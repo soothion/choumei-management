@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <meta name="format-detection" content="telephone=no">
+	  <title>臭美管理后台</title>
+	  <link rel="stylesheet" href="../awesome/css/font-awesome.min.css" />
+	  <link rel="stylesheet" href="../css/reset.css" />
+	  <link rel="stylesheet" href="../css/global.css" />
+	  <link rel="stylesheet" href="../css/admin.css" />
+	  <style type="text/css">
+		.page{
+			background:#E8EDF0;
+			color:#666666;
+		}
+	  </style>
+  </head>
+  <body>
+	<div class="loadbar" style="width: 0px"></div>
+	<div class="page">
+      <header>
+          <div class="logo">
+              <h1>臭美管理后台</h1>
+          </div>
+		  <nav class="nav-main">
+			<ul>
+				<li class="active">
+					<a>
+						店铺管理
+					</a>
+					</li>
+				<li>
+					<a>
+						财务核算
+					</a>
+				</li>
+				<li>
+					<a>
+						交易管理
+					</a>
+				</li>
+				<li>
+					<a>
+						运营中心
+					</a>
+				</li>
+				<li>
+					<a>
+						客服中心
+					</a>
+				</li>
+				<li>
+					<a>
+						权限管理
+					</a>
+				</li>
+			</ul>
+		  </nav>
+		  
+		  <div class="nav-sub">
+				<span class="drop-menu">
+					<button class="drop-menu-toggle"><span>业务部门</span> <i class="fa fa-angle-down"></i></button>
+					<ul class="drop-menu-list">
+						<li class="drop-menu-item" value="1"><a>业务部门</a></li>
+						<li class="drop-menu-item" value="2"><a>财务部门</a></li>
+						<li class="drop-menu-item" value="3"><a>市场部门</a></li>
+						<li class="drop-menu-item" value="4"><a>运营部门</a></li>
+						<li class="drop-menu-item" value="5"><a>商务部门</a></li>
+					</ul>
+				</span>
+				<!--
+				<select class="select">
+					<option value="1">业务部门</option>
+					<option value="2">财务部门</option>
+					<option value="3">市场部门</option>
+					<option value="4">运营部门</option>
+					<option value="5">商务部门</option>
+				</select>-->
+				<ul>
+					<li><a class="nav-sub-item"><span>消息</span></a></li>
+					<li><a class="nav-sub-item"><span>动态</span></a></li>
+					<li><a class="nav-sub-item"><span>帮助</span></a></li>
+					<li class="drop-menu drop-menu-right">
+						<button class="drop-menu-toggle nav-sub-item"><span>用户</span></button>
+						<ul class="drop-menu-list">
+							<li class="drop-menu-item"><a>修改用户信息</a></li>
+							<li class="drop-menu-item"><a>设置</a></li>
+							<li class="drop-menu-item"><a>退出</a></li>
+						</ul>
+					</li>
+					<li><a class="nav-sub-item"><span>刷新</span></a></li>
+				</ul>
+		  </div>
+      </header>
+      <div class="frame-main" style="height: 398px;">
+         <aside id="scroller">
+				<h2>商家管理</h2>
+				<div class="menu-category active">
+					<div class="menu-category-title">
+						<span>系统管理</span>
+					</div>
+					<ul>
+						<li class="flex-box active">
+							<a href="ui.html" class="flex-item" target="main">> UI示例</a>
+						</li>
+						<li class="flex-box">
+							<a href="user.html" class="flex-item" target="main">> 用户管理</a>
+						</li>
+						<li class="flex-box">
+							<a href="ui.html" class="flex-item" target="main">> 角色管理</a>
+						</li>
+						<li class="flex-box">
+							<a href="ui.html" class="flex-item" target="main">> 权限管理</a>
+						</li>
+						 <li class="flex-box">
+							<a href="list.html" class="flex-item" target="main">> 日志管理</a>
+						</li>
+					</ul>
+				</div>
+                <div class="menu-category">
+					<div class="menu-category-title">
+						<span>店铺商铺</span>
+					</div>
+					<ul>
+						<li class="flex-box">
+							<a href="ui.html" class="flex-item" target="main">> 店铺列表</a>
+						</li>
+						<li class="flex-box">
+							<a href="ui.html" class="flex-item" target="main">> 商铺列表</a>
+						</li>
+					</ul>
+				</div> 
+         </aside>
+         <article>
+            <iframe frameborder="0" src="ui.html"  name="main" style="opacity: 1;"></iframe>
+         </article>
+      </div>
+	  </div>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/sea.js"></script>
+	<script src="../js/ejs.js"></script>
+	<script src="../js/lib.js"></script>
+	<script src="../js/iscroll.js"></script>
+	<script src="../js/admin.js"></script>
+	<script>
+	function resize(){
+		$('.frame-main').height($(window).height()-$('header').height());
+	}
+	window.onresize=resize;
+	resize();
+	var loadbar=$('.loadbar');
+	var iframe=$('iframe');
+	var timeStamp=0;
+	$(document.body).on('loading',function(e){
+		timeStamp=e.timeStamp;
+		loadbar.stop().width(0).animate({
+			width:$(window).width()-100
+		},600);
+		iframe.css('opacity',0.35);
+	}).on('loadingend',function(e){
+		if(e.timeStamp-timeStamp<600){
+			setTimeout(function(){
+				loadbar.animate({
+					width:'100%'
+				},150,'swing',function(){
+					loadbar.css({width:0});
+				});
+				iframe.css('opacity',1);
+			},600-(e.timeStamp-timeStamp))
+		}else{
+			loadbar.animate({
+				width:'100%'
+			},150,'swing',function(){
+				loadbar.css({width:0});
+			});
+			iframe.css('opacity',1);
+		}
+	}).trigger('loading');
+	$('aside').on('click','li',function(){
+		$('aside li.active').removeClass('active');
+		$(this).addClass('active');
+	});
+	$('aside').on('click','a',function(){
+		if(iframe[0].contentWindow.location.href==this.href){
+			iframe[0].contentWindow.location.reload();
+		}
+		$(document.body).trigger('loading');
+	});
+	
+	$('.back').on('click',function(){
+		$(document.body).trigger('loading');
+		iframe[0].contentWindow.history.back();
+	});
+	$('.forward').on('click',function(){
+		$(document.body).trigger('loading');
+		iframe[0].contentWindow.history.forward();
+	})
+	$('.refresh').on('click',function(){
+		$(document.body).trigger('loading');
+		iframe[0].contentWindow.location.reload();
+	});
+	
+	$(document).on('click','.menu-category-title',function(e){
+		var $this=$(this);
+		$this.parent().addClass('active').siblings().removeClass('active');
+	})
+	var myScroll = new IScroll('#scroller',{ mouseWheel: true ,checkDOMChanges:true,click:true});
+	var toggle=function(){
+		$('.frame-main').toggleClass('flat');
+		var $this=$('.article-arrow');
+		if($this.text()=='>'){
+			$this.text('<');
+		}else{
+			$this.text('>');
+		}
+		myScroll.refresh();
+	}
+	$('.article-arrow').show().on('click',toggle);
+	if(lib.isMobile()){
+		toggle();
+	}
+	$('.nav-main li,.nav-sub li').on('click',function(){
+		$(this).addClass('active').siblings().removeClass('active');
+	})
+</script>
+  </body>
+</html>
