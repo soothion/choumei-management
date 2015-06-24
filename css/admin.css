@@ -463,6 +463,18 @@ input.label+label{
 input.label:checked + label{
 	border-color:#498ae5;
 	color:#498ae5;
+
+}
+input.solid+label{
+	line-height:22px;
+	border-radius:2px;
+	border:0px;
+	min-width:0;
+	padding:0px 6px;
+}
+input.solid:checked+label,input.solid+label:hover{
+	background-color:#498ae5;
+	color:#fff;
 }
 form[data-role="hash"]{
 	display:inline;
