@@ -70,7 +70,7 @@
 		}
 		e.preventDefault();
 	}).on('click','label[data-role="hash"]',function(){
-		$(this).closest('form').submit();
+		$(this).closest('form[data-role="hash"]').submit();
 	});
 	
 	$(document.body).on('click','[data-toggle-class]',function(){
