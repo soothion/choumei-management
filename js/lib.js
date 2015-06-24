@@ -402,10 +402,8 @@
 			var $el=$(this.el);
 			if(data.status<400){
 				$el.trigger('success');
-				
 			}else{
 				$(self.el).trigger('fail');
-				
 			}
 		},
 		success:function(){
