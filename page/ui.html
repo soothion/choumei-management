@@ -172,6 +172,13 @@
 				</div>
 			</span>
 		</div>
+		<h4>选项卡</h4>
+		<ul class="tab">
+			<li><a class="active">选项卡1</a></li>
+			<li><a>选项卡2</a></li>
+			<li><a>选项卡3</a></li>
+			<li><a>选项卡4</a></li>
+		</ul>
 		<h4>表格</h4>
 		<div>
 			<div class="table">
@@ -182,7 +189,7 @@
                   <th>邮箱</th>
                   <th>手机号码</th>
                   <th>性别</th>
-				  <th>城市</th>
+				  <th>城市 <i class="fa fa-sort"></i></th>
 				  <th>描述</th>
 				  <th>操作</th>
                 </tr>
@@ -299,15 +306,7 @@
 		$('#popup-fail').on('click',function(){
 			lib.popup.tips({text:'<img src="../images/cancel-circle.svg" class="loader"/>用户信息提交失败',time:4000})
 		});
-		$(document).on('click','[data-toggle-class]',function(){
-			var $this=$(this);
-			$this.parent().toggleClass($this.data('toggle-class'));
-		});
-		$(document).on('click',function(e){
-			if($(e.target).closest('.open').length==0){
-				$('.open').removeClass('open')
-			}
-		});
+		
 	</script>
   </body>
 </html>

@@ -5,6 +5,9 @@ body{
 a,button{
 	cursor:pointer;
 }
+h1, h2, h3, h4, h5, h6{
+	font-family:"Microsoft Yahei";
+}
 .fff{
 	color:#fff!important;
 }
@@ -92,6 +95,24 @@ input.radio+label:before{
 }
 .input-group input:focus~.fa{
 	color:#498ae5;
+}
+.tab{
+	border:1px solid #E6EAF2;
+}
+.tab li{
+	display:inline-block;
+	border-top:2px solid transparent;
+	min-width:80px;
+	line-height:36px;
+	text-align:center;
+	margin-top:-1px;
+}
+.tab li.active{
+	border-top-color:#58a2ec;
+	color:#58a2ec;
+}
+.tab li a{
+	display:block;
 }
 .btn-image-upload{
 	width:196px;
@@ -365,8 +386,7 @@ aside h2{
 	background:#eee;
 }
 .table td,.table th{
-	padding:0px 8px;
-	line-height:38px;
+	padding:8px;
 	text-align:left;
 	border:1px solid #E6EAF2;
 }

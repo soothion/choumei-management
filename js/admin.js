@@ -71,6 +71,17 @@
 		e.preventDefault();
 	});
 	
+	$(document.body).on('click','[data-toggle-class]',function(){
+		var $this=$(this);
+		$this.parent().toggleClass($this.data('toggle-class'));
+	}).on('click',function(e){
+		if($(e.target).closest('.open').length==0){
+			$('.open').removeClass('open')
+		}
+	}).on('click','.tab li',function(){
+		$(this).addClass('active').siblings().removeClass('active');
+	});
+	
 	/**分页**/
 	$body.on('_ready',function(e,data){
 		var $pager=$(e.target).find('.pager');
