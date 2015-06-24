@@ -1,7 +1,7 @@
 ﻿(function () {
 	seajs.config({
 		'map': [
-			[ /^(.*\.(?:css|js))(.*)$/i, '$1?20110801' ]
+			[ /^(.*\.(?:css|js))(.*)$/i, '$1?20110802' ]
 		]
 	});
     var lib = {
@@ -323,7 +323,8 @@
 			email:'^([a-zA-Z0-9]+[_|\_|\.|\-]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.|\-]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$',
 			mobile:'^1[0-9]{10}$',
 			phone:'^[0-9]{7,8}$',
-			password:'^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$'
+			password:'^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$',
+			float:'^[+-]?([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?$'
 		},
 		init:function(){
 			this.cfg={};
@@ -366,17 +367,29 @@
 		required:function(e){
 			var $target=$(e.target);
 			var error=this.getErrorDom($target);
-			$target.after(error.show().html(($target.attr('requiredmsg')||this.cfg.requiredmsg)));
+			var $relative=$target;
+			if($target.siblings('.unit').length==1){
+				$relative=$target.siblings('.unit');	
+			}
+			$relative.after(error.show().html(($target.attr('requiredmsg')||this.cfg.requiredmsg)));
 		},
 		pattern:function(e){
 			var $target=$(e.target);
 			var error=this.getErrorDom($target);
-			$target.after(error.show().html(($target.attr('patternmsg')||this.cfg.patternmsg)));
+			var $relative=$target;
+			if($target.siblings('.unit').length==1){
+				$relative=$target.siblings('.unit');	
+			}
+			$relative.after(error.show().html(($target.attr('patternmsg')||this.cfg.patternmsg)));
 		},
 		match:function(){
 			var $target=$(e.target);
 			var error=this.getErrorDom($target);
-			$target.after(error.show().text($target.attr('matchmsg')));
+			var $relative=$target;
+			if($target.siblings('.unit').length==1){
+				$relative=$target.siblings('.unit');	
+			}
+			$relative.after(error.show().text($target.attr('matchmsg')));
 		},
 		getErrorDom:function($target){
 			var error=$target.siblings('.control-help');

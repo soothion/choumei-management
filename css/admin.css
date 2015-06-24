@@ -62,6 +62,12 @@ input.radio+label:before{
 	width:6px;
 	height:6px;
 }
+.unit{
+	display: inline-block; 
+	background: #fff; 
+	transform: translateX(-100%);
+	margin-left: -15px;
+}
 .input-group{
 	border:1px solid #E6EAF2;
 	border-radius:3px;
