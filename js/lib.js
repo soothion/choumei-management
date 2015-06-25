@@ -1,16 +1,18 @@
 ﻿(function () {
 	seajs.config({
 		'map': [
-			[ /^(.*\.(?:css|js))(.*)$/i, '$1?20110802' ]
+			[ /^(.*\.(?:css|js))(.*)$/i, cfg.version ]
 		]
 	});
+	EJS.ext = '.html?v=' + cfg.version;
     var lib = {
-        cfg: {
-            version: Math.random()||'1.0'
-        },
         ajax: function (options) {
+			options.url=cfg.getHost()+options.url;
             return $.ajax(options);
         },
+		getSession:function(){
+			localStorage.getItem('session')?JSON.parse(localStorage.getItem('session')):{}
+		},
         ejs:{
             render:function(temp,data){
                 return new EJS(temp).render($.extend(this.getDefault(),data));
@@ -18,7 +20,7 @@
             getDefault:function(){
                 return {
                     query:lib.query,
-                    session:localStorage.getItem('session')?JSON.parse(localStorage.getItem('session')):{}
+                    session:getSession()
                 }
             }
         },
@@ -85,9 +87,6 @@
                 });
             }
         },
-		isMobile:function(){
-			return ;
-		},
 		browser:function(){
 			var ua=navigator.userAgent;
 			return {
@@ -107,7 +106,8 @@
         }
     }
     lib.init();
-    EJS.ext = '.html?v=' + lib.cfg.version;
+	
+    /*Ajat对象*/
     function Ajat(_protocol) {
         this._protocol = _protocol;
         this.protocol={

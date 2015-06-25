@@ -60,20 +60,6 @@
 		$this.parent().addClass('active').siblings().removeClass('active');
 	})
 	var myScroll = new IScroll('#scroller',{ mouseWheel: true ,checkDOMChanges:true,click:true});
-	var toggle=function(){
-		$('.frame-main').toggleClass('flat');
-		var $this=$('.article-arrow');
-		if($this.text()=='>'){
-			$this.text('<');
-		}else{
-			$this.text('>');
-		}
-		myScroll.refresh();
-	}
-	$('.article-arrow').show().on('click',toggle);
-	if(lib.isMobile()){
-		toggle();
-	}
 	$('.nav-main li,.nav-sub li').on('click',function(){
 		$(this).addClass('active').siblings().removeClass('active');
 	})
