@@ -53,6 +53,7 @@ select{
 	line-height:32px;
 	color:#666;
 	margin-right:5px;
+	border-color:#E6EAF2;
 }
 input:focus,
 textarea:focus,
