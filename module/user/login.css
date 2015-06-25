@@ -12,6 +12,7 @@
 .login form{
 	padding:15px;
 	border:1px solid #E6EAF2;
+	width:280px;
 }
 .login li{
 	margin:25px 0;
@@ -37,9 +38,12 @@
 }
 .slogan  img{
 	width:100px;
+	margin-bottom:10px;
+	opacity:0.8;
 }
 .slogan{
 	text-align:center;
-	font-size:28px;
-	padding-top:50px;
+	font-size:26px;
+	padding-top:90px;
+	margin-left:-100px;
 }
