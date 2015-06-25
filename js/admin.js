@@ -1,12 +1,4 @@
 ﻿(function(){
-	lib.fix=function(){
-		var forIOS = function(){
-			var UA = navigator.userAgent;
-			if(!UA.match(/iPad/) && !UA.match(/iPhone/) && !UA.match(/iPod/)){return;}
-			$('body').children().not('script').wrapAll('<div style="-webkit-overflow-scrolling:touch;overflow-scrolling:touch;overflow:auto;position:relative;height:100%;"></div>');
-		}();
-	}
-	lib.fix();
 	/**hash和加载进度条**/
 	lib.ajatCount=0;
 	var $body=$(document.body);

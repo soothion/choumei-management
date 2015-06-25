@@ -374,6 +374,13 @@ aside h2{
 .control-help{
 	color:#b94a48;
 }
+.red{
+	color:red;
+	margin:5px;
+	font-size:16px;
+	position:relative;
+	top:4px;
+}
 
 .table{
 	margin:15px 0;
