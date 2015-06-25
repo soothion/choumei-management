@@ -5,7 +5,7 @@ body{
 a,button{
 	cursor:pointer;
 }
-h1, h2, h3, h4, h5, h6{
+h1, h2, h3, h4, h5, h6,legend{
 	font-family:"Microsoft Yahei";
 }
 .fff{
@@ -381,7 +381,10 @@ aside h2{
 	position:relative;
 	top:4px;
 }
-
+legend{
+	font-size:17px;
+	padding-left:20px;
+}
 .table{
 	margin:15px 0;
 }
