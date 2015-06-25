@@ -81,7 +81,7 @@
 		var $pager=$(e.target).find('.pager');
 		data=data.response;
 		if(data.total > 0&&data.total>data.pageSize) {
-			seajs.use('http://assets.bittyos.com/js/jquery.pagination.js',function (){
+			seajs.use(location.origin+'/js/jquery.pagination.js',function (){
 				var query=$.extend({},lib.query);
 				var pageNo=query.pageNo;
 				delete query._;

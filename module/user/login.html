@@ -33,19 +33,20 @@
 					var account=$.trim($('#account').val());
 					var password=$.trim($('#password').val());
 					var code=$.trim($('#code').val());
+					var help=$('.control-help');
 					if(!account){
-						$('.control-help').show().text('请输入帐号');
+						help.show().text('请输入帐号');
 						return false;
 					}
 					if(!password){
-						$('.control-help').show().text('请输入密码');
+						help.show().text('请输入密码');
 						return false;
 					}
 					if(!code){
-						$('.control-help').show().text('请输入验证码');
+						help.show().text('请输入验证码');
 						return false;
 					}
-					
+					help.hide();
 					e.preventDefault();
 				})
 			})

@@ -5,7 +5,7 @@ body{
 a,button{
 	cursor:pointer;
 }
-h1, h2, h3, h4, h5, h6{
+h1, h2, h3, h4, h5, h6,legend{
 	font-family:"Microsoft Yahei";
 }
 .fff{
@@ -52,6 +52,7 @@ select{
 	line-height:32px;
 	color:#666;
 	margin-right:5px;
+	border-color:#E6EAF2;
 }
 input:focus,
 textarea:focus,
@@ -328,7 +329,7 @@ aside h2{
 }
 .form-vertical .control-label{
 	display:table-cell;
-	width:15%;
+	width:120px;
 	text-align:right;
 	padding-right:10px;
 }
@@ -382,7 +383,10 @@ aside h2{
 	position:relative;
 	top:4px;
 }
-
+legend{
+	font-size:17px;
+	padding-left:20px;
+}
 .table{
 	margin:15px 0;
 }
