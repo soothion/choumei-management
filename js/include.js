@@ -1,0 +1,21 @@
+﻿document.writeln('<meta charset="utf-8">');
+document.writeln('<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">');
+document.writeln('<meta name="apple-mobile-web-app-capable" content="yes">');
+document.writeln('<meta name="apple-mobile-web-app-status-bar-style" content="black">');
+document.writeln('<meta name="format-detection" content="telephone=no">');
+document.writeln('<link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" />');
+document.writeln('<link rel="stylesheet" href="../../css/reset.css" />');
+document.writeln('<link rel="stylesheet" href="../../css/global.css" />');
+document.writeln('<link rel="stylesheet" href="../../css/admin.css" />');
+document.writeln('<link rel="stylesheet" href="../../css/admin.css" />');
+document.writeln('<script src="../../js/cfg.js"></script>');
+document.writeln('<script src="../../js/jquery.min.js"></script>');
+document.writeln('<script src="../../js/sea.js"></script>');
+document.writeln('<script src="../../js/ejs.js"></script>');
+document.writeln('<script src="../../js/lib.js"></script>');
+document.writeln('<script src="../../js/admin.js"></script>');
+
+	
+	
+	
+	

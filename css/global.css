@@ -176,20 +176,6 @@ input[disabled],select[disabled],textarea[disabled],input[readonly],select[reado
     opacity: 0;
     position: absolute;
 }
-.tab{
-    text-align: center;
-    line-height: 2.6rem;
-}
-.tab li{
-    border-bottom:1px solid #ddd;
-}
-.tab li.active{
-    border-bottom-color:#DF3130;
-    color:#DF3130
-}
-.tab li a{
-    display: block;
-}
 .popup-overlay{
     position: fixed;
     width:100%;
