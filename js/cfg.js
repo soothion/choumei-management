@@ -2,7 +2,7 @@
 	env:'dev',
 	dev:'',
 	test:'',
-	product:''
+	product:'',
 	getHost:function(){
 		return cfg[cfg.env];
 	}
