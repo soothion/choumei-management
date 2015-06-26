@@ -4,6 +4,32 @@
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
 	  <script type="text/javascript" src="../../js/include.js"></script>
+	  <style type="text/css">
+		.right-list li{
+			margin-bottom:15px;
+		}
+		.right-list div{
+			padding-left:30px;
+			display:none;
+		}
+		.right-list div label{
+			margin:4px 0;
+		}
+		.fa-minus-square-o,.fa-plus-square-o{
+			font-size:16px;
+			margin-right:5px;
+			vertical-align:middle;
+		}
+		.fa-minus-square-o,.toggle .fa-plus-square-o{
+			display:none;
+		}
+		.toggle .fa-minus-square-o{
+			display:inline-block;
+		}
+		.toggle div{
+			display:block;
+		}
+	  </style>
   </head>
   <body>
 		<div class="breadcrumb">
@@ -11,7 +37,6 @@
 	</div>
 	<div class="wrapper">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="/data/post.json">
-			
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色名称</label>
 				<div class="control">
@@ -52,11 +77,18 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>配置权限</label>
-				<div class="control">		
-					<input required type="checkbox" value="1" class="checkbox" id="checkbox1" name="love"><label for="checkbox1">吃货</label>
-					<input required type="checkbox" value="2" class="checkbox" id="checkbox2" name="love"><label for="checkbox2">游泳</label>
-					<input required type="checkbox" value="3" class="checkbox" id="checkbox3" name="love"><label for="checkbox3">打篮球</label>
-					<div class="control-help"></div>
+				<div class="control">
+					<ul class="right-list">
+						<li>
+							<input type="checkbox" id="parent1" class="checkbox" />
+							<label for="parent1"></label>
+							<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+							<label for="parent1">基本权限</label>
+							<div>
+								<input type="checkbox" class="checkbox" id="child1" /><label for="child1">缺省主页</label><input type="checkbox" class="checkbox" id="child2" /><label for="child2">修改信息</label>
+							</div>
+						</li>
+					</ul>
 				</div>
 			</div>
 			<div class="control-group">
@@ -69,5 +101,10 @@
 			</div>
 		  </form>
 	</div>
+	<script type="text/javascript">
+		$('.square').on('click',function(){
+			$(this).closest('li').toggleClass('toggle');
+		})
+	</script>
   </body>
 </html>

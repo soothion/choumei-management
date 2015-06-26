@@ -306,6 +306,10 @@ aside h2{
 	color:#58A2EC;
 	font-weight:bold;
 }
+.menu-category .fa-angle-right{
+	margin-right:5px;
+	font-size:14px;
+}
 
 .wrapper{
 	margin:30px;
