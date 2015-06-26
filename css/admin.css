@@ -69,9 +69,10 @@ input.radio+label:before{
 }
 .unit{
 	display: inline-block; 
-	font-weight: bold;
 	width: 0px;
-	text-indent: -28px;
+	text-indent: -61px;
+    text-align: center;
+	color:#999;
 }
 .input-unit{
 	padding-right:20px!important;
@@ -328,7 +329,7 @@ aside h2{
 }
 .form-vertical .control-label{
 	display:table-cell;
-	width:120px;
+	width:170px;
 	text-align:right;
 	padding-right:10px;
 }
