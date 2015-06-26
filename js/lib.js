@@ -375,7 +375,7 @@
 				$relative=$target.siblings('.unit');	
 			}
 			var requiredmsg=this.cfg.requiredmsg;
-			if($target.is('select')){
+			if($target.is('select')||$target.is('input[type="checkbox"]')||||$target.is('input[type="radio"]')){
 				requiredmsg='请选择';
 			}
 			error.show().html(($target.attr('requiredmsg')||requiredmsg));
