@@ -28,7 +28,6 @@ h1, h2, h3, h4, h5, h6,legend{
 	font-size:1.05rem;
 	color:#666;
 	outline:none;
-	margin-right: 15px;
 }
 .btn-primary{
 	border-color:#58A2EC;
@@ -305,7 +304,7 @@ aside h2{
 }
 
 .wrapper{
-	margin:15px;
+	margin:30px;
 }
 .breadcrumb{
     line-height: 40px;
