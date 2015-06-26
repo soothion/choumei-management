@@ -1,7 +1,7 @@
 ﻿(function () {
 	seajs.config({
 		'map': [
-			[ /^(.*\.(?:css|js))(.*)$/i, cfg.version ]
+			[ /^(.*\.(?:css|js))(.*)$/i, '$1?'+cfg.version ]
 		]
 	});
 	EJS.ext = '.html?v=' + cfg.version;
@@ -425,7 +425,7 @@
 		},
 		success:function(){
 			lib.popup.tips({
-				text:'<img src="/svg-loaders/check-alt.svg" class="loader"/>数据更新成功',
+				text:'<i class="fa fa-check-circle"></i>数据更新成功',
 				time:2000,
 				define:function(){
 					history.back();
@@ -434,7 +434,7 @@
 		},
 		fail:function(){
 			lib.popup.tips({
-				text:'<img src="/svg-loaders/cancel-circle" class="loader"/>数据更新失败',
+				text:'<i class="fa fa-times-circle"></i>数据更新失败',
 				time:2000
 			});
 		},
@@ -469,7 +469,7 @@
 			var btn=$(this.el).find('button[type=submit]');
 			if(btn.is(':disabled')) return;
 			btn.attr('disabled',true);
-			lib.popup.tips({text:'<img src="/svg-loaders/oval.svg" class="loader"/>数据正在提交...'});
+			lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
 			var self=this;
 			$.ajax({
 				url:this.el.action,

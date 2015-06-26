@@ -129,7 +129,7 @@
 		<h4>下拉菜单</h4>
 		<div>
 			<span class="drop-menu">
-				<button class="drop-menu-toggle btn">菜单列表 <i class="fa fa-angle-down"></i></button>
+				<a class="drop-menu-toggle btn">菜单列表 <i class="fa fa-angle-down"></i></a>
 				<ul class="drop-menu-list">
 					<li class="drop-menu-item"><a>菜单1</a></li>
 					<li class="drop-menu-item"><a>菜单2</a></li>
@@ -313,10 +313,10 @@
 			lib.popup.tips({text:'<img src="../images/oval.svg" class="loader"/>用户信息提交中',time:4000})
 		});
 		$('#popup-success').on('click',function(){
-			lib.popup.tips({text:'<img src="../images/check-alt.svg" class="loader"/>用户信息提交成功',time:4000})
+			lib.popup.tips({text:'<i class="fa fa-check-circle"></i>用户信息提交成功',time:4000})
 		});
 		$('#popup-fail').on('click',function(){
-			lib.popup.tips({text:'<img src="../images/cancel-circle.svg" class="loader"/>用户信息提交失败',time:4000})
+			lib.popup.tips({text:'<i class="fa fa-times-circle"></i>用户信息提交失败',time:4000})
 		});
 		
 	</script>

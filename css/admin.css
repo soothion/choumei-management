@@ -495,3 +495,11 @@ input.solid:checked+label,input.solid+label:hover{
 form[data-role="hash"]{
 	display:inline;
 }
+.popup-tips-text i.fa{
+	color: #fff;
+    margin-right: 4px;
+    font-size: 26px;
+    vertical-align: middle;
+    margin-top: -2px;
+    margin-left: -6px;
+}
