@@ -12,7 +12,8 @@
         <style>
         .textarea{
           margin-top: 10px;
-          width: 20%;            
+          width: 20%; 
+          min-width: 250px;           
         }
 
         .textarea-bar{
@@ -22,14 +23,27 @@
           border: 1px solid #ddd;
           box-sizing: border-box;
           line-height: 40px;
+          min-width: 250px;  
         }
 
         .area-btn{
             border-radius: 12px;
             float: right;
             margin-top:3px;
+            right:10px;
         }
 
+        .min-width{
+            min-width:80px;
+            width:6.4%;
+        }
+
+        .area-coor{
+         display:inline-block;
+         font-size:14px;
+         vertical-align:middle;
+         padding-left:15px;
+        }
 
         </style>    
     </head>
@@ -43,68 +57,48 @@
         </div>
 
         <div class="wrapper">
-            <div style="height:40px;margin:0 10%;font-size:18px;font-weight: bold;">            
-                <span style="display:inline-block;width:20%">1、店铺基本信息</span> 
-                <span style="display:inline-block;width:20%">2、银行账户信息</span>  
-                <span style="display:inline-block;width:20%">3、准入评估信息</span>
-                <span style="display:inline-block;width:20%">4、附件上传</span>
-                <hr/>            
-            </div>
-
             <form novalidate="" method="post" class="form-vertical" data-role="form" action="/data/post.json">
                 <div class="control-group">
                     <label class="control-label" for="">*店铺编号：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                     </div>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for="">*店铺名称：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                     </div>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for="">*所属商户：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for="">*店铺地址：</label>
-                    <select class="select">
+                    <select class="select min-width">
                         <option value="1">深圳</option>
-                        <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
                     </select>
 
-                    <select class="select">
+                    <select class="select min-width">
                         <option value="1">深圳</option>
-                        <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
                     </select>
 
-                    <select class="select">
+                    <select class="select min-width">
                         <option value="1">深圳</option>
-                        <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
                     </select><br>
 
                     <textarea class="textarea"></textarea>
                     <div class="textarea-bar">
-                        <span style="display:inline-block;font-size:14px;vertical-align:middle;padding-left:15px;">
-                        地理坐标：
-                        </span>
-                        <button class="btn area-btn"><i class="fa fa-map-marker"></i> 添加坐标</button>
+                        <span class="area-coor">地理坐标：</span>
+                        <button class="btn area-btn">
+                            <i class="fa fa-map-marker"></i> 添加坐标
+                        </button>
                     </div>
                 </div>
 
@@ -134,116 +128,95 @@
 
                 <div class="control-group">
                     <label class="control-label" for="">*合同日期：</label>
-                    <select class="select">
+                    <select class="select min-width">
                         <option value="1">深圳</option>
-                        <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
                     </select>
 
-                    <select class="select">
+                    <select class="select min-width">
                         <option value="1">深圳</option>
-                        <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
                     </select>
 
-                    <select class="select">
+                    <select class="select min-width">
                         <option value="1">深圳</option>
-                        <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
                     </select>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for="">*合同限期：</label>
-                    <select class="select">
+                    <select class="select min-width">
                         <option value="1">深圳</option>
-                        <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
                     </select>
 
-                    <select class="select">
+                    <select class="select min-width">
                         <option value="1">深圳</option>
-                        <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
                     </select>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for="">*合同编号：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                     </div>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for="">*联系人：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for="">*联系电话：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for="">*店铺电话：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for="">*法人代表：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for="">*法人电话：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for="">*业务代表：</label>
-                    <select class="select" style="width: 20%;">
+                    <select class="select" style="width:20%;min-width:250px">
                         <option value="1">深圳</option>
-                        <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
                     </select>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""></label>
-                    <button class="btn"><i class="fa fa-print"></i> 打印</button>
+                    <button class="btn" style="margin-right:20px">预览</button>
                     <a href="bank.html">
                         <button class="btn-primary">下一步</button>
                     </a>
                 </div>                                                                                         
             </form>       
         </div>
+    <script src="../../js/cfg.js"></script>
     <script src="../../js/jquery.min.js"></script>
     <script src="../../js/sea.js"></script>
     <script src="../../js/ejs.js"></script>
     <script src="../../js/lib.js"></script>
-    <script src="../../js/admin.js"></script>            
+    <script src="../../js/iscroll.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script src="../../js/frame.js"></script>          
     </body>
 </html>

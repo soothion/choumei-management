@@ -14,6 +14,12 @@
           width: 9.7%!important;
           min-width: 120px!important;
         }
+
+        .border-dash{
+            width: 100%;
+            border-top: 1px dashed #ddd;
+            margin: 10px auto;            
+        }
         </style>   
     </head>
     <body>
@@ -26,10 +32,16 @@
 
         <div class="wrapper">
             <form novalidate="" method="post" class="form-vertical" data-role="form" action="/data/post.json">
-                <div class="control-group">
+
+               <div>
+                   <p><strong>店铺信息</strong></p>
+                   <p class="border-dash"></p>
+               </div> 
+
+               <div class="control-group">
                     <label class="control-label" for="">店铺面积：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">m<sup>2</sup></span>
                     </div>
                 </div> 
@@ -37,7 +49,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">镜台数量：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">个</span>
                     </div>
                 </div> 
@@ -45,7 +57,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">员工总人数：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">个</span>
                     </div>
                 </div>
@@ -53,15 +65,20 @@
                 <div class="control-group">
                     <label class="control-label" for="">发型师人数：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">个</span>
                     </div>
                 </div> 
 
+               <div>
+                   <p><strong>销售信息</strong></p>
+                   <p class="border-dash"></p>
+               </div>                 
+
                 <div class="control-group">
                     <label class="control-label" for="">店铺平均月销售额：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">万元</span>
                     </div>
                 </div>
@@ -69,7 +86,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">2014年销售总额：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">万元</span>
                     </div>
                 </div>
@@ -77,7 +94,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">本店客单价： </label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">元</span>
                     </div>
                 </div>
@@ -85,7 +102,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">充值卡占月销售额： </label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">%</span>
                     </div>
                 </div>
@@ -103,7 +120,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">占全部充值总额：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">%</span>
                     </div>
                 </div>
@@ -111,7 +128,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">每月非充值卡现金占销售额：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">%</span>
                     </div>
                 </div>
@@ -119,7 +136,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">洗剪吹占销售额：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">%</span>
                     </div>
                 </div>
@@ -127,16 +144,20 @@
                 <div class="control-group">
                     <label class="control-label" for="">烫染占销售额：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">%</span>
                     </div>
                 </div>
 
+               <div>
+                   <p><strong>合作信息</strong></p>
+                   <p class="border-dash"></p>
+               </div>
 
                 <div class="control-group">
                     <label class="control-label" for="">O2O平台合作：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                     </div>
                 </div>   
 
@@ -144,16 +165,20 @@
                 <div class="control-group">
                     <label class="control-label" for="">合作O2O销售额占比：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">%</span>
                     </div>
                 </div>   
 
+               <div>
+                   <p><strong>其他信息</strong></p>
+                   <p class="border-dash"></p>
+               </div>
 
                 <div class="control-group">
                     <label class="control-label" for="">本店正常工作时间每日最多可接待人次理论数：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">人</span>
                     </div>
                 </div>
@@ -161,7 +186,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">平均实际每月接待 ：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">人次</span>
                     </div>
                 </div> 
@@ -188,7 +213,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">店铺租金：</label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">元</span>
                     </div>
                 </div>    
@@ -196,7 +221,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">店铺租赁合同剩余有效期： </label>
                     <div class="control">
-                        <input type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account">
+                        <input type="text">
                         <span class="unit">个月</span>
                     </div>
                 </div> 
@@ -217,18 +242,19 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""></label>
-                    <button class="btn"><i class="fa fa-print"></i> 打印</button>
-                    <a href="bank.html">
-                        <button class="btn-primary">下一步</button>
-                    </a>
+                    <button class="btn" style="margin-right:20px">预览</button>
+                    <button class="btn-primary">下一步</button>
                 </div>                 
             </form>
         </div>
 
-        <script src="../../js/jquery.min.js"></script>
-        <script src="../../js/sea.js"></script>
-        <script src="../../js/ejs.js"></script>
-        <script src="../../js/lib.js"></script>
-        <script src="../../js/admin.js"></script>       
+    <script src="../../js/cfg.js"></script>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/sea.js"></script>
+    <script src="../../js/ejs.js"></script>
+    <script src="../../js/lib.js"></script>
+    <script src="../../js/iscroll.js"></script>
+    <script src="../../js/admin.js"></script>
+    <script src="../../js/frame.js"></script>       
     </body>
 </html>

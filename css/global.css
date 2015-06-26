@@ -358,7 +358,7 @@ input.radio,input.checkbox{
 }
 input.radio+label,input.checkbox+label{
 	display:inline-block;
-	margin-right:5px;
+	margin-right:20px;
 }
 input.radio+label:before,input.checkbox+label:before{
     display: inline-block;
