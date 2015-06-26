@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="../../js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+		修改个人信息
+	</div>
+	<div class="wrapper">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="/data/post.json">
+			<div class="control-group">
+				<label class="control-label" for="">登录账号</label>
+				<div class="control">
+					choumei.cn
+					<span class="space"></span>用户姓名<span class="space"></span>
+					郑嘉嘉
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>联系手机</label>
+				<div class="control">
+					<input type="text" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>所属部门</label>
+				<div class="control">
+					<select disabled required name="city" class="select" >
+						<option value="1">深圳</option>
+						<option value="2">上海</option>
+						<option value="3">北京</option>	
+					</select>
+					<span class="space"></span><span class="red">*</span>职位<span class="space"></span>
+					<select disabled required name="city" class="select" >
+						<option value="1">深圳</option>
+						<option value="2">上海</option>
+						<option value="3">北京</option>	
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>所属城市</label>
+				<div class="control">
+					<select disabled required name="city" class="select" >
+						<option value="1">深圳</option>
+						<option value="2">上海</option>
+						<option value="3">北京</option>	
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>用户状态</label>
+				<div class="control">
+					<select disabled required name="city" class="select" >
+						<option value="1">正常</option>
+						<option value="2">停用</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>角色权限</label>
+				<div class="control">		
+					<input disabled required checked type="checkbox" value="1" class="checkbox" id="checkbox1" name="love"><label for="checkbox1">基本账户（默认）</label>
+					<input disabled required checked type="checkbox" value="2" class="checkbox" id="checkbox2" name="love"><label for="checkbox2">产品经理</label>
+				</div>
+			</div>
+			<legend><input class="checkbox" type="checkbox" id="switch" /><label for="switch">修改密码</label></legend>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>原密码</label>
+				<div class="control">
+					<input type="password" disabled/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>新密码</label>
+				<div class="control">
+					<input type="password" disabled/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>确认新密码</label>
+				<div class="control">
+					<input type="password" disabled/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control"><button class="btn-primary" type="submit">提交</button></div>
+			</div>
+		  </form>
+	</div>
+	<script type="text/javascript">
+		$(document.body).on('change','#switch',function(){
+			if($(this).is(':checked')){
+				$('input[type="password"]').removeAttr('disabled');
+			}else{
+				$('input[type="password"]').attr('disabled',true);
+			}
+		})
+	</script>
+  </body>
+</html>
