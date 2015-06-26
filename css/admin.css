@@ -75,7 +75,10 @@ input.radio+label:before{
 	color:#999;
 }
 .input-unit{
-	padding-right:20px!important;
+	padding-right:30px!important;
+}
+input:focus+.unit{
+	color:#58A2EC;
 }
 .input-group{
 	border:1px solid #E6EAF2;
