@@ -129,7 +129,7 @@
 		<h4>下拉菜单</h4>
 		<div>
 			<span class="drop-menu">
-				<button class="drop-menu-toggle btn">菜单列表 <i class="fa fa-angle-down"></i></button>
+				<a class="drop-menu-toggle btn">菜单列表 <i class="fa fa-angle-down"></i></a>
 				<ul class="drop-menu-list">
 					<li class="drop-menu-item"><a>菜单1</a></li>
 					<li class="drop-menu-item"><a>菜单2</a></li>
@@ -137,6 +137,7 @@
 					<li class="drop-menu-item"><a>菜单4</a></li>
 				</ul>
 			</span>
+			<!--
 			<span class="drop-menu drop-menu-right" style="float:right;">
 				<a class="drop-menu-toggle btn" data-toggle-class="open">筛选条件 <i class="fa fa-angle-down"></i></a>
 				<div class="drop-menu-list" style="width:800px">
@@ -181,6 +182,7 @@
 					</div>
 				</div>
 			</span>
+			-->
 		</div>
 		<h4>选项卡</h4>
 		<ul class="tab">
@@ -292,7 +294,8 @@
 		</div>
 		<h4>分页</h4>
 		<div class="pager" style="text-align:left">共1000条&nbsp;<div class="pagination"><span class="current prev">&lt;&lt;</span><span class="current">1</span><a class="link">2</a><a class="link">3</a><a class="link">4</a><a class="link">5</a><a class="link">6</a><a class="link">7</a><a class="next link">&gt;&gt;</a></div><form data-role="hash"><input type="text" name="pageNo"><button class="go link" type="submit">go</button></form></div>
-		
+		<h4>表单示例</h4>
+		<a href="form.html" class="link">表单示例</a>
 		
 	</div>
 	<script src="../js/cfg.js"></script>
@@ -312,10 +315,10 @@
 			lib.popup.tips({text:'<img src="../images/oval.svg" class="loader"/>用户信息提交中',time:4000})
 		});
 		$('#popup-success').on('click',function(){
-			lib.popup.tips({text:'<img src="../images/check-alt.svg" class="loader"/>用户信息提交成功',time:4000})
+			lib.popup.tips({text:'<i class="fa fa-check-circle"></i>用户信息提交成功',time:4000})
 		});
 		$('#popup-fail').on('click',function(){
-			lib.popup.tips({text:'<img src="../images/cancel-circle.svg" class="loader"/>用户信息提交失败',time:4000})
+			lib.popup.tips({text:'<i class="fa fa-times-circle"></i>用户信息提交失败',time:4000})
 		});
 		
 	</script>

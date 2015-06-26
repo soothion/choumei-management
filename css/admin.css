@@ -306,6 +306,10 @@ aside h2{
 	color:#58A2EC;
 	font-weight:bold;
 }
+.menu-category .fa-angle-right{
+	margin-right:5px;
+	font-size:14px;
+}
 
 .wrapper{
 	margin:30px;
@@ -353,7 +357,7 @@ aside h2{
 }
 .form-vertical .control select{
 	width:auto;
-	min-width:100px;
+	min-width:80px;
 	margin-right:10px;
 }
 .form-vertical .control textarea{
@@ -494,4 +498,32 @@ input.solid:checked+label,input.solid+label:hover{
 }
 form[data-role="hash"]{
 	display:inline;
+}
+.popup-tips-text i.fa{
+	color: #fff;
+    margin-right: 4px;
+    font-size: 26px;
+    vertical-align: middle;
+    margin-top: -2px;
+    margin-left: -6px;
+}
+input.checkbox+label:before{
+	box-shadow:none;
+	height:12px;
+	width:12px;
+	line-height:12px;
+	content:"\f00c";
+	font-family:'FontAwesome';
+	color:#ccc;
+	border:1px solid #ccc;
+	background:#fff;
+	text-align:center;
+	margin-right:4px;
+	border-radius:2px;
+}
+input.checkbox:checked+label:before{
+	background:#fff;
+	box-shadow:none;
+	color:#498ae5;
+	border-color:#498ae5;
 }

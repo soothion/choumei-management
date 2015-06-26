@@ -18,18 +18,28 @@
   	<div class="control-group">
   		<label class="control-label" for=""><span class="red">*</span>邮箱</label>
   		<div class="control">
-			<input class="input-unit" type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required="" value="" name="account"><span class="unit">%</span>
+			<input class="input-unit" type="text" patternmsg="邮箱输入不正确" pattern="email" requiredmsg="请输入邮箱" required  name="account"><span class="unit">%</span>
 		</div>
   	</div>
 	<div class="control-group">
   		<label class="control-label" for="">手机号码</label>
   		<div class="control">
-			<input type="text" patternmsg="手机号码输入不正确" pattern="mobile" requiredmsg="请输入手机号码" required="" value="" name="mobile">
+			<input type="text" patternmsg="手机号码输入不正确" pattern="mobile" requiredmsg="请输入手机号码" required  name="mobile">
+		</div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for="">年龄</label>
+  		<div class="control">
+			<input type="text" patternmsg="年龄输入不正确" pattern="number" requiredmsg="请输入年龄" required  name="age">
 		</div>
   	</div>
 	<div class="control-group">
   		<label class="control-label" for="">密码</label>
-  		<div class="control"><input type="password" patternmsg="6-20位数字和字母组合" pattern="password" requiredmsg="请输入密码" required="" placeholder="6-20位数字和字母组合" value="" name="password"></div>
+  		<div class="control"><input id="password" type="password" patternmsg="6-20位数字和字母组合" pattern="password" requiredmsg="请输入密码" required placeholder="6-20位数字和字母组合"  name="password"></div>
+  	</div>
+	<div class="control-group">
+  		<label class="control-label" for="">确认密码</label>
+  		<div class="control"><input type="password" match="password" matchmsg="确认密码与密码不一致" pattern="password" requiredmsg="请输入确认密码" required name="confirm"></div>
   	</div>
 	<div class="control-group">
   		<label class="control-label" for="">性别</label>
@@ -41,36 +51,18 @@
 	<div class="control-group">
   		<label class="control-label" for="">城市</label>
   		<div class="control">
-			<select requiredmsg="请选择城市" required="" name="city" class="select" id="city">
-		
-			<option value="1">深圳</option>
-		
-			<option value="2">上海</option>
-		
-			<option value="3">北京</option>
-		
-			<option value="4">天津</option>
-		
-			<option value="5">广州</option>
-		
-			<option value="6">武汉</option>
-		
-			<option value="7">南京</option>
-		
-			<option value="8">长沙</option>
-		
-			<option value="9">徐州</option>
-		
-			<option value="10">石家庄</option>
-		
-			<option value="11">沈阳</option>
-		
-	</select>
+			<select requiredmsg="请选择城市" required name="city" class="select" id="city">
+				<option value="1">深圳</option>
+				<option value="2">上海</option>
+				<option value="3">北京</option>
+				<option value="4">天津</option>
+				<option value="5">广州</option>
+			</select>
 		</div>
   	</div>
 	<div class="control-group">
   		<label class="control-label" for="">描述</label>
-  		<div class="control"><textarea requiredmsg="请输入描述信息" required=""></textarea></div>
+  		<div class="control"><textarea requiredmsg="请输入描述信息" required></textarea></div>
   	</div>
 	<div class="control-group">
   		<label class="control-label" for="">兴趣爱好</label>

@@ -1,7 +1,7 @@
 ﻿(function () {
 	seajs.config({
 		'map': [
-			[ /^(.*\.(?:css|js))(.*)$/i, cfg.version ]
+			[ /^(.*\.(?:css|js))(.*)$/i, '$1?'+cfg.version ]
 		]
 	});
 	EJS.ext = '.html?v=' + cfg.version;
@@ -324,7 +324,8 @@
 			mobile:'^1[0-9]{10}$',
 			phone:'^[0-9]{7,8}$',
 			password:'^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$',
-			float:'^[+-]?([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?$'
+			float:'^[+-]?([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?$',
+			number:'^[0-9]*[1-9][0-9]*$'
 		},
 		init:function(){
 			this.cfg={};
@@ -374,7 +375,7 @@
 				$relative=$target.siblings('.unit');	
 			}
 			var requiredmsg=this.cfg.requiredmsg;
-			if($target.is('select')){
+			if($target.is('select')||$target.is('input[type="checkbox"]')||$target.is('input[type="radio"]')){
 				requiredmsg='请选择';
 			}
 			error.show().html(($target.attr('requiredmsg')||requiredmsg));
@@ -417,23 +418,23 @@
 		parseResponse:function(data){
 			var $el=$(this.el);
 			if(data.status<400){
-				$el.trigger('success');
+				$el.trigger('success',data);
 			}else{
-				$(self.el).trigger('fail');
+				$el.trigger('fail',data);
 			}
 		},
 		success:function(){
 			lib.popup.tips({
-				text:'<img src="/svg-loaders/check-alt.svg" class="loader"/>数据更新成功',
+				text:'<i class="fa fa-check-circle"></i>数据更新成功',
 				time:2000,
 				define:function(){
 					history.back();
 				}
 			});
 		},
-		fail:function(){
+		fail:function(e,data){
 			lib.popup.tips({
-				text:'<img src="/svg-loaders/cancel-circle" class="loader"/>数据更新失败',
+				text:'<i class="fa fa-times-circle"></i>数据更新失败',
 				time:2000
 			});
 		},
@@ -468,7 +469,7 @@
 			var btn=$(this.el).find('button[type=submit]');
 			if(btn.is(':disabled')) return;
 			btn.attr('disabled',true);
-			lib.popup.tips({text:'<img src="/svg-loaders/oval.svg" class="loader"/>数据正在提交...'});
+			lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
 			var self=this;
 			$.ajax({
 				url:this.el.action,
