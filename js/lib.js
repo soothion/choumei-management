@@ -318,7 +318,7 @@
 		this.init();
 	}
 	Form.prototype={
-		selector:'input,textarea,select,.checkbox-group',
+		selector:'input,textarea,select',
 		regHooks:{
 			email:'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
 			mobile:'^1[0-9]{10}$',
@@ -335,12 +335,14 @@
 		validateFields:function(e){
 			var $target=$(e.target);
 			var val=$.trim($target.val());
-			//非空校验
-			if($target.is('.checkbox-group')&&$target.attr('required')&&$target.find('input[type="checkbox"]:checked').length==0){
-				$target.trigger('error',{type:'required'});
-				return;
+			if($target.is('input[type="checkbox"]')||$target.is('input[type="radio"]')){
+				var name=$target.attr('name');
+				if($('input[name="'+name+'"]:checked').length==0){
+					$('input[name="'+name+'"]:last').trigger('error',{type:'required'});
+					return;
+				}
 			}
-			if($target.attr('required')&&!val&&!$target.is('.checkbox-group')){
+			if($target.attr('required')&&!val&&!$target.is('input[type="checkbox"]')&&!$target.is('input[type="radio"]')){
 				$target.trigger('error',{type:'required'});
 				return;
 			}
@@ -371,7 +373,15 @@
 			if($target.siblings('.unit').length==1){
 				$relative=$target.siblings('.unit');	
 			}
-			$relative.after(error.show().html(($target.attr('requiredmsg')||this.cfg.requiredmsg)));
+			var requiredmsg=this.cfg.requiredmsg;
+			if($target.is('select')){
+				requiredmsg='请选择';
+			}
+			error.show().html(($target.attr('requiredmsg')||requiredmsg));
+			if(!error.is(':visible')){
+				$relative.after(error);	
+			}
+			
 		},
 		pattern:function(e){
 			var $target=$(e.target);
@@ -380,7 +390,10 @@
 			if($target.siblings('.unit').length==1){
 				$relative=$target.siblings('.unit');	
 			}
-			$relative.after(error.show().html(($target.attr('patternmsg')||this.cfg.patternmsg)));
+			error.show().html(($target.attr('patternmsg')||this.cfg.patternmsg))
+			if(!error.is(':visible')){
+				$relative.after(error);	
+			}
 		},
 		match:function(){
 			var $target=$(e.target);
@@ -389,7 +402,10 @@
 			if($target.siblings('.unit').length==1){
 				$relative=$target.siblings('.unit');	
 			}
-			$relative.after(error.show().text($target.attr('matchmsg')));
+			error.show().text($target.attr('matchmsg'))
+			if(!error.is(':visible')){
+				$relative.after(error);	
+			}
 		},
 		getErrorDom:function($target){
 			var error=$target.siblings('.control-help');

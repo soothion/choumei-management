@@ -28,6 +28,7 @@ h1, h2, h3, h4, h5, h6,legend{
 	font-size:1.05rem;
 	color:#666;
 	outline:none;
+	box-sizing: border-box;
 }
 .btn-primary{
 	border-color:#58A2EC;
@@ -37,7 +38,7 @@ input[type='text'], input[type='password'], input[type='url'], input[type='numbe
 	width:auto;
 	padding:0px 10px;
 	border-color:#E6EAF2;
-	height:35px;
+	height:32px;
 	line-height:32px;
 	color:#666;
 }
