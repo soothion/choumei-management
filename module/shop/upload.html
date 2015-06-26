@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>臭美管理后台</title>
+        <link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../../css/reset.css" />
+        <link rel="stylesheet" href="../../css/global.css" />
+        <link rel="stylesheet" href="../../css/admin.css" /> 
+        <style>
+           .conent{
+            display:inline-block;
+            font-weight: bold;
+            font-size: 15px;
+           }
+
+           .thumbnail{
+            width:140px;
+            height:140px;
+            line-height: 140px;
+            display:inline-block;
+            border:1px solid #ddd;
+            margin:5px; 
+            border-radius: 3px;                       
+           }
+
+           .upload-btn{
+              position: relative;
+              display:inline-block;
+              background-color: #ddd;
+              border-radius: 3px;
+              text-align: center;
+              font-size: 15px;
+              font-weight: bold; 
+              width:140px;
+              height:140px;
+              border:1px solid #ddd;
+              margin:5px; 
+              top:19px;                      
+           }
+
+           .fa{
+              font-size: 40px;
+              margin-bottom: 5px;
+              margin-top: 30px;            
+           }
+
+        </style>  
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a class="link" href="ui.html">一级导航</a>
+            <span>&gt;</span>
+            <a class="link" href="ui.html">二级导航</a>
+            <span>&gt;</span>新增店铺
+        </div>
+
+        <div class="wrapper">
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th colspan="2">(请选择图片文件，小于10M，支持JPG，PNG，GIF和JPEC格式)</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td style="width:150px">
+                    <span class="conent">合同上传</span><br>
+                    <span>(选填，限10张)</span>
+                  </td>
+                  <td>
+                    <div class="thumbnail">
+                       <img class="img-thumbnail">
+                    </div>                     
+                    <div class="thumbnail">
+                       <img class="img-thumbnail">
+                    </div>                     
+                    <div class="thumbnail">
+                       <img class="img-thumbnail">
+                    </div>                     
+                    <div class="thumbnail">
+                       <img class="img-thumbnail">
+                    </div>                     
+                    <div class="upload-btn">
+                      <i class="fa fa-image"></i>
+                      <p>上传合同图片</p>
+                      <input type="file" 
+                      style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor: pointer;">
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <span class="conent">营业执照</span><br>
+                    <span>(选填，限3张)</span>
+                  </td>
+                  <td>
+                    <div class="thumbnail">
+                       <img class="img-thumbnail">
+                    </div>                     
+                    <div class="thumbnail">
+                       <img class="img-thumbnail">
+                    </div>                     
+                    <div class="thumbnail">
+                       <img class="img-thumbnail">
+                    </div>                     
+                    <div class="upload-btn">
+                      <i class="fa fa-image"></i>
+                      <p>上传合同图片</p>
+                      <input type="file" 
+                      style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor: pointer;">
+                    </div>                                 
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <span class="conent">法人执照</span><br>
+                    <span>(选填，限3张)</span>
+                  </td>
+                  <td>
+                    <div class="thumbnail">
+                       <img class="img-thumbnail">
+                    </div>                     
+                    <div class="thumbnail">
+                       <img class="img-thumbnail">
+                    </div>                     
+                    <div class="thumbnail">
+                       <img class="img-thumbnail">
+                    </div>                     
+                    <div class="upload-btn">
+                      <i class="fa fa-image"></i>
+                      <p>上传合同图片</p>
+                      <input type="file" 
+                      style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor: pointer;">
+                    </div>                                 
+                  </td>
+                </tr>                                
+              </tbody>            
+            </table>           
+          </div>
+        </div>
+
+        <script src="../../js/cfg.js"></script>
+        <script src="../../js/jquery.min.js"></script>
+        <script src="../../js/sea.js"></script>
+        <script src="../../js/ejs.js"></script>
+        <script src="../../js/lib.js"></script>
+        <script src="../../js/iscroll.js"></script>
+        <script src="../../js/admin.js"></script>
+        <script src="../../js/frame.js"></script>       
+    </body>
+</html>
