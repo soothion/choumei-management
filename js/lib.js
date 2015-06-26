@@ -418,9 +418,9 @@
 		parseResponse:function(data){
 			var $el=$(this.el);
 			if(data.status<400){
-				$el.trigger('success');
+				$el.trigger('success',data);
 			}else{
-				$(self.el).trigger('fail');
+				$el.trigger('fail',data);
 			}
 		},
 		success:function(){
@@ -432,7 +432,7 @@
 				}
 			});
 		},
-		fail:function(){
+		fail:function(e,data){
 			lib.popup.tips({
 				text:'<i class="fa fa-times-circle"></i>数据更新失败',
 				time:2000

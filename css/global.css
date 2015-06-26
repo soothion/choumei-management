@@ -466,9 +466,6 @@ input.label:checked+label{
 	left:auto;
 	right:0px;
 }
-.drop-menu-toggle:focus+.drop-menu-list{
-	display:block;
-}
 .drop-menu.open .drop-menu-list{
 	display:block!important;
 }
