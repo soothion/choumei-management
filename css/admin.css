@@ -514,6 +514,8 @@ input.checkbox+label:before{
 	border:1px solid #ccc;
 	background:#fff;
 	text-align:center;
+	margin-right:4px;
+	border-radius:2px;
 }
 input.checkbox:checked+label:before{
 	background:#fff;
