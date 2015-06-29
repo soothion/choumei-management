@@ -26,7 +26,9 @@
      
     <div class="control-group">
         <label class="control-label" for=""><span class="red">*</span>联系手机：</label>
-        <div class="control"><input type="password"  pattern="password"  required="" placeholder="6-20位数字和字母组合" value="" name="password"></div>
+       <div class="control">
+                        <input type="text" patternmsg="手机号码输入不正确" pattern="mobile" requiredmsg="请输入手机号码" required="" name="mobile"><span class="control-help" style="display: none;">请输入手机号码</span>
+                    </div>
     </div>
     <div class="control-group">
         <label class="control-label" for=""><span class="red">*</span>权限状态：</label>
