@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="../../js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a class="link" href="ui.html">一级导航</a><span>&gt;</span><a class="link" href="ui.html">二级导航</a><span>&gt;</span>日志管理
+        </div>
+        <div class="wrapper">
+            <div class="flex-box">
+                <div class="flex-item">
+                    <form data-role="hash">
+                        <div>
+                            <input type="text" placeholder="请输入登陆账号">
+                            <label>操作模块</label>
+                            <select class="select ">
+                                <option value="1">深圳</option>
+                                <option value="2">上海</option>
+                                <option value="3">北京</option>
+                                <option value="4">天津</option>
+                                <option value="5">广州</option>
+                            </select>
+                            <label>操作类型</label>
+                            <select class="select">
+                                <option value="1">深圳</option>
+                                <option value="2">上海</option>
+                                <option value="3">北京</option>
+                                <option value="4">天津</option>
+                                <option value="5">广州</option>
+                            </select>
+                            <label>添加时间</label>
+                            <input type="date" />到
+                            <input type="date" />
+                            <button class="btn">搜索</button>
+                            <button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
+                        </div>
+                    </form>
+                </div>
+                <a href="../user/addUser.html">
+                <button class="btn-primary"><i class="fa fa-plus"></i> 新增</button>
+                </a>
+            </div>
+
+            <div class="table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>登录账号</th>
+                            <th>用户角色</th>
+                            <th>操作类型</th>
+                            <th>操作模块</th>
+                            <th>操作对象</th>
+                            <th>操作ip</th>
+                            <th class="sort">添加时间</th>
+                        </tr>
+                    </thead>
+                <tbody></tbody>
+            </table>
+            <div class="paginator" id="pagination">
+            </div>
+            <div id="shopMsgTip" class="messageTip">暂无相关店铺数据</div>
+            <script id="rows" type="text/template">
+                                                                                        <%
+                                                                                                _.each(data,function(item,index){
+                                                                                        %>
+                                                                                        %>
+                                                                                        <tr>
+                                                                                            </tr>
+                                                                                        <% })%>
+            </script>
+            <div class="pager"> </div>
+        </div>
+    </div>
+</body>
+</html>
