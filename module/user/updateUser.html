@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <title>臭美管理后台</title>
+        <script src="../../js/include.js"></script>
+        <link rel="stylesheet" href="user.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a class="link" href="ui.html">一级导航</a><span>&gt;</span><a class="link" href="ui.html">二级导航</a><span>&gt;</span>用户修改
+        </div>
+        <div class="wrapper">
+            <form novalidate="" method="post" class="form-vertical" data-role="form" action="/data/post.json">
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>登陆账号：</label>
+                    jiajia
+                    <label class="control-label" for=""><span class="red">*</span>用户姓名：</label>
+                    郑嘉嘉
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>联系手机：</label>
+                    <div class="control"><input type="password"  pattern="password"  required="" placeholder="6-20位数字和字母组合" value="" name="password"></div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>所属部门：</label>
+                    <select class="select" >
+                        <option value="1">深圳</option>
+                        <option value="2">上海</option>
+                        <option value="3">北京</option>
+                        <option value="4">天津</option>
+                        <option value="5">广州</option>
+                    </select>
+                    <label class="control-label" for=""><span class="red">*</span>职位</label>
+                    <select class="select">
+                        <option value="1">深圳</option>
+                        <option value="2">上海</option>
+                        <option value="3">北京</option>
+                        <option value="4">天津</option>
+                        <option value="5">广州</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>所属城市：：</label>
+                    <div class="control">
+                        <select class="select ">
+                            <option value="1">深圳</option>
+                            <option value="2">上海</option>
+                            <option value="3">北京</option>
+                            <option value="4">天津</option>
+                            <option value="5">广州</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>用户状态：</label>
+                    <div class="control">
+                        <div id="love"  required="" class="checkbox-group">
+                            <select class="select ">
+                                <option value="1">深圳</option>
+                                <option value="2">上海</option>
+                                <option value="3">北京</option>
+                                <option value="4">天津</option>
+                                <option value="5">广州</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>配置角色：</label>
+                    <div class="control">
+                        <input type="checkbox" value="1" class="checkbox" id="checkbox1" name="love"><label for="checkbox1">基本角色（默认）</label>
+                        <input type="checkbox" value="2" class="checkbox" id="checkbox2" name="love"><label for="checkbox2">系统管理员</label>
+                        <input type="checkbox" value="3" class="checkbox" id="checkbox3" name="love"><label for="checkbox3">商务人员</label><br/>
+                        <input type="checkbox" value="4" class="checkbox" id="checkbox4" name="love"><label for="checkbox4">产品经理</label>
+                        <input type="checkbox" value="5" class="checkbox" id="checkbox5" name="love"><label for="checkbox5">商务主管</label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <legend class="add-title">
+                       <div class="control">
+                        <input type="checkbox" value="6" class="checkbox" id="checkbox6" name="love"><label for="checkbox6">商务主管</label>
+                    </div>
+                    </legend>
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>登陆密码：</label>
+                        <div class="control">
+                            <input type="text" patternmsg="6-20个字母数字组合，字母区分大小写"  pattern="email"  required="" value="" name="account">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>确认登录密码：</label>
+                        <div class="control">
+                            <input type="text"   pattern="email"  required="" value="" name="account">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <div class="control"><button class="btn-primary" type="submit">提交</button><span class="space"></span><button type="reset" class="btn">重置</button></div>
+                    </div>
+                </form>
+            </div>
+        </body>
+    </html>

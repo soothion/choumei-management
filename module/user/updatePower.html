@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="black">
+      <meta name="format-detection" content="telephone=no">
+      <title>臭美管理后台</title>
+      <script src="../../js/include.js"></script>
+  </head>
+  <body>
+    <div class="breadcrumb">
+        <a class="link" href="ui.html">一级导航</a><span>&gt;</span><a class="link" href="ui.html">二级导航</a><span>&gt;</span>权限修改
+    </div>
+    <div class="wrapper">
+        <form novalidate="" method="post" class="form-vertical" data-role="form" action="/data/post.json">
+         <div class="control-group">
+        </div>
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>权限名称：</label>
+        <div class="control">
+           用户查询
+        </div>
+    </div>
+     
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>联系手机：</label>
+        <div class="control"><input type="password"  pattern="password"  required="" placeholder="6-20位数字和字母组合" value="" name="password"></div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>权限状态：</label>
+         <select class="select ">
+                                <option value="1">深圳</option>
+                                <option value="2">上海</option>
+                                <option value="3">北京</option>
+                                <option value="4">天津</option>
+                                <option value="5">广州</option>
+                            </select>
+    </div>
+    
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>所属城市：</label>
+       <select class="select ">
+                                <option value="1">深圳</option>
+                                <option value="2">上海</option>
+                                <option value="3">北京</option>
+                                <option value="4">天津</option>
+                                <option value="5">广州</option>
+                            </select>
+    </div>
+     <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>权限说明：</label>
+        <div class="control">
+            <input type="text" patternmsg="6-20个字母数字组合，字母区分大小写"  pattern="email"  required="" value="" name="account">
+        </div>
+    </div>
+     <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>信息备注：</label>
+        <div class="control">
+            <input type="text"   pattern="email"  required="" value="" name="account">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for=""></label>
+        <div class="control"><button class="btn-primary" type="submit">取消</button><span class="space"></span><button type="reset" class="btn">保存</button></div>
+    </div>
+  </form>
+    </div>
+  </body>
+</html>
