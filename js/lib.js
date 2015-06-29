@@ -542,8 +542,13 @@
 			});
 			$(document.body).append(options);
 			options.on('mousedown','li',function(e){
-				$select.val($(this).attr('value'));
+				var val=$select.val();
+				var newVal=$(this).attr('value');
+				$select.val(newVal);
 				$select.trigger('blur');
+				if(val!=newVal){
+					$select.trigger('change');
+				}
 			});
 			options.on('mousedown',function(e){
 				e.stopPropagation();
@@ -561,9 +566,9 @@
 			options.css(css);
 		}
 	}
-	if(!lib.browser().mobile){
+	$(function(){
 		new Select();
-	}
+	})
 	
     window.lib = lib;
 })();
