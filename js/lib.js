@@ -336,6 +336,11 @@
 		validateFields:function(e){
 			var $target=$(e.target);
 			var val=$.trim($target.val());
+			if($target.is(':disabled')){
+				var error=this.getErrorDom($target);
+				error.remove();
+				return;
+			}
 			if($target.is('input[type="checkbox"]')||$target.is('input[type="radio"]')){
 				var name=$target.attr('name');
 				if($('input[name="'+name+'"]:checked').length==0){
@@ -396,7 +401,7 @@
 				$relative.after(error);	
 			}
 		},
-		match:function(){
+		match:function(e){
 			var $target=$(e.target);
 			var error=this.getErrorDom($target);
 			var $relative=$target;

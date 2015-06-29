@@ -421,7 +421,9 @@ th.colswrap{
 	padding-bottom:1px!important;
 }
 .table-detail tbody td:nth-child(odd){
-	width:15%;
+	width:10%;
+	min-width:100px;
+	max-width:250px;
 	padding-left:20px;
 }
 .table-detail thead td{
@@ -538,6 +540,7 @@ input.checkbox+label:before{
 	text-align:center;
 	margin-right:4px;
 	border-radius:2px;
+	font-size:10px!important;
 }
 input.checkbox:checked+label:before{
 	background:#fff;
