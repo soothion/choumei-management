@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>臭美管理后台</title>
+        <link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="../../css/reset.css" />
+        <link rel="stylesheet" href="../../css/global.css" />
+        <link rel="stylesheet" href="../../css/admin.css" /> 
+        <style>
+        ul{
+          width: 20%;
+          min-width: 250px;    
+          margin-right: 10px;  
+          border-radius: 3px;
+          background: #fff;
+          position:absolute;
+          z-index: 1000;
+          border: 1px solid #E6EAF2;
+          display: none;
+        }
+
+        ul > li{
+          height: 25px;
+          line-height: 25px;
+          padding:5px 10px;
+          cursor: pointer; 
+          overflow: hidden;
+          white-space: nowrap;     
+        }
+
+        ul > li:hover{
+            background: #eee;
+        }
+
+        .active{
+           background: #eee; 
+        }
+        </style>
+    </head>
+
+    <body>
+        <div class="breadcrumb">
+            <a class="link" href="ui.html">一级导航</a>
+            <span>&gt;</span>
+            <a class="link" href="ui.html">二级导航</a>
+            <span>&gt;</span>新增店铺账号
+        </div>
+
+        <div class="wrapper">
+            <form novalidate="" method="post" class="form-vertical" data-role="form" action="/data/post.json">
+
+                <div class="control-group">
+                    <label class="control-label" for=""><h2 style="width:170px">账号信息</h2></label>
+                </div> 
+
+                <div class="control-group">
+                    <label class="control-label" for="">*店铺名称：</label>
+                    <div id="shopNameControl" class="control" style="position: relative">
+                        <input id="shopNameSelect" type="text" data-value="">
+                        <ul>
+                            <li>2015高考成绩查询11111111111111111111111111111111</li>
+                            <li>2015中考成绩查询</li>
+                            <li>2015节日放假按</li>
+                            <li>2015ssssssssss</li>
+                            <li>2015ggggggggggg</li>
+                        </ul>
+                    </div>
+                </div> 
+
+                <div class="control-group">
+                    <label class="control-label" for="">*所属商户：</label>
+                    <div class="control">
+                        <input type="text" disabled>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">*用户名：</label>
+                    <div class="control">
+                        <input type="text">
+                    </div>
+                </div>  
+
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+                    <input type="radio" name="sex" class="radio" id="radio1"><label for="radio1">普通用户</label>
+                    <input type="radio" name="sex" class="radio" id="radio2"><label for="radio2">超级管理员</label>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""></label>
+                    <button class="btn-primary">提交</button>
+                </div>                                                                  
+            </form>        
+        </div>
+
+        <script src="../../js/cfg.js"></script>
+        <script src="../../js/jquery.min.js"></script>
+        <script src="../../js/sea.js"></script>
+        <script src="../../js/ejs.js"></script>
+        <script src="../../js/lib.js"></script>
+<!--         <script src="../../js/iscroll.js"></script> -->
+        <script src="../../js/admin.js"></script>
+        <script src="../../js/frame.js"></script>  
+        <script>
+            $("#shopNameSelect").on('input',function(e){
+                var parent = $(this).parent();
+                $("ul",parent).show();
+            })
+
+            $("#shopNameSelect").on('click',function(e){
+                var parent = $(this).parent();
+                $("ul",parent).show();
+            })
+
+            $(document).on('click',function(e){
+                 var t = $(e.target);
+                 if(t.attr('id') === 'shopNameSelect') return;
+                 $("#shopNameControl > ul").hide();
+            })
+
+            $(document).on('keyup',function(e){
+                var input  = $("#shopNameSelect");
+                var parent = input.parent();
+                var ul = $("ul",parent);
+                if(e.keyCode == 38 && ul.css('display') === 'block'){
+                    var elemnt = $(".active",ul);
+                    if(elemnt.length > 0){
+                        elemnt.removeClass("active");
+                        var ele = elemnt.prev();
+                        if(ele.length > 0){
+                            ele.addClass("active");
+                            $("#shopNameSelect").val(ele.text());
+                        }else{
+                            $("#shopNameSelect").val($("#shopNameSelect").attr('data-value'))
+                        }                        
+                    }else{
+                        $("li",ul).last().addClass("active");
+                        var val = $("#shopNameSelect").val();
+                        $("#shopNameSelect").attr('data-value',val);
+                        $("#shopNameSelect").val($(".active",ul).text());                        
+                    }
+                }
+
+                if(e.keyCode == 40 && ul.css('display') === 'block'){
+                    var elemnt = $(".active",ul);
+                    if(elemnt.length > 0){
+                        elemnt.removeClass("active");
+                        var ele = elemnt.next();
+                        if(ele.length > 0){
+                            ele.addClass("active");
+                            $("#shopNameSelect").val(ele.text());
+                        }else{
+                            $("#shopNameSelect").val($("#shopNameSelect").attr('data-value'))
+                        }                        
+                    }else{
+                        $("li",ul).first().addClass("active");
+                        var val = $("#shopNameSelect").val();
+                        $("#shopNameSelect").attr('data-value',val);
+                        $("#shopNameSelect").val($(".active",ul).text());                        
+                    }                    
+                }
+            })
+
+            $("#shopNameControl").delegate('li', 'click', function(event) {
+                var val = $(this).text();
+                $("#shopNameSelect").val(val);
+                $("#shopNameSelect").attr("data-vale",val);
+                $(this).parent().hide();
+            });
+            
+        </script>
+    </body>
+</html>
