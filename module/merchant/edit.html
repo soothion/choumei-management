@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="../../js/include.js"></script>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<a href="ui.html">一级导航</a><span>&gt;</span><a href="ui.html">二级导航</a><span>&gt;</span>用户管理
+	</div>
+	<div class="wrapper">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="/data/post.json">
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>商户名称</label>
+				<div class="control">
+					<input type="text"  required  name="mobile">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>商户名称</label>
+				<div class="control">
+					<input type="text"  required name="mobile">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>联系人</label>
+				<div class="control">
+					<input type="text"  required name="mobile">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>联系手机</label>
+				<div class="control">
+					<input type="text"  required pattern="mobile" name="mobile">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">联系座机</label>
+				<div class="control">
+					<input type="text"  required pattern="nubmer" name="mobile" style="width:55px;min-width:0"><input style="width:185px;min-width:0" type="text"  required pattern="nubmer" name="mobile">
+					<span class="control-help"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">邮箱地址</label>
+				<div class="control">
+					<input type="text"  required pattern="email" name="mobile">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">详细地址</label>
+				<div class="control">
+					<textarea name=""></textarea>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">成立日期</label>
+				<div class="control">
+					<input type="date"  required >
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control"><button class="btn-primary" type="submit">提交</button></div>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript">
+		$('#select').on('change',function(){
+			var $this=$(this);
+			if($this.val()==1){
+				$this.next().attr('placeholder','请输入店铺名');
+			}else{
+				$this.next().attr('placeholder','请输入商户名');
+			}
+		})
+	</script>
+  </body>
+</html>
