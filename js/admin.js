@@ -1,4 +1,4 @@
-﻿(function(){
+﻿$(function(){
 	/**hash和加载进度条**/
 	lib.ajatCount=0;
 	var $body=$(document.body);
@@ -54,6 +54,7 @@
 		if(lib.hashchange(data)){
 			$(window).trigger('hashchange');
 		}
+		e.stopPropagation();
 		e.preventDefault();
 	}).on('click','a[data-role="hash"]',function(e){
 		var query=lib.parseQuery($(this).attr('href').replace('#',''));
@@ -105,5 +106,5 @@
 			});
 		}
 	});
-})();    	
+});    	
 	
