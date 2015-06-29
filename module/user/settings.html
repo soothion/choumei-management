@@ -22,7 +22,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>联系手机</label>
 				<div class="control">
-					<input type="text" />
+					<input type="text" required pattern="mobile" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -71,19 +71,19 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>原密码</label>
 				<div class="control">
-					<input type="password" disabled/>
+					<input type="password" disabled required pattern="password" patternmsg="密码是6-20位字母和数字组合"/>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>新密码</label>
 				<div class="control">
-					<input type="password" disabled/>
+					<input id="password" type="password" disabled required pattern="password" patternmsg="密码是6-20位字母和数字组合"/>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>确认新密码</label>
 				<div class="control">
-					<input type="password" disabled/>
+					<input type="password" disabled required match="password" matchmsg="确认新密码与新密码不一致"/>
 				</div>
 			</div>
 			<div class="control-group">
