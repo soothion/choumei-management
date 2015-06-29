@@ -12,15 +12,15 @@
 	<div class="wrapper">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="/data/post.json">
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>商户名称</label>
+				<label class="control-label" for=""><span class="red">*</span>商户编号</label>
 				<div class="control">
-					<input type="text"  required  name="mobile">
+					<input type="text"  required  name="mobile" maxlength="6">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>商户名称</label>
 				<div class="control">
-					<input type="text"  required name="mobile">
+					<input type="text"  required name="mobile" maxlength="16">
 				</div>
 			</div>
 			<div class="control-group">
@@ -51,7 +51,7 @@
 			<div class="control-group">
 				<label class="control-label" for="">详细地址</label>
 				<div class="control">
-					<textarea name=""></textarea>
+					<textarea name="" placeholder="详细街道信息"></textarea>
 				</div>
 			</div>
 			<div class="control-group">
