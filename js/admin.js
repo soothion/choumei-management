@@ -66,7 +66,7 @@
 		$(this).closest('form[data-role="hash"]').submit();
 	});
 	
-	$(document.body).on('click','.drop-menu-toggle',function(){
+	$body.on('click','.drop-menu-toggle',function(){
 		var $this=$(this);
 		$this.parent().toggleClass('open');
 	}).on('click','.drop-menu-item',function(){
@@ -77,7 +77,10 @@
 		}
 	}).on('click','.tab li',function(){
 		$(this).addClass('active').siblings().removeClass('active');
-	});
+	}).on('input','input[data-role="start"]',function(){
+		var $this=$(this);
+		$this.siblings('input[data-role="end"]').attr('min',$this.val());
+	})
 	
 	/**分页**/
 	$body.on('_ready',function(e,data){
