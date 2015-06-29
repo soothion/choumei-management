@@ -410,6 +410,14 @@ legend{
 	text-align:left;
 	border:1px solid #E6EAF2;
 }
+.table-view tbody td:nth-child(odd){
+	width:15%;
+	padding-left:20px;
+}
+.table-view thead td{
+	font-size:18px;
+	padding-left:20px;
+}
 .pager{
 	margin-top:15px;
 	text-align:center;
