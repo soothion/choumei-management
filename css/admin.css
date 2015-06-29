@@ -398,14 +398,14 @@ legend{
 .table{
 	margin:15px 0;
 }
-.table table{
+.table table,.table-detail table{
 	width:100%;
 	border:1px solid #E6EAF2;
 }
 .table tbody tr:hover{
 	background:#eee;
 }
-.table td,.table th{
+.table td,.table th,.table-detail td,.table-detail th{
 	padding:8px;
 	text-align:left;
 	border:1px solid #E6EAF2;
