@@ -1,2 +1,4 @@
 api/storage/*
 api/composer.lock
+api/composer.json
+api/vendor/*
