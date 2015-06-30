@@ -1,0 +1,319 @@
+<?php namespace App\Http\Controllers;
+
+use App\User;
+use App\RoleUser;
+use App\Permission;
+use Illuminate\Pagination\AbstractPaginator;
+use DB;
+use Event;
+use Excel;
+
+class PermissionController extends Controller{
+	/**
+	 * @api {post} /permission/index 1.权限列表
+	 * @apiName list
+	 * @apiGroup Permission
+	 *
+	 * @apiParam {Number} role_id 可选,角色ID.
+	 * @apiParam {Number} department_id 可选,部门ID.
+	 * @apiParam {Number} status 可选,用户状态.1正常、2停用、3注销.
+	 * @apiParam {Number} city_id 可选,城市ID.
+	 * @apiParam {String} start 可选,起始时间.
+	 * @apiParam {String} end 可选,结束时间.
+	 * @apiParam {String} keyword 可选,搜索关键字,匹配帐号或者姓名.
+	 * @apiParam {Number} page 可选,页数.
+	 * @apiParam {Number} page_size 可选,分页大小.
+	 *
+	 *
+	 * @apiSuccess {Number} total 总数据量.
+	 * @apiSuccess {Number} per_page 分页大小.
+	 * @apiSuccess {Number} current_page 当前页面.
+	 * @apiSuccess {Number} last_page 当前页面.
+	 * @apiSuccess {Number} from 起始数据.
+	 * @apiSuccess {Number} to 结束数据.
+	 * @apiSuccess {String} name 用户姓名.
+	 * @apiSuccess {Number} status 用户状态.1正常、2停用、3注销.
+	 * @apiSuccess {String} created_at 创建时间.
+	 * @apiSuccess {String} slug 操作路径(路由名).
+	 * @apiSuccess {String} description 描述信息.
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "msg": "success",
+	 *	    "data": {
+	 *	        "total": 4,
+	 *	        "per_page": 20,
+	 *	        "current_page": 1,
+	 *	        "last_page": 1,
+	 *	        "from": 1,
+	 *	        "to": 4,
+	 *	        "data": [
+	 *	            {
+	 *	                "title": "",
+	 *	                "result": "1",
+	 *	                "created_at": "0000-00-00 00:00:00",
+	 *	                "slug": "",
+	 *	                "description": null
+	 *	            }
+	 *	        ]
+	 *	    }
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+	public function index()
+	{
+		$param = $this->param;
+		$query = Permission::getQuery();
+
+
+		//状态筛选
+		if(isset($param['status'])&&$param['status']){
+			$query = $query->where('status','=',$param['status']);
+		}
+
+		//起始时间
+		if(isset($param['start'])&&$param['start']){
+			$query = $query->where('created_at','>=',$param['start']);
+		}
+
+		//结束时间
+		if(isset($param['end'])&&$param['end']){
+			$query = $query->where('created_at','<=',$param['end']);
+		}
+
+		if(isset($param['keyword'])&&$param['keyword']){
+			$keyword = '%'.$param['keyword'].'%';
+			$query = $query->where('title','like',$keyword);
+		}
+		$page = isset($param['page'])?max($param['page'],1):1;
+		$page_size = isset($param['page_size'])?$param['page_size']:20;
+
+		//手动设置页数
+		AbstractPaginator::currentPageResolver(function() use ($page) {
+		    return $page;
+		});
+		$fields = array(
+				'id',
+				'title',
+				'status',
+				'created_at',
+				'slug',
+				'description'
+			);
+		//分页
+	    $result = $query->select($fields)->paginate($page_size)->toArray();
+	    unset($result['next_page_url']);
+	    unset($result['prev_page_url']);
+	    return $this->success($result);
+
+	}	
+
+
+	/**
+	 * @api {post} /permission/export 5.导出权限
+	 * @apiName export
+	 * @apiGroup Permission
+	 *
+	 * @apiParam {Number} role_id 可选,角色ID.
+	 * @apiParam {Number} department_id 可选,部门ID.
+	 * @apiParam {Number} status 可选,用户状态.1正常、2停用、3注销.
+	 * @apiParam {Number} city_id 可选,城市ID.
+	 * @apiParam {String} start 可选,起始时间.
+	 * @apiParam {String} end 可选,结束时间.
+	 * @apiParam {String} keyword 可选,搜索关键字,匹配帐号或者姓名.
+	 *
+	 * 
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+	public function export()
+	{
+		$param = $this->param;
+		$query = Permission::getQuery();
+
+
+		//状态筛选
+		if(isset($param['status'])&&$param['status']){
+			$query = $query->where('status','=',$param['status']);
+		}
+
+		//起始时间
+		if(isset($param['start'])&&$param['start']){
+			$query = $query->where('created_at','>=',$param['start']);
+		}
+
+		//结束时间
+		if(isset($param['end'])&&$param['end']){
+			$query = $query->where('created_at','<=',$param['end']);
+		}
+
+		if(isset($param['keyword'])&&$param['keyword']){
+			$keyword = '%'.$param['keyword'].'%';
+			$query = $query->where('name','like',$keyword);
+		}
+
+	    $result = $query->get();
+	    foreach ($result as $key => $value) {
+	    	$result[$key] = (array)$value;
+	    }
+		// 触发事件，写入日志
+	    Event::fire('permission.export');
+		
+		//导出excel	   
+		$title = 'permissions-'.date('Y-m-d');
+	    Excel::create($title, function($excel) use($result){
+		    $excel->sheet('Sheet1', function($sheet) use($result){
+			        $sheet->fromArray($result);
+			    });
+		})->export('xls');
+
+	}
+
+	/**
+	 * @api {post} /permission/create 4.创建权限
+	 * @apiName create
+	 * @apiGroup Permission
+	 *
+	 * @apiParam {Number} inherit_id 继承于.
+	 * @apiParam {String} name 权限标题.
+	 * @apiParam {String} slug 操作路径(路由名).
+	 * @apiParam {String} descrition 描述信息.
+	 * @apiParam {String} note 备注信息.
+	 *
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+	 *		    "result": 1,
+	 *		    "msg": "success",
+	 *		    "data": null
+	 *		}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "权限创建失败"
+	 *		}
+	 */
+	public function create()
+	{
+		$param = $this->param;
+		$permission = Permission::create($param);
+		if($permission)
+		{
+			Event::fire('permission.create',array($permission));
+			return $this->success();
+		}
+			 
+		else 
+			return $this->error('权限创建失败');
+	}
+
+
+	/**
+	 * @api {post} /user/show/:id 2.查看权限
+	 * @apiName show
+	 * @apiGroup Permission
+	 *
+	 * @apiParam {Number} id 必填,用户ID.
+	 *
+	 * @apiSuccess {Number} id ID.
+	 * @apiSuccess {Number} inherit_id 继承于.
+	 * @apiSuccess {String} name 权限标题.
+	 * @apiSuccess {String} slug 操作路径(路由名).
+	 * @apiSuccess {String} descrition 描述信息.
+	 * @apiSuccess {String} note 备注信息.
+	 * @apiSuccess {String} created_at 创建时间.
+	 * @apiSuccess {String} updated_at 更新时间.
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "msg": "success",
+	 *	    "data": {
+	 *	        "id": 1,
+	 *	        "inherit_id": null,
+	 *	        "name": "查看用户列表1",
+	 *	        "slug": null,
+	 *	        "result": "1",
+	 *	        "description": "查看用户列表",
+ 	 *	        "note": null,
+ 	 *	        "created_at": "2015-05-05 06:28:18",
+	 *	        "updated_at": "2015-05-08 06:28:20"
+	 *	    }
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+	public function show($id)
+	{
+		$user = Permission::find($id);
+		return $this->success($user);
+	}
+
+
+	/**
+	 * @api {post} /permission/update/:id 3.更新权限
+	 * @apiName update
+	 * @apiGroup Permission
+	 *
+	 * @apiParam {Number} inherit_id 继承于.
+	 * @apiParam {String} name 权限标题.
+	 * @apiParam {String} slug 操作路径(路由名).
+	 * @apiParam {String} descrition 描述信息.
+	 * @apiParam {String} note 备注信息.
+	 *
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+	 *		    "result": 1,
+	 *		    "msg": "success",
+	 *		    "data": {
+	 *		    }
+	 *		}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "没有符合条件数据"
+	 *		}
+	 */
+	public function update($id)
+	{
+		$param = $this->param;
+		$permission = Permission::find($id);
+		if($permission->update($param))
+		{
+			Event::fire('permission.update',array($permission));
+			return $this->success();
+		}
+		else 
+			return $this->error('更新失败');
+
+	}
+
+
+
+}
