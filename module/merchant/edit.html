@@ -75,6 +75,14 @@
 				$this.next().attr('placeholder','请输入商户名');
 			}
 		})
+		lib.Form.prototype.validate=function(){
+			$(this.selector).blur();
+			var $form=$(this.el);
+			if($form.find('.control-help:visible').length==0){
+				var data=this.getFormData();
+				$form.trigger('save',data);
+			}
+		};
 	</script>
   </body>
 </html>
