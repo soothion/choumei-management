@@ -7,20 +7,20 @@
   </head>
   <body>
 	<div class="breadcrumb">
-		<a href="ui.html">一级导航</a><span>&gt;</span><a href="ui.html">二级导航</a><span>&gt;</span>用户管理
+		<a href="ui.html">商户管理</a><span>&gt;</span><a href="index.html">商户列表</a><span>&gt;</span>添加商户
 	</div>
 	<div class="wrapper">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="/data/post.json">
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>商户名称</label>
+				<label class="control-label" for=""><span class="red">*</span>商户编号</label>
 				<div class="control">
-					<input type="text"  required  name="mobile">
+					<input type="text"  required  name="mobile" maxlength="6">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>商户名称</label>
 				<div class="control">
-					<input type="text"  required name="mobile">
+					<input type="text"  required name="mobile" maxlength="16">
 				</div>
 			</div>
 			<div class="control-group">
@@ -38,26 +38,26 @@
 			<div class="control-group">
 				<label class="control-label" for="">联系座机</label>
 				<div class="control">
-					<input type="text"  required pattern="nubmer" name="mobile" style="width:55px;min-width:0"><input style="width:185px;min-width:0" type="text"  required pattern="nubmer" name="mobile">
+					<input type="text"   pattern="nubmer" name="mobile" style="width:55px;min-width:0"><input style="width:185px;min-width:0" type="text"  pattern="nubmer" name="mobile">
 					<span class="control-help"></span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="">邮箱地址</label>
 				<div class="control">
-					<input type="text"  required pattern="email" name="mobile">
+					<input type="text"  name="mobile">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="">详细地址</label>
 				<div class="control">
-					<textarea name=""></textarea>
+					<textarea name="" placeholder="详细街道信息"></textarea>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="">成立日期</label>
 				<div class="control">
-					<input type="date"  required >
+					<input type="date" min="1950-01-01" max="2030-01-01" format="YYYY-MM-DD">
 				</div>
 			</div>
 			<div class="control-group">
@@ -75,6 +75,14 @@
 				$this.next().attr('placeholder','请输入商户名');
 			}
 		})
+		lib.Form.prototype.validate=function(){
+			$(this.selector).blur();
+			var $form=$(this.el);
+			if($form.find('.control-help:visible').length==0){
+				var data=this.getFormData();
+				$form.trigger('save',data);
+			}
+		};
 	</script>
   </body>
 </html>
