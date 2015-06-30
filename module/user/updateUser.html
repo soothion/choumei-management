@@ -1,105 +1,109 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="format-detection" content="telephone=no">
-        <title>臭美管理后台</title>
-        <script src="../../js/include.js"></script>
-        <link rel="stylesheet" href="user.css" />
-    </head>
-    <body>
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="../../js/include.js"></script>
+  </head>
+  <body>
         <div class="breadcrumb">
-            <a class="link" href="ui.html">一级导航</a><span>&gt;</span><a class="link" href="ui.html">二级导航</a><span>&gt;</span>用户修改
-        </div>
-        <div class="wrapper">
-            <form novalidate="" method="post" class="form-vertical" data-role="form" action="/data/post.json">
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>登陆账号：</label>
-                    jiajia
-                    <label class="control-label" for=""><span class="red">*</span>用户姓名：</label>
+        用户修改
+    </div>
+    <div class="wrapper">
+        <form novalidate method="post" class="form-vertical" data-role="form" action="/data/post.json">
+            <div class="control-group">
+                <label class="control-label" for="">登录账号</label>
+                <div class="control">
+                    choumei.cn
+                    <span class="space"></span>用户姓名<span class="space"></span>
                     郑嘉嘉
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>手机号码：</label>
-                    <div class="control">
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>联系手机</label>
+                 <div class="control">
                         <input type="text" patternmsg="手机号码输入不正确" pattern="mobile" requiredmsg="请输入手机号码" required="" name="mobile"><span class="control-help" style="display: none;">请输入手机号码</span>
                     </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>所属部门：</label>
-                    <select class="select" >
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>所属部门</label>
+                <div class="control">
+                    <select disabled required name="city" class="select" >
                         <option value="1">深圳</option>
                         <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
+                        <option value="3">北京</option>   
                     </select>
-                    <label class="control-label" for=""><span class="red">*</span>职位</label>
-                    <select class="select">
+                    <span class="space"></span><span class="red">*</span>职位<span class="space"></span>
+                    <select disabled required name="city" class="select" >
                         <option value="1">深圳</option>
                         <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
+                        <option value="3">北京</option>   
                     </select>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>所属城市：：</label>
-                    <select class="select" >
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>所属城市</label>
+                <div class="control">
+                    <select disabled required name="city" class="select" >
                         <option value="1">深圳</option>
                         <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
+                        <option value="3">北京</option>   
                     </select>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>用户状态：</label>
-                    <select class="select" >
-                        <option value="1">深圳</option>
-                        <option value="2">上海</option>
-                        <option value="3">北京</option>
-                        <option value="4">天津</option>
-                        <option value="5">广州</option>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>用户状态</label>
+                <div class="control">
+                    <select disabled required name="city" class="select" >
+                        <option value="1">正常</option>
+                        <option value="2">停用</option>
                     </select>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>配置角色：</label>
+            </div>
+             <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>配置权限：</label>
                     <div class="control">
                         <input type="checkbox" value="1" class="checkbox" id="checkbox1" name="love"><label for="checkbox1">基本角色（默认）</label>
+
                         <input type="checkbox" value="2" class="checkbox" id="checkbox2" name="love"><label for="checkbox2">系统管理员</label>
+
                         <input type="checkbox" value="3" class="checkbox" id="checkbox3" name="love"><label for="checkbox3">商务人员</label><br/>
+
                         <input type="checkbox" value="4" class="checkbox" id="checkbox4" name="love"><label for="checkbox4">产品经理</label>
+
                         <input type="checkbox" value="5" class="checkbox" id="checkbox5" name="love"><label for="checkbox5">商务主管</label>
-                        <div class="control-help"></div>
+                         <div class="control-help"></div>
                     </div>
                 </div>
-                <div class="control-group">
-                    <legend class="add-title" style="margin-left:70px;">
-                        <div class="control" >
-                            <input type="checkbox" class="checkbox" id="checkbox6" name="6"><label>重置密码</label>
-                            <div class="control-help"></div>
-                        </div>
-                    </legend>
-                    <div class="control-group">
-                        <label class="control-label" for=""><span class="red">*</span>登陆密码：</label>
-                     <div class="control">
-                     <input id="password" type="password" patternmsg="6-20位数字和字母组合" pattern="password" requiredmsg="请输入密码" required="" placeholder="6-20位数字和字母组合" name="password">
-                     <span class="control-help" style="display: none;">请输入密码</span>
-                     </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for=""><span class="red">*</span>确认登录密码：</label>
-                       <div class="control"><input type="password" match="password" matchmsg="确认密码与密码不一致" pattern="password" requiredmsg="请输入确认密码" required="" name="confirm"></div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for=""></label>
-                        <div class="control"><button class="btn-primary" type="submit">提交</button><span class="space"></span><button type="reset" class="btn">重置</button></div>
-                    </div>
-                </form>
+            <legend><input class="checkbox" type="checkbox" id="switch" /><label for="switch">修改密码</label></legend>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>新密码：</label>
+                <div class="control">
+                    <input id="password" type="password" patternmsg="6-20位数字和字母组合" pattern="password"  placeholder="6-20位数字和字母组合" name="password" disabled>
+                        <!-- <span class="control-help" style="display: none;">请输入密码</span> -->
+                </div>
             </div>
-        </body>
-    </html>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>确认新密码：</label>
+                <div class="control">
+                    <input type="password" match="password" matchmsg="确认密码与密码不一致" pattern="password"   name="confirm" disabled> 
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""></label>
+                <div class="control"><button class="btn-primary" type="submit">提交</button></div>
+            </div>
+          </form>
+    </div>
+    <script type="text/javascript">
+        $(document.body).on('change','#switch',function(){
+            if($(this).is(':checked')){
+                $('input[type="password"]').removeAttr('disabled');
+            }else{
+                $('input[type="password"]').attr('disabled',true);
+            }
+        })
+    </script>
+  </body>
+</html>
