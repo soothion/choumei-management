@@ -8,11 +8,6 @@
         <meta name="format-detection" content="telephone=no">
         <title>臭美管理后台</title>
         <script src="../../js/include.js"></script>
-    <style>
-.control-group{
-    margin-left:200px;
-}
-    </style>
     </head>
     <body>
         <div class="breadcrumb">
@@ -23,56 +18,75 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款单类型：</label>
                     <div class="control">
-                        <input type="text" required="" value="" >
-                        <span class="control-help" style="display: none;">未填写</span>
+                        <select class="select" style="width:20%;">
+                            <option value="1">预付交易款</option>
+                            <option value="2">上海</option>
+                            <option value="3">北京</option>
+                            <option value="4">天津</option>
+                            <option value="5">广州</option>
+                        </select>
                     </div>
                 </div>
                 <div class="control-group" style="border-bottom:1px solid #C0C0C0 ;width:800px;margin-left:30px;" >
-                    <legend>付款详情</legend> 
+                    <legend>付款详情</legend>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control">
-                        <input type="text" required="" value="" >
+                        <input type="text" required="" value="" placeholder="店铺名称">
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
-                    <input type="text" required="" value="" >
+                        <input type="text" required="" value="" placeholder="卡顿美发"disabled>
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
-
-
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款金额：</label>
                     <div class="control">
-                       <input type="text" required="" value="" >
+                        <input type="text" required="" value="" placeholder="预付交易款金额" pattern="float" >
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>换算消费额：</label>
                     <div class="control">
-                         <input type="text" required="" value="" >
+                        <input type="text" required="" value="" placeholder="换算消费额" pattern="float" >
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款日期：</label>
                     <div class="control">
-                        <input type="text" required="" value="" >
+                        <input type="date" id="startTime" />
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""></label>
                     <div class="control">
-                    <button class="btn-primary" type="submit" style="margin-left:100px;">提交</button> </div>
+                    <button class="btn-primary" type="submit">提交</button> </div>
                 </div>
             </form>
         </div>
     </body>
 </html>
+<!-- <script type="text/javascript">//得到当前日期
+       
+        $(document).ready(function(){
+            $('#startTime').datebox('setValue', formatterDate(new Date()));
+        });
+         formatterDate = function(date) {
+        var day = date.getDate() > 9 ? date.getDate() : "0" + date.getDate();
+        alert(day);
+        var month = (date.getMonth() + 1) > 9 ? (date.getMonth() + 1) : "0"
+        + (date.getMonth() + 1);
+         alert(month);
+         alert(month + '-' + day);
+      $('#startTime').text(month + '-' + day);
+
+        };
+</script> -->
