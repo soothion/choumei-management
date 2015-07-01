@@ -13,6 +13,7 @@
 
 
 
+
 //权限管理后台接口
 // Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 Route::group(['middleware'], function(){
@@ -95,7 +96,7 @@ Route::group(['middleware'], function(){
 	Route::any('list/permission','ListController@permission');
 	Route::any('list/menu','ListController@menu');
 
-
+	Route::any('merchant/index', 'Merchant\MerchantController@index');
 
 });
 
