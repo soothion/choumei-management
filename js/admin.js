@@ -86,7 +86,6 @@ $(function(){
 	$body.on('_ready',function(e,data){
 		var $pager=$(e.target).find('.pager');
 		data=data.response;
-		console.log(data);
 		if(data.total > 0) {
 			seajs.use('/js/jquery.pagination.js',function (){
 				var query=$.extend({},lib.query);
