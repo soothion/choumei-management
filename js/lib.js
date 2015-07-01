@@ -8,6 +8,12 @@
     var lib = {
         ajax: function (options) {
 			options.url=cfg.getHost()+options.url;
+			if(!options.data){
+				options.data={};
+			}
+			if(localStorage.getItem('token')){
+				options.data.token=localStorage.getItem('token');
+			}
             return $.ajax(options);
         },
 		getSession:function(){
@@ -20,7 +26,7 @@
             getDefault:function(){
                 return {
                     query:lib.query,
-                    session:getSession()
+                    session:lib.getSession()
                 }
             }
         },
@@ -97,11 +103,10 @@
 			}
 		},
         init:function(){
-            lib.query=this.parseQuery(location.search);
-			lib.query._=location.search.replace('?','');
-			var str=location.href.split('#')[1];
-            if(str){
-				$.extend(lib.query,this.parseQuery(str))
+            lib.query={};//this.parseQuery(location.search);
+			lib.query._=location.hash.replace('#','');
+            if(location.hash){
+				$.extend(lib.query,this.parseQuery(location.hash.replace('#','')))
 			}
         }
     }

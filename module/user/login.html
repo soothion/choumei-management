@@ -19,9 +19,9 @@
 					<h4 class="tc">臭美管理后台登录</h4>
 					<ul>
 						<div class="control-help"></div>
-						<li><input type="text" placeholder="帐号" id="account" autofocus="true" /></li>
-						<li><input type="password" placeholder="密码" id="password"/></li>
-						<li><input type="text" class="code" placeholder="验证码" id="code" autocomplete="off" /></li>
+						<li><input type="text" placeholder="帐号" id="account" autofocus="true" value="soothion" /></li>
+						<li><input type="password" placeholder="密码" id="password" value="123456"/></li>
+						<li><input type="text" class="code" placeholder="验证码" id="code" autocomplete="off" /><img id="codeImage" /></li>
 						<li><button type="submit" class="btn-primary">登录</button></li>
 					</ul>
 				</form>
@@ -29,6 +29,29 @@
 		</div>
 		<script type="text/javascript">
 			$(function(){
+				function uuid(len, radix) {
+					var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+					var uuid = [],i,radix = radix || chars.length;
+					if (len) {
+						for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
+					} else {
+						var r;
+						uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
+						uuid[14] = '4';
+						for (i = 0; i < 36; i++) {
+							if (!uuid[i]) {
+								r = 0 | Math.random() * 16;
+								uuid[i] = chars[(i == 19) ? (r & 0x3) | 0x8 : r];
+							}
+						}
+					}
+					return uuid.join('');
+				}
+				 var uniqid = uuid(32);
+				$('#codeImage').attr('src',cfg.getHost()+'captcha?uniqid='+uniqid).on('click',function(){
+					uuid = uuid(32);
+					this.src=cfg.getHost()+'captcha?uniqid='+uniqid;
+				});
 				$('form').on('submit',function(e){
 					var account=$.trim($('#account').val());
 					var password=$.trim($('#password').val());
@@ -47,6 +70,21 @@
 						return false;
 					}
 					help.hide();
+					$('.btn-primary').text('正在登录...');
+					lib.ajax({
+						url:'login',
+						type:'POST',
+						data: {username: account, password: password, captcha: code,uniqid:uniqid },
+						success:function(data){
+							if(data.result==1){
+								localStorage.setItem('token',data.data.token);
+								location.href='/module/index.html';
+							}else{
+								$('.btn-primary').text('登录');
+								help.show().text('帐号或者密码错误');
+							}
+						}
+					})
 					e.preventDefault();
 				});
 			});

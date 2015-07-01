@@ -13,19 +13,39 @@
 			<div class="flex-box">
 				<div class="flex-item">
 					<form data-role="hash">
-						角色名称<input type="text" /><span class="space"></span>
-						所属部门 <select name="" class="select"></select><span class="space"></span>
-						状态 <select name="" class="select"></select><span class="space"></span>
-						所属城市 <select name="" class="select"></select><span class="space"></span>
-						添加时间 <input type="date" data-role="start"/>到<input type="date" data-role="end"/>
+						角色名称<input type="text" name="keyword" /><span class="space"></span>
+						所属部门 <select name="department_id" class="select" ajat-one="true" ajat="list/department#domid=department&tempid=department-t" id="department">
+							<script type="text/template" id="department-t">
+								<option value="">全部</option>
+								<%for(var i=0;i<data.length;i++){%>
+									<option value="<%=data[i].id%>"><%=data[i].title%></option>
+								<%}%>
+							</script>
+						</select>
+						
+						<span class="space"></span>
+						状态 <select name="status" class="select">
+							<option value="">全部</option>
+							<option value="1">正常</option>
+							<option value="2">停用</option>
+							<option value="3">注销</option></select><span class="space"></span>
+						所属城市 <select name="city_id" class="select"  ajat-one="true" ajat="list/city#domid=city&tempid=city-t" id="city">
+							<script type="text/template" id="city-t">
+								<option value="">全部</option>
+								<%for(var i=0;i<data.length;i++){%>
+									<option value="<%=data[i].id%>"><%=data[i].title%></option>
+								<%}%>
+							</script>
+						</select><span class="space"></span>
+						添加时间 <input type="date" name="start" data-role="start"/>到<input name="end" type="date" data-role="end"/>
 						<button class="btn" type="submit">搜索</button>
 						<button class="btn" type="button"><i class="fa fa-file-excel-o"></i> 导出</button>
 					</form>
 				</div>
 				<a class="btn-primary" href="edit.html"><i class="fa fa-plus"></i>新增</a>
 			</div>
-			
-			<div class="table">
+			<div class="table" ajat="role/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
 			<table>
               <thead>
                 <tr>
@@ -39,21 +59,26 @@
                 </tr>
               </thead>
               <tbody>
+				<%var status=["","正常","停用","注销"]%>
+				<%var data=data.data%>
+				<%for(var i=0;i<data.length;i++){%>
                 <tr>
-                  <td>1</td>
-                  <td>yunfei.huang@qq.com800265</td>
-                  <td>15889750625</td>
-                  <td>男</td>
-				  <td></td>
-				  <td>yunfei.huang@qq.com</td>
+                  <td><%=i+1%></td>
+                  <td><%=data[i].name%></td>
+                  <td><%=status[data[i].status]%></td>
+                  <td><%=data[i].department.title%></td>
+				  <td><%=data[i].created_at%></td>
+				  <td><%=data[i].description%></td>
 				  <td>
 					 <a class="link" href="edit.html?id=1000">编辑</a>
 				  </td>
                 </tr>
+				<%}%>
               </tbody>
             </table>
 			<div class="pager">
 			</div>
+			</script>
 		</div>
 	</div>
   </body>

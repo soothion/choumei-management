@@ -1,11 +1,11 @@
-﻿$(function(){
-	/**hash和加载进度条**/
-	lib.ajatCount=0;
-	var $body=$(document.body);
+﻿	lib.ajatCount=0;
 	lib.ajat=function (_protocol) {
-		this.ajatCount++;
+		lib.ajatCount++;
         return new lib.Ajat(_protocol);
     }
+$(function(){
+	/**hash和加载进度条**/
+	var $body=$(document.body);
 	lib.hashchange=function(obj){
 		var temphash=location.hash;
 		var query=$.extend({},lib.query,obj);
@@ -86,15 +86,15 @@
 	$body.on('_ready',function(e,data){
 		var $pager=$(e.target).find('.pager');
 		data=data.response;
-		if(data.total > 0&&data.total>data.pageSize) {
-			seajs.use(location.origin+'/js/jquery.pagination.js',function (){
+		console.log(data);
+		if(data.total > 0) {
+			seajs.use('/js/jquery.pagination.js',function (){
 				var query=$.extend({},lib.query);
-				var pageNo=query.pageNo;
 				delete query._;
-				query.pageNo='__id__';
+				query.page='__id__';
                 $pager.pagination(data.total, {
-					current_page : pageNo-1,
-					items_per_page : data.pageSize,
+					current_page : data.current_page-1,
+					items_per_page : data.per_page,
 					next_text:'>>',
 					prev_text:'<<',
 					num_display_entries: 7,
@@ -105,7 +105,7 @@
 					}
 				});
 				$pager.prepend('共'+data.total+'条&nbsp;');
-				$pager.append('<form data-role="hash"><input type="text" name="pageNo" /><button type="submit" class="go link">go</button></form>');
+				$pager.append('<form data-role="hash"><input type="text" name="page" /><button type="submit" class="go link">go</button></form>');
 			});
 		}
 	});
