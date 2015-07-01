@@ -84,6 +84,53 @@ Route::group(['middleware'], function(){
 			'uses'=>'PermissionController@export'
 		));
 
+
+	 // 店铺结算模块
+    
+    // 列表 搜索
+    Route::any('shop_count/index', array(
+        'as' => 'shop_count.index',
+        'uses' => 'ShopCount\ShopCountController@index'
+    ));
+    // 详情
+    Route::any('shop_count/show/{id}', array(
+        'as' => 'shop_count.show',
+        'uses' => 'ShopCount\ShopCountController@show'
+    ));
+    // 修改
+    Route::any('shop_count/update/{id}', array(
+        'as' => 'shop_count.update',
+        'uses' => 'ShopCount\ShopCountController@update'
+    ));
+    // 新增
+    Route::any('shop_count/create', array(
+        'as' => 'shop_count.create',
+        'uses' => 'ShopCount\ShopCountController@create'
+    ));
+    // 删除
+    Route::any('shop_count/destroy', array(
+        'as' => 'shop_count.destroy',
+        'uses' => 'ShopCount\ShopCountController@destroy'
+    ));
+    
+    // 代收单列表 搜索
+    Route::any('shop_count/delegate_list', array(
+        'as' => 'shop_count.delegate_list',
+        'uses' => 'ShopCount\ShopCountController@delegate_list'
+    ));
+    
+    // 代收单详情
+    Route::any('shop_count/delegate_detail/{id}', array(
+        'as' => 'shop_count.delegate_detail',
+        'uses' => 'ShopCount\ShopCountController@delegate_detail'
+    ));
+    
+    // 往来余额
+    Route::any('shop_count/balance', array(
+        'as' => 'shop_count.balance',
+        'uses' => 'ShopCount\ShopCountController@balance'
+    ));
+
 	//日志模块
 	Route::any('log/index','LogController@index');
 	Route::any('log/export','LogController@export');
