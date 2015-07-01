@@ -19,14 +19,13 @@
                 <div class="flex-item">
                     <form data-role="hash">
                         <div>
-                            <input type="text" placeholder="登陆账号">
-                            <select class="select ">
-                                <option value="1">深圳</option>
-                                <option value="2">上海</option>
-                                <option value="3">北京</option>
-                                <option value="4">天津</option>
-                                <option value="5">广州</option>
+                           <div class="input-group">
+                            <select class="select border-none " id="select">
+                                <option value="1">登录账号</option>
+                                <option value="2">角色名称</option>
                             </select>
+                            <input type="text" class="border-none" placeholder="登录账号">
+                        </div>
                             <label>所属部门</label>
                             <select class="select ">
                                 <option value="1">深圳</option>
@@ -71,6 +70,7 @@
                             <th>状态</th>
                             <th>所属部门</th>
                             <th>所属区域</th>
+                            <th>角色</th>
                             <th><a>添加时间 <i class="fa fa-sort"></i></a></th>
                             <th>操作</th>
                         </tr>
@@ -82,6 +82,7 @@
                   <td>15889750625</td>
                   <td>男</td>
                   <td>11</td>
+                   <td>11</td>
                   <td>1</td>
                   <td>yunfei.huang@qq.com800265</td>
                   <td> <a class="link" href="updateUser.html?id=1000">查看</a></td>
