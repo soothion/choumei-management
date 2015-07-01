@@ -9,43 +9,7 @@
         <link rel="stylesheet" href="../../css/reset.css" />
         <link rel="stylesheet" href="../../css/global.css" />
         <link rel="stylesheet" href="../../css/admin.css" />    
-        <style>
-        .textarea{
-          margin-top: 10px;
-          width: 20%; 
-          min-width: 250px;           
-        }
-
-        .textarea-bar{
-          background-color: #F0F3F8;
-          height: 40px;
-          width: 20%;
-          border: 1px solid #ddd;
-          box-sizing: border-box;
-          line-height: 40px;
-          min-width: 250px;  
-        }
-
-        .area-btn{
-            border-radius: 12px;
-            float: right;
-            margin-top:3px;
-            right:10px;
-        }
-
-        .min-width{
-            min-width:80px;
-            width:6.4%;
-        }
-
-        .area-coor{
-         display:inline-block;
-         font-size:14px;
-         vertical-align:middle;
-         padding-left:15px;
-        }
-
-        </style>    
+        <link rel="stylesheet" href="shop.css" />    
     </head>
 
     <body>
@@ -75,7 +39,7 @@
                 <div class="control-group">
                     <label class="control-label" for="">*所属商户：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" disabled>
                     </div>
                 </div>
 
@@ -84,38 +48,26 @@
                     <select class="select min-width">
                         <option value="1">深圳</option>
                     </select>
-
                     <select class="select min-width">
                         <option value="1">深圳</option>
                     </select>
-
                     <select class="select min-width">
                         <option value="1">深圳</option>
                     </select><br>
-
-                    <textarea class="textarea"></textarea>
+                    <textarea class="textarea" id="address" placeholder="详细街道信息"></textarea>
                     <div class="textarea-bar">
                         <span class="area-coor">地理坐标：</span>
-                        <button class="btn area-btn">
-                            <i class="fa fa-map-marker"></i> 添加坐标
+                        <span id="coorMarker">未标记</span>
+                        <button class="btn area-btn" id="addCoordinate">
+                            <i class="fa fa-map-marker"></i> 
+                            <span>添加坐标</span>
                         </button>
                     </div>
                 </div>
 
- 
-
                 <div class="control-group">
                     <label class="control-label" for="">*所属商圈：</label>
-                    <input type="radio" name="area" class="label" id="area1">
-                    <label for="area1">南山区</label>
-
-                    <input type="radio" name="area" class="label" id="area1">
-                    <label for="area1">南山区</label>
-
-                    <input type="radio" name="area" class="label" id="area1">
-                    <label for="area1">南山区</label>
-
-                    <input type="radio" name="area" class="label" id="area1">
+                    <input type="radio" name="area" class="label">
                     <label for="area1">南山区</label>
                 </div> 
 
@@ -210,13 +162,104 @@
                 </div>                                                                                         
             </form>       
         </div>
-    <script src="../../js/cfg.js"></script>
-    <script src="../../js/jquery.min.js"></script>
-    <script src="../../js/sea.js"></script>
-    <script src="../../js/ejs.js"></script>
-    <script src="../../js/lib.js"></script>
-    <script src="../../js/iscroll.js"></script>
-    <script src="../../js/admin.js"></script>
-    <script src="../../js/frame.js"></script>          
+
+        <div id="pop-wapper" class="hide">
+            <div class="mask"></div>
+            <div class="popup noSelect">
+                <div class="header-wapper">
+                    <span class="pop-tip">标记地理坐标</span>
+                    <span class="pop-close">×</span>
+                </div>
+                <div class="input-group search-wapper">
+                    <input type="text" class="border-none" placeholder="请输入关键字" />
+                    <button type="submit" class="fa fa-search"></button>
+                </div>
+                <div class="map-wapper" id="map-wapper"></div>
+                <div class="map-bar-wapper">
+                    <div class="bar-mark">
+                        <strong>标记位置：</strong>
+                        <span id="pop-geo-coor">未标注</span>
+                    </div>
+                    <div class="bar-group">
+                        <button class="btn">取消</button>
+                        <button class="btn-primary">确定</button>
+                    </div>
+                </div>                                
+            </div>        
+        </div>
+
+        <script src="../../js/cfg.js"></script>
+        <script src="../../js/jquery.min.js"></script>
+        <script src="../../js/sea.js"></script>
+        <script src="../../js/ejs.js"></script>
+        <script src="../../js/lib.js"></script>
+        <script src="../../js/iscroll.js"></script>
+        <script src="../../js/admin.js"></script>
+        <script src="../../js/frame.js"></script>
+        <script src="http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()"></script>
+
+        <script>
+            $("#addCoordinate").on('click',function(){
+                $("#pop-wapper").show();
+            })
+
+            $(".pop-close").on('click',function(){
+                $("#pop-wapper").hide();
+            });
+
+            function renderMap (){
+                $("#addCoordinate").on('click',function(){
+                    var address = $("#address");
+                    var geoCoor = $("#pop-geo-coor").text(address.val());
+                    //在指定的容器内创建地图实例  
+                    var map = new BMap.Map("map-wapper");
+                    //创建一个地理坐标类 
+                    var point = new BMap.Point(113.941893,22.535644);
+                    //初始化地图位置（未进行初始化的地图将不能进行任何操作）
+                    map.centerAndZoom(point,12);
+                    //将平移缩放控件添加到地图上
+                    map.addControl(new BMap.NavigationControl());
+                    //启用滚轮放大缩小功能
+                    map.enableScrollWheelZoom(true);
+                    //根据point创建一个图像标注覆盖物实例
+                    //var mk = new BMap.Marker(point);
+                    //将覆盖物添加到地图中
+                    //map.addOverlay(mk);
+                    //将地图的中心点更改为给定的点
+                    //map.panTo(point);
+                    var marker;
+                    var geolocation = new BMap.Geolocation();
+                    var geoc = new BMap.Geocoder();
+                    geolocation.getCurrentPosition(function(r) {
+                        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                            marker = new BMap.Marker(r.point);
+                            map.addOverlay(marker);
+                            map.panTo(r.point);
+                        }else{
+                            $('#popup-alert').on('click',function(){
+                                lib.popup.alert({text:'暂时无法获取您的位置'})
+                            });
+                        }
+                    },{
+                        enableHighAccuracy: true
+                    });
+                    
+                    var addrPonit = {};
+                    map.addEventListener("click", function(e) {
+                        var point = e.point;
+                        marker = new BMap.Marker(point);
+                        map.clearOverlays();
+                        map.addOverlay(marker);
+                        geoc.getLocation(e.point, function(address) {
+                            var component = address.addressComponents;
+                            addrPonit['text'] = component.street + component.streetNumber;
+                            addrPonit['coor'] = {lng:point.lng,lat:point.lat};
+                            geoCoor.attr({"lat": point.lat,"lng": point.lng});
+                            geoCoor.text(addrPonit.text);
+                        });
+                    });                    
+                });
+            }
+        </script>          
     </body>
 </html>
