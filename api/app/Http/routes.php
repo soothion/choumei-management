@@ -17,7 +17,7 @@
 //权限管理后台接口
 // Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 Route::group(['middleware'], function(){
-	
+
 	//用户模块
 	Route::any('user/index',array(
 			'as'=>'user.index',
@@ -99,63 +99,3 @@ Route::group(['middleware'], function(){
 	Route::any('merchant/index', 'Merchant\MerchantController@index');
 
 });
-
-Route::any('captcha', 'IndexController@captcha');
-Route::any('login', 'IndexController@login');
-Route::any('logout', 'IndexController@logout');
-
-
-
-
-
-
-//消息推送接口
-Route::group(['prefix'=>'push'],function(){
-
-	Route::any('android', array(
-		'as'=>'push.android',
-		'uses'=>'PushController@android'
-	));
-
-	Route::any('ios', array(
-			'as'=>'push.ios',
-			'uses'=>'PushController@ios'
-		));
-
-});
-
-
-
-
-//微信接口
-Route::group(['prefix' => 'wechat'], function(){
-	Route::any('token', array(
-			'as'=>'wechat.token',
-			'uses'=>'WechatController@token'
-		));
-
-	Route::any('ticket', array(
-			'as'=>'wechat.ticket',
-			'uses'=>'WechatController@ticket'
-		));
-
-	Route::any('signature', array(
-			'as'=>'wechat.signature',
-			'uses'=>'WechatController@signature'
-		));	
-
-	Route::any('access_token', array(
-			'as'=>'wechat.access_token',
-			'uses'=>'WechatController@access_token'
-		));
-});
-
-
-Route::any('upload/image','UploadController@image');
-
-Route::any('sms/send','SmsController@send');
-Route::any('sms/callback','SmsController@callback');
-
-
-Route::any('test/wechat','TestController@wechat');
-
