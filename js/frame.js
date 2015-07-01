@@ -59,6 +59,6 @@
 		var $this=$(this);
 		$this.parent().addClass('active').siblings().removeClass('active');
 	});
-	$('.nav-main li,.nav-sub li').on('click',function(){
+	$('.nav-main li').on('click',function(){
 		$(this).addClass('active').siblings().removeClass('active');
 	})
