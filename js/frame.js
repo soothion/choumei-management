@@ -58,8 +58,7 @@
 	$(document).on('click','.menu-category-title',function(e){
 		var $this=$(this);
 		$this.parent().addClass('active').siblings().removeClass('active');
-	})
-	var myScroll = new IScroll('#scroller',{ mouseWheel: true ,checkDOMChanges:true,click:true});
+	});
 	$('.nav-main li,.nav-sub li').on('click',function(){
 		$(this).addClass('active').siblings().removeClass('active');
 	})
