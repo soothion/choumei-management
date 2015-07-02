@@ -34,9 +34,8 @@ class MerchantController extends Controller {
 	 * @apiSuccess {String} phone 电话.
 	 * @apiSuccess {String} email 邮箱.
 	 * @apiSuccess {String} addr 地址.
-	 * @apiSuccess {String} foundingDate 商户成立时间.
+	 * @apiSuccess {String} foundingDate 商户成立时间(时间戳).
 	 * @apiSuccess {String} salonNum 拥有店铺数量.
-	 * @apiSuccess {String} addTime 添加时间戳.
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:
@@ -125,7 +124,7 @@ class MerchantController extends Controller {
 	}
 	
 	/**
-	 * @api {post} /merchant/save/ 2.添加或者修改商户
+	 * @api {post} /merchant/save 2.添加或者修改商户
 	 * @apiName 
 	 * @apiGroup 
 	 *
@@ -138,7 +137,7 @@ class MerchantController extends Controller {
 	 * @apiParam {String} phone 电话.
 	 * @apiParam {String} email 邮箱.
 	 * @apiParam {String} addr 地址.
-	 * @apiParam {String} foundingDate 商户成立时间.
+	 * @apiParam {Number} foundingDate 商户成立时间.
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:
@@ -222,7 +221,7 @@ class MerchantController extends Controller {
 	}
 	
 	/**
-	 * @api {post} /merchant/del/ 3.删除商户
+	 * @api {post} /merchant/del 3.删除商户
 	 * @apiName 
 	 * @apiGroup 
 	 *
@@ -271,7 +270,7 @@ class MerchantController extends Controller {
 	}
 	
 	/**
-	 * @api {post} /merchant/checkMerchantSn/ 4.检测商家编号是否重复
+	 * @api {post} /merchant/checkMerchantSn 4.检测商家编号是否重复
 	 * @apiName 
 	 * @apiGroup 
 	 *
