@@ -16,26 +16,25 @@
         <div class="wrapper">
             <div class="flex-box">
                 <div class="flex-item">
-                    <form data-role="hash">
-                        <div>
-                                添加时间 <input type="date" data-role="start"/>到<input type="date" data-role="end"/>
+                    <form data-role="hash">                    
+                                添加时间 <input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"/>
+								<span class="space"></span>
                             <label>状态</label>
-                            <select class="select ">
-                                <option value="1">深圳</option>
-                                <option value="2">上海</option>
-                                <option value="3">北京</option>
-                                <option value="4">天津</option>
-                                <option value="5">广州</option>
+                            <select class="select" name="status">
+                                <option value="1">正常</option>
+                                <option value="2">注销</option>
+                                <option value="3">停用</option>                            
                             </select>
+							<span class="space"></span>
                             <label>权限名称</label>
-                            <input type="text" placeholder="请输入登陆账号">
-                            <button class="btn">搜索</button>
-                            <button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
-                        </div>
+                            <input type="text" placeholder="请输入登陆账号" name="keyword">
+                            <button class="btn">搜索</button>                                                
                     </form>
+					<form action="permission/export" data-role="export"><button class="btn" type="submit"><i class="fa fa-file-excel-o"></i> 导出</button></form>
                 </div>
             </div>
-            <div class="table">
+            <div class="table" ajat="permission/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
                 <table>
                     <thead>
                         <tr>
@@ -49,31 +48,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>11</td>
-                            <td>1</td>
-                            <td>yunfei.huang@qq.com800265</td>
-                            <td>15889750625</td>
-                            <td>男</td>
-                            <td>
-                                <a class="link" href="updatePower.html?id=1000">查看</a>
-                            </td>
-                        </tr>
+                         <%var status=["","正常","停用","注销"]%>
+				<%var data=data.data%>
+				<%for(var i=0;i<data.length;i++){%>
+                 <tr>
+                 <td><%=i+1%></td>
+                  <td><%=data[i].name%></td>				  
+                  <td><%=status[data[i].status]%></td>
+				  <td><%=data[i].created_at%></td>                   
+				  <td><%=data[i].slug%></td>
+				  <td><%=data[i].description%></td>				  
+                  <td> <a class="link" href="updatePower.html?id=1000">查看</a></td>
+                  </tr>
+				  <%}%>
                     </tbody>
-                </table>
-                <div class="paginator" id="pagination">
-                </div>
-                <script id="rows" type="text/template">
-                                                                                                        <%
-                                                                                                                _.each(data,function(item,index){
-                                                                                                        %>
-                                                                                                        %>
-                                                                                                        <tr>
-                                                                                                            </tr>
-                                                                                                        <% })%>
-                </script>
+                </table>                
                 <div class="pager"> </div>
+				</script>
             </div>
         </div>
     </body>
