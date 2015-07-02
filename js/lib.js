@@ -254,10 +254,14 @@
             return pro.url+(!$.isEmptyObject(pro.query)?'?'+decodeURIComponent($.param(pro.query)):'')+'#'+ decodeURIComponent($.param(pro.custom));
         }
     }
+	Ajat.before=function(){
+		
+	}
     /**
      * ajat自动执行
      */
     $(function(){
+		Ajat.before();
         var ajat=document.body.getAttribute('ajat');
         if(ajat){
             lib.ajat(ajat).render();

@@ -9,6 +9,16 @@
 		}
 		 return data.data;
 	}
+	var loadingend=function(){//触发进度条加载完成
+		lib.ajatCount--;
+		if(lib.ajatCount==0){
+			parent.$('body').trigger('loadingend');
+			$(document.body).off('_ready',loadingend);
+		}
+	}
+	lib.Ajat.before=function(){
+		$(document.body).on('_ready',loadingend);
+	}
 $(function(){
 	/**hash和加载进度条**/
 	var $body=$(document.body);
@@ -32,18 +42,11 @@ $(function(){
 		$(document).scrollTop(0);
 		$body.on('_ready',loadingend);
 	});
-	var loadingend=function(){//触发进度条加载完成
-		lib.ajatCount--;
-		if(lib.ajatCount==0){
-			parent.$('body').trigger('loadingend');
-			$body.off('_ready',loadingend);
-		}
-	}
-	$body.on('_ready',loadingend);
 	
 	if($('[ajat]').length==0){
 		parent.$('body').trigger('loadingend');
 	}
+		
 	$body.on('click','a[href]',function(){//触发加载进度条
 		if(!$(this).attr('target')){
 			parent.$('body').trigger('loading');
