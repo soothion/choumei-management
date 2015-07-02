@@ -3,6 +3,12 @@
 		lib.ajatCount++;
         return new lib.Ajat(_protocol);
     }
+	lib.Ajat.prototype.parseResponse=function(data){
+		if(data.result==0&&data.code==400){
+			parent.location.href="/module/user/login.html";
+		}
+		 return data.data;
+	}
 $(function(){
 	/**hash和加载进度条**/
 	var $body=$(document.body);
@@ -88,8 +94,14 @@ $(function(){
 	}).on('input','input[data-role="start"]',function(){//日期区间
 		var $this=$(this);
 		$this.siblings('input[data-role="end"]').attr('min',$this.val());
-	})
+	});
 	
+	$body.on('_ready',function(e,data){
+		data=data.response;
+		if(data.result==0&&data.code=='400'){
+			parent.location.href="/module/user/login.html";
+		}
+	})
 	/**分页**/
 	$body.on('_ready',function(e,data){
 		var $pager=$(e.target).find('.pager');
