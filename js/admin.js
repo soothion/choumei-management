@@ -21,7 +21,7 @@ $(function(){
 		$(document).scrollTop(0);
 		$body.on('_ready',loadingend);
 	});
-	var loadingend=function(){
+	var loadingend=function(){//触发进度条加载完成
 		lib.ajatCount--;
 		if(lib.ajatCount==0){
 			parent.$('body').trigger('loadingend');
@@ -33,7 +33,7 @@ $(function(){
 	if($('[ajat]').length==0){
 		parent.$('body').trigger('loadingend');
 	}
-	$body.on('click','a[href]',function(){
+	$body.on('click','a[href]',function(){//触发加载进度条
 		if(!$(this).attr('target')){
 			parent.$('body').trigger('loading');
 		}
@@ -64,7 +64,7 @@ $(function(){
 		e.preventDefault();
 	}).on('click','label[data-role="hash"]',function(e){//标签hash提交
 		$(this).closest('form[data-role="hash"]').submit();
-	}).on('submit','form[data-role="export"]',function(e){
+	}).on('submit','form[data-role="export"]',function(e){//导出功能
 		window.open(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#'));
 		e.preventDefault();
 	});
