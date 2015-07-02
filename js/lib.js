@@ -7,7 +7,11 @@
 	EJS.ext = '.html?v=' + cfg.version;
     var lib = {
         ajax: function (options) {
-			options.url=cfg.getHost()+options.url;
+			if(options.url.indexOf('merchant')>-1){
+				options.url='http://192.168.12.91:888/index.php/'+options.url;
+			}else{
+				options.url=cfg.getHost()+options.url;	
+			}
 			if(!options.data){
 				options.data={};
 			}

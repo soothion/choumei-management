@@ -65,6 +65,9 @@ $(function(){
 				}
 			}
 		});
+		if(data.page!=1){
+			data.page=1;
+		}
 		if(lib.hashchange(data)){
 			$(window).trigger('hashchange');
 		}

@@ -9,55 +9,64 @@
 	<div class="breadcrumb">
 		<a href="ui.html">商户管理</a><span>&gt;</span><a href="index.html">商户列表</a><span>&gt;</span>添加商户
 	</div>
-	<div class="wrapper">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="/data/post.json">
+	<div class="wrapper" ajat="<%if(query.id){%>merchant/getMerchantList?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="merchant/save">
+			<input type="hidden" name="id" value="<%=data.id||""%>">
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>商户编号</label>
 				<div class="control">
-					<input type="text"  required  name="mobile" maxlength="6">
+					<input type="text"  required  name="sn" maxlength="6" value="<%=data.sn||""%>">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>商户名称</label>
 				<div class="control">
-					<input type="text"  required name="mobile" maxlength="16">
+					<input type="text"  required name="name" maxlength="16" value="<%=data.name||""%>">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>联系人</label>
 				<div class="control">
-					<input type="text"  required name="mobile">
+					<input type="text"  required name="contact" value="<%=data.contact||""%>">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>联系手机</label>
 				<div class="control">
-					<input type="text"  required pattern="mobile" name="mobile">
+					<input type="text"  required pattern="mobile" name="mobile" value="<%=data.mobile||""%>">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="">联系座机</label>
 				<div class="control">
-					<input type="text"   pattern="number" name="mobile" style="width:55px;min-width:0"><input style="width:185px;min-width:0" type="text"  pattern="number" name="mobile">
+					<%if(data.phone){data.phoneFirst=data.phone.substring(0,4);data.phoneLast=data.phone.substring(4);}%>
+					<input type="text" value="<%=data.phoneFirst||"0755"%>" pattern="number" maxlength="4" style="width:55px;min-width:0" class="phone-first">
+					<input style="width:185px;min-width:0" type="text" value="<%=data.phoneLast%>" pattern="number"  class="phone-last">
+					<input type="hidden" value="<%=data.phone%>" name="phone"/>
 					<span class="control-help"></span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="">邮箱地址</label>
 				<div class="control">
-					<input type="text"  name="mobile">
+					<input type="text"  name="email" value="<%=data.email||""%>" pattern="email">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="">详细地址</label>
 				<div class="control">
-					<textarea name="" placeholder="详细街道信息"></textarea>
+					<textarea name="addr" placeholder="详细街道信息"><%=data.addr||""%></textarea>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="">成立日期</label>
 				<div class="control">
-					<input type="date" min="1950-01-01" max="2030-01-01" format="YYYY-MM-DD">
+				<%if(data.foundingDate){
+					var date=new Date(data.foundingDate);
+					data.foundingDate=date.getFullYear()+"-"+(""+date.getMonth()+1)+"-"+date.getDate();
+				}%>
+					<input type="date" name="foundingDate" min="1950-01-01" max="2030-01-01" format="YYYY-MM-DD" value="<%=data.foundingDate||""%>">
 				</div>
 			</div>
 			<div class="control-group">
@@ -65,6 +74,7 @@
 				<div class="control"><button class="btn-primary" type="submit">提交</button></div>
 			</div>
 		</form>
+		</script>
 	</div>
 	<script type="text/javascript">
 		$('#select').on('change',function(){
@@ -74,7 +84,10 @@
 			}else{
 				$this.next().attr('placeholder','请输入商户名');
 			}
-		})
+		});
+		$('#form').on('keyup','.phone-first,.phone-last',function(){
+			$('input[name="phone"]').val($('.phone-first').val()+$('.phone-last').val());
+		});
 		lib.Form.prototype.validate=function(){
 			$(this.selector).blur();
 			var $form=$(this.el);
