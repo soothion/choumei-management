@@ -551,12 +551,13 @@ input.checkbox:checked+label:before{
 }
 /**nav-step start**/
 .nav-step{
-	font-size:1.2rem;
+	font-size:1.3rem;
 	text-align:center;
 	line-height:50px;
 	height:50px;
 	border-radius:4px;
 	overflow:hidden;
+	background:#eee;
 }
 .nav-step a{
 	display:block;
