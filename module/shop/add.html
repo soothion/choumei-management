@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <title>臭美管理后台</title>
         <link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" href="../../css/reset.css" />
@@ -21,7 +21,7 @@
         </div>
 
         <div class="wrapper">
-            <form novalidate="" method="post" class="form-vertical" data-role="form" action="/data/post.json">
+            <form novalidate="" class="form-vertical" data-role="form">
                 <div class="control-group">
                     <label class="control-label" for="">*店铺编号：</label>
                     <div class="control">
@@ -73,9 +73,12 @@
 
                 <div class="control-group">
                     <label class="control-label" for="">*店铺类型：</label>
-                    <input type="radio" name="sex" class="radio" id="radio1"><label for="radio1">预付款店</label>
-                    <input type="radio" name="sex" class="radio" id="radio2"><label for="radio2">投资店</label>
-                    <input type="radio" name="sex" class="radio" id="radio3"><label for="radio3">金字塔店</label>
+                    <input type="radio" name="sex" class="radio" id="radio1">
+                    <label for="radio1">预付款店</label>
+                    <input type="radio" name="sex" class="radio" id="radio2">
+                    <label for="radio2">投资店</label>
+                    <input type="radio" name="sex" class="radio" id="radio3">
+                    <label for="radio3">金字塔店</label>
                 </div> 
 
                 <div class="control-group">
@@ -165,24 +168,23 @@
 
         <div id="pop-wapper" class="hide">
             <div class="mask"></div>
-            <div class="popup noSelect">
-                <div class="header-wapper">
+            <div class="pop noSelect">
+                <div class="pop-header-wapper">
                     <span class="pop-tip">标记地理坐标</span>
                     <span class="pop-close">×</span>
                 </div>
-                <div class="input-group search-wapper">
-                    <input type="text" class="border-none" placeholder="请输入关键字" />
-                    <button type="submit" class="fa fa-search"></button>
+                <div class="pop-search-wapper">
+                    <input  type="text" id="map-search" placeholder="请输入关键字" />
                 </div>
-                <div class="map-wapper" id="map-wapper"></div>
-                <div class="map-bar-wapper">
+                <div class="pop-map-wapper" id="map-wapper"></div>
+                <div class="pop-bar-wapper">
                     <div class="bar-mark">
                         <strong>标记位置：</strong>
                         <span id="pop-geo-coor">未标注</span>
                     </div>
                     <div class="bar-group">
-                        <button class="btn">取消</button>
-                        <button class="btn-primary">确定</button>
+                        <button class="btn" id="pop-cancel-btn">取消</button>
+                        <button class="btn-primary" id="pop-sure-btn">确定</button>
                     </div>
                 </div>                                
             </div>        
@@ -210,54 +212,110 @@
             function renderMap (){
                 $("#addCoordinate").on('click',function(){
                     var address = $("#address");
-                    var geoCoor = $("#pop-geo-coor").text(address.val());
+                    var geoCoor = $("#pop-geo-coor");
+                    address.val() &&geoCoor.text(address.val());
+                    var addrPonit = {};
                     //在指定的容器内创建地图实例  
                     var map = new BMap.Map("map-wapper");
-                    //创建一个地理坐标类 
-                    var point = new BMap.Point(113.941893,22.535644);
+                    //默认经纬度point
+                    var point = new BMap.Point("113.941893","22.535644");
                     //初始化地图位置（未进行初始化的地图将不能进行任何操作）
-                    map.centerAndZoom(point,12);
+                    map.centerAndZoom(point,11);
                     //将平移缩放控件添加到地图上
                     map.addControl(new BMap.NavigationControl());
                     //启用滚轮放大缩小功能
                     map.enableScrollWheelZoom(true);
-                    //根据point创建一个图像标注覆盖物实例
-                    //var mk = new BMap.Marker(point);
-                    //将覆盖物添加到地图中
-                    //map.addOverlay(mk);
-                    //将地图的中心点更改为给定的点
-                    //map.panTo(point);
-                    var marker;
-                    var geolocation = new BMap.Geolocation();
-                    var geoc = new BMap.Geocoder();
-                    geolocation.getCurrentPosition(function(r) {
-                        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-                            marker = new BMap.Marker(r.point);
-                            map.addOverlay(marker);
-                            map.panTo(r.point);
-                        }else{
-                            $('#popup-alert').on('click',function(){
-                                lib.popup.alert({text:'暂时无法获取您的位置'})
-                            });
-                        }
-                    },{
-                        enableHighAccuracy: true
+                    //此处是一个补丁，由于未知的原因直接new Marker对象添加的标注
+                    //标注的图标很小，所以这里直接用自己的图标
+                    var markerIcon = new BMap.Icon("../../images/marker.png", new BMap.Size(39,25),{
+                        anchor : new BMap.Size(10,25) 
                     });
-                    
-                    var addrPonit = {};
-                    map.addEventListener("click", function(e) {
-                        var point = e.point;
-                        marker = new BMap.Marker(point);
-                        map.clearOverlays();
+
+                    if(address.attr('lng') && address.attr('lat')){
+                        point = new BMap.Point(address.attr('lng'),address.attr('lat'));
+                        var marker = new BMap.Marker(point,{icon:markerIcon}); 
                         map.addOverlay(marker);
-                        geoc.getLocation(e.point, function(address) {
+                        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画  
+                        map.panTo(point);
+                    }else{
+                        var marker = new BMap.Marker(point,{icon:markerIcon}); 
+                        map.addOverlay(marker);
+                        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画                         
+                    }
+
+                    // var geolocationControl = new BMap.GeolocationControl();
+
+                    // geolocationControl.location();
+
+                    // geolocationControl.addEventListener("locationSuccess", function(event){
+                    //     console.log(event.point);
+                    //     var marker = new BMap.Marker(event.point);
+                    //     map.addOverlay(marker);
+                    //     map.panTo(event.point);
+                    // });
+
+                    // geolocationControl.addEventListener("locationError",function(event){
+                    //     lib.popup.alert({text:'暂时无法获取您的位置'})
+                    // });
+
+                    // map.addControl(geolocationControl);
+
+                    var geocoder = new BMap.Geocoder();
+                    //点击地图选择地理位置
+                    map.addEventListener("click", function(event) {
+                        map.clearOverlays();
+                        var marker = new BMap.Marker(event.point,{icon:markerIcon}); 
+                        map.addOverlay(marker);
+                        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                        geocoder.getLocation(event.point, function(address) {
+                            var point = event.point;
                             var component = address.addressComponents;
                             addrPonit['text'] = component.street + component.streetNumber;
                             addrPonit['coor'] = {lng:point.lng,lat:point.lat};
                             geoCoor.attr({"lat": point.lat,"lng": point.lng});
                             geoCoor.text(addrPonit.text);
                         });
-                    });                    
+                    });
+
+                    //建立一个自动完成的查询对象
+                    var search = new BMap.Autocomplete({"input": "map-search","location": map});
+                    search.addEventListener("onconfirm", function(event) {
+                        var area = event.item.value;
+                        var addr = area.province+area.city+area.district+area.street+area.business;
+                        geocoder.getPoint(addr, function(point) {
+                            if (point) {
+                                map.centerAndZoom(point, 16);
+                                map.clearOverlays();
+                                var marker = new BMap.Marker(point,{icon:markerIcon}); 
+                                map.addOverlay(marker);
+                                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                                addrPonit.text = addr;
+                                addrPonit.coor = {lng: point.lng,lat:point.lat};
+                            } else {
+                                addrPonit.text = "";
+                                addrPonit.coor = null;
+                                lib.popup.alert({text:'暂时无法获取您的位置'})
+                            }
+                        })
+                    });
+
+                    $("#pop-cancel-btn").on('click',function(){
+                        $("#pop-wapper").hide();
+                    });
+
+                    $("#pop-sure-btn").on('click',function(){
+                        if(addrPonit.coor){
+                           address.val(addrPonit.text);
+                           address.attr('lng',addrPonit.coor.lng);
+                           address.attr('lat',addrPonit.coor.lat);
+                           $("#coorMarker").text("已标记");
+                           $("#pop-wapper").hide();
+                        }else{
+                           lib.popup.alert({text:'未标记地图'});
+                        }
+                    });
+
+
                 });
             }
         </script>          
