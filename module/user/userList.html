@@ -13,54 +13,60 @@
     <body>
         <div class="breadcrumb">
             <a class="link" href="ui.html">一级导航</a><span>&gt;</span><a class="link" href="ui.html">二级导航</a><span>&gt;</span>用户管理
-        </div>
+        </div>		
         <div class="wrapper">
             <div class="flex-box">
                 <div class="flex-item">
                     <form data-role="hash">
                         <div>
                            <div class="input-group">
-                            <select class="select border-none " id="select">
+                            <select class="select border-none" name="select">
                                 <option value="1">登录账号</option>
                                 <option value="2">角色名称</option>
+								<option value="3">用户姓名</option>
                             </select>
-                            <input type="text" class="border-none" placeholder="登录账号">
+                            <input type="text" class="border-none" placeholder="登录账号" data-role="select" name="select">
                         </div>
+						<span class="space"></span>
                             <label>所属部门</label>
-                            <select class="select ">
-                                <option value="1">深圳</option>
-                                <option value="2">上海</option>
-                                <option value="3">北京</option>
-                                <option value="4">天津</option>
-                                <option value="5">广州</option>
-                            </select>
+                             <select name="department_id" class="select" ajat-one="true" ajat="list/department#domid=department&tempid=department-t" id="department">
+							<script type="text/template" id="department-t">
+								<option value="">全部</option>
+								<%for(var i=0;i<data.length;i++){%>
+									<option value="<%=data[i].id%>"><%=data[i].title%></option>
+								<%}%>
+							</script>
+						</select>
+							<span class="space"></span>
                             <label>状态</label>
-                            <select class="select">
-                                <option value="1">深圳</option>
-                                <option value="2">上海</option>
-                                <option value="3">北京</option>
-                                <option value="4">天津</option>
-                                <option value="5">广州</option>
+                            <select class="select" name="status">
+                                <option value="1">正常</option>
+                                <option value="2">注销</option>
+                                <option value="3">停用</option>                             
                             </select>
+							<span class="space"></span>
                             <label>所属城市</label>
-                            <select class="select">
-                                <option value="1">深圳</option>
-                                <option value="2">上海</option>
-                                <option value="3">北京</option>
-                                <option value="4">天津</option>
-                                <option value="5">广州</option>
+                            <select class="select" name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=city-c" id ="city">
+                               <script type="text/template" id="city-c">
+							   <option value="">全部</option>
+							   <%for(var i=0;i<data.length;i++){%>
+							   <option value="<%=data[i].id%>"><%=data[i].title%></option>
+							   <%}%>
+							   </script>
                             </select>
-                            添加时间 <input type="date" data-role="start"/>到<input type="date" data-role="end"/>
+							<span class="space"></span>
+                            添加时间 <input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"/>
                             <button class="btn">搜索</button>
-                            <button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
-                        </div>
-                    </form>
+							</form>
+                          <form action="user/export" data-role="export"><button class="btn" type="submit"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+                        </div>         
                 </div>
                 <a href="../user/addUser.html">
                 <button class="btn-primary"><i class="fa fa-plus"></i> 新增</button>
                 </a>
             </div>
-            <div class="table">
+           <div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
                 <table>
                     <thead>
                         <tr>
@@ -71,38 +77,32 @@
                             <th>所属部门</th>
                             <th>所属区域</th>
                             <th>角色</th>
-                            <th><a>添加时间 <i class="fa fa-sort"></i></a></th>
+                            <th><a data-role="hash" href="#page=1&sort=<%=query.sort==1?"0":"1"%>">添加时间 <i class="fa fa-sort"></i></a></th>
                             <th>操作</th>
                         </tr>
                     </thead>
                 <tbody>
-                     <tr>
-                  <td>1</td>
-                  <td>yunfei.huang@qq.com800265</td>
-                  <td>15889750625</td>
-                  <td>男</td>
-                  <td>11</td>
-                   <td>11</td>
-                  <td>1</td>
-                  <td>yunfei.huang@qq.com800265</td>
+				<%var status=["","正常","停用","注销"]%>
+				<%var data=data.data%>
+				<%for(var i=0;i<data.length;i++){%>
+                 <tr>
+                 <td><%=i+1%></td>
+                  <td><%=data[i].name%></td>
+				  <td><%=data[i].username%></td>
+                  <td><%=status[data[i].status]%></td>
+                  <td><%=data[i].department%></td>
+				  <td><%=data[i].city%></td>
+				  <td><%=data[i].roles%></td>
+				  <td><%=data[i].created_at%></td>
                   <td> <a class="link" href="updateUser.html?id=1000">查看</a></td>
                   </tr>
+				  <%}%>
                 </tbody>
-            </table>
-            <div class="paginator" id="pagination">
-            </div>
-            <script id="rows" type="text/template">
-                                                                            <%
-                                                                                    _.each(data,function(item,index){
-                                                                            %>
-                                                                            %>
-                                                                            <tr>
-                                                                                </tr>
-                                                                            <% })%>
-            </script>
-            <div class="pager"> </div>
+            </table>		
+           <div class="pager">
+			</div>
+			</script>
         </div>
             </div>
-        
     </body>
 </html>
