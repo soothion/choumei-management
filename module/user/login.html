@@ -81,7 +81,7 @@
 								location.href='/module/index.html';
 							}else{
 								$('.btn-primary').text('登录');
-								help.show().text('帐号或者密码错误');
+								help.show().text(data.msg);
 							}
 						}
 					})

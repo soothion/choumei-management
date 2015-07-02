@@ -35,46 +35,44 @@
 		<div class="breadcrumb">
 		<a href="ui.html">一级导航</a><span>&gt;</span><a href="ui.html">二级导航</a><span>&gt;</span>新增用户
 	</div>
-	<div class="wrapper" ajat="role/update/<%=query.id%>#domid=form&tempid=form-t" id="form">
+	<div class="wrapper" ajat="role/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query._){%>role/update/<%=data.id%><%}else{%>role/create<%}%>">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>role/update/<%=data.id%><%}else{%>role/create<%}%>">
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色名称</label>
 				<div class="control">
-					<input type="text"  required value="" name="mobile">
+					<input type="text" required name="name" value="<%=data.name||""%>">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门</label>
 				<div class="control">
-					<select required name="city" class="select">
-
+					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id%>" id="department" >
+						
 					</select>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属城市</label>
 				<div class="control">
-					<select required name="city" class="select" >
-						<option value="1">深圳</option>
-						<option value="2">上海</option>
-						<option value="3">北京</option>	
+					<select required name="city_id" class="select" ajat="list/city#domid=city&tempid=city-t&sid=<%=data.city_id%>" id="city">
+						
 					</select>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色状态</label>
 				<div class="control">
-					<select required name="city" class="select" >
-						<option value="1">深圳</option>
-						<option value="2">上海</option>
-						<option value="3">北京</option>	
+					<select required name="status" class="select" >
+						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
+						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
+						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
 					</select>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色说明</label>
-				<div class="control"><textarea required></textarea></div>
+				<div class="control"><textarea required name="description"><%=data.description||""%></textarea></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>配置权限</label>
@@ -94,7 +92,7 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>信息备注</label>
-				<div class="control"><textarea  required></textarea></div>
+				<div class="control"><textarea  required name="note"><%=data.note||""%></textarea></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""></label>
@@ -103,8 +101,18 @@
 		  </form>
 		  </script>
 	</div>
+	<script type="text/template" id="department-t">
+		<%for(var i=0;i<data.length;i++){%>
+			<option <%=data[i].id==protocol.custom.sid?"selected":""%> value="<%=data[i].id%>"><%=data[i].title%></option>
+		<%}%>
+	</script>
+	<script type="text/template" id="city-t">
+		<%for(var i=0;i<data.length;i++){%>
+			<option <%=data[i].id==protocol.custom.sid?"selected":""%> value="<%=data[i].id%>"><%=data[i].title%></option>
+		<%}%>
+	</script>
 	<script type="text/javascript">
-		$('.square').on('click',function(){
+		$('.wrapper').on('click','.square',function(){
 			$(this).closest('li').toggleClass('toggle');
 		})
 	</script>

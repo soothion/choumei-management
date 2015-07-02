@@ -103,7 +103,7 @@
 			}
 		},
         init:function(){
-            lib.query={};//this.parseQuery(location.search);
+            lib.query=this.parseQuery(location.search);
 			lib.query._=location.hash.replace('#','');
             if(location.hash){
 				$.extend(lib.query,this.parseQuery(location.hash.replace('#','')))
@@ -476,13 +476,14 @@
 			}
 		},
 		save:function(data){
-			var btn=$(this.el).find('button[type=submit]');
+			var $el=$(this.el);
+			var btn=$el.find('button[type=submit]');
 			if(btn.is(':disabled')) return;
 			btn.attr('disabled',true);
 			lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
 			var self=this;
-			$.ajax({
-				url:this.el.action,
+			lib.ajax({
+				url:$el.attr('action'),
 				data:data,
 				type:this.el.method,
 				success:function(data){
@@ -535,6 +536,7 @@
 				$('.options').remove();
 				$(this).removeClass('select-focus');
 			}).on('mousedown',this.selector,function(e){
+				$('.select').not($(this)).blur();
 				self.instance(this);
 				e.stopPropagation();
 				e.preventDefault();
