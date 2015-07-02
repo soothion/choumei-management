@@ -13,7 +13,7 @@
 			<div class="flex-box">
 				<div class="flex-item">
 					<form data-role="hash">
-						角色名称<input type="text" name="keyword" /><span class="space"></span>
+						角色名称<input type="text" name="keyword"/><span class="space"></span>
 						所属部门 <select name="department_id" class="select" ajat-one="true" ajat="list/department#domid=department&tempid=department-t" id="department">
 							<script type="text/template" id="department-t">
 								<option value="">全部</option>
@@ -35,7 +35,8 @@
 									<option value="<%=data[i].id%>"><%=data[i].title%></option>
 								<%}%>
 							</script>
-						</select><span class="space"></span>
+						</select>
+						<span class="space"></span>
 						添加时间 <input type="date" name="start" data-role="start"/>到<input name="end" type="date" data-role="end"/>
 						<button class="btn" type="submit">搜索</button>
 					</form>
