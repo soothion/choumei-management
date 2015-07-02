@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        <title>臭美管理后台</title>
-        <link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="../../css/reset.css" />
-        <link rel="stylesheet" href="../../css/global.css" />
-        <link rel="stylesheet" href="../../css/admin.css" />    
-        <link rel="stylesheet" href="shop.css" />    
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="../../js/include.js"></script>
+      <link rel="stylesheet" href="shop.css" />    
     </head>
 
     <body>
@@ -19,152 +14,194 @@
             <a class="link" href="ui.html">二级导航</a>
             <span>&gt;</span>新增店铺
         </div>
-
+        
         <div class="wrapper">
+            <ul class="nav-step flex-box">
+                <li class="flex-item active"><a class="arrow">1.店铺基本信息</a></li>
+                <li class="flex-item"><a>2.银行账号信息</a></li>
+                <li class="flex-item"><a>3.准入评估信息</a></li>
+                <li class="flex-item"><a>4.附件上传</a></li>
+            </ul>
+
             <form novalidate="" class="form-vertical" data-role="form">
                 <div class="control-group">
-                    <label class="control-label" for="">*店铺编号：</label>
+                    <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" name="shopNum" placeholder="店铺编号" maxlength="10" required>
                     </div>
                 </div> 
 
                 <div class="control-group">
-                    <label class="control-label" for="">*店铺名称：</label>
+                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" name="shopName" placeholder="店铺名称" maxlength="16" required>
                     </div>
                 </div> 
 
                 <div class="control-group">
-                    <label class="control-label" for="">*所属商户：</label>
+                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
-                        <input type="text" disabled>
+                        <input type="text" name="marchant" placeholder="所属商户" disabled>
                     </div>
                 </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="">*店铺地址：</label>
-                    <select id="province" class="select min-width">
+                <div class="control-group" style="margin-bottom:0">
+                    <label class="control-label" for=""><span class="red">*</span>店铺地址：</label>
+                    <select id="province" name="province" class="select min-width" required>
                         <option value="">省份</option>
                         <option value="1">广东</option>
                     </select>
-                    <select id="city" class="select min-width">
+                    <select id="city" name="city" class="select min-width" required>
                         <option value="">城市</option>
                         <option value="1">深圳</option>
                     </select>
-                    <select id="area" class="select min-width">
+                    <select id="area" name="area" class="select min-width" style="margin-right:10px" required>
                         <option value="">地区</option>
                         <option value="1">南山</option>
-                    </select><br>
-                    <textarea class="textarea" id="address" placeholder="详细街道信息"></textarea>
+                    </select>
+                    <span class="control-help" style="display:none;"></span>
+                </div>
+
+                <div class="control-group" style="margin:0">
+                    <label class="control-label" for=""></label>
+                    <textarea class="textarea" name="address" id="address" placeholder="详细街道信息" 
+                    maxlength="50" required ></textarea>
+                </div>                  
+
+                <div class="control-group" style="margin:0">
+                    <label class="control-label" for=""></label>
                     <div class="textarea-bar">
                         <span class="area-coor">地理坐标：</span>
-                        <span id="coorMarker">未标记</span>
+                        <span  id="coorMarker">未标记</span>                        
                         <button class="btn area-btn" id="addCoordinate">
                             <i class="fa fa-map-marker"></i> 
                             <span>添加坐标</span>
                         </button>
                     </div>
-                </div>
+                    <input id="coorMarkerInput" name="lngLat" type='hidden' required requiredmsg="未标记">
+                    <span class="control-help"  style="display:none;"></span>
+                </div>    
 
                 <div class="control-group">
-                    <label class="control-label" for="">*所属商圈：</label>
-                    <input type="radio" name="area" class="label">
-                    <label for="area1">南山区</label>
+                    <label class="control-label" for=""><span class="red">*</span>所属商圈：</label>
+                    <input type="radio" class="label" id="areaRadio1" name="area">
+                    <label for="areaRadio1" style="margin-right:10px">南山区</label>
+
+                    <input type="radio" class="label" id="areaRadio2" name="area">
+                    <label for="areaRadio2" style="margin-right:10px">福田区</label>
+
+                    <input type="radio" class="label" id="areaRadio3" name="area">
+                    <label for="areaRadio3" style="margin-right:10px">龙岗区</label>
+                    <span class="control-help" style="display:none;"></span>
                 </div> 
 
                 <div class="control-group">
-                    <label class="control-label" for="">*店铺类型：</label>
-                    <input type="radio" name="sex" class="radio" id="radio1">
+                    <label class="control-label" for=""><span class="red">*</span>店铺类型：</label>
+                    <input type="radio" class="radio" id="radio1" name="shopType">
                     <label for="radio1">预付款店</label>
-                    <input type="radio" name="sex" class="radio" id="radio2">
+                    <input type="radio" class="radio" id="radio2" name="shopType">
                     <label for="radio2">投资店</label>
-                    <input type="radio" name="sex" class="radio" id="radio3">
+                    <input type="radio" class="radio" id="radio3" name="shopType">
                     <label for="radio3">金字塔店</label>
+                    <span class="control-help" style="display:none;"></span>
                 </div> 
 
                 <div class="control-group">
-                    <label class="control-label" for="">*合同日期：</label>
-                    <select class="select min-width">
-                        <option value="1">深圳</option>
+                    <label class="control-label" for=""><span class="red">*</span>合同编号：</label>
+                    <div class="control">
+                        <input type="text" name="contractNum" placeholder="合同编号" maxlength="16" required>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>合同日期：</label>
+                    <div class="control">
+                        <input type="date" name="contractDate" required min="1950-01-01" max="2030-01-01">
+                    </div>
+                </div>  
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>合同限期：</label>
+                    <select class="select min-width" name="contractLimitY">
+                        <option value="0">0年</option>
+                        <option value="1">1年</option>
+                        <option value="2">2年</option>
+                        <option value="3" selected="true">3年</option>
+                        <option value="4">4年</option>
+                        <option value="5">5年</option>
+                        <option value="6">6年</option>
+                        <option value="7">7年</option>
+                        <option value="8">8年</option>
+                        <option value="9">9年</option>
+                        <option value="10">10年</option>
                     </select>
 
-                    <select class="select min-width">
-                        <option value="1">深圳</option>
-                    </select>
-
-                    <select class="select min-width">
-                        <option value="1">深圳</option>
+                    <select class="select min-width" name="contractLimitM">
+                        <option value="0" selected="true">0月</option>
+                        <option value="1">1月</option>
+                        <option value="2">2月</option>
+                        <option value="3">3月</option>
+                        <option value="4">4月</option>
+                        <option value="5">5月</option>
+                        <option value="6">6月</option>
+                        <option value="7">7月</option>
+                        <option value="8">8月</option>
+                        <option value="9">9月</option>
+                        <option value="10">10月</option>
+                        <option value="9">11月</option>
                     </select>
                 </div> 
 
-                <div class="control-group">
-                    <label class="control-label" for="">*合同限期：</label>
-                    <select class="select min-width">
-                        <option value="1">深圳</option>
-                    </select>
-
-                    <select class="select min-width">
-                        <option value="1">深圳</option>
-                    </select>
-                </div> 
 
                 <div class="control-group">
-                    <label class="control-label" for="">*合同编号：</label>
+                    <label class="control-label" for=""><span class="red">*</span>联系人：</label>
                     <div class="control">
-                        <input type="text">
-                    </div>
-                </div> 
-
-                <div class="control-group">
-                    <label class="control-label" for="">*联系人：</label>
-                    <div class="control">
-                        <input type="text">
+                        <input type="text" name="linkman" placeholder="联系人" maxlength="8" required>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="">*联系电话：</label>
+                    <label class="control-label" for=""><span class="red">*</span>联系电话：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" name="linkPhone" placeholder="11位有效手机号码" 
+                        maxlength="11" required>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="">*店铺电话：</label>
+                    <label class="control-label" for=""><span class="red">*</span>店铺电话：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" name="shopPhone" placeholder="店铺电话" maxlength="12" required>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="">*法人代表：</label>
+                    <label class="control-label" for=""><span class="red">*</span>法人代表：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" name="legalPerson" placeholder="法人代表" maxlength="8" required>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="">*法人电话：</label>
+                    <label class="control-label" for=""><span class="red">*</span>法人电话：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" name="legalPhone" placeholder="11位有效手机号码" 
+                        maxlength="11" required>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="">*业务代表：</label>
-                    <select class="select" style="width:20%;min-width:250px">
-                        <option value="1">深圳</option>
+                    <label class="control-label" for=""><span class="red">*</span>业务代表：</label>
+                    <select class="select defalut-width" name="businessMan" required>
+                        <option value="">请选择</option>
+                        <option value="1">刘大运</option>
                     </select>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""></label>
                     <button class="btn" style="margin-right:20px">预览</button>
-                    <a href="bank.html">
-                        <button class="btn-primary">下一步</button>
-                    </a>
+                    <button class="btn-primary">下一步</button>
                 </div>                                                                                         
             </form>       
         </div>
@@ -177,7 +214,7 @@
                     <span class="pop-close">×</span>
                 </div>
                 <div class="pop-search-wrapper">
-                    <input  type="text" id="map-search" placeholder="请输入关键字" />
+                    <input  type="text" placeholder="" id="map-search" placeholder="请输入关键字" />
                 </div>
                 <div class="pop-map-wrapper" id="map-wrapper"></div>
                 <div class="pop-bar-wrapper">
@@ -192,131 +229,8 @@
                 </div>                                
             </div>        
         </div>
-
-        <script src="../../js/cfg.js"></script>
-        <script src="../../js/jquery.min.js"></script>
-        <script src="../../js/sea.js"></script>
-        <script src="../../js/ejs.js"></script>
-        <script src="../../js/lib.js"></script>
-        <script src="../../js/iscroll.js"></script>
-        <script src="../../js/admin.js"></script>
-        <script src="../../js/frame.js"></script>
-        <script src="http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()"></script>
-
-        <script>
-            $("#addCoordinate").on('click',function(){
-                $("#pop-wrapper").show();
-            })
-
-            $(".pop-close").on('click',function(){
-                $("#pop-wrapper").hide();
-            });
-
-            function renderMap (){
-                $("#addCoordinate").on('click',function(){
-                    var address = $("#address");
-                    var geoCoor = $("#pop-geo-coor");
-                    address.val() && geoCoor.text(address.val());
-                    var addrPonit = {};
-                    //在指定的容器内创建地图实例  
-                    var map = new BMap.Map("map-wrapper");
-                    //默认经纬度point
-                    var point = new BMap.Point("113.941893","22.535644");
-                    //初始化地图位置（未进行初始化的地图将不能进行任何操作）
-                    map.centerAndZoom(point,11);
-                    //将平移缩放控件添加到地图上
-                    map.addControl(new BMap.NavigationControl());
-                    //启用滚轮放大缩小功能
-                    map.enableScrollWheelZoom(true);
-                    //此处是一个补丁，由于未知的原因直接new Marker对象添加的标注
-                    //标注的图标很小，所以这里直接用自己的图标
-                    var markerIcon = new BMap.Icon("../../images/marker.png", new BMap.Size(39,25),{
-                        anchor : new BMap.Size(10,25) 
-                    });
-                    //根据point获取address实例
-                    var geocoder = new BMap.Geocoder();
-
-                    function drawMarker(point){
-                        var marker = new BMap.Marker(point,{icon:markerIcon}); 
-                        map.addOverlay(marker);
-                        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画  
-                        //map.panTo(point);                                                
-                    }
-
-                    if(address.attr('lng') && address.attr('lat')){
-                        point = new BMap.Point(address.attr('lng'),address.attr('lat'));
-                        drawMarker(point);
-                        geocoder.getLocation(point, function(addr) {
-                            addrPonit['coor'] = {lng:point.lng,lat:point.lat};
-                            geoCoor.attr({"lat": point.lat,"lng": point.lng});
-                        });                        
-                    }else{
-                        var addr = "";
-                        var prov = $("#province option:selected");
-                        var city = $("#city option:selected");
-                        var area = $("#area option:selected");
-                        if(prov.val()) addr = addr + prov.text()+"省";
-                        if(city.val()) addr = addr + city.text()+"市";
-                        if(area.val()) addr = addr + area.text()+"区";
-                        addr = addr + address.val();
-                        if(addr){
-                            geocoder.getPoint(addr, function(p) {
-                                point = p ? p : point;
-                                drawMarker(point);                       
-                            })                                                                            
-                        }else{
-                            drawMarker(point);                             
-                        }
-                    }
-
-                    //点击地图选择地理位置
-                    map.addEventListener("click", function(event) {
-                        point = event.point;
-                        map.clearOverlays();
-                        drawMarker(point); 
-                        geocoder.getLocation(point, function(addr) {
-                            addrPonit['coor'] = {lng:point.lng,lat:point.lat};
-                            geoCoor.attr({"lat": point.lat,"lng": point.lng});
-                            geoCoor.text(addr.address);
-                        });
-                    });
-
-                    //建立一个自动完成的查询对象
-                    var search = new BMap.Autocomplete({"input": "map-search","location": map});
-                    search.addEventListener("onconfirm", function(event) {
-                        var area = event.item.value;
-                        var addr = area.province+area.city+area.district+area.street+area.business;
-                        geocoder.getPoint(addr, function(point) {
-                            if (point) {
-                                map.centerAndZoom(point, 16);
-                                map.clearOverlays();
-                                drawMarker(point);
-                            } else {
-                                lib.popup.alert({text:'暂时无法获取您的位置'})
-                            }
-                        })
-                    });
-
-                    $("#pop-cancel-btn").off("click");
-
-                    $("#pop-cancel-btn").on('click',function(){
-                        $("#pop-wrapper").hide();
-                    });
-
-                    $("#pop-sure-btn").off("click");
-                    
-                    $("#pop-sure-btn").on('click',function(){
-                        if(addrPonit.coor){
-                           address.attr('lng',addrPonit.coor.lng);
-                           address.attr('lat',addrPonit.coor.lat);
-                           $("#coorMarker").text("已标记");
-                           $("#pop-wrapper").hide();
-                        }else{
-                           lib.popup.alert({text:'未标记地图'});
-                        }
-                    });
-                });
-            }
-        </script>          
+        <script src="http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()">
+        </script>
+        <script src="add.js"></script>
     </body>
 </html>
