@@ -38,6 +38,7 @@
 						<th>联系人</th>
 						<th>联系手机</th>
 						<th>座机与邮箱</th>
+						<th>成立日期</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -54,6 +55,11 @@
 						<td class="colswrap">座机：<%=data[i].phone%> <br />   
 							邮箱：<%=data[i].email%>
 						</td>
+						<%if(data[i].foundingDate){
+						var date=new Date(data[i].foundingDate*1000);
+						data[i].foundingDate=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()+1<10?"0"+(date.getDate()+1):date.getDate()+1);
+						}%>
+						<td><%=data[i].foundingDate||""%></td>
 						<td>
 							<a href="" class="link">+添加店铺</a>
 							<span class="space"></span>
