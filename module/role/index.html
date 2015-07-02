@@ -38,8 +38,8 @@
 						</select><span class="space"></span>
 						添加时间 <input type="date" name="start" data-role="start"/>到<input name="end" type="date" data-role="end"/>
 						<button class="btn" type="submit">搜索</button>
-						<button class="btn" type="button"><i class="fa fa-file-excel-o"></i> 导出</button>
 					</form>
+					<form action="role/export" data-role="export"><button class="btn" type="submit"><i class="fa fa-file-excel-o"></i> 导出</button></form>
 				</div>
 				<a class="btn-primary" href="edit.html"><i class="fa fa-plus"></i>新增</a>
 			</div>
@@ -52,7 +52,7 @@
                   <th>角色姓名</th>
                   <th>角色状态</th>
                   <th>所属部门</th>
-				  <th>添加时间</th>
+				  <th><a data-role="hash" href="#page=1&sort=<%=query.sort==1?"0":"1"%>">添加时间 <i class="fa fa-sort"></i></a></th>
 				  <th>角色说明</th>
 				  <th>操作</th>
                 </tr>

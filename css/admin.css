@@ -517,7 +517,7 @@ input.solid:checked+label,input.solid+label:hover{
 	background-color:#498ae5;
 	color:#fff;
 }
-form[data-role="hash"]{
+form[data-role="hash"],form[data-role="export"]{
 	display:inline;
 }
 .popup-tips-text i.fa{

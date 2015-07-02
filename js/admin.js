@@ -37,7 +37,7 @@ $(function(){
 		if(!$(this).attr('target')){
 			parent.$('body').trigger('loading');
 		}
-	}).on('submit','form[data-role="hash"]',function(e){
+	}).on('submit','form[data-role="hash"]',function(e){//表单hash提交
 		var data={};
 		var fields=$(this).serializeArray();
 		$.each(fields,function(i,field){
@@ -56,17 +56,20 @@ $(function(){
 		}
 		e.stopPropagation();
 		e.preventDefault();
-	}).on('click','a[data-role="hash"]',function(e){
+	}).on('click','a[data-role="hash"]',function(e){//链接hash提交
 		var query=lib.parseQuery($(this).attr('href').replace('#',''));
 		if(lib.hashchange(query)){
 			$(window).trigger('hashchange');
 		}
 		e.preventDefault();
-	}).on('click','label[data-role="hash"]',function(){
+	}).on('click','label[data-role="hash"]',function(e){//标签hash提交
 		$(this).closest('form[data-role="hash"]').submit();
+	}).on('submit','form[data-role="export"]',function(e){
+		window.open(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#'));
+		e.preventDefault();
 	});
 	
-	$body.on('click','.drop-menu-toggle',function(){
+	$body.on('click','.drop-menu-toggle',function(){//下拉菜单
 		var $this=$(this);
 		$this.parent().toggleClass('open');
 	}).on('click','.drop-menu-item',function(){
@@ -75,9 +78,9 @@ $(function(){
 		if($(e.target).closest('.open').length==0){
 			$('.open').removeClass('open');
 		}
-	}).on('click','.tab li',function(){
+	}).on('click','.tab li',function(){//选项卡切换
 		$(this).addClass('active').siblings().removeClass('active');
-	}).on('input','input[data-role="start"]',function(){
+	}).on('input','input[data-role="start"]',function(){//日期区间
 		var $this=$(this);
 		$this.siblings('input[data-role="end"]').attr('min',$this.val());
 	})
