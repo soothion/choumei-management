@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-06-30 10:24:56
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-01 16:30:25
+* @Last Modified time: 2015-07-02 13:47:05
 */
 
 /********************店铺列表***********************/
@@ -143,7 +143,7 @@
   z-index: 1000;
 }
 
-.pop-header-wapper{
+.pop-header-wrapper{
     height: 50px;
     line-height: 50px;
     padding:0 20px;
@@ -170,18 +170,18 @@
     -ms-user-select: none;
     user-select:none;
 }
-.pop-search-wapper{
+.pop-search-wrapper{
   position: absolute;
   top: 60px;
   right: 40px;
   border-radius: 4px;
   z-index: 1001;
 }
-.pop-map-wapper{
+.pop-map-wrapper{
   background:#aaa;
   height:380px;
 }
-.pop-bar-wapper{
+.pop-bar-wrapper{
     height:70px;
     line-height:70px;
 }
