@@ -10,6 +10,11 @@ $(function(){
 		var temphash=location.hash;
 		var query=$.extend({},lib.query,obj);
 		delete query._;
+		for(var name in query){
+			if(!query[name]){
+				delete query[name];
+			}
+		}
 		location.hash='#'+$.param(query);
 		return temphash==location.hash;
 	}
