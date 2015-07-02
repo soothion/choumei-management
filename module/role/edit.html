@@ -35,7 +35,7 @@
 		<div class="breadcrumb">
 		<a href="ui.html">一级导航</a><span>&gt;</span><a href="ui.html">二级导航</a><span>&gt;</span>新增用户
 	</div>
-	<div class="wrapper" ajat="role/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
+	<div class="wrapper" ajat="<%if(query.id){%>role/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>role/update/<%=data.id%><%}else{%>role/create<%}%>">
 			<div class="control-group">
