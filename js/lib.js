@@ -17,7 +17,11 @@
             return $.ajax(options);
         },
 		getSession:function(){
-			localStorage.getItem('session')?JSON.parse(localStorage.getItem('session')):{}
+			return localStorage.getItem('session')?JSON.parse(localStorage.getItem('session')):{}
+		},
+		setSession:function(obj){
+			var session=$.extend(this.getSession(),obj);
+			localStorage.setItem('session',JSON.stringify(session));
 		},
         ejs:{
             render:function(temp,data){

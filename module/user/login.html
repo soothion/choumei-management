@@ -21,7 +21,7 @@
 						<div class="control-help"></div>
 						<li><input type="text" placeholder="帐号" id="account" autofocus="true" value="soothion" /></li>
 						<li><input type="password" placeholder="密码" id="password" value="123456"/></li>
-						<li><input type="text" class="code" placeholder="验证码" id="code" autocomplete="off" /><img id="codeImage" /></li>
+						<li><input type="text" class="code" placeholder="验证码" id="code" autocomplete="off" /><a><img id="codeImage" /></a></li>
 						<li><button type="submit" class="btn-primary">登录</button></li>
 					</ul>
 				</form>
@@ -49,7 +49,7 @@
 				}
 				 var uniqid = uuid(32);
 				$('#codeImage').attr('src',cfg.getHost()+'captcha?uniqid='+uniqid).on('click',function(){
-					uuid = uuid(32);
+					uniqid = uuid(32);
 					this.src=cfg.getHost()+'captcha?uniqid='+uniqid;
 				});
 				$('form').on('submit',function(e){
@@ -78,6 +78,7 @@
 						success:function(data){
 							if(data.result==1){
 								localStorage.setItem('token',data.data.token);
+								lib.setSession({user:{uid:data.data.uid,account:account}});
 								location.href='/module/index.html';
 							}else{
 								$('.btn-primary').text('登录');
