@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Merchant;
 use App\Http\Controllers\Controller;
 use App\Merchant;
 use Illuminate\Pagination\AbstractPaginator;
+use DB;
 
 class MerchantController extends Controller {
 	/**
@@ -218,6 +219,100 @@ class MerchantController extends Controller {
 			return $this->error('商户更新失败');
 		} 
 			
+	}
+	
+	/**
+	 * @api {post} /merchant/del/ 3.删除商户
+	 * @apiName 
+	 * @apiGroup 
+	 *
+	 *@apiParam {Number} id 删除必填,商家ID.
+	 *
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "msg": "",
+	 *	    "data": {
+	 *	    }
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "商户删除失败"
+	 *		}
+	 */	
+	public function del()
+	{
+		$param = $this->param;
+		$query = Merchant::getQuery();
+		
+		$param["id"] = isset($param["id"])?$param["id"]:0;
+		if(!$param["id"])
+		{
+			return $this->error('参数错误');
+		}
+		$save["status"] = 2;//1正常 2删除
+
+		$status = $query->where('id',$param['id'])->update($save);
+
+		if($status)
+		{
+			return $this->success();
+		}	 
+		else
+		{
+			return $this->error('商户删除失败');
+		} 
+		
+	}
+	
+	/**
+	 * @api {post} /merchant/checkMerchantSn/ 4.检测商家编号是否重复
+	 * @apiName 
+	 * @apiGroup 
+	 *
+	 *@apiParam {String} sn 必填商家编号.
+	 *
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "msg": "",
+	 *	    "data": {
+	 *	    }
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "店铺编号重复已经存在"
+	 *		}
+	 */	
+	public function checkMerchantSn()
+	{
+		$param = $this->param;
+		$sn = isset($param["sn"])?trim($param["sn"]):"";	
+
+		if(!$sn)
+		{
+			return $this->error('参数错误');
+		}
+
+		$snNo = $this->getCheckSn($sn);//检测商铺编号
+		if($snNo)
+		{
+			return $this->error('商户编号重复已经存在');
+		}
+		else 
+		{
+			return $this->success();
+		}
 	}
 	
 }

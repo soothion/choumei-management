@@ -12,6 +12,11 @@
 */
 
 
+Route::any('merchant/index', 'Merchant\MerchantController@index');//商户列表
+Route::any('merchant/create', 'Merchant\MerchantController@save');//添加修改商户
+Route::any('merchant/del', 'Merchant\MerchantController@del');//删除商户
+Route::any('merchant/checkMerchantSn', 'Merchant\MerchantController@checkMerchantSn');//检测商户编号
+
 
 
 //权限管理后台接口
@@ -96,6 +101,6 @@ Route::group(['middleware'], function(){
 	Route::any('list/permission','ListController@permission');
 	Route::any('list/menu','ListController@menu');
 
-	Route::any('merchant/index', 'Merchant\MerchantController@index');
+	
 
 });
