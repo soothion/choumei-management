@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-06-30 10:24:56
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-06-30 17:17:24
+* @Last Modified time: 2015-07-02 13:47:05
 */
 
 /********************店铺列表***********************/
@@ -132,18 +132,18 @@
   z-index: 999;
 }
 
-.popup{
+.pop{
   position: fixed;
   min-width: 500px;
   height: 500px;
   left: 30%;
   top: 20%;
   width: 45%;
-  z-index: 1000;
   background-color: #fff;
+  z-index: 1000;
 }
 
-.header-wapper{
+.pop-header-wrapper{
     height: 50px;
     line-height: 50px;
     padding:0 20px;
@@ -170,20 +170,18 @@
     -ms-user-select: none;
     user-select:none;
 }
-.search-wapper{
+.pop-search-wrapper{
   position: absolute;
   top: 60px;
   right: 40px;
-  background-color: white;
   border-radius: 4px;
-  height: 35px;
-  line-height: 35px;
+  z-index: 1001;
 }
-.map-wapper{
+.pop-map-wrapper{
   background:#aaa;
   height:380px;
 }
-.map-bar-wapper{
+.pop-bar-wrapper{
     height:70px;
     line-height:70px;
 }
@@ -198,5 +196,9 @@
 }
 .hide{
     display: none;
+}
+
+.tangram-suggestion-main{
+  z-index : 1001;
 }
 

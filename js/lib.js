@@ -17,7 +17,11 @@
             return $.ajax(options);
         },
 		getSession:function(){
-			localStorage.getItem('session')?JSON.parse(localStorage.getItem('session')):{}
+			return localStorage.getItem('session')?JSON.parse(localStorage.getItem('session')):{}
+		},
+		setSession:function(obj){
+			var session=$.extend(this.getSession(),obj);
+			localStorage.setItem('session',JSON.stringify(session));
 		},
         ejs:{
             render:function(temp,data){
@@ -103,7 +107,7 @@
 			}
 		},
         init:function(){
-            lib.query={};//this.parseQuery(location.search);
+            lib.query=this.parseQuery(location.search);
 			lib.query._=location.hash.replace('#','');
             if(location.hash){
 				$.extend(lib.query,this.parseQuery(location.hash.replace('#','')))
@@ -218,7 +222,7 @@
             if(data.errorLevel=='xhr'){
                 $dom.trigger('exception',data);
                 return true
-            }else if(data.status>400){
+            }else if(data.status>=400){
                 $dom.trigger('exception',data);
                 return true
             }
@@ -250,10 +254,14 @@
             return pro.url+(!$.isEmptyObject(pro.query)?'?'+decodeURIComponent($.param(pro.query)):'')+'#'+ decodeURIComponent($.param(pro.custom));
         }
     }
+	Ajat.before=function(){
+		
+	}
     /**
      * ajat自动执行
      */
     $(function(){
+		Ajat.before();
         var ajat=document.body.getAttribute('ajat');
         if(ajat){
             lib.ajat(ajat).render();
@@ -476,13 +484,14 @@
 			}
 		},
 		save:function(data){
-			var btn=$(this.el).find('button[type=submit]');
+			var $el=$(this.el);
+			var btn=$el.find('button[type=submit]');
 			if(btn.is(':disabled')) return;
 			btn.attr('disabled',true);
 			lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
 			var self=this;
-			$.ajax({
-				url:this.el.action,
+			lib.ajax({
+				url:$el.attr('action'),
 				data:data,
 				type:this.el.method,
 				success:function(data){
@@ -535,6 +544,7 @@
 				$('.options').remove();
 				$(this).removeClass('select-focus');
 			}).on('mousedown',this.selector,function(e){
+				$('.select').not($(this)).blur();
 				self.instance(this);
 				e.stopPropagation();
 				e.preventDefault();

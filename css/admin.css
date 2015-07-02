@@ -549,3 +549,36 @@ input.checkbox:checked+label:before{
 	color:#498ae5;
 	border-color:#498ae5;
 }
+/**nav-step start**/
+.nav-step{
+	font-size:1.3rem;
+	text-align:center;
+	line-height:50px;
+	height:50px;
+	border-radius:4px;
+	overflow:hidden;
+	background:#eee;
+}
+.nav-step a{
+	display:block;
+}
+.nav-step .active a{
+	background:#58A2EC;
+	color:#fff;
+	position:relative;
+}
+.nav-step .arrow{
+	margin-right:25px;
+}
+.nav-step .arrow:after{
+	content:'';
+	width:50px;
+	height:50px;	
+	position:absolute;
+	top:0;
+	right:-14px;
+	background:#58A2EC;
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+/**nav-step end**/
