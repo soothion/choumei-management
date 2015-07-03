@@ -393,7 +393,6 @@
 			var pattern=$target.attr('pattern');
 			if(val&&pattern){
 				var ret=this.regHooks[pattern]||pattern;
-				console.log(typeof ret);
 				if(typeof ret=='string'){
 					var reg=new RegExp(ret);
 					if(!reg.test(val)){
