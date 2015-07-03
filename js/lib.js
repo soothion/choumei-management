@@ -479,7 +479,7 @@
 				self.fail();
 			}).on('input',this.selector,function(e){
 				var $this=$(this);
-				if($this.attr('nospace')!==undefined){
+				if($this.attr('nospace')&&$this.attr('nospace')!==undefined){
 					$this.val($this.val().replace(/\s+/g,''));
 				}
 			});
