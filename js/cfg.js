@@ -1,6 +1,6 @@
 ﻿var cfg={
 	env:'dev',
-	dev:'http://192.168.13.49/',
+	dev:'http://192.168.13.46:8090/',
 	test:'',
 	product:'',
 	getHost:function(){
