@@ -523,9 +523,9 @@
 				$el.trigger('fail',data);
 			}
 		},
-		success:function(){
+		success:function(e,data){
 			lib.popup.tips({
-				text:'<i class="fa fa-check-circle"></i>数据更新成功',
+				text:'<i class="fa fa-check-circle"></i>'+(data.msg||"数据更新成功"),
 				time:2000,
 				define:function(){
 					history.back();
@@ -534,7 +534,7 @@
 		},
 		fail:function(e,data){
 			lib.popup.tips({
-				text:'<i class="fa fa-times-circle"></i>数据更新失败',
+				text:'<i class="fa fa-times-circle"></i>'+(data.msg||"数据更新失败"),
 				time:2000
 			});
 		},
@@ -585,6 +585,9 @@
 				type:this.el.method,
 				success:function(data){
 					$(self.el).trigger('response',data).find('button[type=submit]').attr('disabled',false);;
+				},
+				error:function(){
+					self.fail(null,{})
 				}
 			});
 		}

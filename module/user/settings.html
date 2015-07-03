@@ -64,6 +64,7 @@
 				<div class="control">
 					<%for(var i=0;i<data.roles.length;i++){%>	
 					<input disabled required checked type="checkbox"  class="checkbox" id="checkbox<%=data.roles[i].id%>" ><label for="checkbox<%=data.roles[i].id%>"><%=data.roles[i].name%></label>
+					<input type="hidden" value="<%=data.roles[i].id%>" name="roles" />
 					<%}%>
 				</div>
 			</div>
