@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InsteadReceive extends Model
 {
+
     protected $table = 'instead_receive';
     
     public function merchant(){
@@ -19,4 +20,5 @@ class InsteadReceive extends Model
     {
         return $this->belongsTo(Salon::class);
     }
+    
 }

@@ -145,13 +145,8 @@ Route::group(['middleware'], function(){
     Route::any('shop_count/balance', array(
         'as' => 'shop_count.balance',
         'uses' => 'ShopCount\ShopCountController@balance'
-    ));
-    
-    // 往来余额 详情
-    Route::any('shop_count/balance_detail/{id}', array(
-        'as' => 'shop_count.balance_detail',
-        'uses' => 'ShopCount\ShopCountController@balance_detail'
-    ));
+    ));    
+
 
 	//日志模块
 	Route::any('log/index','LogController@index');
