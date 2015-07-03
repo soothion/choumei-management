@@ -163,10 +163,10 @@
             this.protocol.url=lib.ejs.render({text: url},{});
         },
         setQuery:function(obj){//修改请求参数
-            $.extend(this.protocol.query,obj);
+            this.protocol.query=$.extend(this.protocol.query,obj);
         },
         setCustom:function(obj){//修改自定义配置
-            $.extend(this.protocol.custom,obj);
+            this.protocol.custom=$.extend(this.protocol.custom,obj);
         },
         render: function () {//发送http请求关渲染HTML
             if(this.protocol.url){
@@ -328,7 +328,9 @@
                 this.removeAttribute('ajat-click');
                 this.setAttribute('_ajat',ajat);
             }
-        }).on('_ready',function(e){
+        }).on('change','select[ajat-change]',function(){
+            lib.ajat(this.getAttribute('ajat-change')).render();
+		}).on('_ready',function(e){
 			var $target=$(e.target);
             Ajat.run($target);
             Ajat.sync($target);
@@ -586,7 +588,7 @@
 				success:function(data){
 					$(self.el).trigger('response',data).find('button[type=submit]').attr('disabled',false);;
 				},
-				error:function(){
+				error:function(xhr,code){
 					self.fail(null,{})
 				}
 			});
