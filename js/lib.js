@@ -352,12 +352,24 @@
 	}
 	Form.prototype={
 		selector:'input,textarea,select',
-		regHooks:{
+		hooks:{
 			email:'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
 			mobile:'^1[0-9]{10}$',
 			phone:'^[0-9]{7,8}$',
 			password:'^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$',
-			float:'^[+-]?([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?$',
+			float:function(val){
+				var reg=new RegExp('^[+-]?([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?$');
+				if(reg.test(val)){
+					var arr=val.split('.');
+					if(arr[0].length>12){
+						return false;
+					}else{
+						return true;
+					}
+				}else{
+					return false;
+				}
+			},
 			number:'^[0-9]*[1-9][0-9]*$',
 			percent:function(val){
 				val=parseFloat(val);
@@ -392,7 +404,7 @@
 			//正则校验
 			var pattern=$target.attr('pattern');
 			if(val&&pattern){
-				var ret=this.regHooks[pattern]||pattern;
+				var ret=this.hooks[pattern]||pattern;
 				if(typeof ret=='string'){
 					var reg=new RegExp(ret);
 					if(!reg.test(val)){
