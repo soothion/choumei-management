@@ -159,6 +159,10 @@ Route::group(['middleware'], function(){
 	Route::any('list/permission','ListController@permission');
 	Route::any('list/menu','ListController@menu');
 
-	
+
+	Route::any('captcha', 'IndexController@captcha');
+	Route::any('login', 'IndexController@login');
+	Route::any('logout', 'IndexController@logout');
+
 
 });

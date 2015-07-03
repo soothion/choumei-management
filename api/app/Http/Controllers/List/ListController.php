@@ -201,13 +201,50 @@ class ListController extends Controller{
         foreach ($user->roles as $role) {
         	if($role->status!=1)
         		continue;
-            foreach ($role->permissions()->select(['permission_id as id','inherit_id','title','slug','sort'])->get() as $permission) {
+            foreach ($role->permissions()->select(['permission_id as id','inherit_id','title','slug','sort'])->orderBy('sort','desc')->get() as $permission) {
+                $permission = $permission->toArray();
                 $permissions[] = $permission;  
             }
         }
+        //生成树型结构
+        foreach( array_keys( $permissions ) as $key )
+		{
+		       if( $permissions[$key]['inherit_id'] == null )
+		       {
+		            continue;
+		       }
+		       if( $this->child( $permissions , $permissions[$key] ) )
+		       {
+		            unset( $permissions[$key] );
+		       }
+		}
+		$permissions = array_values($permissions);
         return $this->success($permissions);
 	}
 
+
+	protected function child( &$list , $tree ){
+	    if( empty( $list ) )
+	    {
+	        return false;
+	    }
+	    foreach( $list as $key => $val )
+	    {
+	        if( $tree['inherit_id'] == $val['id'] && $tree['id'] != $tree['inherit_id'] )
+	        {
+	            $list[$key]['child'][] = $tree;
+	            return true;
+	        }
+	        if( isset( $val['child'] ) && is_array( $val['child'] ) && !empty( $val['child'] ) )
+	        {
+	            if( $this->child( $list[$key]['child'] , $tree ) )
+	            {
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
+	}
 
 
 }
