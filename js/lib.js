@@ -390,10 +390,11 @@
 				error.remove();
 				return;
 			}
-			if($target.attr('required')($target.is('input[type="checkbox"]')||$target.is('input[type="radio"]'))){
+			if($target.is('input[type="checkbox"]')||$target.is('input[type="radio"]')){
 				var name=$target.attr('name');
-				if($('input[name="'+name+'"]:checked').length==0){
-					$('input[name="'+name+'"]:last').trigger('error',{type:'required'});
+				var inputs=$('input[name="'+name+'"]');
+				if(inputs.filter(':checked').length==0&&inputs.last().attr('required')){
+					inputs.last().trigger('error',{type:'required'});
 					return;
 				}
 			}
