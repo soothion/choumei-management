@@ -366,7 +366,7 @@
 			this.cfg.patternmsg=this.el.patternmsg||"不正确";
 			this.bindEvent();
 		},
-		validateFields:function(e){
+		validateFields:function(e,eventData){
 			var $target=$(e.target);
 			var val=$.trim($target.val());
 			if($target.is(':disabled')){
@@ -402,6 +402,30 @@
 					return;
 				}
 			}
+			//唯一校验
+			var unique=$target.attr('unique');
+			if(val&&unique&&val!=$target.data('value')){
+				$target.trigger('error',{type:'unique',msg:'正在校验中...'});
+				var self=this;
+				var data={};
+				data[$target.attr('name')]=val;
+				lib.ajax({
+					url:unique,
+					data:data,
+					success:function(data){
+						if(data.result!=1){
+							$target.trigger('error',{type:'unique'});
+						}else{
+							var error=self.getErrorDom($target);
+							error.remove();
+							if(eventData&&eventData.type=='validate'){
+								self.validate(true);
+							}
+						}
+					}
+				});
+				return;
+			}
 			var error=this.getErrorDom($target);
 			error.remove();
 		},
@@ -429,7 +453,19 @@
 			if($target.siblings('.unit').length==1){
 				$relative=$target.siblings('.unit');	
 			}
-			error.show().html(($target.attr('patternmsg')||this.cfg.patternmsg))
+			error.show().html(($target.attr('patternmsg')||this.cfg.patternmsg));
+			if(!error.is(':visible')){
+				$relative.after(error);	
+			}
+		},
+		unique:function(e,data){
+			var $target=$(e.target);
+			var error=this.getErrorDom($target);
+			var $relative=$target;
+			if($target.siblings('.unit').length==1){
+				$relative=$target.siblings('.unit');	
+			}
+			error.show().html((data.msg||$target.attr('uniquemsg')||this.cfg.uniquemsg));
 			if(!error.is(':visible')){
 				$relative.after(error);	
 			}
@@ -478,10 +514,10 @@
 		},
 		bindEvent:function(){
 			var self=this;
-			$(this.el).on('blur',this.selector,function(e){
-				self.validateFields(e);
+			$(this.el).on('blur',this.selector,function(e,data){
+				self.validateFields(e,data);
 			}).on('error',this.selector,function(e,data){
-				self[data.type]&&self[data.type](e);
+				self[data.type]&&self[data.type](e,data);
 			}).on('submit',function(e){
 				self.validate();
 				e.preventDefault();
@@ -500,8 +536,10 @@
 				}
 			});
 		},
-		validate:function(){
-			$(this.selector).blur();
+		validate:function(untrigger){
+			if(!untrigger){
+				$(this.selector).trigger('blur',{type:'validate'});
+			}
 			var $form=$(this.el);
 			if($form.find('.control-help:visible').length==0){
 				var data=lib.getFormData($form);

@@ -16,19 +16,19 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>商户编号</label>
 				<div class="control">
-					<input type="text"  required  name="sn" maxlength="6" value="<%=data.sn||""%>">
+					<input type="text" required  name="sn" maxlength="6" value="<%=data.sn||""%>" unique="merchant/checkMerchantSn" data-value="<%=data.sn||""%>" uniquemsg="此商户编号已经存在">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>商户名称</label>
 				<div class="control">
-					<input type="text"  required name="name" maxlength="16" value="<%=data.name||""%>">
+					<input type="text" required name="name" maxlength="16" value="<%=data.name||""%>">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>联系人</label>
 				<div class="control">
-					<input type="text"  required name="contact" value="<%=data.contact||""%>">
+					<input type="text" required name="contact" value="<%=data.contact||""%>">
 				</div>
 			</div>
 			<div class="control-group">
@@ -77,14 +77,6 @@
 		</script>
 	</div>
 	<script type="text/javascript">
-		$('#select').on('change',function(){
-			var $this=$(this);
-			if($this.val()==1){
-				$this.next().attr('placeholder','请输入店铺名');
-			}else{
-				$this.next().attr('placeholder','请输入商户名');
-			}
-		});
 		$('#form').on('keyup','.phone-first,.phone-last',function(){
 			$('input[name="phone"]').val($('.phone-first').val()+$('.phone-last').val());
 		});
