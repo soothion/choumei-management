@@ -18,13 +18,13 @@
         <div class="wrapper">
             <ul class="nav-step flex-box">
                 <li class="flex-item">
-                    <a data-url="add.html">
+                    <a href="add.html">
                         <i class="fa fa-check-circle"></i>
                         <span>1.店铺基本信息</span>
                     </a>
                 </li>
                 <li class="flex-item">
-                    <a data-url="bank.html">
+                    <a href="bank.html">
                         <i class="fa fa-check-circle"></i>
                         <span>2.银行账号信息</span>
                     </a>
@@ -245,10 +245,6 @@
         </div>  
 
         <script>
-            $(".nav-step a").on('click',function(){
-                location.href = $(this).attr('data-url');
-            });
-
             lib.Form.prototype.save = function(data){             
                 var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
                 shopData = $.extend({},shopData,data);

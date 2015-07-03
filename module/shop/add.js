@@ -2,10 +2,13 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-03 15:19:56
+* @Last Modified time: 2015-07-03 17:40:09
 */
 
 $(document).ready(function(){
+
+    
+
     $("#addCoordinate").on('click',function(){
         $("#pop-wrapper").show();
     })
