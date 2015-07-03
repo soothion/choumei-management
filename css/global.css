@@ -389,7 +389,6 @@ input.label{
 	opacity:0;
 	margin:0;
 	padding:0;
-    margin-right: 5px;
 }
 input.label+label{
 	display:inline-block;

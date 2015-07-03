@@ -17,10 +17,20 @@
 
         <div class="wrapper">
             <ul class="nav-step flex-box">
-                <li class="flex-item"><a><i class="finished"></i><span>1.店铺基本信息</span></a></li>
-                <li class="flex-item"><a><i class="finished"></i><span>2.银行账号信息</span></a></li>
-                <li class="flex-item active"><a class="arrow"><i></i><span>3.准入评估信息</span></a></li>
-                <li class="flex-item"><a><i></i><span>4.附件上传</span></a></li>
+                <li class="flex-item">
+                    <a href="add.html">
+                        <i class="fa fa-check-circle"></i>
+                        <span>1.店铺基本信息</span>
+                    </a>
+                </li>
+                <li class="flex-item">
+                    <a href="bank.html">
+                        <i class="fa fa-check-circle"></i>
+                        <span>2.银行账号信息</span>
+                    </a>
+                </li>
+                <li class="flex-item active"><span class="arrow">3.准入评估信息</span></li>
+                <li class="flex-item"><i></i><span>4.附件上传</span></li>
             </ul>
 
             <form novalidate="" class="form-vertical" data-role="form" style="margin-top:20px">
@@ -208,19 +218,19 @@
 
                 <div class="control-group">
                     <label class="control-label" for="">店铺类型：</label>
-                    <input type="checkbox" name="shop" class="checkbox" id="checkbox1">
+                    <input type="checkbox" name="shop" class="checkbox" value="1" id="checkbox1">
                     <label for="checkbox1">纯社区店</label>
 
-                    <input type="checkbox" name="shop" class="checkbox" id="checkbox2">
+                    <input type="checkbox" name="shop" class="checkbox" value="2" id="checkbox2">
                     <label for="checkbox2">社区商圈店</label>
 
-                    <input type="checkbox" name="shop" class="checkbox" id="checkbox3">
+                    <input type="checkbox" name="shop" class="checkbox" value="3" id="checkbox3">
                     <label for="checkbox3">商圈店</label>
 
-                    <input type="checkbox" name="shop" class="checkbox" id="checkbox4">
+                    <input type="checkbox" name="shop" class="checkbox" value="4" id="checkbox4">
                     <label for="checkbox4">商场店</label>
 
-                    <input type="checkbox" name="shop" class="checkbox" id="checkbox5">
+                    <input type="checkbox" name="shop" class="checkbox" value="5" id="checkbox5">
                     <label for="checkbox5">工作室(写字楼)店</label>
 
                     <span class="control-help" style="display: inline;">请选择</span>
@@ -232,6 +242,15 @@
                     <button class="btn-primary">下一步</button>
                 </div>                 
             </form>
-        </div>   
+        </div>  
+
+        <script>
+            lib.Form.prototype.save = function(data){             
+                var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
+                shopData = $.extend({},shopData,data);
+                sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));
+                location.href = "upload.html";
+            }           
+        </script>               
     </body>
 </html>

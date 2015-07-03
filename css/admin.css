@@ -563,13 +563,20 @@ input.checkbox:checked+label:before{
 	overflow:hidden;
 	background:#eee;
 }
-.nav-step a{
-	display:block;
+
+.nav-step i{
+  font-size: 1.5em;
+  color: #58A2EC;
+  position: relative;
+  top: 3px;
+  margin-right: 5px;
 }
-.nav-step .active a{
+.nav-step .active span{
 	background:#58A2EC;
 	color:#fff;
 	position:relative;
+    display: inline-block;
+    width: 93%;	
 }
 .nav-step .arrow{
 	margin-right:25px;
