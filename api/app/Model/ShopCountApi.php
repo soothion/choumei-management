@@ -1,0 +1,266 @@
+<?php
+/**
+ * 商铺结算相关的功能
+ */
+namespace App;
+
+use App\ShopCount;
+use App\InsteadReceive;
+use App\PrepayBill;
+use Illuminate\Pagination\AbstractPaginator;
+
+class ShopCountApi
+{
+    /**
+     * 统计已消费的信息
+     */
+    public static function countAlreadyCost()
+    {
+        
+    }
+    
+    /**
+     * 已消费的订单结算
+     * @param array $options
+     */
+    public static function countOrder($options)
+    {
+        
+    }
+
+    /**
+     * 结算赏金单
+     * @param array $options
+     */
+    public static function countBounty($options)
+    {
+        
+    }
+    
+    /**
+     * 收到用户的钱
+     * @param array $options
+     */
+    public static function receiveMoney($options)
+    {
+        
+    }
+    
+    /**
+     * 付给商户钱
+     * @param array $option
+     */
+    public static function payMoney($option)
+    {
+        
+    }
+    
+    /**
+     * 搜索预付款信息
+     * @param array $options
+     */
+    public static function searchPrepay($options)
+    {
+        $salon_fields = ['salonid','salonname'];
+        $merchant_fields = ['id','name'];
+        $user_fields = ['id','name'];
+        $prepay_fields = ['id','created_at','merchant_id','salon_id','code','type','uid','pay_money','cost_money','day'];
+        $order_by_fields = ['id','created_at','code','type','pay_money','cost_money','day'];
+
+        $prepay = PrepayBill::where('state','<>',0)->select($prepay_fields);
+        
+        //关键字搜索
+        $salon_condition = null;
+        $merchant_condition = null;
+        if(isset($options['key']) && !empty($options['key']) && isset($options['keyword']) && !empty($options['keyword']))
+        {
+            $key = intval($options['key']);
+            $keyword = "%".str_replace(["%","_"], ["\\%","\\_"], $options['keyword'])."%";
+            if($key == 1)
+            {
+                $salon_condition = ['key'=>'salonname','opera'=>'like','value'=>$keyword];
+            }
+            elseif ($key == 2)
+            {
+                $merchant_condition = ['key'=>'name','opera'=>'like','value'=>$keyword];
+            }
+        }
+        
+        $prepay->with([
+            'user' => function ($q) use($user_fields)
+            {
+                $q->lists($user_fields[0],$user_fields[1]);
+            }
+        ]);
+        
+        $prepay->with([
+            'salon' => function ($q) use($salon_condition,$salon_fields)
+            {
+                if (empty($salon_condition)) {
+                    $q->lists($salon_fields[0],$salon_fields[1]);
+                } else {
+                    $q->where($salon_condition['key'], $salon_condition['opera'], $salon_condition['value'])
+                        ->lists($salon_fields[0],$salon_fields[1]);
+                }
+            }
+        ]);
+        
+        $prepay->with([
+            'merchant' => function ($q) use($merchant_condition,$merchant_fields)
+            {
+                if (empty($merchant_condition)) {
+                    $q->lists($merchant_fields[0],$merchant_fields[1]);
+                } else {
+                    $q->where($merchant_condition['key'], $merchant_condition['opera'], $merchant_condition['value'])
+                        ->lists($merchant_fields[0],$merchant_fields[1]);
+                }
+            }
+        ]);
+        
+        //按时间搜索
+        if(isset($options['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_min'])))
+        {
+            $prepay->where('day',">=",trim($options['pay_time_min']));
+        }
+        if(isset($options['pay_time_max']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_max'])))
+        {
+            $prepay->where('day',"<=",trim($options['pay_time_max']));
+        }
+        
+        //页数
+        $page = isset($options['page'])?max(intval($options['page']),1):1;
+        $size = isset($options['size'])?max(intval($options['size']),1):10;
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
+        
+        //排序
+        if(isset($options['sort_key']) && in_array($options['sort_key'], $order_by_fields))
+        {
+            $order = $options['sort_key'];
+        }
+        else
+        {
+            $order = "created_at";
+        }
+        
+        if(isset($options['sort_type']) && $options['sort_type'] == 1)
+        {
+            $order_by = "ASC";
+        }
+        else
+        {
+            $order_by = "DESC";
+        }
+        
+        $res =  $prepay->orderBy($order,$order_by)->paginate($size)->toArray();
+        unset($res['next_page_url']);
+        unset($res['prev_page_url']);
+        return $res;
+    }
+    
+    /**
+     * 搜索代收单信息
+     * @param array $option
+     */
+    public static function searchInsteadReceive($options)
+    {
+        $salon_fields = ['salonid','salonname'];
+        $merchant_fields = ['id','name'];
+        $instead_receive_fields = ['id','created_at','merchant_id','salon_id','code','type','money','day'];
+        $order_by_fields = ['id','created_at','code','type','money','day'];
+        
+        $instead_receive = InsteadReceive::select($instead_receive_fields);
+        
+        //关键字搜索
+        $salon_condition = null;
+        $merchant_condition = null;
+        if(isset($options['key']) && !empty($options['key']) && isset($options['keyword']) && !empty($options['keyword']))
+        {
+            $key = intval($options['key']);
+            $keyword = "%".str_replace(["%","_"], ["\\%","\\_"], $options['keyword'])."%";
+            if($key == 1)
+            {
+                $salon_condition = ['key'=>'salonname','opera'=>'like','value'=>$keyword];
+            }
+            elseif ($key == 2)
+            {
+                $merchant_condition = ['key'=>'name','opera'=>'like','value'=>$keyword];
+            }
+        }
+        
+        $instead_receive->with([
+            'salon' => function ($q) use($salon_condition,$salon_fields)
+            {
+                if (empty($salon_condition)) {
+                    $q->lists($salon_fields[0],$salon_fields[1]);
+                } else {
+                    $q->where($salon_condition['key'], $salon_condition['opera'], $salon_condition['value'])
+                    ->lists($salon_fields[0],$salon_fields[1]);
+                }
+            }
+        ]);
+        
+        $instead_receive->with([
+            'merchant' => function ($q) use($merchant_condition,$merchant_fields)
+            {
+                if (empty($merchant_condition)) {
+                    $q->lists($merchant_fields[0],$merchant_fields[1]);
+                } else {
+                    $q->where($merchant_condition['key'], $merchant_condition['opera'], $merchant_condition['value'])
+                    ->lists($merchant_fields[0],$merchant_fields[1]);
+                }
+            }
+        ]);
+        
+        //按时间搜索
+        if(isset($options['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_min'])))
+        {
+            $instead_receive->where('day',">=",trim($options['pay_time_min']));
+        }
+        if(isset($options['pay_time_max']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_max'])))
+        {
+            $instead_receive->where('day',"<=",trim($options['pay_time_max']));
+        }
+        
+        //页数
+        $page = isset($options['page'])?max(intval($options['page']),1):1;
+        $size = isset($options['size'])?max(intval($options['size']),1):10;
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
+        
+            //排序
+            if(isset($options['sort_key']) && in_array($options['sort_key'], $order_by_fields))
+            {
+                $order = $options['sort_key'];
+            }
+            else
+            {
+                $order = "created_at";
+            }
+        
+            if(isset($options['sort_type']) && $options['sort_type'] == 1)
+            {
+                $order_by = "ASC";
+            }
+            else
+            {
+                $order_by = "DESC";
+            }
+        
+            $res =  $instead_receive->orderBy($order,$order_by)->paginate($size)->toArray();
+            unset($res['next_page_url']);
+            unset($res['prev_page_url']);
+            return $res;
+    }
+    
+    /**
+     * 搜索商铺往来结算信息
+     * @param array $option
+     */
+    public static function searchShopCount($options)
+    {
+        
+    }
+}

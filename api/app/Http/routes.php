@@ -113,10 +113,15 @@ Route::group(['middleware'], function(){
         'as' => 'shop_count.update',
         'uses' => 'ShopCount\ShopCountController@update'
     ));
+    // 预览
+    Route::any('shop_count/preview', array(
+    'as' => 'shop_count.preview',
+    'uses' => 'ShopCount\ShopCountController@create'
+    ));
     // 新增
     Route::any('shop_count/create', array(
         'as' => 'shop_count.create',
-        'uses' => 'ShopCount\ShopCountController@create'
+        'uses' => 'ShopCount\ShopCountController@store'
     ));
     // 删除
     Route::any('shop_count/destroy', array(
@@ -136,10 +141,16 @@ Route::group(['middleware'], function(){
         'uses' => 'ShopCount\ShopCountController@delegate_detail'
     ));
     
-    // 往来余额
+    // 往来余额 查询
     Route::any('shop_count/balance', array(
         'as' => 'shop_count.balance',
         'uses' => 'ShopCount\ShopCountController@balance'
+    ));
+    
+    // 往来余额 详情
+    Route::any('shop_count/balance_detail/{id}', array(
+        'as' => 'shop_count.balance_detail',
+        'uses' => 'ShopCount\ShopCountController@balance_detail'
     ));
 
 	//日志模块
