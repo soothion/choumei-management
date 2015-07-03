@@ -358,7 +358,11 @@
 			phone:'^[0-9]{7,8}$',
 			password:'^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$',
 			float:'^[+-]?([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?$',
-			number:'^[0-9]*[1-9][0-9]*$'
+			number:'^[0-9]*[1-9][0-9]*$',
+			percent:function(val){
+				val=parseFloat(val);
+				return val>=0&&val<=100;
+			}
 		},
 		init:function(){
 			this.cfg={};
@@ -388,10 +392,20 @@
 			//正则校验
 			var pattern=$target.attr('pattern');
 			if(val&&pattern){
-				var reg=new RegExp(this.regHooks[pattern]||pattern);
-				if(!reg.test(val)){
-					$target.trigger('error',{type:'pattern'});
-					return;
+				var ret=this.regHooks[pattern]||pattern;
+				console.log(typeof ret);
+				if(typeof ret=='string'){
+					var reg=new RegExp(ret);
+					if(!reg.test(val)){
+						$target.trigger('error',{type:'pattern'});
+						return;
+					}
+				}
+				if(typeof ret=='function'){
+					if(!ret(val)){
+						$target.trigger('error',{type:'pattern'});
+						return;
+					}
 				}
 			}
 			//匹配校验
