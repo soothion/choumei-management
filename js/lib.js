@@ -455,7 +455,7 @@
 		},
 		parseResponse:function(data){
 			var $el=$(this.el);
-			if(data.status<400){
+			if(data.result==1){
 				$el.trigger('success',data);
 			}else{
 				$el.trigger('fail',data);
