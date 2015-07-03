@@ -52,19 +52,7 @@ $(function(){
 			parent.$('body').trigger('loading');
 		}
 	}).on('submit','form[data-role="hash"]',function(e){//表单hash提交
-		var data={};
-		var fields=$(this).serializeArray();
-		$.each(fields,function(i,field){
-			if(!data[field.name]){
-				data[field.name]=field.value;
-			}else{
-				if(data[field.name] instanceof Array){
-					data[field.name].push(field.value);
-				}else{
-					data[field.name]=[data[field.name],field.value];
-				}
-			}
-		});
+		var data=lib.getFormData($(this));
 		if(data.page!=1){
 			data.page=1;
 		}
@@ -86,20 +74,9 @@ $(function(){
 		e.preventDefault();
 	}).on('submit','form[data-role="remove"]',function(e){
 		var $this=$(this);
-		lib.popup.confirm({text:'确认删除此数据吗',define:function(){
-			var data={};
-			var fields=$this.serializeArray();
-			$.each(fields,function(i,field){
-				if(!data[field.name]){
-					data[field.name]=field.value;
-				}else{
-					if(data[field.name] instanceof Array){
-						data[field.name].push(field.value);
-					}else{
-						data[field.name]=[data[field.name],field.value];
-					}
-				}
-			});
+		
+		var postRemove=function(){
+			var data=lib.getFormData($this);
 			lib.ajax({
 				url:$this.attr('action'),
 				type:'POST',
@@ -120,8 +97,16 @@ $(function(){
 						});
 					}
 				}
-			})
-		}})
+			});
+		}
+		var title=$this.attr('confirm-title');
+		if(title!=='false'){
+			lib.popup.confirm({text:(title||'确认删除此数据吗'),define:function(){
+				postRemove();
+			}})
+		}else{
+			postRemove();
+		}
 		e.preventDefault();
 	});
 	

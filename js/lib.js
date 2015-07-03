@@ -110,6 +110,22 @@
 				winphone:/(windows phone)/i.test(ua)
 			}
 		},
+		getFormData:function($form){
+			var data={};
+			var fields=$form.serializeArray();
+			$.each(fields,function(i,field){
+				if(!data[field.name]){
+					data[field.name]=field.value;
+				}else{
+					if(data[field.name] instanceof Array){
+						data[field.name].push(field.value);
+					}else{
+						data[field.name]=[data[field.name],field.value];
+					}
+				}
+			});
+			return data;
+		},
         init:function(){
             lib.query=this.parseQuery(location.search);
 			lib.query._=location.hash.replace('#','');
@@ -488,7 +504,7 @@
 			$(this.selector).blur();
 			var $form=$(this.el);
 			if($form.find('.control-help:visible').length==0){
-				var data=this.getFormData();
+				var data=lib.getFormData($form);
 				$form.trigger('save',data);
 			}
 		},
@@ -507,22 +523,6 @@
 					$(self.el).trigger('response',data).find('button[type=submit]').attr('disabled',false);;
 				}
 			});
-		},
-		getFormData:function(){
-			var data={};
-			var fields=$(this.el).serializeArray();
-			$.each(fields,function(i,field){
-				if(!data[field.name]){
-					data[field.name]=field.value;
-				}else{
-					if(data[field.name] instanceof Array){
-						data[field.name].push(field.value);
-					}else{
-						data[field.name]=[data[field.name],field.value];
-					}
-				}
-			});
-			return data;
 		}
 	}
 	lib.Form=Form;
