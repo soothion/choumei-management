@@ -19,7 +19,7 @@
 								<option value="2">手机号搜索</option>
 							</select>
 							<input type="text" name="name" class="border-none" placeholder="请输入店铺名">
-							<input type="text" name="phone" class="border-none hide" placeholder="请输入手机号">
+							<input type="text" name="mobile" class="border-none hide" placeholder="请输入手机号">
 							<button type="submit" class="fa fa-search"></button>
 						</div>
 					</form>
@@ -80,7 +80,7 @@
 		$('#select').on('change',function(){
 			var $this=$(this);
 			var input1=$('input[name="name"]');
-			var input2=$('input[name="phone"]');
+			var input2=$('input[name="mobile"]');
 			if($this.val()==1){
 				input1.show();
 				input2.hide().val('');
