@@ -11,6 +11,11 @@
 |
 */
 
+//welcome view
+Route::any('/', function () {
+    return view('welcome');
+});
+
 
 Route::any('merchant/index', 'Merchant\MerchantController@index');//商户列表
 Route::any('merchant/create', 'Merchant\MerchantController@save');//添加修改商户
