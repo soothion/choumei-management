@@ -390,7 +390,7 @@
 				error.remove();
 				return;
 			}
-			if($target.is('input[type="checkbox"]')||$target.is('input[type="radio"]')){
+			if($target.attr('required')($target.is('input[type="checkbox"]')||$target.is('input[type="radio"]'))){
 				var name=$target.attr('name');
 				if($('input[name="'+name+'"]:checked').length==0){
 					$('input[name="'+name+'"]:last').trigger('error',{type:'required'});
