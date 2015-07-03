@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>臭美管理后台</title>
-        <link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="../../css/reset.css" />
-        <link rel="stylesheet" href="../../css/global.css" />
-        <link rel="stylesheet" href="../../css/admin.css" />    
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="../../js/include.js"></script> 
     </head>
     <body>
         <div class="breadcrumb">
@@ -19,39 +14,53 @@
         </div>
 
         <div class="wrapper">
-            <form novalidate="" method="post" class="form-vertical" data-role="form" action="/data/post.json">
+            <ul class="nav-step flex-box">
+                <li class="flex-item"><a><i class="finished"></i><span>1.店铺基本信息</span></a></li>
+                <li class="flex-item"><a><i class="finished"></i><span>2.银行账号信息</span></a></li>
+                <li class="flex-item active"><a class="arrow"><i></i><span>3.准入评估信息</span></a></li>
+                <li class="flex-item"><a><i></i><span>4.附件上传</span></a></li>
+            </ul>
+
+            <form novalidate=""  class="form-vertical" data-role="form">
                 <div class="control-group">
-                    <label class="control-label" for="">*银行名称：</label>
+                    <label class="control-label" for=""><span class="red">*</span>银行名称：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" name="bankName" placeholder="银行名称" maxlength="16" required>
                     </div>
                 </div> 
 
                 <div class="control-group">
-                    <label class="control-label" for="">*收款人：</label>
+                    <label class="control-label" for=""><span class="red">*</span>收款人：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" name="receiver" placeholder="收款人" maxlength="8"  required>
                     </div>
                 </div> 
 
                 <div class="control-group">
-                    <label class="control-label" for="">*银行卡号：</label>
+                    <label class="control-label" for=""><span class="red">*</span>银行卡号：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" name="bankNum" placeholder="银行卡号" maxlength="20"  
+                        required pattern="^\d{1,20}$" patternMsg="银行卡号有误">
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="">*支行名称：</label>
+                    <label class="control-label" for=""><span class="red">*</span>支行名称：</label>
                     <div class="control">
-                        <input type="text">
+                        <input type="text" name="branchName" placeholder="支行名称" maxlength="25"  required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for="">*账户类型：</label>
-                    <input type="radio" name="sex" class="radio" id="radio1"><label for="radio1">对公账户</label>
-                    <input type="radio" name="sex" class="radio" id="radio2"><label for="radio2">对私账户</label>
+
+                    <input type="radio" name="accountType" class="radio" id="radio1" value="1">
+                    <label for="radio1">对公账户</label>
+
+                    <input type="radio" name="accountType" class="radio" id="radio2" value="2">
+                    <label for="radio2">对私账户</label>
+
+                    <span class="control-help" style="display:none;"></span>
                 </div>
 
                 <div class="control-group">
@@ -60,15 +69,15 @@
                     <button class="btn-primary">下一步</button>
                 </div>                                                                  
             </form>
-        </div>        
+        </div>
 
-    <script src="../../js/cfg.js"></script>
-    <script src="../../js/jquery.min.js"></script>
-    <script src="../../js/sea.js"></script>
-    <script src="../../js/ejs.js"></script>
-    <script src="../../js/lib.js"></script>
-    <script src="../../js/iscroll.js"></script>
-    <script src="../../js/admin.js"></script>
-    <script src="../../js/frame.js"></script>        
+        <script>
+            lib.Form.prototype.save = function(data){                
+                var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
+                shopData = $.extend({},shopData,data);
+                sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));
+                location.href = "assess.html";
+            }           
+        </script>             
     </body>
 </html>
