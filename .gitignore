@@ -1,5 +1,3 @@
-api/storage/*
-api/composer.lock
 api/composer.json
-api/vendor/*
-/api/vendor/composer/autoload_classmap.php
+api/vendor/
+
