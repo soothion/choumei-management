@@ -74,7 +74,6 @@ $(function(){
 		e.preventDefault();
 	}).on('submit','form[data-role="remove"]',function(e){
 		var $this=$(this);
-		
 		var postRemove=function(){
 			var data=lib.getFormData($this);
 			lib.ajax({
@@ -101,7 +100,7 @@ $(function(){
 		}
 		var title=$this.attr('confirm-title');
 		if(title!=='false'){
-			lib.popup.confirm({text:(title||'确认删除此数据吗'),define:function(){
+			parent.lib.popup.confirm({text:(title||'确认删除此数据吗'),define:function(){
 				postRemove();
 			}})
 		}else{
