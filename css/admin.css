@@ -517,8 +517,11 @@ input.solid:checked+label,input.solid+label:hover{
 	background-color:#498ae5;
 	color:#fff;
 }
-form[data-role="hash"],form[data-role="export"]{
+form[data-role="hash"],form[data-role="export"],form[data-role="remove"]{
 	display:inline;
+}
+form[data-role="remove"] button{
+	padding:0;
 }
 .popup-tips-text i.fa{
 	color: #fff;

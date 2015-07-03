@@ -84,6 +84,45 @@ $(function(){
 	}).on('submit','form[data-role="export"]',function(e){//导出功能
 		window.open(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#'));
 		e.preventDefault();
+	}).on('submit','form[data-role="remove"]',function(e){
+		var $this=$(this);
+		lib.popup.confirm({text:'确认删除此数据吗',define:function(){
+			var data={};
+			var fields=$this.serializeArray();
+			$.each(fields,function(i,field){
+				if(!data[field.name]){
+					data[field.name]=field.value;
+				}else{
+					if(data[field.name] instanceof Array){
+						data[field.name].push(field.value);
+					}else{
+						data[field.name]=[data[field.name],field.value];
+					}
+				}
+			});
+			lib.ajax({
+				url:$this.attr('action'),
+				type:'POST',
+				data:data,
+				success:function(data){
+					if(data.result==1){
+						lib.popup.tips({
+							text:'<i class="fa fa-check-circle"></i>'+(data.msg||'删除成功'),
+							time:2000,
+							define:function(){
+								$this.closest('tr').remove();
+							}
+						});
+					}else{
+						lib.popup.tips({
+							text:'<i class="fa fa-times-circle"></i>'+(data.msg||'删除失败'),
+							time:2000
+						});
+					}
+				}
+			})
+		}})
+		e.preventDefault();
 	});
 	
 	$body.on('click','.drop-menu-toggle',function(){//下拉菜单

@@ -65,7 +65,10 @@
 							<span class="space"></span>
 							<a class="link" href="edit.html?id=<%=data[i].id%>">编辑</a>
 							<span class="space"></span>
-							<a class="link">删除</a>
+							<form action="merchant/del" data-role="remove">
+								<input type="hidden" name="id" value="<%=data[i].id%>" />
+								<button class="link">删除</button>
+							</form>
 						</td>
 					</tr> 
 					<%}%>
