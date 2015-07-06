@@ -20,7 +20,6 @@ class ListController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": [
 	 *	        {
 	 *	            "id": 4,
@@ -60,7 +59,6 @@ class ListController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": [
 	 *	        {
 	 *	            "id": 1,
@@ -95,7 +93,6 @@ class ListController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": [
 	 *	        {
 	 *	            "id": 2,
@@ -138,7 +135,6 @@ class ListController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": [
 	 *	        {
 	 *	            "id": 10,
@@ -181,7 +177,6 @@ class ListController extends Controller{
 	 *
 	 * 	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": [
 	 *	       {
 	 *		        "id": 2,
