@@ -47,24 +47,6 @@ class ShopCountApi
     }
     
     /**
-     * 付给商户钱
-     * @param array $option
-     */
-    public static function payMoney($options)
-    {
-        if(isset($options['merchant_id'])
-            && isset($options['salon_id'])
-            && isset($options['type'])
-            && isset($options['pay_money'])
-            && isset($options['cost_money']))
-        {
-           $model = ShopCount::firstOrNew(['salon_id'=>$options['salon_id']]);
-           return $ret;
-        }
-        return false;
-    }
-    
-    /**
      * 搜索预付款信息
      * @param array $options
      */
@@ -272,8 +254,8 @@ class ShopCountApi
     {     
         $salon_fields = ['salonid','salonname','shopType'];
         $merchant_fields = ['id','name'];
-        $shop_count_fields = ['id','created_at','merchant_id','salon_id','salon_name','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
-        $order_by_fields = ['id','created_at','salon_name','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
+        $shop_count_fields = ['id','created_at','merchant_id','salon_id','salon_name','salon_type','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
+        $order_by_fields = ['id','created_at','salon_name','salon_type','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
         
         $shop_count = ShopCount::select($shop_count_fields);
         
@@ -399,7 +381,7 @@ class ShopCountApi
             $options['code'] = $code;
             $options['state'] = PrepayBill::STATE_OF_COMPLETED;
             $id = PrepayBill::insertGetId($options);
-            self::payMoney($options);
+            ShopCount::payMoney($options);
             return $id;
         }
         return false;
@@ -410,7 +392,48 @@ class ShopCountApi
      */
     public static function updatePrepay($id,$options)
     {
-        #@todo 
+        $prepay = PrepayBill::where('id',$id)->first();
+        if($prepay->state == 0)
+        {
+            $options['state'] = PrepayBill::STATE_OF_COMPLETED;
+            PrepayBill::update($options);
+            ShopCount::payMoney($options);
+        }
+        else if($prepay->state == 1)
+        {
+            PrepayBill::update($options);
+            if(isset($options['pay_money']) && isset($options['cost_money']))
+            {
+                $options['pay_money'] = floatval($options['pay_money']) - floatval($prepay->pay_money);
+                $options['cost_money'] = floatval($options['cost_money']) - floatval($prepay->cost_money);
+                ShopCount::payMoney($options);
+            }            
+        }
+        return null;
+    }
+    
+    public static function deletePrepay($id)
+    {
+        $prepay = PrepayBill::where('id',$id)->first();
+        if(empty($prepay))
+        {
+            return true;
+        }
+        
+        if($prepay->state == 0)
+        {
+           PrepayBill::delete($id);
+        }
+        else if($prepay->state == 1)
+        {
+            PrepayBill::delete($id);
+            $options = [];
+            $options['salon_id'] = intval($prepay->salon_id);
+            $options['pay_money'] = floatval($prepay->pay_money) * -1;
+            $options['cost_money'] = floatval($prepay->cost_money) * -1;
+            ShopCount::payMoney($options);
+            
+        }
         return null;
     }
     

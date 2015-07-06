@@ -26,7 +26,7 @@ class ShopCount extends Model
      */
     public static function payMoney($attrs)
     {
-        if (isset($attrs['merchant_id']) && isset($attrs['salon_id']) && isset($attrs['type']) && isset($attrs['pay_money']) && isset($attrs['cost_money'])) {
+        if (isset($attrs['salon_id']) && isset($attrs['pay_money']) && isset($attrs['cost_money'])) {
             $salon_id = $attrs['salon_id'];
             $class = __CLASS__;
             $model = new $class;
@@ -36,7 +36,7 @@ class ShopCount extends Model
             }
             $salon = Salon::where('salonid',$salon_id)->first();
             $attrs['salon_name'] = $salon->salonname;
-            $attrs['salon_type'] = $salon->salonname;
+            $attrs['salon_type'] = $salon->salonType;
             $this->beginTransaction();
             try {
                 $item = $model->where([

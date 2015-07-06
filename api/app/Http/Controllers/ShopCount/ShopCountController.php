@@ -476,17 +476,15 @@ class ShopCountController extends Controller
     }
     
     /**
-     * @api {get} /shop_count/index 9.商户往来列表
-     * @apiName index
+     * @api {get} /shop_count/balance 9.商户往来列表
+     * @apiName balance
      * @apiGroup ShopCount
      *
      * @apiParam {Number} key  1 店铺搜索 2 商户搜索
      * @apiParam {String} keyword  根据key来的关键字
-     * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
-     * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} size 可选,分页大小.(最小1 最大500,默认10)
-     * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money']
+     * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'salon_name','salon_type','pay_money','cost_money',...(money相关的key)]
      * @apiParam {String} sort_type 排序的方式 1正序 2倒叙 (默认)
      *
      * @apiSuccess {Number} total 总数据量.
@@ -495,6 +493,8 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} last_page 当前页面.
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
+     * @apiSuccess {String} salon_name 店铺名称.
+     * @apiSuccess {Number} salon_type 店铺名称类型(1预付款店 2投资店 3金字塔店).
      * @apiSuccess {String} pay_money 预付款/付交易代收款.
      * @apiSuccess {String} cost_money 换算消费额.
      * @apiSuccess {String} spend_money 交易消费额.
@@ -505,7 +505,6 @@ class ShopCountController extends Controller
      * @apiSuccess {String} borrow_money 付借款.
      * @apiSuccess {String} borrow_return_money 借款返还.
      * @apiSuccess {String} borrow_balance_money 借款余额.
-     * @apiSuccess {Object} salon 店铺信息.
      * @apiSuccess {Object} merchant 商盟信息.
      *
      * @apiSuccessExample Success-Response:
@@ -524,6 +523,8 @@ class ShopCountController extends Controller
      *                       "created_at": "2015-07-01 00:00:00",
      *                       "merchant_id": 3,
      *                       "salon_id": 2,
+     *                       "salon_name":"米莱国际造型连锁(田贝店)",
+     *                       "salon_type":1,
      *                       "pay_money": "123.00",
      *                       "cost_money": "111.00",
      *                       "spend_money": "23434.00",
@@ -534,10 +535,6 @@ class ShopCountController extends Controller
      *                       "borrow_money": "2323.00",
      *                       "borrow_return_money": "34.00",
      *                       "borrow_balance_money": "2334.00",
-     *                       "salon": {
-     *                           "salonid": 2,
-     *                           "salonname": "名流造型SPA（皇岗店）"
-     *                       },
      *                       "merchant": {
      *                           "id": 3,
      *                           "name": "黎艳平"
