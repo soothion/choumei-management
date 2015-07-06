@@ -14,18 +14,18 @@
 				<div class="flex-item">
 					<form data-role="hash">
 						<div class="input-group">
-							<select class="select border-none" id="select">
+							<select class="select border-none" id="select" name="key">
 								<option value="1">店铺搜索</option>
 								<option value="2">商户搜索</option>
 							</select>
-							<input type="text" class="border-none" placeholder="请输入店铺名">
+							<input type="text" class="border-none" placeholder="请输入店铺名" name="keyword">
 							<button type="submit" class="fa fa-search"></button>
 						</div>
 					</form>
 				</div>
 			</div>
-			
-			<div class="table">
+			<div class="table" ajat="shop_count/index?<%=query._%>#domid=table&tempid=table-t">
+			<script type="text/template" id="table-t">
 			<table>
               <thead>
                 <tr>
@@ -45,27 +45,29 @@
                 </tr>
               </thead>
               <tbody>
+				<%data=data.data%>
+				<%for(var i=0;i<data.length;i++){%>
                 <tr>
-                  <td>1</td>
-                  <td>yunfei.huang@qq.com800265</td>
-                  <td>15889750625</td>
-                  <td>男</td>
-				  <td></td>
-				  <td>
-				  </td>
-				  <td>1</td>
-                  <td>yunfei.huang@qq.com800265</td>
-                  <td>15889750625</td>
-                  <td>男</td>
-				  <td></td>
-				  <td></td>
-				  <td>
-				  </td>
+                  <td><%=i+1%></td>
+                  <td><%=data[i].salon.salonname%></td>
+                  <td><%=data[i].salon.salonname%></td>
+                  <td><%=data[i].pay_money%></td>
+				  <td><%=data[i].cost_money%></td>
+				  <td><%=data[i].spend_money%></td>
+				  <td><%=data[i].balance_money%></td>
+                  <td><%=data[i].invest_money%></td>
+                  <td><%=data[i].invest_return_money%></td>
+                  <td><%=data[i].invest_balance_money%></td>
+				  <td><%=data[i].borrow_money%></td>
+				  <td><%=data[i].borrow_return_money%></td>
+				  <td><%=data[i].borrow_balance_money%></td>
                 </tr>
+				<%}%>
               </tbody>
             </table>
 			<div class="pager">
 			</div>
+			</script>
 		</div>
 	</div>
 	<script type="text/javascript">
