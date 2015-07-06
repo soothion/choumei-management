@@ -24,7 +24,7 @@ abstract class Controller extends BaseController
 		$this->user = User::first();		
 	}
 
-	public function error($msg,$code){
+	public function error($msg,$code=0){
 		return Response::json([
 			'result'=>0,
 			'msg'=>$msg,

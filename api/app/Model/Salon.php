@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php 
 namespace App;
 
@@ -138,21 +137,4 @@ class Salon extends Model {
     }
 
 }
-=======
-<?php
-/**
- * 商铺往来结算相关
- * @author zhunian
- */
-namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Salon extends Model
-{    
-    protected $table = "salon";
-    protected $primaryKey = 'salonid';
-}
-
-?>
->>>>>>> 2939eb31a552c323960ffe053b72c3c001531bd2

@@ -1,5 +1,4 @@
-<?php
-namespace App\Http\Controllers\Merchant;
+<?php namespace App\Http\Controllers\Merchant;
 
 
 use App\Http\Controllers\Controller;
@@ -48,7 +47,7 @@ class SalonController extends Controller {
     		);
 	/**
 	* @api {post} /salon/index 1.店铺列表
-	* @apiName list
+	* @apiName index
 	* @apiGroup salon
 	*
 	* @apiParam {Number} shopType 可选,店铺类型 
@@ -68,7 +67,7 @@ class SalonController extends Controller {
 	* @apiSuccess {Number} last_page 当前页面.
 	* @apiSuccess {Number} from 起始数据.
 	* @apiSuccess {Number} to 结束数据.
-	* @apiSuccess {Number} salonid salonid.
+	* @apiSuccess {Number} salonid 店铺Id.
 	* @apiSuccess {String} salonname 店铺名称.
 	* @apiSuccess {String} shopType 店铺类型.
 	* @apiSuccess {String} zone 商圈.
@@ -76,7 +75,7 @@ class SalonController extends Controller {
 	* @apiSuccess {String} salestatus 状态.
 	* @apiSuccess {String} businessId 业务ID.
 	* @apiSuccess {String} sn 地址.
-	* @apiSuccess {String} add_time 商户成立时间(时间戳).
+	* @apiSuccess {String} add_time 商户成立时间(10位时间戳).
 	* @apiSuccess {String} name 商户名.
 	* @apiSuccess {String} merchantId 商户ID.
 	* @apiSuccess {String} businessName 业务代表名.
@@ -222,8 +221,8 @@ class SalonController extends Controller {
 	* @apiName save
 	* @apiGroup salon
 	*
-	* @apiParam {Number} merchantId 必填,商户id
-	* @apiParam {Number} salonid 必填,店铺id 更新必填.
+	* @apiParam {Number} merchantId 必填,商户Id
+	* @apiParam {Number} salonid 可选,店铺id 更新必填.
 	* @apiParam {Number} sn 必填,店铺编号.
 	* @apiParam {String} salonname 必填,店名.
 	* @apiParam {Number} district 必填,行政地区 . 
@@ -240,7 +239,7 @@ class SalonController extends Controller {
 	* @apiParam {String} phone 必填,店铺座机.
 	* @apiParam {String} corporateName 必填,法人代表.
 	* @apiParam {String} corporateTel 必填,法人电话.
-	* @apiParam {Number} businessId 必填,业务代表ID.
+	* @apiParam {Number} businessId 必填,业务代表Id.
 	* @apiParam {String} bankName 必填,银行名称.
 	* @apiParam {String} beneficiary 必填,收款人.
 	* @apiParam {String} bankCard 必填,银行卡号.
@@ -459,7 +458,7 @@ class SalonController extends Controller {
 	* @apiParam {Number} salonid 必填,店铺id.
 
 	* @apiSuccess {Number} sn 店铺编号.
-	* @apiSuccess {String} salonname 店名.
+	* @apiSuccess {String} salonname 店铺名.
 	* @apiSuccess {Number} district 行政地区 . 
 	* @apiSuccess {String} addr 详细街道信息.
 	* @apiSuccess {Number} addrlati 地理坐标纬度.
@@ -742,7 +741,7 @@ class SalonController extends Controller {
 	 * @apiName endCooperation
 	 * @apiGroup salon
 	 *
-	 *@apiParam {Number} id 必填,店铺ID.
+	 *@apiParam {Number} salonid 必填,店铺ID.
 	 *@apiParam {Number} type 必填,操作类型 1终止合作 2恢复店铺.
 	 *
 	 * 
@@ -809,7 +808,7 @@ class SalonController extends Controller {
 	 * @apiName del
 	 * @apiGroup salon
 	 *
-	 *@apiParam {Number} id 删除必填,店铺ID.
+	 *@apiParam {Number} salonid 删除必填,店铺Id.
 	 *
 	 * 
 	 * 
