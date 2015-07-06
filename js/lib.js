@@ -8,7 +8,8 @@
     var lib = {
         ajax: function (options) {
 			if(options.url.indexOf('merchant')>-1){
-				options.url='http://192.168.12.91:888/index.php/'+options.url;
+				//options.url='http://192.168.12.91:888/index.php/'+options.url;
+				options.url=cfg.getHost()+options.url;	
 			}else{
 				options.url=cfg.getHost()+options.url;	
 			}
@@ -127,10 +128,14 @@
 			return data;
 		},
         init:function(){
-            lib.query=this.parseQuery(location.search);
-			lib.query._=location.hash.replace('#','');
-            if(location.hash){
+			lib.query={};
+			if(location.search){
+				$.extend(lib.query,this.parseQuery(location.search.replace('?','')))
+				lib.query._=location.search.replace('?','');
+			}
+			if(location.hash){
 				$.extend(lib.query,this.parseQuery(location.hash.replace('#','')))
+				lib.query._=location.hash.replace('#','');
 			}
         }
     }

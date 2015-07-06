@@ -62,6 +62,10 @@
 	$('.nav-main li').on('click',function(){
 		$(this).addClass('active').siblings().removeClass('active');
 	});
-	if(!localStorage.getItem('token')){
-		location.href="/module/user/login.html";
-	}
+	/*
+	lib.ajax({
+		url:'list/menu',
+		success:function(data){
+			
+		}
+	})*/
