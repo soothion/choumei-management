@@ -50,9 +50,18 @@ class ShopCountApi
      * 付给商户钱
      * @param array $option
      */
-    public static function payMoney($option)
+    public static function payMoney($options)
     {
-        
+        if(isset($options['merchant_id'])
+            && isset($options['salon_id'])
+            && isset($options['type'])
+            && isset($options['pay_money'])
+            && isset($options['cost_money']))
+        {
+           $model = ShopCount::firstOrNew(['salon_id'=>$options['salon_id']]);
+           return $ret;
+        }
+        return false;
     }
     
     /**
@@ -391,6 +400,7 @@ class ShopCountApi
             $options['code'] = $code;
             $options['state'] = PrepayBill::STATE_OF_COMPLETED;
             $id = PrepayBill::insertGetId($options);
+            self::payMoney($options);
             return $id;
         }
         return false;
