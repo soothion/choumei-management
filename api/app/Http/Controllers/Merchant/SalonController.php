@@ -69,10 +69,10 @@ class SalonController extends Controller {
 	* @apiSuccess {Number} to 结束数据.
 	* @apiSuccess {Number} salonid 店铺Id.
 	* @apiSuccess {String} salonname 店铺名称.
-	* @apiSuccess {String} shopType 店铺类型.
+	* @apiSuccess {String} shopType 店铺类型 店铺类型  1预付款店 2投资店 3金字塔店.
 	* @apiSuccess {String} zone 商圈.
 	* @apiSuccess {String} district 行政区域.
-	* @apiSuccess {String} salestatus 状态.
+	* @apiSuccess {String} salestatus 状态 0终止合作 1正常合作.
 	* @apiSuccess {String} businessId 业务ID.
 	* @apiSuccess {String} sn 地址.
 	* @apiSuccess {String} add_time 商户成立时间(10位时间戳).
@@ -175,44 +175,9 @@ class SalonController extends Controller {
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 		
 		
-		$result = Salon::getSalonList($where,$page,$page_size,$orderName,$orderLr);
+		$list = Salon::getSalonList($where,$page,$page_size,$orderName,$orderLr);
 		
-        $result = $result->toArray();
-
-		$list["total"] = $result["total"];
-		$list["per_page"] = $result["per_page"];
-		$list["current_page"] = $result["current_page"];
-		$list["last_page"] = $result["last_page"];
-		$list["from"] = $result["from"];
-		$list["to"] = $result["to"];
-		unset($result['total']);
-		unset($result['per_page']);
-		unset($result['current_page']);
-		unset($result['last_page']);
-		unset($result['from']);
-		unset($result['to']);
-		unset($result['next_page_url']);
-		unset($result['prev_page_url']);
-		
-		foreach($result["data"] as $key=>$val)
-		{
-			$tmpVal = (array)$val;
-			$data[$key] = $tmpVal;
-			$areaArr = $this->getAreaMes(array("zone"=>$tmpVal["zone"],"district"=>$tmpVal["district"])) ;
-			if($areaArr)
-			{
-				$data[$key] = array_merge($data[$key],$areaArr);
-			}
-		}
-		
-		foreach($data as $key=>$val)
-		{
-			if(is_null($val) == true)//null 数据转化为 空字符串
-			{
-				$data[$key] = "";
-			}
-		}
-		$list["data"] = $data;
+        
 	    return $this->success($list);
 	}
 	
@@ -458,6 +423,7 @@ class SalonController extends Controller {
 	* @apiParam {Number} salonid 必填,店铺id.
 
 	* @apiSuccess {Number} sn 店铺编号.
+	* @apiSuccess {Number} salestatus 状态 0终止合作 1正常合作.
 	* @apiSuccess {String} salonname 店铺名.
 	* @apiSuccess {Number} district 行政地区 . 
 	* @apiSuccess {String} addr 详细街道信息.
@@ -520,142 +486,12 @@ class SalonController extends Controller {
 		{
 			return $this->error("参数错误");
 		}
-		$fields = array(
-				's.salonid',
-				's.salonname',
-				's.addr',
-				's.addrlati',
-				's.addrlong',
-				's.zone',
-   			    's.district',
-				's.shopType',
-				's.contractTime',
-				's.contractPeriod',
-				's.bargainno',
-				's.bcontacts',
-				's.tel',
-				's.phone',
-				's.corporateName',
-				's.corporateTel',
-                's.sn',
-                's.salestatus',
-                's.businessId',
-				'i.bankName',
-				'i.beneficiary',
-				'i.bankCard',
-				'i.branchName',
-				'i.accountType',
-				'i.salonArea',
-				'i.dressingNums',
-				'i.staffNums',
-				'i.stylistNums',
-				'i.monthlySales',
-				'i.totalSales',
-				'i.price',
-				'i.payScale',
-				'i.payMoney',
-				'i.payMoneyScale',
-				'i.payCountScale',
-				'i.cashScale',
-				'i.blowScale',
-				'i.hdScale',
-				'i.platformName',
-				'i.platformScale',
-				'i.receptionNums',
-				'i.receptionMons',
-				'i.setupTime',
-				'i.hotdyeScale',
-				'i.lastValidity',
-				'i.salonType',
-				'i.contractPicUrl',
-				'i.licensePicUrl',
-				'i.corporatePicUrl',
-				'm.name',
-				'm.id as merchantId',
-				'b.businessName'
-			);
-		$salonList =  DB::table('salon as s')
-            ->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
-            ->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-            ->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
-            ->select($fields)
-            ->where(array("s.salonid"=>$salonid))
-            ->first();
-		$salonList = (array)$salonList;
-		
-		if($salonList)
-		{
-			foreach($salonList as $key=>$val)
-			{
-				if(is_null($val) == true)//null 数据转化为 空字符串
-				{
-					$salonList[$key] = "";
-				}
-				
-				if($val === "0.00" || $val == "0")//0 0.00默认值 数据转化为 空字符串
-				{
-					$salonList[$key] = "";
-				}
-				
-			}
-		}
-
-		if($salonList)
-		{
-			$areaArr = $this->getAreaMes(array("zone"=>$salonList["zone"],"district"=>$salonList["district"])) ;
-			if($areaArr)
-			{
-				$salonList = array_merge($salonList,$areaArr);
-			}
-		}
+		$salonList = Salon::getSalon($salonid);
 		
 		return $this->success($salonList);
 	}
 	
-	/**
-	 * 获取省市区信息
-	 * */
-	private function getAreaMes($salonList)
-	{
-			$rs["zoneName"] = "";
-			$rs["districtName"] = "";
-			$rs["citiesName"] = "";
-			$rs["citiesId"] = "";
-			$rs["provinceName"] = "";
-			$rs["provinceId"] = "";
-			//商圈
-			$zoneList = DB::table('salon_area')
-                    ->where(array("areaid"=>$salonList["zone"]))
-                    ->first();   
-            if($zoneList)
-            {
-            	$rs["zoneName"] = $zoneList->areaname? $zoneList->areaname:"";
-            } 
-			//区
-			$districtList = DB::table('town')
-                    ->where(array("tid"=>$salonList["district"]))
-                    ->first();  
-            if($districtList)
-            {
-            	$rs["districtName"] = $districtList->tname? $districtList->tname:"";
-			
-				//市
-				$cityList = DB::table('city')
-	                    ->where(array("pid"=>$districtList->iid))
-	                    ->first();     
-				$rs["citiesName"] = $cityList->iname? $cityList->iname:"";
-				$rs["citiesId"] = $cityList->iid? $cityList->iid:"";
-				
-				
-				//省
-				$provinceList = DB::table('province')
-	                    ->where(array("pid"=>$cityList->pid))
-	                    ->first();     
-				$rs["provinceName"] = $provinceList->pname? $provinceList->pname:"";
-				$rs["provinceId"] = $provinceList->pid? $provinceList->pid:"";
-            }
-            return $rs;
-	}
+
 	
 	/**
 	 * 添加修改操作

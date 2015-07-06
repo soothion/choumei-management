@@ -66,8 +66,44 @@ class Salon extends Model {
 		}
          
         $salonList =    $query->paginate($page_size);
+        $result = $salonList->toArray();
+
+		$list["total"] = $result["total"];
+		$list["per_page"] = $result["per_page"];
+		$list["current_page"] = $result["current_page"];
+		$list["last_page"] = $result["last_page"];
+		$list["from"] = $result["from"];
+		$list["to"] = $result["to"];
+		unset($result['total']);
+		unset($result['per_page']);
+		unset($result['current_page']);
+		unset($result['last_page']);
+		unset($result['from']);
+		unset($result['to']);
+		unset($result['next_page_url']);
+		unset($result['prev_page_url']);
+		
+		foreach($result["data"] as $key=>$val)
+		{
+			$tmpVal = (array)$val;
+			$data[$key] = $tmpVal;
+			$areaArr = Salon::getAreaMes(array("zone"=>$tmpVal["zone"],"district"=>$tmpVal["district"])) ;
+			if($areaArr)
+			{
+				$data[$key] = array_merge($data[$key],$areaArr);
+			}
+		}
+		
+		foreach($data as $key=>$val)
+		{
+			if(is_null($val) == true)//null 数据转化为 空字符串
+			{
+				$data[$key] = "";
+			}
+		}
+		$list["data"] = $data;
            
-        return $salonList;
+        return $list;
 	}
 	
 	/**
@@ -100,7 +136,7 @@ class Salon extends Model {
 		return $affectid;
 	}
 	
-	/*
+	/**
 	 * 删除店铺
 	 * */
 	public static function dodel($salonid)
@@ -122,20 +158,146 @@ class Salon extends Model {
 		return $affectid;
 	}
 	
-	public function businessStaff()
+	/**
+	 * 获取店铺详情
+	 * */
+	public static function getSalon($salonid)
 	{
-        return $this->belongsTo('App\BusinessStaff');
-    }
-    
-	public function salonInfo()
+		$fields = array(
+					's.salonid',
+					's.salonname',
+					's.addr',
+					's.addrlati',
+					's.addrlong',
+					's.zone',
+	   			    's.district',
+					's.shopType',
+					's.contractTime',
+					's.contractPeriod',
+					's.bargainno',
+					's.bcontacts',
+					's.tel',
+					's.phone',
+					's.corporateName',
+					's.corporateTel',
+	                's.sn',
+	                's.salestatus',
+	                's.businessId',
+					'i.bankName',
+					'i.beneficiary',
+					'i.bankCard',
+					'i.branchName',
+					'i.accountType',
+					'i.salonArea',
+					'i.dressingNums',
+					'i.staffNums',
+					'i.stylistNums',
+					'i.monthlySales',
+					'i.totalSales',
+					'i.price',
+					'i.payScale',
+					'i.payMoney',
+					'i.payMoneyScale',
+					'i.payCountScale',
+					'i.cashScale',
+					'i.blowScale',
+					'i.hdScale',
+					'i.platformName',
+					'i.platformScale',
+					'i.receptionNums',
+					'i.receptionMons',
+					'i.setupTime',
+					'i.hotdyeScale',
+					'i.lastValidity',
+					'i.salonType',
+					'i.contractPicUrl',
+					'i.licensePicUrl',
+					'i.corporatePicUrl',
+					'm.name',
+					'm.id as merchantId',
+					'b.businessName'
+				);
+			$salonList =  DB::table('salon as s')
+	            ->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
+	            ->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
+	            ->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
+	            ->select($fields)
+	            ->where(array("s.salonid"=>$salonid))
+	            ->first();
+			$salonList = (array)$salonList;
+			
+			if($salonList)
+			{
+				foreach($salonList as $key=>$val)
+				{
+					if(is_null($val) == true)//null 数据转化为 空字符串
+					{
+						$salonList[$key] = "";
+					}
+					
+					if($val === "0.00" || $val == "0")//0 0.00默认值 数据转化为 空字符串
+					{
+						$salonList[$key] = "";
+					}
+					
+				}
+			}
+	
+			if($salonList)
+			{
+				$areaArr = self::getAreaMes(array("zone"=>$salonList["zone"],"district"=>$salonList["district"])) ;
+				if($areaArr)
+				{
+					$salonList = array_merge($salonList,$areaArr);
+				}
+			}
+			return $salonList;
+	}
+	
+	/**
+	 * 获取省市区信息
+	 * */
+	public static  function getAreaMes($salonList)
 	{
-        return $this->belongsTo('App\SalonInfo');
-    }
-    
-	public function merchant()
-	{
-        return $this->belongsTo('App\Merchant');
-    }
+			$rs["zoneName"] = "";
+			$rs["districtName"] = "";
+			$rs["citiesName"] = "";
+			$rs["citiesId"] = "";
+			$rs["provinceName"] = "";
+			$rs["provinceId"] = "";
+			//商圈
+			$zoneList = DB::table('salon_area')
+                    ->where(array("areaid"=>$salonList["zone"]))
+                    ->first();   
+            if($zoneList)
+            {
+            	$rs["zoneName"] = $zoneList->areaname? $zoneList->areaname:"";
+            } 
+			//区
+			$districtList = DB::table('town')
+                    ->where(array("tid"=>$salonList["district"]))
+                    ->first();  
+            if($districtList)
+            {
+            	$rs["districtName"] = $districtList->tname? $districtList->tname:"";
+			
+				//市
+				$cityList = DB::table('city')
+	                    ->where(array("pid"=>$districtList->iid))
+	                    ->first();     
+				$rs["citiesName"] = $cityList->iname? $cityList->iname:"";
+				$rs["citiesId"] = $cityList->iid? $cityList->iid:"";
+				
+				
+				//省
+				$provinceList = DB::table('province')
+	                    ->where(array("pid"=>$cityList->pid))
+	                    ->first();     
+				$rs["provinceName"] = $provinceList->pname? $provinceList->pname:"";
+				$rs["provinceId"] = $provinceList->pid? $provinceList->pid:"";
+            }
+            return $rs;
+	}
 
 }
 
