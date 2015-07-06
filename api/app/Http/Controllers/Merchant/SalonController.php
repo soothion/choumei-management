@@ -504,6 +504,13 @@ class SalonController extends Controller {
 	* @apiSuccess {String} contractPicUrl 合同图片 json数组.
 	* @apiSuccess {String} licensePicUrl 营业执照 json数组.
 	* @apiSuccess {String} corporatePicUrl 法人执照 json数组.
+	* @apiSuccess {String} zoneName 商圈名.
+	* @apiSuccess {String} districtName 区域名称.
+	* @apiSuccess {String} citiesName 市名称.
+	* @apiSuccess {String} citiesId 市Id.
+	* @apiSuccess {String} provinceName 省名称.
+	* @apiSuccess {String} provinceId 省Id
+	* 
 	*/
 	public function getSalon()
 	{
