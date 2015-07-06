@@ -28,6 +28,10 @@
 			var session=$.extend(this.getSession(),obj);
 			localStorage.setItem('session',JSON.stringify(session));
 		},
+		getDate:function(){
+			var date=new Date();
+			return date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()+1<10?"0"+(date.getDate()+1):date.getDate()+1);
+		},
         ejs:{
             render:function(temp,data){
                 return new EJS(temp).render($.extend(this.getDefault(),data));

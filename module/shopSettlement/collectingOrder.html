@@ -12,6 +12,7 @@
 	<div class="wrapper">
 		<div class="table-detail" ajat="shop_count/delegate_detail?<%=query._%>#domid=detail&detail-t" id="detail">
 		<script type="text/template" id="detail-t">
+			<%var arr=["项目消费"]%>
 			<table>
 				<thead>
 					<tr>
@@ -27,7 +28,7 @@
 					</tr>
 					<tr>
 					  <td>代收类型：</td>
-					  <td><%=data.type%></td>
+					  <td><%=arr[data.type-1]%></td>
 					</tr>
 					<tr>
 					  <td>代收金额：</td>

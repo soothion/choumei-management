@@ -26,7 +26,7 @@
 				</div>
 			</div>
 			
-			<div class="table" ajat="shop_count/delegate_list?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="<%if(query._){%>shop_count/delegate_list?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 				<table>
 				  <thead>
@@ -41,6 +41,7 @@
 					</tr>
 				  </thead>
 				  <tbody>
+					<%if(data.data){%>
 					<%data=data.data%>
 					<%for(var i=0;i<data.length;i++){%>
 					<tr>
@@ -55,6 +56,7 @@
 					  </td>
 					</tr>
 					<%}%>
+					<%}%>
 				  </tbody>
 				</table>
 				<div class="pager">
@@ -64,14 +66,18 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		$('#select').on('change',function(){
-			var $this=$(this);
-			if($this.val()==1){
-				$this.next().attr('placeholder','请输入店铺名');
-			}else{
-				$this.next().attr('placeholder','请输入商户名');
-			}
-		})
+		$(function(){
+			$('#select').on('change',function(){
+				var $this=$(this);
+				if($this.val()==1){
+					$this.next().attr('placeholder','请输入店铺名');
+				}else{
+					$this.next().attr('placeholder','请输入商户名');
+				}
+			});
+			$('input[type="date"]').val(lib.getDate());
+			$('button').click();
+		});
 	</script>
   </body>
 </html>
