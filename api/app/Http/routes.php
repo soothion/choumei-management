@@ -17,6 +17,10 @@ Route::any('/', function () {
 });
 
 
+Route::any('captcha', 'IndexController@captcha');
+Route::any('login', 'IndexController@login');
+Route::any('logout', 'IndexController@logout');
+
 Route::any('merchant/index', 'Merchant\MerchantController@index');//商户列表
 Route::any('merchant/create', 'Merchant\MerchantController@save');//添加修改商户
 Route::any('merchant/del', 'Merchant\MerchantController@del');//删除商户
@@ -96,6 +100,40 @@ Route::group(['middleware'], function(){
 		));
 
 
+	//日志模块
+	Route::any('log/index',array(
+		'as'=>'log.index',
+		'uses'=>'LogController@index'
+	));
+	Route::any('log/export',array(
+		'as'=>'log.export',
+		'uses'=>'LogController@export'
+	));
+
+	//列表模块
+	Route::any('list/city',array(
+		'as'=>'list.city',
+		'uses'=>'ListController@city'
+	));
+	Route::any('list/department',array(
+		'as'=>'list.department',
+		'uses'=>'ListController@department'
+	));
+	Route::any('list/position',array(
+		'as'=>'list.position',
+		'uses'=>'ListController@position'
+	));
+	Route::any('list/permission',array(
+		'as'=>'list.permission',
+		'uses'=>'ListController@permission'
+	));
+	Route::any('list/menu',array(
+		'as'=>'list.menu',
+		'uses'=>'ListController@menu'
+	));
+
+
+
 	 // 店铺结算模块
     
     // 列表 搜索
@@ -147,22 +185,5 @@ Route::group(['middleware'], function(){
         'uses' => 'ShopCount\ShopCountController@balance'
     ));    
 
-
-	//日志模块
-	Route::any('log/index','LogController@index');
-	Route::any('log/export','LogController@export');
-
-
-	Route::any('list/city','ListController@city');
-	Route::any('list/department','ListController@department');
-	Route::any('list/position','ListController@position');
-	Route::any('list/permission','ListController@permission');
-	Route::any('list/menu','ListController@menu');
-
-
-	Route::any('captcha', 'IndexController@captcha');
-	Route::any('login', 'IndexController@login');
-	Route::any('logout', 'IndexController@logout');
-
-
 });
+
