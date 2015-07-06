@@ -288,7 +288,7 @@ class ShopCountController extends Controller
 
      /**
      * @api {post} /shop_count/update/{id} 5.转付单 修改
-     * @apiName create
+     * @apiName update
      * @apiGroup ShopCount
      *
      * @apiParam {Number} merchant_id  商户id 
