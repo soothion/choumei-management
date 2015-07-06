@@ -42,7 +42,6 @@ class RoleController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": {
 	 *	        "total": 2,
 	 *	        "per_page": 20,
@@ -234,7 +233,6 @@ class RoleController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *		{
 	 *		    "result": 1,
-	 *		    "msg": "success",
 	 *		    "data": null
 	 *		}
 	 *
@@ -304,7 +302,6 @@ class RoleController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": {
 	 *	        "id": 1,
 	 *	        "name": "管理员",
@@ -398,7 +395,6 @@ class RoleController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *		{
 	 *		    "result": 1,
-	 *		    "msg": "success",
 	 *		    "data": null
 	 *		}
 	 *

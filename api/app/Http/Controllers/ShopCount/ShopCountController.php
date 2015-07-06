@@ -214,7 +214,7 @@ class ShopCountController extends Controller
     }
 
    /**
-     * @api {get} /shop_count/show 4.转付单详情
+     * @api {get} /shop_count/show/{id} 4.转付单详情
      * @apiName show
      * @apiGroup ShopCount
      *
@@ -425,7 +425,7 @@ class ShopCountController extends Controller
     }
     
     /**
-     * @api {get} /shop_count/delegate_detail 8.代收单 详情
+     * @api {get} /shop_count/delegate_detail/{id} 8.代收单 详情
      * @apiName delegate_detail
      * @apiGroup ShopCount
      *

@@ -42,7 +42,6 @@ class LogController extends Controller{
 	 * 
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": {
 	 *	        "total": 5,
 	 *	        "per_page": 20,

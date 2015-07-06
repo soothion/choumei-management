@@ -60,7 +60,6 @@ class IndexController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *		{
 	 *		    "result": 1,
-	 *		    "msg": "success",
 	 *		    "data": {
 	 *		        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJzdWIiOjEsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdFwvbGFyYXZlbFwvcHVibGljXC9pbmRleC5waHBcL2xvZ2luIiwiaWF0IjoiMTQzMDkwNTQ4NyIsImV4cCI6IjE0MzA5MDkwODciLCJuYmYiOiIxNDMwOTA1NDg3IiwianRpIjoiYTQ4OWI3N2NmOWY4NmUxMWZjMWY1NTE3ZTQ4NjViZjYifQ.Njg2ZWQ3ZDNjZjFjMGY3ZGVmMDhmYjdkZjI0MDI2NTY4YjFjOTBmNzM4MzFhYzgzZjNkZTZmNTc3NGRhODI4Ng",
 	 *		        "uid": 1
@@ -102,7 +101,6 @@ class IndexController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *		{
 	 *		    "result": 1,
-	 *		    "msg": "success",
 	 *		    "data": null
 	 *		}
 	 *
