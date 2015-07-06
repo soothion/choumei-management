@@ -55,7 +55,7 @@ class ShopCountApi
         $salon_fields = ['salonid','salonname'];
         $merchant_fields = ['id','name'];
         $user_fields = ['id','name'];
-        $prepay_fields = ['id','created_at','merchant_id','salon_id','code','type','uid','pay_money','cost_money','day'];
+        $prepay_fields = ['id','created_at','merchant_id','salon_id','code','type','uid','pay_money','cost_money','day','state'];
         $order_by_fields = ['id','created_at','code','type','pay_money','cost_money','day'];
 
         $prepay = PrepayBill::where('state','<>',PrepayBill::STATE_OF_PREVIEW)->select($prepay_fields);
@@ -446,7 +446,7 @@ class ShopCountApi
         $salon_fields = ['salonid','salonname'];
         $merchant_fields = ['id','name'];
         $user_fields = ['id','name'];
-        $prepay_fields = ['id','created_at','merchant_id','salon_id','code','type','uid','pay_money','cost_money','day'];
+        $prepay_fields = ['id','created_at','merchant_id','salon_id','code','type','uid','pay_money','cost_money','day','state'];
         
         $prepay = PrepayBill::where('id',$id);
         $prepay->with([

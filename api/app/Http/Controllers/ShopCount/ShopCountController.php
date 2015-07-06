@@ -32,7 +32,8 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
      * @apiSuccess {String} code 付款单号.
-     * @apiSuccess {Number} type 状态.1已付款.
+     * @apiSuccess {Number} type 付款单类型 1:预付交易款 2:付代收交易款
+     * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} cost_money 换算消费额.
      * @apiSuccess {String} created_at 创建时间.
@@ -105,7 +106,8 @@ class ShopCountController extends Controller
      * @apiParam {String} day   付款日期 (YYYY-MM-DD)
      * 
      * @apiSuccess {String} code 付款单号.
-     * @apiSuccess {Number} type 状态.1已付款.
+     * @apiSuccess {Number} type 付款单类型 1:预付交易款 2:付代收交易款
+     * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} cost_money 换算消费额.
      * @apiSuccess {String} created_at 创建时间.
@@ -221,7 +223,8 @@ class ShopCountController extends Controller
      * @apiParam {Number} id  id
      *
      * @apiSuccess {String} code 付款单号.
-     * @apiSuccess {Number} type 状态.1已付款.
+     * @apiSuccess {Number} type 付款单类型 1:预付交易款 2:付代收交易款
+     * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} cost_money 换算消费额.
      * @apiSuccess {String} created_at 创建时间.
