@@ -155,7 +155,8 @@ $(function(){
 				$pager.prepend('共'+data.total+'条&nbsp;');
 				$pager.append('<form data-role="hash"><input type="text" name="page" /><button type="submit" class="go link">go</button></form>');
 			});
-		}else{
+		}
+		if(data.total==0){
 			$pager.html('<div class="data-empty"><i class="fa fa-frown-o"></i>没有查找到相关数据</div>');
 		}
 	});
