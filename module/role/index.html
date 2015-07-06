@@ -59,13 +59,13 @@
                 </tr>
               </thead>
               <tbody>			  
-				<%var status=["","正常","停用","注销"]%>
+				<%var status=["正常","停用","注销"]%>
 				<%var data=data.data%>
 				<%for(var i=0;i<data.length;i++){%>
                 <tr>
                   <td><%=i+1%></td>
                   <td><%=data[i].name%></td>
-                  <td><%=status[data[i].status]%></td>
+                  <td><%=status[data[i].status-1]%></td>
                   <td><%=data[i].department.title%></td>
 				  <td><%=data[i].created_at%></td>
 				  <td><%=data[i].description%></td>

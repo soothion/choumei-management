@@ -133,7 +133,8 @@ $(function(){
 	})
 	/**分页**/
 	$body.on('_ready',function(e,data){
-		var $pager=$(e.target).find('.pager');
+		var $target=$(e.target);
+		var $pager=$target.find('.pager');
 		data=data.response;
 		if(data.total > 0&&data.total>data.per_page) {
 			seajs.use('/js/jquery.pagination.js',function (){
@@ -157,7 +158,7 @@ $(function(){
 			});
 		}
 		if(data.total==0){
-			$pager.html('<div class="data-empty"><i class="fa fa-frown-o"></i>没有查找到相关数据</div>');
+			$pager.html('<div class="data-empty"><i class="fa fa-frown-o"></i>'+($target.attr('data-empty-alert')||"没有查找到相关数据")+'</div>');
 		}
 	});
 });    	
