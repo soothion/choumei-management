@@ -41,7 +41,6 @@ class PermissionController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": {
 	 *	        "total": 4,
 	 *	        "per_page": 20,
@@ -198,7 +197,6 @@ class PermissionController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *		{
 	 *		    "result": 1,
-	 *		    "msg": "success",
 	 *		    "data": null
 	 *		}
 	 *
@@ -244,7 +242,6 @@ class PermissionController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": {
 	 *	        "id": 1,
 	 *	        "inherit_id": null,
@@ -288,7 +285,6 @@ class PermissionController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *		{
 	 *		    "result": 1,
-	 *		    "msg": "success",
 	 *		    "data": {
 	 *		    }
 	 *		}

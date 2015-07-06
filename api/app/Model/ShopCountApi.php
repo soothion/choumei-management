@@ -270,10 +270,10 @@ class ShopCountApi
      */
     public static function searchShopCount($options)
     {     
-//        $salon_fields = ['salonid','salonname','shopType'];
+        $salon_fields = ['salonid','salonname','shopType'];
         $merchant_fields = ['id','name'];
-        $shop_count_fields = ['id','created_at','merchant_id','salon_id','salon_name','salon_type','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
-        $order_by_fields = ['id','created_at','salon_name','salon_type','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
+        $shop_count_fields = ['id','created_at','merchant_id','salon_id','salon_name','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
+        $order_by_fields = ['id','created_at','salon_name','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
         
         $shop_count = ShopCount::select($shop_count_fields);
         
@@ -293,19 +293,18 @@ class ShopCountApi
                 $merchant_condition = ['key'=>'name','opera'=>'like','value'=>$keyword];
             }
         }
-
-// 获取统计时的店铺信息  不动态获取        
-//         $shop_count->with([
-//             'salon' => function ($q) use($salon_condition,$salon_fields)
-//             {
-//                 if (empty($salon_condition)) {
-//                     $q->lists($salon_fields[0],$salon_fields[1]);
-//                 } else {
-//                     $q->where($salon_condition['key'], $salon_condition['opera'], $salon_condition['value'])
-//                     ->lists($salon_fields[0],$salon_fields[1]);
-//                 }
-//             }
-//         ]);
+        
+        $shop_count->with([
+            'salon' => function ($q) use($salon_condition,$salon_fields)
+            {
+                if (empty($salon_condition)) {
+                    $q->lists($salon_fields[0],$salon_fields[1]);
+                } else {
+                    $q->where($salon_condition['key'], $salon_condition['opera'], $salon_condition['value'])
+                    ->lists($salon_fields[0],$salon_fields[1]);
+                }
+            }
+        ]);
         
         $shop_count->with([
             'merchant' => function ($q) use($merchant_condition,$merchant_fields)

@@ -199,7 +199,6 @@ class UserController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": null
 	 *	}
 	 *
@@ -287,8 +286,11 @@ class UserController extends Controller{
 	 * @apiParam {Number} status 用户状态.1正常、2停用、3注销.
 	 * @apiParam {Array} roles 用户角色.
 	 *
-	 *
-	 *
+	 * @apiSuccessExample Success-Response:
+	 *	    {
+	 *	        "result": 1,
+	 *	        "data": null
+	 *	    }
 	 *
 	 * @apiErrorExample Error-Response:
 	 *		{
@@ -356,7 +358,6 @@ class UserController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "msg": "success",
 	 *	    "data": {
 	 *	        "id": 1,
 	 *	        "username": "soothion",
@@ -430,9 +431,7 @@ class UserController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *		{
 	 *		    "result": 1,
-	 *		    "msg": "success",
-	 *		    "data": {
-	 *		    }
+	 *		    "data": null
 	 *		}
 	 *
 	 *
