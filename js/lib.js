@@ -167,7 +167,6 @@
      * protocol.custom:#号后面的参数,自定义配置.domid,tempid是必需项,insert是插入方式(前后插入)：before||after,默认为覆盖，cache=true是缓存请求，loader=true显示加载提示框loadertext提示语，
      */
     Ajat.prototype = {
-        query:null,
         setUrl:function(url){//修改请求地址
             this.protocol.url=lib.ejs.render({text: url},{});
         },

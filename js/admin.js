@@ -9,7 +9,7 @@
 		}
 		 return data.data;
 	}
-	var loadingend=function(){//触发进度条加载完成
+	var loadingend=function(e){//触发进度条加载完成
 		lib.ajatCount--;
 		if(lib.ajatCount==0){
 			parent.$('body').trigger('loadingend');

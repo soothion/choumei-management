@@ -30,8 +30,8 @@
               <thead>
                 <tr>
                   <th>序号</th>
-                  <th><a href="">店铺 <i class="fa fa-sort"></i></a></th>
-                  <th><a href="">店铺类型 <i class="fa fa-sort"></i></a></th>
+                  <th><a href="#page=1&sort_key=sort_type=<%=query.sort_type==2?1:2%>">店铺 <i class="fa fa-sort"></i></a></th>
+                  <th><a href="#page=1&sort_key=sort_type=<%=query.sort_type==2?1:2%>">店铺类型 <i class="fa fa-sort"></i></a></th>
                   <th class="colswrap">预付款<br />付交易代收款</th>
 				  <th>换算消费额</th>
 				  <th>交易消费额</th>
@@ -55,12 +55,12 @@
 				  <td><%=data[i].cost_money%></td>
 				  <td><%=data[i].spend_money%></td>
 				  <td><%=data[i].balance_money%></td>
-                  <td><%=data[i].invest_money%></td>
-                  <td><%=data[i].invest_return_money%></td>
-                  <td><%=data[i].invest_balance_money%></td>
-				  <td><%=data[i].borrow_money%></td>
-				  <td><%=data[i].borrow_return_money%></td>
-				  <td><%=data[i].borrow_balance_money%></td>
+                  <td><%=data[i].invest_money||"0.00"%></td>
+                  <td><%=data[i].invest_return_money||"0.00"%></td>
+                  <td><%=data[i].invest_balance_money||"0.00"%></td>
+				  <td><%=data[i].borrow_money||"0.00"%></td>
+				  <td><%=data[i].borrow_return_money||"0.00"%></td>
+				  <td><%=data[i].borrow_balance_money||"0.00"%></td>
                 </tr>
 				<%}%>
               </tbody>

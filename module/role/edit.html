@@ -50,7 +50,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门</label>
 				<div class="control">
-					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id%>" data-name="ddd" id="department" ajat-change="list/city#domid=city&value=<%=value%>&tempid=city-t&sid=<%=data.city_id%>">
+					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id||""%>" data-name="ddd" id="department">
 					</select>
 				</div>
 			</div>
