@@ -282,6 +282,7 @@ aside h2{
 .menu-category-title{
 	 border-bottom:1px solid #E0E6EF;
 	 padding:0 15px;
+	 cursor:pointer;
 }
 .menu-category li{
     margin-left:10px;
