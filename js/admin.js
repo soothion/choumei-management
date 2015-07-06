@@ -135,7 +135,7 @@ $(function(){
 	$body.on('_ready',function(e,data){
 		var $pager=$(e.target).find('.pager');
 		data=data.response;
-		if(data.total > 0) {
+		if(data.total > 0&&data.total>data.per_page) {
 			seajs.use('/js/jquery.pagination.js',function (){
 				var query=$.extend({},lib.query);
 				delete query._;
@@ -155,6 +155,8 @@ $(function(){
 				$pager.prepend('共'+data.total+'条&nbsp;');
 				$pager.append('<form data-role="hash"><input type="text" name="page" /><button type="submit" class="go link">go</button></form>');
 			});
+		}else{
+			$pager.html('<div class="data-empty"><i class="fa fa-frown-o"></i>没有查找到相关数据</div>');
 		}
 	});
 });    	

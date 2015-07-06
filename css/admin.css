@@ -469,6 +469,15 @@ th.colswrap{
 .pager .current:first-child,.pager .current:last-child{
 	display:none;
 }
+.data-empty{
+	font-size:14px;
+	color:#999;
+}
+.data-empty i{
+	font-size:32px;
+	margin-right:5px;
+	vertical-align:middle;
+}
 .options{
 	position:absolute;
 	background:#fff;
