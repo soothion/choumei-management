@@ -52,6 +52,10 @@ $(function(){
 			parent.$('body').trigger('loading');
 		}
 	}).on('submit','form[data-role="hash"]',function(e){//表单hash提交
+		$(this).trigger('hash');
+		e.stopPropagation();
+		e.preventDefault();
+	}).on('hash','form[data-role="hash"]',function(e){//表单hash提交
 		var data=lib.getFormData($(this));
 		if(data.page!=1){
 			data.page=1;
@@ -59,8 +63,6 @@ $(function(){
 		if(lib.hashchange(data)){
 			$(window).trigger('hashchange');
 		}
-		e.stopPropagation();
-		e.preventDefault();
 	}).on('click','a[data-role="hash"]',function(e){//链接hash提交
 		var query=lib.parseQuery($(this).attr('href').replace('#',''));
 		if(lib.hashchange(query)){
