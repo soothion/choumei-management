@@ -534,7 +534,8 @@
 				$el.trigger('fail',data);
 			}
 		},
-		success:function(e,data){
+		success:function(data){
+			console.log(data);
 			lib.popup.tips({
 				text:'<i class="fa fa-check-circle"></i>'+(data.msg||"数据更新成功"),
 				time:2000,
@@ -543,7 +544,7 @@
 				}
 			});
 		},
-		fail:function(e,data){
+		fail:function(data){
 			lib.popup.tips({
 				text:'<i class="fa fa-times-circle"></i>'+(data.msg||"数据更新失败"),
 				time:2000
@@ -562,10 +563,10 @@
 				self.save(data);
 			}).on('response',function(e,data){
 				self.parseResponse(data);
-			}).on('success',function(){
-				self.success();
-			}).on('fail',function(){
-				self.fail();
+			}).on('success',function(e,data){
+				self.success(data);
+			}).on('fail',function(e,data){
+				self.fail(data);
 			}).on('input',this.selector,function(e){
 				var $this=$(this);
 				if($this.attr('nospace')!==undefined){
