@@ -14,7 +14,7 @@ class MerchantController extends Controller {
 	 * @apiName index
 	 * @apiGroup merchant
 	 *
-	 * @apiParam {String} phone 可选,电话号码
+	 * @apiParam {String} mobile 可选,电话号码
 	 * @apiParam {String} name 可选,商户名
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.

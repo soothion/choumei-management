@@ -1,5 +1,4 @@
-<?php
-namespace App\Http\Controllers\Merchant;
+<?php namespace App\Http\Controllers\Merchant;
 
 
 use App\Http\Controllers\Controller;
@@ -48,7 +47,7 @@ class SalonController extends Controller {
     		);
 	/**
 	* @api {post} /salon/index 1.店铺列表
-	* @apiName list
+	* @apiName index
 	* @apiGroup salon
 	*
 	* @apiParam {Number} shopType 可选,店铺类型 
