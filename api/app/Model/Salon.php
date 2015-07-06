@@ -7,6 +7,7 @@ use DB;
 class Salon extends Model {
 
 	protected $table = 'salon';
+	protected $primaryKey = 'salonid';
 	public $timestamps = false;
 	
 	//protected $fillable = ['id', 'sn','name','contact','mobile','phone','email','addr','foundingDate','salonNum','addTime' ];
