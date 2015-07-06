@@ -272,19 +272,19 @@ class SalonController extends Controller {
 	* @apiParam {String} contractPicUrl 可选,合同图片 json数组.
 	* @apiParam {String} licensePicUrl 可选,营业执照 json数组.
 	* @apiParam {String} corporatePicUrl 可选,法人执照 json数组.
-	* @apiParam 合同图片 营业执照 法人执照 demo
+	* @apiDescription 合同图片 营业执照 法人执照 demo
 	*	[
 	*		{
-	*			"img": "http:\/\/choumei2.test.com\/merchant\/index.jpg",    //大图
-	*			"thumbimg": "http:\/\/choumei2.test.com\/sindex.jpg"       //缩略图
+	*			"img": "http://choumei2.test.com/merchant/index.jpg",    //大图
+	*			"thumbimg": "http://choumei2.test.com/sindex.jpg"       //缩略图
 	*		},
 	*		{
-	*			"img": "http:\/\/choumei2.test.com\/merchant\/index.jpg",
-	*			"thumbimg": "http:\/\/choumei2.test.com\/sindex.jpg"
+	*			"img": "http://choumei2.test.com/merchant/index.jpg",
+	*			"thumbimg": "http://choumei2.test.com/sindex.jpg"
 	*		},
 	*		{
-	*			"img": "http:\/\/choumei2.test.com\/merchant\/index.jpg",
-	*			"thumbimg": "http:\/\/choumei2.test.com\/sindex.jpg"
+	*			"img": "http://choumei2.test.com/merchant/index.jpg",
+	*			"thumbimg": "http://choumei2.test.com/sindex.jpg"
 	*		}
 	*	]
 	*
