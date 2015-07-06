@@ -11,8 +11,8 @@ use DB;
 class MerchantController extends Controller {
 	/**
 	 * @api {post} /merchant/index 1.商户列表
-	 * @apiName list
-	 * @apiGroup 
+	 * @apiName index
+	 * @apiGroup merchant
 	 *
 	 * @apiParam {String} phone 可选,电话号码
 	 * @apiParam {String} name 可选,商户名
@@ -81,15 +81,16 @@ class MerchantController extends Controller {
 		$query = Merchant::getQuery();
 
 		//状态筛选
-		if(isset($param['name'])&&$param['name'])
+		if(isset($param['name']) && urldecode($param['name']))
 		{
-			$keyword = '%'.$param['name'].'%';
+			$keyword = '%'.urldecode($param['name']).'%';
 			$query = $query->where('name','like',$keyword);
 		}
 		
-		if(isset($param['phone'])&&$param['phone'])
+		if(isset($param['mobile'])&&$param['mobile'])
 		{
-			$query = $query->where('phone','>=',$param['phone']);
+			$kModile = '%'.$param['mobile'].'%';
+			$query = $query->where('mobile','like',$kModile);
 		}
 
 		$page = isset($param['page'])?max($param['page'],1):1;
@@ -125,8 +126,8 @@ class MerchantController extends Controller {
 	
 	/**
 	 * @api {post} /merchant/save 2.添加或者修改商户
-	 * @apiName 
-	 * @apiGroup 
+	 * @apiName save
+	 * @apiGroup  merchant
 	 *
 	 *@apiParam {Number} id 修改必填,商家ID（添加不填）.
 	 *
@@ -197,6 +198,7 @@ class MerchantController extends Controller {
 		$save["email"] = trim($param["email"])?trim($param["email"]):"";
 		$save["addr"] = trim($param["addr"])?trim($param["addr"]):"";
 		$save["foundingDate"] = trim($param["foundingDate"])?trim($param["foundingDate"]):"";
+		$save["foundingDate"] = strtotime($save["foundingDate"]);
 		$save["sn"] = trim($param["sn"])?trim($param["sn"]):"";
 		
 		if($param["id"])
@@ -222,8 +224,8 @@ class MerchantController extends Controller {
 	
 	/**
 	 * @api {post} /merchant/del 3.删除商户
-	 * @apiName 
-	 * @apiGroup 
+	 * @apiName del
+	 * @apiGroup merchant
 	 *
 	 *@apiParam {Number} id 删除必填,商家ID.
 	 *
@@ -271,8 +273,8 @@ class MerchantController extends Controller {
 	
 	/**
 	 * @api {post} /merchant/checkMerchantSn 4.检测商家编号是否重复
-	 * @apiName 
-	 * @apiGroup 
+	 * @apiName checkMerchantSn
+	 * @apiGroup merchant
 	 *
 	 *@apiParam {String} sn 必填商家编号.
 	 *
@@ -312,6 +314,54 @@ class MerchantController extends Controller {
 		{
 			return $this->success();
 		}
+	}
+	
+	/**
+	 * @api {post} /merchant/getMerchantList 5.获取商户详情
+	 * @apiName getMerchantList
+	 * @apiGroup merchant
+	 *
+	 *@apiParam {Number} id 必填商家id.
+	 *
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "data": {
+	 *	        "id": 48,
+	 *	        "sn": "00048",
+	 *	        "name": "sn手动输入",
+	 *	        "contact": "汪先生",
+	 *	        "mobile": "13458745236",
+	 *	        "phone": "0755236566",
+	 *	        "email": "",
+	 *	        "addr": "",
+	 *	        "foundingDate": 0,
+	 *	        "addTime": 1432202115,
+	 *	        "upTime": 0,
+	 *	        "status": 1,
+	 *	        "salonNum": 0
+	 *	    }
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "参数错误"
+	 *		}
+	 */		
+	public function  getMerchantList()
+	{
+		$param = $this->param;
+		$id = isset($param["id"])?trim($param["id"]):"";	
+		if(!$id)
+		{
+			return $this->error('参数错误');
+		}
+		$rs = Merchant::find($id);
+		return $this->success($rs);
 	}
 	
 }
