@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-06-30 10:24:56
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-03 15:19:08
+* @Last Modified time: 2015-07-06 16:56:57
 */
 
 /********************店铺列表***********************/
@@ -24,11 +24,11 @@
     height:50px;
     padding-right:3.25%;    
 }
-.table-view{
+.table-wrapper{
     display:inline-block;
     width:70%;
 }
-.table-view th{
+.table-wrapper th{
     font-size: 14px;            
 }
 .shop-name{
@@ -90,6 +90,61 @@
     background: url(../../images/search-bar.png);
     cursor: pointer;        
 }
+
+.img-wrapper{
+  border:1px solid #ddd;
+  width:196px;height:138px;
+  margin:5px;
+  display:inline-block;
+  cursor: pointer;
+}
+
+.img-wrapper img{
+  width:192px;
+  height:134px;
+  padding:2px;
+  box-shadow: 2px 2px 2px #ddd;
+}
+
+.swiper-container{
+    position: fixed;
+    width:60%;
+    height:60%;
+    left: 20%;
+    top: 20%;
+    background-color: #fff;
+    z-index: 1000;
+}
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.swiper-close{
+    position: absolute;
+    z-index: 1019;
+    top: -1px;
+    right: 0px;
+    font-size: 2rem;  
+}
+
+.contract-mr{
+  display: inline-block;
+  margin-right: 30px;
+}
+
 
 /********************新增、修改店铺***********************/
 .textarea{

@@ -4,6 +4,7 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="../../js/include.js"></script>
+      <script type="text/javascript" src="../../js/utils.js"></script>
       <link rel="stylesheet" href="shop.css" />    
     </head>
 
@@ -23,25 +24,26 @@
             <li class="flex-item"><span>4.附件上传</span></li>
           </ul>
 
-            <form novalidate="" class="form-vertical" data-role="form">
+            <form novalidate="" class="form-vertical" data-role="form" id="form">
+                <script type="text/template" id="form-t">  
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
                     <div class="control">
-                        <input type="text" name="shopNum" placeholder="店铺编号" maxlength="10" required>
+                        <input type="text" name="sn" placeholder="店铺编号" maxlength="10" required>
                     </div>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control">
-                        <input type="text" name="shopName" placeholder="店铺名称" maxlength="16" required>
+                        <input type="text" name="salonname" value="<%=data.salonname%>" placeholder="店铺名称" maxlength="16" required>
                     </div>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
-                        <input type="text" name="marchant" placeholder="所属商户" disabled>
+                        <input type="text" name="marchant" value="<%=data.name%>" placeholder="所属商户" disabled>
                     </div>
                 </div>
 
@@ -64,8 +66,8 @@
 
                 <div class="control-group" style="margin:0">
                     <label class="control-label" for=""></label>
-                    <textarea class="textarea" name="address" id="address" placeholder="详细街道信息" 
-                    maxlength="50" required ></textarea>
+                    <textarea class="textarea" name="addr" id="address" placeholder="详细街道信息" 
+                    maxlength="50" required ><%=data.addr%></textarea>
                 </div>                  
 
                 <div class="control-group" style="margin:0">
@@ -84,13 +86,13 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商圈：</label>
-                    <input type="radio" class="label" id="areaRadio1" name="district" value="1">
+                    <input type="radio" class="label" id="areaRadio1" name="zone" value="1">
                     <label for="areaRadio1" style="margin-right:10px">南山区</label>
 
-                    <input type="radio" class="label" id="areaRadio2" name="district" value="2">
+                    <input type="radio" class="label" id="areaRadio2" name="zone" value="2">
                     <label for="areaRadio2" style="margin-right:10px">福田区</label>
 
-                    <input type="radio" class="label" id="areaRadio3" name="district" value="3">
+                    <input type="radio" class="label" id="areaRadio3" name="zone" value="3">
                     <label for="areaRadio3" style="margin-right:10px">龙岗区</label>
                     
                     <span class="control-help" style="display:none;"></span>
@@ -110,14 +112,15 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>合同编号：</label>
                     <div class="control">
-                        <input type="text" name="contractNum" placeholder="合同编号" maxlength="16" required>
+                        <input type="text" name="bargainno" value="<%=data.bargainno%>" placeholder="合同编号" maxlength="16" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>合同日期：</label>
                     <div class="control">
-                        <input type="date" name="contractDate" required min="1950-01-01" max="2030-01-01">
+                        <input type="date" name="contractTime" value="<%=data.contractTime%>" 
+                        required min="1950-01-01" max="2030-01-01">
                     </div>
                 </div>  
 
@@ -157,14 +160,14 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>联系人：</label>
                     <div class="control">
-                        <input type="text" name="linkman" placeholder="联系人" maxlength="8" required>
+                        <input type="text" name="bcontacts" value="<%=data.bcontacts%>" placeholder="联系人" maxlength="8" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>联系电话：</label>
                     <div class="control">
-                        <input type="text" name="linkPhone" placeholder="11位有效手机号码" 
+                        <input type="text" name="tel" value="<%=data.tel%>" placeholder="11位有效手机号码" 
                         maxlength="11" required>
                     </div>
                 </div>
@@ -172,28 +175,29 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺电话：</label>
                     <div class="control">
-                        <input type="text" name="shopPhone" placeholder="店铺电话" maxlength="12" required>
+                        <input type="text" name="phone" value="<%=data.phone%>" placeholder="店铺电话" maxlength="12" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>法人代表：</label>
                     <div class="control">
-                        <input type="text" name="legalPerson" placeholder="法人代表" maxlength="8" required>
+                        <input type="text" name="corporateName" value="<%=data.corporateName%>" placeholder="法人代表" 
+                        maxlength="8" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>法人电话：</label>
                     <div class="control">
-                        <input type="text" name="legalPhone" placeholder="11位有效手机号码" 
+                        <input type="text" name="corporateTel" value="<%=data.corporateTel%>" placeholder="11位有效手机号码" 
                         maxlength="11" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>业务代表：</label>
-                    <select class="select defalut-width" name="businessMan" required>
+                    <select class="select defalut-width" name="businessId" required>
                         <option value="">请选择</option>
                         <option value="1">刘大运</option>
                     </select>
@@ -203,7 +207,8 @@
                     <label class="control-label" for=""></label>
                     <button class="btn" style="margin-right:20px">预览</button>
                     <button class="btn-primary">下一步</button>
-                </div>                                                                                         
+                </div>
+                </script>                                                                                         
             </form>       
         </div>
 

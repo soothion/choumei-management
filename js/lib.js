@@ -178,7 +178,7 @@
         },
         render: function () {//发送http请求关渲染HTML
             if(this.protocol.url){
-                this.fetch();
+                return this.fetch();
             }else{
                 this.template({});
             }
@@ -225,7 +225,7 @@
             if(pro.custom.cache=='true'){
                 options.cache=true;
             }
-            lib.ajax(options);
+            return lib.ajax(options);
         },
         setExternal:function(data){//引入外部数据，以便模板引擎渲染时能获取；
             this.external=data;

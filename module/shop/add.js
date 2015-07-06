@@ -2,13 +2,20 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-03 17:40:09
+* @Last Modified time: 2015-07-06 18:37:59
 */
 
-$(document).ready(function(){
+(function(){
+    var type = utils.getSearchString("type");
+    if(type && type === 'edit'){
+        var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));       
+        lib.ajat('#domid=form&tempid=form-t').template(data);     
+    }
 
+    if(type && type === 'add'){
+        alert(11);
+    }
     
-
     $("#addCoordinate").on('click',function(){
         $("#pop-wrapper").show();
     })
@@ -18,10 +25,18 @@ $(document).ready(function(){
     });
 
     lib.Form.prototype.save = function(data){
-        sessionStorage.setItem('add-shop-data',JSON.stringify(data));
-        location.href = "bank.html";
+        debugger;
+        if(type && type === 'edit'){
+            sessionStorage.setItem('eidt-shop-data',JSON.stringify(data));   
+        }
+        if(type && type === 'add'){
+            sessionStorage.setItem('add-shop-data',JSON.stringify(data));            
+        }
+        location.href = "bank.html?type="+type;
     }       
-});
+
+})();
+
 
 function renderMap (){
     $("#addCoordinate").on('click',function(){

@@ -27,59 +27,59 @@
 
             <form novalidate="" class="form-vertical" data-role="form" id="form">
                 <script type="text/template" id="form-t">            
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>银行名称：</label>
-                    <div class="control">
-                        <input type="text" name="bankName" placeholder="银行名称" maxlength="16" required 
-                        value="<%=data.bankName%>">
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>银行名称：</label>
+                        <div class="control">
+                            <input type="text" name="bankName" placeholder="银行名称" maxlength="16" required 
+                            value="<%=data.bankName%>">
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>收款人：</label>
+                        <div class="control">
+                            <input type="text" name="receiver" placeholder="收款人" maxlength="8"  required>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>银行卡号：</label>
+                        <div class="control">
+                            <input type="text" name="bankNum" placeholder="银行卡号" maxlength="20"  
+                            required pattern="^\d{1,20}$" patternMsg="银行卡号有误">
+                        </div>
                     </div>
-                </div> 
 
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>收款人：</label>
-                    <div class="control">
-                        <input type="text" name="receiver" placeholder="收款人" maxlength="8"  required>
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>支行名称：</label>
+                        <div class="control">
+                            <input type="text" name="branchName" placeholder="支行名称" maxlength="25"  required>
+                        </div>
                     </div>
-                </div> 
 
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>银行卡号：</label>
-                    <div class="control">
-                        <input type="text" name="bankNum" placeholder="银行卡号" maxlength="20"  
-                        required pattern="^\d{1,20}$" patternMsg="银行卡号有误">
+                    <div class="control-group">
+                        <label class="control-label" for="">*账户类型：</label>
+
+                        <input type="radio" name="accountType" class="radio" id="radio1" value="1">
+                        <label for="radio1">对公账户</label>
+
+                        <input type="radio" name="accountType" class="radio" id="radio2" value="2">
+                        <label for="radio2">对私账户</label>
+
+                        <span class="control-help" style="display:none;"></span>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>支行名称：</label>
-                    <div class="control">
-                        <input type="text" name="branchName" placeholder="支行名称" maxlength="25"  required>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label" for="">*账户类型：</label>
-
-                    <input type="radio" name="accountType" class="radio" id="radio1" value="1">
-                    <label for="radio1">对公账户</label>
-
-                    <input type="radio" name="accountType" class="radio" id="radio2" value="2">
-                    <label for="radio2">对私账户</label>
-
-                    <span class="control-help" style="display:none;"></span>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label" for=""></label>
-                    <button class="btn" style="margin-right:20px">预览</button>
-                    <button class="btn-primary">下一步</button>
-                </div>                                                                  
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <button class="btn" style="margin-right:20px">预览</button>
+                        <button class="btn-primary">下一步</button>
+                    </div>                                                                  
                 </script>
             </form>
         </div>
 
         <script>
-
+             
             lib.ajat('#domid=form&tempid=form-t').template({
                 'bankName'   : 111111111111,
                 'receiver'   : 111111111111,

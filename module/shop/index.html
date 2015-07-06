@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>臭美管理后台</title>
-        <link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="../../css/reset.css" />
-        <link rel="stylesheet" href="../../css/global.css" />
-        <link rel="stylesheet" href="../../css/admin.css" />
-        <link rel="stylesheet" href="shop.css" />      
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="../../js/include.js"></script>
+      <script type="text/javascript" src="../../js/utils.js"></script>
+      <link rel="stylesheet" href="shop.css" />     
     </head>
     <body>
       <div class="breadcrumb">
@@ -81,7 +77,8 @@
           </div>
         </div>
 
-        <div class="table">
+        <div class="table" id="table" ajat="salon/index?<%=query._%>#domid=table&tempid=table-t">
+          <script type="text/template" id="table-t">
           <table>
             <thead>
               <tr>
@@ -98,29 +95,35 @@
             </thead>
 
             <tbody>
+              <% 
+              var row = data.data;
+              for(var i = 0 ; i< row.length ; i++){ 
+                var t = row[i].shopType , typeName = "" , statusText = "";
+                if(t == "1") typeName = "预付款店";
+                if(t == "2") typeName = "投资店";
+                if(t == "3") typeName = "金字塔店";
+                if(row[i].salestatus == "0") statusText = "终止合作";
+                if(row[i].salestatus == "1") statusText = "正常";
+              %>
               <tr>
-                <td>001</td>
-                <td>11111111111</td>
-                <td><strong>卡顿美发</strong><p>所属商户：卡顿</p></td>
-                <td>金字塔</td>
-                <td>福田</td>
-                <td>福田1111</td>
-                <td>aaaa</td>
-                <td>正常</td>
-                <td><a class="link" href="detail.html">查看&gt;&gt;</a></td>
+                <td><%=i+1%></td>
+                <td><%=row[i].sn%></td>
+                <td><strong><%=row[i].salonname%></strong><p>所属商户：<%=row[i].name%></p></td>
+                <td><%=typeName%></td>
+                <td><%=row[i].districtName%></td>
+                <td><%=row[i].zoneName%></td>
+                <td><%=row[i].businessName%></td>
+                <td><%=statusText%></td>
+                <td><a class="link" href="detail.html?type=detail&salonid=<%=row[i].salonid%>">查看&gt;&gt;</a></td>
               </tr>
+              <%}%>
             </tbody>
           </table>
+          <div class="pager"></div>          
+          </script>
         </div>
       </div>
-      <script src="../../js/cfg.js"></script>
-      <script src="../../js/jquery.min.js"></script>
-      <script src="../../js/sea.js"></script>
-      <script src="../../js/ejs.js"></script>
-      <script src="../../js/lib.js"></script>
-      <script src="../../js/iscroll.js"></script>
-      <script src="../../js/admin.js"></script>
-      <script src="../../js/frame.js"></script>
+
       <script>
         $("#dropMenu").on('click',function(e){
           $(".area-box").fadeToggle(300);

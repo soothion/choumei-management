@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>臭美管理后台</title>
-        <link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="../../css/reset.css" />
-        <link rel="stylesheet" href="../../css/global.css" />
-        <link rel="stylesheet" href="../../css/admin.css" />
-        <link rel="stylesheet" href="shop.css" />      
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="../../js/include.js"></script>
+      <script type="text/javascript" src="../../js/utils.js"></script>
+      <script type="text/javascript" src="../../js/utils.js"></script>
+      <link rel="stylesheet" href="shop.css" />   
+      <link rel="stylesheet" href="../../css/swiper.min.css">
     </head>
+
     <body>
         <div class="breadcrumb">
             <a class="link" href="ui.html">一级导航</a>
@@ -23,171 +22,205 @@
                 <div style="float:right">
                     <button class="btn">终止合作</button>
                     <button class="btn">删除店铺</button>
-                    <a href='add.html'>
+                    <a href='add.html?type=edit'>
                         <button class="btn">编辑</button>
                     </a>  
                 </div>          
             </div>
                     
             <div>
-                <div class="table-view">
-                    <div class="table" style="margin:0px">
-                        <table>
-                            <tr style="height:60px;">
-                                <td class="shop-name">
-                                    <h1>卡顿美发（南山店）</h1>
-                                    <p style="padding-left:5px">所属商户：卡顿</p>
-                                </td>
-                                <td class="shop-num">编号：161361631007</td>
-                            </tr>                      
-                        </table>
-
-                        <table>
-                            <tbody>
-                                <tr><td class="content">店铺地址：</td><td>2</td></tr>
-                                <tr><td class="content">所属商圈：</td><td>2</td></tr>
-                                <tr><td class="content">店铺类型：</td><td>2</td></tr>
-                                <tr><td class="content">合同：</td><td>2</td></tr>
-                                <tr><td class="content">合同编号：</td><td>2</td></tr>
-                                <tr><td class="content">联系人：</td><td>2</td></tr>
-                                <tr><td class="content">联系手机：</td><td>2</td></tr>
-                                <tr><td class="content">店铺电话：</td><td>2</td></tr>
-                                <tr><td class="content">法人代表：</td><td>2</td></tr>
-                                <tr><td class="content">法人手机：</td><td>2</td></tr>
-                                <tr><td class="content">业务代表：</td><td>2</td></tr>
-                            </tbody>
-                        </table>
-
-                        <table>
-                              <thead>
-                                <tr>
-                                  <th colspan="4" class="content">银行账户信息</th>
-                                </tr>
-                              </thead>                      
-                            <tbody>
-                                <tr>
-                                    <td class="content">银行名称：</td>
-                                    <td>招行银行</td>
-                                    <td class="content">支行名称：</td>
-                                    <td>招行银行</td>
-                                </tr>
-                                <tr>
-                                    <td class="content">收款人：</td>
-                                    <td>飞哥</td>
-                                    <td class="content">银行账号：</td>
-                                    <td>2222222222222222</td>
-                                </tr>
-                                <tr>
-                                <td colspan="1" class="content">账户类型：</td>
-                                <td colspan="3">对公账户</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table>
-
-                              <thead>
-                                <tr>
-                                  <th colspan="8" class="content">准入评估表</th>
-                                </tr>
-                              </thead>  
-
-                            <tbody>
-                                <tr>
-                                    <td class="content">店铺面积：</td>
-                                    <td>33</td>
-                                    <td class="content">镜台数量：</td>
-                                    <td>15</td>
-                                    <td class="content">员工总人数：</td>
-                                    <td>30</td>
-                                    <td class="content">发型师人数：</td>
-                                    <td>15</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="con-special">店铺平均月销售量：</td>
-                                    <td colspan="2">1w</td>
-                                    <td colspan="2" class="content">年销售总额：</td>
-                                    <td colspan="2">222222222222222</td>
-                                </tr>                            
-                                <tr>
-                                    <td colspan="2" class="con-special">本店客单价：</td>
-                                    <td colspan="2">25</td>
-                                    <td colspan="2" class="content">充值卡占月销售额：</td>
-                                    <td colspan="2">2222222222222222</td>
-                                </tr>                            
-                                <tr>
-                                    <td  colspan="2" class="con-special">销售最多的充值卡金额：</td>
-                                    <td >100</td>
-                                    <td >7.5折</td>
-                                    <td colspan="2" class="content">占全部充值总额：</td>
-                                    <td colspan="2">11111</td>
-                                </tr>                            
-                                <tr>
-                                    <td colspan="2" class="con-special">洗剪吹占销售额：</td>
-                                    <td colspan="2">25</td>
-                                    <td colspan="2" class="content">烫染占销售额：</td>
-                                    <td colspan="2">250</td>
-                                </tr>                            
-                                <tr>
-                                    <td colspan="2" class="con-special">O2O平台合作：</td>
-                                    <td colspan="2">臭美</td>
-                                    <td colspan="2" class="content">合作O2O销售额占比：</td>
-                                    <td colspan="2">45%</td>
-                                </tr>                            
-                                <tr>
-                                    <td colspan="2" class="con-special">本店正常工作时间每日最多客接待人次理论数：</td>
-                                    <td colspan="6">100</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="con-special">平均每月实际接待：</td>
-                                    <td colspan="2">100</td>
-                                    <td colspan="2" class="content">店铺成立时间：</td>
-                                    <td colspan="2">2015年4月</td>
-                                </tr>                            
-                                <tr>
-                                    <td colspan="2" class="con-special">店铺租金：</td>
-                                    <td colspan="2">1000</td>
-                                    <td colspan="2" class="content">店铺租赁合同剩余有效期：</td>
-                                    <td colspan="2">8月23</td>
-                                </tr>                            
-                                <tr>
-                                    <td colspan="2" class="con-special">收款人：</td>
-                                    <td colspan="2">飞哥</td>
-                                    <td colspan="2" class="content">银行账号：</td>
-                                    <td colspan="2">2222222222222222</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="content">店铺类型：</td>
-                                    <td colspan="6">
-                                        <input type="checkbox" name="boll" class="checkbox" id="checkbox1"><label for="checkbox1">篮球</label>
-                                        <input type="checkbox" name="boll" class="checkbox" id="checkbox2"><label for="checkbox2">足球</label>                                  
+                <div class="table-wrapper" id="table-wrapper" >
+                    <script type="text/template" id="table-t">                
+                        <div class="table" style="margin:0px">
+                            <table>
+                                <tr style="height:60px;">
+                                    <td class="shop-name">
+                                        <h1><%=data.salonname%></h1>
+                                        <p style="padding-left:5px">所属商户：<%=data.name%></p>
                                     </td>
-                                </tr>
-                            </tbody>
-                        </table>  
+                                    <td class="shop-num">编号：<%=data.sn%></td>
+                                </tr>                      
+                            </table>
 
-                        <table>
-                              <thead>
-                                <tr>
-                                  <th colspan="8" class="content">附件图片</th>
-                                </tr>
-                              </thead>                    
-                            <tbody>
-                                <tr>
-                                    <td colspan="2" class="content">合同照片：</td>
-                                    <td colspan="6"></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="content">营业执照：</td>
-                                    <td colspan="6"></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="content">法人执照：</td>
-                                    <td colspan="6"></td>
-                                </tr>
-                            </tbody>
-                        </table>                                           
-                    </div>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="content">店铺地址：</td>
+                                        <td><%=data.provinceName + data.citiesName + data.districtName + data.addr%></td>
+                                    </tr>
+                                    <tr><td class="content">所属商圈：</td>
+                                        <td><%=data.zone%></td>
+                                    </tr>
+                                    <tr><td class="content">店铺类型：</td>
+                                        <%
+                                        var typeName = "";
+                                        if(data.shopType == 1) typeName = "预付款店";
+                                        if(data.shopType == 2) typeName = "投资店";
+                                        if(data.shopType == 3) typeName = "金字塔店";
+                                        %>
+                                        <td><%=typeName%></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="content">合同：</td>
+                                        <td>
+                                            <span class="contract-mr">日期：<%=data.contractTime%></span>
+                                            <span class="contract-mr">期限：<%=data.contractPeriod%></span>
+                                            <span class="contract-mr">合同编号：<%=data.bargainno%></span>
+                                        </td>
+                                    </tr>
+                                    <tr><td class="content">联系人：</td><td><%=data.bcontacts%></td></tr>
+                                    <tr><td class="content">联系手机：</td><td><%=data.tel%></td></tr>
+                                    <tr><td class="content">店铺电话：</td><td><%=data.phone%></td></tr>
+                                    <tr><td class="content">法人代表：</td><td><%=data.corporateName%></td></tr>
+                                    <tr><td class="content">法人手机：</td><td><%=data.corporateTel%></td></tr>
+                                    <tr><td class="content">业务代表：</td><td><%=data.businessName%></td></tr>
+                                </tbody>
+                            </table>
+
+                            <table>
+                                  <thead>
+                                    <tr>
+                                      <th colspan="4" class="content">银行账户信息</th>
+                                    </tr>
+                                  </thead>                      
+                                <tbody>
+                                    <tr>
+                                        <td class="content">银行名称：</td>
+                                        <td><%=data.bankName%></td>
+                                        <td class="content">支行名称：</td>
+                                        <td><%=data.branchName%></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="content">收款人：</td>
+                                        <td><%=data.beneficiary%></td>
+                                        <td class="content">银行账号：</td>
+                                        <td><%=data.bankCard%></td>
+                                    </tr>
+                                    <tr>
+                                    <td colspan="1" class="content">账户类型：</td>
+                                    <td colspan="3">
+                                    <%= data.accountType==1 ? " 对公帐户" : "对私帐户"  %>
+                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table>
+
+                                  <thead>
+                                    <tr>
+                                      <th colspan="8" class="content">准入评估表</th>
+                                    </tr>
+                                  </thead>  
+
+                                <tbody>
+                                    <tr>
+                                        <td class="content">店铺面积：</td>
+                                        <td><%=data.salonArea%></td>
+                                        <td class="content">镜台数量：</td>
+                                        <td><%=data.dressingNums%></td>
+                                        <td class="content">员工总人数：</td>
+                                        <td><%=data.staffNums%></td>
+                                        <td class="content">发型师人数：</td>
+                                        <td><%=data.stylistNums%></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="con-special">店铺平均月销售量：</td>
+                                        <td colspan="2"><%=data.monthlySales%></td>
+                                        <td colspan="2" class="content">年销售总额：</td>
+                                        <td colspan="2"><%=data.totalSales%></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td colspan="2" class="con-special">本店客单价：</td>
+                                        <td colspan="2"><%=data.price%></td>
+                                        <td colspan="2" class="content">充值卡占月销售额：</td>
+                                        <td colspan="2"><%=data.payScale%></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td  colspan="2" class="con-special">销售最多的充值卡金额：</td>
+                                        <td ><%=data.payMoney%></td>
+                                        <td ><%=data.payMoneyScale%>折</td>
+                                        <td colspan="2" class="content">占全部充值总额：</td>
+                                        <td colspan="2"><%=data.payCountScale%></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td colspan="2" class="con-special">洗剪吹占销售额：</td>
+                                        <td colspan="2"><%=data.blowScale%></td>
+                                        <td colspan="2" class="content">烫染占销售额：</td>
+                                        <td colspan="2"><%=data.hdScale%></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td colspan="2" class="con-special">O2O平台合作：</td>
+                                        <td colspan="2"><%=data.platformName%></td>
+                                        <td colspan="2" class="content">合作O2O销售额占比：</td>
+                                        <td colspan="2"><%=data.platformScale%>%</td>
+                                    </tr>                            
+                                    <tr>
+                                        <td colspan="2" class="con-special">本店正常工作时间每日最多客接待人次理论数：</td>
+                                        <td colspan="6"><%=data.receptionNums%></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="con-special">平均每月实际接待：</td>
+                                        <td colspan="2"><%=data.receptionMons%></td>
+                                        <td colspan="2" class="content">店铺成立时间：</td>
+                                        <td colspan="2"><%=data.setupTime%></td>
+                                    </tr>                            
+                                    <tr>
+                                        <td colspan="2" class="con-special">店铺租金：</td>
+                                        <td colspan="2"><%=data.hotdyeScale%></td>
+                                        <td colspan="2" class="content">店铺租赁合同剩余有效期：</td>
+                                        <td colspan="2"><%=data.lastValidity%></td>
+                                    </tr>                            
+
+                                    <tr>
+                                        <td colspan="2" class="content">店铺类型：</td>
+                                        <td colspan="6">
+                                            <input type="checkbox" name="boll" class="checkbox" id="checkbox1"><label for="checkbox1">篮球</label>
+                                            <input type="checkbox" name="boll" class="checkbox" id="checkbox2"><label for="checkbox2">足球</label>                                  
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>  
+
+                            <table>
+                                  <thead>
+                                    <tr>
+                                      <th colspan="8" class="content">附件图片</th>
+                                    </tr>
+                                  </thead>                    
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2" class="content">合同照片：</td>
+                                        <td colspan="6">
+                                            <div class="img-wrapper">
+                                                <img src="../../images/logo.png">
+                                            </div>                                         <div class="img-wrapper">
+                                                <img src="../../images/logo.png">
+                                            </div>                                         <div class="img-wrapper">
+                                                <img src="../../images/logo.png">
+                                            </div>                                         <div class="img-wrapper">
+                                                <img src="../../images/logo.png">
+                                            </div>                                         <div class="img-wrapper">
+                                                <img src="../../images/logo.png">
+                                            </div>                                         <div class="img-wrapper">
+                                                <img src="../../images/logo.png">
+                                            </div>                                         <div class="img-wrapper">
+                                                <img src="../../images/logo.png">
+                                            </div>                                        
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="content">营业执照：</td>
+                                        <td colspan="6"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="content">法人执照：</td>
+                                        <td colspan="6"></td>
+                                    </tr>
+                                </tbody>
+                            </table>                                           
+                        </div>
+                    </script>
                 </div>
 
                 <div class="map">
@@ -202,44 +235,33 @@
                 </div>
             </div>
         </div>
-    <script src="../../js/cfg.js"></script>
-    <script src="../../js/jquery.min.js"></script>
-    <script src="../../js/sea.js"></script>
-    <script src="../../js/ejs.js"></script>
-    <script src="../../js/lib.js"></script>
-    <script src="../../js/iscroll.js"></script>
-    <script src="../../js/admin.js"></script>
-    <script src="../../js/frame.js"></script>
-    <script src="http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()">
-    </script>
-    <script>
-        function renderMap(){
-            //在指定的容器内创建地图实例  
-            var map = new BMap.Map("mapContent");
-            //创建一个地理坐标类 
-            var point = new BMap.Point(113.941893,22.535644);
-            //初始化地图位置（未进行初始化的地图将不能进行任何操作）
-            map.centerAndZoom(point,12);
-            //将平移缩放控件添加到地图上
-            map.addControl(new BMap.NavigationControl());
-            //启用滚轮放大缩小功能
-            map.enableScrollWheelZoom(true);
-            //此处是一个补丁，由于未知的原因直接new Marker对象添加的标注
-            //标注的图标很小，所以这里直接用自己的图标            
-            var markerIcon = new BMap.Icon("../../images/marker.png", new BMap.Size(39,25),{
-                anchor : new BMap.Size(10,25) 
-            });
-            //根据point创建一个图像标注覆盖物实例
-            var marker = new BMap.Marker(point,{icon:markerIcon}); 
-            //将覆盖物添加到地图中
-            map.addOverlay(marker);
-            //跳动的动画   
-            marker.setAnimation(BMAP_ANIMATION_BOUNCE);
-                    
-            $(".map-search-bar").on('click',function(){
-            window.open("http://map.baidu.com/?latlng=22.535644,113.941893&title=我们位置&content=南山科技中一路华强高新发展大楼&autoOpen=true");            
-          })           
-        }
-    </script>                
+
+        <div id="swipper" style="display:none">
+            <div class="mask"></div>
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">Slide 1</div>
+                    <div class="swiper-slide">Slide 2</div>
+                    <div class="swiper-slide">Slide 3</div>
+                    <div class="swiper-slide">Slide 4</div>
+                    <div class="swiper-slide">Slide 5</div>
+                    <div class="swiper-slide">Slide 6</div>
+                    <div class="swiper-slide">Slide 7</div>
+                    <div class="swiper-slide">Slide 8</div>
+                    <div class="swiper-slide">Slide 9</div>
+                    <div class="swiper-slide">Slide 10</div>
+                </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+                <!-- Add Arrows -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <i class="fa fa-times-circle swiper-close"></i>
+            </div>
+        </div>
+        <script src="../../js/swiper.min.js"></script>
+        <script src="detail.js"></script>
+        <script src="http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()">
+        </script>             
     </body>
 </html>
