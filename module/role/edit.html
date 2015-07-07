@@ -77,18 +77,8 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>配置权限</label>
-				<div class="control">
-					<ul class="right-list">
-						<li>
-							<input type="checkbox" id="parent1" class="checkbox" />
-							<label for="parent1" style="margin-right:2px;"></label>
-							<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
-							<label for="parent1">基本权限</label>
-							<div>
-								<input type="checkbox" class="checkbox" id="child1" /><label for="child1">缺省主页</label><input type="checkbox" class="checkbox" id="child2" /><label for="child2">修改信息</label>
-							</div>
-						</li>
-					</ul>
+				<div class="control" ajat="list/permission#domid=permission&tempid=permission-t" id="permission">
+					
 				</div>
 			</div>
 			<div class="control-group">
@@ -111,6 +101,19 @@
 		<%for(var i=0;i<data.length;i++){%>
 			<option <%=data[i].id==protocol.custom.sid?"selected":""%> value="<%=data[i].id%>"><%=data[i].title%></option>
 		<%}%>
+	</script>
+	<script type="text/template" id="permission-t">
+		<ul class="right-list">
+			<li>
+				<input type="checkbox" id="parent1" class="checkbox" />
+				<label for="parent1" style="margin-right:2px;"></label>
+				<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+				<label for="parent1">基本权限</label>
+				<div>
+					<input type="checkbox" class="checkbox" id="child1" /><label for="child1">缺省主页</label><input type="checkbox" class="checkbox" id="child2" /><label for="child2">修改信息</label>
+				</div>
+			</li>
+		</ul>
 	</script>
 	<script type="text/javascript">
 		$('.wrapper').on('click','.square',function(){

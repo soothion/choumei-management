@@ -347,6 +347,13 @@ aside h2{
 .form-vertical .control{
 	display:table-cell;
 }
+.form-vertical .control:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
 .form-vertical .control input[type='text'],
 .form-vertical .control input[type='password'],
 .form-vertical .control input[type='number'],
@@ -603,3 +610,13 @@ input.checkbox:checked+label:before{
 	transform: rotate(45deg);
 }
 /**nav-step end**/
+
+.autocomplete-items{
+	position:absolute;
+	z-index:999;
+	background:#fff;
+	border:1px solid #ddd;
+}
+.autocomplete-items li.active{
+	background:#eee;
+}

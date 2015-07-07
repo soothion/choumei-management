@@ -576,7 +576,7 @@
 		},
 		validate:function(untrigger){
 			if(!untrigger){
-				$(this.selector).trigger('blur',{type:'validate'});
+				$(this.el).find(this.selector).trigger('blur',{type:'validate'});
 			}
 			var $form=$(this.el);
 			if($form.find('.control-help:visible').length==0){

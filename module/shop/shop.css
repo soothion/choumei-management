@@ -360,4 +360,7 @@
   background: url(../../images/remove.png);
   background-size: contain;
 }
-
+#circle label{
+	margin-bottom:10px;
+	margin-right:10px;
+}

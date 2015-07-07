@@ -32,7 +32,6 @@
                         <input type="text" name="sn" placeholder="店铺编号" maxlength="10" required>
                     </div>
                 </div> 
-
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control">
@@ -49,20 +48,20 @@
 
                 <div class="control-group" style="margin-bottom:0">
                     <label class="control-label" for=""><span class="red">*</span>店铺地址：</label>
-                    <select id="province" name="province" class="select min-width" required 
-                    ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t">
-                    </select>
-                    <select id="city" name="city" class="select min-width" required 
-                    ajat="salonList/getProvinces?type=2&areaId=<%=data.provinceId%>#domid=city&tempid=city_t" ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t">
-                        <option value="">城市</option>
-                        <option value="1">深圳</option>
-                    </select>
-                    <select id="area" name="area" class="select min-width" style="margin-right:10px" required 
-                    ajat="salonList/getProvinces?type=3&areaId=<%=data.citiesId%>#domid=area&tempid=area_t">
-                        <option value="">地区</option>
-                        <option value="1">南山</option>
-                    </select>
-                    <span class="control-help" style="display:none;"></span>
+						<select id="province" name="province" class="select min-width" required ajat-one="true" 
+						ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&provinceId=<%=data.provinceId%>" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>">
+						</select>
+						<select id="city" name="city" class="select min-width" required ajat-one="true" 
+						ajat="<%if(data.provinceId){%>salonList/getProvinces?type=2&areaId=<%=data.provinceId%><%}%>#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>"
+						ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=data.district%>">
+						
+						</select>
+						<select id="area" name="area" class="select min-width" style="margin-right:10px" required ajat-one="true"
+						ajat="<%if(data.citiesId){%>salonList/getProvinces?type=3&areaId=<%=data.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=data.district%>"
+						ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=circle&tempid=circle_t&zone=<%=data.zone%>"
+						>
+						</select>
+						<span class="control-help" style="display:none;"></span>
                 </div>
 
                 <div class="control-group" style="margin:0">
@@ -87,16 +86,8 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商圈：</label>
-                    <input type="radio" class="label" id="areaRadio1" name="zone" value="1">
-                    <label for="areaRadio1" style="margin-right:10px">南山区</label>
-
-                    <input type="radio" class="label" id="areaRadio2" name="zone" value="2">
-                    <label for="areaRadio2" style="margin-right:10px">福田区</label>
-
-                    <input type="radio" class="label" id="areaRadio3" name="zone" value="3">
-                    <label for="areaRadio3" style="margin-right:10px">龙岗区</label>
-                    
-                    <span class="control-help" style="display:none;"></span>
+					<div class="control" id="circle" ajat="salonList/getProvinces?type=4&areaId=<%=data.district%>#domid=circle&tempid=circle_t&zone=<%=data.zone%>">
+					</div>
                 </div> 
 
                 <div class="control-group">
@@ -240,7 +231,7 @@
         <script type="text/template" id="province_t">
             <option value="">省份</option>
             <%for(var i=0;i<data.length;i++){%>
-                <option value="<%=data[i].pid%>"><%=data[i].pname%></option>
+                <option <%=data[i].pid==protocol.custom.provinceId?"selected":""%> value="<%=data[i].pid%>"><%=data[i].pname%></option>
             <%}%>
         </script>
 
@@ -248,7 +239,7 @@
             <option value="">城市</option>
 			<%if(data){%>
             <%for(var i=0;i<data.length;i++){%>
-                <option value="<%=data[i].iid%>"><%=data[i].iname%></option>
+                <option <%=data[i].iid==protocol.custom.citiesId?"selected":""%> value="<%=data[i].iid%>"><%=data[i].iname%></option>
             <%}%>
 			<%}%>
         </script>
@@ -257,7 +248,7 @@
             <option value="">地区</option>
 			<%if(data){%>
             <%for(var i=0;i<data.length;i++){%>
-                <option value="<%=data[i].tid%>"><%=data[i].tname%></option>
+                <option <%=data[i].iid==protocol.custom.areaId?"selected":""%> value="<%=data[i].tid%>"><%=data[i].tname%></option>
             <%}%>
 			<%}%>
         </script>
@@ -268,7 +259,13 @@
                 <option value="<%=data[i].id%>"><%=data[i].businessName%></option>
             <%}%>
         </script>
-
+		<script type="text/template" id="circle_t">
+			 <%for(var i=0;i<data.length;i++){%>
+			<input type="radio" class="label" id="areaRadio<%=data[i].areaid%>" <%=data[i].areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=data[i].areaid%>">
+			<label for="areaRadio<%=data[i].areaid%>"><%=data[i].areaname%></label>
+			<%}%>
+			<span class="control-help" style="display:none;"></span>
+		</script>
         <script src="http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()">
         </script>
         <script src="add.js"></script>
