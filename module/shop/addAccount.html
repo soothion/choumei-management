@@ -4,37 +4,6 @@
         <meta charset="utf-8">
         <title>臭美管理后台</title>
 		<script type="text/javascript" src="../../js/include.js"></script>
-        <style>
-		/*
-        ul{
-          width: 20%;
-          min-width: 250px;    
-          margin-right: 10px;  
-          border-radius: 3px;
-          background: #fff;
-          position:absolute;
-          z-index: 1000;
-          border: 1px solid #E6EAF2;
-          display: none;
-        }
-
-        ul > li{
-          height: 25px;
-          line-height: 25px;
-          padding:5px 10px;
-          cursor: pointer; 
-          overflow: hidden;
-          white-space: nowrap;     
-        }
-
-        ul > li:hover{
-            background: #eee;
-        }
-
-        .active{
-           background: #eee; 
-        }*/
-        </style>
     </head>
 
     <body>
@@ -48,6 +17,8 @@
         <div class="wrapper">
             <form novalidate="" method="post" class="form-vertical" data-role="form" action="salonAccount/save">
                <legend>账号信息</legend>
+				<input type="hidden" name="salonid" id="salonid"/>
+				<input type="hidden" name="merchantId" id="merchantId"/>
 				 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
@@ -65,8 +36,6 @@
 							<%}%>
 							</script>
 						</div>
-						<input type="hidden" name="salonid" id="salonid"/>
-						<input type="hidden" name="merchantId" id="merchantId"/>
                     </div>
                 </div>
                 <div class="control-group">

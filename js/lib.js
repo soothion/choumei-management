@@ -396,11 +396,13 @@
 		validateFields:function(e,eventData){
 			var $target=$(e.target);
 			var val=$.trim($target.val());
+			//有disabled的不做校验
 			if($target.is(':disabled')){
 				var error=this.getErrorDom($target);
 				error.remove();
 				return;
 			}
+			//复选框单选框校验的非空校验
 			if($target.is('input[type="checkbox"]')||$target.is('input[type="radio"]')){
 				var name=$target.attr('name');
 				var inputs=$('input[name="'+name+'"]');
@@ -409,6 +411,7 @@
 					return;
 				}
 			}
+			//非复选框单选框校验的非空校验
 			if($target.attr('required')&&!val&&!$target.is('input[type="checkbox"]')&&!$target.is('input[type="radio"]')){
 				$target.trigger('error',{type:'required'});
 				return;
