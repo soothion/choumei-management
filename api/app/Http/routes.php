@@ -78,6 +78,28 @@ Route::any('salonList/getBussesName',array(  //获取省市区
 				'as'=>'salonList.getBussesName',
 				'uses'=>'Merchant\ListController@getBussesName'
 	));	
+	
+
+Route::any('salonAccount/index',array(  //店铺账号列表
+				'as'=>'salonAccount.index',
+				'uses'=>'Merchant\SalonAccountController@index'
+	));	
+Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
+				'as'=>'salonAccount.getSalonName',
+				'uses'=>'Merchant\SalonAccountController@getSalonName'
+	));		
+Route::any('salonAccount/save',array(  //添加账号
+				'as'=>'salonAccount.save',
+				'uses'=>'Merchant\SalonAccountController@save'
+	));	
+Route::any('salonAccount/resetPwd',array(  //重置密码
+				'as'=>'salonAccount.resetPwd',
+				'uses'=>'Merchant\SalonAccountController@resetPwd'
+	));	
+Route::any('salonAccount/delAct',array(  //删除
+				'as'=>'salonAccount.delAct',
+				'uses'=>'Merchant\SalonAccountController@delAct'
+	));	
 
 //权限管理后台接口
 // Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
