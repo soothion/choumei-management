@@ -250,7 +250,7 @@
             if(data.errorLevel=='xhr'){
                 $dom.trigger('exception',data);
                 return true
-            }else if(data.status>=400){
+            }else if(data.result==0){
                 $dom.trigger('exception',data);
                 return true
             }

@@ -246,16 +246,20 @@
 
         <script type="text/template" id="city_t">
             <option value="">城市</option>
+			<%if(data){%>
             <%for(var i=0;i<data.length;i++){%>
                 <option value="<%=data[i].iid%>"><%=data[i].iname%></option>
             <%}%>
+			<%}%>
         </script>
 
         <script type="text/template" id="area_t">
             <option value="">地区</option>
+			<%if(data){%>
             <%for(var i=0;i<data.length;i++){%>
                 <option value="<%=data[i].tid%>"><%=data[i].tname%></option>
             <%}%>
+			<%}%>
         </script>
 
         <script type="text/template" id="business_t">
