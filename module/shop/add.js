@@ -6,7 +6,7 @@
 */
 
 (function(){
-
+	
     var type = utils.getSearchString("type");
 
     if(type && type === 'edit'){

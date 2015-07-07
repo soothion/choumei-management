@@ -1,14 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>臭美管理后台</title>
-        <link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="../../css/reset.css" />
-        <link rel="stylesheet" href="../../css/global.css" />
-        <link rel="stylesheet" href="../../css/admin.css" /> 
+		<title>臭美管理后台</title>
+		<script type="text/javascript" src="../../js/include.js"></script>
     </head>
 
     <body>
@@ -23,21 +17,18 @@
             <div class="flex-box">
                 <div class="flex-item">
                     <form data-role="hash">
-                    <div class="input-group">
-                    <select class="select border-none">
-                    <option value="1">深圳</option>
-                    <option value="2">上海</option>
-                    <option value="3">北京</option>
-                    <option value="4">天津</option>
-                    <option value="5">广州</option>
-                    </select>
-                    <input type="text" class="border-none"/>
-                    <button type="submit" class="fa fa-search"></button>
-                    </div>
-                    </form>
+						<div class="input-group">
+							<select class="select border-none" id="select" name="key">
+								<option value="1">商户搜索</option>
+								<option value="2">用户名</option>
+							</select>
+							<input type="text" class="border-none" placeholder="请输入店铺名" name="keyword">
+							<button type="submit" class="fa fa-search"></button>
+						</div>
+					</form>
                 </div>
                 <div>
-                    <button class="btn-primary"><i class="fa fa-plus"></i> 新增</button>           
+                    <a class="btn-primary" href="addAccount.html"><i class="fa fa-plus"></i> 新增</a>           
                 </div>
             </div>
 
@@ -46,12 +37,13 @@
             <table>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>邮箱</th>
-                        <th>手机号码</th>
-                        <th>性别</th>
-                        <th><a>城市 <i class="fa fa-sort"></i></a></th>
-                        <th>描述</th>
+                        <th>序号</th>
+                        <th>店铺</th>
+                        <th>用户名</th>
+                        <th><a>用户角色 <i class="fa fa-sort"></i></a>  </th>
+						<th>创建日期 </th>
+						<th><a>状态  <i class="fa fa-sort"></i></a> </th>
+						<th>用户角色 </th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -64,10 +56,14 @@
                         <td>男</td>
                         <td>5</td>
                         <td>yunfei.huang@qq.com</td>
+						<td>yunfei.huang@qq.com</td>
                         <td>
-                        <a class="link" href="form.html?id=1000">编辑</a>
+                        <a class="link reset" data-text="重置密码">重置密码</a>
                         <span class="space"></span>
-                        <a class="link delete">删除</a>
+							<form action="merchant/del" data-role="remove">
+								<input type="hidden" name="id" value="<%=data[i].id%>" />
+								<button class="link">删除</button>
+							</form>
                         </td>
                     </tr>
                 </tbody>
@@ -76,13 +72,34 @@
             </div>            
         </div>
 
-    <script src="../../js/cfg.js"></script>
-    <script src="../../js/jquery.min.js"></script>
-    <script src="../../js/sea.js"></script>
-    <script src="../../js/ejs.js"></script>
-    <script src="../../js/lib.js"></script>
-    <script src="../../js/iscroll.js"></script>
-    <script src="../../js/admin.js"></script>
-    <script src="../../js/frame.js"></script>      
+   <script type="text/javascript">
+		$('#select').on('change',function(){
+			var $this=$(this);
+			if($this.val()==1){
+				$this.next().attr('placeholder','请输入商户名');
+			}else{
+				$this.next().attr('placeholder','请输入用户名');
+			}
+		});
+		$('.table').on('click','.reset',function(){
+			var $this=$(this);
+			parent.lib.popup.confirm({
+				text:$this.data('text'),
+				define:function(){
+					lib.ajax({
+						url:'',
+						type:'POST',
+						data:{userId:$this.data('id')},
+						success:function(data){
+							lib.popup.tips({
+								text:'<i class="fa fa-check-circle"></i>'+(data.result==1?'重置成功':'重置失败'),
+								time:2000
+							});
+						}
+					});
+				}
+			})
+		})
+	</script>    
     </body>
 </html>

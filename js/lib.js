@@ -250,7 +250,7 @@
             if(data.errorLevel=='xhr'){
                 $dom.trigger('exception',data);
                 return true
-            }else if(data.status>=400){
+            }else if(data.result==0){
                 $dom.trigger('exception',data);
                 return true
             }
@@ -339,6 +339,17 @@
         }).on('change','select[ajat-change]',function(){
 			var ajat=this.getAttribute('ajat-change').replace('${value}',this.value);
             lib.ajat(ajat).render();
+		}).on('input','input[ajat-complete]',function(){
+			var $this=$(this);
+			var val=$.trim($this.val());
+			if(val){
+				var ajat=this.getAttribute('ajat-complete').replace('${value}',val);
+				lib.ajat(ajat).render().done(function(){
+					$this.closest('.complete').find('.complete-position').show();
+				});
+			}else{
+				$this.closest('.complete').find('.complete-position').hide();
+			}
 		}).on('_ready',function(e){
 			var $target=$(e.target);
             Ajat.run($target);
@@ -464,7 +475,7 @@
 				return;
 			}
 			var error=this.getErrorDom($target);
-			error.remove();
+			error.hide();
 		},
 		required:function(e){
 			var $target=$(e.target);
@@ -576,7 +587,7 @@
 		},
 		validate:function(untrigger){
 			if(!untrigger){
-				$(this.selector).trigger('blur',{type:'validate'});
+				$(this.el).find(this.selector).trigger('blur',{type:'validate'});
 			}
 			var $form=$(this.el);
 			if($form.find('.control-help:visible').length==0){

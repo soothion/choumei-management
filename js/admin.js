@@ -13,11 +13,11 @@
 		lib.ajatCount--;
 		if(lib.ajatCount==0){
 			parent.$('body').trigger('loadingend');
-			$(document.body).off('_ready',loadingend);
+			$(document.body).off('_ready',loadingend).on('');
 		}
 	}
 	lib.Ajat.before=function(){
-		$(document.body).on('_ready',loadingend);
+		$(document.body).on('_ready',loadingend).on('exception',loadingend);
 	}
 $(function(){
 	/**hash和加载进度条**/
