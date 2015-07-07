@@ -9,7 +9,9 @@
     <div class="breadcrumb">
         <a href="ui.html">店铺结算 </a><span>&gt;</span><a href="collectingOrderList.html">付款管理</a><span>&gt;</span>查看付款单
     </div>
-    <div class="wrapper">
+   <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}%>">
         <div class="table-detail">
         <table>
             <thead>
@@ -22,35 +24,35 @@
               <tbody>
                 <tr>
                   <td>付款单号：</td>
-                  <td>DS-15060300001</td>
+                  <td><%=data.code%></td>
                 </tr>
                 <tr>
                   <td>付款类型：</td>
-                  <td>DS-15060300001</td>
+                  <td><%=data.type%></td>
                 </tr>
                 <tr>
                   <td>付款金额：</td>
-                  <td>DS-15060300001</td>
+                  <td><%=data.pay_money%></td>
                 </tr>
                 <tr>
                  <td>换算消费额：</td>
-                  <td>DS-15060300001</td>
+                  <td><%=data.cost_money%><</td>
                 </tr>
                 <tr>
                   <td>付款日期：</td>
-                  <td>DS-15060300001</td>
+                  <td><%=data.day%></td>
                 </tr>
                 <tr>
                   <td>创建日期：</td>
-                  <td>DS-15060300001</td>
+                  <td><%=data.created_at%></td>
                 </tr>
                 <tr>
                  <td>制单人</td>
-                  <td>DS-15060300001</td>
+                  <td><%=data.user%></td>
                </tr>
                 <tr>
                   <td>状态</td>
-                  <td>已付款 待审核 未通过</td>
+                  <td><%data.state%></td>
                 </tr>
                 <tr>
                   <td>操作</td>
@@ -58,6 +60,8 @@
                 </tr>
               </tbody>
         </table>
+		 </form>
+		  </script>
         </div>
     </div>
     <script type="text/javascript">

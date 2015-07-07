@@ -19,11 +19,15 @@
                     <form data-role="hash">
                         <div>
                             <div class="input-group">
-                                <input type="text" class="border-none" placeholder ="请输入店铺名">
-                                <button type="submit" class="fa fa-search"></button>
-                            </div>
+							<select class="select border-none " id="select">
+								<option value="1">店铺搜索</option>
+								<option value="2">商户搜索</option>
+							</select>
+							<input type="text" class="border-none" placeholder="请输入店铺名">
+						</div>
                             <label>付款日期：</label>
-                              <input type="date" data-role="start"/>到<input type="date" data-role="end"/>
+                              <input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"/>
+							  <button class="btn" type="submit">搜索</button>
                         </div>
                     </form>
                 </div>
@@ -31,7 +35,8 @@
                 <button class="btn-primary"><i class="fa fa-plus"></i> 新增</button>
                 </a>
             </div>
-            <div class="table">
+           <div class="table" ajat="shop_count/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
                 <table>
                     <thead>
                         <tr>
@@ -49,34 +54,26 @@
                         </tr>
                     </thead>
                <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>yunfei.huang@qq.com800265</td>
-                  <td>15889750625</td>
-                  <td>男</td>
-                  <td>11</td>
-                  <td>1</td>
-                   <td>1</td>
-                  <td>yunfei.huang@qq.com800265</td>
-                  <td>15889750625</td>
-                  <td>男</td>
-                  <td>
-                     <a class="link" href="updateSingle.html?id=1000">查看</a>
-                  </td>
-                </tr>
+             <%var type=["","预付交易款","付代收交易款"]%>
+			 <%var state=["","已付款","预览状态"]%>
+				<%var data=data.data%>
+				<%for(var i=0;i<data.length;i++){%>
+                 <tr>
+                 <td><%=i+1%></td>
+                  <td><%=data[i].code%></td>
+				  <td><%=type[data[i].type]%></td>
+				   <td><%=data[i].merchant.name%></td>
+                  <td><%=data[i].pay_money%></td>
+				  <td><%=data[i].cost_money%></td>
+				  <td><%=data[i].day%></td>
+				   <td><%=data[i].created_at%></td>
+				  <td><%=data[i].user.name%> </td>
+				  <td><%=state[data[i].state]%></td>
+                   <td><a class="link" href="updateSingle.html?id=<%=data[i].id%>">查看</a></td>
+                  </tr>
+				  <%}%>
               </tbody>
-            </table>
-            <div class="paginator" id="pagination">
-            </div>
-            <script id="rows" type="text/template">
-                                                                                                    <%
-                                                                                                            _.each(data,function(item,index){
-                                                                                                    %>
-                                                                                                    %>
-                                                                                                    <tr>
-                                                                                                        </tr>
-                                                                                                    <% })%>
-            </script>
+            </table>          
             <div class="pager"> </div>
         </div>
     </div>
