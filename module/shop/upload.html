@@ -5,6 +5,7 @@
       <title>臭美管理后台</title>
       <script type="text/javascript" src="../../js/include.js"></script>
       <script type="text/javascript" src="../../js/utils.js"></script>
+      <link rel="stylesheet" href="../../css/webuploader.css" />
       <link rel="stylesheet" href="shop.css" />   
     </head>
     <body>
@@ -38,7 +39,7 @@
                 <li class="flex-item active"><span class="arrow">4.附件上传</span></li>
             </ul>
 
-           <table style="margin-top:20px;">
+            <table style="margin-top:20px;">
               <thead>
                 <tr>
                   <th colspan="2" class="thead">（请选择图片文件，小于10M，支持JPG，PNG，GIF和JPEC格式）</th>
@@ -47,83 +48,74 @@
 
               <tbody>
                 <tr style="height:15px"></tr>
+
                 <tr>
-                  <td style="width:150px">
-                    <span class="conent">合同上传</span><br>
-                    <span>（选填，限10张）</span>
-                  </td>
-                  <td>
+                  <td style="width:150px"><span class="conent">合同上传</span><br><span>（选填，限10张）</span></td>
+                  <td id="con_wrapper">
                     <div class="thumbnail">
-                      <i class="del"></i>
-                      <img />
+                      <i class="fa fa-times-circle del"></i>
+                      <img src="../../images/logo.png">
                     </div>                   
-                                             
-                    <div class="upload-btn">
+                           
+                    <div class="upload-btn" id="con_loader_button">
                       <i class="fa fa-image"></i>
                       <p class="btn-text">上传合同图片</p>
-                      <input type="file" class="file-btn">
+                      <!-- <input type="file" class="file-btn"> -->
                     </div>
                   </td>
                 </tr>
+
                 <tr style="height:15px"></tr>
+
                 <tr>
                   <td>
                     <span class="conent">营业执照</span><br>
                     <span>（选填，限3张）</span>
                   </td>
-                  <td>
+
+                  <td id="lic_wrapper">                     
                     <div class="thumbnail">
-                       <i class="del"></i>
-                       <img class="img-thumbnail">
+                      <i class="fa fa-times-circle del"></i>
+                      <img src="../../images/logo.png">
                     </div>                     
-                    <div class="thumbnail">
-                       <i class="del"></i>
-                       <img class="img-thumbnail">
-                    </div>                     
-                    <div class="thumbnail">
-                       <i class="del"></i>
-                       <img class="img-thumbnail">
-                    </div>                     
-               <div class="upload-btn">
+                    <div class="upload-btn" id="lic_loader_button">
                       <i class="fa fa-image"></i>
                       <p class="btn-text">上传合同图片</p>
-                      <input type="file" class="file-btn">
+                      <!-- <input type="file" class="file-btn"> -->
                     </div>                                 
                   </td>
                 </tr>
+
                 <tr style="height:15px"></tr>
+
                 <tr>
                   <td>
                     <span class="conent">法人执照</span><br>
                     <span>（选填，限3张）</span>
                   </td>
-                  <td>
+
+                  <td id="cor_wrapper">
                     <div class="thumbnail">
-                       <i class="del"></i>                    
-                       <img class="img-thumbnail">
-                    </div>                     
-                    <div class="thumbnail">
-                       <i class="del"></i>                    
-                       <img class="img-thumbnail">
-                    </div>                     
-                    <div class="thumbnail">
-                       <i class="del"></i>                    
-                       <img class="img-thumbnail">
-                    </div>                     
-                    <div class="upload-btn">
+                      <i class="fa fa-times-circle del"></i>               
+                      <img src="../../images/logo.png">
+                    </div> 
+
+                    <div class="upload-btn" id="cor_loader_button">
                       <i class="fa fa-image"></i>
                       <p class="btn-text">上传合同图片</p>
-                      <input type="file" class="file-btn">
+                      <!-- <input type="file" class="file-btn"> -->
                     </div>                                 
                   </td>
                 </tr>                                
               </tbody>            
             </table>  
+
             <div style="margin:50px 160px;">
                 <button class="btn" style="margin-right:20px">预览</button>
                 <button class="btn-primary">提交</button>              
             </div>
         </div> 
+        <script type="text/javascript" src="../../js/webuploader.js"></script>
         <script type="text/javascript" src="upload.js"></script>  
     </body>
 </html>

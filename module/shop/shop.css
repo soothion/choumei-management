@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-06-30 10:24:56
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-06 16:56:57
+* @Last Modified time: 2015-07-07 13:41:46
 */
 
 /********************店铺列表***********************/
@@ -315,6 +315,13 @@
   cursor: pointer;                     
 }
 
+.thumbnail img{
+  width:192px;
+  height:134px;
+  padding:2px;
+  box-shadow: 2px 2px 2px #ddd;  
+}
+
 .upload-btn{
   position: relative;
   display:inline-block;
@@ -352,12 +359,11 @@
 }
 
 .del{
-  width: 20px;
-  height: 20px;
+/*  width: 20px;
+  height: 20px;*/
   position: absolute;
   right: -6px;
   top: -6px;
-  background: url(../../images/remove.png);
-  background-size: contain;
+  font-size: 1.5rem;
 }
 
