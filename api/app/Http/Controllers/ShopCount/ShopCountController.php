@@ -207,7 +207,7 @@ class ShopCountController extends Controller
         else
         {
             $id = ShopCountApi::makePrepay($param);
-            if(! $id)
+            if(!$id)
             {
                 throw new \Exception("参数有误,生成失败");
             }

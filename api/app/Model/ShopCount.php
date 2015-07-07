@@ -6,11 +6,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class ShopCount extends Model
 {
     protected $table = 'shop_count';
-    
+
+   
     public function merchant(){
         return $this->belongsTo(Merchant::class);
     }
@@ -19,41 +21,38 @@ class ShopCount extends Model
     {
         return $this->belongsTo(Salon::class);
     }
-    
+
     /**
      * 付给商户钱
-     * @param array $option
+     * 
+     * @param array $option            
      */
     public static function payMoney($attrs)
     {
-        if (isset($attrs['salon_id']) && isset($attrs['pay_money']) && isset($attrs['cost_money'])) {
-            $salon_id = $attrs['salon_id'];
-            $class = __CLASS__;
-            $model = new $class;
-            if(empty($salon_id))
+        if (isset($attrs['salon_id']) && isset($attrs['merchant_id']) && isset($attrs['pay_money']) && isset($attrs['cost_money'])) {
+            DB::transaction(function () use($attrs)
             {
-                return false;
-            }
-            $salon = Salon::where('salonid',$salon_id)->first();
-            $attrs['salon_name'] = $salon->salonname;
-            $attrs['salon_type'] = $salon->salonType;
-            $this->beginTransaction();
-            try {
+                $salon_id = $attrs['salon_id'];
+                $class = __CLASS__;
+                $model = new $class();
+                if (empty($salon_id)) {
+                    return false;
+                }
+                $salon = Salon::where('salonid', $salon_id)->first();
+                $attrs['salon_name'] = $salon->salonname;
+                $attrs['salon_type'] = intval($salon->salonType);
                 $item = $model->where([
                     'salon_id' => $salon_id
                 ])->first();
                 if (empty($item)) {
-                    $model->create($attrs);
+                    $attrs['balance_money'] = $attrs['cost_money'] - $attrs['spend_money'];
+                    $model::create($attrs);
                 } else {
                     $attrs = self::mergeMoney($attrs, $item);
                     $model->update($attrs);
                 }
-            } catch (\Exception $e) {
-                $model->rollBack();
-                return false;
-            }
-            $model->commit();
-            return true;
+                return true;
+            });
         } else {
             return false;
         }
@@ -83,5 +82,14 @@ class ShopCount extends Model
             $attrs['borrow_balance_money'] = $attrs['borrow_money'] - $attrs['borrow_return_money'];;
         }        
         return $attrs;
+    }
+    
+    /**
+     * 重写  免得蛋疼
+     * @see \Illuminate\Database\Eloquent\Model::isFillable()
+     */
+    public function isFillable($key)
+    {
+       return true;
     }
 }
