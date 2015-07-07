@@ -54,7 +54,6 @@
 						<select id="city" name="city" class="select min-width" required ajat-one="true" 
 						ajat="<%if(data.provinceId){%>salonList/getProvinces?type=2&areaId=<%=data.provinceId%><%}%>#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>"
 						ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=data.district%>">
-						
 						</select>
 						<select id="area" name="area" class="select min-width" style="margin-right:10px" required ajat-one="true"
 						ajat="<%if(data.citiesId){%>salonList/getProvinces?type=3&areaId=<%=data.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=data.district%>"

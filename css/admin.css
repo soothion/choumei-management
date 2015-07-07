@@ -610,13 +610,23 @@ input.checkbox:checked+label:before{
 	transform: rotate(45deg);
 }
 /**nav-step end**/
-
-.autocomplete-items{
+.complete{
+	position:relative;
+}
+.complete-position{
 	position:absolute;
 	z-index:999;
 	background:#fff;
 	border:1px solid #ddd;
+	box-sizing:border-box;
+	display:none;
 }
-.autocomplete-items li.active{
+.complete-item{
+	padding:0 10px;
+	line-height:30px;
+	height:30px;
+	overflow:hidden;
+}
+.complete-item.active{
 	background:#eee;
 }

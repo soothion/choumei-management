@@ -2,14 +2,10 @@
 <html lang="zh-CN">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>臭美管理后台</title>
-        <link rel="stylesheet" href="../../awesome/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="../../css/reset.css" />
-        <link rel="stylesheet" href="../../css/global.css" />
-        <link rel="stylesheet" href="../../css/admin.css" /> 
+		<script type="text/javascript" src="../../js/include.js"></script>
         <style>
+		/*
         ul{
           width: 20%;
           min-width: 250px;    
@@ -37,7 +33,7 @@
 
         .active{
            background: #eee; 
-        }
+        }*/
         </style>
     </head>
 
@@ -51,13 +47,9 @@
 
         <div class="wrapper">
             <form novalidate="" method="post" class="form-vertical" data-role="form" action="/data/post.json">
-
+               <legend>账号信息</legend>
                 <div class="control-group">
-                    <label class="control-label" for=""><h2 style="width:170px">账号信息</h2></label>
-                </div> 
-
-                <div class="control-group">
-                    <label class="control-label" for="">*店铺名称：</label>
+                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div id="shopNameControl" class="control" style="position: relative">
                         <input id="shopNameSelect" type="text" data-value="">
                         <ul>
@@ -69,16 +61,31 @@
                         </ul>
                     </div>
                 </div> 
-
+				 <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
+                    <div class="control complete">
+                        <input type="text" ajat-complete="list/city#domid=complete-position&tempid=complete-position-t" autocomplete="off">
+						<div class="complete-position" id="complete-position" style="width:250px;">
+							<script type="text/template" id="complete-position-t">
+							
+							<ul>
+								<%for(var i=0;i<data.length;i++){%>
+								<li class="complete-item"><%=data[i].title%></li>
+								<%}%>
+							</ul>
+							</script>
+						</div>
+                    </div>
+                </div>
                 <div class="control-group">
-                    <label class="control-label" for="">*所属商户：</label>
+                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
                         <input type="text" disabled>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" for="">*用户名：</label>
+                    <label class="control-label" for=""><span class="red">*</span>用户名：</label>
                     <div class="control">
                         <input type="text">
                     </div>
@@ -96,15 +103,6 @@
                 </div>                                                                  
             </form>        
         </div>
-
-        <script src="../../js/cfg.js"></script>
-        <script src="../../js/jquery.min.js"></script>
-        <script src="../../js/sea.js"></script>
-        <script src="../../js/ejs.js"></script>
-        <script src="../../js/lib.js"></script>
-<!--         <script src="../../js/iscroll.js"></script> -->
-        <script src="../../js/admin.js"></script>
-        <script src="../../js/frame.js"></script>  
         <script>
             $("#shopNameSelect").on('input',function(e){
                 var parent = $(this).parent();
