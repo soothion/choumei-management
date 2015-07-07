@@ -337,7 +337,8 @@
                 this.setAttribute('_ajat',ajat);
             }
         }).on('change','select[ajat-change]',function(){
-            lib.ajat(this.getAttribute('ajat-change')).render();
+			var ajat=this.getAttribute('ajat-change').replace('${value}',this.value);
+            lib.ajat(ajat).render();
 		}).on('_ready',function(e){
 			var $target=$(e.target);
             Ajat.run($target);
@@ -675,7 +676,7 @@
 	}
 	$(function(){
 		new Select();
-	})
-	
+	});
+
     window.lib = lib;
 })();

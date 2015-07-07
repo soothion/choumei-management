@@ -74,7 +74,7 @@ $(function(){
 	}).on('submit','form[data-role="export"]',function(e){//导出功能
 		window.open(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#'));
 		e.preventDefault();
-	}).on('submit','form[data-role="remove"]',function(e){
+	}).on('submit','form[data-role="remove"]',function(e){//删除提交
 		var $this=$(this);
 		var postRemove=function(){
 			var data=lib.getFormData($this);
@@ -100,7 +100,7 @@ $(function(){
 				}
 			});
 		}
-		var title=$this.attr('confirm-title');
+		var title=$this.attr('data-title');
 		if(title!=='false'){
 			parent.lib.popup.confirm({text:(title||'确认删除此数据吗'),define:function(){
 				postRemove();

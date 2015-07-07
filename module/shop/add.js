@@ -13,18 +13,12 @@
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));
 		lib.ajatCount--;
         lib.ajat('#domid=form&tempid=form-t').template(data);
-        initProvince     
     }
 
     if(type && type === 'add'){
 		lib.ajatCount--;
         lib.ajat('#domid=form&tempid=form-t').template({});    
     }
-
-    $("#province").on('change',function(){
-        var val = this(e).val();
-    })
-    
     $("#addCoordinate").on('click',function(){
         $("#pop-wrapper").show();
     })
