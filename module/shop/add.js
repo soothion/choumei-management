@@ -2,11 +2,13 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-07 12:14:50
+* @Last Modified time: 2015-07-07 17:03:50
 */
 
 (function(){
-	
+	parent.$('body').trigger('loadingend');
+    $(document.body).off('_ready',loadingend)
+
     var type = utils.getSearchString("type");
 
     if(type && type === 'edit'){
@@ -28,10 +30,17 @@
     });
 
     lib.Form.prototype.save = function(data){
+        data.contractPeriod = data.contractLimitY + "_" + data.contractLimitM;
+        delete data.contractLimitY;
+        delete data.contractLimitM;       
+        var arr = data.lngLat.split(",");
+        data.addrlati = arr[0];
+        data.addrlong = arr[1];
+        delete data.lngLat;
         if(type && type === 'edit'){
-            var shopData = JSON.parse(sessionStorage.getItem('eidt-shop-data'));
+            var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
             shopData = $.extend({},shopData,data);
-            sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));   
+            sessionStorage.setItem('edit-shop-data',JSON.stringify(shopData));   
         }
         if(type && type === 'add'){
             var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
@@ -137,8 +146,8 @@ function renderMap (){
         $("#pop-sure-btn").off("click");       
         $("#pop-sure-btn").on('click',function(){
             if(addrPonit.coor){
-               $("#coorMarker").text("已标记");
-               $("#coorMarkerInput").val("{'lng':"+addrPonit.coor.lng+",'lat':"+addrPonit.coor.lat+"}");
+               $("#coorMarker").text("已标记");               
+               $("#coorMarkerInput").val(addrPonit.coor.lat + ","+addrPonit.coor.lng);
                $("#coorMarkerInput").blur();
                $("#pop-wrapper").hide();
             }else{
