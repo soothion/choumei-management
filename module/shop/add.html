@@ -29,7 +29,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
                     <div class="control">
-                        <input type="text" name="sn" placeholder="店铺编号" maxlength="10" required>
+                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10" required>
                     </div>
                 </div> 
                 <div class="control-group">
@@ -42,20 +42,21 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
-                        <input type="text" name="marchant" value="<%=data.name%>" placeholder="所属商户" disabled>
+                        <input type="text" name="name" value="<%=data.name%>" placeholder="所属商户" disabled>
                     </div>
                 </div>
 
                 <div class="control-group" style="margin-bottom:0">
                     <label class="control-label" for=""><span class="red">*</span>店铺地址：</label>
-						<select id="province" name="province" class="select min-width" required ajat-one="true" 
+						<select id="province" name="provinceId" class="select min-width" required ajat-one="true" 
 						ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&provinceId=<%=data.provinceId%>" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>">
 						</select>
-						<select id="city" name="city" class="select min-width" required ajat-one="true" 
+						<select id="city" name="citiesId" class="select min-width" required ajat-one="true" 
 						ajat="<%if(data.provinceId){%>salonList/getProvinces?type=2&areaId=<%=data.provinceId%><%}%>#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>"
 						ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=data.district%>">
 						</select>
-						<select id="area" name="area" class="select min-width" style="margin-right:10px" required ajat-one="true"
+						<select id="area" name="district" class="select min-width" style="margin-right:10px" 
+                        required ajat-one="true"
 						ajat="<%if(data.citiesId){%>salonList/getProvinces?type=3&areaId=<%=data.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=data.district%>"
 						ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=circle&tempid=circle_t&zone=<%=data.zone%>"
 						>
@@ -74,13 +75,14 @@
                     <label class="control-label" for=""></label>
                     <div class="textarea-bar">
                         <span class="area-coor">地理坐标：</span>
-                        <span  id="coorMarker">未标记</span>                        
+                        <span  id="coorMarker"><%=data.addrlati && data.addrlong ? '已标记':'未标记'%></span>                         
                         <button class="btn area-btn" id="addCoordinate">
                             <i class="fa fa-map-marker"></i> 
                             <span>添加坐标</span>
                         </button>
                     </div>
-                    <input id="coorMarkerInput" name="lngLat" type='hidden' required requiredmsg="未标记">
+                    <input id="coorMarkerInput" name="lngLat" type='hidden' required requiredmsg="未标记"
+                    value="<%=data.addrlati && data.addrlong ? data.addrlati+','+data.addrlong:''%>">
                     <span class="control-help"  style="display:none;"></span>
                 </div>    
 
@@ -92,11 +94,14 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺类型：</label>
-                    <input type="radio" class="radio" id="radio1" name="shopType" value="1">
+                    <input type="radio" class="radio" id="radio1" name="shopType" value="1"
+                    <%=data.shopType==1 ?"checked":""%>>
                     <label for="radio1">预付款店</label>
-                    <input type="radio" class="radio" id="radio2" name="shopType" value="2">
+                    <input type="radio" class="radio" id="radio2" name="shopType" value="2" 
+                    <%=data.shopType==2 ?"checked":""%>>
                     <label for="radio2">投资店</label>
-                    <input type="radio" class="radio" id="radio3" name="shopType" value="3">
+                    <input type="radio" class="radio" id="radio3" name="shopType" value="3"
+                    <%=data.shopType==3 ?"checked":""%>>
                     <label for="radio3">金字塔店</label>
                     <span class="control-help" style="display:none;"></span>
                 </div> 
@@ -111,40 +116,58 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>合同日期：</label>
                     <div class="control">
-                        <input type="date" name="contractTime" value="<%=data.contractTime%>" 
-                        required min="1950-01-01" max="2030-01-01">
+                        <%
+                        if(!isNaN(data.contractTime)){
+                            var date = new Date(+data.contractTime * 1000);
+                            var year  = date.getFullYear();
+                            var month = (+date.getMonth()+1) < 9 ? "0"+(+date.getMonth()+1) : +date.getMonth()+1;
+                            var day   = (+date.getDate()) < 9 ? "0"+(+date.getDate()) : date.getDate();
+                            data.contractTime = year + "-" + month + "-" + day;
+                        }
+                        %>
+                        <input type="date" name="contractTime" value="<%=data.contractTime%>" required 
+                        min="1950-01-01" max="2030-01-01">
                     </div>
                 </div>  
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>合同限期：</label>
+                    <%
+                     var arr = [];
+                     if(data.contractPeriod){
+                        arr = data.contractPeriod.split("_");
+                     }else{
+                        arr[0] = 3;
+                        arr[1] = 0;
+                     }
+                    %>
                     <select class="select min-width" name="contractLimitY">
-                        <option value="0">0年</option>
-                        <option value="1">1年</option>
-                        <option value="2">2年</option>
-                        <option value="3" selected="true">3年</option>
-                        <option value="4">4年</option>
-                        <option value="5">5年</option>
-                        <option value="6">6年</option>
-                        <option value="7">7年</option>
-                        <option value="8">8年</option>
-                        <option value="9">9年</option>
-                        <option value="10">10年</option>
+                        <option value="0" <%=arr[0]==0 ? 'selected' : ''%> >0年</option>
+                        <option value="1" <%=arr[0]==1 ? 'selected' : ''%> >1年</option>
+                        <option value="2" <%=arr[0]==2 ? 'selected' : ''%> >2年</option>
+                        <option value="3" <%=arr[0]==3 ? 'selected' : ''%> >3年</option>
+                        <option value="4" <%=arr[0]==4 ? 'selected' : ''%> >4年</option>
+                        <option value="5" <%=arr[0]==5 ? 'selected' : ''%> >5年</option>
+                        <option value="6" <%=arr[0]==6 ? 'selected' : ''%> >6年</option>
+                        <option value="7" <%=arr[0]==7 ? 'selected' : ''%> >7年</option>
+                        <option value="8" <%=arr[0]==8 ? 'selected' : ''%> >8年</option>
+                        <option value="9" <%=arr[0]==9 ? 'selected' : ''%> >9年</option>
+                        <option value="10"<%=arr[0]==10 ? 'selected' : ''%>>10年</option>
                     </select>
 
                     <select class="select min-width" name="contractLimitM">
-                        <option value="0" selected="true">0月</option>
-                        <option value="1">1月</option>
-                        <option value="2">2月</option>
-                        <option value="3">3月</option>
-                        <option value="4">4月</option>
-                        <option value="5">5月</option>
-                        <option value="6">6月</option>
-                        <option value="7">7月</option>
-                        <option value="8">8月</option>
-                        <option value="9">9月</option>
-                        <option value="10">10月</option>
-                        <option value="9">11月</option>
+                        <option value="0" <%=arr[1]==0 ? 'selected' : ''%>>0月</option>
+                        <option value="1" <%=arr[1]==1 ? 'selected' : ''%>>1月</option>
+                        <option value="2" <%=arr[1]==2 ? 'selected' : ''%>>2月</option>
+                        <option value="3" <%=arr[1]==3 ? 'selected' : ''%>>3月</option>
+                        <option value="4" <%=arr[1]==4 ? 'selected' : ''%>>4月</option>
+                        <option value="5" <%=arr[1]==5 ? 'selected' : ''%>>5月</option>
+                        <option value="6" <%=arr[1]==6 ? 'selected' : ''%>>6月</option>
+                        <option value="7" <%=arr[1]==7 ? 'selected' : ''%>>7月</option>
+                        <option value="8" <%=arr[1]==8 ? 'selected' : ''%>>8月</option>
+                        <option value="9" <%=arr[1]==9 ? 'selected' : ''%>>9月</option>
+                        <option value="10" <%=arr[1]==10 ? 'selected' : ''%>>10月</option>
+                        <option value="11" <%=arr[1]==11 ? 'selected' : ''%>>11月</option>
                     </select>
                 </div> 
 
@@ -160,14 +183,15 @@
                     <label class="control-label" for=""><span class="red">*</span>联系电话：</label>
                     <div class="control">
                         <input type="text" name="tel" value="<%=data.tel%>" placeholder="11位有效手机号码" 
-                        maxlength="11" required>
+                        maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺电话：</label>
                     <div class="control">
-                        <input type="text" name="phone" value="<%=data.phone%>" placeholder="店铺电话" maxlength="12" required>
+                        <input type="text" name="phone" value="<%=data.phone%>" placeholder="店铺电话" maxlength="12" 
+                        pattern="^\d{7,12}$" patternmsg="请输入7-12位有效店铺电话" required>
                     </div>
                 </div>
 
@@ -183,14 +207,14 @@
                     <label class="control-label" for=""><span class="red">*</span>法人电话：</label>
                     <div class="control">
                         <input type="text" name="corporateTel" value="<%=data.corporateTel%>" placeholder="11位有效手机号码" 
-                        maxlength="11" required>
+                        maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>业务代表：</label>
                     <select class="select defalut-width" name="businessId" id="business" required 
-                    ajat="salonList/getBussesName#domid=business&tempid=business_t">
+                    ajat="salonList/getBussesName#domid=business&tempid=business_t&businessId=<%=data.businessId%>">
 
                     </select>
                 </div>
@@ -248,7 +272,7 @@
             <option value="">地区</option>
 			<%if(data){%>
             <%for(var i=0;i<data.length;i++){%>
-                <option <%=data[i].iid==protocol.custom.areaId?"selected":""%> value="<%=data[i].tid%>"><%=data[i].tname%></option>
+                <option <%=data[i].tid==protocol.custom.district?"selected":""%> value="<%=data[i].tid%>"><%=data[i].tname%></option>
             <%}%>
 			<%}%>
         </script>
@@ -256,7 +280,8 @@
         <script type="text/template" id="business_t">
             <option value="">请选择</option>
             <%for(var i=0;i<data.length;i++){%>
-                <option value="<%=data[i].id%>"><%=data[i].businessName%></option>
+                <option <%=data[i].id == protocol.custom.businessId ? 'selected':''%> value="<%=data[i].id%>">
+                <%=data[i].businessName%></option>
             <%}%>
         </script>
 		<script type="text/template" id="circle_t">

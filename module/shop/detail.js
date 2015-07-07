@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-06 16:48:38
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-07 09:16:48
+* @Last Modified time: 2015-07-07 16:55:59
 */
 
 (function(){
@@ -13,7 +13,7 @@
         var promise = lib.ajat('salon/getSalon?salonid='+salonId+'#domid=table-wrapper&tempid=table-t').render();
         promise.done(function(data){
             var str = JSON.stringify(data.data);
-            sessionStorage.setItem('edit-shop-data',str);          
+            sessionStorage.setItem('edit-shop-data',str);      
         });
     }
     //新增时预览
