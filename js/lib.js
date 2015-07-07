@@ -464,7 +464,7 @@
 				return;
 			}
 			var error=this.getErrorDom($target);
-			error.remove();
+			error.hide();
 		},
 		required:function(e){
 			var $target=$(e.target);
