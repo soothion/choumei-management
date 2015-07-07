@@ -18,12 +18,12 @@
                 <div class="flex-item">
                     <form data-role="hash">
                         <div>
-                            <div class="input-group">
-							<select class="select border-none " id="select">
-								<option value="1">店铺搜索</option>
-								<option value="2">商户搜索</option>
+                           <div class="input-group">
+							<select class="select border-none" id="select" >
+								<option key="1">店铺名称</option>
+								<option value="2" name="">商户名称</option>
 							</select>
-							<input type="text" class="border-none" placeholder="请输入店铺名">
+							<input type="text" name="keyword" class="border-none" placeholder="请输入商户名">
 						</div>
                             <label>付款日期：</label>
                               <input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"/>
@@ -69,7 +69,12 @@
 				   <td><%=data[i].created_at%></td>
 				  <td><%=data[i].user.name%> </td>
 				  <td><%=state[data[i].state]%></td>
-                   <td><a class="link" href="updateSingle.html?id=<%=data[i].id%>">查看</a></td>
+                   <td><a class="link" href="updateSingle.html?id=<%=data[i].id%>">查看</a>
+				   <form action="shop_count/destroy" data-role="remove">
+								<input type="hidden" name="id" value="<%=data[i].id%>" />
+								<button class="link">删除</button>
+							</form>
+				   </td>
                   </tr>
 				  <%}%>
               </tbody>

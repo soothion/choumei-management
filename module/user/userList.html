@@ -20,13 +20,15 @@
                     <form data-role="hash">
                         <div>
                            <div class="input-group">
-                            <select class="select border-none" name="select">
-                                <option value="1">登录账号</option>
-                                <option value="2">角色名称</option>
-								<option value="3">用户姓名</option>
-                            </select>
-                            <input type="text" class="border-none" placeholder="登录账号" data-role="select" name="select">
-                        </div>
+							<select class="select border-none" id="select" >
+								<option value="1" name="username">登录账号</option>
+								<option value="2" name="role_id">角色名称</option>
+								<option value="3" name="name">用户姓名</option>
+							</select>
+							<input type="text" name="keyword" class="border-none" placeholder="请输入登录账号">
+							<input type="text" name="role_id" class="border-none hide" placeholder="请输入角色名称">
+							<input type="text" name="name" class="border-none hide" placeholder="请输入用户姓名">
+						</div>
 						<span class="space"></span>
                             <label>所属部门</label>
                              <select name="department_id" class="select" ajat-one="true" ajat="list/department#domid=department&tempid=department-t" id="department">

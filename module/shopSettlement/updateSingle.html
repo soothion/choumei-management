@@ -7,11 +7,12 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a href="ui.html">店铺结算 </a><span>&gt;</span><a href="collectingOrderList.html">付款管理</a><span>&gt;</span>查看付款单
+        <a href="ui.html">店铺结算 </a><span>&gt;</span><a href="collectingOrderList.html">付款管理</a><span>&gt;</span><span id="breadcrumb-current">查看付款单</span>
     </div>
    <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}%>">
+		
         <div class="table-detail">
         <table>
             <thead>
@@ -22,6 +23,11 @@
                 </tr>
             </thead>
               <tbody>
+			   <%var state=["","已付款","预览状态"]%>
+			   <tr>
+                  <td>付款单号：</td>
+                  <td><%=data.id%></td>
+                </tr>
                 <tr>
                   <td>付款单号：</td>
                   <td><%=data.code%></td>
@@ -36,7 +42,7 @@
                 </tr>
                 <tr>
                  <td>换算消费额：</td>
-                  <td><%=data.cost_money%><</td>
+                  <td><%=data.cost_money%></td>
                 </tr>
                 <tr>
                   <td>付款日期：</td>
@@ -52,11 +58,11 @@
                </tr>
                 <tr>
                   <td>状态</td>
-                  <td><%data.state%></td>
+                  <td><%=state[data.state]%></td>
                 </tr>
                 <tr>
                   <td>操作</td>
-                  <td> <button class="btn">删除</button><span class="space"></span><button class="btn">编辑</button></td>
+                  <td><a class="link" href="addSingle.html?id=<%=data.id%>">编辑</a></td>
                 </tr>
               </tbody>
         </table>
