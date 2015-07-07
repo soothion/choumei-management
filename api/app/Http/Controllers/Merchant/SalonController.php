@@ -228,7 +228,7 @@ class SalonController extends Controller {
 	* @apiParam {String} platformScale 可选,合作O2O销售额占比.
 	* @apiParam {String} receptionNums 可选,本店正常工作时间每日最多可接待人次理论数.
 	* @apiParam {String} receptionMons 可选,均实际每月接待.
-	* @apiParam {String} setupTime 可选,店铺成立时间.
+	* @apiParam {String} setupTime 可选,店铺成立时间 Y-m-d.
 	* @apiParam {String} hotdyeScale 可选,店铺租金.
 	* @apiParam {String} lastValidity 可选,店铺租赁合同剩余有效期.
 	* @apiParam {String} salonType 可选,店铺类型 1纯社区店 2社区商圈店 3商圈店 4商场店 5工作室（写字楼)）,多选  1_3  下划线拼接.
@@ -320,7 +320,7 @@ class SalonController extends Controller {
 		$dataInfo["platformScale"] = isset($param["platformScale"])?trim($param["platformScale"]):"";//合作O2O销售额占比
 		$dataInfo["receptionNums"] = isset($param["receptionNums"])?trim($param["receptionNums"]):"";//本店正常工作时间每日最多可接待人次理论数
 		$dataInfo["receptionMons"] = isset($param["receptionMons"])?trim($param["receptionMons"]):"";//均实际每月接待
-		$dataInfo["setupTime"] = isset($param["setupTime"])?trim($param["setupTime"]):"";//店铺成立时间
+		$dataInfo["setupTime"] = isset($param["setupTime"])?strtotime($param["setupTime"]):"";//店铺成立时间
 		$dataInfo["hotdyeScale"] = isset($param["hotdyeScale"])?trim($param["hotdyeScale"]):"";//店铺租金
 		$dataInfo["lastValidity"] = isset($param["lastValidity"])?trim($param["lastValidity"]):"";//店铺租赁合同剩余有效期
 		$dataInfo["salonType"] = isset($param["salonType"])?trim($param["salonType"]):"";//店铺类型
@@ -463,7 +463,7 @@ class SalonController extends Controller {
 	* @apiSuccess {String} platformScale 合作O2O销售额占比.
 	* @apiSuccess {String} receptionNums 本店正常工作时间每日最多可接待人次理论数.
 	* @apiSuccess {String} receptionMons 均实际每月接待.
-	* @apiSuccess {String} setupTime 店铺成立时间.
+	* @apiSuccess {String} setupTime 店铺成立时间 (时间戳).
 	* @apiSuccess {String} hotdyeScale 店铺租金.
 	* @apiSuccess {String} lastValidity 店铺租赁合同剩余有效期.
 	* @apiSuccess {String} salonType 店铺类型 1纯社区店 2社区商圈店 3商圈店 4商场店 5工作室（写字楼)）,多选  1_3  下划线拼接.
