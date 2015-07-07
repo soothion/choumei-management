@@ -39,8 +39,8 @@ class SalonAccountController extends Controller {
 	 * @apiParam {String} username 可选,账号名称
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.
-	 * @apiParam {String} sequence 可选,排序字段 1状态 2角色.
-	 * @apiParam {String} order 可选,排序 1倒序 2升序.
+	 * @apiParam {Number} sequence 可选,排序字段 1状态 2角色.
+	 * @apiParam {Number} order 可选,排序 1倒序 2升序.
 	 *
 	 * @apiSuccess {Number} total 总数据量.
 	 * @apiSuccess {Number} per_page 分页大小.
