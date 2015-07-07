@@ -2,18 +2,29 @@
 * @Author: anchen
 * @Date:   2015-07-06 16:48:38
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-06 18:02:16
+* @Last Modified time: 2015-07-07 09:16:48
 */
 
 (function(){
     var type = utils.getSearchString("type");
     var salonId = utils.getSearchString("salonid");
+    //查看详情
     if(type && type === 'detail'){
         var promise = lib.ajat('salon/getSalon?salonid='+salonId+'#domid=table-wrapper&tempid=table-t').render();
         promise.done(function(data){
             var str = JSON.stringify(data.data);
             sessionStorage.setItem('edit-shop-data',str);          
         });
+    }
+    //新增时预览
+    if(type && type === 'add'){
+        var data = JSON.parse(sessionStorage.getItem('add-shop-preview')); 
+        lib.ajat('#domid=table-wrapper&tempid=table-t').template(data);
+    }
+    //编辑时预览
+    if(type && type === 'edit'){
+        var data = JSON.parse(sessionStorage.getItem('edit-shop-preview')); 
+        lib.ajat('#domid=table-wrapper&tempid=table-t').template(data);
     }
 
     var swiper = new Swiper('.swiper-container', {

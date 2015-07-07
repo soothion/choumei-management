@@ -2,18 +2,20 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-06 18:37:59
+* @Last Modified time: 2015-07-07 10:00:15
 */
 
 (function(){
+
     var type = utils.getSearchString("type");
+
     if(type && type === 'edit'){
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));       
         lib.ajat('#domid=form&tempid=form-t').template(data);     
     }
 
     if(type && type === 'add'){
-        alert(11);
+        lib.ajat('#domid=form&tempid=form-t').template({});    
     }
     
     $("#addCoordinate").on('click',function(){
@@ -25,15 +27,18 @@
     });
 
     lib.Form.prototype.save = function(data){
-        debugger;
         if(type && type === 'edit'){
-            sessionStorage.setItem('eidt-shop-data',JSON.stringify(data));   
+            var shopData = JSON.parse(sessionStorage.getItem('eidt-shop-data'));
+            shopData = $.extend({},shopData,data);
+            sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));   
         }
         if(type && type === 'add'){
-            sessionStorage.setItem('add-shop-data',JSON.stringify(data));            
+            var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
+            shopData = $.extend({},shopData,data);
+            sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
         }
         location.href = "bank.html?type="+type;
-    }       
+    }        
 
 })();
 

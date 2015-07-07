@@ -5,6 +5,7 @@
       <title>臭美管理后台</title>
       <script type="text/javascript" src="../../js/include.js"></script>
       <script type="text/javascript" src="../../js/validator.js"></script>
+      <script type="text/javascript" src="../../js/utils.js"></script>
       <link rel="stylesheet" href="shop.css" />    
     </head>
     <body>
@@ -33,224 +34,249 @@
                 <li class="flex-item"><i></i><span>4.附件上传</span></li>
             </ul>
 
-            <form novalidate="" class="form-vertical" data-role="form" style="margin-top:20px">
-               <div>
-                   <p><strong>店铺信息</strong></p>
-                   <p class="border-dash"></p>
-               </div> 
+            <form novalidate="" class="form-vertical" data-role="form" style="margin-top:20px" id="form">
+                <script type="text/template" id="form-t">             
+                   <div>
+                       <p><strong>店铺信息</strong></p>
+                       <p class="border-dash"></p>
+                   </div> 
 
-               <div class="control-group">
-                    <label class="control-label" for="">店铺面积：</label>
-                    <div class="control">
-                        <input type="text" name="shopArea" pattern="float">
-                        <span class="unit">m<sup>2</sup></span>
+                   <div class="control-group">
+                        <label class="control-label" for="">店铺面积：</label>
+                        <div class="control">
+                            <input type="text" name="shopArea" pattern="float">
+                            <span class="unit">m<sup>2</sup></span>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for="">镜台数量：</label>
+                        <div class="control">
+                            <input type="text" name="dressingNum" pattern="number" maxlength="9">
+                            <span class="unit">个</span>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for="">员工总人数：</label>
+                        <div class="control">
+                            <input type="text" name="employeeNum" pattern="number" maxlength="9">
+                            <span class="unit">个</span>
+                        </div>
                     </div>
-                </div> 
 
-                <div class="control-group">
-                    <label class="control-label" for="">镜台数量：</label>
-                    <div class="control">
-                        <input type="text" name="dressingNum" pattern="number" maxlength="9">
-                        <span class="unit">个</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">发型师人数：</label>
+                        <div class="control">
+                            <input type="text" name="hairdresserNum" pattern="number" maxlength="9">
+                            <span class="unit">个</span>
+                        </div>
+                    </div> 
+
+                   <div>
+                       <p><strong>销售信息</strong></p>
+                       <p class="border-dash"></p>
+                   </div>                 
+
+                    <div class="control-group">
+                        <label class="control-label" for="">店铺平均月销售额：</label>
+                        <div class="control">
+                            <input type="text" name="avgSales" pattern="float">
+                            <span class="unit">万元</span>
+                        </div>
                     </div>
-                </div> 
 
-                <div class="control-group">
-                    <label class="control-label" for="">员工总人数：</label>
-                    <div class="control">
-                        <input type="text" name="employeeNum" pattern="number" maxlength="9">
-                        <span class="unit">个</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">年销售总额：</label>
+                        <div class="control">
+                            <input type="text" name="allSales" pattern="float">
+                            <span class="unit">万元</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="">发型师人数：</label>
-                    <div class="control">
-                        <input type="text" name="hairdresserNum" pattern="number" maxlength="9">
-                        <span class="unit">个</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">本店客单价： </label>
+                        <div class="control">
+                            <input type="text" name="price" pattern="float">
+                            <span class="unit">元</span>
+                        </div>
                     </div>
-                </div> 
 
-               <div>
-                   <p><strong>销售信息</strong></p>
-                   <p class="border-dash"></p>
-               </div>                 
-
-                <div class="control-group">
-                    <label class="control-label" for="">店铺平均月销售额：</label>
-                    <div class="control">
-                        <input type="text" name="avgSales" pattern="float">
-                        <span class="unit">万元</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">充值卡占月销售额： </label>
+                        <div class="control">
+                            <input type="text" name="rechargeSalesM" pattern="float" len="2" decimal="2">
+                            <span class="unit">%</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="">年销售总额：</label>
-                    <div class="control">
-                        <input type="text" name="allSales" pattern="float">
-                        <span class="unit">万元</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">销售最多的充值卡金额：</label>
+                        <div class="control">
+                            <input type="text" name="rechargeSales" class="component-width" pattern="float">
+                            <span class="unit">元</span>
+                            <input type="text" name="discountSales" class="component-width" pattern="float" 
+                            len="2" decimal="2">
+                            <span class="unit">折</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="">本店客单价： </label>
-                    <div class="control">
-                        <input type="text" name="price" pattern="float">
-                        <span class="unit">元</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">占全部充值总额：</label>
+                        <div class="control">
+                            <input type="text" name="rechargeProportion" pattern="float" len="2" decimal="2">
+                            <span class="unit">%</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="">充值卡占月销售额： </label>
-                    <div class="control">
-                        <input type="text" name="rechargeSalesM" pattern="float" len="2" decimal="2">
-                        <span class="unit">%</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">每月非充值卡现金占销售额：</label>
+                        <div class="control">
+                            <input type="text" name="salesProportion" pattern="float" len="2" decimal="2">
+                            <span class="unit">%</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="">销售最多的充值卡金额：</label>
-                    <div class="control">
-                        <input type="text" name="rechargeSales" class="component-width" pattern="float">
-                        <span class="unit">元</span>
-                        <input type="text" name="discountSales" class="component-width" pattern="float" 
-                        len="2" decimal="2">
-                        <span class="unit">折</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">洗剪吹占销售额：</label>
+                        <div class="control">
+                            <input type="text" name="HaircutProportion" pattern="float" len="2" decimal="2">
+                            <span class="unit">%</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="">占全部充值总额：</label>
-                    <div class="control">
-                        <input type="text" name="rechargeProportion" pattern="float" len="2" decimal="2">
-                        <span class="unit">%</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">烫染占销售额：</label>
+                        <div class="control">
+                            <input type="text" name="colAndPerProportion" pattern="float" len="2" decimal="2">
+                            <span class="unit">%</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="">每月非充值卡现金占销售额：</label>
-                    <div class="control">
-                        <input type="text" name="salesProportion" pattern="float" len="2" decimal="2">
-                        <span class="unit">%</span>
+                    <div class="control-group">
+                        <p><strong>合作信息</strong></p>
+                        <p class="border-dash"></p>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="">洗剪吹占销售额：</label>
-                    <div class="control">
-                        <input type="text" name="HaircutProportion" pattern="float" len="2" decimal="2">
-                        <span class="unit">%</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">O2O平台合作：</label>
+                        <div class="control">
+                        <input type="text" name="cooperationPlatform" maxlength="50">
+                        </div>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <label class="control-label" for="">烫染占销售额：</label>
-                    <div class="control">
-                        <input type="text" name="colAndPerProportion" pattern="float" len="2" decimal="2">
-                        <span class="unit">%</span>
+                    <div class="control-group">
+                        <label class="control-label" for="">合作O2O销售额占比：</label>
+                        <div class="control">
+                            <input type="text" name="platformProportion" pattern="float" len="2" decimal="2">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>   
+
+                   <div>
+                       <p><strong>其他信息</strong></p>
+                       <p class="border-dash"></p>
+                   </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="">本店正常工作时间每日最多可接待人次理论数：</label>
+                        <div class="control">
+                            <input type="text" name="receptionNums" pattern="number" maxlength="9">
+                            <span class="unit">人</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="control-group">
-                    <p><strong>合作信息</strong></p>
-                    <p class="border-dash"></p>
-                </div>
+                    <div class="control-group">
+                        <label class="control-label" for="">平均每月实际接待 ：</label>
+                        <div class="control">
+                            <input type="text" name="receptionMons" pattern="number" maxlength="9">
+                            <span class="unit">人次</span>
+                        </div>
+                    </div> 
 
-                <div class="control-group">
-                    <label class="control-label" for="">O2O平台合作：</label>
-                    <div class="control">
-                    <input type="text" name="cooperationPlatform" maxlength="50">
+                    <div class="control-group">
+                        <label class="control-label" for="">店铺成立时间： </label>
+                        <div class="control">
+                            <input type="date" name="establishedTime" min="1950-01-01" 
+                            max="2030-01-01">
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for="">店铺租金：</label>
+                        <div class="control">
+                            <input type="text" name="hotdyeScale" pattern="float">
+                            <span class="unit">元</span>
+                        </div>
+                    </div>    
+
+                    <div class="control-group">
+                        <label class="control-label" for="">店铺租赁合同剩余有效期： </label>
+                        <div class="control">
+                            <input type="text" name="lastValidity" pattern="number" maxlength="9">
+                            <span class="unit">个月</span>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" for="">店铺类型：</label>
+                        <input type="checkbox" name="shop" class="checkbox" value="1" id="checkbox1">
+                        <label for="checkbox1">纯社区店</label>
+
+                        <input type="checkbox" name="shop" class="checkbox" value="2" id="checkbox2">
+                        <label for="checkbox2">社区商圈店</label>
+
+                        <input type="checkbox" name="shop" class="checkbox" value="3" id="checkbox3">
+                        <label for="checkbox3">商圈店</label>
+
+                        <input type="checkbox" name="shop" class="checkbox" value="4" id="checkbox4">
+                        <label for="checkbox4">商场店</label>
+
+                        <input type="checkbox" name="shop" class="checkbox" value="5" id="checkbox5">
+                        <label for="checkbox5">工作室(写字楼)店</label>
+
+                        <span class="control-help" style="display: inline;">请选择</span>
+                    </div>  
+
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <button class="btn" style="margin-right:20px">预览</button>
+                        <button class="btn-primary">下一步</button>
                     </div>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label" for="">合作O2O销售额占比：</label>
-                    <div class="control">
-                        <input type="text" name="platformProportion" pattern="float" len="2" decimal="2">
-                        <span class="unit">%</span>
-                    </div>
-                </div>   
-
-               <div>
-                   <p><strong>其他信息</strong></p>
-                   <p class="border-dash"></p>
-               </div>
-
-                <div class="control-group">
-                    <label class="control-label" for="">本店正常工作时间每日最多可接待人次理论数：</label>
-                    <div class="control">
-                        <input type="text" name="receptionNums" pattern="number" maxlength="9">
-                        <span class="unit">人</span>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label" for="">平均每月实际接待 ：</label>
-                    <div class="control">
-                        <input type="text" name="receptionMons" pattern="number" maxlength="9">
-                        <span class="unit">人次</span>
-                    </div>
-                </div> 
-
-                <div class="control-group">
-                    <label class="control-label" for="">店铺成立时间： </label>
-                    <div class="control">
-                        <input type="date" name="establishedTime" min="1950-01-01" 
-                        max="2030-01-01">
-                    </div>
-                </div> 
-
-                <div class="control-group">
-                    <label class="control-label" for="">店铺租金：</label>
-                    <div class="control">
-                        <input type="text" name="hotdyeScale" pattern="float">
-                        <span class="unit">元</span>
-                    </div>
-                </div>    
-
-                <div class="control-group">
-                    <label class="control-label" for="">店铺租赁合同剩余有效期： </label>
-                    <div class="control">
-                        <input type="text" name="lastValidity" pattern="number" maxlength="9">
-                        <span class="unit">个月</span>
-                    </div>
-                </div> 
-
-                <div class="control-group">
-                    <label class="control-label" for="">店铺类型：</label>
-                    <input type="checkbox" name="shop" class="checkbox" value="1" id="checkbox1">
-                    <label for="checkbox1">纯社区店</label>
-
-                    <input type="checkbox" name="shop" class="checkbox" value="2" id="checkbox2">
-                    <label for="checkbox2">社区商圈店</label>
-
-                    <input type="checkbox" name="shop" class="checkbox" value="3" id="checkbox3">
-                    <label for="checkbox3">商圈店</label>
-
-                    <input type="checkbox" name="shop" class="checkbox" value="4" id="checkbox4">
-                    <label for="checkbox4">商场店</label>
-
-                    <input type="checkbox" name="shop" class="checkbox" value="5" id="checkbox5">
-                    <label for="checkbox5">工作室(写字楼)店</label>
-
-                    <span class="control-help" style="display: inline;">请选择</span>
-                </div>  
-
-                <div class="control-group">
-                    <label class="control-label" for=""></label>
-                    <button class="btn" style="margin-right:20px">预览</button>
-                    <button class="btn-primary">下一步</button>
-                </div>                 
+                </script>                 
             </form>
         </div>  
 
         <script>
-            lib.Form.prototype.save = function(data){             
-                var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
-                shopData = $.extend({},shopData,data);
-                sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));
-                location.href = "upload.html";
-            }           
+
+            var type = utils.getSearchString("type");
+
+            if(type && type === 'edit'){
+                var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));       
+                lib.ajat('#domid=form&tempid=form-t').template(data);     
+            }
+
+            if(type && type === 'add'){
+                lib.ajat('#domid=form&tempid=form-t').template({});    
+            }
+            $(".flex-item a").on('click',function(e){
+                e.preventDefault();
+                location.href = $(this).attr('href') + "?type="+type;
+            });
+
+            lib.Form.prototype.save = function(data){
+                if(type && type === 'edit'){
+                    var shopData = JSON.parse(sessionStorage.getItem('eidt-shop-data'));
+                    shopData = $.extend({},shopData,data);
+                    sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));   
+                }
+                if(type && type === 'add'){
+                    var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
+                    shopData = $.extend({},shopData,data);
+                    sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
+                }
+                location.href = "upload.html?type="+type;
+            }                        
         </script>               
     </body>
 </html>

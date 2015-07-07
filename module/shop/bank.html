@@ -4,6 +4,7 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="../../js/include.js"></script> 
+      <script type="text/javascript" src="../../js/utils.js"></script>
     </head>
     <body>
         <div class="breadcrumb">
@@ -77,22 +78,6 @@
                 </script>
             </form>
         </div>
-
-        <script>
-             
-            lib.ajat('#domid=form&tempid=form-t').template({
-                'bankName'   : 111111111111,
-                'receiver'   : 111111111111,
-                'bankNum'    : 111111111111,
-                'branchName' : 111111111111
-            })
-
-            lib.Form.prototype.save = function(data){          
-                var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
-                shopData = $.extend({},shopData,data);
-                sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));
-                location.href = "assess.html";
-            }           
-        </script>             
+        <script type="text/javascript" src="bank.js"></script>           
     </body>
 </html>
