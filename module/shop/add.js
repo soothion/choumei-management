@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-07 18:19:45
+* @Last Modified time: 2015-07-07 18:40:23
 */
 
 (function(){
@@ -50,7 +50,6 @@
             sessionStorage.setItem('edit-shop-data',JSON.stringify(shopData));   
         }
         if(type && type === 'add'){
-            debugger;
             var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
             shopData = $.extend({},shopData,data);
             sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            

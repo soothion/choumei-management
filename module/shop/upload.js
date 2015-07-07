@@ -26,9 +26,7 @@
     }
 
     var initEvent = function(){
-        debugger;
         $(".flex-item a").on('click',function(e){
-            debugger;
             e.preventDefault();
             location.href = $(this).attr('href') + "?type="+type;
         });        
