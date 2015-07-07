@@ -14,6 +14,17 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\Inspire::class,
+        //店铺往来数据相关
+        \App\Console\Commands\ShopcountCreate::class,
+        \App\Console\Commands\ShopcountIndex::class,
+        \App\Console\Commands\ShopcountPreview::class,
+        \App\Console\Commands\ShopcountShow::class,
+        \App\Console\Commands\ShopcountStore::class,
+        \App\Console\Commands\ShopcountUpdate::class,
+        \App\Console\Commands\ShopcountDestory::class,
+        \App\Console\Commands\ShopcountBalance::class,
+        \App\Console\Commands\ShopcountDelegateDetail::class,
+        \App\Console\Commands\ShopcountDelegateList::class,
     ];
 
     /**
