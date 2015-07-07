@@ -37,6 +37,15 @@
 								<%}%>
 							</script>
 						</select>
+						
+						<select name="position_id" class="select" ajat-one="true" ajat="list/position#domid=position&tempid=position-t" id="position">
+							<script type="text/template" id="position-t">
+								<option value="">全部</option>
+								<%for(var i=0;i<data.length;i++){%>
+									<option value="<%=data[i].id%>"><%=data[i].title%></option>
+								<%}%>
+							</script>
+						</select>
 							<span class="space"></span>
                             <label>状态</label>
                             <select class="select" name="status">
@@ -76,13 +85,13 @@
                             <th>状态</th>
                             <th>所属部门</th>
                             <th>所属区域</th>
-                            <th>角色</th>
+                            <th>角色名称</th>
                             <th><a data-role="hash" href="#page=1&sort=<%=query.sort==1?"0":"1"%>">添加时间 <i class="fa fa-sort"></i></a></th>
                             <th>操作</th>
                         </tr>
                     </thead>
                 <tbody>
-				<%var status=["","正常","停用","注销"]%>
+				<%var status=["","正常","注销","停用"]%>
 				<%var data=data.data%>
 				<%for(var i=0;i<data.length;i++){%>
                  <tr>
@@ -91,10 +100,10 @@
 				  <td><%=data[i].username%></td>
                   <td><%=status[data[i].status]%></td>
                   <td><%=data[i].department?data[i].department.title:""%></td>
-				  <td><%=data[i].city%></td>
-				  <td><%=data[i].roles%></td>
+				  <td><%=data[i].city?data[i].city.title:""%></td>
+				  <td><%=data[i].roles%> </td>
 				  <td><%=data[i].created_at%></td>
-                  <td> <a class="link" href="updateUser.html?id=1000">查看</a></td>
+                  <td><a class="link" href="updateUser.html?id=<%=data[i].id%>">查看</a></td>
                   </tr>
 				  <%}%>
                 </tbody>
