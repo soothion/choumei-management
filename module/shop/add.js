@@ -10,11 +10,13 @@
     var type = utils.getSearchString("type");
 
     if(type && type === 'edit'){
-        var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));       
+        var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));
+		lib.ajatCount--;
         lib.ajat('#domid=form&tempid=form-t').template(data);     
     }
 
     if(type && type === 'add'){
+		lib.ajatCount--;
         lib.ajat('#domid=form&tempid=form-t').template({});    
     }
     
