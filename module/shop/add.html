@@ -50,16 +50,16 @@
                 <div class="control-group" style="margin-bottom:0">
                     <label class="control-label" for=""><span class="red">*</span>店铺地址：</label>
                     <select id="province" name="province" class="select min-width" required 
-                    ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t">
+                    ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t">
 
                     </select>
                     <select id="city" name="city" class="select min-width" required 
-                    ajat="salonList/getProvinces?type=2&areaId=<%data.provinceId%>#domid=city&tempid=city_t">
+                    ajat="salonList/getProvinces?type=2&areaId=<%=data.provinceId%>#domid=city&tempid=city_t" ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t">
                         <option value="">城市</option>
                         <option value="1">深圳</option>
                     </select>
                     <select id="area" name="area" class="select min-width" style="margin-right:10px" required 
-                    ajat="salonList/getProvinces?type=3&areaId=<%data.citiesId%>#domid=area&tempid=area_t">
+                    ajat="salonList/getProvinces?type=3&areaId=<%=data.citiesId%>#domid=area&tempid=area_t">
                         <option value="">地区</option>
                         <option value="1">南山</option>
                     </select>
@@ -246,14 +246,14 @@
         </script>
 
         <script type="text/template" id="city_t">
-            <option value="">请选择</option>
+            <option value="">城市</option>
             <%for(var i=0;i<data.length;i++){%>
                 <option value="<%=data[i].iid%>"><%=data[i].iname%></option>
             <%}%>
         </script>
 
         <script type="text/template" id="area_t">
-            <option value="">请选择</option>
+            <option value="">地区</option>
             <%for(var i=0;i<data.length;i++){%>
                 <option value="<%=data[i].tid%>"><%=data[i].tname%></option>
             <%}%>
