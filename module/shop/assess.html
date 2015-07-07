@@ -196,6 +196,15 @@
 
                     <div class="control-group">
                         <label class="control-label" for="">店铺成立时间： </label>
+                        <%
+                        if(!isNaN(data.setupTime)){
+                            var date = new Date(+data.setupTime * 1000);
+                            var year  = date.getFullYear();
+                            var month = (+date.getMonth()+1) < 9 ? "0"+(+date.getMonth()+1) : +date.getMonth()+1;
+                            var day   = (+date.getDate()) < 9 ? "0"+(+date.getDate()) : date.getDate();
+                            data.setupTime = year + "-" + month + "-" + day;
+                        }
+                        %>
                         <div class="control">
                             <input type="date" name="setupTime" value="<%=data.setupTime%>" min="1950-01-01" max="2030-01-01">
                         </div>
@@ -233,8 +242,6 @@
 
                         <input type="checkbox" name="salonType" class="checkbox" value="5" id="checkbox5">
                         <label for="checkbox5">工作室(写字楼)店</label>
-
-                        <span class="control-help" style="display: inline;">请选择</span>
                     </div>  
 
                     <div class="control-group">
@@ -245,37 +252,6 @@
                 </script>                 
             </form>
         </div>  
-
-        <script>
-
-            var type = utils.getSearchString("type");
-
-            if(type && type === 'edit'){
-                var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));       
-                lib.ajat('#domid=form&tempid=form-t').template(data);     
-            }
-
-            if(type && type === 'add'){
-                lib.ajat('#domid=form&tempid=form-t').template({});    
-            }
-            $(".flex-item a").on('click',function(e){
-                e.preventDefault();
-                location.href = $(this).attr('href') + "?type="+type;
-            });
-
-            lib.Form.prototype.save = function(data){
-                if(type && type === 'edit'){
-                    var shopData = JSON.parse(sessionStorage.getItem('eidt-shop-data'));
-                    shopData = $.extend({},shopData,data);
-                    sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));   
-                }
-                if(type && type === 'add'){
-                    var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
-                    shopData = $.extend({},shopData,data);
-                    sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
-                }
-                location.href = "upload.html?type="+type;
-            }                        
-        </script>               
+        <script type="text/javascript" src="assess.js"></script>     
     </body>
 </html>

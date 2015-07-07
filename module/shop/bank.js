@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-07 10:22:30
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-07 10:47:44
+* @Last Modified time: 2015-07-07 18:20:17
 */
 
 (function(){
@@ -14,7 +14,8 @@
     }
     
     if(type && type === 'add'){
-        lib.ajat('#domid=form&tempid=form-t').template({});    
+        var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
+        lib.ajat('#domid=form&tempid=form-t').template(shopData);    
     }
 
     $(".flex-item a").on('click',function(e){
@@ -24,11 +25,12 @@
 
     lib.Form.prototype.save = function(data){
         if(type && type === 'edit'){
-            var shopData = JSON.parse(sessionStorage.getItem('eidt-shop-data'));
+            var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
             shopData = $.extend({},shopData,data);
-            sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));   
+            sessionStorage.setItem('edit-shop-data',JSON.stringify(shopData));   
         }
         if(type && type === 'add'){
+            debugger;
             var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
             shopData = $.extend({},shopData,data);
             sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            

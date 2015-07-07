@@ -8,6 +8,7 @@
 
     var init = function(){
         initPage();
+        initEvent();
         initConUploader();
         initLicUploader();
         initCorUploader();
@@ -22,6 +23,15 @@
         if(type && type === 'edit'){
             currentData = JSON.parse(sessionStorage.getItem('edit-shop-data')); 
         }
+    }
+
+    var initEvent = function(){
+        debugger;
+        $(".flex-item a").on('click',function(e){
+            debugger;
+            e.preventDefault();
+            location.href = $(this).attr('href') + "?type="+type;
+        });        
     }
 
     var initConUploader = function(){

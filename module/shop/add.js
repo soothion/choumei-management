@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-07 17:03:50
+* @Last Modified time: 2015-07-07 18:19:45
 */
 
 (function(){
@@ -19,7 +19,14 @@
 
     if(type && type === 'add'){
 		lib.ajatCount--;
-        lib.ajat('#domid=form&tempid=form-t').template({});    
+        var merchantId = utils.getSearchString("merchantId");
+        var name = utils.getSearchString("name");  
+        var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
+        shopData = $.extend({},shopData,{
+            "merchantId" : merchantId,
+            "name" : name
+        });      
+        lib.ajat('#domid=form&tempid=form-t').template(shopData);    
     }
     $("#addCoordinate").on('click',function(){
         $("#pop-wrapper").show();
@@ -43,6 +50,7 @@
             sessionStorage.setItem('edit-shop-data',JSON.stringify(shopData));   
         }
         if(type && type === 'add'){
+            debugger;
             var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
             shopData = $.extend({},shopData,data);
             sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
