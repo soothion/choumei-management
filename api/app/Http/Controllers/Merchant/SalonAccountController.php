@@ -7,6 +7,8 @@ use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\Salon;
 use App\SalonAccount;
+
+
 class SalonAccountController extends Controller {
 	
 	private $pwd = "choumei";
