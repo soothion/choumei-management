@@ -371,7 +371,6 @@ class ShopCountApi
     {
         if(isset($options['merchant_id'])
             && isset($options['salon_id'])
-            && isset($options['type'])
             && isset($options['uid'])
             && isset($options['pay_money'])
             && isset($options['cost_money'])
@@ -380,8 +379,15 @@ class ShopCountApi
             $code = PrepayBill::getNewCode($options['type']);
             $options['code'] = $code;
             $options['state'] = PrepayBill::STATE_OF_COMPLETED;
+            $options['created_at'] = $options['updated_at'] = date("Y-m-d H:i:s");
             $id = PrepayBill::insertGetId($options);
-            ShopCount::payMoney($options);
+            $params = [
+                'merchant_id'=>$options['merchant_id'],
+                'salon_id'=>$options['salon_id'],
+                'pay_money'=>$options['pay_money'],
+                'cost_money'=>$options['cost_money'],                
+            ];
+            ShopCount::payMoney($params);
             return $id;
         }
         return false;
@@ -397,16 +403,27 @@ class ShopCountApi
         {
             $options['state'] = PrepayBill::STATE_OF_COMPLETED;
             PrepayBill::update($options);
-            ShopCount::payMoney($options);
         }
         else if($prepay->state == 1)
         {
+            $options['updated_at'] = date("Y-m-d H:i:s");
             PrepayBill::update($options);
             if(isset($options['pay_money']) && isset($options['cost_money']))
             {
                 $options['pay_money'] = floatval($options['pay_money']) - floatval($prepay->pay_money);
                 $options['cost_money'] = floatval($options['cost_money']) - floatval($prepay->cost_money);
-                ShopCount::payMoney($options);
+                $options['merchant_id'] = intval($options['merchant_id']);
+                $options['salon_id'] = intval($options['salon_id']);
+                if( $options['pay_money'] != 0 &&   $options['cost_money'] != 0)
+                {
+                    $params = [
+                        'merchant_id'=>$options['merchant_id'],
+                        'salon_id'=>$options['salon_id'],
+                        'pay_money'=>$options['pay_money'],
+                        'cost_money'=>$options['cost_money'],
+                    ];
+                    ShopCount::payMoney($params);
+                }
             }            
         }
         return null;
