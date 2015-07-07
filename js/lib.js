@@ -339,17 +339,6 @@
         }).on('change','select[ajat-change]',function(){
 			var ajat=this.getAttribute('ajat-change').replace('${value}',this.value);
             lib.ajat(ajat).render();
-		}).on('input','input[ajat-complete]',function(){
-			var $this=$(this);
-			var val=$.trim($this.val());
-			if(val){
-				var ajat=this.getAttribute('ajat-complete').replace('${value}',val);
-				lib.ajat(ajat).render().done(function(){
-					$this.closest('.complete').find('.complete-position').show();
-				});
-			}else{
-				$this.closest('.complete').find('.complete-position').hide();
-			}
 		}).on('_ready',function(e){
 			var $target=$(e.target);
             Ajat.run($target);

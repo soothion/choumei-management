@@ -4,7 +4,6 @@
 		<title>臭美管理后台</title>
 		<script type="text/javascript" src="../../js/include.js"></script>
     </head>
-
     <body>
         <div class="breadcrumb">
             <a class="link" href="ui.html">一级导航</a>
@@ -12,17 +11,17 @@
             <a class="link" href="ui.html">二级导航</a>
             <span>&gt;</span>店铺账号
         </div>
-
         <div class="wrapper">
             <div class="flex-box">
                 <div class="flex-item">
                     <form data-role="hash">
 						<div class="input-group">
-							<select class="select border-none" id="select" name="key">
+							<select class="select border-none" id="select">
 								<option value="1">商户搜索</option>
 								<option value="2">用户名</option>
 							</select>
-							<input type="text" class="border-none" placeholder="请输入店铺名" name="keyword">
+							<input type="text" class="border-none" placeholder="请输入店铺名" name="salonname">
+							<input type="text" class="border-none" placeholder="请输入用户名" name="username" style="display:none">
 							<button type="submit" class="fa fa-search"></button>
 						</div>
 					</form>
@@ -31,54 +30,61 @@
                     <a class="btn-primary" href="addAccount.html"><i class="fa fa-plus"></i> 新增</a>           
                 </div>
             </div>
-
-            <div>
-            <div class="table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>序号</th>
-                        <th>店铺</th>
-                        <th>用户名</th>
-                        <th><a>用户角色 <i class="fa fa-sort"></i></a>  </th>
-						<th>创建日期 </th>
-						<th><a>状态  <i class="fa fa-sort"></i></a> </th>
-						<th>用户角色 </th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-
-                <tbody>                
-                    <tr>
-                        <td>5</td>
-                        <td>yunfei.huang@qq.com155112</td>
-                        <td>15889750625</td>
-                        <td>男</td>
-                        <td>5</td>
-                        <td>yunfei.huang@qq.com</td>
-						<td>yunfei.huang@qq.com</td>
-                        <td>
-                        <a class="link reset" data-text="重置密码">重置密码</a>
-                        <span class="space"></span>
-							<form action="merchant/del" data-role="remove">
-								<input type="hidden" name="id" value="<%=data[i].id%>" />
-								<button class="link">删除</button>
-							</form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
+            <div class="table" id="table" ajat="salonAccount/index?<%=query._%>#domid=table&tempid=table-t">
+			<script type="text/template" id="table-t">
+				<table>
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>店铺</th>
+							<th>用户名</th>
+							<th><a href="">用户角色 <i class="fa fa-sort"></i></a></th>
+							<th>创建日期 </th>
+							<th><a href="">状态  <i class="fa fa-sort"></i></a></th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%data=data.data%>
+						<%var role=["普通用户","超级管理员"]%>
+						<%var status=["正常使用","已停用","已删除"]%>
+						<%for(var i=0;i<data.length;i++){%>
+						<tr>
+							<td><%=i+1%></td>
+							<td><%=data[i].salonname%></td>
+							<td><%=data[i].username%></td>
+							<td><%=role[data[i].roleType-1]%></td>
+							<td><%=data[i].addTime%></td>
+							<td><%=status[data[i].status]%></td>
+							<td>
+							<a data-id="<%=data[i].salonUserId%>" class="link reset" data-text="重置密码">重置密码</a>
+							<span class="space"></span>
+								<form action="salonAccount/delAct" data-role="remove">
+									<input type="hidden" name="salonUserId" value="<%=data[i].salonUserId%>" />
+									<input type="hidden" name="type" value="2" />
+									<button class="link">删除</button>
+								</form>
+							</td>
+						</tr>
+						<%}%>
+					</tbody>
+				</table>
+				<div class="pager"></div>
+			</script>
             </div>            
         </div>
 
    <script type="text/javascript">
 		$('#select').on('change',function(){
 			var $this=$(this);
+			var input1=$('input[name="salonname"]');
+			var input2=$('input[name="username"]');
 			if($this.val()==1){
-				$this.next().attr('placeholder','请输入商户名');
+				input1.show();
+				input2.hide().val('');
 			}else{
-				$this.next().attr('placeholder','请输入用户名');
+				input2.show();
+				input1.hide().val('');
 			}
 		});
 		$('.table').on('click','.reset',function(){
@@ -87,9 +93,9 @@
 				text:$this.data('text'),
 				define:function(){
 					lib.ajax({
-						url:'',
+						url:'salonAccount/resetPwd',
 						type:'POST',
-						data:{userId:$this.data('id')},
+						data:{salonUserId:$this.data('id')},
 						success:function(data){
 							lib.popup.tips({
 								text:'<i class="fa fa-check-circle"></i>'+(data.result==1?'重置成功':'重置失败'),

@@ -231,7 +231,7 @@
         <script type="text/template" id="province_t">
             <option value="">省份</option>
             <%for(var i=0;i<data.length;i++){%>
-                <option <%=data[i].pid==protocol.custom.provinceId?"selected":""%> value="<%=data[i].pid%>"><%=data[i].pname%></option>
+                <option <%=protocol.custom.provinceId&&data[i].pid==protocol.custom.provinceId?"selected":""%> value="<%=data[i].pid%>"><%=data[i].pname%></option>
             <%}%>
         </script>
 
@@ -239,7 +239,7 @@
             <option value="">城市</option>
 			<%if(data){%>
             <%for(var i=0;i<data.length;i++){%>
-                <option <%=data[i].iid==protocol.custom.citiesId?"selected":""%> value="<%=data[i].iid%>"><%=data[i].iname%></option>
+                <option <%=protocol.custom.citiesId&&data[i].iid==protocol.custom.citiesId?"selected":""%> value="<%=data[i].iid%>"><%=data[i].iname%></option>
             <%}%>
 			<%}%>
         </script>
@@ -248,7 +248,7 @@
             <option value="">地区</option>
 			<%if(data){%>
             <%for(var i=0;i<data.length;i++){%>
-                <option <%=data[i].iid==protocol.custom.areaId?"selected":""%> value="<%=data[i].tid%>"><%=data[i].tname%></option>
+                <option <%=protocol.custom.areaId&&data[i].iid==protocol.custom.areaId?"selected":""%> value="<%=data[i].tid%>"><%=data[i].tname%></option>
             <%}%>
 			<%}%>
         </script>

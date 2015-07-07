@@ -620,13 +620,15 @@ input.checkbox:checked+label:before{
 	border:1px solid #ddd;
 	box-sizing:border-box;
 	display:none;
+	margin-top:-1px;
 }
 .complete-item{
 	padding:0 10px;
 	line-height:30px;
 	height:30px;
 	overflow:hidden;
+	cursor:pointer;
 }
-.complete-item.active{
+.complete-item.active,.complete-item:hover{
 	background:#eee;
 }

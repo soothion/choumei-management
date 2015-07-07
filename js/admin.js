@@ -13,7 +13,7 @@
 		lib.ajatCount--;
 		if(lib.ajatCount==0){
 			parent.$('body').trigger('loadingend');
-			$(document.body).off('_ready',loadingend).on('');
+			$(document.body).off('_ready',loadingend);
 		}
 	}
 	lib.Ajat.before=function(){
@@ -126,6 +126,58 @@ $(function(){
 		var $this=$(this);
 		$this.siblings('input[data-role="end"]').attr('min',$this.val());
 	});
+	/**自动补全**/
+	$body.on('input','input[ajat-complete]',function(){//自动补全输入事件
+			var $this=$(this);
+			var val=$.trim($this.val());
+			if(val){
+				clearTimeout(lib.completeTimer);
+				lib.completeTimer=setTimeout(function(){
+					var ajat=$this.attr('ajat-complete').replace('${value}',val);
+					lib.ajat(ajat).render().done(function(){
+						$this.closest('.complete').find('.complete-position').show();
+					});
+				},200);
+			}else{
+				$this.closest('.complete').find('.complete-position').hide();
+			}
+		}).on('keyup','input[ajat-complete]',function(e){//自动补全键盘事件
+			if(e.keyCode==13||e.keyCode==38||e.keyCode==40){
+				var $this=$(this);
+				var complete=$this.closest('.complete');
+				if(complete.find('.complete-item').length==0){
+					return ;
+				}
+				if(e.keyCode==40||e.keyCode==38){
+					var active=complete.find('.complete-item.active');
+					if(active.length==0){
+						active=complete.find('.complete-item')[e.keyCode==40?'first':'last']();
+					}else{
+						if(active[e.keyCode==40?'next':'prev']().length==1){
+							active=active[e.keyCode==40?'next':'prev']();
+						}
+					}
+					active.addClass('active').siblings().removeClass('active');
+					$this.val(active.text()).trigger('autoinput',active.data());
+				}
+				if(e.keyCode==13){
+					complete.find('.complete-position').hide();
+				}
+				e.preventDefault();
+			}
+		}).on('keydown','input[ajat-complete]',function(e){
+			if(e.keyCode==13){
+				e.preventDefault();
+			}
+				
+		}).on('blur','input[ajat-complete]',function(){//自动补全失去焦点事件
+			$(this).closest('.complete').find('.complete-position').hide();
+		}).on('click','.complete-item',function(){//自动补全单击事件
+			var $this=$(this);
+			var complete=$this.closest('.complete');
+			complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',active.data());
+			complete.hide();
+		});
 	
 	$body.on('_ready',function(e,data){
 		data=data.response;
