@@ -11,17 +11,20 @@
     </head>
     <body>
         <div class="breadcrumb">
-            <a class="link" href="ui.html">店铺结算</a><span>&gt;</span><a class="link" href="ui.html">付款管理</a><span>&gt;</span> 新增付款单
+            <a class="link" href="ui.html">店铺结算</a><span>&gt;</span><a class="link" href="ui.html">付款管理</a><span>&gt;</span><span id="breadcrumb-current">新增付款单</span>
         </div>
       <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}else{%>shop_count/create<%}%>">
+		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}else{%>shop_count/create<%}%>">
+		<%if(query.id){%>
+				<input type="hidden" ajat-sync-selector="#breadcrumb-current" value="编辑付款单" />
+				<%}%>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款单类型：</label>
                     <div class="control">
-                        <select class="select" style="width:20%;">
-                            <option value="1">预付交易款</option>  
-                            <option value="2">付交易代收款</option>  							
+                       <select required name="type" class="select"  style="width:20%;">
+					   <option value="1" <%=data.status==1?"selected":""%>>预付交易款</option>
+					    <option value="2" <%=data.status==2?"selected":""%>>付交易代收款</option>                            							
                         </select>
                     </div>
                 </div>
@@ -31,45 +34,48 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control">
-                        <input type="text" required="" value="<%data.salon||""%>" placeholder="店铺名称" >
+                        <input type="text" required="" name="salon_id" value="<%=data.salon_id||""%>" placeholder="店铺名称" >
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
-                        <input type="text" required="" value="<%data.merchant||""%>" placeholder="卡顿美发"disabled>
+                        <input type="text" required="" name="merchant_id" value="<%=data.merchant_id||""%>" placeholder="卡顿美发" >
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款金额：</label>
                     <div class="control">
-                        <input type="text" required="" value="<%data.pay_money||""%>" placeholder="预付交易款金额" pattern="float" >
+                        <input type="text" required="" name="pay_money "value="<%=data.pay_money||""%>" placeholder="预付交易款金额" pattern="float" >
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>换算消费额：</label>
                     <div class="control">
-                        <input type="text" required="" value="<%data.cost_money||""%>" placeholder="换算消费额" pattern="float" >
+                        <input type="text" required="" name="cost_money" value="<%=data.cost_money||"">data.pay_money||""%>" placeholder="换算消费额" pattern="float" matchmsg="换算消费额必须要大于付款金额">
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款日期：</label>
                     <div class="control">
-                        <input type="date" id="startTime" value="<%data.day||""%>"/>
+                        <input type="date" name="day" value="<%=data.day||""%>"/>
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for=""></label>
-                    <div class="control">
-                    <button class="btn-primary" type="submit">提交</button> </div>
-                </div>
+               <div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control">
+				<button class="btn-primary" type="submit">提交</button>
+				<button class="btn" style="margin-right:20px"><a class="link" href="previewSingle.html?id=<%=data.id%>">预览</a></button>
+				</div>
+			</div>
             </form>
-        </div>
+			</script>
+        </div>		
     </body>
 </html>
  
