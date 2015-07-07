@@ -12,7 +12,7 @@ class SalonAccount extends Model {
 	 * 获取账号列表
 	 * 
 	 * */
-	public static function getList($where = '' , $page=1, $page_size=20)
+	public static function getList($where = '' , $page=1, $page_size=20,$orderName = 'salon_user_id',$orederAsc = 'desc')
 	{
 		//手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
@@ -23,8 +23,9 @@ class SalonAccount extends Model {
             ->leftjoin('salon as s', 'u.salonid', '=', 's.salonid')
             ->leftjoin('merchant as m', 'm.id', '=', 'u.merchantId')
             ->select($fields)
-            ->orderBy("salon_user_id","desc")
+            ->orderBy($orderName,$orederAsc)
             ;
+        $query = $query->where('u.status','!=',3);//排除删除账号
         if(isset($where['salonname'])&&$where['salonname'])//店铺名
 		{
 			$keyword = '%'.urldecode($where['salonname']).'%';

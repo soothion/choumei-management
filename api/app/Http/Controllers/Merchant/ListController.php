@@ -124,9 +124,10 @@ class ListController extends Controller {
         {
         	$list = Town::select(['tid','tname'])->where("iid","=",$areaId)->get();
         }
-    	elseif($type == 4)
+    	elseif($type == 4)//商圈按拼音排序 特殊处理
         {
-        	$list = SalonArea::select(['areaid','areaname'])->where("parentid","=",$areaId)->get();
+        	$sql = "SELECT areaid,areaname from cm_salon_area where parentid={$areaId} ORDER BY CONVERT( areaname USING gbk ) COLLATE gbk_chinese_ci ASC";
+        	$list = DB::select($sql);
         }
         return $list?$list:array();
         
@@ -168,6 +169,7 @@ class ListController extends Controller {
     	$result = BusinessStaff::select(['id','businessName'])->get();
 		return $this->success($result);
     }
+
 }
 
 ?>
