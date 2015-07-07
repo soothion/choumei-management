@@ -82,6 +82,29 @@ class SalonAccount extends Model {
 	   return $query->select(array("salon_user_id","username"))->count();
 	}
 	
+	/***
+	 * 
+	 * 获取店铺名称
+	 * */
+	public static function getSalonNamebyCon($where)
+	{
+		$fields = array("merchantId","salonid","salonname","name");
+		$query =  DB::table('salon as s')
+            ->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
+            ;
+		if(isset($where['salonname']) && urldecode($where['salonname']))
+		{
+			$keyword = '%'.urldecode($where['salonname']).'%';
+			$query = $query->where('s.salonname','like',$keyword);
+			$query = $query->where('s.salestatus','=',1);//正常合作的店铺
+			$query = $query->where('s.merchantId','!=',0);//有商户Id
+		}
+
+		$result = $query->select($fields)->paginate(5)->toArray();
+		return $result["data"];
+		
+	}
+	
 	
 	
 

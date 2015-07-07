@@ -255,6 +255,7 @@ class SalonAccountController extends Controller {
 	 * @apiParam {String} salonname 必填,店铺名称.
 	 * 
 	 * @apiSuccess {Number} merchantId 商户Id.
+	 * @apiSuccess {String} name 商户名称.
 	 * @apiSuccess {Number} salonid 店铺Id.
 	 * @apiSuccess {String} salonname 店铺名称.
 	 * 
@@ -265,12 +266,14 @@ class SalonAccountController extends Controller {
 	 *	        {
 	 *	            "merchantId": 1,
 	 *	            "salonid": 1,
-	 *	            "salonname": "嘉美专业烫染"
+	 *	            "salonname": "嘉美专业烫染",
+	 *				"name": "嘉烫染"
 	 *	        },
 	 *	        {
 	 *	            "merchantId": 33,
 	 *	            "salonid": 804,
 	 *	            "salonname": "臭美腾讯专属高端店"
+	 *              "name": "嘉美烫染"
 	 *	        },
 	 *	        ......
 	 *	    ]
@@ -290,19 +293,7 @@ class SalonAccountController extends Controller {
 		{
 			return $this->error("参数错误");	
 		}
-		$query = Salon::getQuery();
-		
-		if(isset($param['salonname']) && urldecode($param['salonname']))
-		{
-			$keyword = '%'.urldecode($param['salonname']).'%';
-			$query = $query->where('salonname','like',$keyword);
-			$query = $query->where('salestatus','=',1);//正常合作的店铺
-			$query = $query->where('merchantId','!=',0);//有商户Id
-		}
-
-		$fields = array("merchantId","salonid","salonname");
-		$result = $query->select($fields)->paginate(5)->toArray();
-		$data = $result["data"];
+		$data = SalonAccount::getSalonNamebyCon($param);
 		return $this->success($data);
 	}
 	
