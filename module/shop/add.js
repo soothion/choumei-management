@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-07 10:00:15
+* @Last Modified time: 2015-07-07 12:14:50
 */
 
 (function(){
@@ -12,13 +12,18 @@
     if(type && type === 'edit'){
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));
 		lib.ajatCount--;
-        lib.ajat('#domid=form&tempid=form-t').template(data);     
+        lib.ajat('#domid=form&tempid=form-t').template(data);
+        initProvince     
     }
 
     if(type && type === 'add'){
 		lib.ajatCount--;
         lib.ajat('#domid=form&tempid=form-t').template({});    
     }
+
+    $("#province").on('change',function(){
+        var val = this(e).val();
+    })
     
     $("#addCoordinate").on('click',function(){
         $("#pop-wrapper").show();

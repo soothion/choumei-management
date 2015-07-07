@@ -44,7 +44,7 @@
                    <div class="control-group">
                         <label class="control-label" for="">店铺面积：</label>
                         <div class="control">
-                            <input type="text" name="shopArea" pattern="float">
+                            <input type="text" name="salonArea"  value="<%=data.salonArea%>" pattern="float">
                             <span class="unit">m<sup>2</sup></span>
                         </div>
                     </div> 
@@ -52,7 +52,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">镜台数量：</label>
                         <div class="control">
-                            <input type="text" name="dressingNum" pattern="number" maxlength="9">
+                            <input type="text" name="dressingNums" value="<%=data.dressingNums%>" pattern="number" maxlength="9">
                             <span class="unit">个</span>
                         </div>
                     </div> 
@@ -60,7 +60,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">员工总人数：</label>
                         <div class="control">
-                            <input type="text" name="employeeNum" pattern="number" maxlength="9">
+                            <input type="text" name="staffNums" value="<%=data.staffNums%>" pattern="number" maxlength="9">
                             <span class="unit">个</span>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">发型师人数：</label>
                         <div class="control">
-                            <input type="text" name="hairdresserNum" pattern="number" maxlength="9">
+                            <input type="text" name="stylistNums" value="<%=data.stylistNums%>" pattern="number" maxlength="9">
                             <span class="unit">个</span>
                         </div>
                     </div> 
@@ -81,7 +81,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">店铺平均月销售额：</label>
                         <div class="control">
-                            <input type="text" name="avgSales" pattern="float">
+                            <input type="text" name="monthlySales" value="<%=data.monthlySales%>" pattern="float">
                             <span class="unit">万元</span>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">年销售总额：</label>
                         <div class="control">
-                            <input type="text" name="allSales" pattern="float">
+                            <input type="text" name="totalSales" value="<%=data.totalSales%>" pattern="float">
                             <span class="unit">万元</span>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">本店客单价： </label>
                         <div class="control">
-                            <input type="text" name="price" pattern="float">
+                            <input type="text" name="price" value="<%=data.price%>" pattern="float">
                             <span class="unit">元</span>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">充值卡占月销售额： </label>
                         <div class="control">
-                            <input type="text" name="rechargeSalesM" pattern="float" len="2" decimal="2">
+                            <input type="text" name="payScale" value="<%=data.payScale%>" pattern="float" len="2" decimal="2">
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -113,9 +113,9 @@
                     <div class="control-group">
                         <label class="control-label" for="">销售最多的充值卡金额：</label>
                         <div class="control">
-                            <input type="text" name="rechargeSales" class="component-width" pattern="float">
+                            <input type="text" name="payMoney" class="component-width" value="<%=data.payMoney%>" pattern="float">
                             <span class="unit">元</span>
-                            <input type="text" name="discountSales" class="component-width" pattern="float" 
+                            <input type="text" name="payMoneyScale" class="component-width" value="<%=data.payMoneyScale%>" pattern="float" 
                             len="2" decimal="2">
                             <span class="unit">折</span>
                         </div>
@@ -124,7 +124,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">占全部充值总额：</label>
                         <div class="control">
-                            <input type="text" name="rechargeProportion" pattern="float" len="2" decimal="2">
+                            <input type="text" name="payCountScale" value="<%=data.payCountScale%>" pattern="float" len="2" decimal="2">
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">每月非充值卡现金占销售额：</label>
                         <div class="control">
-                            <input type="text" name="salesProportion" pattern="float" len="2" decimal="2">
+                            <input type="text" name="cashScale" value="<%=data.cashScale%>" pattern="float" len="2" decimal="2">
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -140,7 +140,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">洗剪吹占销售额：</label>
                         <div class="control">
-                            <input type="text" name="HaircutProportion" pattern="float" len="2" decimal="2">
+                            <input type="text" name="blowScale" value="<%=data.blowScale%>" pattern="float" len="2" decimal="2">
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">烫染占销售额：</label>
                         <div class="control">
-                            <input type="text" name="colAndPerProportion" pattern="float" len="2" decimal="2">
+                            <input type="text" name="hdScale" value="<%=data.hdScale%>" pattern="float" len="2" decimal="2">
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -161,14 +161,14 @@
                     <div class="control-group">
                         <label class="control-label" for="">O2O平台合作：</label>
                         <div class="control">
-                        <input type="text" name="cooperationPlatform" maxlength="50">
+                        <input type="text" name="platformName" value="<%=data.platformName%>" maxlength="50" >
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label" for="">合作O2O销售额占比：</label>
                         <div class="control">
-                            <input type="text" name="platformProportion" pattern="float" len="2" decimal="2">
+                            <input type="text" name="platformScale" value="<%=data.platformScale%>" pattern="float" len="2" decimal="2">
                             <span class="unit">%</span>
                         </div>
                     </div>   
@@ -181,7 +181,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">本店正常工作时间每日最多可接待人次理论数：</label>
                         <div class="control">
-                            <input type="text" name="receptionNums" pattern="number" maxlength="9">
+                            <input type="text" name="receptionNums" value="<%=data.receptionNums%>" pattern="number" maxlength="9">
                             <span class="unit">人</span>
                         </div>
                     </div>
@@ -189,7 +189,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">平均每月实际接待 ：</label>
                         <div class="control">
-                            <input type="text" name="receptionMons" pattern="number" maxlength="9">
+                            <input type="text" name="receptionMons" value="<%=data.receptionMons%>" pattern="number" maxlength="9">
                             <span class="unit">人次</span>
                         </div>
                     </div> 
@@ -197,15 +197,14 @@
                     <div class="control-group">
                         <label class="control-label" for="">店铺成立时间： </label>
                         <div class="control">
-                            <input type="date" name="establishedTime" min="1950-01-01" 
-                            max="2030-01-01">
+                            <input type="date" name="setupTime" value="<%=data.setupTime%>" min="1950-01-01" max="2030-01-01">
                         </div>
                     </div> 
 
                     <div class="control-group">
                         <label class="control-label" for="">店铺租金：</label>
                         <div class="control">
-                            <input type="text" name="hotdyeScale" pattern="float">
+                            <input type="text" name="hotdyeScale" value="<%=data.hotdyeScale%>" pattern="float">
                             <span class="unit">元</span>
                         </div>
                     </div>    
@@ -213,26 +212,26 @@
                     <div class="control-group">
                         <label class="control-label" for="">店铺租赁合同剩余有效期： </label>
                         <div class="control">
-                            <input type="text" name="lastValidity" pattern="number" maxlength="9">
+                            <input type="text" name="lastValidity" value="<%=data.lastValidity%>" pattern="number" maxlength="9">
                             <span class="unit">个月</span>
                         </div>
                     </div> 
 
                     <div class="control-group">
                         <label class="control-label" for="">店铺类型：</label>
-                        <input type="checkbox" name="shop" class="checkbox" value="1" id="checkbox1">
+                        <input type="checkbox" name="salonType" class="checkbox" value="1" id="checkbox1">
                         <label for="checkbox1">纯社区店</label>
 
-                        <input type="checkbox" name="shop" class="checkbox" value="2" id="checkbox2">
+                        <input type="checkbox" name="salonType" class="checkbox" value="2" id="checkbox2">
                         <label for="checkbox2">社区商圈店</label>
 
-                        <input type="checkbox" name="shop" class="checkbox" value="3" id="checkbox3">
+                        <input type="checkbox" name="salonType" class="checkbox" value="3" id="checkbox3">
                         <label for="checkbox3">商圈店</label>
 
-                        <input type="checkbox" name="shop" class="checkbox" value="4" id="checkbox4">
+                        <input type="checkbox" name="salonType" class="checkbox" value="4" id="checkbox4">
                         <label for="checkbox4">商场店</label>
 
-                        <input type="checkbox" name="shop" class="checkbox" value="5" id="checkbox5">
+                        <input type="checkbox" name="salonType" class="checkbox" value="5" id="checkbox5">
                         <label for="checkbox5">工作室(写字楼)店</label>
 
                         <span class="control-help" style="display: inline;">请选择</span>

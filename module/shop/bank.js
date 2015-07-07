@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-07 10:22:30
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-07 10:25:36
+* @Last Modified time: 2015-07-07 10:47:44
 */
 
 (function(){
@@ -23,7 +23,6 @@
     });
 
     lib.Form.prototype.save = function(data){
-        debugger;
         if(type && type === 'edit'){
             var shopData = JSON.parse(sessionStorage.getItem('eidt-shop-data'));
             shopData = $.extend({},shopData,data);
