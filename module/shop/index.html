@@ -5,7 +5,10 @@
       <title>臭美管理后台</title>
       <script type="text/javascript" src="../../js/include.js"></script>
       <script type="text/javascript" src="../../js/utils.js"></script>
-      <link rel="stylesheet" href="shop.css" />     
+      <link rel="stylesheet" href="shop.css" />
+		<style type="text/css">
+			
+		</style>
     </head>
     <body>
       <div class="breadcrumb">
@@ -13,11 +16,16 @@
       <span>&gt;</span>
       <a class="link" href="ui.html">二级导航</a>
       <span>&gt;</span>店铺列表
+	  <div class="flex-box">
+			<div class="flex-item">
+				<h4>店铺列表</h4>
+			</div>
+		</div>
       </div>
       <div class="wrapper">
             <form data-role="hash" id="form">
-        <div class="flex-box">
-          <div class="flex-item">
+
+          <div class="position">
               <div class="input-group">
                 <select class="select border-none" id="select">
                   <option value="1">店铺搜索</option>
@@ -25,19 +33,14 @@
                 </select>
                 <input type="text" class="border-none" name="salonname" placeholder="请输入店铺名称"/>
                 <input type="text" class="border-none hide" name="businessName" placeholder="请输入业务代表"/>
-              <button type="submit" class="fa fa-search"></button>
+				<button type="submit" class="fa fa-search"></button>
               </div>
-
-          </div>
-
-          <div id="dropMenu">
-            <span class="drop-menu drop-menu-right" style="float:right;">
+			  <span class="drop-menu drop-menu-right" id="dropMenu">
               <a class="drop-menu-toggle btn" data-toggle-class="open">
                 筛选条件 <i class="fa fa-angle-down"></i>
               </a>
-            </span>             
+			 </span>      
           </div>
-        </div>
 
         <div class="area-box" style="display:none">
           <div class="flex-box">

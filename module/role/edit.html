@@ -33,7 +33,13 @@
   </head>
   <body>
 	<div class="breadcrumb">
-		<a>系统管理</a><span>&gt;</span><a>用户管理</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑用户":"新增用户"%></span>
+		<a>系统管理</a><span>&gt;</span><a>系统管理</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑角色":"新增角色"%></span>
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑角色":"新增角色"%></h4>
+			</div>
+		</div>
+		<hr />
 	</div>
 	<div class="wrapper" ajat="<%if(query.id){%>role/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">

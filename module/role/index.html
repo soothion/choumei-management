@@ -7,7 +7,15 @@
   </head>
   <body>
 	<div class="breadcrumb">
-		<a href="ui.html">一级导航</a><span>&gt;</span><a href="ui.html">二级导航</a><span>&gt;</span>用户管理
+		<a href="ui.html">系统管理</a><span>&gt;</span><a href="ui.html">系统管理</a><span>&gt;</span>角色管理
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4>角色管理</h4>
+			</div>
+			<div>
+				<a class="btn-primary" href="edit.html"><i class="fa fa-plus"></i>新增</a>
+			</div>
+		</div>
 	</div>
 	<div class="wrapper">
 			<div class="flex-box">
@@ -37,12 +45,14 @@
 							</script>
 						</select>
 						<span class="space"></span>
+						<span class="date-group">
 						添加时间 <input type="date" name="start" data-role="start"/>到<input name="end" type="date" data-role="end"/>
 						<button class="btn" type="submit">搜索</button>
+						</span>
 					</form>
 					<form action="role/export" data-role="export"><button class="btn" type="submit"><i class="fa fa-file-excel-o"></i> 导出</button></form>
 				</div>
-				<a class="btn-primary" href="edit.html"><i class="fa fa-plus"></i>新增</a>
+				
 			</div>
 			<div class="table" ajat="role/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">

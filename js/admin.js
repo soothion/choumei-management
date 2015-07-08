@@ -25,7 +25,7 @@ $(function(){
 	/**渲染面包屑**/
 	var breadcrumb=$('.breadcrumb');
 	if(breadcrumb.length==1){
-		breadcrumb.html(lib.ejs.render({text:breadcrumb.html().replace('%&gt;','%>').replace('&lt;%','<%')},{}))
+		breadcrumb.html(lib.ejs.render({text:breadcrumb.html().replace(/%&gt;/g,'%>').replace(/&lt;%/g,'<%')},{}))
 	}
 	/**hash和加载进度条**/
 	var $body=$(document.body);
@@ -195,7 +195,7 @@ $(function(){
 		var $target=$(e.target);
 		var $pager=$target.find('.pager');
 		data=data.response;
-		if(data.total > 0&&data.total>data.per_page) {
+		if(data.total > 0) {
 			seajs.use('/js/jquery.pagination.js',function (){
 				var query=$.extend({},lib.query);
 				delete query._;
