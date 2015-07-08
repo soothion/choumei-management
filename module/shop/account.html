@@ -23,10 +23,12 @@
            <form data-role="hash" class="position-group">
 						<div class="input-group">
 							<select class="select border-none" id="select">
+								<option value="0">店铺搜索</option>
 								<option value="1">商户搜索</option>
 								<option value="2">用户名</option>
 							</select>
 							<input type="text" class="border-none" placeholder="请输入店铺名" name="salonname">
+							<input type="text" class="border-none" placeholder="请输入商户名" name="name" style="display:none">
 							<input type="text" class="border-none" placeholder="请输入用户名" name="username" style="display:none">
 							<button type="submit" class="fa fa-search"></button>
 						</div>
@@ -82,15 +84,8 @@
    <script type="text/javascript">
 		$('#select').on('change',function(){
 			var $this=$(this);
-			var input1=$('input[name="salonname"]');
-			var input2=$('input[name="username"]');
-			if($this.val()==1){
-				input1.show();
-				input2.hide().val('');
-			}else{
-				input2.show();
-				input1.hide().val('');
-			}
+			var inputs=$('.position-group input');
+			inputs.eq($this.val()).show().siblings('input').hide().val('');
 		});
 		$('.table').on('click','.reset',function(){
 			var $this=$(this);
