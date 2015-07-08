@@ -1,4 +1,5 @@
-﻿	lib.ajatCount=0;
+﻿(function(){
+	lib.ajatCount=0;
 	lib.ajat=function (_protocol) {
 		lib.ajatCount++;
         return new lib.Ajat(_protocol);
@@ -9,16 +10,17 @@
 		}
 		 return data.data;
 	}
-	var loadingend=function(e){//触发进度条加载完成
+	lib.loadingend=function(e){//触发进度条加载完成
 		lib.ajatCount--;
 		if(lib.ajatCount==0){
 			parent.$('body').trigger('loadingend');
-			$(document.body).off('_ready',loadingend);
+			$(document.body).off('_ready',lib.loadingend);
 		}
 	}
 	lib.Ajat.before=function(){
-		$(document.body).on('_ready',loadingend).on('exception',loadingend);
+		$(document.body).on('_ready',lib.loadingend).on('exception',lib.loadingend);
 	}
+})();
 $(function(){
 	/**渲染面包屑**/
 	var breadcrumb=$('.breadcrumb');
@@ -45,9 +47,8 @@ $(function(){
 		lib.init();
 		lib.Ajat.run();
 		$(document).scrollTop(0);
-		$body.on('_ready',loadingend);
+		$body.on('_ready',lib.loadingend);
 	});
-	
 	if($('[ajat]').length==0){
 		parent.$('body').trigger('loadingend');
 	}
@@ -56,11 +57,11 @@ $(function(){
 		if(!$(this).attr('target')){
 			parent.$('body').trigger('loading');
 		}
-	}).on('submit','form[data-role="hash"]',function(e){//表单hash提交
+	}).on('submit','form[data-role="hash"]',function(e){//表单submit提交
 		$(this).trigger('hash');
 		e.stopPropagation();
 		e.preventDefault();
-	}).on('hash','form[data-role="hash"]',function(e){//表单hash提交
+	}).on('hash','form[data-role="hash"]',function(e){//表单自定义hash提交
 		var data=lib.getFormData($(this));
 		if(data.page!=1){
 			data.page=1;
@@ -115,7 +116,7 @@ $(function(){
 		}
 		e.preventDefault();
 	});
-	
+	/**常见**/
 	$body.on('click','.drop-menu-toggle',function(){//下拉菜单
 		var $this=$(this);
 		$this.parent().toggleClass('open');
@@ -133,58 +134,57 @@ $(function(){
 	});
 	/**自动补全**/
 	$body.on('input','input[ajat-complete]',function(){//自动补全输入事件
-			var $this=$(this);
-			var val=$.trim($this.val());
-			if(val){
-				clearTimeout(lib.completeTimer);
-				lib.completeTimer=setTimeout(function(){
-					var ajat=$this.attr('ajat-complete').replace('${value}',val);
-					lib.ajat(ajat).render().done(function(){
-						$this.closest('.complete').find('.complete-position').show();
-					});
-				},200);
-			}else{
-				$this.closest('.complete').find('.complete-position').hide();
-			}
-		}).on('keyup','input[ajat-complete]',function(e){//自动补全键盘事件
-			if(e.keyCode==13||e.keyCode==38||e.keyCode==40){
-				var $this=$(this);
-				var complete=$this.closest('.complete');
-				if(complete.find('.complete-item').length==0){
-					return ;
-				}
-				if(e.keyCode==40||e.keyCode==38){
-					var active=complete.find('.complete-item.active');
-					if(active.length==0){
-						active=complete.find('.complete-item')[e.keyCode==40?'first':'last']();
-					}else{
-						if(active[e.keyCode==40?'next':'prev']().length==1){
-							active=active[e.keyCode==40?'next':'prev']();
-						}
-					}
-					active.addClass('active').siblings().removeClass('active');
-					$this.val(active.text()).trigger('autoinput',active.data());
-				}
-				if(e.keyCode==13){
-					complete.find('.complete-position').hide();
-				}
-				e.preventDefault();
-			}
-		}).on('keydown','input[ajat-complete]',function(e){
-			if(e.keyCode==13){
-				e.preventDefault();
-			}
-				
-		}).on('blur','input[ajat-complete]',function(){//自动补全失去焦点事件
-			$(this).closest('.complete').find('.complete-position').hide();
-		}).on('click','.complete-item',function(){//自动补全单击事件
+		var $this=$(this);
+		var val=$.trim($this.val());
+		if(val){
+			clearTimeout(lib.completeTimer);
+			lib.completeTimer=setTimeout(function(){
+				var ajat=$this.attr('ajat-complete').replace('${value}',val);
+				lib.ajat(ajat).render().done(function(){
+					$this.closest('.complete').find('.complete-position').show();
+				});
+			},200);
+		}else{
+			$this.closest('.complete').find('.complete-position').hide();
+		}
+	}).on('keyup','input[ajat-complete]',function(e){//自动补全键盘事件
+		if(e.keyCode==13||e.keyCode==38||e.keyCode==40){
 			var $this=$(this);
 			var complete=$this.closest('.complete');
-			complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',active.data());
-			complete.hide();
-		});
-	
-	$body.on('_ready',function(e,data){
+			if(complete.find('.complete-item').length==0){
+				return ;
+			}
+			if(e.keyCode==40||e.keyCode==38){
+				var active=complete.find('.complete-item.active');
+				if(active.length==0){
+					active=complete.find('.complete-item')[e.keyCode==40?'first':'last']();
+				}else{
+					if(active[e.keyCode==40?'next':'prev']().length==1){
+						active=active[e.keyCode==40?'next':'prev']();
+					}
+				}
+				active.addClass('active').siblings().removeClass('active');
+				$this.val(active.text()).trigger('autoinput',active.data());
+			}
+			if(e.keyCode==13){
+				complete.find('.complete-position').hide();
+			}
+			e.preventDefault();
+		}
+	}).on('keydown','input[ajat-complete]',function(e){
+		if(e.keyCode==13){
+			e.preventDefault();
+		}
+	}).on('blur','input[ajat-complete]',function(){//自动补全失去焦点事件
+		$(this).closest('.complete').find('.complete-position').hide();
+	}).on('click','.complete-item',function(){//自动补全单击事件
+		var $this=$(this);
+		var complete=$this.closest('.complete');
+		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',active.data());
+		complete.hide();
+	});
+	/**返回数据异常处理**/
+	$body.on('exception',function(e,data){
 		data=data.response;
 		if(data.result==0&&data.code=='400'){
 			//parent.location.href="/module/user/login.html";

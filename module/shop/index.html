@@ -15,7 +15,7 @@
       <span>&gt;</span>店铺列表
       </div>
       <div class="wrapper">
-            <form data-role="hash">
+            <form data-role="hash" id="form">
         <div class="flex-box">
           <div class="flex-item">
               <div class="input-group">
@@ -43,7 +43,7 @@
           <div class="flex-box">
             <div class="filter-title">店铺类型：</div>
             <div class="flex-item">
-              <input type="radio" class="label" name="shopType" id="type1" checked />
+              <input type="radio" class="label" name="shopType" id="type1" checked value=""/>
               <label for="type1"  class="mr">全部</label>
               <input type="radio" class="label" name="shopType"  id="type2" value="1"/>
               <label for="type2"  class="mr">预付款店</label>
@@ -63,7 +63,7 @@
                   arr.push(data[i].tid);
                 }
               %>
-              <input type="radio" class="label" name="district" id="_area0" checked/>
+              <input type="radio" class="label" name="district" id="_area0" checked value=""/>
               <label for="_area0" ajat-click="salonList/getProvinces?type=4&areaId=<%=arr%>#domid=circle&tempid=circle_t" ajat-one="true" >全部</label>
               <%
                 for(var i=0; i<data.length;i++){
@@ -80,7 +80,7 @@
             <div class="filter-title">商圈类型：</div>
             <div class="flex-item" id="circle">
             <script type="text/template" id="circle_t">
-                <input type="radio" class="label" name="zone" id="circle0" checked/>
+                <input type="radio" class="label" name="zone" id="circle0" checked value=""/>
                 <label for="circle0">全部</label>
                 <%for(var i=0; i<data.length;i++){%>
                   <input type="radio" class="label" name="zone" id="circle<%=i+1%>" value="<%=data[i].areaid%>"/>
@@ -154,8 +154,10 @@
           input1.hide().val('');
         }
       })
-      $('form').on('click','label',function(){
-        $('form').submit();
+      $('body').on('click','label',function(){
+		setTimeout(function(){
+			$('#form').submit();
+		},200)
       })
 
   </script>     

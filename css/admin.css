@@ -408,6 +408,9 @@ legend{
 .table{
 	margin:15px 0;
 }
+.table thead{
+	background:#F6F8F9;
+}
 .table table,.table-detail table{
 	width:100%;
 	border:1px solid #E6EAF2;
