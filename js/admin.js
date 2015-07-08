@@ -212,8 +212,7 @@ $(function(){
 						$pager.find('.pagination a').off('click').addClass('link');
 					}
 				});
-				$pager.prepend('共'+data.total+'条&nbsp;');
-				$pager.append('<form data-role="hash"><input type="text" name="page" /><button type="submit" class="go link">go</button></form>');
+				$pager.append('&nbsp;共'+data.total+'条&nbsp;<form data-role="hash"><input type="text" name="page" /><button type="submit" class="go link">go</button></form>');
 			});
 		}
 		if(data.total==0){
