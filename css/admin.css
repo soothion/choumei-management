@@ -516,10 +516,11 @@ th.colswrap{
 .pager .go{
 	border:1px solid #ddd;
 	border-radius:3px;
-	padding:4px 8px;
+	padding:0;
 	background:#fff;
-	line-height:24px;
+	line-height:30px;
 	vertical-align:middle;
+	width:40px;
 }
 .pager .current{
 	color:#fff!important;

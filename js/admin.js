@@ -206,7 +206,7 @@ $(function(){
 					next_text:'>>',
 					prev_text:'<<',
 					num_display_entries: 7,
-					num_edge_entries: 0,
+					num_edge_entries: 1,
 					link_to:location.pathname+'#'+$.param(query),
 					callback:function(data){
 						$pager.find('.pagination a').off('click').addClass('link');
