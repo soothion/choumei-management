@@ -15,9 +15,9 @@
       <span>&gt;</span>店铺列表
       </div>
       <div class="wrapper">
+            <form data-role="hash">
         <div class="flex-box">
           <div class="flex-item">
-            <form data-role="hash">
               <div class="input-group">
                 <select class="select border-none" id="select">
                   <option value="1">店铺搜索</option>
@@ -27,7 +27,7 @@
                 <input type="text" class="border-none hide" name="businessName" placeholder="请输入业务代表"/>
               <button type="submit" class="fa fa-search"></button>
               </div>
-            </form>
+
           </div>
 
           <div id="dropMenu">
@@ -43,39 +43,54 @@
           <div class="flex-box">
             <div class="filter-title">店铺类型：</div>
             <div class="flex-item">
-              <input type="radio" class="label" name="type" id="type1" checked />
+              <input type="radio" class="label" name="shopType" id="type1" checked />
               <label for="type1"  class="mr">全部</label>
-              <input type="radio" class="label" name="type"  id="type2" value="1"/>
+              <input type="radio" class="label" name="shopType"  id="type2" value="1"/>
               <label for="type2"  class="mr">预付款店</label>
-              <input type="radio" class="label" name="type"  id="type3" value="2" />
+              <input type="radio" class="label" name="shopType"  id="type3" value="2" />
               <label for="type3"  class="mr">投资店</label>
-              <input type="radio" class="label" name="type"  id="type4" value="3" />
+              <input type="radio" class="label" name="shopType"  id="type4" value="3" />
               <label for="type4"  class="mr">金字塔店</label>
             </div>
           </div>
           <div class="flex-box">
             <div class="filter-title">区域类型：</div>
-            <div id="area" class="flex-item" ajat="salonList/getProvinces?type=3&areaId=1#domid=area&tempid=area_t">
+            <div id="area" class="flex-item" ajat="salonList/getProvinces?type=3&areaId=1#domid=area&tempid=area_t" ajat-one="true">
             <script type="text/template" id="area_t">
-              <input type="radio" class="label" name="_area" id="_area0" checked/>
-              <label for="_area0">全部</label>
-              <%for(var i=0; i<data.length;i++){%>
-                <input type="radio" class="label" name="_area" id="_area<%=i+1%>" value="<%=data[i].tid%>"/>
-                <label for="_area<%=i+1%>"><%=data[i].tname%></label>
+              <%
+                var arr = [];
+                 for(var i=0; i<data.length;i++){
+                  arr.push(data[i].tid);
+                }
+              %>
+              <input type="radio" class="label" name="district" id="_area0" checked/>
+              <label for="_area0" ajat-click="salonList/getProvinces?type=4&areaId=<%=arr%>#domid=circle&tempid=circle_t" ajat-one="true" >全部</label>
+              <%
+                for(var i=0; i<data.length;i++){
+              %>
+                
+                <input type="radio" class="label" name="district" id="_area<%=i+1%>" value="<%=data[i].tid%>"/>
+                <label for="_area<%=i+1%>" ajat-click="salonList/getProvinces?type=4&areaId=<%=data[i].tid%>#domid=circle&tempid=circle_t"><%=data[i].tname%></label>
               <%}%>
+              <input type="hidden" ajat="salonList/getProvinces?type=4&areaId=<%=arr%>#domid=circle&tempid=circle_t" ajat-one="true">
             </script>
             </div>
           </div>
           <div class="flex-box">
             <div class="filter-title">商圈类型：</div>
             <div class="flex-item" id="circle">
-              <script type="text/template" id="circle_t">
-                <input type="radio" class="label" name="circle" id="circle0" />
-                <label for="circle0" checked>全部</label>
-              </script>
+            <script type="text/template" id="circle_t">
+                <input type="radio" class="label" name="zone" id="circle0" checked/>
+                <label for="circle0">全部</label>
+                <%for(var i=0; i<data.length;i++){%>
+                  <input type="radio" class="label" name="zone" id="circle<%=i+1%>" value="<%=data[i].areaid%>"/>
+                  <label for="circle<%=i+1%>"><%=data[i].areaname%></label>
+                <%}%>
+            </script>
             </div>
           </div>
         </div>
+        </form>
 
         <div class="table" id="table" ajat="salon/index?<%=query._%>#domid=table&tempid=table-t">
           <script type="text/template" id="table-t">
@@ -139,6 +154,10 @@
           input1.hide().val('');
         }
       })
+      $('form').on('click','label',function(){
+        $('form').submit();
+      })
+
   </script>     
     </body>
 </html>
