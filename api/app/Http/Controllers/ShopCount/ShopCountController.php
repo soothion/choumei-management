@@ -98,7 +98,7 @@ class ShopCountController extends Controller
             'pay_time_max'=>self::T_STRING,
             'page'=>self::T_INT,
             'size'=>self::T_INT,
-            'sort_key'=>self::T_INT,
+            'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_INT,
         ]);
         $items = ShopCountApi::searchPrepay($param);
@@ -466,7 +466,7 @@ class ShopCountController extends Controller
             'pay_time_max'=>self::T_STRING,
             'page'=>self::T_INT,
             'size'=>self::T_INT,
-            'sort_key'=>self::T_INT,
+            'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_INT,
         ]);
         $items = ShopCountApi::searchInsteadReceive($param);
@@ -610,7 +610,7 @@ class ShopCountController extends Controller
             'pay_time_max'=>self::T_STRING,
             'page'=>self::T_INT,
             'size'=>self::T_INT,
-            'sort_key'=>self::T_INT,
+            'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_INT,
         ]);
         $items = ShopCountApi::searchShopCount($param);
