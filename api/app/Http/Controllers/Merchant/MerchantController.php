@@ -92,7 +92,7 @@ class MerchantController extends Controller {
 			$kModile = '%'.$param['mobile'].'%';
 			$query = $query->where('mobile','like',$kModile);
 		}
-
+		$query = $query->where('status','=',1);//排除删除
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 
