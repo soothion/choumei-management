@@ -51,8 +51,8 @@
 				<%for(var i=0;i<data.length;i++){%>
                 <tr>
                   <td><%=i+1%></td>
-                  <td><%=data[i].salon.salonname%></td>
-                  <td><%=types[data[i].salon.salon_type-1]%></td>
+                  <td><%if(data[i].salon){%><%=data[i].salon.salonname%><%}%></td>
+                  <td><%if(data[i].salon){%><%=types[data[i].salon.salon_type-1]%><%}%></td>
                   <td><%=data[i].pay_money%></td>
 				  <td><%=data[i].cost_money%></td>
 				  <td><%=data[i].spend_money%></td>
