@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-06-30 10:24:56
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-08 16:32:21
+* @Last Modified time: 2015-07-08 20:06:14
 */
 
 /********************店铺列表***********************/
@@ -386,16 +386,16 @@
 	margin-left:-200px;
 	top:40px;
 }
-input.label+label{
+.shop-hash-form input.label+label{
 	border:0px;
 	margin-bottom:5px;
 	line-height:25px;
 	min-width:0;
 }
-input.label:checked+label{
+.shop-hash-form input.label:checked+label{
 	font-weight:bold;
 }
-input[name="district"]:checked+label{
+.shop-hash-form input[name="district"]:checked+label{
 	border:1px solid #D7D7D7;
 	border-bottom-color:#fff;
 	background:#fff;
@@ -405,17 +405,21 @@ input[name="district"]:checked+label{
 	color:#666;
 }
 
-#circle{
+
+.circle-wrapper{
 	border:1px solid #D7D7D7;
 	margin-top:-6px;
 	padding-top:8px;
 	padding-bottom:5px;
 }
 
-#circle label{
+.circle-wrapper label{
 	margin-bottom:5px;
 	margin-right:5px;
 }
 .filter-title{
 	line-height:26px;
+}
+.control-circle label{
+	margin:5px 5px 5px 0;
 }

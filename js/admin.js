@@ -63,7 +63,7 @@ $(function(){
 		e.preventDefault();
 	}).on('hash','form[data-role="hash"]',function(e){//表单自定义hash提交
 		var data=lib.getFormData($(this));
-		if(data.page!=1){
+		if(data.page===undefined){
 			data.page=1;
 		}
 		if(lib.hashchange(data)){
@@ -206,14 +206,13 @@ $(function(){
 					next_text:'>>',
 					prev_text:'<<',
 					num_display_entries: 7,
-					num_edge_entries: 0,
+					num_edge_entries: 1,
 					link_to:location.pathname+'#'+$.param(query),
 					callback:function(data){
 						$pager.find('.pagination a').off('click').addClass('link');
 					}
 				});
-				$pager.prepend('共'+data.total+'条&nbsp;');
-				$pager.append('<form data-role="hash"><input type="text" name="page" /><button type="submit" class="go link">go</button></form>');
+				$pager.append('&nbsp;共'+data.total+'条&nbsp;<form data-role="hash"><input type="text" name="page" /><button type="submit" class="go link">go</button></form>');
 			});
 		}
 		if(data.total==0){

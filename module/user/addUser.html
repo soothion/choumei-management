@@ -7,8 +7,15 @@
   </head>
   <body>
 		<div class="breadcrumb">
-		<a href="ui.html">一级导航</a><span>&gt;</span><a href="ui.html">二级导航</a><span>&gt;</span><span id="breadcrumb-current">新增用户</span>
+		<a href="ui.html">系统管理</a><span>&gt;</span><a href="ui.html">系统管理</a><span>&gt;</span><span id="breadcrumb-current">新增用户</span>
+			<div class="flex-box">
+			<div class="flex-item">
+				<h4>新增用户</h4>
+			</div>		 
+		</div>
+		<hr />
 	</div>
+	
 	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
@@ -63,6 +70,7 @@
 					</select>
 				</div>
 			</div>
+			 
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色状态：</label>
 				<div class="control">
@@ -135,5 +143,12 @@
 			<option <%=data[i].id==protocol.custom.sid?"selected":""%> value="<%=data[i].id%>"><%=data[i].title%></option>
 		<%}%>
 	</script>
+	<script type="text/javascript">
+		$(function(){			 
+			$('input[type="date"]').val(lib.getDate());
+			$('form').submit();
+		});
+	</script>
+	 
   </body>
 </html>

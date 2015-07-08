@@ -11,29 +11,36 @@
     </head>
     <body>
         <div class="breadcrumb">
-           <a href="ui.html">店铺结算 </a><span>&gt;</span>付款管理
+           <a href="ui.html">店铺结算 </a><span>&gt;</span><a href="ui.html">转付单</a><span>&gt;</span>付款管理
+		   <div class="flex-box">
+			<div class="flex-item">
+				<h4>付款管理</h4>
+			</div>
+			<div>
+				<a class="btn-primary" href="addSingle.html"><i class="fa fa-plus"></i>新增</a>
+			</div>
+		</div>
         </div>
         <div class="wrapper">
             <div class="flex-box">
                 <div class="flex-item">
                     <form data-role="hash">
                         <div>
-                           <div class="input-group">
-							<select class="select border-none" id="select" >
-								<option key="1">店铺名称</option>
-								<option value="2" name="">商户名称</option>
+                          <div class="input-group">
+							<select class="select border-none" name="key" id="select">
+								<option value="1">店铺名称</option>
+								<option value="2">商户名称</option>
 							</select>
-							<input type="text" name="keyword" class="border-none" placeholder="请输入商户名">
+							<input type="text" class="border-none" placeholder="请输入店铺名称" name="keyword">
 						</div>
                             <label>付款日期：</label>
-                              <input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"/>
+							<span class="date-group">
+                              <input type="date" data-role="start"  name="pay_time_min"/>到<input type="date" data-role="end"  name="pay_time_max"/>
+							  </span>
 							  <button class="btn" type="submit">搜索</button>
                         </div>
                     </form>
-                </div>
-                <a href="../shopSettlement/addSingle.html">
-                <button class="btn-primary"><i class="fa fa-plus"></i> 新增</button>
-                </a>
+                </div>              
             </div>
            <div class="table" ajat="shop_count/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
@@ -44,10 +51,11 @@
                             <th>付款单号</th>
                             <th>付款类型</th>
                             <th>商户名称</th>
+							<th>店铺名称</th>
                             <th>付款金额</th>
                             <th>换算消费额</th>
-                           <th><a>付款日期<i class="fa fa-sort"></i></a></th>
-                            <th><a>创建日期 <i class="fa fa-sort"></i></a></th>
+                           <th><a data-role="hash" href="#page=1&sort_type=<%=query.sort_type==2?"1":"2"%>">付款日期 <i class="fa fa-sort"></i></a></th>
+                            <th><a data-role="hash" href="#page=1&sort_type=<%=query.sort_type==2?"1":"2"%>">创建日期 <i class="fa fa-sort"></i></a></th>
                             <th>制单人</th>
                             <th>状态</th>
                             <th>操作</th>
@@ -62,7 +70,8 @@
                  <td><%=i+1%></td>
                   <td><%=data[i].code%></td>
 				  <td><%=type[data[i].type]%></td>
-				   <td><%=data[i].merchant.name%></td>
+				   <td><%=data[i].merchant?data[i].merchant.name:""%></td>
+				    <td><%=data[i].salon?data[i].salon.salonname:""%></td>
                   <td><%=data[i].pay_money%></td>
 				  <td><%=data[i].cost_money%></td>
 				  <td><%=data[i].day%></td>
@@ -80,7 +89,28 @@
               </tbody>
             </table>          
             <div class="pager"> </div>
+			</script>
         </div>
     </div>
+	<script type="text/javascript">
+		$(function(){
+			$('#select').on('change',function(){
+				var $this=$(this);
+				if($this.val()==1){
+					$this.next().attr('placeholder','请输入店铺名称');
+				}else{
+					$this.next().attr('placeholder','请输入商户名称');
+				}
+			});
+			$('input[type="date"]').val(lib.getDate());
+			$('form').submit();
+			$('button[data="link"]').on('click',function(){
+			if(merchant_id.in(salon_id)!=0){
+				parent.lib.popup.confirm({text:(title||'该商户还有正在合作的店铺请先终止该商户所有店铺合作，再删除商户'),define:function(){			
+			}
+			});
+			});
+		});
+	</script>
 </body>
 </html>

@@ -213,6 +213,7 @@
             var options={
                 url: pro.url,
                 data: pro.query,
+				cache:false,
                 success: function (data) {
                     if(!self.exception(data)){
                         self.template(self.parseResponse(data));

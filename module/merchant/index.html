@@ -7,12 +7,18 @@
   </head>
   <body>
 	<div class="breadcrumb">
-		<a href="ui.html">商户管理</a><span>&gt;</span>商户列表
+		<a href="ui.html">商户管理</a><span>&gt;</span><a href="ui.html">商户管理</a><span>&gt;</span>商户列表
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4>商户列表</h4>
+			</div>
+			<div>
+				<a class="btn-primary" href="edit.html"><i class="fa fa-plus"></i>新增</a>
+			</div>
+		</div>
 	</div>
 	<div class="wrapper">
-			<div class="flex-box">
-				<div class="flex-item">
-					<form data-role="hash">
+					<form data-role="hash" class="position-group">
 						<div class="input-group">
 							<select class="select border-none" id="select">
 								<option value="1">商户搜索</option>
@@ -23,9 +29,6 @@
 							<button type="submit" class="fa fa-search"></button>
 						</div>
 					</form>
-				</div>
-				<a class="btn-primary" href="edit.html"><i class="fa fa-plus"></i>新增</a>
-			</div>
 			<div class="table" ajat="merchant/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
@@ -57,7 +60,7 @@
 						</td>
 						<%if(data[i].foundingDate){
 						var date=new Date(data[i].foundingDate*1000);
-						data[i].foundingDate=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()+1<10?"0"+(date.getDate()+1):date.getDate()+1);
+						data[i].foundingDate=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()+1<10?"0"+(date.getDate()):date.getDate());
 						}%>
 						<td><%=data[i].foundingDate||""%></td>
 						<td>

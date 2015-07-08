@@ -42,8 +42,8 @@ input[type='text'], input[type='password'], input[type='url'], input[type='numbe
 	width:auto;
 	padding:0px 10px;
 	border-color:#E6EAF2;
-	height:30px;
-	line-height:30px;
+	height:32px;
+	line-height:32px;
 	color:#666;
 	font-size:12px;
 }
@@ -54,8 +54,8 @@ select{
 	width:auto;
 	padding-right:16px;
 	min-width:100px;
-	height:30px;
-	line-height:30px;
+	height:32px;
+	line-height:32px;
 	color:#666;
 	margin-right:5px;
 	border-color:#E6EAF2;
@@ -73,46 +73,8 @@ input.radio+label:before{
 	width:6px;
 	height:6px;
 }
-.unit{
-	display: inline-block; 
-	width: 0px;
-	text-indent: -61px;
-    text-align: center;
-	color:#999;
-}
-.input-unit{
-	padding-right:30px!important;
-}
-input:focus+.unit{
-	color:#58A2EC;
-}
-.input-group{
-	border:1px solid #E6EAF2;
-	border-radius:3px;
-	display:inline-block;
-	vertical-align:middle;
-	font-size:0;
-}
-.input-group select{
-	min-width:0;
-	border-right:1px solid #ddd!important;
-	margin-left:-1px;
-	margin-bottom:0px!important;
-	margin-top:0px!important;
-}
-.input-group input,.input-group button{
-	margin-bottom:0px!important;
-	margin-top:0px!important;
-}
-.input-group .fa{
-	font-size:16px;
-	vertical-align:middle;
-	margin:0px 5px;
-	color:#666;
-}
-.input-group input:focus~.fa{
-	color:#498ae5;
-}
+
+
 .tab{
 	border:1px solid #E6EAF2;
 }
@@ -238,11 +200,12 @@ h1{
 	height:35px;
 	margin-left:6px;
 }
+/**第一级菜单 start**/
 .nav-main li{
 	display: inline-block;
     height: 56px;
     line-height: 56px;
-    min-width: 90px;
+    min-width: 80px;
     padding: 0 10px;
     text-align: center;
 	font-size:14px;
@@ -280,6 +243,8 @@ h1{
 	line-height:32px;
 	color:#fff;
 }
+/**第一级菜单 end**/
+/**侧边栏 start**/
 aside h2{
 	color:#999;
 	font-size:18px;
@@ -322,10 +287,12 @@ aside h2{
 	margin-right:5px;
 	font-size:14px;
 }
+/**侧边栏 end**/
 
 .wrapper{
-	margin:17px;//设计图是17px
+	margin:10px 17px;//设计图是17px
 }
+/**面包屑 start**/
 .breadcrumb{
     line-height: 40px;
 	margin-bottom:10px;
@@ -341,9 +308,12 @@ aside h2{
 	color:#888;
 }
 .breadcrumb h4{
-	font-size:18px;
+	font-size:16px;
 	font-weight:bold;
 }
+/**面包屑 end**/
+
+/**表单 start**/
 .control-group{
 	margin:30px 0;
 }
@@ -418,6 +388,62 @@ legend{
 	font-size:17px;
 	padding-left:20px;
 }
+input.label+label{
+	line-height:30px;
+}
+input.label:checked + label{
+	border-color:#498ae5;
+	color:#498ae5;
+
+}
+input.solid+label{
+	line-height:22px;
+	border-radius:2px;
+	border:0px;
+	min-width:0;
+	padding:0px 6px;
+}
+input.solid:checked+label,input.solid+label:hover{
+	background-color:#498ae5;
+	color:#fff;
+}
+input.checkbox+label:before{
+	box-shadow:none;
+	height:12px;
+	width:12px;
+	line-height:12px;
+	content:"\f00c";
+	font-family:'FontAwesome';
+	color:#ccc;
+	border:1px solid #ccc;
+	background:#fff;
+	text-align:center;
+	margin-right:4px;
+	border-radius:2px;
+	font-size:10px!important;
+}
+input.checkbox:checked+label:before{
+	background:#fff;
+	box-shadow:none;
+	color:#498ae5;
+	border-color:#498ae5;
+}
+.unit{
+	display: inline-block; 
+	width: 0px;
+	text-indent: -61px;
+    text-align: center;
+	color:#999;
+}
+.input-unit{
+	padding-right:30px!important;
+}
+input:focus+.unit{
+	color:#58A2EC;
+}
+/**表单 end**/
+
+/**列表 start**/
 .table{
 	margin:15px 0;
 }
@@ -456,6 +482,17 @@ th.colswrap{
 	font-size:18px;
 	padding-left:20px;
 }
+.data-empty{
+	font-size:14px;
+	color:#999;
+}
+.data-empty i{
+	font-size:32px;
+	margin-right:5px;
+	vertical-align:middle;
+}
+/**列表 end**/
+/**分页 start**/
 .pager{
 	margin-top:15px;
 	text-align:center;
@@ -479,10 +516,11 @@ th.colswrap{
 .pager .go{
 	border:1px solid #ddd;
 	border-radius:3px;
-	padding:4px 8px;
+	padding:0;
 	background:#fff;
-	line-height:24px;
+	line-height:30px;
 	vertical-align:middle;
+	width:40px;
 }
 .pager .current{
 	color:#fff!important;
@@ -492,15 +530,8 @@ th.colswrap{
 .pager .current:first-child,.pager .current:last-child{
 	display:none;
 }
-.data-empty{
-	font-size:14px;
-	color:#999;
-}
-.data-empty i{
-	font-size:32px;
-	margin-right:5px;
-	vertical-align:middle;
-}
+/**分页 end**/
+/**自定义select控件下拉菜单 start**/
 .options{
 	position:absolute;
 	background:#fff;
@@ -525,6 +556,8 @@ th.colswrap{
 .options li:hover,.options li.active{
 	background:#eee;
 }
+/**自定义select控件下拉菜单 end**/
+/**自定义下拉菜单 start**/
 .drop-menu-list{
 	color:#666;
 }
@@ -532,25 +565,9 @@ th.colswrap{
 	background:#eee;
 	color:inherit;
 }
-input.label+label{
-	line-height:30px;
-}
-input.label:checked + label{
-	border-color:#498ae5;
-	color:#498ae5;
+/**自定义下拉菜单 end**/
 
-}
-input.solid+label{
-	line-height:22px;
-	border-radius:2px;
-	border:0px;
-	min-width:0;
-	padding:0px 6px;
-}
-input.solid:checked+label,input.solid+label:hover{
-	background-color:#498ae5;
-	color:#fff;
-}
+/**hash表单提交 start**/
 form[data-role="hash"],form[data-role="export"],form[data-role="remove"]{
 	display:inline;
 }
@@ -581,27 +598,40 @@ form[data-role="hash"] button{
     margin-top: -2px;
     margin-left: -6px;
 }
-input.checkbox+label:before{
-	box-shadow:none;
-	height:12px;
-	width:12px;
-	line-height:12px;
-	content:"\f00c";
-	font-family:'FontAwesome';
-	color:#ccc;
-	border:1px solid #ccc;
-	background:#fff;
-	text-align:center;
-	margin-right:4px;
-	border-radius:2px;
-	font-size:10px!important;
+.position-group{
+	position:absolute;
+	left:50%;
+	margin-left:-200px;
+	top:40px;
 }
-input.checkbox:checked+label:before{
-	background:#fff;
-	box-shadow:none;
+.input-group{
+	border:1px solid #E6EAF2;
+	border-radius:3px;
+	display:inline-block;
+	vertical-align:middle;
+	font-size:0;
+}
+.input-group select{
+	min-width:0;
+	border-right:1px solid #ddd!important;
+	margin-left:-1px;
+	margin-bottom:0px!important;
+	margin-top:0px!important;
+}
+.input-group input,.input-group button{
+	margin-bottom:0px!important;
+	margin-top:0px!important;
+}
+.input-group .fa{
+	font-size:16px;
+	vertical-align:middle;
+	margin:0px 5px;
+	color:#666;
+}
+.input-group input:focus~.fa{
 	color:#498ae5;
-	border-color:#498ae5;
 }
+/**hash表单提交 end**/
 /**nav-step start**/
 .nav-step{
 	font-size:1.3rem;
@@ -642,6 +672,7 @@ input.checkbox:checked+label:before{
 	transform: rotate(45deg);
 }
 /**nav-step end**/
+/**自动完成 start**/
 .complete{
 	position:relative;
 }
@@ -664,3 +695,4 @@ input.checkbox:checked+label:before{
 .complete-item.active,.complete-item:hover{
 	background:#eee;
 }
+/**自动完成 end**/

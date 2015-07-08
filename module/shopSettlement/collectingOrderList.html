@@ -7,7 +7,12 @@
   </head>
   <body>
 	<div class="breadcrumb">
-		<a href="ui.html">店铺结算 </a><span>&gt;</span>代收单
+		<a href="ui.html">店铺结算 </a><span>&gt;</span><a href="ui.html">店铺结算 </a><span>&gt;</span>代收单
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4>代收单</h4>
+			</div>
+		</div>
 	</div>
 	<div class="wrapper">
 			<div class="flex-box">
@@ -20,7 +25,8 @@
 							</select>
 							<input type="text" class="border-none" placeholder="请输入店铺名" name="keyword">
 						</div>
-						代收日期 <input type="date" data-role="start" name="pay_time_min" />到<input type="date" data-role="end" name="pay_time_max"/>
+						代收日期 <span class="date-group"><input type="date" data-role="start" name="pay_time_min" />到<input type="date" data-role="end" name="pay_time_max"/>
+						</span>
 						<button class="btn" type="submit">搜索</button>
 					</form>
 				</div>
@@ -68,6 +74,7 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+		lib.ajatCount++;
 		$(function(){
 			$('#select').on('change',function(){
 				var $this=$(this);
