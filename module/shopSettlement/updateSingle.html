@@ -8,6 +8,12 @@
   <body>
     <div class="breadcrumb">
         <a href="ui.html">店铺结算 </a><span>&gt;</span><a href="collectingOrderList.html">付款管理</a><span>&gt;</span><span id="breadcrumb-current">查看付款单</span>
+			<div class="flex-box">
+			<div class="flex-item">
+				<h4>查看付款单</h4>
+			</div>		 
+		</div>
+		<hr />
     </div>
    <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
@@ -62,7 +68,7 @@
                 </tr>
                 <tr>
                   <td>操作</td>
-                  <td><a class="btn link" href="addSingle.html?id=<%=data.id%>">编辑</a></td>
+                  <td><a class="btn link" href="addSingle.html?id=<%=data.id%>">编辑</a></button></td>
                 </tr>
               </tbody>
         </table>

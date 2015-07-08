@@ -11,11 +11,17 @@
     </head>
     <body>
         <div class="breadcrumb">
-            <a class="link" href="ui.html">店铺结算</a><span>&gt;</span><a class="link" href="ui.html">付款管理</a><span>&gt;</span><span id="breadcrumb-current">新增付款单</span>
+            <a href="ui.html">店铺结算</a><span>&gt;</span><a href="ui.html">付款管理</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑付款单":"新增付款单"%></span>
+				<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑付款单":"新增付款单"%></h4>
+			</div>		 
+		  </div>
+		 <hr />
         </div>
      <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		  <form novalidate method="get" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}else{%>shop_count/create<%}%>">
+		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}else{%>shop_count/create<%}%>">
 			 <%if(query.id){%>
 				<input type="hidden" ajat-sync-selector="#breadcrumb-current" value="编辑付款单" />				 		  		
 			 <%}%>
@@ -28,8 +34,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="control-group" style="border-bottom:1px solid #C0C0C0 ;width:800px;margin-left:30px;" >
+                <div class="control-group" style="width:800px;margin-left:30px;" >
                     <legend>付款详情</legend>
+						<hr />
                 </div>
 				  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
@@ -63,7 +70,9 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款日期：</label>
                     <div class="control">
-                        <input type="date" name="day" value="<%=data.day||""%>" id="day"/>
+					<span class="date-group">
+                              <input type="date" data-role="start"  name="day"/> 
+							  </span>
                         <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
@@ -74,9 +83,11 @@
 				<button class="btn" style="margin-right:20px"><a class="link" href="previewSingle.html?id=<%=data.id%>">预览</a></button>
 				</div>
 			</div>			 
-            </form>
+          </form>
 			</script>
-        </div>			
+        </div>
+		 	
+ 
     </body>
 </html>
  
