@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Merchant;
 
 
+use App\Salon;
+
 use App\Http\Controllers\Controller;
 use App\Merchant;
 use Illuminate\Pagination\AbstractPaginator;
@@ -256,6 +258,12 @@ class MerchantController extends Controller {
 		{
 			return $this->error('参数错误');
 		}
+		$flag = $this->selectMerSalonStatus($param['id']);
+		if($flag > 0)
+		{
+			return $this->error('该商户还有正在合作的店铺请先终止该商户所有店铺合作，再删除商户');
+		}
+		
 		$save["status"] = 2;//1正常 2删除
 
 		$status = $query->where('id',$param['id'])->update($save);
@@ -269,6 +277,18 @@ class MerchantController extends Controller {
 			return $this->error('商户删除失败');
 		} 
 		
+	}
+	
+	/**
+	 * 删除查看是否有合作的店铺
+	 * 
+	 * */
+	private function selectMerSalonStatus($merchantId)
+	{
+		$query = Salon::getQuery();
+		$query->where('merchantId',$merchantId);
+		$query->where('salestatus',1);//salestatus 0暂停 1正常 2删除
+		return $query->count();
 	}
 	
 	/**
