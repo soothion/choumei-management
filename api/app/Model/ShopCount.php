@@ -48,8 +48,10 @@ class ShopCount extends Model
                     $attrs['balance_money'] = $attrs['cost_money'];
                     $model::create($attrs);
                 } else {
+                    $id = $item->id;
                     $attrs = self::mergeMoney($attrs, $item);
-                    $model->update($attrs);
+                    unset($attrs['id'],$attrs['salon_id']);
+                    self::where('id',$id)->update($attrs);
                 }
                 return true;
             });
