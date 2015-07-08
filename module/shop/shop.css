@@ -390,7 +390,7 @@ input[name="district"]:checked+label{
 #circle{
 	border:1px solid #D7D7D7;
 	margin-top:-6px;
-	padding-top:10px;
+	padding-top:3px;
 	padding-bottom:5px;
 }
 #circle label{
