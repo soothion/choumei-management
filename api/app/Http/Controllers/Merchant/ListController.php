@@ -97,7 +97,7 @@ class ListController extends Controller {
 	{
 		$param = $this->param;
 		$type = isset($param["type"])?intval($param["type"]):1;//1 省 2市 3区 4商圈
-		$areaId = isset($param["areaId"])?intval($param["areaId"]):0;//对应的上级id
+		$areaId = isset($param["areaId"])?trim($param["areaId"]):0;//对应的上级id
 		if($type != 1 && !$areaId)
 		{
 			return $this->error('参数错误');
@@ -124,9 +124,9 @@ class ListController extends Controller {
         {
         	$list = Town::select(['tid','tname'])->where("iid","=",$areaId)->get();
         }
-    	elseif($type == 4)//商圈按拼音排序 特殊处理
+    	elseif($type == 4)//商圈按拼音排序 特殊处理    一次可获取多个区域商圈
         {
-        	$sql = "SELECT areaid,areaname from cm_salon_area where parentid={$areaId} ORDER BY CONVERT( areaname USING gbk ) COLLATE gbk_chinese_ci ASC";
+        	$sql = "SELECT areaid,areaname from cm_salon_area where parentid in ({$areaId}) ORDER BY CONVERT( areaname USING gbk ) COLLATE gbk_chinese_ci ASC";
         	$list = DB::select($sql);
         }
         return $list?$list:array();
