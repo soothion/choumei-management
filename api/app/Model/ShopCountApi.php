@@ -370,6 +370,7 @@ class ShopCountApi
     public static function makePrepay($options)
     {
         if(isset($options['merchant_id'])
+            && isset($options['type'])
             && isset($options['salon_id'])
             && isset($options['uid'])
             && isset($options['pay_money'])
