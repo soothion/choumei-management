@@ -32,15 +32,12 @@
 	  </style>
   </head>
   <body>
-		<div class="breadcrumb">
-		<a href="ui.html">一级导航</a><span>&gt;</span><a href="ui.html">二级导航</a><span>&gt;</span><span id="breadcrumb-current">新增用户</span>
+	<div class="breadcrumb">
+		<a>系统管理</a><span>&gt;</span><a>用户管理</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑用户":"新增用户"%></span>
 	</div>
 	<div class="wrapper" ajat="<%if(query.id){%>role/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>role/update/<%=data.id%><%}else{%>role/create<%}%>">
-			<%if(query.id){%>
-				<input type="hidden" ajat-sync-selector="#breadcrumb-current" value="编辑用户" />
-			<%}%>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色名称</label>
 				<div class="control">
