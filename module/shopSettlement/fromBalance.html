@@ -7,7 +7,12 @@
   </head>
   <body>
 	<div class="breadcrumb">
-		<a href="ui.html">店铺结算 </a><span>&gt;</span>代收单
+		<a href="ui.html">店铺结算 </a><span>&gt;</span><a href="ui.html">店铺结算 </a><span>&gt;</span>店铺往来余额
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4>店铺往来余额</h4>
+			</div>
+		</div>
 	</div>
 	<div class="wrapper">
 			<div class="flex-box">
@@ -24,14 +29,14 @@
 					</form>
 				</div>
 			</div>
-			<div class="table" ajat="shop_count/index?<%=query._%>#domid=table&tempid=table-t">
+			<div class="table" id="table" ajat="shop_count/balance?<%=query._%>#domid=table&tempid=table-t">
 			<script type="text/template" id="table-t">
 			<table>
               <thead>
                 <tr>
                   <th>序号</th>
-                  <th><a href="#page=1&sort_key=salon_name&sort_type=<%=query.sort_type==2?1:2%>">店铺 <i class="fa fa-sort"></i></a></th>
-                  <th><a href="#page=1&sort_key=salon_type&sort_type=<%=query.sort_type==2?1:2%>">店铺类型 <i class="fa fa-sort"></i></a></th>
+                  <th><a href="#page=1&sort_key=salon_name&sort_type=<%=query.sort_type==1?2:1%>">店铺 <i class="fa fa-sort"></i></a></th>
+                  <th><a href="#page=1&sort_key=salon_type&sort_type=<%=query.sort_type==1?2:1%>">店铺类型 <i class="fa fa-sort"></i></a></th>
                   <th class="colswrap">预付款<br />付交易代收款</th>
 				  <th>换算消费额</th>
 				  <th>交易消费额</th>
@@ -46,11 +51,12 @@
               </thead>
               <tbody>
 				<%data=data.data%>
+				<%var types=["预付款店","投资店","金字塔店"]%>
 				<%for(var i=0;i<data.length;i++){%>
                 <tr>
                   <td><%=i+1%></td>
                   <td><%=data[i].salon.salonname%></td>
-                  <td><%=data[i].salon.salonname%></td>
+                  <td><%=types[data[i].salon.salon_type-1]%></td>
                   <td><%=data[i].pay_money%></td>
 				  <td><%=data[i].cost_money%></td>
 				  <td><%=data[i].spend_money%></td>
