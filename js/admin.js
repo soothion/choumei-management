@@ -20,8 +20,11 @@
 		$(document.body).on('_ready',loadingend).on('exception',loadingend);
 	}
 $(function(){
+	/**渲染面包屑**/
 	var breadcrumb=$('.breadcrumb');
-	breadcrumb.html(lib.ejs.render({text:breadcrumb.html().replace('%&gt;','%>').replace('&lt;%','<%')},{}))
+	if(breadcrumb.length==1){
+		breadcrumb.html(lib.ejs.render({text:breadcrumb.html().replace('%&gt;','%>').replace('&lt;%','<%')},{}))
+	}
 	/**hash和加载进度条**/
 	var $body=$(document.body);
 	lib.hashchange=function(obj){
