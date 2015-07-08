@@ -140,9 +140,11 @@ class SalonController extends Controller {
 		$salonname = isset($param["salonname"])?urldecode($param["salonname"]):"";//店名
 		$district = isset($param["district"])?$param["district"]:0;//区域
 		$businessName = isset($param["businessName"])?urldecode($param["businessName"]):"";//业务代表
-		$sequence = isset($param["sequence"])?$param["sequence"]:1;//排序字段  1shopType 2salestatus
-    	$orders = isset($param["order"])?$param["order"]:1;//1倒序 2升序
+		$sequence = isset($param["sequence"])?$param["sequence"]:0;//排序字段  1shopType 2salestatus
+    	$orders = isset($param["order"])?$param["order"]:0;//1倒序 2升序
 		
+    	$orderName = "add_time";
+    	$orderLr = "desc";
 		if(in_array($sequence, array(1,2)) && in_array($orders, array(1,2)))
     	{
     		$orderName = $this->sequenceType[$sequence];
