@@ -11,7 +11,13 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a class="link" href="ui.html">一级导航</a><span>&gt;</span><a class="link" href="ui.html">二级导航</a><span>&gt;</span>权限修改
+        <a href="ui.html">系统管理</a><span>&gt;</span><a href="ui.html">系统管理</a><span>&gt;</span>权限修改
+			<div class="flex-box">
+			<div class="flex-item">
+				<h4>权限修改</h4>
+			</div>		 
+		</div>
+		<hr />
     </div>
     <div class="wrapper" ajat="<%if(query.id){%>permission/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 	   <script type="text/template" id="form-t">
