@@ -378,6 +378,9 @@ input.label+label{
 	line-height:25px;
 	min-width:0;
 }
+input.label:checked+label{
+	font-weight:bold;
+}
 input[name="district"]:checked+label{
 	border:1px solid #D7D7D7;
 	border-bottom-color:#fff;
