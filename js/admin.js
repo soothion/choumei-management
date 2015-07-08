@@ -63,7 +63,7 @@ $(function(){
 		e.preventDefault();
 	}).on('hash','form[data-role="hash"]',function(e){//表单自定义hash提交
 		var data=lib.getFormData($(this));
-		if(data.page!=1){
+		if(data.page===undefined){
 			data.page=1;
 		}
 		if(lib.hashchange(data)){
