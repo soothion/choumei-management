@@ -6,8 +6,8 @@
       <script type="text/javascript" src="../../js/include.js"></script>
       <script type="text/javascript" src="../../js/utils.js"></script>
       <script type="text/javascript" src="../../js/utils.js"></script>
-      <link rel="stylesheet" href="shop.css" />   
       <link rel="stylesheet" href="../../css/swiper.min.css">
+      <link rel="stylesheet" href="shop.css" />   
     </head>
 
     <body>
@@ -17,11 +17,18 @@
             <a class="link" href="ui.html">二级导航</a>
             <span>&gt;</span>店铺详情       
         </div>
-        <div class="wrapper">
+        <div class="wrapper" id="table-wrapper">
+            <script type="text/template" id="table-t">                
             <div class="btn-group">
-                <div style="float:right">
-                    <button class="btn">终止合作</button>
-                    <button class="btn">删除店铺</button>
+                <div style="float:right">                     
+                    <button class="btn" id="stop_cooperation_btn" salonid="<%=data.salonid%>" status="<%=data.salestatus%>">
+                        <%=data.salestatus == 0 ? '恢复合作' : '终止合作'%> 
+                    </button>
+
+                    <button class="btn" id="remove_stop_btn" salonid="<%=data.salonid%>">
+                        删除店铺
+                    </button>
+
                     <a href='add.html?type=edit'>
                         <button class="btn">编辑</button>
                     </a>  
@@ -29,8 +36,7 @@
             </div>
                     
             <div>
-                <div class="table-wrapper" id="table-wrapper" >
-                    <script type="text/template" id="table-t">                
+                <div class="table-wrapper"  >
                         <div class="table" style="margin:0px">
                             <table>
                                 <tr style="height:60px;">
@@ -175,9 +181,22 @@
                                     <tr>
                                         <td colspan="2" class="content">店铺类型：</td>
                                         <td colspan="6">
-                                            <input type="checkbox" name="boll" class="checkbox" id="checkbox1"><label for="checkbox1">篮球</label>
-                                            <input type="checkbox" name="boll" class="checkbox" id="checkbox2"><label for="checkbox2">足球</label>                                  
+                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" value="1" id="checkbox1">
+                                            <label for="checkbox1" style="display:none">纯社区店</label>
+
+                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" value="2" id="checkbox2">
+                                            <label for="checkbox2" style="display:none">社区商圈店</label>
+
+                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" value="3" id="checkbox3">
+                                            <label for="checkbox3" style="display:none">商圈店</label>
+
+                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" value="4" id="checkbox4">
+                                            <label for="checkbox4" style="display:none">商场店</label>
+
+                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" value="5" id="checkbox5">
+                                            <label for="checkbox5" style="display:none">工作室(写字楼)店</label>                                                                          
                                         </td>
+                                        %>
                                     </tr>
                                 </tbody>
                             </table>  
@@ -192,35 +211,57 @@
                                     <tr>
                                         <td colspan="2" class="content">合同照片：</td>
                                         <td colspan="6">
-                                            <div class="img-wrapper">
-                                                <img src="../../images/logo.png">
-                                            </div>                                         <div class="img-wrapper">
-                                                <img src="../../images/logo.png">
-                                            </div>                                         <div class="img-wrapper">
-                                                <img src="../../images/logo.png">
-                                            </div>                                         <div class="img-wrapper">
-                                                <img src="../../images/logo.png">
-                                            </div>                                         <div class="img-wrapper">
-                                                <img src="../../images/logo.png">
-                                            </div>                                         <div class="img-wrapper">
-                                                <img src="../../images/logo.png">
-                                            </div>                                         <div class="img-wrapper">
-                                                <img src="../../images/logo.png">
-                                            </div>                                        
+                                            <%
+                                            if(data.contractPicUrl){
+                                                var arr = JSON.parse(data.contractPicUrl);
+                                                arr.forEach(function(obj,index){
+                                            %>
+                                                <div class="img-wrapper">
+                                                    <img src="<%=obj.thumbimg%>">
+                                                </div> 
+                                            <%
+                                                });
+                                            }
+                                            %>                                                                               
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="content">营业执照：</td>
-                                        <td colspan="6"></td>
+                                        <td colspan="6">
+                                            <%
+                                            if(data.contractPicUrl){
+                                                var arr = JSON.parse(data.licensePicUrl);
+                                                arr.forEach(function(obj,index){
+                                            %>
+                                                <div class="img-wrapper">
+                                                    <img src="<%=obj.thumbimg%>">
+                                                </div> 
+                                            <%
+                                                });
+                                            }
+                                            %>  
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="content">法人执照：</td>
-                                        <td colspan="6"></td>
+                                        <td colspan="6">
+                                            <%
+                                            if(data.contractPicUrl){
+                                                var arr = JSON.parse(data.corporatePicUrl);
+                                                arr.forEach(function(obj,index){
+                                            %>
+                                                <div class="img-wrapper">
+                                                    <img src="<%=obj.thumbimg%>">
+                                                </div> 
+                                            <%
+                                                });
+                                            }
+                                            %>  
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>                                           
                         </div>
-                    </script>
                 </div>
 
                 <div class="map">
@@ -234,6 +275,7 @@
                     </div>
                 </div>
             </div>
+            </script>
         </div>
 
         <div id="swipper" style="display:none">
@@ -260,8 +302,6 @@
             </div>
         </div>
         <script src="../../js/swiper.min.js"></script>
-        <script src="detail.js"></script>
-        <script src="http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()">
-        </script>             
+        <script src="detail.js"></script>           
     </body>
 </html>

@@ -2,12 +2,12 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-07 18:40:23
+* @Last Modified time: 2015-07-08 18:16:43
 */
 
 (function(){
 	parent.$('body').trigger('loadingend');
-    $(document.body).off('_ready',loadingend)
+    $(document.body).off('_ready',lib.loadingend)
 
     var type = utils.getSearchString("type");
 
@@ -28,6 +28,17 @@
         });      
         lib.ajat('#domid=form&tempid=form-t').template(shopData);    
     }
+
+    $("#preview-btn").on('click',function(){
+        var data = lib.getFormData($("#form"));
+        dataFormat(data);
+        if(type === 'edit') var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
+        if(type === 'add')  var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
+        shopData = $.extend({},shopData,data);
+        sessionStorage.setItem('preview-shop-data',JSON.stringify(shopData));
+        window.open("detail.html?type=preview");
+    })
+
     $("#addCoordinate").on('click',function(){
         $("#pop-wrapper").show();
     })
@@ -37,6 +48,21 @@
     });
 
     lib.Form.prototype.save = function(data){
+        dataFormat(data);
+        if(type === 'edit'){
+            var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
+            shopData = $.extend({},shopData,data);
+            sessionStorage.setItem('edit-shop-data',JSON.stringify(shopData));   
+        }
+        if(type === 'add'){
+            var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
+            shopData = $.extend({},shopData,data);
+            sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
+        }
+        location.href = "bank.html?type="+type;
+    } 
+
+    var dataFormat = function(data){
         data.contractPeriod = data.contractLimitY + "_" + data.contractLimitM;
         delete data.contractLimitY;
         delete data.contractLimitM;       
@@ -44,18 +70,7 @@
         data.addrlati = arr[0];
         data.addrlong = arr[1];
         delete data.lngLat;
-        if(type && type === 'edit'){
-            var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
-            shopData = $.extend({},shopData,data);
-            sessionStorage.setItem('edit-shop-data',JSON.stringify(shopData));   
-        }
-        if(type && type === 'add'){
-            var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
-            shopData = $.extend({},shopData,data);
-            sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
-        }
-        location.href = "bank.html?type="+type;
-    }        
+    }      
 
 })();
 

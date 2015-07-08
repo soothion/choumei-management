@@ -2,30 +2,116 @@
 * @Author: anchen
 * @Date:   2015-07-06 16:48:38
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-07 16:55:59
+* @Last Modified time: 2015-07-08 19:55:57
 */
 
 (function(){
     var type = utils.getSearchString("type");
     var salonId = utils.getSearchString("salonid");
+
+    var selectSalonType = function(data){
+        if(data.salonType){
+            var arr = data.salonType.split("_");
+            arr.forEach(function(value,index){
+                $(":checkbox[value='"+value+"']").attr('checked',true).show().next().show(); 
+            })       
+        }
+    }
+
+    var createScript = function(){
+        var el = document.createElement("script");
+        el.setAttribute('src','http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()');
+        document.getElementsByTagName("head")[0].appendChild(el);
+    }
+
     //查看详情
-    if(type && type === 'detail'){
+    if(type === 'detail'){
         var promise = lib.ajat('salon/getSalon?salonid='+salonId+'#domid=table-wrapper&tempid=table-t').render();
         promise.done(function(data){
             var str = JSON.stringify(data.data);
-            sessionStorage.setItem('edit-shop-data',str);      
+            sessionStorage.setItem('edit-shop-data',str);    
+            selectSalonType(data.data);
         });
+        createScript();
     }
-    //新增时预览
-    if(type && type === 'add'){
-        var data = JSON.parse(sessionStorage.getItem('add-shop-preview')); 
+
+    if(type === "preview"){
+        var data = JSON.parse(sessionStorage.getItem('preview-shop-data'));
+        var conArr = JSON.parse(localStorage.getItem("contractPicUrl")); 
+        var licArr = JSON.parse(sessionStorage.getItem("licensePicUrl"));
+        var corArr = JSON.parse(sessionStorage.getItem("corporatePicUrl")); 
+        if(conArr && conArr.length > 0){
+            data.contractPicUrl = localStorage.getItem("contractPicUrl");
+        }
+        if(licArr && licArr.length > 0){
+            data.licensePicUrl = sessionStorage.getItem("licensePicUrl");
+        }  
+        if(corArr && corArr.length > 0){
+            data.corporatePicUrl = sessionStorage.getItem("corporatePicUrl");
+        }     
         lib.ajat('#domid=table-wrapper&tempid=table-t').template(data);
+        createScript();
+        $(".btn-group").hide();
+        selectSalonType(data);         
     }
-    //编辑时预览
-    if(type && type === 'edit'){
-        var data = JSON.parse(sessionStorage.getItem('edit-shop-preview')); 
-        lib.ajat('#domid=table-wrapper&tempid=table-t').template(data);
-    }
+
+    $("#table-wrapper").delegate('#stop_cooperation_btn','click',function(){
+        var status = $(this).attr("status");
+        var data   = {salonid : $(this).attr("salonid")};
+        var msg    = "";
+        if(status == "0"){
+            data.type = 2;
+            msg = "终止合作";
+        }else{
+            data.type = 1;
+            msg = "恢复合作";
+        }
+
+        $.ajax({
+            method: "post",
+            dataType: "json",
+            async: false,
+            data : data,
+            url : cfg.getHost()+"salon/endCooperation"
+        }).done(function(data, status, xhr){
+            if(data.result == 1){
+                lib.popup.tips({text:"信息提交成功！"});
+                $(this).text(msg);
+            }else{
+                lib.popup.tips({text:data.msg ||"信息提交失败！"});
+            }
+        }).fail(function(xhr, status){
+            var msg = "请求失败，请稍后再试!";
+            if (status === "parseerror") msg = "数据响应格式异常!";
+            if (status === "timeout")    msg = "请求超时，请稍后再试!";
+            if (status === "offline")    msg = "网络异常，请稍后再试!";
+            lib.popup.tips({text:msg});
+        });
+    })
+
+    $("#table-wrapper").delegate('#remove_stop_btn','click',function(){
+        var data   = {salonid : $(this).attr("salonid")};
+        $.ajax({
+            method: "post",
+            dataType: "json",
+            async: false,
+            data : data,
+            url : cfg.getHost()+"salon/del"
+        }).done(function(data, status, xhr){
+            if(data.result == 1){
+                lib.popup.tips({text:"信息提交成功！"});
+                location.href="index.html";
+            }else{
+                lib.popup.tips({text:data.msg ||"信息提交失败！"});
+            }
+        }).fail(function(xhr, status){
+            var msg = "请求失败，请稍后再试!";
+            if (status === "parseerror") msg = "数据响应格式异常!";
+            if (status === "timeout")    msg = "请求超时，请稍后再试!";
+            if (status === "offline")    msg = "网络异常，请稍后再试!";
+            lib.popup.tips({text:msg});
+        });
+    })
 
     var swiper = new Swiper('.swiper-container', {
         pagination: '.swiper-pagination',

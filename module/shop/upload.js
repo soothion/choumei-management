@@ -1,6 +1,6 @@
 (function(){
     var type = utils.getSearchString("type");
-    var currentData = {} , uploadData = {};
+    var currentData = {};
     var conLoader = {} , licLoader = {} , corLoader = {};
     var contractArr  = [],licenseArr   = [],corporateArr = []; //图片预览数组
     var uploadConArr = [],uploadLicArr = [],uploadCorArr = []; //图片真正上传数组
@@ -23,13 +23,38 @@
         if(type && type === 'edit'){
             currentData = JSON.parse(sessionStorage.getItem('edit-shop-data')); 
         }
+
+        renderImage();
     }
 
-    var initEvent = function(){
-        $(".flex-item a").on('click',function(e){
-            e.preventDefault();
-            location.href = $(this).attr('href') + "?type="+type;
-        });        
+    var renderImage = function(){
+        var contractPicUrl = currentData.contractPicUrl;
+        if(contractPicUrl){
+            contractPicUrl = JSON.parse(contractPicUrl);
+            readyConArr    = contractPicUrl;
+            contractPicUrl.forEach(function(obj,index){           
+                $("#con_loader_button").before('<div class="thumbnail" data-type="1"><i index="'+index+'"  class="fa fa-times-circle del"></i><img src="'+obj.thumbimg+'"></div>');               
+            })
+        }
+
+        var licensePicUrl = currentData.licensePicUrl;
+        if(licensePicUrl){
+            licensePicUrl = JSON.parse(licensePicUrl);
+            readyLicArr   = licensePicUrl;
+            licensePicUrl.forEach(function(obj,index){            
+                $("#lic_loader_button").before('<div class="thumbnail" data-type="2"><i index="'+index+'"  class="fa fa-times-circle del"></i><img src="'+obj.thumbimg+'"></div>');      
+            })
+        }
+
+        var corporatePicUrl = currentData.corporatePicUrl;
+        if(corporatePicUrl){
+            corporatePicUrl = JSON.parse(corporatePicUrl);
+            readyCorArr     = corporatePicUrl;
+            corporatePicUrl.forEach(function(obj,index){              
+                $("#cor_loader_button").before('<div class="thumbnail" data-type="3"><i index="'+index+'"  class="fa fa-times-circle del"></i><img src="'+obj.thumbimg+'"></div>');      
+            })                     
+        }
+        hideUploaderButton()        
     }
 
     var initConUploader = function(){
@@ -42,11 +67,11 @@
                     $("#con_loader_button").hide();
                     return;
                 }else{
-                    // var index = $("#contractBox img").length;
-                    // $("#contractBox").append('<div class="thumbnail" data-type="1"><div index="'+index+'" id="'+file.id+'" class="remove-img upload"></div><img width="110px" height="110px" src="'+src+'"/></div>');             
-                    // contractArr.push({'img':src,'thumbimg':src});                      
+                    var index = $("#con_wrapper img").length;
+                    $("#con_loader_button").before('<div class="thumbnail" data-type="1"><i index="'+index+'" id="'+file.id+'" class="fa fa-times-circle del"></i><img src="'+src+'"></div>');           
+                    contractArr.push({'img':src,'thumbimg':src});                                      
                 }
-                //hideUploaderButton();
+                hideUploaderButton();
             },1,1);
         })
         conLoader.on('uploadSuccess',function(file,response){
@@ -54,9 +79,9 @@
         })              
         conLoader.on('uploadFinished',function(){
             if(uploadConArr.length > 0){
-                uploadData['contractPicUrl'] = JSON.stringify(readyConArr.concat(uploadConArr));               
+                currentData['contractPicUrl'] = JSON.stringify(readyConArr.concat(uploadConArr));               
             }else{
-                uploadData['contractPicUrl'] = JSON.stringify(readyConArr); 
+                currentData['contractPicUrl'] = JSON.stringify(readyConArr); 
             }
         });  
     }
@@ -71,11 +96,11 @@
                     $("#lic_loader_button").hide();
                     return;
                 }else{
-                    // var index = $("#licenseBox img").length;
-                    // $("#licenseBox").append('<div class="thumbnail" data-type="2"><div index="'+index+'" id="'+file.id+'" class="remove-img upload"></div><img width="110px" height="110px" src="'+src+'"/></div>');             
-                    // licenseArr.push({'img':src,'thumbimg':src});                      
+                    var index = $("#lic_wrapper img").length;
+                    $("#lic_loader_button").before('<div class="thumbnail" data-type="2"><i index="'+index+'" id="'+file.id+'" class="fa fa-times-circle del"></i><img src="'+src+'"></div>');           
+                    licenseArr.push({'img':src,'thumbimg':src});                      
                 }
-                //hideUploaderButton();
+                hideUploaderButton();
             },1,1);
         })
         licLoader.on('uploadSuccess',function(file,response){
@@ -83,9 +108,9 @@
         })              
         licLoader.on('uploadFinished',function(){
              if(uploadLicArr.length > 0){
-                 uploadData['licensePicUrl'] = JSON.stringify(readyLicArr.concat(uploadLicArr));
+                 currentData['licensePicUrl'] = JSON.stringify(readyLicArr.concat(uploadLicArr));
              }else{
-                 uploadData['licensePicUrl'] = JSON.stringify(readyLicArr);
+                 currentData['licensePicUrl'] = JSON.stringify(readyLicArr);
              }
         })  
     }
@@ -100,11 +125,12 @@
                     $("#lic_loader_button").hide();
                     return;
                 }else{
-                    // var index = $("#corporateBox img").length;
-                    // $("#corporateBox").append('<div class="thumbnail" data-type="3"><div index="'+index+'" id="'+file.id+'" class="remove-img upload"></div><img width="110px" height="110px" src="'+src+'"/></div>');
-                    // corporateArr.push({'img':src,'thumbimg':src});                                   
+                    var index = $("#cor_wrapper img").length;
+                    $("#cor_loader_button").before('<div class="thumbnail" data-type="3"><i index="'+index+'" id="'+file.id+'" class="fa fa-times-circle del"></i><img src="'+src+'"></div>'
+                    ); 
+                    corporateArr.push({'img':src,'thumbimg':src});                                   
                 }
-                //hideUploaderButton();
+                hideUploaderButton();
             },1,1);
 
 
@@ -114,9 +140,9 @@
         })              
         corLoader.on('uploadFinished',function(){
              if(uploadCorArr.length > 0){
-                 uploadData['corporatePicUrl'] = JSON.stringify(readyCorArr.concat(uploadCorArr));
+                 currentData['corporatePicUrl'] = JSON.stringify(readyCorArr.concat(uploadCorArr));
              }else{
-                 uploadData['corporatePicUrl'] = JSON.stringify(readyCorArr);
+                 currentData['corporatePicUrl'] = JSON.stringify(readyCorArr);
              }
         }) 
     }
@@ -124,7 +150,7 @@
     var initUploader = function(button,limit){
         var uploader = WebUploader.create({
             swf   : '../../js/Uploader.swf',
-            server: 'http://service.choumei.cn/FileUploadService/imgUpload',
+            server: 'http://service.choumei.cn/upload/image',
             prepareNextFile : true,
             fileNumLimit : limit,
             fileSingleSizeLimit : 1024*1024,
@@ -152,7 +178,176 @@
             }
         }, 50)           
         return uploader;
+    }
+
+    var initEvent = function(){
+        //导航条绑定事件
+        $(".flex-item a").on('click',function(e){
+            e.preventDefault();
+            localStorage.removeItem("contractPicUrl"); 
+            sessionStorage.removeItem("licensePicUrl");
+            sessionStorage.removeItem("corporatePicUrl");            
+            location.href = $(this).attr('href') + "?type="+type;
+        });
+
+        //删除图片
+        $(".td-wrapper").delegate('.thumbnail i', 'click', function(event) {
+            var fileId    = $(this).attr("id");
+            var index = $(this).attr("index");
+            var dataType = $(this).parent().attr("data-type");
+            if(dataType == "1") {
+                fileId && conLoader.removeFile(fileId,true);
+                fileId && contractArr.splice(index,1);
+               !fileId && readyConArr.splice(index,1);
+            }
+            if(dataType == "2") {
+                fileId && fileId && licLoader.removeFile(fileId,true);
+                fileId && licenseArr.splice(index,1);
+               !fileId && readyLicArr.splice(index,1);                
+            }
+            if(dataType == "3") {
+                fileId && corLoader.removeFile(fileId,true);
+                fileId && corporateArr.splice(index,1);
+               !fileId && readyCorArr.splice(index,1);                   
+            }
+            $(this).parent().remove();
+            imageSort(dataType);
+            hideUploaderButton();            
+        });
+
+        $(".td-wrapper").delegate("img","click",function(){
+            var dataType = $(this).parent().attr("data-type");
+            var index = $(this).prev().attr("index") * 1;
+            if(dataType == "1") {
+                initswiper(readyConArr.concat(contractArr),index);
+            }
+            if(dataType == "2"){
+                initswiper(readyLicArr.concat(licenseArr),index);
+            } 
+            if(dataType == "3"){
+                initswiper(readyCorArr.concat(corporateArr),index);                
+            }   
+            $("#swipper").show();   
+        });
+
+        $(".swiper-close").on('click',function(){
+            $("#swipper").hide();   
+        });
+
+        $("#preview_btn").on('click',function(){           
+            //base64数据过大分开存储
+            localStorage.setItem("contractPicUrl",JSON.stringify(readyConArr.concat(contractArr)));
+            //base64数据过大分开存储    
+            sessionStorage.setItem("licensePicUrl",JSON.stringify(readyLicArr.concat(licenseArr)));
+            sessionStorage.setItem("corporatePicUrl",JSON.stringify(readyCorArr.concat(corporateArr)));
+            sessionStorage.setItem("preview-shop-data",JSON.stringify(currentData));
+            window.open("detail.html?type=preview");         
+        })
+
+        $("#submit").on('click',function(){
+            conLoader.upload();
+            licLoader.upload();
+            corLoader.upload();
+            var timer = setInterval(function(){
+                if(conLoader.isInProgress() || licLoader.isInProgress() || corLoader.isInProgress()){
+                    return;
+                }else{
+                    clearInterval(timer);
+                    save();
+                }
+            },50)             
+        })
+    }
+
+    var initswiper = function(arr,index){
+        $(".swiper-wrapper").empty();
+        arr.forEach(function(obj,index){
+            $(".swiper-wrapper").append('<div class="swiper-slide"><img src="'+obj.img+'"></div>');      
+        });
+        renderSwiper(index);   
+    }
+
+    var renderSwiper = function(index){
+        var swiper = new Swiper('.swiper-container', {
+            loop: true,
+            initialSlide : index,
+            lazyLoading : true,            
+            pagination: '.swiper-pagination',
+            nextButton: '.swiper-button-next',
+            prevButton: '.swiper-button-prev',
+            slidesPerView: 1,
+            paginationClickable: true,
+            spaceBetween: 30
+        });        
+    }
+
+    var imageSort = function(dataType){
+        if(dataType == 1){
+            $("#con_wrapper img").each(function(index,obj){
+                $(obj).prev().attr('index',index);
+            });
+        }
+        if(dataType == 2){
+            $("#lic_wrapper img").each(function(index,obj){
+                $(obj).prev().attr('index',index);
+            });            
+        }
+        if(dataType == 3){
+            $("#cor_wrapper img").each(function(index,obj){
+                $(obj).prev().attr('index',index);
+            });            
+        }
     }    
+
+    var hideUploaderButton = function(){
+        if($("#con_wrapper img").length >= 10){
+            $("#con_loader_button").hide();
+        }else{
+            $("#con_loader_button").show();
+        }
+
+        if($("#lic_wrapper img").length >= 3){
+            $("#lic_loader_button").hide();
+        }else{
+            $("#lic_loader_button").show();
+        }
+
+        if($("#cor_wrapper img").length >= 3){
+            $("#cor_loader_button").hide();
+        }else{
+            $("#cor_loader_button").show();
+        } 
+        $(window).trigger('resize');       
+    }
+
+    var save = function(){
+        $.ajax({
+            method: "post",
+            dataType: "json",
+            async: false,
+            url : cfg.getHost()+"salon/save",
+            data: currentData    
+        }).done(function(data, status, xhr){
+           if(data.result == 1){
+                localStorage.removeItem("contractPicUrl"); 
+                sessionStorage.removeItem("licensePicUrl");
+                sessionStorage.removeItem("corporatePicUrl");
+                sessionStorage.removeItem('add-shop-data');
+                sessionStorage.removeItem('edit-shop-data');
+                if(type === "edit") location.href="detail.html?salonid="+currentData.salonid ;
+                if(type === "add") location.href="../merchant/index.html" ;             
+                lib.popup.alert({text:'信息提交成功！'});
+           }else{
+                lib.popup.alert({text:data.msg || '信息提交失败！'});
+           }
+        }).fail(function(xhr, status){
+            var msg = "请求失败，请稍后再试!";
+            if (status === "parseerror") msg = "数据响应格式异常!";
+            if (status === "timeout")    msg = "请求超时，请稍后再试!";
+            if (status === "offline")    msg = "网络异常，请稍后再试!";
+             lib.popup.alert({text:msg})
+        });
+    }     
 
     init();
 })();

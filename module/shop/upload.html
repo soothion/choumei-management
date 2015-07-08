@@ -6,6 +6,7 @@
       <script type="text/javascript" src="../../js/include.js"></script>
       <script type="text/javascript" src="../../js/utils.js"></script>
       <link rel="stylesheet" href="../../css/webuploader.css" />
+      <link rel="stylesheet" href="../../css/swiper.css">
       <link rel="stylesheet" href="shop.css" />   
     </head>
     <body>
@@ -51,16 +52,10 @@
 
                 <tr>
                   <td style="width:150px"><span class="conent">合同上传</span><br><span>（选填，限10张）</span></td>
-                  <td id="con_wrapper">
-                    <div class="thumbnail">
-                      <i class="fa fa-times-circle del"></i>
-                      <img src="../../images/logo.png">
-                    </div>                   
-                           
+                  <td id="con_wrapper" class="td-wrapper">                                                              
                     <div class="upload-btn" id="con_loader_button">
                       <i class="fa fa-image"></i>
                       <p class="btn-text">上传合同图片</p>
-                      <!-- <input type="file" class="file-btn"> -->
                     </div>
                   </td>
                 </tr>
@@ -73,15 +68,10 @@
                     <span>（选填，限3张）</span>
                   </td>
 
-                  <td id="lic_wrapper">                     
-                    <div class="thumbnail">
-                      <i class="fa fa-times-circle del"></i>
-                      <img src="../../images/logo.png">
-                    </div>                     
+                  <td id="lic_wrapper" class="td-wrapper">                                        
                     <div class="upload-btn" id="lic_loader_button">
                       <i class="fa fa-image"></i>
                       <p class="btn-text">上传合同图片</p>
-                      <!-- <input type="file" class="file-btn"> -->
                     </div>                                 
                   </td>
                 </tr>
@@ -94,16 +84,10 @@
                     <span>（选填，限3张）</span>
                   </td>
 
-                  <td id="cor_wrapper">
-                    <div class="thumbnail">
-                      <i class="fa fa-times-circle del"></i>               
-                      <img src="../../images/logo.png">
-                    </div> 
-
+                  <td id="cor_wrapper" class="td-wrapper">
                     <div class="upload-btn" id="cor_loader_button">
                       <i class="fa fa-image"></i>
                       <p class="btn-text">上传合同图片</p>
-                      <!-- <input type="file" class="file-btn"> -->
                     </div>                                 
                   </td>
                 </tr>                                
@@ -111,11 +95,26 @@
             </table>  
 
             <div style="margin:50px 160px;">
-                <button class="btn" style="margin-right:20px">预览</button>
-                <button class="btn-primary">提交</button>              
+                <button class="btn" type="button" id="preview_btn" style="margin-right:20px">预览</button>
+                <button class="btn-primary" id="submit">提交</button>              
             </div>
         </div> 
+
+        <div id="swipper" style="display:none">
+            <div class="mask"></div>
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <i class="fa fa-times-circle swiper-close"></i>
+            </div>
+        </div>
+
         <script type="text/javascript" src="../../js/webuploader.js"></script>
+        <script src="../../js/swiper.js"></script>
         <script type="text/javascript" src="upload.js"></script>  
     </body>
 </html>

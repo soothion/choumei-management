@@ -43,6 +43,7 @@
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
                         <input type="text" name="name" value="<%=data.name%>" placeholder="所属商户" disabled>
+                        <input type="hidden" name="merchantId" value="<%=data.merchantId%>">
                     </div>
                 </div>
 
@@ -59,7 +60,7 @@
 						<select id="area" name="district" class="select min-width" style="margin-right:10px" 
                         required ajat-one="true"
 						ajat="<%if(data.citiesId){%>salonList/getProvinces?type=3&areaId=<%=data.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=data.district%>"
-						ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=circle&tempid=circle_t&zone=<%=data.zone%>"
+						ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=zone&tempid=zone_t&zone=<%=data.zone%>"
 						>
 						</select>
 						<span class="control-help" style="display:none;"></span>
@@ -89,7 +90,7 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商圈：</label>
-					<div class="control" id="circle" ajat="salonList/getProvinces?type=4&areaId=<%=data.district%>#domid=circle&tempid=circle_t&zone=<%=data.zone%>">
+					<div class="control" id="zone" ajat="salonList/getProvinces?type=4&areaId=<%=data.district%>#domid=zone&tempid=zone_t&zone=<%=data.zone%>">
 					</div>
                 </div> 
 
@@ -222,7 +223,7 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""></label>
-                    <button class="btn" type="button" style="margin-right:20px">预览</button>
+                    <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
                     <button class="btn-primary">下一步</button>
                 </div>
                 </script>                                                                                                   
@@ -285,7 +286,7 @@
                 <%=data[i].businessName%></option>
             <%}%>
         </script>
-		<script type="text/template" id="circle_t">
+		<script type="text/template" id="zone_t">
 			 <%for(var i=0;i<data.length;i++){%>
 			<input type="radio" class="label" id="areaRadio<%=data[i].areaid%>" <%=data[i].areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=data[i].areaid%>">
 			<label for="areaRadio<%=data[i].areaid%>"><%=data[i].areaname%></label>
