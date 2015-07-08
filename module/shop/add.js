@@ -7,9 +7,9 @@
 
 (function(){
 	parent.$('body').trigger('loadingend');
-    $(document.body).off('_ready',loadingend)
+    $(document.body).off('_ready',lib.loadingend)
 
-    var type = utils.getSearchString("type");
+    var type = lib.query.type;
 
     if(type && type === 'edit'){
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));
