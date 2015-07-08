@@ -102,8 +102,11 @@
 				  <td><%=data[i].username%></td>
                   <td><%=status[data[i].status]%></td>
                   <td><%=data[i].department?data[i].department.title:""%></td>
-				  <td><%=data[i].city?data[i].city.title:""%></td>
-				  <td><%=data[i].roles%> </td>
+				  <td><%=data[i].city?data[i].city.title:""%></td>			   
+				  <td><%for(var j=0;j<data[i].roles.length;j++){%>
+				      <%=data[i].roles[j].name%>
+					  <%}%>					 
+				   </td>				  
 				  <td><%=data[i].created_at%></td>
                   <td><a class="link" href="updateUser.html?id=<%=data[i].id%>">查看</a></td>
                   </tr>

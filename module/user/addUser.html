@@ -17,8 +17,7 @@
 				<input type="hidden" ajat-sync-selector="#titlt-msg" value="" />
 				<input type="hidden" ajat-sync-selector="#user_name" value="<%data.username||""%>" />
 				<input type="hidden" ajat-sync-selector="#name" value="<%data.name||""%>" />
-				<input type="hidden" ajat-sync-selector="#title-password" value="" ><input class="checkbox" type="checkbox" id="switch" /><label for="switch">重置密码</label>
-				  		
+				<input type="hidden" ajat-sync-selector="#title-password" value="" ><input class="checkbox" type="checkbox" id="switch" /><label for="switch">重置密码</label>				  		
 			<%}%>
 		 <div class="control-group">
                     <legend class="add-title" style="margin-left:70px;" id="titlt-msg">基本信息：</legend>
@@ -135,7 +134,6 @@
 		<%for(var i=0;i<data.length;i++){%>
 			<option <%=data[i].id==protocol.custom.sid?"selected":""%> value="<%=data[i].id%>"><%=data[i].title%></option>
 		<%}%>
-	</script>
 	</script>
   </body>
 </html>
