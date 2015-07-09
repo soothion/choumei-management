@@ -11,13 +11,13 @@
     </head>
     <body>
         <div class="breadcrumb">
-           <a href="ui.html">店铺结算 </a><span>&gt;</span><a href="ui.html">转付单</a><span>&gt;</span>付款管理
+           <a>店铺结算 </a><span>&gt;</span><a href="singList.html">转付单</a>
 		   <div class="flex-box">
 			<div class="flex-item">
 				<h4>付款管理</h4>
 			</div>
 			<div>
-				<a class="btn-primary" href="addSingle.html"><i class="fa fa-plus"></i>新增</a>
+				<a class="btn-primary" href="addSingle.html" data-slug="shop_count.create"><i class="fa fa-plus" ></i>新增</a>
 			</div>
 		</div>
         </div>
@@ -27,12 +27,12 @@
                 <div class="flex-item">
                     <form data-role="hash">
                         <div>
-                          <div class="input-group">
+                         <div class="input-group">
 							<select class="select border-none" name="key" id="select">
-								<option value="1">店铺名称</option>
-								<option value="2">商户名称</option>
+								<option value="1">店铺搜索</option>
+								<option value="2">商户搜索</option>
 							</select>
-							<input type="text" class="border-none" placeholder="请输入店铺名称" name="keyword">
+							<input type="text" class="border-none" placeholder="请输入店铺名" name="keyword">
 						</div>
                             <label>付款日期：</label>
 							<span class="date-group">
@@ -55,8 +55,8 @@
 							<th>店铺名称</th>
                             <th>付款金额</th>
                             <th>换算消费额</th>
-                           <th><a data-role="hash" href="#page=1&sort_type=<%=query.sort_type==2?"1":"2"%>">付款日期 <i class="fa fa-sort"></i></a></th>
-                            <th><a data-role="hash" href="#page=1&sort_type=<%=query.sort_type==2?"1":"2"%>">创建日期 <i class="fa fa-sort"></i></a></th>
+                           <th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type==2?"1":"2"%>">付款日期 <i class="fa fa-sort"></i></a></th>
+                            <th><a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type==2?"1":"2"%>">创建日期 <i class="fa fa-sort"></i></a></th>
                             <th>制单人</th>
                             <th>状态</th>
                             <th>操作</th>
@@ -79,10 +79,10 @@
 				   <td><%=data[i].created_at%></td>
 				  <td><%=data[i].user.name%> </td>
 				  <td><%=state[data[i].state]%></td>
-                   <td><a class="link" href="updateSingle.html?id=<%=data[i].id%>">查看</a>
-				   <form action="shop_count/destroy" data-role="remove" data-title="该商户有合作的店铺，是否继续删除？">
+                   <td><a class="link" href="updateSingle.html?id=<%=data[i].id%>" data-slug="shop_count.show">查看</a>
+				   <form action="shop_count/destroy/<%=data[i].id%>" data-role="remove" data-title="该商户有合作的店铺，是否继续删除？">
 								<input type="hidden" name="id" value="<%=data[i].id%>" />
-								<button class="link">删除</button>
+								<button class="link" name="id" value="<%=data[i].id%>" data-slug="shop_count.destroy">删除</button>
 							</form>
 				   </td>
                   </tr>
@@ -94,17 +94,18 @@
         </div>
     </div>
 	<script type="text/javascript">
+		lib.ajatCount++;
 		$(function(){
 			$('#select').on('change',function(){
 				var $this=$(this);
 				if($this.val()==1){
-					$this.next().attr('placeholder','请输入店铺名称');
+					$this.next().attr('placeholder','请输入店铺名');
 				}else{
-					$this.next().attr('placeholder','请输入商户名称');
+					$this.next().attr('placeholder','请输入商户名');
 				}
 			});
 			$('input[type="date"]').val(lib.getDate());
-			$('form').submit();		 		 
+			$('form').submit();
 		});
 	</script>
 </body>
