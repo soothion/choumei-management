@@ -153,7 +153,11 @@ class SalonAccountController extends Controller {
 			return $this->error("参数错误");	
 		}
 		$save["username"] = $param["username"];
-		$save["salonid"] = $param["salonid"];
+		if($param["roleType"] == 1)//普通用户
+		{
+			$save["salonid"] = $param["salonid"];
+		}
+		
 		$save["merchantId"] = $param["merchantId"];
 		$save["roleType"] = $param["roleType"];
 		$save["password"] = md5($this->pwd);
@@ -168,6 +172,11 @@ class SalonAccountController extends Controller {
 			return $this->error($this->addMsg[$param["roleType"]]);
 		}
 		$id = SalonUser::insertGetId($save);//添加账号
+		if($param["roleType"] == 1)//普通用户
+		{
+			Salon::where(array("salonid"=>$param["salonid"]))->update(array("puserid"=>$id));
+		}
+		
 		if($id)
 		{
 			return $this->success();
