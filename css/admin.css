@@ -359,6 +359,7 @@ aside h2{
 .form-vertical .control textarea{
 	height:80px;
 	padding:5px 10px;
+	line-height:20px;
 }
 .form-vertical button{
 	padding-left:10px;
