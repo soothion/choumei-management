@@ -186,7 +186,7 @@ $(function(){
 	/**返回数据异常处理**/
 	$body.on('exception',function(e,data){
 		data=data.response;
-		if(data.result==0&&data.code=='400'){
+		if(data&&data.result==0&&data.code=='400'){
 			//parent.location.href="/module/user/login.html";
 		}
 	})
@@ -219,5 +219,12 @@ $(function(){
 			$pager.html('<div class="data-empty"><i class="fa fa-frown-o"></i>'+($target.attr('data-empty-alert')||"没有查找到相关数据")+'</div>');
 		}
 	});
+	/**权限控制**/
+	if(parent.access){
+		parent.access.control(document.body);
+	}
+	$body.on('_ready',function(e){
+		parent.access.control(e.target);
+	})
 });    	
 	

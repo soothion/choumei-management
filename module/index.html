@@ -95,7 +95,25 @@
 		  </div>
       </header>
       <div class="frame-main" style="height: 398px;">
-         <aside id="scroller">
+         <aside id="aside">
+				<script type="text/template" id="aside-t">
+				<%for(var i=0;i<data.length;i++){%>
+					<div class="menu-category <%=i==0?"active":""%>">
+					<div class="menu-category-title">
+						<span><%=data[i].title%></span>
+					</div>
+					<ul>
+					<%for(var j=0;j<data[i].child.length;j++){%>
+						<%if(data[i].child[j].show==1){%>
+						<li class="flex-box">
+							<a href="<%=slug[data[i].child[j].slug]%>" data-slug1="<%=data[i].child[j].slug%>" class="flex-item" target="main"><i class="fa fa-angle-right"></i><%=data[i].child[j].title%></a>
+						</li>
+						<%}%>
+					<%}%>
+					</ul>
+					</div>
+				<%}%>
+				<!--
 				<h2>商家管理</h2>
 				<div class="menu-category active">
 					<div class="menu-category-title">
@@ -121,7 +139,7 @@
 				</div>
                 <div class="menu-category">
 					<div class="menu-category-title">
-						<span>店铺商铺</span>
+						<span>店铺管理</span>
 					</div>
 					<ul>
 						<li class="flex-box">
@@ -156,7 +174,8 @@
 							<a href="shopSettlement/fromBalance.html" class="flex-item" target="main"><i class="fa fa-angle-right"></i>店铺往来余额</a>
 						</li>
 					</ul>
-				</div>
+				</div>-->
+				</script>
          </aside>
          <article>
             <iframe frameborder="0" src="example/ui.html"  name="main" style="opacity: 1;"></iframe>
@@ -170,5 +189,6 @@
 	<script src="../js/lib.js"></script>
 	<script src="../js/admin.js"></script>
 	<script src="../js/frame.js"></script>
+	<script src="../js/access.js"></script>
   </body>
 </html>

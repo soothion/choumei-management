@@ -15,6 +15,9 @@ h1, h2, h3, h4, h5, h6,legend{
 .fff{
 	color:#fff!important;
 }
+.weak{
+	color:#999;
+}
 .link{
 	color:#58A2EC!important;
 }
@@ -463,7 +466,6 @@ input:focus+.unit{
 	border:1px solid #E6EAF2;
 }
 td.colswrap{
-	line-height:14px;
 	padding-top:5px!important;
 	padding-bottom:5px!important;
 }
@@ -696,3 +698,6 @@ form[data-role="hash"] button{
 	background:#eee;
 }
 /**自动完成 end**/
+[data-slug]{
+	display:none;
+}

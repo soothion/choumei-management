@@ -23,7 +23,6 @@
             <form novalidate="" method="post" class="form-vertical" data-role="form" action="salonAccount/save">
                <legend>账号信息</legend>
 				<input type="hidden" name="salonid" id="salonid"/>
-				<input type="hidden" name="merchantId" id="merchantId"/>
 				 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
@@ -46,7 +45,8 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
-                        <input type="text" id="merchantname" disabled >
+                        <input type="text" id="merchantname"  disabled>
+						<input type="hidden" name="merchantId" id="merchantId" required requiredmsg="请店铺搜索到商户"/>
                     </div>
                 </div>
 

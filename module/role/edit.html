@@ -5,14 +5,17 @@
 	  <title>臭美管理后台</title>
 	  <script type="text/javascript" src="../../js/include.js"></script>
 	  <style type="text/css">
-		.right-list li{
+		.right-tree li{
 			margin-bottom:15px;
 		}
-		.right-list div{
+		.child{
 			padding-left:30px;
 			display:none;
 		}
-		.right-list div label{
+		.child li{
+			margin-bottom:0px;
+		}
+		.right-tree .child label{
 			margin:4px 0;
 		}
 		.fa-minus-square-o,.fa-plus-square-o{
@@ -20,13 +23,13 @@
 			margin-right:5px;
 			vertical-align:middle;
 		}
-		.fa-minus-square-o,.toggle .fa-plus-square-o{
+		.fa-minus-square-o,.toggle>.square>.fa-plus-square-o{
 			display:none;
 		}
-		.toggle .fa-minus-square-o{
+		.toggle>.square>.fa-minus-square-o{
 			display:inline-block;
 		}
-		.toggle div{
+		.toggle>.child{
 			display:block;
 		}
 	  </style>
@@ -106,7 +109,36 @@
 		<%}%>
 	</script>
 	<script type="text/template" id="permission-t">
-		<ul class="right-list">
+		<ul class="right-tree">
+			<%for(var i=0;i<data.length;i++){%>
+			<li>
+				<input type="checkbox" id="root<%=data[i].id%>" class="checkbox" />
+				<label for="root<%=data[i].id%>" style="margin-right:2px;"></label>
+				<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+				<label for="root<%=data[i].id%>"><%=data[i].title%></label>
+				<ul class="child">
+					<%var level2=data[i].child%>
+					<%for(var j=0;j<level2.length;j++){%>
+					<li>
+						<input type="checkbox" id="parent<%=level2[j].id%>" class="checkbox" />
+						<label for="parent<%=level2[j].id%>" style="margin-right:2px;"></label>
+						<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+						<label for="parent<%=level2[j].id%>"><%=level2[j].title%></label>
+						<ul class="child">
+							<li>
+							<%var level3=level2[j].child%>
+							<%if(level3){%>
+							<%for(var m=0;m<level3.length;m++){%>
+								<input type="checkbox" class="checkbox" id="level3<%=level3[m].id%>" /><label for="level3<%=level3[m].id%>"><%=level3[m].title%></label>
+							<%}%>
+							<%}%>
+							</li>
+						</ul>
+					</li>
+					<%}%>
+				</ul>
+			</li>
+			<!--
 			<li>
 				<input type="checkbox" id="parent1" class="checkbox" />
 				<label for="parent1" style="margin-right:2px;"></label>
@@ -115,12 +147,16 @@
 				<div>
 					<input type="checkbox" class="checkbox" id="child1" /><label for="child1">缺省主页</label><input type="checkbox" class="checkbox" id="child2" /><label for="child2">修改信息</label>
 				</div>
-			</li>
+			</li>-->
+			<%}%>
 		</ul>
 	</script>
 	<script type="text/javascript">
 		$('.wrapper').on('click','.square',function(){
 			$(this).closest('li').toggleClass('toggle');
+		}).on('click','.right-tree input',function(){
+			var $this=$(this);
+			$this.siblings('.child').find('input').attr('checked',$this.is(':checked')?"checked":false);
 		})
 	</script>
   </body>

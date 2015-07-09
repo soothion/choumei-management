@@ -13,7 +13,7 @@
 				<h4>角色管理</h4>
 			</div>
 			<div>
-				<a class="btn-primary" href="edit.html"><i class="fa fa-plus"></i>新增</a>
+				<a class="btn-primary" data-slug="role.create" href="edit.html"><i class="fa fa-plus"></i>新增</a>
 			</div>
 		</div>
 	</div>
@@ -81,7 +81,7 @@
 				  <td><%=data[i].created_at%></td>
 				  <td><%=data[i].description%></td>
 				  <td>
-					 <a class="link" href="edit.html?id=<%=data[i].id%>">编辑</a>
+					 <a class="link" data-slug="user.update" href="edit.html?id=<%=data[i].id%>">编辑</a>
 				  </td>
                 </tr>
 				<%}%>

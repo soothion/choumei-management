@@ -62,9 +62,5 @@
 	$('.nav-main li').on('click',function(){
 		$(this).addClass('active').siblings().removeClass('active');
 	});
-	lib.ajax({
-		url:'list/menu',
-		success:function(data){
-			
-		}
-	})
+	
+	
