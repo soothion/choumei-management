@@ -57,6 +57,46 @@ abstract class Controller extends BaseController
 	}
 	
 	
+	//生成树型结构
+	public function tree($array){   
+        foreach( array_keys( $array ) as $key )
+		{
+		       if( $array[$key]['inherit_id'] == null )
+		       {
+		            continue;
+		       }
+		       if( $this->child( $array , $array[$key] ) )
+		       {
+		            unset( $array[$key] );
+		       }
+		}
+		$array = array_values($array);
+		return $array;
+	}
+
+	public function child( &$list , $tree ){
+	    if( empty( $list ) )
+	    {
+	        return false;
+	    }
+	    foreach( $list as $key => $val )
+	    {
+	        if( $tree['inherit_id'] == $val['id'] && $tree['id'] != $tree['inherit_id'] )
+	        {
+	            $list[$key]['child'][] = $tree;
+	            return true;
+	        }
+	        if( isset( $val['child'] ) && is_array( $val['child'] ) && !empty( $val['child'] ) )
+	        {
+	            if( $this->child( $list[$key]['child'] , $tree ) )
+	            {
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
+	}
+
 	public function parameters($definition, $required = false, $source =null , $prefix = null)
 	{
 	    $parameters = array();
