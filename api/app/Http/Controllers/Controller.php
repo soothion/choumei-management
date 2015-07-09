@@ -97,6 +97,20 @@ abstract class Controller extends BaseController
 	    return false;
 	}
 
+	//二维数据去重
+	public function array_multiuniue($array){
+		foreach ($array as $key => $value) {
+			$value = json_encode($value);
+			$temp[] = $value;
+		}
+		$temp = array_unique($temp);
+		foreach ($temp as $key => $value) {
+			$temp[$key] = json_decode($value,TRUE);
+		}
+		return $temp;
+	}
+
+
 	public function parameters($definition, $required = false, $source =null , $prefix = null)
 	{
 	    $parameters = array();
