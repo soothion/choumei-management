@@ -16,13 +16,14 @@ class UserController extends Controller{
 	 * @apiName list
 	 * @apiGroup User
 	 *
-	 * @apiParam {Number} role_id 可选,角色ID.
+	 * @apiParam {String} role 可选,角色名关键字.
+	 * @apiParam {String} name 可选,姓名关键字.
+	 * @apiParam {String} username 可选,登录帐号关键字.
 	 * @apiParam {Number} department_id 可选,部门ID.
 	 * @apiParam {Number} status 可选,用户状态.1正常、2停用、3注销.
 	 * @apiParam {Number} city_id 可选,城市ID.
 	 * @apiParam {String} start 可选,起始时间.
 	 * @apiParam {String} end 可选,结束时间.
-	 * @apiParam {String} keyword 可选,搜索关键字,匹配帐号或者姓名.
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.
 	 * @apiParam {String} sort_key 排序的键,比如:created_at,update_at;
@@ -149,11 +150,22 @@ class UserController extends Controller{
 		if(isset($param['end'])&&$param['end']){
 			$query = $query->where('created_at','<=',$param['end']);
 		}
-
-		if(isset($param['keyword'])&&$param['keyword']){
-			$keyword = '%'.$param['keyword'].'%';
+		//登录帐号筛选
+		if(isset($param['username'])&&$param['username']){
+			$keyword = '%'.$param['username'].'%';
+			$query = $query->where('username','like',$keyword);
+		}		
+		//姓名筛选
+		if(isset($param['name'])&&$param['name']){
+			$keyword = '%'.$param['name'].'%';
 			$query = $query->where('name','like',$keyword);
-			$query = $query->orWhere('username','like',$keyword);
+		}
+		//角色名筛选
+		if(isset($param['role'])&&$param['role']){
+			$keyword = '%'.$param['role'].'%';
+			$query = $query->whereHas('roles',function($q) use($keyword){
+				$q->where('name','like',$keyword);
+			});
 		}
 
 		//排序
