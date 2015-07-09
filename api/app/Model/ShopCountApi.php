@@ -135,7 +135,7 @@ class ShopCountApi
             $order = "created_at";
         }
         
-        if(isset($options['sort_type']) && $options['sort_type'] == 1)
+        if(isset($options['sort_type']) && strtoupper($options['sort_type']) == "ASC")
         {
             $order_by = "ASC";
         }
@@ -231,7 +231,7 @@ class ShopCountApi
                 $order = "created_at";
             }
         
-            if(isset($options['sort_type']) && $options['sort_type'] == 1)
+            if(isset($options['sort_type']) && strtoupper($options['sort_type']) == "ASC")
             {
                 $order_by = "ASC";
             }
@@ -327,7 +327,7 @@ class ShopCountApi
                 $order = "created_at";
             }
         
-            if(isset($options['sort_type']) && $options['sort_type'] == 1)
+            if(isset($options['sort_type']) && strtoupper($options['sort_type']) == "ASC")
             {
                 $order_by = "ASC";
             }

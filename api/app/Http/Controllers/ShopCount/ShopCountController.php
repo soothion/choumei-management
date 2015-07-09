@@ -99,7 +99,7 @@ class ShopCountController extends Controller
             'page'=>self::T_INT,
             'size'=>self::T_INT,
             'sort_key'=>self::T_STRING,
-            'sort_type'=>self::T_INT,
+            'sort_type'=>self::T_STRING,
         ]);
         $items = ShopCountApi::searchPrepay($param);
         return $this->success($items);
@@ -467,7 +467,7 @@ class ShopCountController extends Controller
             'page'=>self::T_INT,
             'size'=>self::T_INT,
             'sort_key'=>self::T_STRING,
-            'sort_type'=>self::T_INT,
+            'sort_type'=>self::T_STRING,
         ]);
         $items = ShopCountApi::searchInsteadReceive($param);
         return $this->success($items);
@@ -611,7 +611,7 @@ class ShopCountController extends Controller
             'page'=>self::T_INT,
             'size'=>self::T_INT,
             'sort_key'=>self::T_STRING,
-            'sort_type'=>self::T_INT,
+            'sort_type'=>self::T_STRING,
         ]);
         $items = ShopCountApi::searchShopCount($param);
         return $this->success($items);
