@@ -235,7 +235,7 @@ class Salon extends Model {
 						$salonList[$key] = "";
 					}
 					
-					if($val === "0.00" || $val == "0")//0 0.00默认值 数据转化为 空字符串
+					if($val === "0.00")//0 0.00默认值 数据转化为 空字符串
 					{
 						$salonList[$key] = "";
 					}
