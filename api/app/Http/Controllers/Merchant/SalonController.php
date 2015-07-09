@@ -10,17 +10,7 @@ use App\SalonInfo;
 
 
 class SalonController extends Controller {
-	
-	private $sequenceType = array(
-						1=>"shopType",
-						2=>"salestatus"
-			);
-			
-	private $orderType = array(
-						1=>"desc",
-						2=>"asc"
-			);
-			
+		
     private $addFields = array(
 			    		"merchantId",
 			            "salonname",
@@ -55,8 +45,8 @@ class SalonController extends Controller {
 	* @apiParam {Number} zone 可选,所属商圈
 	* @apiParam {String} salonname 可选,店名
 	* @apiParam {String} businessName 可选,业务代表
-	* @apiParam {Number} sequence 可选,排序字段 1店铺类型字段 2状态字段.
-	* @apiParam {Number} order 可选,1倒序 2升序 sequence和order同时存在.
+	* @apiParam {Number} sort_key 可选,排序字段 shopType 店铺类型  salestatus 状态.
+	* @apiParam {Number} sort_type 可选,排序 DESC倒序 ASC升序.
 	* @apiParam {Number} page 可选,页数.
 	* @apiParam {Number} page_size 可选,分页大小.
 	*
@@ -140,16 +130,9 @@ class SalonController extends Controller {
 		$salonname = isset($param["salonname"])?urldecode($param["salonname"]):"";//店名
 		$district = isset($param["district"])?$param["district"]:0;//区域
 		$businessName = isset($param["businessName"])?urldecode($param["businessName"]):"";//业务代表
-		$sequence = isset($param["sequence"])?$param["sequence"]:0;//排序字段  1shopType 2salestatus
-    	$orders = isset($param["order"])?$param["order"]:0;//1倒序 2升序
+		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"add_time";
+    	$sort_type = isset($param["sort_type"])?$param["sort_type"]:"desc";
 		
-    	$orderName = "add_time";
-    	$orderLr = "desc";
-		if(in_array($sequence, array(1,2)) && in_array($orders, array(1,2)))
-    	{
-    		$orderName = $this->sequenceType[$sequence];
-    		$orderLr = $this->orderType[$orders];
-    	}
 		if($shopType)
     	{
     		$where["shopType"] = $shopType;
@@ -177,7 +160,7 @@ class SalonController extends Controller {
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 		
 		
-		$list = Salon::getSalonList($where,$page,$page_size,$orderName,$orderLr);
+		$list = Salon::getSalonList($where,$page,$page_size,$sort_key,$sort_type);
 		
         
 	    return $this->success($list);

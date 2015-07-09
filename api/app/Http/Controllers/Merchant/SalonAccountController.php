@@ -19,17 +19,6 @@ class SalonAccountController extends Controller {
 				1=>"当前店铺已存在普通用户，请查询",
 				2=>"当前商户已存在超级管理员，请查询",
 		);
-
-	private $sequenceType = array(
-						1=>"status",
-						2=>"roleType"
-			);
-			
-	private $orderType = array(
-						1=>"desc",
-						2=>"asc"
-			);
-			
 	
 	/**
 	 * @api {post} /salonAccount/index 1.店铺账号列表
@@ -41,8 +30,8 @@ class SalonAccountController extends Controller {
 	 * @apiParam {String} username 可选,账号名称
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.
-	 * @apiParam {Number} sequence 可选,排序字段 1状态 2角色.
-	 * @apiParam {Number} order 可选,排序 1倒序 2升序.
+	 * @apiParam {Number} sort_key 可选,排序字段 status状态 roleType角色.
+	 * @apiParam {Number} sort_type 可选,排序 DESC倒序 ASC升序.
 	 *
 	 * @apiSuccess {Number} total 总数据量.
 	 * @apiSuccess {Number} per_page 分页大小.
@@ -102,14 +91,9 @@ class SalonAccountController extends Controller {
 		$param = $this->param;
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
-		$sequence = isset($param["sequence"])?$param["sequence"]:1;//排序字段
-    	$orders = isset($param["order"])?$param["order"]:1;//1倒序 2升序
-		if(in_array($sequence, array(1,2)) && in_array($orders, array(1,2)))
-    	{
-    		$orderName = $this->sequenceType[$sequence];
-    		$orderLr = $this->orderType[$orders];
-    	}
-		$result = SalonAccount::getList($param,$page,$page_size,$orderName,$orderLr);
+		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"salon_user_id";
+    	$sort_type = isset($param["sort_type"])?$param["sort_type"]:"desc";
+		$result = SalonAccount::getList($param,$page,$page_size,$sort_key,$sort_type);
 		unset($result['next_page_url']);
 	    unset($result['prev_page_url']);
 	    return $this->success($result);
