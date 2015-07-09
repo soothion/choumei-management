@@ -154,8 +154,9 @@ class ListController extends Controller{
 	 */
 	public function permission(){
 		$result = Permission::select(['id','inherit_id','title','sort'])->get();
-		$result = $this->tree($result->toArray());
-		$result = array($result);
+		$result = $result->toArray();
+		$result = $this->array_multiuniue($result);
+		$result = $this->tree($result);
 		return $this->success($result);
 	}
 
@@ -205,7 +206,7 @@ class ListController extends Controller{
                 $permissions[] = $permission;  
             }
         }
-        $permissions = array_unique($permissions);
+        $permissions = $this->array_multiuniue($permissions);
         $permissions = $this->tree($permissions);
         return $this->success($permissions);
 	}
