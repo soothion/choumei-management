@@ -75,7 +75,7 @@ class SalonController extends Controller {
 	* @apiSuccess {String} salestatus 状态 0终止合作 1正常合作.
 	* @apiSuccess {String} businessId 业务ID.
 	* @apiSuccess {String} sn 地址.
-	* @apiSuccess {String} add_time 商户成立时间(10位时间戳).
+	* @apiSuccess {String} add_time 添加时间(10位时间戳).
 	* @apiSuccess {String} name 商户名.
 	* @apiSuccess {String} merchantId 商户ID.
 	* @apiSuccess {String} businessName 业务代表名.

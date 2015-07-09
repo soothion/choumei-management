@@ -13,6 +13,8 @@ class SalonAccountController extends Controller {
 	
 	private $pwd = "choumei";
 	
+	private $cmPwd = "choumeiapp.123.!";
+	
 	private $addMsg = array(
 				1=>"当前店铺已存在普通用户，请查询",
 				2=>"当前商户已存在超级管理员，请查询",
@@ -146,11 +148,21 @@ class SalonAccountController extends Controller {
 		{
 			return $this->error("参数错误");	
 		}
+		if(!$param["username"] || !$param["merchantId"] || !in_array($param["roleType"], array(1,2)) )
+		{
+			return $this->error("参数错误");	
+		}
 		$save["username"] = $param["username"];
-		$save["salonid"] = $param["salonid"];
+		if($param["roleType"] == 1)//普通用户
+		{
+			$save["salonid"] = $param["salonid"];
+		}
+		
 		$save["merchantId"] = $param["merchantId"];
 		$save["roleType"] = $param["roleType"];
 		$save["password"] = md5($this->pwd);
+		$save["admin_password"] = md5($this->cmPwd);
+
 		$save["addTime"] = time();
 		$save["status"] = 1;
 		
@@ -160,6 +172,11 @@ class SalonAccountController extends Controller {
 			return $this->error($this->addMsg[$param["roleType"]]);
 		}
 		$id = SalonUser::insertGetId($save);//添加账号
+		if($param["roleType"] == 1)//普通用户
+		{
+			Salon::where(array("salonid"=>$param["salonid"]))->update(array("puserid"=>$id));
+		}
+		
 		if($id)
 		{
 			return $this->success();
