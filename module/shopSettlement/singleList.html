@@ -79,7 +79,7 @@
 				  <td><%=data[i].user.name%> </td>
 				  <td><%=state[data[i].state]%></td>
                    <td><a class="link" href="updateSingle.html?id=<%=data[i].id%>">查看</a>
-				   <form action="shop_count/destroy" data-role="remove" data-title="您正在删除转付单，是否继续？">
+				   <form action="shop_count/destroy" data-role="remove" data-title="该商户有合作的店铺，是否继续删除？">
 								<input type="hidden" name="id" value="<%=data[i].id%>" />
 								<button class="link">删除</button>
 							</form>
@@ -103,13 +103,7 @@
 				}
 			});
 			$('input[type="date"]').val(lib.getDate());
-			$('form').submit();
-			$('button[data="link"]').on('click',function(){
-			if(merchant_id.in(salon_id)!=0){
-				parent.lib.popup.confirm({text:(title||'该商户还有正在合作的店铺请先终止该商户所有店铺合作，再删除商户'),define:function(){			
-			}
-			});
-			});
+			$('form').submit();		 		 
 		});
 	</script>
 </body>
