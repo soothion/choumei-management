@@ -235,7 +235,7 @@ Route::group(['middleware'], function(){
         'uses' => 'ShopCount\ShopCountController@store'
     ));
     // 删除
-    Route::any('shop_count/destroy', array(
+    Route::any('shop_count/destroy/{id}', array(
         'as' => 'shop_count.destroy',
         'uses' => 'ShopCount\ShopCountController@destroy'
     ));
