@@ -370,6 +370,7 @@ class ShopCountApi
     public static function makePrepay($options)
     {
         if(isset($options['merchant_id'])
+            && isset($options['type'])
             && isset($options['salon_id'])
             && isset($options['uid'])
             && isset($options['pay_money'])
@@ -398,22 +399,42 @@ class ShopCountApi
      */
     public static function updatePrepay($id,$options)
     {
+        $ret = true;
         $prepay = PrepayBill::where('id',$id)->first();
+        if(empty($prepay))
+        {
+            $ret = false;
+            return $ret;
+        }
         if($prepay->state == 0)
         {
             $options['state'] = PrepayBill::STATE_OF_COMPLETED;
-            PrepayBill::update($options);
+            $ret = PrepayBill::where('id',$id)->update($options);
         }
         else if($prepay->state == 1)
         {
             $options['updated_at'] = date("Y-m-d H:i:s");
-            PrepayBill::update($options);
+            $ret =  PrepayBill::where('id',$id)->update($options);
             if(isset($options['pay_money']) && isset($options['cost_money']))
             {
                 $options['pay_money'] = floatval($options['pay_money']) - floatval($prepay->pay_money);
                 $options['cost_money'] = floatval($options['cost_money']) - floatval($prepay->cost_money);
-                $options['merchant_id'] = intval($options['merchant_id']);
-                $options['salon_id'] = intval($options['salon_id']);
+                if (isset($options['merchant_id']))
+                {
+                    $options['merchant_id'] = intval($options['merchant_id']);
+                }
+                else 
+                {
+                    $options['merchant_id'] = $prepay->merchant_id;
+                }
+                if (isset($options['salon_id']))
+                {
+                    $options['salon_id'] = intval($options['salon_id']);
+                }
+                else
+                {
+                    $options['salon_id'] = $prepay->salon_id;
+                }
                 if( $options['pay_money'] != 0 &&   $options['cost_money'] != 0)
                 {
                     $params = [
@@ -422,11 +443,11 @@ class ShopCountApi
                         'pay_money'=>$options['pay_money'],
                         'cost_money'=>$options['cost_money'],
                     ];
-                    ShopCount::payMoney($params);
+                    $ret =ShopCount::payMoney($params);
                 }
             }            
         }
-        return null;
+        return $ret;
     }
     
     public static function deletePrepay($id)

@@ -90,7 +90,18 @@ class ShopCountController extends Controller
      */
     public function index()
     {
-        $items = ShopCountApi::searchPrepay($this->param);
+        $param = $this->parameters([
+            'key'=>self::T_INT,
+            'keyword'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_max'=>self::T_STRING,
+            'page'=>self::T_INT,
+            'size'=>self::T_INT,
+            'sort_key'=>self::T_STRING,
+            'sort_type'=>self::T_INT,
+        ]);
+        $items = ShopCountApi::searchPrepay($param);
         return $this->success($items);
     }
     
@@ -99,6 +110,7 @@ class ShopCountController extends Controller
      * @apiName preview
      * @apiGroup ShopCount
      *
+     * @apiParam {Number} type  转付单类型
      * @apiParam {Number} merchant_id  商户id
      * @apiParam {Number} salon_id     店铺id
      * @apiParam {Number} pay_money    付款金额
@@ -154,10 +166,19 @@ class ShopCountController extends Controller
      */
     public function create()
     {
-        //
-        $param = $this->param;
-        $param['uid'] = $this->user->id;
-        $id = ShopCountApi::makePreviewPrepay($this->param);
+       $param_must = $this->parameters( 
+           ['type'=>self::T_INT,
+            'merchant_id'=>self::T_INT,
+            'salon_id'=>self::T_INT
+           ],true);
+       $param = $this->parameters([           
+            'pay_money'=>self::T_INT,
+            'cost_money'=>self::T_INT,
+            'day'=>self::T_STRING,
+        ]);
+        $param = array_merge($param,$param_must);
+        $param['uid'] = $this->user->id;        
+        $id = ShopCountApi::makePreviewPrepay($param);
         if(! $id)
         {
             throw new \Exception("参数有误,生成预览失败");
@@ -197,7 +218,15 @@ class ShopCountController extends Controller
      */
     public function store()
     {
-        $param = $this->param;
+        $param = $this->parameters([
+            'id'=>self::T_INT,
+            'type'=>self::T_INT,
+            'merchant_id'=>self::T_INT,
+            'salon_id'=>self::T_INT,
+            'pay_money'=>self::T_INT,
+            'cost_money'=>self::T_INT,
+            'day'=>self::T_STRING,
+        ]);
         $param['uid'] = $this->user->id;
         if(isset($param['id']))
         {
@@ -316,7 +345,13 @@ class ShopCountController extends Controller
      */
     public function update($id)
     {
-        $param=$this->param;
+        $param = $this->parameters([
+            'merchant_id'=>self::T_INT,
+            'salon_id'=>self::T_INT,
+            'pay_money'=>self::T_INT,
+            'cost_money'=>self::T_INT,
+            'day'=>self::T_STRING,
+        ]);
         $param['uid'] = $this->user->id;
         $ret = ShopCountApi::updatePrepay($id, $param);
         if(! $ret)
@@ -423,7 +458,18 @@ class ShopCountController extends Controller
      */
     public function delegate_list()
     {
-        $items = ShopCountApi::searchInsteadReceive($this->param);
+        $param = $this->parameters([
+            'key'=>self::T_INT,
+            'keyword'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_max'=>self::T_STRING,
+            'page'=>self::T_INT,
+            'size'=>self::T_INT,
+            'sort_key'=>self::T_STRING,
+            'sort_type'=>self::T_INT,
+        ]);
+        $items = ShopCountApi::searchInsteadReceive($param);
         return $this->success($items);
     }
     
@@ -556,7 +602,18 @@ class ShopCountController extends Controller
      */
     public function balance()
     {
-        $items = ShopCountApi::searchShopCount($this->param);
+        $param = $this->parameters([
+            'key'=>self::T_INT,
+            'keyword'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_max'=>self::T_STRING,
+            'page'=>self::T_INT,
+            'size'=>self::T_INT,
+            'sort_key'=>self::T_STRING,
+            'sort_type'=>self::T_INT,
+        ]);
+        $items = ShopCountApi::searchShopCount($param);
         return $this->success($items);
     }
 }

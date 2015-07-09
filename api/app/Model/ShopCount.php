@@ -45,11 +45,13 @@ class ShopCount extends Model
                     'salon_id' => $salon_id
                 ])->first();
                 if (empty($item)) {
-                    $attrs['balance_money'] = $attrs['cost_money'] - $attrs['spend_money'];
+                    $attrs['balance_money'] = $attrs['cost_money'];
                     $model::create($attrs);
                 } else {
+                    $id = $item->id;
                     $attrs = self::mergeMoney($attrs, $item);
-                    $model->update($attrs);
+                    unset($attrs['id'],$attrs['salon_id']);
+                    self::where('id',$id)->update($attrs);
                 }
                 return true;
             });

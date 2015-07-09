@@ -82,7 +82,7 @@ class Salon extends Model {
 		unset($result['to']);
 		unset($result['next_page_url']);
 		unset($result['prev_page_url']);
-		
+		$data = array();
 		foreach($result["data"] as $key=>$val)
 		{
 			$tmpVal = (array)$val;
