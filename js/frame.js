@@ -74,5 +74,15 @@
 				}
 			}
 		})
+	});
+	$(document).on('click','.drop-menu-toggle',function(){//下拉菜单
+		var $this=$(this);
+		$this.parent().toggleClass('open');
+	}).on('click','.drop-menu-item',function(){
+		$(this).closest('.open').removeClass('open');
+	}).on('click',function(e){
+		if($(e.target).closest('.open').length==0){
+			$('.open').removeClass('open');
+		}
 	})
 	
