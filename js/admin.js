@@ -224,7 +224,10 @@ $(function(){
 		parent.access.control(document.body);
 	}
 	$body.on('_ready',function(e){
-		parent.access.control(e.target);
+		if(parent.access){
+			parent.access.control(e.target);
+		}
+		
 	})
 });    	
 	

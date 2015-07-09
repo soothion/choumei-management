@@ -99,11 +99,11 @@
                 <th>序号</th>
                 <th>编号</th>
                 <th>店铺</th>
-                <th><a>店铺类型<i class="fa fa-sort"></i></a></th>
+                <th><a data-role="hash" href="#sort_key=shopType&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">店铺类型<i class="fa fa-sort"></i></a></th>
                 <th>区域</th>
                 <th>所属商圈</th>
                 <th>业务代表</th>
-                <th><a>状态<i class="fa fa-sort"></i></a></th>
+                <th><a data-role="hash" href="#sort_key=salestatus&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">状态<i class="fa fa-sort"></i></a></th>
                 <th>操作</th>
               </tr>
             </thead>
@@ -128,7 +128,7 @@
                 <td><%=row[i].zoneName%></td>
                 <td><%=row[i].businessName%></td>
                 <td><%=statusText%></td>
-                <td><a class="link" href="detail.html?type=detail&salonid=<%=row[i].salonid%>">查看&gt;&gt;</a></td>
+                <td><a class="link" data-slug="salon.getSalon" href="detail.html?type=detail&salonid=<%=row[i].salonid%>">查看&gt;&gt;</a></td>
               </tr>
               <%}%>
             </tbody>

@@ -15,7 +15,7 @@
 				<h4>店铺账号</h4>
 			</div>
 			<div>
-				<a class="btn-primary" href="addAccount.html"><i class="fa fa-plus"></i>新增</a>
+				<a class="btn-primary" data-slug="salonAccount.create" href="addAccount.html"><i class="fa fa-plus"></i>新增</a>
 			</div>
 		</div>
         </div>
@@ -41,9 +41,9 @@
 							<th>序号</th>
 							<th>店铺</th>
 							<th>用户名</th>
-							<th><a href="#page=1&sequence=2&order=<%=query.order==2?"1":"2"%>">用户角色 <i class="fa fa-sort"></i></a></th>
+							<th><a data-role="hash" href="#sort_key=roleType&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">用户角色 <i class="fa fa-sort"></i></a></th>
 							<th>创建日期 </th>
-							<th><a href="#page=1&sequence=1&order=<%=query.order==2?"1":"2"%>">状态  <i class="fa fa-sort"></i></a></th>
+							<th><a data-role="hash" href="#sort_key=status&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">状态  <i class="fa fa-sort"></i></a></th>
 							<th>操作</th>
 						</tr>
 					</thead>
@@ -55,7 +55,9 @@
 						<tr>
 							<td><%=i+1%></td>
 							<td class="<%=data[i].name?"colswrap":""%>">
+								<%if(data[i].salonname){%>
 								<strong><%=data[i].salonname%></strong><br />
+								<%}%>
 								<span class="weak"><%=data[i].name%></span>
 							</td>
 							<td><%=data[i].username%></td>
@@ -67,9 +69,9 @@
 							<td><%=data[i].addTime%></td>
 							<td><%=status[data[i].status-1]%></td>
 							<td>
-							<a data-id="<%=data[i].salonUserId%>" class="link reset" data-text="重置密码">重置密码</a>
+							<a data-id="<%=data[i].salonUserId%>" class="link reset" data-slug="salonAccount.reset" data-text="重置密码">重置密码</a>
 							<span class="space"></span>
-								<form action="salonAccount/delAct" data-role="remove">
+								<form action="salonAccount/delAct" data-role="remove" data-slug="salonAccount.del">
 									<input type="hidden" name="salonUserId" value="<%=data[i].salonUserId%>" />
 									<input type="hidden" name="type" value="2" />
 									<button class="link">删除</button>

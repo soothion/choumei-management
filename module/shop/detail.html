@@ -5,7 +5,6 @@
       <title>臭美管理后台</title>
       <script type="text/javascript" src="../../js/include.js"></script>
       <script type="text/javascript" src="../../js/utils.js"></script>
-      <script type="text/javascript" src="../../js/utils.js"></script>
       <link rel="stylesheet" href="../../css/swiper.css">
       <link rel="stylesheet" href="shop.css" />   
     </head>
@@ -21,15 +20,15 @@
             <script type="text/template" id="table-t">                
             <div class="btn-group">
                 <div style="float:right">                     
-                    <button class="btn" id="stop_cooperation_btn" salonid="<%=data.salonid%>" status="<%=data.salestatus%>">
+                    <button data-slug="salon.endCooperation" class="btn" id="stop_cooperation_btn" salonid="<%=data.salonid%>" status="<%=data.salestatus%>">
                         <%=data.salestatus == 0 ? '恢复合作' : '终止合作'%> 
                     </button>
 
-                    <button class="btn" id="remove_stop_btn" salonid="<%=data.salonid%>">
+                    <button class="btn" id="remove_stop_btn" salonid="<%=data.salonid%>" data-slug="salon.del">
                         删除店铺
                     </button>
 
-                    <a href='add.html?type=edit'>
+                    <a href='add.html?type=edit' data-slug="salon.save">
                         <button class="btn">编辑</button>
                     </a>  
                 </div>          
