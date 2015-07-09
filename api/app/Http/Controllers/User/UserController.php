@@ -25,6 +25,7 @@ class UserController extends Controller{
 	 * @apiParam {String} keyword 可选,搜索关键字,匹配帐号或者姓名.
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.
+	 * @apiParam {String} order 排序方式,比如:created_at,DESC,update_at,ASC;格式为:{字段名},{DESC|ASC}
 	 *
 	 *
 	 * @apiSuccess {Number} total 总数据量.
@@ -152,6 +153,14 @@ class UserController extends Controller{
 			$keyword = '%'.$param['keyword'].'%';
 			$query = $query->where('name','like',$keyword);
 			$query = $query->orWhere('username','like',$keyword);
+		}
+
+		//排序
+		if(isset($param['order'])&&$param['order']){
+			$order = explode(',', $param['order']);
+			if(!count($order)==2)
+				return $this->error('order参数错误');
+			$query = $query->orderBy($order[0],$order[1]);
 		}
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
