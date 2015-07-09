@@ -583,6 +583,7 @@
 				$(this.el).find(this.selector).trigger('blur',{type:'validate'});
 			}
 			var $form=$(this.el);
+			if($form.attr('disabled'))return;
 			if($form.find('.control-help:visible').length==0){
 				var data=lib.getFormData($form);
 				$form.trigger('save',data);

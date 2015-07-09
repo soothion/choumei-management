@@ -32,6 +32,11 @@ var access={
 			var $this=$(this);
 			if(self.map[$this.data('slug')]==1){
 				$this.show()
+			}else{
+				var form=$this.closest('form[data-role="form"]');
+				if($this.is('button')&&form.length==1){
+					form.attr('disabled','disabled');
+				}
 			}
 		});
 	}
