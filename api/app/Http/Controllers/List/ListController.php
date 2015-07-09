@@ -171,6 +171,7 @@ class ListController extends Controller{
 	 * @apiSuccess {String} title 权限标题.
 	 * @apiSuccess {String} slug 权限路由.
 	 * @apiSuccess {Number} sort 排序.
+	 * @apiSuccess {String} show 是否作为菜单显示.
 	 * 
 	 * 
 	 *
@@ -184,7 +185,8 @@ class ListController extends Controller{
 	 *		        "inherit_id": 1,
 	 *		        "title": "查看用户信息",
 	 *		        "slug": "user.create",
-	 *		        "sort": 2
+	 *		        "sort": 2,
+	 *		        'show': "1"
 	 *		    }
 	 *	    ]
 	 *	}
@@ -197,7 +199,7 @@ class ListController extends Controller{
         foreach ($user->roles as $role) {
         	if($role->status!=1)
         		continue;
-            foreach ($role->permissions()->select(['permission_id as id','inherit_id','title','slug','sort'])->orderBy('sort','desc')->get() as $permission) {
+            foreach ($role->permissions()->select(['permission_id as id','inherit_id','title','slug','sort','show'])->orderBy('sort','desc')->get() as $permission) {
                 $permission = $permission->toArray();
                 $permissions[] = $permission;  
             }
