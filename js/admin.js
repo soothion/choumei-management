@@ -6,7 +6,7 @@
     }
 	lib.Ajat.prototype.parseResponse=function(data){
 		if(data.result==0&&data.code==400){
-			//parent.location.href="/module/user/login.html";
+			parent.location.href="/module/user/login.html";
 		}
 		 return data.data;
 	}
@@ -187,7 +187,7 @@ $(function(){
 	$body.on('exception',function(e,data){
 		data=data.response;
 		if(data&&data.result==0&&data.code=='400'){
-			//parent.location.href="/module/user/login.html";
+			parent.location.href="/module/user/login.html";
 		}
 	})
 	/**分页**/
