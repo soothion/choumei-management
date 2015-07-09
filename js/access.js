@@ -16,6 +16,9 @@ var access={
 	get:function(slug){
 		return this.map[slug];
 	},
+	getData:function(){
+		return JSON.parse(localStorage.getItem('access-data'))
+	},
 	foreach:function(data){
 		for(var i=0;i<data.length;i++){
 			if(data[i].slug){

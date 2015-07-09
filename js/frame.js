@@ -84,5 +84,7 @@
 		if($(e.target).closest('.open').length==0){
 			$('.open').removeClass('open');
 		}
-	})
+	});
+	
+	
 	
