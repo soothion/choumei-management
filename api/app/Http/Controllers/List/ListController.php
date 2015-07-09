@@ -154,6 +154,7 @@ class ListController extends Controller{
 	 */
 	public function permission(){
 		$result = Permission::select(['id','inherit_id','title','sort'])->get();
+		$result = $this->tree($result->toArray());
 		return $this->success($result);
 	}
 
@@ -170,6 +171,7 @@ class ListController extends Controller{
 	 * @apiSuccess {String} title 权限标题.
 	 * @apiSuccess {String} slug 权限路由.
 	 * @apiSuccess {Number} sort 排序.
+	 * @apiSuccess {String} show 是否作为菜单显示.
 	 * 
 	 * 
 	 *
@@ -183,7 +185,8 @@ class ListController extends Controller{
 	 *		        "inherit_id": 1,
 	 *		        "title": "查看用户信息",
 	 *		        "slug": "user.create",
-	 *		        "sort": 2
+	 *		        "sort": 2,
+	 *		        'show': "1"
 	 *		    }
 	 *	    ]
 	 *	}
@@ -196,49 +199,13 @@ class ListController extends Controller{
         foreach ($user->roles as $role) {
         	if($role->status!=1)
         		continue;
-            foreach ($role->permissions()->select(['permission_id as id','inherit_id','title','slug','sort'])->orderBy('sort','desc')->get() as $permission) {
+            foreach ($role->permissions()->select(['permission_id as id','inherit_id','title','slug','sort','show'])->orderBy('sort','desc')->get() as $permission) {
                 $permission = $permission->toArray();
                 $permissions[] = $permission;  
             }
         }
-        //生成树型结构
-        foreach( array_keys( $permissions ) as $key )
-		{
-		       if( $permissions[$key]['inherit_id'] == null )
-		       {
-		            continue;
-		       }
-		       if( $this->child( $permissions , $permissions[$key] ) )
-		       {
-		            unset( $permissions[$key] );
-		       }
-		}
-		$permissions = array_values($permissions);
+        $permissions = $this->tree($permissions);
         return $this->success($permissions);
-	}
-
-
-	protected function child( &$list , $tree ){
-	    if( empty( $list ) )
-	    {
-	        return false;
-	    }
-	    foreach( $list as $key => $val )
-	    {
-	        if( $tree['inherit_id'] == $val['id'] && $tree['id'] != $tree['inherit_id'] )
-	        {
-	            $list[$key]['child'][] = $tree;
-	            return true;
-	        }
-	        if( isset( $val['child'] ) && is_array( $val['child'] ) && !empty( $val['child'] ) )
-	        {
-	            if( $this->child( $list[$key]['child'] , $tree ) )
-	            {
-	                return true;
-	            }
-	        }
-	    }
-	    return false;
 	}
 
 
