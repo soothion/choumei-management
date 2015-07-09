@@ -62,5 +62,17 @@
 	$('.nav-main li').on('click',function(){
 		$(this).addClass('active').siblings().removeClass('active');
 	});
-	
+	$('#logout').on('click',function(){
+		lib.ajax({
+			url:'logout',
+			success:function(data){
+				if(data.reslut==1){
+					localStorage.clearItem('token');
+					location.href='user/login.html'
+				}else{
+					lib.popup.tips({text:(data.msg||"退出失败")})
+				}
+			}
+		})
+	})
 	
