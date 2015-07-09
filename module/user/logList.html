@@ -11,13 +11,14 @@
     </head>
     <body>
         <div class="breadcrumb">
-            <a href="ui.html">系统管理</a><span>&gt;</span><a href="ui.html">系统管理</a><span>&gt;</span>日志管理
-			<div class="flex-box">
+           <a>系统管理 </a><span>&gt;</span><a href="singList.html">日志管理</a>
+		   <div class="flex-box">
 			<div class="flex-item">
 				<h4>日志管理</h4>
-			</div>		
+			</div>
+			 
 		</div>
-        </div>		
+        </div>
         <div class="wrapper">
             <div class="flex-box">
                 <div class="flex-item">
@@ -26,24 +27,7 @@
 							<span class="space"></span>
 							 <label>操作对象</label>
 							<input type="text" placeholder="操作对象名称" name="object">
-							<span class="space"></span>
-                            <label>操作模块</label>
-                            <select class="select" >
-                                <option value="1">深圳</option>
-                                <option value="2">上海</option>
-                                <option value="3">北京</option>
-                                <option value="4">天津</option>
-                                <option value="5">广州</option>
-                            </select>
-							<span class="space"></span>
-                            <label>操作类型</label>
-                            <select class="select">
-                                <option value="1">深圳</option>
-                                <option value="2">上海</option>
-                                <option value="3">北京</option>
-                                <option value="4">天津</option>
-                                <option value="5">广州</option>
-                            </select>
+							<span class="space"></span>                           
 							<span class="space"></span>
                             添加时间 
 							<span class="date-group">
@@ -51,7 +35,7 @@
 							</span>
                             <button class="btn">搜索</button>
                     </form>
-						<form action="log/export" data-role="export"><button class="btn" type="submit"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+						<form action="log/export" data-role="export"><button class="btn" type="submit" data-slug="log.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
                 </div>               
             </div>
             <div class="table" ajat="log/index?<%=query._%>#domid=table&tempid=table-t" id="table">
@@ -72,7 +56,7 @@
 				<%var data=data.data%>
 				<%for(var i=0;i<data.length;i++){%>
                  <tr>
-                 <td><%=i+data[i].username%></td>
+                 <td><%=data[i].username%></td>
                   <td><%=data[i].roles%></td>				  
                   <td><%=data[i].operation%></td>				                     
 				  <td><%=data[i].slug%></td>

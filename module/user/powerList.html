@@ -10,14 +10,16 @@
         <script type="text/javascript" src="../../js/include.js"></script>
     </head>
     <body>
-        <div class="breadcrumb">
-            <a href="ui.html">系统管理</a><span>&gt;</span><a href="ui.html">系统管理</a><span>&gt;</span>权限管理
-			<div class="flex-box">
+        
+   <div class="breadcrumb">
+           <a>系统管理 </a><span>&gt;</span><a href="singList.html">权限管理</a>
+		   <div class="flex-box">
 			<div class="flex-item">
 				<h4>权限管理</h4>
-			</div>		
+			</div>
+			 
 		</div>
-        </div>		
+        </div>
         <div class="wrapper">
             <div class="flex-box">
                 <div class="flex-item">
@@ -38,7 +40,7 @@
                             <input type="text" placeholder="请输入登陆账号" name="keyword">
                             <button class="btn">搜索</button>                                                
                     </form>
-					<form action="permission/export" data-role="export"><button class="btn" type="submit"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+					<form action="permission/export" data-role="export"><button class="btn" type="submit" data-slug="permission.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
                 </div>
             </div>
             <div class="table" ajat="permission/index?<%=query._%>#domid=table&tempid=table-t" id="table">
@@ -66,7 +68,7 @@
 				  <td><%=data[i].created_at%></td>                   
 				  <td><%=data[i].slug%></td>
 				  <td><%=data[i].description%></td>				  
-                  <td><a class="link" href="updatePower.html?id=<%=data[i].id%>">查看</a></td>
+                  <td><a class="link" href="updatePower.html?id=<%=data[i].id%>" data-slug="permission.show">查看</a></td>
                   </tr>
 				  <%}%>
                     </tbody>
