@@ -13,6 +13,6 @@ class Permission extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['inherit_id', 'name', 'slug', 'status', 'description', 'note'];
+	protected $fillable = ['inherit_id', 'title', 'slug', 'status', 'description', 'note'];
 
 }
