@@ -146,6 +146,7 @@ return [
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Mews\Captcha\CaptchaServiceProvider::class,
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
 
     ],
 
@@ -197,6 +198,8 @@ return [
 
         'Excel' => 'Maatwebsite\Excel\Facades\Excel',
         'Captcha' => 'Mews\Captcha\Facades\Captcha',
+        'JWTAuth' => 'Tymon\JWTAuth\Facades\JWTAuth',
+        'JWTFactory' => 'Tymon\JWTAuth\Facades\JWTFactory',
 
     ],
 

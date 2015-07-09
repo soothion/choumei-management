@@ -27,7 +27,8 @@
         "App\\Providers\\EventServiceProvider",
         "App\\Providers\\RouteServiceProvider",
         "Maatwebsite\\Excel\\ExcelServiceProvider",
-        "Mews\\Captcha\\CaptchaServiceProvider"
+        "Mews\\Captcha\\CaptchaServiceProvider",
+        "Tymon\\JWTAuth\\Providers\\JWTAuthServiceProvider"
     ],
     "eager": [
         "Illuminate\\Auth\\AuthServiceProvider",
@@ -45,7 +46,8 @@
         "App\\Providers\\EventServiceProvider",
         "App\\Providers\\RouteServiceProvider",
         "Maatwebsite\\Excel\\ExcelServiceProvider",
-        "Mews\\Captcha\\CaptchaServiceProvider"
+        "Mews\\Captcha\\CaptchaServiceProvider",
+        "Tymon\\JWTAuth\\Providers\\JWTAuthServiceProvider"
     ],
     "deferred": {
         "command.app.name": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
