@@ -79,7 +79,7 @@
 				  <td><%=data[i].user.name%> </td>
 				  <td><%=state[data[i].state]%></td>
                    <td><a class="link" href="updateSingle.html?id=<%=data[i].id%>">查看</a>
-				   <form action="shop_count/destroy" data-role="remove">
+				   <form action="shop_count/destroy" data-role="remove" data-title="您正在删除转付单，是否继续？">
 								<input type="hidden" name="id" value="<%=data[i].id%>" />
 								<button class="link">删除</button>
 							</form>

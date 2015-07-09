@@ -59,7 +59,7 @@
 							<td><%=role[data[i].roleType-1]%></td>
 							<%if(data[i].addTime){
 						var date=new Date(data[i].addTime*1000);
-						data[i].addTime=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()+1<10?"0"+(date.getDate()):date.getDate());
+						data[i].addTime=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 						}%>
 							<td><%=data[i].addTime%></td>
 							<td><%=status[data[i].status]%></td>

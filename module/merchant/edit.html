@@ -70,7 +70,7 @@
 				<div class="control">
 				<%if(data.foundingDate){
 					var date=new Date(data.foundingDate*1000);
-					data.foundingDate=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()+1<10?"0"+(date.getDate()):date.getDate());
+					data.foundingDate=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 				}%>
 					<input type="date" name="foundingDate" min="1950-01-01" max="2030-01-01" format="YYYY-MM-DD" value="<%=data.foundingDate||""%>">
 				</div>

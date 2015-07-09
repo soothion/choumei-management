@@ -30,7 +30,7 @@
 		},
 		getDate:function(){
 			var date=new Date();
-			return date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()+1<10?"0"+(date.getDate()+1):date.getDate()+1);
+			return date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 		},
         ejs:{
             render:function(temp,data){

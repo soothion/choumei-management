@@ -60,7 +60,7 @@
 						</td>
 						<%if(data[i].foundingDate){
 						var date=new Date(data[i].foundingDate*1000);
-						data[i].foundingDate=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()+1<10?"0"+(date.getDate()):date.getDate());
+						data[i].foundingDate=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 						}%>
 						<td><%=data[i].foundingDate||""%></td>
 						<td>
