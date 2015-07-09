@@ -6,7 +6,7 @@
       <script type="text/javascript" src="../../js/include.js"></script>
       <script type="text/javascript" src="../../js/utils.js"></script>
       <script type="text/javascript" src="../../js/utils.js"></script>
-      <link rel="stylesheet" href="../../css/swiper.min.css">
+      <link rel="stylesheet" href="../../css/swiper.css">
       <link rel="stylesheet" href="shop.css" />   
     </head>
 
@@ -181,22 +181,26 @@
                                     <tr>
                                         <td colspan="2" class="content">店铺类型：</td>
                                         <td colspan="6">
-                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" value="1" id="checkbox1">
+                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" 
+                                            value="1" id="checkbox1">
                                             <label for="checkbox1" style="display:none">纯社区店</label>
 
-                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" value="2" id="checkbox2">
+                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" 
+                                            value="2" id="checkbox2">
                                             <label for="checkbox2" style="display:none">社区商圈店</label>
 
-                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" value="3" id="checkbox3">
+                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" 
+                                            value="3" id="checkbox3">
                                             <label for="checkbox3" style="display:none">商圈店</label>
 
-                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" value="4" id="checkbox4">
+                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" 
+                                            value="4" id="checkbox4">
                                             <label for="checkbox4" style="display:none">商场店</label>
 
-                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" value="5" id="checkbox5">
+                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" 
+                                            value="5" id="checkbox5">
                                             <label for="checkbox5" style="display:none">工作室(写字楼)店</label>                                                                          
                                         </td>
-                                        %>
                                     </tr>
                                 </tbody>
                             </table>  
@@ -210,14 +214,14 @@
                                 <tbody>
                                     <tr>
                                         <td colspan="2" class="content">合同照片：</td>
-                                        <td colspan="6">
+                                        <td colspan="6" id="con_wrapper">
                                             <%
-                                            if(data.contractPicUrl){
+                                            if(data.contractPicUrl && typeof data.contractPicUrl === "string"){
                                                 var arr = JSON.parse(data.contractPicUrl);
                                                 arr.forEach(function(obj,index){
                                             %>
                                                 <div class="img-wrapper">
-                                                    <img src="<%=obj.thumbimg%>">
+                                                    <img index="<%=index%>" src="<%=obj.img%>">
                                                 </div> 
                                             <%
                                                 });
@@ -227,14 +231,14 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="content">营业执照：</td>
-                                        <td colspan="6">
+                                        <td colspan="6" id="lic_wrapper">
                                             <%
-                                            if(data.contractPicUrl){
+                                            if(data.licensePicUrl && typeof data.licensePicUrl === "string"){
                                                 var arr = JSON.parse(data.licensePicUrl);
-                                                arr.forEach(function(obj,index){
+                                                arr.forEach(function(obj,index){                                 
                                             %>
                                                 <div class="img-wrapper">
-                                                    <img src="<%=obj.thumbimg%>">
+                                                    <img index="<%=index%>" src="<%=obj.img%>">
                                                 </div> 
                                             <%
                                                 });
@@ -244,14 +248,14 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="content">法人执照：</td>
-                                        <td colspan="6">
+                                        <td colspan="6" id="cor_wrapper">
                                             <%
-                                            if(data.contractPicUrl){
+                                            if(data.corporatePicUrl && typeof data.corporatePicUrl === "string"){
                                                 var arr = JSON.parse(data.corporatePicUrl);
                                                 arr.forEach(function(obj,index){
                                             %>
                                                 <div class="img-wrapper">
-                                                    <img src="<%=obj.thumbimg%>">
+                                                    <img index="<%=index%>" src="<%=obj.img%>">
                                                 </div> 
                                             <%
                                                 });
@@ -282,16 +286,7 @@
             <div class="mask"></div>
             <div class="swiper-container">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">Slide 1</div>
-                    <div class="swiper-slide">Slide 2</div>
-                    <div class="swiper-slide">Slide 3</div>
-                    <div class="swiper-slide">Slide 4</div>
-                    <div class="swiper-slide">Slide 5</div>
-                    <div class="swiper-slide">Slide 6</div>
-                    <div class="swiper-slide">Slide 7</div>
-                    <div class="swiper-slide">Slide 8</div>
-                    <div class="swiper-slide">Slide 9</div>
-                    <div class="swiper-slide">Slide 10</div>
+
                 </div>
                 <!-- Add Pagination -->
                 <div class="swiper-pagination"></div>
@@ -301,7 +296,8 @@
                 <i class="fa fa-times-circle swiper-close"></i>
             </div>
         </div>
-        <script src="../../js/swiper.min.js"></script>
+
+        <script src="../../js/swiper.js"></script>
         <script src="detail.js"></script>           
     </body>
 </html>

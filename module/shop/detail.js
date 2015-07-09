@@ -2,12 +2,14 @@
 * @Author: anchen
 * @Date:   2015-07-06 16:48:38
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-08 19:55:57
+* @Last Modified time: 2015-07-09 12:26:19
 */
 
 (function(){
     var type = utils.getSearchString("type");
+    var upload = utils.getSearchString("upload");
     var salonId = utils.getSearchString("salonid");
+    var currentData = {}; 
 
     var selectSalonType = function(data){
         if(data.salonType){
@@ -31,6 +33,7 @@
             var str = JSON.stringify(data.data);
             sessionStorage.setItem('edit-shop-data',str);    
             selectSalonType(data.data);
+            currentData = data.data;
         });
         createScript();
     }
@@ -39,16 +42,19 @@
         var data = JSON.parse(sessionStorage.getItem('preview-shop-data'));
         var conArr = JSON.parse(localStorage.getItem("contractPicUrl")); 
         var licArr = JSON.parse(sessionStorage.getItem("licensePicUrl"));
-        var corArr = JSON.parse(sessionStorage.getItem("corporatePicUrl")); 
-        if(conArr && conArr.length > 0){
-            data.contractPicUrl = localStorage.getItem("contractPicUrl");
+        var corArr = JSON.parse(sessionStorage.getItem("corporatePicUrl"));
+        if(upload === "true"){
+            if(conArr && conArr.length > 0){
+                data.contractPicUrl = localStorage.getItem("contractPicUrl");
+            }
+            if(licArr && licArr.length > 0){
+                data.licensePicUrl = sessionStorage.getItem("licensePicUrl");
+            }  
+            if(corArr && corArr.length > 0){
+                data.corporatePicUrl = sessionStorage.getItem("corporatePicUrl");
+            }                            
         }
-        if(licArr && licArr.length > 0){
-            data.licensePicUrl = sessionStorage.getItem("licensePicUrl");
-        }  
-        if(corArr && corArr.length > 0){
-            data.corporatePicUrl = sessionStorage.getItem("corporatePicUrl");
-        }     
+        currentData = data;
         lib.ajat('#domid=table-wrapper&tempid=table-t').template(data);
         createScript();
         $(".btn-group").hide();
@@ -75,17 +81,23 @@
             url : cfg.getHost()+"salon/endCooperation"
         }).done(function(data, status, xhr){
             if(data.result == 1){
-                lib.popup.tips({text:"信息提交成功！"});
-                $(this).text(msg);
+                lib.popup.tips({text:'<i class="fa fa-check-circle"></i>用户信息提交成功',time:2000});
+                var btn = $("#stop_cooperation_btn");
+                if(btn.attr('status') == "0"){
+                     btn.attr("status","1");
+                }else{
+                     btn.attr("status","0");
+                }
+                btn.text(msg);
             }else{
-                lib.popup.tips({text:data.msg ||"信息提交失败！"});
+                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>用户信息提交失败',time:2000});
             }
         }).fail(function(xhr, status){
             var msg = "请求失败，请稍后再试!";
             if (status === "parseerror") msg = "数据响应格式异常!";
             if (status === "timeout")    msg = "请求超时，请稍后再试!";
             if (status === "offline")    msg = "网络异常，请稍后再试!";
-            lib.popup.tips({text:msg});
+            lib.popup.tips({text:'<i class="fa fa-times-circle"></i>用户信息提交失败',time:2000});
         });
     })
 
@@ -99,29 +111,60 @@
             url : cfg.getHost()+"salon/del"
         }).done(function(data, status, xhr){
             if(data.result == 1){
-                lib.popup.tips({text:"信息提交成功！"});
+                lib.popup.tips({text:'<i class="fa fa-check-circle"></i>用户信息提交成功',time:2000});
                 location.href="index.html";
             }else{
-                lib.popup.tips({text:data.msg ||"信息提交失败！"});
+                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>用户信息提交失败',time:2000});
             }
         }).fail(function(xhr, status){
             var msg = "请求失败，请稍后再试!";
             if (status === "parseerror") msg = "数据响应格式异常!";
             if (status === "timeout")    msg = "请求超时，请稍后再试!";
             if (status === "offline")    msg = "网络异常，请稍后再试!";
-            lib.popup.tips({text:msg});
+            lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
         });
     })
 
-    var swiper = new Swiper('.swiper-container', {
-        pagination: '.swiper-pagination',
-        nextButton: '.swiper-button-next',
-        prevButton: '.swiper-button-prev',
-        slidesPerView: 1,
-        paginationClickable: true,
-        spaceBetween: 30,
-        loop: true
+    $("#table-wrapper").delegate(".img-wrapper","click",function(){
+        var id = $(this).parent().attr("id");
+        var index = $(this).children().attr("index");
+        if(id === "con_wrapper"){
+            appendImage(JSON.parse(currentData.contractPicUrl || null),index);
+        }
+        if(id === "lic_wrapper"){
+            appendImage(JSON.parse(currentData.licensePicUrl || null),index);           
+        }
+        if(id === "cor_wrapper"){
+            appendImage(JSON.parse(currentData.corporatePicUrl || null),index);           
+        }
+        $("#swipper").show();
     });
+
+    $(".swiper-close").on('click',function(){
+        $("#swipper").hide();   
+    });
+
+    var appendImage = function(arr,index){
+        $(".swiper-wrapper").empty();
+        arr && arr.forEach(function(obj,index){
+            $(".swiper-wrapper").append('<div class="swiper-slide"><img src="'+obj.img+'"></div>');  
+        });
+        initSwiper(+index);            
+    };
+
+    var initSwiper = function(index){
+        var swiper = new Swiper('.swiper-container', {
+            loop: true,
+            initialSlide : index,
+            lazyLoading : true,            
+            pagination: '.swiper-pagination',
+            nextButton: '.swiper-button-next',
+            prevButton: '.swiper-button-prev',
+            slidesPerView: 1,
+            paginationClickable: true,
+            spaceBetween: 30
+        });  
+    }
 })();
 
     function renderMap(){
