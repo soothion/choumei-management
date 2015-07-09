@@ -234,17 +234,18 @@
             $("#swipper").hide();   
         });
 
-        $("#preview_btn").on('click',function(){           
+        $("#preview_btn").on('click',function(){          
             //base64数据过大分开存储
             localStorage.setItem("contractPicUrl",JSON.stringify(readyConArr.concat(contractArr)));
             //base64数据过大分开存储    
             sessionStorage.setItem("licensePicUrl",JSON.stringify(readyLicArr.concat(licenseArr)));
             sessionStorage.setItem("corporatePicUrl",JSON.stringify(readyCorArr.concat(corporateArr)));
             sessionStorage.setItem("preview-shop-data",JSON.stringify(currentData));
-            window.open("detail.html?type=preview");         
+            window.open("detail.html?type=preview&upload=true");        
         })
 
         $("#submit").on('click',function(){
+            lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
             conLoader.upload();
             licLoader.upload();
             corLoader.upload();
@@ -264,7 +265,7 @@
         arr.forEach(function(obj,index){
             $(".swiper-wrapper").append('<div class="swiper-slide"><img src="'+obj.img+'"></div>');      
         });
-        renderSwiper(index);   
+        renderSwiper(+index);   
     }
 
     var renderSwiper = function(index){
@@ -334,18 +335,17 @@
                 sessionStorage.removeItem("corporatePicUrl");
                 sessionStorage.removeItem('add-shop-data');
                 sessionStorage.removeItem('edit-shop-data');
-                if(type === "edit") location.href="detail.html?salonid="+currentData.salonid ;
+                if(type === "edit") location.href="detail.html?type=detail&salonid="+currentData.salonid;
                 if(type === "add") location.href="../merchant/index.html" ;             
-                lib.popup.alert({text:'信息提交成功！'});
            }else{
-                lib.popup.alert({text:data.msg || '信息提交失败！'});
+                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>用户信息提交失败',time:2000});               
            }
         }).fail(function(xhr, status){
             var msg = "请求失败，请稍后再试!";
             if (status === "parseerror") msg = "数据响应格式异常!";
             if (status === "timeout")    msg = "请求超时，请稍后再试!";
             if (status === "offline")    msg = "网络异常，请稍后再试!";
-             lib.popup.alert({text:msg})
+            lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
         });
     }     
 
