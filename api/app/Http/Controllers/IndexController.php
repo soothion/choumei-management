@@ -80,7 +80,7 @@ class IndexController extends Controller{
 	       return $this->error('验证码错误');
 		if (Auth::attempt(array('username' => $this->param['username'], 'password' => $this->param['password'])))
 		{       
-    		$user = User::firstByAttributes(array('username'=>$this->param['username']));
+    		$user = User::where('username',$this->param['username'])->firstOrFail();
     		$this->user = $user;
     		$token = JWTAuth::fromUser($user);
     		Event::fire('login',$user);
