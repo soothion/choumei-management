@@ -21,7 +21,7 @@
 						<div class="control-help"></div>
 						<li><input type="text" placeholder="帐号" id="account" autofocus="true" value="soothion" /></li>
 						<li><input type="password" placeholder="密码" id="password" value="123456"/></li>
-						<li><input type="text" class="code" placeholder="验证码" id="code" autocomplete="off" /> <a><img id="codeImage" /></a></li>
+						<li><input type="text" class="code" placeholder="验证码" id="code" autocomplete="off" /> <a class="link"><img id="codeImage" /> 换一张</a></li>
 						<li><button type="submit" class="btn-primary">登录</button></li>
 					</ul>
 				</form>
@@ -48,9 +48,9 @@
 					return uuid.join('');
 				}
 				 var uniqid = uuid(32);
-				$('#codeImage').attr('src',cfg.getHost()+'captcha?uniqid='+uniqid).on('click',function(){
+				$('#codeImage').attr('src',cfg.getHost()+'captcha?uniqid='+uniqid).parent().on('click',function(){
 					uniqid = uuid(32);
-					this.src=cfg.getHost()+'captcha?uniqid='+uniqid;
+					document.getElementById('codeImage').src=cfg.getHost()+'captcha?uniqid='+uniqid;
 				});
 				$('form').on('submit',function(e){
 					var account=$.trim($('#account').val());
