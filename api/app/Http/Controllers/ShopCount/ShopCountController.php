@@ -385,7 +385,15 @@ class ShopCountController extends Controller
      */
     public function destroy($id)
     {
-        return $this->success(['ret'=>1]);
+        $ret = ShopCountApi::deletePrepay($id);
+        if($ret)
+        {
+            return $this->success(['ret'=>1]);
+        }
+        else
+        {
+            return $this->error("delete error!");
+        }
     }
     
     /**

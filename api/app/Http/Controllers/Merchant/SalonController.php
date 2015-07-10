@@ -161,15 +161,9 @@ class SalonController extends Controller {
     			$where["businessId"] = 1000000000;//默认查找不到信息
     		}
     	}
-    	
-    	
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
-		
-		
 		$list = Salon::getSalonList($where,$page,$page_size,$sort_key,$sort_type);
-		
-        
 	    return $this->success($list);
 	}
 	
