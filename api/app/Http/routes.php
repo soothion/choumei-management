@@ -21,6 +21,28 @@ Route::any('captcha', 'IndexController@captcha');
 Route::any('login', 'IndexController@login');
 Route::any('logout', 'IndexController@logout');
 
+//列表模块
+Route::any('list/city',array(
+	'as'=>'list.city',
+	'uses'=>'ListController@city'
+));
+Route::any('list/department',array(
+	'as'=>'list.department',
+	'uses'=>'ListController@department'
+));
+Route::any('list/position',array(
+	'as'=>'list.position',
+	'uses'=>'ListController@position'
+));
+Route::any('list/permission',array(
+	'as'=>'list.permission',
+	'uses'=>'ListController@permission'
+));
+Route::any('list/menu',array(
+	'as'=>'list.menu',
+	'uses'=>'ListController@menu'
+));
+
 
 //权限管理后台接口
 Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
@@ -102,28 +124,6 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 	Route::any('log/export',array(
 		'as'=>'log.export',
 		'uses'=>'LogController@export'
-	));
-
-	//列表模块
-	Route::any('list/city',array(
-		'as'=>'list.city',
-		'uses'=>'ListController@city'
-	));
-	Route::any('list/department',array(
-		'as'=>'list.department',
-		'uses'=>'ListController@department'
-	));
-	Route::any('list/position',array(
-		'as'=>'list.position',
-		'uses'=>'ListController@position'
-	));
-	Route::any('list/permission',array(
-		'as'=>'list.permission',
-		'uses'=>'ListController@permission'
-	));
-	Route::any('list/menu',array(
-		'as'=>'list.menu',
-		'uses'=>'ListController@menu'
 	));
 
 
