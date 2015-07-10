@@ -66,12 +66,15 @@
 		lib.ajax({
 			url:'logout',
 			success:function(data){
-				if(data.reslut==1){
-					localStorage.clearItem('token');
-					location.href='user/login.html'
-				}else{
-					lib.popup.tips({text:(data.msg||"退出失败")})
-				}
+				lib.popup.result({
+					bool:data.result==1,
+					text:(data.result==1?'退出成功':data.msg),
+					time:2000,
+					define:function(){
+						localStorage.setItem('token','');
+						location.href='user/login.html'
+					}
+				});
 			}
 		})
 	});
