@@ -58,4 +58,21 @@
         </div>
     </div>
     <%}%>
+	<%if(options.type=='swiper'){%>
+	<a class="swiper-close"><i class="fa fa-times-circle"></i></a>
+	<div class="swiper-container">
+        <div class="swiper-wrapper">
+			<%for(var i=0;i<options.list.length;i++){%>
+			<div class="swiper-slide">
+				<img src="<%=options.list[i]%>" alt="" />
+			</div>
+			<%}%>
+        </div>
+               <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next"><i class="fa fa-angle-right"></i></div>
+        <div class="swiper-button-prev"><i class="fa fa-angle-left"></i></div>
+    </div>
+	<%}%>
 </div>

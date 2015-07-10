@@ -261,25 +261,11 @@
     }
 
     var initswiper = function(arr,index){
-        $(".swiper-wrapper").empty();
-        arr.forEach(function(obj,index){
-            $(".swiper-wrapper").append('<div class="swiper-slide"><img src="'+obj.img+'"></div>');      
+		var list=[];
+        arr && arr.forEach(function(obj,index){
+			list.push(obj.img);
         });
-        renderSwiper(+index);   
-    }
-
-    var renderSwiper = function(index){
-        var swiper = new Swiper('.swiper-container', {
-            loop: true,
-            initialSlide : index,
-            lazyLoading : true,            
-            pagination: '.swiper-pagination',
-            nextButton: '.swiper-button-next',
-            prevButton: '.swiper-button-prev',
-            slidesPerView: 1,
-            paginationClickable: true,
-            spaceBetween: 30
-        });        
+        parent.lib.popup.swiper({list:list,index:index});
     }
 
     var imageSort = function(dataType){

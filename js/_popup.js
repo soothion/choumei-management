@@ -64,6 +64,41 @@ define(function(require,exports,module){
             });
             this.append(popup);
         },
+		swiper:function(options){
+			var self=this;
+			seajs.use([location.origin+'/js/swiper.min.js',location.origin+'/css/swiper.css'],function(){
+				options.type='swiper';
+				var popup = $(new EJS({url: path}).render({options: options}));
+				popup.on('click', '.swiper-close', function () {
+					self.close();
+				});
+				popup.on('click', '.swiper-slide', function (e) {
+					if(e.target==this){
+						self.close();
+					}
+				});
+				$(document.body).append(popup);
+				popup.css({
+					top:"0",
+					left:"0",
+					width:"100%",
+					height:"100%"
+				});
+				popup.find('.swiper-container').height($(window).height());
+				var swiper = new Swiper(popup.find('.swiper-container')[0], {
+					loop: true,
+					initialSlide : options.index,
+					lazyLoading : true,            
+					pagination: '.swiper-pagination',
+					nextButton: '.swiper-button-next',
+					prevButton: '.swiper-button-prev',
+					slidesPerView: 1,
+					paginationClickable: true,
+					spaceBetween: 0
+				});
+				self.overlay().css('background','rgba(0,0,0,0.85)');
+			});
+		},
         overlay: function () {
             var $dom=$('<div class="popup-overlay"></div>');
             $(document.body).append($dom);

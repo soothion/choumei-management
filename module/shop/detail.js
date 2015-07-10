@@ -136,11 +136,11 @@
     });
 
     var appendImage = function(arr,index){
-        $(".swiper-wrapper").empty();
+		var list=[];
         arr && arr.forEach(function(obj,index){
-            $(".swiper-wrapper").append('<div class="swiper-slide"><img src="'+obj.img+'"></div>');  
+			list.push(obj.img);
         });
-        initSwiper(+index);            
+        parent.lib.popup.swiper({list:list,index:index});            
     };
 
     var initSwiper = function(index){

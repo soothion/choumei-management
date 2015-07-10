@@ -21,6 +21,16 @@
 				if (status === "timeout")    msg = "请求超时，请稍后再试!";
 				if (status === "offline")    msg = "网络异常，请稍后再试!";
 				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
+			}).done(function(data){
+				//code 异常处理
+				if(data.result==0){
+					if(data.code==400||data.code==401){
+						parent.location.href="/module/user/login.html";
+					}
+					if(data.code==402){
+						parent.lib.popup({text:"没有权限操作",time:2000});
+					}
+				}
 			});
             return promise;
         },
@@ -81,6 +91,11 @@
             menu: function (options) {
                 seajs.use(this.path,function(a){
                     a.menu(options);
+                });
+            },
+			swiper: function (options) {
+                seajs.use(this.path,function(a){
+                    a.swiper(options);
                 });
             },
             tips: function (options) {

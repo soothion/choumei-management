@@ -4,12 +4,6 @@
 		lib.ajatCount++;
         return new lib.Ajat(_protocol);
     }
-	lib.Ajat.prototype.parseResponse=function(data){
-		if(data.result==0&&data.code==400){
-			//parent.location.href="/module/user/login.html";
-		}
-		 return data.data;
-	}
 	lib.loadingend=function(e){//触发进度条加载完成
 		lib.ajatCount--;
 		if(lib.ajatCount==0){
@@ -185,9 +179,8 @@ $(function(){
 	});
 	/**返回数据异常处理**/
 	$body.on('exception',function(e,data){
-		data=data.response;
-		if(data&&data.result==0&&data.code=='400'){
-			//parent.location.href="/module/user/login.html";
+		if(data.code=='400'||data.code=='401'){
+			parent.location.href="/module/user/login.html";
 		}
 	})
 	/**分页**/

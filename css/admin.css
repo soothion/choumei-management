@@ -704,3 +704,37 @@ form[data-role="hash"] button{
 [data-slug]{
 	display:none;
 }
+.popup .swiper-container{
+	border-radius:3px;
+}
+.popup .swiper-container img{
+	max-width:100%;
+	max-height:100%;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+}
+.popup .swiper-close{
+	position:absolute;
+	top:-8px;
+	right:-8px;
+	z-index:100;
+}
+.popup .swiper-close i{
+	font-size:40px;
+	color:#fff;
+}
+.popup .swiper-close:hover i{
+	color:red;
+}
+.popup .swiper-pagination-bullet-active{
+	background:#eee;
+}
+.popup .swiper-button-next,.popup .swiper-button-prev{
+	background:none;
+}
+.popup .swiper-button-next i,.popup .swiper-button-prev i{
+	font-size:60px;
+	color:#fff;
+}
