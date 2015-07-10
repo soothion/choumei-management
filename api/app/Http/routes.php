@@ -21,97 +21,10 @@ Route::any('captcha', 'IndexController@captcha');
 Route::any('login', 'IndexController@login');
 Route::any('logout', 'IndexController@logout');
 
-Route::any('merchant/index',array(  //商户列表
-				'as'=>'merchant.index',
-				'uses'=>'Merchant\MerchantController@index'
-	));
-Route::any('merchant/save',array(  //添加修改商户
-				'as'=>'merchant.save',
-				'uses'=>'Merchant\MerchantController@save'
-	));
-Route::any('merchant/update',array(  //修改商户
-				'as'=>'merchant.update',
-				'uses'=>'Merchant\MerchantController@update'
-	));
-Route::any('merchant/del',array(  //删除商户
-				'as'=>'merchant.del',
-				'uses'=>'Merchant\MerchantController@del'
-	));
-Route::any('merchant/checkMerchantSn',array( //检测商户编号
-				'as'=>'merchant.checkMerchantSn',
-				'uses'=>'Merchant\MerchantController@checkMerchantSn'
-	));
-Route::any('merchant/getMerchantList',array( //获取单个商户详情
-				'as'=>'merchant.getMerchantList',
-				'uses'=>'Merchant\MerchantController@getMerchantList'
-	));
-
-
-Route::any('salon/index',array(  //店铺列表
-				'as'=>'salon.index',
-				'uses'=>'Merchant\SalonController@index'
-	));
-	
-Route::any('salon/save',array( //店铺添加 接口
-				'as'=>'salon.save',
-				'uses'=>'Merchant\SalonController@save'
-	));
-Route::any('salon/update',array( //店铺 更新接口
-				'as'=>'salon.update',
-				'uses'=>'Merchant\SalonController@update'
-	));
-Route::any('salon/getSalon',array(  //获取店铺详情
-				'as'=>'salon.getSalon',
-				'uses'=>'Merchant\SalonController@getSalon'
-	));	
-Route::any('salon/endCooperation',array( //终止合作
-				'as'=>'salon.endCooperation',
-				'uses'=>'Merchant\SalonController@endCooperation'
-	));
-Route::any('salon/del',array(  //删除店铺
-				'as'=>'salon.del',
-				'uses'=>'Merchant\SalonController@del'
-	));		
-	
-Route::any('salon/checkSalonSn',array(  //检测店铺编号
-				'as'=>'salon.checkSalonSn',
-				'uses'=>'Merchant\SalonController@checkSalonSn'
-	));	
-
-Route::any('salonList/getProvinces',array(  //获取省市区商圈
-				'as'=>'salonList.getProvinces',
-				'uses'=>'Merchant\ListController@getProvinces'
-	));	
-Route::any('salonList/getBussesName',array(  //获取省市区
-				'as'=>'salonList.getBussesName',
-				'uses'=>'Merchant\ListController@getBussesName'
-	));	
-	
-
-Route::any('salonAccount/index',array(  //店铺账号列表
-				'as'=>'salonAccount.index',
-				'uses'=>'Merchant\SalonAccountController@index'
-	));	
-Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
-				'as'=>'salonAccount.getSalonName',
-				'uses'=>'Merchant\SalonAccountController@getSalonName'
-	));		
-Route::any('salonAccount/save',array(  //添加账号
-				'as'=>'salonAccount.save',
-				'uses'=>'Merchant\SalonAccountController@save'
-	));	
-Route::any('salonAccount/resetPwd',array(  //重置密码
-				'as'=>'salonAccount.resetPwd',
-				'uses'=>'Merchant\SalonAccountController@resetPwd'
-	));	
-Route::any('salonAccount/delAct',array(  //删除
-				'as'=>'salonAccount.delAct',
-				'uses'=>'Merchant\SalonAccountController@delAct'
-	));	
 
 //权限管理后台接口
-// Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
-Route::group(['middleware'], function(){
+Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+// Route::group(['middleware'], function(){
 
 	//用户模块
 	Route::any('user/index',array(
@@ -265,6 +178,98 @@ Route::group(['middleware'], function(){
         'as' => 'shop_count.balance',
         'uses' => 'ShopCount\ShopCountController@balance'
     ));    
+
+
+
+
+    Route::any('merchant/index',array(  //商户列表
+				'as'=>'merchant.index',
+				'uses'=>'Merchant\MerchantController@index'
+	));
+	Route::any('merchant/save',array(  //添加修改商户
+					'as'=>'merchant.save',
+					'uses'=>'Merchant\MerchantController@save'
+		));
+	Route::any('merchant/update',array(  //修改商户
+					'as'=>'merchant.update',
+					'uses'=>'Merchant\MerchantController@update'
+		));
+	Route::any('merchant/del',array(  //删除商户
+					'as'=>'merchant.del',
+					'uses'=>'Merchant\MerchantController@del'
+		));
+	Route::any('merchant/checkMerchantSn',array( //检测商户编号
+					'as'=>'merchant.checkMerchantSn',
+					'uses'=>'Merchant\MerchantController@checkMerchantSn'
+		));
+	Route::any('merchant/getMerchantList',array( //获取单个商户详情
+					'as'=>'merchant.getMerchantList',
+					'uses'=>'Merchant\MerchantController@getMerchantList'
+		));
+
+
+	Route::any('salon/index',array(  //店铺列表
+					'as'=>'salon.index',
+					'uses'=>'Merchant\SalonController@index'
+		));
+		
+	Route::any('salon/save',array( //店铺添加 接口
+					'as'=>'salon.save',
+					'uses'=>'Merchant\SalonController@save'
+		));
+	Route::any('salon/update',array( //店铺 更新接口
+					'as'=>'salon.update',
+					'uses'=>'Merchant\SalonController@update'
+		));
+	Route::any('salon/getSalon',array(  //获取店铺详情
+					'as'=>'salon.getSalon',
+					'uses'=>'Merchant\SalonController@getSalon'
+		));	
+	Route::any('salon/endCooperation',array( //终止合作
+					'as'=>'salon.endCooperation',
+					'uses'=>'Merchant\SalonController@endCooperation'
+		));
+	Route::any('salon/del',array(  //删除店铺
+					'as'=>'salon.del',
+					'uses'=>'Merchant\SalonController@del'
+		));		
+		
+	Route::any('salon/checkSalonSn',array(  //检测店铺编号
+					'as'=>'salon.checkSalonSn',
+					'uses'=>'Merchant\SalonController@checkSalonSn'
+		));	
+
+	Route::any('salonList/getProvinces',array(  //获取省市区商圈
+					'as'=>'salonList.getProvinces',
+					'uses'=>'Merchant\ListController@getProvinces'
+		));	
+	Route::any('salonList/getBussesName',array(  //获取省市区
+					'as'=>'salonList.getBussesName',
+					'uses'=>'Merchant\ListController@getBussesName'
+		));	
+		
+
+	Route::any('salonAccount/index',array(  //店铺账号列表
+					'as'=>'salonAccount.index',
+					'uses'=>'Merchant\SalonAccountController@index'
+		));	
+	Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
+					'as'=>'salonAccount.getSalonName',
+					'uses'=>'Merchant\SalonAccountController@getSalonName'
+		));		
+	Route::any('salonAccount/save',array(  //添加账号
+					'as'=>'salonAccount.save',
+					'uses'=>'Merchant\SalonAccountController@save'
+		));	
+	Route::any('salonAccount/resetPwd',array(  //重置密码
+					'as'=>'salonAccount.resetPwd',
+					'uses'=>'Merchant\SalonAccountController@resetPwd'
+		));	
+	Route::any('salonAccount/delAct',array(  //删除
+					'as'=>'salonAccount.delAct',
+					'uses'=>'Merchant\SalonAccountController@delAct'
+		));	
+
 
 });
 
