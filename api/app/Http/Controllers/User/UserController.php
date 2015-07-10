@@ -101,7 +101,7 @@ class UserController extends Controller{
 	public function index()
 	{
 		$param = $this->param;
-		$query = User::with(['roles'=>function($q){
+		$query = Manager::with(['roles'=>function($q){
 			$q->lists('role_id','name');
 		}]);
 
@@ -119,9 +119,9 @@ class UserController extends Controller{
 
 		//角色筛选
 		if(isset($param['role_id'])&&$param['role_id']){
-			$ids = RoleUser::where('role_id','=',$param['role_id'])->get(['user_id'])->toArray();
+			$ids = RoleManager::where('role_id','=',$param['role_id'])->get(['user_id'])->toArray();
 			$ids = array_values($ids);
-			$query =User::whereHas('roles',function($q) use($param){
+			$query =Manager::whereHas('roles',function($q) use($param){
 				$q->where('role_id','=',$param['role_id']);
 			});
 		}
@@ -232,15 +232,15 @@ class UserController extends Controller{
 	public function export()
 	{
 		$param = $this->param;
-		$query = User::with(['roles'=>function($q){
+		$query = Manager::with(['roles'=>function($q){
 			$q->lists('role_id');
 		}]);
 
 		//角色筛选
 		if(isset($param['role_id'])&&$param['role_id']){
-			$ids = RoleUser::where('role_id','=',$param['role_id'])->get(['user_id'])->toArray();
+			$ids = RoleManager::where('role_id','=',$param['role_id'])->get(['user_id'])->toArray();
 			$ids = array_values($ids);
-			$query =User::whereHas('roles',function($q) use($param){
+			$query =Manager::whereHas('roles',function($q) use($param){
 				$q->where('role_id','=',$param['role_id']);
 			});
 		}
@@ -323,7 +323,7 @@ class UserController extends Controller{
 		$param = $this->param;
 		DB::beginTransaction();
 		$param['password'] = bcrypt($param['password']);
-		$user = User::create($param);
+		$user = Manager::create($param);
 		$role = 1;
 		if(isset($param['roles'])){
 			$roles = $param['roles'];
@@ -415,7 +415,7 @@ class UserController extends Controller{
 	 */
 	public function show($id)
 	{
-		$user = User::with('roles')->find($id);
+		$user = Manager::with('roles')->find($id);
 		return $this->success($user);
 	}
 
