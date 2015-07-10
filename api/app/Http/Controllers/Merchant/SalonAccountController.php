@@ -136,6 +136,12 @@ class SalonAccountController extends Controller {
 		{
 			return $this->error("参数错误");	
 		}
+		$oldRs = $this->getAccount($param["username"]);
+		if($oldRs)
+		{
+			return $this->error("该用户名重复，请重新修改");	
+		}
+
 		$save["username"] = $param["username"];
 		if($param["roleType"] == 1)//普通用户
 		{
@@ -169,6 +175,20 @@ class SalonAccountController extends Controller {
 		{
 			return $this->error("更新失败");	
 		}
+	}
+	
+	/**
+	 * 通过账号名查询
+	 * 
+	 * */
+	private function getAccount($username)
+	{
+		$list = SalonUser::where(array("username"=>$username))->first();
+		if($list)
+		{
+			$list = $list->toArray();
+		}
+		return $list;
 	}
 	
 	/**
