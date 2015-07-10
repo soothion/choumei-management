@@ -46,7 +46,7 @@ class PrepayBill extends Model
     
     public function user()
     {
-        return $this->belongsTo(User::class,'uid');
+        return $this->belongsTo(Manager::class,'uid');
     }
     
     /**
