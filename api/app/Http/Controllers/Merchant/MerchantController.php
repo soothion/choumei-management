@@ -127,16 +127,14 @@ class MerchantController extends Controller {
 	}
 	
 	/**
-	 * @api {post} /merchant/save 2.添加或者修改商户
+	 * @api {post} /merchant/save 2.添加商户
 	 * @apiName save
 	 * @apiGroup  merchant
 	 *
-	 *@apiParam {Number} id 修改必填,商家ID（添加不填）.
-	 *
-	 * @apiParam {String} sn 商户编号.
-	 * @apiParam {String} name 用户姓名.
-	 * @apiParam {String} contact 联系人.
-	 * @apiParam {String} mobile 用户姓名.
+	 * @apiParam {String} sn 必填,商户编号.
+	 * @apiParam {String} name 必填,用户姓名.
+	 * @apiParam {String} contact 必填,联系人.
+	 * @apiParam {String} mobile 必填,用户姓名.
 	 * @apiParam {String} phone 电话.
 	 * @apiParam {String} email 邮箱.
 	 * @apiParam {String} addr 地址.
@@ -160,7 +158,54 @@ class MerchantController extends Controller {
 	 */	
 	public function save()
 	{
-		$param = $this->param;
+		return $this->dosave($this->param);
+	}
+	
+	/**
+	 * @api {post} /merchant/save 3.修改商户
+	 * @apiName save
+	 * @apiGroup  merchant
+	 *
+	 *@apiParam {Number} id 必填,商家ID.
+	 *
+	 * @apiParam {String} sn 必填,商户编号.
+	 * @apiParam {String} name 必填,用户姓名.
+	 * @apiParam {String} contact 必填,联系人.
+	 * @apiParam {String} mobile 必填,用户姓名.
+	 * @apiParam {String} phone 电话.
+	 * @apiParam {String} email 邮箱.
+	 * @apiParam {String} addr 地址.
+	 * @apiParam {Number} foundingDate 商户成立时间.
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "msg": "",
+	 *	    "data": {
+	 *	    }
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */	
+	public function update()
+	{
+		return $this->dosave($this->param);
+	}
+	/***
+	 * 添加修改操作
+	 * 
+	 * 
+	 * 
+	 * */
+	private  function dosave($param)
+	{
+
 		$param["id"] = isset($param["id"])?$param["id"]:0;
 		
 		$query = Merchant::getQuery();
@@ -225,7 +270,7 @@ class MerchantController extends Controller {
 	}
 	
 	/**
-	 * @api {post} /merchant/del 3.删除商户
+	 * @api {post} /merchant/del 4.删除商户
 	 * @apiName del
 	 * @apiGroup merchant
 	 *
@@ -292,7 +337,7 @@ class MerchantController extends Controller {
 	}
 	
 	/**
-	 * @api {post} /merchant/checkMerchantSn 4.检测商家编号是否重复
+	 * @api {post} /merchant/checkMerchantSn 5.检测商家编号是否重复
 	 * @apiName checkMerchantSn
 	 * @apiGroup merchant
 	 *
@@ -337,7 +382,7 @@ class MerchantController extends Controller {
 	}
 	
 	/**
-	 * @api {post} /merchant/getMerchantList 5.获取商户详情
+	 * @api {post} /merchant/getMerchantList 6.获取商户详情
 	 * @apiName getMerchantList
 	 * @apiGroup merchant
 	 *
