@@ -54,9 +54,9 @@
 					<tr>
 					  <td><%=i+1%></td>
 					  <td><%=data[i].code%></td>
-					  <td><%=data[i].salon.salonname%></td>
+					  <td><%=data[i].salon?data[i].salon.salonname:""%></td>
 					  <!--
-					  <td><%=data[i].merchant.name%></td>-->
+					  <td><%=data[i].merchant?data[i].merchant.name:""%></td>-->
 					  <td><%=data[i].money%></td>
 					  <td><%=data[i].day%></td>
 					  <td>
