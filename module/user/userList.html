@@ -30,7 +30,7 @@
                     <form data-role="hash">
                         <div>
                            <div class="input-group">
-							<select class="select border-none" id="select" name="key" >
+							<select class="select border-none" id="select"  >
 								<option value="1">登录账号</option>
 								<option value="2">角色名称</option>
 								<option value="3">用户姓名</option>
@@ -51,17 +51,11 @@
 							</script>
 						</select>
 						
-						<select name="position_id" class="select" ajat-one="true" ajat="list/position#domid=position&tempid=position-t" id="position">
-							<script type="text/template" id="position-t">
-								<option value="">全部</option>
-								<%for(var i=0;i<data.length;i++){%>
-									<option value="<%=data[i].id%>"><%=data[i].title%></option>
-								<%}%>
-							</script>
-						</select>
+						 
 							<span class="space"></span>
                             <label>状态</label>
                             <select class="select" name="status">
+							<option value="0">全部</option>
                                 <option value="1">正常</option>
                                 <option value="2">注销</option>
                                 <option value="3">停用</option>                             
