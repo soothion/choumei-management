@@ -249,9 +249,9 @@ class RoleController extends Controller{
 		DB::beginTransaction();
 		$role = Role::create($param);
 		$permission = 1;
-		if(isset($param['permission'])){
-			$permissions = $param['permission'];
-			unset($param['permission']);
+		if(isset($param['permissions'])){
+			$permissions = $param['permissions'];
+			unset($param['permissions']);
 			$ermission = $role->permissions()->sync($permissions);
 		}
 		
