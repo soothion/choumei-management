@@ -28,7 +28,8 @@
             <div class="flex-box">
                 <div class="flex-item">
                     <form data-role="hash">
-                        <div class="input-group">
+                        
+                           <div class="input-group">
 							<select class="select border-none" id="select"  >
 								<option value="1">登录账号</option>
 								<option value="2">角色名称</option>
@@ -37,6 +38,7 @@
 							<input type="text" name="username" class="border-none" placeholder="请输入登录账号">
 							<input type="text" name="role" class="border-none hide" placeholder="请输入角色名称">
 							<input type="text" name="name" class="border-none hide" placeholder="请输入用户名称">
+							
 						</div>
 						<span class="space"></span>
                             <label>所属部门</label>
@@ -76,7 +78,7 @@
                             <button class="btn">搜索</button>
 							</form>
                           <form action="user/export" data-role="export"><button class="btn" type="submit" data-slug="user.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
-                        </div>         
+                                  
                 </div>              
             </div>
            <div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t" id="table">

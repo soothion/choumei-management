@@ -22,11 +22,12 @@
     <div class="wrapper" ajat="<%if(query.id){%>permission/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 	   <script type="text/template" id="form-t">
         <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>permission/update/<%=data.id%><%}%>">
-    <div class="control-group">
-        <label class="control-label" for=""><span class="red">*</span>权限名称：</label>
-        <div class="control">
-           <label value="<%=data.name||""%>" name="name" ></label>
-        </div>
+		
+    
+	<div class="control-group">
+	
+        <label class="control-label" for=""><span class="red">*</span>权限名称：</label> 
+ <div class="control"><%=data.title||""%></div>		
     </div>
      
     <div class="control-group">

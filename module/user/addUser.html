@@ -28,7 +28,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>登陆账号：</label>
                     <div class="control">
-                        <input type="text"  required="" value="<%=data.username||""%>" name="username" id="user_name">
+                        <input type="text" pattern="email" requiredmsg="账号为邮箱格式，不包@choumei.cn" required="" value="<%=data.username||""%>" name="username" id="user_name">
                     </div>
                 </div>
                 <div class="control-group">
