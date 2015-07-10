@@ -11,6 +11,9 @@ use Illuminate\Pagination\AbstractPaginator;
 
 class ShopCountApi
 {
+    /////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////    业务逻辑相关         /////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////
     /**
      * 统计已消费的信息
      */
@@ -45,6 +48,152 @@ class ShopCountApi
     {
         
     }
+    
+
+
+    /**
+     * 生成一个预览状态的预付单
+     */
+    public static function makePreviewPrepay($options)
+    {
+        if(isset($options['merchant_id'])
+            && isset($options['salon_id'])
+            && isset($options['type'])
+            && isset($options['uid'])
+            && isset($options['pay_money'])
+            && isset($options['cost_money'])
+            && isset($options['day']))
+        {
+            $code = PrepayBill::getNewCode($options['type']);
+            $options['code'] = $code;
+            $id = PrepayBill::insertGetId($options);
+            return $id;
+        }
+        return false;
+    }
+    
+    /**
+     * 生成一个预付单
+     */
+    public static function makePrepay($options)
+    {
+        if(isset($options['merchant_id'])
+            && isset($options['type'])
+            && isset($options['salon_id'])
+            && isset($options['uid'])
+            && isset($options['pay_money'])
+            && isset($options['cost_money'])
+            && isset($options['day']))
+        {
+            $code = PrepayBill::getNewCode($options['type']);
+            $options['code'] = $code;
+            $options['state'] = PrepayBill::STATE_OF_COMPLETED;
+            $options['created_at'] = $options['updated_at'] = date("Y-m-d H:i:s");
+            $id = PrepayBill::insertGetId($options);
+            $params = [
+                'merchant_id'=>$options['merchant_id'],
+                'salon_id'=>$options['salon_id'],
+                'pay_money'=>$options['pay_money'],
+                'cost_money'=>$options['cost_money'],
+            ];
+            ShopCount::payMoney($params);
+            return $id;
+        }
+        return false;
+    }
+    
+    /**
+     * 更新一个预付单
+     */
+    public static function updatePrepay($id,$options)
+    {
+        $ret = true;
+        $prepay = PrepayBill::where('id',$id)->first();
+        if(empty($prepay))
+        {
+            $ret = false;
+            return $ret;
+        }
+        if($prepay->state == 0)
+        {
+            $options['state'] = PrepayBill::STATE_OF_COMPLETED;
+            $ret = PrepayBill::where('id',$id)->update($options);
+        }
+        else if($prepay->state == 1)
+        {
+            $options['updated_at'] = date("Y-m-d H:i:s");
+            $ret =  PrepayBill::where('id',$id)->update($options);
+            if(isset($options['pay_money']) && isset($options['cost_money']))
+            {
+                $options['pay_money'] = floatval($options['pay_money']) - floatval($prepay->pay_money);
+                $options['cost_money'] = floatval($options['cost_money']) - floatval($prepay->cost_money);
+                if (isset($options['merchant_id']))
+                {
+                    $options['merchant_id'] = intval($options['merchant_id']);
+                }
+                else
+                {
+                    $options['merchant_id'] = $prepay->merchant_id;
+                }
+                if (isset($options['salon_id']))
+                {
+                    $options['salon_id'] = intval($options['salon_id']);
+                }
+                else
+                {
+                    $options['salon_id'] = $prepay->salon_id;
+                }
+                if( $options['pay_money'] != 0 &&   $options['cost_money'] != 0)
+                {
+                    $params = [
+                        'merchant_id'=>$options['merchant_id'],
+                        'salon_id'=>$options['salon_id'],
+                        'pay_money'=>$options['pay_money'],
+                        'cost_money'=>$options['cost_money'],
+                    ];
+                    $ret =ShopCount::payMoney($params);
+                }
+            }
+        }
+        return $ret;
+    }
+    
+    /**
+     * 删除预付单
+     * @param int $id
+     * @return boolean|NULL
+     */
+    public static function deletePrepay($id)
+    {
+       #@todo 需求不明确 先只做简单处理
+       return PrepayBill::delete($id);
+//         $prepay = PrepayBill::where('id',$id)->first();
+//         if(empty($prepay))
+//         {
+//             return true;
+//         }
+    
+//         if($prepay->state == 0)
+//         {
+//             PrepayBill::delete($id);
+//         }
+//         else if($prepay->state == 1)
+//         {
+//             PrepayBill::delete($id);
+//             $options = [];
+//             $options['salon_id'] = intval($prepay->salon_id);
+//             $options['pay_money'] = floatval($prepay->pay_money) * -1;
+//             $options['cost_money'] = floatval($prepay->cost_money) * -1;
+//             ShopCount::payMoney($options);
+    
+//         }
+//         return null;
+    }
+    
+    
+    /////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////    数据查询相关         /////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////
     
     /**
      * 搜索预付款信息
@@ -364,138 +513,6 @@ class ShopCountApi
             return $res;
     }
 
-    
-    /**
-     * 生成一个预览状态的预付单
-     */
-    public static function makePreviewPrepay($options)
-    {
-        if(isset($options['merchant_id']) 
-            && isset($options['salon_id'])
-            && isset($options['type'])
-            && isset($options['uid'])
-            && isset($options['pay_money'])
-            && isset($options['cost_money'])
-            && isset($options['day']))
-        {
-            $code = PrepayBill::getNewCode($options['type']);
-            $options['code'] = $code;
-            $id = PrepayBill::insertGetId($options);
-            return $id;
-        }
-        return false;
-    }
-    
-    /**
-     * 生成一个预付单
-     */
-    public static function makePrepay($options)
-    {
-        if(isset($options['merchant_id'])
-            && isset($options['type'])
-            && isset($options['salon_id'])
-            && isset($options['uid'])
-            && isset($options['pay_money'])
-            && isset($options['cost_money'])
-            && isset($options['day']))
-        {
-            $code = PrepayBill::getNewCode($options['type']);
-            $options['code'] = $code;
-            $options['state'] = PrepayBill::STATE_OF_COMPLETED;
-            $options['created_at'] = $options['updated_at'] = date("Y-m-d H:i:s");
-            $id = PrepayBill::insertGetId($options);
-            $params = [
-                'merchant_id'=>$options['merchant_id'],
-                'salon_id'=>$options['salon_id'],
-                'pay_money'=>$options['pay_money'],
-                'cost_money'=>$options['cost_money'],                
-            ];
-            ShopCount::payMoney($params);
-            return $id;
-        }
-        return false;
-    }
-    
-    /**
-     * 更新一个预付单
-     */
-    public static function updatePrepay($id,$options)
-    {
-        $ret = true;
-        $prepay = PrepayBill::where('id',$id)->first();
-        if(empty($prepay))
-        {
-            $ret = false;
-            return $ret;
-        }
-        if($prepay->state == 0)
-        {
-            $options['state'] = PrepayBill::STATE_OF_COMPLETED;
-            $ret = PrepayBill::where('id',$id)->update($options);
-        }
-        else if($prepay->state == 1)
-        {
-            $options['updated_at'] = date("Y-m-d H:i:s");
-            $ret =  PrepayBill::where('id',$id)->update($options);
-            if(isset($options['pay_money']) && isset($options['cost_money']))
-            {
-                $options['pay_money'] = floatval($options['pay_money']) - floatval($prepay->pay_money);
-                $options['cost_money'] = floatval($options['cost_money']) - floatval($prepay->cost_money);
-                if (isset($options['merchant_id']))
-                {
-                    $options['merchant_id'] = intval($options['merchant_id']);
-                }
-                else 
-                {
-                    $options['merchant_id'] = $prepay->merchant_id;
-                }
-                if (isset($options['salon_id']))
-                {
-                    $options['salon_id'] = intval($options['salon_id']);
-                }
-                else
-                {
-                    $options['salon_id'] = $prepay->salon_id;
-                }
-                if( $options['pay_money'] != 0 &&   $options['cost_money'] != 0)
-                {
-                    $params = [
-                        'merchant_id'=>$options['merchant_id'],
-                        'salon_id'=>$options['salon_id'],
-                        'pay_money'=>$options['pay_money'],
-                        'cost_money'=>$options['cost_money'],
-                    ];
-                    $ret =ShopCount::payMoney($params);
-                }
-            }            
-        }
-        return $ret;
-    }
-    
-    public static function deletePrepay($id)
-    {
-        $prepay = PrepayBill::where('id',$id)->first();
-        if(empty($prepay))
-        {
-            return true;
-        }
-        
-        if($prepay->state == 0)
-        {
-           PrepayBill::delete($id);
-        }
-        else if($prepay->state == 1)
-        {
-            PrepayBill::delete($id);
-            $options = [];
-            $options['salon_id'] = intval($prepay->salon_id);
-            $options['pay_money'] = floatval($prepay->pay_money) * -1;
-            $options['cost_money'] = floatval($prepay->cost_money) * -1;
-            ShopCount::payMoney($options);
-            
-        }
-        return null;
-    }
     
     /**
      * 预付款详情信息
