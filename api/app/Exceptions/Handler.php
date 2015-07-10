@@ -42,10 +42,10 @@ class Handler extends ExceptionHandler
     {
         // return parent::render($request, $e);
         $code = 0;
-        if(method_exists($e,'getStatusCode'))
-            $code = $e->getStatusCode();
         if(method_exists($e,'getCode'))
             $code = $e->getCode();
+        if(method_exists($e,'getStatusCode'))
+            $code = $e->getStatusCode();
         return Response::json(['result'=>0,'code'=>$code,'msg'=>$e->getMessage()]);
     }
 }
