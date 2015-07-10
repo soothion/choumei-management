@@ -72,16 +72,13 @@
             data.type = 1;
             msg = "恢复合作";
         }
-
-        $.ajax({
-            method: "post",
-            dataType: "json",
-            async: false,
+        lib.ajax({
+            type: "post",
             data : data,
-            url : cfg.getHost()+"salon/endCooperation"
+            url : "salon/endCooperation"
         }).done(function(data, status, xhr){
             if(data.result == 1){
-                lib.popup.tips({text:'<i class="fa fa-check-circle"></i>用户信息提交成功',time:2000});
+                lib.popup.tips({text:'<i class="fa fa-check-circle"></i>操作成功',time:2000});
                 var btn = $("#stop_cooperation_btn");
                 if(btn.attr('status') == "0"){
                      btn.attr("status","1");
@@ -90,38 +87,24 @@
                 }
                 btn.text(msg);
             }else{
-                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>用户信息提交失败',time:2000});
+                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+data.msg,time:2000});
             }
-        }).fail(function(xhr, status){
-            var msg = "请求失败，请稍后再试!";
-            if (status === "parseerror") msg = "数据响应格式异常!";
-            if (status === "timeout")    msg = "请求超时，请稍后再试!";
-            if (status === "offline")    msg = "网络异常，请稍后再试!";
-            lib.popup.tips({text:'<i class="fa fa-times-circle"></i>用户信息提交失败',time:2000});
         });
     })
 
     $("#table-wrapper").delegate('#remove_stop_btn','click',function(){
         var data   = {salonid : $(this).attr("salonid")};
-        $.ajax({
-            method: "post",
-            dataType: "json",
-            async: false,
+        lib.ajax({
+            type: "post",
             data : data,
-            url : cfg.getHost()+"salon/del"
+            url : "salon/del"
         }).done(function(data, status, xhr){
             if(data.result == 1){
-                lib.popup.tips({text:'<i class="fa fa-check-circle"></i>用户信息提交成功',time:2000});
+                lib.popup.tips({text:'<i class="fa fa-check-circle"></i>删除成功',time:2000});
                 location.href="index.html";
             }else{
-                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>用户信息提交失败',time:2000});
+                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+data.msg,time:2000});
             }
-        }).fail(function(xhr, status){
-            var msg = "请求失败，请稍后再试!";
-            if (status === "parseerror") msg = "数据响应格式异常!";
-            if (status === "timeout")    msg = "请求超时，请稍后再试!";
-            if (status === "offline")    msg = "网络异常，请稍后再试!";
-            lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
         });
     })
 
