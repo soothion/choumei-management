@@ -148,6 +148,20 @@ class Salon extends Model {
 		}
 		elseif($affectid && $type == 2)
 		{
+			SalonUser::where(['salonid'=>$salonid])->update(['status'=>1]);//恢复普通用户账号
+			$usersCount = DB::table('salon_user')
+						->where('merchantId',"=" ,$merchantId)
+						->where('salonid',"!=" ,0)
+						->where('status',"=" ,1)
+						->count();
+			if($usersCount)
+			{
+				DB::table('salon_user')//恢复账号  超级管理员
+		            ->where('salonid',"=" ,0)
+		            ->where('merchantId',"=" ,$merchantId)
+		            ->update(['status'=>1]);
+			}
+			
 			$flag = DB::table('merchant')->where("id","=",$merchantId)->increment('salonNum',1);//店铺数量加1
 		}
 		if($flag)
