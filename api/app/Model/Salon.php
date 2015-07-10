@@ -4,6 +4,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
+use App\SalonUser;
 class Salon extends Model {
 
 	protected $table = 'salon';
@@ -128,7 +129,22 @@ class Salon extends Model {
             
 		if($affectid && $type == 1)
 		{
+			SalonUser::where(['salonid'=>$salonid])->update(['status'=>2]);//停用普通用户账号
+			
+			$usersCount = DB::table('salon_user')
+						->where('merchantId',"=" ,$merchantId)
+						->where('salonid',"!=" ,0)
+						->where('status',"=" ,1)
+						->count();
+			if(!$usersCount)
+			{
+				DB::table('salon_user')//停用账号  超级管理员
+		            ->where('salonid',"=" ,0)
+		            ->where('merchantId',"=" ,$merchantId)
+		            ->update(['status'=>2]);
+			}			
 			$flag = DB::table('merchant')->where("id","=",$merchantId)->decrement('salonNum',1);//店铺数量减1
+			
 		}
 		elseif($affectid && $type == 2)
 		{
