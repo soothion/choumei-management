@@ -22,7 +22,7 @@ class ACLauthMiddleware
         
         $permission = Route::currentRouteName();
         if(!$user->can($permission))
-            throw new NoAuthException("未授权访问");
+            throw new NoAuthException("unauthorized",402);
             
         return $next($request);
     }
