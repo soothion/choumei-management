@@ -101,7 +101,7 @@
 						data:{salonUserId:$this.data('id')},
 						success:function(data){
 							lib.popup.tips({
-								text:'<i class="fa fa-check-circle"></i>'+(data.result==1?'重置成功':'重置失败'),
+								text:'<i class="fa fa-check-circle"></i>'+(data.result==1?'重置成功':data.msg),
 								time:2000
 							});
 						}
