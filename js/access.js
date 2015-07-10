@@ -13,6 +13,10 @@
 var access={
 	data:[],
 	map:{},
+	init:function(){
+		this.data=JSON.parse(localStorage.getItem('access.data'));
+		this.map=JSON.parse(localStorage.getItem('access.map'));
+	},
 	get:function(slug){
 		return this.map[slug];
 	},
@@ -44,9 +48,15 @@ var access={
 		});
 	}
 }
-var ajat=lib.ajat('list/menu#domid=aside&tempid=aside-t');
-ajat.setExternal({slug:slug});
-ajat.render().done(function(data){
-	access.data=data.data;
-	access.foreach(access.data);
-});
+if($('.loadbar').length==1){
+	var ajat=lib.ajat('list/menu#domid=aside&tempid=aside-t');
+	ajat.setExternal({slug:slug});
+	ajat.render().done(function(data){
+		access.foreach(access.data);
+		localStorage.setItem('access.data',JSON.stringify(access.data));
+		localStorage.setItem('access.map',JSON.stringify(access.map));
+		access.init();
+	});
+}else{
+	access.init();
+}
