@@ -15,7 +15,6 @@
 		</div>
 		<hr />
 	</div>
-	
 	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
