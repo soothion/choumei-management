@@ -327,8 +327,9 @@
             url : (type=="add"?"salon/save":"salon/update"),
             data: currentData    
         }).done(function(data, status, xhr){
-			parent.lib.popup.tips({
-				text:'<i class="fa fa-'+(data.result == 1?"check":"times")+'-circle"></i>'+(data.result == 1?"店铺信息提交成功":data.msg),
+			parent.lib.popup.result({
+				bool:data.result == 1,
+				text:(data.result == 1?"店铺信息提交成功":data.msg),
 				time:2000,
 				define:function(){
 					if(data.result == 1){

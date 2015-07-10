@@ -107,7 +107,11 @@
                 seajs.use(this.path,function(a){
                     a.close();
                 });
-            }
+            },
+			result:function(options){
+				options.text='<i class="fa fa-'+(options.bool?"check":"times")+'-circle"></i>'+options.text;
+				this.tips(options)
+			}
         },
 		browser:function(){
 			var ua=navigator.userAgent;

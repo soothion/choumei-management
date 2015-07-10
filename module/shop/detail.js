@@ -77,8 +77,12 @@
             data : data,
             url : "salon/endCooperation"
         }).done(function(data, status, xhr){
+			parent.lib.popup.result({
+				bool:data.result == 1,
+				text:(data.result == 1?"操作成功":data.msg),
+				time:2000
+			});
             if(data.result == 1){
-                lib.popup.tips({text:'<i class="fa fa-check-circle"></i>操作成功',time:2000});
                 var btn = $("#stop_cooperation_btn");
                 if(btn.attr('status') == "0"){
                      btn.attr("status","1");
@@ -86,8 +90,6 @@
                      btn.attr("status","0");
                 }
                 btn.text(msg);
-            }else{
-                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+data.msg,time:2000});
             }
         });
     })
@@ -100,12 +102,16 @@
 				data : data,
 				url : "salon/del"
 			}).done(function(data, status, xhr){
-				if(data.result == 1){
-					lib.popup.tips({text:'<i class="fa fa-check-circle"></i>删除成功',time:2000});
-					location.href="index.html";
-				}else{
-					lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+data.msg,time:2000});
-				}
+				parent.lib.popup.result({
+					bool:data.result == 1,
+					text:(data.result == 1?"删除成功":data.msg),
+					time:2000,
+					define:function(){
+						if(data.result == 1){
+							location.href="index.html";
+						}
+					}
+				});
 			});
 		}});
     });
