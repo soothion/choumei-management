@@ -29,6 +29,10 @@ Route::any('merchant/save',array(  //添加修改商户
 				'as'=>'merchant.save',
 				'uses'=>'Merchant\MerchantController@save'
 	));
+Route::any('merchant/update',array(  //修改商户
+				'as'=>'merchant.update',
+				'uses'=>'Merchant\MerchantController@update'
+	));
 Route::any('merchant/del',array(  //删除商户
 				'as'=>'merchant.del',
 				'uses'=>'Merchant\MerchantController@del'
@@ -48,9 +52,13 @@ Route::any('salon/index',array(  //店铺列表
 				'uses'=>'Merchant\SalonController@index'
 	));
 	
-Route::any('salon/save',array( //店铺添加 更新接口
+Route::any('salon/save',array( //店铺添加 接口
 				'as'=>'salon.save',
 				'uses'=>'Merchant\SalonController@save'
+	));
+Route::any('salon/update',array( //店铺 更新接口
+				'as'=>'salon.update',
+				'uses'=>'Merchant\SalonController@update'
 	));
 Route::any('salon/getSalon',array(  //获取店铺详情
 				'as'=>'salon.getSalon',

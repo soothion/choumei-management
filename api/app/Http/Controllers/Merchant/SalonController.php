@@ -167,12 +167,11 @@ class SalonController extends Controller {
 	}
 	
 	/**
-	* @api {post} /salon/save 2.店铺添加 更新 
+	* @api {post} /salon/save 2.店铺添加
 	* @apiName save
 	* @apiGroup salon
 	*
-	* @apiParam {Number} merchantId 必填,商户Id
-	* @apiParam {Number} salonid 可选,店铺id 更新必填.
+	* @apiParam {Number} merchantId 必填,商户Id.
 	* @apiParam {Number} sn 必填,店铺编号.
 	* @apiParam {String} salonname 必填,店名.
 	* @apiParam {Number} district 必填,行政地区 . 
@@ -251,10 +250,108 @@ class SalonController extends Controller {
 	*		    "msg": "店铺更新失败"
 	*		}
 	*/
-	
 	public function save()
 	{
-		$param = $this->param;
+		return $this->dosave($this->param);
+	}
+	
+		/**
+	* @api {post} /salon/update 3.店铺更新 
+	* @apiName update
+	* @apiGroup salon
+	*
+	* @apiParam {Number} merchantId 必填,商户Id
+	* @apiParam {Number} salonid 必填,店铺id .
+	* @apiParam {Number} sn 必填,店铺编号.
+	* @apiParam {String} salonname 必填,店名.
+	* @apiParam {Number} district 必填,行政地区 . 
+	* @apiParam {String} addr 必填,详细街道信息.
+	* @apiParam {Number} addrlati 必填,地理坐标纬度.
+	* @apiParam {Number} addrlong 必填,地理坐标经度.
+	* @apiParam {Number} zone 必填,所属商圈 .
+	* @apiParam {Number} shopType 必填,店铺类型  1预付款店 2投资店 3金字塔店.
+	* @apiParam {String} contractTime 可选,合同日期  Y-m-d.
+	* @apiParam {String} contractPeriod 可选,合同期限 y_m.
+	* @apiParam {String} bargainno 可选,合同编号.
+	* @apiParam {String} bcontacts 可选,联系人.
+	* @apiParam {String} tel 必填,联系电话.
+	* @apiParam {String} phone 必填,店铺座机.
+	* @apiParam {String} corporateName 必填,法人代表.
+	* @apiParam {String} corporateTel 必填,法人电话.
+	* @apiParam {Number} businessId 必填,业务代表Id.
+	* @apiParam {String} bankName 必填,银行名称.
+	* @apiParam {String} beneficiary 必填,收款人.
+	* @apiParam {String} bankCard 必填,银行卡号.
+	* @apiParam {String} branchName 必填,支行名称.
+	* @apiParam {Number} accountType 必填,帐户类型 1. 对公帐户 2.对私帐户.
+	* @apiParam {String} salonArea 可选,店铺面积.
+	* @apiParam {String} dressingNums 可选,镜台数量.
+	* @apiParam {Number} staffNums 可选,员工总人数.
+	* @apiParam {Number} stylistNums 可选,发型师人数.
+	* @apiParam {String} monthlySales 可选,店铺平均月销售额.
+	* @apiParam {String} totalSales 可选,年销售总额.
+	* @apiParam {String} price 可选,本店客单价.
+	* @apiParam {String} payScale 可选,充值卡占月销售额.
+	* @apiParam {String} payMoney 可选,销售最多的充值卡金额.
+	* @apiParam {String} payMoneyScale 可选,销售最多的充值卡折扣.
+	* @apiParam {String} payCountScale 可选,占全部充值总额.
+	* @apiParam {String} cashScale 可选,每月非充值卡现金占销售额.
+	* @apiParam {String} blowScale 可选,洗剪吹占销售额.
+	* @apiParam {String} hdScale 可选,烫染占销售额.
+	* @apiParam {String} platformName 可选,O2O平台合作.
+	* @apiParam {String} platformScale 可选,合作O2O销售额占比.
+	* @apiParam {String} receptionNums 可选,本店正常工作时间每日最多可接待人次理论数.
+	* @apiParam {String} receptionMons 可选,均实际每月接待.
+	* @apiParam {String} setupTime 可选,店铺成立时间 Y-m-d.
+	* @apiParam {String} hotdyeScale 可选,店铺租金.
+	* @apiParam {String} lastValidity 可选,店铺租赁合同剩余有效期.
+	* @apiParam {String} salonType 可选,店铺类型 1纯社区店 2社区商圈店 3商圈店 4商场店 5工作室（写字楼)）,多选  1_3  下划线拼接.
+	* @apiParam {String} contractPicUrl 可选,合同图片 json数组.
+	* @apiParam {String} licensePicUrl 可选,营业执照 json数组.
+	* @apiParam {String} corporatePicUrl 可选,法人执照 json数组.
+	* @apiDescription 合同图片 营业执照 法人执照 demo
+	*	[
+	*		{
+	*			"img": "http://choumei2.test.com/merchant/index.jpg",    //大图
+	*			"thumbimg": "http://choumei2.test.com/sindex.jpg"       //缩略图
+	*		},
+	*		{
+	*			"img": "http://choumei2.test.com/merchant/index.jpg",
+	*			"thumbimg": "http://choumei2.test.com/sindex.jpg"
+	*		},
+	*		{
+	*			"img": "http://choumei2.test.com/merchant/index.jpg",
+	*			"thumbimg": "http://choumei2.test.com/sindex.jpg"
+	*		}
+	*	]
+	*
+	* @apiSuccessExample Success-Response:
+	*	{
+	*	    "result": 1,
+	*	    "msg": "",
+	*	    "data": {
+	*	    }
+	*	}
+	*
+	*
+	* @apiErrorExample Error-Response:
+	*		{
+	*		    "result": 0,
+	*		    "msg": "店铺更新失败"
+	*		}
+	*/
+	public function update()
+	{
+		return $this->dosave($this->param);
+	}
+	
+	/**
+	 * 店铺添加 修改操作方法
+	 * 
+	 * */
+	private function dosave($param)
+	{
+		//$param = $this->param;
 		$flag = 0;
 		
 		$data["merchantId"] = isset($param["merchantId"])?intval($param["merchantId"]):0;//商户id
@@ -265,8 +362,11 @@ class SalonController extends Controller {
 		$data["salonname"] = isset($param["salonname"])?trim($param["salonname"]):"";//店铺名称
 		$data["district"] = isset($param["district"])?trim($param["district"]):"";//行政地区  
 		$data["addr"] = isset($param["addr"])?trim($param["addr"]):"";//详细街道信息
-		$data["addrlati"] = isset($param["addrlati"])?trim($param["addrlati"]):"";//地理坐标纬度
-		$data["addrlong"] = isset($param["addrlong"])?trim($param["addrlong"]):"";//地理坐标经度
+		
+		//-- 坑  原有商家后台数据录入经纬度搞反，数据录入 将错就错处理吧。。。
+		$data["addrlati"] = isset($param["addrlong"])?trim($param["addrlong"]):"";//地理坐标纬度   
+		$data["addrlong"] = isset($param["addrlati"])?trim($param["addrlati"]):"";//地理坐标经度
+		
 		$data["zone"] = isset($param["zone"])?trim($param["zone"]):"";//所属商圈 - 位置地区
 		$data["shopType"] = isset($param["shopType"])?intval($param["shopType"]):0;//店铺类型
 		$data["contractTime"] = isset($param["contractTime"])?strtotime($param["contractTime"]):"";//合同日期
@@ -401,7 +501,7 @@ class SalonController extends Controller {
 	
 	
 	/**
-	* @api {post} /salon/getSalon 3.获取店铺详情
+	* @api {post} /salon/getSalon 4.获取店铺详情
 	* @apiName getSalon
 	* @apiGroup salon
 	*
@@ -520,7 +620,7 @@ class SalonController extends Controller {
 	
 	
 	/**
-	* @api {post} /salon/checkSalonSn 4.检测店铺编号是否重复
+	* @api {post} /salon/checkSalonSn 5.检测店铺编号是否重复
 	* @apiName checkSalonSn
 	* @apiGroup salon
 	*
@@ -565,7 +665,7 @@ class SalonController extends Controller {
 	}
 	
 	/**
-	 * @api {post} /salon/endCooperation 5.终止合作
+	 * @api {post} /salon/endCooperation 6.终止合作
 	 * @apiName endCooperation
 	 * @apiGroup salon
 	 *
@@ -632,7 +732,7 @@ class SalonController extends Controller {
 	}	
 	
 	/**
-	 * @api {post} /salon/del 6.店铺商户
+	 * @api {post} /salon/del 7.删除店铺
 	 * @apiName del
 	 * @apiGroup salon
 	 *
