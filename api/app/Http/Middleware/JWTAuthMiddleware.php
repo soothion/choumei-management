@@ -17,7 +17,7 @@ class JWTAuthMiddleware extends BaseMiddleware
     public function handle($request, \Closure $next)
     {
         if (! $token = $this->auth->setRequest($request)->getToken()) {
-            return $this->respond('tymon.jwt.invalid', 'token_invalid', $e->getStatusCode(), [$e]);
+            Throw new \Exception('token_invalid',400);
         }
 
         try {
