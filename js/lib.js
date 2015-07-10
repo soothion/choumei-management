@@ -124,14 +124,17 @@
 			$.each(fields,function(i,field){
 				if(!data[field.name]){
 					data[field.name]=field.value;
+					if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
+						alert(JSON.stringify(data[field.name]));
+					}
 				}else{
 					if(data[field.name] instanceof Array){
 						data[field.name].push(field.value);
-					}else{
-						data[field.name]=[data[field.name],field.value];
 					}
 				}
+				
 			});
+			
 			return data;
 		},
         init:function(){

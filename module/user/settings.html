@@ -21,6 +21,7 @@
 					<span class="space"></span>
 					用户姓名<span class="space"></span>
 					<%=data.name%>
+					<input type="hidden" name="name" value="<%=data.name%>" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -64,7 +65,7 @@
 				<div class="control">
 					<%for(var i=0;i<data.roles.length;i++){%>	
 					<input disabled required checked type="checkbox"  class="checkbox" id="checkbox<%=data.roles[i].id%>" ><label for="checkbox<%=data.roles[i].id%>"><%=data.roles[i].name%></label>
-					<input type="hidden" value="<%=data.roles[i].id%>" name="roles" />
+					<input type="checkbox" value="<%=data.roles[i].id%>" name="roles" style="display:none" />
 					<%}%>
 				</div>
 			</div>
