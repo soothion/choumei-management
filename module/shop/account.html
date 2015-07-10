@@ -100,7 +100,7 @@
 						type:'POST',
 						data:{salonUserId:$this.data('id')},
 						success:function(data){
-							lib.popup.result({
+							parent.lib.popup.result({
 								bool:data.result==1,
 								text:(data.result==1?'重置成功':data.msg),
 								time:2000
