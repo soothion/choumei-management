@@ -10,7 +10,7 @@ use Response;
 use Route;
 use Request;
 use Event;
-use App\User;
+use App\Manager;
 
 abstract class Controller extends BaseController
 {
@@ -38,7 +38,7 @@ abstract class Controller extends BaseController
 
 	public function __construct(){
 		$this->param = Input::all();
-		$this->user = User::first();		
+		$this->user = Manager::first();		
 	}
 
 	public function error($msg,$code=0){
