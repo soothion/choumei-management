@@ -94,19 +94,21 @@
 
     $("#table-wrapper").delegate('#remove_stop_btn','click',function(){
         var data   = {salonid : $(this).attr("salonid")};
-        lib.ajax({
-            type: "post",
-            data : data,
-            url : "salon/del"
-        }).done(function(data, status, xhr){
-            if(data.result == 1){
-                lib.popup.tips({text:'<i class="fa fa-check-circle"></i>删除成功',time:2000});
-                location.href="index.html";
-            }else{
-                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+data.msg,time:2000});
-            }
-        });
-    })
+		parent.lib.popup.confirm({text:'确认删除此店铺',define:function(){
+			lib.ajax({
+				type: "post",
+				data : data,
+				url : "salon/del"
+			}).done(function(data, status, xhr){
+				if(data.result == 1){
+					lib.popup.tips({text:'<i class="fa fa-check-circle"></i>删除成功',time:2000});
+					location.href="index.html";
+				}else{
+					lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+data.msg,time:2000});
+				}
+			});
+		}});
+    });
 
     $("#table-wrapper").delegate(".img-wrapper","click",function(){
         var id = $(this).parent().attr("id");
@@ -173,7 +175,7 @@
         //跳动的动画   
         marker.setAnimation(BMAP_ANIMATION_BOUNCE);
                 
-        $(".map-search-bar").on('click',function(){
+        $("#map-open").on('click',function(){
         window.open("http://map.baidu.com/?latlng=22.535644,113.941893&title=我们位置&content=南山科技中一路华强高新发展大楼&autoOpen=true");            
       })           
     }
