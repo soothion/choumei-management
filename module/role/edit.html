@@ -5,7 +5,7 @@
 	  <title>臭美管理后台</title>
 	  <script type="text/javascript" src="../../js/include.js"></script>
 	  <style type="text/css">
-		.right-tree li{
+		.tree li{
 			margin-bottom:15px;
 		}
 		.child{
@@ -15,7 +15,7 @@
 		.child li{
 			margin-bottom:0px;
 		}
-		.right-tree .child label{
+		.tree .child label{
 			margin:4px 0;
 		}
 		.fa-minus-square-o,.fa-plus-square-o{
@@ -115,7 +115,7 @@
 		<%}%>
 	</script>
 	<script type="text/template" id="permission-t">
-		<ul class="right-tree">
+		<ul class="tree">
 			<%for(var i=0;i<data.length;i++){%>
 			<li>
 				<input type="checkbox" id="root<%=data[i].id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(data[i].id+",")>-1?"checked":""%> class="checkbox" name="permissions" value="<%=data[i].id%>" />
@@ -155,14 +155,20 @@
 	<script type="text/javascript">
 		$('.wrapper').on('click','.square',function(){
 			$(this).closest('li').toggleClass('toggle');
-		}).on('change','.right-tree input',function(){
+		}).on('change','.tree input',function(){
 			var $this=$(this);
 			$this.siblings('.child').find('input').each(function(){
 				this.checked=$this.is(':checked');
 			});
-			var input=$this.closest('ul').siblings('input')[0];
-			if(input){
-				input.checked=$this.closest('ul').find('input:checked').length==0?false:true;
+			var parentInput=$this.closest('ul').siblings('input')[0];
+			if(parentInput){
+				parentInput.checked=$this.closest('ul').find('input:checked').length==0?false:true;
+				var rootInput=$(parentInput).closest('ul').siblings('input')
+				if(parentInput.checked){
+					rootInput[0].checked=true;
+				}else{
+					rootInput[0].checked=$(parentInput).closest('ul').find('input:checked').length==0?false:true;
+				}
 			}
 		})
 	</script>
