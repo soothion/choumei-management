@@ -77,7 +77,7 @@
 				  <td><%=data[i].cost_money%></td>
 				  <td><%=data[i].day%></td>
 				   <td><%=data[i].created_at%></td>
-				  <td><%=data[i].user.name%> </td>
+				  <td><%=data[i].user?data[i].user.name:""%> </td>
 				  <td><%=state[data[i].state]%></td>
                    <td><a class="link" href="updateSingle.html?id=<%=data[i].id%>" data-slug="shop_count.show">查看</a>
 				   <form action="shop_count/destroy/<%=data[i].id%>" data-role="remove" data-title="该商户有合作的店铺，是否继续删除？">
