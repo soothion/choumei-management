@@ -412,10 +412,10 @@ class RoleController extends Controller{
 		$role = Role::find($id);
 		$update_permission = 1;
 
-		if(isset($param['permission'])){
-			$permission = $param['permission'];
-			unset($param['permission']);
-			$update_permission = $role->permissions()->sync($permission);
+		if(isset($param['permissions'])){
+			$permissions = $param['permissions'];
+			unset($param['permissions']);
+			$update_permission = $role->permissions()->sync($permissions);
 		}
 		$update_role = $role->update($param);
 		if($update_permission&&$update_role){
