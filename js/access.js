@@ -38,7 +38,7 @@ var access={
 		$(dom).find('[data-slug]').each(function(){
 			var $this=$(this);
 			if(true||self.map[$this.data('slug')]==1){
-				$this.show()
+				$this.removeAttr('data-slug');
 			}else{
 				var form=$this.closest('form[data-role="form"]');
 				if($this.is('button')&&form.length==1){

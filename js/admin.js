@@ -83,20 +83,16 @@ $(function(){
 				type:'POST',
 				data:data,
 				success:function(data){
-					if(data.result==1){
-						lib.popup.tips({
-							text:'<i class="fa fa-check-circle"></i>'+(data.msg||'删除成功'),
-							time:2000,
-							define:function(){
+					parent.lib.popup.result({
+						bool:data.result==1,
+						text:(data.result==1?"删除成功":"删除失败"),
+						time:2000,
+						define:function(){
+							if(data.result==1){
 								$this.closest('tr').remove();
 							}
-						});
-					}else{
-						lib.popup.tips({
-							text:'<i class="fa fa-times-circle"></i>'+(data.msg||'删除失败'),
-							time:2000
-						});
-					}
+						}
+					});
 				}
 			});
 		}
@@ -177,12 +173,6 @@ $(function(){
 		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',active.data());
 		complete.hide();
 	});
-	/**返回数据异常处理**/
-	$body.on('exception',function(e,data){
-		if(data.code=='400'||data.code=='401'){
-			parent.location.href="/module/user/login.html";
-		}
-	})
 	/**分页**/
 	$body.on('_ready',function(e,data){
 		var $target=$(e.target);

@@ -12,7 +12,7 @@
 				options.data={};
 			}
 			if(localStorage.getItem('token')){
-				options.data.token=localStorage.getItem('token');
+				options.url+="?token="+localStorage.getItem('token');
 			}
 			var promise=$.ajax(options);
 			promise.fail(function(xhr, status){
@@ -28,7 +28,7 @@
 						parent.location.href="/module/user/login.html";
 					}
 					if(data.code==402){
-						parent.lib.popup({text:"没有权限操作",time:2000});
+						parent.lib.popup.result({bool:false,text:"没有权限操作",time:2000});
 					}
 				}
 			});

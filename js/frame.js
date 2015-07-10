@@ -85,7 +85,7 @@
 			$('.open').removeClass('open');
 		}
 	});
-	var myScroll = new IScroll('#aside',{ mouseWheel: true ,checkDOMChanges:true,click:true});
+	//var myScroll = new IScroll('#aside',{ mouseWheel: true ,checkDOMChanges:true,click:true});
 	
 	
 	
