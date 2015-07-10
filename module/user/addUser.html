@@ -15,6 +15,7 @@
 		</div>
 		<hr />
 	</div>
+	
 	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
@@ -27,7 +28,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>登陆账号：</label>
                     <div class="control">
-                        <input type="text" patternmsg="账号为邮箱格式，不包@choumei.cn" pattern="email"  required="" value="<%=data.username||""%>" name="username" id="user_name">
+                        <input type="text"  required="" value="<%=data.username||""%>" name="username" id="user_name">
                     </div>
                 </div>
                 <div class="control-group">
@@ -91,10 +92,17 @@
 				</div>
 			</div>
 			  <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>配置权限：</label>                    
-                       <div class="control" ajat="role/index?page=1&page_size=10000#domid=roles&tempid=roles-t" id="roles">
+                    <label class="control-label" for=""><span class="red">*</span>配置角色：</label>      
+<%var sids=[];
+				if(data.roles){
+				for(var i=0;i<data.roles.length;i++){
+					sids.push(data.roles[i].id);
+				}}%>					
+                       <div class="control" ajat="role/index?page=1&page_size=10000#domid=roles&tempid=roles-t&sids=<%=sids%>" id="roles">
 				
 			  	       </div>
+ 				   
+                         <div class="control-help" style="display:none"></div>
                     </div>
                 </div>
                 <div class="control-group">
@@ -147,11 +155,10 @@
 	<script type="text/template" id="roles-t">
 			<%data=data.data%>
 			<%for(var i=0;i<data.length;i++){%>
-				<input type="checkbox" id="<%=data[i].id%>" class="checkbox" name="roles"  required value="<%=data[i].id%>"/>
+				<input type="checkbox" id="<%=data[i].id%>" class="checkbox" name="roles"  required value="<%=data[i].id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(data[i].id+",")>-1?"checked":""%> />
 				<label for="<%=data[i].id%>" style="margin-right:2px;"></label>
-				<label for="<%=data[i].id%>"><%=data[i].name%></label><span class="space"></span>		 				 
+				<label for="<%=data[i].id%>"><%=data[i].name%></label><span class="space"></span>			 				 
 			<%}%>
-			<div class="control-help" style="display:none"></div>
 	</script>
   </body>
 </html>
