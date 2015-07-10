@@ -11,7 +11,7 @@
 			if(!options.data){
 				options.data={};
 			}
-			if(localStorage.getItem('token')){
+			if(localStorage.getItem('token')&&options.url.indexOf('/login')==-1){
 				options.url+="?token="+localStorage.getItem('token');
 			}
 			var promise=$.ajax(options);
