@@ -101,6 +101,7 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);
+        
         $items = ShopCountApi::searchPrepay($param);
         return $this->success($items);
     }

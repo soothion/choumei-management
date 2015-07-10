@@ -210,27 +210,23 @@ class ShopCountApi
         $prepay = PrepayBill::where('state','<>',PrepayBill::STATE_OF_PREVIEW)->select($prepay_fields);
         
         //关键字搜索
-        $salon_condition = null;
-        $merchant_condition = null;
         if(isset($options['key']) && !empty($options['key']) && isset($options['keyword']) && !empty($options['keyword']))
         {
             $key = intval($options['key']);
-            $keyword = str_replace(["%","_"], ["\\%","\\_"], $options['keyword']);
+            $keyword = '%'.str_replace(["%","_"], ["\\%","\\_"], $options['keyword'])."%";
             if($key == 1)
             {
-               // ["column"]=> string(5) "state" ["operator"]=> string(2) "<>" ["value"]=> int(0) ["boolean"]=> string(3) "and"
-                    
+                   
                 $prepay->getQuery()->wheres[] = [
                     'type'=>'In',
                     'column'=>'salon_id',
                     'operator'=>'IN',
                     'value' => function()
                     {
-                      return "SELECT `salon_id` FROM `cm_order` where salonname like '{$keyword}'";
+                      return "SELECT `salonid` FROM `cm_order` where salonname like '{$keyword}'";
                     },
                   'boolean'=>'and'
-                ];
-                //$salon_condition = ['key'=>'salonname','opera'=>'like','value'=>$keyword];
+                ];                
             }
             elseif ($key == 2)
             {
@@ -257,25 +253,14 @@ class ShopCountApi
         $prepay->with([
             'salon' => function ($q) use($salon_condition,$salon_fields)
             {
-                if (empty($salon_condition)) {
-                    $q->lists($salon_fields[0],$salon_fields[1]);
-                } 
-//                 else {
-//                     $q->where($salon_condition['key'], $salon_condition['opera'], $salon_condition['value'])
-//                         ->lists($salon_fields[0],$salon_fields[1]);
-//                 }
+              $q->lists($salon_fields[0],$salon_fields[1]);              
             }
         ]);
         
         $prepay->with([
-            'merchant' => function ($q) use($merchant_condition,$merchant_fields)
+            'merchant' => function ($q) use($merchant_fields)
             {
-                if (empty($merchant_condition)) {
-                    $q->lists($merchant_fields[0],$merchant_fields[1]);
-                } else {
-                    $q->where($merchant_condition['key'], $merchant_condition['opera'], $merchant_condition['value'])
-                        ->lists($merchant_fields[0],$merchant_fields[1]);
-                }
+               $q->lists($merchant_fields[0],$merchant_fields[1]);                
             }
         ]);
         
@@ -335,43 +320,50 @@ class ShopCountApi
         $instead_receive = InsteadReceive::select($instead_receive_fields);
         
         //关键字搜索
-        $salon_condition = null;
-        $merchant_condition = null;
         if(isset($options['key']) && !empty($options['key']) && isset($options['keyword']) && !empty($options['keyword']))
         {
             $key = intval($options['key']);
             $keyword = "%".str_replace(["%","_"], ["\\%","\\_"], $options['keyword'])."%";
             if($key == 1)
             {
-                $salon_condition = ['key'=>'salonname','opera'=>'like','value'=>$keyword];
+                   
+                $instead_receive->getQuery()->wheres[] = [
+                    'type'=>'In',
+                    'column'=>'salon_id',
+                    'operator'=>'IN',
+                    'value' => function()
+                    {
+                      return "SELECT `salonid` FROM `cm_order` where salonname like '{$keyword}'";
+                    },
+                  'boolean'=>'and'
+                ];                
             }
             elseif ($key == 2)
             {
-                $merchant_condition = ['key'=>'name','opera'=>'like','value'=>$keyword];
+                $instead_receive->getQuery()->wheres[] = [
+                    'type'=>'In',
+                    'column'=>'merchant_id',
+                    'operator'=>'IN',
+                    'value' => function()
+                    {
+                        return "SELECT `id` FROM `cm_merchant` where `name` like '{$keyword}'";
+                    },
+                    'boolean'=>'and'
+                  ];
             }
         }
         
         $instead_receive->with([
-            'salon' => function ($q) use($salon_condition,$salon_fields)
+            'salon' => function ($q) use($salon_fields)
             {
-                if (empty($salon_condition)) {
-                    $q->lists($salon_fields[0],$salon_fields[1]);
-                } else {
-                    $q->where($salon_condition['key'], $salon_condition['opera'], $salon_condition['value'])
-                    ->lists($salon_fields[0],$salon_fields[1]);
-                }
+               $q->lists($salon_fields[0],$salon_fields[1]);
             }
         ]);
         
         $instead_receive->with([
-            'merchant' => function ($q) use($merchant_condition,$merchant_fields)
+            'merchant' => function ($q) use($merchant_fields)
             {
-                if (empty($merchant_condition)) {
-                    $q->lists($merchant_fields[0],$merchant_fields[1]);
-                } else {
-                    $q->where($merchant_condition['key'], $merchant_condition['opera'], $merchant_condition['value'])
-                    ->lists($merchant_fields[0],$merchant_fields[1]);
-                }
+              $q->lists($merchant_fields[0],$merchant_fields[1]);
             }
         ]);
         
@@ -431,43 +423,33 @@ class ShopCountApi
         $shop_count = ShopCount::select($shop_count_fields);
         
         //关键字搜索
-        $salon_condition = null;
-        $merchant_condition = null;
         if(isset($options['key']) && !empty($options['key']) && isset($options['keyword']) && !empty($options['keyword']))
         {
             $key = intval($options['key']);
             $keyword = "%".str_replace(["%","_"], ["\\%","\\_"], $options['keyword'])."%";
             if($key == 1)
             {
-                $salon_condition = ['key'=>'salonname','opera'=>'like','value'=>$keyword];
+                $shop_count->where('salonname','like',"%{$keyword}%");
             }
             elseif ($key == 2)
             {
-                $merchant_condition = ['key'=>'name','opera'=>'like','value'=>$keyword];
+                $shop_count->getQuery()->wheres[] = [
+                    'type'=>'In',
+                    'column'=>'merchant_id',
+                    'operator'=>'IN',
+                    'value' => function()
+                    {
+                        return "SELECT `id` FROM `cm_merchant` where `name` like '{$keyword}'";
+                    },
+                    'boolean'=>'and'
+                  ];
             }
         }
-        
+
         $shop_count->with([
-            'salon' => function ($q) use($salon_condition,$salon_fields)
+            'merchant' => function ($q) use($merchant_fields)
             {
-                if (empty($salon_condition)) {
-                    $q->lists($salon_fields[0],$salon_fields[1]);
-                } else {
-                    $q->where($salon_condition['key'], $salon_condition['opera'], $salon_condition['value'])
-                    ->lists($salon_fields[0],$salon_fields[1]);
-                }
-            }
-        ]);
-        
-        $shop_count->with([
-            'merchant' => function ($q) use($merchant_condition,$merchant_fields)
-            {
-                if (empty($merchant_condition)) {
-                    $q->lists($merchant_fields[0],$merchant_fields[1]);
-                } else {
-                    $q->where($merchant_condition['key'], $merchant_condition['opera'], $merchant_condition['value'])
-                    ->lists($merchant_fields[0],$merchant_fields[1]);
-                }
+               $q->lists($merchant_fields[0],$merchant_fields[1]);
             }
         ]);
         
