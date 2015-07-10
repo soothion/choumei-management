@@ -202,8 +202,8 @@ class SalonAccountController extends Controller {
 		{
 			return $this->error("参数错误");	
 		}
-		$status = SalonAccount::doUpdate($param['salonUserId'], array("password"=>md5($this->pwd)));
-		if($status !== false)
+		$status = SalonAccount::doUpdate($param['salonUserId'], array("password"=>md5($this->pwd),"upTime"=>time()));
+		if($status)
 		{
 			return	$this->success();
 		}
@@ -256,8 +256,8 @@ class SalonAccountController extends Controller {
 		{
 			return $this->error("参数异常");
 		}
-		$status = SalonAccount::doUpdate($param['salonUserId'], array("status"=>$status));
-		if($status !== false)
+		$status = SalonAccount::doUpdate($param['salonUserId'], array("status"=>$status,"upTime"=>time()));
+		if($status)
 		{
 			return	$this->success();
 		}

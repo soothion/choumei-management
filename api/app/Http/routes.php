@@ -243,7 +243,7 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 					'as'=>'salonList.getProvinces',
 					'uses'=>'Merchant\ListController@getProvinces'
 		));	
-	Route::any('salonList/getBussesName',array(  //获取省市区
+	Route::any('salonList/getBussesName',array(  //获取业务代表
 					'as'=>'salonList.getBussesName',
 					'uses'=>'Merchant\ListController@getBussesName'
 		));	
