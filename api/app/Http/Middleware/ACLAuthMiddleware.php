@@ -3,7 +3,6 @@
 use Closure;
 use Route;
 use JWTAuth;
-use App\Exceptions\NoAuthException;
 
 class ACLauthMiddleware
 {
@@ -22,7 +21,7 @@ class ACLauthMiddleware
         
         $permission = Route::currentRouteName();
         if(!$user->can($permission))
-            throw new NoAuthException("unauthorized",402);
+            throw new \Exception("unauthorized",402);
             
         return $next($request);
     }
