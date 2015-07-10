@@ -120,6 +120,7 @@ class Salon extends Model {
 		{
 			$save["salestatus"] = 1;
 		}
+		DB::beginTransaction();
 		$affectid =  DB::table('salon')
             ->where('salonid', $salonid)
             ->update($save);
@@ -127,13 +128,21 @@ class Salon extends Model {
             
 		if($affectid && $type == 1)
 		{
-			DB::table('merchant')->where("id","=",$merchantId)->decrement('salonNum',1);//店铺数量减1
+			$flag = DB::table('merchant')->where("id","=",$merchantId)->decrement('salonNum',1);//店铺数量减1
 		}
 		elseif($affectid && $type == 2)
 		{
-			DB::table('merchant')->where("id","=",$merchantId)->increment('salonNum',1);//店铺数量加1
+			$flag = DB::table('merchant')->where("id","=",$merchantId)->increment('salonNum',1);//店铺数量加1
 		}
-		return $affectid;
+		if($flag)
+		{
+			DB::commit();
+		}
+		else
+		{
+			DB::rollBack();  
+		}
+		return $flag;
 	}
 	
 	/**

@@ -42,14 +42,7 @@ Route::any('list/menu',array(
 	'as'=>'list.menu',
 	'uses'=>'ListController@menu'
 ));
-Route::any('salonList/getProvinces',array(  //获取省市区商圈
-				'as'=>'salonList.getProvinces',
-				'uses'=>'Merchant\ListController@getProvinces'
-	));	
-Route::any('salonList/getBussesName',array(  //获取省市区
-				'as'=>'salonList.getBussesName',
-				'uses'=>'Merchant\ListController@getBussesName'
-	));	
+
 
 //权限管理后台接口
 Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
@@ -246,6 +239,14 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 					'uses'=>'Merchant\SalonController@checkSalonSn'
 		));	
 
+	Route::any('salonList/getProvinces',array(  //获取省市区商圈
+					'as'=>'salonList.getProvinces',
+					'uses'=>'Merchant\ListController@getProvinces'
+		));	
+	Route::any('salonList/getBussesName',array(  //获取省市区
+					'as'=>'salonList.getBussesName',
+					'uses'=>'Merchant\ListController@getBussesName'
+		));	
 		
 
 	Route::any('salonAccount/index',array(  //店铺账号列表
