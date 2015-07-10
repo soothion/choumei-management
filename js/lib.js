@@ -125,7 +125,7 @@
 				if(!data[field.name]){
 					data[field.name]=field.value;
 					if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
-						alert(JSON.stringify(data[field.name]));
+						data[field.name]=[field.value];
 					}
 				}else{
 					if(data[field.name] instanceof Array){
