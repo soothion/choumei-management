@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use App\User;
+use App\Manager;
 use App\RoleUser;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
@@ -465,7 +465,7 @@ class UserController extends Controller{
 	{
 		$param = $this->param;
 		DB::beginTransaction();
-		$user = User::find($id);
+		$user = Manager::find($id);
 		$update_role = 1;
 		if(isset($param['password'])&&$param['password']){
 			$param['password'] = bcrypt($param['password']);

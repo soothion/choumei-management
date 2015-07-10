@@ -16,7 +16,7 @@ class Role extends Model {
 	protected $hidden = ['pivot'];
 
 	public function users(){
-		return $this->belongsToMany('App\User');
+		return $this->belongsToMany('App\Manager');
 	}
 
 	public function city(){
