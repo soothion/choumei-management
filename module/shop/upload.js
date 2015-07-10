@@ -327,17 +327,22 @@
             url : (type=="add"?"salon/save":"salon/update"),
             data: currentData    
         }).done(function(data, status, xhr){
-           if(data.result == 1){
-                localStorage.removeItem("contractPicUrl"); 
-                sessionStorage.removeItem("licensePicUrl");
-                sessionStorage.removeItem("corporatePicUrl");
-                sessionStorage.removeItem('add-shop-data');
-                sessionStorage.removeItem('edit-shop-data');
-                if(type === "edit") location.href="detail.html?type=detail&salonid="+currentData.salonid;
-                if(type === "add") location.href="../merchant/index.html" ;             
-           }else{
-                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+(data.msg||"店铺信息提交失败"),time:2000});               
-           }
+			parent.lib.popup.tips({
+				text:'<i class="fa fa-'+(data.result == 1?"check":"times")+'-circle"></i>'+(data.result == 1?"店铺信息提交成功":data.msg),
+				time:2000,
+				define:function(){
+					if(data.result == 1){
+						localStorage.removeItem("contractPicUrl"); 
+						sessionStorage.removeItem("licensePicUrl");
+						sessionStorage.removeItem("corporatePicUrl");
+						sessionStorage.removeItem('add-shop-data');
+						sessionStorage.removeItem('edit-shop-data');
+						if(type === "edit") location.href="detail.html?type=detail&salonid="+currentData.salonid;
+						if(type === "add") location.href="../merchant/index.html" ;             
+					}
+				}
+			});
+           
         });
     }     
 

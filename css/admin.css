@@ -392,13 +392,15 @@ legend{
 	font-size:17px;
 	padding-left:20px;
 }
+input.label{
+	margin:-1px;
+}
 input.label+label{
 	line-height:30px;
 }
 input.label:checked + label{
 	border-color:#498ae5;
 	color:#498ae5;
-
 }
 input.solid+label{
 	line-height:22px;
