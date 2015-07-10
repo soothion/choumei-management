@@ -261,7 +261,7 @@ class SalonController extends Controller {
 	* @apiGroup salon
 	*
 	* @apiParam {Number} merchantId 必填,商户Id
-	* @apiParam {Number} salonid 可选,店铺id 更新必填.
+	* @apiParam {Number} salonid 必填,店铺id .
 	* @apiParam {Number} sn 必填,店铺编号.
 	* @apiParam {String} salonname 必填,店名.
 	* @apiParam {Number} district 必填,行政地区 . 

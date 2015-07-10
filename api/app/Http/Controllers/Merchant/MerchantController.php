@@ -161,12 +161,13 @@ class MerchantController extends Controller {
 		return $this->dosave($this->param);
 	}
 	
+	
 	/**
-	 * @api {post} /merchant/save 3.修改商户
-	 * @apiName save
+	 * @api {post} /merchant/update 3.修改商户
+	 * @apiName update
 	 * @apiGroup  merchant
 	 *
-	 *@apiParam {Number} id 必填,商家ID.
+	 *@apiParam {Number} id 必填,商家Id.
 	 *
 	 * @apiParam {String} sn 必填,商户编号.
 	 * @apiParam {String} name 必填,用户姓名.
@@ -197,10 +198,9 @@ class MerchantController extends Controller {
 	{
 		return $this->dosave($this->param);
 	}
-	/***
+	
+	/**
 	 * 添加修改操作
-	 * 
-	 * 
 	 * 
 	 * */
 	private  function dosave($param)
