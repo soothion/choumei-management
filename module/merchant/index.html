@@ -13,7 +13,7 @@
 				<h4>商户列表</h4>
 			</div>
 			<div>
-				<a class="btn-primary" data-slug="merchant.create" href="edit.html"><i class="fa fa-plus"></i>新增</a>
+				<a class="btn-primary" data-slug="merchant.save" href="edit.html"><i class="fa fa-plus"></i>新增</a>
 			</div>
 		</div>
 	</div>
@@ -64,7 +64,7 @@
 						}%>
 						<td><%=data[i].foundingDate||""%></td>
 						<td>
-							<a data-slug="salon.create" href="../shop/add.html?type=add&merchantId=<%=data[i].id%>&name=<%=data[i].name%>" class="link">+添加店铺</a>
+							<a data-slug="salon.save" href="../shop/add.html?type=add&merchantId=<%=data[i].id%>&name=<%=data[i].name%>" class="link">+添加店铺</a>
 							<span class="space"></span>
 							<a class="link" data-slug="merchant.show" href="edit.html?id=<%=data[i].id%>">编辑</a>
 							<span class="space"></span>
