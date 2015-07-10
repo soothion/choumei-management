@@ -151,8 +151,15 @@ class SalonController extends Controller {
     	}
     	if($businessName)
     	{
-    		$userBus = DB::table('business_staff')->where('businessName', $businessName)->first();
-    		$where["businessId"] = $userBus->id;
+    		$userBus = DB::table('business_staff')->where('businessName',"like", "%".$businessName."%")->first();
+    		if($userBus)
+    		{
+    			$where["businessId"] = $userBus->id;
+    		}
+    		else 
+    		{
+    			$where["businessId"] = 1000000000;//默认查找不到信息
+    		}
     	}
     	
     	
