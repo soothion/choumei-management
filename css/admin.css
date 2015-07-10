@@ -724,6 +724,7 @@ form[data-role="hash"] button{
 .popup .swiper-close i{
 	font-size:40px;
 	color:#fff;
+	
 }
 .popup .swiper-close:hover i{
 	color:red;
@@ -733,8 +734,11 @@ form[data-role="hash"] button{
 }
 .popup .swiper-button-next,.popup .swiper-button-prev{
 	background:none;
+	width:40px;
+	text-align:center;
 }
 .popup .swiper-button-next i,.popup .swiper-button-prev i{
 	font-size:60px;
 	color:#fff;
+	line-height:40px;
 }
