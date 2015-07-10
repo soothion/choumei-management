@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use App\User;
+use App\Manager;
 use App\RoleUser;
 use App\Role;
 use Illuminate\Pagination\AbstractPaginator;

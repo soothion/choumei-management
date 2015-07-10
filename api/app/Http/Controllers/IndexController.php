@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use App\User;
+use App\Manager;
 use Kodeine\Acl\Models\Eloquent\Role;
 use Kodeine\Acl\Models\Eloquent\Permission;
 use JWTAuth;
