@@ -7,7 +7,7 @@
 
 (function(){
 	parent.$('body').trigger('loadingend');
-    $(document.body).off('_ready',lib.loadingend)
+    $(document.body).off('_ready',lib.loadingend);
 
     var type = lib.query.type;
 

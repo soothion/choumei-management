@@ -29,7 +29,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
                     <div class="control">
-                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10" required>
+                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10" required unique="salon/checkSalonSn?sn=${value}" data-value="<%=data.sn||""%>" uniquemsg="此店铺编号已经存在">
                     </div>
                 </div> 
                 <div class="control-group">

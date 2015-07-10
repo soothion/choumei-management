@@ -22,7 +22,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>商户编号</label>
 				<div class="control">
-					<input type="text" required  name="sn" maxlength="6" value="<%=data.sn||""%>" unique="merchant/checkMerchantSn" data-value="<%=data.sn||""%>" uniquemsg="此商户编号已经存在">
+					<input type="text" required  name="sn" maxlength="6" value="<%=data.sn||""%>" unique="merchant/checkMerchantSn?sn=${value}" data-value="<%=data.sn||""%>" uniquemsg="此商户编号已经存在">
 				</div>
 			</div>
 			<div class="control-group">

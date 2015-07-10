@@ -449,10 +449,10 @@
 				$target.trigger('error',{type:'unique',msg:'正在校验中...'});
 				var self=this;
 				var data={};
-				data[$target.attr('name')]=val;
+				unique=unique.replace('${value}',val);
 				lib.ajax({
 					url:unique,
-					data:data,
+					type:'post',
 					success:function(data){
 						if(data.result!=1){
 							$target.trigger('error',{type:'unique'});
@@ -539,7 +539,6 @@
 			}
 		},
 		success:function(data){
-			console.log(data);
 			lib.popup.tips({
 				text:'<i class="fa fa-check-circle"></i>'+(data.msg||"数据更新成功"),
 				time:2000,
