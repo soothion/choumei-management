@@ -197,6 +197,8 @@ class ListController extends Controller{
 	 */
 	public function menu(){
 		$user = $this->user;
+		if(!$user)
+			return $this->success([]);
         $permissions = [];
         foreach ($user->roles as $role) {
         	if($role->status!=1)
