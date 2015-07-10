@@ -1,4 +1,7 @@
-﻿	function resize(){
+﻿	if(!localStorage.getItem('token')){
+		location.href='user/login.html';
+	}
+	function resize(){
 		$('.frame-main').height($(window).height()-$('header').height());
 	}
 	window.onresize=resize;
@@ -72,7 +75,7 @@
 					time:2000,
 					define:function(){
 						localStorage.setItem('token','');
-						location.href='user/login.html'
+						location.href='user/login.html';
 					}
 				});
 			}
@@ -88,6 +91,7 @@
 			$('.open').removeClass('open');
 		}
 	});
+	
 	//var myScroll = new IScroll('#aside',{ mouseWheel: true ,checkDOMChanges:true,click:true});
 	
 	
