@@ -1,5 +1,5 @@
 (function(){
-    var type = utils.getSearchString("type");
+    var type = lib.query.type;
     var currentData = {};
     var conLoader = {} , licLoader = {} , corLoader = {};
     var contractArr  = [],licenseArr   = [],corporateArr = []; //图片预览数组
@@ -322,11 +322,9 @@
     }
 
     var save = function(){
-        $.ajax({
-            method: "post",
-            dataType: "json",
-            async: false,
-            url : cfg.getHost()+"salon/save",
+        lib.ajax({
+            type: "post",
+            url : (type=="add"?"salon/save":"salon/update"),
             data: currentData    
         }).done(function(data, status, xhr){
            if(data.result == 1){
@@ -338,14 +336,8 @@
                 if(type === "edit") location.href="detail.html?type=detail&salonid="+currentData.salonid;
                 if(type === "add") location.href="../merchant/index.html" ;             
            }else{
-                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>用户信息提交失败',time:2000});               
+                lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+(data.msg||"店铺信息提交失败"),time:2000});               
            }
-        }).fail(function(xhr, status){
-            var msg = "请求失败，请稍后再试!";
-            if (status === "parseerror") msg = "数据响应格式异常!";
-            if (status === "timeout")    msg = "请求超时，请稍后再试!";
-            if (status === "offline")    msg = "网络异常，请稍后再试!";
-            lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
         });
     }     
 

@@ -6,9 +6,9 @@
 */
 
 (function(){
-    var type = utils.getSearchString("type");
-    var upload = utils.getSearchString("upload");
-    var salonId = utils.getSearchString("salonid");
+    var type = lib.query.type;
+    var upload = lib.query.upload;
+    var salonId = lib.query.salonid;
     var currentData = {}; 
 
     var selectSalonType = function(data){

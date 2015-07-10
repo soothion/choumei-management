@@ -7,19 +7,22 @@
 	EJS.ext = '.html?v=' + cfg.version;
     var lib = {
         ajax: function (options) {
-			if(options.url.indexOf('merchant')>-1){
-				//options.url='http://192.168.12.91:888/index.php/'+options.url;
-				options.url=cfg.getHost()+options.url;	
-			}else{
-				options.url=cfg.getHost()+options.url;	
-			}
+			options.url=cfg.getHost()+options.url;
 			if(!options.data){
 				options.data={};
 			}
 			if(localStorage.getItem('token')){
 				options.data.token=localStorage.getItem('token');
 			}
-            return $.ajax(options);
+			var promise=$.ajax(options);
+			promise.fail(function(xhr, status){
+				var msg = "请求失败，请稍后再试!";
+				if (status === "parseerror") msg = "数据响应格式异常!";
+				if (status === "timeout")    msg = "请求超时，请稍后再试!";
+				if (status === "offline")    msg = "网络异常，请稍后再试!";
+				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
+			});
+            return promise;
         },
 		getSession:function(){
 			return localStorage.getItem('session')?JSON.parse(localStorage.getItem('session')):{}
