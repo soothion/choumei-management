@@ -23,7 +23,7 @@ class ShopCountController extends Controller
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} size 可选,分页大小.(最小1 最大500,默认10)
      * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
-     * @apiParam {String} sort_type 排序的方式 1正序 2倒叙 (默认)
+     * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
      * @apiSuccess {Number} total 总数据量.
      * @apiSuccess {Number} per_page 分页大小.
@@ -400,7 +400,7 @@ class ShopCountController extends Controller
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} size 可选,分页大小.(最小1 最大500,默认10)
      * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(代收单号),'type'(代收类型),'money'(代收金额),'day'(代收日期)]
-     * @apiParam {String} sort_type 排序的方式 1正序 2倒叙 (默认)
+     * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
      * @apiSuccess {Number} total 总数据量.
      * @apiSuccess {Number} per_page 分页大小.
@@ -534,7 +534,7 @@ class ShopCountController extends Controller
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} size 可选,分页大小.(最小1 最大500,默认10)
      * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'salon_name','salon_type','pay_money','cost_money',...(money相关的key)]
-     * @apiParam {String} sort_type 排序的方式 1正序 2倒叙 (默认)
+     * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
      * @apiSuccess {Number} total 总数据量.
      * @apiSuccess {Number} per_page 分页大小.

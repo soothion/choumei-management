@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\ShopCount\ShopCountController;
 
 class ShopcountIndex extends Command
 {
@@ -12,6 +13,8 @@ class ShopcountIndex extends Command
      * @var string
      */
     protected $signature = 'shopcount:index';
+    
+    protected $controller = NULL;
 
     /**
      * The console command description.
@@ -25,8 +28,9 @@ class ShopcountIndex extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ShopCountController $contoller)
     {
+        $this->controller = $contoller;
         parent::__construct();
     }
 
@@ -37,6 +41,18 @@ class ShopcountIndex extends Command
      */
     public function handle()
     {
-        //
+        $default = ['merchant_id'=>2,'type'=>1,'salon_id'=>2,'uid'=>2,'pay_money'=>'25','cost_money'=>30,'day'=>'2015-06-01'];
+        $args = [];
+//         if($args && is_array($args))
+//         {
+//             $args = array_merge($default,$args);
+//         }
+//         else
+//         {
+//             $args = $default;
+//         }
+        $this->controller->param = $args;
+        $ret = $this->controller->index();
+        ShopcountStore::outputReturn($this, $ret);
     }
 }

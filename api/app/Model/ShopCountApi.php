@@ -66,14 +66,35 @@ class ShopCountApi
         if(isset($options['key']) && !empty($options['key']) && isset($options['keyword']) && !empty($options['keyword']))
         {
             $key = intval($options['key']);
-            $keyword = "%".str_replace(["%","_"], ["\\%","\\_"], $options['keyword'])."%";
+            $keyword = str_replace(["%","_"], ["\\%","\\_"], $options['keyword']);
             if($key == 1)
             {
-                $salon_condition = ['key'=>'salonname','opera'=>'like','value'=>$keyword];
+               // ["column"]=> string(5) "state" ["operator"]=> string(2) "<>" ["value"]=> int(0) ["boolean"]=> string(3) "and"
+                    
+                $prepay->getQuery()->wheres[] = [
+                    'type'=>'In',
+                    'column'=>'salon_id',
+                    'operator'=>'IN',
+                    'value' => function()
+                    {
+                      return "SELECT `salon_id` FROM `cm_order` where salonname like '{$keyword}'";
+                    },
+                  'boolean'=>'and'
+                ];
+                //$salon_condition = ['key'=>'salonname','opera'=>'like','value'=>$keyword];
             }
             elseif ($key == 2)
             {
-                $merchant_condition = ['key'=>'name','opera'=>'like','value'=>$keyword];
+                $prepay->getQuery()->wheres[] = [
+                    'type'=>'In',
+                    'column'=>'merchant_id',
+                    'operator'=>'IN',
+                    'value' => function()
+                    {
+                        return "SELECT `id` FROM `cm_merchant` where `name` like '{$keyword}'";
+                    },
+                    'boolean'=>'and'
+                  ];
             }
         }
         
@@ -89,10 +110,11 @@ class ShopCountApi
             {
                 if (empty($salon_condition)) {
                     $q->lists($salon_fields[0],$salon_fields[1]);
-                } else {
-                    $q->where($salon_condition['key'], $salon_condition['opera'], $salon_condition['value'])
-                        ->lists($salon_fields[0],$salon_fields[1]);
-                }
+                } 
+//                 else {
+//                     $q->where($salon_condition['key'], $salon_condition['opera'], $salon_condition['value'])
+//                         ->lists($salon_fields[0],$salon_fields[1]);
+//                 }
             }
         ]);
         
@@ -142,8 +164,8 @@ class ShopCountApi
         else
         {
             $order_by = "DESC";
-        }
-        
+        }   
+      
         $res =  $prepay->orderBy($order,$order_by)->paginate($size)->toArray();
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
