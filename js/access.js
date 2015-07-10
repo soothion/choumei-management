@@ -37,7 +37,7 @@ var access={
 		var self=this;
 		$(dom).find('[data-slug]').each(function(){
 			var $this=$(this);
-			if(true||self.map[$this.data('slug')]==1){
+			if(self.map[$this.data('slug')]==1){
 				$this.removeAttr('data-slug');
 			}else{
 				var form=$this.closest('form[data-role="form"]');
@@ -52,7 +52,7 @@ if($('.loadbar').length==1){
 	var ajat=lib.ajat('list/menu#domid=aside&tempid=aside-t');
 	ajat.setExternal({slug:slug});
 	ajat.render().done(function(data){
-		access.foreach(access.data);
+		access.foreach(data.data);
 		localStorage.setItem('access.data',JSON.stringify(access.data));
 		localStorage.setItem('access.map',JSON.stringify(access.map));
 		access.init();
