@@ -11,6 +11,7 @@ use Route;
 use Request;
 use Event;
 use App\Manager;
+use JWTAuth;
 
 abstract class Controller extends BaseController
 {
@@ -38,7 +39,7 @@ abstract class Controller extends BaseController
 
 	public function __construct(){
 		$this->param = Input::all();
-		$this->user = Manager::first();		
+		$this->user = JWTAuth::parseToken()->authenticate();	
 	}
 
 	public function error($msg,$code=0){
