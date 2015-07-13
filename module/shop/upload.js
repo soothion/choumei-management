@@ -245,7 +245,7 @@
         })
 
         $("#submit").on('click',function(){
-            lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
+            parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
             conLoader.upload();
             licLoader.upload();
             corLoader.upload();
@@ -324,7 +324,7 @@
 						sessionStorage.removeItem("corporatePicUrl");
 						sessionStorage.removeItem('add-shop-data');
 						sessionStorage.removeItem('edit-shop-data');
-						if(type === "edit") location.href="detail.html?type=detail&salonid="+currentData.salonid;
+						if(type === "edit") location.href="/shop/detail.html?type=detail&salonid="+currentData.salonid;
 						if(type === "add") location.href="../merchant/index.html" ;             
 					}
 				}

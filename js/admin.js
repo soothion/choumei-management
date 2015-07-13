@@ -26,13 +26,16 @@ $(function(){
 	lib.hashchange=function(obj){
 		var temphash=location.hash;
 		var query=$.extend({},lib.query,obj);
+		var arr=[];
 		delete query._;
 		for(var name in query){
 			if(!query[name]){
 				delete query[name];
+			}else{
+				arr.push(name+'='+query[name]);
 			}
 		}
-		location.hash='#'+decodeURIComponent($.param(query));
+		location.hash='#'+arr.join('&');
 		return temphash==location.hash;
 	}
 	$(window).on('hashchange',function(){
@@ -182,6 +185,14 @@ $(function(){
 			seajs.use('/js/jquery.pagination.js',function (){
 				var query=$.extend({},lib.query);
 				delete query._;
+				var arr=[];
+				for(var name in query){
+					if(!query[name]){
+						delete query[name];
+					}else{
+						arr.push(name+'='+query[name]);
+					}
+				}
 				query.page='__id__';
                 $pager.pagination(data.total, {
 					current_page : data.current_page-1,
@@ -190,7 +201,7 @@ $(function(){
 					prev_text:'<<',
 					num_display_entries: 7,
 					num_edge_entries: 1,
-					link_to:location.pathname+'#'+$.param(query),
+					link_to:location.pathname+'#'+arr.join('&'),
 					callback:function(data){
 						$pager.find('.pagination a').off('click').addClass('link');
 					}

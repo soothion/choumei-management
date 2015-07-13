@@ -1,4 +1,5 @@
-﻿	if(!localStorage.getItem('token')){
+﻿$('#page').on('_ready',function(){
+	if(!localStorage.getItem('token')){
 		location.href='user/login.html';
 	}
 	function resize(){
@@ -64,6 +65,7 @@
 	});
 	$('.nav-main li').on('click',function(){
 		$(this).addClass('active').siblings().removeClass('active');
+		$('#'+$(this).data('id')).show().siblings().hide();
 	});
 	$('#logout').on('click',function(){
 		lib.ajax({
@@ -91,7 +93,7 @@
 			$('.open').removeClass('open');
 		}
 	});
-	
+});
 	//var myScroll = new IScroll('#aside',{ mouseWheel: true ,checkDOMChanges:true,click:true});
 	
 	

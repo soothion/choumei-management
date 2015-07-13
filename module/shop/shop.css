@@ -23,11 +23,6 @@
 /********************店铺详情***********************/
 .btn-group{
     height:50px;
-    padding-right:3.25%;    
-}
-.table-wrapper{
-    display:inline-block;
-    width:70%;
 }
 .table-wrapper th{
     font-size: 14px;            
@@ -55,7 +50,7 @@
     height: 350px;
     line-height: 350px;
     vertical-align: top;
-    width:25%;
+    width:330px;
     margin-left: 25px;  
     box-sizing:border-box;     
 }

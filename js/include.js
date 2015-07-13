@@ -1,4 +1,5 @@
-﻿document.writeln('<meta charset="utf-8">');
+﻿document.writeln('<meta http-equiv="Cache" content="no-cache">');
+document.writeln('<meta charset="utf-8">');
 document.writeln('<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">');
 document.writeln('<meta name="apple-mobile-web-app-capable" content="yes">');
 document.writeln('<meta name="apple-mobile-web-app-status-bar-style" content="black">');

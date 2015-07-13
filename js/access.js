@@ -50,7 +50,7 @@ var access={
 	}
 }
 if($('.loadbar').length==1){
-	var ajat=lib.ajat('list/menu#domid=aside&tempid=aside-t');
+	var ajat=lib.ajat('list/menu#domid=page&tempid=page-t');
 	ajat.setExternal({slug:slug});
 	ajat.render().done(function(data){
 		access.foreach(data.data);

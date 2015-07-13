@@ -19,45 +19,21 @@
   </head>
   <body>
 	<div class="loadbar" style="width: 0px"></div>
-	<div class="page">
+	<div class="page" id="page">
+		<script type="text/template" id="page-t">
       <header>
           <div class="logo">
               <h1>臭美管理后台</h1>
           </div>
 		  <nav class="nav-main">
 			<ul>
-				<li class="active">
+				<%for(var i=0;i<data.length;i++){%>
+				<li class="<%=i==0?"active":""%>"  data-id="level2<%=data[i].id%>">
 					<a>
-						店铺管理
+						<%=data[i].title%>
 					</a>
 				</li>
-				<!--
-				<li>
-					<a>
-						财务核算
-					</a>
-				</li>
-				<li>
-					<a>
-						交易管理
-					</a>
-				</li>
-				<li>
-					<a>
-						运营中心
-					</a>
-				</li>
-				<li>
-					<a>
-						客服中心
-					</a>
-				</li>
-				-->
-				<li>
-					<a>
-						权限管理
-					</a>
-				</li>
+				<%}%>
 			</ul>
 		  </nav>
 		  
@@ -95,91 +71,35 @@
       </header>
       <div class="frame-main" style="height: 398px;">
          <aside id="aside">
-				<script type="text/template" id="aside-t">
 				<%for(var i=0;i<data.length;i++){%>
-					<div class="menu-category <%=i==0?"active":""%>">
+					<div class="menu-level2" id="level2<%=data[i].id%>" style="<%=i!=0?"display:none":""%>">
+					<h2><%=data[i].title%></h2>
+					<%var level2=data[i].child%>
+					<%for(var j=0;j<level2.length;j++){%>
+					<div class="menu-category <%=j==0?"active":""%>">
 					<div class="menu-category-title">
-						<span><%=data[i].title%></span>
+						<span><%=level2[j].title%></span>
 					</div>
 					<ul>
-					<%for(var j=0;j<data[i].child.length;j++){%>
-						<%if(data[i].child[j].show==1){%>
+						<%var level3=level2[j].child%>
+						<%for(var h=0;h<level3.length;h++){%>
+						<%if(level3[h].show==1){%>
 						<li class="flex-box">
-							<a href="<%=slug[data[i].child[j].slug]%>" data-slug1="<%=data[i].child[j].slug%>" class="flex-item" target="main"><i class="fa fa-angle-right"></i><%=data[i].child[j].title%></a>
+							<a href="<%=slug[level3[h].slug]%>" data-slug1="<%=level3[h].slug%>" class="flex-item" target="main"><i class="fa fa-angle-right"></i><%=level3[h].title%></a>
 						</li>
 						<%}%>
-					<%}%>
+						<%}%>
 					</ul>
+					</div>
+					<%}%>
 					</div>
 				<%}%>
-				<!--
-				<h2>商家管理</h2>
-				<div class="menu-category active">
-					<div class="menu-category-title">
-						<span>系统管理</span>
-					</div>
-					<ul>
-						<li class="flex-box active">
-							<a href="example/ui.html" class="flex-item" target="main"><i class="fa fa-angle-right"></i>UI示例</a>
-						</li>
-						<li class="flex-box">
-							<a href="user/userList.html" class="flex-item" target="main"><i class="fa fa-angle-right"></i>用户管理</a>
-						</li>
-						<li class="flex-box">
-							<a href="role/index.html#page=1&page_size=20" class="flex-item" target="main"><i class="fa fa-angle-right"></i>角色管理</a>
-						</li>
-						<li class="flex-box">
-							<a href="user/powerList.html" class="flex-item" target="main"><i class="fa fa-angle-right"></i>权限管理</a>
-						</li>
-						 <li class="flex-box">
-							<a href="user/logList.html" class="flex-item" target="main"><i class="fa fa-angle-right"></i>日志管理</a>
-						</li>
-					</ul>
-				</div>
-                <div class="menu-category">
-					<div class="menu-category-title">
-						<span>店铺管理</span>
-					</div>
-					<ul>
-						<li class="flex-box">
-							<a href="shop/index.html#page=1&page_size=10" class="flex-item" target="main"><i class="fa fa-angle-right"></i>店铺列表</a>
-						</li>
-						<li class="flex-box">
-							<a href="shop/account.html" class="flex-item" target="main">
-							<i class="fa fa-angle-right"></i>店铺账号</a>
-						</li>
-					</ul>
-				</div>
-				<div class="menu-category">
-					<div class="menu-category-title">
-						<span>商户管理</span>
-					</div>
-					<ul>
-						<li class="flex-box">
-							<a href="merchant/index.html" class="flex-item" target="main"><i class="fa fa-angle-right"></i>商户列表</a>
-						</li>
-					</ul>
-				</div>
-				<div class="menu-category">
-					<div class="menu-category-title"><span>店铺结算</span></div>
-					<ul>
-						<li class="flex-box">
-							<a href="shopSettlement/singleList.html" class="flex-item" target="main"><i class="fa fa-angle-right"></i>转付单</a>
-						</li>
-						<li class="flex-box">
-							<a href="shopSettlement/collectingOrderList.html" class="flex-item" target="main"><i class="fa fa-angle-right"></i>代收单</a>
-						</li>
-						<li class="flex-box">
-							<a href="shopSettlement/fromBalance.html" class="flex-item" target="main"><i class="fa fa-angle-right"></i>店铺往来余额</a>
-						</li>
-					</ul>
-				</div>-->
-				</script>
          </aside>
          <article>
             <iframe frameborder="0" src="user/info.html" name="main" style="opacity: 1;"></iframe>
          </article>
       </div>
+	  </script>
 	  </div>
 	<script src="../js/cfg.js"></script>
 	<script src="../js/jquery.min.js"></script>

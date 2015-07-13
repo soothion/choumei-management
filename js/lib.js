@@ -109,7 +109,7 @@
                 if(options.time){
                     setTimeout(function(){
                         popup.fadeOut(300,function(){
-							this.remove();
+							popup.remove();
 						});
 						options.define && options.define.call();
                     },options.time)
@@ -142,13 +142,13 @@
 			var fields=$form.serializeArray();
 			$.each(fields,function(i,field){
 				if(!data[field.name]){
-					data[field.name]=field.value;
+					data[field.name]=$.trim(field.value);
 					if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
-						data[field.name]=[field.value];
+						data[field.name]=$.trim([field.value]);
 					}
 				}else{
 					if(data[field.name] instanceof Array){
-						data[field.name].push(field.value);
+						data[field.name].push($.trim(field.value));
 					}
 				}
 				
