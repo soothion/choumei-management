@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="../../js/include.js"></script>
+      <link rel="stylesheet" href="shop.css" />
+    </head>
+    <body>
+      <div class="breadcrumb">
+      <a>店铺管理</a>
+      <span>&gt;</span>店铺列表
+	  <div class="flex-box">
+			<div class="flex-item">
+				<h4>店铺列表</h4>
+			</div>
+		</div>
+      </div>
+      <div class="wrapper">
+            <form data-role="hash" id="form" class="shop-hash-form">
+
+          <div class="position">
+              <div class="input-group">
+                <select class="select border-none" id="select">
+                  <option value="1">店铺搜索</option>
+                  <option value="2">业务代表</option>
+                </select>
+                <input type="text" class="border-none" name="salonname" placeholder="请输入店铺名称"/>
+                <input type="text" class="border-none hide" name="businessName" placeholder="请输入业务代表"/>
+				<button type="submit" class="fa fa-search"></button>
+              </div>
+			  <span class="drop-menu drop-menu-right" id="dropMenu">
+              <a class="drop-menu-toggle btn" data-toggle-class="open" style="line-height:32px">
+                筛选条件 <i class="fa fa-angle-down"></i>
+              </a>
+			 </span>      
+          </div>
+
+        <div class="area-box" style="display:none">
+          <div class="flex-box">
+            <div class="filter-title">店铺类型：</div>
+            <div class="flex-item">
+              <input type="radio" class="label" name="shopType" id="type1" checked value=""/>
+              <label for="type1">全部</label>
+              <input type="radio" class="label" name="shopType"  id="type2" value="1"/>
+              <label for="type2">预付款店</label>
+              <input type="radio" class="label" name="shopType"  id="type3" value="2" />
+              <label for="type3">投资店</label>
+              <input type="radio" class="label" name="shopType"  id="type4" value="3" />
+              <label for="type4">金字塔店</label>
+            </div>
+          </div>
+          <div class="flex-box">
+            <div class="filter-title">区域类型：</div>
+            <div id="area" class="flex-item" ajat="salonList/getProvinces?type=3&areaId=1#domid=area&tempid=area_t" ajat-one="true">
+            <script type="text/template" id="area_t">
+              <%
+                var arr = [];
+                 for(var i=0; i<data.length;i++){
+                  arr.push(data[i].tid);
+                }
+              %>
+              <input type="radio" class="label" name="district" id="_area0" checked value=""/>
+              <label for="_area0" ajat-click="salonList/getProvinces?type=4&areaId=<%=arr%>#domid=circle&tempid=circle_t" ajat-one="true" >全部</label>
+              <%
+                for(var i=0; i<data.length;i++){
+              %>
+                
+                <input type="radio" class="label" name="district" id="_area<%=i+1%>" value="<%=data[i].tid%>"/>
+                <label for="_area<%=i+1%>" ajat-click="salonList/getProvinces?type=4&areaId=<%=data[i].tid%>#domid=circle&tempid=circle_t"><%=data[i].tname%></label>
+              <%}%>
+              <input type="hidden" ajat="salonList/getProvinces?type=4&areaId=<%=arr%>#domid=circle&tempid=circle_t" ajat-one="true">
+            </script>
+            </div>
+          </div>
+          <div class="flex-box">
+            <div class="filter-title">商圈类型：</div>
+            <div class="flex-item circle-wrapper" id="circle">
+            <script type="text/template" id="circle_t">
+                <input type="radio" class="label" name="zone" id="circle0" checked value=""/>
+                <label for="circle0">全部</label>
+                <%for(var i=0; i<data.length;i++){%>
+                  <input type="radio" class="label" name="zone" id="circle<%=i+1%>" value="<%=data[i].areaid%>"/>
+                  <label for="circle<%=i+1%>"><%=data[i].areaname%></label>
+                <%}%>
+            </script>
+            </div>
+          </div>
+        </div>
+        </form>
+
+        <div class="table" id="table" ajat="salon/index?<%=query._%>#domid=table&tempid=table-t">
+          <script type="text/template" id="table-t">
+          <table>
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>编号</th>
+                <th>店铺</th>
+                <th><a data-role="hash" href="#sort_key=shopType&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">店铺类型 <i class="fa fa-sort"></i></a></th>
+                <th>区域</th>
+                <th>所属商圈</th>
+                <th>业务代表</th>
+                <th><a data-role="hash" href="#sort_key=salestatus&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">状态 <i class="fa fa-sort"></i></a></th>
+                <th>操作</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% 
+              var row = data.data;
+              for(var i = 0 ; i< row.length ; i++){ 
+                var t = row[i].shopType , typeName = "" , statusText = "";
+                if(t == "1") typeName = "预付款店";
+                if(t == "2") typeName = "投资店";
+                if(t == "3") typeName = "金字塔店";
+                if(row[i].salestatus == "0") statusText = "终止合作";
+                if(row[i].salestatus == "1") statusText = "正常合作";
+              %>
+              <tr>
+                <td><%=i+1%></td>
+                <td><%=row[i].sn%></td>
+                <td class="colswrap"><strong><%=row[i].salonname%></strong><p>所属商户：<%=row[i].name%></p></td>
+                <td><%=typeName%></td>
+                <td><%=row[i].districtName%></td>
+                <td><%=row[i].zoneName%></td>
+                <td><%=row[i].businessName%></td>
+                <td><%=statusText%></td>
+                <td><a class="link" data-slug="salon.getSalon" href="detail.html?type=detail&salonid=<%=row[i].salonid%>">查看&gt;&gt;</a></td>
+              </tr>
+              <%}%>
+            </tbody>
+          </table>
+          <div class="pager"></div>          
+          </script>
+        </div>
+      </div>
+    <script type="text/javascript">
+      $("#dropMenu").on('click',function(e){
+        $(".area-box").fadeToggle(300);
+      })
+      $('#select').on('change',function(){
+        var $this=$(this);
+        var input1=$('input[name="salonname"]');
+        var input2=$('input[name="businessName"]');
+        if($this.val()==1){
+          input1.show();
+          input2.hide().val('');
+        }else{
+          input2.show();
+          input1.hide().val('');
+        }
+      })
+      $('body').on('click','label',function(){
+		setTimeout(function(){
+			$('#form').submit();
+		},200)
+      })
+
+  </script>     
+    </body>
+</html>

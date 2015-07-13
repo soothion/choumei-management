@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="../../js/include.js"></script>
+  </head>
+  <body>
+    <div class="breadcrumb">
+        <a>店铺结算 </a><span>&gt;</span><a href="singList.html">转付单</a><span>&gt;</span><span id="breadcrumb-current">查看付款单</span>
+			<div class="flex-box">
+			<div class="flex-item">
+				<h4>查看付款单</h4>
+			</div>		 
+		</div>
+		<hr />
+    </div>
+   <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		 
+		
+        <div class="table-detail">
+        <table>
+            <thead>
+                <tr>
+                    <td colspan="2">
+                      发丝缘（宝安店）
+                    </td>
+                </tr>
+            </thead>
+              <tbody>
+			   <%var state=["","已付款","预览状态"]%>
+			   <tr>
+                  <td>付款单号：</td>
+                  <td><%=data.id%></td>
+                </tr>
+                <tr>
+                  <td>付款单号：</td>
+                  <td><%=data.code%></td>
+                </tr>
+                <tr>
+                  <td>付款类型：</td>
+                  <td><%=data.type%></td>
+                </tr>
+                <tr>
+                  <td>付款金额：</td>
+                  <td><%=data.pay_money%></td>
+                </tr>
+                <tr>
+                 <td>换算消费额：</td>
+                  <td><%=data.cost_money%></td>
+                </tr>
+                <tr>
+                  <td>付款日期：</td>
+                  <td><%=data.day%></td>
+                </tr>
+                <tr>
+                  <td>创建日期：</td>
+                  <td><%=data.created_at%></td>
+                </tr>
+                <tr>
+                 <td>制单人</td>
+                  <td><%=data.user%></td>
+               </tr>
+                <tr>
+                  <td>状态</td>
+                  <td><%=state[data.state]%></td>
+                </tr>
+                <tr>
+                  <td>操作</td>
+                  <td><a class="btn link" href="addSingle.html?id=<%=data.id%>"  data-slug="shop_count.update">编辑</a></button></td>
+                </tr>
+              </tbody>
+        </table>
+		
+		  </script>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $('#select').on('change',function(){
+            var $this=$(this);
+            if($this.val()==1){
+                $this.next().attr('placeholder','请输入店铺名');
+            }else{
+                $this.next().attr('placeholder','请输入商户名');
+            }
+        })
+    </script>
+  </body>
+</html>
