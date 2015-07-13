@@ -364,9 +364,8 @@ class SalonController extends Controller {
 		$data["district"] = isset($param["district"])?trim($param["district"]):"";//行政地区  
 		$data["addr"] = isset($param["addr"])?trim($param["addr"]):"";//详细街道信息
 		
-		//-- 坑  原有商家后台数据录入经纬度搞反，数据录入 将错就错处理吧。。。
-		$data["addrlati"] = isset($param["addrlong"])?trim($param["addrlong"]):"";//地理坐标纬度   
-		$data["addrlong"] = isset($param["addrlati"])?trim($param["addrlati"]):"";//地理坐标经度
+		$data["addrlati"] = isset($param["addrlati"])?trim($param["addrlati"]):"";//地理坐标纬度   
+		$data["addrlong"] = isset($param["addrlong"])?trim($param["addrlong"]):"";//地理坐标经度
 		
 		$data["zone"] = isset($param["zone"])?trim($param["zone"]):"";//所属商圈 - 位置地区
 		$data["shopType"] = isset($param["shopType"])?intval($param["shopType"]):0;//店铺类型
