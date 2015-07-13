@@ -1,7 +1,7 @@
-﻿$('#page').on('_ready',function(){
-	if(!localStorage.getItem('token')){
-		location.href='user/login.html';
-	}
+﻿if(!localStorage.getItem('token')){
+	location.href='user/login.html';
+}
+$('#page').on('_ready',function(){
 	function resize(){
 		$('.frame-main').height($(window).height()-$('header').height());
 	}
