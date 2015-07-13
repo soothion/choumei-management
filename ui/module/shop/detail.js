@@ -126,7 +126,7 @@
 
     $("#table-wrapper").delegate(".img-wrapper","click",function(){
         var id = $(this).parent().attr("id");
-        var index = $(this).children().attr("index");
+        var index = $(this).index();
         if(id === "con_wrapper"){
             appendImage(JSON.parse(currentData.contractPicUrl || null),index);
         }
