@@ -67,7 +67,7 @@
 							<td><%=data[i].addTime%></td>
 							<td><%=status[data[i].status-1]%></td>
 							<td>
-							<a data-id="<%=data[i].salonUserId%>" class="link reset" data-slug="salonAccount.reset" data-text="确认重置密码？">重置密码</a>
+							<a data-id="<%=data[i].salonUserId%>" class="link reset" data-slug="salonAccount.resetPwd" data-text="确认重置密码？">重置密码</a>
 							<span class="space"></span>
 								<form action="salonAccount/delAct" data-role="remove" data-slug="salonAccount.del">
 									<input type="hidden" name="salonUserId" value="<%=data[i].salonUserId%>" />
