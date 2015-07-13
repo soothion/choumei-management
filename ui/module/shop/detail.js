@@ -91,7 +91,7 @@
                      btn.attr("status","0");
                 }
                 btn.text(msg);
-				if(msg=="终止合作"){
+				if(msg=="恢复合作"){
 					$('#remove_stop_btn').removeAttr('disabled');
 				}else{
 					$('#remove_stop_btn').attr('disabled',true);
