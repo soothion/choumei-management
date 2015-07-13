@@ -32,6 +32,9 @@
     $("#preview-btn").on('click',function(){
         var data = lib.getFormData($("#form"));
         dataFormat(data);
+		if(!data.zoneName){
+			data.zoneName=$('input[name="zone"]:checked').next().text();
+		}
         if(type === 'edit') var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
         if(type === 'add')  var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
         shopData = $.extend({},shopData,data);
