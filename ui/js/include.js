@@ -8,10 +8,10 @@ document.writeln('<link rel="stylesheet" href="../../awesome/css/font-awesome.mi
 document.writeln('<link rel="stylesheet" href="../../css/reset.css" />');
 document.writeln('<link rel="stylesheet" href="../../css/global.css" />');
 document.writeln('<link rel="stylesheet" href="../../css/admin.css" />');
-document.writeln('<script src="../../js/cfg.js"></script>');
-document.writeln('<script src="../../js/jquery.min.js"></script>');
-document.writeln('<script src="../../js/sea.js"></script>');
-document.writeln('<script src="../../js/ejs.js"></script>');
-document.writeln('<script src="../../js/lib.js"></script>');
-document.writeln('<script src="../../js/access.js"></script>');
-document.writeln('<script src="../../js/admin.js"></script>');
+document.writeln('<script type="text/javascript" src="../../js/cfg.js"></script>');
+document.writeln('<script type="text/javascript" src="../../js/jquery.min.js"></script>');
+document.writeln('<script type="text/javascript" src="../../js/sea.js"></script>');
+document.writeln('<script type="text/javascript" src="../../js/ejs.js"></script>');
+document.writeln('<script type="text/javascript" src="../../js/lib.js"></script>');
+document.writeln('<script type="text/javascript" src="../../js/access.js"></script>');
+document.writeln('<script type="text/javascript" src="../../js/admin.js"></script>');
