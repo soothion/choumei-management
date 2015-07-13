@@ -103,6 +103,7 @@ abstract class Controller extends BaseController
 
 	//二维数据去重
 	public function array_multiuniue($array){
+		$temp = [];
 		foreach ($array as $key => $value) {
 			$value = json_encode($value);
 			$temp[] = $value;
