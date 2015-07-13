@@ -1,5 +1,4 @@
 api/composer.lock
 api/vendor/
 api/.env
-api/bootstrap/cache/
 api/public/doc/
