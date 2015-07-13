@@ -3,7 +3,7 @@
 	'role.index':'role/index.html#page=1&page_size=20',
 	'permission.index':'user/powerList.html',
 	'log.index':'user/logList.html',
-	'salon.index':'shop/index.html#page=1&page_size=10',
+	'salon.index':'shop/index.html#page=1&page_size=20',
 	'salonAccount.index':'shop/account.html',
 	'merchant.index':'merchant/index.html',
 	'shop_count.index':'shopSettlement/singleList.html',
@@ -37,7 +37,8 @@ var access={
 		var self=this;
 		$(dom).find('[data-slug]').each(function(){
 			var $this=$(this);
-			if(self.map[$this.data('slug')]==1){
+			var arr=$this.data('slug').split(',');
+			if(self.map[arr[0]]==1||(arr[1]&&self.map[arr[1]])){
 				$this.removeAttr('data-slug');
 			}else{
 				var form=$this.closest('form[data-role="form"]');
