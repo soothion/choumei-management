@@ -23,6 +23,7 @@
 /********************店铺详情***********************/
 .btn-group{
     height:50px;
+	margin-top:-50px;
 }
 .table-wrapper th{
     font-size: 14px;            
@@ -325,6 +326,15 @@
   right: -6px;
   top: -6px;
   font-size: 1.5rem;
+  background-color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  line-height: 20px;
+}
+.del:hover{
+	color:red;
 }
 .position{
 	position:absolute;
