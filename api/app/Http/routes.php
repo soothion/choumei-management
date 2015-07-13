@@ -264,7 +264,7 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 					'uses'=>'Merchant\SalonAccountController@resetPwd'
 		));	
 	Route::any('salonAccount/delAct',array(  //删除
-					'as'=>'salonAccount.delAct',
+					'as'=>'salonAccount.del',
 					'uses'=>'Merchant\SalonAccountController@delAct'
 		));	
 
