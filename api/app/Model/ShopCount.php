@@ -60,6 +60,65 @@ class ShopCount extends Model
         }
     }
     
+    /**
+     * 店铺订单结算
+     */
+    public static function ShopCountOrder($code,$salon_id,$money,$time,$type,$salon_info,$merchant_info)
+    {
+        DB::transaction(function () use($code,$salon_id,$money,$time,$type,$salon_info,$merchant_info)
+        {           
+            $detail = ShopCountDetail::where("code",$code)->where("type",$type)->get()->toArray();
+            
+            if(!empty($detail))//已存在
+            {
+                return 2;
+            }
+           
+           $ret = ShopCountDetail::create([
+            'code'=>$code,
+            'type'=>$type,
+            'money'=>$money,
+            'salon_id'=>isset($salon_info['id'])?$salon_info['id']:0,
+            'merchant_id'=>isset($merchant_info['id'])?$merchant_info['id']:0,
+            'created_at'=>date("Y-m-d H:i:s",$time)
+            ]);
+          
+            $shop_counts = ShopCount::where('salon_id',$salon_info['id'])->get(['id','pay_money','cost_money','spend_money','balance_money'])->toArray();
+          
+            if(!empty($shop_counts))
+            {
+                $shop_count = $shop_counts[0];
+                $id = $shop_count['id'];
+                $pay_money = floatval($shop_count['pay_money']);
+                $cost_money = floatval($shop_count['cost_money']);
+                $spend_money = floatval($shop_count['spend_money']) + $money;
+                $balance_money = $cost_money - $spend_money;
+                ShopCount::where('id',$id)->update([
+                'salon_name'=>isset($salon_info['salon_name'])?$salon_info['salon_name']:'',
+                'salon_type'=>isset($salon_info['salon_type'])?$salon_info['salon_type']:0,
+                'updated_at'=>date("Y-m-d H:i:s",$time),
+                'pay_money'=>$pay_money,
+                'cost_money'=>$cost_money,
+                'spend_money'=>$spend_money,
+                'balance_money'=>$balance_money,
+                ]);
+            }
+            else 
+            {
+                ShopCount::create([
+                'salon_id'=>isset($salon_info['id'])?$salon_info['id']:0,
+                'merchant_id'=>isset($merchant_info['id'])?$merchant_info['id']:0,
+                'salon_name'=>isset($salon_info['salon_name'])?$salon_info['salon_name']:'',
+                'salon_type'=>isset($salon_info['salon_type'])?$salon_info['salon_type']:0,
+                'created_at'=>date("Y-m-d H:i:s",$time),               
+                'spend_money'=>$money,
+                'balance_money'=>$money * -1,
+                ]);
+            }
+             return 1;          
+        });
+    }
+    
     public static function mergeMoney($attrs,$model)
     {
         if(isset($attrs['pay_money']) && isset($attrs['cost_money']))

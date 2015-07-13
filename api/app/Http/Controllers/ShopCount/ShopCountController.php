@@ -625,4 +625,24 @@ class ShopCountController extends Controller
         $items = ShopCountApi::searchShopCount($param);
         return $this->success($items);
     }
+    
+    /**
+     * 订单结算相关
+     */
+    public function countOrder()
+    {
+        $param = $this->parameters([
+            'type'=>self::T_INT,
+            'ordersn'=>self::T_STRING,
+            'token'=>self::T_STRING,
+        ],true);
+        $passed = ShopCountApi::checkToken($param);
+        if(!$passed)
+        {
+            return $this->error("Unauthorized",401);
+        }
+        $orders = explode(",", $param['ordersn']);
+        $res = ShopCountApi::countOrder($orders);
+        return $this->success($res);
+    }
 }
