@@ -46,10 +46,22 @@ Route::any('salonList/getProvinces',array(  //获取省市区商圈
 				'as'=>'salonList.getProvinces',
 				'uses'=>'Merchant\ListController@getProvinces'
 	));	
-Route::any('salonList/getBussesName',array(  //获取省市区
+Route::any('salonList/getBussesName',array(  //获取业务代表
 				'as'=>'salonList.getBussesName',
 				'uses'=>'Merchant\ListController@getBussesName'
 	));	
+Route::any('merchant/checkMerchantSn',array( //检测商户编号
+				'as'=>'merchant.checkMerchantSn',
+				'uses'=>'Merchant\MerchantController@checkMerchantSn'
+	));
+Route::any('salon/checkSalonSn',array(  //检测店铺编号
+				'as'=>'salon.checkSalonSn',
+				'uses'=>'Merchant\SalonController@checkSalonSn'
+	));	
+Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
+				'as'=>'salonAccount.getSalonName',
+				'uses'=>'Merchant\SalonAccountController@getSalonName'
+	));		
 
 //权限管理后台接口
 Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
@@ -205,10 +217,6 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 					'as'=>'merchant.del',
 					'uses'=>'Merchant\MerchantController@del'
 		));
-	Route::any('merchant/checkMerchantSn',array( //检测商户编号
-					'as'=>'merchant.checkMerchantSn',
-					'uses'=>'Merchant\MerchantController@checkMerchantSn'
-		));
 	Route::any('merchant/getMerchantList',array( //获取单个商户详情
 					'as'=>'merchant.getMerchantList',
 					'uses'=>'Merchant\MerchantController@getMerchantList'
@@ -241,20 +249,12 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 					'uses'=>'Merchant\SalonController@del'
 		));		
 		
-	Route::any('salon/checkSalonSn',array(  //检测店铺编号
-					'as'=>'salon.checkSalonSn',
-					'uses'=>'Merchant\SalonController@checkSalonSn'
-		));	
-		
 
 	Route::any('salonAccount/index',array(  //店铺账号列表
 					'as'=>'salonAccount.index',
 					'uses'=>'Merchant\SalonAccountController@index'
 		));	
-	Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
-					'as'=>'salonAccount.getSalonName',
-					'uses'=>'Merchant\SalonAccountController@getSalonName'
-		));		
+
 	Route::any('salonAccount/save',array(  //添加账号
 					'as'=>'salonAccount.save',
 					'uses'=>'Merchant\SalonAccountController@save'
