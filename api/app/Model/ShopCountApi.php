@@ -11,6 +11,9 @@ use Illuminate\Pagination\AbstractPaginator;
 
 class ShopCountApi
 {
+    
+    CONST TOKEN_KEY = "CHOUmei";
+    
     /////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////    业务逻辑相关         /////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////
@@ -24,11 +27,55 @@ class ShopCountApi
     
     /**
      * 已消费的订单结算
-     * @param array $options
+     * @param array $options 订单号
      */
     public static function countOrder($options)
     {
+        $order_sns = $options;
+        $input_count = count($order_sns);
+        $base_order_infos = Order::whereIn("ordersn",$order_sns)->where('status',4)->select('ordersn','salonid','priceall','use_time')->get()->toArray();
         
+        $select_count = count($base_order_infos);
+        //状态检查
+        if($input_count != $select_count)
+        {
+            throw new \Exception("some ordersn in [".implode(",", $order_sns)."] is wrong status");
+        }
+        
+        $salon_ids = array_column($base_order_infos, "salonid");
+        
+        $other_info = self::getSalonMerchantBaseInfo($salon_ids);
+       
+        $res = ['success'=>[],'type'=>1,'already'=>[]];
+        foreach($base_order_infos as $order)
+        {
+            $ordersn = $order['ordersn'];
+            $salon_id = $order['salonid'];
+            $money = floatval($order['priceall']);
+            $time = $order['use_time'];
+            $salon_info = [];
+            $merchant_info = [];
+            $merchant_id = 0;
+            if(isset($other_info['salon'][$salon_id]))
+            {
+                $salon_info = $other_info['salon'][$salon_id];
+                $merchant_id = $other_info['salon'][$salon_id]['merchant_id'];
+            }
+            if(isset($other_info['merchant'][$merchant_id]))
+            {
+                $merchant_info = $other_info['merchant'][$merchant_id];
+            }
+            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$money,$time,1,$salon_info,$merchant_info);
+            if($ret == 1)
+            {
+                $res['success'][] = $ordersn;
+            }
+            else if($ret == 2)
+            {
+               $res['already'][] = $ordersn;;
+            }
+        }
+        return $res;
     }
 
     /**
@@ -190,6 +237,44 @@ class ShopCountApi
 //         return null;
     }
     
+    public static function getSalonMerchantBaseInfo($salon_ids)
+    {
+        $salon_infos = Salon::whereIn('salonid',$salon_ids)->get(['salonid','salonname','shopType','merchantId'])->toArray();
+        $merchant_ids = array_column($salon_infos, "merchantId");
+        $merchant_infos = Merchant::whereIn('id',$merchant_ids)->get(['id','name'])->toArray();
+        $res = ['salon'=>[],'merchant'=>[]];
+        foreach ($salon_infos as $salon)
+        {
+            $id= $salon['salonid'];
+            $res['salon'][$id] = ['id'=>$id,'salon_name'=>$salon['salonname'],'shop_type'=>$salon['shopType'],'merchant_id'=>$salon['merchantId']];
+        }
+        foreach ($merchant_infos as $merchant)
+        {
+            $id = $merchant['id'];
+            $res['merchant'][$id] = ['id'=>$id,'name'=>$merchant['name']];
+        }        
+        return $res;
+    }
+    
+    
+    public static function makeToken(&$params)
+    {
+        asort($params);
+        $url = http_build_query($params);
+        $params['token'] =  md5(md5($url).self::TOKEN_KEY);
+    }
+    
+    public static function checkToken($params)
+    {
+        if(isset($params['token']))
+        {
+            $token = $params['token'];
+            unset($params['token']);
+            self::makeToken($params);
+            return $params['token'] === $token;
+        }
+        return false;
+    }    
     
     /////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////    数据查询相关         /////////////////////////////////////////
