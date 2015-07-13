@@ -23,6 +23,7 @@
 /********************店铺详情***********************/
 .btn-group{
     height:50px;
+	margin-top:-50px;
 }
 .table-wrapper th{
     font-size: 14px;            
