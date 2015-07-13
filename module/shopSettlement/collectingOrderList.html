@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="../../js/include.js"></script>
+  </head>
+  <body>
+	<div class="breadcrumb">
+		<a href="ui.html">店铺结算 </a><span>&gt;</span>代收单
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4>代收单</h4>
+			</div>
+		</div>
+	</div>
+	<div class="wrapper">
+			<div class="flex-box">
+				<div class="flex-item">
+					<form data-role="hash">
+						<div class="input-group">
+							<select class="select border-none" name="key" id="select">
+								<option value="1">店铺搜索</option>
+								<option value="2">商户搜索</option>
+							</select>
+							<input type="text" class="border-none" placeholder="请输入店铺名" name="keyword">
+						</div>
+						代收日期 <span class="date-group"><input type="date" data-role="start" name="pay_time_min" />到<input type="date" data-role="end" name="pay_time_max"/>
+						</span>
+						<button class="btn" type="submit">搜索</button>
+					</form>
+				</div>
+			</div>
+			
+			<div class="table" ajat="<%if(query._){%>shop_count/delegate_list?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+				<table>
+				  <thead>
+					<tr>
+					  <th>序号</th>
+					  <th>代收单号</th>
+					  <th>店铺名称</th>
+					  <!--
+					  <th>商户名称</th>-->
+					  <th>代收金额</th>
+					  <th><a href="#sort_key=day&sort_type=<%=query.sort_type==2?1:2%>&page=1" data-role="hash">代收日期 <i class="fa fa-sort"></i></a></th>
+					  <th>操作</th>
+					</tr>
+				  </thead>
+				  <tbody>
+					<%if(data.data){%>
+					<%data=data.data%>
+					<%for(var i=0;i<data.length;i++){%>
+					<tr>
+					  <td><%=i+1%></td>
+					  <td><%=data[i].code%></td>
+					  <td><%=data[i].salon?data[i].salon.salonname:""%></td>
+					  <!--
+					  <td><%=data[i].merchant?data[i].merchant.name:""%></td>-->
+					  <td><%=data[i].money%></td>
+					  <td><%=data[i].day%></td>
+					  <td>
+						 <a class="link" data-slug="shop_count.delegate_detail" href="collectingOrder.html?id=<%=data[i].id%>">查看</a>
+					  </td>
+					</tr>
+					<%}%>
+					<%}%>
+				  </tbody>
+				</table>
+				<div class="pager">
+				</div>
+				
+			</script>
+		</div>
+	</div>
+	<script type="text/javascript">
+		lib.ajatCount++;
+		$(function(){
+			$('#select').on('change',function(){
+				var $this=$(this);
+				if($this.val()==1){
+					$this.next().attr('placeholder','请输入店铺名');
+				}else{
+					$this.next().attr('placeholder','请输入商户名');
+				}
+			});
+			$('input[type="date"]').val(lib.getDate());
+			$('form').submit();
+		});
+	</script>
+  </body>
+</html>
