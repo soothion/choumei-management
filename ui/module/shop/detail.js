@@ -170,7 +170,8 @@
         //在指定的容器内创建地图实例  
         var map = new BMap.Map("mapContent");
         //创建一个地理坐标类 
-        var point = new BMap.Point(113.941893,22.535644);
+		var $map=$('.map');
+		var point = new BMap.Point($map.data('lng')||113.941893,$map.data('lat')||22.535644);
         //初始化地图位置（未进行初始化的地图将不能进行任何操作）
         map.centerAndZoom(point,12);
         //将平移缩放控件添加到地图上
@@ -190,6 +191,6 @@
         marker.setAnimation(BMAP_ANIMATION_BOUNCE);
                 
         $("#map-open").on('click',function(){
-        window.open("http://map.baidu.com/?latlng=22.535644,113.941893&title=我们位置&content=南山科技中一路华强高新发展大楼&autoOpen=true");            
-      })           
+			window.open("http://map.baidu.com/?latlng="+($map.data('lat')||22.535644)+","+($map.data('lng')||113.941893)+"&title=我们位置&content=南山科技中一路华强高新发展大楼&autoOpen=true");            
+		})           
     }
