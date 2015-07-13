@@ -90,11 +90,18 @@
                      btn.attr("status","0");
                 }
                 btn.text(msg);
+				if(msg=="终止合作"){
+					$('#remove_stop_btn').removeAttr('disabled');
+				}else{
+					$('#remove_stop_btn').attr('disabled',true);
+				}
             }
+			
         });
     })
 
     $("#table-wrapper").delegate('#remove_stop_btn','click',function(){
+		if($(this).is(':disabled')) return;
         var data   = {salonid : $(this).attr("salonid")};
 		parent.lib.popup.confirm({text:'确认删除此店铺',define:function(){
 			lib.ajax({

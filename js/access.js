@@ -26,7 +26,7 @@ var access={
 	foreach:function(data){
 		for(var i=0;i<data.length;i++){
 			if(data[i].slug){
-				this.map[data[i].slug]=data[i].show;
+				this.map[data[i].slug]=true;
 			}
 			if(data[i].child instanceof Array){
 				access.foreach(data[i].child);
@@ -38,7 +38,7 @@ var access={
 		$(dom).find('[data-slug]').each(function(){
 			var $this=$(this);
 			var arr=$this.data('slug').split(',');
-			if(self.map[arr[0]]==1||(arr[1]&&self.map[arr[1]])){
+			if(self.map[arr[0]]||(arr[1]&&self.map[arr[1]])){
 				$this.removeAttr('data-slug');
 			}else{
 				var form=$this.closest('form[data-role="form"]');

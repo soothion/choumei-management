@@ -22,7 +22,7 @@
                         <%=data.salestatus == 0 ? '恢复合作' : '终止合作'%> 
                     </button>
 
-                    <button class="btn" id="remove_stop_btn" salonid="<%=data.salonid%>" data-slug="salon.del">
+                    <button class="btn" id="remove_stop_btn" salonid="<%=data.salonid%>" data-slug="salon.del"  <%=data.salestatus == 0 ? 'disabled' : ''%> >
                         删除店铺
                     </button>
                     <a href='add.html?type=edit' data-slug="salon.update">
