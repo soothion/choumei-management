@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ShopcountBalance::class,
         \App\Console\Commands\ShopcountDelegateDetail::class,
         \App\Console\Commands\ShopcountDelegateList::class,
+        \App\Console\Commands\ShopcountCountBalance::class,
     ];
 
     /**
