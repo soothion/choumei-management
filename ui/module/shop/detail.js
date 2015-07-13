@@ -34,8 +34,9 @@
             sessionStorage.setItem('edit-shop-data',str);    
             selectSalonType(data.data);
             currentData = data.data;
+			createScript();
         });
-        createScript();
+        
     }
 
     if(type === "preview"){
