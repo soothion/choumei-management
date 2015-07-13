@@ -90,7 +90,12 @@ function renderMap (){
         //在指定的容器内创建地图实例  
         var map = new BMap.Map("map-wrapper");
         //默认经纬度point
-        var point = new BMap.Point("113.941893","22.535644");
+		var latlng=$('#coorMarkerInput').val();
+		var latlng={
+			lat:latlng.split(',')[0],
+			lng:latlng.split(',')[1]
+		}
+		var point = new BMap.Point("113.941893","22.535644");
         //初始化地图位置（未进行初始化的地图将不能进行任何操作）
         map.centerAndZoom(point,11);
         //将平移缩放控件添加到地图上
@@ -112,12 +117,11 @@ function renderMap (){
             //map.panTo(point);                                                
         }
 
-        if(address.attr('lng') && address.attr('lat')){
-            point = new BMap.Point(address.attr('lng'),address.attr('lat'));
+        if(latlng.lng && latlng.lat){
+            point = new BMap.Point(latlng.lng,latlng.lat);
             drawMarker(point);
             geocoder.getLocation(point, function(addr) {
                 addrPonit['coor'] = {lng:point.lng,lat:point.lat};
-                geoCoor.attr({"lat": point.lat,"lng": point.lng});
             });                        
         }else{
             var addr = "";
@@ -145,7 +149,6 @@ function renderMap (){
             drawMarker(point); 
             geocoder.getLocation(point, function(addr) {
                 addrPonit['coor'] = {lng:point.lng,lat:point.lat};
-                geoCoor.attr({"lat": point.lat,"lng": point.lng});
                 geoCoor.text(addr.address);
             });
         });
