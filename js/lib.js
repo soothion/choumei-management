@@ -11,7 +11,7 @@
 			if(!options.data){
 				options.data={};
 			}
-			if(options.type&&options.type.toUpperCase()=="POST"&&localStorage.getItem('token')&&options.url.indexOf('/login')==-1){
+			if(localStorage.getItem('token')&&options.url.indexOf('/login')==-1){
 				options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
 			}
 			var promise=$.ajax(options);

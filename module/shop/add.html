@@ -99,7 +99,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺类型：</label>
                     <input type="radio" class="radio" id="radio1" name="shopType" value="1"
-                    <%=data.shopType==1 ?"checked":""%>>
+                    <%=!data.shopType||data.shopType==1 ?"checked":""%>>
                     <label for="radio1">预付款店</label>
                     <input type="radio" class="radio" id="radio2" name="shopType" value="2" 
                     <%=data.shopType==2 ?"checked":""%>>
