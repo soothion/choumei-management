@@ -62,9 +62,9 @@
                     </div>
 
                     <div class="control-group">
-                        <label class="control-label" for="">*账户类型：</label>
+                        <label class="control-label" for=""><span class="red">*</span>账户类型：</label>
 
-                        <input type="radio" name="accountType" <%=data.accountType == 1 ? 'checked' : ''%> 
+                        <input type="radio" name="accountType" <%=!data.accountType||data.accountType == 1 ? 'checked' : ''%> 
                         class="radio" id="radio1" value="1" required>
                         <label for="radio1">对公账户</label>
 
