@@ -324,7 +324,7 @@
 						sessionStorage.removeItem("corporatePicUrl");
 						sessionStorage.removeItem('add-shop-data');
 						sessionStorage.removeItem('edit-shop-data');
-						if(type === "edit") location.href="/shop/detail.html?type=detail&salonid="+currentData.salonid;
+						if(type === "edit") location.href="/module/shop/detail.html?type=detail&salonid="+currentData.salonid;
 						if(type === "add") location.href="../merchant/index.html" ;             
 					}
 				}
