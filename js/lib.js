@@ -11,8 +11,8 @@
 			if(!options.data){
 				options.data={};
 			}
-			if(localStorage.getItem('token')&&options.url.indexOf('/login')==-1){
-				options.url+="?token="+localStorage.getItem('token');
+			if(options.type&&options.type.toUpperCase()=="POST"&&localStorage.getItem('token')&&options.url.indexOf('/login')==-1){
+				options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
 			}
 			var promise=$.ajax(options);
 			promise.fail(function(xhr, status){
