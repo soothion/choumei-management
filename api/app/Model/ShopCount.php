@@ -65,22 +65,35 @@ class ShopCount extends Model
      */
     public static function ShopCountOrder($code,$salon_id,$money,$time,$type,$salon_info,$merchant_info)
     {
-        DB::transaction(function () use($code,$salon_id,$money,$time,$type,$salon_info,$merchant_info)
+        $ds_code =InsteadReceive::getNewCode();
+       
+        $return_code = 0;
+        DB::transaction(function () use($code,$salon_id,$money,$time,$type,$salon_info,$merchant_info,$ds_code,&$return_code)
         {           
             $detail = ShopCountDetail::where("code",$code)->where("type",$type)->get()->toArray();
             
             if(!empty($detail))//已存在
             {
-                return 2;
+                $return_code = 2;
+                return ;
             }
-           
-           $ret = ShopCountDetail::create([
-            'code'=>$code,
-            'type'=>$type,
-            'money'=>$money,
-            'salon_id'=>isset($salon_info['id'])?$salon_info['id']:0,
-            'merchant_id'=>isset($merchant_info['id'])?$merchant_info['id']:0,
-            'created_at'=>date("Y-m-d H:i:s",$time)
+            $ret = ShopCountDetail::create([
+                'code' => $code,
+                'type' => $type,
+                'money' => $money,
+                'salon_id' => isset($salon_info['id']) ? $salon_info['id'] : 0,
+                'merchant_id' => isset($merchant_info['id']) ? $merchant_info['id'] : 0,
+                'created_at' => date("Y-m-d H:i:s", $time)
+            ]);
+            
+            InsteadReceive::create([
+                'code' => $ds_code,
+                'salon_id' => isset($salon_info['id']) ? $salon_info['id'] : 0,
+                'merchant_id' => isset($merchant_info['id']) ? $merchant_info['id'] : 0,
+                'type' => InsteadReceive::TYPE_OF_ORDER,
+                'money' => $money,
+                'day' => date("Y-m-d", $time),
+                'created_at' => date("Y-m-d H:i:s")
             ]);
           
             $shop_counts = ShopCount::where('salon_id',$salon_info['id'])->get(['id','pay_money','cost_money','spend_money','balance_money'])->toArray();
@@ -94,6 +107,8 @@ class ShopCount extends Model
                 $spend_money = floatval($shop_count['spend_money']) + $money;
                 $balance_money = $cost_money - $spend_money;
                 ShopCount::where('id',$id)->update([
+                'merchant_id'=>isset($merchant_info['id'])?$merchant_info['id']:0,
+                'merchant_name'=>isset($merchant_info['name'])?$merchant_info['name']:'',
                 'salon_name'=>isset($salon_info['salon_name'])?$salon_info['salon_name']:'',
                 'salon_type'=>isset($salon_info['salon_type'])?$salon_info['salon_type']:0,
                 'updated_at'=>date("Y-m-d H:i:s",$time),
@@ -108,6 +123,7 @@ class ShopCount extends Model
                 ShopCount::create([
                 'salon_id'=>isset($salon_info['id'])?$salon_info['id']:0,
                 'merchant_id'=>isset($merchant_info['id'])?$merchant_info['id']:0,
+                'merchant_name'=>isset($merchant_info['name'])?$merchant_info['name']:'',
                 'salon_name'=>isset($salon_info['salon_name'])?$salon_info['salon_name']:'',
                 'salon_type'=>isset($salon_info['salon_type'])?$salon_info['salon_type']:0,
                 'created_at'=>date("Y-m-d H:i:s",$time),               
@@ -115,8 +131,10 @@ class ShopCount extends Model
                 'balance_money'=>$money * -1,
                 ]);
             }
-             return 1;          
+            $return_code = 1;
+            return ;         
         });
+        return $return_code;
     }
     
     public static function mergeMoney($attrs,$model)

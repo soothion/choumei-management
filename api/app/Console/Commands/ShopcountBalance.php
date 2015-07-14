@@ -41,7 +41,7 @@ class ShopcountBalance extends Command
     public function handle()
     {
         $default = ['merchant_id'=>2,'type'=>1,'salon_id'=>2,'uid'=>2,'pay_money'=>'25','cost_money'=>30,'day'=>'2015-06-01'];
-        $args = ['key'=>1,'keyword'=>'丝凡达'];
+        $args = ['key'=>1,'keyword'=>''];
         //$args = [];
 //         if($args && is_array($args))
 //         {

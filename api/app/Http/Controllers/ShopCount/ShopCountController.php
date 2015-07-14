@@ -580,6 +580,7 @@ class ShopCountController extends Controller
      *                       "id": 1,
      *                       "created_at": "2015-07-01 00:00:00",
      *                       "merchant_id": 3,
+     *                       "merchant_name":"米莱国际",
      *                       "salon_id": 2,
      *                       "salon_name":"米莱国际造型连锁(田贝店)",
      *                       "salon_type":1,
@@ -592,11 +593,7 @@ class ShopCountController extends Controller
      *                       "invest_balance_money": "343.00",
      *                       "borrow_money": "2323.00",
      *                       "borrow_return_money": "34.00",
-     *                       "borrow_balance_money": "2334.00",
-     *                       "merchant": {
-     *                           "id": 3,
-     *                           "name": "黎艳平"
-     *                       }
+     *                       "borrow_balance_money": "2334.00"
      *                   }
      *               ]
      *           }
