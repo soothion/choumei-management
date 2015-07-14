@@ -144,7 +144,7 @@
 				if(!data[field.name]){
 					data[field.name]=$.trim(field.value);
 					if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
-						data[field.name]=$.trim([field.value]);
+						data[field.name]=[$.trim(field.value)];
 					}
 				}else{
 					if(data[field.name] instanceof Array){
