@@ -551,6 +551,7 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} last_page 当前页面.
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
+     * @apiSuccess {String} merchant_name 商户名称.
      * @apiSuccess {String} salon_name 店铺名称.
      * @apiSuccess {Number} salon_type 店铺名称类型(1预付款店 2投资店 3金字塔店).
      * @apiSuccess {String} pay_money 预付款/付交易代收款.
@@ -563,7 +564,6 @@ class ShopCountController extends Controller
      * @apiSuccess {String} borrow_money 付借款.
      * @apiSuccess {String} borrow_return_money 借款返还.
      * @apiSuccess {String} borrow_balance_money 借款余额.
-     * @apiSuccess {Object} merchant 商盟信息.
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -580,6 +580,7 @@ class ShopCountController extends Controller
      *                       "id": 1,
      *                       "created_at": "2015-07-01 00:00:00",
      *                       "merchant_id": 3,
+     *                       "merchant_name":"米莱国际",
      *                       "salon_id": 2,
      *                       "salon_name":"米莱国际造型连锁(田贝店)",
      *                       "salon_type":1,
@@ -592,11 +593,7 @@ class ShopCountController extends Controller
      *                       "invest_balance_money": "343.00",
      *                       "borrow_money": "2323.00",
      *                       "borrow_return_money": "34.00",
-     *                       "borrow_balance_money": "2334.00",
-     *                       "merchant": {
-     *                           "id": 3,
-     *                           "name": "黎艳平"
-     *                       }
+     *                       "borrow_balance_money": "2334.00"
      *                   }
      *               ]
      *           }

@@ -65,7 +65,7 @@ class ShopCountApi
             {
                 $merchant_info = $other_info['merchant'][$merchant_id];
             }
-            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$money,$time,1,$salon_info,$merchant_info);
+            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$money,$time,1,$salon_info,$merchant_info);   
             if($ret == 1)
             {
                 $res['success'][] = $ordersn;
@@ -524,7 +524,7 @@ class ShopCountApi
     {     
         $salon_fields = ['salonid','salonname','shopType'];
         $merchant_fields = ['id','name'];
-        $shop_count_fields = ['id','created_at','merchant_id','salon_id','salon_name','salon_type','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
+        $shop_count_fields = ['id','created_at','merchant_id','merchant_name','salon_id','salon_name','salon_type','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
         $order_by_fields = ['id','created_at','salon_name','salon_type','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
         
         $shop_count = ShopCount::select($shop_count_fields);
@@ -540,8 +540,7 @@ class ShopCountApi
             }
             else
             {
-                $merchant_ids=Salon::where('name','like',$keyword)->lists('id');
-                $shop_count->whereIn('merchant_id',$merchant_ids);
+                $shop_count->where('merchant_name','like',$keyword);
             }
             
 //             if($key == 1)
@@ -562,13 +561,6 @@ class ShopCountApi
 //                   ];
 //             }
         }
-
-        $shop_count->with([
-            'merchant' => function ($q) use($merchant_fields)
-            {
-               $q->lists($merchant_fields[0],$merchant_fields[1]);
-            }
-        ]);
         
         //按时间搜索
         if(isset($options['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_min'])))
