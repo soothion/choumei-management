@@ -164,7 +164,7 @@ function renderMap (){
                     map.clearOverlays();
                     drawMarker(point);
                 } else {
-                    lib.popup.alert({text:'暂时无法获取您的位置'})
+                    parent.lib.popup.alert({text:'暂时无法获取您的位置'})
                 }
             })
         });
@@ -182,7 +182,7 @@ function renderMap (){
                $("#coorMarkerInput").blur();
                $("#pop-wrapper").hide();
             }else{
-               lib.popup.alert({text:'未标记地图'});
+               parent.lib.popup.alert({text:'未标记地图'});
             }
         });
     });

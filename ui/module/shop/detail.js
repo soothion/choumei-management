@@ -15,7 +15,7 @@
         if(data.salonType){
             var arr = data.salonType.split("_");
             arr.forEach(function(value,index){
-                $(":checkbox[value='"+value+"']").attr('checked',true).show().next().show(); 
+               $(":checkbox[value='"+value+"']").attr('checked',true).show().next().show(); 
             })       
         }
     }
