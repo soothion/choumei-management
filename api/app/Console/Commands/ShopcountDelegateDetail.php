@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Http\Controllers\ShopCount\ShopCountController;
 
 class ShopcountDelegateDetail extends Command
 {
@@ -20,13 +21,16 @@ class ShopcountDelegateDetail extends Command
      */
     protected $description = 'Command description.';
 
+    protected $controller = null;
+
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ShopCountController $contoller)
     {
+        $this->controller = $contoller;
         parent::__construct();
     }
 
@@ -37,6 +41,9 @@ class ShopcountDelegateDetail extends Command
      */
     public function handle()
     {
-        //
+        $id = $this->ask("input the id ");    
+        $ret = $this->controller->delegate_detail($id);
+        
+        ShopcountStore::outputReturn($this, $ret);
     }
 }
