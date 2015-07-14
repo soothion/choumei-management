@@ -614,7 +614,7 @@
 				$form.trigger('save',data);
 			}else{
 				$(document).scrollTop(help.eq(0).offset().top-50);
-				help.eq(0).siblings('input').focus();
+				help.eq(0).siblings('input:visible').focus();
 			}
 		},
 		save:function(data){
