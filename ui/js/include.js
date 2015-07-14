@@ -1,4 +1,6 @@
 ﻿document.writeln('<meta http-equiv="Cache" content="no-cache">');
+document.writeln('<meta name="renderer" content="webkit|ie-stand">');
+document.writeln('<meta http-equiv=”X-UA-Compatible” content=”IE=edge” > ');
 document.writeln('<meta charset="utf-8">');
 document.writeln('<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">');
 document.writeln('<meta name="apple-mobile-web-app-capable" content="yes">');
