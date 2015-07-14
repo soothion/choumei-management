@@ -668,7 +668,9 @@
 				$(this).removeClass('select-focus');
 			}).on('mousedown',this.selector,function(e){
 				$('.select').not($(this)).blur();
-				self.instance(this);
+				if(!this.disabled){
+					self.instance(this);
+				}
 				e.stopPropagation();
 				e.preventDefault();
 			});
