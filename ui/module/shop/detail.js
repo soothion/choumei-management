@@ -136,11 +136,6 @@
         if(id === "cor_wrapper"){
             appendImage(JSON.parse(currentData.corporatePicUrl || null),index);           
         }
-        $("#swipper").show();
-    });
-
-    $(".swiper-close").on('click',function(){
-        $("#swipper").hide();   
     });
 
     var appendImage = function(arr,index){
@@ -150,20 +145,6 @@
         });
         parent.lib.popup.swiper({list:list,index:index});            
     };
-
-    var initSwiper = function(index){
-        var swiper = new Swiper('.swiper-container', {
-            loop: true,
-            initialSlide : index,
-            lazyLoading : true,            
-            pagination: '.swiper-pagination',
-            nextButton: '.swiper-button-next',
-            prevButton: '.swiper-button-prev',
-            slidesPerView: 1,
-            paginationClickable: true,
-            spaceBetween: 30
-        });  
-    }
 })();
 
     function renderMap(){

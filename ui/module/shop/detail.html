@@ -54,7 +54,11 @@
                                 <tbody>
                                     <tr>
                                         <td class="content">店铺地址：</td>
-                                        <td><%=data.provinceName + data.citiesName + data.districtName + data.addr%></td>
+                                        <td><%=data.provinceName!="省份"?data.provinceName:""%>
+											<%=data.citiesName!="城市"?data.citiesName:""%>
+											<%=data.districtName!="地区"?data.districtName:""%>
+											<%=data.addr%>
+										</td>
                                     </tr>
                                     <tr><td class="content">所属商圈：</td>
                                         <td><%=data.zoneName%></td>

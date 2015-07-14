@@ -41,6 +41,15 @@
 		if(!data.businessName){
 			data.businessName=$('#business option:selected').text();
 		}
+		if(!data.provinceName){
+			data.provinceName=$('#province option:selected').text();
+		}
+		if(!data.citiesName){
+			data.citiesName=$('#city option:selected').text();
+		}
+		if(!data.districtName){
+			data.districtName=$('#area option:selected').text();
+		}
         if(type === 'edit') var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
         if(type === 'add')  var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
         shopData = $.extend({},shopData,data);
