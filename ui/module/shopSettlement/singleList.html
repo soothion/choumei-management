@@ -106,8 +106,10 @@
 					$this.next().attr('placeholder','请输入商户名');
 				}
 			});
-			$('input[type="date"]').val(lib.getDate());
-			$('form').submit();
+			if(!lib.query._){
+				$('input[type="date"]').val(lib.getDate());
+				$('form').submit();
+			}
 		});
 	</script>
 </body>

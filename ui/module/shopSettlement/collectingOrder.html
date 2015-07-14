@@ -10,14 +10,14 @@
 		<a>店铺结算 </a><span>&gt;</span><a href="collectingOrderList.html">代收单</a><span>&gt;</span>查看代收单
 	</div>
 	<div class="wrapper">
-		<div class="table-detail" ajat="shop_count/delegate_detail?<%=query._%>#domid=detail&detail-t" id="detail">
+		<div class="table-detail" ajat="shop_count/delegate_detail/<%=query.id%>#domid=detail&tempid=detail-t" id="detail">
 		<script type="text/template" id="detail-t">
 			<%var arr=["项目消费"]%>
 			<table>
 				<thead>
 					<tr>
 						<td colspan="2">
-						  <%=data.salon.salonname%>
+						  <%=data.salon?data.salon.salonname:""%>
 						</td>
 					</tr>
 				</thead>
