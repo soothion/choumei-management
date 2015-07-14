@@ -170,7 +170,7 @@ article{
     -ms-transition:opacity 0.2s ease 0s,margin-left 0.2s ease 0s;
     transition:opacity 0.2s ease 0s,margin-left 0.2s ease 0s;
 }
-.simsun{
+.simsun,.pager .next,.pager .prev{
 	font-family:SimSun;
 }
 header{
