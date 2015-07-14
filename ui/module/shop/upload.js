@@ -18,6 +18,9 @@
         //新增
         if(type && type === 'add'){
             currentData = JSON.parse(sessionStorage.getItem('add-shop-data')); 
+			document.body.onbeforeunload=function(){
+			return "确定离开当前页面吗？";
+			}
         }
         //编辑
         if(type && type === 'edit'){
@@ -324,6 +327,7 @@
 						sessionStorage.removeItem("corporatePicUrl");
 						sessionStorage.removeItem('add-shop-data');
 						sessionStorage.removeItem('edit-shop-data');
+						document.body.onbeforeunload=function(){}
 						if(type === "edit") location.href="/module/shop/detail.html?type=detail&salonid="+currentData.salonid;
 						if(type === "add") location.href="../merchant/index.html" ;             
 					}

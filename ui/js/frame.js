@@ -34,7 +34,7 @@ $('#page').on('_ready',function(){
 			});
 			iframe.css('opacity',1);
 		}
-	}).trigger('loading');
+	});
 	$('aside').on('click','li',function(){
 		$('aside li.active').removeClass('active');
 		$(this).addClass('active');
@@ -43,19 +43,15 @@ $('#page').on('_ready',function(){
 		if(iframe[0].contentWindow.location.href==this.href){
 			iframe[0].contentWindow.location.reload();
 		}
-		$(document.body).trigger('loading');
 	});
 	
 	$('.back').on('click',function(){
-		$(document.body).trigger('loading');
 		iframe[0].contentWindow.history.back();
 	});
 	$('.forward').on('click',function(){
-		$(document.body).trigger('loading');
 		iframe[0].contentWindow.history.forward();
 	})
 	$('.refresh').on('click',function(){
-		$(document.body).trigger('loading');
 		iframe[0].contentWindow.location.reload();
 	});
 	

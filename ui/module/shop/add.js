@@ -26,7 +26,10 @@
             "merchantId" : merchantId,
             "name" : name
         });      
-        lib.ajat('#domid=form&tempid=form-t').template(shopData);    
+        lib.ajat('#domid=form&tempid=form-t').template(shopData);
+		document.body.onbeforeunload=function(){
+			return "确定离开当前页面吗？";
+		}
     }
 
     $("#preview-btn").on('click',function(){
@@ -65,6 +68,7 @@
             shopData = $.extend({},shopData,data);
             sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
         }
+		document.body.onbeforeunload=function(){}
         location.href = "bank.html?type="+type;
     } 
 

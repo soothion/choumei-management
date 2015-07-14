@@ -15,7 +15,10 @@
     
     if(type === 'add'){
         var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
-        lib.ajat('#domid=form&tempid=form-t').template(shopData);    
+        lib.ajat('#domid=form&tempid=form-t').template(shopData);
+		document.body.onbeforeunload=function(){
+			return "确定离开当前页面吗？";
+		}		
     }
 
     $(".flex-item a").on('click',function(e){
@@ -43,6 +46,7 @@
             shopData = $.extend({},shopData,data);
             sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
         }
+		document.body.onbeforeunload=function(){}
         location.href = "assess.html?type="+type;
     }
 })()
