@@ -14,6 +14,11 @@
 	lib.Ajat.before=function(){
 		$(document.body).on('_ready',lib.loadingend).on('exception',lib.loadingend);
 	}
+	document.onreadystatechange=function(){
+		if(document.readyState=='interactive'){
+			parent.$('body').trigger('loading');
+		}
+	}
 })();
 $(function(){
 	/**渲染面包屑**/

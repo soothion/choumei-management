@@ -26,7 +26,10 @@
             "merchantId" : merchantId,
             "name" : name
         });      
-        lib.ajat('#domid=form&tempid=form-t').template(shopData);    
+        lib.ajat('#domid=form&tempid=form-t').template(shopData);
+		document.body.onbeforeunload=function(){
+			return "确定离开当前页面吗？";
+		}
     }
 
     $("#preview-btn").on('click',function(){
@@ -37,6 +40,15 @@
 		}
 		if(!data.businessName){
 			data.businessName=$('#business option:selected').text();
+		}
+		if(!data.provinceName){
+			data.provinceName=$('#province option:selected').text();
+		}
+		if(!data.citiesName){
+			data.citiesName=$('#city option:selected').text();
+		}
+		if(!data.districtName){
+			data.districtName=$('#area option:selected').text();
 		}
         if(type === 'edit') var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
         if(type === 'add')  var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
@@ -65,6 +77,7 @@
             shopData = $.extend({},shopData,data);
             sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
         }
+		document.body.onbeforeunload=function(){}
         location.href = "bank.html?type="+type;
     } 
 
@@ -164,7 +177,7 @@ function renderMap (){
                     map.clearOverlays();
                     drawMarker(point);
                 } else {
-                    lib.popup.alert({text:'暂时无法获取您的位置'})
+                    parent.lib.popup.alert({text:'暂时无法获取您的位置'})
                 }
             })
         });
@@ -182,7 +195,7 @@ function renderMap (){
                $("#coorMarkerInput").blur();
                $("#pop-wrapper").hide();
             }else{
-               lib.popup.alert({text:'未标记地图'});
+               parent.lib.popup.alert({text:'未标记地图'});
             }
         });
     });

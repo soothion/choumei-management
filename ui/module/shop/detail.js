@@ -15,7 +15,7 @@
         if(data.salonType){
             var arr = data.salonType.split("_");
             arr.forEach(function(value,index){
-                $(":checkbox[value='"+value+"']").attr('checked',true).show().next().show(); 
+               $(":checkbox[value='"+value+"']").attr('checked',true).show().next().show(); 
             })       
         }
     }
@@ -126,7 +126,7 @@
 
     $("#table-wrapper").delegate(".img-wrapper","click",function(){
         var id = $(this).parent().attr("id");
-        var index = $(this).children().attr("index");
+        var index = $(this).index();
         if(id === "con_wrapper"){
             appendImage(JSON.parse(currentData.contractPicUrl || null),index);
         }
@@ -136,11 +136,6 @@
         if(id === "cor_wrapper"){
             appendImage(JSON.parse(currentData.corporatePicUrl || null),index);           
         }
-        $("#swipper").show();
-    });
-
-    $(".swiper-close").on('click',function(){
-        $("#swipper").hide();   
     });
 
     var appendImage = function(arr,index){
@@ -150,20 +145,6 @@
         });
         parent.lib.popup.swiper({list:list,index:index});            
     };
-
-    var initSwiper = function(index){
-        var swiper = new Swiper('.swiper-container', {
-            loop: true,
-            initialSlide : index,
-            lazyLoading : true,            
-            pagination: '.swiper-pagination',
-            nextButton: '.swiper-button-next',
-            prevButton: '.swiper-button-prev',
-            slidesPerView: 1,
-            paginationClickable: true,
-            spaceBetween: 30
-        });  
-    }
 })();
 
     function renderMap(){

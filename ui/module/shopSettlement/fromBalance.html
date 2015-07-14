@@ -6,25 +6,25 @@
 	  <script type="text/javascript" src="../../js/include.js"></script>
   </head>
   <body>
-	<div class="breadcrumb">
-		<a>店铺结算 </a><span>&gt;</span>往来余额
-		<div class="flex-box">
-			<div class="flex-item">
-				<h4>往来余额</h4>
+		<div class="breadcrumb">
+			<a>店铺结算 </a><span>&gt;</span>往来余额
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>往来余额</h4>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="wrapper">
-					<form data-role="hash" class="position-group">
-						<div class="input-group">
-							<select class="select border-none" id="select" name="key">
-								<option value="1">店铺搜索</option>
-								<option value="2">商户搜索</option>
-							</select>
-							<input type="text" class="border-none" placeholder="请输入店铺名" name="keyword">
-							<button type="submit" class="fa fa-search"></button>
-						</div>
-					</form>
+		<div class="wrapper">
+			<form data-role="hash" class="position-group">
+				<div class="input-group">
+					<select class="select border-none" id="select" name="key">
+						<option value="1">店铺搜索</option>
+						<option value="2">商户搜索</option>
+					</select>
+					<input type="text" class="border-none" placeholder="请输入店铺名" name="keyword">
+					<button type="submit" class="fa fa-search"></button>
+				</div>
+			</form>
 			<div class="table" id="table" ajat="shop_count/balance?<%=query._%>#domid=table&tempid=table-t">
 			<script type="text/template" id="table-t">
 			<table>

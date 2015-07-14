@@ -144,7 +144,7 @@
 				if(!data[field.name]){
 					data[field.name]=$.trim(field.value);
 					if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
-						data[field.name]=$.trim([field.value]);
+						data[field.name]=[$.trim(field.value)];
 					}
 				}else{
 					if(data[field.name] instanceof Array){
@@ -564,8 +564,9 @@
 			}
 		},
 		success:function(data){
-			lib.popup.tips({
-				text:'<i class="fa fa-check-circle"></i>'+(data.msg||"数据更新成功"),
+			parent.lib.popup.result({
+				bool:true,
+				text:(data.msg||"数据更新成功"),
 				time:2000,
 				define:function(){
 					history.back();
@@ -573,8 +574,9 @@
 			});
 		},
 		fail:function(data){
-			lib.popup.tips({
-				text:'<i class="fa fa-times-circle"></i>'+(data.msg||"数据更新失败"),
+			parent.lib.popup.tips({
+				bool:false,
+				text:(data.msg||"数据更新失败"),
 				time:2000
 			});
 		},
@@ -608,9 +610,13 @@
 			}
 			var $form=$(this.el);
 			if($form.attr('disabled'))return;
-			if($form.find('.control-help:visible').length==0){
+			var help=$form.find('.control-help:visible');
+			if(help.length==0){
 				var data=lib.getFormData($form);
 				$form.trigger('save',data);
+			}else{
+				$(document).scrollTop(help.eq(0).offset().top-50);
+				help.eq(0).siblings('input:visible').focus();
 			}
 		},
 		save:function(data){
@@ -618,7 +624,7 @@
 			var btn=$el.find('button[type=submit]');
 			if(btn.is(':disabled')) return;
 			btn.attr('disabled',true);
-			lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
+			parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
 			var self=this;
 			lib.ajax({
 				url:$el.attr('action'),

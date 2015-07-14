@@ -27,7 +27,10 @@
             arr.forEach(function(value,index){
                 $(":checkbox[value='"+value+"']").attr('checked',true);
             })
-        }     
+        }
+		document.body.onbeforeunload=function(){
+			return "确定离开当前页面吗？";
+		}
     }
 
     $(".flex-item a").on('click',function(e){
@@ -62,7 +65,7 @@
             shopData = $.extend({},shopData,data);
             sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
         }
-
+		document.body.onbeforeunload=function(){}
         location.href = "upload.html?type="+type;
     }     
 })();

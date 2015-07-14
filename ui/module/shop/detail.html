@@ -26,10 +26,11 @@
                     <button data-slug="salon.endCooperation" class="btn" id="stop_cooperation_btn" salonid="<%=data.salonid%>" status="<%=data.salestatus%>">
                         <%=data.salestatus == 0 ? '恢复合作' : '终止合作'%> 
                     </button>
-
+					&nbsp;
                     <button class="btn" id="remove_stop_btn" salonid="<%=data.salonid%>" data-slug="salon.del"  <%=data.salestatus != 0 ? 'disabled' : ''%> >
                         删除店铺
                     </button>
+					&nbsp;
                     <a href='add.html?type=edit' data-slug="salon.update">
                         <button class="btn">编辑</button>
                     </a>  
@@ -53,7 +54,11 @@
                                 <tbody>
                                     <tr>
                                         <td class="content">店铺地址：</td>
-                                        <td><%=data.provinceName + data.citiesName + data.districtName + data.addr%></td>
+                                        <td><%=data.provinceName!="省份"?data.provinceName:""%>
+											<%=data.citiesName!="城市"?data.citiesName:""%>
+											<%=data.districtName!="地区"?data.districtName:""%>
+											<%=data.addr%>
+										</td>
                                     </tr>
                                     <tr><td class="content">所属商圈：</td>
                                         <td><%=data.zoneName%></td>
@@ -186,7 +191,7 @@
                                     <tr>
                                         <td colspan="2" class="content">店铺类型：</td>
                                         <td colspan="6">
-                                            <input type="checkbox" name="salonType" class="checkbox" style="display:none" 
+                                            <input type="checkbox" name="salonType" class="checkbox" _style="display:none" 
                                             value="1" id="checkbox1">
                                             <label for="checkbox1" style="display:none">纯社区店</label>
 

@@ -34,34 +34,20 @@ $('#page').on('_ready',function(){
 			});
 			iframe.css('opacity',1);
 		}
-	}).trigger('loading');
+	});
 	$('aside').on('click','li',function(){
 		$('aside li.active').removeClass('active');
 		$(this).addClass('active');
-	});
-	$('aside').on('click','a',function(){
+	}).on('click','a',function(){
 		if(iframe[0].contentWindow.location.href==this.href){
 			iframe[0].contentWindow.location.reload();
 		}
-		$(document.body).trigger('loading');
-	});
-	
-	$('.back').on('click',function(){
-		$(document.body).trigger('loading');
-		iframe[0].contentWindow.history.back();
-	});
-	$('.forward').on('click',function(){
-		$(document.body).trigger('loading');
-		iframe[0].contentWindow.history.forward();
-	})
-	$('.refresh').on('click',function(){
-		$(document.body).trigger('loading');
-		iframe[0].contentWindow.location.reload();
-	});
-	
-	$(document).on('click','.menu-category-title',function(e){
+	}).on('click','.menu-category-title',function(e){
 		var $this=$(this);
 		$this.parent().addClass('active').siblings().removeClass('active');
+	});
+	$('.refresh').on('click',function(){
+		iframe[0].contentWindow.location.reload();
 	});
 	$('.nav-main li').on('click',function(){
 		$(this).addClass('active').siblings().removeClass('active');
@@ -81,7 +67,7 @@ $('#page').on('_ready',function(){
 					}
 				});
 			}
-		})
+		});
 	});
 	$(document).on('click','.drop-menu-toggle',function(){//下拉菜单
 		var $this=$(this);
