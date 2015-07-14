@@ -26,10 +26,11 @@
                     <button data-slug="salon.endCooperation" class="btn" id="stop_cooperation_btn" salonid="<%=data.salonid%>" status="<%=data.salestatus%>">
                         <%=data.salestatus == 0 ? '恢复合作' : '终止合作'%> 
                     </button>
-
+					&nbsp;
                     <button class="btn" id="remove_stop_btn" salonid="<%=data.salonid%>" data-slug="salon.del"  <%=data.salestatus != 0 ? 'disabled' : ''%> >
                         删除店铺
                     </button>
+					&nbsp;
                     <a href='add.html?type=edit' data-slug="salon.update">
                         <button class="btn">编辑</button>
                     </a>  
