@@ -608,9 +608,13 @@
 			}
 			var $form=$(this.el);
 			if($form.attr('disabled'))return;
-			if($form.find('.control-help:visible').length==0){
+			var help=$form.find('.control-help:visible');
+			if(help.length==0){
 				var data=lib.getFormData($form);
 				$form.trigger('save',data);
+			}else{
+				$(document).scrollTop(help.eq(0).offset().top-50);
+				help.eq(0).siblings('input').focus();
 			}
 		},
 		save:function(data){
