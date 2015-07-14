@@ -230,11 +230,6 @@
             if(dataType == "3"){
                 initswiper(readyCorArr.concat(corporateArr),index);                
             }   
-            $("#swipper").show();   
-        });
-
-        $(".swiper-close").on('click',function(){
-            $("#swipper").hide();   
         });
 
         $("#preview_btn").on('click',function(){          
