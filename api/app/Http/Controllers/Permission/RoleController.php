@@ -117,7 +117,7 @@ class RoleController extends Controller{
 			$query = $query->where('name','like',$keyword);
 		}
 		$page = isset($param['page'])?max($param['page'],1):1;
-		$page_size = isset($param['page_size'])?$param['page_size']:1;
+		$page_size = isset($param['page_size'])?$param['page_size']:20;
 
 		//手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
