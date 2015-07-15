@@ -13,9 +13,52 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+        //用户模块
+        'user.update' => [
+            'App\Listeners\UserEventListener@onUpdate',
         ],
+        'user.create' => [
+            'App\Listeners\UserEventListener@onCreate',
+        ],      
+        'user.export' => [
+            'App\Listeners\UserEventListener@onExport',
+        ],
+        'login' => [
+            'App\Listeners\UserEventListener@onLogin',
+        ],
+        'logout' => [
+            'App\Listeners\UserEventListener@onLogout',
+        ],   
+
+
+        //角色模块
+        'role.update' => [
+            'App\Listeners\RoleEventListener@onUpdate',
+        ],
+        'role.create' => [
+            'App\Listeners\RoleEventListener@onCreate',
+        ],              
+        'role.export' => [
+            'App\Listeners\RoleEventListener@onExport',
+        ],      
+
+
+        //权限模块
+        'permission.update' => [
+            'App\Listeners\PermissionEventListener@onUpdate',
+        ],
+        'permission.create' => [
+            'App\Listeners\PermissionEventListener@onCreate',
+        ],          
+        'permission.export' => [
+            'App\Listeners\PermissionEventListener@onExport',
+        ],  
+
+        //日志模块          
+        'role.export' => [
+            'App\Listeners\LogEventListener@onExport',
+        ],  
+
     ];
 
     /**
