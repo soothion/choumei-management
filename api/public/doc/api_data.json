@@ -1689,8 +1689,8 @@
             "group": "Parameter",
             "type": "<p>Number</p> ",
             "optional": false,
-            "field": "size",
-            "description": "<p>可选,分页大小.(最小1 最大500,默认10)</p> "
+            "field": "page_size",
+            "description": "<p>可选,分页大小.(最小1 最大500,默认20)</p> "
           },
           {
             "group": "Parameter",
@@ -2097,8 +2097,8 @@
             "group": "Parameter",
             "type": "<p>Number</p> ",
             "optional": false,
-            "field": "size",
-            "description": "<p>可选,分页大小.(最小1 最大500,默认10)</p> "
+            "field": "page_size",
+            "description": "<p>可选,分页大小.(最小1 最大500,默认20)</p> "
           },
           {
             "group": "Parameter",
@@ -2321,8 +2321,8 @@
             "group": "Parameter",
             "type": "<p>Number</p> ",
             "optional": false,
-            "field": "size",
-            "description": "<p>可选,分页大小.(最小1 最大500,默认10)</p> "
+            "field": "page_size",
+            "description": "<p>可选,分页大小.(最小1 最大500,默认20)</p> "
           },
           {
             "group": "Parameter",
