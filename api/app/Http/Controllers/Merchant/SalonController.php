@@ -454,6 +454,7 @@ class SalonController extends Controller {
 			{
 				return $this->error("店铺数据不存在，id错误");
 			}
+			$oldSn = '';
 			foreach ($ordRs as $v)
 			{
 				if($v->sn)
