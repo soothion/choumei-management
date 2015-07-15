@@ -43,7 +43,7 @@
                     </form>
                 </div>              
             </div>
-           <div class="table" ajat="shop_count/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="<%if(query._){%>shop_count/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -63,6 +63,7 @@
                         </tr>
                     </thead>
                <tbody>
+			   <%if(data.data){%>
              <%var type=["","预付交易款","付代收交易款"]%>
 			 <%var state=["","已付款","预览状态"]%>
 				<%var data=data.data%>
@@ -87,6 +88,7 @@
 				   </td>
                   </tr>
 				  <%}%>
+				  <%}%>
               </tbody>
             </table>          
             <div class="pager"> </div>
@@ -104,8 +106,10 @@
 					$this.next().attr('placeholder','请输入商户名');
 				}
 			});
-			$('input[type="date"]').val(lib.getDate());
-			$('form').submit();
+			if(!lib.query._){
+				$('input[type="date"]').val(lib.getDate());
+				$('form').submit();
+			}
 		});
 	</script>
 </body>

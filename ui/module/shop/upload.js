@@ -323,8 +323,10 @@
 						sessionStorage.removeItem('add-shop-data');
 						sessionStorage.removeItem('edit-shop-data');
 						document.body.onbeforeunload=function(){}
+						history.go(-4);
+						/*
 						if(type === "edit") location.href="/module/shop/detail.html?type=detail&salonid="+currentData.salonid;
-						if(type === "add") location.href="../merchant/index.html" ;             
+						if(type === "add") location.href="/module/merchant/index.html" ; */            
 					}
 				}
 			});

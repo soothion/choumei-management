@@ -31,8 +31,8 @@
               <thead>
                 <tr>
                   <th>序号</th>
-                  <th><a href="#page=1&sort_key=salon_name&sort_type=<%=query.sort_type==1?2:1%>">店铺 <i class="fa fa-sort"></i></a></th>
-                  <th><a href="#page=1&sort_key=salon_type&sort_type=<%=query.sort_type==1?2:1%>">店铺类型 <i class="fa fa-sort"></i></a></th>
+                  <th><a href="#page=1&sort_key=salon_name&sort_type=<%=query.sort_type=="ASC"?"DESC":"ASC"%>">店铺 <i class="fa fa-sort"></i></a></th>
+                  <th><a href="#page=1&sort_key=salon_type&sort_type=<%=query.sort_type=="ASC"?"DESC":"ASC"%>">店铺类型 <i class="fa fa-sort"></i></a></th>
                   <th class="colswrap">预付款<br />付交易代收款</th>
 				  <th>换算消费额</th>
 				  <th>交易消费额</th>
@@ -51,8 +51,8 @@
 				<%for(var i=0;i<data.length;i++){%>
                 <tr>
                   <td><%=i+1%></td>
-                  <td><%if(data[i].salon){%><%=data[i].salon.salonname%><%}%></td>
-                  <td><%if(data[i].salon){%><%=types[data[i].salon.salon_type-1]%><%}%></td>
+                  <td><%=data[i].salon_name%></td>
+                  <td><%=types[data[i].salon_type-1]%></td>
                   <td><%=data[i].pay_money%></td>
 				  <td><%=data[i].cost_money%></td>
 				  <td><%=data[i].spend_money%></td>
