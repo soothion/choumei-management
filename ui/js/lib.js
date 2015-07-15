@@ -107,12 +107,12 @@
 					popup.find('.popup-tips-text').html(options.text);
 				}
                 if(options.time){
-                    setTimeout(function(){
-                        popup.fadeOut(300,function(){
+					setTimeout(function(){
+						popup.fadeOut(300,function(){
 							popup.remove();
 						});
 						options.define && options.define.call();
-                    },options.time)
+					},options.time);
                 }else{
 					options.define && options.define.call();
 				}

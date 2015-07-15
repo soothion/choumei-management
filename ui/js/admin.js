@@ -178,6 +178,15 @@ $(function(){
 		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',active.data());
 		complete.hide();
 	});
+	$body.on('exception',function(e,data){
+		if(data.result==0){
+			parent.lib.popup.result({
+				text:"加载数据异常："+data.msg,
+				bool:false,
+				time:2000
+			});
+		}
+	})
 	/**分页**/
 	$body.on('_ready',function(e,data){
 		var $target=$(e.target);
