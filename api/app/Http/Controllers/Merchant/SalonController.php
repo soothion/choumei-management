@@ -185,8 +185,8 @@ class SalonController extends Controller {
 	* @apiParam {String} contractPeriod 可选,合同期限 y_m.
 	* @apiParam {String} bargainno 可选,合同编号.
 	* @apiParam {String} bcontacts 可选,联系人.
-	* @apiParam {String} tel 必填,联系电话.
-	* @apiParam {String} phone 必填,店铺座机.
+	* @apiParam {String} tel 必填,店铺座机.
+	* @apiParam {String} phone 必填,联系电话.
 	* @apiParam {String} corporateName 必填,法人代表.
 	* @apiParam {String} corporateTel 必填,法人电话.
 	* @apiParam {Number} businessId 必填,业务代表Id.
@@ -275,8 +275,8 @@ class SalonController extends Controller {
 	* @apiParam {String} contractPeriod 可选,合同期限 y_m.
 	* @apiParam {String} bargainno 可选,合同编号.
 	* @apiParam {String} bcontacts 可选,联系人.
-	* @apiParam {String} tel 必填,联系电话.
-	* @apiParam {String} phone 必填,店铺座机.
+	* @apiParam {String} tel 必填,店铺座机.
+	* @apiParam {String} phone 必填,联系电话.
 	* @apiParam {String} corporateName 必填,法人代表.
 	* @apiParam {String} corporateTel 必填,法人电话.
 	* @apiParam {Number} businessId 必填,业务代表Id.
@@ -374,8 +374,8 @@ class SalonController extends Controller {
 		
 		$data["bargainno"] = isset($param["bargainno"])?trim($param["bargainno"]):"";//合同编号
 		$data["bcontacts"] = isset($param["bcontacts"])?trim($param["bcontacts"]):"";//联系人
-		$data["tel"] = isset($param["tel"])?trim($param["tel"]):"";//联系电话
-		$data["phone"] = isset($param["phone"])?trim($param["phone"]):"";//店铺座机
+		$data["tel"] = isset($param["tel"])?trim($param["tel"]):"";//店铺座机
+		$data["phone"] = isset($param["phone"])?trim($param["phone"]):"";//联系电话
 		$data["corporateName"] = isset($param["corporateName"])?trim($param["corporateName"]):"";//法人代表
 		$data["corporateTel"] = isset($param["corporateTel"])?trim($param["corporateTel"]):"";//法人电话
 		$data["businessId"] = isset($param["businessId"])?trim($param["businessId"]):"";//业务代表ID
@@ -520,8 +520,8 @@ class SalonController extends Controller {
 	* @apiSuccess {String} contractPeriod 合同期限 y_m.
 	* @apiSuccess {String} bargainno 合同编号.
 	* @apiSuccess {String} bcontacts 联系人.
-	* @apiSuccess {String} tel 联系电话.
-	* @apiSuccess {String} phone 店铺座机.
+	* @apiSuccess {String} tel 店铺座机.
+	* @apiSuccess {String} phone 联系电话.
 	* @apiSuccess {String} corporateName 法人代表.
 	* @apiSuccess {String} corporateTel 法人电话.
 	* @apiSuccess {Number} businessId 业务代表ID.
