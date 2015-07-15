@@ -1,6 +1,6 @@
 ﻿var slug={
 	'user.index':'user/userList.html',
-	'role.index':'role/index.html#page=1&page_size=20',
+	'role.index':'role/index.html',
 	'permission.index':'user/powerList.html',
 	'log.index':'user/logList.html',
 	'salon.index':'shop/index.html',

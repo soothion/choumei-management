@@ -52,11 +52,7 @@ $(function(){
 		parent.$('body').trigger('loadingend');
 	}
 		
-	$body.on('click','a[href]',function(){//触发加载进度条
-		if(!$(this).attr('target')){
-			parent.$('body').trigger('loading');
-		}
-	}).on('submit','form[data-role="hash"]',function(e){//表单submit提交
+	$body.on('submit','form[data-role="hash"]',function(e){//表单submit提交
 		$(this).trigger('hash');
 		e.stopPropagation();
 		e.preventDefault();
