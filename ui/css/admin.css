@@ -52,6 +52,9 @@ input[type='text'], input[type='password'], input[type='url'], input[type='numbe
 }
 textarea{
 	height:100px;
+	line-height:20px;
+	padding-top:5px;
+	padding-bottom:5px;
 }
 select{
 	width:auto;

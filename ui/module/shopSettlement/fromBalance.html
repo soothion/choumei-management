@@ -7,7 +7,7 @@
   </head>
   <body>
 		<div class="breadcrumb">
-			<a>店铺结算 </a><span>&gt;</span>往来余额
+			<a>店铺结算 </a><span>&gt;</span><a href="fromBalance.html">往来余额</a>
 			<div class="flex-box">
 				<div class="flex-item">
 					<h4>往来余额</h4>
@@ -48,23 +48,23 @@
               <tbody>
 				<%data=data.data%>
 				<%var types=["预付款店","投资店","金字塔店"]%>
-				<%for(var i=0;i<data.length;i++){%>
+				<%data.forEach&&data.forEach(function(item,i){%>
                 <tr>
                   <td><%=i+1%></td>
-                  <td><%=data[i].salon_name%></td>
-                  <td><%=types[data[i].salon_type-1]%></td>
-                  <td><%=data[i].pay_money%></td>
-				  <td><%=data[i].cost_money%></td>
-				  <td><%=data[i].spend_money%></td>
-				  <td><%=data[i].balance_money%></td>
-                  <td><%=data[i].invest_money||"0.00"%></td>
-                  <td><%=data[i].invest_return_money||"0.00"%></td>
-                  <td><%=data[i].invest_balance_money||"0.00"%></td>
-				  <td><%=data[i].borrow_money||"0.00"%></td>
-				  <td><%=data[i].borrow_return_money||"0.00"%></td>
-				  <td><%=data[i].borrow_balance_money||"0.00"%></td>
+                  <td><%=item.salon_name%></td>
+                  <td><%=types[item.salon_type-1]%></td>
+                  <td><%=item.pay_money%></td>
+				  <td><%=item.cost_money%></td>
+				  <td><%=item.spend_money%></td>
+				  <td><%=item.balance_money%></td>
+                  <td><%=item.invest_money||"0.00"%></td>
+                  <td><%=item.invest_return_money||"0.00"%></td>
+                  <td><%=item.invest_balance_money||"0.00"%></td>
+				  <td><%=item.borrow_money||"0.00"%></td>
+				  <td><%=item.borrow_return_money||"0.00"%></td>
+				  <td><%=item.borrow_balance_money||"0.00"%></td>
                 </tr>
-				<%}%>
+				<%})%>
               </tbody>
             </table>
 			<div class="pager">

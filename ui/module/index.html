@@ -27,13 +27,13 @@
           </div>
 		  <nav class="nav-main">
 			<ul>
-				<%for(var i=0;i<data.length;i++){%>
-				<li class="<%=i==0?"active":""%>"  data-id="level2<%=data[i].id%>">
+				<%data.forEach(function(item,i){%>
+				<li class="<%=i==0?"active":""%>"  data-id="level2<%=item.id%>">
 					<a>
-						<%=data[i].title%>
+						<%=item.title%>
 					</a>
 				</li>
-				<%}%>
+				<%})%>
 			</ul>
 		  </nav>
 		  
@@ -71,29 +71,27 @@
       </header>
       <div class="frame-main" style="height: 398px;">
          <aside id="aside">
-				<%for(var i=0;i<data.length;i++){%>
-					<div class="menu-level2" id="level2<%=data[i].id%>" style="<%=i!=0?"display:none":""%>">
-					<h2><%=data[i].title%></h2>
-					<%var level2=data[i].child%>
-					<%for(var j=0;j<level2.length;j++){%>
+				<%data.forEach(function(item1,i){%>
+					<div class="menu-level2" id="level2<%=item1.id%>" style="<%=i!=0?"display:none":""%>">
+					<h2><%=item1.title%></h2>
+					<%item1.child&&item1.child.forEach(function(item2,j){%>
 					<div class="menu-category <%=j==0?"active":""%>">
 					<div class="menu-category-title">
-						<span><%=level2[j].title%></span>
+						<span><%=item2.title%></span>
 					</div>
 					<ul>
-						<%var level3=level2[j].child%>
-						<%for(var h=0;h<level3.length;h++){%>
-						<%if(level3[h].show==1){%>
+						<%item2.child&&item2.child.forEach(function(item3){%>
+						<%if(item3.show==1){%>
 						<li class="flex-box">
-							<a href="<%=slug[level3[h].slug]%>" data-slug1="<%=level3[h].slug%>" class="flex-item" target="main"><i class="fa fa-angle-right"></i><%=level3[h].title%></a>
+							<a href="<%=slug[item3.slug]%>" data-slug1="<%=item3.slug%>" class="flex-item" target="main"><i class="fa fa-angle-right"></i><%=item3.title%></a>
 						</li>
 						<%}%>
-						<%}%>
+						<%})%>
 					</ul>
 					</div>
-					<%}%>
+					<%})%>
 					</div>
-				<%}%>
+				<%})%>
          </aside>
          <article>
             <iframe frameborder="0" src="user/info.html" name="main" style="opacity: 1;"></iframe>

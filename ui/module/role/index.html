@@ -7,7 +7,7 @@
   </head>
   <body>
 		<div class="breadcrumb">
-			<a>系统管理</a><span>&gt;</span>角色管理
+			<a>系统管理</a><span>&gt;</span><a href="index.html">角色管理</a>
 			<div class="flex-box">
 				<div class="flex-item">
 					<h4>角色管理</h4>
@@ -71,19 +71,19 @@
               <tbody>			  
 				<%var status=["正常","停用","注销"]%>
 				<%var data=data.data%>
-				<%for(var i=0;i<data.length;i++){%>
+				<%data.forEach(function(item,i){%>
                 <tr>
                   <td><%=i+1%></td>
-                  <td><%=data[i].name%></td>
-                  <td><%=status[data[i].status-1]%></td>
-                  <td><%=data[i].department?data[i].department.title:""%></td>
-				  <td><%=data[i].created_at%></td>
-				  <td><%=data[i].description%></td>
+                  <td><%=item.name%></td>
+                  <td><%=status[item.status-1]%></td>
+                  <td><%=item.department?item.department.title:""%></td>
+				  <td><%=item.created_at%></td>
+				  <td><%=item.description%></td>
 				  <td>
-					 <a class="link" data-slug="role.show,role.update" href="edit.html?id=<%=data[i].id%>">查看</a>
+					 <a class="link" data-slug="role.show,role.update" href="edit.html?id=<%=item.id%>">查看</a>
 				  </td>
                 </tr>
-				<%}%>
+				<%})%>
               </tbody>
             </table>
 			<div class="pager">

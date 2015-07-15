@@ -7,7 +7,7 @@
     <body>
         <div class="breadcrumb">
             <a>店铺管理</a>
-            <span>&gt;</span>店铺账号
+            <span>&gt;</span><a href="account.html">店铺账号</a>
 			<div class="flex-box">
 				<div class="flex-item">
 					<h4>店铺账号</h4>
@@ -49,34 +49,34 @@
 						<%data=data.data%>
 						<%var role=["普通用户","超级管理员"]%>
 						<%var status=["正常使用","已停用","已删除"]%>
-						<%for(var i=0;i<data.length;i++){%>
+						<%data.forEach&&data.forEach(function(item,i){%>
 						<tr>
 							<td><%=i+1%></td>
-							<td class="<%=data[i].name?"colswrap":""%>">
-								<%if(data[i].salonname){%>
-								<strong><%=data[i].salonname%></strong><br />
+							<td class="<%=item.name?"colswrap":""%>">
+								<%if(item.salonname){%>
+								<strong><%=item.salonname%></strong><br />
 								<%}%>
-								<span class="weak">所属商户：<%=data[i].name%></span>
+								<span class="weak">所属商户：<%=item.name%></span>
 							</td>
-							<td><%=data[i].username%></td>
-							<td><%=role[data[i].roleType-1]%></td>
-							<%if(data[i].addTime){
-						var date=new Date(data[i].addTime*1000);
-						data[i].addTime=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
-						}%>
-							<td><%=data[i].addTime%></td>
-							<td><%=status[data[i].status-1]%></td>
+							<td><%=item.username%></td>
+							<td><%=role[item.roleType-1]%></td>
+							<%if(item.addTime){
+								var date=new Date(item.addTime*1000);
+								item.addTime=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
+							}%>
+							<td><%=item.addTime%></td>
+							<td><%=status[item.status-1]%></td>
 							<td>
-							<a data-id="<%=data[i].salonUserId%>" class="link reset" data-slug="salonAccount.resetPwd" data-text="确认重置密码？">重置密码</a>
+							<a data-id="<%=item.salonUserId%>" class="link reset" data-slug="salonAccount.resetPwd" data-text="确认重置密码？">重置密码</a>
 							<span class="space"></span>
 								<form action="salonAccount/delAct" data-role="remove" data-slug="salonAccount.del">
-									<input type="hidden" name="salonUserId" value="<%=data[i].salonUserId%>" />
+									<input type="hidden" name="salonUserId" value="<%=item.salonUserId%>" />
 									<input type="hidden" name="type" value="2" />
 									<button class="link">删除</button>
 								</form>
 							</td>
 						</tr>
-						<%}%>
+						<%})%>
 					</tbody>
 				</table>
 				<div class="pager"></div>

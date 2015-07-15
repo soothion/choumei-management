@@ -7,7 +7,7 @@
   </head>
   <body>
 		<div class="breadcrumb">
-			<a href="ui.html">店铺结算 </a><span>&gt;</span>代收单
+			<a>店铺结算 </a><span>&gt;</span><a href="collectingOrderList.html">代收单</a>
 			<div class="flex-box">
 				<div class="flex-item">
 					<h4>代收单</h4>
@@ -50,20 +50,20 @@
 				  <tbody>
 					<%if(data.data){%>
 					<%data=data.data%>
-					<%for(var i=0;i<data.length;i++){%>
+					<%data.forEach&&data.forEach(function(item,i){%>
 					<tr>
 					  <td><%=i+1%></td>
-					  <td><%=data[i].code%></td>
-					  <td><%=data[i].salon?data[i].salon.salonname:""%></td>
+					  <td><%=item.code%></td>
+					  <td><%=item.salon?item.salon.salonname:""%></td>
 					  <!--
-					  <td><%=data[i].merchant?data[i].merchant.name:""%></td>-->
-					  <td><%=data[i].money%></td>
-					  <td><%=data[i].day%></td>
+					  <td><%=item.merchant?item.merchant.name:""%></td>-->
+					  <td><%=item.money%></td>
+					  <td><%=item.day%></td>
 					  <td>
-						 <a class="link" data-slug="shop_count.delegate_detail" href="collectingOrder.html?id=<%=data[i].id%>">查看</a>
+						 <a class="link" data-slug="shop_count.delegate_detail" href="collectingOrder.html?id=<%=item.id%>">查看</a>
 					  </td>
 					</tr>
-					<%}%>
+					<%})%>
 					<%}%>
 				  </tbody>
 				</table>

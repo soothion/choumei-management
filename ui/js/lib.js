@@ -134,7 +134,8 @@
 				moible:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
 				android:/(android)/i.test(ua),
 				ios:/(iphone|ipod|ipad)/i.test(ua),
-				winphone:/(windows phone)/i.test(ua)
+				winphone:/(windows phone)/i.test(ua),
+				webkit:/webkit/i.test(ua)
 			}
 		},
 		getFormData:function($form){
@@ -392,7 +393,7 @@
 		hooks:{
 			email:'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
 			mobile:'^1[0-9]{10}$',
-			phone:'^[0-9]{7,8}$',
+			phone:'^[0-9\-]{7,13}$',
 			password:'^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$',
 			float:function(val){
 				var reg=new RegExp('^[+-]?([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?$');

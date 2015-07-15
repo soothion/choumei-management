@@ -123,7 +123,7 @@ $(function(){
 		}
 	}).on('click','.tab li',function(){//选项卡切换
 		$(this).addClass('active').siblings().removeClass('active');
-	}).on('input','input[data-role="start"]',function(){//日期区间
+	}).on('blur','input[data-role="start"]',function(){//日期区间
 		var $this=$(this);
 		$this.siblings('input[data-role="end"]').attr('min',$this.val());
 	});
@@ -178,6 +178,7 @@ $(function(){
 		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',active.data());
 		complete.hide();
 	});
+	/**获取数据异常提示**/
 	$body.on('exception',function(e,data){
 		if(data.result==0){
 			parent.lib.popup.result({
@@ -222,6 +223,25 @@ $(function(){
 	}
 	$body.on('_ready',function(e){
 		parent.access.control(e.target);
-	})
+	});
+	/**日期控件修正**/
+	if(!lib.browser().webkit){
+		seajs.use([location.origin+'/laydate/laydate.js']);
+		$body.on('focus','input[type=date]',function(e){
+			$(this).attr('readonly',true);
+		})
+		$body.on('click','input[type=date]',function(e){
+			var options={
+				format: 'YYYY-MM-DD',
+				min:this.min,
+				max:this.max,
+				zIndex:1000,
+				choose:function(){
+					e.target.focus();
+				}
+			};
+			laydate(options);			
+		});
+	}
 });    	
 	

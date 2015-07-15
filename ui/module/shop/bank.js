@@ -6,7 +6,7 @@
 */
 
 (function(){
-    var type = utils.getSearchString("type");
+    var type = lib.query.type;
 
     if(type === 'edit'){
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));       

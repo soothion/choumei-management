@@ -31,9 +31,9 @@
 							<script type="text/template" id="complete-position-t">
 							<%if(data.length>0){%>
 							<ul>
-								<%for(var i=0;i<data.length;i++){%>
-								<li class="complete-item" data-salonid="<%=data[i].salonid%>" data-merchantid="<%=data[i].merchantId%>" data-merchantname="<%=data[i].name%>" ><%=data[i].salonname%></li>
-								<%}%>
+								<%data.forEach(function(item){%>
+								<li class="complete-item" data-salonid="<%=item.salonid%>" data-merchantid="<%=item.merchantId%>" data-merchantname="<%=item.name%>" ><%=item.salonname%></li>
+								<%})%>
 							</ul>
 							<%}else{%>
 							<div style="padding:5px 10px;">没有查找到店铺</div>
