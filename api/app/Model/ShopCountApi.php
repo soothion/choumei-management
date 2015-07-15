@@ -370,7 +370,7 @@ class ShopCountApi
         
         //页数
         $page = isset($options['page'])?max(intval($options['page']),1):1;
-        $size = isset($options['size'])?max(intval($options['size']),1):10;
+        $size = isset($options['page_size'])?max(intval($options['page_size']),1):20;
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });
@@ -486,7 +486,7 @@ class ShopCountApi
         
         //页数
         $page = isset($options['page'])?max(intval($options['page']),1):1;
-        $size = isset($options['size'])?max(intval($options['size']),1):10;
+        $size = isset($options['page_size'])?max(intval($options['page_size']),1):20;
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });
@@ -574,7 +574,7 @@ class ShopCountApi
         
         //页数
         $page = isset($options['page'])?max(intval($options['page']),1):1;
-        $size = isset($options['size'])?max(intval($options['size']),1):10;
+        $size = isset($options['page_size'])?max(intval($options['page_size']),1):20;
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });

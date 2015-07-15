@@ -84,6 +84,7 @@ class Salon extends Model {
 		unset($result['next_page_url']);
 		unset($result['prev_page_url']);
 		$data = array();
+		$rs = array();
 		foreach($result["data"] as $key=>$val)
 		{
 			$tmpVal = (array)$val;
@@ -91,18 +92,22 @@ class Salon extends Model {
 			$areaArr = Salon::getAreaMes(array("zone"=>$tmpVal["zone"],"district"=>$tmpVal["district"])) ;
 			if($areaArr)
 			{
-				$data[$key] = array_merge($data[$key],$areaArr);
+				$rs[$key] = array_merge($data[$key],$areaArr);
+			}
+			else 
+			{
+				$rs[$key] = $data[$key];
 			}
 		}
 		
-		foreach($data as $key=>$val)
+		foreach($rs as $key=>$val)
 		{
 			if(is_null($val) == true)//null 数据转化为 空字符串
 			{
-				$data[$key] = "";
+				$rs[$key] = "";
 			}
 		}
-		$list["data"] = $data;
+		$list["data"] = $rs;
            
         return $list;
 	}
@@ -323,17 +328,25 @@ class Salon extends Model {
 				//市
 				$cityList = DB::table('city')
 	                    ->where(array("pid"=>$districtList->iid))
-	                    ->first();     
-				$rs["citiesName"] = $cityList->iname? $cityList->iname:"";
-				$rs["citiesId"] = $cityList->iid? $cityList->iid:"";
+	                    ->first(); 
+	            if($cityList)
+	            {
+	            	$rs["citiesName"] = $cityList->iname? $cityList->iname:"";
+					$rs["citiesId"] = $cityList->iid? $cityList->iid:"";
 				
 				
-				//省
-				$provinceList = DB::table('province')
+					//省
+					$provinceList = DB::table('province')
 	                    ->where(array("pid"=>$cityList->pid))
-	                    ->first();     
-				$rs["provinceName"] = $provinceList->pname? $provinceList->pname:"";
-				$rs["provinceId"] = $provinceList->pid? $provinceList->pid:"";
+	                    ->first();  
+	                if($provinceList) 
+	                {
+	                	$rs["provinceName"] = $provinceList->pname? $provinceList->pname:"";
+						$rs["provinceId"] = $provinceList->pid? $provinceList->pid:"";
+	                }  
+					
+	            }    
+				
             }
             return $rs;
 	}

@@ -20,6 +20,8 @@ class ShopcountShow extends Command
      * @var string
      */
     protected $description = 'Command description.';
+    
+    protected $controller = null;
 
     /**
      * Create a new command instance.

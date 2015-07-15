@@ -21,7 +21,7 @@ class ShopCountController extends Controller
      * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
      * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
      * @apiParam {Number} page 可选,页数. (从1开始)
-     * @apiParam {Number} size 可选,分页大小.(最小1 最大500,默认10)
+     * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
      * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
@@ -97,7 +97,7 @@ class ShopCountController extends Controller
             'pay_time_min'=>self::T_STRING,
             'pay_time_max'=>self::T_STRING,
             'page'=>self::T_INT,
-            'size'=>self::T_INT,
+            'page_size'=>self::T_INT,
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);
@@ -407,7 +407,7 @@ class ShopCountController extends Controller
      * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
      * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
      * @apiParam {Number} page 可选,页数. (从1开始)
-     * @apiParam {Number} size 可选,分页大小.(最小1 最大500,默认10)
+     * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(代收单号),'type'(代收类型),'money'(代收金额),'day'(代收日期)]
      * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
@@ -474,7 +474,7 @@ class ShopCountController extends Controller
             'pay_time_min'=>self::T_STRING,
             'pay_time_max'=>self::T_STRING,
             'page'=>self::T_INT,
-            'size'=>self::T_INT,
+            'page_size'=>self::T_INT,
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);
@@ -541,7 +541,7 @@ class ShopCountController extends Controller
      * @apiParam {Number} key  1 店铺搜索 2 商户搜索
      * @apiParam {String} keyword  根据key来的关键字
      * @apiParam {Number} page 可选,页数. (从1开始)
-     * @apiParam {Number} size 可选,分页大小.(最小1 最大500,默认10)
+     * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'salon_name','salon_type','pay_money','cost_money',...(money相关的key)]
      * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
@@ -615,7 +615,7 @@ class ShopCountController extends Controller
             'pay_time_min'=>self::T_STRING,
             'pay_time_max'=>self::T_STRING,
             'page'=>self::T_INT,
-            'size'=>self::T_INT,
+            'page_size'=>self::T_INT,
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);
