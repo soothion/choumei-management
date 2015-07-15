@@ -178,6 +178,7 @@ $(function(){
 		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',active.data());
 		complete.hide();
 	});
+	/**获取数据异常提示**/
 	$body.on('exception',function(e,data){
 		if(data.result==0){
 			parent.lib.popup.result({
@@ -222,6 +223,25 @@ $(function(){
 	}
 	$body.on('_ready',function(e){
 		parent.access.control(e.target);
-	})
+	});
+	/**日期控件修正**/
+	if(!lib.browser().webkit){
+		$body.on('focus','input[type=date]',function(){
+			var self=this;
+			if(!self.id){
+				self.id="date"+Math.random();
+			}
+			seajs.use([location.origin+'/laydate/laydate.js',location.origin+'/laydate/need/laydate.css',location.origin+'/laydate/skins/default/laydate.css'],function(){
+				var options={
+					elem:'#'+self.id,
+					format: 'YYYY-MM-DD',
+					min:self.min,
+					max:self.max,
+					zIndex:1000
+				};
+				laydate(options);
+			})
+		});
+	}
 });    	
 	

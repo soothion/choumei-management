@@ -134,7 +134,8 @@
 				moible:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
 				android:/(android)/i.test(ua),
 				ios:/(iphone|ipod|ipad)/i.test(ua),
-				winphone:/(windows phone)/i.test(ua)
+				winphone:/(windows phone)/i.test(ua),
+				webkit:/webkit/i.test(ua)
 			}
 		},
 		getFormData:function($form){
