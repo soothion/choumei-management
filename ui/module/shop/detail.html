@@ -75,7 +75,9 @@
                                     <tr>
                                         <td class="content">合同：</td>
                                         <td>
-											<%if(data.contractTime.indexOf("-")==-1){
+											<%if(data.contractTime&&data.contractTime==0){
+												data.contractTime="";
+											}else if(data.contractTime.indexOf("-")==-1){
 												var date=new Date(data.contractTime*1000);
 												data.contractTime=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 											}%>
