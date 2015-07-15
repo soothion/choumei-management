@@ -24,11 +24,19 @@
 			}).done(function(data){
 				//code 异常处理
 				if(data.result==0){
-					if(data.code==400||data.code==401){
-						parent.location.href="/module/user/login.html";
-					}
 					if(data.code==402){
 						parent.lib.popup.result({bool:false,text:"没有权限操作",time:2000});
+					}else{
+						parent.lib.popup.result({
+							text:"出现异常："+data.msg,
+							bool:false,
+							time:2000,
+							define:function(){
+								if(data.code==400||data.code==401){
+									parent.location.href="/module/user/login.html";
+								}
+							}
+						});
 					}
 				}
 			});
