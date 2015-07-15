@@ -123,7 +123,7 @@ $(function(){
 		}
 	}).on('click','.tab li',function(){//选项卡切换
 		$(this).addClass('active').siblings().removeClass('active');
-	}).on('input','input[data-role="start"]',function(){//日期区间
+	}).on('blur','input[data-role="start"]',function(){//日期区间
 		var $this=$(this);
 		$this.siblings('input[data-role="end"]').attr('min',$this.val());
 	});
@@ -228,11 +228,17 @@ $(function(){
 	if(!lib.browser().webkit){
 		seajs.use([location.origin+'/laydate/laydate.js']);
 		$body.on('focus','input[type=date]',function(e){
+			$(this).attr('readonly',true);
+		})
+		$body.on('click','input[type=date]',function(e){
 			var options={
 				format: 'YYYY-MM-DD',
-				min:self.min,
-				max:self.max,
-				zIndex:1000
+				min:this.min,
+				max:this.max,
+				zIndex:1000,
+				choose:function(){
+					e.target.focus();
+				}
 			};
 			laydate(options);			
 		});
