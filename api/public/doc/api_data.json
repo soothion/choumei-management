@@ -1758,6 +1758,13 @@
             "group": "Success 200",
             "type": "<p>String</p> ",
             "optional": false,
+            "field": "merchant_name",
+            "description": "<p>商户名称.</p> "
+          },
+          {
+            "group": "Success 200",
+            "type": "<p>String</p> ",
+            "optional": false,
             "field": "salon_name",
             "description": "<p>店铺名称.</p> "
           },
@@ -1837,20 +1844,13 @@
             "optional": false,
             "field": "borrow_balance_money",
             "description": "<p>借款余额.</p> "
-          },
-          {
-            "group": "Success 200",
-            "type": "<p>Object</p> ",
-            "optional": false,
-            "field": "merchant",
-            "description": "<p>商盟信息.</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "{\n    \"result\": 1,\n    \"data\": {\n        \"total\": 1,\n        \"per_page\": 10,\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"from\": 1,\n        \"to\": 1,\n        \"data\": [\n            {\n                \"id\": 1,\n                \"created_at\": \"2015-07-01 00:00:00\",\n                \"merchant_id\": 3,\n                \"salon_id\": 2,\n                \"salon_name\":\"米莱国际造型连锁(田贝店)\",\n                \"salon_type\":1,\n                \"pay_money\": \"123.00\",\n                \"cost_money\": \"111.00\",\n                \"spend_money\": \"23434.00\",\n                \"balance_money\": \"2334.00\",\n                \"invest_money\": \"2334.00\",\n                \"invest_return_money\": \"23.00\",\n                \"invest_balance_money\": \"343.00\",\n                \"borrow_money\": \"2323.00\",\n                \"borrow_return_money\": \"34.00\",\n                \"borrow_balance_money\": \"2334.00\",\n                \"merchant\": {\n                    \"id\": 3,\n                    \"name\": \"黎艳平\"\n                }\n            }\n        ]\n    }\n}",
+          "content": "{\n    \"result\": 1,\n    \"data\": {\n        \"total\": 1,\n        \"per_page\": 10,\n        \"current_page\": 1,\n        \"last_page\": 1,\n        \"from\": 1,\n        \"to\": 1,\n        \"data\": [\n            {\n                \"id\": 1,\n                \"created_at\": \"2015-07-01 00:00:00\",\n                \"merchant_id\": 3,\n                \"merchant_name\":\"米莱国际\",\n                \"salon_id\": 2,\n                \"salon_name\":\"米莱国际造型连锁(田贝店)\",\n                \"salon_type\":1,\n                \"pay_money\": \"123.00\",\n                \"cost_money\": \"111.00\",\n                \"spend_money\": \"23434.00\",\n                \"balance_money\": \"2334.00\",\n                \"invest_money\": \"2334.00\",\n                \"invest_return_money\": \"23.00\",\n                \"invest_balance_money\": \"343.00\",\n                \"borrow_money\": \"2323.00\",\n                \"borrow_return_money\": \"34.00\",\n                \"borrow_balance_money\": \"2334.00\"\n            }\n        ]\n    }\n}",
           "type": "json"
         }
       ]
