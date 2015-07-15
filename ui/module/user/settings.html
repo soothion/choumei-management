@@ -68,10 +68,10 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色权限</label>
 				<div class="control">
-					<%for(var i=0;i<data.roles.length;i++){%>	
-					<input disabled required checked type="checkbox"  class="checkbox" id="checkbox<%=data.roles[i].id%>" ><label for="checkbox<%=data.roles[i].id%>"><%=data.roles[i].name%></label>
-					<input type="checkbox" value="<%=data.roles[i].id%>" name="roles" style="display:none" />
-					<%}%>
+					<%data.roles.forEach(function(item){%>	
+					<input disabled required checked type="checkbox"  class="checkbox" id="checkbox<%=item.id%>" ><label for="checkbox<%=item.id%>"><%=item.name%></label>
+					<input type="checkbox" value="<%=item.id%>" name="roles" style="display:none" />
+					<%})%>
 				</div>
 			</div>
 			<legend><input class="checkbox" type="checkbox" id="switch" /><label for="switch">修改密码</label></legend>

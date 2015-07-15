@@ -83,13 +83,14 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>配置权限</label>
-				
 				<%var sids=[];
 				if(data.permissions){
 				for(var i=0;i<data.permissions.length;i++){
 					sids.push(data.permissions[i].id);
-				}}%>
-				<div class="control" ajat="list/permission#domid=permission&tempid=permission-t&sids=<%=sids%>," id="permission">
+				}
+				sessionStorage.setItem("permissions",JSON.stringify(sids));
+				}%>
+				<div class="control" ajat="list/permission#domid=permission&tempid=permission-t" id="permission">
 					
 				</div>
 			</div>
@@ -116,9 +117,13 @@
 	</script>
 	<script type="text/template" id="permission-t">
 		<ul class="tree">
+			<%
+				var sids=JSON.parse(sessionStorage.getItem("permissions"));
+				sessionStorage.removeItem("permissions");
+			%>
 			<%data.forEach(function(item1){%>
 			<li>
-				<input type="checkbox" id="root<%=item1.id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(item1.id+",")>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" />
+				<input type="checkbox" id="root<%=item1.id%>" <%=sids.indexOf(item1.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" />
 				<label for="root<%=item1.id%>" style="margin-right:2px;"></label>
 				<%if(item1.child&&item1.child.length>0){%>
 				<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
@@ -127,7 +132,7 @@
 				<ul class="child">
 					<%item1.child.forEach(function(item2){%>
 					<li>
-						<input type="checkbox" id="parent<%=item2.id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(item2.id+",")>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item2.id%>"/>
+						<input type="checkbox" id="parent<%=item2.id%>" <%=sids.indexOf(item2.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item2.id%>"/>
 						<label for="parent<%=item2.id%>" style="margin-right:2px;"></label>
 						<%if(item2.child&&item2.child.length>0){%>
 						<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
@@ -137,7 +142,7 @@
 							<li>
 							<%if(item2.child){%>
 							<%item2.child.forEach(function(item3){%>
-								<input type="checkbox" class="checkbox" id="level3<%=item3.id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(item3.id+",")>-1?"checked":""%> name="permissions" value="<%=item3.id%>"/>
+								<input type="checkbox" class="checkbox" id="level3<%=item3.id%>" <%=sids.indexOf(item3.id)>-1?"checked":""%> name="permissions" value="<%=item3.id%>"/>
 								<label for="level3<%=item3.id%>"><%=item3.title%></label>
 							<%})%>
 							<%}%>
