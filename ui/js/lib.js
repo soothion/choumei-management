@@ -407,7 +407,10 @@
 					return false;
 				}
 			},
-			number:'^[0-9]*[1-9][0-9]*$',
+			number:function(val){
+				var reg=new RegExp('^[0-9]*[1-9][0-9]*$');
+				return reg.test(val)||val==0;
+			},
 			percent:function(val){
 				val=parseFloat(val);
 				return val>=0&&val<=100;
