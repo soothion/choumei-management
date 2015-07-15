@@ -226,21 +226,15 @@ $(function(){
 	});
 	/**日期控件修正**/
 	if(!lib.browser().webkit){
-		$body.on('focus','input[type=date]',function(){
-			var self=this;
-			if(!self.id){
-				self.id="date"+Math.random();
-			}
-			seajs.use([location.origin+'/laydate/laydate.js',location.origin+'/laydate/need/laydate.css',location.origin+'/laydate/skins/default/laydate.css'],function(){
-				var options={
-					elem:'#'+self.id,
-					format: 'YYYY-MM-DD',
-					min:self.min,
-					max:self.max,
-					zIndex:1000
-				};
-				laydate(options);
-			})
+		seajs.use([location.origin+'/laydate/laydate.js']);
+		$body.on('focus','input[type=date]',function(e){
+			var options={
+				format: 'YYYY-MM-DD',
+				min:self.min,
+				max:self.max,
+				zIndex:1000
+			};
+			laydate(options);			
 		});
 	}
 });    	
