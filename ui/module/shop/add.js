@@ -50,6 +50,9 @@
 		if(!data.districtName){
 			data.districtName=$('#area option:selected').text();
 		}
+		if(!data.name){
+			data.name=$('input[name="name"]').val();
+		}
         if(type === 'edit') var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
         if(type === 'add')  var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
         shopData = $.extend({},shopData,data);
