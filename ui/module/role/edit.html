@@ -105,51 +105,49 @@
 		  </script>
 	</div>
 	<script type="text/template" id="department-t">
-		<%for(var i=0;i<data.length;i++){%>
-			<option <%=data[i].id==protocol.custom.sid?"selected":""%> value="<%=data[i].id%>"><%=data[i].title%></option>
-		<%}%>
+		<%data.forEach(function(item){%>
+			<option <%=item.id==protocol.custom.sid?"selected":""%> value="<%=item.id%>"><%=item.title%></option>
+		<%})%>
 	</script>
 	<script type="text/template" id="city-t">
-		<%for(var i=0;i<data.length;i++){%>
-			<option <%=data[i].id==protocol.custom.sid?"selected":""%> value="<%=data[i].id%>"><%=data[i].title%></option>
-		<%}%>
+		<%data.forEach(function(item){%>
+			<option <%=item.id==protocol.custom.sid?"selected":""%> value="<%=item.id%>"><%=item.title%></option>
+		<%})%>
 	</script>
 	<script type="text/template" id="permission-t">
 		<ul class="tree">
-			<%for(var i=0;i<data.length;i++){%>
+			<%data.forEach(function(item1){%>
 			<li>
-				<input type="checkbox" id="root<%=data[i].id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(data[i].id+",")>-1?"checked":""%> class="checkbox" name="permissions" value="<%=data[i].id%>" />
-				<label for="root<%=data[i].id%>" style="margin-right:2px;"></label>
-				<%if(data[i].child&&data[i].child.length>0){%>
+				<input type="checkbox" id="root<%=item1.id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(item1.id+",")>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" />
+				<label for="root<%=item1.id%>" style="margin-right:2px;"></label>
+				<%if(item1.child&&item1.child.length>0){%>
 				<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
 				<%}%>
-				<label for="root<%=data[i].id%>"><%=data[i].title%></label>
+				<label for="root<%=item1.id%>"><%=item1.title%></label>
 				<ul class="child">
-					<%var level2=data[i].child%>
-					<%for(var j=0;j<level2.length;j++){%>
+					<%item1.child.forEach(function(item2){%>
 					<li>
-						<input type="checkbox" id="parent<%=level2[j].id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(level2[j].id+",")>-1?"checked":""%> class="checkbox" name="permissions" value="<%=level2[j].id%>"/>
-						<label for="parent<%=level2[j].id%>" style="margin-right:2px;"></label>
-						<%if(level2[j].child&&level2[j].child.length>0){%>
+						<input type="checkbox" id="parent<%=item2.id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(item2.id+",")>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item2.id%>"/>
+						<label for="parent<%=item2.id%>" style="margin-right:2px;"></label>
+						<%if(item2.child&&item2.child.length>0){%>
 						<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
 						<%}%>
-						<label for="parent<%=level2[j].id%>"><%=level2[j].title%></label>
+						<label for="parent<%=item2.id%>"><%=item2.title%></label>
 						<ul class="child">
 							<li>
-							<%var level3=level2[j].child%>
-							<%if(level3){%>
-							<%for(var m=0;m<level3.length;m++){%>
-								<input type="checkbox" class="checkbox" id="level3<%=level3[m].id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(level3[m].id+",")>-1?"checked":""%> name="permissions" value="<%=level3[m].id%>"/>
-								<label for="level3<%=level3[m].id%>"><%=level3[m].title%></label>
-							<%}%>
+							<%if(item2.child){%>
+							<%item2.child.forEach(function(item3){%>
+								<input type="checkbox" class="checkbox" id="level3<%=item3.id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(item3.id+",")>-1?"checked":""%> name="permissions" value="<%=item3.id%>"/>
+								<label for="level3<%=item3.id%>"><%=item3.title%></label>
+							<%})%>
 							<%}%>
 							</li>
 						</ul>
 					</li>
-					<%}%>
+					<%})%>
 				</ul>
 			</li>
-			<%}%>
+			<%})%>
 		</ul>
 	</script>
 	<script type="text/javascript">

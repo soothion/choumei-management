@@ -47,34 +47,34 @@
 				</thead>
 				<tbody>
 					<%data=data.data%>
-					<%for(var i=0;i<data.length;i++){%>
+					<%data.forEach(function(item,i){%>
 					 <tr>
 						<td><%=i+1%></td>
-						<td><%=data[i].sn%></td>
-						<td><%=data[i].name%></td>
-						<td><%=data[i].salonNum%></td>
-						<td><%=data[i].contact%></td>
-						<td>手机：<%=data[i].mobile%></td>
-						<td class="colswrap">座机：<%=data[i].phone%> <br />   
-							邮箱：<%=data[i].email%>
+						<td><%=item.sn%></td>
+						<td><%=item.name%></td>
+						<td><%=item.salonNum%></td>
+						<td><%=item.contact%></td>
+						<td>手机：<%=item.mobile%></td>
+						<td class="colswrap">座机：<%=item.phone%> <br />   
+							邮箱：<%=item.email%>
 						</td>
-						<%if(data[i].foundingDate){
-						var date=new Date(data[i].foundingDate*1000);
-						data[i].foundingDate=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
+						<%if(item.foundingDate){
+						var date=new Date(item.foundingDate*1000);
+						item.foundingDate=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 						}%>
-						<td><%=data[i].foundingDate||""%></td>
+						<td><%=item.foundingDate||""%></td>
 						<td>
-							<a data-slug="salon.save" href="../shop/add.html?type=add&merchantId=<%=data[i].id%>&name=<%=data[i].name%>" class="link">+添加店铺</a>
+							<a data-slug="salon.save" href="../shop/add.html?type=add&merchantId=<%=item.id%>&name=<%=item.name%>" class="link">+添加店铺</a>
 							<span class="space"></span>
-							<a class="link" data-slug="merchant.show,merchant.update" href="edit.html?id=<%=data[i].id%>">查看</a>
+							<a class="link" data-slug="merchant.show,merchant.update" href="edit.html?id=<%=item.id%>">查看</a>
 							<span class="space"></span>
 							<form action="merchant/del" data-role="remove" data-slug="merchant.del">
-								<input type="hidden" name="id" value="<%=data[i].id%>" />
+								<input type="hidden" name="id" value="<%=item.id%>" />
 								<button class="link">删除</button>
 							</form>
 						</td>
 					</tr> 
-					<%}%>
+					<%})%>
 				</tbody>
 			</table>
 			<div class="pager">

@@ -4,7 +4,6 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="../../js/include.js"></script>
-      <script type="text/javascript" src="../../js/utils.js"></script>
       <link rel="stylesheet" href="shop.css" />    
     </head>
 
@@ -259,41 +258,36 @@
 
         <script type="text/template" id="province_t">
             <option value="">省份</option>
-            <%for(var i=0;i<data.length;i++){%>
-                <option <%=data[i].pid==protocol.custom.provinceId?"selected":""%> value="<%=data[i].pid%>"><%=data[i].pname%></option>
-            <%}%>
+            <%data.forEach&&data.forEach(function(item){%>
+                <option <%=item.pid==protocol.custom.provinceId?"selected":""%> value="<%=item.pid%>"><%=item.pname%></option>
+            <%})%>
         </script>
-
         <script type="text/template" id="city_t">
             <option value="">城市</option>
-			<%if(data){%>
-            <%for(var i=0;i<data.length;i++){%>
-                <option <%=data[i].iid==protocol.custom.citiesId?"selected":""%> value="<%=data[i].iid%>"><%=data[i].iname%></option>
-            <%}%>
-			<%}%>
+            <%data.forEach&&data.forEach(function(item){%>
+                <option <%=item.iid==protocol.custom.citiesId?"selected":""%> value="<%=item.iid%>"><%=item.iname%></option>
+            <%})%>
         </script>
 
         <script type="text/template" id="area_t">
             <option value="">地区</option>
-			<%if(data){%>
-            <%for(var i=0;i<data.length;i++){%>
-                <option <%=data[i].tid==protocol.custom.district?"selected":""%> value="<%=data[i].tid%>"><%=data[i].tname%></option>
-            <%}%>
-			<%}%>
+            <%data.forEach&&data.forEach(function(item){%>
+                <option <%=item.tid==protocol.custom.district?"selected":""%> value="<%=item.tid%>"><%=item.tname%></option>
+            <%})%>
         </script>
 
         <script type="text/template" id="business_t">
             <option value="">请选择</option>
-            <%for(var i=0;i<data.length;i++){%>
-                <option <%=data[i].id == protocol.custom.businessId ? 'selected':''%> value="<%=data[i].id%>">
-                <%=data[i].businessName%></option>
-            <%}%>
+            <%data.forEach&&data.forEach(function(item){%>
+                <option <%=item.id == protocol.custom.businessId ? "selected":""%> value="<%=item.id%>">
+                <%=item.businessName%></option>
+            <%})%>
         </script>
 		<script type="text/template" id="zone_t">
-			 <%for(var i=0;i<data.length;i++){%>
-			<input type="radio" class="label" id="areaRadio<%=data[i].areaid%>" <%=data[i].areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=data[i].areaid%>">
-			<label for="areaRadio<%=data[i].areaid%>"><%=data[i].areaname%></label>
-			<%}%>
+			 <%data.forEach&&data.forEach(function(item){%>
+			<input type="radio" class="label" id="areaRadio<%=item.areaid%>" <%=item.areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=item.areaid%>">
+			<label for="areaRadio<%=item.areaid%>"><%=item.areaname%></label>
+			<%})%>
 			<span class="control-help" style="display:none;"></span>
 		</script>
         <script src="http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()">
