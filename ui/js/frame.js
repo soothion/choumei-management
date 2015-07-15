@@ -62,8 +62,10 @@ $('#page').on('_ready',function(){
 					text:(data.result==1?'退出成功':data.msg),
 					time:2000,
 					define:function(){
-						localStorage.setItem('token','');
-						location.href='user/login.html';
+						if(data.result==1){
+							localStorage.setItem('token','');
+							location.href='user/login.html';
+						}
 					}
 				});
 			}
