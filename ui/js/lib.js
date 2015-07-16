@@ -24,11 +24,22 @@
 			}).done(function(data){
 				//code 异常处理
 				if(data.result==0){
-					if(data.code==400||data.code==401){
-						parent.location.href="/module/user/login.html";
-					}
 					if(data.code==402){
 						parent.lib.popup.result({bool:false,text:"没有权限操作",time:2000});
+					}else{
+						if(data.code==401||data.code==400){
+							data.msg="token失效，请重新登录";
+						}
+						parent.lib.popup.result({
+							text:"出现异常："+data.msg,
+							bool:false,
+							time:2000,
+							define:function(){
+								if(data.code==400||data.code==401){
+									parent.location.href="/module/user/login.html";
+								}
+							}
+						});
 					}
 				}
 			});
@@ -62,7 +73,7 @@
         parseQuery: function (str) {//解析字符串的参数
             var ret = {},reg = /([^?=&]+)=([^&]+)/ig,match;
             while (( match = reg.exec(str)) != null) {
-                ret[match[1]] = match[2];
+                ret[match[1]] = decodeURIComponent(match[2]);
             }
             return ret;
         },
@@ -364,8 +375,10 @@
                 this.setAttribute('_ajat',ajat);
             }
         }).on('change','select[ajat-change]',function(){
-			var ajat=this.getAttribute('ajat-change').replace('${value}',this.value);
-            lib.ajat(ajat).render();
+			if(this.value){
+				var ajat=this.getAttribute('ajat-change').replace('${value}',this.value);
+				lib.ajat(ajat).render();
+			}
 		}).on('_ready',function(e){
 			var $target=$(e.target);
             Ajat.run($target);
@@ -619,7 +632,7 @@
 				var data=lib.getFormData($form);
 				$form.trigger('save',data);
 			}else{
-				$(document).scrollTop(help.eq(0).offset().top-50);
+				$('html,body').animate({scrollTop:help.eq(0).offset().top-50},200);
 				help.eq(0).siblings('input:visible').focus();
 			}
 		},

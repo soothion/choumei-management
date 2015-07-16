@@ -120,7 +120,7 @@
                     <label class="control-label" for=""><span class="red">*</span>合同日期：</label>
                     <div class="control">
                         <%
-                        if(!isNaN(data.contractTime)){
+                        if(data.contractTime&&data.contractTime!=0&&!isNaN(data.contractTime)){
                             var date = new Date(+data.contractTime * 1000);
                             var year  = date.getFullYear();
                             var month = (+date.getMonth()+1) < 9 ? "0"+(+date.getMonth()+1) : +date.getMonth()+1;

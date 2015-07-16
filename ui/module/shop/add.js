@@ -5,22 +5,17 @@
 * @Last Modified time: 2015-07-09 10:52:55
 */
 
-(function(){
-	parent.$('body').trigger('loadingend');
-    $(document.body).off('_ready',lib.loadingend);
-
+$(function(){
     var type = lib.query.type;
 
     if(type && type === 'edit'){
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));
-		lib.ajatCount--;
         lib.ajat('#domid=form&tempid=form-t').template(data);
     }
 
     if(type && type === 'add'){
-		lib.ajatCount--;
-        var merchantId = utils.getSearchString("merchantId");
-        var name = utils.getSearchString("name");  
+        var merchantId = lib.query.merchantId;
+        var name = lib.query.name;  
         var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
         shopData = $.extend({},shopData,{
             "merchantId" : merchantId,
@@ -31,7 +26,8 @@
 			return "确定离开当前页面吗？";
 		}
     }
-
+	
+	
     $("#preview-btn").on('click',function(){
         var data = lib.getFormData($("#form"));
         dataFormat(data);
@@ -94,7 +90,7 @@
         delete data.lngLat;
     }      
 
-})();
+});
 
 
 function renderMap (){

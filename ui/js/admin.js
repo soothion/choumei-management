@@ -45,11 +45,12 @@ $(function(){
 		parent.$('body').trigger('loading');
 		lib.init();
 		lib.Ajat.run();
-		$(document).scrollTop(0);
+		$('html,body').animate({scrollTop:0},200);
 		$body.on('_ready',lib.loadingend);
 	});
 	if($('[ajat]').length==0){
 		parent.$('body').trigger('loadingend');
+		$(document.body).off('_ready',lib.loadingend);
 	}
 		
 	$body.on('submit','form[data-role="hash"]',function(e){//表单submit提交
@@ -168,22 +169,12 @@ $(function(){
 		}
 	}).on('blur','input[ajat-complete]',function(){//自动补全失去焦点事件
 		$(this).closest('.complete').find('.complete-position').hide();
-	}).on('click','.complete-item',function(){//自动补全单击事件
+	}).on('mousedown','.complete-item',function(){//自动补全单击事件
 		var $this=$(this);
 		var complete=$this.closest('.complete');
-		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',active.data());
-		complete.hide();
+		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',$this.data());
+		complete.find('.complete-position').hide();
 	});
-	/**获取数据异常提示**/
-	$body.on('exception',function(e,data){
-		if(data.result==0){
-			parent.lib.popup.result({
-				text:"加载数据异常："+data.msg,
-				bool:false,
-				time:2000
-			});
-		}
-	})
 	/**分页**/
 	$body.on('_ready',function(e,data){
 		var $target=$(e.target);

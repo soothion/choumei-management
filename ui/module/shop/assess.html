@@ -197,7 +197,9 @@
                     <div class="control-group">
                         <label class="control-label" for="">店铺成立时间： </label>
                         <%
-                        if(!isNaN(data.setupTime)){
+						if(data.setupTime==0){
+							data.setupTime="";
+						}else if(!isNaN(data.setupTime)){
                             var date = new Date(+data.setupTime * 1000);
                             var year  = date.getFullYear();
                             var month = (+date.getMonth()+1) < 9 ? "0"+(+date.getMonth()+1) : +date.getMonth()+1;
@@ -206,6 +208,7 @@
                         }
                         %>
                         <div class="control">
+							<%=data.setupTime%>
                             <input type="date" name="setupTime" value="<%=data.setupTime%>" min="1950-01-01" max="2030-01-01">
                         </div>
                     </div> 

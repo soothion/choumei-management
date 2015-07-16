@@ -13,7 +13,7 @@
 					<h4>店铺账号</h4>
 				</div>
 				<div>
-					<a class="btn-primary" data-slug="salonAccount.create" href="addAccount.html"><i class="fa fa-plus"></i>新增</a>
+					<a class="btn-primary" data-slug="salonAccount.save" href="addAccount.html"><i class="fa fa-plus"></i>新增</a>
 				</div>
 			</div>
         </div>
@@ -39,9 +39,9 @@
 							<th>序号</th>
 							<th>店铺</th>
 							<th>用户名</th>
-							<th><a data-role="hash" href="#sort_key=roleType&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">用户角色 <i class="fa fa-sort"></i></a></th>
+							<th><a data-role="hash" href="#page=1&sort_key=roleType&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">用户角色 <i class="fa fa-sort"></i></a></th>
 							<th>创建日期 </th>
-							<th><a data-role="hash" href="#sort_key=status&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">状态  <i class="fa fa-sort"></i></a></th>
+							<th><a data-role="hash" href="#page=1&sort_key=status&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">状态  <i class="fa fa-sort"></i></a></th>
 							<th>操作</th>
 						</tr>
 					</thead>
