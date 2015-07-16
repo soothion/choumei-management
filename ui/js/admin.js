@@ -45,7 +45,7 @@ $(function(){
 		parent.$('body').trigger('loading');
 		lib.init();
 		lib.Ajat.run();
-		$(document).scrollTop(0);
+		$('html,body').animate({scrollTop:0},200);
 		$body.on('_ready',lib.loadingend);
 	});
 	if($('[ajat]').length==0){

@@ -632,7 +632,7 @@
 				var data=lib.getFormData($form);
 				$form.trigger('save',data);
 			}else{
-				$(document).scrollTop(help.eq(0).offset().top-50);
+				$('html,body').animate({scrollTop:help.eq(0).offset().top-50},200);
 				help.eq(0).siblings('input:visible').focus();
 			}
 		},
