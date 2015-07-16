@@ -685,6 +685,7 @@
 				$(this).removeClass('select-focus');
 			}).on('mousedown',this.selector,function(e){
 				$('.select').not($(this)).blur();
+				$('input:focus,textarea:focus').blur();
 				if(!this.disabled){
 					self.instance(this);
 				}
