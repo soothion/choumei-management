@@ -27,6 +27,9 @@
 					if(data.code==402){
 						parent.lib.popup.result({bool:false,text:"没有权限操作",time:2000});
 					}else{
+						if(data.code==401||data.code==400){
+							data.msg="token失效，请重新登录";
+						}
 						parent.lib.popup.result({
 							text:"出现异常："+data.msg,
 							bool:false,
