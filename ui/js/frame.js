@@ -10,14 +10,15 @@ $('#page').on('_ready',function(){
 	var loadbar=$('.loadbar');
 	var iframe=$('iframe');
 	var timeStamp=0;
+	var time=500;
 	$(document.body).on('loading',function(e){
 		timeStamp=e.timeStamp;
 		loadbar.stop().width(0).animate({
 			width:$(window).width()-100
-		},600);
+		},time);
 		iframe.css('opacity',0.35);
 	}).on('loadingend',function(e){
-		if(e.timeStamp-timeStamp<600){
+		if(e.timeStamp-timeStamp<time){
 			setTimeout(function(){
 				loadbar.animate({
 					width:'100%'
@@ -25,7 +26,7 @@ $('#page').on('_ready',function(){
 					loadbar.css({width:0});
 				});
 				iframe.css('opacity',1);
-			},600-(e.timeStamp-timeStamp))
+			},time-(e.timeStamp-timeStamp))
 		}else{
 			loadbar.animate({
 				width:'100%'
