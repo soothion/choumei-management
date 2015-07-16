@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-06 16:48:38
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-16 15:10:36
+* @Last Modified time: 2015-07-16 17:38:49
 */
 
 (function(){
@@ -173,8 +173,11 @@
         map.addOverlay(marker);
         //跳动的动画   
         marker.setAnimation(BMAP_ANIMATION_BOUNCE);
+
+        var addr = $map.data('addr') || '南山科技中一路华强高新发展大楼';
                 
         $("#map-open").on('click',function(){
-			window.open("http://map.baidu.com/?latlng="+($map.data('lat')||22.535644)+","+($map.data('lng')||113.941893)+"&title=我们位置&content=南山科技中一路华强高新发展大楼&autoOpen=true");            
+			window.open("http://map.baidu.com/?latlng="+($map.data('lat')||22.535644)+","+($map.data('lng')||113.941893)+"&title="+addr+"&autoOpen=true");
+
 		})           
     }

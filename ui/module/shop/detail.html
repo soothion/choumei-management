@@ -77,7 +77,9 @@
                                         <td class="content">合同：</td>
                                         <td>
                                             <%
-                                            if(!isNaN(data.contractTime)){
+                                            if(data.contractTime==0){
+                                                data.contractTime = "";
+                                            } else if(!isNaN(data.contractTime)){
                                                 data.contractTime = lib.getDate(data.contractTime);
                                             }
                                             %>
@@ -183,7 +185,9 @@
                                         <td colspan="2" class="content">店铺成立时间：</td>
                                         <td colspan="2">
                                         <%
-                                        if(!isNaN(data.setupTime)){
+                                        if(data.setupTime==0){
+                                            data.setupTime = "";
+                                        }else if(!isNaN(data.setupTime)){
                                             data.setupTime = lib.getDate(data.setupTime);
                                         }
                                         %>
@@ -286,7 +290,8 @@
                             </table>                                           
                         </div>
                 </div>
-                <div class="map" data-lat="<%=data.addrlati%>" data-lng="<%=data.addrlong%>">
+                <div class="map" data-lat="<%=data.addrlati%>" data-lng="<%=data.addrlong%>" 
+                data-addr="<%=data.addr%>">
                     <div><strong>地理坐标：</strong></div>
                     <div>
                         <div class="map-content" id="mapContent"></div>

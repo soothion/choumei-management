@@ -727,8 +727,8 @@ form[data-role="hash"] button{
 }
 .popup .swiper-close{
 	position:absolute;
-	top:-8px;
-	right:-8px;
+	top:10px;
+	right:10px;
 	z-index:100;
 }
 .popup .swiper-close i{
