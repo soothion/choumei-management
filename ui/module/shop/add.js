@@ -5,9 +5,7 @@
 * @Last Modified time: 2015-07-09 10:52:55
 */
 
-(function(){
-	document.onreadystatechange=function(){}
-
+$(function(){
     var type = lib.query.type;
 
     if(type && type === 'edit'){
@@ -28,7 +26,8 @@
 			return "确定离开当前页面吗？";
 		}
     }
-
+	
+	
     $("#preview-btn").on('click',function(){
         var data = lib.getFormData($("#form"));
         dataFormat(data);
@@ -91,7 +90,7 @@
         delete data.lngLat;
     }      
 
-})();
+});
 
 
 function renderMap (){

@@ -50,6 +50,7 @@ $(function(){
 	});
 	if($('[ajat]').length==0){
 		parent.$('body').trigger('loadingend');
+		$(document.body).off('_ready',lib.loadingend);
 	}
 		
 	$body.on('submit','form[data-role="hash"]',function(e){//表单submit提交
