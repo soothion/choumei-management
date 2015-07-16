@@ -6,19 +6,16 @@
 */
 
 (function(){
-	parent.$('body').trigger('loadingend');
-    $(document.body).off('_ready',lib.loadingend);
+	document.onreadystatechange=function(){}
 
     var type = lib.query.type;
 
     if(type && type === 'edit'){
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));
-		lib.ajatCount--;
         lib.ajat('#domid=form&tempid=form-t').template(data);
     }
 
     if(type && type === 'add'){
-		lib.ajatCount--;
         var merchantId = lib.query.merchantId;
         var name = lib.query.name;  
         var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
