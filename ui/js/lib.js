@@ -719,11 +719,11 @@
 			var css={
 				'minWidth':$select.outerWidth(),
 				left:$select.offset().left,
-				top:$select.offset().top+$select.height(),
+				top:$select.offset().top+$select.outerHeight()-1,
 				opacity:1
 			};
 			if(css.top+options.outerHeight()>$(document).scrollTop()+$(window).height()){
-				css.top=$select.offset().top-options.outerHeight();
+				css.top=$select.offset().top-options.outerHeight()+1;
 			}
 			options.css(css);
 		}

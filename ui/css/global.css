@@ -166,6 +166,7 @@ button[disabled]{
 .border-none{
 	border:0px!important;
 	border-radius:0!important;
+	box-shadow:none!important;
 }
 ::-ms-expand{
 	border:0;
