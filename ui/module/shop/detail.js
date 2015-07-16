@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-06 16:48:38
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-09 12:26:19
+* @Last Modified time: 2015-07-16 15:10:36
 */
 
 (function(){
@@ -39,7 +39,10 @@
         
     }
 
+    //预览
     if(type === "preview"){
+        $("#branchTitle").attr("href","#");
+        $("#leafTitle").text("预览");
         var data = JSON.parse(sessionStorage.getItem('preview-shop-data'));
         var conArr = JSON.parse(localStorage.getItem("contractPicUrl")); 
         var licArr = JSON.parse(sessionStorage.getItem("licensePicUrl"));
