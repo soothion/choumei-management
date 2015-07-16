@@ -70,7 +70,7 @@
         parseQuery: function (str) {//解析字符串的参数
             var ret = {},reg = /([^?=&]+)=([^&]+)/ig,match;
             while (( match = reg.exec(str)) != null) {
-                ret[match[1]] = match[2];
+                ret[match[1]] = decodeURIComponent(match[2]);
             }
             return ret;
         },
