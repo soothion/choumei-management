@@ -169,11 +169,11 @@ $(function(){
 		}
 	}).on('blur','input[ajat-complete]',function(){//自动补全失去焦点事件
 		$(this).closest('.complete').find('.complete-position').hide();
-	}).on('click','.complete-item',function(){//自动补全单击事件
+	}).on('mousedown','.complete-item',function(){//自动补全单击事件
 		var $this=$(this);
 		var complete=$this.closest('.complete');
-		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',active.data());
-		complete.hide();
+		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',$this.data());
+		complete.find('.complete-position').hide();
 	});
 	/**分页**/
 	$body.on('_ready',function(e,data){
