@@ -52,8 +52,8 @@
 			var session=$.extend(this.getSession(),obj);
 			localStorage.setItem('session',JSON.stringify(session));
 		},
-		getDate:function(){
-			var date=new Date();
+		getDate:function(time){
+			var date= time ? new Date(time*1000) : new Date();
 			return date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 		},
         ejs:{
