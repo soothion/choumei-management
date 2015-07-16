@@ -20,7 +20,7 @@
     if(type && type === 'add'){
 		lib.ajatCount--;
         var merchantId = lib.query.merchantId;
-        var name = utils.getSearchString("name");  
+        var name = lib.query.name;  
         var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
         shopData = $.extend({},shopData,{
             "merchantId" : merchantId,
