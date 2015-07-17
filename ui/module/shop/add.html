@@ -186,32 +186,31 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>联系电话：</label>
                     <div class="control">
-						 <input type="text" name="phone" value="<%=data.phone%>" placeholder="联系电话" 
-                         maxlength="12" pattern="mobile" patternmsg="11位有效手机号码" required>
+						 <input type="text" name="phone" value="<%=data.phone%>" placeholder="请输入11位有效手机号" 
+                         maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号码" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺电话：</label>
-                    <div class="control">
-                       
-                        <input type="text" name="tel" value="<%=data.tel%>" placeholder="11位有效手机号码" 
-                        maxlength="11" pattern="phone" patternmsg="请输入7-12位有效店铺电话" required>
+                    <div class="control">                       
+                        <input type="text" name="tel" value="<%=data.tel%>" placeholder="请输入7-12位有效店铺电话" 
+                        maxlength="12" pattern="phone" patternmsg="请输入7-12位有效店铺电话" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>法人代表：</label>
                     <div class="control">
-                        <input type="text" name="corporateName" value="<%=data.corporateName%>" placeholder="法人代表" 
-                        maxlength="8" required>
+                        <input type="text" name="corporateName" value="<%=data.corporateName%>" 
+                        placeholder="法人代表" maxlength="8" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>法人电话：</label>
                     <div class="control">
-                        <input type="text" name="corporateTel" value="<%=data.corporateTel%>" placeholder="11位有效手机号码" 
+                        <input type="text" name="corporateTel" value="<%=data.corporateTel%>" placeholder="请输入11位有效手机号" 
                         maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号" required>
                     </div>
                 </div>
