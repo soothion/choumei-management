@@ -16,6 +16,10 @@ Route::any('/', function () {
     return view('welcome');
 });
 
+//测试控制器
+Route::any('test',array(
+	'uses'=>'IndexController@test'
+));
 
 Route::any('captcha', 'IndexController@captcha');
 Route::any('login', 'IndexController@login');
