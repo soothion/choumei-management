@@ -21,15 +21,17 @@
         <div class="wrapper">
            <form data-role="hash" class="position-group">
 				<div class="input-group">
-					<select class="select border-none" id="select">
+					<select class="select" id="select">
 						<option value="0">店铺搜索</option>
 						<option value="1">商户搜索</option>
 						<option value="2">用户名</option>
 					</select>
-					<input type="text" class="border-none" placeholder="请输入店铺名" name="salonname">
-					<input type="text" class="border-none" placeholder="请输入商户名" name="name" style="display:none">
-					<input type="text" class="border-none" placeholder="请输入用户名" name="username" style="display:none">
-					<button type="submit" class="fa fa-search"></button>
+					<input type="text" placeholder="请输入店铺名" name="salonname">
+					<input type="text" placeholder="请输入商户名" name="name" style="display:none">
+					<input type="text" placeholder="请输入用户名" name="username" style="display:none">
+					<button type="submit" class="btn btn-search">
+						<i class="fa fa-search"></i>
+					</button>
 				</div>
 			</form>
             <div class="table" id="table" ajat="salonAccount/index?<%=query._%>#domid=table&tempid=table-t">

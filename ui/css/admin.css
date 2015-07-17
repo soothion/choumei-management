@@ -622,31 +622,35 @@ form[data-role="hash"] button{
 	top:40px;
 }
 .input-group{
-	border:1px solid #E6EAF2;
-	border-radius:3px;
 	display:inline-block;
 	vertical-align:middle;
 	font-size:0;
 }
-.input-group select{
-	min-width:0;
-	border-right:1px solid #ddd!important;
-	margin-left:-1px;
-	margin-bottom:0px!important;
-	margin-top:0px!important;
-	padding-left:5px;
+.input-group button,.input-group input,.input-group select{
+	border-radius:0px;
+	margin:0px!important;
+	min-width:20px;
+	margin-right:-1px;
 }
-.input-group input,.input-group button{
-	margin-bottom:0px!important;
-	margin-top:0px!important;
+.input-group button:first-child,.input-group input:first-child,.input-group select:first-child{
+	border-radius:3px 0px 0px 3px;
+}
+.input-group button:last-child,.input-group input:last-child,.input-group select:last-child{
+	border-radius:0px 3px 3px 0px;
+}
+.input-group .btn-search{
+	border-color:#E6EAF2;
+	border-left-color:#fff;
 }
 .input-group .fa{
 	font-size:16px;
 	vertical-align:middle;
 	margin:0px 5px;
 	color:#666;
+	position: relative;
+	top: -2px;
 }
-.input-group input:focus~.fa{
+.input-group input:focus~.btn-search .fa{
 	color:#498ae5;
 }
 /**hash表单提交 end**/

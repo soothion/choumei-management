@@ -20,13 +20,15 @@
 		<div class="wrapper">
 			<form data-role="hash" class="position-group">
 				<div class="input-group">
-					<select class="select border-none" id="select">
+					<select class="select" id="select">
 						<option value="1">商户搜索</option>
 						<option value="2">手机号搜索</option>
 					</select>
-					<input type="text" name="name" class="border-none" placeholder="请输入店铺名">
-					<input type="text" name="mobile" class="border-none hide" placeholder="请输入手机号">
-					<button type="submit" class="fa fa-search"></button>
+					<input type="text" name="name"  placeholder="请输入店铺名">
+					<input type="text" name="mobile" class="hide" placeholder="请输入手机号">
+					<button type="submit" class="btn btn-search">
+						<i class="fa fa-search"></i>
+					</button>
 				</div>
 			</form>
 			<div class="table" ajat="merchant/index?<%=query._%>#domid=table&tempid=table-t" id="table">
