@@ -210,6 +210,7 @@ class ListController extends Controller{
         		$id = 'id';
         	}		
             foreach ($query->select([$id,'inherit_id','title','slug','sort','show'])->orderBy('sort','desc')->get() as $permission) {
+                $permission = $permission->toArray();
                 $permissions[] = $permission;  
             }
         }
