@@ -9,7 +9,7 @@ use Request;
 use App\Log;
 use JWTAuth;
 
-class RoleListener {
+class RoleEventListener {
 
 	/**
 	 * Create the event handler.
