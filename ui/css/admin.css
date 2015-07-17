@@ -36,6 +36,7 @@ h1, h2, h3, h4, h5, h6,legend{
 	color:#666;
 	outline:none;
 	box-sizing: border-box;
+	border-color:#E6EAF2
 }
 .btn-primary{
 	border-color:#58A2EC;
