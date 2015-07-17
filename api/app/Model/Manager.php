@@ -80,7 +80,7 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
         foreach ($this->roles as $role) {
         	if($role->status!=1)
         		continue;
-            if($role->username=='administrator')
+            if($role->id==1)
                 return Permission::lists('slug');
             foreach ($role->permissions->toArray() as $permission) {
                 $permissions[] = $permission['slug'];  
