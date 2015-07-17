@@ -4,7 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class UserTest extends TestCase
+class RoleTest extends TestCase
 {
 
     use WithoutMiddleware;
@@ -16,32 +16,21 @@ class UserTest extends TestCase
     public function testIndex()
     {
         //默认第一页
-        $this->post('user/index')            
+        $this->post('role/index')            
              ->seeJson([
                 'result'=>1,
              ]);
 
-        //筛选username
-        $this->post('user/index',['username'=>'soothion'])            
-             ->seeJson([
-                'username'=>'soothion',
-             ]);
-
-        //筛选username,搜索不存在的用户名,返回空数据
-        $this->post('user/index',['username'=>'none'])            
-             ->seeJson([
-                'data'=>[],
-             ]);
     }
 
     public function testCreate(){
         //创建用户,以当前时间戳为用户名
         $time = time();
-        $this->post('user/create',['username'=>$time,'password'=>'cm123456','roles'=>[1]])            
+        $this->post('role/create',['name'=>$time,'description'=>'测试角色'])            
              ->seeJson([
                 'result'=>1,
              ]);
         //判断数据库是否存在此记录
-        $this->seeInDatabase('managers', ['username' => $time]); 
+        $this->seeInDatabase('roles', ['name' => $time]); 
     }
 }
