@@ -49,6 +49,10 @@ input[type='text'], input[type='password'], input[type='url'], input[type='numbe
 	line-height:32px;
 	color:#666;
 	font-size:12px;
+	-webkit-transition: all 0.2s ease 0s;
+	-moz-transition: all 0.2s ease 0s;
+	-ms-transition: all 0.2s ease 0s;
+	transition: all 0.2s ease 0s;
 }
 textarea{
 	height:100px;
@@ -65,11 +69,16 @@ select{
 	color:#666;
 	margin-right:5px;
 	border-color:#E6EAF2;
+	-webkit-transition: border 0.2s ease 0s,box-shadow 0.2s ease 0s;
+	-moz-transition: border 0.2s ease 0s,box-shadow 0.2s ease 0s;
+	-ms-transition: border 0.2s ease 0s,box-shadow 0.2s ease 0s;
+	transition: border 0.2s ease 0s,box-shadow 0.2s ease 0s;
 }
 input:focus,
 textarea:focus,
 select:focus,.select-focus{
     border-color:#58A2EC;
+	box-shadow:0 0 10px rgba(102, 175, 233, 0.7);
 }
 input.radio:checked+label:before,input.checkbox:checked+label:before{
 	box-shadow:0px 0px 0px 3px #fff,0px 0px 0px 4px #498ae5;
@@ -613,31 +622,36 @@ form[data-role="hash"] button{
 	top:40px;
 }
 .input-group{
-	border:1px solid #E6EAF2;
-	border-radius:3px;
 	display:inline-block;
 	vertical-align:middle;
 	font-size:0;
 }
-.input-group select{
-	min-width:0;
-	border-right:1px solid #ddd!important;
-	margin-left:-1px;
-	margin-bottom:0px!important;
-	margin-top:0px!important;
-	padding-left:5px;
+.input-group button,.input-group input,.input-group select{
+	border-radius:0px;
+	margin:0px!important;
+	min-width:20px;
+	margin-right:-1px;
 }
-.input-group input,.input-group button{
-	margin-bottom:0px!important;
-	margin-top:0px!important;
+.input-group button:first-child,.input-group input:first-child,.input-group select:first-child{
+	border-radius:3px 0px 0px 3px;
+}
+.input-group button:last-child,.input-group input:last-child,.input-group select:last-child{
+	border-radius:0px 3px 3px 0px;
+}
+.input-group .btn-search{
+	border-color:#E6EAF2;
+	border-left-color:#fff;
+	background:transparent;
 }
 .input-group .fa{
 	font-size:16px;
 	vertical-align:middle;
 	margin:0px 5px;
 	color:#666;
+	position: relative;
+	top: -2px;
 }
-.input-group input:focus~.fa{
+.input-group input:focus~.btn-search .fa{
 	color:#498ae5;
 }
 /**hash表单提交 end**/
@@ -721,8 +735,8 @@ form[data-role="hash"] button{
 }
 .popup .swiper-close{
 	position:absolute;
-	top:-8px;
-	right:-8px;
+	top:10px;
+	right:10px;
 	z-index:100;
 }
 .popup .swiper-close i{

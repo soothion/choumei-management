@@ -166,7 +166,10 @@ button[disabled]{
 .border-none{
 	border:0px!important;
 	border-radius:0!important;
+	box-shadow:none!important;
 }
+button::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner { border:none; padding:0; }
 ::-ms-expand{
 	border:0;
 	background:transparent;

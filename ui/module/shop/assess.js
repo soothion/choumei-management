@@ -2,11 +2,11 @@
 * @Author: anchen
 * @Date:   2015-07-07 17:22:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-08 18:49:53
+* @Last Modified time: 2015-07-16 15:26:38
 */
 
 (function(){
-    var type = utils.getSearchString("type");
+    var type = lib.query.type;
 
     if(type === 'edit'){
         var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));       

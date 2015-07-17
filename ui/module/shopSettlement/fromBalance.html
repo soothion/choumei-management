@@ -17,12 +17,14 @@
 		<div class="wrapper">
 			<form data-role="hash" class="position-group">
 				<div class="input-group">
-					<select class="select border-none" id="select" name="key">
+					<select class="select" id="select" name="key">
 						<option value="1">店铺搜索</option>
 						<option value="2">商户搜索</option>
 					</select>
-					<input type="text" class="border-none" placeholder="请输入店铺名" name="keyword">
-					<button type="submit" class="fa fa-search"></button>
+					<input type="text" placeholder="请输入店铺名" name="keyword">
+					<button type="submit" class="btn btn-search">
+						<i class="fa fa-search"></i>
+					</button>
 				</div>
 			</form>
 			<div class="table" id="table" ajat="shop_count/balance?<%=query._%>#domid=table&tempid=table-t">

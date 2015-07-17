@@ -5,7 +5,6 @@
       <title>臭美管理后台</title>
       <script type="text/javascript" src="../../js/include.js"></script>
       <script type="text/javascript" src="../../js/validator.js"></script>
-      <script type="text/javascript" src="../../js/utils.js"></script>
       <link rel="stylesheet" href="shop.css" />    
     </head>
     <body>
@@ -199,16 +198,11 @@
                         <%
 						if(data.setupTime==0){
 							data.setupTime="";
-						}else if(!isNaN(data.setupTime)){
-                            var date = new Date(+data.setupTime * 1000);
-                            var year  = date.getFullYear();
-                            var month = (+date.getMonth()+1) < 9 ? "0"+(+date.getMonth()+1) : +date.getMonth()+1;
-                            var day   = (+date.getDate()) < 9 ? "0"+(+date.getDate()) : date.getDate();
-                            data.setupTime = year + "-" + month + "-" + day;
+						}else if(!isNaN(data.setupTime)){                            
+                            data.setupTime = lib.getDate(data.setupTime);
                         }
                         %>
                         <div class="control">
-							<%=data.setupTime%>
                             <input type="date" name="setupTime" value="<%=data.setupTime%>" min="1950-01-01" max="2030-01-01">
                         </div>
                     </div> 

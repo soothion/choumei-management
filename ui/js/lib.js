@@ -52,8 +52,8 @@
 			var session=$.extend(this.getSession(),obj);
 			localStorage.setItem('session',JSON.stringify(session));
 		},
-		getDate:function(){
-			var date=new Date();
+		getDate:function(time){
+			var date= time ? new Date(time*1000) : new Date();
 			return date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 		},
         ejs:{
@@ -685,6 +685,7 @@
 				$(this).removeClass('select-focus');
 			}).on('mousedown',this.selector,function(e){
 				$('.select').not($(this)).blur();
+				$('input:focus,textarea:focus').blur();
 				if(!this.disabled){
 					self.instance(this);
 				}
@@ -719,11 +720,11 @@
 			var css={
 				'minWidth':$select.outerWidth(),
 				left:$select.offset().left,
-				top:$select.offset().top+$select.height(),
+				top:$select.offset().top+$select.outerHeight()-1,
 				opacity:1
 			};
 			if(css.top+options.outerHeight()>$(document).scrollTop()+$(window).height()){
-				css.top=$select.offset().top-options.outerHeight();
+				css.top=$select.offset().top-options.outerHeight()+1;
 			}
 			options.css(css);
 		}

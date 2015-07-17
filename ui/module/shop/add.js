@@ -2,18 +2,18 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-09 10:52:55
+* @Last Modified time: 2015-07-16 18:01:34
 */
 
 $(function(){
     var type = lib.query.type;
 
-    if(type && type === 'edit'){
+    if(type === 'edit'){
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));
         lib.ajat('#domid=form&tempid=form-t').template(data);
     }
 
-    if(type && type === 'add'){
+    if(type === 'add'){
         var merchantId = lib.query.merchantId;
         var name = lib.query.name;  
         var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
@@ -90,8 +90,7 @@ $(function(){
         delete data.lngLat;
     }      
 
-});
-
+})();
 
 function renderMap (){
     $("#addCoordinate").on('click',function(){

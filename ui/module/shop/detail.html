@@ -11,8 +11,9 @@
         <div class="breadcrumb">
             <a>店铺管理</a>
             <span>&gt;</span>
-            <a href="index.html">店铺管理</a>
-            <span>&gt;</span>店铺详情
+            <a id="branchTitle" href="index.html">店铺列表</a>
+            <span>&gt;</span>
+            <span id="leafTitle">店铺详情</span>
 			<div class="flex-box">
 				<div class="flex-item">
 					<h4>店铺详情</h4>
@@ -43,8 +44,8 @@
                             <table>
                                 <tr style="height:60px;">
                                     <td class="shop-name">
-                                        <h1><%=data.salonname%></h1>
-                                        <p style="padding-left:5px">所属商户：<%=data.name%></p>
+                                        <h1 style="padding-left:0"><%=data.salonname%></h1>
+                                        <p>所属商户：<%=data.name%></p>
                                     </td>
                                     <td class="shop-num">编号：<%=data.sn%></td>
                                 </tr>                      
@@ -75,12 +76,13 @@
                                     <tr>
                                         <td class="content">合同：</td>
                                         <td>
-											<%if(data.contractTime==0){
-												data.contractTime="";
-											}else if(data.contractTime.indexOf("-")==-1){
-												var date=new Date(data.contractTime*1000);
-												data.contractTime=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
-											}%>
+                                            <%
+                                            if(data.contractTime==0){
+                                                data.contractTime = "";
+                                            } else if(!isNaN(data.contractTime)){
+                                                data.contractTime = lib.getDate(data.contractTime);
+                                            }
+                                            %>
                                             <span class="contract-mr">日期：<%=data.contractTime%></span>
                                             <span class="contract-mr">期限：<%=data.contractPeriod.replace("_","年")%>月</span>
                                             <span class="contract-mr">合同编号：<%=data.bargainno%></span>
@@ -134,60 +136,69 @@
                                 <tbody>
                                     <tr>
                                         <td class="content">店铺面积：</td>
-                                        <td><%=data.salonArea%></td>
+                                        <td><%=data.salonArea && data.salonArea + '<span class="unit" style="text-indent:1px">m<sup>2</sup></span>'%></td>
                                         <td class="content">镜台数量：</td>
-                                        <td><%=data.dressingNums%></td>
+                                        <td><%=data.dressingNums && data.dressingNums + '个'%></td>
                                         <td class="content">员工总人数：</td>
-                                        <td><%=data.staffNums%></td>
+                                        <td><%=data.staffNums && data.staffNums + '个'%></td>
                                         <td class="content">发型师人数：</td>
-                                        <td><%=data.stylistNums%></td>
+                                        <td><%=data.stylistNums && data.stylistNums + '个'%></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="con-special">店铺平均月销售量：</td>
-                                        <td colspan="2"><%=data.monthlySales%></td>
+                                        <td colspan="2"><%=data.monthlySales && data.monthlySales+'万元'%></td>
                                         <td colspan="2" class="content">年销售总额：</td>
-                                        <td colspan="2"><%=data.totalSales%></td>
+                                        <td colspan="2"><%=data.totalSales && data.totalSales+'万元'%></td>
                                     </tr>                            
                                     <tr>
                                         <td colspan="2" class="con-special">本店客单价：</td>
-                                        <td colspan="2"><%=data.price%></td>
+                                        <td colspan="2"><%=data.price && data.price+'元'%></td>
                                         <td colspan="2" class="content">充值卡占月销售额：</td>
-                                        <td colspan="2"><%=data.payScale%></td>
+                                        <td colspan="2"><%=data.payScale && data.payScale+'%'%></td>
                                     </tr>                            
                                     <tr>
                                         <td  colspan="2" class="con-special">销售最多的充值卡金额：</td>
-                                        <td ><%=data.payMoney%></td>
-                                        <td ><%=data.payMoneyScale%>折</td>
+                                        <td ><%=data.payMoney && data.payMoney + '万元'%></td>
+                                        <td ><%=data.payMoneyScale && data.payMoneyScale + '折'%></td>
                                         <td colspan="2" class="content">占全部充值总额：</td>
-                                        <td colspan="2"><%=data.payCountScale%></td>
+                                        <td colspan="2"><%=data.payCountScale && data.payCountScale+'%'%></td>
                                     </tr>                            
                                     <tr>
                                         <td colspan="2" class="con-special">洗剪吹占销售额：</td>
-                                        <td colspan="2"><%=data.blowScale%></td>
+                                        <td colspan="2"><%=data.blowScale && data.blowScale+'%'%></td>
                                         <td colspan="2" class="content">烫染占销售额：</td>
-                                        <td colspan="2"><%=data.hdScale%></td>
+                                        <td colspan="2"><%=data.hdScale && data.hdScale+'%'%></td>
                                     </tr>                            
                                     <tr>
                                         <td colspan="2" class="con-special">O2O平台合作：</td>
                                         <td colspan="2"><%=data.platformName%></td>
                                         <td colspan="2" class="content">合作O2O销售额占比：</td>
-                                        <td colspan="2"><%=data.platformScale%>%</td>
+                                        <td colspan="2"><%=data.platformScale && data.platformScale+'%'%></td>
                                     </tr>                            
                                     <tr>
                                         <td colspan="2" class="con-special">本店正常工作时间每日最多客接待人次理论数：</td>
-                                        <td colspan="6"><%=data.receptionNums%></td>
+                                        <td colspan="6"><%=data.receptionNums && data.receptionNums + '人'%></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="con-special">平均每月实际接待：</td>
-                                        <td colspan="2"><%=data.receptionMons%></td>
+                                        <td colspan="2"><%=data.receptionMons && data.receptionMons+'人次'%></td>
                                         <td colspan="2" class="content">店铺成立时间：</td>
-                                        <td colspan="2"><%=data.setupTime%></td>
+                                        <td colspan="2">
+                                        <%
+                                        if(data.setupTime==0){
+                                            data.setupTime = "";
+                                        }else if(!isNaN(data.setupTime)){
+                                            data.setupTime = lib.getDate(data.setupTime);
+                                        }
+                                        %>
+                                        <%=data.setupTime%>
+                                        </td>
                                     </tr>                            
                                     <tr>
                                         <td colspan="2" class="con-special">店铺租金：</td>
-                                        <td colspan="2"><%=data.hotdyeScale%></td>
+                                        <td colspan="2"><%=data.hotdyeScale && data.hotdyeScale+'元'%></td>
                                         <td colspan="2" class="content">店铺租赁合同剩余有效期：</td>
-                                        <td colspan="2"><%=data.lastValidity%></td>
+                                        <td colspan="2"><%=data.lastValidity && data.lastValidity+'个月'%></td>
                                     </tr>                            
 
                                     <tr>
@@ -279,7 +290,8 @@
                             </table>                                           
                         </div>
                 </div>
-                <div class="map" data-lat="<%=data.addrlati%>" data-lng="<%=data.addrlong%>">
+                <div class="map" data-lat="<%=data.addrlati%>" data-lng="<%=data.addrlong%>" 
+                data-addr="<%=data.addr%>">
                     <div><strong>地理坐标：</strong></div>
                     <div>
                         <div class="map-content" id="mapContent"></div>

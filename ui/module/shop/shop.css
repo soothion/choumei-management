@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-06-30 10:24:56
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-08 20:06:14
+* @Last Modified time: 2015-07-16 15:00:06
 */
 
 /********************店铺列表***********************/
@@ -367,6 +367,7 @@
 	margin-top:-6px;
 	padding-top:8px;
 	padding-bottom:5px;
+  margin-left: 1px;
 }
 
 .circle-wrapper label{
