@@ -201,9 +201,12 @@ class ListController extends Controller{
 			return $this->success([]);
         $permissions = [];
         foreach ($user->roles as $role) {
+        	$query = $role->permissions()
         	if($role->status!=1)
         		continue;
-            foreach ($role->permissions()->select(['permission_id as id','inherit_id','title','slug','sort','show'])->orderBy('sort','desc')->get() as $permission) {
+        	if($role->username=='administrator')
+        		$query = Permission::getQuery();
+            foreach ($query->select(['permission_id as id','inherit_id','title','slug','sort','show'])->orderBy('sort','desc')->get() as $permission) {
                 $permission = $permission->toArray();
                 $permissions[] = $permission;  
             }
