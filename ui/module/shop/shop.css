@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-06-30 10:24:56
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-16 15:00:06
+* @Last Modified time: 2015-07-17 16:43:44
 */
 
 /********************店铺列表***********************/
@@ -358,7 +358,6 @@
 	position:relative;
 	z-index:100;
 	border-radius:0px;
-	color:#666;
 }
 
 
