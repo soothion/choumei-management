@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-16 18:01:34
+* @Last Modified time: 2015-07-17 15:10:48
 */
 
 $(function(){
@@ -89,8 +89,7 @@ $(function(){
         data.addrlong = arr[1];
         delete data.lngLat;
     }      
-
-})();
+});
 
 function renderMap (){
     $("#addCoordinate").on('click',function(){
@@ -125,7 +124,7 @@ function renderMap (){
             var marker = new BMap.Marker(point,{icon:markerIcon}); 
             map.addOverlay(marker);
             marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画  
-            //map.panTo(point);                                                
+            map.panTo(point);                                                
         }
 
         if(latlng.lng && latlng.lat){
@@ -188,12 +187,15 @@ function renderMap (){
         $("#pop-sure-btn").off("click");       
         $("#pop-sure-btn").on('click',function(){
             if(addrPonit.coor){
-               $("#coorMarker").text("已标记");               
-               $("#coorMarkerInput").val(addrPonit.coor.lat + ","+addrPonit.coor.lng);
-               $("#coorMarkerInput").blur();
-               $("#pop-wrapper").hide();
+                $("#coorMarker").text("已标记");               
+                $("#coorMarkerInput").val(addrPonit.coor.lat + ","+addrPonit.coor.lng);
+                $("#coorMarkerInput").blur();
+                $("#pop-wrapper").hide();
             }else{
-               parent.lib.popup.alert({text:'未标记地图'});
+                parent.lib.popup.tips({
+                    text:'<i class="fa fa-exclamation-circle"></i>地图未标记,请先标记地图',
+                    time:2000
+                })
             }
         });
     });
