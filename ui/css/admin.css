@@ -78,7 +78,7 @@ select{
 input:focus,
 textarea:focus,
 select:focus,.select-focus{
-    border-color:#58A2EC;
+	border-color:rgba(88,162,236,0.9);
 	box-shadow:0 0 10px rgba(102, 175, 233, 0.7);
 }
 input.radio:checked+label:before,input.checkbox:checked+label:before{
