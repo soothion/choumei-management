@@ -590,7 +590,8 @@ class SalonController extends Controller {
 		if($where)//修改
 		{
 			Salon::where($where)->update($data);
-			if(!SalonInfo::where($whereInfo)->get())
+			$salonTmpInfo = SalonInfo::where($whereInfo)->first();
+			if(!$salonTmpInfo)
 			{
 				DB::table('salon_info')->insertGetId(array("salonid"=>$whereInfo["salonid"]));
 			}
