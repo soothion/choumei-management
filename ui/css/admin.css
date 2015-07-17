@@ -49,7 +49,6 @@ input[type='text'], input[type='password'], input[type='url'], input[type='numbe
 	line-height:32px;
 	color:#666;
 	font-size:12px;
-	
 	-webkit-transition: all 0.2s ease 0s;
 	-moz-transition: all 0.2s ease 0s;
 	-ms-transition: all 0.2s ease 0s;
@@ -70,6 +69,10 @@ select{
 	color:#666;
 	margin-right:5px;
 	border-color:#E6EAF2;
+	-webkit-transition: all 0.2s ease 0s;
+	-moz-transition: all 0.2s ease 0s;
+	-ms-transition: all 0.2s ease 0s;
+	transition: all 0.2s ease 0s;
 }
 input:focus,
 textarea:focus,
