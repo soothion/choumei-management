@@ -562,6 +562,7 @@ th.colswrap{
 	overflow-y:auto;
 	top:0;
 	left:0;
+	opacity:0;
 }
 .options li{
 	padding-left:5px;

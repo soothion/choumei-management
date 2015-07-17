@@ -725,8 +725,10 @@
 			};
 			if(css.top+options.outerHeight()>$(document).scrollTop()+$(window).height()){
 				css.top=$select.offset().top-options.outerHeight()+1;
+				options.css(css);
+			}else{
+				options.css(css).hide().slideDown(100);
 			}
-			options.css(css);
 		}
 	}
 	$(function(){
