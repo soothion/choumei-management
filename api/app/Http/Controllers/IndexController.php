@@ -1,8 +1,6 @@
 <?php namespace App\Http\Controllers;
 
 use App\Manager;
-use Kodeine\Acl\Models\Eloquent\Role;
-use Kodeine\Acl\Models\Eloquent\Permission;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Captcha;
@@ -12,14 +10,13 @@ use Auth;
 use Response;
 use Event;
 use Illuminate\Support\Facades\Redis as Redis;
+use App\Permission;
 
 class IndexController extends Controller{
 
 
 	public function test(){
-		return $query = Manager::with(['roles'=>function($q){
-		    $q->get(['role_user.role_id']);
-		}])->get(['id','name']);
+		return Permission::lists('slug');
 	}
 
 
