@@ -139,14 +139,26 @@
 						<%}%>
 						<label for="parent<%=item2.id%>"><%=item2.title%></label>
 						<ul class="child">
-							<li>
-							<%if(item2.child){%>
 							<%item2.child.forEach(function(item3){%>
-								<input type="checkbox" class="checkbox" id="level3<%=item3.id%>" <%=sids.indexOf(item3.id)>-1?"checked":""%> name="permissions" value="<%=item3.id%>"/>
-								<label for="level3<%=item3.id%>"><%=item3.title%></label>
-							<%})%>
-							<%}%>
+							<li>
+								<input type="checkbox" id="parent<%=item3.id%>" <%=sids.indexOf(item3.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item3.id%>"/>
+								<label for="parent<%=item3.id%>" style="margin-right:2px;"></label>
+								<%if(item3.child&&item3.child.length>0){%>
+								<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+								<%}%>
+								<label for="parent<%=item3.id%>"><%=item3.title%></label>
+								<ul class="child">
+									<li>
+									<%if(item3.child){%>
+									<%item3.child.forEach(function(item4){%>
+										<input type="checkbox" class="checkbox" id="level3<%=item4.id%>" <%=sids.indexOf(item4.id)>-1?"checked":""%> name="permissions" value="<%=item4.id%>"/>
+										<label for="level3<%=item4.id%>"><%=item4.title%></label>
+									<%})%>
+									<%}%>
+									</li>
+								</ul>
 							</li>
+							<%})%>
 						</ul>
 					</li>
 					<%})%>
