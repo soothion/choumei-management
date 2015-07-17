@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-07 17:22:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-16 15:26:38
+* @Last Modified time: 2015-07-17 10:56:36
 */
 
 (function(){
@@ -54,13 +54,13 @@
         if($.isArray(data.salonType)){
             data.salonType = data.salonType.join("_");
         } 
-        if(type && type === 'edit'){
+        if(type === 'edit'){
             var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
             shopData = $.extend({},shopData,data);
             sessionStorage.setItem('edit-shop-data',JSON.stringify(shopData));   
         }
 
-        if(type && type === 'add'){
+        if(type === 'add'){
             var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
             shopData = $.extend({},shopData,data);
             sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
