@@ -641,6 +641,7 @@ form[data-role="hash"] button{
 .input-group .btn-search{
 	border-color:#E6EAF2;
 	border-left-color:#fff;
+	background:transparent;
 }
 .input-group .fa{
 	font-size:16px;
