@@ -1,9 +1,23 @@
 ﻿var cfg={
-	url:'http://192.168.13.46:8090/',
+	version:'1.0',
+	url:'',
+	env:'dev',
+	dev:'http://192.168.13.46:8090/',
+	test:'',
+	product:'',
 	getHost:function(){
-		return cfg.url;
-	},
-	version:'1.0'
+		if(cfg.url){
+			return cfg.url;	
+		}
+		if(cfg.env){
+			return cfg[cfg.env];
+		}
+	}
+}
+if(!cfg.url){
+	if(cfg.env=='dev'||cfg.env=='test'){
+		cfg.version=Math.random()*10;
+	}
 }
 document.writeln('<meta name="renderer" content="webkit|ie-stand">');
 document.writeln('<meta http-equiv=”X-UA-Compatible” content=”IE=edge” > ');
