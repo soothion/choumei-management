@@ -9,6 +9,7 @@
 		if(lib.ajatCount==0){
 			parent.$('body').trigger('loadingend');
 			$(document.body).off('_ready',lib.loadingend);
+			parent.lib.popup.close();
 		}
 	}
 	lib.Ajat.before=function(){
