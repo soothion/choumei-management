@@ -14,6 +14,7 @@
 			if(localStorage.getItem('token')&&options.url.indexOf('/login')==-1){
 				options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
 			}
+			options.timeout=6000;
 			var promise=$.ajax(options);
 			promise.fail(function(xhr, status){
 				var msg = "请求失败，请稍后再试!";
