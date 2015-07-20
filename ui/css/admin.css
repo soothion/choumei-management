@@ -648,6 +648,7 @@ form[data-role="hash"] button{
 	position:absolute;
 	right:0px;
 	top:0px;
+	box-shadow:none;
 }
 .input-search{
 	padding-right:30px!important;
