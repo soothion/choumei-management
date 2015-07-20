@@ -61,16 +61,16 @@ $(function(){
 		var data=lib.getFormData($(this));
 		if(data.page===undefined){
 			data.page=1;
-		}
-		//清除排序条件
-		if(lib.query.sort_key){
-			data.sort_key="";
-		}
-		if(lib.query.sort_type){
-			data.sort_type="";
-		}
-		if(lib.hashchange(data)){
-			$(window).trigger('hashchange');
+			//清除排序条件
+			if(lib.query.sort_key){
+				data.sort_key="";
+			}
+			if(lib.query.sort_type){
+				data.sort_type="";
+			}
+			if(lib.hashchange(data)){
+				$(window).trigger('hashchange');
+			}
 		}
 	}).on('click','a[data-role="hash"]',function(e){//链接hash提交
 		var query=lib.parseQuery($(this).attr('href').replace('#',''));
