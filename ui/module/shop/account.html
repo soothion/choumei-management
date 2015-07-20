@@ -64,14 +64,14 @@
 							<td><%=item.username%></td>
 							<td><%=role[item.roleType-1]%></td>
 							<%if(item.addTime){
-								var date=new Date(item.addTime*1000);
-								item.addTime=date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
+								item.addTime = lib.getDate(item.addTime);
 							}%>
 							<td><%=item.addTime%></td>
 							<td><%=status[item.status-1]%></td>
 							<td>
-							<a data-id="<%=item.salonUserId%>" class="link reset" data-slug="salonAccount.resetPwd" data-text="确认重置密码？">重置密码</a>
-							<span class="space"></span>
+								<a data-id="<%=item.salonUserId%>" class="link reset" data-slug="salonAccount.resetPwd" 
+								data-text="确认重置密码？">重置密码</a>
+								<span class="space"></span>
 								<form action="salonAccount/delAct" data-role="remove" data-slug="salonAccount.del">
 									<input type="hidden" name="salonUserId" value="<%=item.salonUserId%>" />
 									<input type="hidden" name="type" value="2" />
@@ -86,32 +86,34 @@
 			</script>
             </div>
         </div>
-   <script type="text/javascript">
-		$('#select').on('change',function(){
-			var $this=$(this);
-			var inputs=$('.position-group input');
-			inputs.eq($this.val()).show().siblings('input').hide().val('');
-		});
-		$('.table').on('click','.reset',function(){
-			var $this=$(this);
-			parent.lib.popup.confirm({
-				text:$this.data('text'),
-				define:function(){
-					lib.ajax({
-						url:'salonAccount/resetPwd',
-						type:'POST',
-						data:{salonUserId:$this.data('id')},
-						success:function(data){
-							parent.lib.popup.result({
-								bool:data.result==1,
-								text:(data.result==1?'重置成功':data.msg),
-								time:2000
-							});
-						}
-					});
-				}
+
+	   <script type="text/javascript">
+			$('#select').on('change',function(){
+				var $this=$(this);
+				var inputs=$('.position-group input');
+				inputs.eq($this.val()).show().siblings('input').hide().val('');
+			});
+
+			$('.table').on('click','.reset',function(){
+				var $this=$(this);
+				parent.lib.popup.confirm({
+					text:$this.data('text'),
+					define:function(){
+						lib.ajax({
+							url:'salonAccount/resetPwd',
+							type:'POST',
+							data:{salonUserId:$this.data('id')},
+							success:function(data){
+								parent.lib.popup.result({
+									bool:data.result==1,
+									text:(data.result==1?'重置成功':data.msg),
+									time:2000
+								});
+							}
+						});
+					}
+				})
 			})
-		})
-	</script>
+		</script>
     </body>
 </html>
