@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-06-30 10:24:56
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-17 16:43:44
+* @Last Modified time: 2015-07-20 10:42:50
 */
 
 /********************店铺列表***********************/
@@ -233,7 +233,7 @@
 
 /********************准入评估信息表***********************/
 .component-width{
-  width: 9.7%!important;
+  width: 9.5%!important;
   min-width: 120px!important;
 }
 
