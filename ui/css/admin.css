@@ -719,6 +719,15 @@ form[data-role="hash"] button{
 .complete-item.active,.complete-item:hover{
 	background:#eee;
 }
+.complete-loader{
+	-webkit-transition: none!important;
+	-moz-transition: none!important;
+	-ms-transition: none!important;
+	transition: none!important;
+	background:transparent no-repeat right 8px center url('../images/tail-spin.svg');
+	background-size:20px 20px;
+	padding-right:22px;
+}
 /**自动完成 end**/
 [data-slug]{
 	display:none!important;
