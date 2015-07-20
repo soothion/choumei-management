@@ -14,11 +14,10 @@
 		}
 	}
 }
-if(!cfg.url){
-	if(cfg.env=='dev'||cfg.env=='test'){
-		cfg.version=Math.random()*10;
-	}
+if(!cfg.url&&(cfg.env=='dev'||cfg.env=='test')){
+	cfg.version=Math.random()*10;
 }
+
 document.writeln('<meta name="renderer" content="webkit|ie-stand">');
 document.writeln('<meta http-equiv=”X-UA-Compatible” content=”IE=edge” > ');
 document.writeln('<meta charset="utf-8">');
