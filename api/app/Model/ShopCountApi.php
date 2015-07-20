@@ -213,7 +213,7 @@ class ShopCountApi
     public static function deletePrepay($id)
     {
        #@todo 需求不明确 先只做简单处理
-       return PrepayBill::delete($id);
+       return PrepayBill::where("id",$id)->delete();
 //         $prepay = PrepayBill::where('id',$id)->first();
 //         if(empty($prepay))
 //         {
