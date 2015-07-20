@@ -6,7 +6,7 @@
 	test:'',
 	product:'',
 	getHost:function(){
-		if(cfg.url&&cfg.url.indexOf('<#MANAGER_BACK_URL#>')==-1){
+		if(cfg.url&&cfg.url.indexOf('<#')==-1){
 			return cfg.url;	
 		}
 		if(cfg.env){
