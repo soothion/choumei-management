@@ -49,15 +49,17 @@ var access={
 		});
 	}
 }
-if($('.loadbar').length==1){
-	var ajat=lib.ajat('list/menu#domid=page&tempid=page-t');
-	ajat.setExternal({slug:slug});
-	ajat.render().done(function(data){
-		access.foreach(data.data);
-		localStorage.setItem('access.data',JSON.stringify(access.data));
-		localStorage.setItem('access.map',JSON.stringify(access.map));
+$(function(){
+	if($('.loadbar').length==1){
+		var ajat=lib.ajat('list/menu#domid=page&tempid=page-t');
+		ajat.setExternal({slug:slug});
+		ajat.render().done(function(data){
+			access.foreach(data.data);
+			localStorage.setItem('access.data',JSON.stringify(access.data));
+			localStorage.setItem('access.map',JSON.stringify(access.map));
+			access.init();
+		});
+	}else{
 		access.init();
-	});
-}else{
-	access.init();
-}
+	}
+})

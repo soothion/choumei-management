@@ -59,14 +59,14 @@
 		
 	</div>
 	<script type="text/template" id="department-t">
-		<%for(var i=0;i<data.length;i++){%>
-			<%if(data[i].id==protocol.custom.sid){%><%=data[i].title%><%}%>
-		<%}%>
+		<%data.forEach(function(item){%>
+			<%if(item.id==protocol.custom.sid){%><%=item.title%><%}%>
+		<%})%>
 	</script>
 	<script type="text/template" id="position-t">
-		<%for(var i=0;i<data.length;i++){%>
-			<%if(data[i].id==protocol.custom.sid){%><%=data[i].title%><%}%>
-		<%}%>
+		<%data.forEach(function(item){%>
+			<%if(item.id==protocol.custom.sid){%><%=item.title%><%}%>
+		<%})%>
 	</script>
   </body>
 </html>

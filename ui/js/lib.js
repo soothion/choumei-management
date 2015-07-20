@@ -406,10 +406,12 @@
 		hooks:{
 			email:'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
 			mobile:'^1[0-9]{10}$',
-			phone:'^[0-9\-]{7,13}$',
+			phone:'^\\d{7,12}$',
 			password:'^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$',
 			float:function(val){
-				var reg=new RegExp('^[+-]?([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?$');
+                // 表达式验证有问题：2. ， 2....
+				//var reg=new RegExp('^[+-]?([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?$');
+                var reg = new RegExp('^(-?\\d+)(\.\\d+)?$');
 				if(reg.test(val)){
 					var arr=val.split('.');
 					if(arr[0].length>12){
@@ -725,8 +727,10 @@
 			};
 			if(css.top+options.outerHeight()>$(document).scrollTop()+$(window).height()){
 				css.top=$select.offset().top-options.outerHeight()+1;
+				options.css(css);
+			}else{
+				options.css(css).hide().slideDown(100);
 			}
-			options.css(css);
 		}
 	}
 	$(function(){

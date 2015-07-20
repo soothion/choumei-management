@@ -43,7 +43,7 @@
                    <div class="control-group">
                         <label class="control-label" for="">店铺面积：</label>
                         <div class="control">
-                            <input type="text" name="salonArea"  value="<%=data.salonArea%>" pattern="float">
+                            <input type="text" name="salonArea" value="<%=data.salonArea%>" pattern="float" patternmsg="店铺面积有误">
                             <span class="unit">m<sup>2</sup></span>
                         </div>
                     </div> 
@@ -51,7 +51,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">镜台数量：</label>
                         <div class="control">
-                            <input type="text" name="dressingNums" value="<%=data.dressingNums%>" pattern="number" maxlength="9">
+                            <input type="text" name="dressingNums" value="<%=data.dressingNums%>" pattern="number" maxlength="9" patternmsg="镜台数量有误">
                             <span class="unit">个</span>
                         </div>
                     </div> 
@@ -59,7 +59,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">员工总人数：</label>
                         <div class="control">
-                            <input type="text" name="staffNums" value="<%=data.staffNums%>" pattern="number" maxlength="9">
+                            <input type="text" name="staffNums" value="<%=data.staffNums%>" pattern="number" maxlength="9" patternmsg="员工总人数有误">
                             <span class="unit">个</span>
                         </div>
                     </div>
@@ -67,7 +67,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">发型师人数：</label>
                         <div class="control">
-                            <input type="text" name="stylistNums" value="<%=data.stylistNums%>" pattern="number" maxlength="9">
+                            <input type="text" name="stylistNums" value="<%=data.stylistNums%>" pattern="number" maxlength="9" patternmsg="发型师人数有误">
                             <span class="unit">个</span>
                         </div>
                     </div> 
@@ -80,7 +80,8 @@
                     <div class="control-group">
                         <label class="control-label" for="">店铺平均月销售额：</label>
                         <div class="control">
-                            <input type="text" name="monthlySales" value="<%=data.monthlySales%>" pattern="float">
+                            <input type="text" name="monthlySales" value="<%=data.monthlySales%>" pattern="float"
+                            patternmsg="店铺平均月销售额有误">
                             <span class="unit">万元</span>
                         </div>
                     </div>
@@ -88,7 +89,8 @@
                     <div class="control-group">
                         <label class="control-label" for="">年销售总额：</label>
                         <div class="control">
-                            <input type="text" name="totalSales" value="<%=data.totalSales%>" pattern="float">
+                            <input type="text" name="totalSales" value="<%=data.totalSales%>" pattern="float"
+                            patternmsg="年销售总额有误">
                             <span class="unit">万元</span>
                         </div>
                     </div>
@@ -96,7 +98,8 @@
                     <div class="control-group">
                         <label class="control-label" for="">本店客单价： </label>
                         <div class="control">
-                            <input type="text" name="price" value="<%=data.price%>" pattern="float">
+                            <input type="text" name="price" value="<%=data.price%>" pattern="float"
+                            patternmsg="本店客单价有误">
                             <span class="unit">元</span>
                         </div>
                     </div>
@@ -104,7 +107,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">充值卡占月销售额： </label>
                         <div class="control">
-                            <input type="text" name="payScale" value="<%=data.payScale%>" pattern="float" len="2" decimal="2">
+                            <input type="text" name="payScale" value="<%=data.payScale%>" pattern="float" len="2" decimal="2" patternmsg="充值卡占月销售额有误">
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -112,10 +115,9 @@
                     <div class="control-group">
                         <label class="control-label" for="">销售最多的充值卡金额：</label>
                         <div class="control">
-                            <input type="text" name="payMoney" class="component-width" value="<%=data.payMoney%>" pattern="float">
+                            <input type="text" name="payMoney" class="component-width" value="<%=data.payMoney%>" pattern="float" patternmsg="销售最多的充值卡金额有误">
                             <span class="unit">元</span>
-                            <input type="text" name="payMoneyScale" class="component-width" value="<%=data.payMoneyScale%>" pattern="float" 
-                            len="2" decimal="2">
+                            <input type="text" name="payMoneyScale" class="component-width" pattern="float" len="2" decimal="2" value="<%=data.payMoneyScale%>" patternmsg="销售最多的充值卡金额折扣有误">
                             <span class="unit">折</span>
                         </div>
                     </div>
@@ -123,7 +125,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">占全部充值总额：</label>
                         <div class="control">
-                            <input type="text" name="payCountScale" value="<%=data.payCountScale%>" pattern="float" len="2" decimal="2">
+                            <input type="text" name="payCountScale" value="<%=data.payCountScale%>" pattern="float" len="2" decimal="2" patternmsg="占全部充值总额有误">
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -131,7 +133,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">每月非充值卡现金占销售额：</label>
                         <div class="control">
-                            <input type="text" name="cashScale" value="<%=data.cashScale%>" pattern="float" len="2" decimal="2">
+                            <input type="text" name="cashScale" value="<%=data.cashScale%>" pattern="float" len="2" decimal="2" patternmsg="每月非充值卡现金占销售额有误">
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -139,7 +141,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">洗剪吹占销售额：</label>
                         <div class="control">
-                            <input type="text" name="blowScale" value="<%=data.blowScale%>" pattern="float" len="2" decimal="2">
+                            <input type="text" name="blowScale" value="<%=data.blowScale%>" pattern="float" len="2" decimal="2" patternmsg="洗剪吹占销售额有误">
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -147,7 +149,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">烫染占销售额：</label>
                         <div class="control">
-                            <input type="text" name="hdScale" value="<%=data.hdScale%>" pattern="float" len="2" decimal="2">
+                            <input type="text" name="hdScale" value="<%=data.hdScale%>" pattern="float" len="2" decimal="2" patternmsg="烫染占销售额有误">
                             <span class="unit">%</span>
                         </div>
                     </div>
@@ -160,14 +162,15 @@
                     <div class="control-group">
                         <label class="control-label" for="">O2O平台合作：</label>
                         <div class="control">
-                        <input type="text" name="platformName" value="<%=data.platformName%>" maxlength="50" >
+                        <input type="text" name="platformName" value="<%=data.platformName%>" maxlength="50"
+                        patternmsg="O2O平台合作有误">
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label" for="">合作O2O销售额占比：</label>
                         <div class="control">
-                            <input type="text" name="platformScale" value="<%=data.platformScale%>" pattern="float" len="2" decimal="2">
+                            <input type="text" name="platformScale" value="<%=data.platformScale%>" pattern="float" len="2" decimal="2" patternmsg="合作O2O销售额占比有误">
                             <span class="unit">%</span>
                         </div>
                     </div>   
@@ -180,7 +183,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">本店正常工作时间每日最多可接待人次理论数：</label>
                         <div class="control">
-                            <input type="text" name="receptionNums" value="<%=data.receptionNums%>" pattern="number" maxlength="9">
+                            <input type="text" name="receptionNums" value="<%=data.receptionNums%>" pattern="number" maxlength="9" patternmsg="本店正常工作时间每日最多可接待人次理论数有误">
                             <span class="unit">人</span>
                         </div>
                     </div>
@@ -188,7 +191,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">平均每月实际接待 ：</label>
                         <div class="control">
-                            <input type="text" name="receptionMons" value="<%=data.receptionMons%>" pattern="number" maxlength="9">
+                            <input type="text" name="receptionMons" value="<%=data.receptionMons%>" pattern="number" maxlength="9" patternmsg="平均每月实际接待有误">
                             <span class="unit">人次</span>
                         </div>
                     </div> 
@@ -210,7 +213,8 @@
                     <div class="control-group">
                         <label class="control-label" for="">店铺租金：</label>
                         <div class="control">
-                            <input type="text" name="hotdyeScale" value="<%=data.hotdyeScale%>" pattern="float">
+                            <input type="text" name="hotdyeScale" value="<%=data.hotdyeScale%>" pattern="float"
+                            patternmsg="店铺租金有误">
                             <span class="unit">元</span>
                         </div>
                     </div>    
@@ -218,7 +222,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">店铺租赁合同剩余有效期： </label>
                         <div class="control">
-                            <input type="text" name="lastValidity" value="<%=data.lastValidity%>" pattern="number" maxlength="9">
+                            <input type="text" name="lastValidity" value="<%=data.lastValidity%>" pattern="number" maxlength="9" patternmsg="店铺租赁合同剩余有效期有误">
                             <span class="unit">个月</span>
                         </div>
                     </div> 

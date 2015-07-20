@@ -12,7 +12,7 @@
             <a>店铺管理</a>
             <span>&gt;</span>
             <a href="index.html">店铺列表</a>
-            <span>&gt;</span><%=query.type=="add"?"新增店铺":"编辑店铺"%>
+            <span>&gt;</span><%=query.type=="add" ? "新增店铺" : "编辑店铺"%>
         </div>
         
         <div class="wrapper">
@@ -43,6 +43,7 @@
                     <div class="control">
                         <input type="text" name="name" value="<%=data.name%>" placeholder="所属商户" disabled>
                         <input type="hidden" name="merchantId" value="<%=data.merchantId%>">
+                        <input type="hidden" name="name" value="<%=data.name%>">
                     </div>
                 </div>
 
@@ -76,14 +77,14 @@
                     <label class="control-label" for=""></label>
                     <div class="textarea-bar">
                         <span class="area-coor">地理坐标：</span>
-                        <span  id="coorMarker"><%=data.addrlati && data.addrlong ? '已标记':'未标记'%></span>                         
+                        <span  id="coorMarker"><%=data.addrlati && data.addrlong ? '已标记' : '未标记'%></span>                         
                         <button class="btn area-btn" id="addCoordinate" type="button">
                             <i class="fa fa-map-marker"></i> 
                             <span>添加坐标</span>
                         </button>
                     </div>
                     <input id="coorMarkerInput" name="lngLat" type='hidden' required requiredmsg="未标记"
-                    value="<%=data.addrlati && data.addrlong ? data.addrlati+','+data.addrlong:''%>">
+                    value="<%=data.addrlati && data.addrlong ? data.addrlati+','+data.addrlong : ''%>">
                     <span class="control-help"  style="display:none;"></span>
                 </div>    
 
@@ -98,14 +99,17 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺类型：</label>
                     <input type="radio" class="radio" id="radio1" name="shopType" value="1"
-                    <%=!data.shopType||data.shopType==1 ?"checked":""%>>
+                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
                     <label for="radio1">预付款店</label>
+
                     <input type="radio" class="radio" id="radio2" name="shopType" value="2" 
-                    <%=data.shopType==2 ?"checked":""%>>
+                    <%=data.shopType==2 ? "checked" : "" %>>
                     <label for="radio2">投资店</label>
+
                     <input type="radio" class="radio" id="radio3" name="shopType" value="3"
-                    <%=data.shopType==3 ?"checked":""%>>
+                    <%=data.shopType==3 ? "checked" : "" %>>
                     <label for="radio3">金字塔店</label>
+
                     <span class="control-help" style="display:none;"></span>
                 </div> 
 
@@ -120,14 +124,12 @@
                     <label class="control-label" for=""><span class="red">*</span>合同日期：</label>
                     <div class="control">
                         <%
-                        if(data.contractTime&&data.contractTime!=0&&!isNaN(data.contractTime)){
-                            var date = new Date(+data.contractTime * 1000);
-                            var year  = date.getFullYear();
-                            var month = (+date.getMonth()+1) < 9 ? "0"+(+date.getMonth()+1) : +date.getMonth()+1;
-                            var day   = (+date.getDate()) < 9 ? "0"+(+date.getDate()) : date.getDate();
-                            data.contractTime = year + "-" + month + "-" + day;
+                        if(data.contractTime==0){
+                            data.contractTime = "";
+                        }else if(!isNaN(data.contractTime)){
+                            data.contractTime = lib.getDate(data.contractTime);
                         }
-                        %>
+                        %>                        
                         <input type="date" name="contractTime" value="<%=data.contractTime%>" required 
                         min="1950-01-01" max="2030-01-01">
                     </div>
@@ -185,32 +187,31 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>联系电话：</label>
                     <div class="control">
-						 <input type="text" name="phone" value="<%=data.phone%>" placeholder="联系电话" maxlength="12" 
-                        pattern="mobile" patternmsg="11位有效手机号码" required>
+						 <input type="text" name="phone" value="<%=data.phone%>" placeholder="请输入11位有效手机号" 
+                         maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号码" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺电话：</label>
-                    <div class="control">
-                       
-                        <input type="text" name="tel" value="<%=data.tel%>" placeholder="11位有效手机号码" 
-                        maxlength="11" pattern="phone" patternmsg="请输入7-12位有效店铺电话" required>
+                    <div class="control">                       
+                        <input type="text" name="tel" value="<%=data.tel%>" placeholder="请输入7-12位有效店铺电话" 
+                        maxlength="12" pattern="phone" patternmsg="请输入7-12位有效店铺电话" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>法人代表：</label>
                     <div class="control">
-                        <input type="text" name="corporateName" value="<%=data.corporateName%>" placeholder="法人代表" 
-                        maxlength="8" required>
+                        <input type="text" name="corporateName" value="<%=data.corporateName%>" 
+                        placeholder="法人代表" maxlength="8" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>法人电话：</label>
                     <div class="control">
-                        <input type="text" name="corporateTel" value="<%=data.corporateTel%>" placeholder="11位有效手机号码" 
+                        <input type="text" name="corporateTel" value="<%=data.corporateTel%>" placeholder="请输入11位有效手机号" 
                         maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号" required>
                     </div>
                 </div>
@@ -246,7 +247,7 @@
                 <div class="pop-bar-wrapper">
                     <div class="bar-mark">
                         <strong>标记位置：</strong>
-                        <span id="pop-geo-coor">未标注</span>
+                        <span id="pop-geo-coor">未标记</span>
                     </div>
                     <div class="bar-group">
                         <button class="btn"  id="pop-cancel-btn">取消</button>
@@ -262,6 +263,7 @@
                 <option <%=item.pid==protocol.custom.provinceId?"selected":""%> value="<%=item.pid%>"><%=item.pname%></option>
             <%})%>
         </script>
+
         <script type="text/template" id="city_t">
             <option value="">城市</option>
             <%data.forEach&&data.forEach(function(item){%>
@@ -283,15 +285,19 @@
                 <%=item.businessName%></option>
             <%})%>
         </script>
+
 		<script type="text/template" id="zone_t">
-			 <%data.forEach&&data.forEach(function(item){%>
+			<%data.forEach&&data.forEach(function(item){%>
 			<input type="radio" class="label" id="areaRadio<%=item.areaid%>" <%=item.areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=item.areaid%>">
 			<label for="areaRadio<%=item.areaid%>"><%=item.areaname%></label>
 			<%})%>
 			<span class="control-help" style="display:none;"></span>
 		</script>
+       
+        <script src="add.js"></script>
+
         <script src="http://api.map.baidu.com/api?v=2.0&ak=F360d7e9ea3c3ecb5b9b9f2b530be8f4&callback=renderMap()">
         </script>
-        <script src="add.js"></script>
+        
     </body>
 </html>

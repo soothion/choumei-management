@@ -122,31 +122,43 @@
 				sessionStorage.removeItem("permissions");
 			%>
 			<%data.forEach(function(item1){%>
-			<li>
-				<input type="checkbox" id="root<%=item1.id%>" <%=sids.indexOf(item1.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" />
-				<label for="root<%=item1.id%>" style="margin-right:2px;"></label>
+			<li class="super1">
+				<input type="checkbox" id="tree<%=item1.id%>" <%=sids.indexOf(item1.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" />
+				<label for="tree<%=item1.id%>" style="margin-right:2px;"></label>
 				<%if(item1.child&&item1.child.length>0){%>
 				<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
 				<%}%>
-				<label for="root<%=item1.id%>"><%=item1.title%></label>
+				<label for="tree<%=item1.id%>"><%=item1.title%></label>
 				<ul class="child">
 					<%item1.child.forEach(function(item2){%>
-					<li>
-						<input type="checkbox" id="parent<%=item2.id%>" <%=sids.indexOf(item2.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item2.id%>"/>
-						<label for="parent<%=item2.id%>" style="margin-right:2px;"></label>
+					<li class="super2">
+						<input type="checkbox" id="tree<%=item2.id%>" <%=sids.indexOf(item2.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item2.id%>"/>
+						<label for="tree<%=item2.id%>" style="margin-right:2px;"></label>
 						<%if(item2.child&&item2.child.length>0){%>
 						<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
 						<%}%>
-						<label for="parent<%=item2.id%>"><%=item2.title%></label>
+						<label for="tree<%=item2.id%>"><%=item2.title%></label>
 						<ul class="child">
-							<li>
-							<%if(item2.child){%>
 							<%item2.child.forEach(function(item3){%>
-								<input type="checkbox" class="checkbox" id="level3<%=item3.id%>" <%=sids.indexOf(item3.id)>-1?"checked":""%> name="permissions" value="<%=item3.id%>"/>
-								<label for="level3<%=item3.id%>"><%=item3.title%></label>
-							<%})%>
-							<%}%>
+							<li class="super3">
+								<input type="checkbox" id="tree<%=item3.id%>" <%=sids.indexOf(item3.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item3.id%>"/>
+								<label for="tree<%=item3.id%>" style="margin-right:2px;"></label>
+								<%if(item3.child&&item3.child.length>0){%>
+								<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+								<%}%>
+								<label for="tree<%=item3.id%>"><%=item3.title%></label>
+								<ul class="child">
+									<li class="super4">
+									<%if(item3.child){%>
+									<%item3.child.forEach(function(item4){%>
+										<input type="checkbox" class="checkbox" id="tree<%=item4.id%>" <%=sids.indexOf(item4.id)>-1?"checked":""%> name="permissions" value="<%=item4.id%>"/>
+										<label for="tree<%=item4.id%>"><%=item4.title%></label>
+									<%})%>
+									<%}%>
+									</li>
+								</ul>
 							</li>
+							<%})%>
 						</ul>
 					</li>
 					<%})%>
@@ -158,22 +170,26 @@
 	<script type="text/javascript">
 		$('.wrapper').on('click','.square',function(){
 			$(this).closest('li').toggleClass('toggle');
-		}).on('change','.tree input',function(){
+		}).on('change','.tree input',function(e){
 			var $this=$(this);
 			$this.siblings('.child').find('input').each(function(){
 				this.checked=$this.is(':checked');
 			});
-			var parentInput=$this.closest('ul').siblings('input')[0];
-			if(parentInput){
-				parentInput.checked=$this.closest('ul').find('input:checked').length==0?false:true;
-				var rootInput=$(parentInput).closest('ul').siblings('input')
-				if(parentInput.checked){
-					rootInput[0].checked=true;
-				}else{
-					rootInput[0].checked=$(parentInput).closest('ul').find('input:checked').length==0?false:true;
+			var super4=$this.closest('ul').siblings('input')[0];
+			if(super4){
+				super4.checked=$this.closest('ul').find('input:checked').length==0?false:true;
+				var super3=$(super4).closest('ul').siblings('input')[0];
+				if(super3){
+					super3.checked=$(super4).closest('ul').find('input:checked').length==0?false:true;
+					var super2=$(super3).closest('ul').siblings('input')[0];
+					if(super2){
+						super2.checked=$(super3).closest('ul').find('input:checked').length==0?false:true;
+					}
 				}
+				
 			}
 		})
+		
 	</script>
   </body>
 </html>
