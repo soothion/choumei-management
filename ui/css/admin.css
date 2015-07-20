@@ -626,6 +626,7 @@ form[data-role="hash"] button{
 	display:inline-block;
 	vertical-align:middle;
 	font-size:0;
+	position:relative;
 }
 .input-group button,.input-group input,.input-group select{
 	border-radius:0px;
@@ -640,9 +641,18 @@ form[data-role="hash"] button{
 	border-radius:0px 3px 3px 0px;
 }
 .input-group .btn-search{
-	border-color:#E6EAF2;
-	border-left-color:#fff;
+	border-color:transparent;
 	background:transparent;
+	padding:0px;
+	width:30px;
+	position:absolute;
+	right:0px;
+	top:0px;
+	box-shadow:none;
+}
+.input-search{
+	padding-right:30px!important;
+	border-radius:0px 3px 3px 0px!important;
 }
 .input-group .fa{
 	font-size:16px;
@@ -718,6 +728,15 @@ form[data-role="hash"] button{
 }
 .complete-item.active,.complete-item:hover{
 	background:#eee;
+}
+.complete-loader{
+	-webkit-transition: none!important;
+	-moz-transition: none!important;
+	-ms-transition: none!important;
+	transition: none!important;
+	background:transparent no-repeat right 8px center url('../images/tail-spin.svg');
+	background-size:20px 20px;
+	padding-right:22px;
 }
 /**自动完成 end**/
 [data-slug]{

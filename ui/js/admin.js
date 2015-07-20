@@ -132,8 +132,10 @@ $(function(){
 			clearTimeout(lib.completeTimer);
 			lib.completeTimer=setTimeout(function(){
 				var ajat=$this.attr('ajat-complete').replace('${value}',val);
+				$this.addClass('complete-loader');
 				lib.ajat(ajat).render().done(function(){
 					$this.closest('.complete').find('.complete-position').show();
+					$this.removeClass('complete-loader');
 				});
 			},200);
 		}else{

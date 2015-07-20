@@ -28,7 +28,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>登陆账号：</label>
                     <div class="control">
-                        <input type="text" pattern="email" requiredmsg="账号为邮箱格式，不包@choumei.cn" required="" value="<%=data.username||""%>" name="username" id="user_name">
+                        <input type="text"  requiredmsg="账号为邮箱格式，不包@choumei.cn" required="" value="<%=data.username||""%>" name="username" id="user_name">
                     </div>
                 </div>
                 <div class="control-group">
@@ -97,7 +97,9 @@
 				if(data.roles){
 				for(var i=0;i<data.roles.length;i++){
 					sids.push(data.roles[i].id);
-				}}%>					
+				}
+				sessionStorage.setItem("roles",JSON.stringify(sids));
+				}%>					
                        <div class="control" ajat="role/index?page=1&page_size=10000#domid=roles&tempid=roles-t&sids=<%=sids%>" id="roles">
 				
 			  	       </div>
@@ -153,9 +155,15 @@
 		<%}%>
 	</script>	 
 	<script type="text/template" id="roles-t">
+	<%
+				var sids=JSON.parse(sessionStorage.getItem("roles"));
+				sessionStorage.removeItem("roles");
+			%>
 			<%data=data.data%>
 			<%for(var i=0;i<data.length;i++){%>
-				<input type="checkbox" id="<%=data[i].id%>" class="checkbox" name="roles"  required value="<%=data[i].id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(data[i].id+",")>-1?"checked":""%> />
+				<!--<input type="checkbox" id="<%=data[i].id%>" class="checkbox" name="roles"  required value="<%=data[i].id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(data[i].id+",")>-1?"checked":""%> />-->
+				<!--<label for="<%=data[i].id%>" style="margin-right:2px;"></label>-->
+				<input type="checkbox" id="<%=data[i].id%>" <%=sids&&sids.indexOf(data[i].id)>-1?"checked":""%> class="checkbox" name="roles" value="<%=data[i].id%>" />
 				<label for="<%=data[i].id%>" style="margin-right:2px;"></label>
 				<label for="<%=data[i].id%>"><%=data[i].name%></label><span class="space"></span>			 				 
 			<%}%>

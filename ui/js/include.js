@@ -1,12 +1,12 @@
 ﻿var cfg={
 	version:'1.0',
-	url:'',
+	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
 	dev:'http://192.168.13.46:8090/',
 	test:'',
 	product:'',
 	getHost:function(){
-		if(cfg.url){
+		if(cfg.url&&cfg.url.indexOf('<#')==-1){
 			return cfg.url;	
 		}
 		if(cfg.env){
@@ -21,6 +21,7 @@ if(!cfg.url&&(cfg.env=='dev'||cfg.env=='test')){
 document.writeln('<meta name="renderer" content="webkit|ie-stand">');
 document.writeln('<meta http-equiv=”X-UA-Compatible” content=”IE=edge” > ');
 document.writeln('<meta charset="utf-8">');
+document.writeln('<link rel="icon" href="http://app.choumei.cn/images/logo16.ico" type="image/x-icon">');
 document.writeln('<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">');
 document.writeln('<meta name="apple-mobile-web-app-capable" content="yes">');
 document.writeln('<meta name="apple-mobile-web-app-status-bar-style" content="black">');
