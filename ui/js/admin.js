@@ -68,9 +68,9 @@ $(function(){
 			if(lib.query.sort_type){
 				data.sort_type="";
 			}
-			if(lib.hashchange(data)){
-				$(window).trigger('hashchange');
-			}
+		}
+		if(lib.hashchange(data)){
+			$(window).trigger('hashchange');
 		}
 	}).on('click','a[data-role="hash"]',function(e){//链接hash提交
 		var query=lib.parseQuery($(this).attr('href').replace('#',''));
