@@ -63,10 +63,10 @@ $(function(){
 			data.page=1;
 		}
 		//清除排序条件
-		if(data.sort_key){
+		if(lib.query.sort_key){
 			data.sort_key="";
 		}
-		if(data.sort_type){
+		if(lib.query.sort_type){
 			data.sort_type="";
 		}
 		if(lib.hashchange(data)){
