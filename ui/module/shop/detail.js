@@ -119,7 +119,7 @@
 					time:2000,
 					define:function(){
 						if(data.result == 1){
-							location.href="index.html";
+							history.back();
 						}
 					}
 				});
