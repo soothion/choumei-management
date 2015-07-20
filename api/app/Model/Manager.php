@@ -24,7 +24,7 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['username', 'name', 'tel', 'department_id', 'city_id', 'email', 'password', 'status'];
+	protected $fillable = ['username', 'name', 'tel', 'department_id', 'position_id', 'city_id', 'email', 'password', 'status'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
