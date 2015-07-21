@@ -18,6 +18,11 @@
 	<div class="wrapper">
 		<div class="table-detail" ajat="<%if(query.id){%>merchant/getMerchantList?id=<%=query.id%><%}%>#domid=detail&tempid=detail-t" id="detail" >
 		<script type="text/template" id="detail-t">
+			<%
+				if(query.preview=="preview"){
+					data=JSON.parse(sessionStorage.getItem("preview"));
+				}
+			%>
 			<table>
 				<thead>
 					<tr>
@@ -49,11 +54,11 @@
 					</tr>                           
 					<tr>
 						<td>成立日期：</td>
-						<td><%=lib.tools.getDate(data.foundingDate)%></td>
+						<td><%if(data.foundingDate){%><%=lib.tools.getDate(data.foundingDate)%><%}%></td>
 					</tr>
 					<tr>
 						<td>创建日期：</td>
-						<td><%=lib.tools.getDate(data.addTime)%></td>
+						<td><%if(data.addTime){%><%=lib.tools.getDate(data.addTime)%><%}%></td>
 					</tr> 
 					<tr>
 						<td></td>
