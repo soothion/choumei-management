@@ -73,7 +73,7 @@
 							<div class="menu-category-title">
 								<span><%=item2.title%></span>
 							</div>
-							<ul>
+							<ul style="<%=j==0?"display:block":""%>">
 								<%item2.child&&item2.child.forEach(function(item3){%>
 								<%if(item3.show==1){%>
 								<li class="flex-box">
