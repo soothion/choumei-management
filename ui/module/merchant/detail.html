@@ -58,12 +58,11 @@
 					<tr>
 						<td></td>
 						<td>
-						<a class="btn" href="edit.html?id=<%=data.id%>">编辑</a>
+						<a class="btn" data-slug="merchant.update" href="edit.html?id=<%=data.id%>">编辑</a>
 						<form action="merchant/del" data-role="remove" data-slug="merchant.del">
 							<input type="hidden" name="id" value="<%=data.id%>" />
-							<button class="btn" >删除</button>
+							<button class="btn">删除</button>
 						</form>
-						
 						</td>
 					</tr> 				
 				  </tbody>
