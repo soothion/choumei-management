@@ -171,7 +171,7 @@
 			}
         },
 		getFormData:function($form){
-			this.tools.getFormData($form);
+			return this.tools.getFormData($form);
 		},
         init:function(){
 			lib.query={};
@@ -664,7 +664,6 @@
 		}
 	}
 	lib.Form=Form;
-	
 	$(document).one('mouseenter','form[data-role="form"]',function(){
 		new lib.Form(this);
 	}).one('touchstart','form[data-role="form"]',function(){
