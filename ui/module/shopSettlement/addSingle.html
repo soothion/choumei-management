@@ -78,21 +78,18 @@
                     <label class="control-label" for=""><span class="red">*</span>付款金额：</label>
                     <div class="control">
                         <input type="text" required name="pay_money" value="<%=data.pay_money||""%>" placeholder="预付交易款金额" pattern="float" id="pay_money">
-                        <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>换算消费额：</label>
                     <div class="control">
                         <input type="text" required name="cost_money" value="<%=data.cost_money||""%>" placeholder="换算消费额" pattern="float" matchmsg="换算消费额必须要大于付款金额" id="cost_money">
-                        <span class="control-help" style="display: none;">未填写</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款日期：</label>
                     <div class="control">			 
-                              <input type="date"  name="day" value="<%=data.day||""%>" required />                              							  
-							   <span class="control-help" style="display: none;">未填写</span>						   
+                        <input type="date"  name="day" value="<%=data.day||""%>" required />                              							  
                     </div>
                 </div>
                <div class="control-group">
