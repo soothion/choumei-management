@@ -12,6 +12,9 @@
 			<div class="flex-item">
 				<h4>商户详情</h4>
 			</div>
+			<div>
+				<button class="btn" type="button" onclick="history.back()">返回</button>
+			</div>
 		</div>
 		<hr />
 	</div>
@@ -54,11 +57,17 @@
 					</tr>                           
 					<tr>
 						<td>成立日期：</td>
-						<td><%if(data.foundingDate){%><%=lib.tools.getDate(data.foundingDate)%><%}%></td>
+						<td><%if(data.foundingDate){%>
+								<%=data.foundingDate.toString().indexOf("-")==-1?lib.tools.getDate(data.foundingDate):data.foundingDate%>
+							<%}%>
+						</td>
 					</tr>
 					<tr>
 						<td>创建日期：</td>
-						<td><%if(data.addTime){%><%=lib.tools.getDate(data.addTime)%><%}%></td>
+						<td><%if(data.addTime){%>
+								<%=data.addTime.toString().indexOf("-")==-1?lib.tools.getDate(data.addTime):data.addTime%>
+							<%}%>
+						</td>
 					</tr> 
 					<tr>
 						<td></td>
