@@ -13,9 +13,6 @@
 				<h4><%=query._?"编辑商户":"添加商户"%></h4>
 			</div>
 		</div>
-		<div>
-			<button class="btn" type="button" onclick="history.back()">返回</button>
-		</div>
 		<hr />
 	</div>
 	<div class="wrapper" ajat="<%if(query.id){%>merchant/getMerchantList?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
