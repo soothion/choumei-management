@@ -72,10 +72,7 @@ $('#page').on('_ready',function(){
 		loop: true,
 		initialSlide : 0,
 		spaceBetween: 0,
-		simulateTouch:false,
-		onTouchEnd:function(swiper){
-			$('.nav-main li').eq(swiper.snapIndex-1).addClass('active').siblings().removeClass('active');
-		}
+		simulateTouch:false
 	});
 	$('.nav-main li').on('click',function(){
 		$(this).addClass('active').siblings().removeClass('active');
