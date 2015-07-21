@@ -7,7 +7,7 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a>店铺结算 </a><span>&gt;</span><a href="singList.html">转付单</a><span>&gt;</span><span id="breadcrumb-current">查看付款单</span>
+        <a>店铺结算 </a><span>&gt;</span><a href="singleList.html">转付单</a><span>&gt;</span><span id="breadcrumb-current">查看付款单</span>
 			<div class="flex-box">
 			<div class="flex-item">
 				<h4>查看付款单</h4>
@@ -60,7 +60,7 @@
                 </tr>
                 <tr>
                  <td>制单人</td>
-                  <td><%=data.user%></td>
+                  <td><%=data.user?data.user.name:""%></td>
                </tr>
                 <tr>
                   <td>状态</td>
