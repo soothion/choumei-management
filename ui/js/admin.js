@@ -29,7 +29,7 @@ $(function(){
 	}
 	/**hash和加载进度条**/
 	var $body=$(document.body);
-	lib.hashchange=function(obj){
+	lib.tools.hashchange=function(obj){
 		var temphash=location.hash;
 		var query=$.extend({},lib.query,obj);
 		delete query._;
@@ -59,7 +59,7 @@ $(function(){
 		e.stopPropagation();
 		e.preventDefault();
 	}).on('hash','form[data-role="hash"]',function(e){//表单自定义hash提交
-		var data=lib.getFormData($(this));
+		var data=lib.tools.getFormData($(this));
 		if(data.page===undefined){
 			data.page=1;
 			//清除排序条件
@@ -70,12 +70,12 @@ $(function(){
 				data.sort_type="";
 			}
 		}
-		if(lib.hashchange(data)){
+		if(lib.tools.hashchange(data)){
 			$(window).trigger('hashchange');
 		}
 	}).on('click','a[data-role="hash"]',function(e){//链接hash提交
 		var query=lib.parseQuery($(this).attr('href').replace('#',''));
-		if(lib.hashchange(query)){
+		if(lib.tools.hashchange(query)){
 			$(window).trigger('hashchange');
 		}
 		e.preventDefault();
@@ -222,7 +222,7 @@ $(function(){
 		parent.access.control(e.target);
 	});
 	/**日期控件修正**/
-	if(!lib.browser().webkit){
+	if(!lib.tools.browser().webkit){
 		seajs.use([location.origin+'/laydate/laydate.js']);
 		$body.on('focus','input[type=date]',function(e){
 			$(this).attr('readonly',true);
