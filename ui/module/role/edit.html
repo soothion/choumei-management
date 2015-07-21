@@ -116,11 +116,11 @@
 		<%})%>
 	</script>
 	<script type="text/template" id="permission-t">
-		<ul class="tree">
-			<%
-				var sids=JSON.parse(sessionStorage.getItem("permissions"));
+		<%
+				var sids=JSON.parse(sessionStorage.getItem("permissions"))||[];
 				sessionStorage.removeItem("permissions");
 			%>
+		<ul class="tree">
 			<%data.forEach(function(item1){%>
 			<li class="super1">
 				<input type="checkbox" id="tree<%=item1.id%>" <%=sids.indexOf(item1.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" />
@@ -166,6 +166,7 @@
 			</li>
 			<%})%>
 		</ul>
+		<input type="hidden" id="rights" required value="<%=sids%>" requiredmsg="请选择权限"/>
 	</script>
 	<script type="text/javascript">
 		$('.wrapper').on('click','.square',function(){
@@ -186,8 +187,12 @@
 						super2.checked=$(super3).closest('ul').find('input:checked').length==0?false:true;
 					}
 				}
-				
 			}
+			var arr=[];
+			$('.tree input:checked').each(function(){
+				arr.push($(this).val());
+			});
+			$('#rights').val(arr);
 		})
 		
 	</script>

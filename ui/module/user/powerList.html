@@ -25,7 +25,7 @@
                 <div class="flex-item">
                     <form data-role="hash">                    
                                 添加时间
-<span class="date-group">
+                                <span class="date-group">
 								<input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"/>
 								</span>
 								<span class="space"></span>
@@ -38,11 +38,11 @@
                             </select>
 							<span class="space"></span>
                             <label>权限名称</label>
-                            <input type="text" placeholder="请输入登陆账号" name="keyword">
+                            <input type="text" placeholder="请输入权限名称" name="keyword">
                             <button class="btn">搜索</button>                                                
                     </form>
-					<form action="permission/export" data-role="export"><button class="btn" type="submit" data-slug="permission.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
-                </div>
+					<form action="permission/export" data-role="export"><button class="btn" type="submit" data-slug="permission.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>               
+				</div>
             </div>
             <div class="table" ajat="permission/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
@@ -59,7 +59,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                         <%var status=["","正常","停用","注销"]%>
+                         <%var status=["","正常","注销","停用"]%>
 				<%var data=data.data%>
 				<%for(var i=0;i<data.length;i++){%>
                  <tr>

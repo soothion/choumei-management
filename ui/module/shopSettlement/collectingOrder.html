@@ -8,6 +8,15 @@
   <body>
 	<div class="breadcrumb">
 		<a>店铺结算 </a><span>&gt;</span><a href="collectingOrderList.html">代收单</a><span>&gt;</span>查看代收单
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4>查看代收单</h4>
+			</div>
+			<div>
+				<button class="btn" type="button" onclick="history.back()">返回</button>
+			</div>
+		</div>
+		<hr />
 	</div>
 	<div class="wrapper">
 		<div class="table-detail" ajat="shop_count/delegate_detail/<%=query.id%>#domid=detail&tempid=detail-t" id="detail">
@@ -32,7 +41,7 @@
 					</tr>
 					<tr>
 					  <td>代收金额：</td>
-					  <td><%=data.code%></td>
+					  <td><%=data.money%></td>
 					</tr>
 					<tr>
 					  <td>代收日期：</td>

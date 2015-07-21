@@ -291,7 +291,6 @@ aside h2{
 }
 .menu-category.active ul{
     background: #fff;
-	display:block;
 	border-bottom:1px solid #E0E6EF;
 }
 .menu-category li.active{

@@ -70,18 +70,18 @@
 						<h2><%=item1.title%></h2>
 						<%item1.child&&item1.child.forEach(function(item2,j){%>
 						<div class="menu-category <%=j==0?"active":""%>">
-						<div class="menu-category-title">
-							<span><%=item2.title%></span>
-						</div>
-						<ul>
-							<%item2.child&&item2.child.forEach(function(item3){%>
-							<%if(item3.show==1){%>
-							<li class="flex-box">
-								<a href="<%=slug[item3.slug]%>" data-slug1="<%=item3.slug%>" class="flex-item" target="main"><i class="fa fa-angle-right"></i><%=item3.title%></a>
-							</li>
-							<%}%>
-							<%})%>
-						</ul>
+							<div class="menu-category-title">
+								<span><%=item2.title%></span>
+							</div>
+							<ul style="<%=j==0?"display:block":""%>">
+								<%item2.child&&item2.child.forEach(function(item3){%>
+								<%if(item3.show==1){%>
+								<li class="flex-box">
+									<a href="<%=slug[item3.slug]%>" data-slug1="<%=item3.slug%>" class="flex-item" target="main"><i class="fa fa-angle-right"></i><%=item3.title%></a>
+								</li>
+								<%}%>
+								<%})%>
+							</ul>
 						</div>
 						<%})%>
 					</div>

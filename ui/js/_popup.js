@@ -111,7 +111,7 @@ define(function(require,exports,module){
             });
         },
         append:function(popup){
-			if(!lib.browser.mobile){
+			if(!lib.tools.browser.mobile){
 				popup.css({
 					left:($(window).width()-300)/2,
 					width:300

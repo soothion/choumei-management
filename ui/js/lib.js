@@ -6,6 +6,47 @@
 	});
 	EJS.ext = '.html?v=' + cfg.version;
     var lib = {
+		tools:{
+			getDate:function(time){
+				var date= time ? new Date(time*1000) : new Date();
+				return date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
+			},
+			parseQuery: function (str) {//解析字符串的参数
+				var ret = {},reg = /([^?=&]+)=([^&]+)/ig,match;
+				while (( match = reg.exec(str)) != null) {
+					ret[match[1]] = decodeURIComponent(match[2]);
+				}
+				return ret;
+			},
+			browser:function(){
+				var ua=navigator.userAgent;
+				return {
+					moible:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
+					android:/(android)/i.test(ua),
+					ios:/(iphone|ipod|ipad)/i.test(ua),
+					winphone:/(windows phone)/i.test(ua),
+					webkit:/webkit/i.test(ua)
+				}
+			},
+			getFormData:function($form){
+				var data={};
+				var fields=$form.serializeArray();
+				$.each(fields,function(i,field){
+					if(!data[field.name]){
+						data[field.name]=$.trim(field.value);
+						if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
+							data[field.name]=[$.trim(field.value)];
+						}
+					}else{
+						if(data[field.name] instanceof Array){
+							data[field.name].push($.trim(field.value));
+						}
+					}
+					
+				});
+				return data;
+			}
+		},
         ajax: function (options) {
 			options.url=cfg.getHost()+options.url;
 			if(!options.data){
@@ -53,10 +94,6 @@
 			var session=$.extend(this.getSession(),obj);
 			localStorage.setItem('session',JSON.stringify(session));
 		},
-		getDate:function(time){
-			var date= time ? new Date(time*1000) : new Date();
-			return date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
-		},
         ejs:{
             render:function(temp,data){
                 return new EJS(temp).render($.extend(this.getDefault(),data));
@@ -70,13 +107,6 @@
         },
         ajat: function (_protocol) {
             return new Ajat(_protocol);
-        },
-        parseQuery: function (str) {//解析字符串的参数
-            var ret = {},reg = /([^?=&]+)=([^&]+)/ig,match;
-            while (( match = reg.exec(str)) != null) {
-                ret[match[1]] = decodeURIComponent(match[2]);
-            }
-            return ret;
         },
         popup: {//弹出层
             path:'_popup.js',
@@ -140,43 +170,17 @@
 				this.tips(options)
 			}
         },
-		browser:function(){
-			var ua=navigator.userAgent;
-			return {
-				moible:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
-				android:/(android)/i.test(ua),
-				ios:/(iphone|ipod|ipad)/i.test(ua),
-				winphone:/(windows phone)/i.test(ua),
-				webkit:/webkit/i.test(ua)
-			}
-		},
 		getFormData:function($form){
-			var data={};
-			var fields=$form.serializeArray();
-			$.each(fields,function(i,field){
-				if(!data[field.name]){
-					data[field.name]=$.trim(field.value);
-					if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
-						data[field.name]=[$.trim(field.value)];
-					}
-				}else{
-					if(data[field.name] instanceof Array){
-						data[field.name].push($.trim(field.value));
-					}
-				}
-				
-			});
-			
-			return data;
+			return this.tools.getFormData($form);
 		},
         init:function(){
 			lib.query={};
 			if(location.search){
-				$.extend(lib.query,this.parseQuery(location.search.replace('?','')))
+				$.extend(lib.query,this.tools.parseQuery(location.search.replace('?','')))
 				lib.query._=location.search.replace('?','');
 			}
 			if(location.hash){
-				$.extend(lib.query,this.parseQuery(location.hash.replace('#','')))
+				$.extend(lib.query,this.tools.parseQuery(location.hash.replace('#','')))
 				lib.query._=location.hash.replace('#','');
 			}
         }
@@ -227,15 +231,15 @@
                 var arr = this._protocol.split(/\?|#/);
                 if(arr.length==3){
                     this.protocol.url = arr[0];
-                    this.protocol.query = lib.parseQuery(arr[1]);
-                    this.protocol.custom = lib.parseQuery(arr[2]);
+                    this.protocol.query = lib.tools.parseQuery(arr[1]);
+                    this.protocol.custom = lib.tools.parseQuery(arr[2]);
                 }else if(arr.length==2){
 					if(arr[0].indexOf('/')>-1){
 						this.protocol.url=arr[0];
 					}else{
-						this.protocol.query=lib.parseQuery(arr[0])
+						this.protocol.query=lib.tools.parseQuery(arr[0])
 					}
-                    this.protocol.custom = lib.parseQuery(arr[1]);
+                    this.protocol.custom = lib.tools.parseQuery(arr[1]);
                 }
                 this.dom=document.getElementById(this.protocol.custom.domid);
             }
@@ -619,7 +623,7 @@
 				self.fail(data);
 			}).on('input',this.selector,function(e){
 				var $this=$(this);
-				if($this.attr('nospace')!==undefined){
+				if($this.attr('nospace')!==undefined&&/\s+/g.test($this.val())){
 					$this.val($this.val().replace(/\s+/g,''));
 				}
 			});
@@ -632,7 +636,7 @@
 			if($form.attr('disabled'))return;
 			var help=$form.find('.control-help:visible');
 			if(help.length==0){
-				var data=lib.getFormData($form);
+				var data=lib.tools.getFormData($form);
 				$form.trigger('save',data);
 			}else{
 				$('html,body').animate({scrollTop:help.eq(0).offset().top-50},200);
@@ -660,7 +664,6 @@
 		}
 	}
 	lib.Form=Form;
-	
 	$(document).one('mouseenter','form[data-role="form"]',function(){
 		new lib.Form(this);
 	}).one('touchstart','form[data-role="form"]',function(){
