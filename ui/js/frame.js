@@ -45,7 +45,8 @@ $('#page').on('_ready',function(){
 		}
 	}).on('click','.menu-category-title',function(e){
 		var $this=$(this);
-		$this.parent().addClass('active').siblings().removeClass('active');
+		$this.parent().addClass('active').children('ul').slideToggle(200);
+		$this.parent().siblings().removeClass('active').children('ul').slideUp(200);
 	});
 	$('.refresh').on('click',function(){
 		iframe[0].contentWindow.location.reload();
@@ -75,8 +76,9 @@ $('#page').on('_ready',function(){
 		simulateTouch:false
 	});
 	$('.nav-main li').on('click',function(){
-		$(this).addClass('active').siblings().removeClass('active');
-		swiper.slideTo($(this).index()+1);
+		var $this=$(this)
+		$this.addClass('active').siblings().removeClass('active');
+		swiper.slideTo($this.index()+1);
 	});
 });
 	//var myScroll = new IScroll('#aside',{ mouseWheel: true ,checkDOMChanges:true,click:true});

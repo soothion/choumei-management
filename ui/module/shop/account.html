@@ -64,7 +64,7 @@
 							<td><%=item.username%></td>
 							<td><%=role[item.roleType-1]%></td>
 							<%if(item.addTime){
-								item.addTime = lib.getDate(item.addTime);
+								item.addTime = lib.tools.getDate(item.addTime);
 							}%>
 							<td><%=item.addTime%></td>
 							<td><%=status[item.status-1]%></td>

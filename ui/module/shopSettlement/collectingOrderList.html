@@ -73,7 +73,6 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		lib.ajatCount++;
 		$(function(){
 			$('#select').on('change',function(){
 				var $this=$(this);
@@ -84,7 +83,7 @@
 				}
 			});
 			if(!lib.query._){
-				$('input[type="date"]').val(lib.getDate());
+				$('input[type="date"]').val(lib.tools.getDate());
 				$('form').submit();
 			}
 		});
