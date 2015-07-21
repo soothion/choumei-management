@@ -276,6 +276,14 @@ class UserController extends Controller{
 			$query = $query->orWhere('username','like',$keyword);
 		}
 
+		//角色名筛选
+		if(isset($param['role'])&&$param['role']){
+			$keyword = '%'.$param['role'].'%';
+			$query = $query->whereHas('roles',function($q) use($keyword){
+				$q->where('name','like',$keyword);
+			});
+		}
+		
 		$result = $query->get()->toArray();
 
 		//触发事件，写入日志
