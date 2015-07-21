@@ -45,7 +45,7 @@ $('#page').on('_ready',function(){
 		}
 	}).on('click','.menu-category-title',function(e){
 		var $this=$(this);
-		$this.parent().addClass('active').children('ul').slideDown(200);
+		$this.parent().addClass('active').children('ul').slideToggle(200);
 		$this.parent().siblings().removeClass('active').children('ul').slideUp(200);
 	});
 	$('.refresh').on('click',function(){
