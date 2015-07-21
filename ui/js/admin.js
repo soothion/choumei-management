@@ -82,7 +82,8 @@ $(function(){
 	}).on('click','label[data-role="hash"]',function(e){//标签hash提交
 		$(this).closest('form[data-role="hash"]').submit();
 	}).on('submit','form[data-role="export"]',function(e){//导出功能
-		window.open(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#'));
+		console.log(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#',''));
+		window.open(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#',''));
 		e.preventDefault();
 	}).on('submit','form[data-role="remove"]',function(e){//删除提交
 		var $this=$(this);
