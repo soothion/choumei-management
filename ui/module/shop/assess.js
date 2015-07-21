@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-07 17:22:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-17 10:56:36
+* @Last Modified time: 2015-07-20 16:21:38
 */
 
 (function(){
@@ -40,7 +40,7 @@
 
     $("#preview-btn").on('click',function(){
         var data = lib.getFormData($("#form"));
-        if($.inArray(data.salonType)){
+        if($.isArray(data.salonType)){
             data.salonType = data.salonType.join("_");
         } 
         if(type === 'edit') var shopData = JSON.parse(sessionStorage.getItem('edit-shop-data'));
