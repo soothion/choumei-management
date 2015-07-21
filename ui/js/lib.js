@@ -67,7 +67,12 @@
 				//code 异常处理
 				if(data.result==0){
 					if(data.code==402){
-						parent.lib.popup.result({bool:false,text:"没有权限操作",time:2000});
+						parent.lib.popup.confirm({
+							text:"您的权限已经被修改！需要刷新页面更新权限",
+							define:function(){
+								parent.location.reload();
+							}
+						});
 					}else{
 						if(data.code==401||data.code==400){
 							data.msg="token失效，请重新登录";
