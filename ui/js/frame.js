@@ -50,10 +50,6 @@ $('#page').on('_ready',function(){
 	$('.refresh').on('click',function(){
 		iframe[0].contentWindow.location.reload();
 	});
-	$('.nav-main li').on('click',function(){
-		$(this).addClass('active').siblings().removeClass('active');
-		$('#'+$(this).data('id')).show().siblings().hide();
-	});
 	$('#logout').on('click',function(){
 		lib.ajax({
 			url:'logout',
@@ -71,6 +67,19 @@ $('#page').on('_ready',function(){
 				});
 			}
 		});
+	});
+	var swiper = new Swiper($('aside .swiper-container')[0],{
+		loop: true,
+		initialSlide : 0,
+		spaceBetween: 0,
+		simulateTouch:false,
+		onTouchEnd:function(swiper){
+			$('.nav-main li').eq(swiper.snapIndex-1).addClass('active').siblings().removeClass('active');
+		}
+	});
+	$('.nav-main li').on('click',function(){
+		$(this).addClass('active').siblings().removeClass('active');
+		swiper.slideTo($(this).index()+1);
 	});
 });
 	//var myScroll = new IScroll('#aside',{ mouseWheel: true ,checkDOMChanges:true,click:true});
