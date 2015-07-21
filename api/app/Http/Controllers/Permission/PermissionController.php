@@ -161,7 +161,7 @@ class PermissionController extends Controller{
 
 		if(isset($param['keyword'])&&$param['keyword']){
 			$keyword = '%'.$param['keyword'].'%';
-			$query = $query->where('name','like',$keyword);
+			$query = $query->where('title','like',$keyword);
 		}
 
 	    $result = $query->get();
