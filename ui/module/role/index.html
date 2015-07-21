@@ -63,6 +63,7 @@
                   <th>角色姓名</th>
                   <th>角色状态</th>
                   <th>所属部门</th>
+				  <th>所属城市</th>
 				  <th>添加时间</th>
 				  <th>角色说明</th>
 				  <th>操作</th>
@@ -77,6 +78,7 @@
                   <td><%=item.name%></td>
                   <td><%=status[item.status-1]%></td>
                   <td><%=item.department?item.department.title:""%></td>
+				  <td><%=item.city?item.city.title:""%></td>
 				  <td><%=item.created_at%></td>
 				  <td><%=item.description%></td>
 				  <td>

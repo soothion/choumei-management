@@ -623,7 +623,7 @@
 				self.fail(data);
 			}).on('input',this.selector,function(e){
 				var $this=$(this);
-				if($this.attr('nospace')!==undefined){
+				if($this.attr('nospace')!==undefined&&/\s+/g.test($this.val())){
 					$this.val($this.val().replace(/\s+/g,''));
 				}
 			});
