@@ -50,7 +50,11 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色名称</label>
 				<div class="control">
+					<%if(data.name){%>
+					<%=data.name||""%>
+					<%}else{%>
 					<input type="text" required name="name" value="<%=data.name||""%>" nospace>
+					<%}%>
 				</div>
 			</div>
 			<div class="control-group">
@@ -95,8 +99,8 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>信息备注</label>
-				<div class="control"><textarea  required name="note"><%=data.note||""%></textarea></div>
+				<label class="control-label" for="">信息备注</label>
+				<div class="control"><textarea  name="note"><%=data.note||""%></textarea></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""></label>
