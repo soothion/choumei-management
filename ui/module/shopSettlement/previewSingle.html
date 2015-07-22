@@ -11,6 +11,11 @@
     </div>
    <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
+		<%
+				if(query.preview=="preview"){
+					data=JSON.parse(sessionStorage.getItem("preview"));
+				}
+			%>
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/preview/<%=data.id%><%}%>">		
         <div class="table-detail">
         <table>
@@ -61,7 +66,7 @@
                 </tr>
                 <tr>
                   <td>操作</td>
-                  <td><button class="btn" style="margin-right:20px"><a class="link" href="singleList.html?id=<%=data.id%>">关闭预览</a></button></td>
+                  <td><a class="btn link" href="singleList.html">关闭预览</a></td>	
                 </tr>
               </tbody>
         </table>
