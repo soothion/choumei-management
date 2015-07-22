@@ -21,10 +21,8 @@
         </div>		
      <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
+			<%sessionStorage.setItem("preview",JSON.stringify(data))%>
 		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}else{%>shop_count/create<%}%>">
-			 <%if(query.id){%>
-				<input type="hidden" ajat-sync-selector="#breadcrumb-current" value="编辑付款单" />				 		  		
-			 <%}%>
                   <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款单类型：</label>
                     <div class="control">
@@ -47,8 +45,7 @@
 						<div class="complete-position" id="complete-position" style="width:20%;">							
 						</div>
                     </div>
-                </div>
-				
+                </div>			
                  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
@@ -104,8 +101,7 @@
 			</script>
         </div>
 		<script type="text/template" id="complete-position-t">
-		<%if(data.length>0){%>
-		
+		<%if(data.length>0){%>	
 		<ul>
 			<%data.forEach(function(item){%>
 			<li class="complete-item" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" ><%=item.salonname%></li>
@@ -138,6 +134,7 @@
 			});
 			$(document).on('click','.preview',function(){
 				var data=lib.tools.getFormData($(this).closest('form'));
+				data=$.extend(JSON.parse(sessionStorage.getItem("preview")),data);
 				data.type=$('select[name="type"] option:selected').text();
 				data.salon={
 					salonname:$('#search').val()
@@ -148,10 +145,8 @@
 				sessionStorage.setItem('preview',JSON.stringify(data));
 				location.href="updateSingle.html?preview=preview";
 			});
-		});
-		
+		});		
 	</script> 	
- 
     </body>
 </html>
  
