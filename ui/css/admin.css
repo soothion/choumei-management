@@ -498,6 +498,11 @@ th.colswrap{
 	font-size:18px;
 	padding-left:20px;
 }
+.detail-operation{
+  margin-top: -53px;
+  text-align: right;
+  margin-bottom: 30px;
+}
 .data-empty{
 	font-size:14px;
 	color:#999;

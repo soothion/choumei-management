@@ -133,6 +133,10 @@ $(function(){
 		var $this=$(this);
 		$this.siblings('input[data-role="end"]').attr('min',$this.val());
 	});
+	/**日期禁止输入**/
+	$body.on('keypress','input[type="date"]',function(e){
+		e.preventDefault();
+	})
 	/**自动补全**/
 	$body.on('input','input[ajat-complete]',function(){//自动补全输入事件
 		var $this=$(this);

@@ -95,6 +95,8 @@
                <div class="control-group">
 				<label class="control-label" for=""></label>
 				<div class="control">
+				<button class="btn preview" type="button">预览</button>
+				<a class="btn link" href="../shopSettlement/previewSingle.html?id=<%=data.id%>">预览</a>
 				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
 				</div>
 			</div>			 
@@ -133,6 +135,12 @@
 					}
 				}
 			});
+			
+			$(document).on('click','.preview',function(){
+			var data=lib.tools.getFormData($(this).closest('form'));
+			sessionStorage.setItem('preview',JSON.stringify(data));
+			location.href="../shopSettlement/previewSingle.html?id=<%=data.id%>";
+		})
 		});		
 	</script> 	
     </body>

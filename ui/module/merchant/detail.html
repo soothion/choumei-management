@@ -12,9 +12,6 @@
 			<div class="flex-item">
 				<h4>商户详情</h4>
 			</div>
-			<div>
-				<button class="btn" type="button" onclick="history.back()">返回</button>
-			</div>
 		</div>
 		<hr />
 	</div>
@@ -26,6 +23,18 @@
 					data=JSON.parse(sessionStorage.getItem("preview"));
 				}
 			%>
+			<div class="detail-operation">
+				<%if(query.preview!="preview"){%>
+					<a class="btn" data-slug="merchant.update" href="edit.html?id=<%=data.id%>">编辑</a>
+					<span class="space"></span>
+					<form action="merchant/del" data-role="remove" data-slug="merchant.del">
+						<input type="hidden" name="id" value="<%=data.id%>" />
+						<button class="btn">删除</button>
+					</form>
+				<%}%>
+				<span class="space"></span>
+				<button class="btn" type="button" onclick="history.back()">返回</button>
+			</div>
 			<table>
 				<thead>
 					<tr>
@@ -69,16 +78,6 @@
 							<%}%>
 						</td>
 					</tr> 
-					<tr>
-						<td></td>
-						<td>
-						<a class="btn" data-slug="merchant.update" href="edit.html?id=<%=data.id%>">编辑</a>
-						<form action="merchant/del" data-role="remove" data-slug="merchant.del">
-							<input type="hidden" name="id" value="<%=data.id%>" />
-							<button class="btn">删除</button>
-						</form>
-						</td>
-					</tr> 				
 				  </tbody>
 			</table>
 		</script>

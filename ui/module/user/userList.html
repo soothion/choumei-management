@@ -49,12 +49,11 @@
 						</select>			 
 							<span class="space"></span>
                             <label>状态</label>
-                            <select class="select" name="status">
-							<option value="0">全部</option>
-                                <option value="1">正常</option>
-                                <option value="2">注销</option>
-                                <option value="3">停用</option>                             
-                            </select>
+                           <select name="status" class="select">
+							<option >全部</option>
+							<option value="1">正常</option>
+							<option value="2">停用</option>
+							<option value="3">注销</option></select>
 							<span class="space"></span>
                             <label>所属城市</label>
                             <select class="select" name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=city-c" id ="city">
@@ -94,7 +93,7 @@
                         </tr>
                     </thead>
                 <tbody>
-				<%var status=["","正常","注销","停用"]%>
+				<%var status=["","正常","停用","注销"]%>
 				<%var data=data.data%>
 				<%for(var i=0;i<data.length;i++){%>
                  <tr>

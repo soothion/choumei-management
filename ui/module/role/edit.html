@@ -53,28 +53,27 @@
 					<%if(data.name){%>
 					<%=data.name||""%>
 					<%}else{%>
-					<input type="text" required name="name" value="<%=data.name||""%>" nospace>
+					<input type="text" required name="name" value="<%=data.name||""%>" nospace <%=data.status==3?"disabled":""%> disabled>
 					<%}%>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门</label>
 				<div class="control">
-					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id||""%>" data-name="ddd" id="department">
-					</select>
+					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id||""%>" data-name="ddd" id="department" <%=data.status==3?"disabled":""%>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属城市</label>
 				<div class="control">
-					<select required name="city_id" class="select" ajat="list/city#domid=city&tempid=city-t&sid=<%=data.city_id%>" id="city">
+					<select required name="city_id" class="select" ajat="list/city#domid=city&tempid=city-t&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
 					</select>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色状态</label>
 				<div class="control">
-					<select required name="status" class="select" >
+					<select required name="status" class="select" <%=data.status==3?"disabled":""%>>
 						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
 						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
 						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
@@ -83,7 +82,7 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色说明</label>
-				<div class="control"><textarea required name="description"><%=data.description||""%></textarea></div>
+				<div class="control"><textarea required name="description" <%=data.status==3?"disabled":""%>><%=data.description||""%></textarea></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>配置权限</label>
@@ -100,11 +99,11 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="">信息备注</label>
-				<div class="control"><textarea  name="note"><%=data.note||""%></textarea></div>
+				<div class="control"><textarea <%=data.status==3?"disabled":""%>  name="note"><%=data.note||""%></textarea></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""></label>
-				<div class="control"><button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary" type="submit">提交</button></div>
+				<div class="control"><%if(data.status!=3){%><button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary" type="submit" <%=data.status==3?"disabled":""%>>提交</button><%}%></div>
 			</div>
 		  </form>
 		  </script>
