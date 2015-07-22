@@ -14,12 +14,18 @@
 			</div>		 
 		</div>
 		<hr />
-	</div>
+	</div>	
 	
 	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
-		 <div class="control-group">
+		 <div class="detail-operation">
+				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+				<span class="space"></span>
+				 <button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button>
+			</div>
+		
+		<div class="control-group">
 					<%if(!query._){%>
                     <legend class="add-title" style="margin-left:70px;" id="titlt-msg">基本信息：</legend>
 					<%}%>
@@ -127,7 +133,8 @@
                 </div>
 				<div class="control-group">
 				<label class="control-label" for=""></label>
-				<div class="control"><button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>>提交</button></div>
+				<div class="control">
+				<button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button></div>
 			</div>
 		  </form>
 		  </script>
