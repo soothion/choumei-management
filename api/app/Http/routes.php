@@ -93,6 +93,17 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 			'uses'=>'UserController@export'
 		));
 
+	//self模块
+	Route::any('self/show',array(
+			'as'=>'self.show',
+			'uses'=>'SelfController@show'
+		));
+	Route::any('self/update',array(
+			'as'=>'self.update',
+			'uses'=>'SelfController@update'
+		));
+
+
 	//角色模块
 	Route::any('role/index',array(
 			'as'=>'role.index',
