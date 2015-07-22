@@ -18,6 +18,11 @@
 	<div class="wrapper" ajat="<%if(query.id){%>merchant/getMerchantList?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%=query._?"merchant/update":"merchant/save"%>">
+			<div class="detail-operation">
+				<button class="btn" onclick="history.back()" type="button">取消</button>
+				<span class="space"></span>
+				<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>" type="submit">提交</button>
+			</div>
 			<input type="hidden" name="id" value="<%=data.id||""%>">
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>商户编号</label>
