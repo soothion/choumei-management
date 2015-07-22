@@ -7,14 +7,11 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a>店铺结算 </a><span>&gt;</span><a href="singleList.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"><%=query.preview?"预览":"查看"%>付款单</span>
+        <a>店铺结算 </a><span>&gt;</span><a href="singleList.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>付款单</span>
 		<div class="flex-box">
 			<div class="flex-item">
-				<h4><%=query.preview?"预览":"查看"%>付款单</h4>
-			</div>
-			<div>
-				
-			</div>			
+				<h4> <%=query.preview?"预览":"查看"%>付款单</h4>
+			</div>	
 		</div>
 		<hr />
     </div>
@@ -22,7 +19,7 @@
 		<script type="text/template" id="form-t">
 		<%
 				if(query.preview=="preview"){
-					data=JSON.parse(sessionStorage.getItem("preview"));
+					data=JSON.parse(localStorage.getItem("preview"));
 				}
 			%>
 		<div class="detail-operation">
@@ -33,9 +30,11 @@
 				<input type="hidden" name="id" value="<%=data.id%>" />
 				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy">删除</button>
 			</form>
-			<%}%>
 			<span class="space"></span>
 			<button class="btn" type="button" onclick="history.back()">返回</button>
+			<%}else{%>
+			<button class="btn" type="button" onclick="window.close()">关闭预览</button>
+			<%}%>
 		</div>
         <div class="table-detail">
         <table>
