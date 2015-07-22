@@ -79,9 +79,9 @@ class IndexController extends Controller{
 		{       
     		$user = Manager::where('username',$this->param['username'])->firstOrFail();
     		if($user->status==2)
-    			return $this->error('当前帐户已注销'); 
-    		if($user->status==3)
     			return $this->error('当前帐户已停用'); 
+    		if($user->status==3)
+    			return $this->error('当前帐户已注销'); 
     		$this->user = $user;
     		$token = JWTAuth::fromUser($user);
     		Event::fire('login',$user);
