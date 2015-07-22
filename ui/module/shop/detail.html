@@ -23,7 +23,8 @@
         <div class="wrapper" id="table-wrapper">
             <script type="text/template" id="table-t">                
             <div class="btn-group">
-                <div style="float:right">                     
+                <div style="float:right">
+					<%if(query.type!="preview"){%>
                     <button data-slug="salon.endCooperation" class="btn" id="stop_cooperation_btn" salonid="<%=data.salonid%>" status="<%=data.salestatus%>">
                         <%=data.salestatus == 0 ? '恢复合作' : '终止合作'%> 
                     </button>
@@ -34,8 +35,13 @@
 					&nbsp;
                     <a href='add.html?type=edit' data-slug="salon.update">
                         <button class="btn">编辑</button>
-                    </a>  
-                </div>          
+                    </a>
+					&nbsp;
+					<button class="btn" type="button" onclick="history.back()">返回</button>
+					<%}else{%>					
+					<button class="btn" type="button" onclick="window.close()">关闭预览</button>
+					<%}%>
+                </div>
             </div>
                     
             <div class="flex-box">

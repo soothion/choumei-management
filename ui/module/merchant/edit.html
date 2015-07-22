@@ -96,8 +96,8 @@
 		});
 		$(document).on('click','.preview',function(){
 			var data=lib.tools.getFormData($(this).closest('form'));
-			sessionStorage.setItem('preview',JSON.stringify(data));
-			location.href="detail.html?preview=preview";
+			localStorage.setItem('preview',JSON.stringify(data));
+			window.open("detail.html?preview=preview");
 		});
 	</script>
   </body>

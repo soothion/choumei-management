@@ -61,7 +61,6 @@
         currentData = data;
         lib.ajat('#domid=table-wrapper&tempid=table-t').template(data);
         createScript();
-        $(".btn-group").hide();
         selectSalonType(data);         
     }
 
