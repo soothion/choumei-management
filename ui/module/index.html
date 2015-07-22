@@ -20,11 +20,13 @@
 		  <nav class="nav-main">
 			<ul>
 				<%data.forEach(function(item,i){%>
+				<%if(item.show!=2){%>
 				<li class="<%=i==0?"active":""%>"  data-id="level2<%=item.id%>">
 					<a>
 						<%=item.title%>
 					</a>
 				</li>
+				<%}%>
 				<%})%>
 			</ul>
 		  </nav>
@@ -66,16 +68,18 @@
 			<div class="swiper-container">
 				<div class="swiper-wrapper">
 				<%data.forEach(function(item1,i){%>
+					<%if(item1.show!=2){%>
 					<div class="menu-level2 swiper-slide" id="level2<%=item1.id%>">
 						<h2><%=item1.title%></h2>
 						<%item1.child&&item1.child.forEach(function(item2,j){%>
+						<%if(item2.show!=2){%>
 						<div class="menu-category <%=j==0?"active":""%>">
 							<div class="menu-category-title">
 								<span><%=item2.title%></span>
 							</div>
 							<ul style="<%=j==0?"display:block":""%>">
 								<%item2.child&&item2.child.forEach(function(item3){%>
-								<%if(item3.show==1){%>
+								<%if(item3.show!=2){%>
 								<li class="flex-box">
 									<a href="<%=slug[item3.slug]%>" data-slug1="<%=item3.slug%>" class="flex-item" target="main"><i class="fa fa-angle-right"></i><%=item3.title%></a>
 								</li>
@@ -83,8 +87,10 @@
 								<%})%>
 							</ul>
 						</div>
+						<%}%>
 						<%})%>
 					</div>
+					<%}%>
 				<%})%>
 				</div>
 			</div>
