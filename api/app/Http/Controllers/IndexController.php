@@ -78,6 +78,8 @@ class IndexController extends Controller{
 		if (Auth::attempt(array('username' => $this->param['username'], 'password' => $this->param['password'])))
 		{       
     		$user = Manager::where('username',$this->param['username'])->firstOrFail();
+    		if($user->status==3)
+    			return $this->error('当前帐户已停用'); 
     		$this->user = $user;
     		$token = JWTAuth::fromUser($user);
     		Event::fire('login',$user);
