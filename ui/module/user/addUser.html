@@ -55,14 +55,14 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>联系手机：</label>
                     <div class="control">
-                        <input type="text" patternmsg="手机号码输入不正确" pattern="mobile" requiredmsg="请输入手机号码" required name="tel" value="<%=data.tel||""%>">
+                        <input type="text" patternmsg="手机号码输入不正确" pattern="mobile" requiredmsg="请输入手机号码" required name="tel" value="<%=data.tel||""%>" <%=data.status==3?"disabled":""%>>
 					
                     </div>
                 </div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门：</label>
 				<div class="control">
-					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id%>" id="department" >
+					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id%>" id="department" <%=data.status==3?"disabled":""%>>
 					</select>
 					 
 				</div>
@@ -70,7 +70,7 @@
 		<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>职位：</label>
 				<div class="control">
-					<select required name="position_id" class="select" ajat="list/position#domid=position&tempid=position_t&sid=<%=data.position_id%>" id="position" >
+					<select required name="position_id" class="select" ajat="list/position#domid=position&tempid=position_t&sid=<%=data.position_id%>" id="position" <%=data.status==3?"disabled":""%>>
 					</select>
 				 
 				</div>
@@ -78,7 +78,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属城市：</label>
 				<div class="control">
-					<select required name="city_id" class="select" ajat="list/city#domid=city&tempid=city-t&sid=<%=data.city_id%>" id="city">
+					<select required name="city_id" class="select" ajat="list/city#domid=city&tempid=city-t&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
 					</select>
 						 
 				</div>
@@ -87,7 +87,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>用户状态：</label>
 				<div class="control">
-						<select required name="status" class="select" >
+						<select required name="status" class="select" <%=data.status==3?"disabled":""%>>
 						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
 						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
 						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
@@ -104,7 +104,7 @@
 				}
 				sessionStorage.setItem("roles",JSON.stringify(sids));
 				}%>					
-                       <div class="control"  ajat="role/index?page=1&page_size=10000#domid=roles&tempid=roles-t&sids=<%=sids%>" id="roles">
+                       <div class="control"  ajat="role/index?page=1&page_size=10000#domid=roles&tempid=roles-t&sids=<%=sids%>" id="roles" <%=data.status==3?"disabled":""%>>
 				 
 			  	       </div>
 					
@@ -116,18 +116,18 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>登陆密码：</label>
                     <div class="control">
-                        <input id="password" type="password" patternmsg="6-20位数字和字母组合" pattern="password" requiredmsg="请输入密码" required placeholder="6-20位数字和字母组合" name="password" value="<%=data.password||""%>" <%=query._?"disabled":""%>>
+                        <input id="password" type="password" patternmsg="6-20位数字和字母组合" pattern="password" requiredmsg="请输入密码" required placeholder="6-20位数字和字母组合" name="password" value="<%=data.password||""%>" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>>
                     
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>确认登录密码：</label>
                     <div class="control">
-					<input type="password" match="password" matchmsg="确认密码与密码不一致" pattern="password" requiredmsg="请输入确认密码" required name="confirm" <%=query._?"disabled":""%>></div>
+					<input type="password" match="password" matchmsg="确认密码与密码不一致" pattern="password" requiredmsg="请输入确认密码" required name="confirm" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>></div>
                 </div>
 				<div class="control-group">
 				<label class="control-label" for=""></label>
-				<div class="control"><button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>">提交</button></div>
+				<div class="control"><button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>>提交</button></div>
 			</div>
 		  </form>
 		  </script>
