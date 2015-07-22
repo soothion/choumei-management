@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Merchant;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
+use App\SalonUser;
 
 class MerchantController extends Controller {
 	/**
@@ -310,8 +311,24 @@ class MerchantController extends Controller {
 		}
 		
 		$save["status"] = 2;//1正常 2删除
-
+		$save["uptime"] = time();
 		$status = $query->where('id',$param['id'])->update($save);
+		
+		SalonUser::where(['merchantId'=>$param['id']])->update(['status'=>3]);//删除普通用户账号
+		
+		$merchantId = $param['id'];
+		$usersCount = DB::table('salon_user')
+		->where('merchantId',"=" ,$merchantId)
+		->where('salonid',"!=" ,0)
+		->where('status',"=" ,1)
+		->count();
+		if(!$usersCount)
+		{
+			DB::table('salon_user')//删除账号  超级管理员
+			->where('salonid',"=" ,0)
+			->where('merchantId',"=" ,$merchantId)
+			->update(['status'=>3]);
+		}
 
 		if($status)
 		{
