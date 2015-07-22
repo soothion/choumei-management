@@ -22,46 +22,47 @@
     <div class="wrapper" ajat="<%if(query.id){%>permission/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 	   <script type="text/template" id="form-t">
         <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>permission/update/<%=data.id%><%}%>">
-			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>权限名称：</label> 
-				<div class="control"><%=data.title||""%></div>		
-			</div>
-			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>配置路径：</label>
-			   <div class="control">
-					<input type="text" required="" name="slug" value="<%=data.slug||""%>" disabled>
-					<span class="control-help" style="display: none;">未填写</span>
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>权限状态：</label>
-				 <select required name="status" class="select" <%=data.status==3?"disabled":""%>>
-					<option value="1" <%=data.status==1?"selected":""%>>正常</option>
-					<option value="2" <%=data.status==2?"selected":""%>>停用</option>
-					<option value="3" <%=data.status==3?"selected":""%>>注销</option>
-				</select>
-			</div>   
-			 <div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>权限说明：</label>
-				<div class="control">
-					<input type="text" required="" value="<%=data.description||""%>" name="description" <%=data.status==3?"disabled":""%>>
-					<span class="control-help" style="display: none;">未填写</span>
-				</div>
-			</div>
-			 <div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>信息备注：</label>
-				<div class="control">
-					<input type="text" required="" value="<%=data.note||""%>" name="note" <%=data.status==3?"disabled":""%>>
-					 <span class="control-help" style="display: none;">未填写</span>
-				</div>
-			</div>
-			<%if(data.status!=3){%>
-			<div class="control-group">
-				<label class="control-label" for=""></label>
-				<div class="control"><button class="btn-primary" type="submit" data-slug="permission.update">保存</button></div>
-			</div>
-			<%}%>
-		</form>
+		
+    
+	<div class="control-group">
+	
+        <label class="control-label" for=""><span class="red">*</span>权限名称：</label> 
+ <div class="control"><%=data.title||""%></div>		
+    </div>
+     
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>配置路径：</label>
+       <div class="control">
+                        <input type="text" required="" name="slug" value="<%=data.slug||""%>" disabled>
+						 <span class="control-help" style="display: none;">未填写</span>
+                    </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for=""><span class="red">*</span>权限状态：</label>
+         <select required name="status" class="select" >
+		 
+						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
+						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
+						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
+					</select>
+    </div>   
+     <div class="control-group">
+        <label class="control-label" for="">权限说明：</label>
+        <div class="control">
+            <input type="text" value="<%=data.description||""%>" name="description">
+        </div>
+    </div>
+     <div class="control-group">
+        <label class="control-label" for="">信息备注：</label>
+        <div class="control">
+            <input type="text" value="<%=data.note||""%>" name="note">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for=""></label>
+        <div class="control"><button class="btn-primary" type="submit" data-slug="permission.update">保存</button></div>
+    </div>
+  </form>
     </div>
   </body>
 </html>
