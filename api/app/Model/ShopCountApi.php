@@ -306,7 +306,7 @@ class ShopCountApi
             }
             else 
             {
-                $merchant_ids=Salon::where('name','like',$keyword)->lists('id');
+                $merchant_ids=Merchant::where('name','like',$keyword)->lists('id');
                 $prepay->whereIn('merchant_id',$merchant_ids);
             }
 //             if($key == 1)
@@ -425,7 +425,7 @@ class ShopCountApi
             }
             else
             {
-                $merchant_ids=Salon::where('name','like',$keyword)->lists('id');
+                $merchant_ids=Merchant::where('name','like',$keyword)->lists('id');
                 $instead_receive->whereIn('merchant_id',$merchant_ids);
             }
             
