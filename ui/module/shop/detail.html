@@ -86,7 +86,7 @@
                                             if(data.contractTime==0){
                                                 data.contractTime = "";
                                             } else if(!isNaN(data.contractTime)){
-                                                data.contractTime = lib.getDate(data.contractTime);
+                                                data.contractTime = lib.tools.getDate(data.contractTime);
                                             }
                                             %>
                                             <span class="contract-mr">日期：<%=data.contractTime%></span>
@@ -194,7 +194,7 @@
                                         if(data.setupTime==0){
                                             data.setupTime = "";
                                         }else if(!isNaN(data.setupTime)){
-                                            data.setupTime = lib.getDate(data.setupTime);
+                                            data.setupTime = lib.tools.getDate(data.setupTime);
                                         }
                                         %>
                                         <%=data.setupTime%>
