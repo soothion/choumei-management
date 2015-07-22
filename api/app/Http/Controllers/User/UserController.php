@@ -477,9 +477,6 @@ class UserController extends Controller{
 		$update_role = 1;
 		if(isset($param['password'])&&$param['password']){
 			$param['password'] = bcrypt($param['password']);
-			//当前用户修改自己密码需要提交原密码
-			if ($id==$this->user->id&&!Auth::attempt(array('username' => $user->username, 'password' => $this->param['old_password'])))
-				return $this->error('原密码错误');
 		}
 		if(isset($param['roles'])){
 			$roles = $param['roles'];
