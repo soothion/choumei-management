@@ -72,7 +72,7 @@ class IndexController extends Controller{
 	 */
 	public function login(){
 		$captcha = new Captcha;
-		$validator = $captcha::check($this->param['captcha']);
+		$validator = $captcha::check(strtolower($this->param['captcha']));
         if (!$validator)
 	       return $this->error('验证码错误');
 		if (Auth::attempt(array('username' => $this->param['username'], 'password' => $this->param['password'])))

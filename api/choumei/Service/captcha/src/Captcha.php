@@ -377,7 +377,7 @@ class Captcha
     public function check($value)
     {
         $store = $this->redis->get($this->input['uniqid']);
-        if (!$this->sensitive)
+        if ($this->sensitive)
         {
             $value = $this->str->lower($value);
             $store = $this->str->lower($store);
