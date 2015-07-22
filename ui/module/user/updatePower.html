@@ -26,8 +26,7 @@
 				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
 				<span class="space"></span>
 				 <button class="btn-primary" style=" <%=data.status==3?"display:none":""%>" type="submit" <%=data.status==3?"disabled":""%> data-slug="permission.update">提交</button>
-			</div>
-			 
+			</div>		 
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>权限名称：</label> 
 				<div class="control"><%=data.title||""%></div>		
