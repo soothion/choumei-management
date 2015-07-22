@@ -13,21 +13,36 @@
 				<h4>查看付款单</h4>
 			</div>
 			<div>
-				<button class="btn" type="button" onclick="history.back()">返回</button>
+				
 			</div>			
 		</div>
 		<hr />
     </div>
    <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		 
-		
+		<%
+				if(query.preview=="preview"){
+					data=JSON.parse(sessionStorage.getItem("preview"));
+				}
+			%>
+		<div class="detail-operation">
+			<%if(query.preview!="preview"){%>
+			<a class="btn" href="addSingle.html?id=<%=data.id%>"  data-slug="shop_count.update">编辑</a></button>
+			<span class="space"></span>
+			<form action="shop_count/destroy/<%=data.id%>" data-role="remove" data-title="该商户有合作的店铺，是否继续删除？">
+				<input type="hidden" name="id" value="<%=data.id%>" />
+				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy">删除</button>
+			</form>
+			<%}%>
+			<span class="space"></span>
+			<button class="btn" type="button" onclick="history.back()">返回</button>
+		</div>
         <div class="table-detail">
         <table>
             <thead>
                 <tr>
                     <td colspan="2">
-                      发丝缘（宝安店）
+                      <%=data.salon?data.salon.salonname:""%>
                     </td>
                 </tr>
             </thead>
@@ -68,10 +83,6 @@
                 <tr>
                   <td>状态</td>
                   <td><%=state[data.state]%></td>
-                </tr>
-                <tr>
-                  <td>操作</td>
-                  <td><a class="btn link" href="addSingle.html?id=<%=data.id%>"  data-slug="shop_count.update">编辑</a></button></td>
                 </tr>
               </tbody>
         </table>
