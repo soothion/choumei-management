@@ -56,18 +56,16 @@
 				options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
 			}
 			options.timeout=6000;
-			var promise=$.ajax(options);
-			promise.fail(function(xhr, status){
-				var msg = "请求失败，请稍后再试!";
-				if (status === "parseerror") msg = "数据响应格式异常!";
-				if (status === "timeout")    msg = "请求超时，请稍后再试!";
-				if (status === "offline")    msg = "网络异常，请稍后再试!";
-				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
-			}).done(function(data){
+			var done=function(data){
 				//code 异常处理
 				if(data.result==0){
 					if(data.code==402){
-						parent.lib.popup.result({bool:false,text:"没有权限操作",time:2000});
+						parent.lib.popup.confirm({
+							text:"您的权限已经被修改！需要刷新页面更新权限",
+							define:function(){
+								parent.location.reload();
+							}
+						});
 					}else{
 						if(data.code==401||data.code==400){
 							data.msg="token失效，请重新登录";
@@ -84,7 +82,18 @@
 						});
 					}
 				}
-			});
+			}
+			if(options.done){
+				done=options.done;
+			}
+			var promise=$.ajax(options);
+			promise.fail(function(xhr, status){
+				var msg = "请求失败，请稍后再试!";
+				if (status === "parseerror") msg = "数据响应格式异常!";
+				if (status === "timeout")    msg = "请求超时，请稍后再试!";
+				if (status === "offline")    msg = "网络异常，请稍后再试!";
+				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
+			}).done(done);
             return promise;
         },
 		getSession:function(){
@@ -512,7 +521,8 @@
 								self.validate(true);
 							}
 						}
-					}
+					},
+					done:function(){}
 				});
 				return;
 			}
