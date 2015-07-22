@@ -22,9 +22,7 @@
      <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}else{%>shop_count/create<%}%>">
-			 <%if(query.id){%>
-				<input type="hidden" ajat-sync-selector="#breadcrumb-current" value="编辑付款单" />				 		  		
-			 <%}%>
+				<%sessionStorage.setItem("preview",JSON.stringify(data))%>
                   <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款单类型：</label>
                     <div class="control">
@@ -96,7 +94,6 @@
 				<label class="control-label" for=""></label>
 				<div class="control">
 				<button class="btn preview" type="button">预览</button>
-				<a class="btn link" href="../shopSettlement/previewSingle.html?id=<%=data.id%>">预览</a>
 				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
 				</div>
 			</div>			 
@@ -115,7 +112,7 @@
 		<%}%>
 		</script>		
 		<script type="text/javascript">
-		$(function(){			 
+		$(function(){			
 			$('input[type="date"]').val(lib.tools.getDate());			  
 			$(document).on('autoinput','#search',function(e,data){
 				if(data){
@@ -137,10 +134,17 @@
 			});
 			
 			$(document).on('click','.preview',function(){
-			var data=lib.tools.getFormData($(this).closest('form'));
-			sessionStorage.setItem('preview',JSON.stringify(data));
-			location.href="../shopSettlement/previewSingle.html?id=<%=data.id%>";
-		})
+				var data=lib.tools.getFormData($(this).closest('form'));
+				data=$.extend(JSON.parse(sessionStorage.getItem("preview")),data);
+				data.salon={
+					salonname:$('#search').val()
+				}
+				data.merchant={
+					name:$('#merchantname').val()
+				}
+				sessionStorage.setItem('preview',JSON.stringify(data));
+				location.href="updateSingle.html?preview=preview";
+			})
 		});		
 	</script> 	
     </body>
