@@ -42,7 +42,7 @@
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
                         <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required>
-						<div class="complete-position" id="complete-position" style="width:20%;">							
+						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;">							
 						</div>
                     </div>
                 </div>			
@@ -59,8 +59,7 @@
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
                         <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required value="<%=data.salon.salonname||""%>">
-						<div class="complete-position" id="complete-position" style="width:20%;">							
-						</div>
+						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
                     </div>
                 </div>
                  <div class="control-group">
