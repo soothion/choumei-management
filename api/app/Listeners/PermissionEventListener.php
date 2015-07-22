@@ -37,7 +37,7 @@ class PermissionEventListener {
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-		$data['object'] = $permission->name;
+		$data['object'] = $permission->title;
 
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
@@ -54,7 +54,7 @@ class PermissionEventListener {
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-		$data['object'] = $permission->name;
+		$data['object'] = $permission->title;
 
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
