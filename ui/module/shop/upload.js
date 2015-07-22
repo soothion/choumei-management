@@ -239,7 +239,7 @@
             window.open("detail.html?type=preview&upload=true");        
         })
 
-        $("#submit").on('click',function(){
+        $(".submit").on('click',function(){
             parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
             conLoader.upload();
             licLoader.upload();
