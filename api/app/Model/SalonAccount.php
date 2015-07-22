@@ -79,6 +79,7 @@ class SalonAccount extends Model {
 	   {
 	  	 	$query = $query->where('salonid','=',$data["salonid"]);
 	   }
+	   $query = $query->where('status','!=',3);//排除删除账号
 	   $query = $query->where('merchantId','=',$data["merchantId"]);
 	   return $query->select(array("salon_user_id","username"))->count();
 	}
