@@ -55,12 +55,10 @@
 					 <span class="control-help" style="display: none;">未填写</span>
 				</div>
 			</div>
-			<%if(data.status!=3){%>
 			<div class="control-group">
 				<label class="control-label" for=""></label>
-				<div class="control"><button class="btn-primary" type="submit" data-slug="permission.update">保存</button></div>
+				<div class="control"><button class="btn-primary" style=" <%=data.status==3?"display:none":""%>" type="submit" <%=data.status==3?"disabled":""%> data-slug="permission.update">保存</button></div>
 			</div>
-			<%}%>
 		</form>
     </div>
   </body>
