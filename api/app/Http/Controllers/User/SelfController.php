@@ -13,7 +13,7 @@ use Auth;
 class SelfController extends Controller{
 
 	/**
-	 * @api {post} /self/show/:id 1.查看个人信息
+	 * @api {post} /self/show 1.查看个人信息
 	 * @apiName show
 	 * @apiGroup Self
 	 *
