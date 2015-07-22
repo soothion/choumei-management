@@ -183,10 +183,13 @@ class SalonAccountController extends Controller {
 	 * */
 	private function getAccount($username)
 	{
-		$list = SalonUser::where(array("username"=>$username))->first();
+		$query = SalonUser::getQuery();
+		$query = $query->where('username','=',$username);
+		$query = $query->where('status','!=',3);//排除删除账号
+		$list = $query->first();
 		if($list)
 		{
-			$list = $list->toArray();
+			$list = (array)$list;
 		}
 		return $list;
 	}
