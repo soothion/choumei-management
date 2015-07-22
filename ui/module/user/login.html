@@ -11,17 +11,17 @@
 			<div class="flex-box">
 				<div class="flex-item">
 					<div class="slogan">
-						<img src="../../images/logo.png" alt="" /><br />
+						<img src="/images/logo.png" alt="" /><br />
 						美发O2O领跑者
 					</div>
 				</div>
-				<form action="" >
+				<form>
 					<h4 class="tc">臭美管理后台登录</h4>
 					<ul>
 						<div class="control-help"></div>
-						<li><input type="text" placeholder="帐号" id="account" autofocus="true" value="choumei" /></li>
+						<li><input type="text" placeholder="帐号" id="account" autofocus="true" value="choumei"/></li>
 						<li><input type="password" placeholder="密码" id="password" value="cm123456"/></li>
-						<li><input type="text" class="code" placeholder="验证码" id="code" autocomplete="off" /> <a class="link"><img id="codeImage" /> 换一张</a></li>
+						<li><input type="text" class="code" placeholder="验证码" id="code" autocomplete="off"/> <a class="link"><img id="codeImage" /> 换一张</a></li>
 						<li><button type="submit" class="btn-primary">登录</button></li>
 					</ul>
 				</form>
@@ -89,15 +89,7 @@
 					})
 					e.preventDefault();
 				});
-				/*
-				$('.slogan').on('click',function(){
-					parent.lib.popup.swiper({list:[
-						"http://www.sc.xinhuanet.com/content/2014-12/05/1113535463_14177557357041n.jpg",
-						"http://image.tianjimedia.com/uploadImages/2015/163/07/47ZL0H16XQS1_1000x500.jpg",
-						"http://c.hiphotos.baidu.com/image/pic/item/b03533fa828ba61e4a51302e4334970a304e5970.jpg",
-						"http://c.hiphotos.baidu.com/image/pic/item/38dbb6fd5266d0167b8bc222952bd40735fa352d.jpg"
-					],index:0});
-				})*/
+				$('#account').val(lib.getSession().account);
 			});
 		</script>
   </body>
