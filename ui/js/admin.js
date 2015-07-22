@@ -9,7 +9,6 @@
 		if(lib.ajatCount==0){
 			parent.$('body').trigger('loadingend');
 			$(document.body).off('_ready',lib.loadingend);
-			parent.lib.popup.close();
 		}
 	}
 	lib.Ajat.before=function(){
@@ -18,6 +17,7 @@
 	document.onreadystatechange=function(){
 		if(document.readyState=='interactive'){
 			parent.$('body').trigger('loading');
+			parent.lib.popup.close();
 		}
 	}
 })();
@@ -74,7 +74,7 @@ $(function(){
 			$(window).trigger('hashchange');
 		}
 	}).on('click','a[data-role="hash"]',function(e){//链接hash提交
-		var query=lib.parseQuery($(this).attr('href').replace('#',''));
+		var query=lib.tools.parseQuery($(this).attr('href').replace('#',''));
 		if(lib.tools.hashchange(query)){
 			$(window).trigger('hashchange');
 		}
