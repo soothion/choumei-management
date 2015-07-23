@@ -84,7 +84,52 @@ class ShopCountApi
      */
     public static function countBounty($options)
     {
+        $order_sns = $options;
+        $input_count = count($order_sns);
+        $base_order_infos = BountyTask::whereIn("btSn",$order_sns)->where('btStatus',4)->select('btSn','salonId','money','endTime')->get()->toArray();
         
+        $select_count = count($base_order_infos);
+        //状态检查
+        if($input_count != $select_count)
+        {
+            throw new \Exception("some ordersn in [".implode(",", $order_sns)."] is wrong status");
+        }
+        
+        $salon_ids = array_column($base_order_infos, "salonId");
+        
+        $other_info = self::getSalonMerchantBaseInfo($salon_ids);
+         
+        $res = ['success'=>[],'type'=>2,'already'=>[]];
+        foreach($base_order_infos as $order)
+        {
+            $ordersn = $order['btSn'];
+            $salon_id = $order['salonId'];
+            $money = floatval($order['money']);
+            $time = $order['endTime'];
+            $type = 2;
+            $salon_info = [];
+            $merchant_info = [];
+            $merchant_id = 0;
+            if(isset($other_info['salon'][$salon_id]))
+            {
+                $salon_info = $other_info['salon'][$salon_id];
+                $merchant_id = $other_info['salon'][$salon_id]['merchant_id'];
+            }
+            if(isset($other_info['merchant'][$merchant_id]))
+            {
+                $merchant_info = $other_info['merchant'][$merchant_id];
+            }
+            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$money,$time,$type,$salon_info,$merchant_info);
+            if($ret == 1)
+            {
+                $res['success'][] = $ordersn;
+            }
+            else if($ret == 2)
+            {
+                $res['already'][] = $ordersn;;
+            }
+        }
+        return $res;
     }
     
     /**
@@ -212,29 +257,27 @@ class ShopCountApi
      */
     public static function deletePrepay($id)
     {
-       #@todo 需求不明确 先只做简单处理
-       return PrepayBill::where("id",$id)->delete();
-//         $prepay = PrepayBill::where('id',$id)->first();
-//         if(empty($prepay))
-//         {
-//             return true;
-//         }
+        $prepay = PrepayBill::where('id',$id)->first();
+        if(empty($prepay))
+        {
+            return true;
+        }
     
-//         if($prepay->state == 0)
-//         {
-//             PrepayBill::delete($id);
-//         }
-//         else if($prepay->state == 1)
-//         {
-//             PrepayBill::delete($id);
-//             $options = [];
-//             $options['salon_id'] = intval($prepay->salon_id);
-//             $options['pay_money'] = floatval($prepay->pay_money) * -1;
-//             $options['cost_money'] = floatval($prepay->cost_money) * -1;
-//             ShopCount::payMoney($options);
+        if($prepay->state == 0)
+        {
+            PrepayBill::delete($id);
+        }
+        else if($prepay->state == 1)
+        {
+            PrepayBill::delete($id);
+            $options = [];
+            $options['salon_id'] = intval($prepay->salon_id);
+            $options['pay_money'] = floatval($prepay->pay_money) * -1;
+            $options['cost_money'] = floatval($prepay->cost_money) * -1;
+            ShopCount::payMoney($options);
     
-//         }
-//         return null;
+        }
+        return null;
     }
     
     public static function getSalonMerchantBaseInfo($salon_ids)
@@ -527,6 +570,9 @@ class ShopCountApi
         $shop_count_fields = ['id','created_at','merchant_id','merchant_name','salon_id','salon_name','salon_type','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
         $order_by_fields = ['id','created_at','salon_name','salon_type','pay_money','cost_money','spend_money','balance_money','invest_money','invest_return_money','invest_balance_money','borrow_money','borrow_return_money','borrow_balance_money'];
         
+        $salon_infos = null;
+        $merchant_infos =null;
+        
         $shop_count = ShopCount::select($shop_count_fields);
         
         //关键字搜索
@@ -536,12 +582,25 @@ class ShopCountApi
             $keyword = "%".str_replace(["%","_"], ["\\%","\\_"], $options['keyword'])."%";
             if ($key == 1)
             {
-                $shop_count->where('salon_name','like',$keyword);
+                $salon_infos=Salon::where('salonname','like',$keyword)->get($salon_fields)->toArray();
+                $salon_ids = array_column($salon_infos, "salonid");
+                $shop_count->whereIn('salon_id',$salon_ids);
             }
             else
             {
-                $shop_count->where('merchant_name','like',$keyword);
+                $merchant_infos=Merchant::where('name','like',$keyword)->get($merchant_fields)->toArray();
+                $merchant_ids = array_column($merchant_infos, "id");
+                $shop_count->whereIn('merchant_id',$merchant_ids);
             }
+            
+//             if ($key == 1)
+//             {
+//                 $shop_count->where('salon_name','like',$keyword);
+//             }
+//             else
+//             {
+//                 $shop_count->where('merchant_name','like',$keyword);
+//             }
             
 //             if($key == 1)
 //             {
@@ -601,6 +660,7 @@ class ShopCountApi
             $res =  $shop_count->orderBy($order,$order_by)->paginate($size)->toArray();
             unset($res['next_page_url']);
             unset($res['prev_page_url']);
+            $res = self::formatShopCountOut($res,$salon_infos,$merchant_infos);
             return $res;
     }
 
@@ -668,5 +728,55 @@ class ShopCountApi
         ]);
         
         return $instead_receive->first($instead_receive_fields);
+    }
+    
+    protected static function formatShopCountOut($bases,$salon_infos,$merchant_infos)
+    {
+        $datas = (isset($bases['data'])&&count($bases['data']>0))?$bases['data']:null;
+        if (empty($datas))
+        {
+            return $bases;
+        }
+        
+        if(empty($salon_infos))
+        {
+            $salon_ids = array_column($datas, "salon_id");
+            $salon_infos = Salon::whereIn("salonid",$salon_ids)->get(['salonid','salonname','shopType'])->toArray();
+        }
+        if (empty($merchant_infos))
+        {
+            $merchant_ids = array_column($datas, "merchant_id");
+            $merchant_infos = Merchant::whereIn("id",$merchant_ids)->get(['id','name'])->toArray();
+        }
+        $salon_info_indexs =[];
+        $merchant_info_indexs = [];
+        foreach ($salon_infos as $info)
+        {
+            $key = $info['salonid'];
+            $salon_info_indexs[$key] = $info;
+        }
+        
+        foreach ($merchant_infos as $info)
+        {
+            $key = $info['id'];
+            $merchant_info_indexs[$key] = $info;
+        }
+        
+        foreach ($datas as &$data)
+        {
+            $salon_id = $data['salon_id'];
+            $merchant_id = $data['merchant_id'];
+            if(isset($salon_info_indexs[$salon_id]))
+            {
+                $data['salon_name'] = $salon_info_indexs[$salon_id]['salonname'];
+                $data['salon_type'] = $salon_info_indexs[$salon_id]['shopType'];
+            }
+            if(isset($merchant_info_indexs[$merchant_id]))
+            {
+                $data['merchant_name'] = $merchant_info_indexs[$merchant_id]['name'];
+            }
+        }
+        $bases['data'] = $datas;
+        return $bases;
     }
 }
