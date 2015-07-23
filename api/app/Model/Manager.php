@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Kodeine\Acl\Traits\HasRole;
 use App\Permission;
+use Illuminate\Support\Facades\Redis as Redis;
 
 class Manager extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -70,23 +71,26 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
      */
     public function getPermissions()
     {
-        // user permissions overridden from role.
-        $permissions = [];
+        //先从redis里读取
+        $redis = Redis::connection();
+        if($permissions = $redis->get('permissions:'.$this->id))
+            return unserialize($permissions);
 
-        // permissions based on role.
-        // more permissive permission wins
-        // if user has multiple roles we keep
-        // true values.
+        $permissions = [];
         foreach ($this->roles as $role) {
         	if($role->status!=1)
         		continue;
             if($role->id==1)
-                return Permission::lists('slug')->toArray();
+            {
+                $permissions = Permission::lists('slug')->toArray();
+                break;
+            }
+                
             foreach ($role->permissions->toArray() as $permission) {
                 $permissions[] = $permission['slug'];  
             }
         }
-
+        $redis->set('permissions:'.$this->id,serialize($permissions));
         return $permissions;
     }
 
