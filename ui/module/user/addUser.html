@@ -110,7 +110,7 @@
 				}
 				sessionStorage.setItem("roles",JSON.stringify(sids));
 				}%>					
-                       <div class="control"  ajat="role/index?page=1&page_size=10000#domid=roles&tempid=roles-t&sids=<%=sids%>" id="roles" <%=data.status==3?"disabled":""%>>
+                       <div class="control"  ajat="role/index?page=1&page_size=10000#domid=roles&tempid=roles-t&sids=<%=sids%>&status=<%=data.status%>" id="roles" <%=data.status==3?"disabled":""%>>
 				 
 			  	       </div>
 					
@@ -170,9 +170,7 @@
 			%>
 			<%data=data.data%>
 			<%for(var i=0;i<data.length;i++){%>
-				<!--<input type="checkbox" id="<%=data[i].id%>" class="checkbox" name="roles"  required value="<%=data[i].id%>" <%=protocol.custom.sids&&protocol.custom.sids.indexOf(data[i].id+",")>-1?"checked":""%> />-->
-				<!--<label for="<%=data[i].id%>" style="margin-right:2px;"></label>-->
-				<input type="checkbox" required id="<%=data[i].id%>" <%=sids&&sids.indexOf(data[i].id)>-1?"checked":""%> class="checkbox" name="roles" value="<%=data[i].id%>" />
+				<input type="checkbox" required id="<%=data[i].id%>" <%=sids&&sids.indexOf(data[i].id)>-1?"checked":""%> class="checkbox" name="roles" value="<%=data[i].id%>" <%=protocol.custom.status==3?"disabled":""%>/>
 				<label for="<%=data[i].id%>" style="margin-right:2px;"></label>
 				<label for="<%=data[i].id%>"><%=data[i].name%></label><span class="space"></span>	
                  			

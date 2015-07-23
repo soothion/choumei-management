@@ -79,7 +79,7 @@ $('#page').on('_ready',function(){
 		var $this=$(this)
 		$this.addClass('active').siblings().removeClass('active');
 		swiper.slideTo($this.index()+1);
-	});
+	}).first().addClass('active');
 });
 	//var myScroll = new IScroll('#aside',{ mouseWheel: true ,checkDOMChanges:true,click:true});
 	
