@@ -121,7 +121,7 @@ class IndexController extends Controller{
 		{
 			Event::fire('logout',$user);
 			$redis = Redis::connection();
-			$redis->del('permissions:'.$user->id);
+			$redis->del('permissions:'.$token);
 			return $this->success();
 		}
 		return $this->error('退出失败');
