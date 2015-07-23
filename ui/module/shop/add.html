@@ -299,10 +299,14 @@
 
 		<script type="text/template" id="zone_t">
 			<%data.forEach&&data.forEach(function(item){%>
-			<input type="radio" class="label" id="areaRadio<%=item.areaid%>" <%=item.areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=item.areaid%>">
+			<input type="radio" class="label" id="areaRadio<%=item.areaid%>" <%=item.areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=item.areaid%>" required>
 			<label for="areaRadio<%=item.areaid%>"><%=item.areaname%></label>
 			<%})%>
-			<span class="control-help" style="display:none;"></span>
+			<%if(data.length>0){%>
+				<div class="control-help" style="display:none;"></div>
+			<%}else{%>
+				<input type="hidden" name="zone" required requiredmsg="请选择有商圈的地区"/>
+			<%}%>
 		</script>
        
         <script src="add.js"></script>
