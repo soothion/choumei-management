@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Kodeine\Acl\Traits\HasRole;
 use App\Permission;
 use Illuminate\Support\Facades\Redis as Redis;
+use JWTAuth;
 
 class Manager extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -73,7 +74,8 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
     {
         //先从redis里读取
         $redis = Redis::connection();
-        if($permissions = $redis->get('permissions:'.$this->id))
+        $token = JWTAuth::getToken();
+        if($permissions = $redis->get('permissions:'.$token))
             return unserialize($permissions);
 
         $permissions = [];
@@ -90,7 +92,7 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
                 $permissions[] = $permission['slug'];  
             }
         }
-        $redis->set('permissions:'.$this->id,serialize($permissions));
+        $redis->set('permissions:'.$token,serialize($permissions));
         return $permissions;
     }
 

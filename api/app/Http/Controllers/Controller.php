@@ -12,6 +12,7 @@ use Request;
 use Event;
 use App\Manager;
 use JWTAuth;
+use App\City;
 
 abstract class Controller extends BaseController
 {
@@ -116,6 +117,14 @@ abstract class Controller extends BaseController
 		return $temp;
 	}
 
+
+	//对导出的数据作字段映射
+	public function mapping($array){
+		$status = [1=>'正常',2=>'停用',3=>'注销'];
+		$city = City::lists('id','title')->toArray();
+		$city = array_flip($city);
+		return $city;
+	}
 
 	public function parameters($definition, $required = false, $source =null , $prefix = null)
 	{
