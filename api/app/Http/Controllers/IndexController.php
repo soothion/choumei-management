@@ -16,7 +16,8 @@ class IndexController extends Controller{
 
 
 	public function test(){
-		return Permission::lists('slug');
+		$user = Manager::first();
+		return $user->getPermissions();
 	}
 
 
@@ -119,6 +120,8 @@ class IndexController extends Controller{
 		if(JWTAuth::invalidate($token))
 		{
 			Event::fire('logout',$user);
+			$redis = Redis::connection();
+			$redis->del('permissions:'.$user->id);
 			return $this->success();
 		}
 		return $this->error('退出失败');
