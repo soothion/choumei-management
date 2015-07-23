@@ -769,7 +769,7 @@ class ShopCountApi
             if(isset($salon_info_indexs[$salon_id]))
             {
                 $data['salon_name'] = $salon_info_indexs[$salon_id]['salonname'];
-                $data['shopType'] = $salon_info_indexs[$salon_id]['shopType'];
+                $data['salon_type'] = $salon_info_indexs[$salon_id]['shopType'];
             }
             if(isset($merchant_info_indexs[$merchant_id]))
             {
