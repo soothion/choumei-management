@@ -8,6 +8,7 @@ namespace App\Http\Controllers\ShopCount;
 
 use App\Http\Controllers\Controller;
 use App\ShopCountApi;
+use App\ShopCount;
 
 class ShopCountController extends Controller
 {
@@ -386,7 +387,7 @@ class ShopCountController extends Controller
      */
     public function destroy($id)
     {
-        $ret = ShopCountApi::deletePrepay($id);
+        $ret = ShopCount::deletePrepay($id);
         if($ret)
         {
             return $this->success(['ret'=>1]);
@@ -624,8 +625,48 @@ class ShopCountController extends Controller
     }
     
     /**
-     * 订单结算相关
-     */
+     * @api {post} /shop_count/count_order 10.订单结算相关 (外部调用)
+     * @apiName count_order
+     * @apiGroup ShopCount
+     *
+     * @apiParam {Number} type  1 订单 2 赏金单
+     * @apiParam {String} ordersn  订单单号,赏金单单号(多个用英文逗号","隔开)
+     * @apiParam {String} token  加密验证指纹
+     *
+     * @apiSuccess {Array} success 成功结算的订单号
+     * @apiSuccess {Array} already 已经结算过的订单号
+     * @apiSuccess {Number} type 结算的类型 同传入的type
+     *
+     * @apiSuccessExample Success-Response:
+     *      {
+     *           "result": 1,
+     *           "data": {
+     *               "success": [
+     *                   "33923619970",
+     *                   "33924964189",
+     *                   "33927676599",
+     *                   "33928797449",
+     *                   "33929103073",
+     *                   "33929641274",
+     *                   "33929787504",
+     *                   "33930191013",
+     *                   "33930816691",
+     *                   "33994190861"
+     *               ],
+     *               "type": 2,
+     *               "already": [
+     *
+     *               ]
+     *           }
+     *       }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "错误信息"
+     *		}
+     */    
     public function countOrder()
     {
         $param = $this->parameters([
@@ -639,7 +680,15 @@ class ShopCountController extends Controller
             return $this->error("Unauthorized",401);
         }
         $orders = explode(",", $param['ordersn']);
-        $res = ShopCountApi::countOrder($orders);
+        $res = null;
+        if ($param['type'] == 1)
+        {
+            $res = ShopCountApi::countOrder($orders);
+        }
+        else if($param['type'] == 2)
+        {
+            $res = ShopCountApi::countBounty($orders);
+        }
         return $this->success($res);
     }
 }
