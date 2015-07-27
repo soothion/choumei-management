@@ -89,6 +89,7 @@ $(function(){
 
 function renderMap (){
     $("#addCoordinate").on('click',function(){
+		parent.lib.fullpage(true);
 		var container=$('.map-container').show();
         var address = $("#address");
 		var geoCoor = $("#address-text");
@@ -178,6 +179,7 @@ function renderMap (){
         });
 		container.find(".btn").on('click',function(){
             container.hide();
+			parent.lib.fullpage(false);
         });
 		container.find(".btn-primary").on('click',function(){
             if(addrPonit.coor){
@@ -185,6 +187,7 @@ function renderMap (){
                 $("#coorMarkerInput").val(addrPonit.coor.lat + ","+addrPonit.coor.lng);
                 $("#coorMarkerInput").blur();
                 container.hide();
+				parent.lib.fullpage(false);
             }else{
                 parent.lib.popup.tips({
                     text:'<i class="fa fa-exclamation-circle"></i>地图未标记,请先标记地图',

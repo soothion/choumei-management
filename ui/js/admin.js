@@ -20,6 +20,14 @@
 			parent.lib.popup.close();
 		}
 	}
+	lib.fullpage=function(bool){
+		var page=$('#page');
+		if(bool){
+			page.addClass('full');
+		}else{
+			page.removeClass('full');
+		}
+	}
 })();
 $(function(){
 	/**渲染面包屑**/
