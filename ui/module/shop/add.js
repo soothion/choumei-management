@@ -56,10 +56,6 @@ $(function(){
         window.open("detail.html?type=preview");
     })
 
-    $("#addCoordinate").on('click',function(){
-        $("#pop-wrapper").show();
-    })
-
     $(".pop-close").on('click',function(){
         $("#pop-wrapper").hide();
     });
@@ -93,12 +89,13 @@ $(function(){
 
 function renderMap (){
     $("#addCoordinate").on('click',function(){
+		var container=$('.map-container').show();
         var address = $("#address");
-        var geoCoor = $("#pop-geo-coor");
+		var geoCoor = $("#address-text");
         address.val() && geoCoor.text(address.val());
         var addrPonit = {};
         //在指定的容器内创建地图实例  
-        var map = new BMap.Map("map-wrapper");
+        var map = new BMap.Map(container.find(".map-inner")[0]);
         //默认经纬度point
 		var latlng=$('#coorMarkerInput').val();
 		var latlng={
@@ -145,7 +142,8 @@ function renderMap (){
             if(addr){
                 geocoder.getPoint(addr, function(p) {
                     point = p ? p : point;
-                    drawMarker(point);                       
+                    drawMarker(point);
+					addrPonit.coor={lng:point.lng,lat:point.lat};
                 })                                                                            
             }else{
                 drawMarker(point);                             
@@ -178,19 +176,15 @@ function renderMap (){
                 }
             })
         });
-
-        $("#pop-cancel-btn").off("click");
-        $("#pop-cancel-btn").on('click',function(){
-            $("#pop-wrapper").hide();
+		container.find(".btn").on('click',function(){
+            container.hide();
         });
-
-        $("#pop-sure-btn").off("click");       
-        $("#pop-sure-btn").on('click',function(){
+		container.find(".btn-primary").on('click',function(){
             if(addrPonit.coor){
                 $("#coorMarker").text("已标记");               
                 $("#coorMarkerInput").val(addrPonit.coor.lat + ","+addrPonit.coor.lng);
                 $("#coorMarkerInput").blur();
-                $("#pop-wrapper").hide();
+                container.hide();
             }else{
                 parent.lib.popup.tips({
                     text:'<i class="fa fa-exclamation-circle"></i>地图未标记,请先标记地图',
@@ -198,5 +192,6 @@ function renderMap (){
                 })
             }
         });
+		
     });
 }
