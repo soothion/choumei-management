@@ -105,7 +105,7 @@ function renderMap (){
 		}
 		var point = new BMap.Point("113.941893","22.535644");
         //初始化地图位置（未进行初始化的地图将不能进行任何操作）
-        map.centerAndZoom(point,11);
+        map.centerAndZoom(point,12);
         //将平移缩放控件添加到地图上
         map.addControl(new BMap.NavigationControl());
         //启用滚轮放大缩小功能
