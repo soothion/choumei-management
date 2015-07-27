@@ -177,10 +177,11 @@ article{
 	margin-left:180px;
 	height:100%;
 	background:#fff;
+	/*
 	-webkit-transition:opacity 0.2s ease 0s,margin-left 0.2s ease 0s;
     -moz-transition:opacity 0.2s ease 0s,margin-left 0.2s ease 0s;
     -ms-transition:opacity 0.2s ease 0s,margin-left 0.2s ease 0s;
-    transition:opacity 0.2s ease 0s,margin-left 0.2s ease 0s;
+    transition:opacity 0.2s ease 0s,margin-left 0.2s ease 0s;*/
 }
 .full .frame-main{
 	height:100%!important;
