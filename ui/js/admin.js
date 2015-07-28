@@ -8,7 +8,6 @@
 		lib.ajatCount--;
 		if(lib.ajatCount==0){
 			parent.$('body').trigger('loadingend');
-			$(document.body).off('_ready',lib.loadingend);
 		}
 	}
 	lib.Ajat.before=function(){
@@ -55,11 +54,9 @@ $(function(){
 		lib.init();
 		lib.Ajat.run();
 		$('html,body').animate({scrollTop:0},200);
-		$body.on('_ready',lib.loadingend);
 	});
 	if($('[ajat]').length==0){
 		parent.$('body').trigger('loadingend');
-		$(document.body).off('_ready',lib.loadingend);
 	}
 		
 	$body.on('submit','form[data-role="hash"]',function(e){//表单submit提交
