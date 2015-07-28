@@ -15,22 +15,18 @@
 			</div>
 		</div>
 		<div class="wrapper">
-			<div class="flex-box">
-				<div class="flex-item">
-					<form data-role="hash">
-						<div class="input-group">
-							<select class="select" name="key" id="select">
-								<option value="1">店铺搜索</option>
-								<option value="2">商户搜索</option>
-							</select>
-							<input type="text" placeholder="请输入店铺名" name="keyword">
-						</div>
-						代收日期 <span class="date-group"><input type="date" data-role="start" name="pay_time_min" />到<input type="date" data-role="end" name="pay_time_max"/>
-						</span>
-						<button class="btn" type="submit">搜索</button>
-					</form>
+			<form data-role="hash">
+				<div class="input-group">
+					<select class="select" name="key" id="select">
+						<option value="1">店铺搜索</option>
+						<option value="2">商户搜索</option>
+					</select>
+					<input type="text" placeholder="请输入店铺名" name="keyword">
 				</div>
-			</div>
+				代收日期 <span class="date-group"><input type="date" data-role="start" name="pay_time_min" />到<input type="date" data-role="end" name="pay_time_max"/>
+				</span>
+				<button class="btn" type="submit">搜索</button>
+			</form>
 			
 			<div class="table" ajat="<%if(query._){%>shop_count/delegate_list?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">

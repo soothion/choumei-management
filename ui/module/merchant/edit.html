@@ -83,6 +83,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""></label>
 				<div class="control">
+					<%localStorage.setItem("preview",JSON.stringify(data));%>
 					<button class="btn preview" type="button">预览</button>
 					<span class="space"></span>
 					<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>" type="submit">提交</button>
@@ -101,6 +102,7 @@
 		});
 		$(document).on('click','.preview',function(){
 			var data=lib.tools.getFormData($(this).closest('form'));
+			data=$.extend(JSON.parse(localStorage.getItem("preview")),data);
 			localStorage.setItem('preview',JSON.stringify(data));
 			window.open("detail.html?preview=preview");
 		});
