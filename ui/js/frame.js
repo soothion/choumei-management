@@ -70,6 +70,15 @@ $('#page').on('_ready',function(){
 			}
 		});
 	});
+	if(window.ie9){
+		$('.swiper-slide').hide();
+		$('.nav-main li').on('click',function(){
+			var $this=$(this)
+			$this.addClass('active').siblings().removeClass('active');
+			$('.swiper-slide').eq($this.index()).show().siblings().hide();
+		}).first().trigger('click');
+		return;
+	}
 	var swiper = new Swiper($('aside .swiper-container')[0],{
 		loop: true,
 		initialSlide : 0,

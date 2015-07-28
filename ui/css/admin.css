@@ -796,3 +796,19 @@ form[data-role="hash"] button{
 	color:#fff;
 	line-height:40px;
 }
+
+.ie9 .flex-box{
+	display:table;
+	width:100%;
+}
+.ie9 .flex-item{
+	display:table-cell;
+	vertical-align:top;
+}
+.ie9 .breadcrumb .btn-primary{
+	float:right;
+}
+.ie9 .select{
+	padding-right:0px;
+	background-image:none;
+}

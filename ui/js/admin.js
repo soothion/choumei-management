@@ -32,7 +32,7 @@ $(function(){
 	/**渲染面包屑**/
 	var breadcrumb=$('.breadcrumb');
 	if(breadcrumb.length==1){
-		breadcrumb.html(lib.ejs.render({text:breadcrumb.html().replace(/%&gt;/g,'%>').replace(/&lt;%/g,'<%')},{}))
+		breadcrumb.html(lib.ejs.render({text:breadcrumb.html().replace(/%&gt;/g,'%>').replace(/&lt;%/g,'<%')},{}));
 	}
 	/**hash和加载进度条**/
 	var $body=$(document.body);
@@ -233,6 +233,9 @@ $(function(){
 	});
 	/**日期控件修正**/
 	if(!lib.tools.browser().webkit){
+		if(!location.origin){
+			location.origin="http://"+location.host;
+		}
 		seajs.use([location.origin+'/laydate/laydate.js']);
 		$body.on('focus','input[type=date]',function(e){
 			$(this).attr('readonly',true);
@@ -249,6 +252,9 @@ $(function(){
 			};
 			laydate(options);			
 		});
+	}
+	if(window.ie9){
+		$(document.body).addClass("ie9");
 	}
 });    	
 	

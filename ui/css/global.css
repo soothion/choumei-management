@@ -68,7 +68,6 @@ small,.small{
     -moz-box-flex: 1;
     -moz-flex: 1;
     flex:1;
-	display:block;
 }
 .table-box{
     display:table;
