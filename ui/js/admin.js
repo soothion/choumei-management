@@ -226,10 +226,10 @@ $(function(){
 	});
 	/**权限控制**/
 	if(parent.access){
-		parent.access.control(document.body);
+		access.control(document.body);
 	}
 	$body.on('_ready',function(e){
-		parent.access.control(e.target);
+		access.control(e.target);
 	});
 	/**日期控件修正**/
 	if(!lib.tools.browser().webkit){
