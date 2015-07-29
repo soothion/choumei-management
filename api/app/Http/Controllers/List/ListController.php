@@ -209,7 +209,7 @@ class ListController extends Controller{
         		$query = Permission::getQuery();
         		$id = 'id';
         	}		
-            foreach ($query->select([$id,'inherit_id','title','slug','sort','show'])->orderBy('sort','desc')->get() as $permission) {
+            foreach ($query->select([$id,'inherit_id','title','slug','sort','show'])->where('status',1)->orderBy('sort','desc')->get() as $permission) {
                 $permissions[] = $permission;  
             }
         }
