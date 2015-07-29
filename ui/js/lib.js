@@ -1,4 +1,5 @@
 ﻿(function () {
+	jQuery.support.cors = true;
 	seajs.config({
 		'map': [
 			[ /^(.*\.(?:css|js))(.*)$/i, '$1?'+cfg.version ]
@@ -124,7 +125,7 @@
             return new Ajat(_protocol);
         },
         popup: {//弹出层
-            path:'_popup.js',
+            path:'/js/_popup.js',
             alert: function (options) {
                 seajs.use(this.path,function(a){
                     a.alert(options);
