@@ -233,7 +233,19 @@ class UserController extends Controller{
 	{
 		$param = $this->param;
 		$query = Manager::with(['roles'=>function($q){
-			$q->lists('role_id');
+			$q->lists('role_id','name');
+		}]);
+
+		$query = $query->with(['department'=>function($q){
+			$q->lists('id','title');
+		}]);
+
+		$query = $query->with(['city'=>function($q){
+			$q->lists('id','title');
+		}]);		
+
+		$query = $query->with(['position'=>function($q){
+			$q->lists('id','title');
 		}]);
 
 		//角色筛选
@@ -269,13 +281,6 @@ class UserController extends Controller{
 		if(isset($param['end'])&&$param['end']){
 			$query = $query->where('created_at','<=',$param['end']);
 		}
-
-		if(isset($param['keyword'])&&$param['keyword']){
-			$keyword = '%'.$param['keyword'].'%';
-			$query = $query->where('name','like',$keyword);
-			$query = $query->orWhere('username','like',$keyword);
-		}
-
 		//登录帐号筛选
 		if(isset($param['username'])&&$param['username']){
 			$keyword = '%'.$param['username'].'%';
@@ -293,8 +298,14 @@ class UserController extends Controller{
 				$q->where('name','like',$keyword);
 			});
 		}
-		
-		$result = $query->get()->toArray();
+
+		//排序
+		if(isset($param['sort_key'])&&$param['sort_key']){
+			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
+			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
+		}
+
+		$result = $query->select($fields)->get()->toArray();
 
 		//触发事件，写入日志
 	    Event::fire('user.export');
