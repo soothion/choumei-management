@@ -21,7 +21,6 @@
 			</div>
 		</div>
         </div>
-		
         <div class="wrapper">
 			<form data-role="hash">
 				<div>
@@ -76,11 +75,7 @@
 				   <td><%=data[i].created_at%></td>
 				  <td><%=data[i].user?data[i].user.name:""%> </td>
 				  <td><%=state[data[i].state]%></td>
-                   <td><a class="link" href="updateSingle.html?id=<%=data[i].id%>" data-slug="shop_count.show,shop_count.update">查看</a>
-				   <form action="shop_count/destroy/<%=data[i].id%>" data-role="remove" data-title="该商户有合作的店铺，是否继续删除？">
-								<input type="hidden" name="id" value="<%=data[i].id%>" />
-								<button class="link" name="id" value="<%=data[i].id%>" data-slug="shop_count.destroy">删除</button>
-							</form>
+                   <td><a class="link" href="updateSingle.html?id=<%=data[i].id%>" data-slug="shop_count.show,shop_count.update">查看</a>				   
 				   </td>
                   </tr>
 				  <%}%>

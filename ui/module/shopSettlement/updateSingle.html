@@ -20,13 +20,16 @@
 		<%
 				if(query.preview=="preview"){
 					data=JSON.parse(localStorage.getItem("preview"));
+					if(!data.state){
+						data.state=2;
+					}
 				}
 			%>
 		<div class="detail-operation">
 			<%if(query.preview!="preview"){%>
 			<a class="btn" href="addSingle.html?id=<%=data.id%>"  data-slug="shop_count.update">编辑</a></button>
 			<span class="space"></span>
-			<form action="shop_count/destroy/<%=data.id%>" data-role="remove" data-title="该商户有合作的店铺，是否继续删除？">
+			<form action="shop_count/destroy/<%=data.id%>" data-role="remove" data-title="你正在删除转付单，是否继续删除？">
 				<input type="hidden" name="id" value="<%=data.id%>" />
 				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy">删除</button>
 			</form>
@@ -47,17 +50,16 @@
             </thead>
               <tbody>
 			   <%var state=["","已付款","预览状态"]%>
-			   <tr>
-                  <td>付款单号：</td>
-                  <td><%=data.id%></td>
-                </tr>
+			    <%var type=["","预付交易款","付代收交易款"]%>
+ 
+			   <%var state=["","已付款","预览状态"];var types=["","预付交易款","付交易代收款"]%>
                 <tr>
                   <td>付款单号：</td>
                   <td><%=data.code%></td>
                 </tr>
                 <tr>
                   <td>付款类型：</td>
-                  <td><%=data.type%></td>
+                  <td><%=types[data.type]%></td>
                 </tr>
                 <tr>
                   <td>付款金额：</td>
@@ -77,7 +79,7 @@
                 </tr>
                 <tr>
                  <td>制单人</td>
-                  <td><%=data.user?data.user.name:""%></td>
+                  <td><%=data.user?data.user.name:session.user.account%></td>
                </tr>
                 <tr>
                   <td>状态</td>

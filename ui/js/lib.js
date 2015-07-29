@@ -10,7 +10,7 @@
 		tools:{
 			getDate:function(time){
 				var date= time ? new Date(time*1000) : new Date();
-				return date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
+				return date.getFullYear()+"-"+(date.getMonth()<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 			},
 			parseQuery: function (str) {//解析字符串的参数
 				var ret = {},reg = /([^?=&]+)=([^&]+)/ig,match;
