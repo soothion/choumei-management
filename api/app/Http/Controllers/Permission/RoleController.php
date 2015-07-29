@@ -263,7 +263,7 @@ class RoleController extends Controller{
 		}
 		else
 		{
-			DB::rolleback();
+			DB::rollBack();
 			return $this->error('error');
 		}
 	}
@@ -425,7 +425,7 @@ class RoleController extends Controller{
 		}
 		else
 		{
-			DB::rolleback();
+			DB::rollBack();
 			return $this->error('error');
 		}
 

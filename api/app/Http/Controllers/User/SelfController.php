@@ -134,7 +134,7 @@ class SelfController extends Controller{
 		}
 		else
 		{
-			DB::rolleback();
+			DB::rollBack();
 			return $this->error('用户更新失败');
 		}
 

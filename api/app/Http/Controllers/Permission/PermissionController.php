@@ -303,7 +303,7 @@ class PermissionController extends Controller{
 		DB::beginTransaction();
 		$self = $permission->update($param);
 		$other = Permission::where('inherit_id',$permission->id)->update(['status'=>$param['status']]);
-		if($self&&$other)
+		if($self)
 		{
 			DB::commit();
 			Event::fire('permission.update',array($permission));
@@ -311,7 +311,7 @@ class PermissionController extends Controller{
 		}
 		else
 		{
-			DB::rolleback();
+			DB::rollBack();
 			return $this->error('更新失败');
 		}
 			
