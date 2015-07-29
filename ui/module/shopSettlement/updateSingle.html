@@ -29,7 +29,7 @@
 			<%if(query.preview!="preview"){%>
 			<a class="btn" href="addSingle.html?id=<%=data.id%>"  data-slug="shop_count.update">编辑</a></button>
 			<span class="space"></span>
-			<form action="shop_count/destroy/<%=data.id%>" data-role="remove" data-title="该商户有合作的店铺，是否继续删除？">
+			<form action="shop_count/destroy/<%=data.id%>" data-role="remove" data-title="你正在删除转付单，是否继续删除？">
 				<input type="hidden" name="id" value="<%=data.id%>" />
 				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy">删除</button>
 			</form>
@@ -49,6 +49,9 @@
                 </tr>
             </thead>
               <tbody>
+			   <%var state=["","已付款","预览状态"]%>
+			    <%var type=["","预付交易款","付代收交易款"]%>
+ 
 			   <%var state=["","已付款","预览状态"];var types=["","预付交易款","付交易代收款"]%>
                 <tr>
                   <td>付款单号：</td>
