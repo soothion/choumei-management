@@ -36,3 +36,4 @@ document.writeln('<script type="text/javascript" src="/js/ejs.js?v='+cfg.version
 document.writeln('<script type="text/javascript" src="/js/lib.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/access.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/admin.js?v='+cfg.version+'"></script>');
+document.writeln('<!--[if IE 9]><script type="text/javascript">var ie9=true;</script><![endif]-->');

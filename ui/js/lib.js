@@ -1,4 +1,5 @@
 ﻿(function () {
+	jQuery.support.cors = true;
 	seajs.config({
 		'map': [
 			[ /^(.*\.(?:css|js))(.*)$/i, '$1?'+cfg.version ]
@@ -74,7 +75,7 @@
 						});*/
 					}else{
 						if(data.code==401||data.code==400){
-							data.msg="token失效，请重新登录";
+							data.msg="登录超时，请重新登录";
 						}
 						parent.lib.popup.result({
 							text:"出现异常："+data.msg,
@@ -124,7 +125,7 @@
             return new Ajat(_protocol);
         },
         popup: {//弹出层
-            path:'_popup.js',
+            path:'/js/_popup.js',
             alert: function (options) {
                 seajs.use(this.path,function(a){
                     a.alert(options);

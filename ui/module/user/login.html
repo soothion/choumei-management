@@ -80,6 +80,7 @@
 							if(data.result==1){
 								localStorage.setItem('token',data.data.token);
 								lib.setSession({user:{uid:data.data.uid,account:account}});
+								localStorage.removeItem('access.data');
 								location.href='/module/index.html';
 							}else{
 								$('.btn-primary').text('登录');
