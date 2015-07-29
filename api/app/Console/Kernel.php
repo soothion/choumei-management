@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ShopcountDelegateList::class,
         \App\Console\Commands\ShopcountCountBalance::class,
         \App\Console\Commands\ShopcountCountBountyBalance::class,
+        \App\Console\Commands\ShopcountImportPrepay::class,
     ];
 
     /**

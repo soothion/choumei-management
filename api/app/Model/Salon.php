@@ -44,7 +44,7 @@ class Salon extends Model {
             ->orderBy($orderName,$order)
             ;
         $query =  $query ->where("salestatus","!=","2");//剔除删除
-        $query =  $query ->where("m.status","!=","2");//剔除商户删除
+       // $query =  $query ->where("m.status","!=","2");//剔除商户删除
         if(isset($where["shopType"]))
         {
         	$query =  $query ->where("shopType","=",$where["shopType"]);

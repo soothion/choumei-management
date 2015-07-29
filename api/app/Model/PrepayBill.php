@@ -22,6 +22,12 @@ class PrepayBill extends Model
     CONST TYPE_OF_ALREADYPAY = 2;
     
     /**
+     * 交易款返还
+     * @var int
+     */
+    CONST TYPE_OF_RETURN = 3;
+    
+    /**
      * 状态  预览状态
      * @var int
      */
@@ -55,14 +61,22 @@ class PrepayBill extends Model
     public static function getNewCode($type)
     {
         $type = intval($type);
-        if($type == self::TYPE_OF_ALREADYPAY)
-        {
-            $type == self::TYPE_OF_PREPAY;
+        $prefix = "YF";
+        switch ($type) {
+            case self::TYPE_OF_ALREADYPAY:
+                $prefix = "FDS";
+                break;
+            case self::TYPE_OF_RETURN:
+                $prefix = "YFFH";
+                break;
+            default:
+                $prefix = "YF";
         }
-        $prefix = $type==self::TYPE_OF_PREPAY?"YF":"FDS";
         $prefix .=date("ymdHis");
+        
         $class = __CLASS__;
         $obj = new $class;
+       
         $count = $obj->where("code","like",$prefix."%")->count();
         $now_num = intval($count) + 1;
         return $prefix.str_pad(strval($now_num), 3,"0",STR_PAD_LEFT);
