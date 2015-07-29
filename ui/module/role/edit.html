@@ -133,7 +133,7 @@
 		<ul class="tree">
 			<%data.forEach(function(item1){%>
 			<li class="super1" style="<%=!item1.child?"display:inline-block;":""%>">
-				<input type="checkbox" id="tree<%=item1.id%>" <%=sids.indexOf(item1.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
+				<input type="checkbox" id="tree<%=item1.id%>" <%=sids.indexOf(item1.id)>-1?"checked":""%> <%=item1.slug.indexOf("self.")>-1?"disabled checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
 				<label for="tree<%=item1.id%>" style="margin-right:2px;"></label>
 				<%if(item1.child&&item1.child.length>0){%>
 				<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
@@ -142,7 +142,7 @@
 				<ul class="child">
 					<%item1.child.forEach(function(item2){%>
 					<li class="super2"  style="<%=!item2.child?"display:inline-block;":""%>">
-						<input type="checkbox" id="tree<%=item2.id%>" <%=sids.indexOf(item2.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item2.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
+						<input type="checkbox" id="tree<%=item2.id%>" <%=sids.indexOf(item2.id)>-1?"checked":""%> <%=item2.slug.indexOf("self.")>-1?"disabled checked":""%> class="checkbox" name="permissions" value="<%=item2.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
 						<label for="tree<%=item2.id%>" style="margin-right:2px;"></label>
 						<%if(item2.child&&item2.child.length>0){%>
 						<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
@@ -151,7 +151,7 @@
 						<ul class="child">
 							<%item2.child&&item2.child.forEach(function(item3){%>
 							<li class="super3" style="<%=!item3.child?"display:inline-block;":""%>">
-								<input type="checkbox" id="tree<%=item3.id%>" <%=sids.indexOf(item3.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item3.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
+								<input type="checkbox" id="tree<%=item3.id%>" <%=sids.indexOf(item3.id)>-1?"checked":""%> <%=item3.slug.indexOf("self.")>-1?"disabled checked":""%> class="checkbox" name="permissions" value="<%=item3.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
 								<label for="tree<%=item3.id%>" style="margin-right:2px;"></label>
 								<%if(item3.child&&item3.child.length>0){%>
 								<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
@@ -161,7 +161,7 @@
 									<%if(item3.child){%>
 									<%item3.child.forEach(function(item4){%>
 									<li class="super4" style="display:inline-block">
-										<input type="checkbox" class="checkbox" id="tree<%=item4.id%>" <%=sids.indexOf(item4.id)>-1?"checked":""%> name="permissions" value="<%=item4.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
+										<input type="checkbox" class="checkbox" id="tree<%=item4.id%>" <%=sids.indexOf(item4.id)>-1?"checked":""%> <%=item4.slug.indexOf("self.")>-1?"disabled checked":""%> name="permissions" value="<%=item4.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
 										<label for="tree<%=item4.id%>"><%=item4.title%></label>
 									</li>
 									<%})%>
