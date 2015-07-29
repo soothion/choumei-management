@@ -148,7 +148,7 @@ class UserController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 		//登录帐号筛选
 		if(isset($param['username'])&&$param['username']){
@@ -279,7 +279,7 @@ class UserController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 		//登录帐号筛选
 		if(isset($param['username'])&&$param['username']){
@@ -351,6 +351,8 @@ class UserController extends Controller{
 	{
 		$param = $this->param;
 		DB::beginTransaction();
+		if(Manager::where('username='.$param['username'])->get())
+			return $this->error('用户名已存在');
 		$param['password'] = bcrypt($param['password']);
 		$user = Manager::create($param);
 		$role = 1;
