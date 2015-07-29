@@ -48,13 +48,19 @@
               <tbody>
 			   <%var state=["","已付款","预览状态"]%>
 			    <%var type=["","预付交易款","付代收交易款"]%>
+ 
+			   <%var state=["","已付款","预览状态"];var types=["","预付交易款","付交易代收款"]%>
+			   <tr>
+                  <td>付款单号：</td>
+                  <td><%=data.id%></td>
+                </tr>
                 <tr>
                   <td>付款单号：</td>
                   <td><%=data.code%></td>
                 </tr>
                 <tr>
                   <td>付款类型：</td>
-                  <td><%=data.type%></td>
+                  <td><%=types[data.type]%></td>
                 </tr>
                 <tr>
                   <td>付款金额：</td>
