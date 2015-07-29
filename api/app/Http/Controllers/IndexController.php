@@ -16,8 +16,7 @@ class IndexController extends Controller{
 
 
 	public function test(){
-		$result = Manager::first()->update(['username'=>'administrator']);
-		var_dump($result);
+		return date('Y-m-d',strtotime('+1 day',strtotime('2015-07-29')));
 	}
 
 

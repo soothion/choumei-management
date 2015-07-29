@@ -148,7 +148,7 @@ class UserController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 		//登录帐号筛选
 		if(isset($param['username'])&&$param['username']){
@@ -279,7 +279,7 @@ class UserController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 		//登录帐号筛选
 		if(isset($param['username'])&&$param['username']){
