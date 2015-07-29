@@ -180,7 +180,7 @@ class ShopCount extends Model
                     $old_balance_money = floatval($shop_count['balance_money']);
                     $attrs['pay_money'] = $old_pay_money - $pay_money;
                     $attrs['cost_money'] = $old_cost_money - $cost_money;
-                    $attrs['balance_money'] = $attrs['cost_money'] - $attrs['balance_money'];
+                    $attrs['balance_money'] = $attrs['cost_money'] - $old_spend_money;
                     self::where('id',$id)->update($attrs);
                 }
                 else
