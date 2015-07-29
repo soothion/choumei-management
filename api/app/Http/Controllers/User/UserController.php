@@ -351,7 +351,7 @@ class UserController extends Controller{
 	{
 		$param = $this->param;
 		DB::beginTransaction();
-		if(Manager::where('username='.$param['username'])->get())
+		if(Manager::where('username','=',$param['username'])->first())
 			return $this->error('用户名已存在');
 		$param['password'] = bcrypt($param['password']);
 		$user = Manager::create($param);
