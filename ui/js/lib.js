@@ -75,7 +75,7 @@
 						});*/
 					}else{
 						if(data.code==401||data.code==400){
-							data.msg="token失效，请重新登录";
+							data.msg="登录超时，请重新登录";
 						}
 						parent.lib.popup.result({
 							text:"出现异常："+data.msg,

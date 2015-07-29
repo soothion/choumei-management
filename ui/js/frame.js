@@ -62,7 +62,7 @@ $('#page').on('_ready',function(){
 					time:2000,
 					define:function(){
 						if(data.result==1){
-							localStorage.setItem('token','');
+							localStorage.removeItem('token');
 							location.href='user/login.html';
 						}
 					}

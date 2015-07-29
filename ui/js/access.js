@@ -51,14 +51,19 @@ var access={
 }
 $(function(){
 	if($('.loadbar').length==1){
-		var ajat=lib.ajat('list/menu#domid=page&tempid=page-t');
-		ajat.setExternal({slug:slug});
-		ajat.render().done(function(data){
-			access.foreach(data.data);
-			localStorage.setItem('access.data',JSON.stringify(access.data));
-			localStorage.setItem('access.map',JSON.stringify(access.map));
-			access.init();
-		});
+		if(!localStorage.getItem('access.data')){
+			var ajat=lib.ajat('list/menu#domid=page&tempid=page-t');
+			ajat.setExternal({slug:slug});
+			ajat.render().done(function(data){
+				access.foreach(data.data);
+				localStorage.setItem('access.data',JSON.stringify(data.data));
+				localStorage.setItem('access.map',JSON.stringify(access.map));
+				access.init();
+			});
+		}else{
+			var ajat=lib.ajat('#domid=page&tempid=page-t');
+			ajat.template(JSON.parse(localStorage.getItem('access.data')));
+		}
 	}else{
 		access.init();
 	}
