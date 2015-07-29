@@ -16,7 +16,8 @@ class IndexController extends Controller{
 
 
 	public function test(){
-		return  Permission::where('status',1)->lists('slug')->toArray();
+		$result = Manager::first()->update(['username'=>'administrator']);
+		var_dump($result);
 	}
 
 
