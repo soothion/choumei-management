@@ -305,7 +305,7 @@ class UserController extends Controller{
 			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
 		}
 
-		$result = $query->select($fields)->get()->toArray();
+		$result = $query->get()->toArray();
 
 		//触发事件，写入日志
 	    Event::fire('user.export');
