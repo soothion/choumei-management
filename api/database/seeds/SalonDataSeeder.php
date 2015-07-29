@@ -15,30 +15,48 @@ class SalonDataSeeder extends Seeder
      */
     public function run()
     {
+    	$file_handle = fopen("public/Uploads/20150729/merchantsalon.csv", "r");
+    	$s = 1;
+    	$i = 1;
+    	$bindArr = array();
+    	while (!feof($file_handle))
+    	{
+    		$line = fgetcsv($file_handle);
+    		if($line && $s>1)
+    		{
+    			if($line[4] && $line[2])
+    			{
+    				$bindArr[$s]["salonname"] = iconv("gbk","UTF-8",$line[0]);//店铺名
+    				$bindArr[$s]["name"] = iconv("gbk","UTF-8",$line[1]);//商户名
+    			}
+    		}
+    		$s++;
+    	}
+    	fclose($file_handle);
     	
 		$mList = DB::table('merchant')->get();
-
 		$sList = DB::table('salon')->get();
 		
 		foreach($mList as $key=>$val)//商户
 		{
-			foreach($this->bind as $each)//对应关系
+			foreach($bindArr as $each)//对应关系
 			{
-				if($each[0] == $val->name)    
+				if($each["name"] == $val->name)    
 				{
 					foreach($sList as $k=>$v)
 					{
-						if($each[1] == $v->salonname)
+						if($each["salonname"] == $v->salonname)
 						{
 							//修改店铺表 
 							DB::table('salon')->where('salonid', $v->salonid)->update(array("merchantId"=>$val->id));
+							$i++;
 						}
 					}
 				}
 			}
 			
 		}
-		echo "ok";
+		echo $i."ok";
     }
     
     //0商铺名称  //1 店铺名称

@@ -7,7 +7,7 @@ use App\SalonInfo;
 class SalonMerSnSeeder extends Seeder
 {
     /**
-     * 店铺编号 商户编号完善
+     * 店铺编号 商户编号完善  ---不用
      * Run the database seeds.
      *
      * @return void
