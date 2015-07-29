@@ -25,6 +25,17 @@ Route::any('captcha', 'IndexController@captcha');
 Route::any('login', 'IndexController@login');
 Route::any('logout', 'IndexController@logout');
 
+//self模块
+Route::any('self/show',array(
+		'as'=>'self.show',
+		'uses'=>'SelfController@show'
+	));
+Route::any('self/update',array(
+		'as'=>'self.update',
+		'uses'=>'SelfController@update'
+	));
+		
+
 //列表模块
 Route::any('list/city',array(
 	'as'=>'list.city',
@@ -94,16 +105,6 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 	Route::any('user/export',array(
 			'as'=>'user.export',
 			'uses'=>'UserController@export'
-		));
-
-	//self模块
-	Route::any('self/show',array(
-			'as'=>'self.show',
-			'uses'=>'SelfController@show'
-		));
-	Route::any('self/update',array(
-			'as'=>'self.update',
-			'uses'=>'SelfController@update'
 		));
 
 
