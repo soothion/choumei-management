@@ -20,6 +20,9 @@
 		<%
 				if(query.preview=="preview"){
 					data=JSON.parse(localStorage.getItem("preview"));
+					if(!data.state){
+						data.state=2;
+					}
 				}
 			%>
 		<div class="detail-operation">
@@ -47,10 +50,6 @@
             </thead>
               <tbody>
 			   <%var state=["","已付款","预览状态"];var types=["","预付交易款","付交易代收款"]%>
-			   <tr>
-                  <td>付款单号：</td>
-                  <td><%=data.id%></td>
-                </tr>
                 <tr>
                   <td>付款单号：</td>
                   <td><%=data.code%></td>
@@ -77,7 +76,7 @@
                 </tr>
                 <tr>
                  <td>制单人</td>
-                  <td><%=data.user?data.user.name:""%></td>
+                  <td><%=data.user?data.user.name:session.user.account%></td>
                </tr>
                 <tr>
                   <td>状态</td>
