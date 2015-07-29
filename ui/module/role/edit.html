@@ -131,6 +131,25 @@
 				sessionStorage.removeItem("permissions");
 			%>
 		<ul class="tree">
+			<li class="super1" style="">
+				<input type="checkbox" id="tree0051" class="checkbox" checked disabled>
+				<label for="tree0051" style="margin-right:2px;"></label>
+				<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+				<label for="tree51">基本权限</label>
+				<ul class="child">
+					<li class="super2" style="display:inline-block;">
+						<input type="checkbox" id="tree0052" class="checkbox" checked disabled>
+						<label for="tree0052" style="margin-right:2px;"></label>
+						<label for="tree0052">默认首页</label>
+					</li>
+					
+					<li class="super2" style="display:inline-block;">
+						<input type="checkbox" id="tree0053" class="checkbox" checked disabled>
+						<label for="tree0053" style="margin-right:2px;"></label>
+						<label for="tree0053">修改信息</label>
+					</li>
+				</ul>
+			</li>
 			<%data.forEach(function(item1){%>
 			<li class="super1" style="<%=!item1.child?"display:inline-block;":""%>">
 				<input type="checkbox" id="tree<%=item1.id%>" <%=sids.indexOf(item1.id)>-1?"checked":""%> <%=item1.slug&&item1.slug.indexOf("self.")>-1?"disabled checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
