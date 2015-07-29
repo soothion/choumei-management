@@ -128,6 +128,8 @@ class ListController extends Controller{
 	 *
 	 * @apiSuccess {Array} permission 返回权限列表数组.
 	 * @apiSuccess {String} inherit_id 继承于.
+	 * @apiSuccess {String} title 标题.
+	 * @apiSuccess {String} slug 路径.
 	 * @apiSuccess {Number} sort 排序.
 	 * 
 	 * 
@@ -140,12 +142,14 @@ class ListController extends Controller{
 	 *	            "id": 10,
 	 *	            "inherit_id": 11
 	 *	            "title": "dddd",
+	 *	            "slug":"user.update",
 	 *	            "sort": 1
 	 *	        },
 	 *	        {
 	 *	            "id": 11,
 	 *	            "inherit_id": 0
 	 *	            "title": "ddddsssss",
+	 *	            "slug":"user.show",
 	 *	            "sort": 2
 	 *	        }
 	 *	    ]
@@ -153,7 +157,7 @@ class ListController extends Controller{
 	 *
 	 */
 	public function permission(){
-		$result = Permission::select(['id','inherit_id','title','sort'])->get();
+		$result = Permission::select(['id','inherit_id','title','slug','sort'])->get();
 		$result = $result->toArray();
 		$result = $this->array_multiuniue($result);
 		$result = $this->tree($result);
