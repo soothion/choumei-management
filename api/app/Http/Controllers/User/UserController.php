@@ -276,6 +276,16 @@ class UserController extends Controller{
 			$query = $query->orWhere('username','like',$keyword);
 		}
 
+		//登录帐号筛选
+		if(isset($param['username'])&&$param['username']){
+			$keyword = '%'.$param['username'].'%';
+			$query = $query->where('username','like',$keyword);
+		}		
+		//姓名筛选
+		if(isset($param['name'])&&$param['name']){
+			$keyword = '%'.$param['name'].'%';
+			$query = $query->where('name','like',$keyword);
+		}
 		//角色名筛选
 		if(isset($param['role'])&&$param['role']){
 			$keyword = '%'.$param['role'].'%';
