@@ -27,7 +27,7 @@
 				<span class="space"></span>
 				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
 			</div>
-				<%sessionStorage.setItem("preview",JSON.stringify(data))%>
+				
                   <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款单类型：</label>
                     <div class="control">
@@ -98,6 +98,7 @@
 				<label class="control-label" for=""></label>
 				<div class="control">
 				<button class="btn preview" type="button">预览</button>
+				<%localStorage.setItem("preview",JSON.stringify(data))%>
 				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
 				</div>
 			</div>			 
