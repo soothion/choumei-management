@@ -24,7 +24,7 @@ class SalonDataSeeder extends Seeder
     		$line = fgetcsv($file_handle);
     		if($line && $s>1)
     		{
-    			if($line[4] && $line[2])
+    			if($line[0] && $line[1])
     			{
     				$bindArr[$s]["salonname"] = iconv("gbk","UTF-8",$line[0]);//店铺名
     				$bindArr[$s]["name"] = iconv("gbk","UTF-8",$line[1]);//商户名
