@@ -347,7 +347,7 @@ class UserController extends Controller{
 		}
 		else
 		{
-			DB::rolleback();
+			DB::rollBack();
 			return $this->error('用户创建失败');
 		}
 	}
@@ -492,7 +492,7 @@ class UserController extends Controller{
 		}
 		else
 		{
-			DB::rolleback();
+			DB::rollBack();
 			return $this->error('用户更新失败');
 		}
 
