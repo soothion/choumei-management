@@ -84,12 +84,13 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
         		continue;
             if($role->id==1)
             {
-                $permissions = Permission::lists('slug')->toArray();
+                $permissions = Permission::where('status',1)->lists('slug')->toArray();
                 break;
             }
                 
             foreach ($role->permissions->toArray() as $permission) {
-                $permissions[] = $permission['slug'];  
+                if($permission['status']==1)
+                    $permissions[] = $permission['slug'];  
             }
         }
         $redis->set('permissions:'.$token,serialize($permissions));
