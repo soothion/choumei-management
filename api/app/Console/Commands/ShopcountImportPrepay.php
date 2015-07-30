@@ -140,7 +140,9 @@ class ShopcountImportPrepay extends Command
         $num = count($day_arr);
         if($num == 3)
         {
-            return date("Y-m-d",strtotime($day_arr[0]."-".$day_arr[1]."-".$day_arr[2]));
+            $month = str_pad($day_arr[1], 2,"0",STR_PAD_LEFT);
+            $day = str_pad($day_arr[2], 2,"0",STR_PAD_LEFT);
+            return date("Y-m-d",strtotime($day_arr[0]."-".$month."-".$day));
         }
         else if($num == 2)
         {
