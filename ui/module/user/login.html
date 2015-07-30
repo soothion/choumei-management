@@ -79,7 +79,9 @@
 						success:function(data){
 							if(data.result==1){
 								localStorage.setItem('token',data.data.token);
-								lib.setSession({user:{uid:data.data.uid,account:account}});
+								delete data.data.token;
+								data.data.account=account
+								lib.setSession({user:data});
 								localStorage.removeItem('access.data');
 								location.href='/module/index.html';
 							}else{

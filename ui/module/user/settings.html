@@ -116,6 +116,16 @@
 		<%})%>
 	</script>
 	<script type="text/javascript">
+		/*
+		$('#form').on('_ready',function(){
+			$(this).find('form').off('success').on('success',function(e,data){
+				parent.lib.popup.result({
+					bool:true,
+					text:(data.msg||"数据更新成功"),
+					time:2000
+				});
+			})
+		});*/
 		$(document.body).on('change','#switch',function(){
 			if($(this).is(':checked')){
 				$('input[type="password"]').removeAttr('disabled');
