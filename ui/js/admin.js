@@ -1,4 +1,5 @@
 ﻿(function(){
+	parent.lib.popup.close();
 	lib.ajatCount=0;
 	lib.ajat=function (_protocol) {
 		lib.ajatCount++;
@@ -17,7 +18,6 @@
 	document.onreadystatechange=function(){
 		if(document.readyState=='interactive'){
 			parent.$('body').trigger('loading');
-			parent.lib.popup.close();
 		}
 	}
 	lib.fullpage=function(bool){

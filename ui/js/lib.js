@@ -34,9 +34,13 @@
 				var fields=$form.serializeArray();
 				$.each(fields,function(i,field){
 					if(!data[field.name]){
-						data[field.name]=$.trim(field.value);
 						if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
-							data[field.name]=[$.trim(field.value)];
+							data[field.name]=[];
+							if($.trim(field.value)){
+								data[field.name].push($.trim(field.value));
+							}
+						}else{
+							data[field.name]=$.trim(field.value);
 						}
 					}else{
 						if(data[field.name] instanceof Array){
@@ -45,7 +49,6 @@
 							}
 						}
 					}
-					
 				});
 				return data;
 			}
@@ -609,7 +612,7 @@
 		success:function(data){
 			parent.lib.popup.result({
 				bool:true,
-				text:(data.msg||"数据更新成功"),
+				text:(data?data.msg:"数据更新成功"),
 				time:2000,
 				define:function(){
 					history.back();
@@ -619,7 +622,7 @@
 		fail:function(data){
 			parent.lib.popup.tips({
 				bool:false,
-				text:(data.msg||"数据更新失败"),
+				text:(data?data.msg:"数据更新失败"),
 				time:2000
 			});
 		},
