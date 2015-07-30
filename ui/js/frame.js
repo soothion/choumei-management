@@ -1,5 +1,5 @@
 ﻿if(!localStorage.getItem('token')){
-	location.href='user/login.html';
+	location.href='/module/user/login.html';
 }
 $('#page').on('_ready',function(){
 	function resize(){
@@ -63,7 +63,7 @@ $('#page').on('_ready',function(){
 					define:function(){
 						if(data.result==1){
 							localStorage.removeItem('token');
-							location.href='user/login.html';
+							location.href='/module/user/login.html';
 						}
 					}
 				});
