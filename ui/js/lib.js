@@ -40,7 +40,9 @@
 						}
 					}else{
 						if(data[field.name] instanceof Array){
-							data[field.name].push($.trim(field.value));
+							if($.trim(field.value)){
+								data[field.name].push($.trim(field.value));
+							}
 						}
 					}
 					

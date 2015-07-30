@@ -194,8 +194,8 @@
 				</ul>
 			</li>
 			<%})%>
+			<input type="checkbox" class="hide" name="permissions" value="" checked/>
 		</ul>
-		<input type="hidden" id="rights" required value="<%=sids%>" requiredmsg="请选择权限"/>
 	</script>
 	<script type="text/javascript">
 		$('.wrapper').on('click','.square',function(){
@@ -217,11 +217,6 @@
 					}
 				}
 			}
-			var arr=[];
-			$('.tree input:checked').each(function(){
-				arr.push($(this).val());
-			});
-			$('#rights').val(arr);
 		})
 		
 	</script>
