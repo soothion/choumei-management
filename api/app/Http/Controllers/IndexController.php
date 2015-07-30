@@ -85,7 +85,7 @@ class IndexController extends Controller{
     		$this->user = $user;
     		$token = JWTAuth::fromUser($user);
     		Event::fire('login',$user);
-    		return $this->success(['token'=>$token,'uid'=>$user->id]);
+    		return $this->success(['token'=>$token,'uid'=>$user->id,'name'=>$user->name,'username'=>$user->username]);
     	}
         else
         {
