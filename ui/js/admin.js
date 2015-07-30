@@ -105,7 +105,8 @@ $(function(){
 						time:2000,
 						define:function(){
 							if(data.result==1){
-								$this.closest('tr').remove();
+								$this.trigger('remove');
+							$this.closest('tr').remove();
 							}
 						}
 					});
@@ -115,7 +116,7 @@ $(function(){
 		var title=$this.attr('data-title');
 		if(title!=='false'){
 			parent.lib.popup.confirm({text:(title||'确认删除此数据吗'),define:function(){
-				postRemove();
+				postRemove();			 
 			}})
 		}else{
 			postRemove();
