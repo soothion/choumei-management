@@ -248,37 +248,7 @@ class ShopCountApi
             }
         }
         return $ret;
-    }
-    
-    /**
-     * 删除预付单
-     * @param int $id
-     * @return boolean|NULL
-     */
-    public static function deletePrepay($id)
-    {
-        $prepay = PrepayBill::where('id',$id)->first();
-        if(empty($prepay))
-        {
-            return true;
-        }
-    
-        if($prepay->state == 0)
-        {
-            PrepayBill::delete($id);
-        }
-        else if($prepay->state == 1)
-        {
-            PrepayBill::delete($id);
-            $options = [];
-            $options['salon_id'] = intval($prepay->salon_id);
-            $options['pay_money'] = floatval($prepay->pay_money) * -1;
-            $options['cost_money'] = floatval($prepay->cost_money) * -1;
-            ShopCount::payMoney($options);
-    
-        }
-        return null;
-    }
+    }    
     
     public static function getSalonMerchantBaseInfo($salon_ids)
     {
