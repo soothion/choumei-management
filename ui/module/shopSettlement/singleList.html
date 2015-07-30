@@ -51,8 +51,8 @@
 							<th>店铺名称</th>
                             <th>付款金额</th>
                             <th>换算消费额</th>
-                           <th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type==2?"1":"2"%>">付款日期 <i class="fa fa-sort"></i></a></th>
-                            <th><a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type==2?"1":"2"%>">创建日期 <i class="fa fa-sort"></i></a></th>
+                           <th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款日期 <i class="fa fa-sort"></i></a></th>
+                            <th><a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">创建日期 <i class="fa fa-sort"></i></a></th>
                             <th>制单人</th>
                             <th>状态</th>
                             <th>操作</th>
