@@ -8,6 +8,7 @@
 		lib.ajatCount--;
 		if(lib.ajatCount==0){
 			parent.$('body').trigger('loadingend');
+			$(document.body).trigger('asynhashform');
 		}
 	}
 	lib.Ajat.before=function(){
@@ -58,7 +59,14 @@ $(function(){
 	if($('[ajat]').length==0){
 		parent.$('body').trigger('loadingend');
 	}
-		
+	/**同步hash查询条件**/
+	$body.one('asynhashform',function(){
+		var hashForm=$('form[data-role="hash"]');
+		for(var name in lib.query){
+			hashForm.find('input[name="'+name+'"]').val(lib.query[name]);
+			hashForm.find('select[name="'+name+'"]').val(lib.query[name]);
+		}
+	});
 	$body.on('submit','form[data-role="hash"]',function(e){//表单submit提交
 		$(this).trigger('hash');
 		e.stopPropagation();
@@ -105,8 +113,8 @@ $(function(){
 						time:2000,
 						define:function(){
 							if(data.result==1){
-								$this.trigger('remove');
-							$this.closest('tr').remove();
+								$this.trigger('remove');//触发remove事件
+							    $this.closest('tr').remove();
 							}
 						}
 					});
