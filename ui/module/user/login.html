@@ -3,7 +3,7 @@
   <head>
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
-	  <script type="text/javascript" src="../../js/include.js"></script>
+	  <script type="text/javascript" src="/js/include.js"></script>
 	  <link rel="stylesheet" href="/module/user/login.css" />
   </head>
   <body>
@@ -83,7 +83,7 @@
 								data.data.account=account
 								lib.setSession({user:data.data});
 								localStorage.removeItem('access.data');
-								location.href='/module/index.html';
+								location.href='/index.html';
 							}else{
 								$('.btn-primary').text('登录');
 								help.show().text(data.msg);
