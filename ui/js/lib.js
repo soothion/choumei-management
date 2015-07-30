@@ -615,7 +615,7 @@
 				text:(data.msg||"数据更新成功"),
 				time:2000,
 				define:function(){
-					//history.back();
+					history.back();
 				}
 			});
 		},
