@@ -11,12 +11,40 @@ use Response;
 use Event;
 use Illuminate\Support\Facades\Redis as Redis;
 use App\Permission;
+use DB;
+use App\Role;
 
 class IndexController extends Controller{
 
 
 	public function test(){
-		return date('Y-m-d',strtotime('+1 day',strtotime('2015-07-29')));
+		$id=19;
+		$param = $this->param;
+		DB::beginTransaction();
+		$role = Role::find($id);
+		$update_permission = 1;
+
+		if(isset($param['permissions'])){
+			$permissions = $param['permissions'];
+			unset($param['permissions']);
+			if(empty($permissions)){
+				$update_permission = $role->permissions()->delete();
+			}
+			else
+				return $permissions;
+				$update_permission = $role->permissions()->sync([]);
+		}
+		$update_role = $role->update($param);
+		if($update_permission&&$update_role){
+			DB::commit();
+			// Event::fire('role.update',array($role));
+			return $this->success();
+		}
+		else
+		{
+			DB::rollBack();
+			return $this->error('error');
+		}
 	}
 
 

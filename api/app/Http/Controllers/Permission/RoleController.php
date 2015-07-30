@@ -415,8 +415,11 @@ class RoleController extends Controller{
 		if(isset($param['permissions'])){
 			$permissions = $param['permissions'];
 			unset($param['permissions']);
-			$update_permission = $role->permissions()->sync($permissions);
 		}
+		else
+			$permissions = [];
+			$update_permission = $role->permissions()->sync($permissions);
+		
 		$update_role = $role->update($param);
 		if($update_permission&&$update_role){
 			DB::commit();
