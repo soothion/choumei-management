@@ -122,10 +122,12 @@ class Salon extends Model {
 		if($type == 1)
 		{
 			$save["salestatus"] = 0;
+			$save["status"] = 2;
 		}
 		else
 		{
 			$save["salestatus"] = 1;
+			$save["status"] = 1;
 		}
 		DB::beginTransaction();
 		$affectid =  DB::table('salon')
