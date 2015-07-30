@@ -50,18 +50,22 @@ class SalonDataPaddingSeeder extends Seeder
 					$row = DB::table('salon')
 					->where('salonname', $salonName)
 					->update($save);//更新店铺表
-						
+		
 					$salonData = DB::table('salon')->where('salonname', $salonName)->first();
 					if($salonData)
 					{
-						$salonInfo["bankName"] = iconv("gbk","UTF-8",$line[9]);//开户行
-						$salonInfo["beneficiary"] = iconv("gbk","UTF-8",$line[10]);//账户名
-						$salonInfo["bankCard"] = iconv("gbk","UTF-8",$line[11]);//账户号
+						$salonInfo["bankName"] = iconv("gbk","UTF-8",$line[10]);//开户行
+						$salonInfo["branchName"] = iconv("gbk","UTF-8",$line[11]);//支行名称
+						$salonInfo["beneficiary"] = iconv("gbk","UTF-8",$line[12]);//账户名
+						$salonInfo["bankCard"] = iconv("gbk","UTF-8",$line[13]);//账户号
+						
+						
+						
 						$salonInfo["accountType"] = 2;//帐户类型
 						//$salonInfo["sn"] = iconv("gbk","UTF-8",$line[2]);;//商户编号
-						
+		
 						$salonInfo["upTime"] = time();
-
+		
 						$whereInfo = array("salonid"=>$salonData->salonid);
 						$salonTmpInfo = SalonInfo::where($whereInfo)->first();//检测附表记录是否存在
 						if(!$salonTmpInfo)
@@ -77,7 +81,7 @@ class SalonDataPaddingSeeder extends Seeder
 					{
 						DB::table('merchant')->where('name', $name)->update(array("sn"=>$sn));
 					}
-					
+						
 					if($affectid)
 					{
 						$i++;
@@ -89,12 +93,13 @@ class SalonDataPaddingSeeder extends Seeder
 					}
 				}
 			}
-				
-			$s++;	
+		
+			$s++;
 		}
 		echo $i."ok";
 		
 		fclose($file_handle);
+	
     }
  
 }
