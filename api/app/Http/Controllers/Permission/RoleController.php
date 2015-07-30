@@ -109,7 +109,7 @@ class RoleController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',$param['end']);
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 
 		if(isset($param['keyword'])&&$param['keyword']){
@@ -187,7 +187,7 @@ class RoleController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',$param['end']);
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 
 		if(isset($param['keyword'])&&$param['keyword']){

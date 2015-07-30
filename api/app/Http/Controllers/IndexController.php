@@ -16,8 +16,7 @@ class IndexController extends Controller{
 
 
 	public function test(){
-		$result = Manager::first()->update(['username'=>'administrator']);
-		var_dump($result);
+		return date('Y-m-d',strtotime('+1 day',strtotime('2015-07-29')));
 	}
 
 
@@ -86,7 +85,7 @@ class IndexController extends Controller{
     		$this->user = $user;
     		$token = JWTAuth::fromUser($user);
     		Event::fire('login',$user);
-    		return $this->success(['token'=>$token,'uid'=>$user->id]);
+    		return $this->success(['token'=>$token,'uid'=>$user->id,'name'=>$user->name,'username'=>$user->username]);
     	}
         else
         {
