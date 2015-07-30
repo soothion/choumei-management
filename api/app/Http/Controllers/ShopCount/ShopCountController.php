@@ -386,7 +386,8 @@ class ShopCountController extends Controller
      *		}
      */
     public function destroy($id)
-    {
+    {        
+        //是 ShopCount 不是 ShopCountApi  不要改回去了
         $ret = ShopCount::deletePrepay($id);
         if($ret)
         {
