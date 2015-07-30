@@ -106,7 +106,7 @@ $(function(){
 						define:function(){
 							if(data.result==1){
 								$this.trigger('remove');
-								$this.closest('tr').remove();
+							$this.closest('tr').remove();
 							}
 						}
 					});
