@@ -81,7 +81,7 @@
 								localStorage.setItem('token',data.data.token);
 								delete data.data.token;
 								data.data.account=account
-								lib.setSession({user:data});
+								lib.setSession({user:data.data});
 								localStorage.removeItem('access.data');
 								location.href='/module/index.html';
 							}else{
