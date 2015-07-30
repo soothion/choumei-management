@@ -34,9 +34,13 @@
 				var fields=$form.serializeArray();
 				$.each(fields,function(i,field){
 					if(!data[field.name]){
-						data[field.name]=$.trim(field.value);
 						if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
-							data[field.name]=[$.trim(field.value)];
+							data[field.name]=[];
+							if($.trim(field.value)){
+								data[field.name].push($.trim(field.value));
+							}
+						}else{
+							data[field.name]=$.trim(field.value);
 						}
 					}else{
 						if(data[field.name] instanceof Array){
@@ -45,7 +49,6 @@
 							}
 						}
 					}
-					
 				});
 				return data;
 			}
