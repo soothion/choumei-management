@@ -56,6 +56,7 @@ class ShopCount extends Model
                 }
                 return true;
             });
+            return true;
         } else {
             return false;
         }
