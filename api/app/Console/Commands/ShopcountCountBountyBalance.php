@@ -56,13 +56,14 @@ class ShopcountCountBountyBalance extends Command
         do{
             $ordersns = BountyTask::where("btStatus",4)
             ->where("endTime",">",$last_time)
+            ->where("salonId","!=",0)
             ->orderBy('endTime','DESC')
             ->skip($size*$page)
             ->take($size)
             ->lists('btSn')
             ->toArray();
             $count = count($ordersns);
-            if($count>1)
+            if($count>=1)
             {
                 $ordersn_str = implode(",", $ordersns);
                 $type = ShopCountDetail::TYPE_OF_BOUNTY;

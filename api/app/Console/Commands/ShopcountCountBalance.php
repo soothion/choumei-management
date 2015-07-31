@@ -61,7 +61,7 @@ class ShopcountCountBalance extends Command
            ->lists('ordersn')
            ->toArray();          
            $count = count($ordersns);
-           if($count>1)
+           if($count>=1)
            {
                $ordersn_str = implode(",", $ordersns);
                $type = ShopCountDetail::TYPE_OF_ORDER;
