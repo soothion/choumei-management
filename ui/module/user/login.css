@@ -39,11 +39,29 @@
 .slogan  img{
 	width:100px;
 	margin-bottom:10px;
-	opacity:0.8;
+	opacity:0.01;
+	-webkit-transition:all 2s ease 0.1s;
+	transition:all 2s ease 0.1s;
+	display:inline-block;
+}
+.slogan  img.fadeIn{
+	opacity:1;
 }
 .slogan{
 	text-align:center;
 	font-size:26px;
 	padding-top:90px;
-	margin-left:-100px;
+	display:inline-block;
+	width:185px;
+}
+.slogan .fonts{
+	text-align:left;
+}
+.font{
+	opacity:1;
+	-webkit-transition:all 1s ease 0s;
+	transition:all 1s ease 0s;
+}
+.font:last-child{
+	opacity:0;
 }

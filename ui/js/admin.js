@@ -63,8 +63,17 @@ $(function(){
 	$body.one('asynhashform',function(){
 		var hashForm=$('form[data-role="hash"]');
 		for(var name in lib.query){
-			hashForm.find('input[name="'+name+'"]').val(lib.query[name]);
 			hashForm.find('select[name="'+name+'"]').val(lib.query[name]);
+			hashForm.find('input[name="'+name+'"]').each(function(){
+				var $this=$(this);
+				if($this.attr('type')=="checkbox"||$this.attr('type')=="radio"){
+					if($this.val()==lib.query[name]){
+						this.checked=true;
+					}
+				}else{
+					$this.val(lib.query[name]);
+				}
+			});
 		}
 	});
 	$body.on('submit','form[data-role="hash"]',function(e){//表单submit提交
