@@ -53,7 +53,10 @@
 				<%data.forEach&&data.forEach(function(item,i){%>
                 <tr>
                   <td><%=i+1%></td>
-                  <td><%=item.salon_name%></td>
+                  <td class="colswrap">
+					<strong><%=item.salon_name%></strong><br />
+					<span class="weak">所属商户：<%=item.merchant_name%></span>
+				  </td>
                   <td><%=types[item.salon_type-1]%></td>
                   <td><%=item.pay_money%></td>
 				  <td><%=item.cost_money%></td>
