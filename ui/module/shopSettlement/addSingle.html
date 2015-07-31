@@ -33,9 +33,8 @@
                     <label class="control-label" for=""><span class="red">*</span>付款单类型：</label>
                     <div class="control">
                        <select required name="type" class="select"  style="width:20%;" <%=query.id?"disabled":""%>>
-							<option value="1" <%=data.type==1?"selected":""%>>预付交易款</option>
-							<option value="2" <%=data.type==2?"selected":""%>>付交易代收款</option> 
-                            <option value="3" <%=data.type==3?"selected":""%>>预付交易款返还</option>    							
+							<option value="1" <%=data.type==1?"selected":""%>>付交易代收款</option>						 
+                            <option value="2" <%=data.type==2?"selected":""%>>预付交易款返还</option>    							
                         </select>
                     </div>
                 </div>
