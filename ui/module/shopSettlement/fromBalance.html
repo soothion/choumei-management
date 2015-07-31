@@ -3,7 +3,7 @@
   <head>
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
-	  <script type="text/javascript" src="../../js/include.js"></script>
+	  <script type="text/javascript" src="/js/include.js"></script>
   </head>
   <body>
 		<div class="breadcrumb">
@@ -33,12 +33,12 @@
               <thead>
                 <tr>
                   <th>序号</th>
-                  <th><a data-role="hash" href="#page=1&sort_key=salon_name&sort_type=<%=query.sort_type=="ASC"?"DESC":"ASC"%>">店铺 <i class="fa fa-sort"></i></a></th>
-                  <th><a data-role="hash" href="#page=1&sort_key=salon_type&sort_type=<%=query.sort_type=="ASC"?"DESC":"ASC"%>">店铺类型 <i class="fa fa-sort"></i></a></th>
-                  <th class="colswrap">预付款<br />付交易代收款</th>
-				  <th>换算消费额</th>
-				  <th>交易消费额</th>
-				  <th>交易余额</th>
+				  <th>店铺</th>
+				  <th>店铺类型</th>
+                  <th class="colswrap"><a data-role="hash" href="#page=1&sort_key=pay_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">预付款<br />付交易代收款 <i class="fa fa-sort"></i></a></th>
+				  <th><a data-role="hash" href="#page=1&sort_key=cost_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">换算消费额 <i class="fa fa-sort"></i></a></th>
+				  <th><a data-role="hash" href="#page=1&sort_key=spend_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">交易消费额 <i class="fa fa-sort"></i></a></th>
+				  <th><a data-role="hash" href="#page=1&sort_key=balance_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">交易余额 <i class="fa fa-sort"></i></a></th>
 				  <th>付投资款</th>
 				  <th>付投款返还</th>
 				  <th>投资余额</th>
