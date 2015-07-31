@@ -205,13 +205,13 @@
 			});
 			var super4=$this.closest('ul').siblings('input')[0];
 			if(super4){
-				super4.checked=$this.closest('ul').find('input:checked').length==0?false:true;
+				super4.checked=$this.closest('ul').find('input:checked').length==0?super4.checked:true;
 				var super3=$(super4).closest('ul').siblings('input')[0];
 				if(super3){
-					super3.checked=$(super4).closest('ul').find('input:checked').length==0?false:true;
+					super3.checked=$(super4).closest('ul').find('input:checked').length==0?super3.checked:true;
 					var super2=$(super3).closest('ul').siblings('input')[0];
 					if(super2){
-						super2.checked=$(super3).closest('ul').find('input:checked').length==0?false:true;
+						super2.checked=$(super3).closest('ul').find('input:checked').length==0?super2.checked:true;
 					}
 				}
 			}
