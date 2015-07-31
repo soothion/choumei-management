@@ -9,6 +9,7 @@
         <title>臭美管理后台</title>
         <script type="text/javascript" src="/js/include.js"></script>
     </head>
+	
     <body>
         <div class="breadcrumb">
            <a>店铺结算 </a><span>&gt;</span><a href="singleList.html">转付单</a>
@@ -45,8 +46,7 @@
                         <tr>
                             <th>序号</th>
                             <th>付款单号</th>
-                            <th>付款类型</th>
-                            <th>商户名称</th>
+                            <th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款类型<i class="fa fa-sort"></i></a></th>                          
 							<th>店铺名称</th>
                             <th>付款金额</th>
                             <th>换算消费额</th>
@@ -59,7 +59,7 @@
                     </thead>
                <tbody>
 			   <%if(data.data){%>
-             <%var type=["","预付交易款","付代收交易款","预付交易款返还"]%>
+             <%var type=["","付交易代收款","交易代收款返还"]%>
 			 <%var state=["","已付款","预览状态"]%>
 				<%var data=data.data%>
 				<%for(var i=0;i<data.length;i++){%>
@@ -67,7 +67,6 @@
                  <td><%=i+1%></td>
                   <td><%=data[i].code%></td>
 				  <td><%=type[data[i].type]%></td>
-				   <td><%=data[i].merchant?data[i].merchant.name:""%></td>
 				    <td><%=data[i].salon?data[i].salon.salonname:""%></td>
                   <td><%=data[i].pay_money%></td>
 				  <td><%=data[i].cost_money%></td>

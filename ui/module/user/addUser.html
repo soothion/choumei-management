@@ -122,8 +122,12 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>登陆密码：</label>
                     <div class="control">
-                        <input id="password" type="password" patternmsg="6-20位数字和字母组合" pattern="password" requiredmsg="请输入密码" required placeholder="6-20位数字和字母组合" name="password" value="<%=data.password||""%>" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>>
+<<<<<<< HEAD
+                        <input id="password" type="password" patternmsg="6-20位数字和字母组合" pattern="password" requiredmsg="请输入密码" required placeholder="6-20位数字和字母组合" name="password" value="<%=data.password||""%>" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>>                  
+=======
+                        <input id="password" type="password" patternmsg="6-20位数字或字母组合" pattern="password" requiredmsg="请输入密码" required placeholder="6-20位数字或字母组合" name="password" value="<%=data.password||""%>" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>>
                     
+>>>>>>> 78e19e25381fa5c6569461d4bd80690df7bf016b
                     </div>
                 </div>
                 <div class="control-group">
@@ -172,10 +176,10 @@
 			<%for(var i=0;i<data.length;i++){%>
 				<input type="checkbox" required id="<%=data[i].id%>" <%=sids&&sids.indexOf(data[i].id)>-1?"checked":""%> class="checkbox" name="roles" value="<%=data[i].id%>" <%=protocol.custom.status==3?"disabled":""%>/>
 				<label for="<%=data[i].id%>" style="margin-right:2px;"></label>
-				<label for="<%=data[i].id%>"><%=data[i].name%></label><span class="space"></span>	
-                 			
+				<label for="<%=data[i].id%>"><%=data[i].name%></label><span class="space"></span>	                 			
 			<%}%>
 			<div class="control-help" style="display:none"></div>
+ 
 	</script>
   </body>
 </html>
