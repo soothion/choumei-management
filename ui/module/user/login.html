@@ -12,7 +12,7 @@
 				<div class="flex-item">
 					<div class="slogan">
 						<img src="/images/logo.png" alt="" /><br />
-						美发O2O领跑者
+						<div class="fonts"></div>
 					</div>
 				</div>
 				<form>
@@ -29,7 +29,21 @@
 		</div>
 		<script type="text/javascript">
 			$(function(){
-				lib.popup.result=function(){}
+				var str="美发O2O领跑者 ";
+				var slogan=$('.slogan');
+				var i=0;
+				var fonts=slogan.find('.fonts');
+				var interval=setInterval(function(){
+					fonts.append('<span class="font">'+str.charAt(i)+'</span>');
+					i++;
+					if(i==str.length){
+						clearInterval(interval);
+					}
+					if(i==2){
+						slogan.find('img').addClass('fadeIn');
+					}
+				},130);
+				
 				function uuid(len, radix) {
 					var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 					var uuid = [],i,radix = radix || chars.length;
@@ -88,7 +102,8 @@
 								$('.btn-primary').text('登录');
 								help.show().text(data.msg);
 							}
-						}
+						},
+						done:function(){}
 					})
 					e.preventDefault();
 				});
