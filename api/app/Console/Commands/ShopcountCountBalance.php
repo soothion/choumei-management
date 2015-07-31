@@ -44,14 +44,14 @@ class ShopcountCountBalance extends Command
      */
     public function handle()
     {
-       $last_time = $this->get_count_start_time();
+       $last_time =$this->get_last_count_time();
        if (empty($last_time))
        {
-           $last_time =$this->get_last_count_time();
+           $last_time = $this->get_count_start_time();
        }
-       $size = 10;
+       $size = 100;
        $page = 0;
-       $count = 10;
+       $count = 100;
        do{
            $ordersns = Order::where("status",4)
            ->where("use_time",">",$last_time)
