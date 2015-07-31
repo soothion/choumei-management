@@ -44,36 +44,47 @@ class ShopcountCountBalance extends Command
      */
     public function handle()
     {
-       $last_time =$this->get_last_count_time();
-       if (empty($last_time))
-       {
-           $last_time = $this->get_count_start_time();
-       }
-       $size = 100;
+       $exist_ordersn = ShopCountDetail::where("type",ShopCountDetail::TYPE_OF_ORDER)->lists('code')->toArray();
+       $ordersns = Order::where("status",4)
+       ->whereNotIn('ordersn',$exist_ordersn)
+       ->orderBy('use_time','DESC')  
+       ->lists('ordersn')
+       ->toArray();
+       $total = count($ordersns);
        $page = 0;
-       $count = 100;
-       do{
-           $ordersns = Order::where("status",4)
-           ->where("use_time",">",$last_time)
-           ->orderBy('use_time','DESC')
-           ->skip($size*$page)
-           ->take($size)       
-           ->lists('ordersn')
-           ->toArray();          
-           $count = count($ordersns);
-           if($count>=1)
-           {
-               $ordersn_str = implode(",", $ordersns);
-               $type = ShopCountDetail::TYPE_OF_ORDER;
-               $params = ['type'=>$type,'ordersn'=>$ordersn_str];
-               ShopCountApi::makeToken($params);
-               $this->controller->param = $params;
-               $ret = $this->controller->countOrder();
-               ShopcountStore::outputReturn($this, $ret);
-           }
-           $page++;
+       $size = 1000;
+       $all_page = ceil($total/$size);
+       $tmp_ordersns = array_slice($ordersns, $page*$size,$size);
+       while(count($tmp_ordersns) > 0)
+       {
+           $this->info("completed ".ceil($page/$all_page*100)."% ...");
+           $ordersn_str = implode(",", $ordersns);
+           $type = ShopCountDetail::TYPE_OF_ORDER;
+           $params = ['type'=>$type,'ordersn'=>$ordersn_str];
+           ShopCountApi::makeToken($params);
+           $this->controller->param = $params;
+           $this->controller->countOrder();
+           
+           $page++ ;
+           $tmp_ordersns = array_slice($ordersns, $page*$size,$size);
        }
-       while($count >= $size);
+       $this->info("all completed!");
+//        do{   
+                 
+//            $count = count($ordersns);
+//            if($count>=1)
+//            {
+//                $ordersn_str = implode(",", $ordersns);
+//                $type = ShopCountDetail::TYPE_OF_ORDER;
+//                $params = ['type'=>$type,'ordersn'=>$ordersn_str];
+//                ShopCountApi::makeToken($params);
+//                $this->controller->param = $params;
+//                $ret = $this->controller->countOrder();
+//                ShopcountStore::outputReturn($this, $ret);
+//            }
+//            $page++;
+//        }
+//        while($count >= $size);
     }
     
     /**

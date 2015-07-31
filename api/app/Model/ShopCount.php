@@ -73,7 +73,7 @@ class ShopCount extends Model
         DB::transaction(function () use($code,$salon_id,$money,$time,$type,$salon_info,$merchant_info,$ds_code,&$return_code)
         {           
             $detail = ShopCountDetail::where("code",$code)->where("type",$type)->get()->toArray();
-            
+            $salon_id = isset($salon_info['id']) ? $salon_info['id'] : 0;
             if(!empty($detail))//已存在
             {
                 $return_code = 2;
@@ -83,20 +83,29 @@ class ShopCount extends Model
                 'code' => $code,
                 'type' => $type,
                 'money' => $money,
-                'salon_id' => isset($salon_info['id']) ? $salon_info['id'] : 0,
+                'salon_id' => $salon_id,
                 'merchant_id' => isset($merchant_info['id']) ? $merchant_info['id'] : 0,
                 'created_at' => date("Y-m-d H:i:s", $time)
             ]);
             
-            InsteadReceive::create([
-                'code' => $ds_code,
-                'salon_id' => isset($salon_info['id']) ? $salon_info['id'] : 0,
-                'merchant_id' => isset($merchant_info['id']) ? $merchant_info['id'] : 0,
-                'type' => InsteadReceive::TYPE_OF_ORDER,
-                'money' => $money,
-                'day' => date("Y-m-d", $time),
-                'created_at' => date("Y-m-d H:i:s")
-            ]);
+            $ir = InsteadReceive::where('salon_id',$salon_id)->where('day',date("Y-m-d", $time))->first();
+            if(empty($ir))
+            {
+                InsteadReceive::create([
+                    'code' => $ds_code,
+                    'salon_id' => isset($salon_info['id']) ? $salon_id: 0,
+                    'merchant_id' => isset($merchant_info['id']) ? $merchant_info['id'] : 0,
+                    'type' => InsteadReceive::TYPE_OF_ORDER,
+                    'money' => $money,
+                    'day' => date("Y-m-d", $time),
+                    'created_at' => date("Y-m-d H:i:s")
+                ]);
+            }
+            else
+            {
+                $now_money = intval($ir->money) + $money;
+                InsteadReceive::where('id',$ir->id)->update(['money'=> $now_money]);
+            }
           
             $shop_counts = ShopCount::where('salon_id',$salon_info['id'])->get(['id','pay_money','cost_money','spend_money','balance_money'])->toArray();
           
