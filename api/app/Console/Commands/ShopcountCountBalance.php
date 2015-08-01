@@ -52,7 +52,7 @@ class ShopcountCountBalance extends Command
        ->toArray();
        $total = count($ordersns);
        $page = 0;
-       $size = 1000;
+       $size = 100;
        $all_page = ceil($total/$size);
        $tmp_ordersns = array_slice($ordersns, $page*$size,$size);
        while(count($tmp_ordersns) > 0)

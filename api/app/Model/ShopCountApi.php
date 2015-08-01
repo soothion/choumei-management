@@ -25,6 +25,115 @@ class ShopCountApi
         
     }
     
+    public static function importAllOrder()
+    {
+        $total = Order::where('status',4)->count();
+        $offset = 0;
+        $size = 5000;
+        $now_time = time();        
+        do{
+            $base_order_infos = Order::where('status',4)->where('use_time','<',$now_time)->select('ordersn','salonid','priceall','use_time')->skip($offset)->take($size)->get()->toArray();
+            $rows_num = count($base_order_infos);
+            $offset += $size;
+            $salon_ids = array_column($base_order_infos, "salonid");
+            $other_info = self::getSalonMerchantBaseInfo($salon_ids);            
+            foreach($base_order_infos as $key => $order)
+            {
+                $now_num = $key + $offset + 1;
+                $ordersn = $order['ordersn'];
+                $salon_id = $order['salonid'];            
+                $money = floatval($order['priceall']);
+                $time = $order['use_time'];                
+                echo "run at {$now_num} / {$total}  count ordersn [{$ordersn}] ...\n";
+                $merchant_id = 0;
+                $salon_name = "";
+                $salon_type = 0;
+                $merchant_name = "";
+                
+                $ds_code =InsteadReceive::getNewCode();
+                
+                if(isset($other_info['salon'][$salon_id]))
+                {
+                    $salon_name = $other_info['salon'][$salon_id]['salon_name'];
+                    $salon_type = $other_info['salon'][$salon_id]['shop_type'];
+                    $merchant_id = $other_info['salon'][$salon_id]['merchant_id'];
+                }
+                if(isset($other_info['merchant'][$merchant_id]))
+                {
+                    $merchant_name = $other_info['merchant'][$merchant_id]['name'];
+                }
+                
+                ShopCountDetail::create([
+                    'code' => $ordersn,
+                    'type' => 1,
+                    'money' => $money,
+                    'salon_id' => $salon_id,
+                    'merchant_id' => $merchant_id,
+                    'created_at' => date("Y-m-d H:i:s", $time)
+                ]);
+                
+                $ir = InsteadReceive::where('salon_id',$salon_id)->where('day',date("Y-m-d", $time))->first();
+                if(empty($ir))
+                {
+                    InsteadReceive::create([
+                    'code' => $ds_code,
+                    'salon_id' => $salon_id,
+                    'merchant_id' => $merchant_id,
+                    'type' => InsteadReceive::TYPE_OF_ORDER,
+                    'money' => $money,
+                    'day' => date("Y-m-d", $time),
+                    'created_at' => date("Y-m-d H:i:s")
+                    ]);
+                }
+                else
+                {
+                    $now_money = intval($ir->money) + $money;
+                    InsteadReceive::where('id',$ir->id)->update(['money'=> $now_money]);
+                }
+                unset($ir);
+                $shop_counts = ShopCount::where('salon_id',$salon_id)->get(['id','pay_money','cost_money','spend_money','balance_money'])->toArray();
+                
+                if(!empty($shop_counts))
+                {
+                    $shop_count = $shop_counts[0];
+                    $id = $shop_count['id'];
+                    $pay_money = floatval($shop_count['pay_money']);
+                    $cost_money = floatval($shop_count['cost_money']);
+                    $spend_money = floatval($shop_count['spend_money']) + $money;
+                    $balance_money = $cost_money - $spend_money;
+                    ShopCount::where('id',$id)->update([
+                    'merchant_id'=>$merchant_id,
+                    'merchant_name'=>$merchant_name,
+                    'salon_name'=>$salon_name,
+                    'salon_type'=>$salon_type,
+                    'updated_at'=>date("Y-m-d H:i:s",$time),
+                    'pay_money'=>$pay_money,
+                    'cost_money'=>$cost_money,
+                    'spend_money'=>$spend_money,
+                    'balance_money'=>$balance_money,
+                    ]);
+                }
+                else
+                {
+                    ShopCount::create([
+                    'salon_id'=>$salon_id,
+                    'merchant_id'=>$merchant_id,
+                    'merchant_name'=>$merchant_name,
+                    'salon_name'=>$salon_name,
+                    'salon_type'=>$salon_type,
+                    'created_at'=>date("Y-m-d H:i:s",$time),
+                    'spend_money'=>$money,
+                    'balance_money'=>$money * -1,
+                    ]);
+                }
+                unset($shop_counts);
+            }
+            unset($base_order_infos);
+        }
+        while($rows_num >= $size);
+            
+    }
+    
     /**
      * 已消费的订单结算
      * @param array $options 订单号
