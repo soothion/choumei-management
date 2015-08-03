@@ -69,7 +69,7 @@ class ShopcountImportPrepay extends Command
 			$salon_id = $data[1];
 			$type_name = $data[4];
 			$day_str = $data[5];
-			$money = intval($data[7]);
+			$money = floatval($data[7]);
 			if(empty($salon_id))
 			{
 				throw new \Exception("can not get salon id of line ".($key).implode(",", $data)."");			
@@ -134,7 +134,7 @@ class ShopcountImportPrepay extends Command
     
     public static function get_cost_money($money)
     {
-        return round($money * 1.1);
+        return round($money * 110)/100;
     }
     
     public static function get_day($day_str)
