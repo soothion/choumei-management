@@ -55,6 +55,9 @@
     margin-left: 25px;  
     box-sizing:border-box;     
 }
+.ie9 .map{
+	display:table-cell;
+}
 .map > div:first-child{
     vertical-align: middle;
     height: 30px;
