@@ -4,7 +4,6 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use App\SalonUser;
 use App\SalonInfo;
-use Maatwebsite\Excel\Facades\Excel;
 class SalonDataPaddingSeeder extends Seeder
 {
     /**
@@ -18,33 +17,36 @@ class SalonDataPaddingSeeder extends Seeder
     public function run()
     {
 		$shopArr =  array("预付款店"=>1, "投资店"=>2 ,"金字塔店"=>3);
-		$file = 'public/Uploads/20150729/salon.xlsx';
-
-		Excel::load($file, function($reader) {
-		    $reader = $reader->getSheet(0);
-		    $results = $reader->toArray();
-		    array_shift($results);
-    		foreach ($results as $key => $line) {
+		$file_handle = fopen("public/Uploads/20150729/salon.csv", "r");
+		$s = 1;
+		$i = 1;
+		while (!feof($file_handle))
+		{
+			$line = fgetcsv($file_handle);
+			if($line && $s>1)
+			{
 				$save = array();
-				//$save["salonname"] = iconv("gbk","UTF-8",$line[4]);//店铺名
-				$salonName = trim($line[5]);//店铺名
+				$salonName = iconv("gbk","UTF-8",$line[5]);//店铺名
 				if($salonName)
 				{
-					$shopType = $line[1];//店铺类型
+					$shopType = iconv("gbk","UTF-8",$line[1]);//店铺类型
 					$save["shopType"] = isset($shopArr[$shopType])?$shopArr[$shopType]:"";
 		
-					$yName = $line[8];//业务代表
+					$yName = iconv("gbk","UTF-8",$line[8]);//业务代表
 					$userName = DB::table('business_staff')->where('businessName', $yName)->first();
 					if($userName)
 					{
 						$save["businessId"] = $userName->id;
 					}
-					$save["sn"] = $line[4];//店铺编号
-					$save["bargainno"] = $line[23];//合同编号
-					$contractTimeArr = explode("-", $line[9]);
+					$save["sn"] = iconv("gbk","UTF-8",$line[4]);//店铺编号
+					$save["bargainno"] = iconv("gbk","UTF-8",$line[23]);//合同编号
+					$save["corporateName"] = iconv("gbk","UTF-8",$line[25]);//法人代表
+					$save["corporateTel"] = iconv("gbk","UTF-8",$line[26]);//法人电话					
+					$contractTimeArr = explode("-", iconv("gbk","UTF-8",$line[9]));
 					$contractTime = strtotime($contractTimeArr[0]);
 					$save["contractTime"] = $contractTime;//合同日期
 					$save["contractPeriod"] = "3_0";//合同期限
+					
 					$affectid = "";
 					DB::beginTransaction();
 					$row = DB::table('salon')
@@ -54,10 +56,12 @@ class SalonDataPaddingSeeder extends Seeder
 					$salonData = DB::table('salon')->where('salonname', $salonName)->first();
 					if($salonData)
 					{
-						$salonInfo["bankName"] = $line[10];//开户行
-						$salonInfo["branchName"] = $line[11];//支行名称
-						$salonInfo["beneficiary"] = $line[12];//账户名
-						$salonInfo["bankCard"] = $line[13];//账户号
+						$salonInfo["bankName"] = iconv("gbk","UTF-8",$line[10]);//开户行
+						$salonInfo["branchName"] = iconv("gbk","UTF-8",$line[11]);//支行名称
+						$salonInfo["beneficiary"] = iconv("gbk","UTF-8",$line[12]);//账户名
+						$salonInfo["bankCard"] = iconv("gbk","UTF-8",$line[13]);//账户号
+						
+						
 						
 						$salonInfo["accountType"] = 2;//帐户类型
 						//$salonInfo["sn"] = iconv("gbk","UTF-8",$line[2]);;//商户编号
@@ -72,8 +76,8 @@ class SalonDataPaddingSeeder extends Seeder
 						}
 						$affectid = SalonInfo::where(array("salonid"=>$whereInfo["salonid"]))->update($salonInfo);
 					}
-					$name = $line[3];//商户名
-					$sn = $line[2];//商户编号
+					$name = iconv("gbk","UTF-8",$line[3]);//商户名
+					$sn = iconv("gbk","UTF-8",$line[2]);//商户编号
 					$merData = DB::table('merchant')->where('sn', $sn)->first();
 					if($name && $sn && !$merData)
 					{
@@ -82,16 +86,22 @@ class SalonDataPaddingSeeder extends Seeder
 						
 					if($affectid)
 					{
-						echo "$salonName update success \n";
+						$i++;
 						DB::commit();
 					}
 					else
 					{
-						echo "$salonName update error \n";
 						DB::rollBack();
 					}
 				}
 			}
-		});
+		
+			$s++;
+		}
+		echo $i."ok";
+		
+		fclose($file_handle);
+	
     }
+ 
 }
