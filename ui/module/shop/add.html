@@ -3,8 +3,8 @@
     <head>
       <meta charset="utf-8">
       <title>臭美管理后台</title>
-      <script type="text/javascript" src="../../js/include.js"></script>
-      <link rel="stylesheet" href="shop.css" />    
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="/module/shop/shop.css" />    
     </head>
 
     <body>
@@ -13,18 +13,29 @@
             <span>&gt;</span>
             <a href="index.html">店铺列表</a>
             <span>&gt;</span><%=query.type=="add" ? "新增店铺" : "编辑店铺"%>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4><%=query.type=="add" ? "新增店铺" : "编辑店铺"%></h4>
+				</div>
+			</div>
+			<hr />
         </div>
         
         <div class="wrapper">
-          <ul class="nav-step flex-box">
-            <li class="flex-item active"><span class="arrow">1.店铺基本信息</span></li>
-            <li class="flex-item"><span>2.银行账号信息</span></li>
-            <li class="flex-item"><span>3.准入评估信息</span></li>
-            <li class="flex-item"><span>4.附件上传</span></li>
-          </ul>
-
+          
             <form novalidate="" class="form-vertical" data-role="form" id="form">
             <script type="text/template" id="form-t">  
+				<div class="detail-operation">
+					<button type="button" class="btn" onclick="history.back()">取消</button>
+					<span class="space"></span>
+					<button class="btn-primary">提交</button>
+				</div>
+				<ul class="nav-step flex-box">
+					<li class="flex-item active"><span class="arrow">1.店铺基本信息</span></li>
+					<li class="flex-item"><span>2.银行账号信息</span></li>
+					<li class="flex-item"><span>3.准入评估信息</span></li>
+					<li class="flex-item"><span>4.附件上传</span></li>
+				</ul>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
                     <div class="control">
@@ -233,30 +244,48 @@
             </form>       
         </div>
 
-        <div id="pop-wrapper" class="hide">
-            <div class="mask"></div>
-            <div class="pop">
-                <div class="pop-header-wrapper">
-                    <span class="pop-tip">标记地理坐标</span>
-                    <span class="pop-close">×</span>
-                </div>
-                <div class="pop-search-wrapper">
-                    <input  type="text" id="map-search" placeholder='请输入关键字' />
-                </div>
-                <div class="pop-map-wrapper" id="map-wrapper"></div>
-                <div class="pop-bar-wrapper">
-                    <div class="bar-mark">
-                        <strong>标记位置：</strong>
-                        <span id="pop-geo-coor">未标记</span>
-                    </div>
-                    <div class="bar-group">
-                        <button class="btn"  id="pop-cancel-btn">取消</button>
-                        <button class="btn-primary" id="pop-sure-btn">确定</button>
-                    </div>
-                </div>                                
-            </div>        
-        </div>
-
+		<div class="map-container">
+			<style type="text/css">
+				.map-container{
+					position:fixed;left:0;top:0;width:100%;height:100%;display:none;
+					z-index:1000;
+				}
+				.map-toolbar{
+					position:absolute;left:0;top:0;width:100%;z-index:100;background:rgba(255,255,255,0.7);
+					box-shadow:0px 0px 5px rgba(0,0,0,0.1);
+				}
+				.map-toolbar>div{
+					padding:10px;
+				}
+				.map-toolbar input{
+					width:250px;
+				}
+				.map-inner{
+					position:absolute;left:0;top:0;width:100%;height:100%;
+				}
+				.map-marker-address{
+					font-size:16px;
+					line-height:32px;
+				}
+				.BMap_stdMpCtrl{
+					top:65px!important;
+				}
+			</style>
+			<div class="map-toolbar">
+				<div class="flex-box">
+					<div class="flex-item map-marker-address">标记位置：<span id="address-text">未标记</span></div>
+					<div class="tc" >
+						<input  type="text" id="map-search" placeholder='请输入关键字' />
+					</div>
+					<div class="flex-item" style="text-align:right">
+						<button class="btn">返回</button>
+						<span class="space"></span>
+						<button class="btn-primary">确定</button>
+					</div>
+				</div>
+			</div>
+			<div class="map-inner"id="map-wrapper"></div>
+		</div>
         <script type="text/template" id="province_t">
             <option value="">省份</option>
             <%data.forEach&&data.forEach(function(item){%>
@@ -288,10 +317,14 @@
 
 		<script type="text/template" id="zone_t">
 			<%data.forEach&&data.forEach(function(item){%>
-			<input type="radio" class="label" id="areaRadio<%=item.areaid%>" <%=item.areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=item.areaid%>">
+			<input type="radio" class="label" id="areaRadio<%=item.areaid%>" <%=item.areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=item.areaid%>" required>
 			<label for="areaRadio<%=item.areaid%>"><%=item.areaname%></label>
 			<%})%>
-			<span class="control-help" style="display:none;"></span>
+			<%if(data.length>0){%>
+				<div class="control-help" style="display:none;"></div>
+			<%}else{%>
+				<input type="hidden" name="zone" required requiredmsg="请选择有商圈的地区"/>
+			<%}%>
 		</script>
        
         <script src="add.js"></script>

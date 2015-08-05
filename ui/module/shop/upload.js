@@ -16,17 +16,14 @@
 
     var initPage = function(){
         //新增
-        if(type && type === 'add'){
+        if(type === 'add'){
             currentData = JSON.parse(sessionStorage.getItem('add-shop-data')); 
-			document.body.onbeforeunload=function(){
-			return "确定离开当前页面吗？";
-			}
+			document.body.onbeforeunload=function(){return "确定离开当前页面吗？";}
         }
         //编辑
-        if(type && type === 'edit'){
+        if(type === 'edit'){
             currentData = JSON.parse(sessionStorage.getItem('edit-shop-data')); 
         }
-
         renderImage();
     }
 
@@ -242,7 +239,7 @@
             window.open("detail.html?type=preview&upload=true");        
         })
 
-        $("#submit").on('click',function(){
+        $(".submit").on('click',function(){
             parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
             conLoader.upload();
             licLoader.upload();

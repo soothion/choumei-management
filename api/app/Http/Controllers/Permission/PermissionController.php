@@ -85,7 +85,7 @@ class PermissionController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',$param['end']);
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 
 		if(isset($param['keyword'])&&$param['keyword']){
@@ -156,12 +156,12 @@ class PermissionController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',$param['end']);
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 
 		if(isset($param['keyword'])&&$param['keyword']){
 			$keyword = '%'.$param['keyword'].'%';
-			$query = $query->where('name','like',$keyword);
+			$query = $query->where('title','like',$keyword);
 		}
 
 	    $result = $query->get();
@@ -300,14 +300,21 @@ class PermissionController extends Controller{
 	{
 		$param = $this->param;
 		$permission = Permission::find($id);
-		if($permission->update($param))
+		DB::beginTransaction();
+		$self = $permission->update($param);
+		$other = Permission::where('inherit_id',$permission->id)->update(['status'=>$param['status']]);
+		if($self)
 		{
+			DB::commit();
 			Event::fire('permission.update',array($permission));
 			return $this->success();
 		}
-		else 
+		else
+		{
+			DB::rollBack();
 			return $this->error('更新失败');
-
+		}
+			
 	}
 
 

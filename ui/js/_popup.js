@@ -85,6 +85,7 @@ define(function(require,exports,module){
 					height:"100%"
 				});
 				popup.find('.swiper-container').height($(window).height());
+				self.overlay().css('background','rgba(0,0,0,0.85)');
 				var swiper = new Swiper(popup.find('.swiper-container')[0], {
 					loop: true,
 					initialSlide : options.index,
@@ -96,7 +97,6 @@ define(function(require,exports,module){
 					paginationClickable: true,
 					spaceBetween: 0
 				});
-				self.overlay().css('background','rgba(0,0,0,0.85)');
 			});
 		},
         overlay: function () {
@@ -111,7 +111,7 @@ define(function(require,exports,module){
             });
         },
         append:function(popup){
-			if(!lib.browser.mobile){
+			if(!lib.tools.browser.mobile){
 				popup.css({
 					left:($(window).width()-300)/2,
 					width:300

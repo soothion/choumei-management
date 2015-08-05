@@ -7,7 +7,13 @@
 
 (function(){
     $("#dropMenu").on('click',function(e){
-      $(".area-box").fadeToggle(300);
+      var box=$(".area-box").fadeToggle(300);
+	  var icon=$(this).find('i');
+	  if(icon.hasClass('fa-angle-down')){
+		  icon.removeClass('fa-angle-down').addClass('fa-angle-up');
+	  }else{
+		  $(this).find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
+	  }
     })
 
     $('#select').on('change',function(){

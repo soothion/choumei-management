@@ -3,7 +3,7 @@
   <head>
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
-	  <script type="text/javascript" src="../../js/include.js"></script>
+	  <script type="text/javascript" src="/js/include.js"></script>
 	  <style type="text/css">
 		.tree li{
 			margin-bottom:15px;
@@ -47,30 +47,38 @@
 	<div class="wrapper" ajat="<%if(query.id){%>role/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>role/update/<%=data.id%><%}else{%>role/create<%}%>">
+			<div class="detail-operation">
+				<button type="button" class="btn" onclick="history.back()">取消</button>
+				<span class="space"></span>
+				<button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary" type="submit" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button>
+			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色名称</label>
 				<div class="control">
-					<input type="text" required name="name" value="<%=data.name||""%>" nospace>
+					<%if(data.name){%>
+					<%=data.name||""%>
+					<%}else{%>
+					<input type="text" required name="name" value="<%=data.name||""%>" nospace <%=data.status==3?"disabled":""%>>
+					<%}%>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门</label>
 				<div class="control">
-					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id||""%>" data-name="ddd" id="department">
-					</select>
+					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id||""%>"  id="department" <%=data.status==3?"disabled":""%>></select>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属城市</label>
 				<div class="control">
-					<select required name="city_id" class="select" ajat="list/city#domid=city&tempid=city-t&sid=<%=data.city_id%>" id="city">
+					<select required name="city_id" class="select" ajat="list/city#domid=city&tempid=city-t&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
 					</select>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色状态</label>
 				<div class="control">
-					<select required name="status" class="select" >
+					<select required name="status" class="select" <%=data.status==3?"disabled":""%>>
 						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
 						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
 						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
@@ -79,7 +87,7 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色说明</label>
-				<div class="control"><textarea required name="description"><%=data.description||""%></textarea></div>
+				<div class="control"><textarea required name="description" <%=data.status==3?"disabled":""%>><%=data.description||""%></textarea></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>配置权限</label>
@@ -90,17 +98,18 @@
 				}
 				sessionStorage.setItem("permissions",JSON.stringify(sids));
 				}%>
-				<div class="control" ajat="list/permission#domid=permission&tempid=permission-t" id="permission">
-					
+				<div class="control" ajat="list/permission#domid=permission&tempid=permission-t&status=<%=data.status%>" id="permission">					
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>信息备注</label>
-				<div class="control"><textarea  required name="note"><%=data.note||""%></textarea></div>
+				<label class="control-label" for="">信息备注</label>
+				<div class="control"><textarea <%=data.status==3?"disabled":""%>  name="note"><%=data.note||""%></textarea></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""></label>
-				<div class="control"><button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary" type="submit">提交</button></div>
+				<div class="control">
+					<button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary" type="submit" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button>
+				</div>
 			</div>
 		  </form>
 		  </script>
@@ -116,14 +125,33 @@
 		<%})%>
 	</script>
 	<script type="text/template" id="permission-t">
-		<ul class="tree">
-			<%
-				var sids=JSON.parse(sessionStorage.getItem("permissions"));
+		<%
+				var sids=JSON.parse(sessionStorage.getItem("permissions"))||[];
 				sessionStorage.removeItem("permissions");
 			%>
+		<ul class="tree">
+			<li class="super1" style="">
+				<input type="checkbox" id="tree0051" class="checkbox" checked disabled>
+				<label for="tree0051" style="margin-right:2px;"></label>
+				<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+				<label for="tree51">基本权限</label>
+				<ul class="child">
+					<li class="super2" style="display:inline-block;">
+						<input type="checkbox" id="tree0052" class="checkbox" checked disabled>
+						<label for="tree0052" style="margin-right:2px;"></label>
+						<label for="tree0052">默认首页</label>
+					</li>
+					
+					<li class="super2" style="display:inline-block;">
+						<input type="checkbox" id="tree0053" class="checkbox" checked disabled>
+						<label for="tree0053" style="margin-right:2px;"></label>
+						<label for="tree0053">修改信息</label>
+					</li>
+				</ul>
+			</li>
 			<%data.forEach(function(item1){%>
-			<li class="super1">
-				<input type="checkbox" id="tree<%=item1.id%>" <%=sids.indexOf(item1.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" />
+			<li class="super1" style="<%=!item1.child?"display:inline-block;":""%>">
+				<input type="checkbox" id="tree<%=item1.id%>" <%=sids.indexOf(item1.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item1.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
 				<label for="tree<%=item1.id%>" style="margin-right:2px;"></label>
 				<%if(item1.child&&item1.child.length>0){%>
 				<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
@@ -131,31 +159,31 @@
 				<label for="tree<%=item1.id%>"><%=item1.title%></label>
 				<ul class="child">
 					<%item1.child.forEach(function(item2){%>
-					<li class="super2">
-						<input type="checkbox" id="tree<%=item2.id%>" <%=sids.indexOf(item2.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item2.id%>"/>
+					<li class="super2"  style="<%=!item2.child?"display:inline-block;":""%>">
+						<input type="checkbox" id="tree<%=item2.id%>" <%=sids.indexOf(item2.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item2.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
 						<label for="tree<%=item2.id%>" style="margin-right:2px;"></label>
 						<%if(item2.child&&item2.child.length>0){%>
 						<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
 						<%}%>
 						<label for="tree<%=item2.id%>"><%=item2.title%></label>
 						<ul class="child">
-							<%item2.child.forEach(function(item3){%>
-							<li class="super3">
-								<input type="checkbox" id="tree<%=item3.id%>" <%=sids.indexOf(item3.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item3.id%>"/>
+							<%item2.child&&item2.child.forEach(function(item3){%>
+							<li class="super3" style="<%=!item3.child?"display:inline-block;":""%>">
+								<input type="checkbox" id="tree<%=item3.id%>" <%=sids.indexOf(item3.id)>-1?"checked":""%> class="checkbox" name="permissions" value="<%=item3.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
 								<label for="tree<%=item3.id%>" style="margin-right:2px;"></label>
 								<%if(item3.child&&item3.child.length>0){%>
 								<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
 								<%}%>
 								<label for="tree<%=item3.id%>"><%=item3.title%></label>
 								<ul class="child">
-									<li class="super4">
 									<%if(item3.child){%>
 									<%item3.child.forEach(function(item4){%>
-										<input type="checkbox" class="checkbox" id="tree<%=item4.id%>" <%=sids.indexOf(item4.id)>-1?"checked":""%> name="permissions" value="<%=item4.id%>"/>
+									<li class="super4" style="display:inline-block">
+										<input type="checkbox" class="checkbox" id="tree<%=item4.id%>" <%=sids.indexOf(item4.id)>-1?"checked":""%> name="permissions" value="<%=item4.id%>" <%=protocol.custom.status==3?"disabled":""%>/>
 										<label for="tree<%=item4.id%>"><%=item4.title%></label>
+									</li>
 									<%})%>
 									<%}%>
-									</li>
 								</ul>
 							</li>
 							<%})%>
@@ -177,16 +205,15 @@
 			});
 			var super4=$this.closest('ul').siblings('input')[0];
 			if(super4){
-				super4.checked=$this.closest('ul').find('input:checked').length==0?false:true;
+				super4.checked=$this.closest('ul').find('input:checked').length==0?super4.checked:true;
 				var super3=$(super4).closest('ul').siblings('input')[0];
 				if(super3){
-					super3.checked=$(super4).closest('ul').find('input:checked').length==0?false:true;
+					super3.checked=$(super4).closest('ul').find('input:checked').length==0?super3.checked:true;
 					var super2=$(super3).closest('ul').siblings('input')[0];
 					if(super2){
-						super2.checked=$(super3).closest('ul').find('input:checked').length==0?false:true;
+						super2.checked=$(super3).closest('ul').find('input:checked').length==0?super2.checked:true;
 					}
 				}
-				
 			}
 		})
 		

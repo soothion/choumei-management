@@ -25,6 +25,17 @@ Route::any('captcha', 'IndexController@captcha');
 Route::any('login', 'IndexController@login');
 Route::any('logout', 'IndexController@logout');
 
+//self模块
+Route::any('self/show',array(
+		'as'=>'self.show',
+		'uses'=>'SelfController@show'
+	));
+Route::any('self/update',array(
+		'as'=>'self.update',
+		'uses'=>'SelfController@update'
+	));
+		
+
 //列表模块
 Route::any('list/city',array(
 	'as'=>'list.city',
@@ -67,6 +78,9 @@ Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
 				'uses'=>'Merchant\SalonAccountController@getSalonName'
 	));		
 
+// 店铺消费验证  结算
+Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
+
 //权限管理后台接口
 Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 // Route::group(['middleware'], function(){
@@ -92,6 +106,7 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 			'as'=>'user.export',
 			'uses'=>'UserController@export'
 		));
+
 
 	//角色模块
 	Route::any('role/index',array(

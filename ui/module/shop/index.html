@@ -3,8 +3,8 @@
     <head>
       <meta charset="utf-8">
       <title>臭美管理后台</title>
-      <script type="text/javascript" src="../../js/include.js"></script>
-      <link rel="stylesheet" href="shop.css" />
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="/module/shop/shop.css" />
     </head>
     <body>
 
@@ -32,11 +32,9 @@
               <i class="fa fa-search"></i>
               </button>
             </div>
-            <span class="drop-menu drop-menu-right" id="dropMenu">
-              <a class="drop-menu-toggle btn" data-toggle-class="open">
+              <a class="btn" id="dropMenu">
               筛选条件 <i class="fa fa-angle-down"></i>
-              </a>
-            </span>      
+              </a>  
           </div>
 
           <div class="area-box" style="display:none">
@@ -125,7 +123,7 @@
               <tr>
                 <td><%=i+1%></td>
                 <td><%=row[i].sn%></td>
-                <td class="colswrap"><strong><%=row[i].salonname%></strong><p>所属商户：<%=row[i].name%></p></td>
+                <td class="colswrap"><strong><%=row[i].salonname%></strong><p class="weak">所属商户：<%=row[i].name%></p></td>
                 <td><%=typeName%></td>
                 <td><%=row[i].districtName%></td>
                 <td><%=row[i].zoneName%></td>

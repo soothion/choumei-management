@@ -148,7 +148,7 @@ class UserController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',$param['end']);
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 		//登录帐号筛选
 		if(isset($param['username'])&&$param['username']){
@@ -233,7 +233,19 @@ class UserController extends Controller{
 	{
 		$param = $this->param;
 		$query = Manager::with(['roles'=>function($q){
-			$q->lists('role_id');
+			$q->lists('role_id','name');
+		}]);
+
+		$query = $query->with(['department'=>function($q){
+			$q->lists('id','title');
+		}]);
+
+		$query = $query->with(['city'=>function($q){
+			$q->lists('id','title');
+		}]);		
+
+		$query = $query->with(['position'=>function($q){
+			$q->lists('id','title');
 		}]);
 
 		//角色筛选
@@ -267,13 +279,30 @@ class UserController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',$param['end']);
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+		}
+		//登录帐号筛选
+		if(isset($param['username'])&&$param['username']){
+			$keyword = '%'.$param['username'].'%';
+			$query = $query->where('username','like',$keyword);
+		}		
+		//姓名筛选
+		if(isset($param['name'])&&$param['name']){
+			$keyword = '%'.$param['name'].'%';
+			$query = $query->where('name','like',$keyword);
+		}
+		//角色名筛选
+		if(isset($param['role'])&&$param['role']){
+			$keyword = '%'.$param['role'].'%';
+			$query = $query->whereHas('roles',function($q) use($keyword){
+				$q->where('name','like',$keyword);
+			});
 		}
 
-		if(isset($param['keyword'])&&$param['keyword']){
-			$keyword = '%'.$param['keyword'].'%';
-			$query = $query->where('name','like',$keyword);
-			$query = $query->orWhere('username','like',$keyword);
+		//排序
+		if(isset($param['sort_key'])&&$param['sort_key']){
+			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
+			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
 		}
 
 		$result = $query->get()->toArray();
@@ -322,6 +351,8 @@ class UserController extends Controller{
 	{
 		$param = $this->param;
 		DB::beginTransaction();
+		if(Manager::where('username','=',$param['username'])->first())
+			return $this->error('用户名已存在');
 		$param['password'] = bcrypt($param['password']);
 		$user = Manager::create($param);
 		$role = 1;
@@ -339,7 +370,7 @@ class UserController extends Controller{
 		}
 		else
 		{
-			DB::rolleback();
+			DB::rollBack();
 			return $this->error('用户创建失败');
 		}
 	}
@@ -469,9 +500,6 @@ class UserController extends Controller{
 		$update_role = 1;
 		if(isset($param['password'])&&$param['password']){
 			$param['password'] = bcrypt($param['password']);
-			//当前用户修改自己密码需要提交原密码
-			if ($id==$this->user->id&&!Auth::attempt(array('username' => $user->username, 'password' => $this->param['old_password'])))
-				return $this->error('原密码错误');
 		}
 		if(isset($param['roles'])){
 			$roles = $param['roles'];
@@ -487,7 +515,7 @@ class UserController extends Controller{
 		}
 		else
 		{
-			DB::rolleback();
+			DB::rollBack();
 			return $this->error('用户更新失败');
 		}
 

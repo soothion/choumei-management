@@ -3,7 +3,7 @@
   <head>
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
-	  <script type="text/javascript" src="../../js/include.js"></script>
+	  <script type="text/javascript" src="/js/include.js"></script>
   </head>
   <body>
 	<div class="breadcrumb">
@@ -14,9 +14,9 @@
 		</div>
 		<hr />
 	</div>
-	<div class="wrapper" ajat="user/show/<%=session.user.uid%>#domid=form&tempid=form-t" id="form">
+	<div class="wrapper" ajat="self/show#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="user/update/<%=session.user.uid%>">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="self/update">
 			<div class="control-group">
 				<label class="control-label" for="">登录账号</label>
 				<div class="control">
@@ -78,13 +78,13 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>原密码</label>
 				<div class="control">
-					<input name="old_password" type="password" disabled required pattern="password" patternmsg="密码是6-20位字母和数字组合"/>
+					<input name="old_password" type="password" disabled required pattern="password" patternmsg="密码是6-20位字母或数字组合"/>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>新密码</label>
 				<div class="control">
-					<input name="password" id="password" type="password" disabled required pattern="password" patternmsg="密码是6-20位字母和数字组合"/>
+					<input name="password" id="password" type="password" disabled required pattern="password" patternmsg="密码是6-20位字母或数字组合"/>
 				</div>
 			</div>
 			<div class="control-group">
@@ -116,6 +116,16 @@
 		<%})%>
 	</script>
 	<script type="text/javascript">
+		/*
+		$('#form').on('_ready',function(){
+			$(this).find('form').off('success').on('success',function(e,data){
+				parent.lib.popup.result({
+					bool:true,
+					text:(data.msg||"数据更新成功"),
+					time:2000
+				});
+			})
+		});*/
 		$(document.body).on('change','#switch',function(){
 			if($(this).is(':checked')){
 				$('input[type="password"]').removeAttr('disabled');

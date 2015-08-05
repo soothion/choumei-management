@@ -3,25 +3,25 @@
   <head>
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
-	  <script type="text/javascript" src="../../js/include.js"></script>
-	  <link rel="stylesheet" href="login.css" />
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <link rel="stylesheet" href="/module/user/login.css" />
   </head>
   <body>
 		<div class="login">
 			<div class="flex-box">
 				<div class="flex-item">
 					<div class="slogan">
-						<img src="../../images/logo.png" alt="" /><br />
-						美发O2O领跑者
+						<img src="/images/logo.png" alt="" /><br />
+						<div class="fonts"></div>
 					</div>
 				</div>
-				<form action="" >
+				<form>
 					<h4 class="tc">臭美管理后台登录</h4>
 					<ul>
 						<div class="control-help"></div>
-						<li><input type="text" placeholder="帐号" id="account" autofocus="true" value="choumei" /></li>
-						<li><input type="password" placeholder="密码" id="password" value="cm123456"/></li>
-						<li><input type="text" class="code" placeholder="验证码" id="code" autocomplete="off" /> <a class="link"><img id="codeImage" /> 换一张</a></li>
+						<li><input type="text" placeholder="帐号" id="account" autofocus="true"/></li>
+						<li><input type="password" placeholder="密码" id="password"/></li>
+						<li><input type="text" class="code" placeholder="验证码" id="code" autocomplete="off"/> <a class="link"><img id="codeImage" /> 换一张</a></li>
 						<li><button type="submit" class="btn-primary">登录</button></li>
 					</ul>
 				</form>
@@ -29,7 +29,21 @@
 		</div>
 		<script type="text/javascript">
 			$(function(){
-				lib.popup.result=function(){}
+				var str="美发O2O领跑者 ";
+				var slogan=$('.slogan');
+				var i=0;
+				var fonts=slogan.find('.fonts');
+				var interval=setInterval(function(){
+					fonts.append('<span class="font">'+str.charAt(i)+'</span>');
+					i++;
+					if(i==str.length){
+						clearInterval(interval);
+					}
+					if(i==2){
+						slogan.find('img').addClass('fadeIn');
+					}
+				},130);
+				
 				function uuid(len, radix) {
 					var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 					var uuid = [],i,radix = radix || chars.length;
@@ -79,25 +93,23 @@
 						success:function(data){
 							if(data.result==1){
 								localStorage.setItem('token',data.data.token);
-								lib.setSession({user:{uid:data.data.uid,account:account}});
-								location.href='/module/index.html';
+								delete data.data.token;
+								data.data.account=account
+								lib.setSession({user:data.data});
+								localStorage.removeItem('access.data');
+								location.href='/index.html';
 							}else{
 								$('.btn-primary').text('登录');
 								help.show().text(data.msg);
 							}
-						}
+						},
+						done:function(){}
 					})
 					e.preventDefault();
 				});
-				/*
-				$('.slogan').on('click',function(){
-					parent.lib.popup.swiper({list:[
-						"http://www.sc.xinhuanet.com/content/2014-12/05/1113535463_14177557357041n.jpg",
-						"http://image.tianjimedia.com/uploadImages/2015/163/07/47ZL0H16XQS1_1000x500.jpg",
-						"http://c.hiphotos.baidu.com/image/pic/item/b03533fa828ba61e4a51302e4334970a304e5970.jpg",
-						"http://c.hiphotos.baidu.com/image/pic/item/38dbb6fd5266d0167b8bc222952bd40735fa352d.jpg"
-					],index:0});
-				})*/
+				if(lib.getSession()&&lib.getSession().account){
+					$('#account').val(lib.getSession().account);
+				}
 			});
 		</script>
   </body>

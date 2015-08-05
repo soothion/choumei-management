@@ -26,18 +26,19 @@ class SalonUsersSeeder extends Seeder
 				if($v->salonid)
 				{
 					$salonList = DB::table('salon')
-						->select(['salonid','merchantId'])
+						->select(['salonid','merchantId','status'])
 						->where("salonid",$v->salonid)
 						->where('merchantId', '!=', '0')
 						->first();
 					if($salonList)//修改普通管理员
 					{
+	
 						DB::table('salon_user')
 							->where('salon_user_id', $v->salon_user_id)
 							->update(
 									array(
 										"merchantId"=>$salonList->merchantId,
-										"status"=>1,
+										"status"=>$salonList->status,
 										"roleType"=>1,
 										"addTime"=>time(),
 									)
@@ -48,18 +49,28 @@ class SalonUsersSeeder extends Seeder
 				else
 				{
 					$salonListAdmin = DB::table('salon')
-						->select(['salonid','merchantId'])
+						->select(['salonid','merchantId','status'])
 						->where("puserid",$v->salon_user_id)
 						->where('merchantId', '!=', '0')
-						->first();
+						->get();
 					if($salonListAdmin)//修改超级管理员
 					{
+						$sStatus = 2;
+						foreach($salonListAdmin as $vt)
+						{
+							if($vt->status == 1)
+							{
+								$sStatus = 1;
+							}
+							$smerchantId = $vt->merchantId;
+						}
+						
 						DB::table('salon_user')
 							->where('salon_user_id', $v->salon_user_id)
 							->update(
 									array(
-										"merchantId"=>$salonListAdmin->merchantId,
-										"status"=>1,
+										"merchantId"=>$smerchantId,
+										"status"=>$sStatus,
 										"roleType"=>2,//超级管理员
 										"addTime"=>time(),
 									)

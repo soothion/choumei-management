@@ -3,8 +3,8 @@
     <head>
       <meta charset="utf-8">
       <title>臭美管理后台</title>
-      <script type="text/javascript" src="../../js/include.js"></script>
-      <link rel="stylesheet" href="shop.css" />   
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="/module/shop/shop.css" />   
     </head>
 
     <body>
@@ -23,7 +23,8 @@
         <div class="wrapper" id="table-wrapper">
             <script type="text/template" id="table-t">                
             <div class="btn-group">
-                <div style="float:right">                     
+                <div style="float:right">
+					<%if(query.type!="preview"){%>
                     <button data-slug="salon.endCooperation" class="btn" id="stop_cooperation_btn" salonid="<%=data.salonid%>" status="<%=data.salestatus%>">
                         <%=data.salestatus == 0 ? '恢复合作' : '终止合作'%> 
                     </button>
@@ -34,8 +35,13 @@
 					&nbsp;
                     <a href='add.html?type=edit' data-slug="salon.update">
                         <button class="btn">编辑</button>
-                    </a>  
-                </div>          
+                    </a>
+					&nbsp;
+					<button class="btn" type="button" onclick="history.back()">返回</button>
+					<%}else{%>					
+					<button class="btn" type="button" onclick="window.close()">关闭预览</button>
+					<%}%>
+                </div>
             </div>
                     
             <div class="flex-box">
@@ -80,7 +86,7 @@
                                             if(data.contractTime==0){
                                                 data.contractTime = "";
                                             } else if(!isNaN(data.contractTime)){
-                                                data.contractTime = lib.getDate(data.contractTime);
+                                                data.contractTime = lib.tools.getDate(data.contractTime);
                                             }
                                             %>
                                             <span class="contract-mr">日期：<%=data.contractTime%></span>
@@ -188,7 +194,7 @@
                                         if(data.setupTime==0){
                                             data.setupTime = "";
                                         }else if(!isNaN(data.setupTime)){
-                                            data.setupTime = lib.getDate(data.setupTime);
+                                            data.setupTime = lib.tools.getDate(data.setupTime);
                                         }
                                         %>
                                         <%=data.setupTime%>

@@ -3,16 +3,17 @@
   <head>
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
-	  <script type="text/javascript" src="../../js/include.js"></script>
+	  <script type="text/javascript" src="/js/include.js"></script>
 	  <style type="text/css">
 		table,td{
 			border-color:#fff!important;
 		}
 		table{
-			width:400px!important;
+			width:auto!important;
 		}
 		.table-detail tbody td:nth-child(odd){
-			width:100px;
+			width:70px;
+			min-width:0;
 		}
 	  </style>
   </head>
@@ -26,7 +27,7 @@
 		<hr />
 	</div>
 	<div class="wrapper">
-		<div class="table-detail" ajat="user/show/<%=session.user.uid%>#domid=detail&tempid=detail-t" id="detail">
+		<div class="table-detail" ajat="self/show#domid=detail&tempid=detail-t" id="detail">
 		<script type="text/template" id="detail-t">
 		<table>
 			<thead>

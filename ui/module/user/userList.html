@@ -7,7 +7,7 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <meta name="format-detection" content="telephone=no">
         <title>臭美管理后台</title>
-        <script type="text/javascript" src="../../js/include.js"></script>
+        <script type="text/javascript" src="/js/include.js"></script>
 
     </head>
     <body>
@@ -24,62 +24,53 @@
 		 
         </div>		
         <div class="wrapper">
-            <div class="flex-box">
-                <div class="flex-item">
-                    <form data-role="hash">
-                        
-                           <div class="input-group">
-							<select class="select" id="select"  >
-								<option value="1">登录账号</option>
-								<option value="2">角色名称</option>
-								<option value="3">用户姓名</option>
-							</select>
-							<input type="text" name="username" placeholder="请输入登录账号">
-							<input type="text" name="role" class="hide" placeholder="请输入角色名称">
-							<input type="text" name="name" class="hide" placeholder="请输入用户名称">
-							
-						</div>
-						<span class="space"></span>
-                            <label>所属部门</label>
-                             <select name="department_id" class="select" ajat-one="true" ajat="list/department#domid=department&tempid=department-t" id="department">
-							<script type="text/template" id="department-t">
-								<option value="">全部</option>
-								<%for(var i=0;i<data.length;i++){%>
-									<option value="<%=data[i].id%>"><%=data[i].title%></option>
-								<%}%>
-							</script>
-						</select>
-						
-						 
-							<span class="space"></span>
-                            <label>状态</label>
-                            <select class="select" name="status">
-							<option value="0">全部</option>
-                                <option value="1">正常</option>
-                                <option value="2">注销</option>
-                                <option value="3">停用</option>                             
-                            </select>
-							<span class="space"></span>
-                            <label>所属城市</label>
-                            <select class="select" name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=city-c" id ="city">
-                               <script type="text/template" id="city-c">
-							   <option value="">全部</option>
-							   <%for(var i=0;i<data.length;i++){%>
-							   <option value="<%=data[i].id%>"><%=data[i].title%></option>
-							   <%}%>
-							   </script>
-                            </select>
-							<span class="space"></span>
-                            添加时间
-							<span class="date-group">
-							<input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"/>
-							</span>
-                            <button class="btn">搜索</button>
-							</form>
-                          <form action="user/export" data-role="export"><button class="btn" type="submit" data-slug="user.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
-                                  
-                </div>              
-            </div>
+			<form data-role="hash">                       
+			   <div class="input-group">
+				<select class="select" id="select"  >
+					<option value="1">登录账号</option>
+					<option value="2">角色名称</option>
+					<option value="3">用户姓名</option>
+				</select>
+				<input type="text" name="username" placeholder="请输入登录账号">
+				<input type="text" name="role" class="hide" placeholder="请输入角色名称">
+				<input type="text" name="name" class="hide" placeholder="请输入用户名称">							
+			</div>
+			<span class="space"></span>
+				<label>所属部门</label>
+				 <select name="department_id" class="select" ajat-one="true" ajat="list/department#domid=department&tempid=department-t" id="department">
+				<script type="text/template" id="department-t">
+					<option value="">全部</option>
+					<%for(var i=0;i<data.length;i++){%>
+						<option value="<%=data[i].id%>"><%=data[i].title%></option>
+					<%}%>
+				</script>
+			</select>			 
+				<span class="space"></span>
+				<label>状态</label>
+			   <select name="status" class="select">
+				<option value="">全部</option>
+				<option value="1">正常</option>
+				<option value="2">停用</option>
+				<option value="3">注销</option></select>
+				<span class="space"></span>
+				<label>所属城市</label>
+				<select class="select" name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=city-c" id ="city">
+				   <script type="text/template" id="city-c">
+				   <option value="">全部</option>
+				   <%for(var i=0;i<data.length;i++){%>
+				   <option value="<%=data[i].id%>"><%=data[i].title%></option>
+				   <%}%>
+				   </script>
+				</select>
+				<span class="space"></span>
+				添加时间
+				<span class="date-group">
+				<input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"/>
+				</span>
+				<button class="btn" type="submit">搜索</button>
+				</form>
+			  <form action="user/export" data-role="export"><button class="btn" type="submit" data-slug="user.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+						  
            <div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
@@ -98,7 +89,7 @@
                         </tr>
                     </thead>
                 <tbody>
-				<%var status=["","正常","注销","停用"]%>
+				<%var status=["","正常","停用","注销"]%>
 				<%var data=data.data%>
 				<%for(var i=0;i<data.length;i++){%>
                  <tr>

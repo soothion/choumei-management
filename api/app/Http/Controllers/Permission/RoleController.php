@@ -109,7 +109,7 @@ class RoleController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',$param['end']);
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 
 		if(isset($param['keyword'])&&$param['keyword']){
@@ -187,7 +187,7 @@ class RoleController extends Controller{
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<=',$param['end']);
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 
 		if(isset($param['keyword'])&&$param['keyword']){
@@ -246,6 +246,8 @@ class RoleController extends Controller{
 	public function create()
 	{
 		$param = $this->param;
+		if(Role::where('name','=',$param['name'])->first())
+			return $this->error('角色名已存在');
 		DB::beginTransaction();
 		$role = Role::create($param);
 		$permission = 1;
@@ -263,7 +265,7 @@ class RoleController extends Controller{
 		}
 		else
 		{
-			DB::rolleback();
+			DB::rollBack();
 			return $this->error('error');
 		}
 	}
@@ -415,8 +417,11 @@ class RoleController extends Controller{
 		if(isset($param['permissions'])){
 			$permissions = $param['permissions'];
 			unset($param['permissions']);
-			$update_permission = $role->permissions()->sync($permissions);
 		}
+		else
+			$permissions = [];
+			$update_permission = $role->permissions()->sync($permissions);
+		
 		$update_role = $role->update($param);
 		if($update_permission&&$update_role){
 			DB::commit();
@@ -425,7 +430,7 @@ class RoleController extends Controller{
 		}
 		else
 		{
-			DB::rolleback();
+			DB::rollBack();
 			return $this->error('error');
 		}
 

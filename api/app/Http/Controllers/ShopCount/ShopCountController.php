@@ -8,6 +8,7 @@ namespace App\Http\Controllers\ShopCount;
 
 use App\Http\Controllers\Controller;
 use App\ShopCountApi;
+use App\ShopCount;
 
 class ShopCountController extends Controller
 {
@@ -32,7 +33,7 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
      * @apiSuccess {String} code 付款单号.
-     * @apiSuccess {Number} type 付款单类型 1:预付交易款 2:付代收交易款
+     * @apiSuccess {Number} type 付款单类型 1:付交易代收款  2:付交易代收款 3:交易代收款返还
      * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} cost_money 换算消费额.
@@ -119,7 +120,7 @@ class ShopCountController extends Controller
      * @apiParam {String} day   付款日期 (YYYY-MM-DD)
      * 
      * @apiSuccess {String} code 付款单号.
-     * @apiSuccess {Number} type 付款单类型 1:预付交易款 2:付代收交易款
+     * @apiSuccess {Number} type 付款单类型  1:付交易代收款  2:付交易代收款 3:交易代收款返还
      * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} cost_money 换算消费额.
@@ -253,7 +254,7 @@ class ShopCountController extends Controller
      * @apiParam {Number} id  id
      *
      * @apiSuccess {String} code 付款单号.
-     * @apiSuccess {Number} type 付款单类型 1:预付交易款 2:付代收交易款
+     * @apiSuccess {Number} type 付款单类型  1:付交易代收款  2:付交易代收款 3:交易代收款返还
      * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} cost_money 换算消费额.
@@ -385,8 +386,9 @@ class ShopCountController extends Controller
      *		}
      */
     public function destroy($id)
-    {
-        $ret = ShopCountApi::deletePrepay($id);
+    {        
+        //是 ShopCount 不是 ShopCountApi  不要改回去了
+        $ret = ShopCount::deletePrepay($id);
         if($ret)
         {
             return $this->success(['ret'=>1]);
@@ -624,8 +626,48 @@ class ShopCountController extends Controller
     }
     
     /**
-     * 订单结算相关
-     */
+     * @api {post} /shop_count/count_order 10.订单结算相关 (外部调用)
+     * @apiName count_order
+     * @apiGroup ShopCount
+     *
+     * @apiParam {Number} type  1 订单 2 赏金单
+     * @apiParam {String} ordersn  订单单号,赏金单单号(多个用英文逗号","隔开)
+     * @apiParam {String} token  加密验证指纹
+     *
+     * @apiSuccess {Array} success 成功结算的订单号
+     * @apiSuccess {Array} already 已经结算过的订单号
+     * @apiSuccess {Number} type 结算的类型 同传入的type
+     *
+     * @apiSuccessExample Success-Response:
+     *      {
+     *           "result": 1,
+     *           "data": {
+     *               "success": [
+     *                   "33923619970",
+     *                   "33924964189",
+     *                   "33927676599",
+     *                   "33928797449",
+     *                   "33929103073",
+     *                   "33929641274",
+     *                   "33929787504",
+     *                   "33930191013",
+     *                   "33930816691",
+     *                   "33994190861"
+     *               ],
+     *               "type": 2,
+     *               "already": [
+     *
+     *               ]
+     *           }
+     *       }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "错误信息"
+     *		}
+     */    
     public function countOrder()
     {
         $param = $this->parameters([
@@ -639,7 +681,15 @@ class ShopCountController extends Controller
             return $this->error("Unauthorized",401);
         }
         $orders = explode(",", $param['ordersn']);
-        $res = ShopCountApi::countOrder($orders);
+        $res = null;
+        if ($param['type'] == 1)
+        {
+            $res = ShopCountApi::countOrder($orders);
+        }
+        else if($param['type'] == 2)
+        {
+            $res = ShopCountApi::countBounty($orders);
+        }
         return $this->success($res);
     }
 }

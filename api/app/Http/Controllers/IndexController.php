@@ -11,12 +11,40 @@ use Response;
 use Event;
 use Illuminate\Support\Facades\Redis as Redis;
 use App\Permission;
+use DB;
+use App\Role;
 
 class IndexController extends Controller{
 
 
 	public function test(){
-		return Permission::lists('slug');
+		$id=19;
+		$param = $this->param;
+		DB::beginTransaction();
+		$role = Role::find($id);
+		$update_permission = 1;
+
+		if(isset($param['permissions'])){
+			$permissions = $param['permissions'];
+			unset($param['permissions']);
+			if(empty($permissions)){
+				$update_permission = $role->permissions()->delete();
+			}
+			else
+				return $permissions;
+				$update_permission = $role->permissions()->sync([]);
+		}
+		$update_role = $role->update($param);
+		if($update_permission&&$update_role){
+			DB::commit();
+			// Event::fire('role.update',array($role));
+			return $this->success();
+		}
+		else
+		{
+			DB::rollBack();
+			return $this->error('error');
+		}
 	}
 
 
@@ -72,16 +100,20 @@ class IndexController extends Controller{
 	 */
 	public function login(){
 		$captcha = new Captcha;
-		$validator = $captcha::check($this->param['captcha']);
+		$validator = $captcha::check(strtolower($this->param['captcha']));
         if (!$validator)
 	       return $this->error('验证码错误');
 		if (Auth::attempt(array('username' => $this->param['username'], 'password' => $this->param['password'])))
 		{       
     		$user = Manager::where('username',$this->param['username'])->firstOrFail();
+    		if($user->status==2)
+    			return $this->error('当前帐户已停用'); 
+    		if($user->status==3)
+    			return $this->error('当前帐户已注销'); 
     		$this->user = $user;
     		$token = JWTAuth::fromUser($user);
     		Event::fire('login',$user);
-    		return $this->success(['token'=>$token,'uid'=>$user->id]);
+    		return $this->success(['token'=>$token,'uid'=>$user->id,'name'=>$user->name,'username'=>$user->username]);
     	}
         else
         {
@@ -115,6 +147,8 @@ class IndexController extends Controller{
 		if(JWTAuth::invalidate($token))
 		{
 			Event::fire('logout',$user);
+			$redis = Redis::connection();
+			$redis->del('permissions:'.$token);
 			return $this->success();
 		}
 		return $this->error('退出失败');

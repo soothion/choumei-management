@@ -3,9 +3,9 @@
     <head>
       <meta charset="utf-8">
       <title>臭美管理后台</title>
-      <script type="text/javascript" src="../../js/include.js"></script>
-      <script type="text/javascript" src="../../js/validator.js"></script>
-      <link rel="stylesheet" href="shop.css" />    
+      <script type="text/javascript" src="/js/include.js"></script>
+      <script type="text/javascript" src="/js/validator.js"></script>
+      <link rel="stylesheet" href="/module/shop/shop.css" />    
     </head>
     <body>
         <div class="breadcrumb">
@@ -13,28 +13,38 @@
             <span>&gt;</span>
             <a href="index.html">店铺列表</a>
             <span>&gt;</span><%=query.type=="add"?"新增店铺":"编辑店铺"%>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4><%=query.type=="add" ? "新增店铺" : "编辑店铺"%></h4>
+				</div>
+			</div>
+			<hr />
         </div>
 
         <div class="wrapper">
-            <ul class="nav-step flex-box">
-                <li class="flex-item">
-                    <a href="add.html">
-                        <i class="fa fa-check-circle"></i>
-                        <span>1.店铺基本信息</span>
-                    </a>
-                </li>
-                <li class="flex-item">
-                    <a href="bank.html">
-                        <i class="fa fa-check-circle"></i>
-                        <span>2.银行账号信息</span>
-                    </a>
-                </li>
-                <li class="flex-item active"><span class="arrow">3.准入评估信息</span></li>
-                <li class="flex-item"><i></i><span>4.附件上传</span></li>
-            </ul>
-
-            <form novalidate="" class="form-vertical" data-role="form" style="margin-top:20px" id="form">
-                <script type="text/template" id="form-t">             
+            <form novalidate="" class="form-vertical" data-role="form" id="form">
+                <script type="text/template" id="form-t">
+					<div class="detail-operation">
+						<button type="button" class="btn" onclick="history.back()">取消</button>
+						<span class="space"></span>
+						<button class="btn-primary">提交</button>
+					</div>
+					<ul class="nav-step flex-box">
+						<li class="flex-item">
+							<a href="add.html">
+								<i class="fa fa-check-circle"></i>
+								<span>1.店铺基本信息</span>
+							</a>
+						</li>
+						<li class="flex-item">
+							<a href="bank.html">
+								<i class="fa fa-check-circle"></i>
+								<span>2.银行账号信息</span>
+							</a>
+						</li>
+						<li class="flex-item active"><span class="arrow">3.准入评估信息</span></li>
+						<li class="flex-item"><i></i><span>4.附件上传</span></li>
+					</ul>
                    <div>
                        <p><strong>店铺信息</strong></p>
                        <p class="border-dash"></p>

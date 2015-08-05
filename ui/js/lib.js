@@ -1,4 +1,5 @@
 ﻿(function () {
+	jQuery.support.cors = true;
 	seajs.config({
 		'map': [
 			[ /^(.*\.(?:css|js))(.*)$/i, '$1?'+cfg.version ]
@@ -6,6 +7,52 @@
 	});
 	EJS.ext = '.html?v=' + cfg.version;
     var lib = {
+		tools:{
+			getDate:function(time){
+				var date= time ? new Date(time*1000) : new Date();
+				return date.getFullYear()+"-"+(date.getMonth()<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
+			},
+			parseQuery: function (str) {//解析字符串的参数
+				var ret = {},reg = /([^?=&]+)=([^&]+)/ig,match;
+				while (( match = reg.exec(str)) != null) {
+					ret[match[1]] = decodeURIComponent(match[2]);
+				}
+				return ret;
+			},
+			browser:function(){
+				var ua=navigator.userAgent;
+				return {
+					moible:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
+					android:/(android)/i.test(ua),
+					ios:/(iphone|ipod|ipad)/i.test(ua),
+					winphone:/(windows phone)/i.test(ua),
+					webkit:/webkit/i.test(ua)
+				}
+			},
+			getFormData:function($form){
+				var data={};
+				var fields=$form.serializeArray();
+				$.each(fields,function(i,field){
+					if(!data[field.name]){
+						if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
+							data[field.name]=[];
+							if($.trim(field.value)){
+								data[field.name].push($.trim(field.value));
+							}
+						}else{
+							data[field.name]=$.trim(field.value);
+						}
+					}else{
+						if(data[field.name] instanceof Array){
+							if($.trim(field.value)){
+								data[field.name].push($.trim(field.value));
+							}
+						}
+					}
+				});
+				return data;
+			}
+		},
         ajax: function (options) {
 			options.url=cfg.getHost()+options.url;
 			if(!options.data){
@@ -14,21 +61,26 @@
 			if(localStorage.getItem('token')&&options.url.indexOf('/login')==-1){
 				options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
 			}
-			var promise=$.ajax(options);
-			promise.fail(function(xhr, status){
-				var msg = "请求失败，请稍后再试!";
-				if (status === "parseerror") msg = "数据响应格式异常!";
-				if (status === "timeout")    msg = "请求超时，请稍后再试!";
-				if (status === "offline")    msg = "网络异常，请稍后再试!";
-				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
-			}).done(function(data){
+			options.timeout=6000;
+			var done=function(data){
 				//code 异常处理
 				if(data.result==0){
 					if(data.code==402){
-						parent.lib.popup.result({bool:false,text:"没有权限操作",time:2000});
+						parent.lib.popup.result({
+							text:"出现异常：没有权限",
+							bool:false,
+							time:2000
+						});
+						/*
+						parent.lib.popup.confirm({
+							text:"您的权限已经被修改！需要刷新页面更新权限",
+							define:function(){
+								parent.location.reload();
+							}
+						});*/
 					}else{
 						if(data.code==401||data.code==400){
-							data.msg="token失效，请重新登录";
+							data.msg="登录超时，请重新登录";
 						}
 						parent.lib.popup.result({
 							text:"出现异常："+data.msg,
@@ -42,7 +94,18 @@
 						});
 					}
 				}
-			});
+			}
+			if(options.done){
+				done=options.done;
+			}
+			var promise=$.ajax(options);
+			promise.fail(function(xhr, status){
+				var msg = "请求失败，请稍后再试!";
+				if (status === "parseerror") msg = "数据响应格式异常!";
+				if (status === "timeout")    msg = "请求超时，请稍后再试!";
+				if (status === "offline")    msg = "网络异常，请稍后再试!";
+				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
+			}).done(done);
             return promise;
         },
 		getSession:function(){
@@ -51,10 +114,6 @@
 		setSession:function(obj){
 			var session=$.extend(this.getSession(),obj);
 			localStorage.setItem('session',JSON.stringify(session));
-		},
-		getDate:function(time){
-			var date= time ? new Date(time*1000) : new Date();
-			return date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 		},
         ejs:{
             render:function(temp,data){
@@ -70,15 +129,8 @@
         ajat: function (_protocol) {
             return new Ajat(_protocol);
         },
-        parseQuery: function (str) {//解析字符串的参数
-            var ret = {},reg = /([^?=&]+)=([^&]+)/ig,match;
-            while (( match = reg.exec(str)) != null) {
-                ret[match[1]] = decodeURIComponent(match[2]);
-            }
-            return ret;
-        },
         popup: {//弹出层
-            path:'_popup.js',
+            path:'/js/_popup.js',
             alert: function (options) {
                 seajs.use(this.path,function(a){
                     a.alert(options);
@@ -139,43 +191,17 @@
 				this.tips(options)
 			}
         },
-		browser:function(){
-			var ua=navigator.userAgent;
-			return {
-				moible:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
-				android:/(android)/i.test(ua),
-				ios:/(iphone|ipod|ipad)/i.test(ua),
-				winphone:/(windows phone)/i.test(ua),
-				webkit:/webkit/i.test(ua)
-			}
-		},
 		getFormData:function($form){
-			var data={};
-			var fields=$form.serializeArray();
-			$.each(fields,function(i,field){
-				if(!data[field.name]){
-					data[field.name]=$.trim(field.value);
-					if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
-						data[field.name]=[$.trim(field.value)];
-					}
-				}else{
-					if(data[field.name] instanceof Array){
-						data[field.name].push($.trim(field.value));
-					}
-				}
-				
-			});
-			
-			return data;
+			return this.tools.getFormData($form);
 		},
         init:function(){
 			lib.query={};
 			if(location.search){
-				$.extend(lib.query,this.parseQuery(location.search.replace('?','')))
+				$.extend(lib.query,this.tools.parseQuery(location.search.replace('?','')))
 				lib.query._=location.search.replace('?','');
 			}
 			if(location.hash){
-				$.extend(lib.query,this.parseQuery(location.hash.replace('#','')))
+				$.extend(lib.query,this.tools.parseQuery(location.hash.replace('#','')))
 				lib.query._=location.hash.replace('#','');
 			}
         }
@@ -226,15 +252,15 @@
                 var arr = this._protocol.split(/\?|#/);
                 if(arr.length==3){
                     this.protocol.url = arr[0];
-                    this.protocol.query = lib.parseQuery(arr[1]);
-                    this.protocol.custom = lib.parseQuery(arr[2]);
+                    this.protocol.query = lib.tools.parseQuery(arr[1]);
+                    this.protocol.custom = lib.tools.parseQuery(arr[2]);
                 }else if(arr.length==2){
 					if(arr[0].indexOf('/')>-1){
 						this.protocol.url=arr[0];
 					}else{
-						this.protocol.query=lib.parseQuery(arr[0])
+						this.protocol.query=lib.tools.parseQuery(arr[0])
 					}
-                    this.protocol.custom = lib.parseQuery(arr[1]);
+                    this.protocol.custom = lib.tools.parseQuery(arr[1]);
                 }
                 this.dom=document.getElementById(this.protocol.custom.domid);
             }
@@ -407,7 +433,7 @@
 			email:'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
 			mobile:'^1[0-9]{10}$',
 			phone:'^\\d{7,12}$',
-			password:'^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$',
+			password:'^[0-9A-Za-z]{6,20}$',
 			float:function(val){
                 // 表达式验证有问题：2. ， 2....
 				//var reg=new RegExp('^[+-]?([0-9]*\.?[0-9]+|[0-9]+\.?[0-9]*)([eE][+-]?[0-9]+)?$');
@@ -507,7 +533,8 @@
 								self.validate(true);
 							}
 						}
-					}
+					},
+					done:function(){}
 				});
 				return;
 			}
@@ -595,7 +622,7 @@
 		fail:function(data){
 			parent.lib.popup.tips({
 				bool:false,
-				text:(data.msg||"数据更新失败"),
+				text:(data&&data.msg?data.msg:"数据更新失败"),
 				time:2000
 			});
 		},
@@ -618,7 +645,7 @@
 				self.fail(data);
 			}).on('input',this.selector,function(e){
 				var $this=$(this);
-				if($this.attr('nospace')!==undefined){
+				if($this.attr('nospace')!==undefined&&/\s+/g.test($this.val())){
 					$this.val($this.val().replace(/\s+/g,''));
 				}
 			});
@@ -631,7 +658,7 @@
 			if($form.attr('disabled'))return;
 			var help=$form.find('.control-help:visible');
 			if(help.length==0){
-				var data=lib.getFormData($form);
+				var data=lib.tools.getFormData($form);
 				$form.trigger('save',data);
 			}else{
 				$('html,body').animate({scrollTop:help.eq(0).offset().top-50},200);
@@ -659,7 +686,6 @@
 		}
 	}
 	lib.Form=Form;
-	
 	$(document).one('mouseenter','form[data-role="form"]',function(){
 		new lib.Form(this);
 	}).one('touchstart','form[data-role="form"]',function(){

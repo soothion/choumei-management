@@ -1,5 +1,5 @@
 ﻿var cfg={
-	version:'1.0',
+	version:'1.1',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
 	dev:'http://192.168.13.46:8090/',
@@ -36,3 +36,4 @@ document.writeln('<script type="text/javascript" src="/js/ejs.js?v='+cfg.version
 document.writeln('<script type="text/javascript" src="/js/lib.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/access.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/admin.js?v='+cfg.version+'"></script>');
+document.writeln('<!--[if IE 9]><script type="text/javascript">var ie9=true;</script><![endif]-->');

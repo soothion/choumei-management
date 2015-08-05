@@ -44,6 +44,7 @@ class Salon extends Model {
             ->orderBy($orderName,$order)
             ;
         $query =  $query ->where("salestatus","!=","2");//剔除删除
+       // $query =  $query ->where("m.status","!=","2");//剔除商户删除
         if(isset($where["shopType"]))
         {
         	$query =  $query ->where("shopType","=",$where["shopType"]);
@@ -121,10 +122,12 @@ class Salon extends Model {
 		if($type == 1)
 		{
 			$save["salestatus"] = 0;
+			$save["status"] = 2;
 		}
 		else
 		{
 			$save["salestatus"] = 1;
+			$save["status"] = 1;
 		}
 		DB::beginTransaction();
 		$affectid =  DB::table('salon')
@@ -185,8 +188,10 @@ class Salon extends Model {
 	 * */
 	public static function dodel($salonid)
 	{
-		$result = DB::table('salon')->select(["salestatus"])->where('salonid', $salonid)->first();
+		$result = DB::table('salon')->select(["salestatus","merchantId"])->where('salonid', $salonid)->first();
 		$rs = (array)$result;	
+		
+		
 		if(!$rs)
 		{
 			return -2;
@@ -199,6 +204,24 @@ class Salon extends Model {
 		$affectid =  DB::table('salon')
             ->where('salonid', $salonid)
             ->update(array("salestatus"=>2,"status"=>3));
+		
+		SalonUser::where(['salonid'=>$salonid])->update(['status'=>3]);//删除普通用户账号
+		
+		$merchantId = $rs["merchantId"];
+		$usersCount = DB::table('salon_user')
+		->where('merchantId',"=" ,$merchantId)
+		->where('salonid',"!=" ,0)
+		->where('status',"=" ,1)
+		->count();
+		if(!$usersCount)
+		{
+			DB::table('salon_user')//删除账号  超级管理员
+			->where('salonid',"=" ,0)
+			->where('merchantId',"=" ,$merchantId)
+			->update(['status'=>3]);
+		}
+		
+		
 		return $affectid;
 	}
 	

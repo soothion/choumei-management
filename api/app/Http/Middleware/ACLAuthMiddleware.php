@@ -17,9 +17,9 @@ class ACLauthMiddleware
     {
 
         $user = JWTAuth::parseToken()->authenticate();
-
         
         $permission = Route::currentRouteName();
+
         if(!$user->can($permission))
             throw new \Exception("unauthorized",402);
             

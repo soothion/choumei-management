@@ -7,37 +7,32 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <meta name="format-detection" content="telephone=no">
         <title>臭美管理后台</title>
-        <script type="text/javascript" src="../../js/include.js"></script>
+        <script type="text/javascript" src="/js/include.js"></script>
     </head>
     <body>
         <div class="breadcrumb">
-           <a>系统管理 </a><span>&gt;</span><a href="logList.html">日志管理</a>
+           <a>系统管理 </a><span>&gt;</span><a href="logList.html">系统日志</a>
 		   <div class="flex-box">
 			<div class="flex-item">
-				<h4>日志管理</h4>
-			</div>
-			 
+				<h4>系统日志</h4>
+			</div>	 
 		</div>
         </div>
         <div class="wrapper">
-            <div class="flex-box">
-                <div class="flex-item">
-                    <form data-role="hash">
-                            <input type="text" placeholder="请输入登陆账号" name="username">
-							<span class="space"></span>
-							 <label>操作对象</label>
-							<input type="text" placeholder="操作对象名称" name="object">
-							<span class="space"></span>                           
-							<span class="space"></span>
-                            添加时间 
-							<span class="date-group">
-							<input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"/>
-							</span>
-                            <button class="btn">搜索</button>
-                    </form>
-						<form action="log/export" data-role="export"><button class="btn" type="submit" data-slug="log.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
-                </div>               
-            </div>
+			<form data-role="hash">
+				<input type="text" placeholder="请输入登陆账号" name="username">
+				<span class="space"></span>
+				 <label>操作对象</label>
+				<input type="text" placeholder="操作对象名称" name="object">
+				<span class="space"></span>                           
+				<span class="space"></span>
+				操作时间 
+				<span class="date-group">
+				<input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"/>
+				</span>
+				<button class="btn" type="submit">搜索</button>
+			</form>
+			<form action="log/export" data-role="export"><button class="btn" type="submit" data-slug="log.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
             <div class="table" ajat="log/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
@@ -49,7 +44,7 @@
                             <th>操作模块</th>
                             <th>操作对象</th>
                             <th>操作ip</th>
-                            <th class="sort">添加时间</th>
+                            <th class="sort">操作时间</th>
                         </tr>
                     </thead>
                 <tbody>

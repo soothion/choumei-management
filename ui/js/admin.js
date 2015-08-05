@@ -1,4 +1,5 @@
 ﻿(function(){
+	parent.lib.popup.close();
 	lib.ajatCount=0;
 	lib.ajat=function (_protocol) {
 		lib.ajatCount++;
@@ -8,7 +9,7 @@
 		lib.ajatCount--;
 		if(lib.ajatCount==0){
 			parent.$('body').trigger('loadingend');
-			$(document.body).off('_ready',lib.loadingend);
+			$(document.body).trigger('asynhashform');
 		}
 	}
 	lib.Ajat.before=function(){
@@ -19,16 +20,24 @@
 			parent.$('body').trigger('loading');
 		}
 	}
+	lib.fullpage=function(bool){
+		var page=$('#page');
+		if(bool){
+			page.addClass('full');
+		}else{
+			page.removeClass('full');
+		}
+	}
 })();
 $(function(){
 	/**渲染面包屑**/
 	var breadcrumb=$('.breadcrumb');
 	if(breadcrumb.length==1){
-		breadcrumb.html(lib.ejs.render({text:breadcrumb.html().replace(/%&gt;/g,'%>').replace(/&lt;%/g,'<%')},{}))
+		breadcrumb.html(lib.ejs.render({text:breadcrumb.html().replace(/%&gt;/g,'%>').replace(/&lt;%/g,'<%')},{}));
 	}
 	/**hash和加载进度条**/
 	var $body=$(document.body);
-	lib.hashchange=function(obj){
+	lib.tools.hashchange=function(obj){
 		var temphash=location.hash;
 		var query=$.extend({},lib.query,obj);
 		delete query._;
@@ -46,35 +55,57 @@ $(function(){
 		lib.init();
 		lib.Ajat.run();
 		$('html,body').animate({scrollTop:0},200);
-		$body.on('_ready',lib.loadingend);
 	});
 	if($('[ajat]').length==0){
 		parent.$('body').trigger('loadingend');
-		$(document.body).off('_ready',lib.loadingend);
 	}
-		
+	/**同步hash查询条件**/
+	$body.one('asynhashform',function(){
+		var hashForm=$('form[data-role="hash"]');
+		for(var name in lib.query){
+			hashForm.find('select[name="'+name+'"]').val(lib.query[name]);
+			hashForm.find('input[name="'+name+'"]').each(function(){
+				var $this=$(this);
+				if($this.attr('type')=="checkbox"||$this.attr('type')=="radio"){
+					if($this.val()==lib.query[name]){
+						this.checked=true;
+					}
+				}else{
+					$this.val(lib.query[name]);
+				}
+			});
+		}
+	});
 	$body.on('submit','form[data-role="hash"]',function(e){//表单submit提交
 		$(this).trigger('hash');
 		e.stopPropagation();
 		e.preventDefault();
 	}).on('hash','form[data-role="hash"]',function(e){//表单自定义hash提交
-		var data=lib.getFormData($(this));
+		var data=lib.tools.getFormData($(this));
 		if(data.page===undefined){
 			data.page=1;
+			//清除排序条件
+			if(lib.query.sort_key){
+				data.sort_key="";
+			}
+			if(lib.query.sort_type){
+				data.sort_type="";
+			}
 		}
-		if(lib.hashchange(data)){
+		if(lib.tools.hashchange(data)){
 			$(window).trigger('hashchange');
 		}
 	}).on('click','a[data-role="hash"]',function(e){//链接hash提交
-		var query=lib.parseQuery($(this).attr('href').replace('#',''));
-		if(lib.hashchange(query)){
+		var query=lib.tools.parseQuery($(this).attr('href').replace('#',''));
+		if(lib.tools.hashchange(query)){
 			$(window).trigger('hashchange');
 		}
 		e.preventDefault();
 	}).on('click','label[data-role="hash"]',function(e){//标签hash提交
 		$(this).closest('form[data-role="hash"]').submit();
 	}).on('submit','form[data-role="export"]',function(e){//导出功能
-		window.open(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#'));
+		console.log(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#',''));
+		window.open(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#',''));
 		e.preventDefault();
 	}).on('submit','form[data-role="remove"]',function(e){//删除提交
 		var $this=$(this);
@@ -91,7 +122,8 @@ $(function(){
 						time:2000,
 						define:function(){
 							if(data.result==1){
-								$this.closest('tr').remove();
+								$this.trigger('remove');//触发remove事件
+							    $this.closest('tr').remove();
 							}
 						}
 					});
@@ -101,7 +133,7 @@ $(function(){
 		var title=$this.attr('data-title');
 		if(title!=='false'){
 			parent.lib.popup.confirm({text:(title||'确认删除此数据吗'),define:function(){
-				postRemove();
+				postRemove();			 
 			}})
 		}else{
 			postRemove();
@@ -124,6 +156,10 @@ $(function(){
 		var $this=$(this);
 		$this.siblings('input[data-role="end"]').attr('min',$this.val());
 	});
+	/**日期禁止输入**/
+	$body.on('keypress','input[type="date"]',function(e){
+		e.preventDefault();
+	})
 	/**自动补全**/
 	$body.on('input','input[ajat-complete]',function(){//自动补全输入事件
 		var $this=$(this);
@@ -208,13 +244,16 @@ $(function(){
 	});
 	/**权限控制**/
 	if(parent.access){
-		parent.access.control(document.body);
+		access.control(document.body);
 	}
 	$body.on('_ready',function(e){
-		parent.access.control(e.target);
+		access.control(e.target);
 	});
 	/**日期控件修正**/
-	if(!lib.browser().webkit){
+	if(!lib.tools.browser().webkit){
+		if(!location.origin){
+			location.origin="http://"+location.host;
+		}
 		seajs.use([location.origin+'/laydate/laydate.js']);
 		$body.on('focus','input[type=date]',function(e){
 			$(this).attr('readonly',true);
@@ -231,6 +270,9 @@ $(function(){
 			};
 			laydate(options);			
 		});
+	}
+	if(window.ie9){
+		$(document.body).addClass("ie9");
 	}
 });    	
 	

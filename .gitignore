@@ -2,3 +2,4 @@ api/composer.lock
 api/vendor/
 api/.env
 api/public/doc/
+update.sh

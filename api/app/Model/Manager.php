@@ -7,6 +7,8 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Kodeine\Acl\Traits\HasRole;
 use App\Permission;
+use Illuminate\Support\Facades\Redis as Redis;
+use JWTAuth;
 
 class Manager extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -70,23 +72,28 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
      */
     public function getPermissions()
     {
-        // user permissions overridden from role.
-        $permissions = [];
+        //先从redis里读取
+        $redis = Redis::connection();
+        $token = JWTAuth::getToken();
+        if($permissions = $redis->get('permissions:'.$token))
+            return unserialize($permissions);
 
-        // permissions based on role.
-        // more permissive permission wins
-        // if user has multiple roles we keep
-        // true values.
+        $permissions = [];
         foreach ($this->roles as $role) {
         	if($role->status!=1)
         		continue;
             if($role->id==1)
-                return Permission::lists('slug')->toArray();
+            {
+                $permissions = Permission::where('status',1)->lists('slug')->toArray();
+                break;
+            }
+                
             foreach ($role->permissions->toArray() as $permission) {
-                $permissions[] = $permission['slug'];  
+                if($permission['status']==1)
+                    $permissions[] = $permission['slug'];  
             }
         }
-
+        $redis->set('permissions:'.$token,serialize($permissions));
         return $permissions;
     }
 

@@ -3,7 +3,7 @@
   <head>
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
-	  <script type="text/javascript" src="../../js/include.js"></script>
+	  <script type="text/javascript" src="/js/include.js"></script>
   </head>
   <body>
 	<div class="breadcrumb">
@@ -18,6 +18,11 @@
 	<div class="wrapper" ajat="<%if(query.id){%>merchant/getMerchantList?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%=query._?"merchant/update":"merchant/save"%>">
+			<div class="detail-operation">
+				<button class="btn" onclick="history.back()" type="button">取消</button>
+				<span class="space"></span>
+				<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>" type="submit">提交</button>
+			</div>
 			<input type="hidden" name="id" value="<%=data.id||""%>">
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>商户编号</label>
@@ -77,7 +82,12 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""></label>
-				<div class="control"><button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>" type="submit">提交</button></div>
+				<div class="control">
+					<%localStorage.setItem("preview",JSON.stringify(data));%>
+					<button class="btn preview" type="button">预览</button>
+					<span class="space"></span>
+					<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>" type="submit">提交</button>
+				</div>
 			</div>
 		</form>
 		</script>
@@ -89,6 +99,12 @@
 			if($(this).val().length==4){
 				$('.phone-last').focus();
 			}
+		});
+		$(document).on('click','.preview',function(){
+			var data=lib.tools.getFormData($(this).closest('form'));
+			data=$.extend(JSON.parse(localStorage.getItem("preview")),data);
+			localStorage.setItem('preview',JSON.stringify(data));
+			window.open("detail.html?preview=preview");
 		});
 	</script>
   </body>
