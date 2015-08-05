@@ -246,6 +246,8 @@ class RoleController extends Controller{
 	public function create()
 	{
 		$param = $this->param;
+		if(Role::where('name','=',$param['name'])->first())
+			return $this->error('角色名已存在');
 		DB::beginTransaction();
 		$role = Role::create($param);
 		$permission = 1;
