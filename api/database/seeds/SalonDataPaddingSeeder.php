@@ -41,7 +41,11 @@ class SalonDataPaddingSeeder extends Seeder
 					$save["sn"] = iconv("gbk","UTF-8",$line[4]);//店铺编号
 					$save["bargainno"] = iconv("gbk","UTF-8",$line[23]);//合同编号
 					$save["corporateName"] = iconv("gbk","UTF-8",$line[25]);//法人代表
-					$save["corporateTel"] = iconv("gbk","UTF-8",$line[26]);//法人电话					
+					$save["corporateTel"] = iconv("gbk","UTF-8",$line[26]);//法人电话	
+					$save["bcontacts"] = iconv("gbk","UTF-8",$line[27]);//联系人
+					$save["phone"] = iconv("gbk","UTF-8",$line[29]);//联系手机
+					$save["tel"] = iconv("gbk","UTF-8",$line[28]);//联系电话  -商家电话号码	
+					
 					$contractTimeArr = explode("-", iconv("gbk","UTF-8",$line[9]));
 					$contractTime = strtotime($contractTimeArr[0]);
 					$save["contractTime"] = $contractTime;//合同日期
