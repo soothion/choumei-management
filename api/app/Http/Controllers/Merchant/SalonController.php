@@ -9,6 +9,7 @@ use App\Merchant;
 use App\SalonInfo;
 use App\Dividend;
 use App\Town;
+use App\SalonUser;
 
 
 class SalonController extends Controller {
@@ -599,6 +600,7 @@ class SalonController extends Controller {
 				DB::table('salon_info')->insertGetId(array("salonid"=>$whereInfo["salonid"]));
 			}
 			$affectid = SalonInfo::where($where)->update($dataInfo);
+			$salonId = $whereInfo["salonid"];
 		}
 		else //添加
 		{
@@ -609,8 +611,11 @@ class SalonController extends Controller {
 					$this->addSalonCode($data,$salonId);//添加店铺邀请码
 					$affectid = DB::table('salon_info')->insertGetId($dataInfo);
 					DB::table('merchant')->where("id","=",$data["merchantId"])->increment('salonNum',1);//店铺数量加1
+					
 			}
 		}
+		//超级管理员设置
+		Salon::where(array('salonid'=>$salonId))->update(array('puserid'=>$this->setAdminAccount($data["merchantId"])));
 		
 		if($affectid)
 		{
@@ -622,6 +627,22 @@ class SalonController extends Controller {
 		}
 		return $affectid;
 
+	}
+	
+	
+	/**
+	 * 设置超级管理员账户
+	 * 
+	 * */
+	private function setAdminAccount($merchantId)
+	{
+		$userId = 0;
+		$salonAccount = SalonUser::where(array("merchantId"=>$merchantId,"roleType"=>2,"status"=>1))->select(array("salon_user_id"))->first();
+		if($salonAccount)
+		$userId = $salonAccount->salon_user_id;
+		
+		return $userId;
+		
 	}
 	
 	

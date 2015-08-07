@@ -162,7 +162,7 @@ class SalonAccountController extends Controller {
 			return $this->error($this->addMsg[$param["roleType"]]);
 		}
 		$id = SalonAccount::dosave($save);//添加账号
-		if($param["roleType"] == 1)//普通用户
+		if($param["roleType"] == 2)//超级管理员
 		{
 			Salon::where(array("salonid"=>$param["salonid"]))->update(array("puserid"=>$id));
 		}
