@@ -7,6 +7,8 @@ use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\Merchant;
 use App\SalonInfo;
+use App\Dividend;
+use App\Town;
 
 
 class SalonController extends Controller {
@@ -562,7 +564,8 @@ class SalonController extends Controller {
 	* @apiSuccess {String} citiesId 市Id.
 	* @apiSuccess {String} provinceName 省名称.
 	* @apiSuccess {String} provinceId 省Id
-	* 
+	* @apiSuccess {String} recommend_code 推荐码.
+	* @apiSuccess {String} dividendStatus 分红联盟状态 0：开启  1关闭.
 	*/
 	public function getSalon()
 	{
@@ -603,6 +606,7 @@ class SalonController extends Controller {
 			if($salonId)
 			{
 					$dataInfo["salonid"] = $salonId;
+					$this->addSalonCode($data,$salonId);//添加店铺邀请码
 					$affectid = DB::table('salon_info')->insertGetId($dataInfo);
 					DB::table('merchant')->where("id","=",$data["merchantId"])->increment('salonNum',1);//店铺数量加1
 			}
@@ -618,6 +622,65 @@ class SalonController extends Controller {
 		}
 		return $affectid;
 
+	}
+	
+	
+	/**
+	 * 添加店铺邀请码
+	 * 
+	 * */
+	private function addSalonCode($data,$salonid)
+	{
+		$code = $this->getRecommendCode();
+		$townInfo = Town::where(array("tid"=>$data["district"]))->first();
+		
+
+		// 写入推荐码表
+		$datas=array (
+				"salon_id" => $salonid,
+				"district" => $townInfo["tname"]?:'',
+				"recommend_code" => $code,
+				"status" => 1,
+				"add_time" => time ()
+		);
+		return DB::table('dividend')->insertGetId($datas);
+	}
+	
+	/**
+	 * 获取推荐码
+	 * 
+	 * @return integer
+	 */
+	private function getRecommendCode() {
+		$code = $this->randNum ( 4 );
+        // 如果不是四位随机数则重新生成
+        if (intval ( $code ) < 1000){
+            return $this->getRecommendCode ();
+        }
+
+		// 如果数据库中已在存在则继续执行
+        $codeTmpInfo = Dividend::where(array("recommend_code"=>$code))->first();
+		if ($codeTmpInfo){
+            return $this->getRecommendCode ();
+        }
+
+		return $code;
+	}
+	
+	/**
+	 * 生成随即数字
+	 * @param int $length
+	 * @return string
+	 */
+	private function randNum($length){
+		$pattern = '12356890';    //字符池,可任意修改
+		$key = '';
+	
+		for($i=0;$i<$length;$i++)    {
+			$key .= $pattern{mt_rand(0, strlen($pattern) - 1)};    //生成php随机数
+		}
+	
+		return $key;
 	}
 	
 	

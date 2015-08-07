@@ -91,19 +91,45 @@ class SalonAccount extends Model {
 	public static function getSalonNamebyCon($where)
 	{
 		$fields = array("merchantId","salonid","salonname","name");
-		$query =  DB::table('salon as s')
-            ->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-            ;
+		$query =  DB::table('salon as s')->leftjoin('merchant as m', 'm.id', '=', 's.merchantId');//第一次精确查找
 		if(isset($where['salonname']) && urldecode($where['salonname']))
 		{
-			$keyword = '%'.urldecode($where['salonname']).'%';
-			$query = $query->where('s.salonname','like',$keyword);
-			$query = $query->where('s.salestatus','=',1);//正常合作的店铺
+			$keyword = urldecode($where['salonname']);
+			$query = $query->where('s.salonname','=',$keyword);
+			$query = $query->where('s.status','!=',3);//正常合作  终止合作的店铺
 			$query = $query->where('s.merchantId','!=',0);//有商户Id
 		}
-
 		$result = $query->select($fields)->paginate(5)->toArray();
-		return $result["data"];
+		
+		
+		if(count($result["data"]) < 5)
+		{
+			$query =  DB::table('salon as s')->leftjoin('merchant as m', 'm.id', '=', 's.merchantId');
+			$keyword = '%'.urldecode($where['salonname']).'%';
+			$query = $query->where('s.salonname','like',$keyword);
+			$query = $query->where('s.status','!=',3);//正常合作 终止合作的店铺
+			$query = $query->where('s.merchantId','!=',0);//有商户Id
+			
+			if($result["data"])
+			{
+				foreach($result["data"] as $val)
+				{
+					$salonidArr[] = $val->salonid;
+				}
+				$query = $query->whereNotIn('s.salonid', $salonidArr);
+			}
+			
+			$limit = 5-count($result["data"]);
+			$data = $query->select($fields)->paginate($limit)->toArray();
+		}
+		if($result["data"] && $data["data"])
+		{
+			return array_merge($result["data"],$data["data"]);
+		}
+		else
+		{
+			return $data["data"];
+		}
 		
 	}
 	
