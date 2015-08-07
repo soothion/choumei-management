@@ -66,6 +66,16 @@ class Salon extends Model {
 			$keyword = '%'.$where['salonname'].'%';
 			$query = $query->where('salonname','like',$keyword);
 		}
+		if(isset($where['sn'])&&$where['sn'])
+		{
+			$keyword = '%'.$where['sn'].'%';
+			$query = $query->where('s.sn','like',$keyword);
+		}
+		if(isset($where['merchantName'])&&$where['merchantName'])
+		{
+			$keyword = '%'.$where['merchantName'].'%';
+			$query = $query->where('m.name','like',$keyword);
+		}
          
         $salonList =    $query->paginate($page_size);
         $result = $salonList->toArray();

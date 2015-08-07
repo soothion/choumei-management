@@ -48,6 +48,8 @@ class SalonController extends Controller {
 	* @apiParam {Number} zone 可选,所属商圈
 	* @apiParam {String} salonname 可选,店名
 	* @apiParam {String} businessName 可选,业务代表
+	* @apiParam {String} sn 可选,店铺编号
+	* @apiParam {String} merchantName 可选,商户名
 	* @apiParam {Number} sort_key 可选,排序字段 shopType 店铺类型  salestatus 状态.
 	* @apiParam {Number} sort_type 可选,排序 DESC倒序 ASC升序.
 	* @apiParam {Number} page 可选,页数.
@@ -132,6 +134,8 @@ class SalonController extends Controller {
 		$zone = isset($param["zone"])?$param["zone"]:0;//所属商圈
 		$salonname = isset($param["salonname"])?urldecode($param["salonname"]):"";//店名
 		$district = isset($param["district"])?$param["district"]:0;//区域
+		$sn = isset($param["sn"])?$param["sn"]:0;//店铺编号
+		$merchantName = isset($param["merchantName"])?$param["merchantName"]:"";//商户名称
 		$businessName = isset($param["businessName"])?urldecode($param["businessName"]):"";//业务代表
 		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"add_time";
     	$sort_type = isset($param["sort_type"])?$param["sort_type"]:"desc";
@@ -151,6 +155,14 @@ class SalonController extends Controller {
 		if($salonname)
     	{
     		$where["salonname"] = $salonname;
+    	}
+    	if($merchantName)
+    	{
+    		$where["merchantName"] = $merchantName;
+    	}
+    	if($sn)
+    	{
+    		$where["sn"] = $sn;
     	}
     	if($businessName)
     	{

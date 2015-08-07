@@ -19,6 +19,7 @@ class MerchantController extends Controller {
 	 *
 	 * @apiParam {String} mobile 可选,电话号码
 	 * @apiParam {String} name 可选,商户名
+	 * @apiParam {String} sn 可选,商户编号
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.
 	 *
@@ -88,6 +89,11 @@ class MerchantController extends Controller {
 		{
 			$keyword = '%'.urldecode($param['name']).'%';
 			$query = $query->where('name','like',$keyword);
+		}
+		if(isset($param['sn']) && urldecode($param['sn']))
+		{
+			$keyword = '%'.urldecode($param['sn']).'%';
+			$query = $query->where('sn','like',$keyword);
 		}
 		
 		if(isset($param['mobile'])&&$param['mobile'])
