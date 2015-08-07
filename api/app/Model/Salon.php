@@ -282,15 +282,20 @@ class Salon extends Model {
 					'i.corporatePicUrl',
 					'm.name',
 					'm.id as merchantId',
-					'b.businessName'
+					'b.businessName',
+					'd.status as dividendStatus',
+					'd.recommend_code',
+					
 				);
 			$salonList =  DB::table('salon as s')
 	            ->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
 	            ->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
 	            ->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
+	            ->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
 	            ->select($fields)
 	            ->where(array("s.salonid"=>$salonid))
 	            ->first();
+			
 			$salonList = (array)$salonList;
 			
 			if($salonList)
