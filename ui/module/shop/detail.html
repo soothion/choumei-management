@@ -293,7 +293,24 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>                                           
+                            </table>
+							<table>
+								<thead>
+									<tr>
+										<th colspan="2" class="content">财务核算</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="content">店铺邀请码：</td>
+										<td><%=data.recommend_code%></td>
+									</tr>
+									<tr>
+										<td class="content">分红联盟：</td>
+										<td><%=data.dividendStatus==0?"已":"未"%>加入</td>
+									</tr>
+								</tbody>
+							</table>
                         </div>
                 </div>
                 <div class="map" data-lat="<%=data.addrlati%>" data-lng="<%=data.addrlong%>" 
