@@ -14,6 +14,9 @@
 				</div>
 				<div>
 					<a class="btn-primary" data-slug="merchant.save" href="edit.html"><i class="fa fa-plus"></i> 新增</a>
+					<form action="" data-role="export">
+						<button class="btn">导出</button>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -21,11 +24,13 @@
 			<form data-role="hash" class="position-group">
 				<div class="input-group">
 					<select class="select" id="select">
-						<option value="1">商户搜索</option>
-						<option value="2">手机号搜索</option>
+						<option value="0">商户名称</option>
+						<option value="1">手机号码</option>
+						<option value="2">商户编号</option>
 					</select>
-					<input class="input-search" type="text" name="name"  placeholder="请输入店铺名">
-					<input class="input-search hide" type="text" name="mobile" placeholder="请输入手机号">
+					<input class="input-search" type="text" name="name"  placeholder="请输入商户名称">
+					<input class="input-search hide" type="text" name="mobile" placeholder="请输入手机号码">
+					<input class="input-search hide" type="text" name="sn" placeholder="请输入商户编号">
 					<button type="submit" class="btn btn-search">
 						<i class="fa fa-search"></i>
 					</button>
@@ -77,16 +82,8 @@
 	<script type="text/javascript">
 		$('#select').on('change',function(){
 			var $this=$(this);
-			var input1=$('input[name="name"]');
-			var input2=$('input[name="mobile"]');
-			if($this.val()==1){
-				input1.show();
-				input2.hide().val('');
-			}else{
-				input2.show();
-				input1.hide().val('');
-			}
-		})
+			$this.parent().find('input').eq($this.val()).show().siblings('input').hide().val('');
+		});
 	</script>
   </body>
 </html>

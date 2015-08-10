@@ -18,15 +18,7 @@
 
     $('#select').on('change',function(){
       var $this=$(this);
-      var input1=$('input[name="salonname"]');
-      var input2=$('input[name="businessName"]');
-      if($this.val()==1){
-        input1.show();
-        input2.hide().val('');
-      }else{
-        input2.show();
-        input1.hide().val('');
-      }
+      $this.parent().find('input').eq($this.val()).show().siblings('input').hide().val('');
     });
 
     $('body').on('click','label',function(){

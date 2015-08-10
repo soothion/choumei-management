@@ -48,20 +48,6 @@
                         <input type="text" name="salonname" value="<%=data.salonname%>" placeholder="店铺名称" maxlength="16" required>
                     </div>
                 </div>
-				<%if(query.type=="edit"){%>
-				<div class="control-group">
-                    <label class="control-label" for="">店铺邀请码：</label>
-                    <div class="control">
-                        <input type="text" value="<%=data.recommend_code%>"  disabled>
-                    </div>
-                </div> 
-				<div class="control-group">
-                    <label class="control-label" for="">分红联盟：</label>
-                    <div class="control">
-                        <%=data.dividendStatus==0?"已":"未"%>加入
-                    </div>
-                </div> 
-				<%}%>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">

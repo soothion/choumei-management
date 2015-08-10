@@ -17,7 +17,7 @@ class ShopCountController extends Controller
      * @apiName index
      * @apiGroup ShopCount
      *
-     * @apiParam {Number} key  1 店铺搜索 2 商户搜索
+     * @apiParam {Number} key  1 店铺搜索 2 商户搜索 3 店铺编号
      * @apiParam {String} keyword  根据key来的关键字
      * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
      * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
@@ -103,6 +103,44 @@ class ShopCountController extends Controller
             'sort_type'=>self::T_STRING,
         ]);
         
+        $items = ShopCountApi::searchPrepay($param);
+        return $this->success($items);
+    }
+    
+    /**
+     * @api {get} /shop_count/export 11.导出转付单
+     * @apiName export
+     * @apiGroup ShopCount
+     *
+     * @apiParam {Number} key  1 店铺搜索 2 商户搜索 3 店铺编号
+     * @apiParam {String} keyword  根据key来的关键字
+     * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
+     * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
+     * @apiParam {Number} page 可选,页数. (从1开始)
+     * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
+     * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
+     * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "未授权访问"
+     *		}
+     */
+    public function export()
+    {
+        $param = $this->parameters([
+            'key'=>self::T_INT,
+            'keyword'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_max'=>self::T_STRING,
+            'page'=>self::T_INT,
+            'page_size'=>self::T_INT,
+            'sort_key'=>self::T_STRING,
+            'sort_type'=>self::T_STRING,
+        ]);
+    
         $items = ShopCountApi::searchPrepay($param);
         return $this->success($items);
     }
@@ -404,7 +442,7 @@ class ShopCountController extends Controller
      * @apiName delegate_list
      * @apiGroup ShopCount
      *
-     * @apiParam {Number} key  1 店铺搜索 2 商户搜索
+     * @apiParam {Number} key  1 店铺搜索 2 商户搜索 3 店铺编号
      * @apiParam {String} keyword  根据key来的关键字
      * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
      * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
@@ -485,6 +523,39 @@ class ShopCountController extends Controller
     }
     
     /**
+     * @api {get} /shop_count/delegate_export 12.导出代收单
+     * @apiName delegate_export
+     * @apiGroup ShopCount
+     *
+     * @apiParam {Number} key  1 店铺搜索 2 商户搜索 3 店铺编号
+     * @apiParam {String} keyword  根据key来的关键字
+     * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
+     * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
+     * @apiParam {Number} page 可选,页数. (从1开始)
+     * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
+     * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(代收单号),'type'(代收类型),'money'(代收金额),'day'(代收日期)]
+     * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
+     *  
+     */
+    public function delegate_export()
+    {
+        $param = $this->parameters([
+            'key'=>self::T_INT,
+            'keyword'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_max'=>self::T_STRING,
+            'page'=>self::T_INT,
+            'page_size'=>self::T_INT,
+            'sort_key'=>self::T_STRING,
+            'sort_type'=>self::T_STRING,
+        ]);
+    
+        $items = ShopCountApi::searchPrepay($param);
+        return $this->success($items);
+    }
+    
+    /**
      * @api {get} /shop_count/delegate_detail/{id} 8.代收单 详情
      * @apiName delegate_detail
      * @apiGroup ShopCount
@@ -540,7 +611,7 @@ class ShopCountController extends Controller
      * @apiName balance
      * @apiGroup ShopCount
      *
-     * @apiParam {Number} key  1 店铺搜索 2 商户搜索
+     * @apiParam {Number} key  1 店铺搜索 2 商户搜索 3 商户编号
      * @apiParam {String} keyword  根据key来的关键字
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
@@ -609,6 +680,77 @@ class ShopCountController extends Controller
      *		}
      */
     public function balance()
+    {
+        $param = $this->parameters([
+            'key'=>self::T_INT,
+            'keyword'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_min'=>self::T_STRING,
+            'pay_time_max'=>self::T_STRING,
+            'page'=>self::T_INT,
+            'page_size'=>self::T_INT,
+            'sort_key'=>self::T_STRING,
+            'sort_type'=>self::T_STRING,
+        ]);
+        $items = ShopCountApi::searchShopCount($param);
+        return $this->success($items);
+    }
+    
+    /**
+     * @api {get} /shop_count/balance_export 13.导出商户往来列表
+     * @apiName balance_export
+     * @apiGroup ShopCount
+     *
+     * @apiParam {Number} key  1 店铺搜索 2 商户搜索 3 商户编号
+     * @apiParam {String} keyword  根据key来的关键字
+     * @apiParam {Number} page 可选,页数. (从1开始)
+     * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
+     * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'salon_name','salon_type','pay_money','cost_money',...(money相关的key)]
+     * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
+     *
+     *
+     * @apiSuccessExample Success-Response:
+     *       {
+     *           "result": 1,
+     *           "data": {
+     *               "total": 1,
+     *               "per_page": 10,
+     *               "current_page": 1,
+     *               "last_page": 1,
+     *               "from": 1,
+     *               "to": 1,
+     *               "data": [
+     *                   {
+     *                       "id": 1,
+     *                       "created_at": "2015-07-01 00:00:00",
+     *                       "merchant_id": 3,
+     *                       "merchant_name":"米莱国际",
+     *                       "salon_id": 2,
+     *                       "salon_name":"米莱国际造型连锁(田贝店)",
+     *                       "salon_type":1,
+     *                       "pay_money": "123.00",
+     *                       "cost_money": "111.00",
+     *                       "spend_money": "23434.00",
+     *                       "balance_money": "2334.00",
+     *                       "invest_money": "2334.00",
+     *                       "invest_return_money": "23.00",
+     *                       "invest_balance_money": "343.00",
+     *                       "borrow_money": "2323.00",
+     *                       "borrow_return_money": "34.00",
+     *                       "borrow_balance_money": "2334.00"
+     *                   }
+     *               ]
+     *           }
+     *       }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "未授权访问"
+     *		}
+     */
+    public function balance_export()
     {
         $param = $this->parameters([
             'key'=>self::T_INT,
