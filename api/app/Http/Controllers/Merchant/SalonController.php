@@ -1049,7 +1049,7 @@ class SalonController extends Controller {
 		Event::fire('salon.export');
 		
 		//导出excel
-		$title = '店铺列表('.date('Y-m-d').")";
+		$title = '店铺列表'.date('Ymd');
 		$header = ['店铺名称','店铺邀请码','分红联盟','所属商户','店铺地址','所属商圈','店铺类型','合同开始时间','合同期限','合同编号','联系人','联系手机','店铺电话','法人代表','法人手机','业务代表','银行名称','支行名称','收款人','银行卡号','帐户类型'];
 		Excel::create($title, function($excel) use($result,$header){
 			$excel->sheet('Sheet1', function($sheet) use($result,$header){

@@ -532,7 +532,7 @@ class MerchantController extends Controller {
 		}
 		Event::fire('merchant.export');
 		//导出excel
-		$title = '商户列表('.date('Y-m-d').")";
+		$title = '商户列表'.date('Ymd');
 		$header = ['商户名称','商户编号','联系人','联系手机','联系座机','联系邮箱','详情地址','成日日期','创建日期']; 
 	    Excel::create($title, function($excel) use($result,$header){
 		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
