@@ -617,7 +617,7 @@ class SalonController extends Controller {
 			if($affectid)
 			{
 				//触发事件，写入日志
-				Event::fire('salon.update','店铺Id:'.$salonId."店铺名称：".$data['salonname']);
+				Event::fire('salon.update','店铺Id:'.$salonId." 店铺名称：".$data['salonname']);
 			}
 		}
 		else //添加
@@ -628,9 +628,13 @@ class SalonController extends Controller {
 					$dataInfo["salonid"] = $salonId;
 					$this->addSalonCode($data,$salonId);//添加店铺邀请码
 					$affectid = DB::table('salon_info')->insertGetId($dataInfo);
-					DB::table('merchant')->where("id","=",$data["merchantId"])->increment('salonNum',1);//店铺数量加1
-					//触发事件，写入日志
-					Event::fire('salon.save','店铺Id:'.$affectid."店铺名称：".$dataInfo['salonname']);
+					if($affectid)
+					{
+						DB::table('merchant')->where("id","=",$data["merchantId"])->increment('salonNum',1);//店铺数量加1
+						//触发事件，写入日志
+						Event::fire('salon.save','店铺Id:'.$affectid." 店铺名称：".$dataInfo['salonname']);
+					}
+					
 			}
 		}
 		//超级管理员设置
@@ -799,7 +803,7 @@ class SalonController extends Controller {
 		$param = $this->param;
 		$salonid = isset($param["salonid"])?intval($param["salonid"]):0;
 		$type = isset($param["type"])?intval($param["type"]):1;
-		Event::fire('salon.endCooperation','店铺Id:'.$salonid);
+		
 		if(!$salonid || !in_array($type, array(1,2)))
 		{
 			return $this->error('参数错误');
@@ -826,6 +830,7 @@ class SalonController extends Controller {
 		$busId = Salon::doendact($salonid,$type,$rs["merchantId"]);
 		if($busId)
 		{
+			Event::fire('salon.endCooperation','店铺Id:'.$salonid." 店铺名称：".$this->getSalonName($salonid));
 			return $this->success();
 		}
 		else
@@ -835,6 +840,17 @@ class SalonController extends Controller {
 		
 		
 	}	
+	
+	/**
+	 * 查询店铺名
+	 * */
+	private function getSalonName($salonid)
+	{
+		$query = Salon::getQuery();
+		$query->where('salonid',$salonid);
+		$rs = $query->select('salonname')->first();
+		return $rs->salonname;
+	}
 	
 	/**
 	 * @api {post} /salon/del 7.删除店铺
@@ -866,7 +882,7 @@ class SalonController extends Controller {
 		$query = Salon::getQuery();
 		
 		$salonid = isset($param["salonid"])?$param["salonid"]:0;
-		Event::fire('salon.del','店铺Id:'.$salonid);
+		
 		if(!$salonid)
 		{
 			return $this->error('参数错误');
@@ -883,6 +899,7 @@ class SalonController extends Controller {
 		}
 		else 
 		{
+			Event::fire('salon.del','店铺Id:'.$salonid." 店铺名称：".$this->getSalonName($salonid));
 			return $this->success();
 		}
 

@@ -75,6 +75,19 @@ class EventServiceProvider extends ServiceProvider
 		'salon.update' => [
     		'App\Listeners\SalonEventListener@onUpdate',
     	],
+		//商户模块
+    	'merchant.export' => [
+    		'App\Listeners\MerchantEventListener@onExport',
+    	],
+    	'merchant.save' => [
+    		'App\Listeners\MerchantEventListener@onSave',
+    	],
+    	'merchant.del' => [
+    		'App\Listeners\MerchantEventListener@onDel',
+    	],
+		'merchant.update' => [
+    		'App\Listeners\MerchantEventListener@onUpdate',
+    	],
 
     ];
 

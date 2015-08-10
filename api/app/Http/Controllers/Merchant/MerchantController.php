@@ -11,7 +11,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\SalonUser;
 use Excel;
-
+use Event;
 class MerchantController extends Controller {
 	/**
 	 * @api {post} /merchant/index 1.商户列表
@@ -260,15 +260,24 @@ class MerchantController extends Controller {
 		if($param["id"])
 		{
 			$status = $query->where('id',$param['id'])->update($save);
+			if($status)
+			{
+				//触发事件，写入日志
+				Event::fire('merchant.save','商户Id:'.$param['id']." 商户名称：".$save['salonname']);
+			}
+			
 		}
 		else
 		{
 			$status = $query->insert($save);
+			if($status)
+			{
+				Event::fire('merchant.update','商户Id:'.$status." 商户名称：".$save['salonname']);
+			}
 		}
 		
 		if($status)
 		{
-			//Event::fire('Merchant.create',array($Merchant));
 			return $this->success();
 		}	 
 		else
@@ -340,6 +349,7 @@ class MerchantController extends Controller {
 
 		if($status)
 		{
+			Event::fire('merchant.del','商户Id:'.$param['id']." 商户名称：".$this->getSalonName($param['id']));
 			return $this->success();
 		}	 
 		else
@@ -347,6 +357,17 @@ class MerchantController extends Controller {
 			return $this->error('商户删除失败');
 		} 
 		
+	}
+	
+	/**
+	 * 查询商户名
+	 * */
+	private function getMerchantName($id)
+	{
+		$query = Merchant::getQuery();
+		$query->where('id',$id);
+		$rs = $query->select('name')->first();
+		return $rs->name;
 	}
 	
 	/**
@@ -509,7 +530,7 @@ class MerchantController extends Controller {
 			$result[$key]['foundingDate'] = $value->foundingDate?date('Y-m-d H:i:s',$value->foundingDate):'';
 			$result[$key]['addTime'] = date('Y-m-d H:i:s',$value->addTime);
 		}
-	
+		Event::fire('merchant.export');
 		//导出excel
 		$title = '商户列表('.date('Y-m-d').")";
 		$header = ['商户名称','商户编号','联系人','联系手机','联系座机','联系邮箱','详情地址','成日日期','创建日期']; 
