@@ -48,6 +48,74 @@ class SalonEventListener {
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
 	}
+	
+	
+	public function onSave()
+	{
+		$operator = JWTAuth::parseToken()->authenticate();
+		$data['username'] = $operator->username;
+		$data['roles'] = $operator->roles->toArray();
+	
+		foreach ($data['roles'] as $key => $value) {
+			$roles[] = $value['name'];
+		}
+		$data['roles'] = implode($roles, ',');
+		$data['operation'] = '添加店铺';
+		$data['slug'] = Route::currentRouteName();
+		$data['ip'] = Request::getClientIp();
+		return Log::create($data);
+	}
+	
 
+	public function onUpdate($log  = '')
+	{
+		$operator = JWTAuth::parseToken()->authenticate();
+		$data['username'] = $operator->username;
+		$data['roles'] = $operator->roles->toArray();
+	
+		foreach ($data['roles'] as $key => $value) {
+			$roles[] = $value['name'];
+		}
+		$data['roles'] = implode($roles, ',');
+		$data['operation'] = '修改店铺';
+		$data['object'] = $log;
+		$data['slug'] = Route::currentRouteName();
+		$data['ip'] = Request::getClientIp();
+		return Log::create($data);
+	}
+
+	public function onDel($log = '')
+	{
+		$operator = JWTAuth::parseToken()->authenticate();
+		$data['username'] = $operator->username;
+		$data['roles'] = $operator->roles->toArray();
+	
+		foreach ($data['roles'] as $key => $value) {
+			$roles[] = $value['name'];
+		}
+		$data['roles'] = implode($roles, ',');
+		$data['operation'] = '删除店铺';
+		$data['object'] = $log;
+		$data['slug'] = Route::currentRouteName();
+		$data['ip'] = Request::getClientIp();
+		return Log::create($data);
+	}
+	
+	public function onEndCooperation($log = '')
+	{
+		$operator = JWTAuth::parseToken()->authenticate();
+		$data['username'] = $operator->username;
+		$data['roles'] = $operator->roles->toArray();
+	
+		foreach ($data['roles'] as $key => $value) {
+			$roles[] = $value['name'];
+		}
+		$data['roles'] = implode($roles, ',');
+		$data['operation'] = '终止合作 或恢复店铺';
+		$data['object'] = $log;
+		$data['slug'] = Route::currentRouteName();
+		$data['ip'] = Request::getClientIp();
+		return Log::create($data);
+	}
 
 }

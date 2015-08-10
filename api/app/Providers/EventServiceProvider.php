@@ -63,6 +63,18 @@ class EventServiceProvider extends ServiceProvider
     	'salon.export' => [
     		'App\Listeners\SalonEventListener@onExport',
     	],
+    	'salon.save' => [
+    		'App\Listeners\SalonEventListener@onSave',
+    	],
+    	'salon.del' => [
+    		'App\Listeners\SalonEventListener@onDel',
+    	],
+		'salon.endCooperation' => [
+    		'App\Listeners\SalonEventListener@onEndCooperation',
+    	],
+		'salon.update' => [
+    		'App\Listeners\SalonEventListener@onUpdate',
+    	],
 
     ];
 

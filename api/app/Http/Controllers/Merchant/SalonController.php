@@ -269,6 +269,8 @@ class SalonController extends Controller {
 	*/
 	public function save()
 	{
+		//触发事件，写入日志
+		Event::fire('salon.save');
 		return $this->dosave($this->param);
 	}
 	
@@ -358,7 +360,10 @@ class SalonController extends Controller {
 	*		}
 	*/
 	public function update()
-	{
+	{	
+		//触发事件，写入日志
+		$salonid = $this->param->salonid;
+		Event::fire('salon.update','店铺Id:'.$salonid);
 		return $this->dosave($this->param);
 	}
 	
@@ -793,7 +798,7 @@ class SalonController extends Controller {
 		$param = $this->param;
 		$salonid = isset($param["salonid"])?intval($param["salonid"]):0;
 		$type = isset($param["type"])?intval($param["type"]):1;
-		
+		Event::fire('salon.endCooperation','店铺Id:'.$salonid);
 		if(!$salonid || !in_array($type, array(1,2)))
 		{
 			return $this->error('参数错误');
@@ -860,6 +865,7 @@ class SalonController extends Controller {
 		$query = Salon::getQuery();
 		
 		$salonid = isset($param["salonid"])?$param["salonid"]:0;
+		Event::fire('salon.del','店铺Id:'.$salonid);
 		if(!$salonid)
 		{
 			return $this->error('参数错误');
