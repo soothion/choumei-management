@@ -100,14 +100,20 @@ class ShopcountEventListener
     
     protected function getLogInfo()
     {
-        $operator = JWTAuth::parseToken()->authenticate();
-        $data['username'] = $operator->username;
-        $data['roles'] = $operator->roles->toArray();        
-        foreach ($data['roles'] as $key => $value) {
-            $roles[] = $value['name'];
-        }
-        $data['roles'] = implode($roles, ',');
+        //#@todo for test
+        $data['username'] = "开发人员测试用户";
+        $data['roles'] = "";
         $data['slug'] = Route::currentRouteName();
         $data['ip'] = Request::getClientIp();
+        
+//         $operator = JWTAuth::parseToken()->authenticate();
+//         $data['username'] = $operator->username;
+//         $data['roles'] = $operator->roles->toArray();        
+//         foreach ($data['roles'] as $key => $value) {
+//             $roles[] = $value['name'];
+//         }
+//         $data['roles'] = implode($roles, ',');
+//         $data['slug'] = Route::currentRouteName();
+//         $data['ip'] = Request::getClientIp();
     }
 }
