@@ -28,6 +28,7 @@
 			page.removeClass('full');
 		}
 	}
+	parent.lib.fullpage(false);
 })();
 $(function(){
 	/**渲染面包屑**/
