@@ -50,7 +50,7 @@ class MerchantEventListener {
 	}
 	
 	
-	public function onSave()
+	public function onSave($log  = '')
 	{
 		$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -61,6 +61,7 @@ class MerchantEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '添加商户';
+		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);

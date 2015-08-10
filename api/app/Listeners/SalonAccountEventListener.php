@@ -9,7 +9,7 @@ use Request;
 use App\Log;
 use JWTAuth;
 
-class SalonEventListener {
+class SalonAccountEventListener {
 
 	/**
 	 * Create the event handler.
@@ -33,22 +33,6 @@ class SalonEventListener {
 	}
 	
 
-	public function onExport()
-	{
-    	$operator = JWTAuth::parseToken()->authenticate();
-		$data['username'] = $operator->username;
-		$data['roles'] = $operator->roles->toArray();
-
-		foreach ($data['roles'] as $key => $value) {
-			$roles[] = $value['name'];
-		}
-		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '导出店铺';
-		$data['slug'] = Route::currentRouteName();
-		$data['ip'] = Request::getClientIp();
-		return Log::create($data);
-	}
-	
 	
 	public function onSave($log  = '')
 	{
@@ -60,7 +44,7 @@ class SalonEventListener {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '添加店铺';
+		$data['operation'] = '添加账号';
 		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
@@ -68,7 +52,7 @@ class SalonEventListener {
 	}
 	
 
-	public function onUpdate($log  = '')
+	public function onResetPwd($log  = '')
 	{
 		$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -78,14 +62,14 @@ class SalonEventListener {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '修改店铺';
+		$data['operation'] = '重置密码';
 		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
 	}
 
-	public function onDel($log = '')
+	public function onDelAct($log = '')
 	{
 		$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -95,28 +79,12 @@ class SalonEventListener {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '删除店铺';
+		$data['operation'] = '删除账号';
 		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
 	}
 	
-	public function onEndCooperation($log = '')
-	{
-		$operator = JWTAuth::parseToken()->authenticate();
-		$data['username'] = $operator->username;
-		$data['roles'] = $operator->roles->toArray();
-	
-		foreach ($data['roles'] as $key => $value) {
-			$roles[] = $value['name'];
-		}
-		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '终止合作 或恢复店铺';
-		$data['object'] = $log;
-		$data['slug'] = Route::currentRouteName();
-		$data['ip'] = Request::getClientIp();
-		return Log::create($data);
-	}
 
 }
