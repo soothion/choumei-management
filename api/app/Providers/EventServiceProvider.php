@@ -88,6 +88,16 @@ class EventServiceProvider extends ServiceProvider
 		'merchant.update' => [
     		'App\Listeners\MerchantEventListener@onUpdate',
     	],
+		//店铺账号模块
+    	'salonAccount.save' => [
+    		'App\Listeners\SalonAccountEventListener@onSave',
+    	],
+    	'salonAccount.delAct' => [
+    		'App\Listeners\SalonAccountEventListener@onDelAct',
+    	],
+		'salonAccount.resetPwd' => [
+    		'App\Listeners\SalonAccountEventListener@onResetPwd',
+    	],
 
     ];
 
