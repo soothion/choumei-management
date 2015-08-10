@@ -105,7 +105,7 @@ class ShopcountEventListener
         $data['roles'] = "";
         $data['slug'] = Route::currentRouteName();
         $data['ip'] = Request::getClientIp();
-        
+        return $data;
 //         $operator = JWTAuth::parseToken()->authenticate();
 //         $data['username'] = $operator->username;
 //         $data['roles'] = $operator->roles->toArray();        
@@ -115,5 +115,6 @@ class ShopcountEventListener
 //         $data['roles'] = implode($roles, ',');
 //         $data['slug'] = Route::currentRouteName();
 //         $data['ip'] = Request::getClientIp();
+//         return $data;
     }
 }
