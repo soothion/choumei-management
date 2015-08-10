@@ -58,6 +58,11 @@ class EventServiceProvider extends ServiceProvider
         'role.export' => [
             'App\Listeners\LogEventListener@onExport',
         ],  
+    		
+    	//店铺模块
+    	'salon.export' => [
+    		'App\Listeners\SalonEventListener@onExport',
+    	],
 
     ];
 

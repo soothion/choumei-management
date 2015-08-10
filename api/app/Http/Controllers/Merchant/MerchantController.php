@@ -10,6 +10,7 @@ use App\Merchant;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\SalonUser;
+use Excel;
 
 class MerchantController extends Controller {
 	/**
@@ -117,6 +118,7 @@ class MerchantController extends Controller {
 	    unset($result['prev_page_url']);
 	    return $this->success($result);
 	}
+	
 	
 	/**
 	 * 检测商户编号是否存在
@@ -450,6 +452,75 @@ class MerchantController extends Controller {
 		}
 		$rs = Merchant::find($id);
 		return $this->success($rs);
+	}
+	
+	/**
+	 * @api {post} /merchant/export 7.商户列表导出
+	 * @apiName export
+	 * @apiGroup merchant
+	 *
+	 * @apiParam {String} mobile 可选,电话号码
+	 * @apiParam {String} name 可选,商户名
+	 * @apiParam {String} sn 可选,商户编号
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+	public function export()
+	{
+	
+		$param = $this->param;
+		$query = Merchant::getQuery();
+	
+		//状态筛选
+		if(isset($param['name']) && urldecode($param['name']))
+		{
+			$keyword = '%'.urldecode($param['name']).'%';
+			$query = $query->where('name','like',$keyword);
+		}
+		if(isset($param['sn']) && urldecode($param['sn']))
+		{
+			$keyword = '%'.urldecode($param['sn']).'%';
+			$query = $query->where('sn','like',$keyword);
+		}
+	
+		if(isset($param['mobile'])&&$param['mobile'])
+		{
+			$kModile = '%'.$param['mobile'].'%';
+			$query = $query->where('mobile','like',$kModile);
+		}
+		$query = $query->where('status','=',1);//排除删除
+		$fields = array('name','sn','contact','mobile','phone','email','addr','foundingDate','addTime' );
+		$rs = $query->select($fields)->orderBy('addTime', 'desc')->get();
+		$result = array();
+		foreach ($rs as $key => $value)
+		{
+			$result[$key]['name'] = $value->name;
+			$result[$key]['sn'] = $value->sn;
+			$result[$key]['contact'] = $value->contact;
+			$result[$key]['mobile'] = $value->mobile;
+			$result[$key]['phone'] = $value->phone;
+			$result[$key]['email'] = $value->email;
+			$result[$key]['addr'] = $value->addr;
+			$result[$key]['foundingDate'] = $value->foundingDate?date('Y-m-d H:i:s',$value->foundingDate):'';
+			$result[$key]['addTime'] = date('Y-m-d H:i:s',$value->addTime);
+		}
+	
+		//导出excel
+		$title = '商户列表('.date('Y-m-d').")";
+		$header = ['商户名称','商户编号','联系人','联系手机','联系座机','联系邮箱','详情地址','成日日期','创建日期']; 
+	    Excel::create($title, function($excel) use($result,$header){
+		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
+			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+	        		$sheet->prependRow(1, $header);//添加表头
+
+			    });
+		})->export('xls');
+	
 	}
 	
 }

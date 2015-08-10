@@ -224,6 +224,10 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 				'as'=>'merchant.index',
 				'uses'=>'Merchant\MerchantController@index'
 	));
+    Route::any('merchant/export',array(  //商户列表
+    		'as'=>'merchant.export',
+    		'uses'=>'Merchant\MerchantController@export'
+    ));
 	Route::any('merchant/save',array(  //添加修改商户
 					'as'=>'merchant.save',
 					'uses'=>'Merchant\MerchantController@save'
@@ -246,6 +250,11 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 					'as'=>'salon.index',
 					'uses'=>'Merchant\SalonController@index'
 		));
+	
+	Route::any('salon/export',array(  //店铺列表导出
+			'as'=>'salon.export',
+			'uses'=>'Merchant\SalonController@export'
+	));
 		
 	Route::any('salon/save',array( //店铺添加 接口
 					'as'=>'salon.save',

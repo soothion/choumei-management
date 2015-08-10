@@ -10,7 +10,8 @@ use App\SalonInfo;
 use App\Dividend;
 use App\Town;
 use App\SalonUser;
-
+use Excel;
+use Event;
 
 class SalonController extends Controller {
 		
@@ -895,6 +896,143 @@ class SalonController extends Controller {
 			$query->where('id',$id);
 		}
 		return  $query->count();
+	}
+	
+	/**
+	 * @api {post} /salon/export 8.店铺列表导出
+	 * @apiName export
+	 * @apiGroup salon
+	 *
+	 * @apiParam {Number} shopType 可选,店铺类型
+	 * @apiParam {Number} district 可选,区域
+	 * @apiParam {Number} zone 可选,所属商圈
+	 * @apiParam {String} salonname 可选,店名
+	 * @apiParam {String} businessName 可选,业务代表
+	 * @apiParam {String} sn 可选,店铺编号
+	 * @apiParam {String} merchantName 可选,商户名
+	 * @apiParam {Number} sort_key 可选,排序字段 shopType 店铺类型  salestatus 状态.
+	 * @apiParam {Number} sort_type 可选,排序 DESC倒序 ASC升序.
+	 *
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+	
+	public function export()
+	{
+		$where = "";
+		$shopTypeArr = array(0=>'',1=>'预付款店',2=>'投资店',3=>'金字塔店');
+		$accountTypeArr = array(0=>'',1=>'对公帐户',2=>'对私帐户');
+		$param = $this->param;
+		$shopType = isset($param["shopType"])?intval($param["shopType"]):0;//店铺类型
+		$zone = isset($param["zone"])?$param["zone"]:0;//所属商圈
+		$salonname = isset($param["salonname"])?urldecode($param["salonname"]):"";//店名
+		$district = isset($param["district"])?$param["district"]:0;//区域
+		$sn = isset($param["sn"])?$param["sn"]:0;//店铺编号
+		$merchantName = isset($param["merchantName"])?$param["merchantName"]:"";//商户名称
+		$businessName = isset($param["businessName"])?urldecode($param["businessName"]):"";//业务代表
+		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"s.add_time";
+		$sort_type = isset($param["sort_type"])?$param["sort_type"]:"desc";
+	
+		if($shopType)
+		{
+			$where["shopType"] = $shopType;
+		}
+		if($district)
+		{
+			$where["district"] = $district;
+		}
+		if($zone)
+		{
+			$where["zone"] = $zone;
+		}
+		if($salonname)
+		{
+			$where["salonname"] = $salonname;
+		}
+		if($merchantName)
+		{
+			$where["merchantName"] = $merchantName;
+		}
+		if($sn)
+		{
+			$where["sn"] = $sn;
+		}
+		if($businessName)
+		{
+			$userBus = DB::table('business_staff')->where('businessName',"like", "%".$businessName."%")->first();
+			if($userBus)
+			{
+				$where["businessId"] = $userBus->id;
+			}
+			else
+			{
+				$where["businessId"] = 1000000000;//默认查找不到信息
+			}
+		}
+		$list = Salon::getSalonListExport($where,$sort_key,$sort_type);
+		$result = array();
+		if($list)
+		{
+			foreach($list as $key=>$val)
+			{
+				$result[$key]['salonname'] = $val['salonname'];
+				$result[$key]['name'] = $val['name'];
+				$result[$key]['districtName'] = $val['districtName'];
+				$result[$key]['zoneName'] = $val['zoneName'];
+				$result[$key]['addr'] = $val['addr'];
+			
+				$result[$key]['shopType'] = $shopTypeArr[$val['shopType']];
+				$result[$key]['contractTime'] = $val['contractTime']?date('Y-m-d',$val['contractTime']):'';
+				$contractPeriod = $val['contractPeriod']?explode('_',$val['contractPeriod']):'';
+			
+				if($contractPeriod)
+				{
+					$result[$key]['contractPeriod'] = $contractPeriod[0].'年'.$contractPeriod[1]."月";
+				}
+				else
+				{
+					$result[$key]['contractPeriod'] = '';
+				}
+				$result[$key]['bargainno'] = $val['bargainno'];
+				$result[$key]['bcontacts'] = $val['bcontacts'];
+				$result[$key]['phone'] = $val['phone'];
+				$result[$key]['tel'] = $val['tel'];
+				$result[$key]['corporateName'] = $val['corporateName'];
+				$result[$key]['corporateTel'] = $val['corporateTel'];
+				$result[$key]['businessName'] = $val['businessName'];
+				//银行卡信息
+				$result[$key]['bankName'] = $val['bankName'];
+				$result[$key]['branchName'] = $val['branchName'];
+				$result[$key]['beneficiary'] = $val['beneficiary'];
+				$result[$key]['bankCard'] = $val['bankCard'];
+			
+				$result[$key]['accountType'] = $val['accountType']?$accountTypeArr[$val['accountType']]:'';
+					
+					
+				$result[$key]['recommend_code'] = $val['recommend_code'];
+				$result[$key]['dividendStatus'] = $val['dividendStatus']?'已进入':'未加入';
+					
+			}
+		}
+		
+		//触发事件，写入日志
+		Event::fire('salon.export');
+		
+		//导出excel
+		$title = '店铺列表('.date('Y-m-d').")";
+		$header = ['店铺名称','商户名称','区域','商圈','店铺地址','店铺类型','合同日期','合同期限','合同编号','联系人','联系手机','店铺电话','法人代表','法人手机','业务代表','银行名称','支行名称','收款人','银行卡号','帐户类型','店铺邀请码','分红联盟'];
+		Excel::create($title, function($excel) use($result,$header){
+			$excel->sheet('Sheet1', function($sheet) use($result,$header){
+				$sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+				$sheet->prependRow(1, $header);//添加表头
+		
+			});
+		})->export('xls');
 	}
 	
 	
