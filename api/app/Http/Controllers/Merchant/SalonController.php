@@ -632,7 +632,7 @@ class SalonController extends Controller {
 					{
 						DB::table('merchant')->where("id","=",$data["merchantId"])->increment('salonNum',1);//店铺数量加1
 						//触发事件，写入日志
-						Event::fire('salon.save','店铺Id:'.$affectid." 店铺名称：".$data['salonname']);
+						Event::fire('salon.save','店铺Id:'.$salonId." 店铺名称：".$data['salonname']);
 					}
 					
 			}
