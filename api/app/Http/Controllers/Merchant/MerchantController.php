@@ -263,7 +263,7 @@ class MerchantController extends Controller {
 			if($status)
 			{
 				//触发事件，写入日志
-				Event::fire('merchant.save','商户Id:'.$param['id']." 商户名称：".$save['salonname']);
+				Event::fire('merchant.save','商户Id:'.$param['id']." 商户名称：".$save['name']);
 			}
 			
 		}
@@ -272,7 +272,7 @@ class MerchantController extends Controller {
 			$status = $query->insert($save);
 			if($status)
 			{
-				Event::fire('merchant.update','商户Id:'.$status." 商户名称：".$save['salonname']);
+				Event::fire('merchant.update','商户Id:'.$status." 商户名称：".$save['name']);
 			}
 		}
 		
