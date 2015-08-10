@@ -109,7 +109,7 @@
 		<%if(data.length>0){%>	
 		<ul>
 			<%data.forEach(function(item){%>
-			<li class="complete-item" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" ><%=item.salonname%></li>
+			<li class="complete-item <%if(protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" ><%=item.salonname%></li>
 			<%})%>
 		</ul>
 		<%}else{%>

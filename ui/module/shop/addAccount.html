@@ -37,7 +37,7 @@
 							<%if(data.length>0){%>
 							<ul>
 								<%data.forEach(function(item){%>
-								<li class="complete-item" data-salonid="<%=item.salonid%>" data-merchantid="<%=item.merchantId%>" data-merchantname="<%=item.name%>" ><%=item.salonname%></li>
+								<li class="complete-item <%if(protocol.query.salonname==item.salonname){%>active<%}%>" data-salonid="<%=item.salonid%>" data-merchantid="<%=item.merchantId%>" data-merchantname="<%=item.name%>" ><%=item.salonname%></li>
 								<%})%>
 							</ul>
 							<%}else{%>

@@ -104,8 +104,8 @@ $(function(){
 	}).on('click','label[data-role="hash"]',function(e){//标签hash提交
 		$(this).closest('form[data-role="hash"]').submit();
 	}).on('submit','form[data-role="export"]',function(e){//导出功能
-		console.log(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#',''));
-		window.open(cfg.getHost()+$(this).attr('action')+'?token='+localStorage.getItem('token')+"&"+location.hash.replace('#',''));
+		console.log(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
+		window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
 		e.preventDefault();
 	}).on('submit','form[data-role="remove"]',function(e){//删除提交
 		var $this=$(this);
@@ -197,7 +197,11 @@ $(function(){
 				$this.val(active.text()).trigger('autoinput',active.data());
 			}
 			if(e.keyCode==13){
-				complete.find('.complete-position').hide();
+				var active=complete.find('.complete-item.active');
+				if(active.length>0){
+					$this.trigger('autoinput',active.data());
+				}
+				$this.closest('.complete').find('.complete-position').hide();			
 			}
 			e.preventDefault();
 		}
