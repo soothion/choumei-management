@@ -62,22 +62,24 @@ class ListController extends Controller{
 	 *	    "data": [
 	 *	        {
 	 *	            "id": 1,
-	 *	            "title": "产品部"
-	 *	        },
-	 *	        {
-	 *	            "id": 5,
-	 *	            "title": "商务部"
-	 *	        },
-	 *	        {
-	 *	            "id": 2,
-	 *	            "title": "运营部"
+	 *	            "title": "产品部",
+	 *	            "positions"[
+	 *				    {
+	 * 					    id: 1,
+     *					    department_id: 1,
+     *					    title: "CEO",
+     *					    description: "CEO",
+	 *					    created_at: "2015-08-10 15:52:52",
+	 *					    updated_at: "2015-08-10 15:52:52"
+	 *					}
+	 *				]
 	 *	        }
 	 *	    ]
 	 *	}
 	 *
 	 */
 	public function department(){
-		$result = Department::select(['id','title'])->get();
+		$result = Department::with('positions')->select(['id','title'])->get();
 		return $this->success($result);
 	}
 
