@@ -269,8 +269,6 @@ class SalonController extends Controller {
 	*/
 	public function save()
 	{
-		//触发事件，写入日志
-		Event::fire('salon.save');
 		return $this->dosave($this->param);
 	}
 	
@@ -361,9 +359,6 @@ class SalonController extends Controller {
 	*/
 	public function update()
 	{	
-		//触发事件，写入日志
-		$salonid = $this->param->salonid;
-		Event::fire('salon.update','店铺Id:'.$salonid);
 		return $this->dosave($this->param);
 	}
 	
@@ -619,6 +614,11 @@ class SalonController extends Controller {
 			}
 			$affectid = SalonInfo::where($where)->update($dataInfo);
 			$salonId = $whereInfo["salonid"];
+			if($affectid)
+			{
+				//触发事件，写入日志
+				Event::fire('salon.update','店铺Id:'.$salonId."店铺名称：".$data['salonname']);
+			}
 		}
 		else //添加
 		{
@@ -629,7 +629,8 @@ class SalonController extends Controller {
 					$this->addSalonCode($data,$salonId);//添加店铺邀请码
 					$affectid = DB::table('salon_info')->insertGetId($dataInfo);
 					DB::table('merchant')->where("id","=",$data["merchantId"])->increment('salonNum',1);//店铺数量加1
-					
+					//触发事件，写入日志
+					Event::fire('salon.save','店铺Id:'.$affectid."店铺名称：".$dataInfo['salonname']);
 			}
 		}
 		//超级管理员设置
