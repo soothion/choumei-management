@@ -13,38 +13,98 @@ use Illuminate\Support\Facades\Redis as Redis;
 use App\Permission;
 use DB;
 use App\Role;
+use Excel;
 
 class IndexController extends Controller{
 
 
 	public function test(){
-		$id=19;
-		$param = $this->param;
-		DB::beginTransaction();
-		$role = Role::find($id);
-		$update_permission = 1;
+				$param = $this->param;
+		$query = Manager::with(['roles'=>function($q){
+			$q->lists('role_id','name');
+		}]);
 
-		if(isset($param['permissions'])){
-			$permissions = $param['permissions'];
-			unset($param['permissions']);
-			if(empty($permissions)){
-				$update_permission = $role->permissions()->delete();
-			}
-			else
-				return $permissions;
-				$update_permission = $role->permissions()->sync([]);
+		$query = $query->with(['department'=>function($q){
+			$q->lists('id','title');
+		}]);
+
+		$query = $query->with(['city'=>function($q){
+			$q->lists('id','title');
+		}]);		
+
+		$query = $query->with(['position'=>function($q){
+			$q->lists('id','title');
+		}]);
+
+		//角色筛选
+		if(isset($param['role_id'])&&$param['role_id']){
+			$ids = RoleManager::where('role_id','=',$param['role_id'])->get(['user_id'])->toArray();
+			$ids = array_values($ids);
+			$query =Manager::whereHas('roles',function($q) use($param){
+				$q->where('role_id','=',$param['role_id']);
+			});
 		}
-		$update_role = $role->update($param);
-		if($update_permission&&$update_role){
-			DB::commit();
-			// Event::fire('role.update',array($role));
-			return $this->success();
+
+		//所属部门筛选
+		if(isset($param['department_id'])&&$param['department_id']){
+			$query = $query->where('department_id','=',$param['department_id']);
 		}
-		else
-		{
-			DB::rollBack();
-			return $this->error('error');
+
+		//状态筛选
+		if(isset($param['status'])&&$param['status']){
+			$query = $query->where('status','=',$param['status']);
 		}
+
+		//所属城市
+		if(isset($param['city_id'])&&$param['city_id']){
+			$query = $query->where('city_id','=',$param['city_id']);
+		}
+
+		//起始时间
+		if(isset($param['start'])&&$param['start']){
+			$query = $query->where('created_at','>=',$param['start']);
+		}
+
+		//结束时间
+		if(isset($param['end'])&&$param['end']){
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+		}
+		//登录帐号筛选
+		if(isset($param['username'])&&$param['username']){
+			$keyword = '%'.$param['username'].'%';
+			$query = $query->where('username','like',$keyword);
+		}		
+		//姓名筛选
+		if(isset($param['name'])&&$param['name']){
+			$keyword = '%'.$param['name'].'%';
+			$query = $query->where('name','like',$keyword);
+		}
+		//角色名筛选
+		if(isset($param['role'])&&$param['role']){
+			$keyword = '%'.$param['role'].'%';
+			$query = $query->whereHas('roles',function($q) use($keyword){
+				$q->where('name','like',$keyword);
+			});
+		}
+
+		//排序
+		if(isset($param['sort_key'])&&$param['sort_key']){
+			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
+			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
+		}
+
+		$result = $query->get()->toArray();
+
+		$header = ['ID','用户名','名字','电话','职位','城市','部门','邮箱','状态','添加时间','更新时间'];
+		//导出excel	 
+		$title = 'users-'.date('Y-m-d');  
+	    Excel::create($title, function($excel) use($result,$header){
+		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
+			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+	        		$sheet->prependRow(1, $header);//添加表头
+
+			    });
+		})->export('xls');
 	}
 
 
