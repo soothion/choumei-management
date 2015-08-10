@@ -40,8 +40,8 @@ class ShopcountBalance extends Command
      */
     public function handle()
     {
-        $default = ['merchant_id'=>2,'type'=>1,'salon_id'=>2,'uid'=>2,'pay_money'=>'25','cost_money'=>30,'day'=>'2015-06-01'];
-        $args = ['key'=>2,'keyword'=>'1'];
+        $default = ['merchant_id'=>1,'type'=>1,'salon_id'=>2,'uid'=>1,'pay_money'=>'25','cost_money'=>30,'day'=>'2015-06-01'];
+        $args = ['key'=>3,'keyword'=>'SZ0132002'];
         //$args = [];
 //         if($args && is_array($args))
 //         {
