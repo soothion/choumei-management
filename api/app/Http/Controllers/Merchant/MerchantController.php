@@ -349,7 +349,7 @@ class MerchantController extends Controller {
 
 		if($status)
 		{
-			Event::fire('merchant.del','商户Id:'.$param['id']." 商户名称：".$this->getSalonName($param['id']));
+			Event::fire('merchant.del','商户Id:'.$param['id']." 商户名称：".$this->getMerchantName($param['id']));
 			return $this->success();
 		}	 
 		else
