@@ -100,8 +100,7 @@ class SalonAccount extends Model {
 			$query = $query->where('s.merchantId','!=',0);//有商户Id
 		}
 		$result = $query->select($fields)->paginate(5)->toArray();
-		
-		
+
 		if(count($result["data"]) < 5)
 		{
 			$query =  DB::table('salon as s')->leftjoin('merchant as m', 'm.id', '=', 's.merchantId');
@@ -126,10 +125,15 @@ class SalonAccount extends Model {
 		{
 			return array_merge($result["data"],$data["data"]);
 		}
-		else
+		elseif(!$result["data"] && $data["data"])
 		{
 			return $data["data"];
 		}
+		elseif($result["data"] && !$data["data"])
+		{
+			return $result["data"];
+		}
+		
 		
 	}
 	
