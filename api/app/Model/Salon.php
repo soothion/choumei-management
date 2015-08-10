@@ -206,7 +206,7 @@ class Salon extends Model {
 		}
 		if(isset($where["district"]))
 		{
-			$query =  $query ->where("district","=",$where["district"]);
+			$query =  $query ->where("s.district","=",$where["district"]);
 		}
 		if(isset($where["businessId"]))
 		{

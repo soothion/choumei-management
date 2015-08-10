@@ -1005,11 +1005,13 @@ class SalonController extends Controller {
 			foreach($list as $key=>$val)
 			{
 				$result[$key]['salonname'] = $val['salonname'];
+				$result[$key]['recommend_code'] = $val['recommend_code'];
+				$result[$key]['dividendStatus'] = $val['dividendStatus']?'已进入':'未加入';
 				$result[$key]['name'] = $val['name'];
-				$result[$key]['districtName'] = $val['districtName'];
-				$result[$key]['zoneName'] = $val['zoneName'];
 				$result[$key]['addr'] = $val['addr'];
-			
+				//$result[$key]['districtName'] = $val['districtName'];
+				$result[$key]['zoneName'] = $val['zoneName'];
+
 				$result[$key]['shopType'] = $shopTypeArr[$val['shopType']];
 				$result[$key]['contractTime'] = $val['contractTime']?date('Y-m-d',$val['contractTime']):'';
 				$contractPeriod = $val['contractPeriod']?explode('_',$val['contractPeriod']):'';
@@ -1038,8 +1040,7 @@ class SalonController extends Controller {
 				$result[$key]['accountType'] = $val['accountType']?$accountTypeArr[$val['accountType']]:'';
 					
 					
-				$result[$key]['recommend_code'] = $val['recommend_code'];
-				$result[$key]['dividendStatus'] = $val['dividendStatus']?'已进入':'未加入';
+				
 					
 			}
 		}
@@ -1049,7 +1050,7 @@ class SalonController extends Controller {
 		
 		//导出excel
 		$title = '店铺列表('.date('Y-m-d').")";
-		$header = ['店铺名称','商户名称','区域','商圈','店铺地址','店铺类型','合同日期','合同期限','合同编号','联系人','联系手机','店铺电话','法人代表','法人手机','业务代表','银行名称','支行名称','收款人','银行卡号','帐户类型','店铺邀请码','分红联盟'];
+		$header = ['店铺名称','店铺邀请码','分红联盟','所属商户','店铺地址','所属商圈','店铺类型','合同开始时间','合同期限','合同编号','联系人','联系手机','店铺电话','法人代表','法人手机','业务代表','银行名称','支行名称','收款人','银行卡号','帐户类型'];
 		Excel::create($title, function($excel) use($result,$header){
 			$excel->sheet('Sheet1', function($sheet) use($result,$header){
 				$sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
