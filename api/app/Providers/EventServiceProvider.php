@@ -58,6 +58,46 @@ class EventServiceProvider extends ServiceProvider
         'role.export' => [
             'App\Listeners\LogEventListener@onExport',
         ],  
+    		
+    	//店铺模块
+    	'salon.export' => [
+    		'App\Listeners\SalonEventListener@onExport',
+    	],
+    	'salon.save' => [
+    		'App\Listeners\SalonEventListener@onSave',
+    	],
+    	'salon.del' => [
+    		'App\Listeners\SalonEventListener@onDel',
+    	],
+		'salon.endCooperation' => [
+    		'App\Listeners\SalonEventListener@onEndCooperation',
+    	],
+		'salon.update' => [
+    		'App\Listeners\SalonEventListener@onUpdate',
+    	],
+		//商户模块
+    	'merchant.export' => [
+    		'App\Listeners\MerchantEventListener@onExport',
+    	],
+    	'merchant.save' => [
+    		'App\Listeners\MerchantEventListener@onSave',
+    	],
+    	'merchant.del' => [
+    		'App\Listeners\MerchantEventListener@onDel',
+    	],
+		'merchant.update' => [
+    		'App\Listeners\MerchantEventListener@onUpdate',
+    	],
+		//店铺账号模块
+    	'salonAccount.save' => [
+    		'App\Listeners\SalonAccountEventListener@onSave',
+    	],
+    	'salonAccount.delAct' => [
+    		'App\Listeners\SalonAccountEventListener@onDelAct',
+    	],
+		'salonAccount.resetPwd' => [
+    		'App\Listeners\SalonAccountEventListener@onResetPwd',
+    	],
 
     ];
 

@@ -123,6 +123,146 @@ class Salon extends Model {
         return $list;
 	}
 	
+	
+	/**
+	 * 店铺列表导出
+	 */
+	public static  function getSalonListExport( $where = '',$orderName = 's.add_time  ',$order = 'desc' )
+	{
+		$fields = array(
+				's.salonid',
+				's.salonname',
+				's.addr',
+				's.addrlati',
+				's.addrlong',
+				's.zone',
+				's.district',
+				's.shopType',
+				's.contractTime',
+				's.contractPeriod',
+				's.bargainno',
+				's.bcontacts',
+				's.tel',
+				's.phone',
+				's.corporateName',
+				's.corporateTel',
+				's.sn',
+				's.salestatus',
+				's.businessId',
+				'i.bankName',
+				'i.beneficiary',
+				'i.bankCard',
+				'i.branchName',
+				'i.accountType',
+				'i.salonArea',
+				'i.dressingNums',
+				'i.staffNums',
+				'i.stylistNums',
+				'i.monthlySales',
+				'i.totalSales',
+				'i.price',
+				'i.payScale',
+				'i.payMoney',
+				'i.payMoneyScale',
+				'i.payCountScale',
+				'i.cashScale',
+				'i.blowScale',
+				'i.hdScale',
+				'i.platformName',
+				'i.platformScale',
+				'i.receptionNums',
+				'i.receptionMons',
+				'i.setupTime',
+				'i.hotdyeScale',
+				'i.lastValidity',
+				'i.salonType',
+				'i.contractPicUrl',
+				'i.licensePicUrl',
+				'i.corporatePicUrl',
+				'm.name',
+				'm.id as merchantId',
+				'b.businessName',
+				'd.status as dividendStatus',
+				'd.recommend_code',	
+		);
+
+		$query =  DB::table('salon as s')
+		->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
+		->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
+		->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
+		->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
+		->select($fields)
+		->orderBy($orderName,$order)
+		;
+		$query =  $query ->where("salestatus","!=","2");//剔除删除
+		// $query =  $query ->where("m.status","!=","2");//剔除商户删除
+		if(isset($where["shopType"]))
+		{
+			$query =  $query ->where("shopType","=",$where["shopType"]);
+		}
+		if(isset($where["zone"]))
+		{
+			$query =  $query ->where("zone","=",$where["zone"]);
+		}
+		if(isset($where["district"]))
+		{
+			$query =  $query ->where("s.district","=",$where["district"]);
+		}
+		if(isset($where["businessId"]))
+		{
+			$query =  $query ->where("businessId","=",$where["businessId"]);
+		}
+		if(isset($where['salonname'])&&$where['salonname'])
+		{
+			$keyword = '%'.$where['salonname'].'%';
+			$query = $query->where('salonname','like',$keyword);
+		}
+		if(isset($where['sn'])&&$where['sn'])
+		{
+			$keyword = '%'.$where['sn'].'%';
+			$query = $query->where('s.sn','like',$keyword);
+		}
+		if(isset($where['merchantName'])&&$where['merchantName'])
+		{
+			$keyword = '%'.$where['merchantName'].'%';
+			$query = $query->where('m.name','like',$keyword);
+		}
+		$rs = array();
+		$salonList =    $query->get();
+		if($salonList)
+		{
+			foreach ($salonList as $key=>$val)
+			{
+				$result[$key] = (array)$val;
+			}
+			$data = array();
+			$rs = array();
+			foreach($result as $key=>$val)
+			{
+				$tmpVal = (array)$val;
+				$data[$key] = $tmpVal;
+				$areaArr = Salon::getAreaMes(array("zone"=>$tmpVal["zone"],"district"=>$tmpVal["district"])) ;
+				if($areaArr)
+				{
+					$rs[$key] = array_merge($data[$key],$areaArr);
+				}
+				else
+				{
+					$rs[$key] = $data[$key];
+				}
+			}
+			
+			foreach($rs as $key=>$val)
+			{
+				if(is_null($val) == true)//null 数据转化为 空字符串
+				{
+					$rs[$key] = "";
+				}
+			}	
+		}
+		return $rs;
+	}
+	
 	/**
 	 * 终止合作 恢复店铺
 	 * type = 1 终止合作  2 恢复店铺

@@ -7,7 +7,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\Salon;
 use App\SalonAccount;
-
+use Event;
 
 class SalonAccountController extends Controller {
 	
@@ -169,6 +169,8 @@ class SalonAccountController extends Controller {
 		
 		if($id)
 		{
+			//触发事件，写入日志
+			Event::fire('salonAccount.save');
 			return $this->success();
 		}	
 		else
@@ -228,6 +230,8 @@ class SalonAccountController extends Controller {
 		$status = SalonAccount::doUpdate($param['salonUserId'], array("password"=>md5($this->pwd),"upTime"=>time()));
 		if($status)
 		{
+			//触发事件，写入日志
+			Event::fire('salonAccount.resetPwd');
 			return	$this->success();
 		}
 		else
@@ -282,6 +286,8 @@ class SalonAccountController extends Controller {
 		$status = SalonAccount::doUpdate($param['salonUserId'], array("status"=>$status,"upTime"=>time()));
 		if($status)
 		{
+			//触发事件，写入日志
+			Event::fire('salonAccount.delAct');
 			return	$this->success();
 		}
 		else

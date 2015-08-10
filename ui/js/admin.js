@@ -28,6 +28,7 @@
 			page.removeClass('full');
 		}
 	}
+	parent.lib.fullpage(false);
 })();
 $(function(){
 	/**渲染面包屑**/
@@ -122,8 +123,10 @@ $(function(){
 						time:2000,
 						define:function(){
 							if(data.result==1){
+								if($this.closest('.table').length==1){
+									$this.closest('tr').remove();
+								}
 								$this.trigger('remove');//触发remove事件
-							    $this.closest('tr').remove();
 							}
 						}
 					});
