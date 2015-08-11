@@ -13,6 +13,7 @@ use Event;
 use App\Manager;
 use JWTAuth;
 use App\City;
+use Excel;
 
 abstract class Controller extends BaseController
 {
@@ -128,6 +129,17 @@ abstract class Controller extends BaseController
 		$city = City::lists('id','title')->toArray();
 		$city = array_flip($city);
 		return $city;
+	}
+	
+	public function export_xls($filename,$header,$datas)
+	{
+	    Excel::create($filename, function($excel) use($datas,$header){
+	        $excel->sheet('Sheet1', function($sheet) use($datas,$header){
+	            $sheet->fromArray($datas, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+	            $sheet->prependRow(1, $header);//添加表头
+	    
+	        });
+	    })->export('xls');
 	}
 
 	public function parameters($definition, $required = false, $source =null , $prefix = null)

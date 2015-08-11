@@ -9,6 +9,8 @@ namespace App\Http\Controllers\ShopCount;
 use App\Http\Controllers\Controller;
 use App\ShopCountApi;
 use App\ShopCount;
+use Event;
+use App\PrepayBill;
 
 class ShopCountController extends Controller
 {
@@ -128,7 +130,7 @@ class ShopCountController extends Controller
      *		}
      */
     public function export()
-    {
+    {        
         $param = $this->parameters([
             'key'=>self::T_INT,
             'keyword'=>self::T_STRING,
@@ -139,10 +141,11 @@ class ShopCountController extends Controller
             'page_size'=>self::T_INT,
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
-        ]);
-    
-        $items = ShopCountApi::searchPrepay($param);
-        return $this->success($items);
+        ]);  
+        $header = ['店铺名称','付款单号','付款类型','付款金额','换算消费额','付款日期','创建日期','制单人','状态'];      
+        $items = ShopCountApi::getPrepayCondition($param)->addSelect('updated_at')->get()->toArray(); 
+        Event::fire('shopcount.export');
+        $this->export_xls("转付单".date("Ymd"),$header,self::format_prepay_data($items));
     }
     
    /**
@@ -224,6 +227,7 @@ class ShopCountController extends Controller
             throw new \Exception("参数有误,生成预览失败");
         }
         $items = ShopCountApi::prepayDetail($id);
+        Event::fire('shopcount.create',$items['code']);
         return $this->success($items);
     }
 
@@ -281,7 +285,9 @@ class ShopCountController extends Controller
                 throw new \Exception("参数有误,生成失败");
             }
         }
-       return $this->success(['id'=>$id]);
+        $prepays = PrepayBill::where('id',$id)->get()->toArray();
+        Event::fire('shopcount.store',$prepays[0]['code']);
+        return $this->success(['id'=>$id]);
     }
 
    /**
@@ -384,7 +390,7 @@ class ShopCountController extends Controller
      *		}
      */
     public function update($id)
-    {
+    {        
         $param = $this->parameters([
             'merchant_id'=>self::T_INT,
             'salon_id'=>self::T_INT,
@@ -398,6 +404,9 @@ class ShopCountController extends Controller
         {
             throw new \Exception("参数有误,更新失败");
         }
+        
+        $prepays = PrepayBill::where('id',$id)->get()->toArray();
+        Event::fire('shopcount.update',$prepays[0]['code']);
         return $this->success(['id'=>$id]);
     }
 
@@ -426,9 +435,17 @@ class ShopCountController extends Controller
     public function destroy($id)
     {        
         //是 ShopCount 不是 ShopCountApi  不要改回去了
+        $prepays = PrepayBill::where('id',$id)->get()->toArray();
+        if(empty($prepays) || !isset($prepays[0]))
+        {
+            return $this->success(['ret'=>1]);
+        }
+        $prepay = $prepays[0];
+        
         $ret = ShopCount::deletePrepay($id);
         if($ret)
         {
+            Event::fire('shopcount.destroy',$prepay['code']);
             return $this->success(['ret'=>1]);
         }
         else
@@ -539,6 +556,7 @@ class ShopCountController extends Controller
      */
     public function delegate_export()
     {
+        
         $param = $this->parameters([
             'key'=>self::T_INT,
             'keyword'=>self::T_STRING,
@@ -550,9 +568,18 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);
-    
-        $items = ShopCountApi::searchPrepay($param);
-        return $this->success($items);
+        $header = ['店铺名称','代收单号','代收类型','代收金额','代收日期'];
+        $items = ShopCountApi::getInsteadReceiveCondition($param)->get()->toArray();
+        $count = count($items);
+        if($count > 10000)//一万条以上
+        {
+            return $this->error("你导出的数据超出1W条，会导致系统奔溃，请修改筛选条件分批导出!");
+        }
+        Event::fire('shopcount.delegateExport');    
+        $res = self::format_ir_data($items); 
+        unset($items);
+        ini_set('memory_limit','256M');
+        $this->export_xls("代收单".date("Ymd"), $header, $res);
     }
     
     /**
@@ -709,41 +736,6 @@ class ShopCountController extends Controller
      * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
      *
-     * @apiSuccessExample Success-Response:
-     *       {
-     *           "result": 1,
-     *           "data": {
-     *               "total": 1,
-     *               "per_page": 10,
-     *               "current_page": 1,
-     *               "last_page": 1,
-     *               "from": 1,
-     *               "to": 1,
-     *               "data": [
-     *                   {
-     *                       "id": 1,
-     *                       "created_at": "2015-07-01 00:00:00",
-     *                       "merchant_id": 3,
-     *                       "merchant_name":"米莱国际",
-     *                       "salon_id": 2,
-     *                       "salon_name":"米莱国际造型连锁(田贝店)",
-     *                       "salon_type":1,
-     *                       "pay_money": "123.00",
-     *                       "cost_money": "111.00",
-     *                       "spend_money": "23434.00",
-     *                       "balance_money": "2334.00",
-     *                       "invest_money": "2334.00",
-     *                       "invest_return_money": "23.00",
-     *                       "invest_balance_money": "343.00",
-     *                       "borrow_money": "2323.00",
-     *                       "borrow_return_money": "34.00",
-     *                       "borrow_balance_money": "2334.00"
-     *                   }
-     *               ]
-     *           }
-     *       }
-     *
-     *
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
@@ -751,7 +743,7 @@ class ShopCountController extends Controller
      *		}
      */
     public function balance_export()
-    {
+    {        
         $param = $this->parameters([
             'key'=>self::T_INT,
             'keyword'=>self::T_STRING,
@@ -763,8 +755,10 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);
-        $items = ShopCountApi::searchShopCount($param);
-        return $this->success($items);
+        $header = ['店铺','所属商户','店铺类型','预付款--付交易代收款','换算消费额','交易消费额','交易余额','付投资款','付投款返还','投资余额','付借款','借款返还','借款余额'];
+        $items = ShopCountApi::getShopCountCondition($param)->get()->toArray();       
+        Event::fire('shopcount.balanceExport');
+        $this->export_xls("店铺往来".date("Ymd"), $header, self::format_shopcount_data($items));
     }
     
     /**
@@ -824,14 +818,97 @@ class ShopCountController extends Controller
         }
         $orders = explode(",", $param['ordersn']);
         $res = null;
+        $operation = "";
         if ($param['type'] == 1)
         {
+            $operation = "订单结算";
             $res = ShopCountApi::countOrder($orders);
         }
         else if($param['type'] == 2)
         {
+            $operation = "赏金单结算";
             $res = ShopCountApi::countBounty($orders);
         }
+        if(!empty($res))
+        {
+            Event::fire("shopcount.countOrder",['operation'=>$operation,'object'=>$param['ordersn']]);
+        }
         return $this->success($res);
+    }
+
+    protected static function format_prepay_data($datas)
+    {
+        $res = [];
+        foreach ($datas as $data) {
+            $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
+            $typename = $data['type'] == 3 ? "交易代收款返还" : "付交易代收款";
+            $username = $data['user']['name'];
+            $statename = "已付款";
+            $res[] = [
+                'salon_name' => $salon_name,
+                'code' => $data['code'],
+                'typename' => $typename,
+                'pay_money' => $data['pay_money'],
+                'cost_money' => $data['cost_money'],
+                'day' => $data['day'],
+                'updated_at' => $data['updated_at'],
+                'username' => $username,
+                'statename' => $statename
+            ];
+        }
+        return $res;
+    }
+
+    protected static function format_ir_data($datas)
+    {
+        $res = [];
+        foreach ($datas as $data) {
+            $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
+            $typename = "项目消费";
+            $res[] = [
+                'salon_name' => $salon_name,
+                'code' => $data['code'],
+                'typename' => $typename,
+                'money' => $data['money'],
+                'day' => $data['day']
+            ];
+        }
+        return $res;
+    }
+
+    protected static function format_shopcount_data($datas)
+    {
+        $res = [];
+        foreach ($datas as $data) {
+            $salon_type_name = "";
+            switch ($data['salon_type']) {
+                case 1:
+                    $salon_type_name = "预付款店";
+                    break;
+                case 2:
+                    $salon_type_name = "投资店";
+                    break;
+                case 3:
+                    $salon_type_name = "金字塔店";
+                    break;
+            }
+            $typename = "项目消费";
+            $res[] = [
+                'salon_name' => $data['salon_name'],
+                'merchant_name' => $data['merchant_name'],
+                'salon_type_name' => $salon_type_name,
+                'pay_money' => $data['pay_money'],
+                'cost_money' => $data['cost_money'],
+                'spend_money' => $data['spend_money'],
+                'balance_money' => $data['balance_money'],
+                'invest_money' => $data['invest_money'],
+                'invest_return_money' => $data['invest_return_money'],
+                'invest_balance_money' => $data['invest_balance_money'],
+                'borrow_money' => $data['borrow_money'],
+                'borrow_return_money' => $data['borrow_return_money'],
+                'borrow_balance_money' => $data['borrow_balance_money']
+            ];
+        }
+        return $res;
     }
 }

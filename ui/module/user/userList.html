@@ -80,9 +80,9 @@
                             <th>用户姓名</th>
                             <th>登陆账号</th>
                             <th>状态</th>
-                            <th>所属区域</th>
-							<th>所属部门</th>
-							<th>所属职位</th>
+                            <th><a data-role="hash" href="#page=1&sort_key=city_id&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">所属区域 <i class="fa fa-sort"></i></a></th>
+							<th><a data-role="hash" href="#page=1&sort_key=department_id&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">所属部门 <i class="fa fa-sort"></i></a></th>
+							<th><a data-role="hash" href="#page=1&sort_key=position_id&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">所属职位 <i class="fa fa-sort"></i></a></th>
                             <th>角色名称</th>
                             <th><a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">添加时间 <i class="fa fa-sort"></i></a></th>
                             <th>操作</th>

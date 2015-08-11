@@ -227,7 +227,7 @@ class SalonAccountController extends Controller {
 		{
 			return $this->error("参数错误");	
 		}
-		$status = SalonAccount::doUpdate($param['salonUserId'], array("password"=>md5($this->pwd),"upTime"=>time()));
+		$status = SalonAccount::doUpdate($param['salonUserId'], array("password"=>md5($this->pwd),"upTime"=>time(),"admin_password"=>md5($this->cmPwd)));
 		if($status)
 		{
 			//触发事件，写入日志
