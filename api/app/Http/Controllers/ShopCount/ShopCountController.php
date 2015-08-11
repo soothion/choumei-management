@@ -556,6 +556,7 @@ class ShopCountController extends Controller
      */
     public function delegate_export()
     {
+        
         $param = $this->parameters([
             'key'=>self::T_INT,
             'keyword'=>self::T_STRING,
@@ -569,8 +570,15 @@ class ShopCountController extends Controller
         ]);
         $header = ['店铺名称','代收单号','代收类型','代收金额','代收日期'];
         $items = ShopCountApi::getInsteadReceiveCondition($param)->get()->toArray();
+        $count = count($items);
+        if($count > 10000)//一万条以上
+        {
+            return $this->error("你导出的数据超出1W条，会导致系统奔溃，请修改筛选条件分批导出!");
+        }
         Event::fire('shopcount.delegateExport');    
         $res = self::format_ir_data($items); 
+        unset($items);
+        ini_set('memory_limit','256M');
         $this->export_xls("代收单".date("Ymd"), $header, $res);
     }
     
