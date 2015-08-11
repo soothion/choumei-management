@@ -569,9 +569,9 @@ class ShopCountController extends Controller
         ]);
         $header = ['店铺名称','代收单号','代收类型','代收金额','代收日期'];
         $items = ShopCountApi::getInsteadReceiveCondition($param)->get()->toArray();
-        Event::fire('shopcount.delegateExport');       
-        $this->export_xls("代收单".date("Ymd"), $header, self::format_ir_data($items));
-        return $this->success($items);
+        Event::fire('shopcount.delegateExport');    
+        $res = self::format_ir_data($items); 
+        $this->export_xls("代收单".date("Ymd"), $header, $res);
     }
     
     /**
