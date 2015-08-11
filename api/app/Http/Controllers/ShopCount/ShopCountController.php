@@ -573,7 +573,9 @@ class ShopCountController extends Controller
         $count = count($items);
         if($count > 10000)//一万条以上
         {
-            return $this->error("你导出的数据超出1W条，会导致系统奔溃，请修改筛选条件分批导出!");
+            echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
+            echo "<h2>你导出的数据超出1W条，会导致系统奔溃，请修改筛选条件分批导出!</h2>";
+            return;
         }
         Event::fire('shopcount.delegateExport');    
         $res = self::format_ir_data($items); 
