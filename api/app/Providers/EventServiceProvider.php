@@ -99,6 +99,32 @@ class EventServiceProvider extends ServiceProvider
     		'App\Listeners\SalonAccountEventListener@onResetPwd',
     	],
 
+		        //店铺结算相关操作
+        'shopcount.export' => [
+            'App\Listeners\ShopcountEventListener@onExport',
+        ],
+        'shopcount.create' => [
+            'App\Listeners\ShopcountEventListener@onCreate',
+        ],
+        'shopcount.store' => [
+            'App\Listeners\ShopcountEventListener@onStore',
+        ],
+        'shopcount.update' => [
+            'App\Listeners\ShopcountEventListener@onUpdate',
+        ],
+        'shopcount.destroy' => [
+            'App\Listeners\ShopcountEventListener@onDestroy',
+        ],
+        'shopcount.delegateExport' => [
+            'App\Listeners\ShopcountEventListener@onDelegateExport',
+        ],
+        'shopcount.balanceExport' => [
+            'App\Listeners\ShopcountEventListener@onBalanceExport',
+        ],
+        'shopcount.countOrder' => [
+            'App\Listeners\ShopcountEventListener@onCountOrder',
+        ],
+
     ];
 
     /**
