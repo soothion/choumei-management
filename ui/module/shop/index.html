@@ -15,13 +15,13 @@
       <div class="flex-item">
 		<h4>店铺列表</h4>
       </div>
-	  <form action="salon/export" data-role="export" data-slug="salon.export">
-		   <button class="btn">导出</button>
-	  </form>
     </div>
     
     </div>
       <div class="wrapper">
+		<form action="salon/export" data-role="export" id="export" >
+		   
+	  </form>
         <form data-role="hash" id="form" class="shop-hash-form">
           <div class="position">
             <div class="input-group">
@@ -41,7 +41,8 @@
             </div>
               <a class="btn" id="dropMenu">
               筛选条件 <i class="fa fa-angle-down"></i>
-              </a>  
+              </a>
+			<button class="btn" form="export" data-slug="salon.export">导出</button>			  
           </div>
 
           <div class="area-box" style="display:none">

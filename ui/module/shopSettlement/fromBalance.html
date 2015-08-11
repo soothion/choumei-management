@@ -12,9 +12,7 @@
 				<div class="flex-item">
 					<h4>往来余额</h4>
 				</div>
-				<form action="shop_count/balance_export" data-role="export" data-slug="shop_count.balance_export">
-					<button class="btn">导出</button>
-				</form>
+				
 			</div>
 		</div>
 		<div class="wrapper">
@@ -29,6 +27,9 @@
 						<i class="fa fa-search"></i>
 					</button>
 				</div>
+			</form>
+			<form action="shop_count/balance_export" data-role="export" data-slug="shop_count.balance_export">
+				<button class="btn">导出</button>
 			</form>
 			<div class="table" id="table" ajat="shop_count/balance?<%=query._%>#domid=table&tempid=table-t">
 			<script type="text/template" id="table-t">
