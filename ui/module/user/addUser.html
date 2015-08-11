@@ -68,14 +68,14 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门：</label>
 				<div class="control">
-					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id%>" id="department" <%=data.status==3?"disabled":""%> ajat-change="list/position?department_id=${value}#domid=position&tempid=position_t">
+					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id%>" id="department" <%=data.status==3?"disabled":""%> ajat-change="list/position?id=${value}#domid=position&tempid=position_t">
 					</select>
 				</div>
 			</div>
 		<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>职位：</label>
 				<div class="control">
-					<select required name="position_id" class="select" ajat="<%if(data.department_id){%>list/position?department_id=<%=data.department_id%><%}%>#domid=position&tempid=position_t&sid=<%=data.position_id%>" id="position" <%=data.status==3?"disabled":""%>>
+					<select required name="position_id" class="select" ajat="<%if(data.department_id){%>list/position?id=<%=data.department_id%><%}%>#domid=position&tempid=position_t&sid=<%=data.position_id%>" id="position" <%=data.status==3?"disabled":""%>>
 					</select>
 				</div>
 			</div>
@@ -153,6 +153,9 @@
             }else{
                 $('input[type="password"]').attr('disabled',true);
             }
+        })
+		$(document.body).on('_ready','#department',function(){
+            $(this).trigger('change');
         })
     </script>
 	<script type="text/template" id="city-t">

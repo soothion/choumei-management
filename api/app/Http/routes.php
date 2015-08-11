@@ -92,6 +92,26 @@ Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
 // 店铺消费验证  结算
 Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
 
+//for test
+//转付单导出
+Route::any('shop_count/export', array(
+'as' => 'shop_count.export',
+'uses' => 'ShopCount\ShopCountController@export'
+    ));
+
+//代收单导出
+Route::any('shop_count/delegate_export', array(
+'as' => 'shop_count.delegate_export',
+'uses' => 'ShopCount\ShopCountController@delegate_export'
+    ));
+
+//店铺往来导出
+Route::any('shop_count/balance_export', array(
+'as' => 'shop_count.balance_export',
+'uses' => 'ShopCount\ShopCountController@balance_export'
+    ));
+//test end
+
 //权限管理后台接口
 Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 // Route::group(['middleware'], function(){
@@ -226,8 +246,25 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
     Route::any('shop_count/balance', array(
         'as' => 'shop_count.balance',
         'uses' => 'ShopCount\ShopCountController@balance'
-    ));    
-
+    ));  
+    
+//     //转付单导出
+//     Route::any('shop_count/export', array(
+//     'as' => 'shop_count.export',
+//     'uses' => 'ShopCount\ShopCountController@export'
+//     ));
+    
+//     //代收单导出
+//     Route::any('shop_count/delegate_export', array(
+//     'as' => 'shop_count.delegate_export',
+//     'uses' => 'ShopCount\ShopCountController@delegate_export'
+//         ));
+    
+//     //店铺往来导出
+//     Route::any('shop_count/balance_export', array(
+//     'as' => 'shop_count.balance_export',
+//     'uses' => 'ShopCount\ShopCountController@balance_export'
+//     ));
 
 
 

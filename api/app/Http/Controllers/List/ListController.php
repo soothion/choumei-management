@@ -63,14 +63,6 @@ class ListController extends Controller{
 	 *	        {
 	 *	            "id": 1,
 	 *	            "title": "产品部"
-	 *	        },
-	 *	        {
-	 *	            "id": 5,
-	 *	            "title": "商务部"
-	 *	        },
-	 *	        {
-	 *	            "id": 2,
-	 *	            "title": "运营部"
 	 *	        }
 	 *	    ]
 	 *	}
@@ -83,11 +75,12 @@ class ListController extends Controller{
 
 
 	/**
-	 * @api {post} /list/position 3.获取职位列表
+	 * @api {post} /list/position/:id 3.获取职位列表
 	 * @apiName position
 	 * @apiGroup List
 	 *
-	 *
+	 * @apiParam {Number} id 部门id
+	 * 
 	 * @apiSuccess {Array} position 返回职位列表数组.
 	 *
 	 * @apiSuccessExample Success-Response:
@@ -115,7 +108,11 @@ class ListController extends Controller{
 	 *
 	 */
 	public function position(){
-		$result = Position::select(['id','title'])->get();
+		$param = $this->param;
+		$query = Position::getQuery();
+		if(!empty($param['id']))
+		$query = $query->where('department_id',$param['id']);
+		$result = $query->select(['id','title'])->get();
 		return $this->success($result);
 	}
 
