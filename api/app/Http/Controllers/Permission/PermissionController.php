@@ -166,7 +166,7 @@ class PermissionController extends Controller{
 
 	    $array = $query->get();
 	    foreach ($array as $key => $value) {
-	    	$result[$key]['id'] = $value->id;
+	    	$result[$key]['id'] = $key+1;
 	    	$result[$key]['title'] = $value->title;
 	    	$result[$key]['status'] = $this->status($value->status);
 	    	$result[$key]['created_at'] = $value->created_at;

@@ -307,7 +307,7 @@ class UserController extends Controller{
 
 		$array = $query->get();
 	    foreach ($array as $key => $value) {
-	    	$result[$key]['id'] = $value->id;
+	    	$result[$key]['id'] = $key+1;
 	    	$result[$key]['name'] = $value->name;
 	    	$result[$key]['username'] = $value->username;
 	    	$result[$key]['status'] = $this->status($value->status);
