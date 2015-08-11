@@ -2,6 +2,8 @@ alter table cm_positions add department_id int(10) unsigned not null default 1 a
 #删除唯一约束
 alter table cm_positions drop index positions_title_unique;
 alter table cm_departments drop index departments_title_unique;
+truncate table cm_positions;
+truncate table cm_departments;
 
 INSERT INTO `cm_permissions` (`id`, `inherit_id`, `title`, `slug`, `status`, `description`, `note`, `sort`, `show`, `created_at`, `updated_at`)
 VALUES
