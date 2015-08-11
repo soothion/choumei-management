@@ -87,8 +87,11 @@ class IndexController extends Controller{
 	public function login(){
 		$captcha = new Captcha;
 		$validator = $captcha::check(strtolower($this->param['captcha']));
-        if (!$validator)
-	       return $this->error('验证码错误');
+        if (!$validator){
+        	$captcha::create();//重新生成验证码
+        	return $this->error('验证码错误');
+        }
+	       
 		if (Auth::attempt(array('username' => $this->param['username'], 'password' => $this->param['password'])))
 		{       
     		$user = Manager::where('username',$this->param['username'])->firstOrFail();
@@ -103,6 +106,7 @@ class IndexController extends Controller{
     	}
         else
         {
+        	$captcha::create();//重新生成验证码
         	return $this->error('用户名或密码错误');
         }
 	}
