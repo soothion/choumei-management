@@ -305,16 +305,34 @@ class UserController extends Controller{
 			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
 		}
 
-		$result = $query->get()->toArray();
-
-		//触发事件，写入日志
+		$array = $query->get();
+	    foreach ($array as $key => $value) {
+	    	$result[$key]['id'] = $value->id;
+	    	$result[$key]['name'] = $value->name;
+	    	$result[$key]['username'] = $value->username;
+	    	$result[$key]['status'] = $this->status($value->status);
+	    	$result[$key]['city'] = $value->city->title;
+	    	$result[$key]['department'] = $value->department->title;
+	    	$result[$key]['position'] = $value->position->title;
+	    	$roles = '';
+	    	foreach ($value->roles as $role) {
+	    		$roles .= $role->name.',';
+	    	}
+	    	$roles = rtrim($roles,',');
+	    	$result[$key]['roles'] = $roles;
+	    	$result[$key]['created_at'] = $value->created_at;
+	    }
+		// 触发事件，写入日志
 	    Event::fire('user.export');
 		
-		//导出excel	 
-		$title = 'users-'.date('Y-m-d');  
-	    Excel::create($title, function($excel) use($result){
-		    $excel->sheet('Sheet1', function($sheet) use($result){
-			        $sheet->fromArray($result);
+		//导出excel	   
+		$title = '用户列表'.date('Ymd');
+		$header = ['序号','用户姓名','登陆账号','状态','所属区域','所属部门','所属职位','角色名称','添加时间'];
+		Excel::create($title, function($excel) use($result,$header){
+		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
+			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+	        		$sheet->prependRow(1, $header);//添加表头
+
 			    });
 		})->export('xls');
 

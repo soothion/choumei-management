@@ -95,6 +95,9 @@ class LogController extends Controller{
 			$keyword = '%'.$param['username'].'%';
 			$query = $query->where('username','like',$keyword);
 		}
+
+		$query = $query->orderBy('created_at','desc');
+
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 
@@ -158,18 +161,27 @@ class LogController extends Controller{
 			$query = $query->where('username','like',$keyword);
 		}
 
-		$result = $query->get();
-	    foreach ($result as $key => $value) {
-	    	$result[$key] = (array)$value;
+		$array = $query->get();
+	    foreach ($array as $key => $value) {
+	    	$result[$key]['username'] = $value->username;
+	    	$result[$key]['roles'] = $value->roles;
+	    	$result[$key]['operation'] = $value->operation;
+	    	$result[$key]['slug'] = $value->slug;
+	    	$result[$key]['object'] = $value->object;
+	    	$result[$key]['ip'] = $value->ip;
+	    	$result[$key]['created_at'] = $value->created_at;
 	    }
 		//触发事件，写入日志
-	    Event::fire('log.export');
+	    Event::fire('role.export');
 		
 		//导出excel	   
-		$title = 'logs-'.date('Y-m-d');
-	    Excel::create($title, function($excel) use($result){
-		    $excel->sheet('Sheet1', function($sheet) use($result){
-			        $sheet->fromArray($result);
+		$title = '日志列表'.date('Ymd');
+		$header = ['登录账号'	,'用户角色','操作类型'	,'操作模块','操作对象'	,'操作ip','操作时间'];
+		Excel::create($title, function($excel) use($result,$header){
+		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
+			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+	        		$sheet->prependRow(1, $header);//添加表头
+
 			    });
 		})->export('xls');
 

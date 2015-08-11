@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ShopcountCountBountyBalance::class,
         \App\Console\Commands\ShopcountImportPrepay::class,
         \App\Console\Commands\ShopcountFastCountOrder::class,
+        \App\Console\Commands\ResetPassword::class,
     ];
 
     /**

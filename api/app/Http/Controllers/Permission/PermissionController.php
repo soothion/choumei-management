@@ -164,18 +164,26 @@ class PermissionController extends Controller{
 			$query = $query->where('title','like',$keyword);
 		}
 
-	    $result = $query->get();
-	    foreach ($result as $key => $value) {
-	    	$result[$key] = (array)$value;
+	    $array = $query->get();
+	    foreach ($array as $key => $value) {
+	    	$result[$key]['id'] = $value->id;
+	    	$result[$key]['title'] = $value->title;
+	    	$result[$key]['status'] = $this->status($value->status);
+	    	$result[$key]['created_at'] = $value->created_at;
+	    	$result[$key]['slug'] = $value->slug;
+	    	$result[$key]['description'] = $value->description;
 	    }
 		// 触发事件，写入日志
 	    Event::fire('permission.export');
 		
 		//导出excel	   
-		$title = 'permissions-'.date('Y-m-d');
-	    Excel::create($title, function($excel) use($result){
-		    $excel->sheet('Sheet1', function($sheet) use($result){
-			        $sheet->fromArray($result);
+		$title = '权限列表'.date('Ymd');
+		$header = ['序号','权限名称','状态','添加时间','配置路径','权限说明'];
+		Excel::create($title, function($excel) use($result,$header){
+		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
+			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+	        		$sheet->prependRow(1, $header);//添加表头
+
 			    });
 		})->export('xls');
 

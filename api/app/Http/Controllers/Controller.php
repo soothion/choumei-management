@@ -62,6 +62,10 @@ abstract class Controller extends BaseController
 		]);
 	}
 	
+	public function status($id){
+		$status = [1=>'正常',2=>'停用',3=>'注销'];
+		return empty($status[$id])?'未知':$status[$id];
+	}
 	
 	//生成树型结构
 	public function tree($array){   
