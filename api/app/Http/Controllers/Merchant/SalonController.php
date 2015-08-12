@@ -12,6 +12,7 @@ use App\Town;
 use App\SalonUser;
 use Excel;
 use Event;
+use App\CompanyCodeCollect;
 
 class SalonController extends Controller {
 		
@@ -689,7 +690,7 @@ class SalonController extends Controller {
 		);
 		return DB::table('dividend')->insertGetId($datas);
 	}
-	
+
 	/**
 	 * 获取推荐码
 	 * 
@@ -706,6 +707,12 @@ class SalonController extends Controller {
         $codeTmpInfo = Dividend::where(array("recommend_code"=>$code))->first();
 		if ($codeTmpInfo){
             return $this->getRecommendCode ();
+        }
+        
+        // 集团码
+        $codeComTmpInfo = CompanyCodeCollect::where(array("code"=>$code))->first();
+        if ($codeComTmpInfo){
+        	return $this->getRecommendCode ();
         }
 
 		return $code;
@@ -1006,7 +1013,7 @@ class SalonController extends Controller {
 			{
 				$result[$key]['salonname'] = $val['salonname'];
 				$result[$key]['recommend_code'] = $val['recommend_code'];
-				$result[$key]['dividendStatus'] = $val['dividendStatus']?'已进入':'未加入';
+				$result[$key]['dividendStatus'] = $val['dividendStatus']?'未进入':'已加入';
 				$result[$key]['name'] = $val['name'];
 				$result[$key]['addr'] = $val['addr'];
 				//$result[$key]['districtName'] = $val['districtName'];
@@ -1035,13 +1042,9 @@ class SalonController extends Controller {
 				$result[$key]['bankName'] = $val['bankName'];
 				$result[$key]['branchName'] = $val['branchName'];
 				$result[$key]['beneficiary'] = $val['beneficiary'];
-				$result[$key]['bankCard'] = $val['bankCard'];
-			
+				$result[$key]['bankCard'] = (string)$val['bankCard'];
 				$result[$key]['accountType'] = $val['accountType']?$accountTypeArr[$val['accountType']]:'';
-					
-					
-				
-					
+	
 			}
 		}
 		
