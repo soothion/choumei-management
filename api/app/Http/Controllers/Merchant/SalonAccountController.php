@@ -170,7 +170,7 @@ class SalonAccountController extends Controller {
 		if($id)
 		{
 			//触发事件，写入日志
-			Event::fire('salonAccount.save');
+			Event::fire('salonAccount.save',$this->getAccount($id));
 			return $this->success();
 		}	
 		else
@@ -231,13 +231,25 @@ class SalonAccountController extends Controller {
 		if($status)
 		{
 			//触发事件，写入日志
-			Event::fire('salonAccount.resetPwd');
+			Event::fire('salonAccount.resetPwd',$this->getAccount($param['salonUserId']));
 			return	$this->success();
 		}
 		else
 		{
 			return $this->error("操作失败");
 		}
+	}
+	
+	/**
+	 * 获取用户信息
+	 * 
+	 * **/
+	private function getAccout($userId)
+	{
+		$query = SalonUser::getQuery();
+		$query = $query->where('salon_user_id','=',$userId);
+		$list = $query->first();
+		return $list->username;
 	}
 	
 	/**
@@ -287,7 +299,7 @@ class SalonAccountController extends Controller {
 		if($status)
 		{
 			//触发事件，写入日志
-			Event::fire('salonAccount.delAct');
+			Event::fire('salonAccount.delAct',$this->getAccount($param['salonUserId']));
 			return	$this->success();
 		}
 		else
