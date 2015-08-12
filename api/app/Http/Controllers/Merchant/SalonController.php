@@ -1042,7 +1042,7 @@ class SalonController extends Controller {
 				$result[$key]['bankName'] = $val['bankName'];
 				$result[$key]['branchName'] = $val['branchName'];
 				$result[$key]['beneficiary'] = $val['beneficiary'];
-				$result[$key]['bankCard'] = (string)$val['bankCard'];
+				$result[$key]['bankCard'] = ' '.$val['bankCard'];
 				$result[$key]['accountType'] = $val['accountType']?$accountTypeArr[$val['accountType']]:'';
 	
 			}
