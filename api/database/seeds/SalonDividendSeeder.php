@@ -19,6 +19,9 @@ class SalonDividendSeeder extends Seeder
      * php artisan db:seed --class=SalonDividendSeeder
      * 
      */
+	//预定码
+	private $codeArr = array('6890','9988','9966','5988','6990','8668','6666','6888','5800','6688','8918','9898','1200','1201','1202','1299','1211','8608','1206','1207','1208','1298','1210','1279','1212','1213','1222','1215','1217','1218','0202','1258','1290','1220','1221','1223','1224','1887','1881','1890','1818','1877','1876','1875','1873','1872','1871','1870','1869','1868','1867','1866','1865','1863','1861','1860','1858','1857','1856','1855','1853','1852','1851','1850','1839','1836','1835','1832','1831','1900','1909','1828','1827','1826','1825','1823','1822','1821','1820','1901','1902','1903','1905','1906','1907','1226','1227','1287','1230','1286','1717','5917','0628','7777','0718','3333','1111','0805','0810','0822','1777','1010','0626');
+	 
     public function run()
     {
     	$sql = "select `cm_s`.`salonid`,`cm_s`.`district` from `cm_salon` as `cm_s` left join `cm_dividend` as `cm_d` on `cm_s`.`salonid` = `cm_d`.`salon_id` where `cm_d`.`salon_id` is NULL";
@@ -73,7 +76,14 @@ class SalonDividendSeeder extends Seeder
     	if (intval ( $code ) < 1000){
     		return $this->getRecommendCode ();
     	}
-    
+		
+		//屏蔽预定码
+		$codeArr = $this->codeArr;
+        if(in_array($code, $codeArr))
+        {
+        	return $this->getRecommendCode ();
+        }
+	
     	// 如果数据库中已在存在则继续执行
     	$codeTmpInfo = Dividend::where(array("recommend_code"=>$code))->first();
     	if ($codeTmpInfo){
