@@ -7,6 +7,7 @@ use App\Salon;
 use App\Merchant;
 use App\Dividend;
 use App\Town;
+use App\CompanyCodeCollect;
 
 class SalonDividendSeeder extends Seeder
 {
@@ -78,6 +79,12 @@ class SalonDividendSeeder extends Seeder
     	if ($codeTmpInfo){
     		return $this->getRecommendCode ();
     	}
+		        
+        // 集团码
+        $codeComTmpInfo = CompanyCodeCollect::where(array("code"=>$code))->first();
+        if ($codeComTmpInfo){
+        	return $this->getRecommendCode ();
+        }
     
     	return $code;
     }
