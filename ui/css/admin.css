@@ -81,15 +81,36 @@ select:focus,.select-focus{
 	border-color:rgba(88,162,236,0.9);
 	box-shadow:0 0 10px rgba(102, 175, 233, 0.7);
 }
-input.radio:checked+label:before,input.checkbox:checked+label:before{
+input.radio:checked+label:before,input.checkbox:checked+label:before,label>input[type="radio"]:checked+span:before,label>input[type="checkbox"]:checked+span:before{
 	box-shadow:0px 0px 0px 3px #fff,0px 0px 0px 4px #498ae5;
     background:#498ae5;
 }
-input.radio+label:before{
+
+input.radio+label:before,label>input[type="radio"]+span:before{
 	width:6px;
 	height:6px;
 }
-
+input.checkbox+label:before,label>input[type="checkbox"]+span:before{
+	box-shadow:none!important;
+	height:12px;
+	width:12px;
+	line-height:12px;
+	content:"\f00c";
+	font-family:'FontAwesome';
+	color:#ccc;
+	border:1px solid #ccc;
+	background:#fff!important;
+	text-align:center;
+	margin-right:4px;
+	border-radius:2px;
+	font-size:10px!important;
+}
+input.checkbox:checked+label:before,label>input[type="checkbox"]:checked+span:before{
+	background:#fff;
+	box-shadow:none;
+	color:#498ae5;
+	border-color:#498ae5;
+}
 
 .tab{
 	border:1px solid #E6EAF2;
@@ -286,21 +307,16 @@ aside h2{
 	 padding:0 15px;
 	 cursor:pointer;
 }
+.menu-category ul{
+	display:none;
+}
 .menu-category li{
     margin-left:10px;
     overflow: hidden;
 	text-shadow:0px 0px 1px rgba(255,255,255,0.15);
 }
-.menu-category .flex-item{
+.menu-category li a{
 	padding-left:10px;
-}
-.menu-category .flex-item+a{
-    width:40px;
-    text-align: center;
-    font-size:18px;
-}
-.menu-category ul{
-	display:none;
 }
 .menu-category.active ul{
     background: #fff;
@@ -437,27 +453,7 @@ input.solid:checked+label,input.solid+label:hover{
 	background-color:#498ae5;
 	color:#fff;
 }
-input.checkbox+label:before{
-	box-shadow:none;
-	height:12px;
-	width:12px;
-	line-height:12px;
-	content:"\f00c";
-	font-family:'FontAwesome';
-	color:#ccc;
-	border:1px solid #ccc;
-	background:#fff;
-	text-align:center;
-	margin-right:4px;
-	border-radius:2px;
-	font-size:10px!important;
-}
-input.checkbox:checked+label:before{
-	background:#fff;
-	box-shadow:none;
-	color:#498ae5;
-	border-color:#498ae5;
-}
+
 .unit{
 	display: inline-block; 
 	width: 0px;
@@ -524,6 +520,17 @@ th.colswrap{
 	font-size:32px;
 	margin-right:5px;
 	vertical-align:middle;
+}
+.table table input.checkbox+label,.table table label>input[type="radio"]+span,.table table label>input[type="checkbox"]+span{
+	margin-right:0px!important;
+}
+.table-bottom{
+	margin:10px 0;
+	padding:5px 10px;
+	background:rgba(0,0,0,0.05);
+}
+.tr-selected{
+	background:rgba(73,165,238,0.08)!important;
 }
 /**列表 end**/
 /**分页 start**/
@@ -795,6 +802,36 @@ form[data-role="hash"] button{
 	font-size:60px;
 	color:#fff;
 	line-height:40px;
+}
+
+.filter-box{
+	margin:15px 0;
+	line-height: 26px;
+}
+.filter-box label span{
+	min-width: 0;
+	display:inline-block;
+	vertical-align: middle;
+	cursor:pointer;
+	padding:0px 10px;
+	margin:-1px!important;
+	border:1px solid transparent;
+}
+.filter-box label input+span:before{
+	display:none;
+}
+.filter-box label input:checked+span{
+	color:#58A2EC;
+	font-weight:bold;
+}
+.filter-box .filter-tab input:checked+span{
+	border-color:#D7D7D7 #D7D7D7 #fff #D7D7D7;
+	position: relative;
+	z-index: 100;
+}
+.filter-box .filter-tab+.flex-box>.flex-item{
+	border: 1px solid #D7D7D7;
+	padding:5px 0;
 }
 
 .ie9 .flex-box{

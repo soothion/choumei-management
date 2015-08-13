@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <title>臭美管理后台</title>
+        <script src="/js/include.js"></script>
+    </head>
+    <body>
+	
+	 <div class="breadcrumb">
+            <a>收款管理</a><span>&gt;</span><a href="index.html">收款列表</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑收款":"新增收款"%></span>
+				<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑收款":"新增收款"%></h4>
+				
+			</div>		 
+		  </div>
+		 <hr />
+        </div>			
+     <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}else{%>shop_count/create<%}%>">
+				<div class="detail-operation">
+				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+				<span class="space"></span>
+				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
+			</div>
+				
+                  <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>付款单类型：</label>
+                    <div class="control">
+                       <select required name="type" class="select"  style="width:20%;" <%=query.id?"disabled":""%>>
+							<option value="2" <%=data.type==1||data.type==2?"selected":""%>>付交易代收款</option>						 
+                            <option value="3" <%=data.type==3?"selected":""%>>交易代收款返还</option>    							
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group" style="width:800px;margin-left:30px;" >
+                    <legend>付款详情</legend>
+						<hr />
+                </div>
+					<%if(!query._){%>
+					<input type="hidden" name="salon_id" id="salon_id" />
+				  <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
+                    <div class="control complete">
+                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required>
+						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;">							
+						</div>
+                    </div>
+                </div>			
+                 <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
+                    <div class="control">
+                        <input type="text" id="merchantname" disabled>
+						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" />
+                    </div>
+                </div>
+					<%}else{%>
+				<input type="hidden" name="salon_id" id="salon_id" value="<%=data.salon.salonid||""%>"/>
+				  <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
+                    <div class="control complete">
+                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required value="<%=data.salon.salonname||""%>">
+						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
+                    </div>
+                </div>
+                 <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
+                    <div class="control">
+                        <input type="text" id="merchantname" value="<%=data.merchant.name||""%>" disabled>
+						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" value="<%=data.merchant.id||""%>"/>
+                    </div>
+                </div>
+              <%}%>
+			    <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>收款方式：</label>
+                     <div class="control">
+                       <select required name="type" class="select"  style="width:20%;" <%=query.id?"disabled":""%>>
+							<option value="1" <%=data.type==1?"selected":""%>>银行存款</option>						 
+                            <option value="2" <%=data.type==2?"selected":""%>>折扣返还</option> 					 
+                            <option value="3" <%=data.type==3?"selected":""%>>现金</option> 
+                            <option value="4" <%=data.type==4?"selected":""%>>支付宝</option>						 
+                            <option value="5" <%=data.type==5?"selected":""%>>财付通</option>    							
+                        </select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>收款金额：</label>
+                    <div class="control">
+                        <input type="text" required name="pay_money" value="<%=data.pay_money||""%>" placeholder="预付交易款金额" pattern="float" id="pay_money">
+                    </div>
+                </div>
+              
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>收款日期：</label>
+                    <div class="control">			 
+                           <input type="date" name="day" value="<%=data.day||""%>" required />                              							  
+                    </div>
+                </div>
+               <div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control">
+				<button class="btn preview" type="button">预览</button>
+				<%localStorage.setItem("preview",JSON.stringify(data))%>
+				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
+				</div>
+			</div>			 
+          </form>
+			</script>
+        </div>
+       
+		<script type="text/template" id="complete-position-t">
+		<%if(data.length>0){%>
+		<ul>
+			<%data.forEach(function(item,i){%>
+			<li class="complete-item <%if(i==0&&protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" ><%=item.salonname%></li>
+			<%})%>
+		</ul>
+		<%}else{%>
+		<div style="padding:5px 10px;">没有查找到店铺</div>
+		<%}%>
+		</script>		
+		<script type="text/javascript">
+		$(function(){			
+			$('input[type="date"]').val(lib.tools.getDate());			  
+			$(document).on('autoinput','#search',function(e,data){
+				if(data){
+					$('#salon_id').val(data.salon_id);
+					$('#merchant_id').val(data.merchant_id);
+					$('#merchantname').val(data.merchantname);
+				}
+			});	
+			/*
+			$(document).on('blur','input[name="cost_money"]',function(){
+				var cost_money=$('input[name="cost_money"]').val();
+			    var pay_money=$('input[name="pay_money"]').val();
+				if(cost_money&&pay_money){
+					cost_money=parseFloat(cost_money);
+					pay_money=parseFloat(pay_money);
+					if(pay_money>=cost_money){
+						$('#cost_money_help').show().text("换算消费额必须要大于付款金额");
+					}
+				}
+			});*/
+			
+			$(document).on('click','.preview',function(){
+				var data=lib.tools.getFormData($(this).closest('form'));
+				data=$.extend(JSON.parse(localStorage.getItem("preview")),data);
+				data.salon={
+					salonname:$('#search').val()
+				}
+				data.merchant={
+					name:$('#merchantname').val()
+				}
+				localStorage.setItem('preview',JSON.stringify(data));
+				window.open("detail.html?preview=preview");
+			})
+		});		
+	</script> 	
+    </body>
+</html>
+ 

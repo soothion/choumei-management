@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="zh-CN">
   <head>
 	  <title>臭美管理后台</title>
@@ -28,6 +29,11 @@
 				</li>
 				<%}%>
 				<%})%>
+				<li data-id="level2-0000">
+					<a>
+						财务管理
+					</a>
+				</li>
 			</ul>
 		  </nav>
 		  
@@ -52,7 +58,7 @@
 					<li class="drop-menu drop-menu-right">
 						<a class="drop-menu-toggle nav-sub-item"><%=session.user.account%> <i class="fa fa-angle-down"></i></a>
 						<ul class="drop-menu-list">
-							<li class="drop-menu-item"><a target="main" href="/module/user/settings.html">修改用户信息</a></li>
+							<li class="drop-menu-item"><a target="main" href="/module/system/user/settings.html">修改用户信息</a></li>
 							<!--
 							<li class="drop-menu-item"><a>设置</a></li>-->
 							<li id="logout" class="drop-menu-item"><a>退出</a></li>
@@ -92,11 +98,50 @@
 					</div>
 					<%}%>
 				<%})%>
+					<div class="menu-level2 swiper-slide" id="level2-0000">
+						<h2>财务管理</h2>
+						<div class="menu-category active">
+							<div class="menu-category-title">
+								<span> 付款管理</span>
+							</div>
+							<ul style="display:block">
+								<li><a href="/module/finance/payment/index.html" target="main"><i class="fa fa-angle-right"></i>付款列表</a></li>
+								<li><a href="/module/finance/approval/index.html" target="main"><i class="fa fa-angle-right"></i>付款审批</a></li>
+								<li><a href="/module/finance/define/index.html" target="main"><i class="fa fa-angle-right"></i>付款确认</a></li>
+							</ul>
+							<div class="menu-category-title">
+								<span> 收款管理</span>
+							</div>
+							<ul>
+								<li><a href="../module/finance/receivables/index.html" target="main"><i class="fa fa-angle-right"></i> 收款列表</a></li>
+							</ul>
+						</div>
+
+						<div class="menu-category active">
+							<div class="menu-category-title">
+								<span> 收入管理</span>
+							</div>
+							<ul style="display:block">
+								<li>
+									<a href="/module/finance/income/index.html" target="main">
+										<i class="fa fa-angle-right"></i>佣金单
+									</a>
+								</li>
+
+								<li>
+									<a href="/module/finance/income/list.html" target="main">
+										<i class="fa fa-angle-right"></i>反佣单
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					
 				</div>
 			</div>
          </aside>
          <article>
-            <iframe frameborder="0" src="/module/user/info.html" name="main" style="opacity: 1;"></iframe>
+            <iframe frameborder="0" src="/module/system/user/info.html" name="main" style="opacity: 1;"></iframe>
          </article>
       </div>
 	  </script>

@@ -1,14 +1,14 @@
 ﻿var slug={
-	'user.index':'/module/user/userList.html',
-	'role.index':'/module/role/index.html',
-	'permission.index':'/module/user/powerList.html',
-	'log.index':'/module/user/logList.html',
-	'salon.index':'/module/shop/index.html',
-	'salonAccount.index':'/module/shop/account.html',
-	'merchant.index':'/module/merchant/index.html',
-	'shop_count.index':'/module/shopSettlement/singleList.html',
-	'shop_count.delegate_list':'/module/shopSettlement/collectingOrderList.html',
-	'shop_count.balance':'/module/shopSettlement/fromBalance.html'
+	'user.index':'/module/system/user/index.html',
+	'role.index':'/module/system/role/index.html',
+	'permission.index':'/module/system/power/index.html',
+	'log.index':'/module/system/log/index.html',
+	'salon.index':'/module/store/shop/index.html',
+	'salonAccount.index':'/module/store/account/index.html',
+	'merchant.index':'/module/store/merchant/index.html',
+	'shop_count.index':'/module/store/single/index.html',
+	'shop_count.delegate_list':'/module/store/collection/index.html',
+	'shop_count.balance':'/module/store/balance/index.html',
 }
 var access={
 	data:[],

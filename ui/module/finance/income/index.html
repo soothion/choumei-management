@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="income.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>收入管理</a>
+            <span>&gt;</span><a href="index.html">佣金单</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>佣金单</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <form data-role="hash" id="form">
+                <div class="input-group input-switch">
+                    <select class="select" id="select">
+                      <option value="0">店铺搜索</option>
+                      <option value="1">店铺编号</option>
+                      <option value="2">商户名称</option>
+                      <option value="3">业务代表</option>
+                    </select>
+                    <input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称" 
+                    maxlength="16"/>
+                          <input type="text" class="input-search hide" name="sn" placeholder="请输入店铺编号" 
+                    maxlength="16"/>
+                          <input type="text" class="input-search hide" name="merchantName" placeholder="请输入商户名称" maxlength="16"/>
+                          <input type="text" class="input-search hide" name="businessName" placeholder="请输入业务代表" maxlength="16"/>
+                    <button type="submit" class="btn btn-search">
+                              <i class="fa fa-search"></i>
+                    </button>
+                </div>                
+
+                <div class="form-group">
+                     <span>确认日期:</span>
+                     <input type="date" />
+                     <span style="margin:0 10px">至</span>
+                     <input type="date" />   				
+                    <input type="radio" class="radio mr-20" name="statistics" id="statistics1" value="1" checked>
+                    <label for="statistics1">按日统计</label>
+
+                    <input type="radio" class="radio" name="statistics" id="statistics2" value="2">
+                    <label for="statistics2">按月统计</label> 
+
+                    <button class="btn" type="submit">搜索</button>
+                </div>            
+            </form>
+
+            <form action="" data-role="export">
+                <button class="btn" type="submit" data-slug="user.export">
+                    <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form> 
+
+            <div class="table">
+                <table>
+                    <thead>
+                        <th>序号</th>                       
+                        <th>店铺编号</th>
+                        <th>店铺名称</th>
+                        <th>佣金单号</th>                       
+                        <th>金额</th>
+                        <th>确认日期</th>
+                        <th>操作</th>                                
+                    </thead>
+
+                    <tbody>
+                        <td>1</td>                        
+                        <td>2</td>                        
+                        <td>3</td>                        
+                        <td>4</td>                        
+                        <td>5</td>                        
+                        <td>6</td>                        
+                        <td><a class="link" href="brokerage.html">查看</a></td>                        
+                    </tbody>
+                </table>  
+                <div class="pager"> </div>              
+            </div>
+        </div>
+    </body>
+</html>

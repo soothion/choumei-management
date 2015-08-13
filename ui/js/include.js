@@ -1,5 +1,5 @@
 ﻿var cfg={
-	version:'1.1',
+	version:'1.3',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
 	dev:'http://192.168.13.46:8090/',

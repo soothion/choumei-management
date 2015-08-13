@@ -33,6 +33,10 @@
 				var data={};
 				var fields=$form.serializeArray();
 				$.each(fields,function(i,field){
+					//防止xss攻击
+					if(field.value){
+						field.value=field.value.replace(/>/g,'&gt;').replace(/</g,'&lt;');
+					}
 					if(!data[field.name]){
 						if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
 							data[field.name]=[];
@@ -88,7 +92,7 @@
 							time:2000,
 							define:function(){
 								if(data.code==400||data.code==401){
-									parent.location.href="/module/user/login.html";
+									parent.location.href="/module/system/user/login.html";
 								}
 							}
 						});
@@ -278,9 +282,14 @@
                 data: pro.query,
 				cache:false,
                 success: function (data) {
-                    if(!self.exception(data)){
-                        self.template(self.parseResponse(data));
-                    }
+					if(data){
+						//防止xss攻击
+						data=JSON.stringify(data);
+						data=JSON.parse(data.replace(/>/g,'&gt;').replace(/</g,'&lt;'));
+						if(!self.exception(data)){
+							self.template(self.parseResponse(data));
+						}
+					}
                 },
                 error:function(xhr,textStatus){
                     self.exception({errorLevel:'xhr',status:xhr.status,readyState:xhr.readyState,textStatus:textStatus});;
@@ -541,12 +550,15 @@
 			var error=this.getErrorDom($target);
 			error.hide();
 		},
-		required:function(e){
+		required:function(e){//非空校验
 			var $target=$(e.target);
 			var error=this.getErrorDom($target);
 			var $relative=$target;
 			if($target.siblings('.unit').length==1){
 				$relative=$target.siblings('.unit');	
+			}
+			if($target.parent('label').length==1){
+				$relative=$target.parent('label');
 			}
 			var requiredmsg=this.cfg.requiredmsg;
 			if($target.is('select')||$target.is('input[type="checkbox"]')||$target.is('input[type="radio"]')){
@@ -558,7 +570,7 @@
 			}
 			
 		},
-		pattern:function(e){
+		pattern:function(e){//正则表达式校验
 			var $target=$(e.target);
 			var error=this.getErrorDom($target);
 			var $relative=$target;
@@ -570,7 +582,7 @@
 				$relative.after(error);	
 			}
 		},
-		unique:function(e,data){
+		unique:function(e,data){//唯一校验
 			var $target=$(e.target);
 			var error=this.getErrorDom($target);
 			var $relative=$target;
@@ -582,7 +594,7 @@
 				$relative.after(error);	
 			}
 		},
-		match:function(e){
+		match:function(e){//匹配校验
 			var $target=$(e.target);
 			var error=this.getErrorDom($target);
 			var $relative=$target;
