@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+    <div class="breadcrumb">
+        <a>店铺结算 </a><span>&gt;</span><a href="store/single/index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>付款单</span>
+		<div class="flex-box">
+			<div class="flex-item">
+				<h4> <%=query.preview?"预览":"查看"%>付款单</h4>
+			</div>	
+		</div>
+		<hr />
+    </div>	
+   <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<%
+				if(query.preview=="preview"){
+					data=JSON.parse(localStorage.getItem("preview"));
+					if(!data.state){
+						data.state=2;
+					}
+				}
+			%>
+		<div class="detail-operation">
+			<%if(query.preview!="preview"){%>
+			<a class="btn" href="edit.html?id=<%=data.id%>"  data-slug="shop_count.update">编辑</a></button>
+			<span class="space"></span>
+			<form action="shop_count/destroy/<%=data.id%>" data-role="remove" data-title="你正在删除转付单，是否继续删除？" id="form-remove">
+				<input type="hidden" name="id" value="<%=data.id%>" />
+				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy">删除</button>				 
+			</form>
+			<span class="space"></span>
+			<a class="btn" href="edit.html?id=<%=data.id%>"  data-slug="shop_count.update">提交</a></button>
+			<span class="space"></span>
+			<button class="btn" type="button" onclick="history.back()">返回</button>
+			<%}else{%>
+			<button class="btn" type="button" onclick="window.close()">关闭预览</button>
+			<%}%>
+		</div>
+        <div class="table-detail">
+        <table>
+            <thead>             
+				<tr style="height:60px;">
+                        <td class="shop-name" colspan="2">
+                             <%=data.salon?data.salon.salonname:""%>
+							 <label style="margin-left:70%;">店铺编号：cccccccccc</label>
+                        </td>                       
+                    </tr>
+            </thead>
+              <tbody>
+			   <%var state=["","已付款","预览状态"];var types=["","付交易代收款","付交易代收款","交易代收款返还"]%>
+                <tr>
+                  <td>付款单号：</td>
+                  <td><%=data.code%></td>
+                </tr>
+                <tr>
+                  <td>付款类型：</td>
+                  <td><%=types[data.type]%></td>
+                </tr>
+				  <tr>
+                  <td>付款方式：</td>
+                  <td><%=data.pay_money%></td>
+                </tr>
+                <tr>
+                  <td>付款金额：</td>
+                  <td><%=data.pay_money%></td>
+                </tr>               
+                <tr>
+                  <td>要求付款日期：</td>
+                  <td><%=data.day%></td>
+                </tr>
+					 <%if(query.preview!="preview"){%>
+                <tr>
+                  <td>创建日期：</td>
+                  <td><%=data.created_at%></td>
+                </tr>			
+                <tr>
+                 <td>制单人</td>
+                  <td><%=data.user?data.user.name:session.user.name%></td>
+               </tr>
+			    <tr>
+                 <td>实际付款日期：</td>
+                  <td><%=data.cost_money%></td>
+                </tr>
+                <tr>				
+                  <td>状态</td>
+                  <td><%=state[data.state]%></td>
+                </tr>
+				<%}else{%> 
+				<%}%>
+              </tbody>
+        </table>
+		  </script>
+        </div>
+    </div>
+   <script type="text/javascript">
+	$(document).on('remove','#form-remove',function(){
+		history.back();
+	})
+   </script>
+  </body>
+</html>

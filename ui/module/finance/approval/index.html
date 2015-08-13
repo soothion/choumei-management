@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+           <a>收款管理 </a><span>&gt;</span><a href="index.html">付款列表</a>
+		   <div class="flex-box">
+			<div class="flex-item">
+				<h4>付款列表</h4>
+			</div>
+			<div>
+				
+			</div>
+		</div>
+        </div>
+        <div class="wrapper">
+			<form data-role="hash">	
+				<div class="input-group">			
+					<select class="select" name="key" id="select">
+						<option value="1">店铺名称</option>
+						<option value="2">店铺编号</option>
+						<option value="3">商户名称</option>
+					</select>
+					<input type="text" placeholder="请输入店铺名" name="keyword">
+				</div>
+				<label>要求付款日期：</label>
+				<span class="date-group">
+					<input type="date" data-role="start"  name="pay_time_min"/>到<input type="date" data-role="end"  name="pay_time_max"/>
+				</span>
+				<button class="btn" type="submit">搜索</button>
+			</form>
+			<form action="" data-role="export" ><button class="btn" ><i class="fa fa-file-excel-o"></i> 导出</button></form>
+           <div class="table" ajat="shop_count/index#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+							<th width="50px"><label class="select-all"><input type="checkbox"/><span>全选</span></label></th>
+                            <th>序号</th>
+							<th>店铺编号</th>                       
+							<th>店铺名称</th>
+							<th>付款单号</th>						 
+                            <th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款类型 <i class="fa fa-sort"></i></a></th>                          
+                            <th>付款金额</th>
+							<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款方式 <i class="fa fa-sort"></i></a></th>							
+							<th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求付款日期 <i class="fa fa-sort"></i></a></th>			       
+							<th>创建日期</th>
+                            <th>制单人</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+               <tbody>
+			   <%if(data.data){%>
+				<%var type=["","付交易代收款","付交易代收款","交易代收款返还"]%>
+				<%var state=["","已付款","预览状态"]%>
+				<%var data=data.data%>
+				<%data.forEach(function(item,i){%>
+				<tr>
+					<td><label><input type="checkbox"/><span></span></label></td>
+					<td><%=i+1%></td>
+					<td>店铺编号</td>
+					<td><%=item.code%></td>
+					<td>付款单号</td>
+					<td><%=type[item.type]%></td>
+					<td><%=item.salon?item.salon.salonname:""%></td>
+					<td><%=item.cost_money%></td>
+					<td><%=item.day%></td>				 
+					<td><%=item.created_at%></td>
+					<td><%=item.user?item.user.name:""%></td>				 
+					<td><%=state[item.state]%></td>
+					<td><a class="link" href="detail-invest.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a></td>
+                  </tr>
+				  <%})%>
+				  <%}%>
+              </tbody>
+            </table>
+			<div class="table-bottom">
+				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+				<button class="btn">审批通过</button>
+				<span class="space"></span>
+				<button class="btn">审批不通过</button>
+			</div>
+            <div class="pager"> </div>
+			</script>
+        </div>
+    </div>
+	<script type="text/javascript">
+		$(function(){
+			
+		});
+	</script>
+</body>
+</html>
