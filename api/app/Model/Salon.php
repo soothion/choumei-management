@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\SalonUser;
+use App\Merchant;
 class Salon extends Model {
 
 	protected $table = 'salon';
@@ -75,6 +76,10 @@ class Salon extends Model {
 		{
 			$keyword = '%'.$where['merchantName'].'%';
 			$query = $query->where('m.name','like',$keyword);
+		}
+		if(isset($where["salestatus"]))
+		{
+			$query =  $query ->where("salestatus","=",$where["salestatus"]);
 		}
          
         $salonList =    $query->paginate($page_size);
@@ -390,7 +395,7 @@ class Salon extends Model {
 	   			    's.district',
 					's.shopType',
 					's.contractTime',
-					's.contractPeriod',
+					//'s.contractPeriod',
 					's.bargainno',
 					's.bcontacts',
 					's.tel',
@@ -400,6 +405,10 @@ class Salon extends Model {
 	                's.sn',
 	                's.salestatus',
 	                's.businessId',
+					's.contractEndTime',
+					's.salonGrade',
+					's.salonChangeGrade',
+					's.changeInTime',
 					'i.bankName',
 					'i.beneficiary',
 					'i.bankCard',
@@ -430,6 +439,20 @@ class Salon extends Model {
 					'i.contractPicUrl',
 					'i.licensePicUrl',
 					'i.corporatePicUrl',
+					'i.floorDate',
+					'i.advanceFacility',
+					'i.commissionRate',
+					'i.dividendPolicy',
+					'i.rebatePolicy',
+					'i.basicSubsidies',
+					'i.bsStartTime',
+					'i.bsEndTime',
+					'i.strongSubsidies',
+					'i.ssStartTime',
+					'i.ssEndTime',
+					'i.strongClaim',
+					'i.subsidyPolicy',
+				
 					'm.name',
 					'm.id as merchantId',
 					'b.businessName',
@@ -445,7 +468,7 @@ class Salon extends Model {
 	            ->select($fields)
 	            ->where(array("s.salonid"=>$salonid))
 	            ->first();
-			
+
 			$salonList = (array)$salonList;
 			
 			if($salonList)
@@ -527,6 +550,22 @@ class Salon extends Model {
 				
             }
             return $rs;
+	}
+	
+	/**
+	 * 自动生成店铺编号
+	 * */
+	public static function getSn($merchantId)
+	{
+		$merchantSn = Merchant::where(array("id"=>$merchantId))->select(array("sn"))->first();
+		$sCount = Salon::where(array("merchantId"=>$merchantId))->count();
+		$sn = intval($sCount)+1; //店铺编号，根据商户编号+01，自增长3位
+	    $tps = "";	 
+		for($i=3;$i>strlen($sn);$i--)
+		{
+			$tps .= 0; 
+		}
+		return $merchantSn->sn.$tps.$sn;	
 	}
 
 }
