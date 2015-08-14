@@ -24,21 +24,23 @@
 	  </form>
         <form data-role="hash" id="form" class="shop-hash-form">
           <div class="position">
-            <div class="input-group input-switch">
-              <select class="select" id="select">
-				  <option value="0">店铺搜索</option>
-				  <option value="1">店铺编号</option>
-				  <option value="2">商户名称</option>
-				  <option value="3">业务代表</option>
-              </select>
-              <input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称" maxlength="16"/>
-			  <input type="text" class="input-search hide" name="sn" placeholder="请输入店铺编号" maxlength="16"/>
-			  <input type="text" class="input-search hide" name="merchantName" placeholder="请输入商户名称" maxlength="16"/>
-			  <input type="text" class="input-search hide" name="businessName" placeholder="请输入业务代表" maxlength="16"/>
-              <button type="submit" class="btn btn-search">
-				<i class="fa fa-search"></i>
-              </button>
-            </div>
+          <div class="input-group input-switch">
+            <select class="select" id="select">
+              <option value="0">店铺搜索</option>
+              <option value="1">店铺编号</option>
+              <option value="2">商户名称</option>
+              <option value="3">业务代表</option>
+            </select>
+            <input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称" 
+            maxlength="16"/>
+            <input type="text" class="input-search hide" name="sn" placeholder="请输入店铺编号" 
+            maxlength="16"/>
+            <input type="text" class="input-search hide" name="merchantName" placeholder="请输入商户名称" maxlength="16"/>
+            <input type="text" class="input-search hide" name="businessName" placeholder="请输入业务代表" maxlength="16"/>
+            <button type="submit" class="btn btn-search">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
             <a class="btn" id="dropMenu">
               筛选条件 <i class="fa fa-angle-down"></i>
               </a>
@@ -50,13 +52,13 @@
             <div class="flex-box">
               <div class="filter-title">店铺状态：</div>
               <div class="flex-item">
-                <input type="radio" class="label" name="shopStatus" id="status1" checked value=""/>
+                <input type="radio" class="label" name="salestatus" id="status1" value="" checked />
                 <label for="status1">全部</label>
 
-                <input type="radio" class="label" name="shopStatus"  id="status2" value="1"/>
+                <input type="radio" class="label" name="salestatus"  id="status2" value="1"/>
                 <label for="status2">正常合作</label>
                 
-                <input type="radio" class="label" name="shopStatus"  id="status3" value="2" />
+                <input type="radio" class="label" name="salestatus"  id="status3" value="0" />
                 <label for="status3">终止合作</label>
               </div>
             </div>  
