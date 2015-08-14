@@ -79,6 +79,44 @@
                                         %>
                                         <td><%=typeName%></td>
                                     </tr>
+                                    <%
+                                        var salonGradeName="";
+                                        var salonChangeGradeName="";
+
+                                        if(data.salonGrade == "1"){
+                                            salonGradeName = "特级店";
+                                        }else if(data.salonGrade == "2"){
+                                            salonGradeName = "A级店";
+                                        }else if(data.salonGrade == "3"){
+                                            salonGradeName = "B级店";
+                                        }else if(data.salonGrade == "4"){
+                                            salonGradeName = "C级店";
+                                        }else if(data.salonGrade == "5"){
+                                            salonGradeName = "淘汰店";
+                                        }
+
+                                        if(data.salonChangeGrade == "1"){
+                                            salonChangeGradeName = "特级店";
+                                        }else if(data.salonChangeGrade == "2"){
+                                            salonChangeGradeName = "A级店";
+                                        }else if(data.salonChangeGrade == "3"){
+                                            salonChangeGradeName = "B级店";
+                                        }else if(data.salonChangeGrade == "4"){
+                                            salonChangeGradeName = "C级店";
+                                        }else if(data.salonChangeGrade == "5"){
+                                            salonChangeGradeName = "淘汰店";
+                                        }
+                                    %>
+                                    <tr><td class="content">当前等级：</td><td><%=salonGradeName%></td></tr>
+                                    <tr><td class="content">调整等级：</td><td><%=salonChangeGradeName%></td></tr>
+                                    <%
+                                    if(data.changeInTime==0){
+                                        data.changeInTime = "";
+                                    } else if(!isNaN(data.changeInTime)){
+                                        data.changeInTime = lib.tools.getDate(data.changeInTime);
+                                    }
+                                    %>
+                                    <tr><td class="content">调整生效日期：</td><td><%=data.changeInTime%></td></tr>
                                     <tr>
                                         <td class="content">合同：</td>
                                         <td>
@@ -88,9 +126,15 @@
                                             } else if(!isNaN(data.contractTime)){
                                                 data.contractTime = lib.tools.getDate(data.contractTime);
                                             }
+
+                                            if(data.contractEndTime==0){
+                                                data.contractEndTime = "";
+                                            } else if(!isNaN(data.contractEndTime)){
+                                                data.contractEndTime = lib.tools.getDate(data.contractEndTime);
+                                            }
                                             %>
-                                            <span class="contract-mr">日期：<%=data.contractTime%></span>
-                                            <span class="contract-mr">期限：<%=data.contractPeriod.replace("_","年")%>月</span>
+                                            <span class="contract-mr">合同起始日期：<%=data.contractTime%></span>
+                                            <span class="contract-mr">合同截止日期：<%=data.contractEndTime%></span>
                                             <span class="contract-mr">合同编号：<%=data.bargainno%></span>
                                         </td>
                                     </tr>
@@ -308,56 +352,92 @@
 
                                   <tr>
                                       <td colspan="2" class="content">分红联盟：</td>
-                                      <td colspan="6"><%=data.dividendStatus==0?"已":"未"%>加入</td>
+                                      <%
+                                      var statusText = "";
+                                      if(data.dividendStatus==0){
+                                          statusText = "已加入";
+                                      }else if(data.dividendStatus==1){
+                                          statusText = "未加入";
+                                      }
+                                      %>
+                                      <td colspan="6"><%=statusText%></td>
                                   </tr>
 
                                   <tr>
                                       <td colspan="2" class="content">预付款额度：</td>
-                                      <td colspan="6">data</td>
+                                      <td colspan="6"><%=data.advanceFacility %></td>
                                   </tr> 
 
                                   <tr>
-                                      <td colspan="2" class="content">data</td>
-                                      <td colspan="6">data</td>
-                                  </tr>
-
-                                  <tr>
+                                      <%
+                                      if(!data.floorDate || +data.floorDate == 0){
+                                        data.floorDate = "";
+                                      }else{
+                                        data.floorDate = lib.tools.getDate(data.floorDate);
+                                      }
+                                      %>
                                       <td colspan="2" class="content">落地日期：</td>
-                                      <td colspan="6">data</td>
+                                      <td colspan="6"><%=data.floorDate %></td>
                                   </tr>
 
                                   <tr>
                                       <td colspan="2" class="content">应收佣金：</td>
-                                      <td colspan="6">data</td>
+                                      <td colspan="6"><%=data.commissionRate %></td>
                                   </tr>
 
                                   <tr>
                                       <td colspan="2" class="content">分红政策：</td>
-                                      <td colspan="6">data</td>
+                                      <td colspan="6"><%=data.dividendPolicy %></td>
                                   </tr> 
                                                                    
                                   <tr>
                                       <td colspan="2" class="content">基础补贴政策：</td>
-                                      <td colspan="6">data</td>
+                                      <td colspan="6"><%=data.basicSubsidies %></td>
                                   </tr>
 
                                   <tr>
+                                      <%
+                                      if(!data.bsStartTime || +data.bsStartTime == 0){
+                                        data.bsStartTime = "";
+                                      }else{
+                                        data.bsStartTime = lib.tools.getDate(data.bsStartTime);
+                                      }
+
+                                      if(!data.bsEndTime || +data.bsEndTime == 0){
+                                        data.bsEndTime = "";
+                                      }else{
+                                        data.bsEndTime = lib.tools.getDate(data.bsEndTime);
+                                      }
+                                      %>
                                       <td colspan="2" class="content">基础补贴起始日：</td>
-                                      <td colspan="2">data</td>
+                                      <td colspan="2"><%=data.bsStartTime%></td>
                                       <td colspan="2" class="content">基础补贴起截止日：</td>
-                                      <td colspan="2">data</td>
+                                      <td colspan="2"><%=data.bsEndTime %></td>
                                   </tr>
 
                                   <tr>
                                       <td colspan="2" class="content">额外补贴政策：</td>
-                                      <td colspan="6">data</td>
+                                      <td colspan="6"><%=data.strongSubsidies %></td>
                                   </tr>
 
                                   <tr>
+                                      <%
+                                      if(!data.ssStartTime || +data.ssStartTime == 0){
+                                        data.ssStartTime = "";
+                                      }else{
+                                        data.ssStartTime = lib.tools.getDate(data.ssStartTime);
+                                      }
+
+                                      if(!data.ssEndTime || +data.ssEndTime == 0){
+                                        data.ssEndTime = "";
+                                      }else{
+                                        data.ssEndTime = lib.tools.getDate(data.ssEndTime);
+                                      }
+                                      %>                                  
                                       <td colspan="2" class="content">额外补贴起始日：</td>
-                                      <td colspan="2">data</td>
+                                      <td colspan="2"><%=data.ssStartTime %></td>
                                       <td colspan="2" class="content">额外补贴起截止日：</td>
-                                      <td colspan="2">data</td>
+                                      <td colspan="2"><%=data.ssEndTime %></td>
                                   </tr>
 
                               </tbody>

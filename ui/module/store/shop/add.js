@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-10 11:06:46
+* @Last Modified time: 2015-08-14 18:58:12
 */
 
 $(function(){
@@ -12,6 +12,10 @@ $(function(){
     if(type === 'edit'){
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));
         lib.ajat('#domid=form&tempid=form-t').template(data);
+        var option = $("select[name='salonChangeGrade'] > option[value='"+data.salonChangeGrade+"']");
+        if(option && option.length > 0) {
+            option.attr("selected","selected");
+        }    
     }
 
     if(type === 'add'){
@@ -27,13 +31,12 @@ $(function(){
             return "确定离开当前页面吗？";
         } 
         $("input[name='contractTime']").val(d);
-        var year = new Date(d).getFullYear()+3;
-        $("input[name='endDate']").val(year + d.substring(4));
+        $("input[name='contractEndTime']").val((new Date(d).getFullYear()+3)+ d.substring(4));
     }
 
     $("input[name='contractTime']").attr('max',d);
-    $("input[name='endDate']").attr('min',d);
-    $("input[name='avaDate']").attr('min',d);
+    $("input[name='contractEndTime']").attr('min',d);
+    $("input[name='changeInTime']").attr('min',d);
 	
 	
     $("#preview-btn").on('click',function(){
@@ -68,6 +71,28 @@ $(function(){
         $("#pop-wrapper").hide();
     });
 
+    $("body").on("keyup",function(e){
+        if(e.which >= 65 &&  e.which <= 90){
+            if($("#business").hasClass('select-focus')){
+                var str = String.fromCharCode(e.which).toLowerCase();  
+                var arr = $("#business option[data-py^='"+str+"']");
+                if(arr && arr.length > 0){
+                    //每次scroll前先重置scrollTop
+                    $(".options").scrollTop(0);                    
+                    //ul的top
+                    var top = $(".options").offset().top;
+                    //目标li
+                    var currentLi = $(".options li[value='"+arr.eq(0).val()+"']");
+                    //目标li的top
+                    var currentLiTop = currentLi.offset().top;
+                    //scrollTop的高度
+                    $(".options").scrollTop(currentLiTop-top);  
+
+                } 
+            }
+        }
+    })
+
     lib.Form.prototype.save = function(data){
         dataFormat(data);
         if(type === 'edit'){
@@ -92,7 +117,9 @@ $(function(){
         data.addrlati = arr[0];
         data.addrlong = arr[1];
         delete data.lngLat;
-    }      
+    } 
+
+
 });
 
 function renderMap (){

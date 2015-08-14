@@ -40,7 +40,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
                     <div class="control">
-                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10" required unique="salon/checkSalonSn?sn=${value}" data-value="<%=data.sn||""%>" uniquemsg="此店铺编号已经存在">
+                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10" disabled>
                     </div>
                 </div> 
                 <div class="control-group">
@@ -127,13 +127,28 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>当前等级：</label>
                     <div class="control">
-                        <input type="text" disabled>
+                        <input type="hidden" name="salonGrade" value="<%=data.salonGrade%>">
+                        <%
+                            var salonGradeName="";
+                            if(data.salonGrade == "1"){
+                                salonGradeName = "特级店";
+                            }else if(data.salonGrade == "2"){
+                                salonGradeName = "A级店";
+                            }else if(data.salonGrade == "3"){
+                                salonGradeName = "B级店";
+                            }else if(data.salonGrade == "4"){
+                                salonGradeName = "C级店";
+                            }else if(data.salonGrade == "5"){
+                                salonGradeName = "淘汰店";
+                            }
+                        %>
+                        <input type="text"  value="<%=salonGradeName%>" disabled>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>调整等级：</label>
-                    <select class="select defalut-width">
+                    <select class="select defalut-width" name="salonChangeGrade">
                       <option value="1">特级店</option>
                       <option value="2">A级店</option>
                       <option value="3">B级店</option>
@@ -145,7 +160,14 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>调整生效日期：</label>
                     <div class="control">
-                        <input type="date" name="avaDate">
+                        <%
+                        if(data.changeInTime==0){
+                            data.changeInTime = "";
+                        }else if(!isNaN(data.changeInTime)){
+                            data.changeInTime = lib.tools.getDate(data.changeInTime);
+                        }
+                        %>   
+                        <input type="date" name="changeInTime" value="<%=data.changeInTime%>" max="2030-01-01" required>
                     </div>
                 </div>                                                
 
@@ -173,8 +195,16 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>合同截止日期：</label>
-                    <div class="control">                    
-                        <input type="date" name="endDate"  required  max="2030-01-01">
+                    <div class="control">   
+                        <%
+                        if(data.contractEndTime==0){
+                            data.contractEndTime = "";
+                        }else if(!isNaN(data.contractEndTime)){
+                            data.contractEndTime = lib.tools.getDate(data.contractEndTime);
+                        }
+                        %>                                       
+                        <input type="date" name="contractEndTime" value="<%=data.contractEndTime%>" 
+                        required  max="2030-01-01">
                     </div>
                 </div>   
 
@@ -302,8 +332,10 @@
         <script type="text/template" id="business_t">
             <option value="">请选择</option>
             <%data.forEach&&data.forEach(function(item){%>
-                <option <%=item.id == protocol.custom.businessId ? "selected":""%> value="<%=item.id%>">
-                <%=item.businessName%></option>
+                <option <%=item.id == protocol.custom.businessId ? "selected":""%> 
+                value="<%=item.id%>" data-py="<%=item.py%>">
+                    <%=item.businessName%>
+                </option>
             <%})%>
         </script>
 
