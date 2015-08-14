@@ -201,8 +201,8 @@ class PayController extends Controller
     }
 
     /**
-     * @api {get} /pay_manage/create/{id} 4.付款单新增
-     * @apiName create
+     * @api {get} /pay_manage/update/{id} 4.付款单修改
+     * @apiName update
      * @apiGroup PayManage
      *
      * @apiParam {Number} salon_id  店铺id
@@ -293,7 +293,7 @@ class PayController extends Controller
     
     /**
      * @api {post} /pay_manage/check 6.付款单  审批
-     * @apiName destroy
+     * @apiName check
      * @apiGroup PayManage
      *
      * @apiParam {String} ids  id1,id2,... 
