@@ -87,15 +87,44 @@ class PayController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @api {get} /pay_manage/create 2.付款单新增
+     * @apiName create
+     * @apiGroup PayManage
      *
-     * @return Response
+     * @apiParam {Number} type 付款类型 1 付交易代收款 2 付业务投资款
+     * @apiParam {Number} salon_id  店铺id
+     * @apiParam {Number} merchant_id  商户id
+     * @apiParam {Number} money 付款金额
+     * @apiParam {Number} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
+     * @apiParam {String} require_day 要求付款日期 格式  YYYY-MM-DD
+     * @apiParam {Number} cycle 回款周期 
+     * @apiParam {Number} cycle_day 回款日期 
+     * 
+     * @apiSuccess {Number} id 成功的id.
+     *
+     * @apiSuccessExample Success-Response:
+     *       {
+     *          "result": 1,
+     *          "data": {
+     *                  "id":1
+     *                  }
+     *              ]
+     *          }
+     *      }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "未授权访问"
+     *		}
      */
     public function store()
     {
         $params = $this->parameters([
             'type' => self::T_INT,
             'salon_id' => self::T_INT,
+            'merchant_id' => self::T_INT,
             'money' => self::T_FLOAT,
             'pay_type' => self::T_INT,
             'require_day' => self::T_STRING,
@@ -121,7 +150,7 @@ class PayController extends Controller
     }
 
     /**
-     * @api {post} /pay_manage/show/{id} 6.付款单  查看
+     * @api {post} /pay_manage/show/{id} 3.付款单  查看
      * @apiName show
      * @apiGroup PayManage
      * 
@@ -172,15 +201,40 @@ class PayController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @api {get} /pay_manage/create/{id} 4.付款单新增
+     * @apiName create
+     * @apiGroup PayManage
      *
-     * @param  int  $id
-     * @return Response
+     * @apiParam {Number} salon_id  店铺id
+     * @apiParam {Number} merchant_id  商户id
+     * @apiParam {Number} money 付款金额
+     * @apiParam {Number} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
+     * @apiParam {String} require_day 要求付款日期 格式  YYYY-MM-DD
+     * @apiParam {Number} cycle 回款周期
+     * @apiParam {Number} cycle_day 回款日期
+     *
+     * @apiSuccess {Number} id 成功的id.
+     *
+     * @apiSuccessExample Success-Response:
+     *       {
+     *          "result": 1,
+     *          "data": {
+     *                  "id":1
+     *                  }
+     *              ]
+     *          }
+     *      }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "未授权访问"
+     *		}
      */
     public function update($id)
     {
         $params = $this->parameters([
-            'type' => self::T_INT,
             'salon_id' => self::T_INT,
             'money' => self::T_FLOAT,
             'pay_type' => self::T_INT,
@@ -205,7 +259,7 @@ class PayController extends Controller
     }
 
     /**
-     * @api {post} /pay_manage/destroy/{id} 6.付款单  删除
+     * @api {post} /pay_manage/destroy/{id} 5.付款单  删除
      * @apiName destroy
      * @apiGroup PayManage
      * 
@@ -271,8 +325,8 @@ class PayController extends Controller
     }
 
     /**
-     * @api {post} /pay_manage/check 6.付款单  确认
-     * @apiName destroy
+     * @api {post} /pay_manage/confirm 7.付款单  确认
+     * @apiName confirm
      * @apiGroup PayManage
      *
      * @apiParam {String} ids  id1,id2,...
@@ -304,7 +358,7 @@ class PayController extends Controller
     }
 
     /**
-     * @api {get} /pay_manage/export 1.付款单导出
+     * @api {get} /pay_manage/export 8.付款单导出
      * @apiName export
      * @apiGroup PayManage
      *
