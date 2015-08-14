@@ -158,31 +158,31 @@ $(function(){
 				});
 			}
 		});
-	}).on('submit','form[data-role="normal"]',function(e,bool){//一般的数据提交
+	}).on('submit','form[data-role="normal"]',function(e,eventData){//一般的数据提交
 		e.preventDefault();
 		var $this=$(this);
 		var confirm=$this.data('confirm');
 		var url=$this.attr('action');
 		if(document.activeElement){
 			var $active=$(document.activeElement);
-			if(document.activeElement.formaction){
+			if($active.attr('formaction')){
 				url=$active.attr('formaction');
 			}
-			if(active.data('confirm')){
+			if($active.data('confirm')){
 				confirm=$active.data('confirm');
 			}
 		}
-		if(!bool&&confirm){
+		if(!eventData&&confirm){
 			parent.lib.popup.confirm({
 				text:confirm,
 				define:function(){
-					$this.trigger('submit',true);
+					$this.trigger('submit',{url:url});
 				}
 			});
 			return;
 		}
 		lib.ajax({
-			url:url,
+			url:(eventData.url||url),
 			data:lib.tools.getFormData($(this)),
 			type:'POST',
 			success:function(data){
