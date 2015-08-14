@@ -29,8 +29,7 @@ class SalonController extends Controller {
    					    "district",
 						"shopType",
 						"contractTime",
-						"contractPeriod",
-			            "sn",
+    					"contractEndTime",
 						"bcontacts",
 						"tel",
 						"phone",
@@ -55,6 +54,7 @@ class SalonController extends Controller {
 	* @apiParam {String} businessName 可选,业务代表
 	* @apiParam {String} sn 可选,店铺编号
 	* @apiParam {String} merchantName 可选,商户名
+	* @apiParam {String} salestatus 状态 0终止合作 1正常合作.
 	* @apiParam {Number} sort_key 可选,排序字段 shopType 店铺类型  salestatus 状态.
 	* @apiParam {Number} sort_type 可选,排序 DESC倒序 ASC升序.
 	* @apiParam {Number} page 可选,页数.
@@ -140,8 +140,10 @@ class SalonController extends Controller {
 		$salonname = isset($param["salonname"])?urldecode($param["salonname"]):"";//店名
 		$district = isset($param["district"])?$param["district"]:0;//区域
 		$sn = isset($param["sn"])?$param["sn"]:0;//店铺编号
-		$merchantName = isset($param["merchantName"])?$param["merchantName"]:"";//商户名称
+		$merchantName = isset($param["merchantName"])?urldecode($param["merchantName"]):"";//商户名称
 		$businessName = isset($param["businessName"])?urldecode($param["businessName"]):"";//业务代表
+		$salestatus = isset($param["salestatus"])?$param["salestatus"]:0;//店铺状态 
+		
 		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"add_time";
     	$sort_type = isset($param["sort_type"])?$param["sort_type"]:"desc";
 		
@@ -169,6 +171,10 @@ class SalonController extends Controller {
     	{
     		$where["sn"] = $sn;
     	}
+    	if(isset($param["salestatus"]))
+    	{
+    		$where["salestatus"] = $salestatus;
+    	}
     	if($businessName)
     	{
     		$userBus = DB::table('business_staff')->where('businessName',"like", "%".$businessName."%")->first();
@@ -193,7 +199,6 @@ class SalonController extends Controller {
 	* @apiGroup salon
 	*
 	* @apiParam {Number} merchantId 必填,商户Id.
-	* @apiParam {Number} sn 必填,店铺编号.
 	* @apiParam {String} salonname 必填,店名.
 	* @apiParam {Number} district 必填,行政地区 . 
 	* @apiParam {String} addr 必填,详细街道信息.
@@ -202,7 +207,7 @@ class SalonController extends Controller {
 	* @apiParam {Number} zone 必填,所属商圈 .
 	* @apiParam {Number} shopType 必填,店铺类型  1预付款店 2投资店 3金字塔店.
 	* @apiParam {String} contractTime 可选,合同日期  Y-m-d.
-	* @apiParam {String} contractPeriod 可选,合同期限 y_m.
+	* @apiParam {String} contractEndTime 可选,合同截止日期 Y-m-d.
 	* @apiParam {String} bargainno 可选,合同编号.
 	* @apiParam {String} bcontacts 可选,联系人.
 	* @apiParam {String} tel 必填,店铺座机.
@@ -240,6 +245,22 @@ class SalonController extends Controller {
 	* @apiParam {String} contractPicUrl 可选,合同图片 json数组.
 	* @apiParam {String} licensePicUrl 可选,营业执照 json数组.
 	* @apiParam {String} corporatePicUrl 可选,法人执照 json数组.
+	* @apiParam {String} salonGrade 可选,店铺当前等级 1特级店2A级店3B级店4C级店4淘汰店.
+	* @apiParam {String} salonChangeGrade 必填,店铺调整等级.
+	* @apiParam {String} changeInTime 必填,调整生效日期 Y-m-d.
+	* @apiParam {String} floorDate 可选,落地日期Y-m-d.
+	* @apiParam {String} advanceFacility 可选,预付款额度.
+	* @apiParam {String} commissionRate 可选,佣金率.
+	* @apiParam {String} dividendPolicy 可选,分红政策.
+	* @apiParam {String} rebatePolicy 可选,返佣政策.
+	* @apiParam {String} basicSubsidies 可选,基础补贴政策.
+	* @apiParam {String} bsStartTime 可选,基础补贴起始日.
+	* @apiParam {String} bsEndTime 可选,基础补贴截止日.
+	* @apiParam {String} strongSubsidies 可选,强补贴政策.
+	* @apiParam {String} ssStartTime 可选,强补贴起始日.
+	* @apiParam {String} ssEndTime 可选,强补贴截止日.
+	* @apiParam {String} strongClaim 可选,强补贴月交易单数要求.
+	* @apiParam {String} subsidyPolicy 可选,首单指标补贴政策.
 	* @apiDescription 合同图片 营业执照 法人执照 demo
 	*	[
 	*		{
@@ -291,8 +312,8 @@ class SalonController extends Controller {
 	* @apiParam {Number} addrlong 必填,地理坐标经度.
 	* @apiParam {Number} zone 必填,所属商圈 .
 	* @apiParam {Number} shopType 必填,店铺类型  1预付款店 2投资店 3金字塔店.
-	* @apiParam {String} contractTime 可选,合同日期  Y-m-d.
-	* @apiParam {String} contractPeriod 可选,合同期限 y_m.
+	* @apiParam {String} contractTime 可选,合同开始日期  Y-m-d.
+	* @apiParam {String} contractEndTime 可选,合同截止日期 Y-m-d.
 	* @apiParam {String} bargainno 可选,合同编号.
 	* @apiParam {String} bcontacts 可选,联系人.
 	* @apiParam {String} tel 必填,店铺座机.
@@ -329,7 +350,23 @@ class SalonController extends Controller {
 	* @apiParam {String} salonType 可选,店铺类型 1纯社区店 2社区商圈店 3商圈店 4商场店 5工作室（写字楼)）,多选  1_3  下划线拼接.
 	* @apiParam {String} contractPicUrl 可选,合同图片 json数组.
 	* @apiParam {String} licensePicUrl 可选,营业执照 json数组.
-	* @apiParam {String} corporatePicUrl 可选,法人执照 json数组.
+	* @apiParam {String} salonGrade 可选,店铺当前等级 1特级店2A级店3B级店4C级店4淘汰店.
+	* @apiParam {String} salonChangeGrade 必填,店铺调整等级.
+	* @apiParam {String} changeInTime 必填,调整生效日期 Y-m-d.
+	* @apiParam {String} floorDate 可选,落地日期Y-m-d.
+	* @apiParam {String} advanceFacility 可选,预付款额度.
+	* @apiParam {String} commissionRate 可选,佣金率.
+	* @apiParam {String} dividendPolicy 可选,分红政策.
+	* @apiParam {String} rebatePolicy 可选,返佣政策.
+	* @apiParam {String} basicSubsidies 可选,基础补贴政策.
+	* @apiParam {String} bsStartTime 可选,基础补贴起始日.
+	* @apiParam {String} bsEndTime 可选,基础补贴截止日.
+	* @apiParam {String} strongSubsidies 可选,强补贴政策.
+	* @apiParam {String} ssStartTime 可选,强补贴起始日.
+	* @apiParam {String} ssEndTime 可选,强补贴截止日.
+	* @apiParam {String} strongClaim 可选,强补贴月交易单数要求.
+	* @apiParam {String} subsidyPolicy 可选,首单指标补贴政策.
+	* 
 	* @apiDescription 合同图片 营业执照 法人执照 demo
 	*	[
 	*		{
@@ -379,7 +416,7 @@ class SalonController extends Controller {
 		$data["salonid"] = isset($param["salonid"])?intval($param["salonid"]):0;//店铺id
 		
 		//商铺基本信息
-		$data["sn"] = isset($param["sn"])?trim($param["sn"]):"";//店铺编号
+		//$data["sn"] = isset($param["sn"])?trim($param["sn"]):"";//店铺编号  1.3自动生成
 		$data["salonname"] = isset($param["salonname"])?trim($param["salonname"]):"";//店铺名称
 		$data["district"] = isset($param["district"])?trim($param["district"]):"";//行政地区  
 		$data["addr"] = isset($param["addr"])?trim($param["addr"]):"";//详细街道信息
@@ -437,6 +474,27 @@ class SalonController extends Controller {
 		if($dataInfo["licensePicUrl"] == "[]"){$dataInfo["licensePicUrl"] = "";}
 		if($dataInfo["corporatePicUrl"] == "[]"){$dataInfo["corporatePicUrl"] = "";}
 		
+		//1.3版本新增字段
+		$data["contractEndTime"] = isset($param["contractEndTime"])?strtotime($param["contractEndTime"]):"";//合同截止日期
+		$data["salonChangeGrade"] = isset($param["salonChangeGrade"])?trim($param["salonChangeGrade"]):"";//店铺调整等级   -- 还未添加限制
+		$data["changeInTime"] = isset($param["changeInTime"])?strtotime($param["changeInTime"]):"";//调整生效日期
+		
+		$dataInfo["floorDate"] = isset($param["floorDate"])?strtotime($param["floorDate"]):"";//落地日期
+		$dataInfo["advanceFacility"] = isset($param["advanceFacility"])?trim($param["advanceFacility"]):"";//预付款额度
+		$dataInfo["commissionRate"] = isset($param["commissionRate"])?trim($param["commissionRate"]):"";//佣金率
+		$dataInfo["dividendPolicy"] = isset($param["dividendPolicy"])?trim($param["dividendPolicy"]):"";//分红政策
+		$dataInfo["rebatePolicy"] = isset($param["rebatePolicy"])?trim($param["rebatePolicy"]):"";//返佣政策
+		$dataInfo["basicSubsidies"] = isset($param["basicSubsidies"])?trim($param["basicSubsidies"]):"";//基础补贴政策
+		$dataInfo["bsStartTime"] = isset($param["bsStartTime"])?strtotime($param["bsStartTime"]):"";//基础补贴起始日
+		$dataInfo["bsEndTime"] = isset($param["bsEndTime"])?strtotime($param["bsEndTime"]):"";//基础补贴截止日
+		$dataInfo["strongSubsidies"] = isset($param["strongSubsidies"])?trim($param["strongSubsidies"]):"";//强补贴政策
+		$dataInfo["ssStartTime"] = isset($param["ssStartTime"])?strtotime($param["ssStartTime"]):"";//强补贴起始日
+		$dataInfo["ssEndTime"] = isset($param["ssEndTime"])?strtotime($param["ssEndTime"]):"";//强补贴截止日
+		$dataInfo["strongClaim"] = isset($param["strongClaim"])?trim($param["strongClaim"]):"";//强补贴月交易单数要求
+		$dataInfo["subsidyPolicy"] = isset($param["subsidyPolicy"])?trim($param["subsidyPolicy"]):"";//首单指标补贴政策
+		
+		
+
 		//参数检测
 		$postData = array_merge($data,$dataInfo);
 		$retMissing = "";
@@ -474,37 +532,13 @@ class SalonController extends Controller {
 			{
 				return $this->error("店铺数据不存在，id错误");
 			}
-			$oldSn = '';
-			foreach ($ordRs as $v)
-			{
-				if($v->sn)
-				{
-					$oldSn = $v->sn;
-				}
-			}
-			if($oldSn != $data["sn"])
-			{
-				$flag = 1;
-			}
 		}
 		else 
 		{
 			$where = '';
 			$whereInfo = '';
-			$flag = 1;
 			$data["add_time"] = time();
 			$dataInfo["addTime"] = time();
-		}
-		
-		
-		
-		if($flag == 1)
-		{
-			$snNo = $this->getCheckSn($data["sn"]);
-			if($snNo)
-			{
-				return $this->error("店铺编号重复已经存在");
-			}
 		}
 		
 		$row = $this->doadd($data,$dataInfo,$where,$whereInfo);
@@ -537,8 +571,8 @@ class SalonController extends Controller {
 	* @apiSuccess {Number} addrlong 地理坐标经度.
 	* @apiSuccess {Number} zone 所属商圈 .
 	* @apiSuccess {Number} shopType 店铺类型  1预付款店 2投资店 3金字塔店.
-	* @apiSuccess {String} contractTime 合同日期   时间戳.
-	* @apiSuccess {String} contractPeriod 合同期限 y_m.
+	* @apiSuccess {String} contractTime 合同日期   (时间戳).
+	* @apiSuccess {String} contractEndTime 合同截止日期 (时间戳).
 	* @apiSuccess {String} bargainno 合同编号.
 	* @apiSuccess {String} bcontacts 联系人.
 	* @apiSuccess {String} tel 店铺座机.
@@ -584,6 +618,22 @@ class SalonController extends Controller {
 	* @apiSuccess {String} provinceId 省Id
 	* @apiSuccess {String} recommend_code 推荐码.
 	* @apiSuccess {String} dividendStatus 分红联盟状态 0：开启  1关闭.
+	* @apiSuccess {String} salonGrade 店铺当前等级 1特级店2A级店3B级店4C级店4淘汰店.
+	* @apiSuccess {String} salonChangeGrade 店铺调整等级.
+	* @apiSuccess {String} changeInTime 调整生效日期 (时间戳).
+	* @apiSuccess {String} floorDate 落地日期 (时间戳).
+	* @apiSuccess {String} advanceFacility 预付款额度.
+	* @apiSuccess {String} commissionRate 佣金率.
+	* @apiSuccess {String} dividendPolicy 分红政策.
+	* @apiSuccess {String} rebatePolicy 返佣政策.
+	* @apiSuccess {String} basicSubsidies 基础补贴政策.
+	* @apiSuccess {String} bsStartTime 基础补贴起始日 (时间戳).
+	* @apiSuccess {String} bsEndTime 基础补贴截止日 (时间戳).
+	* @apiSuccess {String} strongSubsidies 强补贴政策.
+	* @apiSuccess {String} ssStartTime 强补贴起始日 (时间戳).
+	* @apiSuccess {String} ssEndTime 强补贴截止日 (时间戳).
+	* @apiSuccess {String} strongClaim 强补贴月交易单数要求.
+	* @apiSuccess {String} subsidyPolicy 首单指标补贴政策.
 	*/
 	public function getSalon()
 	{
@@ -626,6 +676,8 @@ class SalonController extends Controller {
 		}
 		else //添加
 		{
+			
+			$data['sn'] = Salon::getSn($data['merchantId']);//店铺编号
 			$salonId = DB::table('salon')->insertGetId($data);
 			if($salonId)
 			{
@@ -655,8 +707,7 @@ class SalonController extends Controller {
 		return $affectid;
 
 	}
-	
-	
+
 	/**
 	 * 设置超级管理员账户
 	 * 
