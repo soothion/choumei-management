@@ -182,7 +182,7 @@ $(function(){
 			return;
 		}
 		lib.ajax({
-			url:(eventData.url||url),
+			url:(eventData?eventData.url:url),
 			data:lib.tools.getFormData($(this)),
 			type:'POST',
 			success:function(data){

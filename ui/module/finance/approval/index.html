@@ -65,7 +65,7 @@
 				<%var data=data.data%>
 				<%data.forEach(function(item,i){%>
 				<tr>
-					<td><label><input type="checkbox"/><span></span></label></td>
+					<td><label><input type="checkbox" form="form" name="test" value="<%=i%>"/><span></span></label></td>
 					<td><%=i+1%></td>
 					<td>店铺编号</td>
 					<td><%=item.code%></td>
@@ -84,10 +84,12 @@
               </tbody>
             </table>
 			<div class="table-bottom">
-				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<button class="btn">审批通过</button>
-				<span class="space"></span>
-				<button class="btn">审批不通过</button>
+				<form id="form" action="/aaa/" data-role="normal" >
+					<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+					<button class="btn" formaction="/ddd/">审批通过</button>
+					<span class="space"></span>
+					<button class="btn" formaction="/ccc/">审批不通过</button>
+				</form>
 			</div>
             <div class="pager"> </div>
 			</script>
