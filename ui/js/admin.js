@@ -161,6 +161,7 @@ $(function(){
 	}).on('submit','form[data-role="normal"]',function(e,eventData){//一般的数据提交
 		e.preventDefault();
 		var $this=$(this);
+		if($this.is(':disabled')) return;
 		var confirm=$this.data('confirm');
 		var url=$this.attr('action');
 		if(document.activeElement){
