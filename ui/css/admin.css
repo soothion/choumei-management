@@ -610,10 +610,11 @@ th.colswrap{
 /**自定义下拉菜单 end**/
 
 /**hash表单提交 start**/
-form[data-role="hash"],form[data-role="export"],form[data-role="remove"]{
+form[data-role="hash"],form[data-role="export"],form[data-role="remove"],form[data-role="normal"]{
 	display:inline;
 }
-form[data-role="remove"] button{
+form[data-role="remove"] button,
+form[data-role="normal"] button{
 	padding:0;
 }
 form[data-role="hash"] button,

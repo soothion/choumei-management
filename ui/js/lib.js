@@ -35,12 +35,12 @@
 				$.each(fields,function(i,field){
 					//防止xss攻击
 					if(field.value){
-						field.value=field.value.replace(/>/g,'&gt;').replace(/</g,'&lt;');
+						field.value=$.trim(field.value.replace(/>/g,'&gt;').replace(/</g,'&lt;'));
 					}
 					if(!data[field.name]){
-						if($form.find('input[name="'+field.name+'"]').attr('type')=='checkbox'){
+						if($('input[name="'+field.name+'"]').attr('type')=='checkbox'){
 							data[field.name]=[];
-							if($.trim(field.value)){
+							if(field.value){
 								data[field.name].push($.trim(field.value));
 							}
 						}else{
@@ -48,9 +48,7 @@
 						}
 					}else{
 						if(data[field.name] instanceof Array){
-							if($.trim(field.value)){
-								data[field.name].push($.trim(field.value));
-							}
+							data[field.name].push(field.value);
 						}
 					}
 				});
