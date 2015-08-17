@@ -78,7 +78,17 @@
 					<td><%=item.created_at%></td>
 					<td><%=item.make_user%></td>				 
 					<td><%=state[item.state]%></td>
-					<td><a class="link" href="detail-invest.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a></td>
+					<%
+						var page="invest";
+						if(item.type==1){
+							if(item.pay_type==2){
+								page="pay-account";
+							}else{
+								page="collection";
+							}
+						}
+					%>
+					<td><a class="link" href="detail-<%=page%>.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a></td>
                   </tr>
 				  <%})%>
 				  <%}%>
