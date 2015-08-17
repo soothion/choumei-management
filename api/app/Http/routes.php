@@ -341,7 +341,47 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 					'as'=>'salonAccount.del',
 					'uses'=>'Merchant\SalonAccountController@delAct'
 		));	
-
+    
+	//付款管理
+	Route::any('pay_manage/index',array(  //列表
+	'as'=>'pay_manage.index',
+	'uses'=>'Pay\PayController@index'
+	    ));
+	
+	Route::any('pay_manage/show/{id}',array(  //查看
+	'as'=>'pay_manage.show',
+	'uses'=>'Pay\PayController@show'
+	    ));
+	
+	Route::any('pay_manage/create',array(  //新增
+	'as'=>'pay_manage.create',
+	'uses'=>'Pay\PayController@create'
+	    ));
+	
+	Route::any('pay_manage/update/{id}',array(  //修改
+	'as'=>'pay_manage.update',
+	'uses'=>'Pay\PayController@update'
+	    ));
+	
+	Route::any('pay_manage/destroy/{id}',array(  //删除
+	'as'=>'pay_manage.destroy',
+	'uses'=>'Pay\PayController@destroy'
+	    ));
+	
+	Route::any('pay_manage/check',array(  //审核
+	'as'=>'pay_manage.check',
+	'uses'=>'Pay\PayController@check'
+	    ));
+	
+	Route::any('pay_manage/confirm',array(  //确认
+	'as'=>'pay_manage.confirm',
+	'uses'=>'Pay\PayController@confirm'
+	    ));
+	
+	Route::any('pay_manage/export',array(  //导出
+	'as'=>'pay_manage.export',
+	'uses'=>'Pay\PayController@export'
+	    ));
 
 });
 

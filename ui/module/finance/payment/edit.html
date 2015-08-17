@@ -10,7 +10,6 @@
         <script src="/js/include.js"></script>
     </head>
     <body>
-	
 	 <div class="breadcrumb">
             <a>付款管理</a><span>&gt;</span><a href="index.html">付款列表</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑付款单":"新增付款单"%></span>
 				<div class="flex-box">
@@ -22,7 +21,7 @@
         </div>			
      <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}else{%>shop_count/create<%}%>">
+		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>pay_manage/update/<%=query.id%><%}else{%>pay_manage/create<%}%>">
 				<div class="detail-operation">
 				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
 				<span class="space"></span>
@@ -33,7 +32,8 @@
                     <label class="control-label" for=""><span class="red">*</span>付款类型：</label>
                     <div class="control">
                        <select required name="type" class="select"  style="width:20%;" <%=query.id?"disabled":""%>>
-							<option value="">付业务投资款</option>    							
+							<option value="1">付交易代收款</option>
+							<option value="2">付业务投资款</option>
                         </select>
                     </div>
                 </div>
@@ -49,6 +49,7 @@
                         <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required>
 						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;">							
 						</div>
+						<span id="sn" class="weak"></span>
                     </div>
                 </div>			
                  <div class="control-group">
@@ -78,51 +79,51 @@
 				 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款金额：</label>
                     <div class="control">
-                        <input type="text" required name="pay_money" value="<%=data.pay_money||""%>" placeholder="预付交易款金额" pattern="float" id="pay_money">
+                        <input type="text" required name="money" value="<%=data.money||""%>" placeholder="预付交易款金额" pattern="float" id="pay_money">
                     </div>
                 </div>
 			    <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>收款方式：</label>
                     <div class="control">
-                        <select class="select">
-						  <option value="银行存款" selected="">银行存款</option>
-						  <option value="账扣支付">账扣支付</option>
-						  <option value="现金">现金</option>
-						  <option value="支付宝">支付宝</option>
-						  <option value="财付通">财付通</option>
+                        <select class="select" name="pay_type">
+						  <option value="1" <%=data.pay_type==1?"selected":""%>>银行存款</option>
+						  <option value="2" <%=data.pay_type==2?"selected":""%>>账扣支付</option>
+						  <option value="3" <%=data.pay_type==3?"selected":""%>>现金</option>
+						  <option value="4" <%=data.pay_type==4?"selected":""%>>支付宝</option>
+						  <option value="5" <%=data.pay_type==5?"selected":""%>>财付通</option>
 						</select>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>要求付款日期：</label>
                     <div class="control">			 
-                           <input type="date" name="day" value="<%=data.day||""%>" required />                              							  
+                           <input type="date" name="require_day" value="<%=data.require_day||""%>" required />                              							  
                     </div>
                 </div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>回款周期：</label>
                     <div class="control">			 
-                        <input type="text" name="day" maxlength="5" value="<%=data.day||""%>" required pattern="number" /><span class="unit">个月</span>                              							  
+                        <input type="text" name="cycle" maxlength="5" value="<%=data.cycle||""%>" required pattern="number" /><span class="unit">个月</span>                              							  
                     </div>
                 </div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>回款日期：</label>
                     <div class="control">			 
-                        <input type="text" name="day" value="<%=data.day||""%>" maxlength="2" required /><span class="unit">号/月</span> <span class="weak">当月无此日期时顺延至下月1号</span>                              							  
+                        <input type="text" name="cycle_day" value="<%=data.cycle_day||""%>" maxlength="2" required /><span class="unit">号/月</span> <span class="weak">当月无此日期时顺延至下月1号</span>                              							  
                     </div>
                 </div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>周期回款金额：</label>
                     <div class="control">			 
-                        <input type="text" name="day" value="<%=data.day||""%>" required pattern="float"/> <span class="weak">尾差金额在最后一个回款周期补回</span>                             							  
+                        <input type="text" name="cycle_money" value="<%=data.cycle_money||""%>" required pattern="float"/> <span class="weak">尾差金额在最后一个回款周期补回</span>                             							  
                     </div>
                 </div>
                <div class="control-group">
 				<label class="control-label" for=""></label>
 				<div class="control">
-				<button class="btn preview" type="button">预览</button>
-				<%localStorage.setItem("preview",JSON.stringify(data))%>
-				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
+					<button class="btn preview" type="button">预览</button>
+					<%localStorage.setItem("preview",JSON.stringify(data))%>
+					<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
 				</div>
 			</div>			 
           </form>
@@ -133,7 +134,7 @@
 		<%if(data.length>0){%>
 		<ul>
 			<%data.forEach(function(item,i){%>
-			<li class="complete-item <%if(i==0&&protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" ><%=item.salonname%></li>
+			<li class="complete-item <%if(i==0&&protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" data-sn="<%=item.sn%>"><%=item.salonname%></li>
 			<%})%>
 		</ul>
 		<%}else{%>
@@ -148,20 +149,9 @@
 					$('#salon_id').val(data.salon_id);
 					$('#merchant_id').val(data.merchant_id);
 					$('#merchantname').val(data.merchantname);
+					$('#sn').text(data.sn);
 				}
 			});	
-			/*
-			$(document).on('blur','input[name="cost_money"]',function(){
-				var cost_money=$('input[name="cost_money"]').val();
-			    var pay_money=$('input[name="pay_money"]').val();
-				if(cost_money&&pay_money){
-					cost_money=parseFloat(cost_money);
-					pay_money=parseFloat(pay_money);
-					if(pay_money>=cost_money){
-						$('#cost_money_help').show().text("换算消费额必须要大于付款金额");
-					}
-				}
-			});*/
 			
 			$(document).on('click','.preview',function(){
 				var data=lib.tools.getFormData($(this).closest('form'));
@@ -173,7 +163,7 @@
 					name:$('#merchantname').val()
 				}
 				localStorage.setItem('preview',JSON.stringify(data));
-				window.open("detail.html?preview=preview");
+				window.open("preview.html?preview=preview");
 			})
 		});		
 	</script> 	

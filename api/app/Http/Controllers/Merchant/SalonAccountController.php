@@ -320,6 +320,7 @@ class SalonAccountController extends Controller {
 	 * @apiSuccess {String} name 商户名称.
 	 * @apiSuccess {Number} salonid 店铺Id.
 	 * @apiSuccess {String} salonname 店铺名称.
+	 * @apiSuccess {String} sn 店铺编号.
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *	{
@@ -329,12 +330,14 @@ class SalonAccountController extends Controller {
 	 *	            "merchantId": 1,
 	 *	            "salonid": 1,
 	 *	            "salonname": "嘉美专业烫染",
+	 *				"sn": "SZ00252",
 	 *				"name": "嘉烫染"
 	 *	        },
 	 *	        {
 	 *	            "merchantId": 33,
 	 *	            "salonid": 804,
-	 *	            "salonname": "臭美腾讯专属高端店"
+	 *	            "salonname": "臭美腾讯专属高端店",
+	 *				"sn": "SZ00252",
 	 *              "name": "嘉美烫染"
 	 *	        },
 	 *	        ......

@@ -73,6 +73,7 @@ class ShopCountController extends Controller
      *                     },
      *                     "salon": {
      *                         "salonid": 1,
+     *                         "sn":"商铺编号",
      *                         "salonname": "嘉美专业烫染"
      *                     },
      *                     "merchant": {
@@ -187,6 +188,7 @@ class ShopCountController extends Controller
      *               "day": "2015-07-02",
      *               "user": {
      *                   "id": 1,
+     *                   "sn":"商铺编号",
      *                   "name": ""
      *               },
      *               "salon": {
@@ -328,6 +330,7 @@ class ShopCountController extends Controller
      *               },
      *               "salon": {
      *                   "salonid": 1,
+     *                   "sn":"商铺编号",
      *                   "salonname": "嘉美专业烫染"
      *               },
      *               "merchant": {
@@ -504,6 +507,7 @@ class ShopCountController extends Controller
      *                       "day": "2015-06-01",
      *                       "salon": {
      *                           "salonid": 3,
+     *                           "sn":"商铺编号",
      *                           "salonname": "米莱国际造型连锁（田贝店）"
      *                       },
      *                       "merchant": {
@@ -613,6 +617,7 @@ class ShopCountController extends Controller
      *               "day": "2015-06-01",
      *               "salon": {
      *                   "salonid": 3,
+     *                   "sn":"商铺编号",
      *                   "salonname": "米莱国际造型连锁（田贝店）"
      *               },
      *               "merchant": {
@@ -695,7 +700,17 @@ class ShopCountController extends Controller
      *                       "invest_balance_money": "343.00",
      *                       "borrow_money": "2323.00",
      *                       "borrow_return_money": "34.00",
-     *                       "borrow_balance_money": "2334.00"
+     *                       "borrow_balance_money": "2334.00",
+     *                       "salon": {
+     *                          "salonid": 3,
+     *                          "sn":"商铺编号",
+     *                          "shopType":1,
+     *                          "salonname": "米莱国际造型连锁（田贝店）"
+     *                      },
+     *                      "merchant": {
+     *                          "id": 2,
+     *                          "name": "地对地导弹"
+     *                      }
      *                   }
      *               ]
      *           }
@@ -883,7 +898,10 @@ class ShopCountController extends Controller
         $res = [];
         foreach ($datas as $data) {
             $salon_type_name = "";
-            switch ($data['salon_type']) {
+            $salon_type = isset($data['salon']['salon_type'])?$data['salon']['salon_type']:'';
+            $salon_name = isset($data['salon']['salonname'])?$data['salon']['salonname']:'';
+            $merchant_name = isset($data['merchant']['name'])?$data['merchant']['name']:'';
+            switch ($data['salon']['salon_type']) {
                 case 1:
                     $salon_type_name = "预付款店";
                     break;
@@ -896,8 +914,8 @@ class ShopCountController extends Controller
             }
             $typename = "项目消费";
             $res[] = [
-                'salon_name' => $data['salon_name'],
-                'merchant_name' => $data['merchant_name'],
+                'salon_name' => $salon_name,
+                'merchant_name' => $merchant_name,
                 'salon_type_name' => $salon_type_name,
                 'pay_money' => $data['pay_money'],
                 'cost_money' => $data['cost_money'],

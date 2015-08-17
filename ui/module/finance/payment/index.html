@@ -23,13 +23,13 @@
         </div>
         <div class="wrapper">
 			<form data-role="hash">	
-				<div class="input-group">			
+				<div class="input-group placeholder-switch">			
 					<select class="select" name="key" id="select">
-						<option value="1">店铺名称</option>
-						<option value="2">店铺编号</option>
-						<option value="3">商户名称</option>
+						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
+						<option value="2" data-placeholder="请输入店铺编号">店铺编号</option>
+						<option value="3" data-placeholder="请输入商户名称">商户名称</option>
 					</select>
-					<input type="text" placeholder="请输入店铺名" name="keyword">
+					<input type="text" placeholder="请输入店铺名称" name="keyword">
 				</div>
 				<label>付款日期：</label>
 				<span class="date-group">
@@ -44,34 +44,36 @@
 					<div class="flex-box">
 						<div class="filter-title">付款类型：</div>
 						<div class="flex-item">
-							<label data-role="hash"><input type="radio" name="shopType1" value="" checked/><span>全部</span></label>
-							<label data-role="hash"><input type="radio" name="shopType1" value=""/><span>预付交易款返还</span></label>
-							<label data-role="hash"><input type="radio" name="shopType1" value=""/><span>业务投资款返还</span></label>              
+							<label data-role="hash"><input type="radio" name="type" value="0" checked/><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="type" value="1"/><span>预付交易款返还</span></label>
+							<label data-role="hash"><input type="radio" name="type" value="2"/><span>业务投资款返还</span></label>              
 						</div>
 					</div>
 					<div class="flex-box">
 						<div class="filter-title">付款方式：</div>
 						<div class="flex-item">
-							<label data-role="hash"><input type="radio" name="shopType2" value="" checked/><span>全部</span></label>
-							<label data-role="hash"><input type="radio" name="shopType2" value=""/><span>银行存款</span></label>
-							<label data-role="hash"><input type="radio" name="shopType2" value=""/><span>账扣返还</span></label>              
-							<label data-role="hash"><input type="radio" name="shopType2" value=""/><span>现金</span></label>              
-							<label data-role="hash"><input type="radio" name="shopType2" value=""/><span>支付宝</span></label>              
-							<label data-role="hash"><input type="radio" name="shopType2" value=""/><span>财付通</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="0" checked/><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="pay_type" value="1"/><span>银行存款</span></label>
+							<label data-role="hash"><input type="radio" name="pay_type" value="2"/><span>账扣返还</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="3"/><span>现金</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="4"/><span>支付宝</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="5"/><span>财付通</span></label>              
 						</div>
 					</div>
 					<div class="flex-box">
 						<div class="filter-title">付款状态：</div>
 						<div class="flex-item">
-							<label data-role="hash"><input type="radio" name="shopType3" value="" checked/><span>全部</span></label>
-							<label data-role="hash"><input type="radio" name="shopType3" value=""/><span>已确认</span></label>
-							<label data-role="hash"><input type="radio" name="shopType3" value=""/><span>待确认</span></label>              
+							<label data-role="hash"><input type="radio" name="state" value="0" checked/><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="1"/><span>待提交</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="2"/><span>待审批</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="3"/><span>待付款</span></label>
+							<label data-role="hash"><input type="radio" name="state" value="4"/><span>已付款</span></label>              
 						</div>
 					</div>
 				</div>			  
 			</form>
-			<form action="" data-role="export" id="export"></form>
-           <div class="table" ajat="shop_count/index#domid=table&tempid=table-t" id="table">
+			<form action="pay_manage/export" data-role="export" id="export"></form>
+           <div class="table" ajat="pay_manage/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -82,9 +84,9 @@
 							<th>付款单号</th>						 
                             <th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款类型 <i class="fa fa-sort"></i></a></th>                          
                             <th>付款金额</th>
-							<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款方式 <i class="fa fa-sort"></i></a></th>							
-							<th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求付款日期 <i class="fa fa-sort"></i></a></th>			       
-                            <th><a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">实际付款日期 <i class="fa fa-sort"></i></a></th>
+							<th><a data-role="hash" href="#page=1&sort_key=pay_type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款方式 <i class="fa fa-sort"></i></a></th>							
+							<th><a data-role="hash" href="#page=1&sort_key=require_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求付款日期 <i class="fa fa-sort"></i></a></th>			       
+                            <th><a data-role="hash" href="#page=1&sort_key=pay_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">实际付款日期 <i class="fa fa-sort"></i></a></th>
 							<th>创建日期</th>
                             <th>制单人</th>
                             <th>状态</th>
@@ -93,22 +95,23 @@
                     </thead>
                <tbody>
 			   <%if(data.data){%>
-				<%var type=["","付交易代收款","付交易代收款","交易代收款返还"]%>
-				<%var state=["","已付款","预览状态"]%>
+				<%var type=["","付交易代收款","付业务投资款"]%>
+				<%var pay_type=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
+				<%var state=["","待提交","待审批","待付款","已付款"]%>
 				<%var data=data.data%>
 				<%data.forEach(function(item,i){%>
 				<tr>
 					<td><%=i+1%></td>
-					<td>店铺编号</td>
+					<td><%=item.salon.sn%></td>
+					<td><%=item.salon.salonname%></td>
 					<td><%=item.code%></td>
-					<td>付款单号</td>
 					<td><%=type[item.type]%></td>
-					<td>付款方式</td>
-					<td><%=item.salon?item.salon.salonname:""%></td>
-					<td><%=item.cost_money%></td>
-					<td><%=item.day%></td>				 
+					<td><%=item.pay_money%></td>
+					<td><%=pay_type[item.pay_type]%></td>
+					<td><%=item.require_day%></td>
+					<td><%=item.pay_day%></td>				 
 					<td><%=item.created_at%></td>
-					<td><%=item.user?item.user.name:""%></td>				 
+					<td><%=item.make_user%></td>				 
 					<td><%=state[item.state]%></td>
 					<td><a class="link" href="detail-invest.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a></td>
                   </tr>

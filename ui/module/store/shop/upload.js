@@ -240,7 +240,8 @@
         })
 
         $(".submit").on('click',function(){
-            parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
+            document.body.onbeforeunload=function(){}
+            parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>图片正在上传中...'});
             conLoader.upload();
             licLoader.upload();
             corLoader.upload();
@@ -258,8 +259,7 @@
     var goSettlement = function(){
         localStorage.removeItem("contractPicUrl"); 
         sessionStorage.removeItem("licensePicUrl");
-        sessionStorage.removeItem("corporatePicUrl"); 
-        sessionStorage.setItem("preview-shop-data",JSON.stringify(currentData));       
+        sessionStorage.removeItem("corporatePicUrl");     
         if(type === 'add')  sessionStorage.setItem('add-shop-data',JSON.stringify(currentData));
         if(type === 'edit') sessionStorage.setItem('edit-shop-data',JSON.stringify(currentData));
         location.href="settlement.html?type="+type;
@@ -311,8 +311,6 @@
         } 
         $(window).trigger('resize');       
     }
-
-    
 
     init();
 })();
