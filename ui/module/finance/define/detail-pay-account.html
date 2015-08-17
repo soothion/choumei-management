@@ -15,7 +15,7 @@
 		</div>
 		<hr />
     </div>	
-   <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+   <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
 			<button class="btn" type="button">确认付款</button>
@@ -35,31 +35,32 @@
                 </tr>
             </thead>
               <tbody>
-			   <%var state=["","待提交","待审批","待付款","已付款"]%>
-			   <%var types=["","银行存款","账扣支付","现金","其他支付-支付宝","其他支付-财付通"];%>
+			  <%var state=["","待提交","待审批","待付款","已付款"]%>
+			   <%var type=["","付交易代收款","付业务投资款"]%>
+			   <%var pay_type=["","银行存款","账扣支付","现金","其他支付-支付宝","其他支付-财付通"];%>
                 <tr>
                   <td>付款单号：</td>
                   <td><%=data.code%></td>
                 </tr>
 				<tr>
                   <td>关联收款单号：</td>
-                  <td><%=data.code%></td>
+                  <td><%=data.receive_bill_code%></td>
                 </tr>
 				<tr>
                   <td>关联转付单号：</td>
-                  <td><%=data.code%></td>
+                  <td><%=data.prepay_bill_code%></td>
                 </tr>
                 <tr>
                   <td>付款类型：</td>
-                  <td><%=types[data.type]%></td>
+                  <td><%=type[data.type]%></td>
                 </tr>
 				<tr>
                   <td>付款金额：</td>
-                  <td><%=data.pay_money%></td>
+                  <td><%=data.money%></td>
                 </tr>
                 <tr>
                   <td>要求付款日期：</td>
-                  <td><%=data.day%></td>
+                  <td><%=data.require_day%></td>
                 </tr>
 				 <tr>
                   <td>创建日期：</td>
@@ -67,11 +68,11 @@
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.user?data.user.name:session.user.name%></td>
+                  <td><%=data.make_user%></td>
                </tr>
 			   <tr>
                  <td>付款方式：</td>
-                  <td><%=types[data.type]%></td>
+                  <td><%=pay_type[data.pay_type]%></td>
                </tr>
                 <tr>
                   <td>状态：</td>
