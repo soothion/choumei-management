@@ -31,16 +31,16 @@ class ReceivablesController extends Controller{
 	 * @apiSuccess {Number} from 起始数据.
 	 * @apiSuccess {Number} to 结束数据.
 	 * @apiSuccess {Number} id id.
-	 * @apiSuccess {String} salonid 店铺Id.
+	 * @apiSuccess {Number} salonid 店铺Id.
 	 * @apiSuccess {String} salonname 店铺名称.
 	 * @apiSuccess {String} sn 店铺编号.
 	 * @apiSuccess {String} name 商户名称.
-	 * @apiSuccess {String} type 收款类型 1业务投资款返还2交易代收款返还.
-	 * @apiSuccess {String} paymentStyle 收款方式1银行存款2账扣返还3现金4支付宝5财付通.
+	 * @apiSuccess {Number} type 收款类型 1业务投资款返还2交易代收款返还.
+	 * @apiSuccess {Number} paymentStyle 收款方式1银行存款2账扣返还3现金4支付宝5财付通.
 	 * @apiSuccess {String} money 收款金额.
-	 * @apiSuccess {String} addTime 创建时间(时间戳).
+	 * @apiSuccess {Number} addTime 创建时间(时间戳).
 	 * @apiSuccess {String} singleNumber 收款单号.
-	 * @apiSuccess {String} status 状态1.待确认2  已确认.
+	 * @apiSuccess {Number} status 状态1.待确认2  已确认.
 	 * @apiSuccess {String} preparedByName 制单人.
 	 *
 	 *
@@ -349,26 +349,26 @@ class ReceivablesController extends Controller{
 	}
 	
 	/**
-	 * @api {post} /receivables/index 1.收款列表
-	 * @apiName index
+	 * @api {post} /receivables/getone 6.收款详情
+	 * @apiName getone
 	 * @apiGroup receivables
 	 *
 	 * @apiParam {Number} id 可选,id.
 	 * 
 	 * @apiSuccess {Number} id id.
-	 * @apiSuccess {String} salonid 店铺Id.
+	 * @apiSuccess {Number} salonid 店铺Id.
 	 * @apiSuccess {String} salonname 店铺名称.
 	 * @apiSuccess {String} sn 店铺编号.
 	 * @apiSuccess {String} name 商户名称.
-	 * @apiSuccess {String} type 收款类型 1业务投资款返还2交易代收款返还.
-	 * @apiSuccess {String} paymentStyle 收款方式1银行存款2账扣返还3现金4支付宝5财付通.
+	 * @apiSuccess {Number} type 收款类型 1业务投资款返还2交易代收款返还.
+	 * @apiSuccess {Number} paymentStyle 收款方式1银行存款2账扣返还3现金4支付宝5财付通.
 	 * @apiSuccess {String} money 收款金额.
-	 * @apiSuccess {String} addTime 创建时间(时间戳).
+	 * @apiSuccess {Number} addTime 创建时间(时间戳).
 	 * @apiSuccess {String} singleNumber 收款单号.
-	 * @apiSuccess {String} status 状态1.待确认2  已确认.
-	 * @apiSuccess {String} preparedBy 制单人Id.
+	 * @apiSuccess {Number} status 状态1.待确认2  已确认.
+	 * @apiSuccess {Number} preparedBy 制单人Id.
 	 * @apiSuccess {String} preparedByName 制单人.
-	 * @apiSuccess {String} cashier 出纳Id.
+	 * @apiSuccess {Number} cashier 出纳Id.
 	 * @apiSuccess {String} cashierName 出纳.
 	 *
 	 * @apiSuccessExample Success-Response:
