@@ -201,7 +201,7 @@ $(function(){
 		$this.parent().find('input').eq($this.val()).show().siblings('input').hide().val('');
 	}).on('change','.placeholder-switch select',function(){//placeholder-switch切换placeholder
 		var $this=$(this);
-		$this.next('input').attr('placeholder',$this.children('option:selected').data('placeholder'));
+		$this.next('input').attr('placeholder',$this.children('option:selected').data('placeholder')).val('');
 	});
 	/**常见**/
 	$body.on('click','.drop-menu-toggle',function(){//下拉菜单
