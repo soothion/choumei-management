@@ -239,7 +239,7 @@ class ShopCount extends Model
     }
     
     /**
-     * 重写  免得蛋疼
+     * 重写 
      * @see \Illuminate\Database\Eloquent\Model::isFillable()
      */
     public function isFillable($key)

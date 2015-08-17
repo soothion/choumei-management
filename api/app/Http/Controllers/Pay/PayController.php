@@ -32,7 +32,21 @@ class PayController extends Controller
      * @apiSuccess {Number} last_page 当前页面.
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
-     * @apiSuccess {String} code 付款单号.
+     * @apiSuccess {String} code 单号
+     * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
+     * @apiSuccess {String} money 付款金额
+     * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
+     * @apiSuccess {String} require_day 要求付款日期 
+     * @apiSuccess {String} pay_day 实际付款日期 
+     * @apiSuccess {String} cycle 回款周期
+     * @apiSuccess {String} cycle_day 回款日期 
+     * @apiSuccess {String} cycle_money 周期回款金额 
+     * @apiSuccess {String} make_user 制单人信息
+     * @apiSuccess {String} confirm_user 审批人信息
+     * @apiSuccess {String} cash_user 出纳人信息
+     * @apiSuccess {String} salon 店铺信息
+     * @apiSuccess {String} state 订单状态  1待提交 2待审批 3:待付款 4:已付款
+     * @apiSuccess {String} confirm_at 审批日期
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -45,33 +59,76 @@ class PayController extends Controller
      *              "from": 1,
      *              "to": 1,
      *              "data": [
-     *                  {
-     *                     "id": 1,
-     *                     "created_at": "2015-07-03 00:00:00",
-     *                     "merchant_id": 1,
-     *                     "salon_id": 1,
-     *                     "code": "fasdfasdfasdfasdfadfa",
-     *                     "type": 1,
-     *                     "uid": 1,
-     *                     "pay_money": "2000.00",
-     *                     "cost_money": "2500.00",
-     *                     "day": "2015-07-02",
-     *                     "user": {
-     *                         "id": 1,
-     *                         "name": ""
-     *                     },
-     *                     "salon": {
-     *                         "salonid": 1,
-     *                         "sn":"商铺编号",
-     *                         "salonname": "嘉美专业烫染"
-     *                     },
-     *                     "merchant": {
-     *                         "id": 1,
-     *                         "name": "速度发多少"
-     *                     }
-     *                  }
-     *              ]
-     *          }
+     *               {
+     *                   "id": 2,
+     *                   "code": "FTZ-150814190145001",
+     *                   "type": 2,
+     *                   "salon_id": 1,
+     *                   "merchant_id": 2,
+     *                   "money": "333.66",
+     *                   "pay_type": 1,
+     *                   "require_day": "2015-08-14",
+     *                   "pay_day": "0000-00-00",
+     *                   "cycle": 30,
+     *                   "cycle_day": 1,
+     *                   "cycle_money": "100.00",
+     *                   "make_uid": 1,
+     *                   "cash_uid": 0,
+     *                   "prepay_bill_code": "",
+     *                   "receive_bill_code": "",
+     *                   "state": 2,
+     *                   "created_at": "2015-08-14 19:01:45",
+     *                   "confirm_uid": 0,
+     *                   "confirm_at": "0000-00-00",
+     *                   "updated_at": "2015-08-14 19:01:45",
+     *                   "make_user": {
+     *                       "id": 1,
+     *                       "name": "这是用户名Admin"
+     *                   },
+     *                   "confirm_user": null,
+     *                   "cash_user": null,
+     *                   "salon": {
+     *                       "salonid": 1,
+     *                       "salonname": "嘉美专业烫染",
+     *                       "sn": "SZ0320001"
+     *                   }
+     *               },
+     *               {
+     *                   "id": 2,
+     *                   "code": "FTZ-150814190145001",
+     *                   "type": 2,
+     *                   "salon_id": 1,
+     *                   "merchant_id": 2,
+     *                   "money": "333.66",
+     *                   "pay_type": 1,
+     *                   "require_day": "2015-08-14",
+     *                   "pay_day": "0000-00-00",
+     *                   "cycle": 30,
+     *                   "cycle_day": 1,
+     *                   "cycle_money": "100.00",
+     *                   "make_uid": 1,
+     *                   "cash_uid": 0,
+     *                   "prepay_bill_code": "",
+     *                   "receive_bill_code": "",
+     *                   "state": 2,
+     *                   "created_at": "2015-08-14 19:01:45",
+     *                   "confirm_uid": 0,
+     *                   "confirm_at": "0000-00-00",
+     *                   "updated_at": "2015-08-14 19:01:45",
+     *                   "make_user": {
+     *                       "id": 1,
+     *                       "name": "这是用户名Admin"
+     *                   },
+     *                   "confirm_user": null,
+     *                   "cash_user": null,
+     *                   "salon": {
+     *                       "salonid": 1,
+     *                       "salonname": "嘉美专业烫染",
+     *                       "sn": "SZ0320001"
+     *                   }
+     *               }
+     *           ]
+     *       }
      *      }
      *
      *
@@ -137,6 +194,7 @@ class PayController extends Controller
         $params['code'] = PayManage::makeNewCode($params['type']);
         $params['make_uid'] = 1;
         $params['state'] = PayManage::STATE_OF_TO_CHECK;
+        $params['created_at'] = $params['updated_at'] =date("Y-m-d H:i:s");
         $id = PayManage::insertGetId($params);
         if($id)
         {
@@ -154,15 +212,62 @@ class PayController extends Controller
      * @apiName show
      * @apiGroup PayManage
      * 
-     * @apiSuccess {String} ret 1 成功删除
-     *
+     * @apiSuccess {String} code 单号
+     * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
+     * @apiSuccess {String} money 付款金额
+     * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
+     * @apiSuccess {String} require_day 要求付款日期 
+     * @apiSuccess {String} pay_day 实际付款日期 
+     * @apiSuccess {String} cycle 回款周期
+     * @apiSuccess {String} cycle_day 回款日期 
+     * @apiSuccess {String} cycle_money 周期回款金额 
+     * @apiSuccess {String} make_user 制单人信息
+     * @apiSuccess {String} confirm_user 审批人信息
+     * @apiSuccess {String} cash_user 出纳人信息
+     * @apiSuccess {String} salon 店铺信息
+     * @apiSuccess {String} prepay_bill_code 关联的转付单单号 
+     * @apiSuccess {String} receive_bill_code 关联的收款单单号 
+     * @apiSuccess {String} state 订单状态  1待提交 2待审批 3:待付款 4:已付款
+     * @apiSuccess {String} confirm_at 审批日期
+     * 
      * @apiSuccessExample Success-Response:
-     *       {
-     *           "result": 1,
-     *           "data": {
-     *               "ret": 1
-     *           }
-     *       }
+     *        {
+     *            "result": 1,
+     *            "data": {
+     *                "id": 2,
+     *                "code": "FTZ-150814190145001",
+     *                "type": 2,
+     *                "salon_id": 1,
+     *                "merchant_id": 2,
+     *                "money": "333.66",
+     *                "pay_type": 1,
+     *                "require_day": "2015-08-14",
+     *                "pay_day": "0000-00-00",
+     *                "cycle": 30,
+     *                "cycle_day": 1,
+     *                "cycle_money": "100.00",
+     *                "make_uid": 1,
+     *                "cash_uid": 0,
+     *                "prepay_bill_code": "",
+     *                "receive_bill_code": "",
+     *                "state": 2,
+     *                "created_at": "2015-08-14 19:01:45",
+     *                "confirm_uid": 0,
+     *                "confirm_at": "0000-00-00",
+     *                "updated_at": "2015-08-14 19:01:45",
+     *                "make_user": {
+     *                    "id": 1,
+     *                    "name": "这是用户名Admin"
+     *                },
+     *                "confirm_user": null,
+     *                "cash_user": null,
+     *                "salon": {
+     *                    "salonid": 1,
+     *                    "salonname": "嘉美专业烫染",
+     *                    "sn": "SZ0320001"
+     *                }
+     *            }
+     *        }
      *
      *
      * @apiErrorExample Error-Response:
@@ -177,22 +282,22 @@ class PayController extends Controller
         $query->with([
             'make_user' => function ($q)
             {
-                $q->lists('name');
+                $q->lists('id','name');
             }
         ])->with([
             'confirm_user' => function ($q)
             {
-                $q->lists('name');
+                $q->lists('id','name');
             }
         ])->with([
             'cash_user' => function ($q)
             {
-                $q->lists('name');
+                $q->lists('id','name');
             }
         ])->with([
             'salon' => function ($q)
             {
-                $q->get(['salonname','sn']);
+                $q->get(['salonid','salonname','sn']);
             }
         ]);
         $item = $query->first()->toArray();
@@ -246,7 +351,7 @@ class PayController extends Controller
         //#@todo for debug
         // $params['make_uid'] = $this->user->id;
         $params['make_uid'] = 1;
-        
+        $params['updated_at'] =date("Y-m-d H:i:s");
         $item = PayManage::where('id',$id)->first(['type']);
         if($item->type  != PayManage::STATE_OF_TO_SUBMIT || $item->type  != PayManage::STATE_OF_TO_CHECK )
         {

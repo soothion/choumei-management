@@ -31,7 +31,8 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ShopcountFastCountOrder::class,
         \App\Console\Commands\ResetPassword::class,
         \App\Console\Commands\ShopcountDelegateExport::class,
-
+        \App\Console\Commands\PayCreate::class,
+        \App\Console\Commands\PayShow::class,
     ];
 
     /**
