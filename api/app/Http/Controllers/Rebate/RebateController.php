@@ -218,17 +218,34 @@ class RebateController extends Controller{
 			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
 		}
 
-		$array = $query->get();
+		$fields = array(
+		    'rebate.id as id',
+			'salon_id',
+			'salon.sn as salonsn',
+			'salon.salonname',
+			'rebate.sn as sn',
+			'amount',
+			'rebate.status as status',
+			'start_at',
+			'end_at',
+			'confirm_at',
+			'confirm_by',
+			'created_at',
+			'created_by',
+		);
+
+		//分页
+	    $array = $query->select($fields)->get();
 	    foreach ($array as $key => $value) {
 	    	$result[$key]['id'] = $key+1;
 	    	$result[$key]['salonsn'] = $value->salonsn;
 	    	$result[$key]['salonname'] = $value->salonname;
 	    	$result[$key]['sn'] = $value->sn;
-	    	$result[$key]['start_at'] = $value->start_at;
-	    	$result[$key]['end_at'] = $value->end_at;
+	    	$result[$key]['start_at'] = substr($value->start_at, 0,10);
+	    	$result[$key]['end_at'] = substr($value->end_at, 0,10);
 	    	$result[$key]['amount'] = $value->amount;
-	    	$result[$key]['created_at'] = $value->created_at;
-	    	$result[$key]['confirm_at'] = $value->confirm_at;
+	    	$result[$key]['created_at'] = substr($value->created_at, 0,10);
+	    	$result[$key]['confirm_at'] = substr($value->confirm_at, 0,10);
 	    	$result[$key]['created_by'] = $value->created_by;
 	    	$result[$key]['status'] = $value->status==1?'已确认':'待确认';
 	    }
@@ -357,7 +374,7 @@ class RebateController extends Controller{
 		if(empty($param['rebate']))
 			return $this->erryr('必须指定返佣单ID');
 		DB::beginTransaction();
-		$result = Rebate::whereIn('id',$param['rebate'])->update(['status'=>1]);
+		$result = Rebate::whereIn('id',$param['rebate'])->update(['status'=>1,'confirm_at'=>date('Y-m-d H:m:s'),'confirm_by'=>$this->user->name]);
 		if($result==count($param['rebate']))
 		{
 			DB::commit();

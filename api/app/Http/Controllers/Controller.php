@@ -38,12 +38,14 @@ abstract class Controller extends BaseController
 
 	public $param;
 	public $user;
+	public $token='';
 
 	public function __construct(){
 		$this->param = Input::all();
-		$token = JWTAuth::getToken();
-		if ($token&&$user = JWTAuth::parseToken()->authenticate()) {
-            $this->user = $user;
+		$this->user = Manager::first();
+		if(JWTAuth::getToken()){
+            $this->user = JWTAuth::parseToken()->authenticate();
+            $this->token = JWTAuth::parseToken()->refresh();
         }
 
 	}
@@ -52,6 +54,7 @@ abstract class Controller extends BaseController
 		return Response::json([
 			'result'=>0,
 			'msg'=>$msg,
+			'token'=>$this->token,
 			'code'=>$code
 		]);
 	}
@@ -59,6 +62,7 @@ abstract class Controller extends BaseController
 	public function success($data=[]){
 		return Response::json([
 			'result'=>1,
+			'token'=>$this->token,
 			'data'=>$data
 		]);
 	}
