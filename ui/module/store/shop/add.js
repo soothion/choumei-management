@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-14 18:58:12
+* @Last Modified time: 2015-08-17 09:30:53
 */
 
 $(function(){
@@ -86,8 +86,7 @@ $(function(){
                     //目标li的top
                     var currentLiTop = currentLi.offset().top;
                     //scrollTop的高度
-                    $(".options").scrollTop(currentLiTop-top);  
-
+                    $(".options").scrollTop(currentLiTop-top); 
                 } 
             }
         }

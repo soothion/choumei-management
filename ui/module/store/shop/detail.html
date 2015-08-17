@@ -416,7 +416,7 @@
                                   </tr>
 
                                   <tr>
-                                      <td colspan="2" class="content">额外补贴政策：</td>
+                                      <td colspan="2" class="content">强补贴政策：</td>
                                       <td colspan="6"><%=data.strongSubsidies %></td>
                                   </tr>
 
@@ -434,10 +434,21 @@
                                         data.ssEndTime = lib.tools.getDate(data.ssEndTime);
                                       }
                                       %>                                  
-                                      <td colspan="2" class="content">额外补贴起始日：</td>
+                                      <td colspan="2" class="content">强补贴起始日：</td>
                                       <td colspan="2"><%=data.ssStartTime %></td>
-                                      <td colspan="2" class="content">额外补贴起截止日：</td>
+                                      <td colspan="2" class="content">强补贴截止日：</td>
                                       <td colspan="2"><%=data.ssEndTime %></td>
+                                  </tr>
+
+                                  <tr>
+                                      <td colspan="2" class="content">强补贴月交易单数要求：</td>
+                                      <td colspan="6"><%=data.strongClaim %></td>
+                                  </tr>
+
+                                  
+                                  <tr>
+                                      <td colspan="2" class="content">首单指标补贴政策：</td>
+                                      <td colspan="6"><%=data.subsidyPolicy %></td>
                                   </tr>
 
                               </tbody>
