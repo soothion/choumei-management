@@ -165,6 +165,31 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 		'uses'=>'LogController@export'
 	));
 
+	//返佣单
+	Route::any('rebate/index',array(
+		'as'=>'rebate.index',
+		'uses'=>'RebateController@index'
+	));
+	Route::any('rebate/create',array(
+		'as'=>'rebate.create',
+		'uses'=>'RebateController@create'
+	));
+
+	Route::any('rebate/show/{id}',array(
+		'as'=>'rebate.show',
+		'uses'=>'RebateController@show'
+	));	
+
+	Route::any('rebate/export',array(
+		'as'=>'rebate.export',
+		'uses'=>'RebateController@export'
+	));
+
+	Route::any('rebate/confirm',array(
+		'as'=>'rebate.confirm',
+		'uses'=>'RebateController@confirm'
+	));
+
 
 
 	 // 店铺结算模块

@@ -13,7 +13,11 @@ class Salon extends Model {
 	public $timestamps = false;
 	
 	//protected $fillable = ['id', 'sn','name','contact','mobile','phone','email','addr','foundingDate','salonNum','addTime' ];
-	
+
+    public function rebate(){
+        return $this->hasMany('App\Rebate');
+    }    
+
 	/**
 	 * 店铺列表
 	 */
