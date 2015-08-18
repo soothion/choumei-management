@@ -66,7 +66,7 @@
 				<%var data=data.data%>
 				<%data.forEach(function(item,i){%>
 				<tr>
-					<td><label><input type="checkbox" form="form" name="ids" value="<%=i%>"/><span></span></label></td>
+					<td><label><input type="checkbox" form="form1 form2" name="ids" value="<%=item.id%>"/><span></span></label></td>
 					<td><%=i+1%></td>
 					<td><%=item.salon?item.salon.sn:""%></td>
 					<td><%=item.salon?item.salon.salonname:""%></td>
@@ -95,11 +95,15 @@
               </tbody>
             </table>
 			<div class="table-bottom">
-				<form id="form" action="/aaa/" data-role="normal" >
-					<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-					<button class="btn" formaction="pay_manage/check?do=1">审批通过</button>
-					<span class="space"></span>
-					<button class="btn" formaction="pay_manage/check?do=2">审批不通过</button>
+				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+				<form id="form1" action="pay_manage/check" data-role="normal" >
+					<button class="btn">审批通过</button>
+					<input type="hidden" name="do" value="1" />
+				</form>
+				<span class="space"></span>
+				<form id="form2" action="pay_manage/check" data-role="normal" >
+					<button class="btn">审批不通过</button>
+					<input type="hidden" name="do" value="2" />
 				</form>
 			</div>
             <div class="pager"> </div>
@@ -108,7 +112,9 @@
     </div>
 	<script type="text/javascript">
 		$(function(){
-			
+			$('#table').on('mouseenter','.table-bottom form',function(){
+				$(this).attr('id','form').siblings('form').removeAttr('id');
+			});
 		});
 	</script>
 </body>

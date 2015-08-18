@@ -188,7 +188,18 @@ $(function(){
 			type:'POST',
 			success:function(data){
 				if(data.result==1){
-					$this.trigger('reset',data);//成功后会触发reset事件
+					if($this.attr('onreset')=="remove"){
+						parent.lib.popup.result({
+							bool:true,
+							text:"删除成功",
+							time:2000,
+							define:function(){
+								$this.closest('tr').remove();
+							}
+						});
+					}else{
+						$this.trigger('reset',data);//成功后会触发reset事件
+					}
 				}else{
 					$this.trigger('fail',data);	
 				}
