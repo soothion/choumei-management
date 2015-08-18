@@ -341,6 +341,37 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 					'as'=>'salonAccount.del',
 					'uses'=>'Merchant\SalonAccountController@delAct'
 		));	
+	
+	//财务管理-收款管理
+	
+	Route::any('receivables/index',array(  //列表
+			'as'=>'receivables.index',
+			'uses'=>'Financial\ReceivablesController@index'
+	));
+	
+	Route::any('receivables/save',array(  //添加
+			'as'=>'receivables.save',
+			'uses'=>'Financial\ReceivablesController@save'
+	));
+	Route::any('receivables/udpate',array(  //修改
+			'as'=>'receivables.udpate',
+			'uses'=>'Financial\ReceivablesController@udpate'
+	));
+	Route::any('receivables/confirmAct',array(  //确认收款
+			'as'=>'receivables.confirmAct',
+			'uses'=>'Financial\ReceivablesController@confirmAct'
+	));
+	Route::any('receivables/export',array(  //确认收款
+			'as'=>'receivables.export',
+			'uses'=>'Financial\ReceivablesController@export'
+	));
+	Route::any('receivables/getone',array(  //详细
+			'as'=>'receivables.getone',
+			'uses'=>'Financial\ReceivablesController@getReceivablesByid'
+	));
+	
+	
+	
     
 	//付款管理
 	Route::any('pay_manage/index',array(  //列表
