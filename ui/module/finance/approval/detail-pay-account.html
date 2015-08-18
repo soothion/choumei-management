@@ -30,7 +30,7 @@
                 <tr>
                     <td colspan="2">
                       <%=data.salon?data.salon.salonname:""%>
-					  <span style="float:right">店铺编号：<%=data.salon?data.salon.salonname:""%></span>
+					  <span style="float:right">店铺编号：<%=data.salon?data.salon.sn:""%></span>
                     </td>
                 </tr>
             </thead>
@@ -68,7 +68,7 @@
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.make_user%></td>
+                  <td><%=data.make_user?data.make_user.name:""%></td>
                </tr>
 			   <tr>
                  <td>付款方式：</td>

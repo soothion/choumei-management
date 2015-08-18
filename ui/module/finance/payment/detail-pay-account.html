@@ -7,7 +7,7 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a>付款管理 </a><span>&gt;</span><a href="index.html">付款确认</a><span>&gt;</span><span id="breadcrumb-current">查看付款单</span>
+        <a>付款管理 </a><span>&gt;</span><a href="index.html">付款列表</a><span>&gt;</span><span id="breadcrumb-current">查看付款单</span>
 		<div class="flex-box">
 			<div class="flex-item">
 				<h4> 查看付款单</h4>
@@ -26,7 +26,7 @@
                 <tr>
                     <td colspan="2">
                       <%=data.salon?data.salon.salonname:""%>
-					  <span style="float:right">店铺编号：<%=data.salon?data.salon.salonname:""%></span>
+					  <span style="float:right">店铺编号：<%=data.salon?data.salon.sn:""%></span>
                     </td>
                 </tr>
             </thead>
@@ -64,15 +64,19 @@
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.make_user%></td>
+                  <td><%=data.make_user?data.make_user.name:""%></td>
                </tr>
 			   <tr>
                  <td>审批人：</td>
-                  <td><%=data.confirm_user%></td>
+                  <td><%=data.confirm_user?data.confirm_user.name:""%></td>
+               </tr>
+			   <tr>
+                 <td>审批日期：</td>
+                  <td><%=data.confirm_at%></td>
                </tr>
 			   <tr>
                  <td>出纳：</td>
-                  <td><%=data.cash_user%></td>
+                  <td><%=data.cash_user?data.cash_user.name:""%></td>
                </tr>
 			   <tr>
                  <td>实际付款日期：</td>
