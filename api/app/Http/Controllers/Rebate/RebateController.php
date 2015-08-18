@@ -310,7 +310,7 @@ class RebateController extends Controller{
 	/**
 	 * @api {post} /rebate/show/:id 4.查看返佣单信息
 	 * @apiName show
-	 * @apiGroup User
+	 * @apiGroup Rebate
 	 *
 	 * @apiParam {Number} id 必填,返佣单ID.
 	 *
@@ -389,6 +389,12 @@ class RebateController extends Controller{
 			DB::rollback();
 			return $this->error('确认失败');
 		}
+	}
+
+
+
+	public function upload(){
+
 	}
 
 
