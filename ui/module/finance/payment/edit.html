@@ -32,7 +32,6 @@
                     <label class="control-label" for=""><span class="red">*</span>付款类型：</label>
                     <div class="control">
                        <select required name="type" class="select"  style="width:20%;" <%=query.id?"disabled":""%>>
-							<option value="1">付交易代收款</option>
 							<option value="2">付业务投资款</option>
                         </select>
                     </div>
@@ -109,7 +108,7 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>回款日期：</label>
                     <div class="control">			 
-                        <input type="text" name="cycle_day" value="<%=data.cycle_day||""%>" maxlength="2" required /><span class="unit">号/月</span> <span class="weak">当月无此日期时顺延至下月1号</span>                              							  
+                        <input type="text" name="cycle_day" value="<%=data.cycle_day||""%>" min="1" max="31" required pattern="number" patternmsg="回款日期只能为数字且1-31之间"/><span class="unit">号/月</span> <span class="weak">当月无此日期时顺延至下月1号</span>                              							  
                     </div>
                 </div>
 				<div class="control-group">

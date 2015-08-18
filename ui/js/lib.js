@@ -514,6 +514,20 @@
 					if(!ret(val)){
 						$target.trigger('error',{type:'pattern'});
 						return;
+					}else{
+						//数字和浮点型添加值的限制
+						if(pattern=="number"||pattern=="float"){
+							var min=$target.attr('min')
+							if(min&&parseFloat(val)<parseFloat(min)){
+								$target.trigger('error',{type:'pattern'});
+								return;
+							}
+							var max=$target.attr('max')
+							if(max&&parseFloat(val)>parseFloat(max)){
+								$target.trigger('error',{type:'pattern'});
+								return;
+							}
+						}
 					}
 				}
 			}
