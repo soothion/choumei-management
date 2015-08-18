@@ -38,7 +38,7 @@
 				<button class="btn" type="submit">搜索</button>
 			</form>
 			<form action="pay_manage/export" data-role="export" ><button class="btn" ><i class="fa fa-file-excel-o"></i> 导出</button></form>
-           <div class="table" ajat="pay_manage/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="shop_count/index?url=pay_manage/index<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -95,11 +95,15 @@
               </tbody>
             </table>
 			<div class="table-bottom">
-				<form action="/aaa/" data-role="normal" id="form">
-					<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-					<button class="btn" formaction="pay_manage/confirm?do=1" data-confirm="请选择店铺">确认付款</button>
-					<span class="space"></span>
-					<button class="btn" formaction="pay_manage/confirm?do=2" data-confirm="请选择店铺">拒绝付款</button>
+				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+				<form action="pay_manage/confirm" data-role="normal" data-confirm="请选择店铺">
+					<button class="btn">确认付款</button>
+					<input type="hidden" name="do" value="1" />
+				</form>
+				<span class="space"></span>
+				<form action="pay_manage/confirm" data-role="normal" data-confirm="请选择店铺">
+					<button class="btn">拒绝付款</button>
+					<input type="hidden" name="do" value="2" />
 				</form>
 			</div>
             <div class="pager"> </div>
@@ -110,18 +114,20 @@
 		$(function(){
 			$('#table').on('change','tbody input',function(){
 				var checked=$('tbody input:checked');
-				var button=$('#form button');
+				var form=$('.table-bottom form');
 				if(checked.length==0){
-					button.eq(0).data('confirm',"请选择店铺");
-					button.eq(1).data('confirm',"请选择店铺");
+					form.eq(0).data('confirm',"请选择店铺");
+					form.eq(1).data('confirm',"请选择店铺");
 				}else{
 					var count=0;
 					checked.each(function(){
 						count+=parseFloat($(this).data('price'));
 					});
-					button.eq(0).data('confirm',"你正在给5家店铺支付￥"+count+"，是否继续？");
-					button.eq(1).data('confirm',"你正在拒绝"+checked.length+"家店铺的付款请求，是否继续？");
+					form.eq(0).data('confirm',"你正在给5家店铺支付￥"+count+"，是否继续？");
+					form.eq(1).data('confirm',"你正在拒绝"+checked.length+"家店铺的付款请求，是否继续？");
 				}
+			}).on('mouseenter','.table-bottom form',function(){
+				$(this).attr('id','form').siblings('form').removeAttr('id');
 			})
 		});
 	</script>

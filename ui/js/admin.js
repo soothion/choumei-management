@@ -1,23 +1,25 @@
 ﻿(function(){
-	parent.lib.popup.close();
-	lib.ajatCount=0;
+	parent.lib.popup.close();//清除父弹出框
+	lib.ajatCount=0;//ajat计件数
 	lib.ajat=function (_protocol) {
-		lib.ajatCount++;
+		lib.ajatCount++;//ajat添加计件数
         return new lib.Ajat(_protocol);
     }
-	lib.loadingend=function(e){//触发进度条加载完成
-		lib.ajatCount--;
-		if(lib.ajatCount==0){
-			parent.$('body').trigger('loadingend');
-			$(document.body).trigger('asynhashform');
-		}
-	}
+	
 	lib.Ajat.before=function(){
+		lib.loadingend=function(e){//触发进度条加载完成
+			lib.ajatCount--;//ajat减少计件数
+			if(lib.ajatCount==0){
+				parent.$('body').trigger('loadingend');//终止加载状态
+				$(document.body).trigger('asynhashform');//同步hash查询条件
+			}
+		}
 		$(document.body).on('_ready',lib.loadingend).on('exception',lib.loadingend);
 	}
-	document.onreadystatechange=function(){
+	
+	document.onreadystatechange=function(){//注册document的readystatechagne事件
 		if(document.readyState=='interactive'){
-			parent.$('body').trigger('loading');
+			parent.$('body').trigger('loading');//开启加载状态
 		}
 	}
 	/*子页是否全屏*/
@@ -29,17 +31,19 @@
 			page.removeClass('full');
 		}
 	}
-	parent.lib.fullpage(false);
+	parent.lib.fullpage(false);//清除父全屏状态
 })();
+
 $(function(){
 	/**渲染面包屑**/
 	var breadcrumb=$('.breadcrumb');
 	if(breadcrumb.length==1){
 		breadcrumb.html(lib.ejs.render({text:breadcrumb.html().replace(/%&gt;/g,'%>').replace(/&lt;%/g,'<%')},{}));
 	}
+	
 	/**hash和加载进度条**/
 	var $body=$(document.body);
-	lib.tools.hashchange=function(obj){
+	lib.tools.hashchange=function(obj){//更改浏览器hash值
 		var temphash=location.hash;
 		var query=$.extend({},lib.query,obj);
 		delete query._;
@@ -53,14 +57,15 @@ $(function(){
 	}
 	$(window).on('hashchange',function(){
 		lib.ajatCount=0;
-		parent.$('body').trigger('loading');
-		lib.init();
-		lib.Ajat.run();
+		parent.$('body').trigger('loading');//开启加载状态
+		lib.init();//更新query参数
+		lib.Ajat.run();//重新执行ajat渲染
 		$('html,body').animate({scrollTop:0},200);
 	});
 	if($('[ajat]').length==0){
-		parent.$('body').trigger('loadingend');
+		parent.$('body').trigger('loadingend');//终止加载状态
 	}
+	
 	/**同步hash查询条件**/
 	$body.one('asynhashform',function(){
 		var hashForm=$('form[data-role="hash"]');
@@ -88,6 +93,8 @@ $(function(){
 			});
 		}
 	});
+	
+	/**hash地址查询**/
 	$body.on('submit','form[data-role="hash"]',function(e){//表单submit提交
 		$(this).trigger('hash');
 		e.stopPropagation();
@@ -121,7 +128,10 @@ $(function(){
 		console.log(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
 		window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
 		e.preventDefault();
-	}).on('submit','form[data-role="remove"]',function(e,bool){//删除提交
+	});
+	
+	/**普通表单提交**/
+	$body.on('submit','form[data-role="remove"]',function(e,bool){//删除提交
 		e.preventDefault();
 		var $this=$(this);
 		if(!bool){
@@ -158,7 +168,7 @@ $(function(){
 				});
 			}
 		});
-	}).on('submit','form[data-role="normal"]',function(e,eventData){//一般的数据提交
+	}).on('submit','form[data-role="normal"]',function(e,eventData){//一般的数据提交,提交成功后会触发表单reset事件
 		e.preventDefault();
 		var $this=$(this);
 		if($this.is(':disabled')) return;
@@ -188,7 +198,18 @@ $(function(){
 			type:'POST',
 			success:function(data){
 				if(data.result==1){
-					$this.trigger('reset',data);//成功后会触发reset事件
+					if($this.attr('onreset')=="remove"){
+						parent.lib.popup.result({
+							bool:true,
+							text:"删除成功",
+							time:2000,
+							define:function(){
+								$this.closest('tr').remove();
+							}
+						});
+					}else{
+						$this.trigger('reset',data);//成功后会触发reset事件
+					}
 				}else{
 					$this.trigger('fail',data);	
 				}
@@ -196,13 +217,17 @@ $(function(){
 		});
 	}).on('reset','form[data-role="normal"]',function(e){
 		e.preventDefault();
-	}).on('change','.input-switch select',function(){//input-switch切换输入框
+	});
+	
+	/**input-switch/placeholder-switch切换**/
+	$body.on('change','.input-switch select',function(){//input-switch切换输入框
 		var $this=$(this);
 		$this.parent().find('input').eq($this.val()).show().siblings('input').hide().val('');
 	}).on('change','.placeholder-switch select',function(){//placeholder-switch切换placeholder
 		var $this=$(this);
 		$this.next('input').attr('placeholder',$this.children('option:selected').data('placeholder')).val('');
 	});
+	
 	/**常见**/
 	$body.on('click','.drop-menu-toggle',function(){//下拉菜单
 		var $this=$(this);
@@ -218,12 +243,11 @@ $(function(){
 	}).on('blur','input[data-role="start"]',function(){//日期区间
 		var $this=$(this);
 		$this.siblings('input[data-role="end"]').attr('min',$this.val());
-	});
-	/**日期禁止输入**/
-	$body.on('keypress','input[type="date"]',function(e){
+	}).on('keypress','input[type="date"]',function(e){//日期禁止输入
 		e.preventDefault();
-	})
-	/**自动补全**/
+	});
+	
+	/**键盘输入自动补全**/
 	$body.on('input','input[ajat-complete]',function(){//自动补全输入事件
 		var $this=$(this);
 		var val=$.trim($this.val());
@@ -280,7 +304,8 @@ $(function(){
 		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',$this.data());
 		complete.find('.complete-position').hide();
 	});
-	/**分页**/
+	
+	/**全局分页**/
 	$body.on('_ready',function(e,data){
 		var $target=$(e.target);
 		var $pager=$target.find('.pager');
@@ -309,6 +334,7 @@ $(function(){
 			$pager.html('<div class="data-empty"><i class="fa fa-frown-o"></i>'+($target.attr('data-empty-alert')||"没有查找到相关数据")+'</div>');
 		}
 	});
+	
 	/**权限控制**/
 	if(parent.access){
 		access.control(document.body);
@@ -316,8 +342,9 @@ $(function(){
 	$body.on('_ready',function(e){
 		access.control(e.target);
 	});
-	/**列表复选框全选**/
-	$body.on('change','.table .select-all input',function(){
+	
+	/**列表复选框**/
+	$body.on('change','.table .select-all input',function(){//全选
 		var bool=this.checked;
 		var _this=this;
 		$(this).closest('.table').find('tbody input[type="checkbox"]').each(function(){
@@ -330,13 +357,18 @@ $(function(){
 			}
 		})
 	});
-	/**列表复选框选选中**/
-	$body.on('change','.table tbody input[type="checkbox"]',function(){
-		var tr=$(this).closest('tr');
+	$body.on('change','.table tbody input[type="checkbox"]',function(){//表行复选框
+		var $this=$(this);
+		var tr=$this.closest('tr');
 		if(this.checked){
 			tr.addClass('tr-selected');
 		}else{
 			tr.removeClass('tr-selected');
+		}
+		if($this.closest('.table').find('tbody input[type="checkbox"]:checked').length==0){//取消全选状态
+			$('.select-all input').each(function(){
+				this.checked=false;
+			})
 		}
 	});
 	

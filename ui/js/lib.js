@@ -107,7 +107,12 @@
 				if (status === "timeout")    msg = "请求超时，请稍后再试!";
 				if (status === "offline")    msg = "网络异常，请稍后再试!";
 				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
-			}).done(done);
+			}).done(done).done(function(data){
+				if(data.token){
+					//console.log(data.token);
+					localStorage.setItem('token',data.token);
+				}
+			});
             return promise;
         },
 		getSession:function(){
@@ -437,7 +442,7 @@
 	Form.prototype={
 		selector:'input,textarea,select',
 		hooks:{
-			email:'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
+			email:'^[a-zA-Z0-9_-][\.a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
 			mobile:'^1[0-9]{10}$',
 			phone:'^\\d{7,12}$',
 			password:'^[0-9A-Za-z]{6,20}$',

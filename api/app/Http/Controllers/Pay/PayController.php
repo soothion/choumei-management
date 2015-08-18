@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Pay;
 
 use App\Http\Controllers\Controller;
 use App\PayManage;
+use Illuminate\Pagination\AbstractPaginator;
 
 class PayController extends Controller
 {    
@@ -23,7 +24,7 @@ class PayController extends Controller
      * @apiParam {String} state 0 全部 1 待提交 2待审批 3待付款  4已付款
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
-     * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
+     * @apiParam {String} sort_key 排序的键 ['id','updated_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
      * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
      * @apiSuccess {Number} total 总数据量.
@@ -140,7 +141,33 @@ class PayController extends Controller
      */
     public function index()
     {
-        //
+        $options = $this->parameters([
+            'key' => self::T_INT,
+            'keyword' => self::T_STRING,
+            'pay_time_min' => self::T_STRING,
+            'pay_time_max' => self::T_STRING,
+            'type' => self::T_INT,
+            'pay_type' => self::T_INT,
+            'state' => self::T_INT,
+            'page' => self::T_INT,
+            'page_size' => self::T_INT,
+            'sort_key' => self::T_STRING,
+            'sort_type' => self::T_STRING,
+        ]);
+        $page = isset($options['page']) ? max(intval($options['page']), 1) : 1;
+        $size = isset($options['page_size']) ? max(intval($options['page_size']), 1) : 20;
+        
+        $pay = PayManage::search($options);
+        
+        AbstractPaginator::currentPageResolver(function () use($page)
+        {
+            return $page;
+        });
+        
+        $res = $pay->paginate($size)->toArray();
+        unset($res['next_page_url']);
+        unset($res['prev_page_url']);
+        return $res;
     }
 
     /**
@@ -191,11 +218,9 @@ class PayController extends Controller
         ],true);
         //#@todo for debug
         // $params['make_uid'] = $this->user->id;
-        $params['code'] = PayManage::makeNewCode($params['type']);
+      
         $params['make_uid'] = 1;
-        $params['state'] = PayManage::STATE_OF_TO_CHECK;
-        $params['created_at'] = $params['updated_at'] =date("Y-m-d H:i:s");
-        $id = PayManage::insertGetId($params);
+        $id = PayManage::make($params);
         if($id)
         {
             return $this->success(['id'=>$id]);
@@ -204,7 +229,6 @@ class PayController extends Controller
         {
             return $this->error("创建失败");
         }
-       
     }
 
     /**
@@ -351,15 +375,11 @@ class PayController extends Controller
         //#@todo for debug
         // $params['make_uid'] = $this->user->id;
         $params['make_uid'] = 1;
-        $params['updated_at'] =date("Y-m-d H:i:s");
-        $item = PayManage::where('id',$id)->first(['type']);
-        if($item->type  != PayManage::STATE_OF_TO_SUBMIT || $item->type  != PayManage::STATE_OF_TO_CHECK )
+        $ret = PayManage::change($id, $params);
+        if($ret)
         {
-            return $this->error("此单状态不允许修改");
+            return $this->error("修改失败");
         }
-        
-        $params['state'] = PayManage::STATE_OF_TO_CHECK;
-        PayManage::where('id',$id)->update($params);
         return $this->success(['id'=>$id]);
     }
 
@@ -387,12 +407,11 @@ class PayController extends Controller
      */
     public function destroy($id)
     {
-        $item = PayManage::where('id',$id)->first(['type']);
-        if($item->type  != PayManage::STATE_OF_TO_SUBMIT || $item->type  != PayManage::STATE_OF_TO_CHECK )
+        $ret = PayManage::destory($id);
+        if(!$ret)
         {
-            return $this->error("此单状态不允许删除");
-        }
-        PayManage::where('id',$id)->delete();
+            return $this->error("此单状态不允许删除或者已经删除!");
+        }    
         return $this->success(["ret"=>1]);
     }
     
@@ -402,7 +421,7 @@ class PayController extends Controller
      * @apiGroup PayManage
      *
      * @apiParam {String} ids  id1,id2,... 
-     * @apiParam {Number} do  1 通过 2 拒绝
+     * @apiParam {Number} do  1 通过 0 拒绝
      * 
      * @apiSuccess {String} ret 1 执行成功
      *
@@ -427,6 +446,17 @@ class PayController extends Controller
             'ids' => self::T_STRING,
             'do' => self::T_INT,
         ],true);
+        $uid = 1;
+        //for test
+        //$uid = $this->user->id;
+        $ids =  explode(",",$params['ids']);
+        $ids = array_map("intval",$ids);
+        $ret = PayManage::check($ids,$params['do'],$uid);
+        if(!$ret)
+        {
+            return $this->error("单状态不正确或者不存在!");
+        }
+        return $this->success(["ret"=>1]);
     }
 
     /**
@@ -435,7 +465,7 @@ class PayController extends Controller
      * @apiGroup PayManage
      *
      * @apiParam {String} ids  id1,id2,...
-     * @apiParam {Number} do  1 通过 2 拒绝
+     * @apiParam {Number} do  1 通过 0 拒绝
      *
      * @apiSuccess {String} ret 1 执行成功
      *
@@ -456,10 +486,21 @@ class PayController extends Controller
      */
     public function confirm()
     {
-        $params = $this->parameters([
+       $params = $this->parameters([
             'ids' => self::T_STRING,
             'do' => self::T_INT,
         ],true);
+        $uid = 1;
+        //for test
+        //$uid = $this->user->id;
+        $ids =  explode(",",$params['ids']);
+        $ids = array_map("intval",$ids);
+        $ret = PayManage::confirm($ids,$params['do'],$uid);
+        if(!$ret)
+        {
+            return $this->error("单状态不正确或者不存在!");
+        }
+        return $this->success(["ret"=>1]);
     }
 
     /**
@@ -483,6 +524,20 @@ class PayController extends Controller
      */
     public function export()
     {
-        
+        $options = $this->parameters([
+            'key' => self::T_INT,
+            'keyword' => self::T_STRING,
+            'pay_time_min' => self::T_STRING,
+            'pay_time_max' => self::T_STRING,
+            'type' => self::T_INT,
+            'pay_type' => self::T_INT,
+            'state' => self::T_INT,
+            'sort_key' => self::T_STRING,
+            'sort_type' => self::T_STRING,
+        ]);
+        $pay = PayManage::search($options);    
+        $res = $pay->get()->toArray();
+        return $res;
     }
+    
 }

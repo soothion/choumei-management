@@ -274,7 +274,7 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
     border-top:1px solid #E9E9E9;
 }
 .popup-footer .flex-item+.flex-item {
-    box-shadow:-1px 0px 0px #E9E9E9
+    border-left:1px solid #E9E9E9;
 }
 .popup-sheet,.popup-sheet-cancel{
     background:#fff;

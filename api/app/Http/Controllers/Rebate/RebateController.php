@@ -64,8 +64,10 @@ class RebateController extends Controller{
 	 *	                "status": 2,
 	 *	                "start_at": "0000-00-00 00:00:00",
 	 *	                "end_at": "0000-00-00 00:00:00",
+	 *	                "created_at": "0000-00-00 00:00:00",
 	 *	                "confirm_at": "0000-00-00 00:00:00",
-	 *	                "confirm_by": "administrator"
+	 *	                "confirm_by": "administrator",
+	 *	                "created_by": "administrator"
 	 *	            }
 	 *	        ]
 	 *	    }
@@ -99,7 +101,7 @@ class RebateController extends Controller{
 		//店铺编号筛选
 		if(isset($param['salonsn'])&&$param['salonsn']){
 			$query =Rebate::whereHas('salon',function($q) use($param){
-				$q->where('salonsn','like','%'.$param['salonsn'].'%');
+				$q->where('sn','like','%'.$param['salonsn'].'%');
 			});
 		}
 
@@ -136,8 +138,10 @@ class RebateController extends Controller{
 			'rebate.status as status',
 			'start_at',
 			'end_at',
+			'created_at',
 			'confirm_at',
-			'confirm_by'
+			'confirm_by',
+			'created_by'
 		);
 
 		//分页

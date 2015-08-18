@@ -18,9 +18,15 @@
    <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
-			<button class="btn" type="button">确认付款</button>
+			<form action="pay_manage/confirm" data-role="normal">
+				<button class="btn" type="button">确认付款</button>
+				<input type="hidden" name="ids" value="1" />
+			</form>
 			<span class="space"></span>
-			<button class="btn" type="button">拒绝付款</button>
+			<form action="pay_manage/confirm" data-role="normal">
+				<button class="btn" type="button">拒绝付款</button>
+				<input type="hidden" name="ids" value="2" />
+			</form>
 			<span class="space"></span>
 			<button class="btn" type="button" onclick="history.back()">返回</button>
 		</div>
