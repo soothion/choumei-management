@@ -83,7 +83,7 @@ Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
 
 
 //权限管理后台接口
-Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+// Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 // Route::group(['middleware'], function(){
 
 	//用户模块
