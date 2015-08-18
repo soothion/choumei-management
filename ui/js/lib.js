@@ -442,7 +442,7 @@
 	Form.prototype={
 		selector:'input,textarea,select',
 		hooks:{
-			email:'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
+			email:'^[a-zA-Z0-9_-][\.a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
 			mobile:'^1[0-9]{10}$',
 			phone:'^\\d{7,12}$',
 			password:'^[0-9A-Za-z]{6,20}$',
