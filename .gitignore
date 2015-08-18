@@ -3,6 +3,12 @@ api/vendor/
 api/.env
 api/public/doc/
 update.sh
+.project
+.buildpath
+.buildpath
+/.settings
+*.env
+*.backup
+*.sql
 api/.tags
 api/.tags_sorted_by_file
-
