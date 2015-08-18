@@ -9,23 +9,25 @@
     <body>
         <div class="breadcrumb">
             <a>收入管理</a>
-            <span>&gt;</span><a href="index.html">佣金单</a>
+            <span>&gt;</span><a href="index.html">新增反佣单</a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>佣金单详情</h4>
-                </div>
-                <div class="flex-item">
-                    <button type="button" class="btn-primary fr mr-20" onclick="history.back()">提交</button>
-                    <button type="button" class="btn fr mr-20" onclick="history.back()">取消</button>
+                    <h4>新增反佣单</h4>
                 </div>
             </div>
         </div>
         <div class="wrapper">
-            <form novalidate="" method="post" class="form-vertical" data-role="form">
+            <form novalidate="" action="rebate/create" method="post" class="form-vertical" data-role="form">
+                <div class="detail-operation">
+                    <button type="button" class="btn" onclick="history.back()">取消</button>
+                    <span class="space"></span>
+                    <button class="btn-primary">提交</button>
+                </div>    
+
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
-                        <input type="hidden" name="salonid" id="salonid"/>
+                        <input type="hidden" name="salon_id" id="salonid"/>
                         <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required>
                         <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;">
                             <script type="text/template" id="complete-position-t">
@@ -47,34 +49,34 @@
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
                         <input type="text" id="merchantname"  disabled>
-                        <input type="hidden" name="merchantId" id="merchantId" required requiredmsg="请店铺搜索到商户"/>
+                        <!-- <input type="hidden" name="merchantId" id="merchantId" required requiredmsg="请店铺搜索到商户"/> -->
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>结算起始日：</label>
                     <div class="control">
-                        <input type="date" name="username" required requiredmsg="">
+                        <input type="date" name="start_at" required>
                     </div>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>结算截止日：</label>
                     <div class="control">
-                        <input type="date" name="startDate" required requiredmsg="">
+                        <input type="date" name="end_at" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>金额：</label>
                     <div class="control">
-                        <input type="text" name="endDate" required>
+                        <input type="text" name="amount" required>
                     </div>
                 </div>  
 
                 <div class="control-group">
                     <label class="control-label" for=""></label>
-                    <button type="button" class="btn">预览</button>
+                    <button type="button" class="btn" id="perview_btn">预览</button>
                     <button class="btn-primary mr-20">提交</button>
                 </div>
             </form>       
@@ -83,9 +85,21 @@
             $('#search').on('autoinput',function(e,data){
                 if(data){
                     $('#salonid').val(data.salonid);
-                    $('#merchantId').val(data.merchantid);
+                    // $('#merchantId').val(data.merchantid);
                     $('#merchantname').val(data.merchantname);
                 }
+            });
+
+            $("#perview_btn").on('click',function(){
+                var arr = $("form[data-role='form']").serializeArray();
+                var obj = {};
+                arr.forEach(function(item,index){
+                  obj[item.name] = item.value;
+                });
+                obj.salonname    = $("#search").val();
+                obj.merchantname = $('#merchantname').val();
+                sessionStorage.setItem("income-rebate-perview",JSON.stringify(obj));
+                window.open("detail.html?type=perview");
             });
         </script>
     </body>
