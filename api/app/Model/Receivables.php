@@ -214,6 +214,10 @@ class Receivables extends Model {
 	 */
 	public static  function  getOneById($id)
 	{
+		if(!$id)
+		{
+			return false;
+		}
 		$fields = array(
 				'r.salonid',
 				's.salonname',
