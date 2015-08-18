@@ -96,15 +96,8 @@
 			<%if(data.data&&data.data.length>0){%>
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form id="form1" action="pay_manage/check" data-role="normal" >
-					<button class="btn">审批通过</button>
-					<input type="hidden" name="do" value="1" />
-				</form>
-				<span class="space"></span>
-				<form id="form2" action="pay_manage/check" data-role="normal" >
-					<button class="btn">审批不通过</button>
-					<input type="hidden" name="do" value="2" />
-				</form>
+				<button class="btn" data-define="1">审批通过</button>
+				<button class="btn" data-define="2">审批不通过</button>
 			</div>
 			<%}%>
             <div class="pager"> </div>
@@ -113,9 +106,44 @@
     </div>
 	<script type="text/javascript">
 		$(function(){
-			$('#table').on('mouseenter','.table-bottom form',function(){
-				$(this).attr('id','form').siblings('form').removeAttr('id');
-			});
+			$('#table').on('click','.table-bottom button',function(){
+				var $this=$(this);
+				var checked=$('tbody input:checked');
+				var data={
+					ids:[]
+				}
+				checked.each(function(){
+					data.ids.push(this.value);
+				});
+				if(checked.length==0){
+					parent.lib.popup.alert({text:"请选择店铺"});
+					return;
+				}
+				data.ids=data.ids.join(',')
+				if($this.data('define')==1){
+					data.do=1;
+				}
+				if($this.data('define')==2){
+					data.do=0;
+				}
+				lib.ajax({
+					url:"pay_manage/check",
+					type:"POST",
+					data:data,
+					success:function(data){
+						parent.lib.popup.result({
+							bool:data.result,
+							text:"操作成功",
+							time:2000,
+							define:function(){
+								if(data.result==1){
+									location.reload();
+								}
+							}
+						});
+					}
+				})
+			})
 		});
 	</script>
 </body>

@@ -18,14 +18,14 @@
    <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
-			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" onreset="history.back()">
-				<button class="btn" type="button">删除</button>
+			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" data-confirm="你正在删除此付款单，是否执行删除？" onreset="history.back()">
+				<button class="btn">删除</button>
 			</form>
 			<span class="space"></span>
 			<a class="btn" href="edit.html?id=<%=query.id%>">编辑</a>
 			<span class="space"></span>
 			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" onreset="location.href='../approval/detail-invest.html?id=<%=query.id%>'">
-				<button class="btn" type="button">提交</button>
+				<button class="btn">提交</button>
 			</form>
 			<span class="space"></span>
 			<button class="btn" type="button" onclick="history.back()">返回</button>

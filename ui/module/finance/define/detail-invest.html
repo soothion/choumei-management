@@ -19,13 +19,13 @@
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
 			<form action="pay_manage/confirm" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){history.back()}});">
-				<button class="btn" type="button">确认付款</button>
-				<input type="hidden" name="ids" value="1" />
+				<button class="btn">确认付款</button>
+				<input type="hidden" name="ids" value="<%=query.id%>" />
 			</form>
 			<span class="space"></span>
 			<form action="pay_manage/confirm" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){history.back()}});">
-				<button class="btn" type="button">拒绝付款</button>
-				<input type="hidden" name="ids" value="2" />
+				<button class="btn">拒绝付款</button>
+				<input type="hidden" name="ids" value="<%=query.id%>" />
 			</form>
 			<span class="space"></span>
 			<button class="btn" type="button" onclick="history.back()">返回</button>

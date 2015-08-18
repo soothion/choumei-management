@@ -17,6 +17,11 @@
     </div>	
    <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
+		<%
+			if(query.preview=="preview"){
+				data=JSON.parse(localStorage.getItem("preview"));
+			}
+		%>
 		<div class="detail-operation">
 			<button class="btn" type="button" onclick="history.back()">返回</button>
 		</div>
@@ -52,15 +57,15 @@
                 </tr>
 				<tr>
                   <td>回款周期：</td>
-                  <td><%=data.data.cycle%>个月</td>
+                  <td><%=data.cycle||0%>个月</td>
                 </tr>
 				<tr>
                   <td>回款日期：</td>
-                  <td><%=data.data.cycle_day%>号/月 <span class="space"></span><span class="weak">当月无此日期时顺延至下月1号</span></td>
+                  <td><%=data.cycle_day||0%>号/月 <span class="space"></span><span class="weak">当月无此日期时顺延至下月1号</span></td>
                 </tr>
 				 <tr>
                   <td>周期回款金额：</td>
-                  <td><%=data.data.cycle_money%> <span class="space"></span><span class="weak">尾差金额在最后一个回款周期补回</span></td>
+                  <td><%=data.cycle_money||0%> <span class="space"></span><span class="weak">尾差金额在最后一个回款周期补回</span></td>
                 </tr>
               </tbody>
         </table>

@@ -19,16 +19,15 @@
 		  </div>
 		 <hr />
         </div>			
-     <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+     <div class="wrapper" ajat="<%if(query.id){%>pay_manage/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>pay_manage/update/<%=query.id%><%}else{%>pay_manage/create<%}%>">
 				<div class="detail-operation">
-				<button class="btn" onclick="history.back()" type="button" >取消</button>
-				<span class="space"></span>
-				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
-			</div>
-				
-                  <div class="control-group">
+					<button class="btn" onclick="history.back()" type="button" >取消</button>
+					<span class="space"></span>
+					<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
+				</div>
+                <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款类型：</label>
                     <div class="control">
                        <select required name="type" class="select"  style="width:20%;" <%=query.id?"disabled":""%>>
@@ -40,41 +39,22 @@
                     <legend>付款详情</legend>
 						<hr />
                 </div>
-					<%if(!query._){%>
-					<input type="hidden" name="salon_id" id="salon_id" />
+				<input type="hidden" name="salon_id" id="salon_id" value="<%=data.salon?data.salon.salonid:""%>"/>
 				  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
-                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required>
-						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;">							
-						</div>
+                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required value="<%=data.salon?data.salon.salonname:""%>">
+						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
 						<span id="sn" class="weak"></span>
                     </div>
-                </div>			
-                 <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
-                    <div class="control">
-                        <input type="text" id="merchantname" disabled>
-						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" />
-                    </div>
-                </div>
-					<%}else{%>
-				<input type="hidden" name="salon_id" id="salon_id" value="<%=data.salon.salonid||""%>"/>
-				  <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
-                    <div class="control complete">
-                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required value="<%=data.salon.salonname||""%>">
-						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
-                    </div>
                 </div>
                  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
-                        <input type="text" id="merchantname" value="<%=data.merchant.name||""%>" disabled>
-						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" value="<%=data.merchant.id||""%>"/>
+                        <input type="text" id="merchantname" value="<%=data.merchant?data.merchant.name:""%>" disabled>
+						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" value="<%=data.merchant?data.merchant.id:""%>"/>
                     </div>
                 </div>
-              <%}%>
 				 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款金额：</label>
                     <div class="control">
@@ -96,7 +76,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>要求付款日期：</label>
                     <div class="control">			 
-                           <input type="date" name="require_day" value="<%=data.require_day||""%>" required />                              							  
+                        <input type="date" name="require_day" value="<%=data.require_day||""%>" required />                              							  
                     </div>
                 </div>
 				<div class="control-group">
