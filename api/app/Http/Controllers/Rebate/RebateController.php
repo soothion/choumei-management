@@ -387,7 +387,6 @@ class RebateController extends Controller{
 	 *		    "msg": "未授权访问"
 	 *		}
 	 */
-	 */
 	public function confirm()
 	{
 		$param = $this->param;
