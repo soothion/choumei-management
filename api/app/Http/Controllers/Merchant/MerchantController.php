@@ -12,6 +12,7 @@ use DB;
 use App\SalonUser;
 use Excel;
 use Event;
+use Illuminate\Support\Facades\Redis as Redis;
 class MerchantController extends Controller {
 	/**
 	 * @api {post} /merchant/index 1.商户列表
@@ -273,8 +274,16 @@ class MerchantController extends Controller {
 	 * */
 	private function addMerchantSn()
 	{
-		$lastId = Merchant::select(['id'])->orderBy('id', 'desc')->first();
-		$sn = intval($lastId->id)+20; //生成商户编号 SZ0001    +20避免和之前手动输入的编号冲突
+		$redisKey = 'SZ';
+		$value = Redis::hget('merchantSn',$redisKey);
+		$value += 1;
+		if($value <= 1)
+		{
+			$lastId = Merchant::select(['id'])->orderBy('id', 'desc')->first();
+			$value = $lastId->id;
+		}
+		Redis::hset('merchantSn',$redisKey,$value);
+		$sn = intval($value)+20; //生成商户编号 SZ0001    +20避免和之前手动输入的编号冲突
 		$tps = "";
 		for($i=4;$i>strlen($sn);$i--)
 		{
