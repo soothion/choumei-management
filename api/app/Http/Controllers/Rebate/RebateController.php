@@ -136,8 +136,11 @@ class RebateController extends Controller{
 			'rebate.status as status',
 			'start_at',
 			'end_at',
+			'created_at',
 			'confirm_at',
-			'confirm_by'
+			'confirm_by',
+			'created_by',
+			'status'
 		);
 
 		//分页
