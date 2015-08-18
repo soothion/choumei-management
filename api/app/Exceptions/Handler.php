@@ -43,10 +43,16 @@ class Handler extends ExceptionHandler
     {
         // return parent::render($request, $e);
         $token = '';
-        if(JWTAuth::getToken()){
-            $token = JWTAuth::parseToken()->refresh();
-        }
         $code = 0;
+        if(JWTAuth::getToken()){
+            try {
+                $token = JWTAuth::parseToken()->refresh();
+            } 
+            catch (Exception $e){
+                //
+            }
+            
+        }
         if(method_exists($e,'getCode'))
             $code = $e->getCode();
         if(method_exists($e,'getStatusCode'))
