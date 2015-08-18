@@ -376,11 +376,10 @@ class RebateController extends Controller{
 	 *
 	 *
 	 * @apiSuccessExample Success-Response:
-	 * example Success-Response:
-	 *		{
-	 *		    "result": 1,
-	 *		    "data":[]
-	 *		}
+	 *	    {
+	 *	        "result": 1,
+	 *	        "data": null
+	 *	    }
 	 * 
 	 * @apiErrorExample Error-Response:
 	 *		{
