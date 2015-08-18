@@ -167,7 +167,7 @@ class PayController extends Controller
         $res = $pay->paginate($size)->toArray();
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
-        return $res;
+        return $this->success($res);
     }
 
     /**
