@@ -42,6 +42,7 @@ class Receivables extends Model {
             ->select($fields)
             ->orderBy($orderName,$order)
             ;
+		$query =  $query ->where('r.status','!=',3);
 		if(isset($where['type']) && $where['type'])
 		{
 			$query =  $query ->where('r.type','=',$where['type']);
@@ -245,6 +246,21 @@ class Receivables extends Model {
 					->select($fields);
 		$query =  $query ->where('r.id','=',$id);
 		return $query->first();
+	}
+	
+	/**
+	 * 删除
+	 * */
+	public static function dodel($id)
+	{
+		if(!$id)
+		{
+			return false;
+		}
+		$query = Receivables::getQuery();
+		$save['upTime'] = time();
+		$status = $query->where('id',$id)->update(['status'=>3]);//删除
+		return $status;
 	}
 	
 }
