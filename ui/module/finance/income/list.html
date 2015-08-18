@@ -11,10 +11,10 @@
     <body>
         <div class="breadcrumb">
             <a>收入管理</a>
-            <span>&gt;</span><a href="index.html">佣金单</a>
+            <span>&gt;</span><a href="index.html">反佣单</a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>佣金单</h4>
+                    <h4>反佣单</h4>
                 </div>
                 <div class="flex-item">
                     <a class="btn-primary fr" href="add.html">
@@ -31,14 +31,12 @@
                       <option value="0">店铺搜索</option>
                       <option value="1">店铺编号</option>
                       <option value="2">商户名称</option>
-                      <option value="3">业务代表</option>
                     </select>
                     <input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称" 
                     maxlength="16"/>
-                    <input type="text" class="input-search hide" name="sn" placeholder="请输入店铺编号" 
+                    <input type="text" class="input-search hide" name="salonsn" placeholder="请输入店铺编号" 
                     maxlength="16"/>
-                    <input type="text" class="input-search hide" name="merchantName" placeholder="请输入商户名称" maxlength="16"/>
-                    <input type="text" class="input-search hide" name="businessName" placeholder="请输入业务代表" maxlength="16"/>
+                    <input type="text" class="input-search hide" name="merchantname" placeholder="请输入商户名称" maxlength="16"/>
                     <button type="submit" class="btn btn-search">
                         <i class="fa fa-search"></i>
                     </button>
@@ -46,14 +44,14 @@
 
                 <div class="form-group">
                      <span>确认日期:</span>
-                     <input type="date" />
+                     <input type="date" name="start"/>
                      <span style="margin:0 10px">至</span>
-                     <input type="date" />   
+                     <input type="date" name="end"/>   
                      <button class="btn" type="submit">搜索</button>
                 </div>            
             </form>
 
-            <form action="user/export" data-role="export">
+            <form action="rebate/export" data-role="export">
                 <button class="btn mr-5" type="submit">
                     <i class="fa fa-file-excel-o"></i> 导出
                 </button>
@@ -67,52 +65,98 @@
                 <i class="fa fa-file-excel-o"></i> 导入
             </button>
 
-            <div class="table">
-                <table>
-                    <thead>
-                        <th style="width:50px">
-                            <label class="select-all"><input type="checkbox"/><span>全选</span></label>
-                        </th>
-                        <th>序号</th>                       
-                        <th>店铺编号</th>
-                        <th>店铺名称</th>
-                        <th>返佣单号</th>  
-                        <th>结算起始日</th>
-                        <th>结算截止日</th>                     
-                        <th>金额</th>
-                        <th>创建日期</th>
-                        <th>确认日期</th>
-                        <th>制单人</th>
-                        <th>状态</th>
-                        <th>操作</th>                                
-                    </thead>
+            <div class="table" id="table" ajat="rebate/index?<%=query._%>#domid=table&tempid=table-t">
+                <script type="text/template" id="table-t">
+                    <table>
+                        <thead>
+                            <th style="width:50px">
+                                <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+                            </th>
+                            <th>序号</th>                       
+                            <th>店铺编号</th>
+                            <th>店铺名称</th>
+                            <th>返佣单号</th>  
+                            <th>结算起始日</th>
+                            <th>结算截止日</th>                     
+                            <th>金额</th>
+                            <th>
+                                <a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">                            
+                                    创建日期
+                                    <i class="fa fa-sort"></i>
+                                </a>    
+                            </th>
+                            <th>确认日期</th>
+                            <th>制单人</th>
+                            <th>状态</th>
+                            <th>操作</th>                                
+                        </thead>
 
-                    <tbody>
-                        <td>
-                            <label><input type="checkbox"/><span></span></label>
-                        </td>                        
-                        <td>2</td>                        
-                        <td>3</td>                        
-                        <td>4</td>                        
-                        <td>5</td>                        
-                        <td>6</td>  
-                        <td>1</td>                        
-                        <td>2</td>                        
-                        <td>3</td>                        
-                        <td>4</td>                        
-                        <td>5</td>                        
-                        <td>6</td>                       
-                        <td><a class="link" href="detail.html">查看&gt</a></td>                        
-                    </tbody>
-                </table>  
-                <div class="footer">
-                    <label class="select-all"><input type="checkbox"/><span>全选</span></label>
-                    <button class="btn" type="submit">确认</button>
-                </div>
-                <div class="pager"> </div>              
+                        <tbody>
+                        <% data.data && data.data.forEach(function(item,i){ %>
+                            <tr>
+                                <td>
+                                <label>
+                                    <input type="checkbox" data-id="<%=item.id%>" data-amount="<%=item.amount%>" 
+                                    <%=item.status=="1" ? "disabled" : ""%>/>
+                                    <span></span>
+                                </label>
+                                </td>                        
+                                <td><%=i+1%></td>                        
+                                <td><%=item.salonsn%></td>                        
+                                <td><%=item.salonname%></td>                        
+                                <td><%=item.sn%></td>                        
+                                <td><%=item.start_at%></td>  
+                                <td><%=item.end_at%></td>                        
+                                <td><%=item.amount%></td>                        
+                                <td><%=item.created_at%></td>                        
+                                <td><%=item.confirm_at%></td>                        
+                                <td><%=item.created_by%></td>                        
+                                <td><%=item.status=="1" ? "已确认" : "待确认"%></td>                       
+                                <td><a class="link" href="detail.html?type=detail&id=<%=item.id%>">查看&gt</a></td> 
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                    <div class="footer">
+                        <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+                        <button class="btn" type="button">确认</button>
+                    </div>
+                    <div class="pager"> </div>              
+                </script>  
             </div>
         </div>
         <script>
+            $(".table").delegate('button[type="button"]', 'click', function(event) {
+                var arr = [];      
+                var amount = 0;    
+                $('tbody input[type="checkbox"]:checked').each(function(index,obj){
+                  arr.push($(obj).data("id"));
+                  amount += (+$(obj).data("amount"));
+                });
+                if(arr.length > 0){
+                    parent.lib.popup.confirm({
+                        text:'你正在对'+arr.length+'家店铺确认返佣,返佣总额￥'+amount+',是否继续?',
+                        define:function(){
+                            lib.ajax({
+                                type: "post",
+                                data : {rebate : arr},
+                                url : "rebate/confirm"
+                            }).done(function(data, status, xhr){
+                                parent.lib.popup.result({
+                                    bool:data.result == 1,
+                                    text:(data.result == 1 ? "返佣成功" : data.msg),
+                                    time:2000,
+                                    define:function(){
+                                        lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
+                                    }
+                                });
+                            });                          
+                        }
+                    });
+                }
+
+            });
+
             var uploader = WebUploader.create({
                 swf   : '../../js/Uploader.swf',
                 server: 'http://service.choumei.cn/upload/image',

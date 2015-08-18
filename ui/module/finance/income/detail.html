@@ -14,23 +14,46 @@
                 <div class="flex-item">
                     <h4>佣金单详情</h4>
                 </div>
-                <div class="flex-item">
-                    <button type="button" class="btn fr mr-20" onclick="history.back()">返回</button>
-                    <button type="button" class="btn fr mr-20" onclick="history.back()">编辑</button>
-                    <button type="button" class="btn fr mr-20" onclick="history.back()">删除</button>
-                    <button type="button" class="btn fr mr-20" onclick="history.back()">确认</button>
-                </div>
             </div>
         </div>
         <div class="wrapper">
-            <div class="table" style="margin:0">
+            <div class="table" style="margin:0" id="table-wrapper">
+            <script type="text/template" id="table-t">  
+
+                <div style="position:absolute;right:20px;top:40px;">
+                    <%
+                    if(lib.query.type == "perview"){
+                    %>
+                        <button type="button" class="btn fr mr-20" onclick="window.close()">关闭预览</button>
+                    <%
+                    }else{
+                    %>
+                        <button type="button" class="btn fr mr-20"  onclick="history.back()">返回</button>
+                        <button type="button" class="btn fr mr-20" >编辑</button>
+                        <button type="button" class="btn fr mr-20" >删除</button>
+                        <button type="button" class="btn fr mr-20" >确认</button>
+                    <%
+                    }
+                    %>
+                </div>
+
                 <table>
                     <tr style="height:60px;">
                         <td class="shop-name">
-                            <h1 style="padding-left:0">aaaaaaaaaaa</h1>
-                            <p>所属商户：bbbbbbbbbb</p>
+                            <%
+                            if(lib.query.type == "perview"){
+                            %> 
+                                <h1 style="padding-left:0"><%=data.salonname%></h1>
+                                <p>所属商户：<%=data.merchantname%></p>
+                            <%   
+                            }else{
+                            %>
+                                <h1 style="padding-left:0"><%=data.salon.salonname%></h1>                               
+                            <%
+                            }
+                            %>
                         </td>
-                        <td class="shop-num">编号：cccccccccc</td>
+                        <td class="shop-num">编号：<%=data.salon.sn%></td>
                     </tr>                      
                 </table>
 
@@ -38,51 +61,72 @@
                     <tbody>
                         <tr>
                             <td class="td">返佣单号：</td>
-                            <td></td>
+                            <td><%=data.sn%></td>
                         </tr>
 
                         <tr>
                             <td class="td">结算起始日：</td>
-                            <td></td>                            
+                            <td><%=data.start_at%></td>                            
                         </tr>
 
                         <tr>
                             <td class="td">结算截止日：</td>
-                            <td></td>                            
+                            <td><%=data.end_at%></td>                            
                         </tr>
 
                         <tr>
                             <td class="td">金额：</td>
-                            <td></td>
+                            <td><%=data.amount%></td>
                         </tr>
 
                         <tr>
                             <td class="td">制单人：</td>
-                            <td></td>                            
+                            <td><%=data.created_by%></td>                            
                         </tr>
 
                         <tr>
                             <td class="td">创建日期：</td>
-                            <td></td>                            
+                            <td><%=data.created_at%></td>                            
                         </tr>   
 
                         <tr>
                             <td class="td">确认人：</td>
-                            <td></td>
+                            <td><%=data.confirm_by%></td>
                         </tr>
 
                         <tr>
                             <td class="td">确认日期：</td>
-                            <td></td>                            
+                            <td><%=data.confirm_at%></td>                            
                         </tr>
 
                         <tr>
                             <td class="td">状态：</td>
-                            <td></td>                            
+                            <%
+                            var statusText = "";
+                            if(data.status == "1"){
+                                statusText = "已确认"
+                            }
+                            if(data.status == "2"){
+                                statusText = "待确认"
+                            }
+                            %>
+                            <td><%=statusText%></td>                            
                         </tr>                           
                     </tbody>                     
                 </table>
+                </script>
             </div>
         </div>
+        <script>
+            var type = lib.query.type;
+            if(type == "perview"){
+                var data = JSON.parse(sessionStorage.getItem('income-rebate-perview'));
+                lib.ajat('#domid=table-wrapper&tempid=table-t').template(data);              
+            }
+
+            if(type == "detail"){
+                lib.ajat('rebate/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();                              
+            }
+        </script>
     </body>
 </html>
