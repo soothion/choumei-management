@@ -21,7 +21,7 @@
      <div class="wrapper" ajat="<%if(query.id){%>receivables/getone?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
  
-		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>receivables/update?id=<%=query.id%><%}else{%>receivables/save<%}%>">
+		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>receivables/update<%}else{%>receivables/save<%}%>">
 
 				<div class="detail-operation">
 					<button class="btn" onclick="history.back()" type="button">取消</button>
@@ -44,28 +44,7 @@
 						<hr />
                 </div>
 				
-					<%if(!query._){%>
-				 
-				  <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
-                    <div class="control complete">
-                        <input id="search" type="text" name="salonname" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required>
-						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;">    						 
-						</div>
-						 <span id="sn" class="weak"></span>
-						  <input type="hidden" name="salonid" id="salonid" required requiredmsg="请店铺搜索到商户" />	
-                    </div>
-                </div>	
-				
-                 <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
-                    <div class="control">
-                        <input type="text" id="merchantname" disabled >
-						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" />
-                    </div>
-                </div>
-				
-					<%}else{%>
+					 
 					<input type="hidden" name="id" id="id" value="<%=data.id||""%>"/>
 				<input type="hidden" name="salonid" id="salonid" value="<%=data.salonid||""%>"/>
 				  <div class="control-group">
@@ -85,7 +64,7 @@
                     </div>
                 </div>
 				
-              <%}%>
+           
 			    <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>收款方式：</label>
                      <div class="control">
@@ -111,9 +90,9 @@
                     <label class="control-label" for=""><span class="red">*</span>收款日期：</label>
                     <div class="control">	
                                 <%
-                                        if(data.receiptDate==0){
+                                        if(data.receiptDate==0&&data.status==1){
                                             data.receiptDate = "";
-                                        }else if(!isNaN(data.receiptDate)){
+                                        }else if(data.receiptDate&&!isNaN(data.receiptDate)){
                                             data.receiptDate = lib.tools.getDate(data.receiptDate);
                                         }
                                         %>					
@@ -141,8 +120,8 @@
 		<ul>
 			<%data.forEach(function(item,i){%>
 
-			<li class="complete-item <%if(i==0&&protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" ><%=item.salonname%> </li>
-<li class="complete-item <%if(i==0&&protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-sn="<%=item.sn%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>"><%=item.salonname%> </li>
+			<li class="complete-item <%if(i==0&&protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" data-sn="<%=item.sn%>"><%=item.salonname%> </li>
+ 
 			<%})%>
 		</ul>
 		<%}else{%>

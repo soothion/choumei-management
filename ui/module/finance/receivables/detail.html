@@ -65,10 +65,10 @@
                 </tr>
 				<%}else{%> 
 				<%}%>
-				<%if((query.preview!="preview")||(!data.paymentStyle==2)){%>				 
+				<%if((data.paymentStyle==2)&&(query.preview!="preview")){%>				 
 				<tr>
                   <td>关联付款单号：</td>
-                  <td>1</td>
+                  <td></td>
                 </tr>
 				<%}else{%> 
 				<%}%>
@@ -79,13 +79,21 @@
 				<%if(query.preview!="preview"){%><%}else{%>
                 <tr>
                   <td>  应收投资款款金额 </td>
-                  <td> 1 </td>
+                  <td> <%=data.money%> </td>
                 </tr>
 				<%}%>
                <%if(query.preview!="preview"){%><%}else{%>
                 <tr>
                   <td>要求收款日期：</td>
-                  <td>1</td>
+                  <td>
+				   <%
+                                        if(data.receiptDate==0){
+                                            data.receiptDate = "";
+                                        }else if(!isNaN(data.receiptDate)){
+                                            data.receiptDate = lib.tools.getDate(data.receiptDate);
+                                        }
+                                        %>	
+				  <%=lib.tools.getDate(data.checkTime)%></td>
                 </tr>
 				  <%}%>
                 <tr>
@@ -101,7 +109,15 @@
 				<%}%>
 				 <tr>
                   <td>创建日期：</td>
-                  <td><%=data.addTime%></td>
+                  <td>
+				    <%
+                                        if(data.receiptDate==0){
+                                            data.receiptDate = "";
+                                        }else if(!isNaN(data.receiptDate)){
+                                            data.receiptDate = lib.tools.getDate(data.receiptDate);
+                                        }
+                                        %>	
+				  <%=lib.tools.getDate(data.addTime)%></td>
                 </tr>
                 <tr>
                  <td>制单人：</td>
@@ -114,13 +130,13 @@
 			   <%if(query.preview!="preview"){%><%}else{%>
 			     <tr>
                  <td>实际收款日期： </td>
-                  <td>1</td>
+                  <td></td>
                </tr>
 			   <%}%>
 			    <%if(query.preview!="preview"){%>
 			    <tr>
                   <td>收款日期：</td>
-                  <td>1</td>
+                  <td><%=data.receiptDate%></td>
                 </tr>
 				<%}else{%> 
 				<%}%>

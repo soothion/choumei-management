@@ -93,11 +93,11 @@
 							<th>收款单号</th>						 
                             <th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款类型 <i class="fa fa-sort"></i></a></th>                          
                             <th>收款金额</th>
-							<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款方式 <i class="fa fa-sort"></i></a></th>							
-							<th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款日期 <i class="fa fa-sort"></i></a></th>			       
-							<th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">创建日期<i class="fa fa-sort"></i></a></th>
+							<th><a data-role="hash" href="#page=1&sort_key=paymentStyle&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款方式 <i class="fa fa-sort"></i></a></th>							
+							<th><a data-role="hash" href="#page=1&sort_key=receiptDate&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款日期 <i class="fa fa-sort"></i></a></th>			       
+							<th><a data-role="hash" href="#page=1&sort_key=addTime&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">创建日期<i class="fa fa-sort"></i></a></th>
                             <th>制单人</th>
-                            <th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">状态<i class="fa fa-sort"></i></a></th>
+                            <th><a data-role="hash" href="#page=1&sort_key=status&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">状态<i class="fa fa-sort"></i></a></th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -110,7 +110,7 @@
 				<%var data=data.data%>
 				<%data.forEach(function(item,i){%>
 				<tr>
-					<td><label><input type="checkbox" <%if(item.status==2){%>disabled<%}%>	/><span></span></label></td>
+					<td><label><input type="checkbox" value="<%=item.id%>" data-price="<%=item.money%>" <%if(item.status==2){%>disabled<%}%>	/><span></span></label></td>
 					<td><%=i+1%></td>
 					<td><%=item.sn%></td>
 					<td><%=item.salonname%></td>
@@ -118,7 +118,9 @@
 					<td><%=type[item.type]%></td>					 
 					<td><%=item.money%></td>
 					<td><%=paymentStyle[item.paymentStyle]%></td>
-					<td><%=lib.tools.getDate(item.addTime)%>
+					<td> <%if(item.status==1){%>
+					<%}else{%> <%=lib.tools.getDate(item.receiptDate)%>
+				     <%}%>
 					</td>				 
 					<td><%=lib.tools.getDate(item.addTime)%>
 					</td>
@@ -164,15 +166,22 @@
 				}
 				checked.each(function(){
 					count+=parseFloat($(this).data('price'));
+					
 					data.idStr.push(this.value);
 				});
+				
 				var con="";
 				if(checked.length==0){
 					parent.lib.popup.alert({text:"请选择店铺"});
 					return;
 				}else{
-				con="你正在给"+data.idStr.length+" 家店铺支付￥"+data.count+" ，是否继续？"
-				}	 
+				con="你正在给"+data.idStr.length+" 家店铺支付￥"+count+" ，是否继续？"
+				parent.lib.popup.confirm({text:"你正在给"+data.idStr.length+" 家店铺支付￥"+count+" ，是否继续"});
+				}	
+				data.idStr=data.idStr.join(',');
+				parent.lib.popup.confirm({
+					text:con,
+					define:function(){
 				lib.ajax({
 					url:"receivables/confirmAct",
 					type:"POST",
@@ -189,6 +198,8 @@
 						});
 					}
 				})
+				}
+				});
 			})
 			
 		});
