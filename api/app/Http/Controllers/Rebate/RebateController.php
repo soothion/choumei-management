@@ -64,8 +64,10 @@ class RebateController extends Controller{
 	 *	                "status": 2,
 	 *	                "start_at": "0000-00-00 00:00:00",
 	 *	                "end_at": "0000-00-00 00:00:00",
+	 *	                "created_at": "0000-00-00 00:00:00",
 	 *	                "confirm_at": "0000-00-00 00:00:00",
-	 *	                "confirm_by": "administrator"
+	 *	                "confirm_by": "administrator",
+	 *	                "created_by": "administrator"
 	 *	            }
 	 *	        ]
 	 *	    }
@@ -99,7 +101,7 @@ class RebateController extends Controller{
 		//店铺编号筛选
 		if(isset($param['salonsn'])&&$param['salonsn']){
 			$query =Rebate::whereHas('salon',function($q) use($param){
-				$q->where('salonsn','like','%'.$param['salonsn'].'%');
+				$q->where('sn','like','%'.$param['salonsn'].'%');
 			});
 		}
 
@@ -136,8 +138,10 @@ class RebateController extends Controller{
 			'rebate.status as status',
 			'start_at',
 			'end_at',
+			'created_at',
 			'confirm_at',
-			'confirm_by'
+			'confirm_by',
+			'created_by'
 		);
 
 		//分页
@@ -306,7 +310,7 @@ class RebateController extends Controller{
 	/**
 	 * @api {post} /rebate/show/:id 4.查看返佣单信息
 	 * @apiName show
-	 * @apiGroup User
+	 * @apiGroup Rebate
 	 *
 	 * @apiParam {Number} id 必填,返佣单ID.
 	 *
@@ -367,6 +371,21 @@ class RebateController extends Controller{
 	 * @api {post} /rebate/confirm 5.确认返佣单
 	 * @apiName confirm
 	 * @apiGroup Rebate
+	 *
+	 * @apiParam {Array} rebate 必填,返佣单ID,数组,例如[1,2,3].
+	 *
+	 *
+	 * @apiSuccessExample Success-Response:
+	 *	    {
+	 *	        "result": 1,
+	 *	        "data": null
+	 *	    }
+	 * 
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
 	 */
 	public function confirm()
 	{
@@ -385,6 +404,12 @@ class RebateController extends Controller{
 			DB::rollback();
 			return $this->error('确认失败');
 		}
+	}
+
+
+
+	public function upload(){
+
 	}
 
 

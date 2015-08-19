@@ -69,10 +69,12 @@
 							<td><%=item.addTime%></td>
 							<td><%=status[item.status-1]%></td>
 							<td>
-								<a data-id="<%=item.salonUserId%>" class="link reset" data-slug="salonAccount.resetPwd" 
-								data-text="确认重置密码？">重置密码</a>
+								<form data-role="normal" action="salonAccount/resetPwd" data-confirm="确认重置密码？" onreset="parent.lib.popup.result({bool:true,time:2000,text:'密码重置成功'})" data-slug="salonAccount.resetPwd">
+									<input type="hidden" value="<%=item.salonUserId%>" name="salonUserId" />
+									<button class="link">重置密码</button>
+								</form>
 								<span class="space"></span>
-								<form action="salonAccount/delAct" data-role="remove" data-slug="salonAccount.del">
+								<form action="salonAccount/delAct" data-role="normal" data-slug="salonAccount.del" data-confirm="确认删除此数据吗？" onreset="remove" >
 									<input type="hidden" name="salonUserId" value="<%=item.salonUserId%>" />
 									<input type="hidden" name="type" value="2" />
 									<button class="link">删除</button>
@@ -86,28 +88,8 @@
 			</script>
             </div>
         </div>
-
 	   <script type="text/javascript">
-			$('.table').on('click','.reset',function(){
-				var $this=$(this);
-				parent.lib.popup.confirm({
-					text:$this.data('text'),
-					define:function(){
-						lib.ajax({
-							url:'salonAccount/resetPwd',
-							type:'POST',
-							data:{salonUserId:$this.data('id')},
-							success:function(data){
-								parent.lib.popup.result({
-									bool:data.result==1,
-									text:(data.result==1?'重置成功':data.msg),
-									time:2000
-								});
-							}
-						});
-					}
-				})
-			})
+			
 		</script>
     </body>
 </html>

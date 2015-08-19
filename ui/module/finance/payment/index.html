@@ -106,12 +106,12 @@
 					<td><%=item.salon.salonname%></td>
 					<td><%=item.code%></td>
 					<td><%=type[item.type]%></td>
-					<td><%=item.pay_money%></td>
+					<td><%=item.money%></td>
 					<td><%=pay_type[item.pay_type]%></td>
 					<td><%=item.require_day%></td>
 					<td><%=item.pay_day%></td>				 
 					<td><%=item.created_at%></td>
-					<td><%=item.make_user%></td>				 
+					<td><%=item.make_user?data.make_user.name:""%></td>				 
 					<td><%=state[item.state]%></td>
 					<%
 						var page="invest";

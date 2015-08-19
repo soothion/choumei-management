@@ -11,10 +11,10 @@
     </head>
     <body>
         <div class="breadcrumb">
-           <a>收款管理 </a><span>&gt;</span><a href="index.html">付款列表</a>
+           <a>收款管理 </a><span>&gt;</span><a href="index.html">付款审批</a>
 		   <div class="flex-box">
 			<div class="flex-item">
-				<h4>付款列表</h4>
+				<h4>付款审批</h4>
 			</div>
 			<div>
 				
@@ -63,10 +63,9 @@
 				<%var type=["","付交易代收款","付业务投资款"]%>
 				<%var pay_type=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
 				<%var state=["","待提交","待审批","待付款","已付款"]%>
-				<%var data=data.data%>
-				<%data.forEach(function(item,i){%>
+				<%data.data.forEach(function(item,i){%>
 				<tr>
-					<td><label><input type="checkbox" form="form" name="ids" value="<%=i%>"/><span></span></label></td>
+					<td><label><input type="checkbox" form="form1 form2" name="ids" value="<%=item.id%>"/><span></span></label></td>
 					<td><%=i+1%></td>
 					<td><%=item.salon?item.salon.sn:""%></td>
 					<td><%=item.salon?item.salon.salonname:""%></td>
@@ -76,7 +75,7 @@
 					<td><%=pay_type[item.pay_type]%></td>
 					<td><%=item.require_day%></td>				 
 					<td><%=item.created_at%></td>
-					<td><%=item.make_user%></td>				 
+					<td><%=item.make_user?data.make_user.name:""%></td>				 
 					<td><%=state[item.state]%></td>
 					<%
 						var page="invest";
@@ -94,21 +93,57 @@
 				  <%}%>
               </tbody>
             </table>
+			<%if(data.data&&data.data.length>0){%>
 			<div class="table-bottom">
-				<form id="form" action="/aaa/" data-role="normal" >
-					<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-					<button class="btn" formaction="pay_manage/check?do=1">审批通过</button>
-					<span class="space"></span>
-					<button class="btn" formaction="pay_manage/check?do=2">审批不通过</button>
-				</form>
+				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+				<button class="btn" data-define="1">审批通过</button>
+				<button class="btn" data-define="2">审批不通过</button>
 			</div>
+			<%}%>
             <div class="pager"> </div>
 			</script>
         </div>
     </div>
 	<script type="text/javascript">
 		$(function(){
-			
+			$('#table').on('click','.table-bottom button',function(){
+				var $this=$(this);
+				var checked=$('tbody input:checked');
+				var data={
+					ids:[]
+				}
+				checked.each(function(){
+					data.ids.push(this.value);
+				});
+				if(checked.length==0){
+					parent.lib.popup.alert({text:"请选择店铺"});
+					return;
+				}
+				data.ids=data.ids.join(',')
+				if($this.data('define')==1){
+					data.do=1;
+				}
+				if($this.data('define')==2){
+					data.do=0;
+				}
+				lib.ajax({
+					url:"pay_manage/check",
+					type:"POST",
+					data:data,
+					success:function(data){
+						parent.lib.popup.result({
+							bool:data.result,
+							text:"操作成功",
+							time:2000,
+							define:function(){
+								if(data.result==1){
+									location.reload();
+								}
+							}
+						});
+					}
+				})
+			})
 		});
 	</script>
 </body>

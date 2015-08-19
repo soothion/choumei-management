@@ -107,7 +107,12 @@
 				if (status === "timeout")    msg = "请求超时，请稍后再试!";
 				if (status === "offline")    msg = "网络异常，请稍后再试!";
 				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
-			}).done(done);
+			}).done(done).done(function(data){
+				if(data.token){
+					//console.log(data.token);
+					localStorage.setItem('token',data.token);
+				}
+			});
             return promise;
         },
 		getSession:function(){
@@ -437,7 +442,7 @@
 	Form.prototype={
 		selector:'input,textarea,select',
 		hooks:{
-			email:'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
+			email:'^[a-zA-Z0-9_-][\.a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',
 			mobile:'^1[0-9]{10}$',
 			phone:'^\\d{7,12}$',
 			password:'^[0-9A-Za-z]{6,20}$',
@@ -509,6 +514,20 @@
 					if(!ret(val)){
 						$target.trigger('error',{type:'pattern'});
 						return;
+					}else{
+						//数字和浮点型添加值的限制
+						if(pattern=="number"||pattern=="float"){
+							var min=$target.attr('min')
+							if(min&&parseFloat(val)<parseFloat(min)){
+								$target.trigger('error',{type:'pattern'});
+								return;
+							}
+							var max=$target.attr('max')
+							if(max&&parseFloat(val)>parseFloat(max)){
+								$target.trigger('error',{type:'pattern'});
+								return;
+							}
+						}
 					}
 				}
 			}

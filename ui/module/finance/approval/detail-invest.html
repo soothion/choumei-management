@@ -18,9 +18,17 @@
    <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
-			<button class="btn" type="button">审批</button>
+			<form action="pay_manage/check" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){history.back()}});">
+				<button class="btn">审批</button>
+				<input type="hidden" name="ids" value="<%=query.id%>"/>
+				<input type="hidden" name="do" value="1" />
+			</form>
 			<span class="space"></span>
-			<button class="btn" type="button">审批不通过</button>
+			<form action="pay_manage/check" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){history.back()}});">
+				<button class="btn">审批不通过</button>
+				<input type="hidden" name="ids" value="<%=query.id%>"/>
+				<input type="hidden" name="do" value="0" />
+			</form>
 			<span class="space"></span>
 			<button class="btn" type="button" onclick="history.back()">返回</button>
 		</div>
@@ -30,7 +38,7 @@
                 <tr>
                     <td colspan="2">
                       <%=data.salon?data.salon.salonname:""%>
-					  <span style="float:right">店铺编号：<%=data.salon?data.salon.salonname:""%></span>
+					  <span style="float:right">店铺编号：<%=data.salon?data.salon.sn:""%></span>
                     </td>
                 </tr>
             </thead>
@@ -60,11 +68,11 @@
                 </tr>
 				<tr>
                   <td>回款日期：</td>
-                  <td><%=data.cycle_day%>号/月 <span class="weak">当月无此日期时顺延至下月1号</span></td>
+                  <td><%=data.cycle_day%>号/月 <span class="space"></span><span class="weak">当月无此日期时顺延至下月1号</span></td>
                 </tr>
 				 <tr>
                   <td>周期回款金额：</td>
-                  <td><%=data.cycle_money%><span class="weak">尾差金额在最后一个回款周期补回</span></td>
+                  <td><%=data.cycle_money%> <span class="space"></span><span class="weak">尾差金额在最后一个回款周期补回</span></td>
                 </tr>
 				<tr>
                   <td>创建日期：</td>
@@ -72,7 +80,7 @@
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.make_user%></td>
+                  <td><%=data.make_user?data.make_user.name:""%></td>
                </tr>
 			   <tr>
                  <td>付款方式：</td>

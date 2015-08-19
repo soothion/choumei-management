@@ -4,6 +4,9 @@ use App\Http\Controllers\Controller;
 use App\Receivables;
 use DB;
 use Excel;
+use App\ShopCountApi;
+use App\Merchant;
+use App\Salon;
 class ReceivablesController extends Controller{
 
 	
@@ -22,7 +25,8 @@ class ReceivablesController extends Controller{
 	 * @apiParam {Number} status 可选,状态1.待确认2  已确认.
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.
-	 *
+	 * @apiParam {String} sort_key 可选,排序 type收款类型  paymentStyle 收款方式  receiptDate收款日期 addTime创建日期.
+	 * @apiParam {String} sort_type 可选,排序 DESC倒序 ASC升序.
 	 *
 	 * @apiSuccess {Number} total 总数据量.
 	 * @apiSuccess {Number} per_page 分页大小.
@@ -243,11 +247,15 @@ class ReceivablesController extends Controller{
 		$idStr = isset($param['idStr'])?$param['idStr']:0;
 		$idArr = explode(',', $idStr);
 		$query = Receivables::getQuery();
+		if(!$idStr)
+		{
+			return $this->error('参数错误');
+		}
 		$payTypeId = array();
-		$list = $query->select(['type','id','status','paymentStyle'])->whereIn('id', $idArr)->get();
+		$list = $query->select(['type','id','status','paymentStyle','receiptDate','salonid','money'])->whereIn('id', $idArr)->get();
 		if($list)
 		{
-			foreach($list as $val)
+			foreach($list as $key=>$val)
 			{
 				if($val->status != 1)
 				{
@@ -255,12 +263,37 @@ class ReceivablesController extends Controller{
 				}
 				if($val->paymentStyle == 2)
 				{
-					$payTypeId[] = $val->id;//账扣返还id
+					$payTypeId[$key]['id'] = $val->id;//账扣返还id
+					$payTypeId[$key]['salonid'] = $val->salonid;
+					$payTypeId[$key]['receiptDate'] = date('Y-m-d',$val->receiptDate);
+					$payTypeId[$key]['money'] = $val->money;
+					$merchantId = Salon::select(['merchantId'])->where("salonid","=",$val->salonid)->first();
+					$payTypeId[$key]['merchantId'] = $merchantId->merchantId;
+	
 				}
 			}
 		}
 		//更新状态
 		$status = $query ->whereIn('id', $idArr)->update(['upTime'=>time(),'status'=>2,'confirmTime'=>time(),'cashier'=>$this->user->id]);
+		
+		if($payTypeId)
+		{
+			foreach ($payTypeId as $k=>$v)
+			{
+
+				 $data = array(
+							'merchant_id'=>$v['merchantId'],
+							'type'=>2,
+							'salon_id'=>$v['salonid'],
+							'uid'=>$this->user->id,
+							//'uid'=>1,
+							'pay_money'=>$v['money'],
+							'cost_money'=>0,
+							'day'=>$v['receiptDate'],
+						);
+				ShopCountApi::makePrepay($data);//转付单
+			}
+		}
 		
 		//选择为账扣返还类型时，确认付款后自动在付款单中生成‘付交易代收款’单，且此订单为已付款状态。同时在转付单生成‘付交易代收款’单，此订单也为已付款状态
 		
@@ -411,6 +444,48 @@ class ReceivablesController extends Controller{
 		$du =  Receivables::getOneById($id);
 		return  $this->success($du);
 	}
+	
+	/**
+	 * @api {post} /receivables/del 7.删除收款
+	 * @apiName del
+	 * @apiGroup receivables
+	 *
+	 *@apiParam {Number} id 删除必填,Id.
+	 *
+	 *
+	 *
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "msg": "",
+	 *	    "data": {
+	 *	    }
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "删除失败"
+	 *		}
+	 */
+	public function del()
+	{
+		$param = $this->param;
+		$query = Receivables::getQuery();
+	
+		$id = isset($param["id"])?$param["id"]:0;
+	
+		if(!$id)
+		{
+			return $this->error('参数错误');
+		}
+	
+		$status = Receivables::dodel($id);
+		return $status?$this->success():$this->error('操作失败，请重新操作！');
+	}
+	
+	
 	
 	
 

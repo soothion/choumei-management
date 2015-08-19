@@ -605,8 +605,7 @@ class ShopCountApi
             } elseif ($key == 2) {
                 $instead_receive->whereRaw("merchant_id in (SELECT `id` FROM `cm_merchant` WHERE `name` LIKE '{$keyword}')");              
             } elseif ($key == 3) {
-                $salon_ids = Salon::where('sn', 'like', $keyword)->lists('salonid');
-                $instead_receive->whereIn('salon_id', $salon_ids);
+                $instead_receive->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `sn` LIKE '{$keyword}')");             
             }
         }
         
@@ -714,15 +713,11 @@ class ShopCountApi
             ], $options['keyword']) . "%";
             
             if ($key == 1) {
-                $salon_infos = Salon::where('salonname', 'like', $keyword)->get($salon_fields)->toArray();
-                $salon_ids = array_column($salon_infos, "salonid");
-                $shop_count->whereIn('salon_id', $salon_ids);
+                $shop_count->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
             } elseif ($key == 2) {
                 $shop_count->whereRaw("merchant_id in (SELECT `id` FROM `cm_merchant` WHERE `name` LIKE '{$keyword}')");
             } elseif ($key == 3) {
-                $salon_infos = Salon::where('sn', 'like', $keyword)->get($salon_fields)->toArray();
-                $salon_ids = array_column($salon_infos, "salonid");
-                $shop_count->whereIn('salon_id', $salon_ids);
+                $shop_count->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `sn` LIKE '{$keyword}')");
             }
         }
         
@@ -822,17 +817,13 @@ class ShopCountApi
                 "\\%",
                 "\\_"
             ], $options['keyword']) . "%";
-            if ($key == 1) {
+           if ($key == 1) {
                 $shop_count->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
             } elseif ($key == 2) {
-                    $merchant_infos = Merchant::where('name', 'like', $keyword)->get($merchant_fields)->toArray();
-                    $merchant_ids = array_column($merchant_infos, "id");
-                    $shop_count->whereIn('merchant_id', $merchant_ids);
-                } elseif ($key == 3) {
-                        $salon_infos = Salon::where('sn', 'like', $keyword)->get($salon_fields)->toArray();
-                        $salon_ids = array_column($salon_infos, "salonid");
-                        $shop_count->whereIn('salon_id', $salon_ids);
-                    }
+                $shop_count->whereRaw("merchant_id in (SELECT `id` FROM `cm_merchant` WHERE `name` LIKE '{$keyword}')");
+            } elseif ($key == 3) {
+                $shop_count->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `sn` LIKE '{$keyword}')");
+            }
         }
         
         // 按时间搜索

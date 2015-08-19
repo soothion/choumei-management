@@ -83,8 +83,8 @@ Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
 
 
 //权限管理后台接口
-Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
-// Route::group(['middleware'], function(){
+ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+//Route::group(['middleware'], function(){
 
 	//用户模块
 	Route::any('user/index',array(
@@ -368,6 +368,10 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 	Route::any('receivables/getone',array(  //详细
 			'as'=>'receivables.getone',
 			'uses'=>'Financial\ReceivablesController@getReceivablesByid'
+	));
+	Route::any('receivables/del',array(  //删除
+			'as'=>'receivables.del',
+			'uses'=>'Financial\ReceivablesController@del'
 	));
 	
 	
