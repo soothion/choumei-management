@@ -126,6 +126,7 @@
 					data.do=2;
 					confirmText="你正在拒绝"+data.ids.length+"家店铺的付款请求，是否继续？"
 				}
+				data.ids=data.ids.tostring();
 				parent.lib.popup.alert({
 					text:confirmText,
 					define:function(){
