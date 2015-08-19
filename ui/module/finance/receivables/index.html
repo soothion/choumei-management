@@ -1,11 +1,11 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-        <meta charset="utf-8">
+        <meta charset="utf-8">    
         <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="format-detection" content="telephone=no">
+        <meta name="format-detection" content="telephone=no">		
         <title>臭美管理后台</title>
         <script type="text/javascript" src="/js/include.js"></script>
     </head>
@@ -23,55 +23,65 @@
         </div>
         <div class="wrapper">
             <form data-role="hash"> 
-                 <div class="input-group placeholder-switch">
-					<select class="select" name="key" id="select">
-						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
-						<option value="2" data-placeholder="请输入店铺编号">店铺编号</option>
-						<option value="3" data-placeholder="请输入商户名称">商户名称</option>
+                <div class="input-group input-switch">
+					<select class="select" id="select">
+						<option value="0">店铺名称</option>
+						<option value="1">店铺编号</option>
+						<option value="2">商户名称</option>
 					</select>
-					<input type="text" placeholder="请输入店铺名" name="keyword">		
+				<input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称">
+				<input type="text" class="input-search hide" name="sn" class="hide" placeholder="请输入店铺编号">
+				<input type="text" class="input-search hide" name="merchantName" class="hide" placeholder="请输入商户名称">								
 				 </div>	
+				 
+			 
+				 
                     <label>收款日期：</label>
                     <span class="date-group">
-                      <input type="date" data-role="start"  name="pay_time_min"/>到<input type="date" data-role="end"  name="pay_time_max"/>
+                      <input type="date" data-role="start" name="startTime"/>到<input type="date" data-role="end" name="endTime"/>
                       </span>
                       <button class="btn" type="submit">搜索</button>
                       <a class="btn" id="dropMenu">
               筛选条件 <i class="fa fa-angle-down"></i>
                 </a>
                 <button class="btn" form="export">导出</button>
+				
                 <div class="filter-box" style="display:none">
                     <div class="flex-box">
                         <div class="filter-title">收款类型：</div>
                         <div class="flex-item">
-                            <label><input type="radio" name="shopType1" value="" checked/><span>全部</span></label>
-                            <label><input type="radio" name="shopType1" value=""/><span>预付交易款返还</span></label>
-                            <label><input type="radio" name="shopType1" value=""/><span>业务投资款返还</span></label>              
+                            <label data-role="hash"><input type="radio" name="type" value="0" checked /><span>全部</span></label>
+                            <label data-role="hash"><input type="radio" name="type" value="1" /><span>业务投资款返还</span></label>
+                            <label data-role="hash"><input type="radio" name="type" value="2" /><span>交易代收款返还</span></label>              
                         </div>
                     </div>
+					
                     <div class="flex-box">
                         <div class="filter-title">收款方式：</div>
                         <div class="flex-item">
-                            <label><input type="radio" name="shopType2" value="" checked/><span>全部</span></label>
-                            <label><input type="radio" name="shopType2" value=""/><span>银行存款</span></label>
-                            <label><input type="radio" name="shopType2" value=""/><span>账扣返还</span></label>              
-                            <label><input type="radio" name="shopType2" value=""/><span>现金</span></label>              
-                            <label><input type="radio" name="shopType2" value=""/><span>支付宝</span></label>              
-                            <label><input type="radio" name="shopType2" value=""/><span>财付通</span></label>              
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="0" checked /><span>全部</span></label>
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="1" /><span>银行存款</span></label>
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="2" ><span>账扣返还</span></label>              
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="3" /><span>现金</span></label>              
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="4" /><span>支付宝</span></label>              
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="5"/><span>财付通</span></label>              
                         </div>
-                    </div>
+                    </div> 
+					
                     <div class="flex-box">
                         <div class="filter-title">收款状态：</div>
                         <div class="flex-item">
-                            <label><input type="radio" name="shopType3" value="" checked/><span>全部</span></label>
-                            <label><input type="radio" name="shopType3" value=""/><span>已确认</span></label>
-                            <label><input type="radio" name="shopType3" value=""/><span>待确认</span></label>              
+                            <label data-role="hash"><input type="radio" name="status" value="0" checked /><span>全部</span></label>
+							<label data-role="hash"><input type="radio" name="status" value="1" /><span>待确认</span></label>   
+                            <label data-role="hash"><input type="radio" name="status" value="2" /><span>已确认</span></label>
+                                       
                         </div>
                     </div>
+					
                 </div>            
             </form>
-            <form action="" data-role="export" id="export"></form>    
-           <div class="table" ajat="shop_count/index#domid=table&tempid=table-t" id="table">
+            <form action="receivables/export" data-role="export" id="export"></form>    
+		    <div class="table" ajat="receivables/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -84,43 +94,63 @@
                             <th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款类型 <i class="fa fa-sort"></i></a></th>                          
                             <th>收款金额</th>
 							<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款方式 <i class="fa fa-sort"></i></a></th>							
-							<th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求收款日期 <i class="fa fa-sort"></i></a></th>			       
-							<th>创建日期</th>
+							<th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款日期 <i class="fa fa-sort"></i></a></th>			       
+							<th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">创建日期<i class="fa fa-sort"></i></a></th>
                             <th>制单人</th>
-                            <th>状态</th>
+                            <th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">状态<i class="fa fa-sort"></i></a></th>
                             <th>操作</th>
                         </tr>
                     </thead>
+					
                <tbody>
 			   <%if(data.data){%>
-				<%var type=["","付交易代收款","付交易代收款","交易代收款返还"]%>
-				<%var state=["","已付款","预览状态"]%>
+				<%var type=["","业务投资款返还","交易代收款返还"]%>
+				<%var status=["","待确认","已确认"]%>
+				<%var paymentStyle=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
 				<%var data=data.data%>
 				<%data.forEach(function(item,i){%>
 				<tr>
 					<td><label><input type="checkbox"/><span></span></label></td>
 					<td><%=i+1%></td>
-					<td>店铺编号</td>
-					<td><%=item.code%></td>
-					<td>收款单号</td>
-					<td><%=type[item.type]%></td>
-					<td><%=item.salon?item.salon.salonname:""%></td>
-					<td><%=item.cost_money%></td>
-					<td><%=item.day%></td>				 
-					<td><%=item.created_at%></td>
-					<td><%=item.user?item.user.name:""%></td>				 
-					<td><%=state[item.state]%></td>
+					<td><%=item.sn%></td>
+					<td><%=item.salonname%></td>
+					<td><%=item.singleNumber%></td>
+					<td><%=type[item.type]%></td>					 
+					<td><%=item.money%></td>
+					<td><%=item.paymentStyle%></td>
+					<td>
+					
+					</td>				 
+					<td>
+					<%
+                                        if(data.addTime==0){
+                                            data.addTime = "";
+                                        }else if(!isNaN(data.addTime)){
+                                            data.addTime = lib.tools.getDate(data.addTime);
+                                        }
+                                        %>
+					<%=item.addTime%>
+					</td>
+					<td><%=item.preparedByName%></td>				 
+					<td><%=status[item.status]%></td>
+					  
 					<td><a class="link" href="detail.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a></td>
                   </tr>
 				  <%})%>
 				  <%}%>
               </tbody>
             </table>
+			
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
 				<span class="space"></span>
-				<button class="btn">确认收款</button>
+				<!--<button class="btn"><a class="btn" href="edit.html?id=<%=data.id%>">确认收款</a></button>-->
+			<form action="/receivables/confirmAct/<%=data.id%>" data-role="remove" data-title="你正在对<%=data.name%>家商户确认收款，收款金额<%=data.money%>，是否继续？" id="form-remove">
+				<input type="hidden" name="id" value="<%=data.id%>" />
+				<button class="btn" name="id" value="<%=data.id%>">确认收款</button>			 
+			</form>	
 			</div>
+			
             <div class="pager"> </div>
 			</script>
         </div>

@@ -7,7 +7,7 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a>付款管理 </a><span>&gt;</span><a href="index.html">付款确认</a><span>&gt;</span><span id="breadcrumb-current"> 查看付款单</span>
+        <a>付款管理 </a><span>&gt;</span><a href="index.html">付款列表</a><span>&gt;</span><span id="breadcrumb-current">查看付款单</span>
 		<div class="flex-box">
 			<div class="flex-item">
 				<h4> 查看付款单</h4>
@@ -18,15 +18,21 @@
    <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
-			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" onreset="history.back()">
-				<button class="btn" type="button">删除</button>
+			<%if(data.state==1||data.state==2){%>
+			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" data-confirm="你正在删除此付款单，是否执行删除？" onreset="history.back()">
+				<button class="btn">删除</button>
 			</form>
+			<%}%>
+			<%if(data.state==1||data.state==2){%>
 			<span class="space"></span>
 			<a class="btn" href="edit.html?id=<%=query.id%>">编辑</a>
+			<%}%>
+			<%if(data.state==1){%>
 			<span class="space"></span>
 			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" onreset="location.href='../approval/detail-invest.html?id=<%=query.id%>'">
-				<button class="btn" type="button">提交</button>
+				<button class="btn">提交</button>
 			</form>
+			<%}%>
 			<span class="space"></span>
 			<button class="btn" type="button" onclick="history.back()">返回</button>
 		</div>
@@ -36,7 +42,7 @@
                 <tr>
                     <td colspan="2">
                       <%=data.salon?data.salon.salonname:""%>
-					  <span style="float:right">店铺编号：<%=data.salon?data.salon.salonname:""%></span>
+					  <span style="float:right">店铺编号：<%=data.salon?data.salon.sn:""%></span>
                     </td>
                 </tr>
             </thead>
@@ -58,7 +64,7 @@
                 </tr>
                 <tr>
                   <td>要求付款日期：</td>
-                  <td><%=data.day%></td>
+                  <td><%=data.require_day%></td>
                 </tr>
 				<tr>
                   <td>回款周期：</td>
@@ -66,11 +72,11 @@
                 </tr>
 				<tr>
                   <td>回款日期：</td>
-                  <td><%=data.cycle_day%>号/月 <span class="weak">当月无此日期时顺延至下月1号</span></td>
+                  <td><%=data.cycle_day%>号/月 <span class="weak"> <span class="space"></span>当月无此日期时顺延至下月1号</span></td>
                 </tr>
 				 <tr>
                   <td>周期回款金额：</td>
-                  <td><%=data.cycle_money%><span class="weak">尾差金额在最后一个回款周期补回</span></td>
+                  <td><%=data.cycle_money%><span class="weak"> <span class="space"></span>尾差金额在最后一个回款周期补回</span></td>
                 </tr>
 				<tr>
                   <td>创建日期：</td>
@@ -78,15 +84,11 @@
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.make_user%></td>
+                  <td><%=data.make_user?data.make_user.name:""%></td>
                </tr>
 			   <tr>
-                 <td>审批人：</td>
-                  <td><%=data.confirm_user%></td>
-               </tr>
-			   <tr>
-                 <td>审批日期：</td>
-                  <td><%=data.confirm_at%></td>
+                 <td>出纳：</td>
+                  <td><%=data.cash_user?data.cash_user.name:""%></td>
                </tr>
 			   <tr>
                  <td>付款方式：</td>

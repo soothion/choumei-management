@@ -75,6 +75,22 @@ class PayManage extends Model
         return $this->belongsTo(Salon::class);
     }
     
+    public function merchant()
+    {
+        return $this->belongsTo(Merchant::class);
+    }
+    
+
+    /**
+     * 生成新单 (从收款单生成)
+     * @param array $attr
+     * @return boolean|new id
+     */
+    public static function makeFromReceive($attr)
+    {       
+        return 1;
+    }
+    
     /**
      * 生成新单
      * @param array $attr

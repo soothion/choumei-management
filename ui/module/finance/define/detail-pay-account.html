@@ -18,9 +18,15 @@
    <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
-			<button class="btn" type="button">确认付款</button>
+			<form action="pay_manage/confirm" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){history.back()}});">
+				<button class="btn">确认付款</button>
+				<input type="hidden" name="ids" value="<%=query.id%>" />
+			</form>
 			<span class="space"></span>
-			<button class="btn" type="button">拒绝付款</button>
+			<form action="pay_manage/confirm" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){history.back()}});">
+				<button class="btn">拒绝付款</button>
+				<input type="hidden" name="ids" value="<%=query.id%>" />
+			</form>
 			<span class="space"></span>
 			<button class="btn" type="button" onclick="history.back()">返回</button>
 		</div>
@@ -30,7 +36,7 @@
                 <tr>
                     <td colspan="2">
                       <%=data.salon?data.salon.salonname:""%>
-					  <span style="float:right">店铺编号：<%=data.salon?data.salon.salonname:""%></span>
+					  <span style="float:right">店铺编号：<%=data.salon?data.salon.sn:""%></span>
                     </td>
                 </tr>
             </thead>
@@ -68,7 +74,15 @@
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.make_user%></td>
+                  <td><%=data.make_user?data.make_user.name:""%></td>
+               </tr>
+			   <tr>
+                 <td>审批人：</td>
+                  <td><%=data.confirm_user?data.confirm_user.name:""%></td>
+               </tr>
+			   <tr>
+                 <td>审批日期：</td>
+                  <td><%=data.confirm_at%></td>
                </tr>
 			   <tr>
                  <td>付款方式：</td>

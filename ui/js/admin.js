@@ -348,8 +348,10 @@ $(function(){
 		var bool=this.checked;
 		var _this=this;
 		$(this).closest('.table').find('tbody input[type="checkbox"]').each(function(){
-			this.checked=bool;
-			$(this).trigger('change');
+			if(!this.disabled){
+				this.checked=bool;
+				$(this).trigger('change');
+			}
 		});
 		$('.select-all input').each(function(){
 			if(_this!=this){

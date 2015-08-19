@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
-use DB;
+
 class SalonChangeGradeSeeder extends Seeder
 {
     /**
@@ -11,12 +11,13 @@ class SalonChangeGradeSeeder extends Seeder
      *
      * @return void
      * 
-     * php artisan db:seed --class=SalonChangeGrade  
+     * php artisan db:seed --class=SalonChangeGradeSeeder  
      */
     public function run()
     {
-		//$row = DB::table('salon')->where('salonGrade', $salonName)->update(array("sn"=>$salonSn));
-		echo 22;
+    	$sql = 'update cm_salon set salonGrade=salonChangeGrade where salonGrade!=salonChangeGrade and changeInTime <='.time();
+		$affected = DB::update($sql);
+		echo $affected;
     }
  
 }
