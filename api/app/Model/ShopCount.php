@@ -103,7 +103,7 @@ class ShopCount extends Model
             }
             else
             {
-                $now_money = intval($ir->money) + $money;
+                $now_money = floatval($ir->money) + $money;
                 InsteadReceive::where('id',$ir->id)->update(['money'=> $now_money]);
             }
           

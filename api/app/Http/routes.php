@@ -400,7 +400,7 @@ Route::group(['middleware'], function(){
 	
 	Route::any('pay_manage/create',array(  //新增
 	'as'=>'pay_manage.create',
-	'uses'=>'Pay\PayController@create'
+	'uses'=>'Pay\PayController@store'
 	    ));
 	
 	Route::any('pay_manage/update/{id}',array(  //修改

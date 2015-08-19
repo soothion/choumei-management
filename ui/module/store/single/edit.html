@@ -91,7 +91,7 @@
 			</script>
         </div>
 		<script type="text/template" id="complete-position-t">
-		<%if(data.length>0){%>
+		<%if(data&&data.length>0){%>
 		<ul>
 			<%data.forEach(function(item,i){%>
 			<li class="complete-item <%if(i==0&&protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" data-sn="<%=item.sn%>"><%=item.salonname%></li>

@@ -376,7 +376,7 @@ class PayController extends Controller
             'cycle' => self::T_INT,
             'cycle_day' => self::T_INT,
             'cycle_money' => self::T_FLOAT,
-        ],true);
+        ]);
         //#@todo for debug
         // $params['make_uid'] = $this->user->id;
         $params['make_uid'] = 1;
