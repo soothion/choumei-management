@@ -238,6 +238,7 @@ class Receivables extends Model {
 				'r.status',
 				'r.cashier',
 				'r.id',
+				'r.checkTime',
 				'mg.name as preparedByName',
 				'mgs.name as cashierName',
 		);

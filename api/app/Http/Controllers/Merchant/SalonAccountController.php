@@ -359,7 +359,7 @@ class SalonAccountController extends Controller {
 			return $this->error("参数错误");	
 		}
 		$data = SalonAccount::getSalonNamebyCon($param);
-		return $this->success($data);
+		return $this->success($data?$data:array());
 	}
 	
 }
