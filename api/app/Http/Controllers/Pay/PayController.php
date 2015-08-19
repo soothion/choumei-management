@@ -323,6 +323,11 @@ class PayController extends Controller
             {
                 $q->get(['salonid','salonname','sn']);
             }
+        ])->with([
+            'merchant' => function ($q)
+            {
+                $q->get(['id','name']);
+            }
         ]);
         $item = $query->first()->toArray();
         
