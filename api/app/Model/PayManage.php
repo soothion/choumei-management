@@ -136,29 +136,41 @@ class PayManage extends Model
      */
     public static function change($id,$attr)
     {
-        if( !isset($attr['salon_id']) ||
-            !isset($attr['money']) ||
-            !isset($attr['merchant_id']) ||
-            !isset($attr['pay_type']) ||
-            !isset($attr['require_day']) ||
-            !isset($attr['cycle']) ||
-            !isset($attr['cycle_day']) ||
-            !isset($attr['cycle_money']) ||
-            !isset($attr['make_uid'])
-        )
+        if(!isset($attr['make_uid']))
         {
             return false;
-        }
+        }        
         $record = [
-            'salon_id'=>intval($attr['salon_id']),
-            'merchant_id'=>intval($attr['merchant_id']),
-            'pay_type'=>intval($attr['pay_type']),
-            'require_day'=>$attr['require_day'],
-            'cycle'=>intval($attr['cycle']),
-            'cycle_day'=>intval($attr['pay_type']),
-            'cycle_money'=>floatval($attr['cycle_money']),
             'make_uid'=>intval($attr['make_uid']),
         ];
+        if(isset($attr['salon_id']))
+        {
+            $record['salon_id'] =intval($attr['salon_id']);
+        }
+        if(isset($attr['merchant_id']))
+        {
+            $record['merchant_id'] =intval($attr['merchant_id']);
+        }
+        if(isset($attr['pay_type']))
+        {
+            $record['pay_type'] =intval($attr['pay_type']);
+        }
+        if(isset($attr['require_day']))
+        {
+            $record['require_day'] =intval($attr['require_day']);
+        }
+        if(isset($attr['cycle']))
+        {
+            $record['cycle'] =intval($attr['cycle']);
+        }
+        if(isset($attr['cycle_day']))
+        {
+            $record['cycle_day'] =intval($attr['cycle_day']);
+        }
+        if(isset($attr['cycle_money']))
+        {
+            $record['cycle_money'] =intval($attr['cycle_money']);
+        }
         $record['updated_at'] =date("Y-m-d H:i:s");
         $item = self::where('id',$id)->first(['state']);
         if($item->state  != self::STATE_OF_TO_SUBMIT || $item->state  != self::STATE_OF_TO_CHECK )
