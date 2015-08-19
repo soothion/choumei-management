@@ -20,7 +20,7 @@
 		
      <div class="wrapper" ajat="<%if(query.id){%>receivables/getone?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>receivables/update?id=<%=data.id%><%}else{%>receivables/save<%}%>">
+		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>receivables/update?id=<%=query.id%><%}else{%>receivables/save<%}%>">
 		  
 				<div class="detail-operation">
 				<button class="btn" onclick="history.back()" type="button">取消</button>
@@ -31,7 +31,7 @@
                   <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>收款类型：</label>
                     <div class="control">
-                       <select required name="type" class="select"  style="width:20%;" <%=query.id?"disabled":""%>>
+                       <select required name="type" class="select"  style="width:20%;" >
 							<option value="1" <%=data.type==1?"selected":""%>>业务投资款返还</option>						 
                             <option value="2" <%=data.type==2?"selected":""%>>交易代收款返还</option>    							
                         </select>
@@ -59,21 +59,20 @@
                  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
-                        <input type="text" id="merchantname" disabled>
+                        <input type="text" id="merchantname" disabled >
 						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" />
                     </div>
                 </div>
 				
 					<%}else{%>
+					<input type="hidden" name="id" id="id" value="<%=data.id||""%>"/>
 				<input type="hidden" name="salonid" id="salonid" value="<%=data.salonid||""%>"/>
 				  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
                         <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required value="<%=data.salonname||""%>">
 						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
-						 <span id="sn" class="weak"></span>
-						  <input type="hidden" name="salonid" id="salonid" required requiredmsg="请店铺搜索到商户" />	
-						  
+						  <span id="sn" class="weak"></span>						   						  
                     </div>
                 </div>
 				
@@ -81,7 +80,7 @@
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
                         <input type="text" id="merchantname" value="<%=data.name||""%>" disabled>
-						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" />
+						<input type="hidden" name="merchant_id" id="merchant_id" />
                     </div>
                 </div>
 				
@@ -89,7 +88,7 @@
 			    <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>收款方式：</label>
                      <div class="control">
-                       <select required name="paymentStyle" class="select"  style="width:20%;" <%=query.id?"disabled":""%>>							 	
+                       <select required name="paymentStyle" class="select"  style="width:20%;">							 	
                             <option value="1" <%=data.paymentStyle==1?"selected":""%>>银行存款</option>						 
                             <option value="2" <%=data.paymentStyle==2?"selected":""%>>折扣返还</option>    							
                             <option value="3" <%=data.paymentStyle==3?"selected":""%>>现金</option> 
@@ -109,10 +108,18 @@
               
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>收款日期：</label>
-                    <div class="control">			 
-                           <input type="date" name="receiptDate" value="<%=data.receiptDate||""%>" required />
-						   
-                    </div>					                     
+                    <div class="control">	
+                                <%
+                                        if(data.receiptDate==0){
+                                            data.receiptDate = "";
+                                        }else if(!isNaN(data.receiptDate)){
+                                            data.receiptDate = lib.tools.getDate(data.receiptDate);
+                                        }
+                                        %>					
+                           <input type="date" name="receiptDate" value="<%=data.receiptDate||""%>" required />						   
+                    </div>
+
+					
                 </div>
 				
                <div class="control-group">
@@ -148,12 +155,15 @@
 			$(document).on('autoinput','#search',function(e,data){
 				if(data){
 					$('#salonid').val(data.salon_id);
-					$('#sn').val(data.sn);
+					$('#sn').text(data.sn);
 					$('#merchant_id').val(data.merchant_id);
 					$('#merchantname').val(data.merchantname);
 				}
 			});	
-			 	
+			 	$(document).on(function(e,data){
+				$('#receiptDate').val(data.receiptDate);
+				console.log(receiptDate);
+				})
 			/*
 			$(document).on('blur','input[name="cost_money"]',function(){
 				var cost_money=$('input[name="cost_money"]').val();
