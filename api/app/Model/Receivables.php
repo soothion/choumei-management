@@ -39,9 +39,12 @@ class Receivables extends Model {
             ->leftjoin('salon as s', 's.salonid', '=', 'r.salonid')
             ->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
             ->leftjoin('managers as mg', 'mg.id', '=', 'r.preparedBy')
-            ->select($fields)
-            ->orderBy($orderName,$order)
-            ;
+            ->select($fields);
+		if($orderName == 'receiptDate')//收款日期排序 时 先按状态排序，eq：  待确认 默认不显示收款日期
+		{
+			$query =  $query ->orderBy('status','desc');	
+		}
+		$query =  $query ->orderBy($orderName,$order);
 		$query =  $query ->where('r.status','!=',3);
 		if(isset($where['type']) && $where['type'])
 		{
@@ -159,7 +162,7 @@ class Receivables extends Model {
 	{
 		$tps = '';
 		$redis = Redis::connection();
-		$query = Receivables::getQuery();
+		$query = self::getQuery();
 		if($type == 1)
 		{
 			$key = 'STZ';
@@ -192,7 +195,7 @@ class Receivables extends Model {
 	 * */
 	public static function dosave($save,$id = 0,$user = 0)
 	{
-		$query = Receivables::getQuery();
+		$query = self::getQuery();
 
 		if($id)
 		{
@@ -257,9 +260,9 @@ class Receivables extends Model {
 		{
 			return false;
 		}
-		$query = Receivables::getQuery();
+		$query = self::getQuery();
 		$save['upTime'] = time();
-		$status = $query->where('id',$id)->update(['status'=>3]);//删除
+		$status = $query->where('id',$id)->update(['status'=>3,'upTime'=>time()]);//删除
 		return $status;
 	}
 	

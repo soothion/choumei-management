@@ -188,6 +188,16 @@ Route::group(['middleware'], function(){
 	Route::any('rebate/confirm',array(
 		'as'=>'rebate.confirm',
 		'uses'=>'RebateController@confirm'
+	));	
+
+	Route::any('rebate/upload',array(
+		'as'=>'rebate.upload',
+		'uses'=>'RebateController@upload'
+	));	
+
+	Route::any('rebate/destroy/{id}',array(
+		'as'=>'rebate.destroy',
+		'uses'=>'RebateController@destroy'
 	));
 
 
@@ -353,9 +363,9 @@ Route::group(['middleware'], function(){
 			'as'=>'receivables.save',
 			'uses'=>'Financial\ReceivablesController@save'
 	));
-	Route::any('receivables/udpate',array(  //修改
-			'as'=>'receivables.udpate',
-			'uses'=>'Financial\ReceivablesController@udpate'
+	Route::any('receivables/update',array(  //修改
+			'as'=>'receivables.update',
+			'uses'=>'Financial\ReceivablesController@update'
 	));
 	Route::any('receivables/confirmAct',array(  //确认收款
 			'as'=>'receivables.confirmAct',

@@ -29,9 +29,17 @@
                     }else{
                     %>
                         <button type="button" class="btn fr mr-20"  onclick="history.back()">返回</button>
-                        <button type="button" class="btn fr mr-20" >编辑</button>
-                        <button type="button" class="btn fr mr-20" >删除</button>
-                        <button type="button" class="btn fr mr-20" >确认</button>
+                        <button type="button" class="btn fr mr-20"  <%=data.status == 1 ? "disabled" : ""%>  onclick="edit()" >
+                            编辑
+                        </button>
+                        <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
+                            onclick="del(<%=data.id%>)">
+                            删除
+                        </button>
+                        <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
+                            onclick="sure(<%=data.id%>)">
+                            确认
+                        </button>                  
                     <%
                     }
                     %>
@@ -40,20 +48,13 @@
                 <table>
                     <tr style="height:60px;">
                         <td class="shop-name">
-                            <%
-                            if(lib.query.type == "perview"){
-                            %> 
                                 <h1 style="padding-left:0"><%=data.salonname%></h1>
-                                <p>所属商户：<%=data.merchantname%></p>
-                            <%   
-                            }else{
-                            %>
-                                <h1 style="padding-left:0"><%=data.salon.salonname%></h1>                               
-                            <%
-                            }
-                            %>
+                                <p>
+                                    <span>所属商户：</span>
+                                    <span id="merchantname"><%=data.merchantname%></span>
+                                </p>
                         </td>
-                        <td class="shop-num">编号：<%=data.salon.sn%></td>
+                        <td class="shop-num">编号：<%= data.salonsn%></td>
                     </tr>                      
                 </table>
 
@@ -104,10 +105,10 @@
                             <%
                             var statusText = "";
                             if(data.status == "1"){
-                                statusText = "已确认"
+                                statusText = "已确认";
                             }
                             if(data.status == "2"){
-                                statusText = "待确认"
+                                statusText = "待确认";
                             }
                             %>
                             <td><%=statusText%></td>                            
@@ -125,7 +126,57 @@
             }
 
             if(type == "detail"){
-                lib.ajat('rebate/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();                              
+                var promise = lib.ajat('rebate/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
+                promise.done(function(data){
+                    sessionStorage.setItem('edit-rebate-data',JSON.stringify(data.data));                      
+                });                               
+            }
+
+            function edit() {
+                location = "add.html?type=edit";
+            }
+
+            function del(id){
+                parent.lib.popup.confirm({
+                    text:'你正在删除此返佣单,是否执行删除?',
+                    define:function(){
+                        lib.ajax({
+                            type: "get",
+                            url : "rebate/destroy/"+id   
+                        }).done(function(data, status, xhr){
+                            parent.lib.popup.result({
+                                bool:data.result == 1,
+                                text:(data.result == 1 ? "删除成功" : data.msg),
+                                time:2000,
+                                define:function(){
+                                    history.back();
+                                }
+                            });
+                        });                          
+                    }
+                }); 
+            }
+
+            function sure(id){
+                parent.lib.popup.confirm({
+                    text:'你正在确认此返佣单,是否继续?',
+                    define:function(){
+                        lib.ajax({
+                            type: "post",
+                            data : {rebate:[id]},
+                            url : "rebate/confirm"   
+                        }).done(function(data, status, xhr){
+                            parent.lib.popup.result({
+                                bool:data.result == 1,
+                                text:(data.result == 1 ? "返佣成功" : data.msg),
+                                time:2000,
+                                define:function(){
+                                    history.back();
+                                }
+                            });
+                        });                          
+                    }
+                });                
             }
         </script>
     </body>

@@ -46,6 +46,8 @@ class ReceivablesController extends Controller{
 	 * @apiSuccess {String} singleNumber 收款单号.
 	 * @apiSuccess {Number} status 状态1.待确认2  已确认.
 	 * @apiSuccess {String} preparedByName 制单人.
+	 * @apiSuccess {String} receiptDate 收款日期(时间戳).
+	 * 
 	 *
 	 *
 	 * @apiSuccessExample Success-Response:
@@ -71,7 +73,8 @@ class ReceivablesController extends Controller{
 	 *	                "addTime": "1432202590",
 	 *	                "singleNumber": 1432202590,
 	 *	                "status": 1,
-	 *	                "preparedByName": "唐飞"
+	 *	                "preparedByName": "唐飞",
+	 *					"receiptDate":1432202590,
 	 *	            }
 	 *              ......
 	 *	        ]
@@ -157,8 +160,8 @@ class ReceivablesController extends Controller{
 	}
 	
 	/**
-	 * @api {post} /receivables/udpate 3.修改收款
-	 * @apiName udpate
+	 * @api {post} /receivables/update 3.修改收款
+	 * @apiName update
 	 * @apiGroup  receivables
 	 *
 	 * @apiParam {Number} id 必填,收款id.
@@ -184,7 +187,7 @@ class ReceivablesController extends Controller{
 	 *		    "msg": "参数错误"
 	 *		}
 	 */	
-	public function udpate()
+	public function update()
 	{
 		return $this->dosave($this->param);
 	}
