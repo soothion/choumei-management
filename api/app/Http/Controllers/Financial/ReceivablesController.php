@@ -160,8 +160,8 @@ class ReceivablesController extends Controller{
 	}
 	
 	/**
-	 * @api {post} /receivables/udpate 3.修改收款
-	 * @apiName udpate
+	 * @api {post} /receivables/update 3.修改收款
+	 * @apiName update
 	 * @apiGroup  receivables
 	 *
 	 * @apiParam {Number} id 必填,收款id.
@@ -187,7 +187,7 @@ class ReceivablesController extends Controller{
 	 *		    "msg": "参数错误"
 	 *		}
 	 */	
-	public function udpate()
+	public function update()
 	{
 		return $this->dosave($this->param);
 	}
