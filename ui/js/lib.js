@@ -623,6 +623,18 @@
 				$relative.after(error);	
 			}
 		},
+		error:function(e,data){
+			var $target=$(e.target);
+			var error=this.getErrorDom($target);
+			var $relative=$target;
+			if($target.siblings('.unit').length==1){
+				$relative=$target.siblings('.unit');	
+			}
+			error.show().html(data.errormsg);
+			if(!error.is(':visible')){
+				$relative.after(error);	
+			}
+		},
 		getErrorDom:function($target){
 			var error=$target.siblings('.control-help');
 			if(error.length==0){
