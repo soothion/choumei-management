@@ -125,57 +125,6 @@
                 </script>  
             </div>
         </div>
-        <script>
-            $(".table").delegate('button[type="button"]', 'click', function(event) {
-                var arr = [];      
-                var amount = 0;    
-                $('tbody input[type="checkbox"]:checked').each(function(index,obj){
-                  arr.push($(obj).data("id"));
-                  amount += (+$(obj).data("amount"));
-                });
-                if(arr.length > 0){
-                    parent.lib.popup.confirm({
-                        text:'你正在对'+arr.length+'家店铺确认返佣,返佣总额￥'+amount+',是否继续?',
-                        define:function(){
-                            lib.ajax({
-                                type: "post",
-                                data : {rebate : arr},
-                                url : "rebate/confirm"
-                            }).done(function(data, status, xhr){
-                                parent.lib.popup.result({
-                                    bool:data.result == 1,
-                                    text:(data.result == 1 ? "返佣成功" : data.msg),
-                                    time:2000,
-                                    define:function(){
-                                        lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
-                                    }
-                                });
-                            });                          
-                        }
-                    });
-                }
-
-            });
-
-            var uploader = WebUploader.create({
-                swf   : '../../js/Uploader.swf',
-                server: 'http://service.choumei.cn/upload/image',
-                pick  : '#import',
-                resize: false,
-                auto  : true,
-                fileNumLimit : 1,
-                fileSingleSizeLimit : 5*1024*1024,
-                accept :{
-                    title: 'Excel',
-                    extensions: 'xls',
-                    mimeTypes: 'application/vnd.ms-excel'                
-                }                
-            });
-
-            uploader.on('fileQueued', function(file){
-
-            });
-          
-        </script>
+        <script src="list.js"></script>
     </body>
 </html>
