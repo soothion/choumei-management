@@ -28,6 +28,7 @@
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
                         <input type="hidden" name="salon_id" id="salonid"/>
+                        <input type="hidden" id="salonsn"/>
                         <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required>
                         <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;">
                             <script type="text/template" id="complete-position-t">
@@ -49,28 +50,28 @@
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
                         <input type="text" id="merchantname"  disabled>
-                        <!-- <input type="hidden" name="merchantId" id="merchantId" required requiredmsg="请店铺搜索到商户"/> -->
+                        <input type="hidden"  id="merchantId" />
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>结算起始日：</label>
                     <div class="control">
-                        <input type="date" name="start_at" required>
+                        <input type="date" id="start_at" name="start_at" required>
                     </div>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>结算截止日：</label>
                     <div class="control">
-                        <input type="date" name="end_at" required>
+                        <input type="date" id="end_at" name="end_at" required>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>金额：</label>
                     <div class="control">
-                        <input type="text" name="amount" required>
+                        <input type="text" id="amount" name="amount" required>
                     </div>
                 </div>  
 
@@ -82,23 +83,41 @@
             </form>       
         </div>
         <script>
+
+            var type = lib.query.type;
+
+            if(type == "edit"){
+                var obj = JSON.parse(sessionStorage.getItem('edit-rebate-data'));
+                $("#salonid").val(obj.salon.salon_id);
+                $("#salonsn").val(obj.salon.sn);
+                $("#search").val(obj.salon.salonname);
+                $("#start_at").val(new Date(obj.start_at).format("yyyy-MM-dd"));
+                $("#end_at").val(new Date(obj.end_at).format("yyyy-MM-dd"));
+                $("#amount").val(obj.amount);
+                // $('#merchantId').val(obj.salon.merchantId);
+                // $("#merchantname").val(obj.salon.name);
+            }
+
             $('#search').on('autoinput',function(e,data){
                 if(data){
                     $('#salonid').val(data.salonid);
-                    // $('#merchantId').val(data.merchantid);
+                    $('#salonsn').val(data.salonsn)
+                    $('#merchantId').val(data.merchantid);
                     $('#merchantname').val(data.merchantname);
                 }
             });
 
             $("#perview_btn").on('click',function(){
-                var arr = $("form[data-role='form']").serializeArray();
-                var obj = {};
-                arr.forEach(function(item,index){
-                  obj[item.name] = item.value;
-                });
-                obj.salonname    = $("#search").val();
-                obj.merchantname = $('#merchantname').val();
-                sessionStorage.setItem("income-rebate-perview",JSON.stringify(obj));
+                var data = JSON.parse(sessionStorage.getItem('edit-rebate-data'));
+                var obj = {salon:{}};
+                obj.salon.salon_id  = $("#salonid").val();
+                obj.salon.sn        = $("#salonsn").val();
+                obj.salon.salonname = $("#search").val();
+                obj.salon.merchantname = $("#merchantname").val();
+                obj.start_at = $("#start_at").val(); 
+                obj.end_at = $("#end_at").val();
+                obj.amount = $("#amount").val(); 
+                sessionStorage.setItem("income-rebate-perview",JSON.stringify($.extend(data,obj)));
                 window.open("detail.html?type=perview");
             });
         </script>
