@@ -6,6 +6,10 @@ use Event;
 use Excel;
 use Auth;
 use App\Rebate;
+use Request;
+use Storage;
+use File;
+use Fileentry;
 
 class RebateController extends Controller{
 	/**
@@ -260,7 +264,8 @@ class RebateController extends Controller{
 		$title = '返佣单列表'.date('Ymd');
 		$header = ['序号','店铺编号','店铺名称','返佣编号','结算起始日','结算截止日','金额','创建日期','确认日期','制单人','状态'];
 		Excel::create($title, function($excel) use($result,$header){
-		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
+					$excel->setTitle('rebate');
+		    		$excel->sheet('Sheet1', function($sheet) use($result,$header){
 			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
 	        		$sheet->prependRow(1, $header);//添加表头
 
@@ -326,30 +331,33 @@ class RebateController extends Controller{
 	 * @apiSuccess {String} created_by 创建人.
 	 * @apiSuccess {Number} created_at 创建日期.
 	 * @apiSuccess {String} update_at 更新时间.
-	 * @apiSuccess {Array} salon 店铺信息.
+	 * @apiSuccess {String} salonname 店铺名.
+	 * @apiSuccess {Number} salonnaid 店铺ID.
+	 * @apiSuccess {String} merchantname 商户名.
+	 * @apiSuccess {Number} merchantid 商户ID.
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	  "result": 1,
+	 *	  "token": "",
 	 *	  "data": {
-	 *	    "id": 1,
-	 *	    "salon_id": 1,
-	 *	    "sn": "FY-15081400011",
-	 *	    "amount": "0.00",
-	 *	    "status": 2,
-	 *	    "start_at": "0000-00-00 00:00:00",
-	 *	    "end_at": "0000-00-00 00:00:00",
-	 *	    "confirm_by": null,
-	 *	    "confirm_at": "0000-00-00 00:00:00",
-	 *	    "created_by": "这是用户名Admin",
-	 *	    "created_at": "2015-08-14 16:38:46",
-	 *	    "updated_at": "2015-08-14 16:38:46",
-	 *	    "salon": {
-	 *	      "salonid": 1,
-	 *	      "salonname": "嘉美专业烫染",
-	 *	      "sn": "SZ0320001"
-	 *	    }
+	 *       "id": 1,
+	 *       "salon_id": 1,
+	 *       "sn": "FY-15081400011",
+	 *       "amount": "0.00",
+	 *       "status": 1,
+	 *       "start_at": "0000-00-00 00:00:00",
+	 *       "end_at": "0000-00-00 00:00:00",
+	 *       "confirm_by": null,
+	 *       "confirm_at": "0000-00-00 00:00:00",
+	 *       "created_by": "这是用户名Admin",
+	 *       "created_at": "2015-08-14 16:38:46",
+	 *       "updated_at": "2015-08-17 14:51:35",
+	 *       "salonname": "嘉美专业烫染",
+	 *       "salonsn": "SZ0320001",
+	 *       "merchantname": "深圳市南山区嘉美季理发店",
+	 *       "merchantid": 475	
 	 *	  }
 	 *	}	
 	 *
@@ -361,9 +369,11 @@ class RebateController extends Controller{
 	 */
 	public function show($id)
 	{
-		$rebate = Rebate::with(['salon'=>function($q){
-			$q->select('salonid','salonname','sn');
-		}])->find($id);
+		$rebate = Rebate::join('salon', 'salon.salonid', '=', 'rebate.salon_id')
+				 ->join('merchant', 'merchant.id', '=', 'salon.merchantid')
+				 ->select('rebate.*','salon.salonname','salon.sn as salonsn','merchant.name as merchantname','merchant.id as merchantid')
+				 ->find($id);
+			
 		return $this->success($rebate); 
 	}
 
@@ -406,10 +416,100 @@ class RebateController extends Controller{
 		}
 	}
 
-
+	/**
+	 * @api {post} /rebate/upload 6.导入返佣单
+	 * @apiName upload
+	 * @apiGroup Rebate
+	 *
+	 * @apiParam {File} rebate 必填,excel文件.
+	 *
+	 *
+	 * @apiSuccessExample Success-Response:
+	 *	    {
+	 *	        "result": 1,
+	 *	        "data": null
+	 *	    }
+	 * 
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
 
 	public function upload(){
+		$file = Request::file('rebate');
+		if(!$file)
+			return $this->error('请上传文件');
+		$rebate = new Rebate;
+		$extension = $file->getClientOriginalExtension();
+		if(!in_array($extension, ['xls','xlsx']))
+			return $this->error('请上传xls或者xlsx文件');
 
+		$result = false;
+		Excel::load($file->getPathname(), function($reader) use($rebate,&$result){
+	    	$reader = $reader->getSheet(0);
+		    $array = $reader->toArray();
+		    array_shift($array);
+		    foreach ($array as $key => $value) {
+		    	if(empty($value[1])||empty($value[3])||empty($value[4])||empty($value[5])||empty($value[6]))
+		    		continue;
+		    	$date = date('Y-m-d H:m:s');
+		    	$salonsn = $value[1];
+		    	$data[$key]['salon_id'] = $rebate->getSalonid($salonsn);
+		    	$data[$key]['start_at'] = $value[4];
+		    	$data[$key]['end_at'] = $value[5];
+		    	$data[$key]['amount'] = $value[6];
+	    		$data[$key]['created_by'] = $this->user->name;
+				$data[$key]['status'] = trim($value[10])=='确认'?1:2;
+				$data[$key]['created_at'] = $date;
+				$data[$key]['updated_at'] = $date;
+				$data[$key]['status'] = 2;
+				$sn = $rebate->getSn();
+				$data[$key]['sn'] = $sn;
+		    }
+		    $result = $rebate->insert($data);
+
+		},'UTF-8');
+
+		$name =$rebate->getName();
+		$folder = date('Y/m/d').'/';
+		$src = $folder.$name.'.'.$extension;
+		Storage::disk('local')->put($src,  File::get($file));
+ 		if($result)
+ 			return $this->success();
+ 		return $this->error('导入失败');
+	}
+
+	/**
+	 * @api {post} /rebate/destroy/{id} 7.删除返佣单
+	 * @apiName destroy
+	 * @apiGroup Rebate
+	 *
+	 * @apiParam {Number} id 返佣单ID.
+	 *
+	 *
+	 * @apiSuccessExample Success-Response:
+	 *	    {
+	 *	        "result": 1,
+	 *	        "data": null
+	 *	    }
+	 * 
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "返佣单不存在"
+	 *		}
+	 */
+	public function destroy($id)
+	{
+		$rebate = Rebate::find($id);
+		if(!$rebate)
+			return $this->error('返佣单不存在');
+		$result = $rebate->delete();
+		if($result)
+			return $this->success();
+		return $this->error('删除失败');
 	}
 
 

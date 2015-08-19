@@ -188,6 +188,16 @@ Route::group(['middleware'], function(){
 	Route::any('rebate/confirm',array(
 		'as'=>'rebate.confirm',
 		'uses'=>'RebateController@confirm'
+	));	
+
+	Route::any('rebate/upload',array(
+		'as'=>'rebate.upload',
+		'uses'=>'RebateController@upload'
+	));	
+
+	Route::any('rebate/destroy/{id}',array(
+		'as'=>'rebate.destroy',
+		'uses'=>'RebateController@destroy'
 	));
 
 
