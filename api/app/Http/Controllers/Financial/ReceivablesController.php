@@ -277,7 +277,7 @@ class ReceivablesController extends Controller{
 			}
 		}
 		//更新状态
-		$status = $query ->whereIn('id', $idArr)->update(['upTime'=>time(),'status'=>2,'confirmTime'=>time(),'cashier'=>$this->user->id]);
+		$status = $query ->whereIn('id', $idArr)->update(['checkTime'=>time(),'status'=>2,'confirmTime'=>time(),'cashier'=>$this->user->id]);
 		
 		if($payTypeId)
 		{
@@ -400,12 +400,14 @@ class ReceivablesController extends Controller{
 	 * @apiSuccess {Number} paymentStyle 收款方式1银行存款2账扣返还3现金4支付宝5财付通.
 	 * @apiSuccess {String} money 收款金额.
 	 * @apiSuccess {Number} addTime 创建时间(时间戳).
+	 * @apiSuccess {Number} receiptDate 收款日期(时间戳).
 	 * @apiSuccess {String} singleNumber 收款单号.
 	 * @apiSuccess {Number} status 状态1.待确认2  已确认.
 	 * @apiSuccess {Number} preparedBy 制单人Id.
 	 * @apiSuccess {String} preparedByName 制单人.
 	 * @apiSuccess {Number} cashier 出纳Id.
 	 * @apiSuccess {String} cashierName 出纳.
+	 * @apiSuccess {Number} checkTime 确认收款时间(时间戳).
 	 *
 	 * @apiSuccessExample Success-Response:
 	 *	{
@@ -420,12 +422,14 @@ class ReceivablesController extends Controller{
 	 *	                "paymentStyle": "0755236566",
 	 *	                "money": "36.33",
 	 *	                "addTime": "1432202590",
+	 *	                "receiptDate": "1435202590",
 	 *	                "singleNumber": 1432202590,
 	 *	                "status": 1,
 	 *	                "preparedByName": "唐飞",
-	 *					"preparedBy":3,
-	 *					"cashier":3,
-	 *					"cashierName":3,
+	 *	                "preparedBy":3,
+	 *	                "cashier":3,
+	 *	                "cashierName":3,
+	 *	                "checkTime":1432202590,
 	 *	            }
 	 *	}
 	 *
