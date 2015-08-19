@@ -60,7 +60,7 @@
 				<%var state=["","待提交","待审批","待付款","已付款"]%>
 				<%data.data.forEach(function(item,i){%>
 				<tr>
-					<td><label><input type="checkbox" name="ids" data-price="100" form="form" value="<%=item.id%>"/><span></span></label></td>
+					<td><label><input type="checkbox" name="ids" data-price="<%=item.money%>" form="form" value="<%=item.id%>"/><span></span></label></td>
 					<td><%=i+1%></td>
 					<td><%=item.salon?item.salon.sn:""%></td>
 					<td><%=item.salon?item.salon.salonname:""%></td>
@@ -120,7 +120,7 @@
 				var confirmText="";
 				if($this.data('define')==1){
 					data.do=1;
-					confirmText="你正在给5家店铺支付￥"+data.ids.length+"，是否继续？"
+					confirmText="你正在给5家店铺支付￥"+count+"，是否继续？"
 				}
 				if($this.data('define')==2){
 					data.do=2;
@@ -130,13 +130,14 @@
 					text:confirmText,
 					define:function(){
 						lib.ajax({
-							url:"",
+							url:"pay_manage/confirm",
 							type:"POST",
 							data:data,
 							success:function(data){
 								parent.lib.popup.result({
 									bool:data.result,
 									text:"操作成功",
+									time:2000,
 									define:function(){
 										if(data.result==1){
 											location.reload();
