@@ -88,36 +88,39 @@
 
             if(type == "edit"){
                 var obj = JSON.parse(sessionStorage.getItem('edit-rebate-data'));
-                $("#salonid").val(obj.salon.salon_id);
-                $("#salonsn").val(obj.salon.sn);
-                $("#search").val(obj.salon.salonname);
+                $("#salonid").val(obj.salon_id);
+                $('#salonsn').val(obj.salonsn);
+                $("#search").val(obj.salonname);
                 $("#start_at").val(new Date(obj.start_at).format("yyyy-MM-dd"));
                 $("#end_at").val(new Date(obj.end_at).format("yyyy-MM-dd"));
                 $("#amount").val(obj.amount);
-                // $('#merchantId').val(obj.salon.merchantId);
-                // $("#merchantname").val(obj.salon.name);
+                $('#merchantId').val(obj.merchantid);
+                $("#merchantname").val(obj.merchantname);
             }
 
             $('#search').on('autoinput',function(e,data){
                 if(data){
                     $('#salonid').val(data.salonid);
-                    $('#salonsn').val(data.salonsn)
+                    $('#salonsn').val(data.sn);
                     $('#merchantId').val(data.merchantid);
                     $('#merchantname').val(data.merchantname);
                 }
             });
 
             $("#perview_btn").on('click',function(){
-                var data = JSON.parse(sessionStorage.getItem('edit-rebate-data'));
-                var obj = {salon:{}};
-                obj.salon.salon_id  = $("#salonid").val();
-                obj.salon.sn        = $("#salonsn").val();
-                obj.salon.salonname = $("#search").val();
-                obj.salon.merchantname = $("#merchantname").val();
+                var obj = {}; 
+                obj.salonsn  = $("#salonsn").val();                                
+                obj.salonname = $("#search").val();
+                obj.merchantname = $("#merchantname").val();
                 obj.start_at = $("#start_at").val(); 
-                obj.end_at = $("#end_at").val();
-                obj.amount = $("#amount").val(); 
-                sessionStorage.setItem("income-rebate-perview",JSON.stringify($.extend(data,obj)));
+                obj.end_at   = $("#end_at").val();
+                obj.amount   = $("#amount").val();
+                if(type == "add"){
+                    sessionStorage.setItem("income-rebate-perview",JSON.stringify(obj));
+                }else{
+                    var data = JSON.parse(sessionStorage.getItem('edit-rebate-data'));
+                    sessionStorage.setItem("income-rebate-perview",JSON.stringify($.extend({},data,obj)));
+                }
                 window.open("detail.html?type=perview");
             });
         </script>
