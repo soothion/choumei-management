@@ -33,7 +33,7 @@
                             编辑
                         </button>
                         <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
-                            onclick="remove(<%=data.id%>)">
+                            onclick="del(<%=data.id%>)">
                             删除
                         </button>
                         <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
@@ -48,13 +48,13 @@
                 <table>
                     <tr style="height:60px;">
                         <td class="shop-name">
-                                <h1 style="padding-left:0"><%=data.salon && data.salon.salonname%></h1>
+                                <h1 style="padding-left:0"><%=data.salonname%></h1>
                                 <p>
                                     <span>所属商户：</span>
-                                    <span id="merchantname"><%=data.salon && data.salon.merchantname%></span>
+                                    <span id="merchantname"><%=data.merchantname%></span>
                                 </p>
                         </td>
-                        <td class="shop-num">编号：<%= data.salon && data.salon.sn %></td>
+                        <td class="shop-num">编号：<%= data.salonsn%></td>
                     </tr>                      
                 </table>
 
@@ -136,24 +136,23 @@
                 location = "add.html?type=edit";
             }
 
-            function remove (id){
+            function del(id){
                 parent.lib.popup.confirm({
                     text:'你正在删除此返佣单,是否执行删除?',
                     define:function(){
-                        // lib.ajax({
-                        //     type: "post",
-                        //     data : {rebate:[id]},
-                        //     url : "rebate/confirm"   
-                        // }).done(function(data, status, xhr){
-                        //     parent.lib.popup.result({
-                        //         bool:data.result == 1,
-                        //         text:(data.result == 1 ? "删除成功" : data.msg),
-                        //         time:2000,
-                        //         define:function(){
-                        //             history.back();
-                        //         }
-                        //     });
-                        // });                          
+                        lib.ajax({
+                            type: "get",
+                            url : "rebate/destroy/"+id   
+                        }).done(function(data, status, xhr){
+                            parent.lib.popup.result({
+                                bool:data.result == 1,
+                                text:(data.result == 1 ? "删除成功" : data.msg),
+                                time:2000,
+                                define:function(){
+                                    history.back();
+                                }
+                            });
+                        });                          
                     }
                 }); 
             }
