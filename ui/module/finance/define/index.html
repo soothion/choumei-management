@@ -131,23 +131,28 @@
 					data.do=2;
 					confirmText="你正在拒绝"+data.ids.length+"家店铺的付款请求，是否继续？"
 				}
-				lib.ajax({
-					url:"",
-					type:"POST",
-					data:data,
-					success:function(data){
-						parent.lib.popup.result({
-							bool:data.result,
-							text:"操作成功",
-							define:function(){
-								if(data.result==1){
-									location.reload();
-								}
+				parent.lib.popup.alert({
+					text:confirmText,
+					define:function(){
+						lib.ajax({
+							url:"",
+							type:"POST",
+							data:data,
+							success:function(data){
+								parent.lib.popup.result({
+									bool:data.result,
+									text:"操作成功",
+									define:function(){
+										if(data.result==1){
+											location.reload();
+										}
+									}
+								});
 							}
 						});
 					}
-				})
-			})
+				});
+			});
 		});
 	</script>
 </body>

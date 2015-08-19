@@ -46,6 +46,8 @@ class ReceivablesController extends Controller{
 	 * @apiSuccess {String} singleNumber 收款单号.
 	 * @apiSuccess {Number} status 状态1.待确认2  已确认.
 	 * @apiSuccess {String} preparedByName 制单人.
+	 * @apiSuccess {String} receiptDate 收款日期(时间戳).
+	 * 
 	 *
 	 *
 	 * @apiSuccessExample Success-Response:
@@ -71,7 +73,8 @@ class ReceivablesController extends Controller{
 	 *	                "addTime": "1432202590",
 	 *	                "singleNumber": 1432202590,
 	 *	                "status": 1,
-	 *	                "preparedByName": "唐飞"
+	 *	                "preparedByName": "唐飞",
+	 *					"receiptDate":1432202590,
 	 *	            }
 	 *              ......
 	 *	        ]
