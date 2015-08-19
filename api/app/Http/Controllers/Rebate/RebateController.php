@@ -481,5 +481,36 @@ class RebateController extends Controller{
  		return $this->error('导入失败');
 	}
 
+	/**
+	 * @api {post} /rebate/destroy/{id} 7.删除返佣单
+	 * @apiName destroy
+	 * @apiGroup Rebate
+	 *
+	 * @apiParam {Number} id 返佣单ID.
+	 *
+	 *
+	 * @apiSuccessExample Success-Response:
+	 *	    {
+	 *	        "result": 1,
+	 *	        "data": null
+	 *	    }
+	 * 
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "返佣单不存在"
+	 *		}
+	 */
+	public function destroy($id)
+	{
+		$rebate = Rebate::find($id);
+		if(!$rebate)
+			return $this->error('返佣单不存在');
+		$result = $rebate->delete();
+		if($result)
+			return $this->success();
+		return $this->error('删除失败');
+	}
+
 
 }
