@@ -262,7 +262,7 @@ class Receivables extends Model {
 		}
 		$query = self::getQuery();
 		$save['upTime'] = time();
-		$status = $query->where('id',$id)->update(['status'=>3]);//删除
+		$status = $query->where('id',$id)->update(['status'=>3,'upTime'=>time()]);//删除
 		return $status;
 	}
 	
