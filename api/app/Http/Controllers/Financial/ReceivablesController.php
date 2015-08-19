@@ -73,7 +73,8 @@ class ReceivablesController extends Controller{
 	 *	                "addTime": "1432202590",
 	 *	                "singleNumber": 1432202590,
 	 *	                "status": 1,
-	 *	                "preparedByName": "唐飞"
+	 *	                "preparedByName": "唐飞",
+	 *					"receiptDate":1432202590,
 	 *	            }
 	 *              ......
 	 *	        ]
