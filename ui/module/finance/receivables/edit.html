@@ -20,12 +20,13 @@
 		
      <div class="wrapper" ajat="<%if(query.id){%>receivables/getone?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
+ 
 		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>receivables/update?id=<%=query.id%><%}else{%>receivables/save<%}%>">
-		  
+
 				<div class="detail-operation">
-				<button class="btn" onclick="history.back()" type="button">取消</button>
-				<span class="space"></span>
-				<button class="btn-primary" type="submit">提交</button>			
+					<button class="btn" onclick="history.back()" type="button">取消</button>
+					<span class="space"></span>
+					<button class="btn-primary" type="submit">提交</button>			
 			   </div>
 				
                   <div class="control-group">
