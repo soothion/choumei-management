@@ -237,6 +237,7 @@ $(function(){
 	}).on('click',function(e){
 		if($(e.target).closest('.open').length==0){
 			$('.open').removeClass('open');
+			parent.$('.open').removeClass('open');
 		}
 	}).on('click','.tab li',function(){//选项卡切换
 		$(this).addClass('active').siblings().removeClass('active');
@@ -396,8 +397,15 @@ $(function(){
 			laydate(options);			
 		});
 	}
+	/**修正IE9**/
 	if(window.ie9){
 		$(document.body).addClass("ie9");
+		if($.placeholder){//输入框placeholder修正
+			$.placeholder();
+			$body.on('_ready',function(e){
+				$.placeholder($(e.target).find('input[type="text"],textarea'));
+			});
+		}
 	}
 }); 
 
