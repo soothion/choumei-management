@@ -29,21 +29,20 @@
 						<option value="1">店铺编号</option>
 						<option value="2">商户名称</option>
 					</select>
-				<input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称">
-				<input type="text" class="input-search hide" name="sn" class="hide" placeholder="请输入店铺编号">
-				<input type="text" class="input-search hide" name="merchantName" class="hide" placeholder="请输入商户名称">								
+						<input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称">
+						<input type="text" class="input-search hide" name="sn" class="hide" placeholder="请输入店铺编号">
+						<input type="text" class="input-search hide" name="merchantName" class="hide" placeholder="请输入商户名称">								
 				 </div>	
 				 
-			 
-				 
+					<span class="space"></span>
                     <label>收款日期：</label>
-                    <span class="date-group">
-                      <input type="date" data-role="start" name="startTime"/>到<input type="date" data-role="end" name="endTime"/>
-                      </span>
+				  <span class="date-group">
+					<input type="date" data-role="start" name="startTime"/>到<input type="date" data-role="end" name="endTime"/>
+				  </span>
                       <button class="btn" type="submit">搜索</button>
-                      <a class="btn" id="dropMenu">
-              筛选条件 <i class="fa fa-angle-down"></i>
-                </a>
+				   <a class="btn" id="dropMenu">
+						筛选条件 <i class="fa fa-angle-down"></i>
+				   </a>
                 <button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
 				
                 <div class="filter-box" style="display:none">
@@ -77,7 +76,6 @@
                                        
                         </div>
                     </div>
-					
                 </div>            
             </form>
             <form action="receivables/export" data-role="export" id="export"></form>    
@@ -133,13 +131,11 @@
               </tbody>
             </table>
 			 <%if(data&&data.length>0){%>
-			<div class="table-bottom">
-			 <label class="select-all"> <input type="checkbox"/><span>全选</span></label>  		 
-			 		 			 			 
-				<button class="btn" id="verify">确认付款</button>	 	
-			</div>
-
-				  <%}%>
+				<div class="table-bottom">
+					<label class="select-all"> <input type="checkbox"/><span>全选</span></label>  		 
+					<button class="btn" id="verify">确认付款</button>	 	
+				</div>
+			 <%}%>
             <div class="pager"> </div>
 			</script>
         </div>
