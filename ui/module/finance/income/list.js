@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-08-19 15:54:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-19 18:33:39
+* @Last Modified time: 2015-08-20 10:40:05
 */
 
 (function(){
@@ -42,7 +42,6 @@
         pick  : '#import',
         resize: false,
         auto  : true,
-        fileNumLimit : 1,
         fileSingleSizeLimit : 10*1024*1024,
         fileVal:'rebate',
         accept :{
@@ -52,7 +51,21 @@
         }                
     });
 
-    uploader.on('uploadError',function(){
+    uploader.on('startUpload',function(){
+       parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>正在导入数据...'});
+    });
+
+    uploader.on('uploadSuccess',function(file,response){
+        uploader.removeFile(file,true);
+        uploader.reset();
+        parent.lib.popup.result({
+            bool:response.result  == 1,
+            text:(response.result == 1 ? "数据导入成功！" : file.name + "文件, 数据导入失败！"),
+            time:2000
+        });
+    }); 
+
+    uploader.on('uploadError',function(file,reason){
         parent.lib.popup.result({
             bool:true,
             text:"数据导入出错！",
@@ -60,24 +73,9 @@
         });
     })
 
-    uploader.on('uploadSuccess',function(file,response){
-        uploader.removeFile(file,true);
-        uploader.reset();
-        parent.lib.popup.result({
-            bool:response.result  == 1,
-            text:(response.result == 1 ? "数据导入成功！" : (response.msg ||"数据导入失败！")),
-            time:2000
-        });
-    }); 
-
     uploader.on('uploadFinished',function(){
-        lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
+        setTimeout(function(){
+            lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();           
+        },2000)
     });
-
-    uploader.on('error',function(type){
-        if(type == "Q_EXCEED_NUM_LIMIT") lib.popup.alert({text:'文件数量过大'});
-        if(type == "Q_EXCEED_SIZE_LIMIT ") lib.popup.alert({text:'文件过大'});
-        if(type == "Q_TYPE_DENIED ") lib.popup.alert({text:'不支持你选择的类型文件'});
-    }) 
-  
 })();
