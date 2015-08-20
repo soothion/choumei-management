@@ -367,6 +367,8 @@ class ReceivablesController extends Controller{
 				{
 					$result[$key]['receiptDate'] = date('Y-m-d',$value['receiptDate']);
 				}
+				$result[$key]['checkTime'] = $value['checkTime']?date('Y-m-d H:i:s',$value['checkTime']):'';
+				
 				$result[$key]['status'] = $statusArr[$value['status']];
 				$result[$key]['number'] = '关联付款单号';
 			}
@@ -374,7 +376,7 @@ class ReceivablesController extends Controller{
 		}
 		//导出excel
 		$title = '收款列表'.date('Ymd');
-		$header = ['店铺名称','店铺编号','收款单号','收款类型','收款方式','收款金额','创建日期','制单人','出纳','收款日期','状态','关联付款单号'];
+		$header = ['店铺名称','店铺编号','收款单号','收款类型','收款方式','收款金额','创建日期','制单人','出纳','收款日期','确认收款日期','状态','关联付款单号'];
 		Excel::create($title, function($excel) use($result,$header){
 			$excel->sheet('Sheet1', function($sheet) use($result,$header){
 				$sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
