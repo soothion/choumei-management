@@ -189,6 +189,12 @@ class ReceivablesController extends Controller{
 	 */	
 	public function update()
 	{
+		$param = $this->param;
+		$id = isset($param['id'])?$param['id']:0;
+		if(!$id)
+		{
+			return $this->error("参数错误");
+		}
 		return $this->dosave($this->param);
 	}
 	
