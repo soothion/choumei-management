@@ -22,7 +22,7 @@
 			browser:function(){
 				var ua=navigator.userAgent;
 				return {
-					moible:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
+					mobile:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
 					android:/(android)/i.test(ua),
 					ios:/(iphone|ipod|ipad)/i.test(ua),
 					winphone:/(windows phone)/i.test(ua),
@@ -795,7 +795,9 @@
 		}
 	}
 	$(function(){
-		new Select();
+		if(!lib.tools.browser().mobile){
+			new Select();
+		}
 	});
 
     window.lib = lib;
