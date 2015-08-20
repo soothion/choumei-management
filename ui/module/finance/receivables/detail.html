@@ -26,26 +26,28 @@
 		<div class="detail-operation">
 			<%if(query.preview!="preview"){%>	
             <%if(data.status==1){%>				
-				<form action="/receivables/confirmAct?id=<%=query.id%>" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){history.back()}});"data-confirm="你正在对<%=data.name%>家商户确认收款，收款金额<%=data.money%>，是否继续？" id="form-remove">
-					<input type="hidden" name="idStr" value="<%=query.id%>" />
-					<button class="btn" name="idStr" value="<%=query.id%>">确认收款</button>			 
-				</form>
+					<form action="/receivables/confirmAct?id=<%=query.id%>" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){history.back()}});"data-confirm="你正在对<%=data.name%>家商户确认收款，收款金额<%=data.money%>，是否继续？" id="form-remove">
+				<input type="hidden" name="idStr" value="<%=query.id%>" />
+				<button class="btn" name="idStr" value="<%=query.id%>">确认收款</button>			 
+			</form>
                  <%}%>			
 			<span class="space"></span>
 			<form action="/receivables/del?id=<%=data.id%>" data-role="remove" data-title="你正在删除转付单，是否继续删除？" id="form-remove">
 				<input type="hidden" name="id" value="<%=data.id%>" />
 				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy">删除</button>				 
 			</form>
-            <span class="space"></span>
+             <span class="space"></span>
 				<a class="btn" href="edit.html?id=<%=data.id%>" >编辑</a></button>
+			 
 			<span class="space"></span>
 			<button class="btn" type="button" onclick="history.back()">返回</button>
 			<%}else{%>
-				<button class="btn" type="button" onclick="window.close()">关闭预览</button>
+			<button class="btn" type="button" onclick="window.close()">关闭预览</button>
 			<%}%>
-		  </div>
+		</div>
         <div class="table-detail">
         <table>
+		
             <thead>
                 <tr>
                     <td colspan="2">

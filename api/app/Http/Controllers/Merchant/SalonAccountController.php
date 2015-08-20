@@ -13,7 +13,7 @@ class SalonAccountController extends Controller {
 	
 	private $pwd = "choumei";
 	
-	private $cmPwd = "cmm111";
+	private $cmPwd = "choumeiapp.123.!";
 	
 	private $addMsg = array(
 				1=>"当前店铺已存在普通用户，请查询",
