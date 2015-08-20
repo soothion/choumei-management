@@ -106,15 +106,16 @@ class Receivables extends Model {
 				'r.status',
 				'r.receiptDate',
 				'r.id',
+				'r.checkTime',
 				'mg.name as preparedByName',
 		);
 		$query =  DB::table('receivables as r')
-		->leftjoin('salon as s', 's.salonid', '=', 'r.salonid')
-		->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-		->leftjoin('managers as mg', 'mg.id', '=', 'r.preparedBy')
-		->select($fields)
-		->orderBy($orderName,$order)
-		;
+					->leftjoin('salon as s', 's.salonid', '=', 'r.salonid')
+					->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
+					->leftjoin('managers as mg', 'mg.id', '=', 'r.preparedBy')
+					->select($fields)
+					->orderBy($orderName,$order);
+		$query =  $query ->where('r.status','!=',3);//删除
 		if(isset($where['type']) && $where['type'])
 		{
 			$query =  $query ->where('r.type','=',$where['type']);
