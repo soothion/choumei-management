@@ -850,3 +850,14 @@ form[data-role="hash"] button{
 	padding-right:0px;
 	background-image:none;
 }
+.ie9 .select-all{
+	margin:0px -5px;
+}
+.ie9 .filter-title{
+	vertical-align:top;
+	display:table-cell;
+	width:80px;
+}
+.placeholder{
+	color:#999!important;
+}

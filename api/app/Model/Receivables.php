@@ -208,7 +208,7 @@ class Receivables extends Model {
 			$save['addTime'] = time();
 			$save['preparedBy'] = $user;
 			$save['singleNumber'] = self::createSingleNumber($save['type']);//收款单号
-			$status = $query->insert($save);
+			$status = $query->insertGetId($save);
 		}
 		return $status;
 	}

@@ -251,7 +251,7 @@ class MerchantController extends Controller {
 		else
 		{
 			$save["sn"] = $this->addMerchantSn();
-			$status = $query->insert($save);
+			$status = $query->insertGetId($save);
 			if($status)
 			{
 				Event::fire('merchant.save','商户Id:'.$status." 商户名称：".$save['name']);
