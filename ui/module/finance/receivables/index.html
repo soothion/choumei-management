@@ -148,7 +148,9 @@
 					  $(this).find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
 				  }
 			});
+ 
 			$('#table').on('click','.table-bottom button',function(){				
+ 
 				var $this=$(this);
 				var checked=$('tbody input:checked');
 				var count=0;
@@ -164,7 +166,9 @@
 					parent.lib.popup.alert({text:"请选择店铺"});
 					return;
 				}else{
-				con="你正在给"+data.idStr.length+" 家店铺支付￥"+count+" ，是否继续？"
+ 
+					con="你正在给"+data.idStr.length+" 家店铺支付￥"+count+" ，是否继续？"
+ 
 				}	
 				data.idStr=data.idStr.join(',');
 				parent.lib.popup.confirm({
@@ -186,7 +190,9 @@
 								});
 							}
 						})
+ 
 				}
+ 
 				});
 			})
 			
