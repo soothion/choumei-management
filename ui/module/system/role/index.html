@@ -20,13 +20,9 @@
 		<div class="wrapper">
 			<form data-role="hash">
 				角色名称<input type="text" name="keyword"/><span class="space"></span>
-				所属部门 <select name="department_id" class="select" ajat-one="true" ajat="list/department#domid=department&tempid=department-t" id="department">
-					<script type="text/template" id="department-t">
-						<option value="">全部</option>
-						<%data.forEach(function(item){%>
-							<option value="<%=item.id%>"><%=item.title%></option>
-						<%})%>
-					</script>
+				所属部门 
+				<select name="department_id" class="select" ajat-one="true" ajat="list/department#domid=department&tempid=/module/public/template/department&insert=after" id="department">
+					<option value="">全部</option>
 				</select>
 				<span class="space"></span>
 				状态 <select name="status" class="select">
