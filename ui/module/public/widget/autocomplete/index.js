@@ -4,5 +4,6 @@
 		$('#merchant_id').val(data.merchant_id);
 		$('#merchantname').val(data.merchantname);
 		$('#sn').text(data.sn);
+		$('#salonid').val(data.salon_id);
 	}
 });	

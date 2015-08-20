@@ -156,7 +156,6 @@
 				  }
 			});
 			$('#table').on('click','.table-bottom button',function(){
-				
 				var $this=$(this);
 				var checked=$('tbody input:checked');
 				var count=0;
@@ -165,7 +164,6 @@
 				}
 				checked.each(function(){
 					count+=parseFloat($(this).data('price'));
-					
 					data.idStr.push(this.value);
 				});
 				
@@ -174,30 +172,29 @@
 					parent.lib.popup.alert({text:"请选择店铺"});
 					return;
 				}else{
-				con="你正在给"+data.idStr.length+" 家店铺支付￥"+count+" ，是否继续？"
-				parent.lib.popup.confirm({text:"你正在给"+data.idStr.length+" 家店铺支付￥"+count+" ，是否继续"});
+					con="你正在给"+data.idStr.length+" 家店铺支付￥"+count+" ，是否继续？"
 				}	
 				data.idStr=data.idStr.join(',');
 				parent.lib.popup.confirm({
 					text:con,
 					define:function(){
-				lib.ajax({
-					url:"receivables/confirmAct",
-					type:"POST",
-					data:data,
-					success:function(data){
-						parent.lib.popup.result({
-							bool:data.result,
-							text:"操作成功",
-							define:function(){
-								if(data.result==1){
-									location.reload();
-								}
+						lib.ajax({
+							url:"receivables/confirmAct",
+							type:"POST",
+							data:data,
+							success:function(data){
+								parent.lib.popup.result({
+									bool:data.result,
+									text:"操作成功",
+									define:function(){
+										if(data.result==1){
+											location.reload();
+										}
+									}
+								});
 							}
-						});
+						})
 					}
-				})
-				}
 				});
 			})
 			
