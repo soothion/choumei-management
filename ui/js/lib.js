@@ -454,6 +454,8 @@
 					var arr=val.split('.');
 					if(arr[0].length>12){
 						return false;
+					}if(arr[1]&&arr[1].length>2){
+						return false;
 					}else{
 						return true;
 					}
