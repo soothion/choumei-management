@@ -46,13 +46,13 @@
 				
 					 
 					<input type="hidden" name="id" id="id" value="<%=data.id||""%>"/>
-				<input type="hidden" name="salonid" id="salonid" value="<%=data.salonid||""%>"/>
+					<input type="hidden" name="salonid" id="salonid" value="<%=data.salonid||""%>"/>
 				  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
-                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required value="<%=data.salonname||""%>">
-						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
-						  <span id="sn" class="weak"></span>						   						  
+                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
+						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
+						 <span id="sn" class="weak"></span>						   						  
                     </div>
                 </div>
 				
@@ -114,31 +114,10 @@
           </form>
 			</script>
         </div>
-       
-		<script type="text/template" id="complete-position-t">
-		<%if(data&&data.length>0){%>
-		<ul>
-			<%data.forEach(function(item,i){%>
-
-			<li class="complete-item <%if(i==0&&protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" data-sn="<%=item.sn%>"><%=item.salonname%> </li>
- 
-			<%})%>
-		</ul>
-		<%}else{%>
-		<div style="padding:5px 10px;">没有查找到店铺</div>
-		<%}%>
-		</script>		
+     
 		<script type="text/javascript">		
 		$(function(){			
 			$('input[type="date"]').val(lib.tools.getDate());			  
-			$(document).on('autoinput','#search',function(e,data){
-				if(data){
-					$('#salonid').val(data.salon_id);
-					$('#sn').text(data.sn);
-					$('#merchant_id').val(data.merchant_id);
-					$('#merchantname').val(data.merchantname);
-				}
-			});	
 			 	$(document).on(function(e,data){
 				$('#receiptDate').val(data.receiptDate);
 				console.log(receiptDate);

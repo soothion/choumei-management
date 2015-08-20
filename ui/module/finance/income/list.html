@@ -57,9 +57,9 @@
                 </button>
             </form> 
 
-            <a class="btn mr-5" href="/Book1.xltx">
+            <!--<a class="btn mr-5" href="/Book1.xltx">
                 <i class="fa fa-file-excel-o"></i> 下载模板
-            </a>
+            </a> -->
 
             <button class="btn mr-5" type="button" style="position:relative" id="import">
                 <i class="fa fa-file-excel-o"></i> 导入
@@ -117,10 +117,14 @@
                         <% }) %>
                         </tbody>
                     </table>
+
+                    <% if(data && data.total > 0){%>
                     <div class="footer">
                         <label class="select-all"><input type="checkbox"/><span>全选</span></label>
                         <button class="btn" type="button">确认</button>
                     </div>
+                    <%}%>
+                    
                     <div class="pager"> </div>              
                 </script>  
             </div>
