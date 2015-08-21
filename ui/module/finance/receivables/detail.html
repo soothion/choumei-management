@@ -32,7 +32,7 @@
 				</form>
 			<%}%>			
 			<span class="space"></span>
-			<form action="/receivables/del?id=<%=query.id%>" data-role="normal" data-confirm="你正在删除收款单，是否执行删除？" onreset="history.back()">
+			<form action="/receivables/del?id=<%=query.id%>" data-role="normal" data-confirm="你正在删除此收款单，是否执行删除？" onreset="history.back()">
 				<button class="btn">删除</button>
 			</form>
              <span class="space"></span>
@@ -91,7 +91,7 @@
                                             data.receiptDate = lib.tools.getDate(data.receiptDate);
                                         }
                                         %>	
-				  <%=lib.tools.getDate(data.checkTime)%>
+										<%=lib.tools.getDate(data.checkTime)%>
 					  </td>
                 </tr>
 				  <%}%>
@@ -116,7 +116,7 @@
 												data.receiptDate = lib.tools.getDate(data.receiptDate);
 											}
 											%>	
-					  <%=lib.tools.getDate(data.addTime)%>
+											<%=lib.tools.getDate(data.addTime)%>
 					  </td>
                 </tr>
                 <tr>

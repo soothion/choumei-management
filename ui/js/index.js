@@ -13,26 +13,31 @@ $('#page').on('_ready',function(){//#page _ready事件
 	var timeStamp=0;
 	var time=500;
 	$(document.body).on('loading',function(e){//注册loading事件
+		var winWidth=$(window).width()
 		timeStamp=e.timeStamp;
-		loadbar.stop().width(0).animate({
-			width:$(window).width()-100
+		loadbar.stop().show().width(0).animate({
+			width:winWidth-250
 		},time);
 		iframe.css('opacity',0.35);
 		$(this).one('loadingend',function(e){//注册loadingend事件，只执行一次
 			if(e.timeStamp-timeStamp<time){
 				setTimeout(function(){
-					loadbar.animate({
-						width:'100%'
-					},150,'swing',function(){
-						loadbar.css({width:0});
+					loadbar.stop().animate({
+						width:winWidth
+					},200,'swing',function(){
+						setTimeout(function(){
+							loadbar.fadeOut(120);
+						},50);
 					});
 					iframe.css('opacity',1);
 				},time-(e.timeStamp-timeStamp));
 			}else{
-				loadbar.animate({
-					width:'100%'
-				},150,'swing',function(){
-					loadbar.css({width:0});
+				loadbar.stop().animate({
+					width:winWidth
+				},200,'swing',function(){
+					setTimeout(function(){
+						loadbar.fadeOut(120);
+					},50);
 				});
 				iframe.css('opacity',1);
 			}
