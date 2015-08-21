@@ -29,28 +29,27 @@
 						<option value="1">店铺编号</option>
 						<option value="2">商户名称</option>
 					</select>
-				<input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称">
-				<input type="text" class="input-search hide" name="sn" class="hide" placeholder="请输入店铺编号">
-				<input type="text" class="input-search hide" name="merchantName" class="hide" placeholder="请输入商户名称">								
+						<input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称">
+						<input type="text" class="input-search hide" name="sn" class="hide" placeholder="请输入店铺编号">
+						<input type="text" class="input-search hide" name="merchantName" class="hide" placeholder="请输入商户名称">								
 				 </div>	
 				 
-			 
-				 
+					<span class="space"></span>
                     <label>收款日期：</label>
-                    <span class="date-group">
-                      <input type="date" data-role="start" name="startTime"/>到<input type="date" data-role="end" name="endTime"/>
-                      </span>
+				  <span class="date-group">
+					<input type="date" data-role="start" name="startTime"/>到<input type="date" data-role="end" name="endTime"/>
+				  </span>
                       <button class="btn" type="submit">搜索</button>
-                      <a class="btn" id="dropMenu">
-              筛选条件 <i class="fa fa-angle-down"></i>
-                </a>
-                <button class="btn" form="export">导出</button>
+				   <a class="btn" id="dropMenu">
+						筛选条件 <i class="fa fa-angle-down"></i>
+				   </a>
+                <button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
 				
                 <div class="filter-box" style="display:none">
                     <div class="flex-box">
                         <div class="filter-title">收款类型：</div>
                         <div class="flex-item">
-                            <label data-role="hash"><input type="radio" name="type" value="0" checked /><span>全部</span></label>
+                            <label data-role="hash"><input type="radio" name="type" value="" checked /><span>全部</span></label>
                             <label data-role="hash"><input type="radio" name="type" value="1" /><span>业务投资款返还</span></label>
                             <label data-role="hash"><input type="radio" name="type" value="2" /><span>交易代收款返还</span></label>              
                         </div>
@@ -59,7 +58,7 @@
                     <div class="flex-box">
                         <div class="filter-title">收款方式：</div>
                         <div class="flex-item">
-                            <label data-role="hash"><input type="radio" name="paymentStyle" value="0" checked /><span>全部</span></label>
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="" checked /><span>全部</span></label>
                             <label data-role="hash"><input type="radio" name="paymentStyle" value="1" /><span>银行存款</span></label>
                             <label data-role="hash"><input type="radio" name="paymentStyle" value="2" ><span>账扣返还</span></label>              
                             <label data-role="hash"><input type="radio" name="paymentStyle" value="3" /><span>现金</span></label>              
@@ -71,13 +70,12 @@
                     <div class="flex-box">
                         <div class="filter-title">收款状态：</div>
                         <div class="flex-item">
-                            <label data-role="hash"><input type="radio" name="status" value="0" checked /><span>全部</span></label>
+                            <label data-role="hash"><input type="radio" name="status" value="" checked /><span>全部</span></label>
 							<label data-role="hash"><input type="radio" name="status" value="1" /><span>待确认</span></label>   
                             <label data-role="hash"><input type="radio" name="status" value="2" /><span>已确认</span></label>
                                        
                         </div>
                     </div>
-					
                 </div>            
             </form>
             <form action="receivables/export" data-role="export" id="export"></form>    
@@ -133,13 +131,11 @@
               </tbody>
             </table>
 			 <%if(data&&data.length>0){%>
-			<div class="table-bottom">
-			 <label class="select-all"> <input type="checkbox"/><span>全选</span></label>  		 
-			 		 			 			 
-				<button class="btn" id="verify">确认付款</button>	 	
-			</div>
-
-				  <%}%>
+				<div class="table-bottom">
+					<label class="select-all"> <input type="checkbox"/><span>全选</span></label>  		 
+					<button class="btn" id="verify">确认付款</button>	 	
+				</div>
+			 <%}%>
             <div class="pager"> </div>
 			</script>
         </div>
@@ -156,7 +152,6 @@
 				  }
 			});
 			$('#table').on('click','.table-bottom button',function(){
-				
 				var $this=$(this);
 				var checked=$('tbody input:checked');
 				var count=0;
@@ -165,7 +160,6 @@
 				}
 				checked.each(function(){
 					count+=parseFloat($(this).data('price'));
-					
 					data.idStr.push(this.value);
 				});
 				
@@ -174,30 +168,29 @@
 					parent.lib.popup.alert({text:"请选择店铺"});
 					return;
 				}else{
-				con="你正在给"+data.idStr.length+" 家店铺支付￥"+count+" ，是否继续？"
-				parent.lib.popup.confirm({text:"你正在给"+data.idStr.length+" 家店铺支付￥"+count+" ，是否继续"});
+					con="你正在给"+data.idStr.length+" 家店铺支付￥"+count+" ，是否继续？"
 				}	
 				data.idStr=data.idStr.join(',');
 				parent.lib.popup.confirm({
 					text:con,
 					define:function(){
-				lib.ajax({
-					url:"receivables/confirmAct",
-					type:"POST",
-					data:data,
-					success:function(data){
-						parent.lib.popup.result({
-							bool:data.result,
-							text:"操作成功",
-							define:function(){
-								if(data.result==1){
-									location.reload();
-								}
+						lib.ajax({
+							url:"receivables/confirmAct",
+							type:"POST",
+							data:data,
+							success:function(data){
+								parent.lib.popup.result({
+									bool:data.result,
+									text:"操作成功",
+									define:function(){
+										if(data.result==1){
+											location.reload();
+										}
+									}
+								});
 							}
-						});
+						})
 					}
-				})
-				}
 				});
 			})
 			

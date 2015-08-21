@@ -66,7 +66,7 @@ $(function(){
 		parent.$('body').trigger('loadingend');//终止加载状态
 	}
 	
-	/**同步hash查询条件**/
+	/**hash表单同步hash查询条件**/
 	$body.one('asynhashform',function(){
 		var hashForm=$('form[data-role="hash"]');
 		for(var name in lib.query){
@@ -94,8 +94,8 @@ $(function(){
 		}
 	});
 	
-	/**hash地址查询**/
-	$body.on('submit','form[data-role="hash"]',function(e){//表单submit提交
+	/**提交hash地址**/
+	$body.on('submit','form[data-role="hash"]',function(e){//hash表单提交到hash地址查询
 		$(this).trigger('hash');
 		e.stopPropagation();
 		e.preventDefault();
@@ -237,6 +237,7 @@ $(function(){
 	}).on('click',function(e){
 		if($(e.target).closest('.open').length==0){
 			$('.open').removeClass('open');
+			parent.$('.open').removeClass('open');
 		}
 	}).on('click','.tab li',function(){//选项卡切换
 		$(this).addClass('active').siblings().removeClass('active');
@@ -310,7 +311,7 @@ $(function(){
 		var $target=$(e.target);
 		var $pager=$target.find('.pager');
 		data=data.response;
-		if(data.total > 0) {
+		if(data&&data.total > 0) {
 			seajs.use('/js/jquery.pagination.js',function (){
 				var query=$.extend({},lib.query);
 				delete query._;
@@ -330,7 +331,7 @@ $(function(){
 				$pager.append('&nbsp;共'+data.total+'条&nbsp;<form data-role="hash"><input type="text" name="page" /><button type="submit" class="go link">go</button></form>');
 			});
 		}
-		if(data.total==0){
+		if(data&&data.total==0){
 			$pager.html('<div class="data-empty"><i class="fa fa-frown-o"></i>'+($target.attr('data-empty-alert')||"没有查找到相关数据")+'</div>');
 		}
 	});
@@ -396,8 +397,15 @@ $(function(){
 			laydate(options);			
 		});
 	}
+	/**修正IE9**/
 	if(window.ie9){
 		$(document.body).addClass("ie9");
+		if($.placeholder){//输入框placeholder修正
+			$.placeholder();
+			$body.on('_ready',function(e){
+				$.placeholder($(e.target).find('input[type="text"],textarea'));
+			});
+		}
 	}
 }); 
 

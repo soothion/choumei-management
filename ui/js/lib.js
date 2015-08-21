@@ -22,7 +22,7 @@
 			browser:function(){
 				var ua=navigator.userAgent;
 				return {
-					moible:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
+					mobile:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
 					android:/(android)/i.test(ua),
 					ios:/(iphone|ipod|ipad)/i.test(ua),
 					winphone:/(windows phone)/i.test(ua),
@@ -73,13 +73,6 @@
 							bool:false,
 							time:2000
 						});
-						/*
-						parent.lib.popup.confirm({
-							text:"您的权限已经被修改！需要刷新页面更新权限",
-							define:function(){
-								parent.location.reload();
-							}
-						});*/
 					}else{
 						if(data.code==401||data.code==400){
 							data.msg="登录超时，请重新登录";
@@ -109,7 +102,6 @@
 				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
 			}).done(done).done(function(data){
 				if(data.token){
-					//console.log(data.token);
 					localStorage.setItem('token',data.token);
 				}
 			});
@@ -453,6 +445,8 @@
 				if(reg.test(val)){
 					var arr=val.split('.');
 					if(arr[0].length>12){
+						return false;
+					}if(arr[1]&&arr[1].length>2){
 						return false;
 					}else{
 						return true;
@@ -801,7 +795,9 @@
 		}
 	}
 	$(function(){
-		new Select();
+		if(!lib.tools.browser().mobile){
+			new Select();
+		}
 	});
 
     window.lib = lib;

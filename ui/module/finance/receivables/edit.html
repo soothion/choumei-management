@@ -32,9 +32,9 @@
                   <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>收款类型：</label>
                     <div class="control">
-                       <select required name="type" class="select"  style="width:20%;" >
+                       <select required name="type" class="select"  style="width:20%;"  >
 							<option value="1" <%=data.type==1?"selected":""%>>业务投资款返还</option>						 
-                            <option value="2" <%=data.type==2?"selected":""%>>交易代收款返还</option>    							
+                            <option value="2" <%=!data.type||data.type==2?"selected":""%>>交易代收款返还</option>    							
                         </select>
                     </div>
                 </div>
@@ -43,16 +43,15 @@
                     <legend>收款详情</legend>
 						<hr />
                 </div>
-				
 					 
 					<input type="hidden" name="id" id="id" value="<%=data.id||""%>"/>
-				<input type="hidden" name="salonid" id="salonid" value="<%=data.salonid||""%>"/>
+					<input type="hidden" name="salonid" id="salonid" value="<%=data.salonid||""%>"/>
 				  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
-                    <div class="control complete">
-                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required value="<%=data.salonname||""%>">
-						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
-						  <span id="sn" class="weak"></span>						   						  
+                    <div class="control complete">		
+                        <input id="search" type="text" value="<%=data.salonname||""%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
+						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
+						 <span id="sn" class="weak"></span>	
                     </div>
                 </div>
 				
@@ -64,11 +63,10 @@
                     </div>
                 </div>
 				
-           
 			    <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>收款方式：</label>
                      <div class="control">
-                       <select required name="paymentStyle" class="select"  style="width:20%;">							 	
+                       <select required name="paymentStyle" class="select"  style="width:20%;"  >							 	
                             <option value="1" <%=data.paymentStyle==1?"selected":""%>>银行存款</option>						 
                             <option value="2" <%=data.paymentStyle==2?"selected":""%>>折扣返还</option>    							
                             <option value="3" <%=data.paymentStyle==3?"selected":""%>>现金</option> 
@@ -99,50 +97,22 @@
                            <input type="date" name="receiptDate" value="<%=data.receiptDate||""%>" required />						   
                     </div>
 
-					
                 </div>
 				
                <div class="control-group">
-				<label class="control-label" for=""></label>
-				<div class="control">
-				<button class="btn preview" type="button">预览</button>
-				<%localStorage.setItem("preview",JSON.stringify(data))%>
-				<button class="btn-primary" type="submit">提交</button>				 
-				</div>
-			</div>	
-			
-          </form>
-			</script>
-        </div>
-       
-		<script type="text/template" id="complete-position-t">
-		<%if(data&&data.length>0){%>
-		<ul>
-			<%data.forEach(function(item,i){%>
-
-			<li class="complete-item <%if(i==0&&protocol.query.salonname==item.salonname){%>active<%}%>" data-salon_id="<%=item.salonid%>" data-merchant_id="<%=item.merchantId%>" data-merchantname="<%=item.name%>" data-sn="<%=item.sn%>"><%=item.salonname%> </li>
- 
-			<%})%>
-		</ul>
-		<%}else{%>
-		<div style="padding:5px 10px;">没有查找到店铺</div>
-		<%}%>
-		</script>		
+					<label class="control-label" for=""></label>
+					<div class="control">
+						<button class="btn preview" type="button">预览</button>
+						<%localStorage.setItem("preview",JSON.stringify(data))%>
+						<button class="btn-primary" type="submit">提交</button>				 
+					</div>
+			  </div>	
+		   </form>
+		</script>
+	</div>
+     
 		<script type="text/javascript">		
 		$(function(){			
-			$('input[type="date"]').val(lib.tools.getDate());			  
-			$(document).on('autoinput','#search',function(e,data){
-				if(data){
-					$('#salonid').val(data.salon_id);
-					$('#sn').text(data.sn);
-					$('#merchant_id').val(data.merchant_id);
-					$('#merchantname').val(data.merchantname);
-				}
-			});	
-			 	$(document).on(function(e,data){
-				$('#receiptDate').val(data.receiptDate);
-				console.log(receiptDate);
-				})
 			/*
 			$(document).on('blur','input[name="cost_money"]',function(){
 				var cost_money=$('input[name="cost_money"]').val();
