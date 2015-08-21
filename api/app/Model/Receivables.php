@@ -108,11 +108,13 @@ class Receivables extends Model {
 				'r.id',
 				'r.checkTime',
 				'mg.name as preparedByName',
+				'mgs.name as cashierName',
 		);
 		$query =  DB::table('receivables as r')
 					->leftjoin('salon as s', 's.salonid', '=', 'r.salonid')
 					->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
 					->leftjoin('managers as mg', 'mg.id', '=', 'r.preparedBy')
+					->leftjoin('managers as mgs', 'mgs.id', '=', 'r.cashier')
 					->select($fields)
 					->orderBy($orderName,$order);
 		$query =  $query ->where('r.status','!=',3);//删除

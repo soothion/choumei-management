@@ -283,9 +283,9 @@ class ReceivablesController extends Controller{
 			}
 		}
 		//更新状态
-		$status = $query ->whereIn('id', $idArr)->update(['checkTime'=>time(),'status'=>2,'confirmTime'=>time(),'cashier'=>$this->user->id]);
+		$status = $query ->whereIn('id', $idArr)->update(['checkTime'=>time(),'status'=>2,'cashier'=>$this->user->id]);
 		
-		if($payTypeId)
+		if($payTypeId && $status)
 		{
 			foreach ($payTypeId as $k=>$v)
 			{
@@ -363,8 +363,7 @@ class ReceivablesController extends Controller{
 				$result[$key]['money'] = $value['money'];
 				$result[$key]['addTime'] = date('Y-m-d',$value['addTime']);
 				$result[$key]['preparedByName'] = $value['preparedByName'];
-// 				$result[$key]['cashierName'] = $value['cashierName'];
-				$result[$key]['cashierName'] = '出纳';
+ 				$result[$key]['cashierName'] = $value['cashierName']?$value['cashierName']:'';
 				if($value['status'] == 1)//待确认的收款单无收款日期
 				{
 					$result[$key]['receiptDate'] = '';
