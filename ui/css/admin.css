@@ -161,8 +161,6 @@ input.checkbox:checked+label:before,label>input[type="checkbox"]:checked+span:be
     height:2px;
     z-index: 1000;
     width:0;
-	border-top-right-radius:2px;
-	border-bottom-right-radius:2px;
 }
 .loadbar:after{
     position: absolute;
