@@ -21,6 +21,11 @@
 		if(document.readyState=='interactive'){
 			parent.$('body').trigger('loading');//开启加载状态
 		}
+		if(window.ie9){
+			if(document.readyState=='complete'){
+				parent.$('body').trigger('loading');//开启加载状态
+			}
+		}
 	}
 	/*子页是否全屏*/
 	lib.fullpage=function(bool){
