@@ -101,6 +101,7 @@ class PayManage extends Model
         if( !isset($attr['type']) ||
             !isset($attr['salon_id']) ||
             !isset($attr['merchant_id']) ||
+            !isset($attr['money']) ||
             !isset($attr['pay_type']) ||
             !isset($attr['require_day']) ||
             !isset($attr['cycle']) ||
@@ -115,6 +116,7 @@ class PayManage extends Model
             'type'=>intval($attr['type']),
             'salon_id'=>intval($attr['salon_id']),
             'merchant_id'=>intval($attr['merchant_id']),
+            'money'=>intval($attr['money']),
             'pay_type'=>intval($attr['pay_type']),
             'require_day'=>$attr['require_day'],
             'cycle'=>intval($attr['cycle']),
@@ -151,13 +153,17 @@ class PayManage extends Model
         {
             $record['merchant_id'] =intval($attr['merchant_id']);
         }
+        if(isset($attr['money']))
+        {
+            $record['money'] =floatval($attr['money']);
+        }
         if(isset($attr['pay_type']))
         {
             $record['pay_type'] =intval($attr['pay_type']);
         }
         if(isset($attr['require_day']))
         {
-            $record['require_day'] =intval($attr['require_day']);
+            $record['require_day'] =$attr['require_day'];
         }
         if(isset($attr['cycle']))
         {
@@ -169,15 +175,16 @@ class PayManage extends Model
         }
         if(isset($attr['cycle_money']))
         {
-            $record['cycle_money'] =intval($attr['cycle_money']);
+            $record['cycle_money'] =floatval($attr['cycle_money']);
         }
         $record['updated_at'] =date("Y-m-d H:i:s");
-        $item = self::where('id',$id)->first(['state']);
-        if($item->state  != self::STATE_OF_TO_SUBMIT || $item->state  != self::STATE_OF_TO_CHECK )
+        $item = self::where('id',$id)->first(['state']);     
+        if($item->state  != self::STATE_OF_TO_SUBMIT && $item->state  != self::STATE_OF_TO_CHECK )
         {
             return false;
         }        
         $record['state'] = PayManage::STATE_OF_TO_CHECK;
+        
         self::where('id',$id)->update($record);
         return $id;
     }
@@ -189,7 +196,7 @@ class PayManage extends Model
     public static function destory($id)
     {
         $item = self::where('id',$id)->first(['state']);
-        if($item->state  != PayManage::STATE_OF_TO_SUBMIT || $item->state  != PayManage::STATE_OF_TO_CHECK )
+        if($item->state  != PayManage::STATE_OF_TO_SUBMIT && $item->state  != PayManage::STATE_OF_TO_CHECK )
         {
             return false;
         }
@@ -313,6 +320,8 @@ class PayManage extends Model
             'type',
             'salon_id',
             'merchant_id',
+            'make_uid',
+            'cash_uid',
             'money',
             'pay_type',
             'require_day',

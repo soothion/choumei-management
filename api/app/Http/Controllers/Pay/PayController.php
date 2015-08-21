@@ -183,6 +183,8 @@ class PayController extends Controller
      * @apiParam {String} require_day 要求付款日期 格式  YYYY-MM-DD
      * @apiParam {Number} cycle 回款周期 
      * @apiParam {Number} cycle_day 回款日期 
+     * @apiParam {Number} cycle_money 周期回款金额 
+     * 
      * 
      * @apiSuccess {Number} id 成功的id.
      *
@@ -370,6 +372,7 @@ class PayController extends Controller
     {
         $params = $this->parameters([
             'salon_id' => self::T_INT,
+            'merchant_id' => self::T_INT,
             'money' => self::T_FLOAT,
             'pay_type' => self::T_INT,
             'require_day' => self::T_STRING,
@@ -381,7 +384,7 @@ class PayController extends Controller
         // $params['make_uid'] = $this->user->id;
         $params['make_uid'] = 1;
         $ret = PayManage::change($id, $params);
-        if($ret)
+        if(!$ret)
         {
             return $this->error("修改失败");
         }

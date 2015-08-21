@@ -18,7 +18,7 @@
 	}
 	
 	document.onreadystatechange=function(){//注册document的readystatechagne事件
-		if(document.readyState=='complete'){
+		if(document.readyState=='interactive'){
 			parent.$('body').trigger('loading');//开启加载状态
 		}
 	}
