@@ -155,7 +155,7 @@ class PayManage extends Model
         }
         if(isset($attr['money']))
         {
-            $record['money'] =intval($attr['money']);
+            $record['money'] =floatval($attr['money']);
         }
         if(isset($attr['pay_type']))
         {
@@ -163,7 +163,7 @@ class PayManage extends Model
         }
         if(isset($attr['require_day']))
         {
-            $record['require_day'] =intval($attr['require_day']);
+            $record['require_day'] =$attr['require_day'];
         }
         if(isset($attr['cycle']))
         {
@@ -175,7 +175,7 @@ class PayManage extends Model
         }
         if(isset($attr['cycle_money']))
         {
-            $record['cycle_money'] =intval($attr['cycle_money']);
+            $record['cycle_money'] =floatval($attr['cycle_money']);
         }
         $record['updated_at'] =date("Y-m-d H:i:s");
         $item = self::where('id',$id)->first(['state']);     
