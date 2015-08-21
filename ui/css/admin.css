@@ -315,6 +315,7 @@ aside h2{
 }
 .menu-category li a{
 	padding-left:10px;
+	display:block;
 }
 .menu-category.active ul{
     background: #fff;
@@ -384,15 +385,15 @@ aside h2{
 .form-vertical .control input[type='tel'],
 .form-vertical .control input[type='search'],
 .form-vertical .control input[type='date'],
-.form-vertical .control textarea{
+.form-vertical .control textarea,
+.form-vertical .control select{
 	width:20%;
 	min-width:250px;
 	margin-right:10px;
 }
-.form-vertical .control select{
-	width:auto;
-	min-width:80px;
-	margin-right:10px;
+.form-vertical .control .normal{
+	width:auto!important;
+	min-width:80px!important;
 }
 .form-vertical .control textarea{
 	height:80px;

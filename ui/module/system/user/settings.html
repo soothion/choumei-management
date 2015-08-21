@@ -38,10 +38,10 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门</label>
 				<div class="control">
-					<select disabled required class="select" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id%>" id="department" >
+					<select disabled required class="select normal" ajat="list/department#domid=department&tempid=department-t&sid=<%=data.department_id%>" id="department" >
 					</select>
 					<span class="space"></span><span class="red">*</span>职位<span class="space"></span>
-					<select disabled required  class="select" ajat="list/position#domid=position&tempid=position-t&sid=<%=data.position_id%>" id="position" >
+					<select disabled required  class="select normal" ajat="list/position#domid=position&tempid=position-t&sid=<%=data.position_id%>" id="position" >
 					</select>
 					<input type="hidden" name="position_id" value="<%=data.position_id%>" />
 					<input type="hidden" name="department_id" value="<%=data.department_id%>" />
