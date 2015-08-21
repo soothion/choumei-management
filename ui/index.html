@@ -85,8 +85,8 @@
 							<ul style="<%=j==0?"display:block":""%>">
 								<%item2.child&&item2.child.forEach(function(item3){%>
 								<%if(item3.show!=2){%>
-								<li class="flex-box">
-									<a href="<%=slug[item3.slug]%>" data-slug1="<%=item3.slug%>" class="flex-item" target="main"><i class="fa fa-angle-right"></i><%=item3.title%></a>
+								<li>
+									<a href="<%=slug[item3.slug]%>" data-slug1="<%=item3.slug%>" target="main"><i class="fa fa-angle-right"></i><%=item3.title%></a>
 								</li>
 								<%}%>
 								<%})%>

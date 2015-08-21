@@ -1,6 +1,9 @@
 ﻿if(!localStorage.getItem('token')){
 	location.href='/module/system/user/login.html';
 }
+
+document.onreadystatechange=function(){};//主页不启动加载进度条
+
 $('#page').on('_ready',function(){//#page _ready事件
 	
 	window.onresize=function(){//注册resize事件
@@ -15,7 +18,7 @@ $('#page').on('_ready',function(){//#page _ready事件
 	$(document.body).on('loading',function(e){//注册loading事件
 		var winWidth=$(window).width()
 		timeStamp=e.timeStamp;
-		loadbar.stop().show().width(0).animate({
+		loadbar.stop().css({display:"block",width:0,opacity:1}).animate({
 			width:winWidth-250
 		},time);
 		iframe.css('opacity',0.35);
