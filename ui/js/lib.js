@@ -95,6 +95,7 @@
 			}
 			var promise=$.ajax(options);
 			promise.fail(function(xhr, status){
+				if(status=="abort") return;
 				var msg = "请求失败，请稍后再试!";
 				if (status === "parseerror") msg = "数据响应格式异常!";
 				if (status === "timeout")    msg = "请求超时，请稍后再试!";

@@ -38,7 +38,7 @@
                     <legend>付款详情</legend>
 					<hr />
                 </div>
-				<input type="hidden" name="salon_id" id="salon_id" value="<%=data.salon?data.salon.salonid:""%>"/>
+				<input type="hidden" name="salon_id" id="salonid" value="<%=data.salon?data.salon.salonid:""%>"/>
 				  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
@@ -51,7 +51,7 @@
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
                         <input type="text" id="merchantname" value="<%=data.merchant?data.merchant.name:""%>" disabled>
-						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" value="<%=data.merchant?data.merchant.id:""%>"/>
+						<input type="hidden" name="merchant_id" id="merchantId" required requiredmsg="请店铺搜索到商户" value="<%=data.merchant?data.merchant.id:""%>"/>
                     </div>
                 </div>
 			    <div class="control-group">

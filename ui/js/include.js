@@ -14,7 +14,7 @@
 		}
 	}
 }
-if(!cfg.url&&(cfg.env=='dev'||cfg.env=='test')){
+if(cfg.url.indexOf('<#')>-1&&(cfg.env=='dev'||cfg.env=='test')){
 	cfg.version=Math.random()*10;
 }
 

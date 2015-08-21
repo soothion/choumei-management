@@ -69,6 +69,7 @@ $(function(){
 	/**hash表单同步hash查询条件**/
 	$body.one('asynhashform',function(){
 		var hashForm=$('form[data-role="hash"]');
+		var filterShow=false;
 		for(var name in lib.query){
 			hashForm.find().val(lib.query[name]);
 			hashForm.find('input[name="'+name+'"],select[name="'+name+'"]').each(function(){
@@ -257,9 +258,13 @@ $(function(){
 			lib.completeTimer=setTimeout(function(){
 				var ajat=$this.attr('ajat-complete').replace('${value}',val);
 				$this.addClass('complete-loader');
-				lib.ajat(ajat).render().done(function(){
+				if(window.ajaxComplete&&window.ajaxComplete.abort){
+					window.ajaxComplete.abort();
+				}
+				window.ajaxComplete=lib.ajat(ajat).render().done(function(){
 					$this.closest('.complete').find('.complete-position').show();
 					$this.removeClass('complete-loader');
+					delete window.ajaxComplete;
 				});
 			},200);
 		}else{
@@ -373,6 +378,37 @@ $(function(){
 				this.checked=false;
 			})
 		}
+	});
+	
+	/**filter-box的展示切换**/
+	$body.on('click','#filter-toggle-btn',function(){//注册#filter-toggle-btn事件，控制.filter-box显示与隐藏
+		var $this=$(this);
+		var box=$(".filter-box").slideToggle(250);
+		var icon=$this.children('i');
+		var bool=false;
+		if(icon.hasClass('fa-angle-down')){
+			icon.removeClass('fa-angle-down').addClass('fa-angle-up');
+			bool=true;
+		}else{
+		    icon.removeClass('fa-angle-up').addClass('fa-angle-down');
+		}
+		localStorage.setItem("filter-toggle",location.pathname+"#"+bool);//记录filter-toggle状态
+	});
+	//是否触发#filter-toggle-btn单击事件
+	var filterBtn=$('#filter-toggle-btn');
+	if(filterBtn.length>0){
+		var filterToggle=localStorage.getItem("filter-toggle");
+		if(filterToggle&&filterToggle.indexOf(location.pathname)>-1){
+			if(filterToggle.indexOf("true")>-1){
+				filterBtn.click();
+			}
+		}else{
+			localStorage.removeItem('filter-toggle');
+		}
+	}
+	
+	$body.on('click','.breadcrumb a,.menu-category a',function(){//注册事件清除filter-toggle信息
+		localStorage.removeItem('filter-toggle');
 	});
 	
 	/**日期控件修正**/

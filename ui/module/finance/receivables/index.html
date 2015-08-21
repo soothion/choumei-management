@@ -11,7 +11,7 @@
     </head>
     <body>
             <div class="breadcrumb">
-           <a>收款管理 </a><span>&gt;</span><a href="store/single/index.html">收款列表</a>
+           <a>收款管理 </a><span>&gt;</span><a href="index.html">收款列表</a>
            <div class="flex-box">
             <div class="flex-item">
                 <h4>收款列表</h4>
@@ -40,16 +40,16 @@
 					<input type="date" data-role="start" name="startTime"/>到<input type="date" data-role="end" name="endTime"/>
 				  </span>
                       <button class="btn" type="submit">搜索</button>
-				   <a class="btn" id="dropMenu">
-						筛选条件 <i class="fa fa-angle-down"></i>
-				   </a>
+				  <button type="button" class="btn" id="filter-toggle-btn">
+					筛选条件 <i class="fa fa-angle-down"></i>
+					</button>
                 <button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
 				
                 <div class="filter-box" style="display:none">
                     <div class="flex-box">
                         <div class="filter-title">收款类型：</div>
                         <div class="flex-item">
-                            <label data-role="hash"><input type="radio" name="type" value="" checked /><span>全部</span></label>
+                            <label data-role="hash"><input type="radio" name="type" value="0" checked /><span>全部</span></label>
                             <label data-role="hash"><input type="radio" name="type" value="1" /><span>业务投资款返还</span></label>
                             <label data-role="hash"><input type="radio" name="type" value="2" /><span>交易代收款返还</span></label>              
                         </div>
@@ -58,7 +58,7 @@
                     <div class="flex-box">
                         <div class="filter-title">收款方式：</div>
                         <div class="flex-item">
-                            <label data-role="hash"><input type="radio" name="paymentStyle" value="" checked /><span>全部</span></label>
+                            <label data-role="hash"><input type="radio" name="paymentStyle" value="0" checked /><span>全部</span></label>
                             <label data-role="hash"><input type="radio" name="paymentStyle" value="1" /><span>银行存款</span></label>
                             <label data-role="hash"><input type="radio" name="paymentStyle" value="2" ><span>账扣返还</span></label>              
                             <label data-role="hash"><input type="radio" name="paymentStyle" value="3" /><span>现金</span></label>              
@@ -70,7 +70,7 @@
                     <div class="flex-box">
                         <div class="filter-title">收款状态：</div>
                         <div class="flex-item">
-                            <label data-role="hash"><input type="radio" name="status" value="" checked /><span>全部</span></label>
+                            <label data-role="hash"><input type="radio" name="status" value="0" checked /><span>全部</span></label>
 							<label data-role="hash"><input type="radio" name="status" value="1" /><span>待确认</span></label>   
                             <label data-role="hash"><input type="radio" name="status" value="2" /><span>已确认</span></label>
                                        
@@ -142,15 +142,6 @@
     </div>
 	<script type="text/javascript">
 		$(function(){
-			  $("#dropMenu").on('click',function(e){
-				  var box=$(".filter-box").fadeToggle(300);
-				  var icon=$(this).find('i');
-				  if(icon.hasClass('fa-angle-down')){
-					  icon.removeClass('fa-angle-down').addClass('fa-angle-up');
-				  }else{
-					  $(this).find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
-				  }
-			});
 			$('#table').on('click','.table-bottom button',function(){
 				var $this=$(this);
 				var checked=$('tbody input:checked');
