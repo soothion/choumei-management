@@ -75,7 +75,7 @@
 					<td><%=pay_type[item.pay_type]%></td>
 					<td><%=item.require_day%></td>				 
 					<td><%=item.created_at%></td>
-					<td><%=item.make_user?data.make_user.name:""%></td>				 
+					<td><%=item.make_user?item.make_user.name:""%></td>				 
 					<td><%=state[item.state]%></td>
 					<%
 						var page="invest";
