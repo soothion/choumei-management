@@ -1,6 +1,9 @@
 ﻿if(!localStorage.getItem('token')){
 	location.href='/module/system/user/login.html';
 }
+
+document.onreadystatechange=function(){};//主页不启动加载进度条
+
 $('#page').on('_ready',function(){//#page _ready事件
 	
 	window.onresize=function(){//注册resize事件
