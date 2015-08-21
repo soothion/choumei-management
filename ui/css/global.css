@@ -153,7 +153,13 @@ select{
 select:focus,.select-focus{
 	background-image:url('../images/select-up.svg')!important;
 }
-input[disabled],select[disabled],textarea[disabled],.checkbox[disabled]+label,.radio[disabled]+label{
+input[disabled],
+select[disabled],
+textarea[disabled],
+.checkbox[disabled]+label,
+.radio[disabled]+label,
+label>input[type="radio"][disabled]+span,
+label>input[type="checkbox"][disabled]+span{
 	opacity:0.6;
 	cursor: not-allowed;
 	background-color:#eee;
