@@ -283,9 +283,9 @@ class ReceivablesController extends Controller{
 			}
 		}
 		//更新状态
-		$status = $query ->whereIn('id', $idArr)->update(['checkTime'=>time(),'status'=>2,'confirmTime'=>time(),'cashier'=>$this->user->id]);
+		$status = $query ->whereIn('id', $idArr)->update(['checkTime'=>time(),'status'=>2,'cashier'=>$this->user->id]);
 		
-		if($payTypeId)
+		if($payTypeId && $status)
 		{
 			foreach ($payTypeId as $k=>$v)
 			{
