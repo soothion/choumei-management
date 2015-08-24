@@ -93,6 +93,26 @@
                                         %>
                                         <td><%=typeName%></td>
                                     </tr>
+
+                                   
+                                    <tr>
+                                        <td class="content">店铺邀请码：</td>
+                                        <td><%=data.recommend_code%></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="content">分红联盟：</td>
+                                        <%
+                                            var dividendStatus = "";
+                                            if(data.dividendStatus==0){
+                                                dividendStatus = "加入分红联盟";
+                                            }else if(data.dividendStatus==1){
+                                                dividendStatus = "退出分红联盟";
+                                            }
+                                        %>
+                                        <td><%=dividendStatus%></td>
+                                    </tr>
+                                    
                                     <%
                                         var salonGradeName="";
                                         var salonChangeGradeName="";
@@ -359,23 +379,6 @@
                                   </tr>
                               </thead>
                               <tbody>
-                                  <tr>
-                                      <td colspan="2" class="content">店铺邀请码：</td>
-                                      <td colspan="6"><%=data.recommend_code%></td>
-                                  </tr>
-
-                                  <tr>
-                                      <td colspan="2" class="content">分红联盟：</td>
-                                      <%
-                                      var statusText = "";
-                                      if(data.dividendStatus==0){
-                                          statusText = "已加入";
-                                      }else if(data.dividendStatus==1){
-                                          statusText = "未加入";
-                                      }
-                                      %>
-                                      <td colspan="6"><%=statusText%></td>
-                                  </tr>
 
                                   <tr>
                                       <td colspan="2" class="content">预付款额度：</td>
