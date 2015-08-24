@@ -755,6 +755,9 @@ class ShopCountController extends Controller
             return $this->error("Unauthorized",401);
         }
         $orders = explode(",", $param['ordersn']);
+
+        //佣金单结算
+        ShopCountApi::commissionOrder($orders);
         $res = null;
         $operation = "";
         if ($param['type'] == 1)

@@ -134,6 +134,30 @@ class ShopCountApi
             
     }
     
+
+    /**
+     * 佣金单结算
+     * @param array $options 订单号
+     */
+    public static function commissionOrder($options){
+        $orders = Order::whereIn("ordersn",$options)
+        ->with(['salonInfo'=>function($q){
+            $q->lists('salonid','commissionRate');
+        }])
+        ->where('status',4)
+        ->select('orderid','ordersn','salonid','actuallyPay')
+        ->get();
+
+        foreach ($orders as $key => $order) {
+            $rate = floatval($order->salonInfo->commissionRate);
+            $amount = floatval($order->actuallyPay);
+            $commission = $rate*$amount/100;
+            $commission = round($commission,2);
+            $order->update(['commission'=>$commission]);
+        }
+    }
+
+    
     /**
      * 已消费的订单结算
      * @param array $options 订单号
