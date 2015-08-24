@@ -38,7 +38,7 @@
                     <legend>付款详情</legend>
 					<hr />
                 </div>
-				<input type="hidden" name="salon_id" id="salon_id" value="<%=data.salon?data.salon.salonid:""%>"/>
+				<input type="hidden" name="salon_id" id="salonid" value="<%=data.salon?data.salon.salonid:""%>"/>
 				  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
@@ -51,13 +51,13 @@
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
                         <input type="text" id="merchantname" value="<%=data.merchant?data.merchant.name:""%>" disabled>
-						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" value="<%=data.merchant?data.merchant.id:""%>"/>
+						<input type="hidden" name="merchant_id" id="merchantId" required requiredmsg="请店铺搜索到商户" value="<%=data.merchant?data.merchant.id:""%>"/>
                     </div>
                 </div>
 			    <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款方式：</label>
                      <div class="control">
-                       <select required name="type" class="select"  style="width:20%;" <%=query.id?"disabled":""%>>
+                       <select required name="type" class="select"  <%=query.id?"disabled":""%>>
 							<option value="1" <%=data.type==1?"selected":""%>>银行存款</option>						 
                             <option value="2" <%=data.type==2?"selected":""%>>折扣返还</option> 					 
                             <option value="3" <%=data.type==3?"selected":""%>>现金</option> 
@@ -76,7 +76,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>要求付款日期：</label>
                     <div class="control">			 
-                           <input type="date" name="day" value="<%=data.day||""%>" required />                              							  
+                           <input type="date" name="day" value="<%=data.day||""%>" required placeholder="YYYY-MM-DD" />                              							  
                     </div>
                 </div>
                <div class="control-group">

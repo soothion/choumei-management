@@ -6,31 +6,35 @@
         <script src="/js/include.js"></script>
     </head>
     <body>
+	
 	 <div class="breadcrumb">
             <a>收款管理</a><span>&gt;</span><a href="index.html">收款列表</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑收款":"新增收款"%></span>
-			<div class="flex-box">
-				<div class="flex-item">
-					<h4><%=query._?"编辑收款":"新增收款"%></h4>
-				</div>		 
-		    </div>
-			<hr />
-	 </div>
+				<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑收款":"新增收款"%></h4>
+				
+			</div>		 
+		  </div>
+		 <hr />
+        </div>
 		
      <div class="wrapper" ajat="<%if(query.id){%>receivables/getone?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
+ 
 		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>receivables/update<%}else{%>receivables/save<%}%>">
+
 				<div class="detail-operation">
 					<button class="btn" onclick="history.back()" type="button">取消</button>
 					<span class="space"></span>
 					<button class="btn-primary" type="submit">提交</button>			
 			   </div>
 				
-                <div class="control-group">
+                  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>收款类型：</label>
                     <div class="control">
-                       <select required name="type" class="select"  style="width:20%;" >
+                       <select required name="type" class="select"  style="width:20%;"  >
 							<option value="1" <%=data.type==1?"selected":""%>>业务投资款返还</option>						 
-                            <option value="2" <%=data.type==2?"selected":""%>>交易代收款返还</option>    							
+                            <option value="2" <%=!data.type||data.type==2?"selected":""%>>交易代收款返还</option>    							
                         </select>
                     </div>
                 </div>
@@ -39,16 +43,15 @@
                     <legend>收款详情</legend>
 						<hr />
                 </div>
-				
+					 
 					<input type="hidden" name="id" id="id" value="<%=data.id||""%>"/>
 					<input type="hidden" name="salonid" id="salonid" value="<%=data.salonid||""%>"/>
 				  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
-                    <div class="control complete">
-                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
+                    <div class="control complete">		
+                        <input id="search" type="text" value="<%=data.salonname||""%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
 						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
-						 <span id="sn" class="weak"></span>						   						  
- 
+						 <span id="sn" class="weak"></span>	
                     </div>
                 </div>
 				
@@ -60,11 +63,10 @@
                     </div>
                 </div>
 				
-           
 			    <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>收款方式：</label>
                      <div class="control">
-                       <select required name="paymentStyle" class="select"  style="width:20%;">							 	
+                       <select required name="paymentStyle" class="select" >							 	
                             <option value="1" <%=data.paymentStyle==1?"selected":""%>>银行存款</option>						 
                             <option value="2" <%=data.paymentStyle==2?"selected":""%>>折扣返还</option>    							
                             <option value="3" <%=data.paymentStyle==3?"selected":""%>>现金</option> 
@@ -92,32 +94,25 @@
                                             data.receiptDate = lib.tools.getDate(data.receiptDate);
                                         }
                                         %>					
-                           <input type="date" name="receiptDate" value="<%=data.receiptDate||""%>" required />						   
-                    </div>	
+                           <input type="date" name="receiptDate" value="<%=data.receiptDate||""%>" required placeholder="YYYY-MM-DD"/>						   
+                    </div>
+
                 </div>
 				
                <div class="control-group">
-				<label class="control-label" for=""></label>
-				<div class="control">
-				<button class="btn preview" type="button">预览</button>
-				<%localStorage.setItem("preview",JSON.stringify(data))%>
-				<button class="btn-primary" type="submit">提交</button>				 
-				</div>
- 
-			</div>	
-			
-          </form>
-			</script>
-        </div>
+					<label class="control-label" for=""></label>
+					<div class="control">
+						<button class="btn preview" type="button">预览</button>
+						<%localStorage.setItem("preview",JSON.stringify(data))%>
+						<button class="btn-primary" type="submit">提交</button>				 
+					</div>
+			  </div>	
+		   </form>
+		</script>
+	</div>
      
- 
 		<script type="text/javascript">		
 		$(function(){			
-			$('input[type="date"]').val(lib.tools.getDate());			  
-			 	$(document).on(function(e,data){
-				$('#receiptDate').val(data.receiptDate);
-				console.log(receiptDate);
-				})
 			/*
 			$(document).on('blur','input[name="cost_money"]',function(){
 				var cost_money=$('input[name="cost_money"]').val();

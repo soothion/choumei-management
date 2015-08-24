@@ -69,6 +69,7 @@ $(function(){
 	/**hash表单同步hash查询条件**/
 	$body.one('asynhashform',function(){
 		var hashForm=$('form[data-role="hash"]');
+		var filterShow=false;
 		for(var name in lib.query){
 			hashForm.find().val(lib.query[name]);
 			hashForm.find('input[name="'+name+'"],select[name="'+name+'"]').each(function(){
@@ -223,9 +224,16 @@ $(function(){
 	$body.on('change','.input-switch select',function(){//input-switch切换输入框
 		var $this=$(this);
 		$this.parent().find('input').eq($this.val()).show().siblings('input').hide().val('');
+		if($.placeholder){
+			$.placeholder($this.parent().find('input'));
+		}
 	}).on('change','.placeholder-switch select',function(){//placeholder-switch切换placeholder
 		var $this=$(this);
-		$this.next('input').attr('placeholder',$this.children('option:selected').data('placeholder')).val('');
+		var placeholder=$this.children('option:selected').data('placeholder');
+		$this.next('input').attr('placeholder',placeholder).val('');
+		if($.placeholder){
+			$.placeholder($this.next('input'));
+		}
 	});
 	
 	/**常见**/
@@ -237,14 +245,18 @@ $(function(){
 	}).on('click',function(e){
 		if($(e.target).closest('.open').length==0){
 			$('.open').removeClass('open');
+			parent.$('.open').removeClass('open');
 		}
 	}).on('click','.tab li',function(){//选项卡切换
 		$(this).addClass('active').siblings().removeClass('active');
 	}).on('blur','input[data-role="start"]',function(){//日期区间
 		var $this=$(this);
 		$this.siblings('input[data-role="end"]').attr('min',$this.val());
-	}).on('keypress','input[type="date"]',function(e){//日期禁止输入
-		e.preventDefault();
+	}).on('focus','input[type="date"]',function(e){//日期输入时间限制
+		var $this=$(this);
+		if(!$this.attr('max')){
+			$this.attr('max','9999-12-30');
+		}
 	});
 	
 	/**键盘输入自动补全**/
@@ -256,9 +268,13 @@ $(function(){
 			lib.completeTimer=setTimeout(function(){
 				var ajat=$this.attr('ajat-complete').replace('${value}',val);
 				$this.addClass('complete-loader');
-				lib.ajat(ajat).render().done(function(){
+				if(window.ajaxComplete&&window.ajaxComplete.abort){
+					window.ajaxComplete.abort();
+				}
+				window.ajaxComplete=lib.ajat(ajat).render().done(function(){
 					$this.closest('.complete').find('.complete-position').show();
 					$this.removeClass('complete-loader');
+					delete window.ajaxComplete;
 				});
 			},200);
 		}else{
@@ -374,15 +390,43 @@ $(function(){
 		}
 	});
 	
+	/**filter-box的展示切换**/
+	$body.on('click','#filter-toggle-btn',function(){//注册#filter-toggle-btn事件，控制.filter-box显示与隐藏
+		var $this=$(this);
+		var box=$(".filter-box").slideToggle(250);
+		var icon=$this.children('i');
+		var bool=false;
+		if(icon.hasClass('fa-angle-down')){
+			icon.removeClass('fa-angle-down').addClass('fa-angle-up');
+			bool=true;
+		}else{
+		    icon.removeClass('fa-angle-up').addClass('fa-angle-down');
+		}
+		localStorage.setItem("filter-toggle",location.pathname+"#"+bool);//记录filter-toggle状态
+	});
+	//是否触发#filter-toggle-btn单击事件
+	var filterBtn=$('#filter-toggle-btn');
+	if(filterBtn.length>0){
+		var filterToggle=localStorage.getItem("filter-toggle");
+		if(filterToggle&&filterToggle.indexOf(location.pathname)>-1){
+			if(filterToggle.indexOf("true")>-1){
+				filterBtn.click();
+			}
+		}else{
+			localStorage.removeItem('filter-toggle');
+		}
+	}
+	
+	$body.on('click','.breadcrumb a,.menu-category a',function(){//注册事件清除filter-toggle信息
+		localStorage.removeItem('filter-toggle');
+	});
+	
 	/**日期控件修正**/
 	if(!lib.tools.browser().webkit){
 		if(!location.origin){
 			location.origin="http://"+location.host;
 		}
 		seajs.use([location.origin+'/laydate/laydate.js']);
-		$body.on('focus','input[type=date]',function(e){
-			$(this).attr('readonly',true);
-		})
 		$body.on('click','input[type=date]',function(e){
 			var options={
 				format: 'YYYY-MM-DD',
@@ -396,8 +440,15 @@ $(function(){
 			laydate(options);			
 		});
 	}
+	/**修正IE9**/
 	if(window.ie9){
 		$(document.body).addClass("ie9");
+		if($.placeholder){//输入框placeholder修正
+			$.placeholder();
+			$body.on('_ready',function(e){
+				$.placeholder($(e.target).find('input[type="text"],textarea'));
+			});
+		}
 	}
 }); 
 

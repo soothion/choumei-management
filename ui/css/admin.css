@@ -12,6 +12,9 @@ a,button{
 h1, h2, h3, h4, h5, h6,legend{
 	font-family:"Microsoft Yahei";
 }
+:-ms-input-placeholder{
+	color:#999!important;
+}
 .fff{
 	color:#fff!important;
 }
@@ -161,8 +164,6 @@ input.checkbox:checked+label:before,label>input[type="checkbox"]:checked+span:be
     height:2px;
     z-index: 1000;
     width:0;
-	border-top-right-radius:2px;
-	border-bottom-right-radius:2px;
 }
 .loadbar:after{
     position: absolute;
@@ -317,6 +318,7 @@ aside h2{
 }
 .menu-category li a{
 	padding-left:10px;
+	display:block;
 }
 .menu-category.active ul{
     background: #fff;
@@ -386,15 +388,15 @@ aside h2{
 .form-vertical .control input[type='tel'],
 .form-vertical .control input[type='search'],
 .form-vertical .control input[type='date'],
-.form-vertical .control textarea{
+.form-vertical .control textarea,
+.form-vertical .control select{
 	width:20%;
 	min-width:250px;
 	margin-right:10px;
 }
-.form-vertical .control select{
-	width:auto;
-	min-width:80px;
-	margin-right:10px;
+.form-vertical .control .normal{
+	width:auto!important;
+	min-width:80px!important;
 }
 .form-vertical .control textarea{
 	height:80px;
@@ -506,6 +508,16 @@ th.colswrap{
 .table-detail thead td{
 	font-size:18px;
 	padding-left:20px;
+	position:relative;
+}
+.table-detail-sn{
+	position:absolute;
+	right:0;
+	padding:0px 10px;
+	top:0;
+	background:#fff;
+	font-size: 12px;
+	line-height: 46px;
 }
 .detail-operation{
   margin-top: -53px;
@@ -573,7 +585,7 @@ th.colswrap{
 }
 /**分页 end**/
 /**自定义select控件下拉菜单 start**/
-.options{
+.s-list{
 	position:absolute;
 	background:#fff;
 	border:1px solid #ddd;
@@ -588,14 +600,14 @@ th.colswrap{
 	left:0;
 	opacity:0;
 }
-.options li{
+.s-list-item{
 	padding-left:5px;
 	line-height:30px;
 	height:30px;
 	overflow:hidden;
 	cursor:pointer;
 }
-.options li:hover,.options li.active{
+.s-list-item:hover,.s-list-item.active{
 	background:#eee;
 }
 /**自定义select控件下拉菜单 end**/
@@ -629,6 +641,9 @@ form[data-role="export"] button
 form[data-role="hash"] button{
 	margin-left:5px;
 	margin-right:5px;
+}
+form[data-role="hash"] input[type="date"]{
+	width:120px;
 }
 .date-group{
 	display:inline-block;
@@ -849,4 +864,15 @@ form[data-role="hash"] button{
 .ie9 .select{
 	padding-right:0px;
 	background-image:none;
+}
+.ie9 .select-all{
+	margin:0px -5px;
+}
+.ie9 .filter-title{
+	vertical-align:top;
+	display:table-cell;
+	width:80px;
+}
+.placeholder{
+	color:#999!important;
 }

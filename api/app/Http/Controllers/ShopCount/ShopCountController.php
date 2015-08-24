@@ -37,10 +37,12 @@ class ShopCountController extends Controller
      * @apiSuccess {String} code 付款单号.
      * @apiSuccess {Number} type 付款单类型 1:付交易代收款  2:付交易代收款 3:交易代收款返还
      * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
+     * @apiSuccess {String} pay_type 付款方式:1银行存款 2账扣返还 3现金 4支付宝 5财付通
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} cost_money 换算消费额.
      * @apiSuccess {String} created_at 创建时间.
-     * @apiSuccess {String} day  付款日期.
+     * @apiSuccess {String} day  要求付款日期.
+     * @apiSuccess {String} pay_day  实际付款日期.
      * @apiSuccess {Object} user  制表人信息.
      * @apiSuccess {Object} salon 店铺信息.
      * @apiSuccess {Object} merchant 商盟信息.
@@ -65,8 +67,10 @@ class ShopCountController extends Controller
      *                     "type": 1,
      *                     "uid": 1,
      *                     "pay_money": "2000.00",
+     *                     "pay_type": 1,
      *                     "cost_money": "2500.00",
      *                     "day": "2015-07-02",
+     *                     "pay_day": "2015-09-02",
      *                     "user": {
      *                         "id": 1,
      *                         "name": ""
@@ -143,94 +147,35 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);  
-        $header = ['店铺名称','付款单号','付款类型','付款金额','换算消费额','付款日期','创建日期','制单人','状态'];      
+        $header = ['店铺名称','付款单号','付款类型','支付方式','付款金额','要求付款日期','实际付款日期','创建日期','制单人','状态'];      
         $items = ShopCountApi::getPrepayCondition($param)->addSelect('updated_at')->get()->toArray(); 
         Event::fire('shopcount.export');
         $this->export_xls("转付单".date("Ymd"),$header,self::format_prepay_data($items));
     }
-    
-   /**
-     * @api {post} /shop_count/preview 2.转付单预览
-     * @apiName preview
-     * @apiGroup ShopCount
-     *
-     * @apiParam {Number} type  转付单类型
-     * @apiParam {Number} merchant_id  商户id
-     * @apiParam {Number} salon_id     店铺id
-     * @apiParam {Number} pay_money    付款金额
-     * @apiParam {Number} cost_money   换算消费额
-     * @apiParam {String} day   付款日期 (YYYY-MM-DD)
-     * 
-     * @apiSuccess {String} code 付款单号.
-     * @apiSuccess {Number} type 付款单类型  1:付交易代收款  2:付交易代收款 3:交易代收款返还
-     * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
-     * @apiSuccess {String} pay_money 付款金额.
-     * @apiSuccess {String} cost_money 换算消费额.
-     * @apiSuccess {String} created_at 创建时间.
-     * @apiSuccess {String} day  付款日期.
-     * @apiSuccess {Object} user  制表人信息.
-     * @apiSuccess {Object} salon 店铺信息.
-     * @apiSuccess {Object} merchant 商盟信息.
-     *
-     * @apiSuccessExample Success-Response:
-     *       {
-     *           "result": 1,
-     *           "data": {
-     *               "id": 1,
-     *               "created_at": "2015-07-03 00:00:00",
-     *               "merchant_id": 1,
-     *               "salon_id": 1,
-     *               "code": "fasdfasdfasdfasdfadfa",
-     *               "type": 1,
-     *               "uid": 1,
-     *               "pay_money": "2000.00",
-     *               "cost_money": "2500.00",
-     *               "day": "2015-07-02",
-     *               "user": {
-     *                   "id": 1,
-     *                   "sn":"商铺编号",
-     *                   "name": ""
-     *               },
-     *               "salon": {
-     *                   "salonid": 1,
-     *                   "salonname": "嘉美专业烫染"
-     *               },
-     *               "merchant": {
-     *                   "id": 1,
-     *                   "name": "速度发多少"
-     *               }
-     *           }
-     *       }
-     *
-     *
-     * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "未授权访问"
-     *		}
-     */
+ 
     public function create()
     {
-       $param_must = $this->parameters( 
-           ['type'=>self::T_INT,
-            'merchant_id'=>self::T_INT,
-            'salon_id'=>self::T_INT
-           ],true);
-       $param = $this->parameters([           
-            'pay_money'=>self::T_INT,
-            'cost_money'=>self::T_INT,
-            'day'=>self::T_STRING,
-        ]);
-        $param = array_merge($param,$param_must);
-        $param['uid'] = $this->user->id;        
-        $id = ShopCountApi::makePreviewPrepay($param);
-        if(! $id)
-        {
-            throw new \Exception("参数有误,生成预览失败");
-        }
-        $items = ShopCountApi::prepayDetail($id);
-        Event::fire('shopcount.create',$items['code']);
-        return $this->success($items);
+        return $this->error("功能已关闭!");
+//        $param_must = $this->parameters( 
+//            ['type'=>self::T_INT,
+//             'merchant_id'=>self::T_INT,
+//             'salon_id'=>self::T_INT
+//            ],true);
+//        $param = $this->parameters([           
+//             'pay_money'=>self::T_INT,
+//             'cost_money'=>self::T_INT,
+//             'day'=>self::T_STRING,
+//         ]);
+//         $param = array_merge($param,$param_must);
+//         $param['uid'] = $this->user->id;        
+//         $id = ShopCountApi::makePreviewPrepay($param);
+//         if(! $id)
+//         {
+//             throw new \Exception("参数有误,生成预览失败");
+//         }
+//         $items = ShopCountApi::prepayDetail($id);
+//         Event::fire('shopcount.create',$items['code']);
+//         return $this->success($items);
     }
 
      /**
@@ -241,7 +186,7 @@ class ShopCountController extends Controller
      * @apiParam {Number} id  有预览时  将预览生成的id带过来
      * @apiParam {Number} merchant_id  商户id 有id时可不填 否则为必填
      * @apiParam {Number} salon_id     店铺id 有id时可不填 否则为必填
-     * @apiParam {Number} pay_money    付款金额  有id时可不填 否则为必填
+     * @apiParam {Number} pay_type     付款方式  1银行存款 2账扣返还 3现金 4支付宝 5财付通
      * @apiParam {Number} cost_money   换算消费额  有id时可不填 否则为必填
      * @apiParam {String} day   付款日期 (YYYY-MM-DD) 有id时可不填 否则为必填
      * 
@@ -265,31 +210,17 @@ class ShopCountController extends Controller
     public function store()
     {
         $param = $this->parameters([
-            'id'=>self::T_INT,
             'type'=>self::T_INT,
             'merchant_id'=>self::T_INT,
             'salon_id'=>self::T_INT,
             'pay_money'=>self::T_INT,
-            'cost_money'=>self::T_INT,
+            'pay_type'=>self::T_INT,
             'day'=>self::T_STRING,
         ]);
-        $param['uid'] = $this->user->id;
-        if(isset($param['id']))
-        {
-            $id =  $param['id'];
-            ShopCountApi::updatePrepay($param['id'], $param);
-        }
-        else
-        {
-            $id = ShopCountApi::makePrepay($param);
-            if(!$id)
-            {
-                throw new \Exception("参数有误,生成失败");
-            }
-        }
-        $prepays = PrepayBill::where('id',$id)->get()->toArray();
-        Event::fire('shopcount.store',$prepays[0]['code']);
-        return $this->success(['id'=>$id]);
+        $param['uid'] = $this->user->id;        
+        $ret = ShopCountApi::makePrepay($param);    
+        Event::fire('shopcount.store',$ret['code']);
+        return $this->success(['id'=>$ret['id']]);
     }
 
    /**
@@ -302,10 +233,12 @@ class ShopCountController extends Controller
      * @apiSuccess {String} code 付款单号.
      * @apiSuccess {Number} type 付款单类型  1:付交易代收款  2:付交易代收款 3:交易代收款返还
      * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
+     * @apiSuccess {Number} pay_type 付款方式 1银行存款 2账扣返还 3现金 4支付宝 5财付通
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} cost_money 换算消费额.
      * @apiSuccess {String} created_at 创建时间.
-     * @apiSuccess {String} day  付款日期.
+     * @apiSuccess {String} day  要求付款日期.
+     * @apiSuccess {String} pay_day  实际付款日期.
      * @apiSuccess {Object} user  制表人信息.
      * @apiSuccess {Object} salon 店铺信息.
      * @apiSuccess {Object} merchant 商盟信息.
@@ -372,7 +305,7 @@ class ShopCountController extends Controller
      * @apiParam {Number} merchant_id  商户id 
      * @apiParam {Number} salon_id     店铺id 
      * @apiParam {Number} pay_money    付款金额  
-     * @apiParam {Number} cost_money   换算消费额 
+     * @apiParam {Number} pay_type     付款方式  1银行存款 2账扣返还 3现金 4支付宝 5财付通
      * @apiParam {String} day   付款日期 (YYYY-MM-DD) 
      * 
      * @apiSuccess {String} id 修改成功后的id.
@@ -398,7 +331,7 @@ class ShopCountController extends Controller
             'merchant_id'=>self::T_INT,
             'salon_id'=>self::T_INT,
             'pay_money'=>self::T_INT,
-            'cost_money'=>self::T_INT,
+            'pay_type'=>self::T_INT,
             'day'=>self::T_STRING,
         ]);
         $param['uid'] = $this->user->id;
@@ -438,17 +371,11 @@ class ShopCountController extends Controller
     public function destroy($id)
     {        
         //是 ShopCount 不是 ShopCountApi  不要改回去了
-        $prepays = PrepayBill::where('id',$id)->get()->toArray();
-        if(empty($prepays) || !isset($prepays[0]))
-        {
-            return $this->success(['ret'=>1]);
-        }
-        $prepay = $prepays[0];
-        
-        $ret = ShopCount::deletePrepay($id);
+  
+        $ret = ShopCountApi::deletePrepay($id);
         if($ret)
         {
-            Event::fire('shopcount.destroy',$prepay['code']);
+            Event::fire('shopcount.destroy',$ret['code']);
             return $this->success(['ret'=>1]);
         }
         else
@@ -658,9 +585,6 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} last_page 当前页面.
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
-     * @apiSuccess {String} merchant_name 商户名称.
-     * @apiSuccess {String} salon_name 店铺名称.
-     * @apiSuccess {Number} salon_type 店铺名称类型(1预付款店 2投资店 3金字塔店).
      * @apiSuccess {String} pay_money 预付款/付交易代收款.
      * @apiSuccess {String} cost_money 换算消费额.
      * @apiSuccess {String} spend_money 交易消费额.
@@ -687,10 +611,7 @@ class ShopCountController extends Controller
      *                       "id": 1,
      *                       "created_at": "2015-07-01 00:00:00",
      *                       "merchant_id": 3,
-     *                       "merchant_name":"米莱国际",
      *                       "salon_id": 2,
-     *                       "salon_name":"米莱国际造型连锁(田贝店)",
-     *                       "salon_type":1,
      *                       "pay_money": "123.00",
      *                       "cost_money": "111.00",
      *                       "spend_money": "23434.00",
@@ -862,15 +783,35 @@ class ShopCountController extends Controller
         foreach ($datas as $data) {
             $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
             $typename = $data['type'] == 3 ? "交易代收款返还" : "付交易代收款";
+            //1银行存款 2账扣返还 3现金 4支付宝 5财付通
+            $pay_type_name = "";
+            switch ($data['pay_type']) {
+                case 1:
+                    $pay_type_name = "银行存款";
+                    break;
+                case 2:
+                    $pay_type_name = "账扣返还 ";
+                    break;
+                case 3:
+                    $pay_type_name = "现金";
+                    break;
+                case 4:
+                    $pay_type_name = "支付宝";
+                    break;
+                case  5:
+                    $pay_type_name = "财付通";
+                    break;
+            }
             $username = $data['user']['name'];
             $statename = "已付款";
             $res[] = [
                 'salon_name' => $salon_name,
                 'code' => $data['code'],
                 'typename' => $typename,
+                'pay_type_name' => $pay_type_name,
                 'pay_money' => $data['pay_money'],
-                'cost_money' => $data['cost_money'],
                 'day' => $data['day'],
+                'pay_day' => $data['pay_day'],
                 'updated_at' => $data['updated_at'],
                 'username' => $username,
                 'statename' => $statename

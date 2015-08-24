@@ -38,11 +38,13 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>权限状态：</label>
-				 <select required name="status" class="select" <%=data.status==3?"disabled":""%>>
-					<option value="1" <%=data.status==1?"selected":""%>>正常</option>
-					<option value="2" <%=data.status==2?"selected":""%>>停用</option>
-					<option value="3" <%=data.status==3?"selected":""%>>注销</option>
-				</select>
+				<div class="control">
+					 <select required name="status" class="select" <%=data.status==3?"disabled":""%>>
+						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
+						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
+						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
+					</select>
+				</div>
 			</div>   
 			 <div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>权限说明：</label>

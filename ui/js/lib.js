@@ -2,7 +2,7 @@
 	jQuery.support.cors = true;
 	seajs.config({
 		'map': [
-			[ /^(.*\.(?:css|js))(.*)$/i, '$1?'+cfg.version ]
+			[ /^(.*\.(?:css|js))(.*)$/i, '$1?v='+cfg.version ]
 		]
 	});
 	EJS.ext = '.html?v=' + cfg.version;
@@ -22,7 +22,7 @@
 			browser:function(){
 				var ua=navigator.userAgent;
 				return {
-					moible:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
+					mobile:/(iphone|ipod|ipad|android|ios|windows phone)/i.test(ua),
 					android:/(android)/i.test(ua),
 					ios:/(iphone|ipod|ipad)/i.test(ua),
 					winphone:/(windows phone)/i.test(ua),
@@ -73,13 +73,6 @@
 							bool:false,
 							time:2000
 						});
-						/*
-						parent.lib.popup.confirm({
-							text:"您的权限已经被修改！需要刷新页面更新权限",
-							define:function(){
-								parent.location.reload();
-							}
-						});*/
 					}else{
 						if(data.code==401||data.code==400){
 							data.msg="登录超时，请重新登录";
@@ -102,6 +95,7 @@
 			}
 			var promise=$.ajax(options);
 			promise.fail(function(xhr, status){
+				if(status=="abort") return;
 				var msg = "请求失败，请稍后再试!";
 				if (status === "parseerror") msg = "数据响应格式异常!";
 				if (status === "timeout")    msg = "请求超时，请稍后再试!";
@@ -109,7 +103,6 @@
 				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
 			}).done(done).done(function(data){
 				if(data.token){
-					//console.log(data.token);
 					localStorage.setItem('token',data.token);
 				}
 			});
@@ -137,7 +130,7 @@
             return new Ajat(_protocol);
         },
         popup: {//弹出层
-            path:'/js/_popup.js',
+            path:'/js/popup.js',
             alert: function (options) {
                 seajs.use(this.path,function(a){
                     a.alert(options);
@@ -454,6 +447,8 @@
 					var arr=val.split('.');
 					if(arr[0].length>12){
 						return false;
+					}if(arr[1]&&arr[1].length>2){
+						return false;
 					}else{
 						return true;
 					}
@@ -689,6 +684,11 @@
 				if($this.attr('nospace')!==undefined&&/\s+/g.test($this.val())){
 					$this.val($this.val().replace(/\s+/g,''));
 				}
+			}).on('focus','input[type="date"]',function(){
+				var $this=$(this);
+				if(!$this.attr('pattern')){
+					$this.attr({pattern:"^([0-9]{4})-([0-9]{2})-([0-9]{2})$",patternmsg:"日期格式不正确"});
+				}
 			});
 		},
 		validate:function(untrigger){
@@ -750,30 +750,26 @@
 				e.stopPropagation();
 				e.preventDefault();
 			}).on('blur',this.selector,function(e){
-				$('.options').remove();
-				$(this).removeClass('select-focus');
+				$(document.body).children('.s-list').remove();
 			}).on('mousedown',this.selector,function(e){
-				$('.select').not($(this)).blur();
-				$('input:focus,textarea:focus').blur();
+				var $this=$(this);
+				$this.focus();
 				if(!this.disabled){
 					self.instance(this);
 				}
 				e.stopPropagation();
 				e.preventDefault();
 			});
-			$(document).on('mousedown',function(){
-				$('.select-focus').trigger('blur');
-			});
 		},
 		instance:function(select){
-			var options=$('<ul class="options"></ul>');
-			var $select=$(select).addClass('select-focus');;
+			var list=$('<div class="s-list"></div>');
+			var $select=$(select);
 			$select.children().each(function(){
 				var $this=$(this);
-				options.append('<li class="'+($this.is(':checked')?"active":"")+'" value="'+($this.attr('value')||'')+'">'+$this.text()+'</li>')
+				list.append('<div class="s-list-item '+($this.is(':checked')?"active":"")+'" value="'+($this.attr('value')||'')+'">'+$this.text()+'</div>');
 			});
-			$(document.body).append(options);
-			options.on('mousedown','li',function(e){
+			$(document.body).append(list);
+			list.on('mousedown','.s-list-item',function(e){
 				var val=$select.val();
 				var newVal=$(this).attr('value');
 				$select.val(newVal);
@@ -782,7 +778,7 @@
 					$select.trigger('change');
 				}
 			});
-			options.on('mousedown',function(e){
+			list.on('mousedown',function(e){
 				e.stopPropagation();
 				e.preventDefault();
 			});
@@ -792,16 +788,18 @@
 				top:$select.offset().top+$select.outerHeight()-1,
 				opacity:1
 			};
-			if(css.top+options.outerHeight()>$(document).scrollTop()+$(window).height()){
-				css.top=$select.offset().top-options.outerHeight()+1;
-				options.css(css);
+			if(css.top+list.outerHeight()>$(document).scrollTop()+$(window).height()){
+				css.top=$select.offset().top-list.outerHeight()+1;
+				list.css(css);
 			}else{
-				options.css(css).hide().slideDown(100);
+				list.css(css).hide().slideDown(100);
 			}
 		}
 	}
 	$(function(){
-		new Select();
+		if(!lib.tools.browser().mobile){
+			new Select();
+		}
 	});
 
     window.lib = lib;

@@ -241,7 +241,10 @@
 
         $(".submit").on('click',function(){
             document.body.onbeforeunload=function(){}
-            parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>图片正在上传中...'});
+            var len = contractArr.length + licenseArr.length + corporateArr.length;
+            if(len > 0){                
+                parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>图片正在上传中...'});
+            } 
             conLoader.upload();
             licLoader.upload();
             corLoader.upload();
