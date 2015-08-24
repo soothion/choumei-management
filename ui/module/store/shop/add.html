@@ -250,8 +250,6 @@
                     </div>
                 </div>   
 
-
-
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>联系人：</label>
                     <div class="control">
@@ -293,10 +291,10 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>业务代表：</label>
-                    <select class="select defalut-width" name="businessId" id="business" required 
+                    <div class="control control-circle"  id="business" required 
                     ajat="salonList/getBussesName#domid=business&tempid=business_t&businessId=<%=data.businessId%>">
 
-                    </select>
+                    </div>
                 </div>
 
                 <div class="control-group">
@@ -372,13 +370,12 @@
         </script>
 
         <script type="text/template" id="business_t">
-            <option value="">请选择</option>
             <%data.forEach&&data.forEach(function(item){%>
-                <option <%=item.id == protocol.custom.businessId ? "selected":""%> 
-                value="<%=item.id%>" data-py="<%=item.py%>">
-                    <%=item.businessName%>
-                </option>
+                <input type="radio" class="label" name="businessId" value="<%=item.id%>" id="businssRadio<%=item.id%>" 
+                <%=item.id == protocol.custom.businessId ? "checked":""%> required>
+                <label for="businssRadio<%=item.id%>"><span><%=item.businessName%></span></label>
             <%})%>
+            <span class="control-help" style="display:none;"></span>
         </script>
 
 		<script type="text/template" id="zone_t">
