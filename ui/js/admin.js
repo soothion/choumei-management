@@ -245,8 +245,11 @@ $(function(){
 	}).on('blur','input[data-role="start"]',function(){//日期区间
 		var $this=$(this);
 		$this.siblings('input[data-role="end"]').attr('min',$this.val());
-	}).on('keypress','input[type="date"]',function(e){//日期禁止输入
-		e.preventDefault();
+	}).on('focus','input[type="date"]',function(e){//日期输入时间限制
+		var $this=$(this);
+		if(!$this.attr('max')){
+			$this.attr('max','9999-12-30');
+		}
 	});
 	
 	/**键盘输入自动补全**/
