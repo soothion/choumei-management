@@ -31,9 +31,9 @@
 					<input type="date" data-role="start"  name="pay_time_min"/>到<input type="date" data-role="end"  name="pay_time_max"/>
 				</span>
 				<button class="btn" type="submit">搜索</button>
-				<a class="btn" id="dropMenu">
+				<button type="button" class="btn" id="filter-toggle-btn">
 					筛选条件 <i class="fa fa-angle-down"></i>
-				</a>
+				</button>
 				<button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
 				<div class="filter-box" style="display:none">
 					<div class="flex-box">
@@ -97,8 +97,8 @@
 				<%data.forEach(function(item,i){%>
 				<tr>
 					<td><%=i+1%></td>
-					<td><%=item.salon.sn%></td>
-					<td><%=item.salon.salonname%></td>
+					<td><%=item.salon?item.salon.sn:""%></td>
+					<td><%=item.salon?item.salon.salonname:""%></td>
 					<td><%=item.code%></td>
 					<td><%=type[item.type]%></td>
 					<td><%=item.money%></td>
@@ -106,7 +106,7 @@
 					<td><%=item.require_day%></td>
 					<td><%=item.pay_day%></td>				 
 					<td><%=item.created_at%></td>
-					<td><%=item.make_user?data.make_user.name:""%></td>				 
+					<td><%=item.make_user?item.make_user.name:""%></td>				 
 					<td><%=state[item.state]%></td>
 					<%
 						var page="invest";

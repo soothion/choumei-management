@@ -13,7 +13,7 @@ class SalonAccountController extends Controller {
 	
 	private $pwd = "choumei";
 	
-	private $cmPwd = "choumeiapp.123.!";
+	private $cmPwd = "cmm111";
 	
 	private $addMsg = array(
 				1=>"当前店铺已存在普通用户，请查询",
@@ -164,7 +164,7 @@ class SalonAccountController extends Controller {
 		$id = SalonAccount::dosave($save);//添加账号
 		if($param["roleType"] == 2)//超级管理员
 		{
-			Salon::where(array("salonid"=>$param["salonid"]))->update(array("puserid"=>$id));
+			Salon::where(array("merchantId"=>$param["merchantId"]))->update(array("puserid"=>$id));
 		}
 		
 		if($id)

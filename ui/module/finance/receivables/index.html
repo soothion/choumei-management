@@ -1,17 +1,12 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-        <meta charset="utf-8">    
-        <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="format-detection" content="telephone=no">		
         <title>臭美管理后台</title>
         <script type="text/javascript" src="/js/include.js"></script>
     </head>
     <body>
             <div class="breadcrumb">
-           <a>收款管理 </a><span>&gt;</span><a href="store/single/index.html">收款列表</a>
+           <a>收款管理 </a><span>&gt;</span><a href="index.html">收款列表</a>
            <div class="flex-box">
             <div class="flex-item">
                 <h4>收款列表</h4>
@@ -29,22 +24,21 @@
 						<option value="1">店铺编号</option>
 						<option value="2">商户名称</option>
 					</select>
-				<input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称">
-				<input type="text" class="input-search hide" name="sn" class="hide" placeholder="请输入店铺编号">
-				<input type="text" class="input-search hide" name="merchantName" class="hide" placeholder="请输入商户名称">								
+						<input type="text" class="input-search" name="salonname" placeholder="请输入店铺名称">
+						<input type="text" class="input-search hide" name="sn" class="hide" placeholder="请输入店铺编号">
+						<input type="text" class="input-search hide" name="merchantName" class="hide" placeholder="请输入商户名称">								
 				 </div>	
 				 
-			 
-				 
+					<span class="space"></span>
                     <label>收款日期：</label>
-                    <span class="date-group">
-                      <input type="date" data-role="start" name="startTime"/>到<input type="date" data-role="end" name="endTime"/>
-                      </span>
+				  <span class="date-group">
+					<input type="date" data-role="start" name="startTime"/>到<input type="date" data-role="end" name="endTime"/>
+				  </span>
                       <button class="btn" type="submit">搜索</button>
-                      <a class="btn" id="dropMenu">
-              筛选条件 <i class="fa fa-angle-down"></i>
-                </a>
-                <button class="btn" form="export">导出</button>
+				  <button type="button" class="btn" id="filter-toggle-btn">
+					筛选条件 <i class="fa fa-angle-down"></i>
+					</button>
+                <button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
 				
                 <div class="filter-box" style="display:none">
                     <div class="flex-box">
@@ -77,7 +71,6 @@
                                        
                         </div>
                     </div>
-					
                 </div>            
             </form>
             <form action="receivables/export" data-role="export" id="export"></form>    
@@ -133,28 +126,17 @@
               </tbody>
             </table>
 			 <%if(data&&data.length>0){%>
-			<div class="table-bottom">
-			 <label class="select-all"> <input type="checkbox"/><span>全选</span></label>  		 
-			 		 			 			 
-				<button class="btn" id="verify">确认付款</button>	 	
-			</div>
-
-				  <%}%>
+				<div class="table-bottom">
+					<label class="select-all"> <input type="checkbox"/><span>全选</span></label>  		 
+					<button class="btn" id="verify">确认付款</button>	 	
+				</div>
+			 <%}%>
             <div class="pager"> </div>
 			</script>
         </div>
     </div>
 	<script type="text/javascript">
 		$(function(){
-			  $("#dropMenu").on('click',function(e){
-				  var box=$(".filter-box").fadeToggle(300);
-				  var icon=$(this).find('i');
-				  if(icon.hasClass('fa-angle-down')){
-					  icon.removeClass('fa-angle-down').addClass('fa-angle-up');
-				  }else{
-					  $(this).find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
-				  }
-			});
 			$('#table').on('click','.table-bottom button',function(){
 				var $this=$(this);
 				var checked=$('tbody input:checked');
@@ -186,6 +168,7 @@
 								parent.lib.popup.result({
 									bool:data.result,
 									text:"操作成功",
+									time:2000,
 									define:function(){
 										if(data.result==1){
 											location.reload();
@@ -197,7 +180,6 @@
 					}
 				});
 			})
-			
 		});
 	 
 	</script>

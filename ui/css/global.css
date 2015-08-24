@@ -153,7 +153,13 @@ select{
 select:focus,.select-focus{
 	background-image:url('../images/select-up.svg')!important;
 }
-input[disabled],select[disabled],textarea[disabled],.checkbox[disabled]+label,.radio[disabled]+label{
+input[disabled],
+select[disabled],
+textarea[disabled],
+.checkbox[disabled]+label,
+.radio[disabled]+label,
+label>input[type="radio"][disabled]+span,
+label>input[type="checkbox"][disabled]+span{
 	opacity:0.6;
 	cursor: not-allowed;
 	background-color:#eee;
@@ -362,6 +368,10 @@ input.radio,input.checkbox,label>input[type="radio"],label>input[type="checkbox"
     width:0!important;
 	opacity:0;
 	margin:0;
+	-webkit-appearance:none;
+    -moz-appearance:none;
+    -ms-appearance:none;
+    appearance:none;
 }
 input.radio+label,input.checkbox+label,label>input[type="radio"]+span,label>input[type="checkbox"]+span{
 	display:inline-block;
@@ -396,6 +406,10 @@ input.label{
 	opacity:0;
 	margin:0;
 	padding:0;
+	 -webkit-appearance:none;
+    -moz-appearance:none;
+    -ms-appearance:none;
+    appearance:none;
 }
 input.label+label{
 	display:inline-block;

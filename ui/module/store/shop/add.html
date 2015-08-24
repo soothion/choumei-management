@@ -209,7 +209,7 @@
                             data.changeInTime = lib.tools.getDate(data.changeInTime);
                         }
                         %>   
-                        <input type="date" name="changeInTime" value="<%=data.changeInTime%>" max="2030-01-01" required>
+                        <input type="date" name="changeInTime" value="<%=data.changeInTime%>" max="2030-01-01" placeholder="YYYY-MM-DD" required>
                     </div>
                 </div>                                                
 
@@ -230,7 +230,7 @@
                             data.contractTime = lib.tools.getDate(data.contractTime);
                         }
                         %>                        
-                        <input type="date" name="contractTime" value="<%=data.contractTime%>" required 
+                        <input type="date" name="contractTime" value="<%=data.contractTime%>" required  placeholder="YYYY-MM-DD"
                         min="1950-01-01" max="2030-01-01">
                     </div>
                 </div>
@@ -245,7 +245,7 @@
                             data.contractEndTime = lib.tools.getDate(data.contractEndTime);
                         }
                         %>                                       
-                        <input type="date" name="contractEndTime" value="<%=data.contractEndTime%>" 
+                        <input type="date" name="contractEndTime" placeholder="YYYY-MM-DD" value="<%=data.contractEndTime%>" 
                         required  max="2030-01-01">
                     </div>
                 </div>   

@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+		<title>臭美管理后台</title>
+		<script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>系统配置</a>
+            <span>&gt;</span><a href="index.html">店铺APP显示配置</a>
+			 <div class="flex-box">
+                <div class="flex-item">
+                    <h4>店铺APP显示配置</h4>
+                </div>
+            </div>
+			<hr />
+        </div>
+        <div class="wrapper">
+           <form data-role="normal" action="">
+				<label>
+					<input type="checkbox" />
+					<span>无店铺的商圈不在APP显示</span>
+				</label>
+			</form>
+		</div>
+		<script type="text/javascript">
+			$("input").on('change',function(){
+				$('form').submit();
+			})
+		</script>
+    </body>
+</html>

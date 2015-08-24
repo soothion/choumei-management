@@ -14,7 +14,7 @@
 		}
 	}
 }
-if(!cfg.url&&(cfg.env=='dev'||cfg.env=='test')){
+if(cfg.url.indexOf('<#')>-1&&(cfg.env=='dev'||cfg.env=='test')){
 	cfg.version=Math.random()*10;
 }
 
@@ -31,6 +31,7 @@ document.writeln('<link rel="stylesheet" href="/css/reset.css?v='+cfg.version+'"
 document.writeln('<link rel="stylesheet" href="/css/global.css?v='+cfg.version+'" />');
 document.writeln('<link rel="stylesheet" href="/css/admin.css?v='+cfg.version+'" />');
 document.writeln('<script type="text/javascript" src="/js/jquery.min.js?v='+cfg.version+'"></script>');
+document.writeln('<!--[if IE 9]><script type="text/javascript" src="/js/jquery.placeholder.js"></script><![endif]-->');
 document.writeln('<script type="text/javascript" src="/js/sea.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/ejs.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/lib.js?v='+cfg.version+'"></script>');

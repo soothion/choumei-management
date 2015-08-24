@@ -34,11 +34,11 @@
                     <legend>付款详情</legend>
 						<hr />
                 </div>
-				<input type="hidden" name="salon_id" id="salon_id" value="<%=data.salon?data.salon.salonid:""%>"/>
+				<input type="hidden" name="salon_id" id="salonid" value="<%=data.salon?data.salon.salonid:""%>"/>
 				  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
-						<input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
+						<input id="search" type="text" value="<%=data.salon?data.salon.salonname:""%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
 						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
 						<span id="sn" class="weak"></span>
                     </div>
@@ -47,7 +47,7 @@
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
                         <input type="text" id="merchantname" value="<%=data.merchant?data.merchant.name:""%>" disabled>
-						<input type="hidden" name="merchant_id" id="merchant_id" required requiredmsg="请店铺搜索到商户" value="<%=data.merchant?data.merchant.id:""%>"/>
+						<input type="hidden" name="merchant_id" id="merchantId" required requiredmsg="请店铺搜索到商户" value="<%=data.merchant?data.merchant.id:""%>"/>
                     </div>
                 </div>
 				 <div class="control-group">
@@ -71,7 +71,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>要求付款日期：</label>
                     <div class="control">			 
-                        <input type="date" name="require_day" value="<%=data.require_day||""%>" required />                              							  
+                        <input type="date" name="require_day" value="<%=data.require_day||""%>" required placeholder="YYYY-MM-DD"/>                              							  
                     </div>
                 </div>
 				<div class="control-group">
