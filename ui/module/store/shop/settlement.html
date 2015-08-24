@@ -64,28 +64,6 @@
                 </ul>
 
                 <div class="control-group">
-                    <label class="control-label" for="">店铺邀请码：</label>
-                    <div class="control">
-                        <input type="text" value="<%=data.recommend_code%>" placeholder="店铺邀请码" patternMsg="" disabled>
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label" for="">分红联盟：</label>
-                    <div class="control">
-                        <%
-                        var statusText = "";
-                        if(data.dividendStatus == 0){
-                            statusText = "已加入";
-                        }else if(data.dividendStatus == 1){
-                            statusText = "未加入"; 
-                        }
-                        %>
-                        <input type="text" value="<%=statusText%>" placeholder="分红联盟" patternMsg="" disabled>
-                    </div>
-                </div>
-
-                <div class="control-group">
                     <label class="control-label" for="">落地日期：</label>
                     <div class="control">
                         <%
