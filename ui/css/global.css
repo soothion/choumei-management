@@ -368,6 +368,10 @@ input.radio,input.checkbox,label>input[type="radio"],label>input[type="checkbox"
     width:0!important;
 	opacity:0;
 	margin:0;
+	-webkit-appearance:none;
+    -moz-appearance:none;
+    -ms-appearance:none;
+    appearance:none;
 }
 input.radio+label,input.checkbox+label,label>input[type="radio"]+span,label>input[type="checkbox"]+span{
 	display:inline-block;
@@ -402,6 +406,10 @@ input.label{
 	opacity:0;
 	margin:0;
 	padding:0;
+	 -webkit-appearance:none;
+    -moz-appearance:none;
+    -ms-appearance:none;
+    appearance:none;
 }
 input.label+label{
 	display:inline-block;
