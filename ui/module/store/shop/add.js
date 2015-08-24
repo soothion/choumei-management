@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-17 09:30:53
+* @Last Modified time: 2015-08-24 14:53:46
 */
 
 $(function(){
@@ -11,11 +11,22 @@ $(function(){
 
     if(type === 'edit'){
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));
+        data.type = type;
         lib.ajat('#domid=form&tempid=form-t').template(data);
         var option = $("select[name='salonChangeGrade'] > option[value='"+data.salonChangeGrade+"']");
         if(option && option.length > 0) {
             option.attr("selected","selected");
-        }    
+        }
+        $("input[name='shopType']").on('change',function(){
+            if($(this).val() == 3){
+                $(".forShopType").removeClass("hidden");
+                $(".forShopType").show();
+                $(".dividendStatus").attr("name","dividendStatus");
+            }else{
+                $(".forShopType").hide();
+                $(".dividendStatus").removeAttr('name');
+            }
+        })    
     }
 
     if(type === 'add'){
@@ -108,10 +119,7 @@ $(function(){
         location.href = "bank.html?type="+type;
     } 
 
-    var dataFormat = function(data){
-        data.contractPeriod = data.contractLimitY + "_" + data.contractLimitM;
-        delete data.contractLimitY;
-        delete data.contractLimitM;       
+    var dataFormat = function(data){      
         var arr = data.lngLat.split(",");
         data.addrlati = arr[0];
         data.addrlong = arr[1];
