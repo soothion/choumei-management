@@ -2,7 +2,7 @@
 	jQuery.support.cors = true;
 	seajs.config({
 		'map': [
-			[ /^(.*\.(?:css|js))(.*)$/i, '$1?'+cfg.version ]
+			[ /^(.*\.(?:css|js))(.*)$/i, '$1?v='+cfg.version ]
 		]
 	});
 	EJS.ext = '.html?v=' + cfg.version;
@@ -130,7 +130,7 @@
             return new Ajat(_protocol);
         },
         popup: {//弹出层
-            path:'/js/_popup.js',
+            path:'/js/popup.js',
             alert: function (options) {
                 seajs.use(this.path,function(a){
                     a.alert(options);
