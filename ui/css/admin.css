@@ -572,7 +572,7 @@ th.colswrap{
 }
 /**分页 end**/
 /**自定义select控件下拉菜单 start**/
-.options{
+.s-list{
 	position:absolute;
 	background:#fff;
 	border:1px solid #ddd;
@@ -587,14 +587,14 @@ th.colswrap{
 	left:0;
 	opacity:0;
 }
-.options li{
+.s-list-item{
 	padding-left:5px;
 	line-height:30px;
 	height:30px;
 	overflow:hidden;
 	cursor:pointer;
 }
-.options li:hover,.options li.active{
+.s-list-item:hover,.s-list-item.active{
 	background:#eee;
 }
 /**自定义select控件下拉菜单 end**/
