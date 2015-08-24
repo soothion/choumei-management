@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-24 14:53:46
+* @Last Modified time: 2015-08-24 15:27:05
 */
 
 $(function(){
@@ -30,12 +30,11 @@ $(function(){
     }
 
     if(type === 'add'){
-        var merchantId = lib.query.merchantId;
-        var name = lib.query.name;  
         var shopData = JSON.parse(sessionStorage.getItem('add-shop-data'));
         shopData = $.extend({},shopData,{
-            "merchantId" : merchantId,
-            "name" : name
+            "merchantId" : lib.query.merchantId,
+            "name"       : lib.query.name,
+            addr         : lib.query.addr
         });      
         lib.ajat('#domid=form&tempid=form-t').template(shopData);
         document.body.onbeforeunload=function(){
