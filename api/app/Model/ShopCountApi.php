@@ -253,24 +253,24 @@ class ShopCountApi
 
 
     /**
-     * 生成一个预览状态的预付单
+     * 生成一个预览状态的预付单 已经不用了
      */
     public static function makePreviewPrepay($options)
     {
-        if(isset($options['merchant_id'])
-            && isset($options['salon_id'])
-            && isset($options['type'])
-            && isset($options['uid'])
-            && isset($options['pay_money'])
-            && isset($options['cost_money'])
-            && isset($options['day']))
-        {
-            $code = PrepayBill::getNewCode($options['type']);
-            $options['code'] = $code;
-            $id = PrepayBill::insertGetId($options);
-            return $id;
-        }
-        return false;
+//         if(isset($options['merchant_id'])
+//             && isset($options['salon_id'])
+//             && isset($options['type'])
+//             && isset($options['uid'])
+//             && isset($options['pay_money'])
+//             && isset($options['cost_money'])
+//             && isset($options['day']))
+//         {
+//             $code = PrepayBill::getNewCode($options['type']);
+//             $options['code'] = $code;
+//             $id = PrepayBill::insertGetId($options);
+//             return $id;
+//         }
+//         return false;
     }
     
     /**
@@ -361,7 +361,30 @@ class ShopCountApi
         PayManage::where('id',$prepay->pay_manage_id)->update($pay_record);
         
         return $ret;
-    }    
+    }   
+
+    /**
+     * 更新一个预付单
+     */
+    public static function deletePrepay($id)
+    {
+        $prepay = PrepayBill::where('id', $id)->first();
+        if (empty($prepay)) {
+            return false;
+        }
+    
+        if( $prepay->state != PrepayBill::STATE_OF_TO_SUBMIT && $prepay->state != PrepayBill::STATE_OF_TO_CHECK)
+        {
+            return false;
+        }
+        $pay_id = $prepay->pay_manage_id;
+        //删除转付单
+        PrepayBill::where('id',$id)->delete();
+        //删除付款单
+        PayManage::where('id',$pay_id)->delete();
+       
+        return ['id'=>$id,'code'=>$prepay->code];
+    }
     
     public static function getSalonMerchantBaseInfo($salon_ids)
     {

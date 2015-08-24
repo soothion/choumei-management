@@ -99,8 +99,7 @@ class PayManage extends Model
             !isset($params['receive_day']) ||//实际付款日期
             !isset($params['cash_uid'])    ||//确认人
             !isset($params['make_uid']) ||//制单人
-            !isset($params['make_at']) ||//创建日期
-            !isset($params['cash_at']) //确认日期
+            !isset($params['make_at'])//创建日期
         )
         {
             return false;
@@ -142,8 +141,7 @@ class PayManage extends Model
             'make_uid'=>$params['make_uid'],
             'confirm_uid'=>$params['cash_uid'],
             'cash_uid'=>$params['cash_uid'],
-            'confirm_at'=>$params['cash_at'],
-            'cash_at'=>$params['cash_at'], 
+            'confirm_at'=>$params['receive_day'],
             'make_at'=>$params['make_at'],
             'updated_at'=>date('Y-m-d H:i:s')
         ];

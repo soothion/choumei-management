@@ -371,17 +371,11 @@ class ShopCountController extends Controller
     public function destroy($id)
     {        
         //是 ShopCount 不是 ShopCountApi  不要改回去了
-        $prepays = PrepayBill::where('id',$id)->get()->toArray();
-        if(empty($prepays) || !isset($prepays[0]))
-        {
-            return $this->success(['ret'=>1]);
-        }
-        $prepay = $prepays[0];
-        
-        $ret = ShopCount::deletePrepay($id);
+  
+        $ret = ShopCountApi::deletePrepay($id);
         if($ret)
         {
-            Event::fire('shopcount.destroy',$prepay['code']);
+            Event::fire('shopcount.destroy',$ret['code']);
             return $this->success(['ret'=>1]);
         }
         else
@@ -591,9 +585,6 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} last_page 当前页面.
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
-     * @apiSuccess {String} merchant_name 商户名称.
-     * @apiSuccess {String} salon_name 店铺名称.
-     * @apiSuccess {Number} salon_type 店铺名称类型(1预付款店 2投资店 3金字塔店).
      * @apiSuccess {String} pay_money 预付款/付交易代收款.
      * @apiSuccess {String} cost_money 换算消费额.
      * @apiSuccess {String} spend_money 交易消费额.
@@ -620,10 +611,7 @@ class ShopCountController extends Controller
      *                       "id": 1,
      *                       "created_at": "2015-07-01 00:00:00",
      *                       "merchant_id": 3,
-     *                       "merchant_name":"米莱国际",
      *                       "salon_id": 2,
-     *                       "salon_name":"米莱国际造型连锁(田贝店)",
-     *                       "salon_type":1,
      *                       "pay_money": "123.00",
      *                       "cost_money": "111.00",
      *                       "spend_money": "23434.00",
