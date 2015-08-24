@@ -224,9 +224,16 @@ $(function(){
 	$body.on('change','.input-switch select',function(){//input-switch切换输入框
 		var $this=$(this);
 		$this.parent().find('input').eq($this.val()).show().siblings('input').hide().val('');
+		if($.placeholder){
+			$.placeholder($this.parent().find('input'));
+		}
 	}).on('change','.placeholder-switch select',function(){//placeholder-switch切换placeholder
 		var $this=$(this);
-		$this.next('input').attr('placeholder',$this.children('option:selected').data('placeholder')).val('');
+		var placeholder=$this.children('option:selected').data('placeholder');
+		$this.next('input').attr('placeholder',placeholder).val('');
+		if($.placeholder){
+			$.placeholder($this.next('input'));
+		}
 	});
 	
 	/**常见**/
