@@ -142,7 +142,7 @@ class PayManage extends Model
             'confirm_uid'=>$params['cash_uid'],
             'cash_uid'=>$params['cash_uid'],
             'confirm_at'=>$params['receive_day'],
-            'make_at'=>$params['make_at'],
+            'created_at'=>$params['make_at'],
             'updated_at'=>date('Y-m-d H:i:s')
         ];
         $id = self::insertGetId($record);
