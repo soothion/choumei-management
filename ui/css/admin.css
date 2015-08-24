@@ -12,6 +12,9 @@ a,button{
 h1, h2, h3, h4, h5, h6,legend{
 	font-family:"Microsoft Yahei";
 }
+:-ms-input-placeholder{
+	color:#999!important;
+}
 .fff{
 	color:#fff!important;
 }
