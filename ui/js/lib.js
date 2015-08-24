@@ -684,6 +684,11 @@
 				if($this.attr('nospace')!==undefined&&/\s+/g.test($this.val())){
 					$this.val($this.val().replace(/\s+/g,''));
 				}
+			}).on('focus','input[type="date"]',function(){
+				var $this=$(this);
+				if(!$this.attr('pattern')){
+					$this.attr({pattern:"^([0-9]{4})-([0-9]{2})-([0-9]{2})$",patternmsg:"日期格式不正确"});
+				}
 			});
 		},
 		validate:function(untrigger){

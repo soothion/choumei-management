@@ -629,6 +629,9 @@ form[data-role="hash"] button{
 	margin-left:5px;
 	margin-right:5px;
 }
+form[data-role="hash"] input[type="date"]{
+	width:120px;
+}
 .date-group{
 	display:inline-block;
 }
