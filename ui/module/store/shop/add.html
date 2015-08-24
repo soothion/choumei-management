@@ -105,7 +105,21 @@
 					<div class="control control-circle" id="zone" ajat="<%if(data.district){%>salonList/getProvinces?type=4&areaId=<%=data.district%><%}%>#domid=zone&tempid=zone_t&zone=<%=data.zone%>">
 
 					</div>
-                </div> 
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>店铺分类：</label>
+                    <label>
+                        <input type="radio" class="radio" name="salonCategory" value="2"
+                        <%=!data.salonCategory||data.salonCategory==2 ? "checked" : "" %>>
+                        <span>店铺</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" class="radio" name="salonCategory" value="1">
+                        <span>工作室</span>
+                    </label>
+                </div>                 
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺类型：</label>
@@ -122,7 +136,35 @@
                     <label for="radio3">金字塔店</label>
 
                     <span class="control-help" style="display:none;"></span>
-                </div> 
+                </div>
+
+                <% if(data.type == 'edit') { %>
+                    <div class="control-group forShopType <%=data.shopType == 3 ? '' : 'hidden'%>">
+                        <label class="control-label" for=""><span class="red">*</span>店铺邀请码：</label>
+                        <div class="control">
+                            <input type="text" value="<%=data.recommend_code%>" placeholder="店铺邀请码" 
+                            maxlength="10" disabled>
+                        </div>
+                    </div>
+
+                    <div class="control-group forShopType <%=data.shopType == 3 ? '' : 'hidden'%>">
+                        <label class="control-label" for=""><span class="red">*</span>分红联盟：</label>
+
+                        <label>
+                            <input type="radio" class="radio dividendStatus"  value="0" 
+                            <%=data.shopType == 3 ? 'name="dividendStatus"' : ''%> 
+                            <%=data.dividendStatus == 0 ? "checked" : "" %>>
+                            <span>加入分红联盟</span>
+                        </label>
+
+                        <label>
+                            <input type="radio" class="radio dividendStatus" value="1" 
+                            <%=data.shopType == 3 ? 'name="dividendStatus"' : ''%> 
+                            <%=data.dividendStatus == 1 ? "checked" : "" %>>
+                            <span>退出分红联盟</span>
+                        </label>
+                    </div>
+                <%}%>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>当前等级：</label>
@@ -167,7 +209,7 @@
                             data.changeInTime = lib.tools.getDate(data.changeInTime);
                         }
                         %>   
-                        <input type="date" name="changeInTime" value="<%=data.changeInTime%>" max="2030-01-01" required>
+                        <input type="date" name="changeInTime" value="<%=data.changeInTime%>" max="2030-01-01" placeholder="YYYY-MM-DD" required>
                     </div>
                 </div>                                                
 
@@ -188,7 +230,7 @@
                             data.contractTime = lib.tools.getDate(data.contractTime);
                         }
                         %>                        
-                        <input type="date" name="contractTime" value="<%=data.contractTime%>" required 
+                        <input type="date" name="contractTime" value="<%=data.contractTime%>" required  placeholder="YYYY-MM-DD"
                         min="1950-01-01" max="2030-01-01">
                     </div>
                 </div>
@@ -203,7 +245,7 @@
                             data.contractEndTime = lib.tools.getDate(data.contractEndTime);
                         }
                         %>                                       
-                        <input type="date" name="contractEndTime" value="<%=data.contractEndTime%>" 
+                        <input type="date" name="contractEndTime" placeholder="YYYY-MM-DD" value="<%=data.contractEndTime%>" 
                         required  max="2030-01-01">
                     </div>
                 </div>   
@@ -220,8 +262,8 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>联系电话：</label>
                     <div class="control">
-						 <input type="text" name="phone" value="<%=data.phone%>" placeholder="请输入11位有效手机号" 
-                         maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号码" required>
+						 <input type="text" name="phone" value="<%=data.phone%>" placeholder="请输入7-12位有效店铺电话" 
+                         maxlength="12" pattern="phone" patternmsg="请输入7-12位有效店铺电话" required>
                     </div>
                 </div>
 

@@ -12,6 +12,9 @@ a,button{
 h1, h2, h3, h4, h5, h6,legend{
 	font-family:"Microsoft Yahei";
 }
+:-ms-input-placeholder{
+	color:#999!important;
+}
 .fff{
 	color:#fff!important;
 }
@@ -505,6 +508,16 @@ th.colswrap{
 .table-detail thead td{
 	font-size:18px;
 	padding-left:20px;
+	position:relative;
+}
+.table-detail-sn{
+	position:absolute;
+	right:0;
+	padding:0px 10px;
+	top:0;
+	background:#fff;
+	font-size: 12px;
+	line-height: 46px;
 }
 .detail-operation{
   margin-top: -53px;

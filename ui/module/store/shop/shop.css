@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-06-30 10:24:56
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-10 11:07:40
+* @Last Modified time: 2015-08-24 14:21:46
 */
 
 /********************店铺列表***********************/
@@ -232,6 +232,14 @@
 
 .tangram-suggestion-main{
   z-index : 1001;
+}
+
+.show{
+  display: block!important;
+}
+
+.hidden{
+  display:none!important;
 }
 
 /********************准入评估信息表***********************/

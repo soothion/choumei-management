@@ -1,5 +1,5 @@
 define(function(require,exports,module){
-	var path=location.origin+'/js/popup';
+	var path='/js/popup';
     var popup= {
         alert: function (options) {
             var self=this;

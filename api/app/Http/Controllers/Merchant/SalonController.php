@@ -41,6 +41,7 @@ class SalonController extends Controller {
 						"bankCard",
 						"branchName",
 						"accountType",
+    					"salonCategory",
     		);
 	/**
 	* @api {post} /salon/index 1.店铺列表
@@ -215,6 +216,7 @@ class SalonController extends Controller {
 	* @apiParam {String} corporateName 必填,法人代表.
 	* @apiParam {String} corporateTel 必填,法人电话.
 	* @apiParam {Number} businessId 必填,业务代表Id.
+	* @apiParam {Number} salonCategory 必填,店铺分类 1工作室2店铺.
 	* @apiParam {String} bankName 必填,银行名称.
 	* @apiParam {String} beneficiary 必填,收款人.
 	* @apiParam {String} bankCard 必填,银行卡号.
@@ -321,7 +323,8 @@ class SalonController extends Controller {
 	* @apiParam {String} corporateName 必填,法人代表.
 	* @apiParam {String} corporateTel 必填,法人电话.
 	* @apiParam {Number} businessId 必填,业务代表Id.
-	* @apiParam {Number} joinDividend 可选, 1退出分红联盟 2加入分红联盟.
+	* @apiParam {Number} dividendStatus 可选, 1退出分红联盟 0加入分红联盟.
+	* @apiParam {Number} salonCategory 必填,店铺分类 1工作室2店铺.
 	* @apiParam {String} bankName 必填,银行名称.
 	* @apiParam {String} beneficiary 必填,收款人.
 	* @apiParam {String} bankCard 必填,银行卡号.
@@ -437,6 +440,7 @@ class SalonController extends Controller {
 		$data["corporateName"] = isset($param["corporateName"])?trim($param["corporateName"]):"";//法人代表
 		$data["corporateTel"] = isset($param["corporateTel"])?trim($param["corporateTel"]):"";//法人电话
 		$data["businessId"] = isset($param["businessId"])?trim($param["businessId"]):"";//业务代表ID
+		$data["salonCategory"] = isset($param["salonCategory"])?trim($param["salonCategory"]):"";//店铺分类
 		
 		//商铺其他信息
 		$dataInfo["bankName"] = isset($param["bankName"])?trim($param["bankName"]):"";//银行名称
@@ -520,7 +524,7 @@ class SalonController extends Controller {
 		{
 			return $this->error("商户id有误");
 		}
-		$joinDividend = isset($param['joinDividend'])?intval($param['joinDividend']):0;
+		$joinDividend = isset($param['dividendStatus'])?intval($param['dividendStatus']):'';
 		if($data["salonid"])
 		{
 			$whereInfo["salonid"] = $data["salonid"];
@@ -582,6 +586,7 @@ class SalonController extends Controller {
 	* @apiSuccess {String} corporateName 法人代表.
 	* @apiSuccess {String} corporateTel 法人电话.
 	* @apiSuccess {Number} businessId 业务代表ID.
+	* @apiSuccess {Number} salonCategory 店铺分类 1工作室2店铺.
 	* @apiSuccess {String} bankName 银行名称.
 	* @apiSuccess {String} beneficiary 收款人.
 	* @apiSuccess {String} bankCard 银行卡号.
@@ -738,17 +743,17 @@ class SalonController extends Controller {
 	{
 		if(!$salonid){ return false;}
 		$query = Dividend::getQuery();
+		if($joinDividend == 1)//关闭
+		{
+			$status = 1;
+		}
+		else   //开启
+		{
+			$status = 0;
+		}
 		$info = Dividend::where(array('salon_id'=>$salonid))->first();
 		if($data['shopType'] == 3 && $info)  //金字塔店
 		{
-			if($joinDividend == 1)//关闭
-			{
-				$status = 1;
-			}
-			else   //开启
-			{
-				$status = 0;
-			}
 			$query->where('salon_id',$salonid)->update(array('status'=>$status,'update_time'=>time()));
 		}
 		else if($data['shopType'] != 3 && $info) //修改店铺类型不是 金字塔    --关闭
@@ -764,7 +769,7 @@ class SalonController extends Controller {
 					"salon_id" => $salonid,
 					"district" => $townInfo["tname"]?:'',
 					"recommend_code" => $code,
-					"status" => 0,
+					"status" => $status,
 					"add_time" => time ()
 			);
 			DB::table('dividend')->insertGetId($datas);
