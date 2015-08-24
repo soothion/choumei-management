@@ -750,24 +750,20 @@
 				e.stopPropagation();
 				e.preventDefault();
 			}).on('blur',this.selector,function(e){
-				$('.options').remove();
-				$(this).removeClass('select-focus');
+				$('#select-options').remove();
 			}).on('mousedown',this.selector,function(e){
-				$('.select').not($(this)).blur();
-				$('input:focus,textarea:focus').blur();
+				var $this=$(this);
+				$this.focus();
 				if(!this.disabled){
 					self.instance(this);
 				}
 				e.stopPropagation();
 				e.preventDefault();
 			});
-			$(document).on('mousedown',function(){
-				$('.select-focus').trigger('blur');
-			});
 		},
 		instance:function(select){
-			var options=$('<ul class="options"></ul>');
-			var $select=$(select).addClass('select-focus');;
+			var options=$('<ul class="options" id="select-options"></ul>');
+			var $select=$(select);
 			$select.children().each(function(){
 				var $this=$(this);
 				options.append('<li class="'+($this.is(':checked')?"active":"")+'" value="'+($this.attr('value')||'')+'">'+$this.text()+'</li>')
