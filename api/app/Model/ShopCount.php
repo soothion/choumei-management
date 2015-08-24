@@ -200,13 +200,13 @@ class ShopCount extends Model
         $now_date = date("Y-m-d H:i:s");
         if(empty($items) || !isset($items[0]))
         {
-            self::create(['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,'{$type}'=>$money,'created_at'=>$now_date,'updated_at'=>$now_date]);
+            self::create(['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,"{$type}"=>$money,'created_at'=>$now_date,'updated_at'=>$now_date]);
         }
         else
         {
             $now_money = floatval($items[0][$type]) + $money;
             $id = $items[0]['id'];
-            self::where('id',$id)->update(['merchant_id'=>$merchant_id,'{$type}'=>$now_money,'updated_at'=>$now_date]);
+            self::where('id',$id)->update(['merchant_id'=>$merchant_id,"{$type}"=>$now_money,'updated_at'=>$now_date]);
         }
         return true;
     }
