@@ -155,66 +155,6 @@ class ShopCountController extends Controller
  
     public function create()
     {
-//         /**
-//          * @api {post} /shop_count/preview 2.转付单预览
-//          * @apiName preview
-//          * @apiGroup ShopCount
-//          *
-//          * @apiParam {Number} type  转付单类型
-//          * @apiParam {Number} merchant_id  商户id
-//          * @apiParam {Number} salon_id     店铺id
-//          * @apiParam {Number} pay_money    付款金额
-//          * @apiParam {Number} cost_money   换算消费额
-//          * @apiParam {String} day   付款日期 (YYYY-MM-DD)
-//          *
-//          * @apiSuccess {String} code 付款单号.
-//          * @apiSuccess {Number} type 付款单类型  1:付交易代收款  2:付交易代收款 3:交易代收款返还
-//          * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
-//          * @apiSuccess {String} pay_money 付款金额.
-//          * @apiSuccess {String} cost_money 换算消费额.
-//          * @apiSuccess {String} created_at 创建时间.
-//          * @apiSuccess {String} day  付款日期.
-//          * @apiSuccess {Object} user  制表人信息.
-//          * @apiSuccess {Object} salon 店铺信息.
-//          * @apiSuccess {Object} merchant 商盟信息.
-//          *
-//          * @apiSuccessExample Success-Response:
-//          *       {
-//          *           "result": 1,
-//          *           "data": {
-//          *               "id": 1,
-//          *               "created_at": "2015-07-03 00:00:00",
-//          *               "merchant_id": 1,
-//          *               "salon_id": 1,
-//          *               "code": "fasdfasdfasdfasdfadfa",
-//          *               "type": 1,
-//          *               "uid": 1,
-//          *               "pay_money": "2000.00",
-//          *               "cost_money": "2500.00",
-//          *               "day": "2015-07-02",
-//          *               "user": {
-//          *                   "id": 1,
-//          *                   "sn":"商铺编号",
-//          *                   "name": ""
-//          *               },
-//          *               "salon": {
-//          *                   "salonid": 1,
-//          *                   "salonname": "嘉美专业烫染"
-//          *               },
-//          *               "merchant": {
-//          *                   "id": 1,
-//          *                   "name": "速度发多少"
-//          *               }
-//          *           }
-//          *       }
-//          *
-//          *
-//          * @apiErrorExample Error-Response:
-//          *		{
-//          *		    "result": 0,
-//          *		    "msg": "未授权访问"
-//          *		}
-//          */
         return $this->error("功能已关闭!");
 //        $param_must = $this->parameters( 
 //            ['type'=>self::T_INT,
