@@ -135,6 +135,7 @@ class PayManage extends Model
             'p_code'=>$prepay_code,
             'salon_id'=>$params['salon_id'],
             'merchant_id'=>$params['merchant_id'],
+            'money'=>$params['money'],
             'pay_type'=>$params['receive_type'],
             'require_day'=>$params['require_day'],
             'pay_day'=>$params['receive_day'],

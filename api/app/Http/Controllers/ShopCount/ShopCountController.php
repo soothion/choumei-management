@@ -11,6 +11,7 @@ use App\ShopCountApi;
 use App\ShopCount;
 use Event;
 use App\PrepayBill;
+use App\Utils;
 
 class ShopCountController extends Controller
 {
@@ -783,25 +784,7 @@ class ShopCountController extends Controller
         foreach ($datas as $data) {
             $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
             $typename = $data['type'] == 3 ? "交易代收款返还" : "付交易代收款";
-            //1银行存款 2账扣返还 3现金 4支付宝 5财付通
-            $pay_type_name = "";
-            switch ($data['pay_type']) {
-                case 1:
-                    $pay_type_name = "银行存款";
-                    break;
-                case 2:
-                    $pay_type_name = "账扣返还 ";
-                    break;
-                case 3:
-                    $pay_type_name = "现金";
-                    break;
-                case 4:
-                    $pay_type_name = "支付宝";
-                    break;
-                case  5:
-                    $pay_type_name = "财付通";
-                    break;
-            }
+            $pay_type_name = Utils::getPayTypeName($data['pay_type']);
             $username = $data['user']['name'];
             $statename = "已付款";
             $res[] = [
@@ -841,21 +824,10 @@ class ShopCountController extends Controller
     {
         $res = [];
         foreach ($datas as $data) {
-            $salon_type_name = "";
+            $salon_type_name = Utils::getShopTypeName($data['salon']['salon_type']);
             $salon_type = isset($data['salon']['salon_type'])?$data['salon']['salon_type']:'';
             $salon_name = isset($data['salon']['salonname'])?$data['salon']['salonname']:'';
-            $merchant_name = isset($data['merchant']['name'])?$data['merchant']['name']:'';
-            switch ($data['salon']['salon_type']) {
-                case 1:
-                    $salon_type_name = "预付款店";
-                    break;
-                case 2:
-                    $salon_type_name = "投资店";
-                    break;
-                case 3:
-                    $salon_type_name = "金字塔店";
-                    break;
-            }
+            $merchant_name = isset($data['merchant']['name'])?$data['merchant']['name']:'';            
             $typename = "项目消费";
             $res[] = [
                 'salon_name' => $salon_name,
