@@ -283,22 +283,33 @@ class ShopCountApi
             && isset($options['salon_id'])
             && isset($options['uid'])
             && isset($options['pay_money'])
-            && isset($options['cost_money'])
+            && isset($options['pay_type'])
             && isset($options['day']))
         {
+            $now_date = date("Y-m-d H:i:s");
+            $now_day = date("Y-m-d");
+            $pay_code = PayManage::makeNewCode(PayManage::TYPE_OF_FJY);
+            $pay_id = PayManage::insertGetId([
+                'code' => $pay_code,
+                'type' => PayManage::TYPE_OF_FJY,
+                'salon_id' => $options['salon_id'],
+                'merchant_id' => $options['merchant_id'],
+                'money' => $options['pay_money'],
+                'pay_type' => $options['pay_type'],
+                'require_day'=>$options['day'],
+                'make_uid'=>$options['uid'],
+                'created_at'=>$now_date,
+                'updated_at'=>$now_date,
+                'state'=>PayManage::STATE_OF_TO_CHECK,
+            ]);
+            
             $code = PrepayBill::getNewCode($options['type']);
             $options['code'] = $code;
-            $options['state'] = PrepayBill::STATE_OF_COMPLETED;
+            $options['state'] = PrepayBill::STATE_OF_TO_CHECK;
             $options['created_at'] = $options['updated_at'] = date("Y-m-d H:i:s");
             $id = PrepayBill::insertGetId($options);
-            $params = [
-                'merchant_id'=>$options['merchant_id'],
-                'salon_id'=>$options['salon_id'],
-                'pay_money'=>$options['pay_money'],
-                'cost_money'=>$options['cost_money'],
-            ];
-            ShopCount::payMoney($params);
-            return $id;
+            PayManage::where("id",$pay_id)->update(['p_id'=>$id,'p_code'=>$code]);
+            return ['id'=>$id,'code'=>$code];
         }
         return false;
     }
@@ -308,65 +319,47 @@ class ShopCountApi
      */
     public static function updatePrepay($id, $options)
     {
+        $now_date = date("Y-m-d H:i:s");
         $ret = true;
         $prepay = PrepayBill::where('id', $id)->first();
         if (empty($prepay)) {
-            $ret = false;
-            return $ret;
+            return false;
         }
-        if ($prepay->state == 0) // 如果是预览状态
-{
-            $attrs['state'] = PrepayBill::STATE_OF_COMPLETED;
-            $options['updated_at'] = date("Y-m-d H:i:s");
-            PrepayBill::where('id', $id)->update($attrs);
-            if (isset($options['pay_money']) && isset($options['cost_money'])) {
-                $options['pay_money'] = floatval($options['pay_money']);//预览状态的钱未加入  不用减
-                $options['cost_money'] = floatval($options['cost_money']);
-                if (isset($options['merchant_id'])) {
-                    $options['merchant_id'] = intval($options['merchant_id']);
-                } else {
-                    $options['merchant_id'] = $prepay->merchant_id;
-                }
-                if (isset($options['salon_id'])) {
-                    $options['salon_id'] = intval($options['salon_id']);
-                } else {
-                    $options['salon_id'] = $prepay->salon_id;
-                }
-                $params = [
-                    'merchant_id' => $options['merchant_id'],
-                    'salon_id' => $options['salon_id'],
-                    'pay_money' => $options['pay_money'],
-                    'cost_money' => $options['cost_money']
-                ];
-                $ret = ShopCount::payMoney($params);
-            }
-        } else 
-            if ($prepay->state == 1) {
-                $options['updated_at'] = date("Y-m-d H:i:s");
-                $ret = PrepayBill::where('id', $id)->update($options);
-                if (isset($options['pay_money']) && isset($options['cost_money'])) {
-                    $options['pay_money'] = floatval($options['pay_money']) - floatval($prepay->pay_money);
-                    $options['cost_money'] = floatval($options['cost_money']) - floatval($prepay->cost_money);
-                    if (isset($options['merchant_id'])) {
-                        $options['merchant_id'] = intval($options['merchant_id']);
-                    } else {
-                        $options['merchant_id'] = $prepay->merchant_id;
-                    }
-                    if (isset($options['salon_id'])) {
-                        $options['salon_id'] = intval($options['salon_id']);
-                    } else {
-                        $options['salon_id'] = $prepay->salon_id;
-                    }
-                    
-                    $params = [
-                        'merchant_id' => $options['merchant_id'],
-                        'salon_id' => $options['salon_id'],
-                        'pay_money' => $options['pay_money'],
-                        'cost_money' => $options['cost_money']
-                    ];
-                    $ret = ShopCount::payMoney($params);
-                }
-            }
+        
+        if( $prepay->state != PrepayBill::STATE_OF_TO_SUBMIT && $prepay->state != PrepayBill::STATE_OF_TO_CHECK)
+        {
+            return false;
+        }        
+        $options['updated_at'] = $now_date;
+        $options['state'] = PrepayBill::STATE_OF_TO_CHECK;
+        
+        //更新转付单
+        $ret = PrepayBill::where('id', $id)->update($options);
+        
+        //更新付款单
+        $pay_record = ['updated_at'=>$now_date,'state'=>PayManage::STATE_OF_TO_CHECK, ];
+        if(isset($options['salon_id']))
+        {
+            $pay_record['salon_id'] = $options['salon_id'];
+        }
+        if(isset($options['marchant_id']))
+        {
+            $pay_record['marchant_id'] = $options['marchant_id'];
+        }
+        if(isset($options['pay_money']))
+        {
+            $pay_record['money'] = $options['pay_money'];
+        }
+        if(isset($options['pay_type']))
+        {
+            $pay_record['pay_type'] = $options['pay_type'];
+        }
+        if(isset($options['day']))
+        {
+            $pay_record['require_day'] = $options['day'];
+        }
+        PayManage::where('id',$prepay->pay_manage_id)->update($pay_record);
+        
         return $ret;
     }    
     
@@ -457,8 +450,10 @@ class ShopCountApi
             'type',
             'uid',
             'pay_money',
-            'cost_money',
+            'pay_type',
+            //'cost_money',
             'day',
+            'pay_day',
             'state'
         ];
         $order_by_fields = [
@@ -674,10 +669,9 @@ class ShopCountApi
             'pay_money',
             'cost_money',
             'spend_money',
-            'balance_money',
             'invest_money',
             'invest_return_money',
-            'invest_balance_money',
+           // 'invest_balance_money',
             'borrow_money',
             'borrow_return_money',
             'borrow_balance_money'
@@ -698,8 +692,7 @@ class ShopCountApi
             'borrow_return_money',
             'borrow_balance_money'
         ];
-        
-        $shop_count = ShopCount::select($shop_count_fields);
+        $shop_count = ShopCount::select($shop_count_fields)->selectRaw('(`pay_money` - `spend_money`) as `balance_money`')->selectRaw('(`invest_money` - `invest_return_money`) as `invest_balance_money`');
         
         // 关键字搜索
         if (isset($options['key']) && ! empty($options['key']) && isset($options['keyword']) && ! empty($options['keyword'])) {
@@ -780,10 +773,10 @@ class ShopCountApi
             'pay_money',
             'cost_money',
             'spend_money',
-            'balance_money',
+            //'balance_money',
             'invest_money',
             'invest_return_money',
-            'invest_balance_money',
+            //'invest_balance_money',
             'borrow_money',
             'borrow_return_money',
             'borrow_balance_money'
@@ -804,8 +797,8 @@ class ShopCountApi
             'borrow_return_money',
             'borrow_balance_money'
         ];
-        
-        $shop_count = ShopCount::select($shop_count_fields);
+        $shop_count = ShopCount::select($shop_count_fields)->selectRaw('(`pay_money` - `spend_money`) as `balance_money`')->selectRaw('(`invest_money` - `invest_return_money`) as `invest_balance_money`');
+        //$shop_count = ShopCount::select($shop_count_fields);
         
         // 关键字搜索
         if (isset($options['key']) && ! empty($options['key']) && isset($options['keyword']) && ! empty($options['keyword'])) {

@@ -82,13 +82,80 @@ class PayManage extends Model
     
 
     /**
-     * 生成新单 (从收款单生成)
-     * @param array $attr
-     * @return boolean|new id
+     * 生成 (从收款单,账扣支付 生成)
+     * @param array $params
+     * @return ['id'=>id,'code'=>code]
      */
-    public static function makeFromReceive($attr)
-    {       
-        return 1;
+    public static function makeFromReceive($params)
+    {  
+        
+        if( !isset($params['id']) ||//三方id
+            !isset($params['code']) ||//三方code
+            !isset($params['salon_id']) || 
+            !isset($params['merchant_id']) ||
+            !isset($params['money']) ||//金额
+            !isset($params['receive_type']) ||//支付方式
+            !isset($params['require_day']) ||//要求付款日期
+            !isset($params['receive_day']) ||//实际付款日期
+            !isset($params['cash_uid'])    ||//确认人
+            !isset($params['make_uid']) ||//制单人
+            !isset($params['make_at']) ||//创建日期
+            !isset($params['cash_at']) //确认日期
+        )
+        {
+            return false;
+        }
+        $now_day = date("Y-m-d");
+        $now_date = date("Y-m-d");
+        //新建转付单
+        $prepay_code = PrepayBill::getNewCode(PrepayBill::TYPE_OF_ALREADYPAY);
+        $prepay_id = PrepayBill::insertGetId([
+            'created_at'=>$now_date,
+            'updated_at'=>$now_date,
+            'code'=>$prepay_code,
+            'salon_id'=>$params['salon_id'],
+            'merchant_id'=>$params['merchant_id'],
+            'type'=>PrepayBill::TYPE_OF_ALREADYPAY,
+            'uid'=>$params['make_uid'],
+            'pay_money'=>$params['money'],
+            'state'=>PrepayBill::STATE_OF_COMPLETED,
+            'day'=>$params['require_day'],
+            'pay_day'=>$params['receive_day'],
+        ]);
+        
+        //新建付款单
+        $code = self::makeNewCode(self::TYPE_OF_FJY);
+        
+        $record = [
+            'type' =>self::TYPE_OF_FJY,
+            'code'=>$code,
+            'state'=>self::STATE_OF_PAIED,
+            'r_id'=>$params['id'],
+            'r_code'=>$params['code'],
+            'p_id'=>$prepay_id,
+            'p_code'=>$prepay_code,
+            'salon_id'=>$params['salon_id'],
+            'merchant_id'=>$params['merchant_id'],
+            'pay_type'=>$params['receive_type'],
+            'require_day'=>$params['require_day'],
+            'pay_day'=>$params['receive_day'],
+            'make_uid'=>$params['make_uid'],
+            'confirm_uid'=>$params['cash_uid'],
+            'cash_uid'=>$params['cash_uid'],
+            'confirm_at'=>$params['cash_at'],
+            'cash_at'=>$params['cash_at'], 
+            'make_at'=>$params['make_at'],
+            'updated_at'=>date('Y-m-d H:i:s')
+        ];
+        $id = self::insertGetId($record);
+        
+        //转付单关联
+        PrepayBill::where('id',$prepay_id)->update(['pay_manage_id'=>$id,'pay_manage_code'=>$code]);
+        
+        //店铺结算
+        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'], $params['money']);
+        
+        return ['id'=>$id,'code'=>$code];
     }
     
     /**
@@ -179,7 +246,7 @@ class PayManage extends Model
         }
         $record['updated_at'] =date("Y-m-d H:i:s");
         $item = self::where('id',$id)->first(['state']);     
-        if($item->state  != self::STATE_OF_TO_SUBMIT && $item->state  != self::STATE_OF_TO_CHECK )
+        if($item->state  != self::STATE_OF_TO_SUBMIT && $item->state  != self::STATE_OF_TO_CHECK && $item->type  != PayManage::TYPE_OF_FTZ)
         {
             return false;
         }        
@@ -195,8 +262,8 @@ class PayManage extends Model
      */
     public static function destory($id)
     {
-        $item = self::where('id',$id)->first(['state']);
-        if($item->state  != PayManage::STATE_OF_TO_SUBMIT && $item->state  != PayManage::STATE_OF_TO_CHECK )
+        $item = self::where('id',$id)->first(['state','type']);
+        if($item->state  != PayManage::STATE_OF_TO_SUBMIT && $item->state  != PayManage::STATE_OF_TO_CHECK && $item->type  != PayManage::TYPE_OF_FTZ )
         {
             return false;
         }
@@ -221,15 +288,17 @@ class PayManage extends Model
             return false;
         }
         
-        $item_nums = self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_CHECK)->count();
-        if(count($ids) !== $item_nums)
+        $items = self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_CHECK)->get(['p_id'])->toArray();
+        if(count($ids) !== count($items))
         {
             return false;
         }
         $state = self::STATE_OF_TO_SUBMIT;
+        $prepay_state = PrepayBill::STATE_OF_TO_SUBMIT;
         if($opera)
         {
             $state = self::STATE_OF_TO_PAY;
+            $prepay_state = PrepayBill::STATE_OF_TO_PAY;
         }
         self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_CHECK)->update(
             [
@@ -237,7 +306,13 @@ class PayManage extends Model
                 'confirm_uid' => intval($uid),  
                 'confirm_at' => date("Y-m-d"),
             ]
-         );
+        );
+        $pids = array_column($items, "p_id");
+        PrepayBill::whereIn('id',$pids)->where('state',PrepayBill::STATE_OF_TO_CHECK)->update(
+        [
+            'state'=>$prepay_state,
+        ]
+        );
         return true;
     }
     
@@ -249,6 +324,7 @@ class PayManage extends Model
      */
     public static function confirm($ids,$opera,$uid)
     {
+       
         if(is_numeric($ids))
         {
             $ids = [$ids];
@@ -258,24 +334,49 @@ class PayManage extends Model
             return false;
         }
         
-        $item_nums = self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_PAY)->count();
-        if(count($ids) !== $item_nums)
+        $items = self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_PAY)->get(['salon_id','merchant_id','money','p_id','type'])->toArray();
+        if(count($ids) !== count($items))
         {
             return false;
         }
+        $now_day = date("Y-m-d");
         $state = self::STATE_OF_TO_CHECK;
+        $prepay_state = PrepayBill::STATE_OF_TO_CHECK;
         if($opera)
         {
             $state = self::STATE_OF_PAIED;
+            $prepay_state = PrepayBill::STATE_OF_COMPLETED;
         }
         self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_PAY)->update(
             [
                 'state'=>$state,
                 'cash_uid' => intval($uid),
-                'pay_day' => date("Y-m-d"),
+                'pay_day' => $now_day,                
             ]
         );
-        //#@todo 确认后的其他操作
+        $pids = array_column($items, "p_id");
+        PrepayBill::whereIn('id',$pids)->where('state',PrepayBill::STATE_OF_TO_CHECK)->update(
+            [
+            'state'=>$prepay_state,
+            'pay_day'=>$now_day,
+            ]
+        );
+        
+        //如果是确认付款  则结算
+        if($opera)
+        {
+            foreach($items as $item)
+            {
+                if($item['type'] == self::TYPE_OF_FJY)
+                {
+                    ShopCount::count_bill_by_pay_money($item['salon_id'], $item['merchant_id'], $item['money']);
+                }
+                if($item['type'] == self::TYPE_OF_FTZ)
+                {
+                    ShopCount::count_bill_by_invest_money($item['salon_id'], $item['merchant_id'], $item['money']);
+                }
+            }
+        }
         return true;
     }
 

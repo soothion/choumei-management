@@ -348,6 +348,7 @@ class PayController extends Controller
      * @apiParam {String} require_day 要求付款日期 格式  YYYY-MM-DD
      * @apiParam {Number} cycle 回款周期
      * @apiParam {Number} cycle_day 回款日期
+     * @apiParam {Number} cycle_money 周期回款金额 
      *
      * @apiSuccess {Number} id 成功的id.
      *
@@ -418,7 +419,7 @@ class PayController extends Controller
         $ret = PayManage::destory($id);
         if(!$ret)
         {
-            return $this->error("此单状态不允许删除或者已经删除!");
+            return $this->error("此单状态或类型不允许删除或者已经删除!");
         }    
         return $this->success(["ret"=>1]);
     }

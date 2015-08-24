@@ -28,7 +28,7 @@ class PrepayBill extends Model
     CONST TYPE_OF_RETURN = 3;
     
     /**
-     * 状态  预览状态
+     * 状态  预览状态  已经不用   2015-08-24
      * @var int
      */
     CONST STATE_OF_PREVIEW = 0;
@@ -38,6 +38,24 @@ class PrepayBill extends Model
      * @var int
      */
     CONST STATE_OF_COMPLETED = 1;
+    
+    /**
+     * 状态  待提交
+     * @var int
+     */
+    CONST STATE_OF_TO_SUBMIT = 2;
+    
+    /**
+     * 状态 待审批
+     * @var int
+     */
+    CONST STATE_OF_TO_CHECK = 3;
+    
+    /**
+     * 状态  带付款
+     * @var int
+     */
+    CONST STATE_OF_TO_PAY = 4;
     
     protected $table = 'prepay_bill';
     

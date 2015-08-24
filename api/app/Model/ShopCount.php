@@ -212,6 +212,138 @@ class ShopCount extends Model
         }
     }
     
+    /**
+     * 店铺往来结算(多种金额)
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param array $money [type1=>change_money1,type2=>change_money2,...]
+     */
+    public static function count_bill_mutil($salon_id,$merchant_id,$money_info)
+    {
+        $salon_id = intval($salon_id);
+        $merchant_id = intval($merchant_id);
+        $money_info = array_map("floatval",$money_info);
+        $types = array_keys($money_info);
+        $select_keys = $types;
+        $select_keys[] = 'id';
+        $items = self::where("salon_id",$salon_id)->get($select_keys)->toArray();
+        $now_date = date("Y-m-d H:i:s");
+        if(empty($items) || !isset($items[0]))
+        {
+            $records = ['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,'created_at'=>$now_date,'updated_at'=>$now_date];
+            foreach($money_info as $key => $money)
+            {
+                $records[$key] = $money;
+            }
+            self::create($records);
+        }
+        else
+        {
+            $records = ['merchant_id'=>$merchant_id,'updated_at'=>$now_date];
+            foreach($types as $type)
+            {
+                $records[$type] = floatval($items[0][$type]) + $money_info[$type];
+            }
+            $id = $items[0]['id'];
+            self::where('id',$id)->update($records);
+        }
+        return true;
+    }
+    
+    /**
+     * 店铺往来结算
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param unknown $money
+     * @param unknown $type
+     */
+    public static function count_bill($salon_id,$merchant_id,$money,$type)
+    {
+        $salon_id = intval($salon_id);
+        $merchant_id = intval($merchant_id);
+        $money = floatval($money);
+        $items = self::where("salon_id",$salon_id)->get(['id',$type])->toArray();
+        $now_date = date("Y-m-d H:i:s");
+        if(empty($items) || !isset($items[0]))
+        {
+            self::create(['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,'{$type}'=>$money,'created_at'=>$now_date,'updated_at'=>$now_date]);
+        }
+        else
+        {
+            $now_money = floatval($items[0][$type]) + $money;
+            $id = $items[0]['id'];
+            self::where('id',$id)->update(['merchant_id'=>$merchant_id,'{$type}'=>$now_money,'updated_at'=>$now_date]);
+        }
+        return true;
+    }
+    
+    /**
+     * 结算付款
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param unknown $money
+     */
+    public static function count_bill_by_pay_money($salon_id,$merchant_id,$money)
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "pay_money");
+    }
+  
+    /**
+     * 结算收款款(已消费)
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param unknown $money
+     */
+    public static function count_bill_by_receive_money($salon_id,$merchant_id,$money)
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "spend_money");
+    }
+    
+  
+    /**
+     * 结算佣金
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param unknown $money
+     */
+    public static function count_bill_by_commission_money($salon_id,$merchant_id,$money)
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "commission_money");
+    }
+    
+    /**
+     * 结算佣金返还
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param unknown $money
+     */
+    public static function count_bill_by_commission_return_money($salon_id,$merchant_id,$money)
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "commission_return_money");
+    }
+    
+    /**
+     * 结算投资款
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param unknown $money
+     */
+    public static function count_bill_by_invest_money($salon_id,$merchant_id,$money)
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "invest_money");
+    }
+    
+    /**
+     * 结算投资款(返还)
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param unknown $money
+     */
+    public static function count_bill_by_invest_return_money($salon_id,$merchant_id,$money)
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "invest_return_money");
+    }
+    
     public static function mergeMoney($attrs,$model)
     {
         if(isset($attrs['pay_money']) && isset($attrs['cost_money']))
