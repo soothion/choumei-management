@@ -46,9 +46,10 @@
 	<div class="table-detail">
 		<table>
             <thead>
-                <tr>
+               <tr>
                     <td colspan="2">
-                      <%=data.salonname%>
+                      <%=data.salonname?data.salonname:""%>
+					  <span class="table-detail-sn">店铺编号：<%=data.sn?data.sn:""%></span>
                     </td>
                 </tr>
             </thead>
