@@ -36,7 +36,7 @@ class ShopCountApi
             $rows_num = count($base_order_infos);
             $offset += $size;
             $salon_ids = array_column($base_order_infos, "salonid");
-            $other_info = self::getSalonMerchantBaseInfo($salon_ids);            
+            $marchant_info = self::getSalonMerchantBaseInfo($salon_ids);            
             foreach($base_order_infos as $key => $order)
             {
                 $now_num = $key + $offset + 1;
@@ -45,23 +45,10 @@ class ShopCountApi
                 $money = floatval($order['priceall']);
                 $time = $order['use_time'];                
                 echo "run at {$now_num} / {$total}  count ordersn [{$ordersn}] ...\n";
-                $merchant_id = 0;
-                $salon_name = "";
-                $salon_type = 0;
-                $merchant_name = "";
+                $merchant_id = $marchant_info[$salon_id];
+       
                 
                 $ds_code =InsteadReceive::getNewCode();
-                
-                if(isset($other_info['salon'][$salon_id]))
-                {
-                    $salon_name = $other_info['salon'][$salon_id]['salon_name'];
-                    $salon_type = $other_info['salon'][$salon_id]['shop_type'];
-                    $merchant_id = $other_info['salon'][$salon_id]['merchant_id'];
-                }
-                if(isset($other_info['merchant'][$merchant_id]))
-                {
-                    $merchant_name = $other_info['merchant'][$merchant_id]['name'];
-                }
                 
                 ShopCountDetail::create([
                     'code' => $ordersn,
@@ -91,47 +78,11 @@ class ShopCountApi
                     InsteadReceive::where('id',$ir->id)->update(['money'=> $now_money]);
                 }
                 unset($ir);
-                $shop_counts = ShopCount::where('salon_id',$salon_id)->get(['id','pay_money','cost_money','spend_money','balance_money'])->toArray();
-                
-                if(!empty($shop_counts))
-                {
-                    $shop_count = $shop_counts[0];
-                    $id = $shop_count['id'];
-                    $pay_money = floatval($shop_count['pay_money']);
-                    $cost_money = floatval($shop_count['cost_money']);
-                    $spend_money = floatval($shop_count['spend_money']) + $money;
-                    $balance_money = $cost_money - $spend_money;
-                    ShopCount::where('id',$id)->update([
-                    'merchant_id'=>$merchant_id,
-                    'merchant_name'=>$merchant_name,
-                    'salon_name'=>$salon_name,
-                    'salon_type'=>$salon_type,
-                    'updated_at'=>date("Y-m-d H:i:s",$time),
-                    'pay_money'=>$pay_money,
-                    'cost_money'=>$cost_money,
-                    'spend_money'=>$spend_money,
-                    'balance_money'=>$balance_money,
-                    ]);
-                }
-                else
-                {
-                    ShopCount::create([
-                    'salon_id'=>$salon_id,
-                    'merchant_id'=>$merchant_id,
-                    'merchant_name'=>$merchant_name,
-                    'salon_name'=>$salon_name,
-                    'salon_type'=>$salon_type,
-                    'created_at'=>date("Y-m-d H:i:s",$time),
-                    'spend_money'=>$money,
-                    'balance_money'=>$money * -1,
-                    ]);
-                }
-                unset($shop_counts);
+                $shop_counts = ShopCount::count_bill_by_receive_money($salon_id, $merchant_id, $money);             
             }
             unset($base_order_infos);
         }
-        while($rows_num >= $size);
-            
+        while($rows_num >= $size);            
     }
     
 
@@ -177,28 +128,18 @@ class ShopCountApi
         
         $salon_ids = array_column($base_order_infos, "salonid");
         
-        $other_info = self::getSalonMerchantBaseInfo($salon_ids);
+        $marchant_info = self::getSalonMerchantBaseInfo($salon_ids);
        
         $res = ['success'=>[],'type'=>1,'already'=>[]];
         foreach($base_order_infos as $order)
         {
             $ordersn = $order['ordersn'];
             $salon_id = $order['salonid'];
+            $type = 1;
             $money = floatval($order['priceall']);
-            $time = $order['use_time'];
-            $salon_info = [];
-            $merchant_info = [];
-            $merchant_id = 0;
-            if(isset($other_info['salon'][$salon_id]))
-            {
-                $salon_info = $other_info['salon'][$salon_id];
-                $merchant_id = $other_info['salon'][$salon_id]['merchant_id'];
-            }
-            if(isset($other_info['merchant'][$merchant_id]))
-            {
-                $merchant_info = $other_info['merchant'][$merchant_id];
-            }
-            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$money,$time,1,$salon_info,$merchant_info);   
+            $time = $order['use_time'];           
+            $merchant_id = $marchant_info[$salon_id];           
+            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$merchant_id,$money,$time,$type);   
             if($ret == 1)
             {
                 $res['success'][] = $ordersn;
@@ -230,7 +171,7 @@ class ShopCountApi
         
         $salon_ids = array_column($base_order_infos, "salonId");
         
-        $other_info = self::getSalonMerchantBaseInfo($salon_ids);
+        $marchant_info = self::getSalonMerchantBaseInfo($salon_ids);
          
         $res = ['success'=>[],'type'=>2,'already'=>[]];
         foreach($base_order_infos as $order)
@@ -240,19 +181,9 @@ class ShopCountApi
             $money = floatval($order['money']);
             $time = $order['endTime'];
             $type = 2;
-            $salon_info = [];
-            $merchant_info = [];
-            $merchant_id = 0;
-            if(isset($other_info['salon'][$salon_id]))
-            {
-                $salon_info = $other_info['salon'][$salon_id];
-                $merchant_id = $other_info['salon'][$salon_id]['merchant_id'];
-            }
-            if(isset($other_info['merchant'][$merchant_id]))
-            {
-                $merchant_info = $other_info['merchant'][$merchant_id];
-            }
-            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$money,$time,$type,$salon_info,$merchant_info);
+            $merchant_id = $marchant_info[$salon_id];
+            
+            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$money,$time,$type);
             if($ret == 1)
             {
                 $res['success'][] = $ordersn;
@@ -413,19 +344,12 @@ class ShopCountApi
     public static function getSalonMerchantBaseInfo($salon_ids)
     {
         $salon_infos = Salon::whereIn('salonid',$salon_ids)->get(['salonid','salonname','shopType','merchantId'])->toArray();
-        $merchant_ids = array_column($salon_infos, "merchantId");
-        $merchant_infos = Merchant::whereIn('id',$merchant_ids)->get(['id','name'])->toArray();
-        $res = ['salon'=>[],'merchant'=>[]];
+        $res = [];
         foreach ($salon_infos as $salon)
         {
-            $id= $salon['salonid'];
-            $res['salon'][$id] = ['id'=>$id,'salon_name'=>$salon['salonname'],'shop_type'=>$salon['shopType'],'merchant_id'=>$salon['merchantId']];
-        }
-        foreach ($merchant_infos as $merchant)
-        {
-            $id = $merchant['id'];
-            $res['merchant'][$id] = ['id'=>$id,'name'=>$merchant['name']];
-        }        
+           $id = $salon['salonid'];
+           $res[$id] = $salon['merchantId'];          
+        }       
         return $res;
     }
     
