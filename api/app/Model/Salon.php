@@ -416,6 +416,7 @@ class Salon extends Model {
 					's.salonGrade',
 					's.salonChangeGrade',
 					's.changeInTime',
+					's.salonCategory',
 					'i.bankName',
 					'i.beneficiary',
 					'i.bankCard',
