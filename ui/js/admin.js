@@ -420,9 +420,6 @@ $(function(){
 			location.origin="http://"+location.host;
 		}
 		seajs.use([location.origin+'/laydate/laydate.js']);
-		$body.on('focus','input[type=date]',function(e){
-			$(this).attr('readonly',true);
-		})
 		$body.on('click','input[type=date]',function(e){
 			var options={
 				format: 'YYYY-MM-DD',
