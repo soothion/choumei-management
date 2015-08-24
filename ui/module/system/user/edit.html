@@ -64,6 +64,14 @@
                         <input type="text" patternmsg="手机号码输入不正确" pattern="mobile" requiredmsg="请输入手机号码" required name="tel" value="<%=data.tel||""%>" <%=data.status==3?"disabled":""%>>
                     </div>
                 </div>
+				<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>所属城市：</label>
+				<div class="control">
+					<select required name="city_id" class="select" ajat="list/city#domid=city&tempid=/module/public/template/department&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
+					</select>
+						 
+				</div>
+			</div>	
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门：</label>
 				<div class="control">
@@ -78,14 +86,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>所属城市：</label>
-				<div class="control">
-					<select required name="city_id" class="select" ajat="list/city#domid=city&tempid=/module/public/template/department&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
-					</select>
-						 
-				</div>
-			</div>			 
+					 
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>用户状态：</label>
 				<div class="control">
