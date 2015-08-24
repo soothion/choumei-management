@@ -586,7 +586,7 @@ class SalonController extends Controller {
 	* @apiSuccess {String} corporateName 法人代表.
 	* @apiSuccess {String} corporateTel 法人电话.
 	* @apiSuccess {Number} businessId 业务代表ID.
-	* @apiSuccess {Number} salonCategory 必填,店铺分类 1工作室2店铺.
+	* @apiSuccess {Number} salonCategory 店铺分类 1工作室2店铺.
 	* @apiSuccess {String} bankName 银行名称.
 	* @apiSuccess {String} beneficiary 收款人.
 	* @apiSuccess {String} bankCard 银行卡号.
@@ -743,17 +743,17 @@ class SalonController extends Controller {
 	{
 		if(!$salonid){ return false;}
 		$query = Dividend::getQuery();
+		if($joinDividend == 1)//关闭
+		{
+			$status = 1;
+		}
+		else   //开启
+		{
+			$status = 0;
+		}
 		$info = Dividend::where(array('salon_id'=>$salonid))->first();
 		if($data['shopType'] == 3 && $info)  //金字塔店
 		{
-			if($joinDividend == 1)//关闭
-			{
-				$status = 1;
-			}
-			else   //开启
-			{
-				$status = 0;
-			}
 			$query->where('salon_id',$salonid)->update(array('status'=>$status,'update_time'=>time()));
 		}
 		else if($data['shopType'] != 3 && $info) //修改店铺类型不是 金字塔    --关闭
@@ -769,7 +769,7 @@ class SalonController extends Controller {
 					"salon_id" => $salonid,
 					"district" => $townInfo["tname"]?:'',
 					"recommend_code" => $code,
-					"status" => 0,
+					"status" => $status,
 					"add_time" => time ()
 			);
 			DB::table('dividend')->insertGetId($datas);
