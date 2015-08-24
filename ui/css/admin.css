@@ -505,6 +505,16 @@ th.colswrap{
 .table-detail thead td{
 	font-size:18px;
 	padding-left:20px;
+	position:relative;
+}
+.table-detail-sn{
+	position:absolute;
+	right:0;
+	padding:0px 10px;
+	top:0;
+	background:#fff;
+	font-size: 12px;
+	line-height: 46px;
 }
 .detail-operation{
   margin-top: -53px;
