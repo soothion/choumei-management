@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-08-19 15:54:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-19 18:33:39
+* @Last Modified time: 2015-08-25 17:13:00
 */
 
 (function(){
@@ -27,7 +27,8 @@
                             text:(data.result == 1 ? "返佣成功" : data.msg),
                             time:2000,
                             define:function(){
-                                lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
+                                //lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
+                                $(window).trigger("hashchange");
                             }
                         });
                     });                          
