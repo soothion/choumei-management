@@ -841,7 +841,7 @@ class ShopCountApi
         $prepay->with([
             'salon' => function ($q) use($salon_fields)
             {
-              $q->lists($salon_fields[0],$salon_fields[1]);
+              $q->get($salon_fields);
             }
         ]);
         
