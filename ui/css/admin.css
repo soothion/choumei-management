@@ -626,8 +626,8 @@ th.colswrap{
 form[data-role="hash"],form[data-role="export"],form[data-role="remove"],form[data-role="normal"]{
 	display:inline;
 }
-form[data-role="remove"] button,
-form[data-role="normal"] button{
+form[data-role="remove"] .link,
+form[data-role="normal"] .link{
 	padding:0;
 }
 form[data-role="hash"] button,
