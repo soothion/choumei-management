@@ -511,7 +511,10 @@ input[type="date"]{
 ::-webkit-clear-button {
     position:relative;
 	z-index:10;
-	margin-right:20px;
+	margin-right:5px;
+	font-size:20px;
+	padding:0px 10px;
+	margin-left:5px;
 }
 ::-webkit-inner-spin-button {
 	display:none;
