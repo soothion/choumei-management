@@ -37,7 +37,7 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} to 结束数据.
      * @apiSuccess {String} code 付款单号.
      * @apiSuccess {Number} type 付款单类型 1:付交易代收款  2:付交易代收款 3:交易代收款返还
-     * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
+     * @apiSuccess {Number} state 状态 1:已付款 2待提交 3:待审批  4:待付款
      * @apiSuccess {String} pay_type 付款方式:1银行存款 2账扣返还 3现金 4支付宝 5财付通
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} created_at 创建时间.
@@ -231,7 +231,7 @@ class ShopCountController extends Controller
      *
      * @apiSuccess {String} code 付款单号.
      * @apiSuccess {Number} type 付款单类型  1:付交易代收款  2:付交易代收款 3:交易代收款返还
-     * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
+     * @apiSuccess {Number} state 状态 1:已付款 2待提交 3:待审批  4:待付款
      * @apiSuccess {Number} pay_type 付款方式 1银行存款 2账扣返还 3现金 4支付宝 5财付通
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} created_at 创建时间.
@@ -253,7 +253,7 @@ class ShopCountController extends Controller
      *               "type": 1,
      *               "uid": 1,
      *               "pay_money": "2000.00",
-     *               "pay_type": "2500.00",
+     *               "pay_type": "1",
      *               "day": "2015-07-02",
      *               "user": {
      *                   "id": 1,
@@ -785,7 +785,7 @@ class ShopCountController extends Controller
             $typename = $data['type'] == 3 ? "交易代收款返还" : "付交易代收款";
             $pay_type_name = Utils::getPayTypeName($data['pay_type']);
             $username = $data['user']['name'];
-            $statename = "已付款";
+            $statename = Utils::getPrepayStateName($datas['state']);
             $res[] = [
                 'salon_name' => $salon_name,
                 'code' => $data['code'],
