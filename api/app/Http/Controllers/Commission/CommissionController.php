@@ -14,7 +14,7 @@ use App\Commission;
 
 class CommissionController extends Controller{
 	/**
-	 * @api {post} /rebate/index 1.佣金单列表
+	 * @api {post} /commission/index 1.佣金单列表
 	 * @apiName list
 	 * @apiGroup Commission
 	 *
@@ -22,6 +22,7 @@ class CommissionController extends Controller{
 	 * @apiParam {String} salonname 可选,店铺名关键字.
 	 * @apiParam {String} salonsn 可选,店铺编号.
 	 * @apiParam {Number} start 可选,起始日期.
+	 * @apiParam {String} group 统计方式,按日day或者按月month.
 	 * @apiParam {String} end 可选,结束时间.
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.
@@ -158,7 +159,7 @@ class CommissionController extends Controller{
 
 
 	/**
-	 * @api {post} /rebate/export 2.导出佣金单
+	 * @api {post} /commission/export 2.导出佣金单
 	 * @apiName export
 	 * @apiGroup Commission
 	 *
