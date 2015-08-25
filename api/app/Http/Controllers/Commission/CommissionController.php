@@ -264,7 +264,7 @@ class CommissionController extends Controller{
 	    	$result[$key]['created_at'] = $value->created_at?$value->created_at:$created_at;
 	    }
 		// 触发事件，写入日志
-	    // Event::fire('commission.export');
+	    Event::fire('commission.export');
 		
 		//导出excel	   
 		$title = '佣金单列表'.date('Ymd');

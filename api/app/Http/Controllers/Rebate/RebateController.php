@@ -258,7 +258,7 @@ class RebateController extends Controller{
 	    	$result[$key]['status'] = $value->status==1?'已确认':'待确认';
 	    }
 		// 触发事件，写入日志
-	    // Event::fire('rebate.export');
+	    Event::fire('rebate.export');
 		
 		//导出excel	   
 		$title = '返佣单列表'.date('Ymd');
@@ -305,8 +305,11 @@ class RebateController extends Controller{
 		$sn = $rebate->getSn();
 		$param['sn'] = $sn;
 		$rebate = Rebate::create($param);
-		if($rebate)
-			return $this->success();
+		if($rebate){
+			// 触发事件，写入日志
+		    Event::fire('rebate.create',[$rebate]);
+		    return $this->success();
+		}
 		else 
 			return $this->error('创建失败');
 	}
@@ -407,6 +410,8 @@ class RebateController extends Controller{
 		if($result==count($param['rebate']))
 		{
 			DB::commit();
+			// 触发事件，写入日志
+		    Event::fire('rebate.confirm',[$param['rebate']]);
 			return $this->success();
 		}
 		else
