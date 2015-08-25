@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
     <head>
         <title>臭美管理后台</title>
@@ -107,10 +107,11 @@
 		<script type="text/javascript">
 		$(function(){			
 			$(document).on('blur','input[name="cycle_money"]',function(){
-				var cycle_money=$(this).val();
+				var $this=$(this);
+				var cycle_money=$this.val();
 				var money=$('input[name="money"]').val();
-				if(cycle_money&&parseFloat(cycle_money)>=parseFloat(money)){
-					$(this).trigger('error',{type:'error',errormsg:"周期回款金额不能大于付款金额"});
+				if(cycle_money&&money&&parseFloat(cycle_money)>=parseFloat(money)){
+					$this.trigger('error',{type:'error',errormsg:"周期回款金额不能大于付款金额"});
 				}
 			});
 		
