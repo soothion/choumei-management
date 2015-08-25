@@ -98,7 +98,7 @@ class CommissionController extends Controller{
 
 		//店铺编号筛选
 		if(isset($param['salonsn'])&&$param['salonsn']){
-			$query = $query->where('salonsn','like','%'.$param['salonsn'].'%');
+			$query = $query->where('salon.sn','like','%'.$param['salonsn'].'%');
 		}
 
 		//起始时间
