@@ -39,7 +39,7 @@
 				<button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
 			</form>					 
 			 
-			  <div class="table" ajat="shop_count/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			  <div class="table" ajat="<%if(query._){%>shop_count/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                  <table>
                     <thead>
