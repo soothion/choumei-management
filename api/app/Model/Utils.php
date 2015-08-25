@@ -20,7 +20,7 @@ class Utils
                 $res = "银行存款";
                 break;
             case 2:
-                $res = "账扣返还 ";
+                $res = "账扣支付 ";
                 break;
             case 3:
                 $res = "现金";
@@ -55,5 +55,25 @@ class Utils
                 break;
         }
         return $res;
-    }    
+    }  
+
+    public static function getPayManageStateName($state)
+    {
+        $res = "";
+        switch (intval($state)) {
+            case PayManage::STATE_OF_TO_SUBMIT:
+                $res = "待提交";
+                break;
+            case PayManage::STATE_OF_TO_CHECK:
+                $res = "待审批";
+                break;
+            case PayManage::STATE_OF_TO_PAY:
+                $res = "待付款";
+                break;
+            case PayManage::STATE_OF_PAIED:
+                $res = "已付款";
+                break;
+        }
+        return $res;
+    }
 }

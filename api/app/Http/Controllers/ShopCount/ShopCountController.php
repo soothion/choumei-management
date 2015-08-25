@@ -26,7 +26,7 @@ class ShopCountController extends Controller
      * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
-     * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
+     * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'pay_type(付款方式)','cost_money'(换算消费额),'day'(付款日期)]
      * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
      * @apiSuccess {Number} total 总数据量.
@@ -40,7 +40,6 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
      * @apiSuccess {String} pay_type 付款方式:1银行存款 2账扣返还 3现金 4支付宝 5财付通
      * @apiSuccess {String} pay_money 付款金额.
-     * @apiSuccess {String} cost_money 换算消费额.
      * @apiSuccess {String} created_at 创建时间.
      * @apiSuccess {String} day  要求付款日期.
      * @apiSuccess {String} pay_day  实际付款日期.
@@ -126,7 +125,7 @@ class ShopCountController extends Controller
      * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
-     * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
+     * @apiParam {String} sort_key 排序的键 ['id','created_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'day'(付款日期)]
      * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
      * @apiErrorExample Error-Response:
@@ -184,12 +183,11 @@ class ShopCountController extends Controller
      * @apiName create
      * @apiGroup ShopCount
      *
-     * @apiParam {Number} id  有预览时  将预览生成的id带过来
-     * @apiParam {Number} merchant_id  商户id 有id时可不填 否则为必填
-     * @apiParam {Number} salon_id     店铺id 有id时可不填 否则为必填
+     * @apiParam {Number} merchant_id  商户id
+     * @apiParam {Number} salon_id     店铺id
      * @apiParam {Number} pay_type     付款方式  1银行存款 2账扣返还 3现金 4支付宝 5财付通
-     * @apiParam {Number} cost_money   换算消费额  有id时可不填 否则为必填
-     * @apiParam {String} day   付款日期 (YYYY-MM-DD) 有id时可不填 否则为必填
+     * @apiParam {Number} pay_money    付款金额
+     * @apiParam {String} day   付款日期 (YYYY-MM-DD)
      * 
      * @apiSuccess {String} id 创建成功后的id.
      *
@@ -236,7 +234,6 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} state 状态 1:已付款 0:预览状态
      * @apiSuccess {Number} pay_type 付款方式 1银行存款 2账扣返还 3现金 4支付宝 5财付通
      * @apiSuccess {String} pay_money 付款金额.
-     * @apiSuccess {String} cost_money 换算消费额.
      * @apiSuccess {String} created_at 创建时间.
      * @apiSuccess {String} day  要求付款日期.
      * @apiSuccess {String} pay_day  实际付款日期.
@@ -256,7 +253,7 @@ class ShopCountController extends Controller
      *               "type": 1,
      *               "uid": 1,
      *               "pay_money": "2000.00",
-     *               "cost_money": "2500.00",
+     *               "pay_type": "2500.00",
      *               "day": "2015-07-02",
      *               "user": {
      *                   "id": 1,
@@ -586,10 +583,11 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} last_page 当前页面.
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
-     * @apiSuccess {String} pay_money 预付款/付交易代收款.
-     * @apiSuccess {String} cost_money 换算消费额.
-     * @apiSuccess {String} spend_money 交易消费额.
-     * @apiSuccess {String} balance_money 交易余额.
+     * @apiSuccess {String} pay_money 付款
+     * @apiSuccess {String} spend_money 收款(消费额).
+     * @apiSuccess {String} commission_money 佣金
+     * @apiSuccess {String} commission_return_money 佣金
+     * @apiSuccess {String} balance_money 应收余额.
      * @apiSuccess {String} invest_money 付投资款.
      * @apiSuccess {String} invest_return_money 付投款返还.
      * @apiSuccess {String} invest_balance_money 投资余额.
@@ -614,8 +612,9 @@ class ShopCountController extends Controller
      *                       "merchant_id": 3,
      *                       "salon_id": 2,
      *                       "pay_money": "123.00",
-     *                       "cost_money": "111.00",
      *                       "spend_money": "23434.00",
+     *                       "commission_money": "12345",
+     *                       "commission_return_money": "123",
      *                       "balance_money": "2334.00",
      *                       "invest_money": "2334.00",
      *                       "invest_return_money": "23.00",

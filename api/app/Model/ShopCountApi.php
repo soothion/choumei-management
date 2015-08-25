@@ -433,7 +433,7 @@ class ShopCountApi
             'code',
             'type',
             'pay_money',
-            'cost_money',
+            'pay_type',
             'day'
         ];
         
@@ -663,7 +663,9 @@ class ShopCountApi
             'borrow_return_money',
             'borrow_balance_money'
         ];
-        $shop_count = ShopCount::select($shop_count_fields)->selectRaw('(`pay_money` - `spend_money`) as `balance_money`')->selectRaw('(`invest_money` - `invest_return_money`) as `invest_balance_money`');
+        $shop_count = ShopCount::select($shop_count_fields)->selectRaw('(`pay_money` - `spend_money` + `commission_money` - `commission_return_money`) as `balance_money`')
+        ->selectRaw('(`invest_money` - `invest_return_money`) as `invest_balance_money`')
+        ->selectRaw('(`borrow_money` - `borrow_return_money`) as `borrow_balance_money`');
         
         // 关键字搜索
         if (isset($options['key']) && ! empty($options['key']) && isset($options['keyword']) && ! empty($options['keyword'])) {

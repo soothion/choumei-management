@@ -421,6 +421,7 @@ class PayManage extends Model
             'salon_id',
             'merchant_id',
             'make_uid',
+            'confirm_uid',
             'cash_uid',
             'money',
             'pay_type',
@@ -486,11 +487,6 @@ class PayManage extends Model
         
         $base->with([
             'make_user' => function ($q)
-            {
-                $q->lists('id','name');
-            }
-        ])->with([
-            'confirm_user' => function ($q)
             {
                 $q->lists('id','name');
             }

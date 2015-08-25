@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Pay;
 use App\Http\Controllers\Controller;
 use App\PayManage;
 use Illuminate\Pagination\AbstractPaginator;
+use App\Utils;
 
 class PayController extends Controller
 {    
@@ -239,6 +240,8 @@ class PayController extends Controller
      * @apiGroup PayManage
      * 
      * @apiSuccess {String} code 单号
+     * @apiSuccess {String} r_code 关联收款单号
+     * @apiSuccess {String} p_code  关联转付单号
      * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
      * @apiSuccess {String} money 付款金额
      * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
@@ -253,7 +256,7 @@ class PayController extends Controller
      * @apiSuccess {String} salon 店铺信息
      * @apiSuccess {String} prepay_bill_code 关联的转付单单号 
      * @apiSuccess {String} receive_bill_code 关联的收款单单号 
-     * @apiSuccess {String} state 订单状态  1待提交 2待审批 3:待付款 4:已付款
+     * @apiSuccess {String} state 订单状态  1待提交 2待审批 3待付款 4已付款
      * @apiSuccess {String} confirm_at 审批日期
      * 
      * @apiSuccessExample Success-Response:
@@ -262,6 +265,8 @@ class PayController extends Controller
      *            "data": {
      *                "id": 2,
      *                "code": "FTZ-150814190145001",
+     *                "r_code": "FTZ-150814190145001",
+     *                "p_code": "FTZ-150814190145001",
      *                "type": 2,
      *                "salon_id": 1,
      *                "merchant_id": 2,
@@ -543,10 +548,58 @@ class PayController extends Controller
             'state' => self::T_INT,
             'sort_key' => self::T_STRING,
             'sort_type' => self::T_STRING,
-        ]);
-        $pay = PayManage::search($options);    
-        $res = $pay->get()->toArray();
-        return $res;
+        ]);    
+        $header = ['店铺名称','店铺编号','付款单号','关联收款单号','关联转付单号','付款类型','付款金额','要求付款日期','实际付款日期','回款周期','回款日期','周期回款金额','创建日期','审批日期','制单人','审批人','出纳','付款方式','状态'];
+        $items = PayManage::search($options)->with([
+            'cash_user' => function ($q)
+            {
+                $q->lists('id','name');
+            }
+        ])->with([
+            'confirm_user' => function ($q)
+            {
+                $q->lists('id','name');
+            }
+        ])->addSelect(['r_code','p_code','cycle','cycle_day','cycle_money','confirm_at'])->get()->toArray(); 
+        $this->export_xls("付款列表".date("Ymd"),$header,self::format_pay_data($items)); 
+    }
+    
+    
+    public static function  format_pay_data($datas)
+    {
+        $res = [];
+        foreach($datas as $data)
+        {
+            $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
+            $salon_sn = isset($data['salon']['sn']) ? $data['salon']['sn'] : '';
+            $pay_manage_type_name = $data['type'] == 1?"付交易代收款 ":"付业务投资款";
+            $make_user_name = isset($data['make_user']['name'])?$data['make_user']['name']:"";
+            $check_user_name = isset($data['confirm_user']['name'])?$data['confirm_user']['name']:"";
+            $cash_user_name = isset($data['cash_user']['name'])?$data['cash_user']['name']:"";
+            $pay_type_name = Utils::getPayTypeName($data['pay_type']);
+            $state_name = Utils::getPayManageStateName($data['state']);
+            $res[] = [
+                $salon_name,//店铺名称
+                $salon_sn,//店铺编号
+                $data['code'],//付款单号
+                $data['r_code'],//关联收款单号
+                $data['p_code'],//关联转付单号
+                $pay_manage_type_name,//付款类型
+                $data['money'],//付款金额
+                $data['require_day'],//要求付款日期
+                $data['pay_day'],//实际付款日期
+                $data['cycle']."个月",//回款周期
+                $data['cycle_day']."号/月",//回款日期
+                $data['cycle_money'],//周期回款金额
+                $data['created_at'],//创建日期
+                $data['confirm_at'],//审批日期
+                $make_user_name,//制单人
+                $check_user_name,//审批人
+                $cash_user_name,//出纳
+                $pay_type_name,//付款方式
+                $state_name,//状态
+            ];
+        }
     }
     
 }
