@@ -509,8 +509,10 @@ input[type="date"]{
 	background-size: 18px 18px;
 }
 ::-webkit-clear-button {
-    display:none
-  }
+    position:relative;
+	z-index:10;
+	margin-right:20px;
+}
 ::-webkit-inner-spin-button {
 	display:none;
 }
