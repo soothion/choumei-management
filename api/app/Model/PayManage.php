@@ -494,10 +494,10 @@ class PayManage extends Model
     
         // 按时间搜索
         if (isset($options['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_min']))) {
-            $base->where('pay_day', ">=", trim($options['pay_time_min']));
+            $base->where('require_day', ">=", trim($options['pay_time_min']));
         }
         if (isset($options['pay_time_max']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_max']))) {
-            $base->where('pay_day', "<=", trim($options['pay_time_max']));
+            $base->where('require_day', "<=", trim($options['pay_time_max']));
         }
         
         
