@@ -10,7 +10,10 @@ class Commission extends Model {
 
 	protected $fillable = ['id', 'ordersn', 'sn', 'amount', 'created_at', 'updated_at'];
 
-
+    public function salon(){
+        return $this->belongsTo('App\Salon');
+    }    
+    
 	public function getSn(){
 		$redis = Redis::connection();
 		$key = 'YJ-'.date('ymd');

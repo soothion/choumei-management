@@ -242,7 +242,6 @@ class CommissionController extends Controller{
 			);
 		}
 		else if($param['group']=='day'){
-			
 			$fields = array(
 			    'order.orderid',
 				'order.salonid',

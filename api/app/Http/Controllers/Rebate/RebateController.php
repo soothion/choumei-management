@@ -404,7 +404,7 @@ class RebateController extends Controller{
 	{
 		$param = $this->param;
 		if(empty($param['rebate']))
-			return $this->erryr('必须指定返佣单ID');
+			return $this->error('必须指定返佣单ID');
 		DB::beginTransaction();
 		$result = Rebate::whereIn('id',$param['rebate'])->update(['status'=>1,'confirm_at'=>date('Y-m-d H:m:s'),'confirm_by'=>$this->user->name]);
 		if($result==count($param['rebate']))
