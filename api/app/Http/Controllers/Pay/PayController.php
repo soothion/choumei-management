@@ -578,6 +578,8 @@ class PayController extends Controller
             $cash_user_name = isset($data['cash_user']['name'])?$data['cash_user']['name']:"";
             $pay_type_name = Utils::getPayTypeName($data['pay_type']);
             $state_name = Utils::getPayManageStateName($data['state']);
+            $cycle = empty($data['cycle'])?"":$data['cycle']."个月";
+            $cycle_day = empty($data['cycle_day'])?"":$data['cycle_day']."号/月";
             $res[] = [
                 $salon_name,//店铺名称
                 $salon_sn,//店铺编号
@@ -588,8 +590,8 @@ class PayController extends Controller
                 $data['money'],//付款金额
                 $data['require_day'],//要求付款日期
                 $data['pay_day'],//实际付款日期
-                $data['cycle']."个月",//回款周期
-                $data['cycle_day']."号/月",//回款日期
+                $cycle,//回款周期
+                $cycle_day,//回款日期
                 $data['cycle_money'],//周期回款金额
                 $data['created_at'],//创建日期
                 $data['confirm_at'],//审批日期
@@ -600,6 +602,7 @@ class PayController extends Controller
                 $state_name,//状态
             ];
         }
+        return $res;
     }
     
 }
