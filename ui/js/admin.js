@@ -258,7 +258,6 @@ $(function(){
 			$this.attr('max','9999-12-30');
 		}
 	});
-	
 	/**键盘输入自动补全**/
 	$body.on('input','input[ajat-complete]',function(){//自动补全输入事件
 		var $this=$(this);
@@ -423,10 +422,7 @@ $(function(){
 	
 	/**日期控件修正**/
 	if(!lib.tools.browser().webkit){
-		if(!location.origin){
-			location.origin="http://"+location.host;
-		}
-		seajs.use([location.origin+'/laydate/laydate.js']);
+		seajs.use(['/laydate/laydate.js']);
 		$body.on('click','input[type=date]',function(e){
 			var options={
 				format: 'YYYY-MM-DD',

@@ -33,7 +33,7 @@
               <tbody>
 			   <%var state=["","待提交","待审批","待付款","已付款"]%>
 			   <%var type=["","付交易代收款","付业务投资款"]%>
-			   <%var pay_type=["","银行存款","账扣支付","现金","其他支付-支付宝","其他支付-财付通"];%>
+			   <%var pay_type=["","银行存款","账扣支付","现金","支付宝","财付通"];%>
                 <tr>
                   <td>付款单号：</td>
                   <td><%=data.code%></td>
@@ -92,9 +92,7 @@
         </div>
     </div>
    <script type="text/javascript">
-	$(document).on('remove','#form-remove',function(){
-		history.back();
-	})
+
    </script>
   </body>
 </html>

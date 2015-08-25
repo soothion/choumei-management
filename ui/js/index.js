@@ -100,13 +100,10 @@ $('#page').on('_ready',function(){//#page _ready事件
 		spaceBetween: 0,
 		simulateTouch:false
 	});
-	
 	$('.nav-main li').on('click',function(){//顶部菜单事件
 		var $this=$(this)
 		$this.addClass('active').siblings().removeClass('active');
 		swiper.slideTo($this.index()+1);
 	}).first().addClass('active');
 });
-	
-	
 	
