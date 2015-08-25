@@ -259,6 +259,7 @@ class CommissionController extends Controller{
 
 		//分页
 	    $array = $query->select($fields)->get();
+	    $result = [];
 	    foreach ($array as $key => $value) {
 	    	$result[$key]['id'] = $key+1;
 	    	$result[$key]['salonsn'] = $value->salonsn;
