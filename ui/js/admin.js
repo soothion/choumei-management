@@ -156,7 +156,6 @@ $(function(){
 				parent.lib.popup.result({
 					bool:data.result==1,
 					text:(data.result==1?"删除成功":data.msg),
-					time:2000,
 					define:function(){
 						if(data.result==1){
 							if($this.closest('.table').length==1){
@@ -203,7 +202,6 @@ $(function(){
 						parent.lib.popup.result({
 							bool:true,
 							text:"删除成功",
-							time:2000,
 							define:function(){
 								$this.closest('tr').remove();
 							}

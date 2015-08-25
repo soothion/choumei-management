@@ -70,8 +70,7 @@
 					if(data.code==402){
 						parent.lib.popup.result({
 							text:"出现异常：没有权限",
-							bool:false,
-							time:2000
+							bool:false
 						});
 					}else{
 						if(data.code==401||data.code==400){
@@ -80,7 +79,6 @@
 						parent.lib.popup.result({
 							text:"出现异常："+data.msg,
 							bool:false,
-							time:2000,
 							define:function(){
 								if(data.code==400||data.code==401){
 									parent.location.href="/module/system/user/login.html";
@@ -187,6 +185,12 @@
                 });
             },
 			result:function(options){
+				if(!options.text){
+					options.text=(options.bool?"操作成功":"操作失败");
+				}
+				if(options.time===undefined){
+					options.time=2000;
+				}
 				options.text='<i class="fa fa-'+(options.bool?"check":"times")+'-circle"></i>'+options.text;
 				this.tips(options)
 			}
@@ -649,17 +653,15 @@
 			parent.lib.popup.result({
 				bool:true,
 				text:(data.msg||"数据更新成功"),
-				time:2000,
 				define:function(){
 					history.back();
 				}
 			});
 		},
 		fail:function(data){
-			parent.lib.popup.tips({
+			parent.lib.popup.result({
 				bool:false,
-				text:(data&&data.msg?data.msg:"数据更新失败"),
-				time:2000
+				text:(data&&data.msg?data.msg:"数据更新失败")
 			});
 		},
 		bindEvent:function(){

@@ -69,7 +69,7 @@
 							<td><%=item.addTime%></td>
 							<td><%=status[item.status-1]%></td>
 							<td>
-								<form data-role="normal" action="salonAccount/resetPwd" data-confirm="确认重置密码？" onreset="parent.lib.popup.result({bool:true,time:2000,text:'密码重置成功'})" data-slug="salonAccount.resetPwd">
+								<form data-role="normal" action="salonAccount/resetPwd" data-confirm="确认重置密码？" onreset="parent.lib.popup.result({bool:true,text:'密码重置成功'})" data-slug="salonAccount.resetPwd">
 									<input type="hidden" value="<%=item.salonUserId%>" name="salonUserId" />
 									<button class="link">重置密码</button>
 								</form>
