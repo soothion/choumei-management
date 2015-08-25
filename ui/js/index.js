@@ -27,7 +27,7 @@ $('#page').on('_ready',function(){//#page _ready事件
 				setTimeout(function(){
 					loadbar.stop().animate({
 						width:winWidth
-					},200,'swing',function(){
+					},250,'swing',function(){
 						setTimeout(function(){
 							loadbar.fadeOut(120);
 						},50);
@@ -37,7 +37,7 @@ $('#page').on('_ready',function(){//#page _ready事件
 			}else{
 				loadbar.stop().animate({
 					width:winWidth
-				},200,'swing',function(){
+				},250,'swing',function(){
 					setTimeout(function(){
 						loadbar.fadeOut(120);
 					},50);

@@ -503,3 +503,24 @@ input.label:checked+label{
 	background:#2cc870;
 	color:#fff;
 }
+input[type="date"]{
+	position:relative;
+	background:no-repeat right 5px center url('/images/calendar.svg');
+	background-size: 18px 18px;
+}
+::-webkit-clear-button {
+    display:none
+  }
+::-webkit-inner-spin-button {
+	display:none;
+}
+::-webkit-calendar-picker-indicator {
+	position:absolute;
+	width:100%;
+	height:100%;
+	font-size:40px;
+	left:0px;
+	top:0px;
+	color:transparent;
+	background:transparent;
+}

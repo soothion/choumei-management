@@ -636,6 +636,9 @@
 		},
 		getErrorDom:function($target){
 			var error=$target.siblings('.control-help');
+			if($target.parent('label').length==1){
+				error=$target.parent().siblings('.control-help');
+			}
 			if(error.length==0){
 				error=$('<span class="control-help"></span>');
 			}
