@@ -376,7 +376,9 @@ class RebateController extends Controller{
 				 ->join('merchant', 'merchant.id', '=', 'salon.merchantid')
 				 ->select('rebate.*','salon.salonname','salon.sn as salonsn','merchant.name as merchantname','merchant.id as merchantid')
 				 ->find($id);
-			
+		
+		if(!$rebate)
+			return $this->error('未知返佣单ID');
 		return $this->success($rebate); 
 	}
 
