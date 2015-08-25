@@ -38,7 +38,7 @@ class Rebate extends Model {
 	}
 
 	public function getSalonid($sn){
-		$salon = Salon::where('sn',$sn)->select('salonid')->firstOrFail();
+		$salon = Salon::where('sn',$sn)->select('salonid')->first();
 		if($salon)
 			return $salon->salonid;
 		return 0;
