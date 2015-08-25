@@ -112,6 +112,9 @@ class RoleController extends Controller{
 			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 
+		//隐藏超级管理员
+		$query = $query->where('id','<>',1);
+		
 		if(isset($param['keyword'])&&$param['keyword']){
 			$keyword = '%'.$param['keyword'].'%';
 			$query = $query->where('name','like',$keyword);

@@ -165,6 +165,21 @@ Route::group(['middleware'], function(){
 		'uses'=>'LogController@export'
 	));
 
+
+	//佣金单
+	Route::any('commission/index',array(
+		'as'=>'commission.index',
+		'uses'=>'CommissionController@index'
+	));
+	Route::any('commission/export',array(
+		'as'=>'commission.export',
+		'uses'=>'CommissionController@export'
+	));
+	Route::any('commission/show/{id}',array(
+		'as'=>'commission.show',
+		'uses'=>'CommissionController@show'
+	));
+
 	//返佣单
 	Route::any('rebate/index',array(
 		'as'=>'rebate.index',

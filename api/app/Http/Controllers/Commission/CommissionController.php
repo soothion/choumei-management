@@ -1,0 +1,341 @@
+<?php namespace App\Http\Controllers;
+
+use Illuminate\Pagination\AbstractPaginator;
+use DB;
+use Event;
+use Excel;
+use Auth;
+use App\Order;
+use Request;
+use Storage;
+use File;
+use Fileentry;
+use App\Commission;
+
+class CommissionController extends Controller{
+	/**
+	 * @api {post} /rebate/index 1.佣金单列表
+	 * @apiName list
+	 * @apiGroup Commission
+	 *
+	 * @apiParam {String} merchantname 可选,商户名关键字.
+	 * @apiParam {String} salonname 可选,店铺名关键字.
+	 * @apiParam {String} salonsn 可选,店铺编号.
+	 * @apiParam {Number} start 可选,起始日期.
+	 * @apiParam {String} end 可选,结束时间.
+	 * @apiParam {Number} page 可选,页数.
+	 * @apiParam {Number} page_size 可选,分页大小.
+	 * @apiParam {String} sort_key 排序的键,比如:start_at,end_at;
+	 * @apiParam {String} sort_type 排序方式,DESC或者ASC;默认DESC
+	 *
+	 *
+	 * @apiSuccess {Number} total 总数据量.
+	 * @apiSuccess {Number} per_page 分页大小.
+	 * @apiSuccess {Number} current_page 当前页面.
+	 * @apiSuccess {Number} last_page 当前页面.
+	 * @apiSuccess {Number} from 起始数据.
+	 * @apiSuccess {Number} to 结束数据.
+	 * @apiSuccess {String} id 返佣单ID.
+	 * @apiSuccess {String} orderid 订单ID.
+	 * @apiSuccess {String} salonid 店铺ID.
+	 * @apiSuccess {Number} salonsn 店铺编号.
+	 * @apiSuccess {Array} salonname 店铺名.
+	 * @apiSuccess {Object} sn 佣金单编号.
+	 * @apiSuccess {Object} amount 返佣金额.
+	 * @apiSuccess {String} created_at 确认时间.
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "data": {
+	 *	        "total": 1,
+	 *	        "per_page": 20,
+	 *	        "current_page": 1,
+	 *	        "last_page": 1,
+	 *	        "from": 1,
+	 *	        "to": 1,
+	 *	        "data": [
+	 *				{
+	 *				orderid: 101,
+	 *				salonid: 780,
+	 *				salonsn: "SZ0420002",
+	 *				salonname: "唯那丝（黄金山店）",
+	 *				sn: "YJ-15082400029",
+	 *				amount: "100.86",
+	 *				created_at: "2015-08-24 20:08:47"
+	 *				}
+	 *	        ]
+	 *	    }
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+	public function index()
+	{
+		$param = $this->param;
+		if(empty($param['group']))
+			return $this->error('参数错误');
+		$query = Order::join('salon', 'salon.salonid', '=', 'order.salonid');
+		$query = $query->join('commission', 'commission.ordersn', '=', 'order.ordersn');
+		//商户名筛选
+		if(isset($param['merchantname'])&&$param['merchantname']){
+			$query = Order::where('merchant.name', 'like', '%' . $param['merchantname'] .'%')
+			    ->join('salon', 'salon.salonid', '=', 'order.salonid')
+			    ->join('merchant', 'merchant.id', '=', 'salon.merchantid');
+		}	
+
+		//店铺名筛选
+		if(isset($param['salonname'])&&$param['salonname']){
+			$query =Order::whereHas('salon',function($q) use($param){
+				$q->where('salonname','like','%'.$param['salonname'].'%');
+			});
+		}		
+
+		//店铺编号筛选
+		if(isset($param['salonsn'])&&$param['salonsn']){
+			$query =Order::whereHas('salon',function($q) use($param){
+				$q->where('sn','like','%'.$param['salonsn'].'%');
+			});
+		}
+
+		//起始时间
+		if(isset($param['start'])&&$param['start']){
+			$query = $query->where('created_at','>=',$param['start']);
+		}
+
+		//结束时间
+		if(isset($param['end'])&&$param['end']){
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+		}
+
+		//排序
+		if(isset($param['sort_key'])&&$param['sort_key']){
+			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
+			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
+		}
+
+		$page = isset($param['page'])?max($param['page'],1):1;
+		$page_size = isset($param['page_size'])?$param['page_size']:20;
+
+		//手动设置页数
+		AbstractPaginator::currentPageResolver(function() use ($page) {
+		    return $page;
+		});
+
+		if($param['group']=='month'){
+			$query = $query->groupBy('salon.sn');
+			$fields = array(
+			    'order.orderid',
+				'order.salonid',
+				'salon.sn as salonsn',
+				'salon.salonname',
+				DB::raw('sum(amount) as amount')
+			);
+		}
+		else if($param['group']=='day'){
+			$fields = array(
+			    'order.orderid',
+				'order.salonid',
+				'salon.sn as salonsn',
+				'salon.salonname',
+				'commission.sn as sn',
+				'commission.amount as amount',
+				'commission.created_at as created_at',
+			);
+		}
+		$result = $query->select($fields)->paginate($page_size)->toArray();
+	    unset($result['next_page_url']);
+	    unset($result['prev_page_url']);
+	    return $this->success($result);
+
+	}
+
+
+	/**
+	 * @api {post} /rebate/export 2.导出佣金单
+	 * @apiName export
+	 * @apiGroup Commission
+	 *
+	 * @apiParam {String} merchantname 可选,商户名关键字.
+	 * @apiParam {String} salonname 可选,店铺名关键字.
+	 * @apiParam {String} salonsn 可选,店铺编号.
+	 * @apiParam {Number} start 可选,起始日期.
+	 * @apiParam {String} end 可选,结束时间.
+	 * @apiParam {String} sort_key 排序的键,比如:start_at,end_at;
+	 * @apiParam {String} sort_type 排序方式,DESC或者ASC;默认DESC
+	 *
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "data": null
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+	public function export()
+	{
+		$param = $this->param;
+		if(empty($param['group']))
+			return $this->error('参数错误');
+		$query = Order::join('salon', 'salon.salonid', '=', 'order.salonid');
+		$query = $query->join('commission', 'commission.ordersn', '=', 'order.ordersn');
+		//商户名筛选
+		if(isset($param['merchantname'])&&$param['merchantname']){
+			$query = Order::where('merchant.name', 'like', '%' . $param['merchantname'] .'%')
+			    ->join('salon', 'salon.salonid', '=', 'order.salonid')
+			    ->join('merchant', 'merchant.id', '=', 'salon.merchantid');
+		}	
+
+		//店铺名筛选
+		if(isset($param['salonname'])&&$param['salonname']){
+			$query =Order::whereHas('salon',function($q) use($param){
+				$q->where('salonname','like','%'.$param['salonname'].'%');
+			});
+		}		
+
+		//店铺编号筛选
+		if(isset($param['salonsn'])&&$param['salonsn']){
+			$query =Order::whereHas('salon',function($q) use($param){
+				$q->where('sn','like','%'.$param['salonsn'].'%');
+			});
+		}
+
+		//起始时间
+		if(isset($param['start'])&&$param['start']){
+			$query = $query->where('created_at','>=',$param['start']);
+		}
+
+		//结束时间
+		if(isset($param['end'])&&$param['end']){
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+		}
+
+		//排序
+		if(isset($param['sort_key'])&&$param['sort_key']){
+			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
+			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
+		}
+
+		if($param['group']=='month'){
+			$created_at = $param['start'].' 到 '.$param['end'];
+			$query = $query->groupBy('salon.sn');
+			$fields = array(
+			    'order.orderid',
+				'order.salonid',
+				'salon.sn as salonsn',
+				'salon.salonname',
+				DB::raw('sum(amount) as amount')
+			);
+		}
+		else if($param['group']=='day'){
+			
+			$fields = array(
+			    'order.orderid',
+				'order.salonid',
+				'salon.sn as salonsn',
+				'salon.salonname',
+				'commission.sn as sn',
+				'commission.amount as amount',
+				'commission.created_at as created_at',
+			);
+		}
+
+		//分页
+	    $array = $query->select($fields)->get();
+	    foreach ($array as $key => $value) {
+	    	$result[$key]['id'] = $key+1;
+	    	$result[$key]['salonsn'] = $value->salonsn;
+	    	$result[$key]['salonname'] = $value->salonname;
+	    	$result[$key]['sn'] = $value->sn;
+	    	$result[$key]['amount'] = $value->amount;
+	    	$result[$key]['created_at'] = $value->created_at?$value->created_at:$created_at;
+	    }
+		// 触发事件，写入日志
+	    // Event::fire('commission.export');
+		
+		//导出excel	   
+		$title = '佣金单列表'.date('Ymd');
+		$header = ['序号','店铺编号','店铺名称','返佣编号','金额','创建日期'];
+		Excel::create($title, function($excel) use($result,$header){
+					$excel->setTitle('commission');
+		    		$excel->sheet('Sheet1', function($sheet) use($result,$header){
+			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+	        		$sheet->prependRow(1, $header);//添加表头
+
+			    });
+		})->export('xls');
+
+	}
+
+
+	/**
+	 * @api {post} /commission/show/:id 3.查看佣金单信息
+	 * @apiName show
+	 * @apiGroup Commission
+	 *
+	 * @apiParam {Number} id 必填,返佣单ID.
+	 *
+	 * @apiSuccess {Number} id 返佣单ID.
+	 * @apiSuccess {String} ordersn 订单编号.
+	 * @apiSuccess {String} salonid 店铺ID.
+	 * @apiSuccess {String} sn 佣金单编号.
+	 * @apiSuccess {String} amount 金额.
+	 * @apiSuccess {Number} created_at 创建日期.
+	 * @apiSuccess {String} update_at 更新时间.
+	 * @apiSuccess {String} salonname 店铺名.
+	 * @apiSuccess {Number} salonnaid 店铺ID.
+	 * @apiSuccess {String} merchantname 商户名.
+	 * @apiSuccess {Number} merchantid 商户ID.
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	  "result": 1,
+	 *	  "token": "",
+	 *	  "data": {
+	 *		id: 22,
+	 *		ordersn: "2727801211365",
+	 *		salonid: 780,
+	 *		sn: "YJ-15082400029",
+	 *		amount: "100.86",
+	 *		created_at: "2015-08-24 20:08:47",
+	 *		updated_at: "2015-08-24 20:08:47",
+	 *		salonname: "唯那丝（黄金山店）",
+	 *		salonsn: "SZ0420002",
+	 *		merchantname: "深圳市龙岗区坂田轩尼丝理发店",
+	 *		merchantid: 286
+	 *	  }
+	 *	}	
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+	public function show($id)
+	{
+		$commission = Commission::join('salon', 'salon.salonid', '=', 'commission.salonid')
+				 ->join('merchant', 'merchant.id', '=', 'salon.merchantid')
+				 ->select('commission.*','salon.salonname','salon.sn as salonsn','merchant.name as merchantname','merchant.id as merchantid')
+				 ->find($id);
+			
+		return $this->success($commission); 
+	}
+
+
+
+}

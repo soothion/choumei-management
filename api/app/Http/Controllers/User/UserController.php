@@ -168,6 +168,11 @@ class UserController extends Controller{
 			});
 		}
 
+		//隐藏超级管理员
+		$query = $query->whereHas('roles',function($q){
+			$q->where('roles.id','>',1);
+		});
+
 		//排序
 		if(isset($param['sort_key'])&&$param['sort_key']){
 			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
