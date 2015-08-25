@@ -19,15 +19,17 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper">
+        <div class="wrapper" id="table-wrapper"
+        ajat="<%if(query.id){%>commission/show/<%=query.id%><%}%>#domid=table-wrapper&tempid=table-t">
+        <script type="text/template" id="table-t">
             <div class="table" style="margin:0">
                 <table>
                     <tr style="height:60px;">
                         <td class="shop-name">
-                            <h1 style="padding-left:0">aaaaaaaaaaa</h1>
-                            <p>所属商户：bbbbbbbbbb</p>
+                            <h1 style="padding-left:0"><%=data.salonname%></h1>
+                            <p>所属商户：<%=data.merchantname%></p>
                         </td>
-                        <td class="shop-num">编号：cccccccccc</td>
+                        <td class="shop-num">编号：<%=data.salonsn%></td>
                     </tr>                      
                 </table>
 
@@ -35,21 +37,22 @@
                     <tbody>
                         <tr>
                             <td class="td">佣金单号：</td>
-                            <td></td>
+                            <td><%=data.sn%></td>
                         </tr>
 
                         <tr>
                             <td class="td">金额：</td>
-                            <td></td>                            
+                            <td><%=data.amount%></td>                            
                         </tr>
 
                         <tr>
                             <td class="td">确认日期：</td>
-                            <td></td>                            
+                            <td><%=data.created_at%></td>                            
                         </tr>                        
                     </tbody>                     
                 </table>
             </div>
+        </script>
         </div>
     </body>
 </html>
