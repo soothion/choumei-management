@@ -16,7 +16,7 @@ class CommissionController extends Controller{
 	/**
 	 * @api {post} /rebate/index 1.佣金单列表
 	 * @apiName list
-	 * @apiGroup Rebate
+	 * @apiGroup Commission
 	 *
 	 * @apiParam {String} merchantname 可选,商户名关键字.
 	 * @apiParam {String} salonname 可选,店铺名关键字.
@@ -160,7 +160,7 @@ class CommissionController extends Controller{
 	/**
 	 * @api {post} /rebate/export 2.导出佣金单
 	 * @apiName export
-	 * @apiGroup Rebate
+	 * @apiGroup Commission
 	 *
 	 * @apiParam {String} merchantname 可选,商户名关键字.
 	 * @apiParam {String} salonname 可选,店铺名关键字.
