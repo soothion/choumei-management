@@ -36,7 +36,7 @@ class CommissionController extends Controller{
 	 * @apiSuccess {Number} last_page 当前页面.
 	 * @apiSuccess {Number} from 起始数据.
 	 * @apiSuccess {Number} to 结束数据.
-	 * @apiSuccess {String} id 返佣单ID.
+	 * @apiSuccess {String} id 佣金单ID.
 	 * @apiSuccess {String} orderid 订单ID.
 	 * @apiSuccess {String} salonid 店铺ID.
 	 * @apiSuccess {Number} salonsn 店铺编号.
@@ -128,6 +128,7 @@ class CommissionController extends Controller{
 		if($param['group']=='month'){
 			$query = $query->groupBy('salon.sn');
 			$fields = array(
+				'commission.id',
 			    'order.orderid',
 				'order.salonid',
 				'salon.sn as salonsn',
@@ -137,6 +138,7 @@ class CommissionController extends Controller{
 		}
 		else if($param['group']=='day'){
 			$fields = array(
+				'commission.id',
 			    'order.orderid',
 				'order.salonid',
 				'salon.sn as salonsn',
@@ -233,6 +235,7 @@ class CommissionController extends Controller{
 		if($param['group']=='month'){
 			$query = $query->groupBy('salon.sn');
 			$fields = array(
+				'commission.id',
 			    'order.orderid',
 				'order.salonid',
 				'salon.sn as salonsn',
@@ -242,6 +245,7 @@ class CommissionController extends Controller{
 		}
 		else if($param['group']=='day'){
 			$fields = array(
+				'commission.id',
 			    'order.orderid',
 				'order.salonid',
 				'salon.sn as salonsn',
@@ -331,7 +335,7 @@ class CommissionController extends Controller{
 				 ->join('merchant', 'merchant.id', '=', 'salon.merchantid')
 				 ->select('commission.*','salon.salonname','salon.sn as salonsn','merchant.name as merchantname','merchant.id as merchantid')
 				 ->find($id);
-				 
+
 		if(!$commission)
 			return $this->error('未知佣金单ID');	
 		return $this->success($commission); 
