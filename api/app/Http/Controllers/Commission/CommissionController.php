@@ -36,7 +36,7 @@ class CommissionController extends Controller{
 	 * @apiSuccess {Number} last_page 当前页面.
 	 * @apiSuccess {Number} from 起始数据.
 	 * @apiSuccess {Number} to 结束数据.
-	 * @apiSuccess {String} id 返佣单ID.
+	 * @apiSuccess {String} id 佣金单ID.
 	 * @apiSuccess {String} orderid 订单ID.
 	 * @apiSuccess {String} salonid 店铺ID.
 	 * @apiSuccess {Number} salonsn 店铺编号.
@@ -81,28 +81,24 @@ class CommissionController extends Controller{
 	{
 		$param = $this->param;
 		if(empty($param['group']))
-			return $this->error('参数错误');
+			$param['group'] = 'day';
+
 		$query = Order::join('salon', 'salon.salonid', '=', 'order.salonid');
 		$query = $query->join('commission', 'commission.ordersn', '=', 'order.ordersn');
 		//商户名筛选
 		if(isset($param['merchantname'])&&$param['merchantname']){
-			$query = Order::where('merchant.name', 'like', '%' . $param['merchantname'] .'%')
-			    ->join('salon', 'salon.salonid', '=', 'order.salonid')
-			    ->join('merchant', 'merchant.id', '=', 'salon.merchantid');
+			$query = $query->join('merchant', 'merchant.id', '=', 'salon.merchantId');
+			$query = $query->where('merchant.name','like','%'.$param['merchantname'].'%');
 		}	
 
 		//店铺名筛选
 		if(isset($param['salonname'])&&$param['salonname']){
-			$query =Order::whereHas('salon',function($q) use($param){
-				$q->where('salonname','like','%'.$param['salonname'].'%');
-			});
+			$query = $query->where('salonname','like','%'.$param['salonname'].'%');
 		}		
 
 		//店铺编号筛选
 		if(isset($param['salonsn'])&&$param['salonsn']){
-			$query =Order::whereHas('salon',function($q) use($param){
-				$q->where('sn','like','%'.$param['salonsn'].'%');
-			});
+			$query = $query->where('salon.sn','like','%'.$param['salonsn'].'%');
 		}
 
 		//起始时间
@@ -132,6 +128,7 @@ class CommissionController extends Controller{
 		if($param['group']=='month'){
 			$query = $query->groupBy('salon.sn');
 			$fields = array(
+				'commission.id',
 			    'order.orderid',
 				'order.salonid',
 				'salon.sn as salonsn',
@@ -141,6 +138,7 @@ class CommissionController extends Controller{
 		}
 		else if($param['group']=='day'){
 			$fields = array(
+				'commission.id',
 			    'order.orderid',
 				'order.salonid',
 				'salon.sn as salonsn',
@@ -190,28 +188,24 @@ class CommissionController extends Controller{
 	{
 		$param = $this->param;
 		if(empty($param['group']))
-			return $this->error('参数错误');
+			$param['group'] = 'day';
+
 		$query = Order::join('salon', 'salon.salonid', '=', 'order.salonid');
 		$query = $query->join('commission', 'commission.ordersn', '=', 'order.ordersn');
 		//商户名筛选
 		if(isset($param['merchantname'])&&$param['merchantname']){
-			$query = Order::where('merchant.name', 'like', '%' . $param['merchantname'] .'%')
-			    ->join('salon', 'salon.salonid', '=', 'order.salonid')
-			    ->join('merchant', 'merchant.id', '=', 'salon.merchantid');
+			$query = $query->join('merchant', 'merchant.id', '=', 'salon.merchantId');
+			$query = $query->where('merchant.name','like','%'.$param['merchantname'].'%');
 		}	
 
 		//店铺名筛选
 		if(isset($param['salonname'])&&$param['salonname']){
-			$query =Order::whereHas('salon',function($q) use($param){
-				$q->where('salonname','like','%'.$param['salonname'].'%');
-			});
+			$query = $query->where('salonname','like','%'.$param['salonname'].'%');
 		}		
 
 		//店铺编号筛选
 		if(isset($param['salonsn'])&&$param['salonsn']){
-			$query =Order::whereHas('salon',function($q) use($param){
-				$q->where('sn','like','%'.$param['salonsn'].'%');
-			});
+			$query = $query->where('salon.sn','like','%'.$param['salonsn'].'%');
 		}
 
 		//起始时间
@@ -230,10 +224,19 @@ class CommissionController extends Controller{
 			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
 		}
 
+		$page = isset($param['page'])?max($param['page'],1):1;
+		$page_size = isset($param['page_size'])?$param['page_size']:20;
+
+		//手动设置页数
+		AbstractPaginator::currentPageResolver(function() use ($page) {
+		    return $page;
+		});
+
 		if($param['group']=='month'){
 			$created_at = $param['start'].' 到 '.$param['end'];
 			$query = $query->groupBy('salon.sn');
 			$fields = array(
+				'commission.id',
 			    'order.orderid',
 				'order.salonid',
 				'salon.sn as salonsn',
@@ -242,8 +245,8 @@ class CommissionController extends Controller{
 			);
 		}
 		else if($param['group']=='day'){
-			
 			$fields = array(
+				'commission.id',
 			    'order.orderid',
 				'order.salonid',
 				'salon.sn as salonsn',
@@ -333,7 +336,9 @@ class CommissionController extends Controller{
 				 ->join('merchant', 'merchant.id', '=', 'salon.merchantid')
 				 ->select('commission.*','salon.salonname','salon.sn as salonsn','merchant.name as merchantname','merchant.id as merchantid')
 				 ->find($id);
-			
+
+		if(!$commission)
+			return $this->error('未知佣金单ID');	
 		return $this->success($commission); 
 	}
 

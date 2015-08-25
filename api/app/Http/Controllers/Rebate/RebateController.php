@@ -376,7 +376,9 @@ class RebateController extends Controller{
 				 ->join('merchant', 'merchant.id', '=', 'salon.merchantid')
 				 ->select('rebate.*','salon.salonname','salon.sn as salonsn','merchant.name as merchantname','merchant.id as merchantid')
 				 ->find($id);
-			
+		
+		if(!$rebate)
+			return $this->error('未知返佣单ID');
 		return $this->success($rebate); 
 	}
 
@@ -404,7 +406,7 @@ class RebateController extends Controller{
 	{
 		$param = $this->param;
 		if(empty($param['rebate']))
-			return $this->erryr('必须指定返佣单ID');
+			return $this->error('必须指定返佣单ID');
 		DB::beginTransaction();
 		$result = Rebate::whereIn('id',$param['rebate'])->update(['status'=>1,'confirm_at'=>date('Y-m-d H:m:s'),'confirm_by'=>$this->user->name]);
 		if($result==count($param['rebate']))

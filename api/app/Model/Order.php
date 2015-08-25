@@ -18,6 +18,10 @@ class Order extends  Model
     public function salonInfo(){
         return $this->belongsTo('App\SalonInfo','salonid','salonid');
     }
+
+    public function salon(){
+        return $this->belongsTo('App\Salon','salonid','salonid');
+    }    
 }
 
 ?>
