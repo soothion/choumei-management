@@ -25,12 +25,13 @@
 			%>
 		<div class="detail-operation">
 			<%if(query.preview!="preview"){%>	
-            <%if(data.status==1){%>				
-				<form action="/receivables/confirmAct?id=<%=query.id%>" data-role="normal" onreset="parent.lib.popup.result({bool:true,define:function(){history.back()}});" data-confirm="你正在对<%=data.name%>家商户确认收款，收款金额<%=data.money%>，是否继续？" id="form-remove">
+ 
+ 		
+				<form action="/receivables/confirmAct?id=<%=query.id%>" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){history.back()}});" data-confirm="你正在对<%=data.name%>家商户确认收款，收款金额<%=data.money%>，是否继续？" id="form-remove">
 						<input type="hidden" name="idStr" value="<%=query.id%>" />
-						<button class="btn" name="idStr" value="<%=query.id%>">确认收款</button>			 
+						<button class="btn" name="idStr" value="<%=query.id%>" <%=data.status==2?"disabled":""%>>确认收款</button>			 
 				</form>
-			<%}%>			
+		 		
 			<span class="space"></span>
 			<form action="/receivables/del?id=<%=query.id%>" data-role="normal" data-confirm="你正在删除此收款单，是否执行删除？" onreset="parent.lib.popup.result({bool:true,define:function(){history.back()}});">
 				<button class="btn">删除</button>
@@ -67,7 +68,7 @@
 				<%if((data.paymentStyle==2)&&(query.preview!="preview")){%>				 
 				<tr>
 					  <td>关联付款单号：</td>
-					  <td></td>
+					  <td><%=data.payCode%></td>
                 </tr>
 				<%}else{%> 
 				<%}%>

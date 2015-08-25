@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+ 
 <html lang="zh-CN">
   <head>
       <meta charset="utf-8">
@@ -7,7 +7,7 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a>店铺结算 </a><span>&gt;</span><a href="index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>付款单</span>
+        <a>店铺结算 </a><span>&gt;</span><a href="store/single/index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>付款单</span>
 		<div class="flex-box">
 			<div class="flex-item">
 				<h4> <%=query.preview?"预览":"查看"%>付款单</h4>
@@ -27,15 +27,20 @@
 			%>
 		<div class="detail-operation">
 			<%if(query.preview!="preview"){%>
-			<a class="btn" href="edit.html?id=<%=data.id%>"  data-slug="shop_count.update">编辑</a></button>
+			
+			<button class="btn" id="upd" onclick="location='edit.html?id=<%=data.id%>'"  data-slug="shop_count.update" <%=data.state==4?"disabled":""%>>编辑</a></button>
 			<span class="space"></span>
-			<form action="shop_count/destroy/<%=data.id%>" data-role="normal" onreset="parent.lib.popup.result({bool:true,define:function(){history.back()}})" data-confirm="你正在删除转付单，是否继续删除？">
+ 
+			<form action="shop_count/destroy/<%=data.id%>" data-role="remove" data-title="你正在删除转付单，是否继续删除？" id="form-remove">
+ 
 				<input type="hidden" name="id" value="<%=data.id%>" />
-				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy">删除</button>				 
+				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy" <%=data.state==4?"disabled":""%>>删除</button>				 
 			</form>
 			<span class="space"></span>
-			<a class="btn" href="edit.html?id=<%=data.id%>"  data-slug="shop_count.update">提交</a></button>
+		 
+			<button class="btn" id="sub" onclick="location='index.html?id=<%=data.id%>'"  data-slug="shop_count.update" <%=data.state!=2?"disabled":""%>>提交</a></button>
 			<span class="space"></span>
+		 
 			<button class="btn" type="button" onclick="history.back()">返回</button>
 			<%}else{%>
 			<button class="btn" type="button" onclick="window.close()">关闭预览</button>
@@ -44,26 +49,28 @@
         <div class="table-detail">
         <table>
             <thead>             
-				<tr style="height:60px;">
-                        <td class="shop-name" colspan="2">
+				<tr style="height:60px">
+                        <td  colspan="2">
                              <%=data.salon?data.salon.salonname:""%>
-							 <label class="table-detail-sn">店铺编号：cccccccccc</label>
+							 <span class="table-detail-sn">店铺编号：<%=data.salon?data.salon.sn:""%></span>
                         </td>                       
                     </tr>
             </thead>
               <tbody>
-			   <%var state=["","已付款","预览状态"];var types=["","付交易代收款","付交易代收款","交易代收款返还"]%>
+			  <%var type=["","付交易代收款","付交易代收款","交易代收款返还"]%>
+				 <%var state=["","已付款","待提交","待审批","待付款"]%>
+				 <%var pay_type=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
                 <tr>
                   <td>付款单号：</td>
                   <td><%=data.code%></td>
                 </tr>
                 <tr>
                   <td>付款类型：</td>
-                  <td><%=types[data.type]%></td>
+                  <td><%=type[data.type]%></td>
                 </tr>
 				  <tr>
                   <td>付款方式：</td>
-                  <td><%=data.pay_money%></td>
+                  <td><%=pay_type[data.pay_type]%></td>
                 </tr>
                 <tr>
                   <td>付款金额：</td>
@@ -84,7 +91,7 @@
                </tr>
 			    <tr>
                  <td>实际付款日期：</td>
-                  <td><%=data.cost_money%></td>
+                  <td><%=data.pay_day%></td>
                 </tr>
                 <tr>				
                   <td>状态</td>
@@ -97,5 +104,10 @@
 		  </script>
         </div>
     </div>
+   <script type="text/javascript">
+	$(document).on('remove','#form-remove',function(){
+		history.back();
+	})
+   </script>
   </body>
 </html>
