@@ -823,7 +823,7 @@ class ShopCountController extends Controller
     {
         $res = [];
         foreach ($datas as $data) {
-            $salon_type_name = Utils::getShopTypeName($data['salon']['salon_type']);
+            $salon_type_name = isset($data['salon']['salon_type'])?Utils::getShopTypeName($data['salon']['salon_type']):"";
             $salon_type = isset($data['salon']['salon_type'])?$data['salon']['salon_type']:'';
             $salon_name = isset($data['salon']['salonname'])?$data['salon']['salonname']:'';
             $merchant_name = isset($data['merchant']['name'])?$data['merchant']['name']:'';            
