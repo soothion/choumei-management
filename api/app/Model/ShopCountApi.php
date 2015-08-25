@@ -825,10 +825,10 @@ class ShopCountApi
      */
     public static function prepayDetail($id)
     {
-        $salon_fields = ['salonid','salonname'];
+        $salon_fields = ['salonid','salonname','sn'];
         $merchant_fields = ['id','name'];
         $user_fields = ['id','name'];
-        $prepay_fields = ['id','created_at','merchant_id','salon_id','code','type','uid','pay_money','cost_money','day','state'];
+        $prepay_fields = ['id','created_at','merchant_id','salon_id','code','type','uid','pay_money','pay_type','day','state'];
         
         $prepay = PrepayBill::where('id',$id);
         $prepay->with([

@@ -76,4 +76,27 @@ class Utils
         }
         return $res;
     }
+    
+    public static function getPrepayStateName($state)
+    {
+        $res = "";
+        switch (intval($state)) {
+            case PrepayBill::STATE_OF_PREVIEW:
+                $res = "预览";
+                break;
+            case PrepayBill::STATE_OF_TO_SUBMIT:
+                $res = "待提交";
+                break;
+            case PrepayBill::STATE_OF_TO_CHECK:
+                $res = "待审批";
+                break;
+            case PrepayBill::STATE_OF_TO_PAY:
+                $res = "待付款";
+                break;
+            case PrepayBill::STATE_OF_COMPLETED:
+                $res = "已付款";
+                break;
+        }
+        return $res;
+    }
 }
