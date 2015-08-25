@@ -135,6 +135,7 @@ class PayManage extends Model
             'p_code'=>$prepay_code,
             'salon_id'=>$params['salon_id'],
             'merchant_id'=>$params['merchant_id'],
+            'money'=>$params['money'],
             'pay_type'=>$params['receive_type'],
             'require_day'=>$params['require_day'],
             'pay_day'=>$params['receive_day'],
@@ -420,6 +421,7 @@ class PayManage extends Model
             'salon_id',
             'merchant_id',
             'make_uid',
+            'confirm_uid',
             'cash_uid',
             'money',
             'pay_type',
@@ -485,11 +487,6 @@ class PayManage extends Model
         
         $base->with([
             'make_user' => function ($q)
-            {
-                $q->lists('id','name');
-            }
-        ])->with([
-            'confirm_user' => function ($q)
             {
                 $q->lists('id','name');
             }

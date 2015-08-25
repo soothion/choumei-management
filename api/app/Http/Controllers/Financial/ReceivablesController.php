@@ -7,6 +7,7 @@ use Excel;
 use App\ShopCountApi;
 use App\Merchant;
 use App\Salon;
+use App\PayManage;
 class ReceivablesController extends Controller{
 
 	
@@ -261,7 +262,7 @@ class ReceivablesController extends Controller{
 			return $this->error('参数错误');
 		}
 		$payTypeId = array();
-		$list = $query->select(['type','id','status','paymentStyle','receiptDate','salonid','money'])->whereIn('id', $idArr)->get();
+		$list = $query->select(['type','id','status','paymentStyle','receiptDate','salonid','money','singleNumber','cashier','preparedBy','checkTime','addTime'])->whereIn('id', $idArr)->get();
 		if($list)
 		{
 			foreach($list as $key=>$val)
@@ -275,37 +276,60 @@ class ReceivablesController extends Controller{
 					$payTypeId[$key]['id'] = $val->id;//账扣返还id
 					$payTypeId[$key]['salonid'] = $val->salonid;
 					$payTypeId[$key]['receiptDate'] = date('Y-m-d',$val->receiptDate);
+					$payTypeId[$key]['checkTime'] = date('Y-m-d',$val->checkTime);
+					$payTypeId[$key]['addTime'] = date('Y-m-d H:i:s',$val->addTime);
+					
 					$payTypeId[$key]['money'] = $val->money;
 					$merchantId = Salon::select(['merchantId'])->where("salonid","=",$val->salonid)->first();
 					$payTypeId[$key]['merchantId'] = $merchantId->merchantId;
-	
+					$payTypeId[$key]['singleNumber'] =$val->singleNumber;
+					$payTypeId[$key]['cashier'] =$val->cashier;
+					$payTypeId[$key]['preparedBy'] =$val->preparedBy;
 				}
 			}
 		}
+		DB::beginTransaction();
 		//更新状态
 		$status = $query ->whereIn('id', $idArr)->update(['checkTime'=>time(),'status'=>2,'cashier'=>$this->user->id]);
 		
 		if($payTypeId && $status)
 		{
+
+			//选择为账扣返还类型时，确认付款后自动在付款单中生成‘付交易代收款’单，且此订单为已付款状态。同时在转付单生成‘付交易代收款’单，此订单也为已付款状态
 			foreach ($payTypeId as $k=>$v)
 			{
 
 				 $data = array(
-							'merchant_id'=>$v['merchantId'],
-							'type'=>2,
-							'salon_id'=>$v['salonid'],
-							'uid'=>$this->user->id,
-							//'uid'=>1,
-							'pay_money'=>$v['money'],
-							'cost_money'=>0,
-							'day'=>$v['receiptDate'],
+				 			'id'=>$v['id'],
+				 			'code'=>$v['singleNumber'],
+				 			'salon_id'=>$v['salonid'],
+				 			'merchant_id'=>$v['merchantId'],
+				 			'money'=>$v['money'],
+				 			'receive_type'=>2,
+				 			'require_day'=>$v['receiptDate'],
+				 		 	'receive_day'=>$v['checkTime'],
+				 			'cash_uid'=>$v['cashier'],
+				 			'make_uid'=>$v['preparedBy'],
+				 			'make_at'=>$v['addTime'],		 		
 						);
-				ShopCountApi::makePrepay($data);//转付单
+				$retData = PayManage::makeFromReceive($data);
+				$status = 0;
+				if($retData)
+				{
+					$status = Receivables::where('id', '=', $v['id'])->update(['payCode' => $retData['code'],'payId'=>$retData['id']]);
+				}
+				
 			}
 		}
-		
-		//选择为账扣返还类型时，确认付款后自动在付款单中生成‘付交易代收款’单，且此订单为已付款状态。同时在转付单生成‘付交易代收款’单，此订单也为已付款状态
-		
+		if($status)
+		{
+			DB::commit();
+		}
+		else
+		{
+			DB::rollBack();
+		}
+
 		return $status?$this->success():$this->error('操作失败，请重新操作！');
 		
 	}
@@ -375,7 +399,7 @@ class ReceivablesController extends Controller{
 				$result[$key]['checkTime'] = $value['checkTime']?date('Y-m-d H:i:s',$value['checkTime']):'';
 				
 				$result[$key]['status'] = $statusArr[$value['status']];
-				$result[$key]['number'] = '关联付款单号';
+				$result[$key]['payCode'] = $value['payCode'];
 			}
 		
 		}
@@ -415,7 +439,8 @@ class ReceivablesController extends Controller{
 	 * @apiSuccess {Number} cashier 出纳Id.
 	 * @apiSuccess {String} cashierName 出纳.
 	 * @apiSuccess {Number} checkTime 确认收款时间(时间戳).
-	 *
+	 * @apiSuccess {String} payCode 关联付款单号.
+	 * 
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
