@@ -233,6 +233,7 @@ class CommissionController extends Controller{
 		});
 
 		if($param['group']=='month'){
+			$created_at = $param['start'].' 到 '.$param['end'];
 			$query = $query->groupBy('salon.sn');
 			$fields = array(
 				'commission.id',
