@@ -8,6 +8,7 @@ use App\ShopCount;
 use App\InsteadReceive;
 use App\PrepayBill;
 use Illuminate\Pagination\AbstractPaginator;
+use App\Commission;
 
 class ShopCountApi
 {
@@ -95,17 +96,31 @@ class ShopCountApi
         ->with(['salonInfo'=>function($q){
             $q->lists('salonid','commissionRate');
         }])
-        ->where('status',4)
-        ->select('orderid','ordersn','salonid','actuallyPay')
+        ->where('order.status',4)
+        ->join('salon','salon.salonid','=','order.salonid')
+        ->select('order.orderid','order.ordersn','order.salonid','order.actuallyPay','salon.merchantId')
         ->get();
 
+        $insert = [];
+        $model = new Commission;
         foreach ($orders as $key => $order) {
+            if($exist = $model->where('ordersn',$order->ordersn)->first())
+                continue;
             $rate = floatval($order->salonInfo->commissionRate);
             $amount = floatval($order->actuallyPay);
             $commission = $rate*$amount/100;
             $commission = round($commission,2);
-            $order->update(['commission'=>$commission]);
+            $data['ordersn'] = $order->ordersn;
+            $data['salonid'] = $order->salonid;
+            $data['sn'] = $model->getSn();
+            $data['amount'] = $commission;
+            $date = date('Y-m-d H:m:s');
+            $data['updated_at'] = $date;
+            $data['created_at'] = $date;
+            $insert[] = $data;
+            // ShopCount::count_bill_by_commission_money();
         }
+        $model->insert($insert);
     }
 
     

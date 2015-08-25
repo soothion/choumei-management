@@ -451,12 +451,16 @@ class RebateController extends Controller{
 	    	$reader = $reader->getSheet(0);
 		    $array = $reader->toArray();
 		    array_shift($array);
+		    $data = [];
 		    foreach ($array as $key => $value) {
 		    	if(empty($value[1])||empty($value[3])||empty($value[4])||empty($value[5])||empty($value[6]))
 		    		continue;
 		    	$date = date('Y-m-d H:m:s');
 		    	$salonsn = $value[1];
-		    	$data[$key]['salon_id'] = $rebate->getSalonid($salonsn);
+		    	$salonid = $rebate->getSalonid($salonsn);
+		    	if(!$salonid)
+		    		continue;
+		    	$data[$key]['salon_id'] = $salonid;
 		    	$data[$key]['start_at'] = $value[4];
 		    	$data[$key]['end_at'] = $value[5];
 		    	$data[$key]['amount'] = $value[6];
@@ -468,7 +472,8 @@ class RebateController extends Controller{
 				$sn = $rebate->getSn();
 				$data[$key]['sn'] = $sn;
 		    }
-		    $result = $rebate->insert($data);
+		    if(!empty($data))
+		   		$result = $rebate->insert($data);
 
 		},'UTF-8');
 
