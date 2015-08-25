@@ -15,7 +15,7 @@
 	}
 }
 if(cfg.url.indexOf('<#')>-1&&(cfg.env=='dev'||cfg.env=='test')){
-	cfg.version=Math.random()*10;
+	//cfg.version=Math.random()*10;
 }
 
 document.writeln('<meta name="renderer" content="webkit|ie-stand">');

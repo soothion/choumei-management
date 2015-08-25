@@ -27,7 +27,7 @@
 				<%if(query.preview!="preview"){%>
 					<a class="btn" data-slug="merchant.update" href="edit.html?id=<%=data.id%>">编辑</a>
 					<span class="space"></span>
-					<form action="merchant/del" data-role="normal" data-slug="merchant.del" onreset="parent.lib.popup.result({bool:true,text:'删除成功',time:2000,define:function(){history.back()}})" data-confirm="该商户还有正在合作的店铺请先终止该商户所有店铺合作，再删除商户">
+					<form action="merchant/del" data-role="normal" data-slug="merchant.del" onreset="parent.lib.popup.result({bool:true,define:function(){history.back()}})" data-confirm="该商户还有正在合作的店铺请先终止该商户所有店铺合作，再删除商户">
 						<input type="hidden" name="id" value="<%=data.id%>" />
 						<button class="btn">删除</button>
 					</form>
