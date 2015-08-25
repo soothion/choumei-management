@@ -104,6 +104,7 @@ class ShopCountApi
         $insert = [];
         $model = new Commission;
         foreach ($orders as $key => $order) {
+
             if($exist = $model->where('ordersn',$order->ordersn)->first())
                 continue;
             $rate = floatval($order->salonInfo->commissionRate);
@@ -118,7 +119,7 @@ class ShopCountApi
             $data['updated_at'] = $date;
             $data['created_at'] = $date;
             $insert[] = $data;
-            // ShopCount::count_bill_by_commission_money();
+            ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission);
         }
         $model->insert($insert);
     }
