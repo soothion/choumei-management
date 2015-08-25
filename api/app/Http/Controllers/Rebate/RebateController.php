@@ -10,6 +10,7 @@ use Request;
 use Storage;
 use File;
 use Fileentry;
+use App\ShopCount;
 
 class RebateController extends Controller{
 	/**
@@ -391,15 +392,22 @@ class RebateController extends Controller{
 	 *
 	 *
 	 * @apiSuccessExample Success-Response:
-	 *	    {
-	 *	        "result": 1,
-	 *	        "data": null
-	 *	    }
+	 *		{
+	 *		    "result": 1,
+	 *		    "token": "",
+	 *		    "data": {
+	 *		        "total": 3,
+	 *		        "success": 1,
+	 *		        "error": 2
+	 *		    }
+	 *		}
 	 * 
 	 * @apiErrorExample Error-Response:
 	 *		{
 	 *		    "result": 0,
-	 *		    "msg": "未授权访问"
+	 *		    "msg": "确认失败",
+	 *		    "token": "",
+	 *		    "code": 0
 	 *		}
 	 */
 	public function confirm()
@@ -408,13 +416,29 @@ class RebateController extends Controller{
 		if(empty($param['rebate']))
 			return $this->error('必须指定返佣单ID');
 		DB::beginTransaction();
-		$result = Rebate::whereIn('id',$param['rebate'])->update(['status'=>1,'confirm_at'=>date('Y-m-d H:m:s'),'confirm_by'=>$this->user->name]);
-		if($result==count($param['rebate']))
+		
+		$rebates = Rebate::whereIn('id',$param['rebate'])
+			->join('salon','salon.salonid','=','rebate.salon_id')
+			->select(['id','salon_id','amount','merchantId','rebate.status'])
+			->get();
+		$result = 0;
+		foreach ($rebates as $key => $rebate) {
+			if($rebate->status==1)
+				continue;
+			ShopCount::count_bill_by_commission_return_money($rebate->salon_id,$rebate->merchantId,$rebate->amount);
+			$update = $rebate->update(['status'=>1,'confirm_at'=>date('Y-m-d H:m:s'),'confirm_by'=>$this->user->name]);
+			$result++;
+		}
+
+		if($result>0)
 		{
 			DB::commit();
 			// 触发事件，写入日志
 		    Event::fire('rebate.confirm',[$param['rebate']]);
-			return $this->success();
+		    $data['total'] = count($param['rebate']);
+		    $data['success'] = $result;
+		    $data['error'] =$data['total'] - $result;
+			return $this->success($data);
 		}
 		else
 		{

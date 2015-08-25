@@ -30,9 +30,6 @@
                     <input type="text" class="input-search hide" name="salonsn" placeholder="请输入店铺编号" 
                     maxlength="16"/>
                     <input type="text" class="input-search hide" name="merchantname" placeholder="请输入商户名称" maxlength="16"/>
-                    <button type="submit" class="btn btn-search">
-                        <i class="fa fa-search"></i>
-                    </button>
                 </div>   
 
                 <div class="form-group">
@@ -46,7 +43,7 @@
                   <input type="radio" class="radio" name="group" id="statistics2" value="month">
                   <label for="statistics2">按月统计</label> 
 
-                  <button class="btn" type="submit">搜索</button>
+                  <button id="search_btn" class="btn" type="submit">搜索</button>
                 </div>            
             </form>            
 
@@ -56,8 +53,8 @@
                 </button>
             </form> 
 
-            <div class="table" id="table" ajat="commission/index?<%=query._%>#domid=table&tempid=table-t">
-              <script type="text/template" id="table-t">
+            <div class="table" id="table">
+              <script type="text/template" id="table-t" ajat="<%if(query._){%>commission/index?<%=query._%><%}%>#domid=table&tempid=table-t">
                 <table>
                   <thead>
                     <th>序号</th>                       
@@ -65,7 +62,12 @@
                     <th>店铺名称</th>
                     <th>佣金单号</th>                       
                     <th>金额</th>
-                    <th>确认日期</th>
+                    <th>
+                      <a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">                            
+                          确认日期
+                          <i class="fa fa-sort"></i>
+                      </a>                       
+                    </th>
                     <th>操作</th>                                
                   </thead>
 
@@ -76,8 +78,12 @@
                     <td><%=item.salonsn%></td>                        
                     <td><%=item.salonname%></td>                        
                     <td><%=item.sn%></td>                        
-                    <td><%=item.amount%></td>                        
-                    <td><%=item.created_at%></td>                        
+                    <td><%=item.amount%></td> 
+                    <%if(query.group == 'day'){%>                       
+                      <td><%=item.created_at%></td>
+                    <%}else{%>
+                      <td><%=query.start%> 到 <%=query.end%></td>  
+                    <%}%>                          
                     <td><a class="link" href="brokerage.html?id=<%=item.id%>">查看&gt</a></td>  
                     </tr>
                     <%})%>                      
@@ -87,5 +93,13 @@
               </script>             
             </div>
         </div>
+        <script type="text/javascript">
+          $(function(){      
+            if(!lib.query._){
+              $('input[type="date"]').val(new Date().format('yyyy-MM-dd'));
+              $('form[data-role="hash"]').submit();
+            }
+          });
+        </script>
     </body>
 </html>
