@@ -89,8 +89,9 @@
                 <div class="control-group">
                     <label class="control-label" for="">佣金率：</label>
                     <div class="control">
-                        <input type="text" name="commissionRate" value="<%=data.commissionRate%>" 
+                        <input type="text" name="commissionRate" value="<%=data.commissionRate || 9 %>" 
                         placeholder="佣金率" pattern="float" len="2" decimal="2" patternMsg="佣金率有误">
+                        <span class="unit">%</span>
                     </div>
                 </div>
 

@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-08-19 15:54:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-25 17:13:00
+* @Last Modified time: 2015-08-26 10:22:45
 */
 
 (function(){
@@ -27,8 +27,7 @@
                             text:(data.result == 1 ? "返佣成功" : data.msg),
                             time:2000,
                             define:function(){
-                                //lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
-                                $(window).trigger("hashchange");
+                                lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
                             }
                         });
                     });                          
@@ -43,7 +42,6 @@
         pick  : '#import',
         resize: false,
         auto  : true,
-        fileNumLimit : 1,
         fileSingleSizeLimit : 10*1024*1024,
         fileVal:'rebate',
         accept :{
@@ -53,7 +51,13 @@
         }                
     });
 
-    uploader.on('uploadError',function(){
+    uploader.on('startUpload',function(){
+        parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在导入中...'});       
+    });
+
+    uploader.on('uploadError',function(file,reason){
+        uploader.removeFile(file,true);
+        uploader.reset();
         parent.lib.popup.result({
             bool:true,
             text:"数据导入出错！",
@@ -66,19 +70,15 @@
         uploader.reset();
         parent.lib.popup.result({
             bool:response.result  == 1,
-            text:(response.result == 1 ? "数据导入成功！" : (response.msg ||"数据导入失败！")),
+            text:(response.result == 1 ? "数据导入成功！" : file.name + "文件, 数据导入失败！"),
             time:2000
         });
     }); 
 
     uploader.on('uploadFinished',function(){
-        lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
+        setTimeout(function(){
+            lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();           
+        }, 2000)
     });
 
-    uploader.on('error',function(type){
-        if(type == "Q_EXCEED_NUM_LIMIT") lib.popup.alert({text:'文件数量过大'});
-        if(type == "Q_EXCEED_SIZE_LIMIT ") lib.popup.alert({text:'文件过大'});
-        if(type == "Q_TYPE_DENIED ") lib.popup.alert({text:'不支持你选择的类型文件'});
-    }) 
-  
 })();
