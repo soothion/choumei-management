@@ -17,7 +17,7 @@
                     <h4>反佣单</h4>
                 </div>
                 <div class="flex-item">
-                    <a class="btn-primary fr" href="add.html?type=add">
+                    <a class="btn-primary fr" href="add.html?type=add" data-slug="rebate.create">
                         <i class="fa fa-plus"></i> 新增
                     </a>
                 </div>
@@ -49,7 +49,7 @@
             </form>
 
             <form action="rebate/export" data-role="export">
-                <button class="btn mr-5" type="submit">
+                <button class="btn mr-5" type="submit" data-slug="rebate.export">
                     <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form> 
@@ -58,7 +58,8 @@
                 <i class="fa fa-file-excel-o"></i> 下载模板
             </a> -->
 
-            <button class="btn mr-5" type="button" style="position:relative" id="import">
+            <button class="btn mr-5" type="button" style="position:relative" id="import" 
+            data-slug="rebate.upload">
                 <i class="fa fa-file-excel-o"></i> 导入
             </button>
 
@@ -109,7 +110,8 @@
                                 <td><%=item.confirm_at%></td>                        
                                 <td><%=item.created_by%></td>                        
                                 <td><%=item.status=="1" ? "已确认" : "待确认"%></td>                       
-                                <td><a class="link" href="detail.html?type=detail&id=<%=item.id%>">查看&gt</a></td> 
+                                <td><a class="link" href="detail.html?type=detail&id=<%=item.id%>"
+                                data-slug="rebate.show,rebate.update">查看&gt</a></td> 
                             </tr>
                         <% }) %>
                         </tbody>
@@ -117,7 +119,7 @@
                     <%if(data.data && data.total > 0){%>
                     <div class="table-bottom">
                         <label class="select-all"><input type="checkbox"/><span>全选</span></label>
-                        <button class="btn" type="button">确认</button>
+                        <button class="btn" type="button" data-slug="rebate.confirm">确认</button>
                     </div>
                      <%}%>
 

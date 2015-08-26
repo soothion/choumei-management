@@ -48,7 +48,7 @@
             </form>            
 
             <form action="commission/export" data-role="export">
-                <button class="btn" type="submit" data-slug="user.export">
+                <button class="btn" type="submit" data-slug="commission.export">
                   <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form> 
@@ -84,7 +84,8 @@
                     <%}else{%>
                       <td><%=query.start%> 到 <%=query.end%></td>  
                     <%}%>                          
-                    <td><a class="link" href="brokerage.html?id=<%=item.id%>">查看&gt</a></td>  
+                    <td><a class="link" href="brokerage.html?id=<%=item.id%>" 
+                    data-slug="commission.show,commission.update">查看&gt</a></td>  
                     </tr>
                     <%})%>                      
                   </tbody>
