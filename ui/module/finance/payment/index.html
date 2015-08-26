@@ -12,7 +12,7 @@
 				<h4>付款列表</h4>
 			</div>
 			<div>
-				<a class="btn-primary" href="edit.html"><i class="fa fa-plus" ></i>新增</a>
+				<a class="btn-primary" data-slug="pay_manage.create" href="edit.html"><i class="fa fa-plus" ></i>新增</a>
 			</div>
 		</div>
         </div>
@@ -35,7 +35,7 @@
 				<button type="button" class="btn" id="filter-toggle-btn">
 					筛选条件 <i class="fa fa-angle-down"></i>
 				</button>
-				<button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
+				<button class="btn" data-slug="pay_manage.export" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
 				<div class="filter-box" style="display:none">
 					<div class="flex-box">
 						<div class="filter-title">付款类型：</div>
@@ -119,7 +119,7 @@
 							}
 						}
 					%>
-					<td><a class="link" href="detail-<%=page%>.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a></td>
+					<td><a class="link" href="detail-<%=page%>.html?id=<%=item.id%>" data-slug="pay_manage.show,pay_manage.update">查看</a></td>
                   </tr>
 				  <%})%>
 				  <%}%>
