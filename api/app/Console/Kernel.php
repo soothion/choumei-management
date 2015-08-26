@@ -33,6 +33,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ShopcountDelegateExport::class,
         \App\Console\Commands\PayCreate::class,
         \App\Console\Commands\PayShow::class,
+         \App\Console\Commands\ShopcountRepairDecimal::class,
     ];
 
     /**

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\PayManage;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Utils;
+use Event;
 
 class PayController extends Controller
 {    
@@ -219,14 +220,12 @@ class PayController extends Controller
             'cycle_day' => self::T_INT,
             'cycle_money' => self::T_FLOAT,
         ],true);
-        //#@todo for debug
-        // $params['make_uid'] = $this->user->id;
-      
-        $params['make_uid'] = 1;
-        $id = PayManage::make($params);
-        if($id)
+        $params['make_uid'] = $this->user->id;      
+        $res = PayManage::make($params);
+        if($res)
         {
-            return $this->success(['id'=>$id]);
+            Event::fire("pay.store",$res['code']);
+            return $this->success(['id'=>$res['id']]);
         }
         else 
         {
@@ -387,13 +386,15 @@ class PayController extends Controller
             'cycle_money' => self::T_FLOAT,
         ]);
         //#@todo for debug
-        // $params['make_uid'] = $this->user->id;
-        $params['make_uid'] = 1;
+        //$params['make_uid'] = 1;
+        $params['make_uid'] = $this->user->id;
+        
         $ret = PayManage::change($id, $params);
         if(!$ret)
         {
             return $this->error("修改失败");
         }
+        Event::fire("pay.update",$ret['code']);
         return $this->success(['id'=>$id]);
     }
 
@@ -421,11 +422,12 @@ class PayController extends Controller
      */
     public function destroy($id)
     {
-        $ret = PayManage::destory($id);
-        if(!$ret)
+        $res = PayManage::destory($id);
+        if(!$res)
         {
             return $this->error("此单状态或类型不允许删除或者已经删除!");
-        }    
+        } 
+        Event::fire("pay.destroy",$res['code']);
         return $this->success(["ret"=>1]);
     }
     
@@ -460,9 +462,11 @@ class PayController extends Controller
             'ids' => self::T_STRING,
             'do' => self::T_INT,
         ],true);
-        $uid = 1;
+        
         //for test
         //$uid = $this->user->id;
+        
+        $uid = $this->user->id;
         $ids =  explode(",",$params['ids']);
         $ids = array_map("intval",$ids);
         $ret = PayManage::check($ids,$params['do'],$uid);
@@ -470,6 +474,7 @@ class PayController extends Controller
         {
             return $this->error("单状态不正确或者不存在!");
         }
+        Event::fire("pay.check",json_encode(['ids'=>$ids,'type'=>$params['do']],JSON_UNESCAPED_UNICODE));
         return $this->success(["ret"=>1]);
     }
 
@@ -504,9 +509,9 @@ class PayController extends Controller
             'ids' => self::T_STRING,
             'do' => self::T_INT,
         ],true);
-        $uid = 1;
         //for test
         //$uid = $this->user->id;
+        $uid = $this->user->id;
         $ids =  explode(",",$params['ids']);
         $ids = array_map("intval",$ids);
         $ret = PayManage::confirm($ids,$params['do'],$uid);
@@ -514,6 +519,7 @@ class PayController extends Controller
         {
             return $this->error("单状态不正确或者不存在!");
         }
+        Event::fire("pay.confirm",json_encode(['ids'=>$ids,'type'=>$params['do']],JSON_UNESCAPED_UNICODE));
         return $this->success(["ret"=>1]);
     }
 
@@ -561,7 +567,8 @@ class PayController extends Controller
                 $q->lists('id','name');
             }
         ])->addSelect(['r_code','p_code','cycle','cycle_day','cycle_money','confirm_at'])->get()->toArray(); 
-        $this->export_xls("付款列表".date("Ymd"),$header,self::format_pay_data($items)); 
+        Event::fire("pay.export");
+        $this->export_xls("付款列表".date("Ymd"),$header,self::format_pay_data($items));
     }
     
     

@@ -143,7 +143,27 @@ class EventServiceProvider extends ServiceProvider
         'shopcount.countOrder' => [
             'App\Listeners\ShopcountEventListener@onCountOrder',
         ],
-
+        
+        //付款单相关操作
+        'pay.export' => [
+            'App\Listeners\PayManageEventListener@onExport',
+        ],
+        'pay.store' => [
+            'App\Listeners\PayManageEventListener@onStore',
+        ],
+        'pay.update' => [
+            'App\Listeners\PayManageEventListener@onUpdate',
+        ],
+        'pay.destroy' => [
+            'App\Listeners\PayManageEventListener@onDestroy',
+        ],
+        'pay.check' => [
+            'App\Listeners\PayManageEventListener@onCheck',
+        ],
+        'pay.confirm' => [
+            'App\Listeners\PayManageEventListener@onConfirm',
+        ],
+        
     ];
 
     /**
