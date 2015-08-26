@@ -88,38 +88,7 @@ class RebateController extends Controller{
 	public function index()
 	{
 		$param = $this->param;
-		$query = Rebate::join('salon', 'salon.salonid', '=', 'rebate.salon_id')
-				->join('merchant', 'merchant.id', '=', 'salon.merchantid');
-		//商户名筛选
-		if(isset($param['merchantname'])&&$param['merchantname']){
-			$query = $query->where('merchant.name', 'like', '%' . $param['merchantname'] .'%');
-		}	
-
-		//店铺名筛选
-		if(isset($param['salonname'])&&$param['salonname']){
-			$query = $query->where('salon.salonname','like','%'.$param['salonname'].'%');
-		}		
-
-		//店铺编号筛选
-		if(isset($param['salonsn'])&&$param['salonsn']){
-			$query = $query->where('salon.sn','like','%'.$param['salonsn'].'%');
-		}
-
-		//起始时间
-		if(isset($param['start'])&&$param['start']){
-			$query = $query->where('start_at','>=',$param['start']);
-		}
-
-		//结束时间
-		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('end_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
-		}
-
-		//排序
-		if(isset($param['sort_key'])&&$param['sort_key']){
-			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
-			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
-		}
+		$query = Rebate::getQueryByParam($param);
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 
@@ -184,38 +153,7 @@ class RebateController extends Controller{
 	public function export()
 	{
 		$param = $this->param;
-		$query = Rebate::join('salon', 'salon.salonid', '=', 'rebate.salon_id')
-				->join('merchant', 'merchant.id', '=', 'salon.merchantid');
-		//商户名筛选
-		if(isset($param['merchantname'])&&$param['merchantname']){
-			$query = $query->where('merchant.name', 'like', '%' . $param['merchantname'] .'%');
-		}	
-
-		//店铺名筛选
-		if(isset($param['salonname'])&&$param['salonname']){
-			$query = $query->where('salon.salonname','like','%'.$param['salonname'].'%');
-		}		
-
-		//店铺编号筛选
-		if(isset($param['salonsn'])&&$param['salonsn']){
-			$query = $query->where('salon.sn','like','%'.$param['salonsn'].'%');
-		}
-
-		//起始时间
-		if(isset($param['start'])&&$param['start']){
-			$query = $query->where('start_at','>=',$param['start']);
-		}
-
-		//结束时间
-		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('end_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
-		}
-
-		//排序
-		if(isset($param['sort_key'])&&$param['sort_key']){
-			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
-			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
-		}
+		$query = Rebate::getQueryByParam($param);
 
 		$fields = array(
 		    'rebate.id as id',
