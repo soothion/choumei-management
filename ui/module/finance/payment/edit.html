@@ -20,7 +20,7 @@
 				<div class="detail-operation">
 					<button class="btn" onclick="history.back()" type="button" >取消</button>
 					<span class="space"></span>
-					<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
+					<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>pay_manage.update<%}else{%>pay_manage.create<%}%>">提交</button>			
 				</div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款类型：</label>
@@ -96,7 +96,7 @@
 				<label class="control-label" for=""></label>
 				<div class="control">
 					<button class="btn preview" type="button">预览</button>
-					<%localStorage.setItem("preview",JSON.stringify(data))%>
+					<%sessionStorage.setItem("preview",JSON.stringify(data))%>
 					<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>pay_manage.update<%}else{%>pay_manage.create<%}%>">提交</button>				 
 				</div>
 			</div>			 
@@ -117,10 +117,10 @@
 		
 			$(document).on('click','.preview',function(){
 				var data=lib.tools.getFormData($(this).closest('form'));
-				data=$.extend(JSON.parse(localStorage.getItem("preview")),data);
+				data=$.extend(JSON.parse(sessionStorage.getItem("preview")),data);
 				data.salon=$.extend(data.salon,{salonname:$('#search').val()});
 				data.merchant=$.extend(data.merchant,{name:$('#merchantname').val()});
-				localStorage.setItem('preview',JSON.stringify(data));
+				sessionStorage.setItem('preview',JSON.stringify(data));
 				window.open("preview.html?preview=preview");
 			})
 		});		

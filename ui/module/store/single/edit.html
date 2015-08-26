@@ -88,7 +88,7 @@
 				<label class="control-label" for=""></label>
 				<div class="control">
 				<button class="btn preview" type="button">预览</button>
-				<%localStorage.setItem("preview",JSON.stringify(data))%>
+				<%sessionStorage.setItem("preview",JSON.stringify(data))%>
 				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
 				</div>
 			</div>			 
@@ -134,7 +134,7 @@
 				data.merchant={
 					name:$('#merchantname').val()
 				}
-				localStorage.setItem('preview',JSON.stringify(data));
+				sessionStorage.setItem('preview',JSON.stringify(data));
 				window.open("detail.html?preview=preview");
 			})
 		});		
