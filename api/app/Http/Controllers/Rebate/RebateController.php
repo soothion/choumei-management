@@ -244,6 +244,45 @@ class RebateController extends Controller{
 	}
 
 
+/**
+	 * @api {post} /rebate/update 8.修改返佣单
+	 * @apiName update
+	 * @apiGroup Rebate
+	 *
+	 * @apiParam {Number} salon_id 店铺ID.
+	 * @apiParam {String} start_at 结算起始日.
+	 * @apiParam {String} end_at 结算截止日.
+	 * @apiParam {Number} amount 金额.
+	 *
+	 * @apiSuccessExample Success-Response:
+	 *	    {
+	 *	        "result": 1,
+	 *	        "data": null
+	 *	    }
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "修改失败"
+	 *		}
+	 */
+	public function update($id)
+	{
+		$param = $this->param;
+		$rebate = Rebate::find($id);
+		if(!$id)
+			return $this->error('未知返佣单ID');
+		
+		$result = Rebate::update($param);
+		if($result){
+			// 触发事件，写入日志
+		    Event::fire('rebate.update',[$rebate]);
+		    return $this->success();
+		}
+		else 
+			return $this->error('更新失败');
+	}
+
 	/**
 	 * @api {post} /rebate/show/:id 4.查看返佣单信息
 	 * @apiName show

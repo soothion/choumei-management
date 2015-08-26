@@ -188,6 +188,11 @@ Route::group(['middleware'], function(){
 	Route::any('rebate/create',array(
 		'as'=>'rebate.create',
 		'uses'=>'RebateController@create'
+	));	
+
+	Route::any('rebate/update',array(
+		'as'=>'rebate.update',
+		'uses'=>'RebateController@update'
 	));
 
 	Route::any('rebate/show/{id}',array(

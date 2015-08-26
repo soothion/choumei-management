@@ -49,6 +49,25 @@ class RebateEventListener {
 		return Log::create($data);
 	}
 
+	public function onUpdate($rebate)
+	{
+    	$operator = JWTAuth::parseToken()->authenticate();
+		$data['username'] = $operator->username;
+		$data['roles'] = $operator->roles->toArray();
+		$data['object'] = $rebate->sn;
+
+		foreach ($data['roles'] as $key => $value) {
+			$roles[] = $value['name'];
+		}
+		$data['roles'] = implode($roles, ',');
+		$data['operation'] = '更改返佣单';
+		$data['slug'] = Route::currentRouteName();
+		$data['ip'] = Request::getClientIp();
+		return Log::create($data);
+	}
+
+
+
 	public function onConfirm($rebate)
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
