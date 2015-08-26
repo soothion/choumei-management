@@ -98,7 +98,7 @@ class ShopCountApi
         }])
         ->where('order.status',4)
         ->join('salon','salon.salonid','=','order.salonid')
-        ->select('order.orderid','order.ordersn','order.salonid','order.actuallyPay','salon.merchantId')
+        ->select('order.orderid','order.ordersn','order.salonid','order.priceall','salon.merchantId','salon.salonGrade')
         ->get();
 
         $insert = [];
@@ -108,13 +108,15 @@ class ShopCountApi
             if($exist = $model->where('ordersn',$order->ordersn)->first())
                 continue;
             $rate = floatval($order->salonInfo->commissionRate);
-            $amount = floatval($order->actuallyPay);
+            $amount = floatval($order->priceall);
             $commission = $rate*$amount/100;
             $commission = round($commission,2);
             $data['ordersn'] = $order->ordersn;
             $data['salonid'] = $order->salonid;
             $data['sn'] = $model->getSn();
             $data['amount'] = $commission;
+            $data['grade'] = $order->salonGrade;
+            $data['rate'] = $rate;
             $date = date('Y-m-d H:m:s');
             $data['updated_at'] = $date;
             $data['created_at'] = $date;

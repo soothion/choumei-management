@@ -744,20 +744,21 @@ class ShopCountController extends Controller
      */    
     public function countOrder()
     {
-        // $param = $this->parameters([
-        //     'type'=>self::T_INT,
-        //     'ordersn'=>self::T_STRING,
-        //     'token'=>self::T_STRING,
-        // ],true);
-        // $passed = ShopCountApi::checkToken($param);
-        // if(!$passed)
-        // {
-        //     return $this->error("Unauthorized",401);
-        // }
-        // $orders = explode(",", $param['ordersn']);
+        $param = $this->parameters([
+            'type'=>self::T_INT,
+            'ordersn'=>self::T_STRING,
+            'token'=>self::T_STRING,
+        ],true);
+        $passed = ShopCountApi::checkToken($param);
+        if(!$passed)
+        {
+            return $this->error("Unauthorized",401);
+        }
+        $orders = explode(",", $param['ordersn']);
 
         //佣金单结算
-        ShopCountApi::commissionOrder(['2727801211365']);die;
+        ShopCountApi::commissionOrder($orders);
+        
         $res = null;
         $operation = "";
         if ($param['type'] == 1)
