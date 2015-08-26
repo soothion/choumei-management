@@ -413,6 +413,16 @@ Route::group(['middleware'], function(){
 	'uses'=>'Pay\PayController@index'
 	    ));
 	
+	Route::any('pay_manage/check_list',array(  //审批列表
+	'as'=>'pay_manage.check_list',
+	'uses'=>'Pay\PayController@index'
+	    ));
+	
+	Route::any('pay_manage/confirm_list',array(  //确认列表
+	'as'=>'pay_manage.confirm_list',
+	'uses'=>'Pay\PayController@index'
+	    ));
+	
 	Route::any('pay_manage/show/{id}',array(  //查看
 	'as'=>'pay_manage.show',
 	'uses'=>'Pay\PayController@show'

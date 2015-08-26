@@ -894,7 +894,23 @@ class Permissions extends Command
                                 'status' => 1,
                                 'sort' => NULL,
                                 'show' => 2
-                            )
+                            ),
+                            91 => array(
+                                'id' => 91,
+                                'title' => '付款单审批列表',
+                                'slug' => 'pay_manage.check_list',
+                                'status' => 1,
+                                'sort' => NULL,
+                                'show' => 2
+                            ),
+                            92 => array(
+                                'id' => 92,
+                                'title' => '付款单确认列表',
+                                'slug' => 'pay_manage.confirm_list',
+                                'status' => 1,
+                                'sort' => NULL,
+                                'show' => 2
+                            ),
                         )
                     )
                 )
