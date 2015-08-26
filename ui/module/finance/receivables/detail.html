@@ -34,10 +34,10 @@
 		 		
 			<span class="space"></span>
 			<form action="/receivables/del?id=<%=query.id%>" data-role="normal" data-confirm="你正在删除此收款单，是否执行删除？" onreset="parent.lib.popup.result({bool:true,define:function(){history.back()}});">
-				<button class="btn">删除</button>
+				<button class="btn" <%=data.status==2?"disabled":""%>>删除</button>
 			</form>
              <span class="space"></span>
-			<a class="btn" href="edit.html?id=<%=data.id%>" >编辑</a></button>
+			<button class="btn" onclick="location='edit.html?id=<%=data.id%>'" <%=data.status==2?"disabled":""%>>编辑</a></button>
 			<span class="space"></span>
 			<button class="btn" type="button" onclick="history.back()">返回</button>
 			<%}else{%>
