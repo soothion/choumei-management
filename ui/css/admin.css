@@ -660,8 +660,8 @@ form[data-role="hash"] input[type="date"]{
 .position-group{
 	position:absolute;
 	left:50%;
-	margin-left:-200px;
 	top:40px;
+	transform: translateX(-50%);
 }
 .input-group{
 	display:inline-block;
@@ -873,6 +873,9 @@ form[data-role="hash"] input[type="date"]{
 	vertical-align:top;
 	display:table-cell;
 	width:80px;
+}
+.ie9 .position-group{
+	margin-left:-200px;
 }
 .placeholder{
 	color:#999!important;
