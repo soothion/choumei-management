@@ -74,29 +74,7 @@ class LogController extends Controller{
 	public function index()
 	{
 		$param = $this->param;
-		$query = Log::getQuery();
-
-		//操作对象
-		if(isset($param['object'])&&$param['object']){
-			$query = $query->where('object','=',$param['object']);
-		}
-
-		//起始时间
-		if(isset($param['start'])&&$param['start']){
-			$query = $query->where('created_at','>=',$param['start']);
-		}
-
-		//结束时间
-		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
-		}
-
-		if(isset($param['username'])&&$param['username']){
-			$keyword = '%'.$param['username'].'%';
-			$query = $query->where('username','like',$keyword);
-		}
-
-		$query = $query->orderBy('created_at','desc');
+		$query = Log::getQueryByParam($param);
 
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
@@ -139,27 +117,7 @@ class LogController extends Controller{
 	public function export()
 	{
 		$param = $this->param;
-		$query = Log::getQuery();
-
-		//操作对象
-		if(isset($param['object'])&&$param['object']){
-			$query = $query->where('object','=',$param['object']);
-		}
-
-		//起始时间
-		if(isset($param['start'])&&$param['start']){
-			$query = $query->where('created_at','>=',$param['start']);
-		}
-
-		//结束时间
-		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
-		}
-
-		if(isset($param['username'])&&$param['username']){
-			$keyword = '%'.$param['username'].'%';
-			$query = $query->where('username','like',$keyword);
-		}
+		$query = Log::getQueryByParam($param);
 
 		$array = $query->get();
 	    foreach ($array as $key => $value) {

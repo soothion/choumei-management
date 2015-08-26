@@ -19,6 +19,8 @@ class IndexController extends Controller{
 
 
 	public function test(){
+		$password = bcrypt('cmceshi');
+		echo $password;die;
 		echo '<pre>';
 		Excel::load('public/Uploads/20150729/position.xls', function($reader) {
             $results = $reader->get()->toArray();
