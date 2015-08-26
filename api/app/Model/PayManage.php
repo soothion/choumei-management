@@ -354,7 +354,7 @@ class PayManage extends Model
             ]
         );
         $pids = array_column($items, "p_id");
-        PrepayBill::whereIn('id',$pids)->where('state',PrepayBill::STATE_OF_TO_CHECK)->update(
+        PrepayBill::whereIn('id',$pids)->where('state',PrepayBill::STATE_OF_TO_PAY)->update(
             [
             'state'=>$prepay_state,
             'pay_day'=>$now_day,
