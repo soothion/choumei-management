@@ -626,8 +626,8 @@ th.colswrap{
 form[data-role="hash"],form[data-role="export"],form[data-role="remove"],form[data-role="normal"]{
 	display:inline;
 }
-form[data-role="remove"] button,
-form[data-role="normal"] button{
+form[data-role="remove"] .link,
+form[data-role="normal"] .link{
 	padding:0;
 }
 form[data-role="hash"] button,
@@ -644,7 +644,7 @@ form[data-role="hash"] button{
 	margin-right:5px;
 }
 form[data-role="hash"] input[type="date"]{
-	width:120px;
+	width:140px;
 }
 .date-group{
 	display:inline-block;
@@ -660,8 +660,8 @@ form[data-role="hash"] input[type="date"]{
 .position-group{
 	position:absolute;
 	left:50%;
-	margin-left:-200px;
 	top:40px;
+	transform: translateX(-50%);
 }
 .input-group{
 	display:inline-block;
@@ -873,6 +873,9 @@ form[data-role="hash"] input[type="date"]{
 	vertical-align:top;
 	display:table-cell;
 	width:80px;
+}
+.ie9 .position-group{
+	margin-left:-200px;
 }
 .placeholder{
 	color:#999!important;

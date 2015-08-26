@@ -176,18 +176,10 @@ class SalonController extends Controller {
     	{
     		$where["salestatus"] = $salestatus;
     	}
-    	if($businessName)
-    	{
-    		$userBus = DB::table('business_staff')->where('businessName',"like", "%".$businessName."%")->first();
-    		if($userBus)
-    		{
-    			$where["businessId"] = $userBus->id;
-    		}
-    		else 
-    		{
-    			$where["businessId"] = 1000000000;//默认查找不到信息
-    		}
-    	}
+		if($businessName)
+		{
+			$where["businessName"] = $businessName;
+		}
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 		$list = Salon::getSalonList($where,$page,$page_size,$sort_key,$sort_type);
@@ -1088,15 +1080,7 @@ class SalonController extends Controller {
 		}
 		if($businessName)
 		{
-			$userBus = DB::table('business_staff')->where('businessName',"like", "%".$businessName."%")->first();
-			if($userBus)
-			{
-				$where["businessId"] = $userBus->id;
-			}
-			else
-			{
-				$where["businessId"] = 1000000000;//默认查找不到信息
-			}
+			$where["businessName"] = $businessName;
 		}
 		$list = Salon::getSalonListExport($where,$sort_key,$sort_type);
 		$result = array();
