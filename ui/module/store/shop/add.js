@@ -2,12 +2,13 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-24 15:27:05
+* @Last Modified time: 2015-08-26 14:50:19
 */
 
 $(function(){
     var type = lib.query.type;
     var d = new Date().format('yyyy-MM-dd');
+    var timestamp = new Date().getTime();
 
     if(type === 'edit'){
         var data = JSON.parse(sessionStorage.getItem('edit-shop-data'));
@@ -46,7 +47,7 @@ $(function(){
 
     $("input[name='contractTime']").attr('max',d);
     $("input[name='contractEndTime']").attr('min',d);
-    $("input[name='changeInTime']").attr('min',d);
+    $("input[name='changeInTime']").attr('min',new Date(timestamp + 24*60*60*1000).format("yyyy-MM-dd"));
 	
 	
     $("#preview-btn").on('click',function(){

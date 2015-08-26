@@ -1,4 +1,4 @@
- 
+<!DOCTYPE html>
 <html lang="zh-CN">
   <head>
       <meta charset="utf-8">
@@ -7,19 +7,20 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a>店铺结算 </a><span>&gt;</span><a href="store/single/index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>付款单</span>
+        <a>店铺结算 </a><span>&gt;</span><a href="index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>付款单</span>
 		<div class="flex-box">
 			<div class="flex-item">
-				<h4> <%=query.preview?"预览":"查看"%>付款单</h4>
+				<h4><%=query.preview?"预览":"查看"%>付款单</h4>
 			</div>	
 		</div>
 		<hr />
     </div>	
-   <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
-		<script type="text/template" id="form-t">
+   <div class="wrapper">
+		<div class="table-detail" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=detail&tempid=detail-t" id="detail">
+		<script type="text/template" id="detail-t">
 		<%
 				if(query.preview=="preview"){
-					data=JSON.parse(localStorage.getItem("preview"));
+					data=JSON.parse(sessionStorage.getItem("preview"));
 					if(!data.state){
 						data.state=2;
 					}
@@ -28,17 +29,16 @@
 		<div class="detail-operation">
 			<%if(query.preview!="preview"){%>
 			
-			<button class="btn" id="upd" onclick="location='edit.html?id=<%=data.id%>'"  data-slug="shop_count.update" <%=data.state==4?"disabled":""%>>编辑</a></button>
+			<button class="btn" id="upd" onclick="location='edit.html?id=<%=data.id%>'"  data-slug="shop_count.update" <%=data.state==4?"disabled":""%> >编辑</button>
 			<span class="space"></span>
  
 			<form action="shop_count/destroy/<%=data.id%>" data-role="remove" data-title="你正在删除转付单，是否继续删除？" id="form-remove">
- 
 				<input type="hidden" name="id" value="<%=data.id%>" />
-				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy" <%=data.state==4?"disabled":""%>>删除</button>				 
+				<button class="btn" name="id" data-slug="shop_count.destroy" <%=data.state==4?"disabled":""%> >删除</button>				 
 			</form>
 			<span class="space"></span>
 		 
-			<button class="btn" id="sub" onclick="location='index.html?id=<%=data.id%>'"  data-slug="shop_count.update" <%=data.state!=2?"disabled":""%>>提交</a></button>
+			<button class="btn" id="sub" onclick="location='index.html?id=<%=data.id%>'"  data-slug="shop_count.update" <%=data.state!=2?"disabled":""%> >提交</button>
 			<span class="space"></span>
 		 
 			<button class="btn" type="button" onclick="history.back()">返回</button>
@@ -46,15 +46,14 @@
 			<button class="btn" type="button" onclick="window.close()">关闭预览</button>
 			<%}%>
 		</div>
-        <div class="table-detail">
         <table>
             <thead>             
-				<tr style="height:60px">
-                        <td  colspan="2">
-                             <%=data.salon?data.salon.salonname:""%>
-							 <span class="table-detail-sn">店铺编号：<%=data.salon?data.salon.sn:""%></span>
-                        </td>                       
-                    </tr>
+				<tr>
+					<td colspan="2">
+						 <%=data.salon?data.salon.salonname:""%>
+						 <span class="table-detail-sn">店铺编号：<%=data.salon?data.salon.sn:""%></span>
+				    </td>                       
+                </tr>
             </thead>
               <tbody>
 			  <%var type=["","付交易代收款","付交易代收款","交易代收款返还"]%>
@@ -68,7 +67,7 @@
                   <td>付款类型：</td>
                   <td><%=type[data.type]%></td>
                 </tr>
-				  <tr>
+				<tr>
                   <td>付款方式：</td>
                   <td><%=pay_type[data.pay_type]%></td>
                 </tr>
@@ -80,7 +79,7 @@
                   <td>要求付款日期：</td>
                   <td><%=data.day%></td>
                 </tr>
-					 <%if(query.preview!="preview"){%>
+				<%if(query.preview!="preview"){%>
                 <tr>
                   <td>创建日期：</td>
                   <td><%=data.created_at%></td>
@@ -97,7 +96,6 @@
                   <td>状态</td>
                   <td><%=state[data.state]%></td>
                 </tr>
-				<%}else{%> 
 				<%}%>
               </tbody>
         </table>

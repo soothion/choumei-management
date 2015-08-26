@@ -33,7 +33,7 @@
 				</span>
 				<button class="btn" type="submit">搜索</button>
 			</form>
-			<form action="pay_manage/export" data-role="export" ><button class="btn" ><i class="fa fa-file-excel-o"></i> 导出</button></form>
+			<form action="pay_manage/export" data-role="export"  data-slug="pay_manage.export" ><button class="btn" ><i class="fa fa-file-excel-o"></i> 导出</button></form>
            <div class="table" ajat="pay_manage/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
@@ -83,14 +83,14 @@
 							}
 						}
 					%>
-					<td><a class="link" href="detail-<%=page%>.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a></td>
+					<td><a class="link" href="detail-<%=page%>.html?id=<%=item.id%>" data-slug="pay_manage.show,pay_manage.update">查看</a></td>
                   </tr>
 				  <%})%>
 				  <%}%>
               </tbody>
             </table>
 			<%if(data.data&&data.data.length>0){%>
-			<div class="table-bottom">
+			<div class="table-bottom" data-slug="pay_manage.confirm">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
 				<button class="btn" data-define="1">确认付款</button><span class="space"></span><button class="btn" data-define="2">拒绝付款</button>
 			</div>
@@ -126,7 +126,7 @@
 					confirmText="你正在拒绝"+data.ids.length+"家店铺的付款请求，是否继续？"
 				}
 				data.ids=data.ids.toString();
-				parent.lib.popup.alert({
+				parent.lib.popup.confirm({
 					text:confirmText,
 					define:function(){
 						lib.ajax({

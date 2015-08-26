@@ -536,6 +536,7 @@ class SalonController extends Controller {
 			$where = '';
 			$whereInfo = '';
 			$data["add_time"] = time();
+			$data["bountyType"] = 3;//店铺等级C
 			$dataInfo["addTime"] = time();
 		}
 		

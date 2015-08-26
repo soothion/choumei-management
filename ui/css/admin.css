@@ -423,6 +423,16 @@ aside h2{
 .control-help{
 	color:#b94a48;
 }
+.control-help:before{
+	content:"\f06a";
+	color:#b94a48;
+	font-family:FontAwesome;
+	font-size:16px;
+	margin-right:4px;
+	position:relative;
+	top:1px;
+	line-height:12px;
+}
 .red{
 	color:red;
 	margin:5px;

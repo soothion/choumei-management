@@ -9,6 +9,10 @@
 	'shop_count.index':'/module/store/single/index.html',
 	'shop_count.delegate_list':'/module/store/collection/index.html',
 	'shop_count.balance':'/module/store/balance/index.html',
+	'pay_manage.index':'/module/finance/payment/index.html',
+	'receivables.index':'/module/finance/receivables/index.html',
+	'commission.index':'/module/finance/income/index.html',
+	'rebate.index':'/module/finance/income/list.html'
 }
 var access={
 	data:[],
