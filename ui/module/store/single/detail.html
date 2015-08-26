@@ -15,6 +15,7 @@
 		</div>
 		<hr />
     </div>	
+		 
    <div class="wrapper" ajat="<%if(query.id){%>shop_count/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<%
@@ -28,17 +29,17 @@
 		<div class="detail-operation">
 			<%if(query.preview!="preview"){%>
 			
-			<button class="btn" id="upd" onclick="location='edit.html?id=<%=data.id%>'"  data-slug="shop_count.update" <%=data.state==4?"disabled":""%>>编辑</a></button>
+			<button class="btn" id="upd" onclick="location='edit.html?id=<%=data.id%>'"  data-slug="shop_count.update" <%=data.state==4?"disabled":""%><%=data.state==1?"disabled":""%>>编辑</a></button>
 			<span class="space"></span>
- 
 			<form action="shop_count/destroy/<%=data.id%>" data-role="remove" data-title="你正在删除转付单，是否继续删除？" id="form-remove">
- 
 				<input type="hidden" name="id" value="<%=data.id%>" />
-				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy" <%=data.state==4?"disabled":""%>>删除</button>				 
+				<button class="btn" name="id" value="<%=data.id%>" data-slug="shop_count.destroy" <%=data.state==4?"disabled":""%><%=data.state==1?"disabled":""%>>删除</button>				 
 			</form>
 			<span class="space"></span>
-		 
-			<button class="btn" id="sub" onclick="location='index.html?id=<%=data.id%>'"  data-slug="shop_count.update" <%=data.state!=2?"disabled":""%>>提交</a></button>
+			<form action="shop_count/update/<%=query.id%>" data-role="normal" 
+			onreset="parent.lib.popup.result({bool:true,define:function(){history.back()}})">
+				<button class="btn" <%=data.state!=2?"disabled":""%>>提交</button>
+			</form>
 			<span class="space"></span>
 		 
 			<button class="btn" type="button" onclick="history.back()">返回</button>
@@ -99,7 +100,7 @@
                 </tr>
 				<%}%>
               </tbody>
-        </table>
+           </table>
 		  </script>
         </div>
     </div>
