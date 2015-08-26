@@ -272,4 +272,28 @@ class Receivables extends Model {
 		return $status;
 	}
 	
+	/**
+	 * 删除修改时 检测状态
+	 * */
+	public static function getCheckRecRsStatus($id)
+	{
+		if(!$id)
+		{
+			return false;
+		}
+		$status = self::select(['status'])->where("id","=",$id)->first();
+		if($status->status != 1)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+		
+	}
+	
+	
+	
+	
 }

@@ -196,6 +196,12 @@ class ReceivablesController extends Controller{
 		{
 			return $this->error("参数错误");
 		}
+		if(!Receivables::getCheckRecRsStatus($id))
+		{
+			return $this->error('数据错误');
+		}
+		
+		
 		return $this->dosave($this->param);
 	}
 	
@@ -518,6 +524,10 @@ class ReceivablesController extends Controller{
 		if(!$id)
 		{
 			return $this->error('参数错误');
+		}
+		if(!Receivables::getCheckRecRsStatus($id))
+		{
+			return $this->error('数据错误');
 		}
 	
 		$status = Receivables::dodel($id);
