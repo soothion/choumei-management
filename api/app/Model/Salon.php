@@ -62,10 +62,11 @@ class Salon extends Model {
         {
         	$query =  $query ->where("district","=",$where["district"]);
         }
-		if(isset($where["businessId"]))
-        {
-        	$query =  $query ->where("businessId","=",$where["businessId"]);
-        }
+		if(isset($where["businessName"]))
+		{
+			$keyword = '%'.$where['businessName'].'%';
+			$query = $query->where('b.businessName','like',$keyword);
+		}
 		if(isset($where['salonname'])&&$where['salonname'])
 		{
 			$keyword = '%'.$where['salonname'].'%';
@@ -220,9 +221,10 @@ class Salon extends Model {
 		{
 			$query =  $query ->where("s.district","=",$where["district"]);
 		}
-		if(isset($where["businessId"]))
+		if(isset($where["businessName"]))
 		{
-			$query =  $query ->where("businessId","=",$where["businessId"]);
+			$keyword = '%'.$where['businessName'].'%';
+			$query = $query->where('b.businessName','like',$keyword);
 		}
 		if(isset($where['salonname'])&&$where['salonname'])
 		{

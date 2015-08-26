@@ -88,26 +88,21 @@ class RebateController extends Controller{
 	public function index()
 	{
 		$param = $this->param;
-		$query = Rebate::join('salon', 'salon.salonid', '=', 'rebate.salon_id');
+		$query = Rebate::join('salon', 'salon.salonid', '=', 'rebate.salon_id')
+				->join('merchant', 'merchant.id', '=', 'salon.merchantid');
 		//商户名筛选
 		if(isset($param['merchantname'])&&$param['merchantname']){
-			$query = Rebate::where('merchant.name', 'like', '%' . $param['merchantname'] .'%')
-			    ->join('salon', 'salon.salonid', '=', 'rebate.salon_id')
-			    ->join('merchant', 'merchant.id', '=', 'salon.merchantid');
+			$query = $query->where('merchant.name', 'like', '%' . $param['merchantname'] .'%');
 		}	
 
 		//店铺名筛选
 		if(isset($param['salonname'])&&$param['salonname']){
-			$query =Rebate::whereHas('salon',function($q) use($param){
-				$q->where('salonname','like','%'.$param['salonname'].'%');
-			});
+			$query = $query->where('salon.salonname','like','%'.$param['salonname'].'%');
 		}		
 
 		//店铺编号筛选
 		if(isset($param['salonsn'])&&$param['salonsn']){
-			$query =Rebate::whereHas('salon',function($q) use($param){
-				$q->where('sn','like','%'.$param['salonsn'].'%');
-			});
+			$query = $query->where('salon.sn','like','%'.$param['salonsn'].'%');
 		}
 
 		//起始时间
@@ -189,26 +184,21 @@ class RebateController extends Controller{
 	public function export()
 	{
 		$param = $this->param;
-		$query = Rebate::join('salon', 'salon.salonid', '=', 'rebate.salon_id');
+		$query = Rebate::join('salon', 'salon.salonid', '=', 'rebate.salon_id')
+				->join('merchant', 'merchant.id', '=', 'salon.merchantid');
 		//商户名筛选
 		if(isset($param['merchantname'])&&$param['merchantname']){
-			$query = Rebate::where('merchant.name', 'like', '%' . $param['merchantname'] .'%')
-			    ->join('salon', 'salon.salonid', '=', 'rebate.salon_id')
-			    ->join('merchant', 'merchant.id', '=', 'salon.merchantid');
+			$query = $query->where('merchant.name', 'like', '%' . $param['merchantname'] .'%');
 		}	
 
 		//店铺名筛选
 		if(isset($param['salonname'])&&$param['salonname']){
-			$query =Rebate::whereHas('salon',function($q) use($param){
-				$q->where('salonname','like','%'.$param['salonname'].'%');
-			});
+			$query = $query->where('salon.salonname','like','%'.$param['salonname'].'%');
 		}		
 
 		//店铺编号筛选
 		if(isset($param['salonsn'])&&$param['salonsn']){
-			$query =Rebate::whereHas('salon',function($q) use($param){
-				$q->where('salonsn','like','%'.$param['salonsn'].'%');
-			});
+			$query = $query->where('salon.sn','like','%'.$param['salonsn'].'%');
 		}
 
 		//起始时间
