@@ -16,11 +16,13 @@
 		}
 		$(document.body).on('_ready',lib.loadingend).on('exception',lib.loadingend);
 	}
-	
 	document.onreadystatechange=function(){//注册document的readystatechagne事件
 		if(document.readyState=='interactive'){
 			parent.$('body').trigger('loading');//开启加载状态
 		}
+	}
+	if(window.ie9){
+		parent.$('body').trigger('loading');
 	}
 	/*子页是否全屏*/
 	lib.fullpage=function(bool){
