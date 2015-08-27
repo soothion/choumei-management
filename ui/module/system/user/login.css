@@ -16,17 +16,30 @@
 }
 .login li{
 	margin:25px 0;
+	position:relative;
+}
+.login li i{
+	position: absolute;
+	left: 10px;
+	top: 9px;
+	color:#999;
 }
 .login input,.login button{
 	width:280px;
 	height:38px;
 	font-size:14px;
 }
+.login input{
+	padding-left:34px;
+}
 .login input.code{
 	width:100px;
 }
 .login h4{
 	font-size:20px;
+}
+.login-field:focus+.fa{
+	color:#58A2EC!important;
 }
 .login .control-help{
 	display:none;
