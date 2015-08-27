@@ -70,28 +70,7 @@ class PermissionController extends Controller{
 	public function index()
 	{
 		$param = $this->param;
-		$query = Permission::getQuery();
-
-
-		//状态筛选
-		if(isset($param['status'])&&$param['status']){
-			$query = $query->where('status','=',$param['status']);
-		}
-
-		//起始时间
-		if(isset($param['start'])&&$param['start']){
-			$query = $query->where('created_at','>=',$param['start']);
-		}
-
-		//结束时间
-		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
-		}
-
-		if(isset($param['keyword'])&&$param['keyword']){
-			$keyword = '%'.$param['keyword'].'%';
-			$query = $query->where('title','like',$keyword);
-		}
+		$query = Permission::getQueryByParam($param);
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 
@@ -141,28 +120,7 @@ class PermissionController extends Controller{
 	public function export()
 	{
 		$param = $this->param;
-		$query = Permission::getQuery();
-
-
-		//状态筛选
-		if(isset($param['status'])&&$param['status']){
-			$query = $query->where('status','=',$param['status']);
-		}
-
-		//起始时间
-		if(isset($param['start'])&&$param['start']){
-			$query = $query->where('created_at','>=',$param['start']);
-		}
-
-		//结束时间
-		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
-		}
-
-		if(isset($param['keyword'])&&$param['keyword']){
-			$keyword = '%'.$param['keyword'].'%';
-			$query = $query->where('title','like',$keyword);
-		}
+		$query = Permission::getQueryByParam();
 
 	    $array = $query->get();
 	    foreach ($array as $key => $value) {

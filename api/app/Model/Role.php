@@ -30,4 +30,48 @@ class Role extends Model {
 	public function permissions(){
 		return $this->belongsToMany('App\Permission');
 	}
+
+	public static function getQueryByParam($param=[]){
+		$query = Self::with(['department'=>function($q){
+			$q->lists('id','title');
+		}]);
+
+		$query = $query->with(['city'=>function($q){
+			$q->lists('id','title');
+		}]);	
+
+		//所属部门筛选
+		if(isset($param['department_id'])&&$param['department_id']){
+			$query = $query->where('department_id','=',$param['department_id']);
+		}
+
+		//状态筛选
+		if(isset($param['status'])&&$param['status']){
+			$query = $query->where('status','=',$param['status']);
+		}
+
+		//所属城市
+		if(isset($param['city_id'])&&$param['city_id']){
+			$query = $query->where('city_id','=',$param['city_id']);
+		}
+
+		//起始时间
+		if(isset($param['start'])&&$param['start']){
+			$query = $query->where('created_at','>=',$param['start']);
+		}
+
+		//结束时间
+		if(isset($param['end'])&&$param['end']){
+			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+		}
+
+		//隐藏超级管理员
+		$query = $query->where('id','<>',1);
+		
+		if(isset($param['keyword'])&&$param['keyword']){
+			$keyword = '%'.$param['keyword'].'%';
+			$query = $query->where('name','like',$keyword);
+		}
+		return $query;
+	}
 }

@@ -88,43 +88,7 @@ class RebateController extends Controller{
 	public function index()
 	{
 		$param = $this->param;
-		$query = Rebate::join('salon', 'salon.salonid', '=', 'rebate.salon_id');
-		//商户名筛选
-		if(isset($param['merchantname'])&&$param['merchantname']){
-			$query = Rebate::where('merchant.name', 'like', '%' . $param['merchantname'] .'%')
-			    ->join('salon', 'salon.salonid', '=', 'rebate.salon_id')
-			    ->join('merchant', 'merchant.id', '=', 'salon.merchantid');
-		}	
-
-		//店铺名筛选
-		if(isset($param['salonname'])&&$param['salonname']){
-			$query =Rebate::whereHas('salon',function($q) use($param){
-				$q->where('salonname','like','%'.$param['salonname'].'%');
-			});
-		}		
-
-		//店铺编号筛选
-		if(isset($param['salonsn'])&&$param['salonsn']){
-			$query =Rebate::whereHas('salon',function($q) use($param){
-				$q->where('sn','like','%'.$param['salonsn'].'%');
-			});
-		}
-
-		//起始时间
-		if(isset($param['start'])&&$param['start']){
-			$query = $query->where('start_at','>=',$param['start']);
-		}
-
-		//结束时间
-		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('end_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
-		}
-
-		//排序
-		if(isset($param['sort_key'])&&$param['sort_key']){
-			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
-			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
-		}
+		$query = Rebate::getQueryByParam($param);
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 
@@ -189,43 +153,7 @@ class RebateController extends Controller{
 	public function export()
 	{
 		$param = $this->param;
-		$query = Rebate::join('salon', 'salon.salonid', '=', 'rebate.salon_id');
-		//商户名筛选
-		if(isset($param['merchantname'])&&$param['merchantname']){
-			$query = Rebate::where('merchant.name', 'like', '%' . $param['merchantname'] .'%')
-			    ->join('salon', 'salon.salonid', '=', 'rebate.salon_id')
-			    ->join('merchant', 'merchant.id', '=', 'salon.merchantid');
-		}	
-
-		//店铺名筛选
-		if(isset($param['salonname'])&&$param['salonname']){
-			$query =Rebate::whereHas('salon',function($q) use($param){
-				$q->where('salonname','like','%'.$param['salonname'].'%');
-			});
-		}		
-
-		//店铺编号筛选
-		if(isset($param['salonsn'])&&$param['salonsn']){
-			$query =Rebate::whereHas('salon',function($q) use($param){
-				$q->where('salonsn','like','%'.$param['salonsn'].'%');
-			});
-		}
-
-		//起始时间
-		if(isset($param['start'])&&$param['start']){
-			$query = $query->where('start_at','>=',$param['start']);
-		}
-
-		//结束时间
-		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('end_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
-		}
-
-		//排序
-		if(isset($param['sort_key'])&&$param['sort_key']){
-			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
-			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
-		}
+		$query = Rebate::getQueryByParam($param);
 
 		$fields = array(
 		    'rebate.id as id',
@@ -315,6 +243,45 @@ class RebateController extends Controller{
 			return $this->error('创建失败');
 	}
 
+
+/**
+	 * @api {post} /rebate/update 8.修改返佣单
+	 * @apiName update
+	 * @apiGroup Rebate
+	 *
+	 * @apiParam {Number} salon_id 店铺ID.
+	 * @apiParam {String} start_at 结算起始日.
+	 * @apiParam {String} end_at 结算截止日.
+	 * @apiParam {Number} amount 金额.
+	 *
+	 * @apiSuccessExample Success-Response:
+	 *	    {
+	 *	        "result": 1,
+	 *	        "data": null
+	 *	    }
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "修改失败"
+	 *		}
+	 */
+	public function update($id)
+	{
+		$param = $this->param;
+		$rebate = Rebate::find($id);
+		if(!$id)
+			return $this->error('未知返佣单ID');
+		
+		$result = Rebate::update($param);
+		if($result){
+			// 触发事件，写入日志
+		    Event::fire('rebate.update',[$rebate]);
+		    return $this->success();
+		}
+		else 
+			return $this->error('更新失败');
+	}
 
 	/**
 	 * @api {post} /rebate/show/:id 4.查看返佣单信息

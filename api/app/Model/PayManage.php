@@ -194,7 +194,7 @@ class PayManage extends Model
         $record['state'] = self::STATE_OF_TO_CHECK;
         $record['created_at'] = $record['updated_at'] =date("Y-m-d H:i:s");
         $id = self::insertGetId($record);
-        return $id;
+        return ['id'=>$id,'code'=>$record['code']];
     }
     
     /**
@@ -244,7 +244,7 @@ class PayManage extends Model
             $record['cycle_money'] =floatval($attr['cycle_money']);
         }
         $record['updated_at'] =date("Y-m-d H:i:s");
-        $item = self::where('id',$id)->first(['state']);     
+        $item = self::where('id',$id)->first(['state','code']);     
         if($item->state  != self::STATE_OF_TO_SUBMIT && $item->state  != self::STATE_OF_TO_CHECK && $item->type  != PayManage::TYPE_OF_FTZ)
         {
             return false;
@@ -252,7 +252,7 @@ class PayManage extends Model
         $record['state'] = PayManage::STATE_OF_TO_CHECK;
         
         self::where('id',$id)->update($record);
-        return $id;
+        return ['id'=>$id,'code'=>$item->code];
     }
     
     /**
@@ -261,13 +261,13 @@ class PayManage extends Model
      */
     public static function destory($id)
     {
-        $item = self::where('id',$id)->first(['state','type']);
+        $item = self::where('id',$id)->first(['state','type','code']);
         if($item->state  != PayManage::STATE_OF_TO_SUBMIT && $item->state  != PayManage::STATE_OF_TO_CHECK && $item->type  != PayManage::TYPE_OF_FTZ )
         {
             return false;
         }
         self::where('id',$id)->delete();
-        return true;
+        return ['id'=>$id,'code'=>$item->code];
     }
     
     /**
@@ -354,7 +354,7 @@ class PayManage extends Model
             ]
         );
         $pids = array_column($items, "p_id");
-        PrepayBill::whereIn('id',$pids)->where('state',PrepayBill::STATE_OF_TO_CHECK)->update(
+        PrepayBill::whereIn('id',$pids)->where('state',PrepayBill::STATE_OF_TO_PAY)->update(
             [
             'state'=>$prepay_state,
             'pay_day'=>$now_day,

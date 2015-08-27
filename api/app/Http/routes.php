@@ -188,6 +188,11 @@ Route::group(['middleware'], function(){
 	Route::any('rebate/create',array(
 		'as'=>'rebate.create',
 		'uses'=>'RebateController@create'
+	));	
+
+	Route::any('rebate/update',array(
+		'as'=>'rebate.update',
+		'uses'=>'RebateController@update'
 	));
 
 	Route::any('rebate/show/{id}',array(
@@ -405,6 +410,16 @@ Route::group(['middleware'], function(){
 	//付款管理
 	Route::any('pay_manage/index',array(  //列表
 	'as'=>'pay_manage.index',
+	'uses'=>'Pay\PayController@index'
+	    ));
+	
+	Route::any('pay_manage/check_list',array(  //审批列表
+	'as'=>'pay_manage.check_list',
+	'uses'=>'Pay\PayController@index'
+	    ));
+	
+	Route::any('pay_manage/confirm_list',array(  //确认列表
+	'as'=>'pay_manage.confirm_list',
 	'uses'=>'Pay\PayController@index'
 	    ));
 	
