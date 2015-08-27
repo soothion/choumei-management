@@ -63,13 +63,13 @@
 				<%data.forEach&&data.forEach(function(item,i){%>
                 <tr>
                   <td><%=i+1%></td>
-				  <td><%=item.salon_id%></td>
-				  <td><%=item.salon_sn%></td>
+				  <td><%=item.salon?item.salon.salonid:""%></td>
+				  <td><%=item.salon?item.salon.sn:""%></td>
                   <td class="colswrap">
-					<strong><%=item.salon_name%></strong><br />
-					<span class="weak">所属商户：<%=item.merchant_name%></span>
+					<strong><%=item.salon?item.salon.salonname:""%></strong><br />
+					<span class="weak">所属商户：<%=item.merchant?item.merchant.name:""%></span>
 				  </td>
-                  <td><%=types[item.salon_type-1]%></td>
+                  <td><%=item.salon?types[item.salon.shopType-1]:""%></td>
                   <td><%=item.pay_money%></td>
 				  <td><%=item.spend_money%></td>
 				  <td><%=item.commission_money%></td>
