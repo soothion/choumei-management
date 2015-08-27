@@ -12,7 +12,7 @@
                 <h4>收款列表</h4>
             </div>
             <div>
-                <a class="btn-primary" href="edit.html"><i class="fa fa-plus" ></i>新增</a>
+                <a class="btn-primary" href="edit.html"><i class="fa fa-plus" data-slug="receivables.save"></i>新增</a>
             </div>
         </div>
         </div>
@@ -73,7 +73,7 @@
                     </div>
                 </div>            
             </form>
-            <form action="receivables/export" data-role="export" id="export"></form>    
+            <form action="receivables/export" data-role="export" id="export" data-slug="receivables.export"></form>    
 		    <div class="table" ajat="receivables/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
@@ -119,7 +119,7 @@
 					<td><%=item.preparedByName%></td>				 
 					<td><%=status[item.status]%></td>
 					  
-					<td><a class="link" href="detail.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a></td>
+					<td><a class="link" href="detail.html?id=<%=item.id%>" data-slug="receivables.getone">查看</a></td>
                   </tr>
 				  <%})%>
 				  <%}%>
