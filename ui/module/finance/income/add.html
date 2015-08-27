@@ -28,31 +28,20 @@
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">
                         <input type="hidden" name="salon_id" id="salonid"/>
-                        <input type="hidden" id="salonsn"/>
-                        <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=complete-position-t" autocomplete="off" required>
-                        <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;">
-                            <script type="text/template" id="complete-position-t">
-                            <%if(data&&data.length>0){%>
-                            <ul>
-                                <%data.forEach(function(item){%>
-                                <li class="complete-item <%if(protocol.query.salonname==item.salonname){%>active<%}%>" data-salonid="<%=item.salonid%>" data-merchantid="<%=item.merchantId%>" data-merchantname="<%=item.name%>" ><%=item.salonname%></li>
-                                <%})%>
-                            </ul>
-                            <%}else{%>
-                            <div style="padding:5px 10px;">没有查找到店铺</div>
-                            <%}%>
-                            </script>
-                        </div>
+                        <input type="hidden" id="salonsn" value="<%=data.%>"/>
+                        <input id="search" type="text"  ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
+                        <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
+                        <span id="sn" class="weak"></span>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
-                        <input type="text" id="merchantname"  disabled>
-                        <input type="hidden"  id="merchantId" />
+                        <input type="text" id="merchantname" disabled >
+                        <input type="hidden" id="merchantId" required requiredmsg="请店铺搜索到商户" />
                     </div>
-                </div>
+                </div>                
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>结算起始日：</label>
@@ -90,20 +79,19 @@
                 var obj = JSON.parse(sessionStorage.getItem('edit-rebate-data'));
                 $("#salonid").val(obj.salon_id);
                 $('#salonsn').val(obj.salonsn);
+                $("#sn").text(obj.salonsn);
                 $("#search").val(obj.salonname);
                 $("#start_at").val(new Date(obj.start_at).format("yyyy-MM-dd"));
                 $("#end_at").val(new Date(obj.end_at).format("yyyy-MM-dd"));
                 $("#amount").val(obj.amount);
                 $('#merchantId').val(obj.merchantid);
                 $("#merchantname").val(obj.merchantname);
+                $("form").attr('action','rebate/update/'+obj.id);
             }
 
             $('#search').on('autoinput',function(e,data){
                 if(data){
-                    $('#salonid').val(data.salonid);
                     $('#salonsn').val(data.sn);
-                    $('#merchantId').val(data.merchantid);
-                    $('#merchantname').val(data.merchantname);
                 }
             });
 
