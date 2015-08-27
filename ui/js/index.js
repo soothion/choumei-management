@@ -65,21 +65,12 @@ $('#page').on('_ready',function(){//#page _ready事件
 	});
 	
 	$('#logout').on('click',function(){//退出事件
-		lib.ajax({
-			url:'logout',
-			type:"post",
-			success:function(data){
-				lib.popup.result({
-					bool:data.result==1,
-					text:(data.result==1?'退出成功':data.msg),
-					time:2000,
-					define:function(){
-						if(data.result==1){
-							localStorage.removeItem('token');
-							location.href='/module/system/user/login.html';
-						}
-					}
-				});
+		lib.popup.result({
+			bool: true,
+			text:'退出成功',
+			define:function(){
+				localStorage.removeItem('token');
+				location.href='/module/system/user/login.html';
 			}
 		});
 	});
