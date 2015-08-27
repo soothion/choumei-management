@@ -273,7 +273,7 @@ class RebateController extends Controller{
 		if(!$id)
 			return $this->error('未知返佣单ID');
 		
-		$result = Rebate::update($param);
+		$result = $rebate->update($param);
 		if($result){
 			// 触发事件，写入日志
 		    Event::fire('rebate.update',[$rebate]);
