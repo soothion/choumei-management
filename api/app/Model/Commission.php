@@ -9,13 +9,13 @@ class Commission extends Model {
 
 	protected $table = 'commission';
 
-	protected $fillable = ['id', 'ordersn', 'sn', 'amount', 'created_at', 'updated_at'];
+	protected $fillable = ['id', 'ordersn','salonid', 'sn', 'amount', 'created_at', 'updated_at','rate','grade'];
 
     public function salon(){
         return $this->belongsTo('App\Salon');
     }    
     
-	public function getSn(){
+	public static function getSn(){
 		$redis = Redis::connection();
 		$key = 'YJ-'.date('ymd');
 		if($redis->get($key)==FALSE)
