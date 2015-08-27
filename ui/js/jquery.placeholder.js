@@ -11,7 +11,7 @@
 		}
 		return ret;
 	}
-	var selector='input[type="text"],textarea';
+	var selector='input,textarea';
 	$.extend({
 		placeholder:function($dom){
 			$dom=$dom||$(selector);
