@@ -190,7 +190,7 @@ Route::group(['middleware'], function(){
 		'uses'=>'RebateController@create'
 	));	
 
-	Route::any('rebate/update',array(
+	Route::any('rebate/update/{id}',array(
 		'as'=>'rebate.update',
 		'uses'=>'RebateController@update'
 	));
