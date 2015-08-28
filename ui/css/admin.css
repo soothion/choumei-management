@@ -841,7 +841,7 @@ form[data-role="hash"] input[type="date"]{
 	vertical-align: middle;
 	cursor:pointer;
 	padding:0px 8px;
-	margin:-1px!important;
+	margin:0px!important;
 	border:1px solid transparent;
 }
 .filter-box label input+span:before{
@@ -850,6 +850,13 @@ form[data-role="hash"] input[type="date"]{
 .filter-box label input:checked+span{
 	color:#58A2EC;
 	font-weight:bold;
+}
+.filter-box .filter-tab{
+	position:relative;
+	z-index:100;
+}
+.filter-box .filter-tab+.flex-box{
+	margin-top:-1px;
 }
 .filter-box .filter-tab input:checked+span{
 	border-color:#D7D7D7 #D7D7D7 #fff #D7D7D7;
