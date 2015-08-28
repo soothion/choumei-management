@@ -110,7 +110,7 @@ class PrepayBill extends Model
             'created_at' => $now_date,
             'updated_at' => $now_date,
        ];
-       $id = self::insertAndGetId($record);
+       $id = self::insertGetId($record);
        
        //结算
        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['money'],"预付款返还",$now_date);
