@@ -277,9 +277,9 @@ class ShopCountApi
             ]);
             
             $code = PrepayBill::getNewCode($options['type']);
-            $options['pay_manage_id'] = $pay_id;
+            $options['other_id'] = $pay_id;
             $options['code'] = $code;
-            $options['pay_manage_code'] = $pay_code;
+            $options['other_code'] = $pay_code;
             $options['state'] = PrepayBill::STATE_OF_TO_CHECK;
             $options['created_at'] = $options['updated_at'] = date("Y-m-d H:i:s");
             $id = PrepayBill::insertGetId($options);
