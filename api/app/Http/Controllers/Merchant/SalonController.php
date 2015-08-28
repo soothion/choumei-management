@@ -239,7 +239,7 @@ class SalonController extends Controller {
 	* @apiParam {String} contractPicUrl 可选,合同图片 json数组.
 	* @apiParam {String} licensePicUrl 可选,营业执照 json数组.
 	* @apiParam {String} corporatePicUrl 可选,法人执照 json数组.
-	* @apiParam {String} salonGrade 可选,店铺当前等级 1特级店2A级店3B级店4C级店4淘汰店.
+	* @apiParam {String} salonGrade 可选,店铺当前等级 1特级店2A级店3B级店4C级店5淘汰店.
 	* @apiParam {String} salonChangeGrade 必填,店铺调整等级.
 	* @apiParam {String} changeInTime 必填,调整生效日期 Y-m-d.
 	* @apiParam {String} floorDate 可选,落地日期Y-m-d.
@@ -346,7 +346,7 @@ class SalonController extends Controller {
 	* @apiParam {String} salonType 可选,店铺类型 1纯社区店 2社区商圈店 3商圈店 4商场店 5工作室（写字楼)）,多选  1_3  下划线拼接.
 	* @apiParam {String} contractPicUrl 可选,合同图片 json数组.
 	* @apiParam {String} licensePicUrl 可选,营业执照 json数组.
-	* @apiParam {String} salonGrade 可选,店铺当前等级 1特级店2A级店3B级店4C级店4淘汰店.
+	* @apiParam {String} salonGrade 可选,店铺当前等级 1特级店2A级店3B级店4C级店5淘汰店.
 	* @apiParam {String} salonChangeGrade 必填,店铺调整等级.
 	* @apiParam {String} changeInTime 必填,调整生效日期 Y-m-d.
 	* @apiParam {String} floorDate 可选,落地日期Y-m-d.
@@ -618,7 +618,7 @@ class SalonController extends Controller {
 	* @apiSuccess {String} provinceId 省Id
 	* @apiSuccess {String} recommend_code 推荐码.
 	* @apiSuccess {String} dividendStatus 分红联盟状态 0：开启  1关闭.
-	* @apiSuccess {String} salonGrade 店铺当前等级 1特级店2A级店3B级店4C级店4淘汰店.
+	* @apiSuccess {String} salonGrade 店铺当前等级 1特级店2A级店3B级店4C级店5淘汰店.
 	* @apiSuccess {String} salonChangeGrade 店铺调整等级.
 	* @apiSuccess {String} changeInTime 调整生效日期 (时间戳).
 	* @apiSuccess {String} floorDate 落地日期 (时间戳).

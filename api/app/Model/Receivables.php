@@ -108,6 +108,7 @@ class Receivables extends Model {
 				'r.id',
 				'r.checkTime',
 				'r.payCode',
+				'r.paySingleCode',
 				'mg.name as preparedByName',
 				'mgs.name as cashierName',
 		);
@@ -244,6 +245,7 @@ class Receivables extends Model {
 				'r.id',
 				'r.checkTime',
 				'r.payCode',
+				'r.paySingleCode',
 				'mg.name as preparedByName',
 				'mgs.name as cashierName',
 		);

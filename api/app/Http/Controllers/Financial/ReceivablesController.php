@@ -8,6 +8,7 @@ use App\ShopCountApi;
 use App\Merchant;
 use App\Salon;
 use App\PayManage;
+use App\PrepayBill;
 class ReceivablesController extends Controller{
 
 	
@@ -268,7 +269,7 @@ class ReceivablesController extends Controller{
 			return $this->error('参数错误');
 		}
 		$payTypeId = array();
-		$list = $query->select(['type','id','status','paymentStyle','receiptDate','salonid','money','singleNumber','cashier','preparedBy','checkTime','addTime'])->whereIn('id', $idArr)->get();
+		$list = $query->select(['type','type','id','status','paymentStyle','receiptDate','salonid','money','singleNumber','cashier','preparedBy','checkTime','addTime'])->whereIn('id', $idArr)->get();
 		if($list)
 		{
 			foreach($list as $key=>$val)
@@ -277,8 +278,16 @@ class ReceivablesController extends Controller{
 				{
 					return $this->error('数据错误，请重新勾选');
 				}
-				if($val->paymentStyle == 2)
+				if($val->paymentStyle == 2 || $val->type == 2)
 				{
+					if($val->type == 2)
+					{
+						$payTypeId[$key]['act'] = 1;
+					}
+					elseif($val->type != 2 && $val->paymentStyle == 2)
+					{
+						$payTypeId[$key]['act'] = 2;
+					}
 					$payTypeId[$key]['id'] = $val->id;//账扣返还id
 					$payTypeId[$key]['salonid'] = $val->salonid;
 					$payTypeId[$key]['receiptDate'] = date('Y-m-d',$val->receiptDate);
@@ -318,12 +327,25 @@ class ReceivablesController extends Controller{
 				 			'make_uid'=>$v['preparedBy'],
 				 			'make_at'=>$v['addTime'],		 		
 						);
-				$retData = PayManage::makeFromReceive($data);
-				$status = 0;
-				if($retData)
+				if($v['act'] == 1)//转付单
 				{
-					$status = Receivables::where('id', '=', $v['id'])->update(['payCode' => $retData['code'],'payId'=>$retData['id']]);
+					$retData = PrepayBill::makeReturn($data);
+					$status = 0;
+					if($retData)
+					{
+						$status = Receivables::where('id', '=', $v['id'])->update(['paySingleCode' => $retData['code'],'paySingleId'=>$retData['id']]);
+					}
 				}
+				else 
+				{
+					$retData = PayManage::makeFromReceive($data);
+					$status = 0;
+					if($retData)
+					{
+						$status = Receivables::where('id', '=', $v['id'])->update(['payCode' => $retData['code'],'payId'=>$retData['id']]);
+					}
+				}
+				
 				
 			}
 		}
@@ -406,12 +428,14 @@ class ReceivablesController extends Controller{
 				
 				$result[$key]['status'] = $statusArr[$value['status']];
 				$result[$key]['payCode'] = $value['payCode'];
+				$result[$key]['paySingleCode'] = $value['paySingleCode'];
+				
 			}
 		
 		}
 		//导出excel
 		$title = '收款列表'.date('Ymd');
-		$header = ['店铺名称','店铺编号','收款单号','收款类型','收款方式','收款金额','创建日期','制单人','出纳','收款日期','确认收款日期','状态','关联付款单号'];
+		$header = ['店铺名称','店铺编号','收款单号','收款类型','收款方式','收款金额','创建日期','制单人','出纳','收款日期','确认收款日期','状态','关联付款单号','关联转付单号'];
 		Excel::create($title, function($excel) use($result,$header){
 			$excel->sheet('Sheet1', function($sheet) use($result,$header){
 				$sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
@@ -446,7 +470,7 @@ class ReceivablesController extends Controller{
 	 * @apiSuccess {String} cashierName 出纳.
 	 * @apiSuccess {Number} checkTime 确认收款时间(时间戳).
 	 * @apiSuccess {String} payCode 关联付款单号.
-	 * 
+	 * @apiSuccess {String} paySingleCode 关联转付单号.
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
