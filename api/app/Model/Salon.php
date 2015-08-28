@@ -21,7 +21,7 @@ class Salon extends Model {
 	/**
 	 * 店铺列表
 	 */
-	public static  function getSalonList( $where = '' , $page=1, $page_size=20,$orderName = ' add_time  ',$order = 'desc' )
+	public static  function getSalonList( $where = '' , $page=1, $page_size=20,$orderName = ' salonid  ',$order = 'desc' )
 	{
 		$fields = array(
 				's.salonid',
@@ -137,7 +137,7 @@ class Salon extends Model {
 	/**
 	 * 店铺列表导出
 	 */
-	public static  function getSalonListExport( $where = '',$orderName = 's.add_time  ',$order = 'desc' )
+	public static  function getSalonListExport( $where = '',$orderName = 's.salonid  ',$order = 'desc' )
 	{
 		$fields = array(
 				's.salonid',
