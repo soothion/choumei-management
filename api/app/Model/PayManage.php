@@ -149,10 +149,10 @@ class PayManage extends Model
         $id = self::insertGetId($record);
         
         //转付单关联
-        PrepayBill::where('id',$prepay_id)->update(['pay_manage_id'=>$id,'pay_manage_code'=>$code]);
+        PrepayBill::where('id',$prepay_id)->update(['other_id'=>$id,'other_code'=>$code]);
         
         //店铺结算
-        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'], $params['money']);
+        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'], $params['money'],"预付保证金",$params['make_at']);
         
         return ['id'=>$id,'code'=>$code];
     }
@@ -377,7 +377,7 @@ class PayManage extends Model
                     ShopCount::count_bill_by_pay_money($item['salon_id'], $item['merchant_id'],$money,$remark,time());
                 }
                 if($item['type'] == self::TYPE_OF_FTZ)
-                {
+                {                   
                     ShopCount::count_bill_by_invest_money($item['salon_id'], $item['merchant_id'], $item['money']);
                 }
             }

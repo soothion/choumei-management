@@ -74,6 +74,51 @@ class PrepayBill extends Model
     }
     
     /**
+     * 通过收款单生成转付单返还
+     */
+    public static function makeReturn($params)
+    {
+        if( !isset($params['id']) ||//三方id
+            !isset($params['code']) ||//三方code
+            !isset($params['salon_id']) ||
+            !isset($params['merchant_id']) ||
+            !isset($params['money']) ||//金额
+            !isset($params['receive_type']) ||//支付方式
+            !isset($params['require_day']) ||//要求付款日期
+            !isset($params['receive_day']) ||//实际付款日期
+            !isset($params['cash_uid'])    ||//确认人
+            !isset($params['make_uid']) ||//制单人
+            !isset($params['make_at'])//创建日期
+        )
+        {
+            return false;
+        }
+        $code = self::getNewCode(self::TYPE_OF_RETURN);
+        $now_date = date("Y-m-d H:i:s");
+        $record = [
+            'salon_id'  => $params['salon_id'],
+            'merchant_id'  => $params['merchant_id'],
+            'other_id'  => $params['id'],
+            'other_code'  => $params['code'],
+            'type'  => self::TYPE_OF_RETURN,
+            'uid'  => $params['make_uid'],
+            'pay_money'  => $params['money'],
+            'pay_type'  => $params['receive_type'],
+            'state'  => self::STATE_OF_COMPLETED,
+            'day'  => $params['require_day'],
+            'pay_day'  => $params['receive_day'],
+            'created_at' => $now_date,
+            'updated_at' => $now_date,
+       ];
+       $id = self::insertAndGetId($record);
+       
+       //结算
+       ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['money'],"预付款返还",$now_date);
+       
+       return ['id'=>$id,'code'=>$code];     
+    }
+    
+    /**
      * 生成新的一条单号
      */
     public static function getNewCode($type)
