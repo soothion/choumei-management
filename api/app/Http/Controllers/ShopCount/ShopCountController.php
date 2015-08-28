@@ -212,7 +212,7 @@ class ShopCountController extends Controller
             'type'=>self::T_INT,
             'merchant_id'=>self::T_INT,
             'salon_id'=>self::T_INT,
-            'pay_money'=>self::T_INT,
+            'pay_money'=>self::T_FLOAT,
             'pay_type'=>self::T_INT,
             'day'=>self::T_STRING,
         ]);
