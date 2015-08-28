@@ -79,7 +79,7 @@ class ShopCountLog extends Model
             }
         }
         //插入记录
-        $id = self::insertAndGetId([
+        $id = self::insertGetId([
             'salon_id'=>$salon_id,
             'type'=>$type,
             'money'=>$money,
