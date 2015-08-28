@@ -161,7 +161,7 @@ class ShopCount extends Model
      * @param datetime|timestamp $count_at
      * @return boolean
      */
-    public static function count_bill($salon_id,$merchant_id,$money,$money_type,$remark="",$count_at=NULL)
+    public static function count_bill($salon_id,$merchant_id,$money,$money_type,$remark="",$count_at="0000-00-00 00:00:00")
     {
         $salon_id = intval($salon_id);
         $merchant_id = intval($merchant_id);
@@ -209,7 +209,7 @@ class ShopCount extends Model
      * @param datetime|timestamp $count_at
      * @return boolean
      */
-    public static function count_bill_by_pay_money($salon_id,$merchant_id,$money,$remark="预付保证金",$count_at=null)
+    public static function count_bill_by_pay_money($salon_id,$merchant_id,$money,$remark="预付保证金",$count_at="0000-00-00 00:00:00")
     {
         return self::count_bill($salon_id, $merchant_id, $money, "pay_money",$remark,$count_at);
     }
@@ -223,7 +223,7 @@ class ShopCount extends Model
      * @param datetime|timestamp $count_at
      * @return boolean
      */
-    public static function count_bill_by_receive_money($salon_id,$merchant_id,$money,$remark="臭美券消费",$count_at=null)
+    public static function count_bill_by_receive_money($salon_id,$merchant_id,$money,$remark="臭美券消费",$count_at="0000-00-00 00:00:00")
     {
         return self::count_bill($salon_id, $merchant_id, $money, "spend_money",$remark,$count_at);
     }
@@ -238,7 +238,7 @@ class ShopCount extends Model
      * @param datetime|timestamp $count_at
      * @return boolean
      */
-    public static function count_bill_by_commission_money($salon_id,$merchant_id,$money,$remark="",$count_at=null)
+    public static function count_bill_by_commission_money($salon_id,$merchant_id,$money,$remark="",$count_at="0000-00-00 00:00:00")
     {
         return self::count_bill($salon_id, $merchant_id, $money, "commission_money",$remark,$count_at);
     }
@@ -252,7 +252,7 @@ class ShopCount extends Model
      * @param datetime|timestamp $count_at
      * @return boolean
      */
-    public static function count_bill_by_commission_return_money($salon_id,$merchant_id,$money,$remark="",$count_at=null)
+    public static function count_bill_by_commission_return_money($salon_id,$merchant_id,$money,$remark="",$count_at="0000-00-00 00:00:00")
     {
         return self::count_bill($salon_id, $merchant_id, $money, "commission_return_money",$remark,$count_at);
     }
