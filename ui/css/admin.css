@@ -446,13 +446,10 @@ legend{
 	font-size:17px;
 	padding-left:20px;
 }
-input.label{
-	margin:-1px;
-}
-input.label+label{
+label.label input + span{
 	line-height:30px;
 }
-input.label:checked + label{
+label.label input:checked + span{
 	border-color:#498ae5;
 	color:#498ae5;
 }
@@ -874,7 +871,7 @@ form[data-role="hash"] input[type="date"]{
 .ie9 .breadcrumb .btn-primary{
 	float:right;
 }
-.ie9 .select{
+.ie9 select{
 	padding-right:0px;
 	background-image:none;
 }

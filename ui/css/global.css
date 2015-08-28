@@ -414,7 +414,7 @@ label>input[type="radio"]:checked+span:before,label>input[type="checkbox"]:check
 	cursor: pointer;
 }
 .label input+span:before{
-	display:none;
+	display:none!important;
 }
 .label input:checked+span{
 	border-color:#81aa2f;
