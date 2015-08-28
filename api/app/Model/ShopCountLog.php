@@ -78,6 +78,7 @@ class ShopCountLog extends Model
                 $balance_money = $money * -1;
             }
         }
+        
         //插入记录
         $id = self::insertGetId([
             'salon_id'=>$salon_id,
@@ -89,7 +90,8 @@ class ShopCountLog extends Model
             'created_at'=>date("Y-m-d H:i:s")
         ]);
         //更新本条记录之后的余额信息
-        self::where('salon_id',$salon_id)->where("id",">",$id)->{$update_method}("balance_money",$money);
+        self::where('salon_id',$salon_id)->where("id","<>",$id)->where("count_at",">=",$time)->{$update_method}("balance_money",$money);
+        
     }
     
     /**
