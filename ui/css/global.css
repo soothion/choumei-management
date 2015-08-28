@@ -342,6 +342,7 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
 }
 .popup-tips-text{
     color:#fff;
+	background:#3E4D5C;
     background:rgba(0,0,0,0.8);
     border-radius: 3px;
     display:inline-block;
@@ -364,7 +365,7 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
 .touch-link:active{
     background-color:rgba(0,0,0,0.05);
 }
-input.radio,input.checkbox,label>input[type="radio"],label>input[type="checkbox"]{
+label>input[type="radio"],label>input[type="checkbox"]{
     width:0!important;
 	opacity:0;
 	margin:0;
@@ -373,11 +374,11 @@ input.radio,input.checkbox,label>input[type="radio"],label>input[type="checkbox"
     -ms-appearance:none;
     appearance:none;
 }
-input.radio+label,input.checkbox+label,label>input[type="radio"]+span,label>input[type="checkbox"]+span{
+label>input[type="radio"]+span,label>input[type="checkbox"]+span{
 	display:inline-block;
 	margin-right:15px;
 }
-input.radio+label:before,input.checkbox+label:before,label>input[type="radio"]+span:before,label>input[type="checkbox"]+span:before{
+label>input[type="radio"]+span:before,label>input[type="checkbox"]+span:before{
     display: inline-block;
     width:8px;
     height:8px;
@@ -392,26 +393,16 @@ input.radio+label:before,input.checkbox+label:before,label>input[type="radio"]+s
     -ms-transition:all 0.2s ease 0s;
     transition:all 0.2s ease 0s;
 }
-input.checkbox+label:before,label>input[type="checkbox"]+span:before{
+label>input[type="checkbox"]+span:before{
     border-radius:0;
     width:6px;
     height:6px;
 }
-input.radio:checked+label:before,input.checkbox:checked+label:before,label>input[type="radio"]:checked+span:before,label>input[type="checkbox"]:checked+span:before{
+label>input[type="radio"]:checked+span:before,label>input[type="checkbox"]:checked+span:before{
     box-shadow:0px 0px 0px 3px #fff,0px 0px 0px 4px rgba(223,49,49,0.8);
     background:rgba(223,49,49,0.8);
 }
-input.label{
-	width:0px!important;
-	opacity:0;
-	margin:0;
-	padding:0;
-	 -webkit-appearance:none;
-    -moz-appearance:none;
-    -ms-appearance:none;
-    appearance:none;
-}
-input.label+label{
+.label input+span{
 	display:inline-block;
 	vertical-align:middle;
 	border:1px solid #ddd;
@@ -422,7 +413,10 @@ input.label+label{
 	line-height:2.5rem;
 	cursor: pointer;
 }
-input.label:checked+label{
+.label input+span:before{
+	display:none;
+}
+.label input:checked+span{
 	border-color:#81aa2f;
 	color:#81aa2f;
 }

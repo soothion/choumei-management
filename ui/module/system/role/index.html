@@ -21,16 +21,16 @@
 			<form data-role="hash">
 				角色名称<input type="text" name="keyword"/><span class="space"></span>
 				所属部门 
-				<select name="department_id" class="select" ajat-one="true" ajat="list/department#domid=department&tempid=/module/public/template/department&insert=after" id="department">
+				<select name="department_id"  ajat-one="true" ajat="list/department#domid=department&tempid=/module/public/template/department&insert=after" id="department">
 					<option value="">全部</option>
 				</select>
 				<span class="space"></span>
-				状态 <select name="status" class="select">
+				状态 <select name="status" >
 					<option value="">全部</option>
 					<option value="1">正常</option>
 					<option value="2">停用</option>
 					<option value="3">注销</option></select><span class="space"></span>
-				所属城市 <select name="city_id" class="select"  ajat-one="true" ajat="list/city#domid=city&tempid=city-t" id="city">
+				所属城市 <select name="city_id"   ajat-one="true" ajat="list/city#domid=city&tempid=city-t" id="city">
 					<script type="text/template" id="city-t">
 						<option value="">全部</option>
 						<%data.forEach(function(item){%>

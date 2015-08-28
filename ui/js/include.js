@@ -30,11 +30,13 @@ document.writeln('<link rel="stylesheet" href="/awesome/css/font-awesome.min.css
 document.writeln('<link rel="stylesheet" href="/css/reset.css?v='+cfg.version+'" />');
 document.writeln('<link rel="stylesheet" href="/css/global.css?v='+cfg.version+'" />');
 document.writeln('<link rel="stylesheet" href="/css/admin.css?v='+cfg.version+'" />');
+document.writeln('<!--[if lt IE 9]><script type="text/javascript" src="/js/array.js"></script><![endif]-->');
 document.writeln('<script type="text/javascript" src="/js/jquery.min.js?v='+cfg.version+'"></script>');
-document.writeln('<!--[if IE 9]><script type="text/javascript" src="/js/jquery.placeholder.js"></script><![endif]-->');
+document.writeln('<!--[if IE 8]><script type="text/javascript" src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script><![endif]-->');
+document.writeln('<!--[if lt IE 10]><script type="text/javascript" src="/js/jquery.placeholder.js"></script><![endif]-->');
 document.writeln('<script type="text/javascript" src="/js/sea.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/ejs.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/lib.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/access.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/admin.js?v='+cfg.version+'"></script>');
-document.writeln('<!--[if IE 9]><script type="text/javascript">var ie9=true;</script><![endif]-->');
+document.writeln('<!--[if lt IE 10]><script type="text/javascript">var ie9=true;</script><![endif]-->');

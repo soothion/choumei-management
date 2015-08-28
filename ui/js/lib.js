@@ -253,7 +253,7 @@
         parseProtocol: function () {//解析协议内容
             if (this._protocol) {
                 this.renderProtocol();
-                var arr = this._protocol.split(/\?|#/);
+                var arr =this._protocol.split(/\?|#/);
                 if(arr.length==3){
                     this.protocol.url = arr[0];
                     this.protocol.query = lib.tools.parseQuery(arr[1]);
@@ -265,7 +265,9 @@
 						this.protocol.query=lib.tools.parseQuery(arr[0])
 					}
                     this.protocol.custom = lib.tools.parseQuery(arr[1]);
-                }
+                }else if(arr.length==1){
+					this.protocol.custom = lib.tools.parseQuery(arr[0]);
+				}
                 this.dom=document.getElementById(this.protocol.custom.domid);
             }
         },
@@ -745,7 +747,7 @@
 		this.init();
 	}
 	Select.prototype={
-		selector:'.select',
+		selector:'select',
 		init:function(){
 			this.bindEvent();
 		},

@@ -263,6 +263,7 @@ $(function(){
 		var $this=$(this);
 		var val=$.trim($this.val());
 		if(val){
+			$this.data('old',val);
 			clearTimeout(lib.completeTimer);
 			lib.completeTimer=setTimeout(function(){
 				var ajat=$this.attr('ajat-complete').replace('${value}',val);

@@ -21,7 +21,7 @@
         <div class="wrapper">
 			<form data-role="hash">                       
 			   <div class="input-group input-switch">
-				<select class="select" id="select"  >
+				<select  id="select"  >
 					<option value="0">登录账号</option>
 					<option value="1">角色名称</option>
 					<option value="2">用户姓名</option>
@@ -32,7 +32,7 @@
 			</div>					 
 			<span class="space"></span>
 				<label>所属部门</label>
-				 <select name="department_id" class="select" ajat-one="true" ajat="list/department#domid=department&tempid=department-t" id="department">
+				 <select name="department_id"  ajat-one="true" ajat="list/department#domid=department&tempid=department-t" id="department">
 				<script type="text/template" id="department-t">
 					<option value="">全部</option>
 					<%for(var i=0;i<data.length;i++){%>
@@ -42,14 +42,14 @@
 			</select>			 
 				<span class="space"></span>
 				<label>状态</label>
-			   <select name="status" class="select">
+			   <select name="status" >
 				<option value="">全部</option>
 				<option value="1">正常</option>
 				<option value="2">停用</option>
 				<option value="3">注销</option></select>
 				<span class="space"></span>
 				<label>所属城市</label>
-				<select class="select" name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=city-c" id ="city">
+				<select  name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=city-c" id ="city">
 				   <script type="text/template" id="city-c">
 				   <option value="">全部</option>
 				   <%for(var i=0;i<data.length;i++){%>
