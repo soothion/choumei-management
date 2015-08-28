@@ -34,15 +34,21 @@
 
                 <div class="form-group">
                   <span>确认日期:</span>
-                  <input type="date" name="start"/>
-                  <span style="margin:0 10px">至</span>
-                  <input type="date" name="end"/>   
-                  <input type="radio" class="radio mr-20" name="group" id="statistics1" value="day" checked>
-                  <label for="statistics1">按日统计</label>
-
-                  <input type="radio" class="radio" name="group" id="statistics2" value="month">
-                  <label for="statistics2">按月统计</label> 
-
+				  <span class="date-group">
+					  <input type="date" name="start"/>
+					  <span style="margin:0 10px">至</span>
+					  <input type="date" name="end"/>   
+				  </span>
+				  <span class="space"></span>
+				  <label>
+					<input type="radio" name="group" value="day" checked>
+					<span>按日统计</span>
+				  </label>
+                  
+				  <label>
+					<input type="radio" name="group" value="month">
+					<span>按日统计</span>
+				  </label>
                   <button id="search_btn" class="btn" type="submit">搜索</button>
                 </div>            
             </form>            
