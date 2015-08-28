@@ -145,7 +145,7 @@ class SalonController extends Controller {
 		$businessName = isset($param["businessName"])?urldecode($param["businessName"]):"";//业务代表
 		$salestatus = isset($param["salestatus"])?$param["salestatus"]:0;//店铺状态 
 		
-		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"add_time";
+		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"salonid";
     	$sort_type = isset($param["sort_type"])?$param["sort_type"]:"desc";
 		
 		if($shopType)
@@ -1052,7 +1052,7 @@ class SalonController extends Controller {
 		$sn = isset($param["sn"])?$param["sn"]:0;//店铺编号
 		$merchantName = isset($param["merchantName"])?$param["merchantName"]:"";//商户名称
 		$businessName = isset($param["businessName"])?urldecode($param["businessName"]):"";//业务代表
-		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"s.add_time";
+		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"s.salonid";
 		$sort_type = isset($param["sort_type"])?$param["sort_type"]:"desc";
 	
 		if($shopType)

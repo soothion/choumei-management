@@ -25,7 +25,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款类型：</label>
                     <div class="control">
-                       <select required name="type" class="select"  style="width:20%;" <%=query.id?"disabled":""%>>
+                       <select required name="type"   style="width:20%;" <%=query.id?"disabled":""%>>
 							<option value="2">付业务投资款</option>
                         </select>
                     </div>
@@ -59,7 +59,7 @@
 			    <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>收款方式：</label>
                     <div class="control">
-                        <select class="select" name="pay_type">
+                        <select  name="pay_type">
 						  <option value="1" <%=data.pay_type==1?"selected":""%>>银行存款</option>
 						  <option value="2" <%=data.pay_type==2?"selected":""%>>账扣支付</option>
 						  <option value="3" <%=data.pay_type==3?"selected":""%>>现金</option>

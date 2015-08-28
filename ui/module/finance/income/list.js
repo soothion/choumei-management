@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-08-19 15:54:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-26 10:22:45
+* @Last Modified time: 2015-08-28 14:14:20
 */
 
 (function(){
@@ -77,7 +77,8 @@
 
     uploader.on('uploadFinished',function(){
         setTimeout(function(){
-            lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();           
+            //lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
+            $(window).trigger('hashchange')           
         }, 2000)
     });
 

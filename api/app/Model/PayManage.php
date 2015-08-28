@@ -368,7 +368,13 @@ class PayManage extends Model
             {
                 if($item['type'] == self::TYPE_OF_FJY)
                 {
-                    ShopCount::count_bill_by_pay_money($item['salon_id'], $item['merchant_id'], $item['money']);
+                    $money = floatval($item['money']);
+                    $remark = "预付款返还";
+                    if($money >= 0)
+                    {
+                        $remark = "预付保证金";
+                    }
+                    ShopCount::count_bill_by_pay_money($item['salon_id'], $item['merchant_id'],$money,$remark,time());
                 }
                 if($item['type'] == self::TYPE_OF_FTZ)
                 {

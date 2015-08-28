@@ -67,7 +67,7 @@
 				<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属城市：</label>
 				<div class="control">
-					<select required name="city_id" class="select" ajat="list/city#domid=city&tempid=/module/public/template/department&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
+					<select required name="city_id"  ajat="list/city#domid=city&tempid=/module/public/template/department&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
 					</select>
 						 
 				</div>
@@ -75,14 +75,14 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门：</label>
 				<div class="control">
-					<select required name="department_id" class="select" ajat="list/department#domid=department&tempid=/module/public/template/department&sid=<%=data.department_id%>" id="department" <%=data.status==3?"disabled":""%> ajat-change="list/position?id=${value}#domid=position&tempid=position_t">
+					<select required name="department_id"  ajat="list/department#domid=department&tempid=/module/public/template/department&sid=<%=data.department_id%>" id="department" <%=data.status==3?"disabled":""%> ajat-change="list/position?id=${value}#domid=position&tempid=position_t">
 					</select>
 				</div>
 			</div>
 		<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>职位：</label>
 				<div class="control">
-					<select required name="position_id" class="select" ajat="<%if(data.department_id){%>list/position?id=<%=data.department_id%><%}%>#domid=position&tempid=position_t&sid=<%=data.position_id%>" id="position" <%=data.status==3?"disabled":""%>>
+					<select required name="position_id"  ajat="<%if(data.department_id){%>list/position?id=<%=data.department_id%><%}%>#domid=position&tempid=position_t&sid=<%=data.position_id%>" id="position" <%=data.status==3?"disabled":""%>>
 					</select>
 				</div>
 			</div>
@@ -90,7 +90,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>用户状态：</label>
 				<div class="control">
-						<select required name="status" class="select" <%=data.status==3?"disabled":""%>>
+						<select required name="status"  <%=data.status==3?"disabled":""%>>
 						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
 						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
 						<option value="3" <%=data.status==3?"selected":""%>>注销</option>

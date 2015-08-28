@@ -74,13 +74,16 @@
                     <div class="control-group">
                         <label class="control-label" for=""><span class="red">*</span>账户类型：</label>
 
-                        <input type="radio" name="accountType" <%=!data.accountType||data.accountType == 1 ? 'checked' : ''%> 
-                        class="radio" id="radio1" value="1" required>
-                        <label for="radio1">对公账户</label>
+                        <label class="radio">
+                            <input type="radio" name="accountType" <%=!data.accountType||data.accountType == 1 ? 'checked' : ''%> value="1" required>
+                            <span>对公账户</span>
+                        </label>
 
-                        <input type="radio" name="accountType" <%=data.accountType == 2 ? 'checked' : ''%> 
-                        class="radio" id="radio2" value="2" required>
-                        <label for="radio2">对私账户</label>
+                        <label class="radio">
+                            <input type="radio" name="accountType" value="2" required 
+                            <%=data.accountType == 2 ? 'checked' : ''%> >
+                            <span>对私账户</span>
+                        </label>
 
                         <span class="control-help" style="display:none;"></span>
                     </div>
