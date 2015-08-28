@@ -839,7 +839,7 @@ class Permissions extends Command
                                 'slug' => 'pay_manage.index',
                                 'status' => 1,
                                 'sort' => NULL,
-                                'show' => 2
+                                'show' => 1
                             ),
                             84 => array(
                                 'id' => 84,
@@ -903,7 +903,7 @@ class Permissions extends Command
                                 'slug' => 'pay_manage.check_list',
                                 'status' => 1,
                                 'sort' => NULL,
-                                'show' => 2
+                                'show' => 1
                             ),
                             92 => array(
                                 'id' => 92,
@@ -911,7 +911,7 @@ class Permissions extends Command
                                 'slug' => 'pay_manage.confirm_list',
                                 'status' => 1,
                                 'sort' => NULL,
-                                'show' => 2
+                                'show' => 1
                             ),
                         )
                     )

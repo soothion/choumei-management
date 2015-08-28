@@ -103,9 +103,8 @@ class ShopCount extends Model
                 $now_money = floatval($ir->money) + $money;
                 InsteadReceive::where('id',$ir->id)->update(['money'=> $now_money]);
             }
-            
-            ShopCount::count_bill_by_receive_money($salon_id, $merchant_id, $money); 
-                      
+            $remark = $type == 1 ?"臭美券消费":"打赏金额";
+            ShopCount::count_bill_by_receive_money($salon_id, $merchant_id, $money,$remark,$time);
             $return_code = 1;
             return ;         
         });
@@ -121,106 +120,141 @@ class ShopCount extends Model
      */
     public static function count_bill_mutil($salon_id,$merchant_id,$money_info)
     {
-        $salon_id = intval($salon_id);
-        $merchant_id = intval($merchant_id);
-        $money_info = array_map("floatval",$money_info);
-        $types = array_keys($money_info);
-        $select_keys = $types;
-        $select_keys[] = 'id';
-        $items = self::where("salon_id",$salon_id)->get($select_keys)->toArray();
-        $now_date = date("Y-m-d H:i:s");
-        if(empty($items) || !isset($items[0]))
-        {
-            $records = ['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,'created_at'=>$now_date,'updated_at'=>$now_date];
-            foreach($money_info as $key => $money)
-            {
-                $records[$key] = $money;
-            }
-            self::create($records);
-        }
-        else
-        {
-            $records = ['merchant_id'=>$merchant_id,'updated_at'=>$now_date];
-            foreach($types as $type)
-            {
-                $records[$type] = floatval($items[0][$type]) + $money_info[$type];
-            }
-            $id = $items[0]['id'];
-            self::where('id',$id)->update($records);
-        }
-        return true;
+        //@todo 暂时不要用    没有流水信息
+//         $salon_id = intval($salon_id);
+//         $merchant_id = intval($merchant_id);
+//         $money_info = array_map("floatval",$money_info);
+//         $types = array_keys($money_info);
+//         $select_keys = $types;
+//         $select_keys[] = 'id';
+//         $items = self::where("salon_id",$salon_id)->get($select_keys)->toArray();
+//         $now_date = date("Y-m-d H:i:s");
+//         if(empty($items) || !isset($items[0]))
+//         {
+//             $records = ['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,'created_at'=>$now_date,'updated_at'=>$now_date];
+//             foreach($money_info as $key => $money)
+//             {
+//                 $records[$key] = $money;
+//             }
+//             self::create($records);
+//         }
+//         else
+//         {
+//             $records = ['merchant_id'=>$merchant_id,'updated_at'=>$now_date];
+//             foreach($types as $type)
+//             {
+//                 $records[$type] = floatval($items[0][$type]) + $money_info[$type];
+//             }
+//             $id = $items[0]['id'];
+//             self::where('id',$id)->update($records);
+//         }
+//         return true;
     }
     
     /**
      * 店铺往来结算
-     * @param unknown $salon_id
-     * @param unknown $merchant_id
-     * @param unknown $money
-     * @param unknown $type
+     * @param int $salon_id
+     * @param int $merchant_id
+     * @param float $money
+     * @param string $money_type
+     * @param string $remark
+     * @param datetime|timestamp $count_at
+     * @return boolean
      */
-    public static function count_bill($salon_id,$merchant_id,$money,$type)
+    public static function count_bill($salon_id,$merchant_id,$money,$money_type,$remark="",$count_at=NULL)
     {
         $salon_id = intval($salon_id);
         $merchant_id = intval($merchant_id);
         $money = floatval($money);
-        $items = self::where("salon_id",$salon_id)->get(['id',$type])->toArray();
+        $items = self::where("salon_id",$salon_id)->get(['id',$money_type])->toArray();
         $now_date = date("Y-m-d H:i:s");
+        
+        //结算的log
+        switch ($money_type)
+        {
+            case "pay_money":
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_PREPAY, $money, $count_at);
+                break;
+            case "spend_money":
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_SPEND, $money, $count_at);
+                break;
+            case "commission_money":
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_COMMISSION, $money, $count_at);
+                break;
+            case "commission_return_money":
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_COMMISSION_RETURN, $money, $count_at);
+                break;                
+        }
+        
+        
         if(empty($items) || !isset($items[0]))
         {
-            self::create(['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,"{$type}"=>$money,'created_at'=>$now_date,'updated_at'=>$now_date]);
+            self::create(['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,"{$money_type}"=>$money,'created_at'=>$now_date,'updated_at'=>$now_date]);
         }
         else
         {
-            $now_money = floatval($items[0][$type]) + $money;
+            $now_money = floatval($items[0][$money_type]) + $money;
             $id = $items[0]['id'];
-            self::where('id',$id)->update(['merchant_id'=>$merchant_id,"{$type}"=>$now_money,'updated_at'=>$now_date]);
+            self::where('id',$id)->update(['merchant_id'=>$merchant_id,"{$money_type}"=>$now_money,'updated_at'=>$now_date]);
         }
         return true;
     }
     
     /**
      * 结算付款
-     * @param unknown $salon_id
-     * @param unknown $merchant_id
-     * @param unknown $money
+     * @param int $salon_id
+     * @param int $merchant_id
+     * @param float $money
+     * @param string $remark
+     * @param datetime|timestamp $count_at
+     * @return boolean
      */
-    public static function count_bill_by_pay_money($salon_id,$merchant_id,$money)
+    public static function count_bill_by_pay_money($salon_id,$merchant_id,$money,$remark="预付保证金",$count_at=null)
     {
-        return self::count_bill($salon_id, $merchant_id, $money, "pay_money");
+        return self::count_bill($salon_id, $merchant_id, $money, "pay_money",$remark,$count_at);
     }
   
     /**
      * 结算收款款(已消费)
-     * @param unknown $salon_id
-     * @param unknown $merchant_id
-     * @param unknown $money
+     * @param int $salon_id
+     * @param int $merchant_id
+     * @param float $money
+     * @param string $remark
+     * @param datetime|timestamp $count_at
+     * @return boolean
      */
-    public static function count_bill_by_receive_money($salon_id,$merchant_id,$money)
+    public static function count_bill_by_receive_money($salon_id,$merchant_id,$money,$remark="臭美券消费",$count_at=null)
     {
-        return self::count_bill($salon_id, $merchant_id, $money, "spend_money");
+        return self::count_bill($salon_id, $merchant_id, $money, "spend_money",$remark,$count_at);
     }
     
   
     /**
      * 结算佣金
-     * @param unknown $salon_id
-     * @param unknown $merchant_id
-     * @param unknown $money
+     * @param int $salon_id
+     * @param int $merchant_id
+     * @param float $money
+     * @param string $remark
+     * @param datetime|timestamp $count_at
+     * @return boolean
      */
-    public static function count_bill_by_commission_money($salon_id,$merchant_id,$money)
+    public static function count_bill_by_commission_money($salon_id,$merchant_id,$money,$remark="",$count_at=null)
     {
-        return self::count_bill($salon_id, $merchant_id, $money, "commission_money");
+        return self::count_bill($salon_id, $merchant_id, $money, "commission_money",$remark,$count_at);
     }
     
     /**
      * 结算佣金返还
-     * @param unknown $salon_id
-     * @param unknown $merchant_id
-     * @param unknown $money
+     * @param int $salon_id
+     * @param int $merchant_id
+     * @param float $money
+     * @param string $remark
+     * @param datetime|timestamp $count_at
+     * @return boolean
      */
-    public static function count_bill_by_commission_return_money($salon_id,$merchant_id,$money)
+    public static function count_bill_by_commission_return_money($salon_id,$merchant_id,$money,$remark="",$count_at=null)
     {
-        return self::count_bill($salon_id, $merchant_id, $money, "commission_return_money");
+        return self::count_bill($salon_id, $merchant_id, $money, "commission_return_money",$remark,$count_at);
     }
     
     /**
