@@ -392,7 +392,7 @@ class RebateController extends Controller{
 		foreach ($rebates as $key => $rebate) {
 			if($rebate->status==1)
 				continue;
-			ShopCount::count_bill_by_commission_return_money($rebate->salon_id,$rebate->merchantId,$rebate->amount);
+			//ShopCount::count_bill_by_commission_return_money($rebate->salon_id,$rebate->merchantId,$rebate->amount);
 			$update = $rebate->update(['status'=>1,'confirm_at'=>date('Y-m-d H:m:s'),'confirm_by'=>$this->user->name]);
 			$result++;
 		}
