@@ -8,6 +8,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 class ShopCountLog extends Model
 {
+    public $timestamps = false;
     protected $table = 'shop_count_log';
     
     /**
