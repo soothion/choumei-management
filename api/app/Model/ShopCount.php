@@ -173,16 +173,16 @@ class ShopCount extends Model
         switch ($money_type)
         {
             case "pay_money":
-                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_PREPAY, $money, $count_at);
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_PREPAY, $money, $count_at,$remark);
                 break;
             case "spend_money":
-                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_SPEND, $money, $count_at);
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_SPEND, $money, $count_at,$remark);
                 break;
             case "commission_money":
-                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_COMMISSION, $money, $count_at);
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_COMMISSION, $money, $count_at,$remark);
                 break;
             case "commission_return_money":
-                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_COMMISSION_RETURN, $money, $count_at);
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_COMMISSION_RETURN, $money, $count_at,$remark);
                 break;                
         }
         
