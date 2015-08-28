@@ -840,7 +840,7 @@ form[data-role="hash"] input[type="date"]{
 	display:inline-block;
 	vertical-align: middle;
 	cursor:pointer;
-	padding:0px 10px;
+	padding:0px 8px;
 	margin:-1px!important;
 	border:1px solid transparent;
 }

@@ -371,27 +371,7 @@
 	border-radius:0px;
 }
 
-
-.circle-wrapper{
-	border:1px solid #D7D7D7;
-	top:-6px;
-	padding-top:8px;
-	padding-bottom:5px;
-	margin-left: 1px;
-	position:relative;
-}
-
-.circle-wrapper label{
-	margin-bottom:5px;
-	margin-right:5px;
-}
-.filter-title{
-	line-height:26px;
-}
 .table table{
 	margin-bottom:-1px;
 }
-.ie9 .filter-title{
-	display:table-cell;
-	width:70px;
-}
+
