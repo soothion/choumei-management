@@ -448,6 +448,7 @@ legend{
 }
 label.label input + span{
 	line-height:30px;
+	margin-right:0px;
 }
 label.label input:checked + span{
 	border-color:#498ae5;

@@ -29,6 +29,9 @@
 	height:38px;
 	font-size:14px;
 }
+.login button{
+	font-size:16px;
+}
 .login input{
 	padding-left:34px;
 }

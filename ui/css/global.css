@@ -402,6 +402,10 @@ label>input[type="radio"]:checked+span:before,label>input[type="checkbox"]:check
     box-shadow:0px 0px 0px 3px #fff,0px 0px 0px 4px rgba(223,49,49,0.8);
     background:rgba(223,49,49,0.8);
 }
+.label{
+	margin:5px 5px 5px 0;
+	display:inline-block;
+}
 .label input+span{
 	display:inline-block;
 	vertical-align:middle;
@@ -420,6 +424,7 @@ label>input[type="radio"]:checked+span:before,label>input[type="checkbox"]:check
 	border-color:#81aa2f;
 	color:#81aa2f;
 }
+
 .switch{
     display:none;
 }
