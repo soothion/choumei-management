@@ -889,7 +889,7 @@ form[data-role="hash"] input[type="date"]{
 .ie9 .filter-title{
 	vertical-align:top;
 	display:table-cell;
-	width:80px;
+	width:65px;
 }
 .placeholder{
 	color:#999!important;
