@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-06 16:48:38
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-10 11:07:02
+* @Last Modified time: 2015-08-28 14:06:05
 */
 
 (function(){
@@ -15,7 +15,7 @@
         if(data.salonType){
             var arr = data.salonType.split("_");
             arr.forEach(function(value,index){
-               $(":checkbox[value='"+value+"']").attr('checked',true).show().next().show(); 
+               $(":checkbox[value='"+value+"']").attr('checked',true).parent().show(); 
             })       
         }
     }

@@ -371,18 +371,23 @@
 
         <script type="text/template" id="business_t">
             <%data.forEach&&data.forEach(function(item){%>
-                <input type="radio" class="label" name="businessId" value="<%=item.id%>" id="businssRadio<%=item.id%>" 
-                <%=item.id == protocol.custom.businessId ? "checked":""%> required>
-                <label for="businssRadio<%=item.id%>"><span><%=item.businessName%></span></label>
+                <label class="label">
+                    <input type="radio" class="label" name="businessId" value="<%=item.id%>"
+                    <%=item.id == protocol.custom.businessId ? "checked":""%> required>
+                    <span><%=item.businessName%></span>
+                </label>
             <%})%>
             <span class="control-help" style="display:none;"></span>
         </script>
 
 		<script type="text/template" id="zone_t">
 			<%data.forEach&&data.forEach(function(item){%>
-			<input type="radio" class="label" id="areaRadio<%=item.areaid%>" <%=item.areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=item.areaid%>" required>
-			<label for="areaRadio<%=item.areaid%>"><%=item.areaname%></label>
+            <label class="label">
+    			<input type="radio" <%=item.areaid==protocol.custom.zone?"checked":""%>  name="zone" value="<%=item.areaid%>" required>
+    			<span><%=item.areaname%></span>
+            </label>
 			<%})%>
+
 			<%if(data.length>0){%>
 				<div class="control-help" style="display:none;"></div>
 			<%}else{%>
