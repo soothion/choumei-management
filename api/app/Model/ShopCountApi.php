@@ -118,12 +118,12 @@ class ShopCountApi
             $data['amount'] = $commission;
             $data['grade'] = $order->salonGrade;
             $data['rate'] = $rate;
-            $date = date('Y-m-d H:m:s');
+            $date = date('Y-m-d H:i:s');
             $data['updated_at'] = $date;
             $data['created_at'] = $date;
 
             $insert[] = $data;
-            ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'订单佣金',date('Y-m-d H:m:s',$order->use_time));
+            ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'订单佣金',date('Y-m-d H:i:s',$order->use_time));
         }
         $model->insert($insert);
     }
@@ -158,11 +158,11 @@ class ShopCountApi
             $data['amount'] = $commission;
             $data['grade'] = $order->salonGrade;
             $data['rate'] = $rate;
-            $date = date('Y-m-d H:m:s');
+            $date = date('Y-m-d H:i:s');
             $data['updated_at'] = $date;
             $data['created_at'] = $date;
             $insert[] = $data;
-            ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'赏金单佣金',date('Y-m-d H:m:s',$order->endTime));
+            ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'赏金单佣金',date('Y-m-d H:i:s',$order->endTime));
         }
         $model->insert($insert);
     }

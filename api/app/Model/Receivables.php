@@ -35,90 +35,31 @@ class Receivables extends Model {
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
 		});
-		$query =  DB::table('receivables as r')
-            ->leftjoin('salon as s', 's.salonid', '=', 'r.salonid')
-            ->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-            ->leftjoin('managers as mg', 'mg.id', '=', 'r.preparedBy')
-            ->select($fields);
-		if($orderName == 'receiptDate')//收款日期排序 时 先按状态排序，eq：  待确认 默认不显示收款日期
-		{
-			$query =  $query ->orderBy('status','desc');	
-		}
-		$query =  $query ->orderBy($orderName,$order);
-		$query =  $query ->where('r.status','!=',3);
-		if(isset($where['type']) && $where['type'])
-		{
-			$query =  $query ->where('r.type','=',$where['type']);
-		}
-		if(isset($where['paymentStyle']) && $where['paymentStyle'])
-		{
-			$query =  $query ->where('r.paymentStyle','=',$where['paymentStyle']);
-		}
-		if(isset($where['status']) && $where['status'])
-		{
-			$query =  $query ->where('r.status','=',$where['status']);
-		}
-		if(isset($where['startTime']) && $where['startTime']  && $where['endTime'])
-		{
-			$query =  $query ->where('r.receiptDate','>=',$where['startTime']);
-			$query =  $query ->where('r.receiptDate','<=',$where['endTime']);
-			if(!$where['status'])
-			{
-				$query =  $query ->where('r.status','=',2);//只要确认的收款
-			}
-		}
-		if(isset($where['salonname']) && $where['salonname'])
-		{
-			$keyword = '%'.$where['salonname'].'%';
-			$query = $query->where('s.salonname','like',$keyword);
-		}
-		if(isset($where['salonSn']) && $where['salonSn'])
-		{
-			$keyword = '%'.$where['salonSn'].'%';
-			$query = $query->where('s.sn','like',$keyword);
-		}
-		if(isset($where['merchantName']) && $where['merchantName'])
-		{
-			$keyword = '%'.$where['merchantName'].'%';
-			$query = $query->where('m.name','like',$keyword);
-		}
+		$query =  self::getQuery($where,$orderName,$order,$fields);
          
         $salonList =    $query->paginate($page_size);
         $result = $salonList->toArray();
         return $result;
 	}
+	
 	/**
-	 * 导出
-	 * 
+	 * 获取查询对象
 	 * */
-	public static function getListExport($where = '',$orderName = ' addTime  ',$order = 'desc')
+	
+	private static function getQuery($where = '',$orderName = ' addTime  ',$order = 'desc',$fields)
 	{
-		$fields = array(
-				's.salonid',
-				's.salonname',
-				's.sn',
-				'm.name',
-				'r.type',
-				'r.paymentStyle',
-				'r.money',
-				'r.addTime',
-				'r.singleNumber',
-				'r.status',
-				'r.receiptDate',
-				'r.id',
-				'r.checkTime',
-				'r.payCode',
-				'r.paySingleCode',
-				'mg.name as preparedByName',
-				'mgs.name as cashierName',
-		);
 		$query =  DB::table('receivables as r')
-					->leftjoin('salon as s', 's.salonid', '=', 'r.salonid')
-					->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-					->leftjoin('managers as mg', 'mg.id', '=', 'r.preparedBy')
-					->leftjoin('managers as mgs', 'mgs.id', '=', 'r.cashier')
-					->select($fields)
-					->orderBy($orderName,$order);
+		->leftjoin('salon as s', 's.salonid', '=', 'r.salonid')
+		->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
+		->leftjoin('managers as mg', 'mg.id', '=', 'r.preparedBy')
+		->leftjoin('managers as mgs', 'mgs.id', '=', 'r.cashier')
+		->select($fields)
+		->orderBy($orderName,$order);
+
+		if($orderName == 'receiptDate')//收款日期排序 时 先按状态排序，eq：  待确认 默认不显示收款日期
+		{
+			$query =  $query ->orderBy('status','desc');
+		}
 		$query =  $query ->where('r.status','!=',3);//删除
 		if(isset($where['type']) && $where['type'])
 		{
@@ -156,7 +97,36 @@ class Receivables extends Model {
 			$keyword = '%'.$where['merchantName'].'%';
 			$query = $query->where('m.name','like',$keyword);
 		}
-		 
+			
+		return $query;
+	}
+	
+	/**
+	 * 导出
+	 * 
+	 * */
+	public static function getListExport($where = '',$orderName = ' addTime  ',$order = 'desc')
+	{
+		$fields = array(
+				's.salonid',
+				's.salonname',
+				's.sn',
+				'm.name',
+				'r.type',
+				'r.paymentStyle',
+				'r.money',
+				'r.addTime',
+				'r.singleNumber',
+				'r.status',
+				'r.receiptDate',
+				'r.id',
+				'r.checkTime',
+				'r.payCode',
+				'r.paySingleCode',
+				'mg.name as preparedByName',
+				'mgs.name as cashierName',
+		);
+		$query = self::getQuery($where,$orderName,$order,$fields);
 		return  $query->get();
 	}
 	

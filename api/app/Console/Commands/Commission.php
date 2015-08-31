@@ -68,7 +68,7 @@ class Commission extends Command
                 $amount = floatval($order->priceall)*$rate/100;
                 $amount = round($amount,2);
                 $data['amount'] = $amount;
-                $date = date('Y-m-d H:m:s');
+                $date = date('Y-m-d H:i:s');
                 $data['updated_at'] = $date;
                 $data['created_at'] = $date;
                 $result = \App\Commission::create($data);
