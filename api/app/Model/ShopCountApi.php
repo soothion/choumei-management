@@ -87,18 +87,17 @@ class ShopCountApi
     }
     
 
+    
     /**
-     * 佣金单结算
+     * 订单佣金结算
      * @param array $options 订单号
      */
     public static function commissionOrder($options){
         $orders = Order::whereIn("ordersn",$options)
-        ->with(['salonInfo'=>function($q){
-            $q->lists('salonid','commissionRate');
-        }])
         ->where('order.status',4)
+        ->join('salon_info','salon_info.salonid','=','order.salonid')
         ->join('salon','salon.salonid','=','order.salonid')
-        ->select('order.orderid','order.ordersn','order.salonid','order.priceall','salon.merchantId','salon.salonGrade')
+        ->select('order.orderid','order.ordersn','order.salonid','order.priceall','order.use_time','salon.merchantId','salon.salonGrade','salon_info.commissionRate')
         ->get();
 
         $insert = [];
@@ -107,11 +106,12 @@ class ShopCountApi
 
             if($exist = $model->where('ordersn',$order->ordersn)->first())
                 continue;
-            $rate = floatval($order->salonInfo->commissionRate);
+            $rate = floatval($order->commissionRate);
             $amount = floatval($order->priceall);
             $commission = $rate*$amount/100;
             $commission = round($commission,2);
             $data['ordersn'] = $order->ordersn;
+            $data['type'] = 1;//订单1,赏金单2
             $data['salonid'] = $order->salonid;
             $data['sn'] = $model->getSn();
             $data['amount'] = $commission;
@@ -121,12 +121,51 @@ class ShopCountApi
             $data['updated_at'] = $date;
             $data['created_at'] = $date;
             $insert[] = $data;
-            ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission);
+            ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'订单佣金',date('Y-m-d H:m:s',$order->use_time));
+           
+        }
+        $model->insert($insert);
+    }
+    
+
+    /**
+     * 赏金单佣金结算
+     * @param array $options 订单号
+     */
+    public static function commissionBounty($options){
+        $orders = BountyTask::whereIn("btSn",$options)
+        ->where('bountry_task.status',4)
+        ->join('salon','salon.salonid','=','bountry_task.salonId')
+        ->join('salon_info','salon_info.salonid','=','bountry_task.salonId')
+        ->select('bountry_task.btId','bountry_task.btSn','bountry_task.salonId','bountry_task.money','bountry_task.endTime','salon.merchantId','salon.salonGrade')
+        ->get();
+
+        $insert = [];
+        $model = new Commission;
+        foreach ($orders as $key => $order) {
+
+            if($exist = $model->where('ordersn',$order->ordersn)->first())
+                continue;
+            $rate = floatval($order->salonInfo->commissionRate);
+            $amount = floatval($order->money);
+            $commission = $rate*$amount/100;
+            $commission = round($commission,2);
+            $data['ordersn'] = $order->btSn;
+            $data['type'] = 2;//订单1,赏金单2
+            $data['salonid'] = $order->salonId;
+            $data['sn'] = $model->getSn();
+            $data['amount'] = $commission;
+            $data['grade'] = $order->salonGrade;
+            $data['rate'] = $rate;
+            $date = date('Y-m-d H:m:s');
+            $data['updated_at'] = $date;
+            $data['created_at'] = $date;
+            $insert[] = $data;
+            ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'赏金单佣金',date('Y-m-d H:m:s',$order->endTime));
         }
         $model->insert($insert);
     }
 
-    
     /**
      * 已消费的订单结算
      * @param array $options 订单号

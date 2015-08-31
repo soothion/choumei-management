@@ -765,15 +765,17 @@ class ShopCountController extends Controller
         {
             $operation = "订单结算";
             $res = ShopCountApi::countOrder($orders);
+            ShopCountApi::commissionOrder($orders);
         }
         else if($param['type'] == 2)
         {
             $operation = "赏金单结算";
             $res = ShopCountApi::countBounty($orders);
+            ShopCountApi::commissionBounty($orders);
         }
         if(!empty($res))
         {
-            Event::fire("shopcount.countOrder",['operation'=>$operation,'object'=>$param['ordersn']]);
+            Event::fire("shopcount.countOrder",[['operation'=>$operation,'object'=>$param['ordersn']]]);
         }
         return $this->success($res);
     }
