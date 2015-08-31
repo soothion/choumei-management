@@ -145,7 +145,7 @@ class SalonController extends Controller {
 		$businessName = isset($param["businessName"])?urldecode($param["businessName"]):"";//业务代表
 		$salestatus = isset($param["salestatus"])?$param["salestatus"]:0;//店铺状态 
 		
-		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"salonid";
+		$sort_key = isset($param["sort_key"])?$param["sort_key"]:"s.salonid";
     	$sort_type = isset($param["sort_type"])?$param["sort_type"]:"desc";
 		
 		if($shopType)
