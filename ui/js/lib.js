@@ -457,9 +457,9 @@
 				if(reg.test(val)){
 					var arr=val.split('.');
 					if(arr[0].length>12){
-						return false;
+						return {msg:'输入值整数不能大于12位且小数不能大于2位'};
 					}if(arr[1]&&arr[1].length>2){
-						return false;
+						return {msg:'输入值的整数不能大于12位且小数不能大于2位'};
 					}else{
 						return true;
 					}
@@ -469,7 +469,20 @@
 			},
 			number:function(val){
 				var reg=new RegExp('^[0-9]*[1-9][0-9]*$');
-				return reg.test(val)||val==0;
+				if(!isNaN(val)){
+					if(val==0){
+						return {msg:'输入值不能为零'};
+					}
+					if(val.indexOf('.')>-1){
+						return {msg:'输入值不能含小数点'};
+					}
+				}
+				if(reg.test(val)){
+					if(val.length>12){
+						return {msg:'输入值整数不能大于12位且不能有小数点'};
+					}
+				}
+				return reg.test(val);
 			},
 			percent:function(val){
 				val=parseFloat(val);
@@ -517,10 +530,15 @@
 					}
 				}
 				if(typeof ret=='function'){
-					if(!ret(val)){
+					var result=ret(val);
+					if(result===false){
 						$target.trigger('error',{type:'pattern'});
 						return;
 					}else{
+						if(result.msg){
+							$target.trigger('error',{type:'error',errormsg:result.msg});
+							return;
+						}
 						//数字和浮点型添加值的限制
 						if(pattern=="number"||pattern=="float"){
 							var min=$target.attr('min')
