@@ -71,13 +71,15 @@
 					  <td>关联付款单号：</td>
 					  <td><%=data.payCode%></td>
                 </tr>
-					<%}%>
+				<%}%>
+					
 				<%if((data.type==2)&&(query.preview!="preview")){%>		
 				<tr>
 					  <td>关联转付单号：</td>
 					  <td><%=data.paySingleCode%></td>
                 </tr>
 				<%}%>
+				
                 <tr>
 					  <td>收款类型：</td>
 					  <td><%=type[data.type]%></td>
