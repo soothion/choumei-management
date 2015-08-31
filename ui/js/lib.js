@@ -776,7 +776,7 @@
 		},
 		bindEvent:function(){
 			var self=this;
-			$(document.body).on('focus',this.selector,function(e){
+			$(document).on('focus',this.selector,function(e){
 				e.stopPropagation();
 				e.preventDefault();
 			}).on('blur',this.selector,function(e){
