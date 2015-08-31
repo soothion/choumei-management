@@ -392,7 +392,7 @@ class RebateController extends Controller{
 		foreach ($rebates as $key => $rebate) {
 			if($rebate->status==1)
 				continue;
-			$date = date('Y-m-d H:m:s');
+			$date = date('Y-m-d H:i:s');
 			ShopCount::count_bill_by_commission_return_money($rebate->salon_id,$rebate->merchantId,$rebate->amount,'返佣单结算',$date);
 			$update = $rebate->update(['status'=>1,'confirm_at'=>$date,'confirm_by'=>$this->user->name]);
 			$result++;
@@ -454,7 +454,7 @@ class RebateController extends Controller{
 		    foreach ($array as $key => $value) {
 		    	if(empty($value[1])||empty($value[3])||empty($value[4])||empty($value[5])||empty($value[6]))
 		    		continue;
-		    	$date = date('Y-m-d H:m:s');
+		    	$date = date('Y-m-d H:i:s');
 		    	$salonsn = $value[1];
 		    	$salonid = $rebate->getSalonid($salonsn);
 		    	if(!$salonid)
