@@ -64,6 +64,10 @@
 				options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
 			}
 			options.timeout=6000;
+			/*
+			options.headers={
+				token:localStorage.getItem('token')
+			}*/
 			var done=function(data){
 				//code 异常处理
 				if(data.result==0){
@@ -99,7 +103,8 @@
 				if (status === "timeout")    msg = "请求超时，请稍后再试!";
 				if (status === "offline")    msg = "网络异常，请稍后再试!";
 				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
-			}).done(done).done(function(data){
+			}).done(done).done(function(data,status,xhr){
+				//console.log(xhr.getAllResponseHeaders());
 				if(data.token){
 					localStorage.setItem('token',data.token);
 				}
@@ -452,9 +457,9 @@
 				if(reg.test(val)){
 					var arr=val.split('.');
 					if(arr[0].length>12){
-						return false;
+						return {msg:'输入值整数不能大于12位且小数不能大于2位'};
 					}if(arr[1]&&arr[1].length>2){
-						return false;
+						return {msg:'输入值的整数不能大于12位且小数不能大于2位'};
 					}else{
 						return true;
 					}
@@ -464,7 +469,20 @@
 			},
 			number:function(val){
 				var reg=new RegExp('^[0-9]*[1-9][0-9]*$');
-				return reg.test(val)||val==0;
+				if(!isNaN(val)){
+					if(val==0){
+						return {msg:'输入值不能为零'};
+					}
+					if(val.indexOf('.')>-1){
+						return {msg:'输入值不能含小数点'};
+					}
+				}
+				if(reg.test(val)){
+					if(val.length>12){
+						return {msg:'输入值整数不能大于12位且不能有小数点'};
+					}
+				}
+				return reg.test(val);
 			},
 			percent:function(val){
 				val=parseFloat(val);
@@ -512,10 +530,15 @@
 					}
 				}
 				if(typeof ret=='function'){
-					if(!ret(val)){
+					var result=ret(val);
+					if(result===false){
 						$target.trigger('error',{type:'pattern'});
 						return;
 					}else{
+						if(result.msg){
+							$target.trigger('error',{type:'error',errormsg:result.msg});
+							return;
+						}
 						//数字和浮点型添加值的限制
 						if(pattern=="number"||pattern=="float"){
 							var min=$target.attr('min')
@@ -753,23 +776,40 @@
 		},
 		bindEvent:function(){
 			var self=this;
-			$(document.body).on('focus',this.selector,function(e){
+			$(document).on('focus',this.selector,function(e){
 				e.stopPropagation();
 				e.preventDefault();
 			}).on('blur',this.selector,function(e){
-				$(document.body).children('.s-list').remove();
+				$('#s-list').remove();
+				$(this).removeClass('focus');
 			}).on('mousedown',this.selector,function(e){
 				var $this=$(this);
-				$this.focus();
+				if(document._activeElement){
+					$(document._activeElement).trigger('blur');
+				}else{
+					var nodeName=document.activeElement.nodeName;
+					var tagName=document.activeElement.tagName;
+					if(!nodeName){
+						nodeName=tagName;
+					}
+					nodeName=nodeName.toUpperCase();
+					if(nodeName=='SELECT'||nodeName=='INPUT'||nodeName=='TEXTAREA'){
+						document.activeElement.blur();
+					}
+				}
+				$this.addClass('focus');
 				if(!this.disabled){
 					self.instance(this);
+					document._activeElement=this;
 				}
 				e.stopPropagation();
 				e.preventDefault();
+			}).on('mousedown',function(){
+				$('select.focus').trigger('blur');
 			});
 		},
 		instance:function(select){
-			var list=$('<div class="s-list"></div>');
+			var list=$('<div class="s-list" id="s-list"></div>');
 			var $select=$(select);
 			$select.children().each(function(){
 				var $this=$(this);
