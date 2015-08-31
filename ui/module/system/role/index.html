@@ -25,12 +25,16 @@
 					<option value="">全部</option>
 				</select>
 				<span class="space"></span>
-				状态 <select name="status" >
+				状态
+				 <select name="status" >
 					<option value="">全部</option>
 					<option value="1">正常</option>
 					<option value="2">停用</option>
-					<option value="3">注销</option></select><span class="space"></span>
-				所属城市 <select name="city_id"   ajat-one="true" ajat="list/city#domid=city&tempid=city-t" id="city">
+					<option value="3">注销</option>
+				</select>
+				<span class="space"></span>
+				所属城市 
+				<select name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=city-t" id="city">
 					<script type="text/template" id="city-t">
 						<option value="">全部</option>
 						<%data.forEach(function(item){%>
@@ -41,7 +45,7 @@
 				<span class="space"></span>
 				添加时间 
 				<span class="date-group">
-				<input type="date" name="start" data-role="start" placeholder="YYYY-MM-DD"/>到<input name="end" type="date" data-role="end" placeholder="YYYY-MM-DD"/>
+					<input type="date" name="start" data-role="start" placeholder="YYYY-MM-DD"/>到<input name="end" type="date" data-role="end" placeholder="YYYY-MM-DD"/>
 				</span>
 				<button class="btn" type="submit">搜索</button>
 			</form>
