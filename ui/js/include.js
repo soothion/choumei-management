@@ -21,6 +21,8 @@ if(cfg.url.indexOf('<#')>-1&&(cfg.env=='dev'||cfg.env=='test')){
 document.writeln('<meta name="renderer" content="webkit|ie-stand">');
 document.writeln('<meta http-equiv=”X-UA-Compatible” content=”IE=edge” > ');
 document.writeln('<meta charset="utf-8">');
+document.writeln('<meta http-equiv="Access-Control-Allow-Origin" content="*">');
+document.writeln('<meta http-equiv="Access-Control-Allow-Headers" content="token">');
 document.writeln('<link rel="icon" href="http://app.choumei.cn/images/logo16.ico" type="image/x-icon">');
 document.writeln('<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">');
 document.writeln('<meta name="apple-mobile-web-app-capable" content="yes">');
