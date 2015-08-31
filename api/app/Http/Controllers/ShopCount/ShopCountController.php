@@ -749,33 +749,34 @@ class ShopCountController extends Controller
             'ordersn'=>self::T_STRING,
             'token'=>self::T_STRING,
         ],true);
-        $passed = ShopCountApi::checkToken($param);
-        if(!$passed)
-        {
-            return $this->error("Unauthorized",401);
-        }
+//         $passed = ShopCountApi::checkToken($param);
+//         if(!$passed)
+//         {
+//             return $this->error("Unauthorized",401);
+//         }
         $orders = explode(",", $param['ordersn']);
 
         //佣金单结算
         ShopCountApi::commissionOrder($orders);
-        
+      
         $res = null;
-        $operation = "";
+        $str = "";
         if ($param['type'] == 1)
         {
-            $operation = "订单结算";
+            $str = "订单结算";
             $res = ShopCountApi::countOrder($orders);
         }
         else if($param['type'] == 2)
         {
-            $operation = "赏金单结算";
+            $str = "赏金单结算";
             $res = ShopCountApi::countBounty($orders);
         }
         if(!empty($res))
         {
-            Event::fire("shopcount.countOrder",['operation'=>$operation,'object'=>$param['ordersn']]);
-        }
+            Event::fire("shopcount.countOrder",[['operation'=>$str,'object'=>$param['ordersn']]]);
+        }        
         return $this->success($res);
+       
     }
 
     protected static function format_prepay_data($datas)

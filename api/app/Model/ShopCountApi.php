@@ -100,9 +100,10 @@ class ShopCountApi
         ->join('salon','salon.salonid','=','order.salonid')
         ->select('order.orderid','order.ordersn','order.salonid','order.priceall','salon.merchantId','salon.salonGrade')
         ->get();
-
+ 
         $insert = [];
         $model = new Commission;
+        
         foreach ($orders as $key => $order) {
 
             if($exist = $model->where('ordersn',$order->ordersn)->first())
@@ -120,7 +121,7 @@ class ShopCountApi
             $date = date('Y-m-d H:m:s');
             $data['updated_at'] = $date;
             $data['created_at'] = $date;
-            $insert[] = $data;
+            $insert[] = $data;         
             ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission);
         }
         $model->insert($insert);
@@ -136,7 +137,7 @@ class ShopCountApi
         $order_sns = $options;
         $input_count = count($order_sns);
         $base_order_infos = Order::whereIn("ordersn",$order_sns)->where('status',4)->select('ordersn','salonid','priceall','use_time')->get()->toArray();
-        
+       
         $select_count = count($base_order_infos);
         //状态检查
         if($input_count != $select_count)

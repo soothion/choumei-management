@@ -87,14 +87,14 @@ class ShopcountEventListener
     }
     
     public function onCountOrder($info)
-    {
+    {        
         $data = [];
         $data['username'] = "系统结算";
         $data['roles'] = "";
         $data['slug'] = Route::currentRouteName();
         $data['ip'] = Request::getClientIp();
-        $data['operation'] = $info['operation'];
-        $data['object'] = $info['object'];
+        $data['operation'] = isset($info['operation'])?$info['operation']:"";
+        $data['object'] = isset($info['object'])?$info['object']:"";
         return Log::create($data);
     }
     
