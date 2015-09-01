@@ -747,7 +747,13 @@ class SalonController extends Controller {
 		$info = Dividend::where(array('salon_id'=>$salonid))->first();
 		if($data['shopType'] == 3 && $info)  //金字塔店
 		{
-			$query->where('salon_id',$salonid)->update(array('status'=>$status,'update_time'=>time()));
+			$devData['status'] = $status;
+			$devData['update_time'] = time();
+			if($status == 0)
+			{
+				$devData['last_start_time'] = time();
+			}
+			$query->where('salon_id',$salonid)->update($devData);
 		}
 		else if($data['shopType'] != 3 && $info) //修改店铺类型不是 金字塔    --关闭
 		{
