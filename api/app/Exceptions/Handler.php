@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Response;
 use JWTAuth;
+use App\Exceptions\ApiException;
 
 class Handler extends ExceptionHandler
 {
@@ -42,21 +43,25 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $e)
     {
         // return parent::render($request, $e);
-        $token = '';
-        $code = 0;
+        $data['result'] = 0;
+        $data['token'] = '';
         if(JWTAuth::getToken()){
             try {
-                $token = JWTAuth::parseToken()->refresh();
+                $data['token'] = JWTAuth::parseToken()->refresh();
             } 
             catch (Exception $e){
                 //
             }
-            
         }
-        if(method_exists($e,'getCode'))
-            $code = $e->getCode();
-        if(method_exists($e,'getStatusCode'))
-            $code = $e->getStatusCode();
-        return Response::json(['result'=>0,'code'=>$code,'token'=>$token,'msg'=>$e->getMessage()]);
+        if($e instanceof ApiException){
+            $data['message'] = $e->getError();
+            $data['code'] = $e->getCode();
+        }
+        else{
+            if(Config::get('debug')=='true')
+                $data['debug'] = $e->getMessage;
+        }
+
+        return Response::json($data);
     }
 }
