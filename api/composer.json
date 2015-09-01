@@ -22,8 +22,7 @@
     "autoload": {
         "classmap": [
             "database",
-            "app",
-            "choumei"
+            "app"
         ],
         "psr-4": {
             "App\\": "app/"

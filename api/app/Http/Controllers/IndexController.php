@@ -14,11 +14,16 @@ use App\Permission;
 use DB;
 use App\Role;
 use Excel;
+use App\Exceptions\ApiException;
 
 class IndexController extends Controller{
 
 
 	public function test(){
+		throw new ApiException("Error Processing Request", 200);
+		
+		return Choumei::success();
+		header('Access-Control-Allow-Origin: *');
 		$password = bcrypt('cmceshi');
 		echo $password;die;
 		echo '<pre>';
