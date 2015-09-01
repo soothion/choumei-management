@@ -351,7 +351,7 @@ $(function(){
 						$pager.find('.pagination a').off('click').addClass('link');
 					}
 				});
-				$pager.append('&nbsp;共'+data.total+'条&nbsp;<form data-role="hash"><input type="text" name="page" /><button type="submit" class="go link">go</button></form>');
+				$pager.append(lib.ejs.render({url:'/module/public/template/pager'},{data:data}));
 			});
 		}
 		if(data&&data.total==0){
