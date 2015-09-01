@@ -259,7 +259,7 @@ $(function(){
 		}
 	});
 	/**键盘输入自动补全**/
-	$body.on('input','input[ajat-complete]',function(){//自动补全输入事件
+	$body.on('input','input[ajat-complete]',function(e){//自动补全输入事件
 		var $this=$(this);
 		var val=$.trim($this.val());
 		if(val){
@@ -320,6 +320,14 @@ $(function(){
 		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',$this.data());
 		complete.find('.complete-position').hide();
 	});
+	if(document.createElement('input').oninput===undefined){
+		$body.on('keyup','input[ajat-complete]',function(e){
+			if(e.keyCode==13||e.keyCode==38||e.keyCode==40){
+				return;
+			}
+			$(this).trigger('input');
+		})
+	}
 	
 	/**全局分页**/
 	$body.on('_ready',function(e,data){
@@ -343,7 +351,7 @@ $(function(){
 						$pager.find('.pagination a').off('click').addClass('link');
 					}
 				});
-				$pager.append('&nbsp;共'+data.total+'条&nbsp;<form data-role="hash"><input type="text" name="page" /><button type="submit" class="go link">go</button></form>');
+				$pager.append(lib.ejs.render({url:'/module/public/template/pager'},{data:data}));
 			});
 		}
 		if(data&&data.total==0){
@@ -432,6 +440,7 @@ $(function(){
 				zIndex:1000,
 				choose:function(){
 					e.target.focus();
+					$(e.target).removeClass('placeholder');
 				}
 			};
 			laydate(options);			

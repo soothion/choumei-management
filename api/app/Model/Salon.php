@@ -21,7 +21,7 @@ class Salon extends Model {
 	/**
 	 * 店铺列表
 	 */
-	public static  function getSalonList( $where = '' , $page=1, $page_size=20,$orderName = ' salonid  ',$order = 'desc' )
+	public static  function getSalonList( $where = '' , $page=1, $page_size=20,$orderName = ' s.salonid  ',$order = 'desc' )
 	{
 		$fields = array(
 				's.salonid',
@@ -41,52 +41,8 @@ class Salon extends Model {
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
 		});
-		$query =  DB::table('salon as s')
-            ->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
-            ->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-            ->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
-            ->select($fields)
-            ->orderBy($orderName,$order)
-            ;
-        $query =  $query ->where("salestatus","!=","2");//剔除删除
-       // $query =  $query ->where("m.status","!=","2");//剔除商户删除
-        if(isset($where["shopType"]))
-        {
-        	$query =  $query ->where("shopType","=",$where["shopType"]);
-        }
-		if(isset($where["zone"]))
-        {
-        	$query =  $query ->where("zone","=",$where["zone"]);
-        }
-		if(isset($where["district"]))
-        {
-        	$query =  $query ->where("district","=",$where["district"]);
-        }
-		if(isset($where["businessName"]))
-		{
-			$keyword = '%'.$where['businessName'].'%';
-			$query = $query->where('b.businessName','like',$keyword);
-		}
-		if(isset($where['salonname'])&&$where['salonname'])
-		{
-			$keyword = '%'.$where['salonname'].'%';
-			$query = $query->where('salonname','like',$keyword);
-		}
-		if(isset($where['sn'])&&$where['sn'])
-		{
-			$keyword = '%'.$where['sn'].'%';
-			$query = $query->where('s.sn','like',$keyword);
-		}
-		if(isset($where['merchantName'])&&$where['merchantName'])
-		{
-			$keyword = '%'.$where['merchantName'].'%';
-			$query = $query->where('m.name','like',$keyword);
-		}
-		if(isset($where["salestatus"]))
-		{
-			$query =  $query ->where("salestatus","=",$where["salestatus"]);
-		}
-         
+
+		$query = self::getQuery( $where,$orderName,$order,$fields);
         $salonList =    $query->paginate($page_size);
         $result = $salonList->toArray();
 
@@ -131,6 +87,67 @@ class Salon extends Model {
 		$list["data"] = $rs;
            
         return $list;
+	}
+	
+	/**
+	 * 店铺查询
+	 * 
+	 * */
+	private static function getQuery( $where,$orderName,$order,$fields)
+	{
+		$query =  DB::table('salon as s')
+		->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
+		->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
+		->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
+		->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
+		->select($fields)
+		->orderBy($orderName,$order)
+		;
+		
+		if(isset($where["salestatus"]))
+		{
+			$query =  $query ->where("s.salestatus","=",$where["salestatus"]);
+		}
+		else
+		{
+			$query =  $query ->where("s.salestatus","!=","2");//剔除删除
+		}
+
+		if(isset($where["shopType"]))
+		{
+			$query =  $query ->where("s.shopType","=",$where["shopType"]);
+		}
+		if(isset($where["zone"]))
+		{
+			$query =  $query ->where("s.zone","=",$where["zone"]);
+		}
+		if(isset($where["district"]))
+		{
+			$query =  $query ->where("s.district","=",$where["district"]);
+		}
+		if(isset($where["businessName"]))
+		{
+			$keyword = '%'.$where['businessName'].'%';
+			$query = $query->where('b.businessName','like',$keyword);
+		}
+		if(isset($where['salonname'])&&$where['salonname'])
+		{
+			$keyword = '%'.$where['salonname'].'%';
+			$query = $query->where('s.salonname','like',$keyword);
+		}
+		if(isset($where['sn'])&&$where['sn'])
+		{
+			$keyword = '%'.$where['sn'].'%';
+			$query = $query->where('s.sn','like',$keyword);
+		}
+		if(isset($where['merchantName'])&&$where['merchantName'])
+		{
+			$keyword = '%'.$where['merchantName'].'%';
+			$query = $query->where('m.name','like',$keyword);
+		}
+		
+		
+		return $query;
 	}
 	
 	
@@ -199,49 +216,9 @@ class Salon extends Model {
 				'd.recommend_code',	
 		);
 
-		$query =  DB::table('salon as s')
-		->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
-		->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-		->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
-		->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
-		->select($fields)
-		->orderBy($orderName,$order)
-		;
-		$query =  $query ->where("salestatus","!=","2");//剔除删除
-		// $query =  $query ->where("m.status","!=","2");//剔除商户删除
-		if(isset($where["shopType"]))
-		{
-			$query =  $query ->where("shopType","=",$where["shopType"]);
-		}
-		if(isset($where["zone"]))
-		{
-			$query =  $query ->where("zone","=",$where["zone"]);
-		}
-		if(isset($where["district"]))
-		{
-			$query =  $query ->where("s.district","=",$where["district"]);
-		}
-		if(isset($where["businessName"]))
-		{
-			$keyword = '%'.$where['businessName'].'%';
-			$query = $query->where('b.businessName','like',$keyword);
-		}
-		if(isset($where['salonname'])&&$where['salonname'])
-		{
-			$keyword = '%'.$where['salonname'].'%';
-			$query = $query->where('salonname','like',$keyword);
-		}
-		if(isset($where['sn'])&&$where['sn'])
-		{
-			$keyword = '%'.$where['sn'].'%';
-			$query = $query->where('s.sn','like',$keyword);
-		}
-		if(isset($where['merchantName'])&&$where['merchantName'])
-		{
-			$keyword = '%'.$where['merchantName'].'%';
-			$query = $query->where('m.name','like',$keyword);
-		}
+		
 		$rs = array();
+		$query = self::getQuery( $where,$orderName,$order,$fields);
 		$salonList =    $query->get();
 		if($salonList)
 		{

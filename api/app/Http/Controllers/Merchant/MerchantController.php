@@ -84,26 +84,7 @@ class MerchantController extends Controller {
 	{
 		
 		$param = $this->param;
-		$query = Merchant::getQuery();
-
-		//状态筛选
-		if(isset($param['name']) && urldecode($param['name']))
-		{
-			$keyword = '%'.urldecode($param['name']).'%';
-			$query = $query->where('name','like',$keyword);
-		}
-		if(isset($param['sn']) && urldecode($param['sn']))
-		{
-			$keyword = '%'.urldecode($param['sn']).'%';
-			$query = $query->where('sn','like',$keyword);
-		}
-		
-		if(isset($param['mobile'])&&$param['mobile'])
-		{
-			$kModile = '%'.$param['mobile'].'%';
-			$query = $query->where('mobile','like',$kModile);
-		}
-		$query = $query->where('status','=',1);//排除删除
+		$query = $this->getQuery($param);
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 
@@ -481,6 +462,34 @@ class MerchantController extends Controller {
 	}
 	
 	/**
+	 * 商户查询
+	 * */
+	private function getQuery($param)
+	{
+		$query = Merchant::getQuery();
+		
+		//状态筛选
+		if(isset($param['name']) && urldecode($param['name']))
+		{
+			$keyword = '%'.urldecode($param['name']).'%';
+			$query = $query->where('name','like',$keyword);
+		}
+		if(isset($param['sn']) && urldecode($param['sn']))
+		{
+			$keyword = '%'.urldecode($param['sn']).'%';
+			$query = $query->where('sn','like',$keyword);
+		}
+		
+		if(isset($param['mobile'])&&$param['mobile'])
+		{
+			$kModile = '%'.$param['mobile'].'%';
+			$query = $query->where('mobile','like',$kModile);
+		}
+		$query = $query->where('status','=',1);//排除删除
+		return $query;
+	}
+	
+	/**
 	 * @api {post} /merchant/export 7.商户列表导出
 	 * @apiName export
 	 * @apiGroup merchant
@@ -500,26 +509,8 @@ class MerchantController extends Controller {
 	{
 	
 		$param = $this->param;
-		$query = Merchant::getQuery();
-	
-		//状态筛选
-		if(isset($param['name']) && urldecode($param['name']))
-		{
-			$keyword = '%'.urldecode($param['name']).'%';
-			$query = $query->where('name','like',$keyword);
-		}
-		if(isset($param['sn']) && urldecode($param['sn']))
-		{
-			$keyword = '%'.urldecode($param['sn']).'%';
-			$query = $query->where('sn','like',$keyword);
-		}
-	
-		if(isset($param['mobile'])&&$param['mobile'])
-		{
-			$kModile = '%'.$param['mobile'].'%';
-			$query = $query->where('mobile','like',$kModile);
-		}
-		$query = $query->where('status','=',1);//排除删除
+		$query = $this->getQuery($param);
+		
 		$fields = array('name','sn','contact','mobile','phone','email','addr','foundingDate','addTime' );
 		$rs = $query->select($fields)->orderBy('addTime', 'desc')->get();
 		$result = array();

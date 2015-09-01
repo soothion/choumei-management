@@ -23,8 +23,10 @@
 					</select>
 					<input type="text" placeholder="请输入店铺名" name="keyword">
 				</div>
-				代收日期 <span class="date-group"><input type="date" data-role="start" name="pay_time_min" placeholder="YYYY-MM-DD"/>到
-				<input type="date" data-role="end" name="pay_time_max" placeholder="YYYY-MM-DD"/>
+				代收日期 
+				<span class="date-group">
+					<input type="date" data-role="start" name="pay_time_min" placeholder="YYYY-MM-DD"/>到
+					<input type="date" data-role="end" name="pay_time_max" placeholder="YYYY-MM-DD"/>
 				</span>
 				<button class="btn" type="submit">搜索</button>
 			</form>
@@ -59,7 +61,7 @@
 					  <td><%=item.money%></td>
 					  <td><%=item.day%></td>
 					  <td>
-						 <a class="link" data-slug="shop_count.delegate_detail" href="detail.html?id=<%=item.id%>">查看</a>
+						 <a class="link" target="_blank" data-slug="shop_count.delegate_detail" href="detail.html?id=<%=item.id%>">查看</a>
 					  </td>
 					</tr>
 					<%})%>
