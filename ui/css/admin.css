@@ -69,7 +69,9 @@ select{
 	padding-right:16px;
 	min-width:100px;
 	height:32px;
-	line-height:32px;
+	line-height:16px;
+	padding-top:8px\0;
+	padding-bottom:8px\0;
 	color:#666;
 	margin-right:5px;
 	border-color:#E6EAF2;
@@ -550,6 +552,7 @@ th.colswrap{
 .table-bottom{
 	margin:10px 0;
 	padding:5px 10px;
+	background:#f5f5f5;
 	background:rgba(0,0,0,0.05);
 }
 .tr-selected{
@@ -575,7 +578,7 @@ th.colswrap{
 }
 .pager input{
 	width:40px;
-	margin:0px 10px;
+	margin-right:5px;
 }
 .pager .go{
 	border:1px solid #ddd;
@@ -593,6 +596,9 @@ th.colswrap{
 }
 .pager .current:first-child,.pager .current:last-child{
 	display:none;
+}
+.pager form select{
+	min-width:0;
 }
 /**分页 end**/
 /**自定义select控件下拉菜单 start**/

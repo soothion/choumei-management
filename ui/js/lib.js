@@ -198,6 +198,10 @@
 				}
 				options.text='<i class="fa fa-'+(options.bool?"check":"times")+'-circle"></i>'+options.text;
 				this.tips(options)
+			},
+			loading:function(options){
+				options.text='<img src="/images/oval.svg" class="loader"/>'+options.text;
+				parent.lib.popup.tips(options);
 			}
         },
 		getFormData:function($form){
@@ -741,7 +745,7 @@
 			var btn=$el.find('button[type=submit]');
 			if(btn.is(':disabled')) return;
 			btn.attr('disabled',true);
-			parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在提交...'});
+			parent.lib.popup.loading({text:'数据正在提交...'});
 			var self=this;
 			lib.ajax({
 				url:$el.attr('action'),
