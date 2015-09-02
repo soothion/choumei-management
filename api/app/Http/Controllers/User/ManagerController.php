@@ -10,7 +10,7 @@ use Event;
 use Excel;
 use Auth;
 
-class ManagerController extends Controller{
+class UserController extends Controller{
 	/**
 	 * @api {post} /user/index 1.用户列表
 	 * @apiName list
