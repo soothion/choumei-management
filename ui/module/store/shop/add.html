@@ -188,7 +188,9 @@
                             }else if(data.salonGrade == "4"){
                                 salonGradeName = "C级店";
                             }else if(data.salonGrade == "5"){
-                                salonGradeName = "淘汰店";
+                                salonGradeName = "新落地";
+                            }else if(data.salonGrade == "6"){
+                                salonGradeName = "淘汰区";
                             }
                         %>
                         <input type="text"  value="<%=salonGradeName%>" disabled>
@@ -202,7 +204,8 @@
                       <option value="2">A级店</option>
                       <option value="3">B级店</option>
                       <option value="4" selected>C级店</option>
-                      <option value="5">淘汰店</option>
+                      <option value="5">新落地</option>
+                      <option value="6">淘汰区</option>
                     <select>
                 </div>
 
