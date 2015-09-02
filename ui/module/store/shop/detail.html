@@ -118,14 +118,16 @@
                                         var salonChangeGradeName="";
 
                                         if(data.salonGrade == "1"){
-                                            salonGradeName = "特级店";
+                                            salonGradeName = "S";
                                         }else if(data.salonGrade == "2"){
-                                            salonGradeName = "A级店";
+                                            salonGradeName = "A";
                                         }else if(data.salonGrade == "3"){
-                                            salonGradeName = "B级店";
+                                            salonGradeName = "B";
                                         }else if(data.salonGrade == "4"){
-                                            salonGradeName = "C级店";
+                                            salonGradeName = "C";
                                         }else if(data.salonGrade == "5"){
+                                            salonGradeName = "新落地";
+                                        }else if(data.salonGrade == "6"){
                                             salonGradeName = "淘汰店";
                                         }
 
@@ -138,7 +140,9 @@
                                         }else if(data.salonChangeGrade == "4"){
                                             salonChangeGradeName = "C级店";
                                         }else if(data.salonChangeGrade == "5"){
-                                            salonChangeGradeName = "淘汰店";
+                                            salonChangeGradeName = "新落地";
+                                        }else if(data.salonGrade == "6"){
+                                            salonGradeName = "淘汰店";
                                         }
                                     %>
                                     <tr><td class="content">当前等级：</td><td><%=salonGradeName%></td></tr>
