@@ -86,28 +86,33 @@ Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
  //Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 Route::group(['middleware'], function(){
 
-	//用户模块
-	Route::any('user/index',array(
-			'as'=>'user.index',
-			'uses'=>'UserController@index'
+	//管理员模块
+	Route::any('manager/index',array(
+			'as'=>'manager.index',
+			'uses'=>'ManagerController@index'
 		));
-	Route::any('user/show/{id}',array(
-			'as'=>'user.show',
-			'uses'=>'UserController@show'
+	Route::any('manager/show/{id}',array(
+			'as'=>'manager.show',
+			'uses'=>'ManagerController@show'
 		));
-	Route::any('user/update/{id}',array(
-			'as'=>'user.update',
-			'uses'=>'UserController@update'
+	Route::any('manager/update/{id}',array(
+			'as'=>'manager.update',
+			'uses'=>'ManagerController@update'
 		));
-	Route::any('user/create',array(
-			'as'=>'user.create',
-			'uses'=>'UserController@create'
+	Route::any('manager/create',array(
+			'as'=>'manager.create',
+			'uses'=>'ManagerController@create'
 		));	
-	Route::any('user/export',array(
-			'as'=>'user.export',
-			'uses'=>'UserController@export'
+	Route::any('manager/export',array(
+			'as'=>'manager.export',
+			'uses'=>'ManagerController@export'
 		));
 
+	//用户模块
+	Route::any('user/survey',array(
+			'as'=>'user.survey',
+			'uses'=>'UserController@survey'
+		));
 
 	//角色模块
 	Route::any('role/index',array(

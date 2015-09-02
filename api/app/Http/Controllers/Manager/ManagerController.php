@@ -9,10 +9,8 @@ use Kodeine\Acl\Models\Eloquent\Permission;
 use Event;
 use Excel;
 use Auth;
-use App\User;
-use App\Order;
 
-class UserController extends Controller{
+class ManagerController extends Controller{
 	/**
 	 * @api {post} /user/index 1.用户列表
 	 * @apiName list
@@ -100,35 +98,35 @@ class UserController extends Controller{
 	 *		    "msg": "未授权访问"
 	 *		}
 	 */
-	public function survey()
+	public function index()
 	{
-		$total = User::count();
+		$param = $this->param;
+		$query = Manager::getQueryByParam($param);
+		$page = isset($param['page'])?max($param['page'],1):1;
+		$page_size = isset($param['page_size'])?$param['page_size']:20;
 
-		$day = strtotime('today');
-		$week = strtotime('last monday');
-		$month = strtotime(date('Y-m'));
-		
-		$data['day'] = User::where('add_time','>=',$day)->count();
-		$data['week'] = User::where('add_time','>=',$week)->count();
-		$data['month'] = User::where('add_time','>=',$month)->count();
+		//手动设置页数
+		AbstractPaginator::currentPageResolver(function() use ($page) {
+		    return $page;
+		});
 
-		for ($i=14; $i >= 0; $i--) { 
-			if($i==0)
-				$day = 'today';
-			else 
-				$day = "- $i day";
-			$current = strtotime($day);
-			$key = date('Y-m-d',$current);
-			$next = $current+3600*24;
-			$register[$key] = User::whereBetween('add_time',[$current,$next])->count();
-			$users = Order::whereBetween('use_time',[$current,$next])->lists('user_id');
-			$orders = Order::whereIn('user_id',$users)->orderBy('use_time','desc')->groupBy('user_id')->lists('orderid');
-			$first[$key] = Order::whereBetween('use_time',[$current,$next])->whereIn('orderid',$orders)->count();
-		}
-		$data['register'] = $register;
-		$data['first'] = $first;
+		$fields = array(
+		    'id',
+			'name',
+			'username',
+			'status',
+			'created_at',
+			'department_id',
+			'city_id',
+			'position_id'
+		);
 
-		return $this->success($data);
+		//分页
+	    $result = $query->select($fields)->paginate($page_size)->toArray();
+	    unset($result['next_page_url']);
+	    unset($result['prev_page_url']);
+	    return $this->success($result);
+
 	}
 
 
