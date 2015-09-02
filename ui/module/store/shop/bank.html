@@ -50,24 +50,23 @@
                     <div class="control-group">
                         <label class="control-label" for=""><span class="red">*</span>收款人：</label>
                         <div class="control">
-                            <input type="text" name="beneficiary" value="<%=data.beneficiary%>" placeholder="收款人" 
-                            maxlength="8"  required>
+                            <input type="text" name="beneficiary" value="<%=data.beneficiary%>" 
+                            placeholder="收款人" maxlength="8"  required>
                         </div>
                     </div> 
 
                     <div class="control-group">
                         <label class="control-label" for=""><span class="red">*</span>银行卡号：</label>
                         <div class="control">
-                            <input type="text" name="bankCard" value="<%=data.bankCard%>" placeholder="银行卡号" 
-                            maxlength="20" required pattern="^\d{1,20}$" patternMsg="银行卡号有误">
+                            <input type="text" name="bankCard" value="<%=data.bankCard%>"  maxlength="20" required placeholder="银行卡号" pattern="^\d{1,20}$" patternMsg="银行卡号有误">
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label" for=""><span class="red">*</span>支行名称：</label>
                         <div class="control">
-                            <input type="text" name="branchName" value="<%=data.branchName%>" placeholder="支行名称" 
-                            maxlength="25"  required>
+                            <input type="text" name="branchName" value="<%=data.branchName%>" 
+                            placeholder="支行名称" maxlength="25"  required>
                         </div>
                     </div>
 
