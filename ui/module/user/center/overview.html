@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <style type="text/css">
+		.chart-container{
+			position:relative;
+		}
+	  </style>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户中心 </a><span>&gt;</span><a href="index.html">用户概况</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>用户概况</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<div class="table-detail">
+				<table>
+					<tbody>
+						<tr>
+							<td>用户总数</td>
+							<td>947420</td>
+						</tr>
+						<tr>
+							<td>本日新增用户数</td>
+							<td>947420</td>
+						</tr>
+						<tr>
+							<td>本周增用户数</td>
+							<td>947420</td>
+						</tr>
+						<tr>
+							<td>本月新增用户数</td>
+							<td>947420</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<br />
+			<div class="chart-container">
+				<h2 class="tc">最近15天每日新增注册用户数与首单消费数</h2>
+				<canvas id="myChart" width="800" height="600"></canvas>
+			</div>
+	</div>
+	<script type="text/javascript" src="/js/Chart.min.js"></script>
+	<script type="text/javascript">
+		document.getElementById("myChart").width=window.innerWidth-30;
+		var ctx = document.getElementById("myChart").getContext("2d");
+		var labels=[];
+		for(var i=0;i<15;i++){
+			var time=new Date().getTime();
+			time+=1000*60*60*24*i;
+			labels.push(lib.tools.getDate(time/1000))
+		}
+		var data = {
+			labels : labels,
+			datasets : [
+				{
+					fillColor : "rgba(220,220,220,0)",
+					strokeColor : "#E7BFAC",
+					pointColor : "#F6690F",
+					pointStrokeColor : "#fff",
+					data : [865,859,890,1081,1056,855,840,865,859,890,1081,1056,855,840,900]
+				},
+				{
+					fillColor : "rgba(151,187,205,0)",
+					strokeColor : "#FDF9CA",
+					pointColor : "#F7D80D",
+					pointStrokeColor : "#fff",
+					data : [828,848,840,1019,1096,1027,800,828,848,840,1019,1096,1027,800,955]
+				}
+			]
+		}
+		new Chart(ctx).Line(data);
+	</script>
+  </body>
+</html>

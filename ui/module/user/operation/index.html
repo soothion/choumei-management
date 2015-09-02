@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户操作 </a><span>&gt;</span><a href="index.html">反馈列表 </a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>反馈列表</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<form data-role="hash">
+				反馈日期
+				<input type="date"  placeholder="YYYY-MM-DD"/>
+				反馈内容
+				<input type="text" />
+				<button class="btn" type="submit">搜索</button>
+			</form>
+			<div class="table" ajat="role/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<table>
+              <thead>
+                <tr>
+				  <th width="50px"><label class="select-all"><input type="checkbox"/><span>全选</span></label></th>
+                  <th>ID</th>
+                  <th>联系方式</th>
+                  <th>反馈内容</th>
+                  <th>反馈来源</th>
+				  <th>反馈时间</th>
+				  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>			  
+				<%var data=data.data%>
+				<%data.forEach(function(item,i){%>
+                <tr>
+				  <td><label><input type="checkbox" name="ids" data-price="<%=item.money%>" form="form" value="<%=item.id%>"/><span></span></label></td>
+                  <td><%=i+1%></td>
+                  <td><%=item.name%></td>
+                  <td><%=status[item.status-1]%></td>
+				  <td><%=item.created_at%></td>
+				  <td><%=item.description%></td>
+				  <td>
+					 <form action="" data-role="normal">
+						<button class="link">删除</button>
+					 </form>
+				  </td>
+                </tr>
+				<%})%>
+              </tbody>
+            </table>
+			<div class="table-bottom">
+				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+				<button class="btn" >批量删除</button>
+			</div>
+			<div class="pager">
+			</div>
+			</script>
+		</div>
+	</div>
+  </body>
+</html>

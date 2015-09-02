@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <style type="text/css">
+		.table-detail tbody td:nth-child(odd){
+			width:50%;
+		}
+	  </style>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户中心 </a><span>&gt;</span><a href="index.html">用户列表 </a><span>&gt;</span>用户信息
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>用户信息</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<div class="table-detail">
+				<table>
+					<thead>
+						<tr>
+							<th>对本账号操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<form action="" data-role="normal">
+									<button class="btn">重置密码</button>
+								</form>
+								<span class="space"></span>
+								<form action="" data-role="normal">
+									<button class="btn">重置支付密码</button>
+								</form>
+								<span class="space"></span>
+								<form action="" data-role="normal">
+									<button class="btn">解绑当前手机</button>
+								</form>
+								<span class="space"></span>
+								<form action="" data-role="normal">
+									<button class="btn">删除账号</button>
+								</form>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<br />
+			<div class="table-detail">
+				<table>
+					<thead>
+						<tr>
+							<th colspan="2" style="line-height:32px">
+								个人资料
+								<div class="fr">
+									<button class="btn btn-edit">编辑</button>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>臭美号:  10000000</td>
+							<td>头像: <img src="" alt="" /></td>
+						</tr>
+						<tr>
+							<td>昵称: 小康 </td>
+							<td>性别: 男</td>
+						</tr>
+						<tr>
+							<td>发长:  无</td>
+							<td>常住地区:广东,深圳,南山区</td>
+						</tr>
+						<tr>
+							<td colspan="2">生日:1988-04-02</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="table-detail"  style="display:none">
+				<form action="">
+				<table>
+					<thead>
+						<tr>
+							<th colspan="2" style="line-height:32px">
+								个人资料
+								<div class="fr">
+									<button class="btn btn-cancel" type="button">取消</button>
+									<button class="btn">保存</button>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>臭美号:  10000000</td>
+							<td>头像: <img src="" alt="" /> <button class="btn" type="button">上传图片</button></td>
+						</tr>
+						<tr>
+							<td>昵称: <input type="text" value="小康" /></td>
+							<td>性别: 男</td>
+						</tr>
+						<tr>
+							<td>发长:  
+								<select>
+								  <option value="长发">长发</option>
+								  <option value="中发">中发</option>
+								  <option value="短发">短发</option>
+								</select>
+							</td>
+							<td>
+								常住地区:
+								<select>
+									<option value="选择">选择省份</option>
+								</select>
+								<select>
+									<option value="选择">选择城市</option>
+								</select>
+								<select>
+									<option value="选择">选择地区</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">生日: <input type="date" /></td>
+						</tr>
+					</tbody>
+				</table>
+				</form>
+			</div>
+			<br />
+			<div class="table-detail">
+				<table>
+					<thead>
+						<tr>
+							<th colspan="2" style="line-height:32px">
+								帐户信息
+								<div class="fr">
+									<button class="btn btn-edit">编辑</button>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>注册时间:  1401794412</td>
+							<td>注册方式:手机注册</td>
+						</tr>
+						<tr>
+							<td>绑定手机号:  15102011866</td>
+							<td>会员等级:V1</td>
+						</tr>
+						<tr>
+							<td>会员积分:  93</td>
+							<td>成长值:424</td>
+						</tr>
+						<tr>
+							<td>登录密码:已设置</td>
+							<td>支付密码:已设置</td>
+						</tr>
+						<tr>
+							<td>加入集团:南航测控(5062) <span class="space"></span><button class="btn">解绑集团码</button></td>
+							<td>活动邀请码:七夕活动(00250)</td>
+						</tr>
+						<tr>
+							<td colspan="2">店铺邀请码:丝丝如意(5469)</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="table-detail" style="display:none">
+				<form action="">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="2" style="line-height:32px">
+									帐户信息
+									<div class="fr">
+										<button class="btn btn-cancel" type="button">取消</button>
+										<button class="btn">保存</button>
+									</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>注册时间:  1401794412</td>
+								<td>注册方式:手机注册</td>
+							</tr>
+							<tr>
+								<td>绑定手机号:  15102011866</td>
+								<td>会员等级:V1</td>
+							</tr>
+							<tr>
+								<td>会员积分:  <input type="text" value="321" /></td>
+								<td>成长值:<input type="text" value="321" /></td>
+							</tr>
+							<tr>
+								<td>登录密码:已设置</td>
+								<td>支付密码:已设置</td>
+							</tr>
+							<tr>
+								<td>加入集团:南航测控(5062) <span class="space"></span><button class="btn">解绑集团码</button></td>
+								<td>活动邀请码:七夕活动(00250)</td>
+							</tr>
+							<tr>
+								<td colspan="2">店铺邀请码:丝丝如意(5469)</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(document).on('click','.btn-edit',function(){
+				$(this).closest('.table-detail').hide().next().show();
+			}).on('click','.btn-cancel',function(){
+				$(this).closest('.table-detail').hide().prev().show();
+			})
+		</script>
+  </body>
+</html>
