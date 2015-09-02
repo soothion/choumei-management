@@ -171,7 +171,7 @@ class ListController extends Controller {
     	{
     		$rs[$key]['businessName'] = $val->businessName;
     		$rs[$key]['id'] = $val->id;
-    		$rs[$key]['py'] = GetPingYing::encode($val->businessName,'all');//中文转拼音
+    		//$rs[$key]['py'] = GetPingYing::encode($val->businessName,'all');//中文转拼音
     	}
 		return $this->success($rs);
     }
