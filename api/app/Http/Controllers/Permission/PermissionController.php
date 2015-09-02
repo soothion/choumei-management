@@ -7,6 +7,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use Event;
 use Excel;
+use App\Exceptions\ApiException;
 
 class PermissionController extends Controller{
 	/**
@@ -184,7 +185,7 @@ class PermissionController extends Controller{
 		}
 			 
 		else 
-			return $this->error('权限创建失败');
+			throw new ApiException('', -50200);
 	}
 
 
@@ -278,7 +279,7 @@ class PermissionController extends Controller{
 		else
 		{
 			DB::rollBack();
-			return $this->error('更新失败');
+			throw new ApiException('', -50201);
 		}
 			
 	}

@@ -11,6 +11,7 @@ use Storage;
 use File;
 use Fileentry;
 use App\ShopCount;
+use App\Exceptions\ApiException;
 
 class RebateController extends Controller{
 	/**
@@ -240,7 +241,7 @@ class RebateController extends Controller{
 		    return $this->success();
 		}
 		else 
-			return $this->error('创建失败');
+			throw new ApiException('', -50100);
 	}
 
 
@@ -271,7 +272,7 @@ class RebateController extends Controller{
 		$param = $this->param;
 		$rebate = Rebate::find($id);
 		if(!$id)
-			return $this->error('未知返佣单ID');
+			throw new ApiException('', -50105);
 		
 		$result = $rebate->update($param);
 		if($result){
@@ -280,7 +281,7 @@ class RebateController extends Controller{
 		    return $this->success();
 		}
 		else 
-			return $this->error('更新失败');
+			throw new ApiException('', -50106);
 	}
 
 	/**
@@ -346,7 +347,7 @@ class RebateController extends Controller{
 				 ->find($id);
 		
 		if(!$rebate)
-			return $this->error('未知返佣单ID');
+			throw new ApiException('', -50105;
 		return $this->success($rebate); 
 	}
 
@@ -381,7 +382,7 @@ class RebateController extends Controller{
 	{
 		$param = $this->param;
 		if(empty($param['rebate']))
-			return $this->error('必须指定返佣单ID');
+			throw new ApiException('', -50106);
 		DB::beginTransaction();
 		
 		$rebates = Rebate::whereIn('id',$param['rebate'])
@@ -411,7 +412,7 @@ class RebateController extends Controller{
 		else
 		{
 			DB::rollback();
-			return $this->error('确认失败');
+			throw new ApiException('', -50102);
 		}
 	}
 
@@ -439,11 +440,11 @@ class RebateController extends Controller{
 	public function upload(){
 		$file = Request::file('rebate');
 		if(!$file)
-			return $this->error('请上传文件');
+			throw new ApiException('', -50107);
 		$rebate = new Rebate;
 		$extension = $file->getClientOriginalExtension();
 		if(!in_array($extension, ['xls','xlsx']))
-			return $this->error('请上传xls或者xlsx文件');
+			throw new ApiException('', -50108);
 
 		$result = false;
 		Excel::load($file->getPathname(), function($reader) use($rebate,&$result){
@@ -482,7 +483,7 @@ class RebateController extends Controller{
 		Storage::disk('local')->put($src,  File::get($file));
  		if($result)
  			return $this->success();
- 		return $this->error('导入失败');
+ 		throw new ApiException('', -50102);
 	}
 
 	/**
@@ -509,11 +510,11 @@ class RebateController extends Controller{
 	{
 		$rebate = Rebate::find($id);
 		if(!$rebate)
-			return $this->error('返佣单不存在');
+			throw new ApiException('', -50105);
 		$result = $rebate->delete();
 		if($result)
 			return $this->success();
-		return $this->error('删除失败');
+		throw new ApiException('', -50104);
 	}
 
 

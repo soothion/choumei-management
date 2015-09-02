@@ -96,16 +96,16 @@ class IndexController extends Controller{
 		$validator = $captcha::check(strtolower($this->param['captcha']));
         if (!$validator){
         	$captcha::create();//重新生成验证码
-        	return $this->error('验证码错误');
+        	throw new ApiException('', -50400);
         }
 	       
 		if (Auth::attempt(array('username' => $this->param['username'], 'password' => $this->param['password'])))
 		{       
     		$user = Manager::where('username',$this->param['username'])->firstOrFail();
     		if($user->status==2)
-    			return $this->error('当前帐户已停用'); 
+    			throw new ApiException('', -50401);
     		if($user->status==3)
-    			return $this->error('当前帐户已注销'); 
+    			throw new ApiException('', -50402);
     		$this->user = $user;
     		$token = JWTAuth::fromUser($user);
     		Event::fire('login',$user);
@@ -114,7 +114,7 @@ class IndexController extends Controller{
         else
         {
         	$captcha::create();//重新生成验证码
-        	return $this->error('用户名或密码错误');
+        	throw new ApiException('', -50404);
         }
 	}
 
@@ -148,7 +148,7 @@ class IndexController extends Controller{
 			$redis->del('permissions:'.$token);
 			return $this->success();
 		}
-		return $this->error('退出失败');
+		throw new ApiException('', -50405);
 	}
 
 
