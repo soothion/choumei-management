@@ -162,6 +162,10 @@ label>input[type="checkbox"]:checked+span:before{
 	height:100%;
 	opacity:0;
 }
+.btn-upload>div{
+	width:100%!important;
+	height:100%!important;
+}
 .loadbar{
     position: absolute;
     left:0px;

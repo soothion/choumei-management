@@ -4,11 +4,6 @@
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
 	  <script type="text/javascript" src="/js/include.js"></script>
-	  <style type="text/css">
-		.chart-container{
-			position:relative;
-		}
-	  </style>
   </head>
   <body>
 		<div class="breadcrumb">
@@ -46,11 +41,18 @@
 			<div class="chart-container">
 				<h2 class="tc">最近15天每日新增注册用户数与首单消费数</h2>
 				<canvas id="myChart" width="800" height="600"></canvas>
+				<div class="tc">
+					<i class="fa fa-circle" style="color:#E7BFAC"></i>
+					注册用户数
+					<span class="space"></span>
+					<i class="fa fa-circle" style="color:#FDF9CA"></i> 
+					首单消费数
+				</div>
 			</div>
 	</div>
 	<script type="text/javascript" src="/js/Chart.min.js"></script>
 	<script type="text/javascript">
-		document.getElementById("myChart").width=window.innerWidth-30;
+		document.getElementById("myChart").width=window.innerWidth-40;
 		var ctx = document.getElementById("myChart").getContext("2d");
 		var labels=[];
 		for(var i=0;i<15;i++){
