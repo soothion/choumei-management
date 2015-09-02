@@ -12,6 +12,7 @@ use File;
 use Fileentry;
 use App\ShopCount;
 use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class RebateController extends Controller{
 	/**
@@ -347,7 +348,7 @@ class RebateController extends Controller{
 				 ->find($id);
 		
 		if(!$rebate)
-			throw new ApiException('', -50105;
+			throw new ApiException('fdfasddsfa{id} {code}', ERROR::ERROR_TOKEN_INVILD);
 		return $this->success($rebate); 
 	}
 
