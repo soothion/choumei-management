@@ -860,11 +860,10 @@ class ShopCountApi
         $instead_receive->with([
             'merchant' => function ($q) use($merchant_fields)
             {
-                $q->lists($merchant_fields);
+                $q->get($merchant_fields);
             }
         ]);
-        
-        return $instead_receive->first($instead_receive_fields);
+        return $instead_receive->first($instead_receive_fields)->toArray();
     }
     
 }
