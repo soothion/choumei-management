@@ -11,6 +11,7 @@ use Storage;
 use File;
 use Fileentry;
 use App\Commission;
+use App\Exceptions\ApiException;
 
 class CommissionController extends Controller{
 	/**
@@ -275,7 +276,7 @@ class CommissionController extends Controller{
 				 ->find($id);
 
 		if(!$commission)
-			return $this->error('未知佣金单ID');	
+			throw new ApiException('', -50500);
 		return $this->success($commission); 
 	}
 

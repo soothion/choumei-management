@@ -190,7 +190,7 @@ class RoleController extends Controller{
 	{
 		$param = $this->param;
 		if(Role::where('name','=',$param['name'])->first())
-			return $this->error('角色名已存在');
+			throw new ApiException('', -50300);
 		DB::beginTransaction();
 		$role = Role::create($param);
 		$permission = 1;
@@ -209,7 +209,7 @@ class RoleController extends Controller{
 		else
 		{
 			DB::rollBack();
-			return $this->error('error');
+			throw new ApiException('', -50301);
 		}
 	}
 
@@ -374,7 +374,7 @@ class RoleController extends Controller{
 		else
 		{
 			DB::rollBack();
-			return $this->error('error');
+			throw new ApiException('', -50302);
 		}
 
 	}

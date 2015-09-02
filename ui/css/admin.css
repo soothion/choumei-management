@@ -663,7 +663,7 @@ form[data-role="hash"] button{
 	margin-right:5px;
 }
 form[data-role="hash"] input[type="date"]{
-	width:140px;
+	width:160px;
 }
 .date-group{
 	display:inline-block;

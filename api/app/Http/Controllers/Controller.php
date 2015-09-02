@@ -14,6 +14,7 @@ use App\Manager;
 use JWTAuth;
 use App\City;
 use Excel;
+use App\Exceptions\ApiException;
 
 abstract class Controller extends BaseController
 {
@@ -50,13 +51,9 @@ abstract class Controller extends BaseController
 
 	}
 
-	public function error($msg,$code=0){
-		return Response::json([
-			'result'=>0,
-			'msg'=>$msg,
-			'token'=>$this->token,
-			'code'=>$code
-		]);
+	//抛出异常
+	public function error($code=0){
+		Throw new ApiException('',$code);
 	}
 
 	public function success($data=[]){
@@ -112,7 +109,7 @@ abstract class Controller extends BaseController
 	    return false;
 	}
 
-	//二维数据去重
+	//二维数组去重
 	public function array_multiuniue($array){
 		$temp = [];
 		foreach ($array as $key => $value) {
