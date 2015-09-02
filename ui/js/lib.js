@@ -217,7 +217,59 @@
 				$.extend(lib.query,this.tools.parseQuery(location.hash.replace('#','')))
 				lib.query._=location.hash.replace('#','');
 			}
-        }
+        },
+		uploader:{
+			use:function(cb){//加载上传资源文件
+				seajs.use(['/css/webuploader.css','/js/webuploader.js'],function(){
+					cb &&cb();
+				});
+			},
+			create:function(options){//创建上传对象
+				options.swf='/js/Uploader.swf';
+				if(options.server.indexOf('http://')==-1){
+					options.server=cfg.getHost()+options.server;
+				}
+				return WebUploader.create(options);
+			},
+			image:function(options,cb){//图片上传
+				var self=this;
+				this.use(function(){
+					var uploader=self.create(options);
+					uploader.on('uploadStart',function(){
+						parent.lib.popup.loading({text:options.loaderText||"图片准备上传中"});
+					});
+					uploader.on('uploadComplete',function(){
+						parent.lib.popup.result({bool:true,text:options.successText||"图片上传完成"});
+					});
+					uploader.on('uploadError',function(){
+						parent.lib.popup.result({bool:false,text:options.errorText||"图片上传失败"});
+					});
+					uploader.on('uploadProgress',function(file, percentage){
+						parent.lib.popup.tips({
+							text:'<img src="/images/oval.svg" class="loader"/><br />“'+file.name+'”文件上传进度：'+(Math.ceil(percentage*100))+"%"
+						});
+					});
+					uploader.on('error',function(err){
+						if(err=='F_EXCEED_SIZE'){
+							parent.lib.popup.result({bool:false,text:"上传文件过大"});
+						}
+						if(err=='Q_EXCEED_NUM_LIMIT '){
+							parent.lib.popup.result({bool:false,text:"上传文件数过大"});
+						}
+						if(err=='Q_TYPE_DENIED '){
+							parent.lib.popup.result({bool:false,text:"上传文件格式不正确"});
+						}
+					});
+					cb&&cb(uploader);
+				});
+			},
+			file:function(options,cb){//文件上传
+				options.loaderText=options.loaderText||"文件准备上传中";
+				options.successText=options.successText||"文件上传完成";
+				options.errorText=options.errorText||"文件上传失败";
+				this.image(options,cb);
+			}
+		}
     }
     lib.init();
 	

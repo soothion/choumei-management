@@ -54,12 +54,12 @@ class Handler extends ExceptionHandler
             }
         }
         if($e instanceof ApiException){
-            $data['message'] = $e->getError();
+            $data['message'] = $e->getMessage();
             $data['code'] = $e->getCode();
         }
         else{
             if(Config::get('debug')=='true')
-                $data['debug'] = $e->getMessage;
+                $data['debug'] = $e->getMessage();
         }
 
         return Response::json($data);

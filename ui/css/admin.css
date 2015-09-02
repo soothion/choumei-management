@@ -21,6 +21,9 @@ h1, h2, h3, h4, h5, h6,legend{
 .weak{
 	color:#999;
 }
+.fr{
+	float:right;
+}
 .link{
 	color:#58A2EC!important;
 }
@@ -158,6 +161,10 @@ label>input[type="checkbox"]:checked+span:before{
 	width:100%;
 	height:100%;
 	opacity:0;
+}
+.btn-upload>div{
+	width:100%!important;
+	height:100%!important;
 }
 .loadbar{
     position: absolute;
@@ -660,7 +667,7 @@ form[data-role="hash"] button{
 	margin-right:5px;
 }
 form[data-role="hash"] input[type="date"]{
-	width:140px;
+	width:160px;
 }
 .date-group{
 	display:inline-block;

@@ -9,6 +9,8 @@ use Kodeine\Acl\Models\Eloquent\Permission;
 use Event;
 use Excel;
 use Auth;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class SelfController extends Controller{
 
@@ -118,7 +120,8 @@ class SelfController extends Controller{
 			$param['password'] = bcrypt($param['password']);
 			//当前用户修改自己密码需要提交原密码
 			if (!Auth::attempt(array('username' => $user->username, 'password' => $this->param['old_password'])))
-				return $this->error('原密码错误');
+				throw new ApiException('原始密码错误', ERROR::USER_PASSWORD_ERROR);
+	}
 		}
 		if(isset($param['roles'])){
 			$roles = $param['roles'];
@@ -135,7 +138,7 @@ class SelfController extends Controller{
 		else
 		{
 			DB::rollBack();
-			return $this->error('用户更新失败');
+			throw new ApiException('用户更新失败', ERROR::USER_UPDATE_FAILED);
 		}
 
 	}
