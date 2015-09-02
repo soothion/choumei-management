@@ -472,11 +472,8 @@
 				}
 			},
 			number:function(val){
-				var reg=new RegExp('^[0-9]*[1-9][0-9]*$');
+				var reg=new RegExp('^[0-9]$');
 				if(!isNaN(val)){
-					if(val==0){
-						return {msg:'输入值不能为零'};
-					}
 					if(val.indexOf('.')>-1){
 						return {msg:'输入值不能含小数点'};
 					}
