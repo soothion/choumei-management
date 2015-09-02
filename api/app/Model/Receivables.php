@@ -35,7 +35,7 @@ class Receivables extends Model {
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
 		});
-		$query =  self::getQuery($where,$orderName,$order,$fields);
+		$query =  self::getQueryByParam($where,$orderName,$order,$fields);
          
         $salonList =    $query->paginate($page_size);
         $result = $salonList->toArray();
@@ -46,7 +46,7 @@ class Receivables extends Model {
 	 * 获取查询对象
 	 * */
 	
-	private static function getQuery($where = '',$orderName = ' addTime  ',$order = 'desc',$fields)
+	private static function getQueryByParam($where = '',$orderName = ' addTime  ',$order = 'desc',$fields)
 	{
 		$query =  DB::table('receivables as r')
 		->leftjoin('salon as s', 's.salonid', '=', 'r.salonid')
@@ -126,7 +126,7 @@ class Receivables extends Model {
 				'mg.name as preparedByName',
 				'mgs.name as cashierName',
 		);
-		$query = self::getQuery($where,$orderName,$order,$fields);
+		$query = self::getQueryByParam($where,$orderName,$order,$fields);
 		return  $query->get();
 	}
 	
