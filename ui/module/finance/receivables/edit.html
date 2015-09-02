@@ -49,7 +49,7 @@
 				  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                     <div class="control complete">		
-                        <input id="search" type="text" value="<%=data.salonname||""%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
+                        <input id="search" type="text" value="<%=data.salonname||""%>" maxlength="16" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
 						<div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
 						 <span id="sn" class="weak" ></span>	
                     </div>
@@ -129,7 +129,7 @@
 			$(document).on('click','.preview',function(){
 				var data=lib.tools.getFormData($(this).closest('form'));
 				data=$.extend(JSON.parse(sessionStorage.getItem("preview")),data);
-				
+				 
 				data.salon={
 					salonname:$('#search').val()
 				}
