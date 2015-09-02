@@ -15,6 +15,7 @@ use DB;
 use App\Role;
 use Excel;
 use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class IndexController extends Controller{
 
@@ -96,16 +97,16 @@ class IndexController extends Controller{
 		$validator = $captcha::check(strtolower($this->param['captcha']));
         if (!$validator){
         	$captcha::create();//重新生成验证码
-        	throw new ApiException('', -50400);
+        	throw new ApiException('验证码错误', ERROR::CAPTCHA_ERROR);
         }
 	       
 		if (Auth::attempt(array('username' => $this->param['username'], 'password' => $this->param['password'])))
 		{       
     		$user = Manager::where('username',$this->param['username'])->firstOrFail();
     		if($user->status==2)
-    			throw new ApiException('', -50401);
+    			throw new ApiException('当前帐户已停用', ERROR::ACCOUNT_INVALID);
     		if($user->status==3)
-    			throw new ApiException('', -50402);
+    			throw new ApiException('当前帐户已注销', ERROR::ACCOUNT_INVALID);
     		$this->user = $user;
     		$token = JWTAuth::fromUser($user);
     		Event::fire('login',$user);
@@ -114,7 +115,7 @@ class IndexController extends Controller{
         else
         {
         	$captcha::create();//重新生成验证码
-        	throw new ApiException('', -50404);
+        	throw new ApiException('用户名或密码错误', ERROR::LOGIN_FAILED);
         }
 	}
 
@@ -148,7 +149,7 @@ class IndexController extends Controller{
 			$redis->del('permissions:'.$token);
 			return $this->success();
 		}
-		throw new ApiException('', -50405);
+		throw new ApiException('退出登录失败', ERROR::LOGOUT_FAILED);
 	}
 
 

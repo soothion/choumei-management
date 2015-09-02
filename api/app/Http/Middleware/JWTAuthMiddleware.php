@@ -5,6 +5,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Tymon\JWTAuth\Middleware\BaseMiddleware;
 use Route;
 use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class JWTAuthMiddleware extends BaseMiddleware
 {
@@ -18,15 +19,15 @@ class JWTAuthMiddleware extends BaseMiddleware
     public function handle($request, \Closure $next)
     {
         if (! $token = $this->auth->setRequest($request)->getToken()) {
-            Throw new ApiException('',-40000);
+            Throw new ApiException('token无效',ERROR::TOKEN_INVILD);
         }
 
         try {
             $user = $this->auth->authenticate($token);
         } catch (TokenExpiredException $e) {
-            Throw new ApiException('',-40001);
+            Throw new ApiException('token过期',ERROR::TOKEN_EXPIRED);
         } catch (JWTException $e) {
-            Throw new ApiException('',-40000);
+            Throw new ApiException('token无效',ERROR::TOKEN_INVILD);
         }
 
         $this->events->fire('tymon.jwt.valid', $user);

@@ -7,6 +7,8 @@ use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use Event;
 use Excel;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class RoleController extends Controller{
 	/**
@@ -190,7 +192,7 @@ class RoleController extends Controller{
 	{
 		$param = $this->param;
 		if(Role::where('name','=',$param['name'])->first())
-			throw new ApiException('', -50300);
+			throw new ApiException('角色已存在', ERROR::ROLE_EXIST);
 		DB::beginTransaction();
 		$role = Role::create($param);
 		$permission = 1;
@@ -209,7 +211,7 @@ class RoleController extends Controller{
 		else
 		{
 			DB::rollBack();
-			throw new ApiException('', -50301);
+			throw new ApiException('角色创建失败', ROLE_CREATE_FAILED);
 		}
 	}
 
@@ -374,7 +376,7 @@ class RoleController extends Controller{
 		else
 		{
 			DB::rollBack();
-			throw new ApiException('', -50302);
+			throw new ApiException('角色更新失败', ERROR::ROLE_UPDATE_FAILED);
 		}
 
 	}

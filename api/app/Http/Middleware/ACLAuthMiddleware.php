@@ -4,6 +4,7 @@ use Closure;
 use Route;
 use JWTAuth;
 use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class ACLauthMiddleware
 {
@@ -22,7 +23,7 @@ class ACLauthMiddleware
         $permission = Route::currentRouteName();
 
         if(!$user->can($permission))
-            Throw new ApiException('',-40002);
+            Throw new ApiException('未授权访问',ERROR::UNAUTHORIZED);
             
         return $next($request);
     }

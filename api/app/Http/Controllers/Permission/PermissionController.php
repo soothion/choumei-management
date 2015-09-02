@@ -8,6 +8,7 @@ use DB;
 use Event;
 use Excel;
 use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class PermissionController extends Controller{
 	/**
@@ -185,7 +186,7 @@ class PermissionController extends Controller{
 		}
 			 
 		else 
-			throw new ApiException('', -50200);
+			throw new ApiException('权限创建失败', ERROR::PERMISSION_CREATE_FAILED);
 	}
 
 
@@ -279,7 +280,7 @@ class PermissionController extends Controller{
 		else
 		{
 			DB::rollBack();
-			throw new ApiException('', -50201);
+			throw new ApiException('权限更新', PERMISSION_UPDATE_FAILED);
 		}
 			
 	}

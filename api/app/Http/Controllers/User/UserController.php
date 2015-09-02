@@ -10,6 +10,7 @@ use Event;
 use Excel;
 use Auth;
 use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class UserController extends Controller{
 	/**
@@ -229,7 +230,7 @@ class UserController extends Controller{
 		$param = $this->param;
 		DB::beginTransaction();
 		if(Manager::where('username','=',$param['username'])->first())
-			throw new ApiException('', -50001);
+			throw new ApiException('用户名已存在', ERROR::USER_EXIST);
 			
 		$param['password'] = bcrypt($param['password']);
 		$user = Manager::create($param);
@@ -249,7 +250,7 @@ class UserController extends Controller{
 		else
 		{
 			DB::rollBack();
-			throw new ApiException('', -50002);
+			throw new ApiException('用户创建失败', ERROR::USER_CREATE_FAILED);
 		}
 	}
 
@@ -394,7 +395,7 @@ class UserController extends Controller{
 		else
 		{
 			DB::rollBack();
-			throw new ApiException('', -50003);
+			throw new ApiException('用户更新失败', USER_UPDATE_FAILED);
 		}
 
 	}

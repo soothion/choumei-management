@@ -52,8 +52,8 @@ abstract class Controller extends BaseController
 	}
 
 	//抛出异常
-	public function error($code=0){
-		Throw new ApiException('',$code);
+	public function error($message = '',$code=0){
+		Throw new ApiException($message,$code);
 	}
 
 	public function success($data=[]){
