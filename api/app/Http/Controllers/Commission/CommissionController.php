@@ -58,13 +58,12 @@ class CommissionController extends Controller{
 	 *	        "to": 1,
 	 *	        "data": [
 	 *				{
-	 *				"orderid": 101,
-	 *				"salonid": 780,
+	 *				"id": 101,
 	 *				"salonsn": "SZ0420002",
 	 *				"salonname": "唯那丝（黄金山店）",
 	 *				"sn": "YJ-15082400029",
 	 *				"amount": "100.86",
-	 *				"created_at": "2015-08-24 20:08:47"
+	 *				"date": "2015-08-24"
 	 *				}
 	 *	        ]
 	 *	    }
@@ -97,23 +96,20 @@ class CommissionController extends Controller{
 			$query = $query->groupBy('salon.sn');
 			$fields = array(
 				'commission.id',
-			    'order.orderid',
-				'order.salonid',
 				'salon.sn as salonsn',
 				'salon.salonname',
-				DB::raw('sum(amount) as amount')
+				DB::raw('sum(amount) as amount'),
+				'commission.date'
 			);
 		}
 		else if($param['group']=='day'){
 			$fields = array(
 				'commission.id',
-			    'order.orderid',
-				'order.salonid',
 				'salon.sn as salonsn',
 				'salon.salonname',
 				'commission.sn as sn',
 				'commission.amount as amount',
-				'commission.created_at as created_at',
+				'commission.date'
 			);
 		}
 		$result = $query->select($fields)->paginate($page_size)->toArray();

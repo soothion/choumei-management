@@ -229,7 +229,7 @@ class RebateController extends Controller{
 	{
 		$param = $this->param;
 		$rebate = new Rebate;
-		if($param['end']<$param['start'])
+		if($param['end_at']<$param['start_at'])
 			return $this->error('截止日不能小于起始日');
 		$param['created_by'] = $this->user->name;
 		$param['status'] = 2;

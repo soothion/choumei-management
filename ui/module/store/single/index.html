@@ -34,11 +34,10 @@
 					</span>
 				 
 					<button class="btn" type="submit">搜索</button>
+					<button class="btn" form="export" data-slug="shop_count.export"><i class="fa fa-file-excel-o" ></i> 导出</button>			
 			</form>
-			<form action="shop_count/export" data-role="export" data-slug="shop_count.export">
-				<button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
-			</form>					 
-			 
+			  <form action="shop_count/export" data-role="export" id="export" ></form>   
+			  
 			  <div class="table" ajat="<%if(query._){%>shop_count/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                  <table>
@@ -61,7 +60,7 @@
                     </thead>
                <tbody>
 			<%if(data.data){%>
-				 <%var type=["","付交易代收款","付交易代收款","交易代收款返还"]%>
+				 <%var type=["","预付交易款"]%>
 				 <%var state=["","已付款","待提交","待审批","待付款"]%>
 				 <%var pay_type=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
 				 <%data=data.data%>

@@ -108,6 +108,13 @@
                 </div>
 
                 <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>合同编号：</label>
+                    <div class="control">
+                        <input type="text" name="bargainno" value="<%=data.bargainno%>" placeholder="合同编号" maxlength="16" required>
+                    </div>
+                </div>
+
+                <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺分类：</label>
                     <label>
                         <input type="radio" class="radio" name="salonCategory" value="2"
@@ -180,15 +187,17 @@
                         <%
                             var salonGradeName="";
                             if(data.salonGrade == "1"){
-                                salonGradeName = "特级店";
+                                salonGradeName = "S";
                             }else if(data.salonGrade == "2"){
-                                salonGradeName = "A级店";
+                                salonGradeName = "A";
                             }else if(data.salonGrade == "3"){
-                                salonGradeName = "B级店";
+                                salonGradeName = "B";
                             }else if(data.salonGrade == "4"){
-                                salonGradeName = "C级店";
+                                salonGradeName = "C";
                             }else if(data.salonGrade == "5"){
-                                salonGradeName = "淘汰店";
+                                salonGradeName = "新落地";
+                            }else if(data.salonGrade == "6"){
+                                salonGradeName = "淘汰区";
                             }
                         %>
                         <input type="text"  value="<%=salonGradeName%>" disabled>
@@ -198,11 +207,12 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>调整等级：</label>
                     <select class="select defalut-width" name="salonChangeGrade">
-                      <option value="1">特级店</option>
-                      <option value="2">A级店</option>
-                      <option value="3">B级店</option>
-                      <option value="4" selected>C级店</option>
-                      <option value="5">淘汰店</option>
+                      <option value="1">S</option>
+                      <option value="2">A</option>
+                      <option value="3">B</option>
+                      <option value="4" selected>C</option>
+                      <option value="5">新落地</option>
+                      <option value="6">淘汰区</option>
                     <select>
                 </div>
 
@@ -219,13 +229,6 @@
                         <input type="date" name="changeInTime" value="<%=data.changeInTime%>" max="2030-01-01" placeholder="YYYY-MM-DD" required>
                     </div>
                 </div>                                                
-
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>合同编号：</label>
-                    <div class="control">
-                        <input type="text" name="bargainno" value="<%=data.bargainno%>" placeholder="合同编号" maxlength="16" required>
-                    </div>
-                </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>合同起始日期：</label>

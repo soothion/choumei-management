@@ -5,12 +5,16 @@ use Illuminate\Support\Facades\Redis as Redis;
 use App\Salon;
 use App\Order;
 
-class Commission extends Model {
+class CommissionLog extends Model {
 
-	protected $table = 'commission';
+	protected $table = 'commission_log';
 
-	protected $fillable = ['id', 'sn','salonid', 'amount', 'created_at', 'updated_at','date'];
+	protected $fillable = ['id', 'ordersn','salonid', 'amount', 'created_at', 'updated_at','rate','grade'];
 
+    public function salon(){
+        return $this->belongsTo('App\Salon');
+    }    
+    
 	public static function getSn(){
 		$redis = Redis::connection();
 		$key = 'YJ-'.date('ymd');
@@ -30,7 +34,8 @@ class Commission extends Model {
 	}
 
 	public static function getQueryByParam($param){
-		$query = Self::join('salon', 'salon.salonid', '=', 'commission.salonid');
+		$query = Order::join('salon', 'salon.salonid', '=', 'order.salonid');
+		$query = $query->join('commission', 'commission.ordersn', '=', 'order.ordersn');
 		//商户名筛选
 		if(isset($param['merchantname'])&&$param['merchantname']){
 			$query = $query->join('merchant', 'merchant.id', '=', 'salon.merchantId');
