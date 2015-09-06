@@ -41,7 +41,7 @@ class Commission extends Command
      */
     public function handle()
     {
-       // $this->commissionLog();  
+       $this->commissionLog();  
        $this->commission();
     }
 
