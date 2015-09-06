@@ -350,6 +350,11 @@ class ShopCountApi
         //更新转付单
         $ret = PrepayBill::where('id', $id)->update($options);
         
+        if(empty($prepay->other_id))
+        {
+            return $ret;
+        }
+        
         //更新付款单
         $pay_record = ['updated_at'=>$now_date,'state'=>PayManage::STATE_OF_TO_CHECK, ];
         if(isset($options['salon_id']))
@@ -372,7 +377,7 @@ class ShopCountApi
         {
             $pay_record['require_day'] = $options['day'];
         }
-        PayManage::where('id',$prepay->pay_manage_id)->update($pay_record);
+        PayManage::where('id',$prepay->other_id)->update($pay_record);
         
         return $ret;
     }   
@@ -391,7 +396,7 @@ class ShopCountApi
         {
             return false;
         }
-        $pay_id = $prepay->pay_manage_id;
+        $pay_id = $prepay->other_id;
         //删除转付单
         PrepayBill::where('id',$id)->delete();
         //删除付款单
