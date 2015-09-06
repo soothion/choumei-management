@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+		<a>图片管理</a><span>&gt;</span><a href="index.html">图片库</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑图片":"新增图片"%></span>
+			<div class="flex-box">
+			<div class="flex-item">
+				<h4><%=query._?"编辑图片":"新增图片"%></h4>
+			</div>		 
+		</div>
+		<hr />
+	</div>	
+	
+	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
+		 <div class="detail-operation">
+				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+				<span class="space"></span>
+				 <button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button>
+			</div>
+		
+		<div class="control-group">
+					 
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>风格名称：</label>
+                    <div class="control">
+                        <input type="text"  value="<%=data.tel||""%>"  >
+                    </div>
+                </div>
+			   <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>长度：</label>
+                     <label>
+                    <input type="radio" class="radio" name="shopType" value="1"
+                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
+                    <span>长发</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="2" 
+                    <%=data.shopType==2 ? "checked" : "" %>>
+                    <span>中发</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="3"
+                    <%=data.shopType==3 ? "checked" : "" %>>
+                    <span>短发</span>
+                    </label>
+					 <span class="control-help" style="display:none;"></span>
+                </div> 
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>卷度：</label>
+                     <label>
+                    <input type="radio" class="radio" name="shopType" value="1"
+                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
+                    <span>全卷</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="2" 
+                    <%=data.shopType==2 ? "checked" : "" %>>
+                    <span>半卷</span>
+                    </label>
+
+                   
+					  <label>
+                    <input type="radio" class="radio" name="shopType" value="1"
+                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
+                    <span>C卷</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="2" 
+                    <%=data.shopType==2 ? "checked" : "" %>>
+                    <span>外翻</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="3"
+                    <%=data.shopType==3 ? "checked" : "" %>>
+                    <span>直发</span>
+                    </label>
+					 <label>
+                    <input type="radio" class="radio" name="shopType" value="3"
+                    <%=data.shopType==3 ? "checked" : "" %>>
+                    <span>纹理</span>
+                    </label>
+					 <span class="control-help" style="display:none;"></span>
+                </div> 
+				
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>颜色：</label>
+                     <label>
+                    <input type="radio" class="radio" name="shopType" value="1"
+                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
+                    <span>冷色</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="2" 
+                    <%=data.shopType==2 ? "checked" : "" %>>
+                    <span>暖色</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="3"
+                    <%=data.shopType==3 ? "checked" : "" %>>
+                    <span>中性</span>
+                    </label>
+					   <label>
+                    <input type="radio" class="radio" name="shopType" value="3"
+                    <%=data.shopType==3 ? "checked" : "" %>>
+                    <span>时尚</span>
+                    </label>
+					 <span class="control-help" style="display:none;"></span>
+                </div>  
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>风格图片：</label>
+                    <div class="upload-btn" id="con_loader_button">
+                      <i class="fa fa-image"></i>
+                      <p class="btn-text">上传列表图片</p>
+					  <label class="control-label" for="">(上传文件说明：512*512PX的jpg,png图片格式)</label>
+                    </div>
+                </div>				
+				<div class="control-group">
+					<label class="control-label" for=""></label>
+					<div class="control">
+					<button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button></div>
+			</div>
+			</div>
+		  </form>
+		  </script>
+	</div>
+	 
+	 
+  </body>
+</html>

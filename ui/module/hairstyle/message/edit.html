@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+	  <link rel="stylesheet" href="/css/webuploader.css" />
+      <link rel="stylesheet" href="edit.css" />    
+  </head>
+  <body>
+		<div class="breadcrumb">
+		<a>消息管理</a><span>&gt;</span><a href="index.html">申请消息</a> 
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>消息列表</h4>
+			</div>
+		 </div>		
+		<hr />
+	</div>	
+	
+	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+		<script type="text/template" id="form-t">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
+		 <div class="detail-operation">
+				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+				<span class="space"></span>
+				 <button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button>
+			</div>
+		
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>消息类型：</label>
+                     <label>
+                    <input type="radio" class="radio" name="shopType" value="1"
+                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
+                    <span>系统消息</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="2" 
+                    <%=data.shopType==2 ? "checked" : "" %>>
+                    <span>活动消息</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="3"
+                    <%=data.shopType==3 ? "checked" : "" %>>
+                    <span>其他消息</span>
+                    </label>
+					 <span class="control-help" style="display:none;"></span>
+                </div>  
+                 <div class="control-group">
+                        <label class="control-label">发送对象：</label>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="salonType" value="1">
+                            <span>所有臭美发型app安装用户</span><br/>
+                        </label>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="salonType" value="2">
+                            <span>按照城市选择发送对象</span>
+							<span>
+							 
+									<select required name="city_id"  ajat="list/city#domid=city&tempid=/module/public/template/department&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
+									</select>
+								 
+							</span>	
+							<br/>
+                        </label>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="salonType" value="3">
+                            <span>个别手机号码</span>
+                        </label>
+                    </div>  
+					
+				<div class="control-group" style="width:800px;margin-left:30px;" >
+						<legend>消息编辑-列表</legend>
+						<hr />
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>标题：</label>
+                    <div class="control">
+                        <input id="password" type="text" required>
+						<label>(限制32字以内)</label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>摘要：</label>
+                    <div class="control">
+					<input type="text" required>
+					<label>(限制64字以内)</label>
+					</div>
+                </div>
+				 <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>列表展示图片：</label>
+					<div class="upload-btn webuploader-container" id="con_loader_button">
+					<div class="webuploader-pick">
+                      <i class="fa fa-image"></i>
+                        <p class="btn-text">上传列表图片</p>
+                    </div>
+					 
+					</div>
+					<span class="space"></span>
+					 <label>图片规格：2M以内，支持jpg、png格式</label>
+					  
+                </div>
+				
+				  <div class="control-group" style="width:800px;margin-left:30px;" >
+                    <legend>消息编辑-详情</legend>
+						<hr />
+                </div>
+					<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>消息内容：</label>
+                     <label>
+                    <input type="radio" class="radio" name="shopType" value="1"
+                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
+                    <span>信息连接</span>
+					<input type="text" style="width:500px"/>
+                    </label><br/>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="2" 
+                    <%=data.shopType==2 ? "checked" : "" %>>
+                    <span>编辑生成</span>
+                    </label>
+					 <span class="control-help" style="display:none;"></span>
+                </div>  
+				<div class="control-group">
+				<label class="control-label" for=""></label>
+				<div class="control">
+				<button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button>
+				<span class="space"></span>
+				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+				<span class="space"></span>
+				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+				</div>
+			</div>
+		  </form>
+		  </script>
+	</div>
+	 
+	  <script type="text/javascript" src="/js/webuploader.js"></script>
+        <script type="text/javascript" src="edit.js"></script>  
+  </body>
+</html>
