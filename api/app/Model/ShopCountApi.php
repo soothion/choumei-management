@@ -101,7 +101,7 @@ class ShopCountApi
         ->get();
  
         $insert = [];
-        $model = new Commission;
+        $model = new CommissionLog;
         
         foreach ($orders as $key => $order) {
 
@@ -114,11 +114,10 @@ class ShopCountApi
             $data['ordersn'] = $order->ordersn;
             $data['type'] = 1;//订单1,赏金单2
             $data['salonid'] = $order->salonid;
-            $data['sn'] = $model->getSn();
             $data['amount'] = $commission;
             $data['grade'] = $order->salonGrade;
             $data['rate'] = $rate;
-            $date = date('Y-m-d H:i:s');
+            $date = date('Y-m-d H:i:s',$order->use_time);
             $data['updated_at'] = $date;
             $data['created_at'] = $date;
 
@@ -142,7 +141,7 @@ class ShopCountApi
         ->get();
 
         $insert = [];
-        $model = new Commission;
+        $model = new CommissionLog;
         foreach ($orders as $key => $order) {
 
             if($exist = $model->where('ordersn',$order->ordersn)->first())
@@ -158,7 +157,7 @@ class ShopCountApi
             $data['amount'] = $commission;
             $data['grade'] = $order->salonGrade;
             $data['rate'] = $rate;
-            $date = date('Y-m-d H:i:s');
+            $date = date('Y-m-d H:i:s',$order->use_time);
             $data['updated_at'] = $date;
             $data['created_at'] = $date;
             $insert[] = $data;
