@@ -788,10 +788,11 @@ class ShopCountController extends Controller
             $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
             $salon_id = isset($data['salon']['salonid']) ? $data['salon']['salonid'] : '';
             $salon_sn = isset($data['salon']['sn']) ? $data['salon']['sn'] : '';
+            $username = isset($data['user']['name'])?$data['user']['name']:'';
             $typename = $data['type'] == 3 ? "交易代收款返还" : "付交易代收款";
             $pay_type_name = Utils::getPayTypeName($data['pay_type']);
             $username = $data['user']['name'];
-            $statename = Utils::getPrepayStateName($datas['state']);
+            $statename = Utils::getPrepayStateName($data['state']);
             $res[] = [
                 $salon_id,
                 $salon_sn,

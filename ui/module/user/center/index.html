@@ -38,14 +38,18 @@
 					<input type="date" name="start" data-role="start" placeholder="YYYY-MM-DD"/>到<input name="end" type="date" data-role="end" placeholder="YYYY-MM-DD"/>
 				</span>
 				选择地区
-				<select>
-				    <option value="选择">选择省份</option>
+				<select id="province" name="provinceId" required ajat-one="true" style="width:100px" 
+				ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&provinceId=<%=query.provinceId%>" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&citiesId=<%=query.citiesId%>">
 				</select>
-				<select>
-				    <option value="选择">选择城市</option>
+				<select id="city" name="citiesId" required ajat-one="true" style="width:100px" 
+				ajat="<%if(query.provinceId){%>salonList/getProvinces?type=2&areaId=<%=query.provinceId%><%}%>#domid=city&tempid=city_t&citiesId=<%=query.citiesId%>"
+				ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=query.district%>">
 				</select>
-				<select>
-				    <option value="选择">选择地区</option>
+				<select id="area" name="district" 
+				required ajat-one="true"  style="width:100px" 
+				ajat="<%if(query.citiesId){%>salonList/getProvinces?type=3&areaId=<%=query.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=query.district%>"
+				ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=zone&tempid=zone_t&zone=<%=data.zone%>"
+				>
 				</select>
 				<button class="btn" type="submit">搜索</button>
 			</form>
@@ -99,7 +103,26 @@
 			</script>
 		</div>
 	</div>
-	
+	<script type="text/template" id="province_t">
+		<option value="">省份</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.pid==protocol.custom.provinceId?"selected":""%> value="<%=item.pid%>"><%=item.pname%></option>
+		<%})%>
+	</script>
+
+	<script type="text/template" id="city_t">
+		<option value="">城市</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.iid==protocol.custom.citiesId?"selected":""%> value="<%=item.iid%>"><%=item.iname%></option>
+		<%})%>
+	</script>
+
+	<script type="text/template" id="area_t">
+		<option value="">地区</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.tid==protocol.custom.district?"selected":""%> value="<%=item.tid%>"><%=item.tname%></option>
+		<%})%>
+	</script>
 	<script type="text/javascript">
 		 
 	</script>

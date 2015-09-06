@@ -8,6 +8,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Response;
 use JWTAuth;
 use App\Exceptions\ApiException;
+use Config;
 
 class Handler extends ExceptionHandler
 {
@@ -42,8 +43,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        // return parent::render($request, $e);
+        return parent::render($request, $e);
         $data['result'] = 0;
+        $data['code'] = 0;
         $data['token'] = '';
         if(JWTAuth::getToken()){
             try {
