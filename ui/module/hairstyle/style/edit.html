@@ -20,9 +20,9 @@
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
 		 <div class="detail-operation">
-				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+				<button class="btn" onclick="history.back()" type="button"  >取消</button>
 				<span class="space"></span>
-				 <button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button>
+				 <button class="btn-primary" type="submit" ">提交</button>
 			</div>
 		
 		<div class="control-group">
@@ -30,7 +30,8 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>风格名称：</label>
                     <div class="control">
-                        <input type="text"  value="<%=data.tel||""%>"  >
+                        <input type="text"  value="<%=data.tel||""%>" maxlength="10" disabled>
+						<span class="weak">最多输入10个字</span>
                     </div>
                 </div>
 			  
@@ -39,13 +40,16 @@
                     <div class="upload-btn" id="con_loader_button">
                       <i class="fa fa-image"></i>
                       <p class="btn-text">上传列表图片</p>
-					  <label class="control-label" for="">(上传文件说明：512*512PX的jpg,png图片格式)</label>
+					  <span class="weak" >(上传文件说明：512*512PX的jpg,png图片格式)</span>
                     </div>
                 </div>				
 				<div class="control-group">
 					<label class="control-label" for=""></label>
 					<div class="control">
-					<button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button></div>
+					<button class="btn-primary" type="submit">提交</button>
+					<span class="space"></span>
+					<button class="btn" type="button" onclick="history.back()">返回</button>
+			   </div>
 			</div>
 			</div>
 		  </form>

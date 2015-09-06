@@ -93,7 +93,7 @@
                   <td><%=status[data[i].status]%></td>
 				  <td><%=data[i].city?data[i].city.title:""%></td>	
                   <td><%=data[i].department?data[i].department.title:""%></td>
-                  <td><a class="link" href="edit.html?id=<%=data[i].id%>" data-slug="user.show,user.update">查看</a><a class="link" href="edit.html?id=<%=data[i].id%>" data-slug="user.show,user.update">删除</a></td>
+                  <td><a class="link" href="edit.html?id=<%=data[i].id%>" >删除</a> <a class="link" href="edit.html?id=<%=data[i].id%>">修改</a></td>
                   </tr>
 				  <%}%>
                 </tbody>
