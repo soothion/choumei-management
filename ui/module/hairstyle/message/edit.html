@@ -21,30 +21,26 @@
 	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
-		 <div class="detail-operation">
-				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
-				<span class="space"></span>
-				 <button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button>
-			</div>
+		 
 		
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>消息类型：</label>
                      <label>
                     <input type="radio" class="radio" name="shopType" value="1"
                     <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
-                    <span>系统消息</span>
+                    <span>预付款店</span>
                     </label>
 
                     <label>
                     <input type="radio" class="radio" name="shopType" value="2" 
                     <%=data.shopType==2 ? "checked" : "" %>>
-                    <span>活动消息</span>
+                    <span>投资店</span>
                     </label>
 
                     <label>
                     <input type="radio" class="radio" name="shopType" value="3"
                     <%=data.shopType==3 ? "checked" : "" %>>
-                    <span>其他消息</span>
+                    <span>金字塔店</span>
                     </label>
 					 <span class="control-help" style="display:none;"></span>
                 </div>  
@@ -57,20 +53,9 @@
                         </label>
 
                         <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="2">
-                            <span>按照城市选择发送对象</span>
-							<span>
-							 
-									<select required name="city_id"  ajat="list/city#domid=city&tempid=/module/public/template/department&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
-									</select>
-								 
-							</span>	
-							<br/>
-                        </label>
-
-                        <label class="checkbox">
                             <input type="checkbox" name="salonType" value="3">
-                            <span>个别手机号码</span>
+                            <span>个别手机号码</span> 
+							<span style="color:#58A2EC;font-weight:bold;">+添加手机号码</span>
                         </label>
                     </div>  
 					
@@ -82,14 +67,14 @@
                     <label class="control-label" for=""><span class="red">*</span>标题：</label>
                     <div class="control">
                         <input id="password" type="text" required>
-						<label>(限制32字以内)</label>
+						<span class="weak">(限制32字以内)</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>摘要：</label>
                     <div class="control">
 					<input type="text" required>
-					<label>(限制64字以内)</label>
+					<span class="weak">(限制64字以内)</span>
 					</div>
                 </div>
 				 <div class="control-group">
@@ -102,7 +87,7 @@
 					 
 					</div>
 					<span class="space"></span>
-					 <label>图片规格：2M以内，支持jpg、png格式</label>
+					 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
 					  
                 </div>
 				
@@ -113,15 +98,15 @@
 					<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>消息内容：</label>
                      <label>
-                    <input type="radio" class="radio" name="shopType" value="1"
-                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="aa" value="1"
+                    <%=!data.aa||data.aa==1 ? "checked" : "" %>>
                     <span>信息连接</span>
 					<input type="text" style="width:500px"/>
                     </label><br/>
 
                     <label>
-                    <input type="radio" class="radio" name="shopType" value="2" 
-                    <%=data.shopType==2 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="aa" value="2" 
+                    <%=data.aa==2 ? "checked" : "" %>>
                     <span>编辑生成</span>
                     </label>
 					 <span class="control-help" style="display:none;"></span>
@@ -129,9 +114,9 @@
 				<div class="control-group">
 				<label class="control-label" for=""></label>
 				<div class="control">
-				<button class="btn-primary" type="submit" data-slug="<%=query._?"user.update":"user.create"%>" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">提交</button>
+				<button class="btn-primary" type="submit">提交</button>
 				<span class="space"></span>
-				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">预览</button>
 				<span class="space"></span>
 				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
 				</div>
