@@ -34,11 +34,10 @@
 					</span>
 				 
 					<button class="btn" type="submit">搜索</button>
+					<button class="btn" form="export" data-slug="shop_count.export"><i class="fa fa-file-excel-o" ></i> 导出</button>			
 			</form>
-			<form action="shop_count/export" data-role="export" data-slug="shop_count.export">
-				<button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
-			</form>					 
-			 
+			  <form action="shop_count/export" data-role="export" id="export" ></form>   
+			  
 			  <div class="table" ajat="<%if(query._){%>shop_count/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                  <table>
