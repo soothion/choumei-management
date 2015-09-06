@@ -42,7 +42,7 @@ class Salon extends Model {
 		    return $page;
 		});
 
-		$query = self::getQuery( $where,$orderName,$order,$fields);
+		$query = self::getQueryByParam( $where,$orderName,$order,$fields);
         $salonList =    $query->paginate($page_size);
         $result = $salonList->toArray();
 
@@ -93,7 +93,7 @@ class Salon extends Model {
 	 * 店铺查询
 	 * 
 	 * */
-	private static function getQuery( $where,$orderName,$order,$fields)
+	private static function getQueryByParam( $where,$orderName,$order,$fields)
 	{
 		$query =  DB::table('salon as s')
 		->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
@@ -218,7 +218,7 @@ class Salon extends Model {
 
 		
 		$rs = array();
-		$query = self::getQuery( $where,$orderName,$order,$fields);
+		$query = self::getQueryByParam( $where,$orderName,$order,$fields);
 		$salonList =    $query->get();
 		if($salonList)
 		{

@@ -84,7 +84,7 @@ class MerchantController extends Controller {
 	{
 		
 		$param = $this->param;
-		$query = $this->getQuery($param);
+		$query = $this->getQueryByParam($param);
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 
@@ -464,7 +464,7 @@ class MerchantController extends Controller {
 	/**
 	 * 商户查询
 	 * */
-	private function getQuery($param)
+	private function getQueryByParam($param)
 	{
 		$query = Merchant::getQuery();
 		
@@ -509,7 +509,7 @@ class MerchantController extends Controller {
 	{
 	
 		$param = $this->param;
-		$query = $this->getQuery($param);
+		$query = $this->getQueryByParam($param);
 		
 		$fields = array('name','sn','contact','mobile','phone','email','addr','foundingDate','addTime' );
 		$rs = $query->select($fields)->orderBy('addTime', 'desc')->get();
