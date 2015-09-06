@@ -101,7 +101,7 @@ class ShopCountApi
         ->get();
  
         $insert = [];
-        $model = new Commission;
+        $model = new CommissionLog;
         
         foreach ($orders as $key => $order) {
 
@@ -114,11 +114,10 @@ class ShopCountApi
             $data['ordersn'] = $order->ordersn;
             $data['type'] = 1;//订单1,赏金单2
             $data['salonid'] = $order->salonid;
-            $data['sn'] = $model->getSn();
             $data['amount'] = $commission;
             $data['grade'] = $order->salonGrade;
             $data['rate'] = $rate;
-            $date = date('Y-m-d H:i:s');
+            $date = date('Y-m-d H:i:s',$order->use_time);
             $data['updated_at'] = $date;
             $data['created_at'] = $date;
 
@@ -142,7 +141,7 @@ class ShopCountApi
         ->get();
 
         $insert = [];
-        $model = new Commission;
+        $model = new CommissionLog;
         foreach ($orders as $key => $order) {
 
             if($exist = $model->where('ordersn',$order->ordersn)->first())
@@ -158,7 +157,7 @@ class ShopCountApi
             $data['amount'] = $commission;
             $data['grade'] = $order->salonGrade;
             $data['rate'] = $rate;
-            $date = date('Y-m-d H:i:s');
+            $date = date('Y-m-d H:i:s',$order->use_time);
             $data['updated_at'] = $date;
             $data['created_at'] = $date;
             $insert[] = $data;
@@ -351,6 +350,11 @@ class ShopCountApi
         //更新转付单
         $ret = PrepayBill::where('id', $id)->update($options);
         
+        if(empty($prepay->other_id))
+        {
+            return $ret;
+        }
+        
         //更新付款单
         $pay_record = ['updated_at'=>$now_date,'state'=>PayManage::STATE_OF_TO_CHECK, ];
         if(isset($options['salon_id']))
@@ -373,7 +377,7 @@ class ShopCountApi
         {
             $pay_record['require_day'] = $options['day'];
         }
-        PayManage::where('id',$prepay->pay_manage_id)->update($pay_record);
+        PayManage::where('id',$prepay->other_id)->update($pay_record);
         
         return $ret;
     }   
@@ -392,7 +396,7 @@ class ShopCountApi
         {
             return false;
         }
-        $pay_id = $prepay->pay_manage_id;
+        $pay_id = $prepay->other_id;
         //删除转付单
         PrepayBill::where('id',$id)->delete();
         //删除付款单
@@ -860,11 +864,10 @@ class ShopCountApi
         $instead_receive->with([
             'merchant' => function ($q) use($merchant_fields)
             {
-                $q->lists($merchant_fields);
+                $q->get($merchant_fields);
             }
         ]);
-        
-        return $instead_receive->first($instead_receive_fields);
+        return $instead_receive->first($instead_receive_fields)->toArray();
     }
     
 }

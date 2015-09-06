@@ -81,6 +81,12 @@ Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
 // 店铺消费验证  结算
 Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
 
+//退款回调 支付宝
+Route::any('refund/call_back_of_alipay',array( 
+'as'=>'refund.call_back_of_alipay',
+'uses'=>'Trans\OrderRefundController@call_back_of_alipay'
+));
+
 
 //权限管理后台接口
  //Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
@@ -462,6 +468,65 @@ Route::group(['middleware'], function(){
 	'as'=>'pay_manage.export',
 	'uses'=>'Pay\PayController@export'
 	    ));
+	
+	//交易管理
+	Route::any('order/index',array(  //订单列表
+	'as'=>'order.index',
+	'uses'=>'Trans\OrderController@index'
+	    ));
+	
+	Route::any('order/show/{id}',array(  //订单详情
+	'as'=>'order.show',
+	'uses'=>'Trans\OrderController@show'
+	    ));
+	
+	Route::any('order/export',array(  //订单导出
+	'as'=>'order.export',
+	'uses'=>'Trans\OrderController@export'
+	    ));
+	
+	Route::any('ticket/index',array(  //臭美券列表
+	'as'=>'ticket.index',
+	'uses'=>'Trans\TicketController@index'
+	    ));
+	
+	Route::any('ticket/show/{id}',array(  //臭美券详情
+	'as'=>'ticket.show',
+	'uses'=>'Trans\TicketController@show'
+	    ));
+	
+	Route::any('ticket/export',array(  //臭美券导出
+	'as'=>'ticket.export',
+	'uses'=>'Trans\TicketController@export'
+	    ));
+	
+	Route::any('refund/index',array(  //退款列表
+	'as'=>'refund.index',
+	'uses'=>'Trans\OrderRefundController@index'
+	    ));
+	
+	Route::any('refund/show/{id}',array(  //退款详情
+	'as'=>'refund.show',
+	'uses'=>'Trans\OrderRefundController@show'
+	    ));
+	
+
+	Route::any('refund/export',array(  //退款导出
+	'as'=>'refund.export',
+	'uses'=>'Trans\OrderRefundController@export'
+	    ));
+	
+	
+	Route::any('refund/accept',array(  //退款通过
+	'as'=>'refund.accept',
+	'uses'=>'Trans\OrderRefundController@accept'
+	    ));
+	
+	Route::any('refund/reject',array(  //退款拒绝
+	'as'=>'refund.reject',
+	'uses'=>'Trans\OrderRefundController@reject'
+	    ));
+	
 
 });
 

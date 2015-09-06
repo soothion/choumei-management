@@ -15,17 +15,19 @@ class TransactionSearchApi
     public static function searchOfOrder($params)
     {
         $bases = self::getConditionOfOrder($params);
-        //页数
-        $page = isset($options['page'])?max(intval($params['page']),1):1;
-        $size = isset($options['page_size'])?max(intval($params['page_size']),1):20;
-        AbstractPaginator::currentPageResolver(function() use ($page) {
+        // 页数
+        $page = isset($params['page']) ? max(intval($params['page']), 1) : 1;
+        $size = isset($params['page_size']) ? max(intval($params['page_size']), 1) : 20;
+        AbstractPaginator::currentPageResolver(function () use($page)
+        {
             return $page;
         });
-        
-            $res =  $bases->paginate($size)->toArray();
-            unset($res['next_page_url']);
-            unset($res['prev_page_url']);
-            return $res;
+        $total_money = self::countOfOrder($params);        
+        $res = $bases->paginate($size)->toArray();
+        $res['total_money'] = $total_money;
+        unset($res['next_page_url']);
+        unset($res['prev_page_url']);
+        return $res;
     }
     
     /**
@@ -80,113 +82,149 @@ class TransactionSearchApi
             'salonid',
             'salonname'
         ];
-        $merchant_fields = [
-            'id',
-            'name'
+        $fundflow_fields = [
+            'record_no',
+            'pay_type',
         ];
         $user_fields = [
             'user_id',
             'username',
             'mobilephone',
         ];
-        $prepay_fields = [
-            'id',
-            'created_at',
-            'merchant_id',
-            'salon_id',
-            'code',
-            'type',
-            'uid',
-            'pay_money',
-            'pay_type',
-            //'cost_money',
-            'day',
-            'pay_day',
-            'state'
+        $base_fields = [
+            'orderid',
+            'ordersn',
+            'priceall',
+            'salonid',
+            'add_time',
+            'pay_time',
+            'user_id',
+            'ispay',
         ];
+        
         $order_by_fields = [
-            'id',
-            'created_at',
-            'code',
-            'type',
-            'pay_money',
-            'pay_type',
-            'day'
+            'orderid',
+            'ordersn',
+            'priceall',
+            'add_time',
+            'pay_time',
+            'ispay',
         ];
         
-        $prepay = PrepayBill::where('state', '<>', PrepayBill::STATE_OF_PREVIEW)->select($prepay_fields);
+        $orderBase = Order::select($base_fields);
         
-        // 关键字搜索
-        if (isset($options['key']) && ! empty($options['key']) && isset($options['keyword']) && ! empty($options['keyword'])) {
-            $key = intval($options['key']);
-            $keyword = '%' . str_replace([
-                "%",
-                "_"
-            ], [
-                "\\%",
-                "\\_"
-            ], $options['keyword']) . "%";
-            if ($key == 1) {
-                $prepay->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
-            } elseif ($key == 2) {
-                $prepay->whereRaw("merchant_id in (SELECT `id` FROM `cm_merchant` WHERE `name` LIKE '{$keyword}')");
-            } elseif ($key == 3) {
-                $prepay->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `sn` LIKE '{$keyword}')");
-            }
-        }
+        self::makeWhereOfOrder($orderBase, $params);
         
-        $prepay->with([
+        $orderBase->with([
             'user' => function ($q) use($user_fields)
             {
                 $q->get($user_fields);
             }
         ]);
         
-        $prepay->with([
+        $orderBase->with([
             'salon' => function ($q) use($salon_fields)
             {
                 $q->get($salon_fields);
             }
         ]);
         
-        $prepay->with([
-            'merchant' => function ($q) use($merchant_fields)
+        $orderBase->with([
+            'fundflow' => function ($q) use($fundflow_fields)
             {
-                $q->get($merchant_fields);
+                $q->get($fundflow_fields);
             }
         ]);
         
-        // 按时间搜索
-        if (isset($options['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_min']))) {
-            $prepay->where('day', ">=", trim($options['pay_time_min']));
-        }
-        if (isset($options['pay_time_max']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_max']))) {
-            $prepay->where('day', "<=", trim($options['pay_time_max']));
-        }
         
         // 排序
-        if (isset($options['sort_key']) && in_array($options['sort_key'], $order_by_fields)) {
-            $order = $options['sort_key'];
+        if (isset($params['sort_key']) && in_array($params['sort_key'], $order_by_fields)) {
+            $order = $params['sort_key'];
         } else {
-            $order = "created_at";
+            $order = "orderid";
         }
         
-        if (isset($options['sort_type']) && strtoupper($options['sort_type']) == "ASC") {
+        if (isset($params['sort_type']) && strtoupper($params['sort_type']) == "ASC") {
             $order_by = "ASC";
         } else {
             $order_by = "DESC";
         }
         
-        return $prepay->orderBy($order, $order_by);
+        return $orderBase->orderBy($order, $order_by);
     }
     
     public static  function getConditionOfTicket($params)
     {
-    
+
     }
     
     public static  function getConditionOfRefund($params)
     {
     
+    }
+    
+    public static function countOfOrder($params)
+    {
+        $orderBase = Order::selectRaw("SUM(`priceall`) as `priceall`");
+        self::makeWhereOfOrder($orderBase, $params);
+        $order = $orderBase->first();
+        return $order->priceall;
+    }
+    
+    public static function makeWhereOfOrder(&$orderBase,$params)
+    {
+        // 按时间搜索
+        if (isset($params['pay_time_min']) && !empty($params['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['pay_time_min']))) {
+            $orderBase->where('day', ">=", strtotime(trim($params['pay_time_min'])));
+        }
+        if (isset($params['pay_time_max']) && !empty($params['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['pay_time_max']))) {
+            $orderBase->where('day', "<=", strtotime(trim($params['pay_time_max'])) + 86399 );
+        }
+        
+        //支付方式
+        if(isset($params['pay_type']) && !empty($params['pay_type']))
+        {
+            $pay_types = explode(",", $params['pay_type']);
+            $pay_types = array_map("intval", $pay_types);
+            $pay_type_str = implode(",", $pay_types);
+            if(!empty($pay_type_str))
+            {
+                $orderBase->whereRaw('`ordersn` IN (select `record_no` from cm_fundflow where `code_type` = 2 and `pay_type` IN ({$pay_type_str}) )');
+            }
+        }
+        
+        // 付款状态
+        if(isset($params['pay_state']) && !empty($params['pay_state']))
+        {
+            $orderBase->where('ispay', $params['pay_state']);
+        }
+        
+        // 关键字搜索
+        if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty($params['keyword'])) {
+            $key = intval($params['key']);
+            $keyword = '%' . str_replace([
+                "%",
+                "_"
+            ], [
+                "\\%",
+                "\\_"
+            ], $params['keyword']) . "%";
+            if ($key == 1) //订单号
+            {
+                $orderBase->where("ordersn",'like',$keyword);
+            }
+            elseif ($key == 2) //用户臭美号
+            {
+                $orderBase->whereRaw("`user_id` IN (SELECT `user_id` FROM `cm_user` WHERE `username` LIKE '{$keyword}')");
+            }
+            elseif ($key == 3) //用户手机号
+            {
+                $orderBase->whereRaw("user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
+            }
+            elseif ($key == 4) //店铺名
+            {
+                $orderBase->whereRaw("`salonid` IN (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
+            }
+        }        
     }
 }

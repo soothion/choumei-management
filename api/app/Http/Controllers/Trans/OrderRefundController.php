@@ -141,8 +141,8 @@ class OrderRefundController extends Controller
     }
     
     /**
-     * @api {get} /refund/detail/{id} 2.退款详情
-     * @apiName detail
+     * @api {get} /refund/show/{id} 2.退款详情
+     * @apiName show
      * @apiGroup refund
      *
      * @apiSuccess {Number} total 总数据量.
@@ -257,7 +257,7 @@ class OrderRefundController extends Controller
      *		    "msg": "未授权访问"
      *		}
      */
-    public function detail($id)
+    public function show($id)
     {
     
     }
