@@ -133,7 +133,8 @@
 				pick  : {id:'#imageUpload',multiple:false},
 				resize: false,
 				fileSingleSizeLimit : 2*1024*1024,
-				imageLimitSize:function(){
+				//imageLimitSize:"512*512",
+				imageLimitSize:function(width,height){
 					return true
 				},
 				accept :{
