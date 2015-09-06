@@ -58,7 +58,7 @@ class ERROR
      /**
      *@param 返佣单确认失败
      */
-     CONST REBATE_UPDATE_FAILED =  -50102;     
+     CONST REBATE_CONFIRM_FAILED =  -50102;     
 
      /**
      *@param 返佣单导入失败
