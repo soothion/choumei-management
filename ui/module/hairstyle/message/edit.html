@@ -79,16 +79,19 @@
                 </div>
 				 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>列表展示图片：</label>
-					<div class="upload-btn webuploader-container" id="con_loader_button">
-					<div class="webuploader-pick">
-                      <i class="fa fa-image"></i>
-                        <p class="btn-text">上传列表图片</p>
-                    </div>
-					 
+					<div class="control">
+						 <div class="control-image">
+								<div class="control-thumbnails" data-max="2"></div>
+								<div class="control-image-upload" id="imageUpload">
+									<i class="fa fa-image"></i>
+									<em>上传列表图片</em>
+								</div>
+							</div>
+						<span class="space"></span>
+						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
+						 <br />
+						 <input type="hidden" name="path" required requiredmsg="请上传图片" />
 					</div>
-					<span class="space"></span>
-					 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
-					  
                 </div>
 				
 				  <div class="control-group" style="width:800px;margin-left:30px;" >
@@ -124,8 +127,25 @@
 		  </form>
 		  </script>
 	</div>
-	 
-	  <script type="text/javascript" src="/js/webuploader.js"></script>
-        <script type="text/javascript" src="edit.js"></script>  
+        <script type="text/javascript">
+			lib.uploader.image({
+				server: "http://service.choumei.cn/upload/image",
+				pick  : {id:'#imageUpload',multiple:false},
+				resize: false,
+				fileSingleSizeLimit : 2*1024*1024,
+				imageLimitSize:function(){
+					return true
+				},
+				accept :{
+					title: 'Images',
+					extensions: 'jpg,jpeg,png',
+					mimeTypes: 'image/*'                
+				}
+			},function(uploader){
+				uploader.on('uploadSuccess',function(file,res){
+					//console.log(res);
+				})
+			});
+		</script>  
   </body>
 </html>

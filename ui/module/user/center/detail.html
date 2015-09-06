@@ -105,7 +105,7 @@
 						<tr>
 							<td>臭美号：  10000000</td>
 							<td>头像： 
-								<img src="/images/logo.png" alt="" width="60px" height="60px" /> 
+								<img src="/images/logo.png" alt="" width="60px" height="60px" id="photo" /> 
 								<span class="space"></span>
 								<a class="btn btn-upload" id="imageUpload">上传图片</a>
 								<span class="space"></span>
@@ -229,6 +229,7 @@
 				</form>
 			</div>
 		</div>
+		<img id="image" src="" alt="" />
 		<script type="text/javascript">
 			$(document).on('click','.btn-edit',function(){
 				$(this).closest('.table-detail').hide().next().show();
@@ -237,16 +238,21 @@
 			});
 			lib.uploader.image({
 				server: "rebate/upload",
-				pick  : '#imageUpload',
+				pick  : {id:'#imageUpload',multiple:false},
+				auto:true,
 				resize: false,
-				auto  : true,
 				fileSingleSizeLimit : 800*1024,
-				fileVal:'rebate',
+				imageLimitSize:"512*512",
 				accept :{
-					title: 'image',
-					extensions: 'jpg,jpeg,png',
-					mimeTypes: 'image/jpeg,image/png'             
-				}                
+					title: 'Images',
+					extensions: 'gif,jpg,jpeg,bmp,png',
+					mimeTypes: 'image/*'                
+				},
+				imageId:'photo'
+			},function(uploader){
+				uploader.on('uploadSuccess',function(file,res){
+					//console.log(res);
+				})
 			});
 		</script>
   </body>

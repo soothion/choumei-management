@@ -231,18 +231,117 @@
 				}
 				return WebUploader.create(options);
 			},
+			createImage:function(){
+				var imagePreview=$('<div style="position:absolute;left:0;top:0;z-index:-1;width:100%;height:100%;overflow:hidden;visibility:hidden;"><img/></div>')
+				$(document.body).append(imagePreview);
+				return imagePreview;
+			},
 			image:function(options,cb){//图片上传
+				var self=this;
+				options.loaderText=options.loaderText||"图片准备上传中";
+				options.successText=options.successText||"图片上传完成";
+				options.errorText=options.errorText||"图片上传失败";
+				if(options.imageLimitSize){
+					if(options.auto===true){
+						options._auto=true;
+						options.auto=false;
+					}
+				}
+				this.file(options,function(uploader){
+					//支持缩略小图预览
+					if(uploader.options.pick.id){
+						var $target=$(uploader.options.pick.id);
+						uploader.thumbnails=$target.siblings('.control-thumbnails');
+						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
+							uploader.createThumbnails=function(data){
+								uploader.thumbnails.append(lib.ejs.render({url:'/module/public/template/thumbnails'},{data:[data]}))
+								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children().length){
+									uploader.thumbnails.siblings('.control-image-upload').hide();
+								}
+							}
+							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
+								var item=$(this).closest('.control-thumbnails-item');
+								if(item.attr('id')){
+									uploader.removeFile(item.attr('id'));
+								}
+								item.remove();
+								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children().length){
+									uploader.thumbnails.siblings('.control-image-upload').show();
+								}
+							});
+						}
+					}
+					// 当有文件添加进来的时候
+					uploader.on('fileQueued', function( file ) {
+						if(options.imageLimitSize){
+							var self=this;
+							uploader.makeThumb(file, function( error, src ) {
+								if(error){
+									parent.lib.popup.result({bool:false,text:"图片预览失败"});
+									return;
+								}
+								//校验图片尺寸大小
+								var imagePreview=lib.uploader.createImage();
+								imagePreview.children('img').on('load',function(){
+									var $this=$(this);
+									if(typeof self.options.imageLimitSize =='string'){
+										var width=parseInt(self.options.imageLimitSize.split('*')[0]);
+										var height=parseInt(self.options.imageLimitSize.split('*')[1]);
+										if($this.width()!=width||$this.height()!=height){
+											self.trigger( 'error', 'IAMGE_SIZE',file);
+										}else{
+											if(self.options._auto){
+												self.upload();
+											}
+											var data=$.extend({},file,{src:src});
+											self.createThumbnails(data);
+										}
+									}
+									if(typeof self.options.imageLimitSize =='function'){
+										var ret=self.options.imageLimitSize($this.width(),$this.height());
+										if(ret){
+											if(self.options._auto){
+												self.upload();
+											}
+											var data=$.extend({},file,{src:src});
+											self.createThumbnails(data);
+										}else{
+											self.trigger( 'error', 'IAMGE_SIZE',file);
+										}
+									}
+									imagePreview.remove();
+								}).attr('src',src);
+							},1,1);
+						}
+					});
+					uploader.on('uploadSuccess',function(file){
+						var self=this;
+						if(this.options.imageId){
+							uploader.makeThumb(file, function( error, src ) {
+								document.getElementById(self.options.imageId).src=src;
+							},1,1);
+						}
+					});
+					uploader.on('error',function(err){
+						if(err=='IAMGE_SIZE'){
+							parent.lib.popup.result({bool:false,text:"图片的大小尺寸不正确"});
+						}
+					});
+					cb&&cb(uploader);
+				});
+			},
+			file:function(options,cb){//文件上传
 				var self=this;
 				this.use(function(){
 					var uploader=self.create(options);
-					uploader.on('uploadStart',function(){
-						parent.lib.popup.loading({text:options.loaderText||"图片准备上传中"});
+					uploader.on('uploadStart',function(file){
+						parent.lib.popup.loading({text:options.loaderText||"文件准备上传中"});
 					});
-					uploader.on('uploadComplete',function(){
-						parent.lib.popup.result({bool:true,text:options.successText||"图片上传完成"});
+					uploader.on('uploadSuccess',function(file){
+						parent.lib.popup.result({bool:true,text:options.successText||"文件上传完成"});
 					});
-					uploader.on('uploadError',function(){
-						parent.lib.popup.result({bool:false,text:options.errorText||"图片上传失败"});
+					uploader.on('uploadError',function(file){
+						parent.lib.popup.result({bool:false,text:options.errorText||"文件上传失败"});
 					});
 					uploader.on('uploadProgress',function(file, percentage){
 						parent.lib.popup.tips({
@@ -262,12 +361,6 @@
 					});
 					cb&&cb(uploader);
 				});
-			},
-			file:function(options,cb){//文件上传
-				options.loaderText=options.loaderText||"文件准备上传中";
-				options.successText=options.successText||"文件上传完成";
-				options.errorText=options.errorText||"文件上传失败";
-				this.image(options,cb);
 			}
 		}
     }
