@@ -49,12 +49,12 @@ class Commission extends Model {
 
 		//起始时间
 		if(isset($param['start'])&&$param['start']){
-			$query = $query->where('created_at','>=',$param['start']);
+			$query = $query->where('date','>=',$param['start']);
 		}
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+			$query = $query->where('date','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 
 		//排序

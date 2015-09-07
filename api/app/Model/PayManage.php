@@ -80,6 +80,55 @@ class PayManage extends Model
         return $this->belongsTo(Merchant::class);
     }
     
+    
+    /**
+     * 生成(从预付单的交易代收返还生成)
+     * @param unknown $params
+     */
+    public static function makeFromPrepayReturn($params)
+    {
+        if( !isset($params['id']) ||//转付单id
+            !isset($params['code']) ||//转付单code
+            !isset($params['other_id']) ||//代收单id
+            !isset($params['other_code']) ||//代收单code
+            !isset($params['salon_id']) || 
+            !isset($params['merchant_id']) ||
+            !isset($params['pay_money']) ||//金额
+            !isset($params['pay_type']) ||//支付方式
+            !isset($params['day']) ||//要求付款日期
+            !isset($params['pay_day']) ||//实际付款日期
+            !isset($params['uid']) //确认人
+        )
+        {
+            return false;
+        }
+        //新建付款单
+        $code = self::makeNewCode(self::TYPE_OF_FJY);
+        $now_date = date("Y-m-d H:i:s");
+        $record = [
+            'type' =>self::TYPE_OF_FJY,
+            'code'=>$code,
+            'state'=>self::STATE_OF_PAIED,
+            'r_id'=>$params['other_id'],
+            'r_code'=>$params['other_code'],
+            'p_id'=>$params['id'],
+            'p_code'=>$params['code'],
+            'salon_id'=>$params['salon_id'],
+            'merchant_id'=>$params['merchant_id'],
+            'money'=>$params['pay_money'],
+            'pay_type'=>$params['pay_type'],
+            'require_day'=>$params['day'],
+            'pay_day'=>$params['pay_day'],
+            'make_uid'=>$params['uid'],
+            'confirm_uid'=>$params['uid'],
+            'cash_uid'=>$params['uid'],
+            'confirm_at'=>$params['pay_day'],
+            'created_at'=>$now_date,
+            'updated_at'=>$now_date
+        ];
+        $id = self::insertGetId($record);
+        return ['id'=>$id,'code'=>$code];
+    }
 
     /**
      * 生成 (从收款单,账扣支付 生成)
@@ -434,6 +483,7 @@ class PayManage extends Model
             'require_day',
             'pay_day',
             'created_at',
+            'confirm_at',
             'state',
         ];
         $order_by_fields = [

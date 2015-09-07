@@ -21,8 +21,8 @@
 				<div class="input-group placeholder-switch">			
 					<select  name="key">
 						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
-						<option value="2" data-placeholder="请输入店铺编号">店铺编号</option>
-						<option value="3" data-placeholder="请输入商户名称">商户名称</option>
+						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
+						<option value="2" data-placeholder="请输入商户名称">商户名称</option>
 					</select>
 					<input type="text" placeholder="请输入店铺名称" name="keyword">
 				</div>
@@ -119,7 +119,7 @@
 				var confirmText="";
 				if($this.data('define')==1){
 					data.do=1;
-					confirmText="你正在给5家店铺支付￥"+count+"，是否继续？"
+					confirmText="你正在给"+checked.length+"家店铺支付￥"+count+"，是否继续？"
 				}
 				if($this.data('define')==2){
 					data.do=2;
