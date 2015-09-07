@@ -468,6 +468,7 @@ Route::group(['middleware'], function(){
 	'as'=>'pay_manage.export',
 	'uses'=>'Pay\PayController@export'
 	    ));
+
 	
 	//交易管理
 	Route::any('order/index',array(  //订单列表
@@ -566,6 +567,33 @@ Route::group(['middleware'], function(){
 	));
 	
 	
+        
+        //图片风格管理
+          
+        Route::any('ImageStyle/getAllImage',array( 
+	'as'=>'ImageStyle.getAllImage',
+	'uses'=>'Image\ImageStyleController@getAllImage'
+	    ));
+        
+         Route::any('ImageStyle/insertImage',array( 
+	'as'=>'ImageStyle.insertImage',
+	'uses'=>'Image\ImageStyleController@insertImage'
+	    ));
+         
+          Route::any('ImageStyle/deleteImage',array( 
+	'as'=>'ImageStyle.deleteImage',
+	'uses'=>'Image\ImageStyleController@deleteImage'
+	    ));
+          
+           Route::any('ImageStyle/updateImage',array( 
+	'as'=>'ImageStyle.updateImage',
+	'uses'=>'Image\ImageStyleController@updateImage'
+	    ));
+           
+            Route::any('ImageStyle/getOneImage',array( 
+	'as'=>'ImageStyle.getOneImage',
+	'uses'=>'Image\ImageStyleController@getOneImage'
+	    ));
 
 });
 
