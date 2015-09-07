@@ -6,6 +6,8 @@
 namespace App;
 
 use Illuminate\Pagination\AbstractPaginator;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 class TransactionSearchApi
 {
     /**
@@ -54,7 +56,11 @@ class TransactionSearchApi
      */
     public static function orderDetail($id)
     {
-        
+        $base  = Order::where('orderid',$id)->first();
+        if(empty($base))
+        {
+            throw new ApiException("订单 [{$id}] 不存在", ERROR::ORDER_NOT_EXIST);
+        }        
     }
     
     /**

@@ -155,5 +155,13 @@ class ERROR
      *@param 文件格式错误
      */
      CONST FILE_FORMAT_ERROR =  -50508;
+     
+     ////////////交易管理相关///////////////
+     
+     /**
+      * 订单不存在
+      * @var unknown
+      */
+     CONST ORDER_NOT_EXIST = -50601;
 
 }
