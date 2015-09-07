@@ -41,6 +41,11 @@ class ERROR
      */
      CONST USER_PASSWORD_ERROR =  -50004;
 
+     /**
+     *@param 用户不存在
+     */
+     CONST USER_NOT_FOUND =  -50005;
+
 
 
     ////////////返佣单模块//////////////
@@ -155,5 +160,37 @@ class ERROR
      *@param 文件格式错误
      */
      CONST FILE_FORMAT_ERROR =  -50508;
+
+
+     ////////////用户等级模块//////////////
+     /**
+     *@param 等级设置为空
+     */
+     CONST LEVEL_EMPTY =  -50600;
+
+    /**
+     *@param 等级更新失败
+     */
+     CONST LEVEL_UPDATE_FAILED =  -50601;
+
+    /**
+     *@param 未知等级
+     */
+     CONST LEVEL_NOT_FOUND =  -50602;
+
+
+
+     ////////////反馈模块//////////////
+     /**
+     *@param 未知反馈
+     */
+     CONST FEED_NOT_FOUND =  -50700;
+
+     /**
+     *@param 反馈删除失败
+     */
+     CONST FEED_DELETE_FAILED =  -50701;
+
+
 
 }

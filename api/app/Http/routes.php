@@ -119,6 +119,47 @@ Route::group(['middleware'], function(){
 			'as'=>'user.survey',
 			'uses'=>'UserController@survey'
 		));
+	Route::any('user/index',array(
+		'as'=>'user.index',
+		'uses'=>'UserController@index'
+		));
+	Route::any('user/export',array(
+		'as'=>'user.export',
+		'uses'=>'UserController@export'
+		));
+	Route::any('user/show/{id}',array(
+		'as'=>'user.show',
+		'uses'=>'UserController@show'
+		));
+	Route::any('user/update/{id}',array(
+		'as'=>'user.update',
+		'uses'=>'UserController@update'
+		));
+	Route::any('user/company',array(
+		'as'=>'user.company',
+		'uses'=>'UserController@company'
+		));
+
+	//用户等级模块
+	Route::any('level/index',array(
+			'as'=>'level.index',
+			'uses'=>'LevelController@index'
+		));
+	Route::any('level/update',array(
+			'as'=>'level.update',
+			'uses'=>'LevelController@update'
+		));
+
+	//反馈模块
+	Route::any('feed/index',array(
+			'as'=>'feed.index',
+			'uses'=>'FeedController@index'
+		));
+	Route::any('feed/destroy/{id}',array(
+			'as'=>'feed.destroy',
+			'uses'=>'FeedController@destroy'
+		));
+
 
 	//角色模块
 	Route::any('role/index',array(
