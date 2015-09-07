@@ -11,88 +11,68 @@ use Excel;
 use Auth;
 use App\User;
 use App\Order;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class UserController extends Controller{
 	/**
-	 * @api {post} /user/index 1.用户列表
-	 * @apiName list
+	 * @api {post} /user/survey 1.用户根况
+	 * @apiName survey
 	 * @apiGroup User
 	 *
-	 * @apiParam {String} role 可选,角色名关键字.
-	 * @apiParam {String} name 可选,姓名关键字.
-	 * @apiParam {String} username 可选,登录帐号关键字.
-	 * @apiParam {Number} department_id 可选,部门ID.
-	 * @apiParam {Number} status 可选,用户状态.1正常、2停用、3注销.
-	 * @apiParam {Number} city_id 可选,城市ID.
-	 * @apiParam {String} start 可选,起始时间.
-	 * @apiParam {String} end 可选,结束时间.
-	 * @apiParam {Number} page 可选,页数.
-	 * @apiParam {Number} page_size 可选,分页大小.
-	 * @apiParam {String} sort_key 排序的键,比如:created_at,update_at;
-	 * @apiParam {String} sort_type 排序方式,DESC或者ASC;默认DESC
 	 *
-	 *
-	 * @apiSuccess {Number} total 总数据量.
-	 * @apiSuccess {Number} per_page 分页大小.
-	 * @apiSuccess {Number} current_page 当前页面.
-	 * @apiSuccess {Number} last_page 当前页面.
-	 * @apiSuccess {Number} from 起始数据.
-	 * @apiSuccess {Number} to 结束数据.
-	 * @apiSuccess {String} name 用户姓名.
-	 * @apiSuccess {String} username 用户名.
-	 * @apiSuccess {Number} status 用户状态.1正常、2停用、3注销.
-	 * @apiSuccess {Array} roles 用户角色.
-	 * @apiSuccess {Object} department 用户部门.
-	 * @apiSuccess {Object} city 用户部门.
-	 * @apiSuccess {Object} position 用户部门.
-	 * @apiSuccess {String} created_at 创建时间.
+	 * @apiSuccess {Number} total 用户总数.
+	 * @apiSuccess {Number} day 本日新增用户数.
+	 * @apiSuccess {Number} week 本周新增用户数.
+	 * @apiSuccess {Number} month 本月新增用户数.
+	 * @apiSuccess {Number} register 注册用户数.
+	 * @apiSuccess {Number} first 首单消费数.
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
+	 *	    "token": "",
 	 *	    "data": {
-	 *	        "total": 3,
-	 *	        "per_page": 20,
-	 *	        "current_page": 1,
-	 *	        "last_page": 1,
-	 *	        "from": 1,
-	 *	        "to": 3,
-	 *	        "data": [
-	 *	            {
-	 *	                "id": 1,
-	 *	                "username": "soothion",
-	 *	                "name": "老王",
-	 *	                "tel": "18617185201",
-	 *	                "email": "soothion@sina.com",
-	 *	                "result": "1",
-	 *	                "created_at": "2015-05-07 14:15:00",
-	 *	                "updated_at": "2015-05-11 07:18:23",
-	 *	                "roles": [
-	 *	                    {
-	 *	                        "role_id": 2
-	 *	                    },
-	 *	                    {
-	 *	                        "role_id": 1
-	 *	                    },
-	 *	                "department": {
-	 *		                    "id": 1,
-	 *		                    "title": "产品部"
-	 *		                },
-	 *	                "city": {
-	 *		                    "id": 1,
-	 *		                    "title": "深圳"
-	 *		                },
-	 *	                "position": {
-	 *		                    "id": 1,
-	 *		                    "title": "PHP"
-	 *		                }
-	 *	                ]
-	 *	            }
-	 *	        ]
+	 *	        "day": 0,
+	 *	        "week": 0,
+	 *	        "month": 0,
+	 *	        "register": {
+	 *	            "2015-08-24": 6,
+	 *	            "2015-08-25": 0,
+	 *	            "2015-08-26": 1,
+	 *	            "2015-08-27": 4,
+	 *	            "2015-08-28": 0,
+	 *	            "2015-08-29": 0,
+	 *	            "2015-08-30": 0,
+	 *	            "2015-08-31": 0,
+	 *	            "2015-09-01": 0,
+	 *	            "2015-09-02": 0,
+	 *	            "2015-09-03": 0,
+	 *	            "2015-09-04": 0,
+	 *	            "2015-09-05": 0,
+	 *	            "2015-09-06": 0,
+	 *	            "2015-09-07": 0
+	 *	        },
+	 *	        "first": {
+	 *	            "2015-08-24": 0,
+	 *	            "2015-08-25": 0,
+	 *	            "2015-08-26": 0,
+	 *	            "2015-08-27": 0,
+	 *	            "2015-08-28": 0,
+	 *	            "2015-08-29": 0,
+	 *	            "2015-08-30": 0,
+	 *	            "2015-08-31": 0,
+	 *	            "2015-09-01": 1,
+	 *	            "2015-09-02": 0,
+	 *	            "2015-09-03": 0,
+	 *	            "2015-09-04": 0,
+	 *	            "2015-09-05": 0,
+	 *	            "2015-09-06": 0,
+	 *	            "2015-09-07": 0
+	 *	        }
 	 *	    }
 	 *	}
-	 *
 	 *
 	 * @apiErrorExample Error-Response:
 	 *		{
@@ -133,25 +113,122 @@ class UserController extends Controller{
 
 
 	/**
-	 * @api {post} /user/export 5.导出用户
-	 * @apiName export
+	 * @api {post} /user/index 2.用户列表
+	 * @apiName list
 	 * @apiGroup User
 	 *
-	 * @apiParam {Number} role_id 可选,角色ID.
-	 * @apiParam {Number} department_id 可选,部门ID.
-	 * @apiParam {Number} status 可选,用户状态.1正常、2停用、3注销.
-	 * @apiParam {Number} city_id 可选,城市ID.
-	 * @apiParam {String} start 可选,起始时间.
-	 * @apiParam {String} end 可选,结束时间.
-	 * @apiParam {String} keyword 可选,搜索关键字,匹配帐号或者姓名.
+	 *
+	 * @apiParam {String} username 可选,臭美号;
+	 * @apiParam {String} mobilephone 可选,手机号;
+	 * @apiParam {String} companyCode 可选,集团邀请码;
+	 * @apiParam {String} recommendCode 可选,商家推荐码或活动邀请码;
+	 * @apiParam {Number} sex 可选,性别,0未知、1男、2女;
+	 * @apiParam {String} start_at 可选,起始注册时间;
+	 * @apiParam {String} end_at 可选,截止注册时间;
+	 * @apiParam {String} area 可选,区域,省市区用英文逗号,分隔;
+	 * @apiParam {Number} page 可选,页数.
+	 * @apiParam {Number} page_size 可选,分页大小.
+	 * @apiParam {String} sort_key 排序的键,比如:start_at,end_at;
+	 * @apiParam {String} sort_type 排序方式,DESC或者ASC;默认DESC
 	 *
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
-	 *	    "data": null
+	 *	    "token": "",
+	 *	    "data": {
+	 *	        "total": 761506,
+	 *	        "per_page": 20,
+	 *	        "current_page": 1,
+	 *	        "last_page": 38076,
+	 *	        "from": 1,
+	 *	        "to": 20,
+	 *	        "data": [
+	 *	            {
+	 *	                "user_id": 8635360,
+	 *	                "username": "10800054",
+	 *	                "nickname": "光芒万丈的火腿肠",
+	 *	                "sex": "男",
+	 *	                "growth": null,
+	 *	                "mobilephone": 18500001111,
+	 *	                "area": "",
+	 *	                "companyCode": null,
+	 *	                "recommendCode": null,
+	 *	                "add_time": "2015-08-27 21:32:36",
+	 *	                "level": 2
+	 *	            }
+	 *	        ]
+	 *	    }
 	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+	public function index()
+	{
+		$param = $this->param;
+		$query = User::getQueryByParam($param);
+
+		$page = isset($param['page'])?max($param['page'],1):1;
+		$page_size = isset($param['page_size'])?$param['page_size']:20;
+
+		//手动设置页数
+		AbstractPaginator::currentPageResolver(function() use ($page) {
+		    return $page;
+		});
+
+		$fields = array(
+			'user.user_id',
+		    'user.username',
+		    'user.nickname',
+		    'user.sex',
+		    'user.growth',
+		    'user.mobilephone',
+		    'user.area',
+		    'company_code.code as companyCode',
+		    'recommend_code_user.recommend_code as recommendCode',
+		    'user.add_time'
+		);
+
+		//分页
+	    $result = $query->select($fields)->paginate($page_size)->toArray();
+	    foreach ($result['data'] as $key=>$user) {
+	    	$user['level'] = User::getLevel($user['growth']);
+	    	$user['sex'] = User::getSex($user['sex']);
+	    	$user['add_time'] = date('Y-m-d H:i:s',intval($user['add_time']));
+	    	$result['data'][$key] = $user;
+	    }
+	    unset($result['next_page_url']);
+	    unset($result['prev_page_url']);
+	    $queries = DB::getQueryLog();
+	    return $this->success($result);
+
+	}
+
+
+	/**
+	 * @api {post} /user/export 3.导出用户
+	 * @apiName export
+	 * @apiGroup User
+	 *
+	 * @apiParam {String} username 可选,臭美号;
+	 * @apiParam {String} mobilephone 可选,手机号;
+	 * @apiParam {String} companyCode 可选,集团邀请码;
+	 * @apiParam {String} recommendCode 可选,商家推荐码或活动邀请码;
+	 * @apiParam {Number} sex 可选,性别,0未知、1男、2女;
+	 * @apiParam {String} start_at 可选,起始注册时间;
+	 * @apiParam {String} end_at 可选,截止注册时间;
+	 * @apiParam {String} area 可选,区域,省市区用英文逗号,分隔;
+	 * @apiParam {Number} page 可选,页数.
+	 * @apiParam {Number} page_size 可选,分页大小.
+	 * @apiParam {String} sort_key 排序的键,比如:start_at,end_at;
+	 * @apiParam {String} sort_type 排序方式,DESC或者ASC;默认DESC
+	 *
 	 *
 	 *
 	 * @apiErrorExample Error-Response:
@@ -163,31 +240,42 @@ class UserController extends Controller{
 	public function export()
 	{
 		$param = $this->param;
-		$query = Manager::getQueryByParam($param);
+		$query = User::getQueryByParam($param);
 
-		$array = $query->get();
-	    foreach ($array as $key => $value) {
+		$fields = array(
+			'user.user_id',
+		    'user.username',
+		    'user.nickname',
+		    'user.sex',
+		    'user.growth',
+		    'user.mobilephone',
+		    'user.area',
+		    'company_code.code as companyCode',
+		    'recommend_code_user.recommend_code as recommendCode',
+		    'user.add_time'
+		);
+
+		//分页
+	    $array = $query->select($fields)->take(1000)->get();
+	    foreach ($array as $key=>$value) {
 	    	$result[$key]['id'] = $key+1;
-	    	$result[$key]['name'] = $value->name;
 	    	$result[$key]['username'] = $value->username;
-	    	$result[$key]['status'] = $this->status($value->status);
-	    	$result[$key]['city'] = $value->city->title;
-	    	$result[$key]['department'] = $value->department->title;
-	    	$result[$key]['position'] = $value->position->title;
-	    	$roles = '';
-	    	foreach ($value->roles as $role) {
-	    		$roles .= $role->name.',';
-	    	}
-	    	$roles = rtrim($roles,',');
-	    	$result[$key]['roles'] = $roles;
-	    	$result[$key]['created_at'] = $value->created_at;
+	    	$result[$key]['nickname'] = $value->nickname;
+	    	$result[$key]['sex'] = User::getSex($value->sex);
+	    	$result[$key]['growth'] = User::getLevel($value->growth);
+	    	$result[$key]['mobilephone'] = $value->mobilephone;
+	    	$result[$key]['area'] = $value->area;
+	    	$result[$key]['companyCode'] = $value->companyCode;
+	    	$result[$key]['recommendCode'] = $value->recommendCode;
+	    	$result[$key]['add_time'] = date('Y-m-d H:i:s',intval($value->add_time));
 	    }
+
 		// 触发事件，写入日志
-	    Event::fire('user.export');
+	    // Event::fire('user.export');
 		
 		//导出excel	   
 		$title = '用户列表'.date('Ymd');
-		$header = ['序号','用户姓名','登陆账号','状态','所属区域','所属部门','所属职位','角色名称','添加时间'];
+		$header = ['序号','臭美号','昵称','性别','会员等级','手机号','地区','集团邀请码','商家邀请码','注册时间'];
 		Excel::create($title, function($excel) use($result,$header){
 		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
 			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
@@ -198,121 +286,57 @@ class UserController extends Controller{
 
 	}
 
-	 /**
-	 * @api {post} /user/create 4.新增用户
-	 * @apiName create
-	 * @apiGroup User
-	 *
-	 * @apiParam {String} username 登录帐号.
-	 * @apiParam {String} name 用户姓名.
-	 * @apiParam {String} tel 用户电话.
-	 * @apiParam {String} department_id 所属部门.
-	 * @apiParam {String} position_id 职位.
-	 * @apiParam {String} city_id 所属城市.
-	 * @apiParam {String} email email.
-	 * @apiParam {Number} status 用户状态.1正常、2停用、3注销.
-	 * @apiParam {Array} roles 用户角色.
-	 *
-	 * @apiSuccessExample Success-Response:
-	 *	    {
-	 *	        "result": 1,
-	 *	        "data": null
-	 *	    }
-	 *
-	 * @apiErrorExample Error-Response:
-	 *		{
-	 *		    "result": 0,
-	 *		    "msg": "用户创建失败"
-	 *		}
-	 */
-	public function create()
-	{
-		$param = $this->param;
-		DB::beginTransaction();
-		if(Manager::where('username','=',$param['username'])->first())
-			return $this->error('用户名已存在');
-		$param['password'] = bcrypt($param['password']);
-		$user = Manager::create($param);
-		$role = 1;
-		if(isset($param['roles'])){
-			$roles = $param['roles'];
-			unset($param['roles']);
-			$role = $user->roles()->sync($roles);
-		}
-		
-		if($user&&$role){
-			DB::commit();
-			//触发事件，写入日志
-		    Event::fire('user.create',array($user));
-			return $this->success();
-		}
-		else
-		{
-			DB::rollBack();
-			return $this->error('用户创建失败');
-		}
-	}
-
+	
 	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-
-	}
-
-	/**
-	 * @api {post} /user/show/:id 2.查看用户信息
+	 * @api {post} /user/show/:id 4.查看用户信息
 	 * @apiName show
 	 * @apiGroup User
 	 *
 	 * @apiParam {Number} id 必填,用户ID.
 	 *
-	 * @apiSuccess {Number} id 用户ID.
 	 * @apiSuccess {String} username 用户名.
-	 * @apiSuccess {String} name 用户姓名.
-	 * @apiSuccess {String} tel 用户电话.
-	 * @apiSuccess {String} department_id 所属部门.
-	 * @apiSuccess {String} position_id 职位.
-	 * @apiSuccess {String} city_id 所属城市.
-	 * @apiSuccess {String} email email.
-	 * @apiSuccess {Number} status 用户状态.1正常、2停用、3注销.
-	 * @apiSuccess {String} created_at 创建时间.
-	 * @apiSuccess {String} update_at 更新时间.
-	 * @apiSuccess {Array} roles 用户角色.
+	 * @apiSuccess {String} img 头像地址.
+	 * @apiSuccess {String} nickname 昵称.
+	 * @apiSuccess {String} sex 性别.
+	 * @apiSuccess {String} area 地区.
+	 * @apiSuccess {String} birthday 生日.
+	 * @apiSuccess {String} add_time 注册时间.
+	 * @apiSuccess {String} mobilephone 手机号.
+	 * @apiSuccess {String} grade 积分.
+	 * @apiSuccess {String} growth 成长值.
+	 * @apiSuccess {String} password 密码.
+	 * @apiSuccess {String} costpwd 支付密码.
+	 * @apiSuccess {String} companyId 集团ID.
+	 * @apiSuccess {String} companyCode 集团码.
+	 * @apiSuccess {String} companyName 集团名.
+	 * @apiSuccess {String} recommendCode 推荐码.
+	 * @apiSuccess {String} salonname 商家名,如果此项为空,那么
+	 * @apiSuccess {String} level 等级.
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
+	 *	    "token": "",
 	 *	    "data": {
-	 *	        "id": 1,
-	 *	        "username": "soothion",
-	 *	        "name": "老王",
-	 *	        "tel": "18617185201",
-	 * 	        "department_id": 1,
-	 *	        "position_id": 1,
-	 *	        "city_id": 1,
-	 *	        "email": "soothion@sina.com",
-	 *	        "result": "1",
-	 *	        "created_at": "2015-05-07 14:15:00",
-	 *	        "updated_at": "2015-05-11 07:18:23",
-	 *	        "roles": [
-	 *	            {
-	 *	                "id": 1,
-	 *	                "name": "test1sssssssssss",
-	 *	                "slug": "administrator",
-	 *	                "description": "manage administration privileges",
-	 *	                "department_id": 1,
-	 *	                "city_id": 1,
-	 *	                "result": "1",
-	 *	                "note": null,
-	 *	                "created_at": "2015-05-05 06:23:43",
-	 *	                "updated_at": "2015-05-11 07:15:28"
-	 *	            }
-	 *	        ]
+	 *	        "username": "10000000",
+	 *	        "img": "http://img01.choumei.cn/1/1/2015082811011440730900326169088.jpg?imageView2/0/w/100/h/100",
+	 *	        "nickname": "test",
+	 *	        "sex": "女",
+	 *	        "area": "广东,深圳,南山区",
+	 *	        "birthday": "2008-08-20",
+	 *	        "add_time": "2014-06-03",
+	 *	        "mobilephone": 15102011866,
+	 *	        "grade": 93,
+	 *	        "growth": 4050,
+	 *	        "password": "已设置",
+	 *	        "costpwd": "已设置",
+	 *	        "companyId": 0,
+	 *	        "companyCode": null,
+	 *	        "companyName": null,
+	 *	        "recommendCode": "8280",
+	 *	        "salonname": "嘉美专业烫染",
+	 *	        "level": 6
 	 *	    }
 	 *	}
 	 *
@@ -324,36 +348,74 @@ class UserController extends Controller{
 	 */
 	public function show($id)
 	{
-		$user = Manager::with('roles')->find($id);
+		$fields = [
+			'username',
+			'img',
+			'nickname',
+			'sex',
+			'area',
+			'birthday',
+			'user.add_time',
+			'mobilephone',
+			'grade',
+			'growth',
+			'password',
+			'costpwd',
+			'user.companyId',
+			'company_code.code as companyCode',
+			'company_code.companyName',
+			'recommend_code_user.recommend_code as recommendCode',
+			'salon.salonname'
+		];
+		$user = User::leftJoin('recommend_code_user','user.user_id','=','recommend_code_user.user_id')
+			->leftJoin('salon','salon.salonid','=','recommend_code_user.salon_id')
+			->leftJoin('company_code','company_code.companyId','=','user.companyId')
+			->select($fields)
+			->find($id);
+
+		if(!$user)
+			throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+
+		$user->add_time = date('Y-m-d',$user->add_time);
+		$user->sex = User::getSex($user->sex);
+		$user->level = User::getLevel($user->growth);
+		if($user->password)
+			$user->password = '已设置';
+		else
+			$user->password = '未设置';
+		if(!$user->costpwd)
+			$user->costpwd = '已设置';
+		else
+			$user->costpwd = '未设置';
 		return $this->success($user);
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
 
 	/**
-	 * @api {post} /user/update/:id 3.更新用户信息
+	 * @api {post} /user/update/:id 5.更新用户信息
 	 * @apiName update
 	 * @apiGroup User
 	 *
-	 * @apiParam {String} name 用户姓名.
-	 * @apiParam {String} old_password 用户原密码.
-	 * @apiParam {String} password 用户新密码.
-	 * @apiParam {String} tel 用户电话.
-	 * @apiParam {String} department_id 所属部门.
-	 * @apiParam {String} position_id 职位.
-	 * @apiParam {String} city_id 所属城市.
-	 * @apiParam {String} email email.
-	 * @apiParam {Number} status 用户状态.1正常、2停用、3注销.
-	 * @apiParam {Array} roles 用户角色.
+ 	 * @apiParam {Number} id 必填,用户ID.
+	 *
+	 * @apiParam {String} username 用户名.
+	 * @apiParam {String} img 头像地址.
+	 * @apiParam {String} nickname 昵称.
+	 * @apiParam {String} sex 性别.
+	 * @apiParam {String} area 地区.
+	 * @apiParam {String} birthday 生日.
+	 * @apiParam {String} add_time 注册时间.
+	 * @apiParam {String} mobilephone 手机号.
+	 * @apiParam {String} grade 积分.
+	 * @apiParam {String} growth 成长值.
+	 * @apiParam {String} password 密码.
+	 * @apiParam {String} costpwd 支付密码.
+	 * @apiParam {String} companyId 集团ID.
+	 * @apiParam {String} companyCode 集团码.
+	 * @apiParam {String} companyName 集团名.
+	 * @apiParam {String} recommendCode 推荐码.
+	 * @apiParam {String} salonname 商家名,如果此项为空,那么
+	 * @apiParam {String} level 等级.
 	 *
 	 * 
 	 * 
@@ -373,42 +435,106 @@ class UserController extends Controller{
 	public function update($id)
 	{
 		$param = $this->param;
-		DB::beginTransaction();
-		$user = Manager::find($id);
-		$update_role = 1;
-		if(isset($param['password'])&&$param['password']){
-			$param['password'] = bcrypt($param['password']);
-		}
-		if(isset($param['roles'])){
-			$roles = $param['roles'];
-			unset($param['roles']);
-			$update_role = $user->roles()->sync($roles);
-		}
-		$update_user = $user->update($param);
-		if($update_role&&$update_user){
-			DB::commit();
-			//触发事件，写入日志
-			$response = Event::fire('user.update',array($user));
-			return $this->success();
+		$user = User::find($id);
+		if(!empty($param['password'])){
+			$param['password'] = md5($param['password']);
 		}
 		else
-		{
-			DB::rollBack();
-			return $this->error('用户更新失败');
+			unset($param['password']);
+		if(!empty($param['costpwd'])){
+			$param['costpwd'] = md5($param['costpwd']);
 		}
+		else
+			unset($param['costpwd']);
+		$result = $user->update($param);
 
+		if($result){
+			//触发事件，写入日志
+			// Event::fire('user.update',array($user));
+			return $this->success();
+		}
+		throw new ApiException('用户更新失败', ERROR::USER_UPDATE_FAILED);
 	}
 
 	/**
-	 * Remove the specified resource from storage.
+	 * @api {post} /user/destroy/:id 6.删除用户信息
+	 * @apiName destroy
+	 * @apiGroup User
 	 *
-	 * @param  int  $id
-	 * @return Response
+	 * @apiParam {String} id 用户ID.
 	 */
 	public function destroy($id)
 	{
-		$account = Account::find($id);
-		$account->delete();
+		$user = User::find($id);
+		$result = $user->delete();
+		if($result){
+			//触发事件，写入日志
+			// Event::fire('user.delete',array($user));
+			return $this->success();
+		}
+		throw new ApiException('用户删除失败', ERROR::USER_UPDATE_FAILED);
+	}
+
+	/**
+	 * @api {post} /user/company 7.集团用户数
+	 * @apiName company
+	 * @apiGroup User
+	 *
+	 * @apiParam {String} keyword 集团码或者集团名.
+	 *
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "token": "",
+	 *	    "data": {
+	 *	        "total": 52,
+	 *	        "per_page": 20,
+	 *	        "current_page": 1,
+	 *	        "last_page": 3,
+	 *	        "from": 1,
+	 *	        "to": 20,
+	 *	        "data": [
+	 *	            {
+	 *	                "code": "0001",
+	 *	                "name": "华为集团",
+	 *	                "total": 3
+	 *	            }
+	 *	        ]
+	 *	    }
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "没有符合条件数据"
+	 *		}
+	 */
+	public function company(){
+		$param = $this->param;
+
+		$page = isset($param['page'])?max($param['page'],1):1;
+		$page_size = isset($param['page_size'])?$param['page_size']:20;
+
+		//手动设置页数
+		AbstractPaginator::currentPageResolver(function() use ($page) {
+		    return $page;
+		});
+
+		$query = DB::table('company_code')
+			->leftJoin('user','user.companyId','=','company_code.companyId')
+			->select('company_code.code','company_code.companyName as name',DB::raw('count(user_id) as total'))
+			->groupBy('company_code.code');
+
+		if(!empty($param['keyword'])){
+			$keyword = '%'.$param['keyword'].'%';
+			$query = $query->where('company_code.code','like',$keyword)
+				->orWhere('company_code.companyName','like',$keyword);
+		}	
+		$result = $query->paginate($page_size)->toArray();
+		unset($result['next_page_url']);
+	    unset($result['prev_page_url']);
+		return $this->success($result);
 	}
 
 }
