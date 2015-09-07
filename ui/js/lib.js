@@ -254,7 +254,9 @@
 						uploader.thumbnails=$target.siblings('.control-thumbnails');
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
 							uploader.createThumbnails=function(data){
-								uploader.thumbnails.append(lib.ejs.render({url:'/module/public/template/thumbnails'},{data:[data]}))
+								var arr=[data];
+								arr.postName=this.options.postName;
+								uploader.thumbnails.append(lib.ejs.render({url:'/module/public/template/thumbnails'},{data:arr}))
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children().length){
 									uploader.thumbnails.siblings('.control-image-upload').hide();
 								}
@@ -293,10 +295,6 @@
 											if(self.options._auto){
 												self.upload();
 											}
-											if(self.createThumbnails){
-												var data=$.extend({},file,{src:src});
-												self.createThumbnails(data);
-											}
 										}
 									}
 									if(typeof self.options.imageLimitSize =='function'){
@@ -305,10 +303,11 @@
 											if(self.options._auto){
 												self.upload();
 											}
+											/*
 											if(self.createThumbnails){
 												var data=$.extend({},file,{src:src});
 												self.createThumbnails(data);
-											}
+											}*/
 										}else{
 											self.trigger( 'error', 'IAMGE_SIZE',file);
 										}
@@ -318,12 +317,21 @@
 							},1,1);
 						}
 					});
-					uploader.on('uploadSuccess',function(file){
+					uploader.on('uploadSuccess',function(file,res){
 						var self=this;
 						if(this.options.imageId){
 							uploader.makeThumb(file, function( error, src ) {
 								document.getElementById(self.options.imageId).src=src;
 							},1,1);
+						}
+						if(res.result==1){
+							var data=res.data;
+							if(data.main&&data.main.images&&data.main.images[0]){
+								if(self.createThumbnails){
+									var data=$.extend({},file,{src:data.main.images[0].img});
+									self.createThumbnails(data);
+								}
+							}
 						}
 					});
 					uploader.on('error',function(err){

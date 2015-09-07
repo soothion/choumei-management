@@ -87,10 +87,10 @@
 									<em>上传列表图片</em>
 								</div>
 							</div>
-						<span class="space"></span>
+						 <span class="space"></span>
 						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
 						 <br />
-						 <input type="checkbox" class="hide" name="path" required requiredmsg="请上传图片" />
+						 <input type="checkbox" class="hide" name="images" required requiredmsg="请上传图片" />
 					</div>
                 </div>
 				
@@ -129,6 +129,7 @@
 	</div>
         <script type="text/javascript">
 			lib.uploader.image({
+				auto:true,
 				server: "http://service.choumei.cn/upload/image",
 				pick  : {id:'#imageUpload',multiple:false},
 				resize: false,
@@ -140,12 +141,11 @@
 				accept :{
 					title: 'Images',
 					extensions: 'jpg,jpeg,png',
-					mimeTypes: 'image/*'                
-				}
+					mimeTypes: 'image/jpeg,image/png'                
+				},
+				postName:'images'
 			},function(uploader){
-				uploader.on('uploadSuccess',function(file,res){
-					//console.log(res);
-				})
+				
 			});
 		</script>  
   </body>
