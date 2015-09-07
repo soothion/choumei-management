@@ -21,11 +21,13 @@
 			<form action="pay_manage/confirm" data-role="normal" onreset="parent.lib.popup.result({bool:true,define:function(){history.back()}});">
 				<button class="btn">确认付款</button>
 				<input type="hidden" name="ids" value="<%=query.id%>" />
+				<input type="hidden" name="do" value="1" />
 			</form>
 			<span class="space"></span>
 			<form action="pay_manage/confirm" data-role="normal" onreset="parent.lib.popup.result({bool:true,define:function(){history.back()}});">
 				<button class="btn">拒绝付款</button>
 				<input type="hidden" name="ids" value="<%=query.id%>" />
+				<input type="hidden" name="do" value="2" />
 			</form>
 			<span class="space"></span>
 			<button class="btn" type="button" onclick="history.back()">返回</button>
