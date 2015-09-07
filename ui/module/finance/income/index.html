@@ -92,7 +92,23 @@
                     <%if(query.group == 'day'){%>                       
                       <td><%=item.date%></td>
                     <%}else{%>
-                      <td><%=query.start%> 到 <%=query.end%></td>  
+                      <td>
+                      <%
+                      if(query.start && query.end){
+                      %>
+                        <%=query.start%> 到 <%=query.end%>
+                      <%
+                      }else if(query.start && !query.end){
+                      %>
+                        <%=query.start%> 到
+                      <%                        
+                      }else if(!query.start && query.end){
+                      %>
+                        到 <%=query.end%>
+                      <%                        
+                      }
+                      %>                      
+                      </td>  
                     <%}%>                          
                     <td><a class="link" href="brokerage.html?id=<%=item.id%>" 
                     data-slug="commission.show,commission.update">查看&gt</a></td>  
