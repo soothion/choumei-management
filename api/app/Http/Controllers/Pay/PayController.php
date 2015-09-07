@@ -17,7 +17,7 @@ class PayController extends Controller
      * @apiName index
      * @apiGroup PayManage
      *
-     * @apiParam {Number} key  1 店铺搜索  2 店铺编号
+     * @apiParam {Number} key  1 店铺搜索   2 商户搜索 3 店铺编号
      * @apiParam {String} keyword  根据key来的关键字
      * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
      * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
@@ -253,8 +253,6 @@ class PayController extends Controller
      * @apiSuccess {String} confirm_user 审批人信息
      * @apiSuccess {String} cash_user 出纳人信息
      * @apiSuccess {String} salon 店铺信息
-     * @apiSuccess {String} prepay_bill_code 关联的转付单单号 
-     * @apiSuccess {String} receive_bill_code 关联的收款单单号 
      * @apiSuccess {String} state 订单状态  1待提交 2待审批 3待付款 4已付款
      * @apiSuccess {String} confirm_at 审批日期
      * 
