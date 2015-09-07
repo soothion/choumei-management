@@ -290,8 +290,9 @@ class ReceivablesController extends Controller{
 					}
 					$payTypeId[$key]['id'] = $val->id;//账扣返还id
 					$payTypeId[$key]['salonid'] = $val->salonid;
+					$payTypeId[$key]['paymentStyle'] = $val->paymentStyle;
 					$payTypeId[$key]['receiptDate'] = date('Y-m-d',$val->receiptDate);
-					$payTypeId[$key]['checkTime'] = date('Y-m-d',$val->checkTime);
+					$payTypeId[$key]['checkTime'] = date('Y-m-d');
 					$payTypeId[$key]['addTime'] = date('Y-m-d H:i:s',$val->addTime);
 					
 					$payTypeId[$key]['money'] = $val->money;
@@ -320,13 +321,14 @@ class ReceivablesController extends Controller{
 				 			'salon_id'=>$v['salonid'],
 				 			'merchant_id'=>$v['merchantId'],
 				 			'money'=>$v['money'],
-				 			'receive_type'=>2,
+				 			'receive_type'=>$v['paymentStyle'],
 				 			'require_day'=>$v['receiptDate'],
 				 		 	'receive_day'=>$v['checkTime'],
 				 			'cash_uid'=>$v['cashier'],
 				 			'make_uid'=>$v['preparedBy'],
 				 			'make_at'=>$v['addTime'],		 		
 						);
+
 				if($v['act'] == 1)//转付单
 				{
 					$retData = PrepayBill::makeReturn($data);
