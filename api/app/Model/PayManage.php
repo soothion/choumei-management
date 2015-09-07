@@ -434,6 +434,7 @@ class PayManage extends Model
             'require_day',
             'pay_day',
             'created_at',
+            'confirm_at',
             'state',
         ];
         $order_by_fields = [
