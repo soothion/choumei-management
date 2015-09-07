@@ -56,24 +56,26 @@ class TransactionSearchApi
      */
     public static function orderDetail($id)
     {
-        $base = Order::where('orderid',$id)->first();
+        $base = Order::where('orderid',$id)->select(['ordersn','orderid','priceall','salonid'])->first();
         if(empty($base))
         {
             throw new ApiException("订单 [{$id}] 不存在", ERROR::ORDER_NOT_EXIST);
         }
         $baseArr = $base->toArray();
-        $orderItem = OrderItem::where("orderid",$id)->first();
+        $orderItem = OrderItem::where("orderid",$id)->select(['order_item_id','itemname','ordersn'])->first();
         if(empty($orderItem)) //没订单项目
         {
-            return $baseArr;
+            return ['order'=>$baseArr];
         }
         $orderItemArr = $orderItem->toArray();
-        $ticket = OrderTicket::where("order_item_id",$orderItemArr['order_item_id'])->first();
+        $ticket = OrderTicket::where("order_item_id",$orderItemArr['order_item_id'])->select(['order_ticket_id','ticketno','user_id'])->first();
         if(empty($ticket))//没有臭美券
         {
-            return $baseArr;
+            return ['order'=>$baseArr];
         }
         $ticketArr = $ticket->toArray();
+        $res = self::getDetailInfo($baseArr, $orderItemArr, $ticketArr);
+        return $res;
     }
     
     /**
@@ -92,6 +94,51 @@ class TransactionSearchApi
     public static function refundDetail($id)
     {
     
+    }
+    
+    public static function getDetailInfo($order,$orderItem,$ticket)
+    {
+        if(empty($order) || empty($orderItem) || empty($ticket))
+        {
+            return null;
+        }
+        $orderid = $order['orderid'];
+        $ordersn = $order['ordersn'];
+        $ticketno = $ticket['ticketno'];
+        $ticket_id = $ticket['order_ticket_id'];
+        $uid = $ticket['user_id'];
+        $salon_id = $order['salonid'];
+       
+        //用户
+        $user = User::where("user_id",$uid)->select(['username','mobilephone'])->first()->toArray();   
+        //店铺    
+        $salon = Salon::where('salonid',$salon_id)->select(['salonname'])->first()->toArray();
+        //金额构成
+        $fundflows = Fundflow::where("record_no",$ordersn)->where("ticket_no",$ticketno)->where("code_type",2)->get(['pay_type','money'])->toArray();
+        //动态
+        $trends = OrderTicketTrends::where("ordersn",$ordersn)->where("ticketno",$ticketno)->orderBy("add_time","ASC")->get(['add_time','status','remark'])->toArray();
+        //代金券
+        $vouchers = VoucherTrend::where("ordersn",$ordersn)->with(["voucher"=>function($q){
+            $q->get(['vId','vUseMoney','vUseStart','vUseEnd']);
+        }])->orderBy("vAddTime","ASC")->get()->toArray();
+        
+        //佣金
+        $commission = CommissionLog::where('ordersn',$ordersn)->select(['ordersn','amount','rate','grade'])->first()->toArray();
+
+        //用户邀请码
+        $recommendCode = RecommendCodeUser::where('user_id',$uid)->select(['recommend_code'])->first()->toArray();
+        
+        $res = [
+            'order'=>$order,
+            'item'=>$orderItem,
+            'ticket'=>$ticket,
+            'user'=>$user,
+            'salon'=>$salon,
+            'fundflows'=>$fundflows,            
+            'vouchers'=>$vouchers,
+            'commission'=>$commission,
+        ];
+        return $res;
     }
     
 
