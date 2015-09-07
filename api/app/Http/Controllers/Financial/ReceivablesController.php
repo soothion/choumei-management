@@ -9,6 +9,7 @@ use App\Merchant;
 use App\Salon;
 use App\PayManage;
 use App\PrepayBill;
+use App\ShopCount;
 class ReceivablesController extends Controller{
 
 	
@@ -278,6 +279,12 @@ class ReceivablesController extends Controller{
 				{
 					return $this->error('数据错误，请重新勾选');
 				}
+				if($val->type == 1)//取财务管理-收款管理中的业务投资款返还(已确认)的单		  		
+				{
+					$salonResult = Salon::select(['merchantId'])->where("salonid","=",$val->salonid)->first();
+					ShopCount::count_bill_by_invest_return_money($val->salonid,$salonResult->merchantId,$val->money);
+				}
+
 				if($val->paymentStyle == 2 || $val->type == 2)
 				{
 					if($val->type == 2)
