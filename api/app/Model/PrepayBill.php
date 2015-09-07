@@ -96,6 +96,7 @@ class PrepayBill extends Model
         $code = self::getNewCode(self::TYPE_OF_RETURN);
         $now_date = date("Y-m-d H:i:s");
         $record = [
+            'code'=>$code,
             'salon_id'  => $params['salon_id'],
             'merchant_id'  => $params['merchant_id'],
             'other_id'  => $params['id'],
@@ -111,6 +112,13 @@ class PrepayBill extends Model
             'updated_at' => $now_date,
        ];
        $id = self::insertGetId($record);
+       
+       //如果是账扣支付
+       if($params['receive_type'] == 2)
+       {
+           $record['id'] = $id;
+           PayManage::makeFromPrepayReturn($record);
+       }       
        
        //结算
        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['money'],"预付款返还",$now_date);

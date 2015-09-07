@@ -509,6 +509,7 @@ Route::group(['middleware'], function(){
 	'as'=>'pay_manage.export',
 	'uses'=>'Pay\PayController@export'
 	    ));
+
 	
 	//交易管理
 	Route::any('order/index',array(  //订单列表
@@ -568,6 +569,72 @@ Route::group(['middleware'], function(){
 	'uses'=>'Trans\OrderRefundController@reject'
 	    ));
 	
+	//消息管理
+	Route::any('message/create',array(  //添加消息
+			'as'=>'message.create',
+			'uses'=>'Message\MessageController@store'
+	));
+	Route::any('message/update',array(  //修改消息
+			'as'=>'message.update',
+			'uses'=>'Message\MessageController@update'
+	));
+	Route::any('message/checkPhone',array(  //修改消息
+			'as'=>'message.checkPhone',
+			'uses'=>'Message\MessageController@checkPhone'
+	));
+	Route::any('message/index',array(  //消息列表
+			'as'=>'message.index',
+			'uses'=>'Message\MessageController@index'
+	));
+	Route::any('message/destroy',array(  //删除消息
+			'as'=>'message.destroy',
+			'uses'=>'Message\MessageController@destroy'
+	));
+	Route::any('message/online',array(  //上线消息
+			'as'=>'message.online',
+			'uses'=>'Message\MessageController@online'
+	));
+	Route::any('message/getOne',array(  //查询单条信息
+			'as'=>'message.getOne',
+			'uses'=>'Message\MessageController@getOne'
+	));
+	Route::any('message/addingPreview',array(  //添加预览信息
+			'as'=>'message.addingPreview',
+			'uses'=>'Message\MessageController@addingPreview'
+	));
+	Route::any('message/getPreview',array(  //查询单条预览信息
+			'as'=>'message.getPreview',
+			'uses'=>'Message\MessageController@getPreview'
+	));
+	
+	
+        
+        //图片风格管理
+          
+        Route::any('ImageStyle/getAllImage',array( 
+	'as'=>'ImageStyle.getAllImage',
+	'uses'=>'Image\ImageStyleController@getAllImage'
+	    ));
+        
+         Route::any('ImageStyle/insertImage',array( 
+	'as'=>'ImageStyle.insertImage',
+	'uses'=>'Image\ImageStyleController@insertImage'
+	    ));
+         
+          Route::any('ImageStyle/deleteImage',array( 
+	'as'=>'ImageStyle.deleteImage',
+	'uses'=>'Image\ImageStyleController@deleteImage'
+	    ));
+          
+           Route::any('ImageStyle/updateImage',array( 
+	'as'=>'ImageStyle.updateImage',
+	'uses'=>'Image\ImageStyleController@updateImage'
+	    ));
+           
+            Route::any('ImageStyle/getOneImage',array( 
+	'as'=>'ImageStyle.getOneImage',
+	'uses'=>'Image\ImageStyleController@getOneImage'
+	    ));
 
 });
 

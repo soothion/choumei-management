@@ -160,6 +160,31 @@ class ERROR
      *@param 文件格式错误
      */
      CONST FILE_FORMAT_ERROR =  -50508;
+     
+     ////////////交易管理相关///////////////
+     
+     /**
+      * 订单不存在
+      * @var unknown
+      */
+     CONST ORDER_NOT_EXIST = -50601;
+	 
+	 
+	 ////////////消息模块//////////////
+     /**
+     *@param 参数错误
+     */
+     CONST PARAMETER_ERROR =  -50900;
+	 /**
+     *@param 更新失败
+     */
+     CONST UPDATE_FAILED =  -50901;
+	 /**
+     *@param 消息ID不正确
+     */
+     CONST MESSAGE_ID_IS_ERROR  =  -50902;
+
+	
 
 
      ////////////用户等级模块//////////////
