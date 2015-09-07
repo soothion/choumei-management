@@ -163,5 +163,22 @@ class ERROR
       * @var unknown
       */
      CONST ORDER_NOT_EXIST = -50601;
+	 
+	 
+	 ////////////消息模块//////////////
+     /**
+     *@param 参数错误
+     */
+     CONST PARAMETER_ERROR =  -50900;
+	 /**
+     *@param 更新失败
+     */
+     CONST UPDATE_FAILED =  -50901;
+	 /**
+     *@param 消息ID不正确
+     */
+     CONST MESSAGE_ID_IS_ERROR  =  -50902;
+
+	
 
 }
