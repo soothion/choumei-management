@@ -131,9 +131,13 @@
 				if(!data.sn){
 					data.sn=$("#sn").text();
 				}
+				if(!data.salonname){
+					data.salonname=$("#search").val();
+				}
 				data.salon={
 					salonname:$('#search').val()
 				}
+				 
 				data.merchant={
 					name:$('#merchantname').val()
 				}
