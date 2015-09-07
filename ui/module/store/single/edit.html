@@ -119,7 +119,6 @@
 				}
 			});*/
 			
-
 			$(document).on('click','.preview',function(){
 				var data=lib.tools.getFormData($(this).closest('form'));
 				data=$.extend(JSON.parse(sessionStorage.getItem("preview")),data);
