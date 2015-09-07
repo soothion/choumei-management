@@ -253,8 +253,6 @@ class PayController extends Controller
      * @apiSuccess {String} confirm_user 审批人信息
      * @apiSuccess {String} cash_user 出纳人信息
      * @apiSuccess {String} salon 店铺信息
-     * @apiSuccess {String} prepay_bill_code 关联的转付单单号 
-     * @apiSuccess {String} receive_bill_code 关联的收款单单号 
      * @apiSuccess {String} state 订单状态  1待提交 2待审批 3待付款 4已付款
      * @apiSuccess {String} confirm_at 审批日期
      * 
