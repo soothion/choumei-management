@@ -96,6 +96,7 @@ class PrepayBill extends Model
         $code = self::getNewCode(self::TYPE_OF_RETURN);
         $now_date = date("Y-m-d H:i:s");
         $record = [
+            'code'=>$code,
             'salon_id'  => $params['salon_id'],
             'merchant_id'  => $params['merchant_id'],
             'other_id'  => $params['id'],
