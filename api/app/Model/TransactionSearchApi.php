@@ -56,11 +56,24 @@ class TransactionSearchApi
      */
     public static function orderDetail($id)
     {
-        $base  = Order::where('orderid',$id)->first();
+        $base = Order::where('orderid',$id)->first();
         if(empty($base))
         {
             throw new ApiException("订单 [{$id}] 不存在", ERROR::ORDER_NOT_EXIST);
-        }        
+        }
+        $baseArr = $base->toArray();
+        $orderItem = OrderItem::where("orderid",$id)->first();
+        if(empty($orderItem)) //没订单项目
+        {
+            return $baseArr;
+        }
+        $orderItemArr = $orderItem->toArray();
+        $ticket = OrderTicket::where("order_item_id",$orderItemArr['order_item_id'])->first();
+        if(empty($ticket))//没有臭美券
+        {
+            return $baseArr;
+        }
+        $ticketArr = $ticket->toArray();
     }
     
     /**
