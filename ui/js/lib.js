@@ -293,8 +293,10 @@
 											if(self.options._auto){
 												self.upload();
 											}
-											var data=$.extend({},file,{src:src});
-											self.createThumbnails(data);
+											if(self.createThumbnails){
+												var data=$.extend({},file,{src:src});
+												self.createThumbnails(data);
+											}
 										}
 									}
 									if(typeof self.options.imageLimitSize =='function'){
@@ -303,8 +305,10 @@
 											if(self.options._auto){
 												self.upload();
 											}
-											var data=$.extend({},file,{src:src});
-											self.createThumbnails(data);
+											if(self.createThumbnails){
+												var data=$.extend({},file,{src:src});
+												self.createThumbnails(data);
+											}
 										}else{
 											self.trigger( 'error', 'IAMGE_SIZE',file);
 										}

@@ -465,7 +465,13 @@ $(function(){
 			list.push($(this).find('img').attr('src'));
 		});
 		parent.lib.popup.swiper({list:list,index:item.index()});
-	})
+	});
+	$body.on('click','.control-single-image img',function(){
+		var src=$(this).attr('src');
+		if(src){
+			parent.lib.popup.swiper({list:[src],index:0});
+		}
+	});
 }); 
 
 Date.prototype.format = function(format){

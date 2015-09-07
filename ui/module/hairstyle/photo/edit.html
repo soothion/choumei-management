@@ -124,11 +124,19 @@
                 </div>  
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>风格图片：</label>
-                    <div class="upload-btn" id="con_loader_button">
-                      <i class="fa fa-image"></i>
-                      <p class="btn-text">上传列表图片</p>
-					  <label class="weak" >(上传文件说明：512*512PX的jpg,png图片格式)</label>
-                    </div>
+					<div class="control">
+						<div class="control-single-image">
+							<img/>
+							<a class="control-image-ud" id="imageUpload">
+								<i class="fa fa-cloud-upload"></i> 
+								上传
+							</a>
+						</div>
+						<br />
+						<span class="weak">(上传文件说明：512*512PX的jpg,png图片格式)</span>
+						<br />
+						<input type="hidden" name="path" required requiredmsg="请上传图片" />
+					</div>
                 </div>				
 				<div class="control-group">
 					<label class="control-label" for=""></label>
@@ -143,6 +151,32 @@
 		  </script>
 	</div>
 	 
-	 
+	 <script type="text/javascript">
+			lib.uploader.image({
+				server: "http://service.choumei.cn/upload/image",
+				pick  : {id:'#imageUpload',multiple:false},
+				resize: false,
+				fileSingleSizeLimit : 2*1024*1024,
+				imageLimitSize:function(){
+					return true
+				},
+				accept :{
+					title: 'Images',
+					extensions: 'jpg,jpeg,png',
+					mimeTypes: 'image/png,image/jpeg'                
+				},
+				auto:true
+			},function(uploader){
+				uploader.on('uploadSuccess',function(file,res){
+					if(res.result==1){
+						var data=res.data;
+						if(data.main&&data.main.images&&data.main.images[0]){
+							$(this.options.pick.id).siblings('img').attr('src',data.main.images[0].img);
+							$('input[name="path"]').val(data.main.images[0].img);
+						}
+					}
+				})
+			});
+	 </script>
   </body>
 </html>
