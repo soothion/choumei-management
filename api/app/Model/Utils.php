@@ -99,4 +99,43 @@ class Utils
         }
         return $res;
     }
+    
+    /**
+	 * 获取数组或map某列的值,返回数组
+	 */
+	public static function get_column_array($column_name, $inputs = array())
+	{
+		if(version_compare(PHP_VERSION, '5.5.0')>0)
+		{
+			return array_column($inputs,$column_name);
+		}
+		else
+		{
+			$result = array();
+			if (!empty($inputs)) {
+				$result = array();
+				$i = 0;
+				foreach ($inputs as $k => $v) {
+					$result[$i] = $v[$column_name];
+					$i++;
+				}
+			}
+			return $result;
+		}
+	}
+    
+    /**
+	 * 将数组某列元素转化为key值，用作map
+	 */
+	public static function column_to_key($column_name, $inputs = array())
+	{
+		$result = array();
+		if (!empty($inputs)) {
+			$count = count($inputs);
+			for ($i = 0; $i < $count; $i++) {
+				$result[$inputs[$i][$column_name]] = $inputs[$i];
+			}
+		}
+		return $result;
+	}
 }

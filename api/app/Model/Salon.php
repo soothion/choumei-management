@@ -554,6 +554,24 @@ class Salon extends Model {
 		}
 		return $merchantSn->sn.$tps.$sn;	
 	}
+    
+    public static function getSalonsByIds($salon_ids)
+    {
+        $salons = self::whereIn("salonid",$salon_ids)->get();
+        return $salons;
+    }
+    
+    public static function getSalonById($salon_id)
+    {
+        $salon = self::where("salonid","=",$salon_id)->get();
+        if(empty($salon))
+        {
+            return null;
+        }
+        else {
+          return $salon[0];
+        }
+    }
 
 }
 

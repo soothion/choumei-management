@@ -552,7 +552,6 @@ Route::group(['middleware'], function(){
 	'as'=>'refund.show',
 	'uses'=>'Trans\OrderRefundController@show'
 	    ));
-	
 
 	Route::any('refund/export',array(  //退款导出
 		'as'=>'refund.export',
@@ -635,6 +634,22 @@ Route::group(['middleware'], function(){
         'as'=>'ImageStyle.show',
         'uses'=>'Image\ImageStyleController@show'
    ));
+  
+    //赏金单管理-交易管理
+	Route::any('bounty/getList',array(  //赏金单列表
+	'as'=>'bounty.getList',
+	'uses'=>'Bounty\BountyController@getList'
+	    ));
+    
+    Route::any('bounty/detail',array(  //赏金单详情
+	'as'=>'bounty.detail',
+	'uses'=>'Bounty\BountyController@detail'
+	    ));
+    
+    Route::any('bounty/refundDetail',array(  //赏金单退款详情
+	'as'=>'bounty.refundDetail',
+	'uses'=>'Bounty\BountyController@refundDetail'
+	    ));
 
 });
 
