@@ -21,43 +21,24 @@
 	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
-		 
-		
-				<div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>消息类型：</label>
-                     <label>
-                    <input type="radio" class="radio" name="shopType" value="1"
-                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
-                    <span>预付款店</span>
-                    </label>
-
-                    <label>
-                    <input type="radio" class="radio" name="shopType" value="2" 
-                    <%=data.shopType==2 ? "checked" : "" %>>
-                    <span>投资店</span>
-                    </label>
-
-                    <label>
-                    <input type="radio" class="radio" name="shopType" value="3"
-                    <%=data.shopType==3 ? "checked" : "" %>>
-                    <span>金字塔店</span>
-                    </label>
-					 <span class="control-help" style="display:none;"></span>
-                </div>  
                  <div class="control-group">
                         <label class="control-label">发送对象：</label>
+						 <div class="control">
+						 <label>
+                    <input type="radio" class="radio" name="bb" value="1"
+                    <%=!data.bb||data.bb==1 ? "checked" : "" %>>
+                    <span>所有臭美发型app安装用户</span>
+                    </label><br/>
 
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="1">
-                            <span>所有臭美发型app安装用户</span><br/>
-                        </label>
-
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>个别手机号码</span> 
-							<span style="color:#58A2EC;font-weight:bold;"><a href="">+添加手机号码</a></span>
-                        </label>
-                    </div>  
+                    <label>
+                    <input type="radio" class="radio" name="bb" value="2" 
+                    <%=data.bb==2 ? "checked" : "" %>>
+                     <span>个别手机号码</span> 
+                    </label>
+					<br />
+						<textarea name="a"  class="hide" id="phone" placeholder="每行只能输入一个手机号码" ></textarea>
+					</div>
+                </div>  
 					
 				<div class="control-group" style="width:800px;margin-left:30px;" >
 						<legend>消息编辑-列表</legend>
@@ -98,12 +79,12 @@
                     <legend>消息编辑-详情</legend>
 						<hr />
                 </div>
-					<div class="control-group">
+				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>消息内容：</label>
                      <label>
                     <input type="radio" class="radio" name="aa" value="1"
                     <%=!data.aa||data.aa==1 ? "checked" : "" %>>
-                    <span>信息连接</span>
+                    <span>信息链接</span>
 					<input type="text" style="width:500px"/>
                     </label><br/>
 
@@ -145,6 +126,17 @@
 				},
 				postName:'images'
 			},function(uploader){
+				
+			});
+			$(function(){
+				$(document).on('change','.radio',function(){
+					var val=$(this).val();
+					if(val==2){
+						$('#phone').show();
+					}else{
+						$('#phone').hide();
+					}
+				})
 				
 			});
 		</script>  

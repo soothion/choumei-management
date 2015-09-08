@@ -21,6 +21,31 @@
 }
 
 /********************店铺详情***********************/
+/********************手机号码***********************/
+.phone-big{
+width:600px;
+height:400px;
+border:1px solid #E6EAF2;
+margin-top:30px;
+display:none;
+}
+ .phone{
+ margin-left:30px;
+ }
+ .phone-per{
+ margin-top:30px;
+ line-height:5em;
+ }
+ .tex{
+ width:300px;
+ height:220px;
+ }
+ .phone-btn{
+ margin-left:150px;
+ margin-top:30px;
+ }
+
+/********************手机号码***********************/
 .btn-group{
     height:50px;
 	margin-top:-50px;
