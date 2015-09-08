@@ -1118,6 +1118,10 @@ class SalonController extends Controller {
 
 				$result[$key]['shopType'] = $shopTypeArr[$val['shopType']];
 				$result[$key]['salonCategory'] = $salonCategoryArr[$val['salonCategory']];
+				$result[$key]['salonGrade'] = $gradeArr[$val['salonGrade']];
+				$result[$key]['salonChangeGrade'] = $gradeArr[$val['salonChangeGrade']];
+				$result[$key]['changeInTime'] = $val['changeInTime']?date('Y-m-d',$val['changeInTime']):'';
+			
 				$result[$key]['salestatus'] = $statusArr[$val['salestatus']];
 				
 				$result[$key]['add_time'] = $val['add_time']?date('Y-m-d H:i:s',$val['add_time']):'';
@@ -1147,11 +1151,7 @@ class SalonController extends Controller {
 				$result[$key]['beneficiary'] = $val['beneficiary'];
 				$result[$key]['bankCard'] = ' '.$val['bankCard'];
 				$result[$key]['accountType'] = $val['accountType']?$accountTypeArr[$val['accountType']]:'';
-	
-				$result[$key]['salonGrade'] = $gradeArr[$val['salonGrade']];
-				$result[$key]['salonChangeGrade'] = $gradeArr[$val['salonChangeGrade']];
-				$result[$key]['changeInTime'] = $val['changeInTime']?date('Y-m-d',$val['changeInTime']):'';
-			
+
 				//财务信息
 				$result[$key]['floorDate'] = $val['floorDate']?date('Y-m-d',$val['floorDate']):'';
 				$result[$key]['advanceFacility'] = $val['advanceFacility'];
@@ -1175,11 +1175,10 @@ class SalonController extends Controller {
 		//导出excel
 		$title = '店铺列表'.date('Ymd');
 		$header = ['店铺名称','店铺编号','所属商户','商户编号','店铺id','店铺邀请码','分红联盟','店铺地址','省','市','区','所属商圈',
-					'店铺类型','店铺分类','店铺状态','添加时间',
+					'店铺类型','店铺分类','当前等级','调整等级','调整生效日期','店铺状态','添加时间',
 					'合同开始时间','合同截止时间','合同编号','联系人','联系手机',
 					'店铺电话','法人代表','法人手机','业务代表','银行名称',
 					'支行名称','收款人','银行卡号','帐户类型',
-					'当前等级','调整等级','调整生效日期',
 					'落地日期','预付款额度','佣金率','分红政策','返佣政策','基础补贴政策',
 					'基础补贴起始日','基础补贴截止日','强补贴政策','强补贴起始日','强补贴截止日','强补贴月交易单数要求','首单指标补贴政策',
 					];
