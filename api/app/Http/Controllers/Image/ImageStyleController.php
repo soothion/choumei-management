@@ -48,12 +48,13 @@ class ImageStyleController extends Controller{
 	 *	        "from": 1,
 	 *	        "to": 5,
 	 *	        "data": [
-	 *	            {"id":3,
-         *                   "style":1,
-         *                   "length":1,
-         *                   "curl":1,
-         *                   "color":1,
-         *                   "img":"1"
+	 *	            { 
+        *                      "id":3,
+        *                      "style":1,
+        *                      "length":1,
+        *                      "curl":1,
+        *                      "color":1,
+        *                      "img":"1"
 	 *	            }
 	 *	        ]
 	 *	    }
@@ -67,7 +68,7 @@ class ImageStyleController extends Controller{
 	 *		}
 	 */
        
-    public function getAllImage()
+    public function showAll()
     {
            $param = $this->param; 
            $query =ImageStyle::getAllImage($param);
@@ -99,7 +100,7 @@ class ImageStyleController extends Controller{
 	 *		    "msg": "图片风格插入失败"
 	 *		}
 	 */
-    public function insertImage()
+    public function create()
     {
           $param = $this->param; 
           $data=[];
@@ -139,7 +140,7 @@ class ImageStyleController extends Controller{
 	 *		    "msg": "图片风格删除失败"
 	 *		}
 	 */
-    public function deleteImage()
+    public function destroy()
     {  
            $param = $this->param; 
            $id=$param['id'];
@@ -179,7 +180,7 @@ class ImageStyleController extends Controller{
 	 *		}
 	 */
       
-    public function updateImage()
+    public function update()
     { 
             $param = $this->param;  
             $id=$param['id'];
@@ -210,19 +211,20 @@ class ImageStyleController extends Controller{
 	 * @apiSuccess {String} img 图片路径
          * 
          * @apiSuccessExample Success-Response:
-         * {"result":1,
-         * "token":"",
-         * "data":{
-         * "id":2,
-         * "style":1,
-         * "length":1,
-         * "curl":1,
-         * "color":1,
-         * "img":"1"
-         * }
-         * }
+         *   {"   
+         *      result":1,
+         *      "token":"",
+         *      "data":{
+         *                     "id":2,
+         *                     "style":1,
+         *                     "length":1,
+         *                     "curl":1,
+         *                      "color":1,
+         *                     "img":"1"
+         *              }
+         *    }
          */
-    public function getOneImage()
+    public function show()
     {
          $param = $this->param; 
          $id=$param['id'];

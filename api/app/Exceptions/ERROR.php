@@ -184,7 +184,21 @@ class ERROR
      */
      CONST MESSAGE_ID_IS_ERROR  =  -50902;
 
-	
+     
+     
+     	 ////////////图片风格模块//////////////
+     /**
+     *@param 插入风格失败
+     */
+     CONST REBATE_CREATE_FAILED =  -51200;
+	 /**
+     *@param 更新风格失败
+     */
+     CONST REBATE_UPDATE_FAILED =  -51201;
+	 /**
+     *@param 删除风格失败
+     */
+     CONST REBATE_DELETE_FAILED  =  -51202;
 
 
      ////////////用户等级模块//////////////
