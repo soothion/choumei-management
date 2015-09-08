@@ -146,7 +146,7 @@ class ImageStyleController extends Controller{
 		if(!$image)
 			throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
                 $data=[];
-		$data['stutas']=0;
+		$data['stutas']=2;
                 $result = $image->update($data);
 		if($result){
 			return $this->success();
