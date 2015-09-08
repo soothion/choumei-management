@@ -165,27 +165,23 @@ class CommissionController extends Controller{
 		});
 
 		if($param['group']=='month'){
-			$created_at = $param['start'].' 到 '.$param['end'];
 			$query = $query->groupBy('salon.sn');
 			$fields = array(
 				'commission.id',
-			    'order.orderid',
-				'order.salonid',
 				'salon.sn as salonsn',
 				'salon.salonname',
-				DB::raw('sum(amount) as amount')
+				DB::raw('sum(amount) as amount'),
+				'commission.date'
 			);
 		}
 		else if($param['group']=='day'){
 			$fields = array(
 				'commission.id',
-			    'order.orderid',
-				'order.salonid',
 				'salon.sn as salonsn',
 				'salon.salonname',
 				'commission.sn as sn',
 				'commission.amount as amount',
-				'commission.created_at as created_at',
+				'commission.date'
 			);
 		}
 
