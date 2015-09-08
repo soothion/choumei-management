@@ -194,7 +194,7 @@ class CommissionController extends Controller{
 	    	$result[$key]['salonname'] = $value->salonname;
 	    	$result[$key]['sn'] = $value->sn;
 	    	$result[$key]['amount'] = $value->amount;
-	    	$result[$key]['created_at'] = $value->created_at?$value->created_at:$created_at;
+	    	$result[$key]['date'] = $value->date;
 	    }
 		// 触发事件，写入日志
 	    Event::fire('commission.export');
