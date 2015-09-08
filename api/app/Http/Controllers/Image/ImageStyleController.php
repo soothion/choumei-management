@@ -114,7 +114,7 @@ class ImageStyleController extends Controller{
           if($result){
 			return $this->success();
           }else{
-		throw new ApiException('图片风格插入失败', ERROR::REBATE_CREATE_FAILED);
+		throw new ApiException('图片风格插入失败', ERROR::STYLE_CREATE_FAILED);
           }
      }
      /**
@@ -148,7 +148,7 @@ class ImageStyleController extends Controller{
            if($result){
 			return $this->success();
             }else{
-                  throw new ApiException('图片风格删除失败', ERROR::REBATE_DELETE_FAILED);
+                  throw new ApiException('图片风格删除失败', ERROR::STYLE_DELETE_FAILED);
             }
      }
      
@@ -194,7 +194,7 @@ class ImageStyleController extends Controller{
              if($result){
 			return $this->success();
             }else{
-                  throw new ApiException('图片风格更新失败', ERROR::REBATE_UPDATE_FAILED);
+                  throw new ApiException('图片风格更新失败', ERROR::STYLE_UPDATE_FAILED);
             }
      }
         /**

@@ -190,15 +190,15 @@ class ERROR
      /**
      *@param 插入风格失败
      */
-     CONST REBATE_CREATE_FAILED =  -51200;
+     CONST STYLE_CREATE_FAILED =  -51200;
 	 /**
      *@param 更新风格失败
      */
-     CONST REBATE_UPDATE_FAILED =  -51201;
+     CONST STYLE_UPDATE_FAILED =  -51201;
 	 /**
      *@param 删除风格失败
      */
-     CONST REBATE_DELETE_FAILED  =  -51202;
+     CONST STYLE_DELETE_FAILED  =  -51202;
 
 
      ////////////用户等级模块//////////////
