@@ -134,7 +134,7 @@ class MessageController extends Controller{
 	 * @apiGroup  Message
 	 *
 	 * @apiParam {Number} receive_type 必填,接收类型 1所有造型师 2指定造型师'.
-	 * @apiParam {Number} receivers 选填,指定接收人 手机号码（数组）.
+	 * @apiParam {Number} receivers 选填,指定接收人 手机号码（多个用,隔开）.
 	 * @apiParam {String} title 必填,标题.
 	 * @apiParam {String} description 必填,摘要.
 	 * @apiParam {String} img 选填,列表展示图片.
@@ -173,7 +173,7 @@ class MessageController extends Controller{
 		$receivers = isset($param['receivers'])?$param['receivers']:'';
 		if($receivers)
 		{
-			$save['receivers'] = join(',',explode("\r\n",$receivers));
+			$save['receivers'] = join(',',explode(",",$receivers));
 		}
 		$save['title'] = isset($param['title'])?trim($param['title']):'';
 		$save['description'] = isset($param['description'])?trim($param['description']):'';
@@ -203,7 +203,7 @@ class MessageController extends Controller{
 	 * @apiName checkPhone
 	 * @apiGroup  Message
 	 *
-	 * @apiParam {Number} receivers 必填,手机号码.
+	 * @apiParam {Number} receivers 必填,手机号码 多个用,隔开.
 	 *
 	 *
 	 * @apiSuccessExample Success-Response:
@@ -218,10 +218,10 @@ class MessageController extends Controller{
 	 *	{
 	 *	    "result": 1,
 	 *	    "msg": "",
-	 *	    "data": {//data 返回错误的手机号
+	 *	    "data": [//data 返回错误的手机号
 	 *			"13526598665",
 	 *			"13826598465",	
-	 *	    }
+	 *	    ]
 	 *	}
 	 *
 	 *
@@ -235,14 +235,14 @@ class MessageController extends Controller{
 	{
 		$param = $this->param;
 		$receivers = $param['receivers'];
-		$phone = explode("\r\n",$receivers);
+		$phone = explode(",",$receivers);
 		
 		$errorPhone = [];
 		if($phone)
 		{
 			foreach($phone as $val)
 			{
-				$count = hairstylist::where('mobilephone', '=', $val)->count();
+				$count = hairstylist::where('mobilephone', '=', $val)->where('status','=','1')->count();
 				if($count < 1)
 				{
 					$errorPhone[] = $val;
