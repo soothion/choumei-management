@@ -12,9 +12,9 @@ use Auth;
 
 class ManagerController extends Controller{
 	/**
-	 * @api {post} /user/index 1.用户列表
+	 * @api {post} /manager/index 1.用户列表
 	 * @apiName list
-	 * @apiGroup User
+	 * @apiGroup Manager
 	 *
 	 * @apiParam {String} role 可选,角色名关键字.
 	 * @apiParam {String} name 可选,姓名关键字.
@@ -131,9 +131,9 @@ class ManagerController extends Controller{
 
 
 	/**
-	 * @api {post} /user/export 5.导出用户
+	 * @api {post} /manager/export 2.导出用户
 	 * @apiName export
-	 * @apiGroup User
+	 * @apiGroup Manager
 	 *
 	 * @apiParam {Number} role_id 可选,角色ID.
 	 * @apiParam {Number} department_id 可选,部门ID.
@@ -181,7 +181,7 @@ class ManagerController extends Controller{
 	    	$result[$key]['created_at'] = $value->created_at;
 	    }
 		// 触发事件，写入日志
-	    Event::fire('user.export');
+	    Event::fire('manager.export');
 		
 		//导出excel	   
 		$title = '用户列表'.date('Ymd');
@@ -197,9 +197,9 @@ class ManagerController extends Controller{
 	}
 
 	 /**
-	 * @api {post} /user/create 4.新增用户
+	 * @api {post} /manager/create 3.新增用户
 	 * @apiName create
-	 * @apiGroup User
+	 * @apiGroup Manager
 	 *
 	 * @apiParam {String} username 登录帐号.
 	 * @apiParam {String} name 用户姓名.
@@ -241,7 +241,7 @@ class ManagerController extends Controller{
 		if($user&&$role){
 			DB::commit();
 			//触发事件，写入日志
-		    Event::fire('user.create',array($user));
+		    Event::fire('manager.create',array($user));
 			return $this->success();
 		}
 		else
@@ -252,19 +252,9 @@ class ManagerController extends Controller{
 	}
 
 	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-
-	}
-
-	/**
-	 * @api {post} /user/show/:id 2.查看用户信息
+	 * @api {post} /manager/show/:id 4.查看用户信息
 	 * @apiName show
-	 * @apiGroup User
+	 * @apiGroup Manager
 	 *
 	 * @apiParam {Number} id 必填,用户ID.
 	 *
@@ -327,20 +317,9 @@ class ManagerController extends Controller{
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * @api {post} /user/update/:id 3.更新用户信息
+	 * @api {post} /manager/update/:id 5.更新用户信息
 	 * @apiName update
-	 * @apiGroup User
+	 * @apiGroup Manager
 	 *
 	 * @apiParam {String} name 用户姓名.
 	 * @apiParam {String} old_password 用户原密码.
@@ -386,7 +365,7 @@ class ManagerController extends Controller{
 		if($update_role&&$update_user){
 			DB::commit();
 			//触发事件，写入日志
-			$response = Event::fire('user.update',array($user));
+			$response = Event::fire('manager.update',array($user));
 			return $this->success();
 		}
 		else
@@ -395,18 +374,6 @@ class ManagerController extends Controller{
 			return $this->error('用户更新失败');
 		}
 
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		$account = Account::find($id);
-		$account->delete();
 	}
 
 }

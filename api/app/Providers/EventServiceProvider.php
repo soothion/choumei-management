@@ -30,6 +30,23 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\UserEventListener@onLogout',
         ],   
 
+        //管理员模块
+        'manager.update' => [
+            'App\Listeners\ManagerEventListener@onUpdate',
+        ],
+        'manager.create' => [
+            'App\Listeners\ManagerEventListener@onCreate',
+        ],      
+        'manager.export' => [
+            'App\Listeners\ManagerEventListener@onExport',
+        ],
+        'login' => [
+            'App\Listeners\ManagerEventListener@onLogin',
+        ],
+        'logout' => [
+            'App\Listeners\ManagerEventListener@onLogout',
+        ],   
+
 
         //角色模块
         'role.update' => [
