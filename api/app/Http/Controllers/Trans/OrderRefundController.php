@@ -171,9 +171,6 @@ class OrderRefundController extends Controller
      *
      * @apiSuccess {Number} ids id(多个用','隔开).
      *
-     * @apiSuccessExample Success-Response:
-     *
-     *
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
