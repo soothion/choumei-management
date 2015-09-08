@@ -8,7 +8,7 @@ class Rebate extends Model {
 
 	protected $table = 'rebate';
 
-	protected $fillable = ['salon_id', 'author', 'sn', 'amount', 'status', 'start_at', 'end_at', 'confirm_at'];
+	protected $fillable = ['salon_id', 'author', 'sn', 'amount', 'status', 'start_at', 'end_at', 'confirm_at','confirm_by','created_at','created_by','updated_at'];
 
 	//获取query对象
 	public static function getQueryByParam($param=[]){
