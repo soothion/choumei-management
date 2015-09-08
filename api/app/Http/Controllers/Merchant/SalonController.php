@@ -1101,24 +1101,25 @@ class SalonController extends Controller {
 			{
 				$result[$key]['salonname'] = $val['salonname'];
 				$result[$key]['sn'] = $val['sn'];
+				$result[$key]['name'] = $val['name'];
+				$result[$key]['msn'] = $val['msn'];
+				$result[$key]['salonid'] = $val['salonid'];
+				
 				$result[$key]['recommend_code'] = $val['recommend_code'];
 				$result[$key]['dividendStatus'] = $val['dividendStatus']?'退出分红联盟':'加入分红联盟';
-				$result[$key]['name'] = $val['name'];
+				
 				$result[$key]['addr'] = $val['addr'];
 				//$result[$key]['districtName'] = $val['districtName'];
 				
 				$result[$key]['provinceName'] = $val['provinceName'];
 				$result[$key]['citiesName'] = $val['citiesName'];
 				$result[$key]['districtName'] = $val['districtName'];
-				
 				$result[$key]['zoneName'] = $val['zoneName'];
 
 				$result[$key]['shopType'] = $shopTypeArr[$val['shopType']];
 				$result[$key]['salonCategory'] = $salonCategoryArr[$val['salonCategory']];
 				$result[$key]['salestatus'] = $statusArr[$val['salestatus']];
 				
-				$result[$key]['salonid'] = $val['salonid'];
-				$result[$key]['msn'] = $val['msn'];
 				$result[$key]['add_time'] = $val['add_time']?date('Y-m-d H:i:s',$val['add_time']):'';
 				
 				$result[$key]['contractTime'] = $val['contractTime']?date('Y-m-d',$val['contractTime']):'';
@@ -1173,8 +1174,8 @@ class SalonController extends Controller {
 		
 		//导出excel
 		$title = '店铺列表'.date('Ymd');
-		$header = ['店铺名称','店铺编号','店铺邀请码','分红联盟','所属商户','店铺地址','省','市','区','所属商圈',
-					'店铺类型','店铺分类','店铺状态','店铺id','商户编号','添加时间',
+		$header = ['店铺名称','店铺编号','所属商户','商户编号','店铺id','店铺邀请码','分红联盟','店铺地址','省','市','区','所属商圈',
+					'店铺类型','店铺分类','店铺状态','添加时间',
 					'合同开始时间','合同截止时间','合同编号','联系人','联系手机',
 					'店铺电话','法人代表','法人手机','业务代表','银行名称',
 					'支行名称','收款人','银行卡号','帐户类型',
