@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Trans;
 
 use App\Http\Controllers\Controller;
+use App\TransactionSearchApi;
 
 class TicketController extends Controller
 {
@@ -11,13 +12,12 @@ class TicketController extends Controller
      * @apiName index
      * @apiGroup ticket
      *
-     * @apiParam {Number} key  1 店铺搜索  2 店铺编号
+     * @apiParam {Number} key  1 臭美券密码 2 用户手机号  3 店铺名称  4 用户设备号  5 代金券编码  6 活动编码
      * @apiParam {String} keyword  根据key来的关键字
-     * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
-     * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
-     * @apiParam {String} type 0 全部 1 付交易代收款 2 付业务投资款
-     * @apiParam {String} pay_type 0 全部 1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiParam {String} state 0 全部 1 待提交 2待审批 3待付款  4已付款
+     * @apiParam {String} time_key  1 消费时间  2付款时间
+     * @apiParam {String} min_time 最小时间 YYYY-MM-DD
+     * @apiParam {String} max_time 最大时间 YYYY-MM-DD
+     * @apiParam {String} state 0 全部  2 未消费 4 已消费 6申请退款 7 退款完成  8 退款中 9 退款失败
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      * @apiParam {String} sort_key 排序的键 ['id','updated_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
@@ -137,7 +137,20 @@ class TicketController extends Controller
      */
     public function index()
     {
-         
+        $params = $this->parameters([
+            'key' => self::T_INT,
+            'keyword' => self::T_STRING,
+            'min_time' => self::T_STRING,
+            'max_time' => self::T_STRING,
+            'state' => self::T_INT,
+            'time_key' => self::T_INT,
+            'page' => self::T_INT,
+            'page_size' => self::T_INT,
+            'sort_key' => self::T_STRING,
+            'sort_type' => self::T_STRING,
+        ]);
+        $items = TransactionSearchApi::searchOfTicket($params);
+        return $this->success($items);
     }
     
     /**
