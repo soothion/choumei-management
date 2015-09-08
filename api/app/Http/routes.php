@@ -612,31 +612,29 @@ Route::group(['middleware'], function(){
         
     //图片风格管理
     Route::any('ImageStyle/index',array( 
-		'as'=>'ImageStyle.index',
-		'uses'=>'Image\ImageStyleController@index'
+        'as'=>'ImageStyle.index',
+        'uses'=>'Image\ImageStyleController@index'
     ));
-        
+    
     Route::any('ImageStyle/create',array( 
-			'as'=>'ImageStyle.create',
-			'uses'=>'Image\ImageStyleController@create'
+        'as'=>'ImageStyle.create',
+        'uses'=>'Image\ImageStyleController@create'
     ));
-         
+     
     Route::any('ImageStyle/destroy/{id}',array( 
-		'as'=>'ImageStyle.destroy',
-		'uses'=>'Image\ImageStyleController@destroy'
+        'as'=>'ImageStyle.destroy',
+        'uses'=>'Image\ImageStyleController@destroy'
     ));
-          
+      
     Route::any('ImageStyle/update/{id}',array( 
-		'as'=>'ImageStyle.update',
-		'uses'=>'Image\ImageStyleController@update'
-    ));
-           
+        'as'=>'ImageStyle.update',
+        'uses'=>'Image\ImageStyleController@update'
+   ));
+       
     Route::any('ImageStyle/show/{id}',array( 
-		'as'=>'ImageStyle.show',
-		'uses'=>'Image\ImageStyleController@show'
-    ));
-
-
+        'as'=>'ImageStyle.show',
+        'uses'=>'Image\ImageStyleController@show'
+   ));
 
 });
 
