@@ -143,10 +143,11 @@ class ImageStyleController extends Controller{
     public function destroy($id)
     {  
 		$image = ImageStyle::find($id);
-		if(!$image)
+		if(!$image){
 			throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
+                }
                 $data=[];
-		$data['stutas']=2;
+		$data['status']=2;
                 $result = $image->update($data);
 		if($result){
 			return $this->success();
@@ -188,9 +189,9 @@ class ImageStyleController extends Controller{
     { 
         $param = $this->param; 
     	$image = ImageStyle::find($id);
-    	if(!$image)
+    	if(!$image){
     		 throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
-
+        }
             $data=[];
             $data['style']=$param['style'];
             $data['length']=$param['length'];
@@ -218,15 +219,15 @@ class ImageStyleController extends Controller{
 	 * @apiSuccess {String} img 图片路径
      * 
      * @apiSuccessExample Success-Response:
-     *   {"   
-     *      result":1,
+     *   {   
+     *      "result":1,
      *      "token":"",
      *      "data":{
      *                     "id":2,
      *                     "style":1,
      *                     "length":1,
      *                     "curl":1,
-     *                      "color":1,
+     *                     "color":1,
      *                     "img":"1"
      *              }
      *    }

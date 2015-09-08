@@ -132,16 +132,16 @@ class PrepayBill extends Model
     public static function getNewCode($type)
     {
         $type = intval($type);
-        $prefix = "YF";
+        $prefix = "YF-";
         switch ($type) {
             case self::TYPE_OF_ALREADYPAY:
-                $prefix = "FDS";
+                $prefix = "FDS-";
                 break;
             case self::TYPE_OF_RETURN:
-                $prefix = "YFFH";
+                $prefix = "YFFH-";
                 break;
             default:
-                $prefix = "YF";
+                $prefix = "YF-";
         }
         $prefix .=date("ymdHis");
         

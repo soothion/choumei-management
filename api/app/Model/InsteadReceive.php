@@ -31,7 +31,7 @@ class InsteadReceive extends Model
      */
     public static function getNewCode()
     {     
-        $prefix ="DS";
+        $prefix ="DS-";
         $prefix .=date("ymdHis");
         $class = __CLASS__;
         $obj = new $class;

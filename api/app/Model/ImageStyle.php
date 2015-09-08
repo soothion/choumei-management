@@ -16,7 +16,7 @@ use DB;
 class ImageStyle  extends Model{
    
     protected $table = 'style_img';
-    protected $fillable = ['id', 'style', 'length','curl','color','img'];
+    protected $fillable = ['id', 'style', 'length','curl','color','img','status'];
     public $timestamps = false;
 
     public static function getAllImage($param){
