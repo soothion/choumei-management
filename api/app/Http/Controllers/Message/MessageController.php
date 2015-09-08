@@ -105,6 +105,7 @@ class MessageController extends Controller{
 	 * @apiParam {String} img 选填,列表展示图片.
 	 * @apiParam {String} description 必填,摘要.
 	 * @apiParam {String} url 必填,消息内容url.
+	 * @apiParam {String} content 选填,消息内容.
 	 *
 	 *
 	 * @apiSuccessExample Success-Response:
