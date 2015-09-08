@@ -142,13 +142,18 @@ class ImageStyleController extends Controller{
 	 */
     public function destroy($id)
     {  
-		$image = Rebate::find($id);
+		$image = ImageStyle::find($id);
 		if(!$image)
 			throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
-		$result = $image->delete();
-		if($result)
+                $data=[];
+		$data['stutas']=0;
+                $result = $image->update($data);
+		if($result){
 			return $this->success();
-		throw new ApiException('图片删除失败', ERROR::STYLE_DELETE_FAILED);
+                }else {
+                   throw new ApiException('图片删除失败', ERROR::STYLE_DELETE_FAILED); 
+                }
+		
      }
      
        /**
@@ -181,6 +186,7 @@ class ImageStyleController extends Controller{
       
     public function update($id)
     { 
+        $param = $this->param; 
     	$image = ImageStyle::find($id);
     	if(!$image)
     		 throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
@@ -193,7 +199,7 @@ class ImageStyleController extends Controller{
             $data['img']=$param['img']; 
             $result=$image->update($data);
              if($result){
-			return $this->success();
+		  return $this->success();
             }else{
                   throw new ApiException('图片风格更新失败', ERROR::STYLE_UPDATE_FAILED);
             }
