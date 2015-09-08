@@ -186,7 +186,7 @@ class ERROR
 
      
      
-     	 ////////////图片风格模块//////////////
+	 ////////////图片风格模块//////////////
      /**
      *@param 插入风格失败
      */
@@ -195,10 +195,15 @@ class ERROR
      *@param 更新风格失败
      */
      CONST STYLE_UPDATE_FAILED =  -51201;
-	 /**
+      /**
      *@param 删除风格失败
      */
-     CONST STYLE_DELETE_FAILED  =  -51202;
+     CONST STYLE_DELETE_FAILED  =  -51202;	 
+
+     /**
+     *@param 未知图片
+     */
+     CONST STYLE_NOT_FOUND  =  -51203;
 
 
      ////////////用户等级模块//////////////

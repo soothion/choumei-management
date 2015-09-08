@@ -12,7 +12,7 @@ use App\Exceptions\ERROR;
  */
 class ImageStyleController extends Controller{
      /**
-	 * @api {post} /ImageStyle/getAllImage 1.图片列表
+	 * @api {post} /ImageStyle/index 1.图片列表
 	 * @apiGroup Image
 	 *
 	 * @apiParam {Number} style 可选,风格.
@@ -28,7 +28,7 @@ class ImageStyleController extends Controller{
 	 * @apiSuccess {Number} last_page 当前页面.
 	 * @apiSuccess {Number} from 起始数据.
 	 * @apiSuccess {Number} to 结束数据.
-         * @apiSuccess {Number} id  主键.
+     * @apiSuccess {Number} id  主键.
 	 * @apiSuccess {Number} style 风格.
 	 * @apiSuccess {Number} length 长度.
 	 * @apiSuccess {Number} curl 卷度.
@@ -49,12 +49,12 @@ class ImageStyleController extends Controller{
 	 *	        "to": 5,
 	 *	        "data": [
 	 *	            { 
-        *                      "id":3,
-        *                      "style":1,
-        *                      "length":1,
-        *                      "curl":1,
-        *                      "color":1,
-        *                      "img":"1"
+     *                      "id":3,
+     *                      "style":1,
+     *                      "length":1,
+     *                      "curl":1,
+     *                      "color":1,
+     *                      "img":"1"
 	 *	            }
 	 *	        ]
 	 *	    }
@@ -68,7 +68,7 @@ class ImageStyleController extends Controller{
 	 *		}
 	 */
        
-    public function showAll()
+    public function index()
     {
            $param = $this->param; 
            $query =ImageStyle::getAllImage($param);
@@ -110,11 +110,11 @@ class ImageStyleController extends Controller{
           $data['color']=$param['color'];
           $data['img']=$param['img'];
           $data['status']=1;
-          $result=ImageStyle::insertImage($data);
+          $result=ImageStyle::create($data);
           if($result){
 			return $this->success();
           }else{
-		throw new ApiException('图片风格插入失败', ERROR::STYLE_CREATE_FAILED);
+			throw new ApiException('图片风格插入失败', ERROR::STYLE_CREATE_FAILED);
           }
      }
      /**
@@ -140,16 +140,15 @@ class ImageStyleController extends Controller{
 	 *		    "msg": "图片风格删除失败"
 	 *		}
 	 */
-    public function destroy()
+    public function destroy($id)
     {  
-           $param = $this->param; 
-           $id=$param['id'];
-           $result=ImageStyle::deleteImage($id);
-           if($result){
+		$image = Rebate::find($id);
+		if(!$image)
+			throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
+		$result = $image->delete();
+		if($result)
 			return $this->success();
-            }else{
-                  throw new ApiException('图片风格删除失败', ERROR::STYLE_DELETE_FAILED);
-            }
+		throw new ApiException('图片删除失败', ERROR::STYLE_DELETE_FAILED);
      }
      
        /**
@@ -180,56 +179,57 @@ class ImageStyleController extends Controller{
 	 *		}
 	 */
       
-    public function update()
+    public function update($id)
     { 
-            $param = $this->param;  
-            $id=$param['id'];
+    	$image = ImageStyle::find($id);
+    	if(!$image)
+    		 throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
+
             $data=[];
             $data['style']=$param['style'];
             $data['length']=$param['length'];
             $data['curl']=$param['curl'];
             $data['color']=$param['color'];
             $data['img']=$param['img']; 
-            $result=ImageStyle::updateImage($id, $data);
+            $result=$image->update($data);
              if($result){
 			return $this->success();
             }else{
                   throw new ApiException('图片风格更新失败', ERROR::STYLE_UPDATE_FAILED);
             }
      }
-        /**
+    /**
 	 * @api {post} /ImageStyle/getOneImage 1.查找一张图片
 	 * @apiGroup Image
 	 *
 	 * @apiParam {Number} ID 必填，主键.
-
-         * @apiSuccess {Number} id  主键.
+	 *
+     * @apiSuccess {Number} id  主键.
 	 * @apiSuccess {Number} style 风格.
 	 * @apiSuccess {Number} length 长度.
 	 * @apiSuccess {Number} curl 卷度.
 	 * @apiSuccess {Number} color 颜色.
 	 * @apiSuccess {String} img 图片路径
-         * 
-         * @apiSuccessExample Success-Response:
-         *   {"   
-         *      result":1,
-         *      "token":"",
-         *      "data":{
-         *                     "id":2,
-         *                     "style":1,
-         *                     "length":1,
-         *                     "curl":1,
-         *                      "color":1,
-         *                     "img":"1"
-         *              }
-         *    }
-         */
-    public function show()
+     * 
+     * @apiSuccessExample Success-Response:
+     *   {"   
+     *      result":1,
+     *      "token":"",
+     *      "data":{
+     *                     "id":2,
+     *                     "style":1,
+     *                     "length":1,
+     *                     "curl":1,
+     *                      "color":1,
+     *                     "img":"1"
+     *              }
+     *    }
+     */
+    public function show($id)
     {
-         $param = $this->param; 
-         $id=$param['id'];
-         $query=ImageStyle::getOneImage($id);
-         return $this->success($query);
+    	 $fields = ['id', 'style', 'length','curl','color','img'];  
+         $image=ImageStyle::select($fields)->find($id);
+         return $this->success($image);
      }
        
        
