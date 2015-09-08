@@ -219,15 +219,15 @@ class ImageStyleController extends Controller{
 	 * @apiSuccess {String} img 图片路径
      * 
      * @apiSuccessExample Success-Response:
-     *   {"   
-     *      result":1,
+     *   {   
+     *      "result":1,
      *      "token":"",
      *      "data":{
      *                     "id":2,
      *                     "style":1,
      *                     "length":1,
      *                     "curl":1,
-     *                      "color":1,
+     *                     "color":1,
      *                     "img":"1"
      *              }
      *    }
