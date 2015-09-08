@@ -45,89 +45,6 @@ class OrderRefundController extends Controller
      * @apiSuccess {String} state 订单状态  1待提交 2待审批 3:待付款 4:已付款
      * @apiSuccess {String} confirm_at 审批日期
      *
-     * @apiSuccessExample Success-Response:
-     *       {
-     *          "result": 1,
-     *          "data": {
-     *              "total": 1,
-     *              "per_page": 10,
-     *              "current_page": 1,
-     *              "last_page": 1,
-     *              "from": 1,
-     *              "to": 1,
-     *              "data": [
-     *               {
-     *                   "id": 2,
-     *                   "code": "FTZ-150814190145001",
-     *                   "type": 2,
-     *                   "salon_id": 1,
-     *                   "merchant_id": 2,
-     *                   "money": "333.66",
-     *                   "pay_type": 1,
-     *                   "require_day": "2015-08-14",
-     *                   "pay_day": "0000-00-00",
-     *                   "cycle": 30,
-     *                   "cycle_day": 1,
-     *                   "cycle_money": "100.00",
-     *                   "make_uid": 1,
-     *                   "cash_uid": 0,
-     *                   "prepay_bill_code": "",
-     *                   "receive_bill_code": "",
-     *                   "state": 2,
-     *                   "created_at": "2015-08-14 19:01:45",
-     *                   "confirm_uid": 0,
-     *                   "confirm_at": "0000-00-00",
-     *                   "updated_at": "2015-08-14 19:01:45",
-     *                   "make_user": {
-     *                       "id": 1,
-     *                       "name": "这是用户名Admin"
-     *                   },
-     *                   "confirm_user": null,
-     *                   "cash_user": null,
-     *                   "salon": {
-     *                       "salonid": 1,
-     *                       "salonname": "嘉美专业烫染",
-     *                       "sn": "SZ0320001"
-     *                   }
-     *               },
-     *               {
-     *                   "id": 2,
-     *                   "code": "FTZ-150814190145001",
-     *                   "type": 2,
-     *                   "salon_id": 1,
-     *                   "merchant_id": 2,
-     *                   "money": "333.66",
-     *                   "pay_type": 1,
-     *                   "require_day": "2015-08-14",
-     *                   "pay_day": "0000-00-00",
-     *                   "cycle": 30,
-     *                   "cycle_day": 1,
-     *                   "cycle_money": "100.00",
-     *                   "make_uid": 1,
-     *                   "cash_uid": 0,
-     *                   "prepay_bill_code": "",
-     *                   "receive_bill_code": "",
-     *                   "state": 2,
-     *                   "created_at": "2015-08-14 19:01:45",
-     *                   "confirm_uid": 0,
-     *                   "confirm_at": "0000-00-00",
-     *                   "updated_at": "2015-08-14 19:01:45",
-     *                   "make_user": {
-     *                       "id": 1,
-     *                       "name": "这是用户名Admin"
-     *                   },
-     *                   "confirm_user": null,
-     *                   "cash_user": null,
-     *                   "salon": {
-     *                       "salonid": 1,
-     *                       "salonname": "嘉美专业烫染",
-     *                       "sn": "SZ0320001"
-     *                   }
-     *               }
-     *           ]
-     *       }
-     *      }
-     *
      *
      * @apiErrorExample Error-Response:
      *		{
@@ -167,88 +84,6 @@ class OrderRefundController extends Controller
      * @apiSuccess {String} state 订单状态  1待提交 2待审批 3:待付款 4:已付款
      * @apiSuccess {String} confirm_at 审批日期
      *
-     * @apiSuccessExample Success-Response:
-     *       {
-     *          "result": 1,
-     *          "data": {
-     *              "total": 1,
-     *              "per_page": 10,
-     *              "current_page": 1,
-     *              "last_page": 1,
-     *              "from": 1,
-     *              "to": 1,
-     *              "data": [
-     *               {
-     *                   "id": 2,
-     *                   "code": "FTZ-150814190145001",
-     *                   "type": 2,
-     *                   "salon_id": 1,
-     *                   "merchant_id": 2,
-     *                   "money": "333.66",
-     *                   "pay_type": 1,
-     *                   "require_day": "2015-08-14",
-     *                   "pay_day": "0000-00-00",
-     *                   "cycle": 30,
-     *                   "cycle_day": 1,
-     *                   "cycle_money": "100.00",
-     *                   "make_uid": 1,
-     *                   "cash_uid": 0,
-     *                   "prepay_bill_code": "",
-     *                   "receive_bill_code": "",
-     *                   "state": 2,
-     *                   "created_at": "2015-08-14 19:01:45",
-     *                   "confirm_uid": 0,
-     *                   "confirm_at": "0000-00-00",
-     *                   "updated_at": "2015-08-14 19:01:45",
-     *                   "make_user": {
-     *                       "id": 1,
-     *                       "name": "这是用户名Admin"
-     *                   },
-     *                   "confirm_user": null,
-     *                   "cash_user": null,
-     *                   "salon": {
-     *                       "salonid": 1,
-     *                       "salonname": "嘉美专业烫染",
-     *                       "sn": "SZ0320001"
-     *                   }
-     *               },
-     *               {
-     *                   "id": 2,
-     *                   "code": "FTZ-150814190145001",
-     *                   "type": 2,
-     *                   "salon_id": 1,
-     *                   "merchant_id": 2,
-     *                   "money": "333.66",
-     *                   "pay_type": 1,
-     *                   "require_day": "2015-08-14",
-     *                   "pay_day": "0000-00-00",
-     *                   "cycle": 30,
-     *                   "cycle_day": 1,
-     *                   "cycle_money": "100.00",
-     *                   "make_uid": 1,
-     *                   "cash_uid": 0,
-     *                   "prepay_bill_code": "",
-     *                   "receive_bill_code": "",
-     *                   "state": 2,
-     *                   "created_at": "2015-08-14 19:01:45",
-     *                   "confirm_uid": 0,
-     *                   "confirm_at": "0000-00-00",
-     *                   "updated_at": "2015-08-14 19:01:45",
-     *                   "make_user": {
-     *                       "id": 1,
-     *                       "name": "这是用户名Admin"
-     *                   },
-     *                   "confirm_user": null,
-     *                   "cash_user": null,
-     *                   "salon": {
-     *                       "salonid": 1,
-     *                       "salonname": "嘉美专业烫染",
-     *                       "sn": "SZ0320001"
-     *                   }
-     *               }
-     *           ]
-     *       }
-     *      }
      *
      *
      * @apiErrorExample Error-Response:
@@ -302,11 +137,6 @@ class OrderRefundController extends Controller
      * @apiSuccess {String} confirm_at 审批日期
      *
      *
-     * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "未授权访问"
-     *		}
      */
     public function export()
     {
