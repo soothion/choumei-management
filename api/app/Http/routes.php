@@ -27,13 +27,13 @@ Route::any('logout', 'IndexController@logout');
 
 //self模块
 Route::any('self/show',array(
-		'as'=>'self.show',
-		'uses'=>'SelfController@show'
-	));
+	'as'=>'self.show',
+	'uses'=>'SelfController@show'
+));
 Route::any('self/update',array(
-		'as'=>'self.update',
-		'uses'=>'SelfController@update'
-	));
+	'as'=>'self.update',
+	'uses'=>'SelfController@update'
+));
 		
 		
 //列表模块
@@ -58,33 +58,33 @@ Route::any('list/menu',array(
 	'uses'=>'ListController@menu'
 ));
 Route::any('salonList/getProvinces',array(  //获取省市区商圈
-				'as'=>'salonList.getProvinces',
-				'uses'=>'Merchant\ListController@getProvinces'
-	));	
+	'as'=>'salonList.getProvinces',
+	'uses'=>'Merchant\ListController@getProvinces'
+));	
 Route::any('salonList/getBussesName',array(  //获取业务代表
-				'as'=>'salonList.getBussesName',
-				'uses'=>'Merchant\ListController@getBussesName'
-	));	
+	'as'=>'salonList.getBussesName',
+	'uses'=>'Merchant\ListController@getBussesName'
+));	
 Route::any('merchant/checkMerchantSn',array( //检测商户编号
-				'as'=>'merchant.checkMerchantSn',
-				'uses'=>'Merchant\MerchantController@checkMerchantSn'
-	));
+	'as'=>'merchant.checkMerchantSn',
+	'uses'=>'Merchant\MerchantController@checkMerchantSn'
+));
 Route::any('salon/checkSalonSn',array(  //检测店铺编号
-				'as'=>'salon.checkSalonSn',
-				'uses'=>'Merchant\SalonController@checkSalonSn'
-	));	
+	'as'=>'salon.checkSalonSn',
+	'uses'=>'Merchant\SalonController@checkSalonSn'
+));	
 Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
-				'as'=>'salonAccount.getSalonName',
-				'uses'=>'Merchant\SalonAccountController@getSalonName'
-	));		
+	'as'=>'salonAccount.getSalonName',
+	'uses'=>'Merchant\SalonAccountController@getSalonName'
+));		
 
 // 店铺消费验证  结算
 Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
 
 //退款回调 支付宝
 Route::any('refund/call_back_of_alipay',array( 
-'as'=>'refund.call_back_of_alipay',
-'uses'=>'Trans\OrderRefundController@call_back_of_alipay'
+	'as'=>'refund.call_back_of_alipay',
+	'uses'=>'Trans\OrderRefundController@call_back_of_alipay'
 ));
 
 
@@ -94,117 +94,117 @@ Route::group(['middleware'], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
-			'as'=>'manager.index',
-			'uses'=>'ManagerController@index'
-		));
+		'as'=>'manager.index',
+		'uses'=>'ManagerController@index'
+	));
 	Route::any('manager/show/{id}',array(
-			'as'=>'manager.show',
-			'uses'=>'ManagerController@show'
-		));
+		'as'=>'manager.show',
+		'uses'=>'ManagerController@show'
+	));
 	Route::any('manager/update/{id}',array(
-			'as'=>'manager.update',
-			'uses'=>'ManagerController@update'
-		));
+		'as'=>'manager.update',
+		'uses'=>'ManagerController@update'
+	));
 	Route::any('manager/create',array(
-			'as'=>'manager.create',
-			'uses'=>'ManagerController@create'
-		));	
+		'as'=>'manager.create',
+		'uses'=>'ManagerController@create'
+	));	
 	Route::any('manager/export',array(
-			'as'=>'manager.export',
-			'uses'=>'ManagerController@export'
-		));
+		'as'=>'manager.export',
+		'uses'=>'ManagerController@export'
+	));
 
 	//用户模块
 	Route::any('user/survey',array(
-			'as'=>'user.survey',
-			'uses'=>'UserController@survey'
-		));
+		'as'=>'user.survey',
+		'uses'=>'UserController@survey'
+	));
 	Route::any('user/index',array(
 		'as'=>'user.index',
 		'uses'=>'UserController@index'
-		));
+	));
 	Route::any('user/export',array(
 		'as'=>'user.export',
 		'uses'=>'UserController@export'
-		));
+	));
 	Route::any('user/show/{id}',array(
 		'as'=>'user.show',
 		'uses'=>'UserController@show'
-		));
+	));
 	Route::any('user/update/{id}',array(
 		'as'=>'user.update',
 		'uses'=>'UserController@update'
-		));
+	));
 	Route::any('user/company',array(
 		'as'=>'user.company',
 		'uses'=>'UserController@company'
-		));
+	));
 
 	//用户等级模块
 	Route::any('level/index',array(
-			'as'=>'level.index',
-			'uses'=>'LevelController@index'
-		));
+		'as'=>'level.index',
+		'uses'=>'LevelController@index'
+	));
 	Route::any('level/update',array(
-			'as'=>'level.update',
-			'uses'=>'LevelController@update'
-		));
+		'as'=>'level.update',
+		'uses'=>'LevelController@update'
+	));
 
 	//反馈模块
 	Route::any('feed/index',array(
-			'as'=>'feed.index',
-			'uses'=>'FeedController@index'
-		));
+		'as'=>'feed.index',
+		'uses'=>'FeedController@index'
+	));
 	Route::any('feed/destroy/{id}',array(
-			'as'=>'feed.destroy',
-			'uses'=>'FeedController@destroy'
-		));
+		'as'=>'feed.destroy',
+		'uses'=>'FeedController@destroy'
+	));
 
 
 	//角色模块
 	Route::any('role/index',array(
-			'as'=>'role.index',
-			'uses'=>'RoleController@index'
-		));
+		'as'=>'role.index',
+		'uses'=>'RoleController@index'
+	));
 	Route::any('role/show/{id}',array(
-			'as'=>'role.show',
-			'uses'=>'RoleController@show'
-		));
+		'as'=>'role.show',
+		'uses'=>'RoleController@show'
+	));
 	Route::any('role/update/{id}',array(
-			'as'=>'role.update',
-			'uses'=>'RoleController@update'
-		));	
+		'as'=>'role.update',
+		'uses'=>'RoleController@update'
+	));	
 	Route::any('role/create',array(
-			'as'=>'role.create',
-			'uses'=>'RoleController@create'
-		));	
+		'as'=>'role.create',
+		'uses'=>'RoleController@create'
+	));	
 	Route::any('role/export',array(
-			'as'=>'role.export',
-			'uses'=>'RoleController@export'
-		));
+		'as'=>'role.export',
+		'uses'=>'RoleController@export'
+	));
 
 
 	//权限模块
 	Route::any('permission/index',array(
-			'as'=>'permission.index',
-			'uses'=>'PermissionController@index'
-		));
+		'as'=>'permission.index',
+		'uses'=>'PermissionController@index'
+	));
 	Route::any('permission/show/{id}',array(
-			'as'=>'permission.show',
-			'uses'=>'PermissionController@show'
-		));
+		'as'=>'permission.show',
+		'uses'=>'PermissionController@show'
+	));
 	Route::any('permission/update/{id}',array(
-			'as'=>'permission.update',
-			'uses'=>'PermissionController@update'
-		));	
+		'as'=>'permission.update',
+		'uses'=>'PermissionController@update'
+	));	
 	Route::any('permission/create',array(
-			'as'=>'permission.create',
-			'uses'=>'PermissionController@create'
-		));	
+		'as'=>'permission.create',
+		'uses'=>'PermissionController@create'
+	));	
 	Route::any('permission/export',array(
-			'as'=>'permission.export',
-			'uses'=>'PermissionController@export'
-		));
+		'as'=>'permission.export',
+		'uses'=>'PermissionController@export'
+	));
 
 
 	//日志模块
@@ -293,14 +293,16 @@ Route::group(['middleware'], function(){
     ));
     // 预览
     Route::any('shop_count/preview', array(
-    'as' => 'shop_count.preview',
-    'uses' => 'ShopCount\ShopCountController@create'
+	    'as' => 'shop_count.preview',
+	    'uses' => 'ShopCount\ShopCountController@create'
     ));
+
     // 新增
     Route::any('shop_count/create', array(
         'as' => 'shop_count.create',
         'uses' => 'ShopCount\ShopCountController@store'
     ));
+    
     // 删除
     Route::any('shop_count/destroy/{id}', array(
         'as' => 'shop_count.destroy',
@@ -327,133 +329,132 @@ Route::group(['middleware'], function(){
     
     //转付单导出
     Route::any('shop_count/export', array(
-    'as' => 'shop_count.export',
-    'uses' => 'ShopCount\ShopCountController@export'
-        ));
+	    'as' => 'shop_count.export',
+	    'uses' => 'ShopCount\ShopCountController@export'
+    ));
     
     //代收单导出
     Route::any('shop_count/delegate_export', array(
-    'as' => 'shop_count.delegate_export',
-    'uses' => 'ShopCount\ShopCountController@delegate_export'
+	    'as' => 'shop_count.delegate_export',
+	    'uses' => 'ShopCount\ShopCountController@delegate_export'
     ));
     
     //店铺往来导出
     Route::any('shop_count/balance_export', array(
-    'as' => 'shop_count.balance_export',
-    'uses' => 'ShopCount\ShopCountController@balance_export'
-     ));
+	    'as' => 'shop_count.balance_export',
+	    'uses' => 'ShopCount\ShopCountController@balance_export'
+    ));
 
 
 	//商户模块
 	Route::any('merchant/export',array(  //商户列表导出
 		'as'=>'merchant.export',
 		'uses'=>'Merchant\MerchantController@export'
-		));
+	));
 
 
     Route::any('merchant/index',array(  //商户列表
-				'as'=>'merchant.index',
-				'uses'=>'Merchant\MerchantController@index'
-		));
+		'as'=>'merchant.index',
+		'uses'=>'Merchant\MerchantController@index'
+	));
 
 	Route::any('merchant/save',array(  //添加修改商户
-					'as'=>'merchant.save',
-					'uses'=>'Merchant\MerchantController@save'
-		));
+		'as'=>'merchant.save',
+		'uses'=>'Merchant\MerchantController@save'
+	));
 	Route::any('merchant/update',array(  //修改商户
-					'as'=>'merchant.update',
-					'uses'=>'Merchant\MerchantController@update'
-		));
+		'as'=>'merchant.update',
+		'uses'=>'Merchant\MerchantController@update'
+	));
 	Route::any('merchant/del',array(  //删除商户
-					'as'=>'merchant.del',
-					'uses'=>'Merchant\MerchantController@del'
-		));
+		'as'=>'merchant.del',
+		'uses'=>'Merchant\MerchantController@del'
+	));
 	Route::any('merchant/getMerchantList',array( //获取单个商户详情
-					'as'=>'merchant.getMerchantList',
-					'uses'=>'Merchant\MerchantController@getMerchantList'
-		));
+		'as'=>'merchant.getMerchantList',
+		'uses'=>'Merchant\MerchantController@getMerchantList'
+	));
 
 
 	Route::any('salon/index',array(  //店铺列表
-					'as'=>'salon.index',
-					'uses'=>'Merchant\SalonController@index'
-		));
+		'as'=>'salon.index',
+		'uses'=>'Merchant\SalonController@index'
+	));
 	
 	//店铺模块
 	Route::any('salon/export',array(  //店铺列表导出
-					'as'=>'salon.export',
-					'uses'=>'Merchant\SalonController@export'
-		));	
+		'as'=>'salon.export',
+		'uses'=>'Merchant\SalonController@export'
+	));	
 	Route::any('salon/save',array( //店铺添加 接口
-					'as'=>'salon.save',
-					'uses'=>'Merchant\SalonController@save'
-		));
+		'as'=>'salon.save',
+		'uses'=>'Merchant\SalonController@save'
+	));
 	Route::any('salon/update',array( //店铺 更新接口
-					'as'=>'salon.update',
-					'uses'=>'Merchant\SalonController@update'
-		));
+		'as'=>'salon.update',
+		'uses'=>'Merchant\SalonController@update'
+	));
 	Route::any('salon/getSalon',array(  //获取店铺详情
-					'as'=>'salon.getSalon',
-					'uses'=>'Merchant\SalonController@getSalon'
-		));	
+		'as'=>'salon.getSalon',
+		'uses'=>'Merchant\SalonController@getSalon'
+	));	
 	Route::any('salon/endCooperation',array( //终止合作
-					'as'=>'salon.endCooperation',
-					'uses'=>'Merchant\SalonController@endCooperation'
-		));
+		'as'=>'salon.endCooperation',
+		'uses'=>'Merchant\SalonController@endCooperation'
+	));
 	Route::any('salon/del',array(  //删除店铺
-					'as'=>'salon.del',
-					'uses'=>'Merchant\SalonController@del'
-		));		
-		
+		'as'=>'salon.del',
+		'uses'=>'Merchant\SalonController@del'
+	));		
+	
 
 	Route::any('salonAccount/index',array(  //店铺账号列表
-					'as'=>'salonAccount.index',
-					'uses'=>'Merchant\SalonAccountController@index'
-		));	
+		'as'=>'salonAccount.index',
+		'uses'=>'Merchant\SalonAccountController@index'
+	));	
 
 	Route::any('salonAccount/save',array(  //添加账号
-					'as'=>'salonAccount.save',
-					'uses'=>'Merchant\SalonAccountController@save'
-		));	
+		'as'=>'salonAccount.save',
+		'uses'=>'Merchant\SalonAccountController@save'
+	));	
 	Route::any('salonAccount/resetPwd',array(  //重置密码
-					'as'=>'salonAccount.resetPwd',
-					'uses'=>'Merchant\SalonAccountController@resetPwd'
-		));	
+		'as'=>'salonAccount.resetPwd',
+		'uses'=>'Merchant\SalonAccountController@resetPwd'
+	));	
 	Route::any('salonAccount/delAct',array(  //删除
-					'as'=>'salonAccount.del',
-					'uses'=>'Merchant\SalonAccountController@delAct'
-		));	
+		'as'=>'salonAccount.del',
+		'uses'=>'Merchant\SalonAccountController@delAct'
+	));	
 	
 	//财务管理-收款管理
-	
 	Route::any('receivables/index',array(  //列表
-			'as'=>'receivables.index',
-			'uses'=>'Financial\ReceivablesController@index'
+		'as'=>'receivables.index',
+		'uses'=>'Financial\ReceivablesController@index'
 	));
 	
 	Route::any('receivables/save',array(  //添加
-			'as'=>'receivables.save',
-			'uses'=>'Financial\ReceivablesController@save'
+		'as'=>'receivables.save',
+		'uses'=>'Financial\ReceivablesController@save'
 	));
 	Route::any('receivables/update',array(  //修改
-			'as'=>'receivables.update',
-			'uses'=>'Financial\ReceivablesController@update'
+		'as'=>'receivables.update',
+		'uses'=>'Financial\ReceivablesController@update'
 	));
 	Route::any('receivables/confirmAct',array(  //确认收款
-			'as'=>'receivables.confirmAct',
-			'uses'=>'Financial\ReceivablesController@confirmAct'
+		'as'=>'receivables.confirmAct',
+		'uses'=>'Financial\ReceivablesController@confirmAct'
 	));
 	Route::any('receivables/export',array(  //确认收款
-			'as'=>'receivables.export',
-			'uses'=>'Financial\ReceivablesController@export'
+		'as'=>'receivables.export',
+		'uses'=>'Financial\ReceivablesController@export'
 	));
 	Route::any('receivables/getone',array(  //详细
-			'as'=>'receivables.getone',
-			'uses'=>'Financial\ReceivablesController@getReceivablesByid'
+		'as'=>'receivables.getone',
+		'uses'=>'Financial\ReceivablesController@getReceivablesByid'
 	));
 	Route::any('receivables/del',array(  //删除
-			'as'=>'receivables.del',
-			'uses'=>'Financial\ReceivablesController@del'
+		'as'=>'receivables.del',
+		'uses'=>'Financial\ReceivablesController@del'
 	));
 	
 	
@@ -461,19 +462,19 @@ Route::group(['middleware'], function(){
     
 	//付款管理
 	Route::any('pay_manage/index',array(  //列表
-	'as'=>'pay_manage.index',
-	'uses'=>'Pay\PayController@index'
-	    ));
+		'as'=>'pay_manage.index',
+		'uses'=>'Pay\PayController@index'
+    ));
 	
 	Route::any('pay_manage/check_list',array(  //审批列表
-	'as'=>'pay_manage.check_list',
-	'uses'=>'Pay\PayController@index'
-	    ));
+		'as'=>'pay_manage.check_list',
+		'uses'=>'Pay\PayController@index'
+    ));
 	
 	Route::any('pay_manage/confirm_list',array(  //确认列表
-	'as'=>'pay_manage.confirm_list',
-	'uses'=>'Pay\PayController@index'
-	    ));
+		'as'=>'pay_manage.confirm_list',
+		'uses'=>'Pay\PayController@index'
+    ));
 	
 	Route::any('pay_manage/show/{id}',array(  //查看
 	'as'=>'pay_manage.show',
@@ -481,71 +482,71 @@ Route::group(['middleware'], function(){
 	    ));
 	
 	Route::any('pay_manage/create',array(  //新增
-	'as'=>'pay_manage.create',
-	'uses'=>'Pay\PayController@store'
-	    ));
+		'as'=>'pay_manage.create',
+		'uses'=>'Pay\PayController@store'
+    ));
 	
 	Route::any('pay_manage/update/{id}',array(  //修改
-	'as'=>'pay_manage.update',
-	'uses'=>'Pay\PayController@update'
-	    ));
+		'as'=>'pay_manage.update',
+		'uses'=>'Pay\PayController@update'
+    ));
 	
 	Route::any('pay_manage/destroy/{id}',array(  //删除
-	'as'=>'pay_manage.destroy',
-	'uses'=>'Pay\PayController@destroy'
-	    ));
+		'as'=>'pay_manage.destroy',
+		'uses'=>'Pay\PayController@destroy'
+    ));
 	
 	Route::any('pay_manage/check',array(  //审核
-	'as'=>'pay_manage.check',
-	'uses'=>'Pay\PayController@check'
-	    ));
+		'as'=>'pay_manage.check',
+		'uses'=>'Pay\PayController@check'
+    ));
 	
 	Route::any('pay_manage/confirm',array(  //确认
-	'as'=>'pay_manage.confirm',
-	'uses'=>'Pay\PayController@confirm'
-	    ));
+		'as'=>'pay_manage.confirm',
+		'uses'=>'Pay\PayController@confirm'
+    ));
 	
 	Route::any('pay_manage/export',array(  //导出
-	'as'=>'pay_manage.export',
-	'uses'=>'Pay\PayController@export'
-	    ));
+		'as'=>'pay_manage.export',
+		'uses'=>'Pay\PayController@export'
+    ));
 
 	
 	//交易管理
 	Route::any('order/index',array(  //订单列表
-	'as'=>'order.index',
-	'uses'=>'Trans\OrderController@index'
-	    ));
+		'as'=>'order.index',
+		'uses'=>'Trans\OrderController@index'
+    ));
 	
 	Route::any('order/show/{id}',array(  //订单详情
-	'as'=>'order.show',
-	'uses'=>'Trans\OrderController@show'
-	    ));
+		'as'=>'order.show',
+		'uses'=>'Trans\OrderController@show'
+    ));
 	
 	Route::any('order/export',array(  //订单导出
-	'as'=>'order.export',
-	'uses'=>'Trans\OrderController@export'
-	    ));
+		'as'=>'order.export',
+		'uses'=>'Trans\OrderController@export'
+    ));
 	
 	Route::any('ticket/index',array(  //臭美券列表
-	'as'=>'ticket.index',
-	'uses'=>'Trans\TicketController@index'
-	    ));
+		'as'=>'ticket.index',
+		'uses'=>'Trans\TicketController@index'
+    ));
 	
 	Route::any('ticket/show/{id}',array(  //臭美券详情
-	'as'=>'ticket.show',
-	'uses'=>'Trans\TicketController@show'
-	    ));
+		'as'=>'ticket.show',
+		'uses'=>'Trans\TicketController@show'
+    ));
 	
 	Route::any('ticket/export',array(  //臭美券导出
-	'as'=>'ticket.export',
-	'uses'=>'Trans\TicketController@export'
-	    ));
+		'as'=>'ticket.export',
+		'uses'=>'Trans\TicketController@export'
+    ));
 	
 	Route::any('refund/index',array(  //退款列表
-	'as'=>'refund.index',
-	'uses'=>'Trans\OrderRefundController@index'
-	    ));
+		'as'=>'refund.index',
+		'uses'=>'Trans\OrderRefundController@index'
+    ));
 	
 	Route::any('refund/show/{id}',array(  //退款详情
 	'as'=>'refund.show',
@@ -554,87 +555,86 @@ Route::group(['middleware'], function(){
 	
 
 	Route::any('refund/export',array(  //退款导出
-	'as'=>'refund.export',
-	'uses'=>'Trans\OrderRefundController@export'
-	    ));
+		'as'=>'refund.export',
+		'uses'=>'Trans\OrderRefundController@export'
+    ));
 	
 	
 	Route::any('refund/accept',array(  //退款通过
-	'as'=>'refund.accept',
-	'uses'=>'Trans\OrderRefundController@accept'
-	    ));
+		'as'=>'refund.accept',
+		'uses'=>'Trans\OrderRefundController@accept'
+    ));
 	
 	Route::any('refund/reject',array(  //退款拒绝
-	'as'=>'refund.reject',
-	'uses'=>'Trans\OrderRefundController@reject'
-	    ));
+		'as'=>'refund.reject',
+		'uses'=>'Trans\OrderRefundController@reject'
+    ));
 	
 	//消息管理
 	Route::any('message/create',array(  //添加消息
-			'as'=>'message.create',
-			'uses'=>'Message\MessageController@store'
+		'as'=>'message.create',
+		'uses'=>'Message\MessageController@store'
 	));
 	Route::any('message/update',array(  //修改消息
-			'as'=>'message.update',
-			'uses'=>'Message\MessageController@update'
+		'as'=>'message.update',
+		'uses'=>'Message\MessageController@update'
 	));
 	Route::any('message/checkPhone',array(  //修改消息
-			'as'=>'message.checkPhone',
-			'uses'=>'Message\MessageController@checkPhone'
+		'as'=>'message.checkPhone',
+		'uses'=>'Message\MessageController@checkPhone'
 	));
 	Route::any('message/index',array(  //消息列表
-			'as'=>'message.index',
-			'uses'=>'Message\MessageController@index'
+		'as'=>'message.index',
+		'uses'=>'Message\MessageController@index'
 	));
 	Route::any('message/destroy',array(  //删除消息
-			'as'=>'message.destroy',
-			'uses'=>'Message\MessageController@destroy'
+		'as'=>'message.destroy',
+		'uses'=>'Message\MessageController@destroy'
 	));
 	Route::any('message/online',array(  //上线消息
-			'as'=>'message.online',
-			'uses'=>'Message\MessageController@online'
+		'as'=>'message.online',
+		'uses'=>'Message\MessageController@online'
 	));
 	Route::any('message/getOne',array(  //查询单条信息
-			'as'=>'message.getOne',
-			'uses'=>'Message\MessageController@getOne'
+		'as'=>'message.getOne',
+		'uses'=>'Message\MessageController@getOne'
 	));
 	Route::any('message/addingPreview',array(  //添加预览信息
-			'as'=>'message.addingPreview',
-			'uses'=>'Message\MessageController@addingPreview'
+		'as'=>'message.addingPreview',
+		'uses'=>'Message\MessageController@addingPreview'
 	));
 	Route::any('message/getPreview',array(  //查询单条预览信息
-			'as'=>'message.getPreview',
-			'uses'=>'Message\MessageController@getPreview'
+		'as'=>'message.getPreview',
+		'uses'=>'Message\MessageController@getPreview'
 	));
 	
 	
         
-        //图片风格管理
-          
-        Route::any('ImageStyle/getAllImage',array( 
-	'as'=>'ImageStyle.getAllImage',
-	'uses'=>'Image\ImageStyleController@getAllImage'
-	    ));
-        
-         Route::any('ImageStyle/insertImage',array( 
-	'as'=>'ImageStyle.insertImage',
-	'uses'=>'Image\ImageStyleController@insertImage'
-	    ));
-         
-          Route::any('ImageStyle/deleteImage',array( 
-	'as'=>'ImageStyle.deleteImage',
-	'uses'=>'Image\ImageStyleController@deleteImage'
-	    ));
-          
-           Route::any('ImageStyle/updateImage',array( 
-	'as'=>'ImageStyle.updateImage',
-	'uses'=>'Image\ImageStyleController@updateImage'
-	    ));
-           
-            Route::any('ImageStyle/getOneImage',array( 
-	'as'=>'ImageStyle.getOneImage',
-	'uses'=>'Image\ImageStyleController@getOneImage'
-	    ));
+    //图片风格管理
+    Route::any('ImageStyle/index',array( 
+        'as'=>'ImageStyle.index',
+        'uses'=>'Image\ImageStyleController@index'
+    ));
+    
+    Route::any('ImageStyle/create',array( 
+        'as'=>'ImageStyle.create',
+        'uses'=>'Image\ImageStyleController@create'
+    ));
+     
+    Route::any('ImageStyle/destroy/{id}',array( 
+        'as'=>'ImageStyle.destroy',
+        'uses'=>'Image\ImageStyleController@destroy'
+    ));
+      
+    Route::any('ImageStyle/update/{id}',array( 
+        'as'=>'ImageStyle.update',
+        'uses'=>'Image\ImageStyleController@update'
+   ));
+       
+    Route::any('ImageStyle/show/{id}',array( 
+        'as'=>'ImageStyle.show',
+        'uses'=>'Image\ImageStyleController@show'
+   ));
 
 });
 

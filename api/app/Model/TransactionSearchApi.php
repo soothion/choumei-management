@@ -38,7 +38,20 @@ class TransactionSearchApi
      */
     public static function searchOfTicket($params)
     {
-    
+        $bases = self::getConditionOfTicket($params);
+        // 页数
+        $page = isset($params['page']) ? max(intval($params['page']), 1) : 1;
+        $size = isset($params['page_size']) ? max(intval($params['page_size']), 1) : 20;
+        AbstractPaginator::currentPageResolver(function () use($page)
+        {
+            return $page;
+        });
+        $total_money = self::countOfOrder($params);
+        $res = $bases->paginate($size)->toArray();
+        $res['total_money'] = $total_money;
+        unset($res['next_page_url']);
+        unset($res['prev_page_url']);
+        return $res;
     }
     
     /**
