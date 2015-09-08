@@ -147,7 +147,7 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);  
-        $header = ['店铺id','店铺编码','店铺名称','付款单号','付款类型','支付方式','付款金额','要求付款日期','实际付款日期','创建日期','制单人','状态'];      
+        $header = ['店铺编码','店铺名称','付款单号','付款类型','支付方式','付款金额','要求付款日期','实际付款日期','创建日期','制单人','状态'];      
         $items = ShopCountApi::getPrepayCondition($param)->addSelect('updated_at')->get()->toArray(); 
         Event::fire('shopcount.export');
         $this->export_xls("转付单".date("Ymd"),$header,self::format_prepay_data($items));
@@ -497,7 +497,7 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);
-        $header = ['店铺id','店铺编码','店铺名称','代收单号','代收类型','代收金额','代收日期'];
+        $header = ['店铺编码','店铺名称','代收单号','代收类型','代收金额','代收日期'];
         $items = ShopCountApi::getInsteadReceiveCondition($param)->get()->toArray();
         $count = count($items);
         if($count > 10000)//一万条以上
@@ -693,7 +693,7 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);
-        $header = ['店铺id','店铺编号','店铺','店铺类型','所属商户','付款','收款(已消费)','应收佣金','佣金返还','应收余额','付投资款','付投款返还','投资余额','付借款','借款返还','借款余额'];
+        $header = ['店铺编号','店铺','店铺类型','所属商户','付款','收款(已消费)','应收佣金','佣金返还','应收余额','付投资款','投资款返还','投资余额','付借款','借款返还','借款余额'];
         $items = ShopCountApi::getShopCountCondition($param)->get()->toArray();       
         Event::fire('shopcount.balanceExport');
         $this->export_xls("店铺往来".date("Ymd"), $header, self::format_shopcount_data($items));
@@ -791,9 +791,9 @@ class ShopCountController extends Controller
             $username = isset($data['user']['name'])?$data['user']['name']:'';
             $typename = $data['type'] == 3 ? "交易代收款返还" : "付交易代收款";
             $pay_type_name = Utils::getPayTypeName($data['pay_type']);
+            $username = $data['user']['name'];
             $statename = Utils::getPrepayStateName($data['state']);
             $res[] = [
-                $salon_id,
                 $salon_sn,
                 $salon_name,
                 $data['code'],
@@ -819,7 +819,6 @@ class ShopCountController extends Controller
             $salon_sn = isset($data['salon']['sn']) ? $data['salon']['sn'] : '';
             $typename = "项目消费";
             $res[] = [
-               $salon_id,
                $salon_sn,
                $salon_name,
                $data['code'],
@@ -843,7 +842,6 @@ class ShopCountController extends Controller
             $merchant_name = isset($data['merchant']['name'])?$data['merchant']['name']:'';            
             $typename = "项目消费";
             $res[] = [
-               $salon_id,
                $salon_sn,
                $salon_name,
                $salon_type_name,
