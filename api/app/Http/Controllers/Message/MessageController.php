@@ -10,7 +10,7 @@ use App\Exceptions\ERROR;
 use Illuminate\Support\Facades\Redis as Redis;
 class MessageController extends Controller{
 	
-	private $_redisKey = 'messageAddingPreview';
+	private $_redisKey = 'stylist_msg_adding_review';
 	
 	
 	/**
@@ -174,19 +174,27 @@ class MessageController extends Controller{
 		if($receivers)
 		{
 			$save['receivers'] = join(',',explode(",",$receivers));
+			foreach(explode(",",$receivers) as $val)
+			{
+				$count = $this->checkPhoneBysave($val);
+				if($count < 1)
+				{
+					throw new ApiException('参数错误-存在非正常手机号', ERROR::PARAMETER_ERROR);
+				}
+			}
 		}
 		$save['title'] = isset($param['title'])?trim($param['title']):'';
 		$save['description'] = isset($param['description'])?trim($param['description']):'';
 		$save['img'] = isset($param['img'])?trim($param['img']):'';
 		$save['url'] = isset($param['url'])?trim($param['url']):'';
-		$save['content'] = isset($param['content'])?$param['content']:'';
+		$saveConf['content'] = isset($param['content'])?$param['content']:'';
 		if(!$save['title'] || !$save['description'])
 			throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
 		if(($save['receive_type'] == 1 && $receivers) || ($save['receive_type'] == 2 && !$receivers))
 			throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
-		if($save['content'] && $save['url'])
+		if($saveConf['content'] && $save['url'])
 			throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
-		if(StylistMsgConf::dosave($save,$id))
+		if(StylistMsgConf::dosave($save,$saveConf,$id))
 		{
 			return $this->success();
 		}
@@ -195,6 +203,15 @@ class MessageController extends Controller{
 			throw new ApiException('更新失败', ERROR::UPDATE_FAILED);
 		}
 
+	}
+	
+	/*
+	 * 检测手机号码
+	 * */
+	private function checkPhoneBysave($phone)
+	{
+		$count = hairstylist::where('mobilephone', '=', $phone)->where('status','=','1')->count();
+		return $count;
 	}
 	
 	
@@ -242,7 +259,7 @@ class MessageController extends Controller{
 		{
 			foreach($phone as $val)
 			{
-				$count = hairstylist::where('mobilephone', '=', $val)->where('status','=','1')->count();
+				$count = $this->checkPhoneBysave($val);
 				if($count < 1)
 				{
 					$errorPhone[] = $val;
@@ -340,9 +357,22 @@ class MessageController extends Controller{
 	 *
 	 * @apiSuccessExample Success-Response:
 	 *	    {
-	 *	        "result": 1,
-	 *	        "data": null
-	 *	    }
+	 *		    "result": 1,
+	 *		    "token": "",
+	 *		    "data": {
+	 *		        "id": 3,
+	 *		        "receive_type": 1,
+	 *		        "receivers": "",
+	 *		        "title": "测试地方23",
+	 *		        "description": "测试测试2",
+	 *		        "img": "http://s0.hao123img.com/res/r/image/2015-09-06/893f1ca23c591ce3d52dbff655bebcd7.jpg",
+	 *		        "url": "",
+	 *		        "status": 0,
+	 *		        "addtime": 1441768777,
+	 *		        "onlinetime": 0,
+	 *		        "content": "333333333"
+	 *		    }
+	 *		}
 	 *
 	 * @apiErrorExample Error-Response:
 	 *		{
@@ -366,7 +396,7 @@ class MessageController extends Controller{
 	 * @apiGroup Message
 	 *
 	 * @apiParam {Number} receive_type 选填,接收类型 1所有造型师 2指定造型师'.
-	 * @apiParam {Number} receivers 选填,指定接收人 手机号码（数组）.
+	 * @apiParam {Number} receivers 选填,指定接收人 手机号码（逗号隔开）.
 	 * @apiParam {String} title 选填,标题.
 	 * @apiParam {String} description 选填,摘要.
 	 * @apiParam {String} img 选填,列表展示图片.
@@ -374,11 +404,15 @@ class MessageController extends Controller{
 	 * @apiParam {String} url 选填,消息内容url.
 	 * @apiParam {String} content 选填,消息内容.
 	 *
+	 *
+	 * @apiSuccess {String} data key 标识（拿着该返回 去泽键那边读取预览信息）.
+	 * 
 	 * @apiSuccessExample Success-Response:
 	 *	    {
-	 *	        "result": 1,
-	 *	        "data": null
-	 *	    }
+	 *		    "result": 1,
+	 *		    "token": "",
+	 *		    "data": 1441777384
+	 *		}
 	 *
 	 * @apiErrorExample Error-Response:
 	 *		{
@@ -389,14 +423,15 @@ class MessageController extends Controller{
 	public function addingPreview()
 	{
 		$param = $this->param;
-		$key = time();
-		Redis::hset($this->_redisKey,$key,json_encode($param));
-		Redis::EXPIRE($this->_redisKey,86400);//过期时间
-		return $this->success($key);
+		$time = time();
+		$key = $this->_redisKey.$time;
+		Redis::set($key,json_encode($param));
+		Redis::EXPIRE($key,86400);//过期时间
+		return $this->success($time);
 	}
 	
 	/**
-	 * @api {post} /message/getPreview/ 9.预览信息
+	 * @api {post} /message/getPreview/ 9.预览信息（暂不使用）
 	 * @apiName getPreview
 	 * @apiGroup Message
 	 *
@@ -418,11 +453,12 @@ class MessageController extends Controller{
 	{
 		$param = $this->param;
 		$key = $param['key'];
+		$key = $this->_redisKey.$key;
 		if(!$key)
 		{
 			throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
 		}
-		$value = Redis::hget($this->_redisKey,$key);
+		$value = Redis::get($key);
 		return $this->success(json_decode($value,true));
 	}
 	

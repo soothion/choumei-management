@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use App\ImageStyle;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
-
+use Log;
 /**
  * Description of ImageStyleController
  *
@@ -13,6 +13,8 @@ use App\Exceptions\ERROR;
 class ImageStyleController extends Controller{
      /**
 	 * @api {post} /ImageStyle/index 1.图片列表
+	 * 
+	 * @apiName index
 	 * @apiGroup Image
 	 *
 	 * @apiParam {Number} style 可选,风格.
@@ -77,8 +79,8 @@ class ImageStyleController extends Controller{
      
      
      /**
-	 * @api {post} ImageStyle/insertImage 2.添加风格
-	 * @apiName insertImage
+	 * @api {post} /ImageStyle/create 2.添加风格
+	 * @apiName create
 	 * @apiGroup Image
 	 * @apiParam {Number} style 必填,风格.
 	 * @apiParam {Number} length 必填,长度.
@@ -102,7 +104,9 @@ class ImageStyleController extends Controller{
 	 */
     public function create()
     {
+            
           $param = $this->param; 
+          Log::info('ImageStyle create param is: ', $param);
           $data=[];
           $data['style']=$param['style'];
           $data['length']=$param['length'];
@@ -117,9 +121,11 @@ class ImageStyleController extends Controller{
 			throw new ApiException('图片风格插入失败', ERROR::STYLE_CREATE_FAILED);
           }
      }
-     /**
-	 * @api {post} /ImageStyle/deleteImage 4.停用风格
-	 * @apiName Image
+
+
+    /**
+	 * @api {post} /ImageStyle/destroy/:id 3.停用风格
+	 * @apiName destroy
 	 * @apiGroup  Image
 	 *
 	 *@apiParam {Number} id 必填,主键.
@@ -158,8 +164,8 @@ class ImageStyleController extends Controller{
      }
      
        /**
-	 * @api {post} /ImageStyle/updateImage 4.更新风格
-	 * @apiName Image
+	 * @api {post} /ImageStyle/update/:id 4.更新风格
+	 * @apiName update
 	 * @apiGroup  Image
 	 *
 	 * @apiParam {Number} id 必填,主键.
@@ -206,7 +212,8 @@ class ImageStyleController extends Controller{
             }
      }
     /**
-	 * @api {post} /ImageStyle/getOneImage 1.查找一张图片
+	 * @api {post} /ImageStyle/show/:id 5.查找一张图片
+	 * @apiName show
 	 * @apiGroup Image
 	 *
 	 * @apiParam {Number} ID 必填，主键.
