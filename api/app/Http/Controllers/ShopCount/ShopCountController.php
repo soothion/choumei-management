@@ -12,6 +12,7 @@ use App\ShopCount;
 use Event;
 use App\PrepayBill;
 use App\Utils;
+use Log;
 
 class ShopCountController extends Controller
 {
