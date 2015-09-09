@@ -126,7 +126,7 @@ class ShopCountApi
 
             $commissionModel = \App\Commission::where('salonid','=',$order->salonid)->where('date','=',date('Y-m-d',$order->use_time))->first();
             if($commissionModel){
-                $commissionModel->update(['amount'=>$amount+$commission->amount]);
+                $commissionModel->update(['amount'=>$amount+$commissionModel->amount]);
             }
             else{
                 $commissionModel = new \App\Commission;
@@ -182,7 +182,7 @@ class ShopCountApi
 
             $commissionModel = \App\Commission::where('salonid','=',$order->salonid)->where('date','=',date('Y-m-d',$order->use_time))->first();
             if($commissionModel){
-                $commissionModel->update(['amount'=>$amount+$commission->amount]);
+                $commissionModel->update(['amount'=>$amount+$commissionModel->amount]);
             }
             else{
                 $commissionModel = new \App\Commission;
