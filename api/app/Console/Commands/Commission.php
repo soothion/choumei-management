@@ -65,6 +65,7 @@ class Commission extends Command
                 $num = $offset+$key+1;
                 $this->info('正在处理第'.$num.'/'.$count.'条数据');
                 $data['ordersn'] = $order->ordersn;
+                $data['type'] = 1;
                 $data['salonid'] = $order->salonid;
                 $rate = intval($order->pay_time)<strtotime('20150801')?9.09:9.00;
                 $data['rate'] = $rate;
@@ -121,6 +122,7 @@ class Commission extends Command
                 $num = $offset+$key+1;
                 $this->info('正在处理第'.$num.'/'.$count.'条数据');
                 $data['ordersn'] = $order->ordersn;
+                $data['type'] = 2;
                 $data['salonid'] = $order->salonid;
                 $rate = intval($order->pay_time)<strtotime('20150801')?9.09:9.00;
                 $data['rate'] = $rate;
