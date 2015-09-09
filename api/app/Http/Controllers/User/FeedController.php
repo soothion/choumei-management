@@ -93,7 +93,7 @@ class FeedController extends Controller{
 	/**
 	 * @api {post} /user/destroy/:id 2.删除反馈信息
 	 * @apiName destroy
-	 * @apiGroup User
+	 * @apiGroup Feed
 	 *
 	 * @apiParam {Number} id 反馈ID.
 	 */
