@@ -1049,7 +1049,11 @@ class SalonController extends Controller {
 		$where = "";
 		$shopTypeArr = array(0=>'',1=>'预付款店',2=>'投资店',3=>'金字塔店');
 		$accountTypeArr = array(0=>'',1=>'对公帐户',2=>'对私帐户');
-		$statusArr = array(0=>'终止合作',1=>'正常',2=>'删除');
+		$statusArr = array(0=>'终止合作',1=>'正常合作',2=>'删除');
+		$gradeArr = array(0=>'',1=>'S',2=>'A',3=>'B',4=>'C',5=>'新落地',6=>'淘汰区');
+		$salonCategoryArr = array(0=>'',1=>'工作室',2=>'店铺');
+		
+		
 		$param = $this->param;
 		$shopType = isset($param["shopType"])?intval($param["shopType"]):0;//店铺类型
 		$zone = isset($param["zone"])?$param["zone"]:0;//所属商圈
@@ -1096,18 +1100,30 @@ class SalonController extends Controller {
 			foreach($list as $key=>$val)
 			{
 				$result[$key]['salonname'] = $val['salonname'];
-				$result[$key]['recommend_code'] = $val['recommend_code'];
-				$result[$key]['dividendStatus'] = $val['dividendStatus']?'未进入':'已加入';
+				$result[$key]['sn'] = $val['sn'];
 				$result[$key]['name'] = $val['name'];
+				$result[$key]['msn'] = $val['msn'];
+				$result[$key]['salonid'] = $val['salonid'];
+				
+				$result[$key]['recommend_code'] = $val['recommend_code'];
+				$result[$key]['dividendStatus'] = $val['dividendStatus']?'退出分红联盟':'加入分红联盟';
+				
 				$result[$key]['addr'] = $val['addr'];
 				//$result[$key]['districtName'] = $val['districtName'];
+				
+				$result[$key]['provinceName'] = $val['provinceName'];
+				$result[$key]['citiesName'] = $val['citiesName'];
+				$result[$key]['districtName'] = $val['districtName'];
 				$result[$key]['zoneName'] = $val['zoneName'];
 
 				$result[$key]['shopType'] = $shopTypeArr[$val['shopType']];
-				$result[$key]['salestatus'] = $shopTypeArr[$val['salestatus']];
-				$result[$key]['sn'] = $val['sn'];
-				$result[$key]['salonid'] = $val['salonid'];
-				$result[$key]['msn'] = $val['msn'];
+				$result[$key]['salonCategory'] = $salonCategoryArr[$val['salonCategory']];
+				$result[$key]['salonGrade'] = $gradeArr[$val['salonGrade']];
+				$result[$key]['salonChangeGrade'] = $gradeArr[$val['salonChangeGrade']];
+				$result[$key]['changeInTime'] = $val['changeInTime']?date('Y-m-d',$val['changeInTime']):'';
+			
+				$result[$key]['salestatus'] = $statusArr[$val['salestatus']];
+				
 				$result[$key]['add_time'] = $val['add_time']?date('Y-m-d H:i:s',$val['add_time']):'';
 				
 				$result[$key]['contractTime'] = $val['contractTime']?date('Y-m-d',$val['contractTime']):'';
@@ -1135,7 +1151,21 @@ class SalonController extends Controller {
 				$result[$key]['beneficiary'] = $val['beneficiary'];
 				$result[$key]['bankCard'] = ' '.$val['bankCard'];
 				$result[$key]['accountType'] = $val['accountType']?$accountTypeArr[$val['accountType']]:'';
-	
+
+				//财务信息
+				$result[$key]['floorDate'] = $val['floorDate']?date('Y-m-d',$val['floorDate']):'';
+				$result[$key]['advanceFacility'] = $val['advanceFacility'];
+				$result[$key]['commissionRate'] = $val['commissionRate'];
+				$result[$key]['dividendPolicy'] = $val['dividendPolicy'];
+				$result[$key]['rebatePolicy'] = $val['rebatePolicy'];
+				$result[$key]['basicSubsidies'] = $val['basicSubsidies'];
+				$result[$key]['bsStartTime'] = $val['bsStartTime']?date('Y-m-d',$val['bsStartTime']):'';
+				$result[$key]['bsEndTime'] = $val['bsEndTime']?date('Y-m-d',$val['bsEndTime']):'';
+				$result[$key]['strongSubsidies'] = $val['strongSubsidies'];
+				$result[$key]['ssStartTime'] = $val['ssStartTime']?date('Y-m-d',$val['ssStartTime']):'';
+				$result[$key]['ssEndTime'] = $val['ssEndTime']?date('Y-m-d',$val['ssEndTime']):'';
+				$result[$key]['strongClaim'] = $val['strongClaim'];
+				$result[$key]['subsidyPolicy'] = $val['subsidyPolicy'];
 			}
 		}
 		
@@ -1144,7 +1174,14 @@ class SalonController extends Controller {
 		
 		//导出excel
 		$title = '店铺列表'.date('Ymd');
-		$header = ['店铺名称','店铺邀请码','分红联盟','所属商户','店铺地址','所属商圈','店铺类型','店铺状态','店铺编号','店铺id','商户编号','添加时间','合同开始时间','合同截止时间','合同编号','联系人','联系手机','店铺电话','法人代表','法人手机','业务代表','银行名称','支行名称','收款人','银行卡号','帐户类型'];
+		$header = ['店铺名称','店铺编号','所属商户','商户编号','店铺id','店铺邀请码','分红联盟','店铺地址','省','市','区','所属商圈',
+					'店铺类型','店铺分类','当前等级','调整等级','调整生效日期','店铺状态','添加时间',
+					'合同起始日期','合同截止时间','合同编号','联系人','联系手机',
+					'店铺电话','法人代表','法人手机','业务代表','银行名称',
+					'支行名称','收款人','银行卡号','帐户类型',
+					'落地日期','预付款额度','佣金率','分红政策','返佣政策','基础补贴政策',
+					'基础补贴起始日','基础补贴截止日','强补贴政策','强补贴起始日','强补贴截止日','强补贴月交易单数要求','首单指标补贴政策',
+					];
 		Excel::create($title, function($excel) use($result,$header){
 			$excel->sheet('Sheet1', function($sheet) use($result,$header){
 				$sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false

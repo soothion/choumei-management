@@ -165,27 +165,23 @@ class CommissionController extends Controller{
 		});
 
 		if($param['group']=='month'){
-			$created_at = $param['start'].' 到 '.$param['end'];
 			$query = $query->groupBy('salon.sn');
 			$fields = array(
 				'commission.id',
-			    'order.orderid',
-				'order.salonid',
 				'salon.sn as salonsn',
 				'salon.salonname',
-				DB::raw('sum(amount) as amount')
+				DB::raw('sum(amount) as amount'),
+				'commission.date'
 			);
 		}
 		else if($param['group']=='day'){
 			$fields = array(
 				'commission.id',
-			    'order.orderid',
-				'order.salonid',
 				'salon.sn as salonsn',
 				'salon.salonname',
 				'commission.sn as sn',
 				'commission.amount as amount',
-				'commission.created_at as created_at',
+				'commission.date'
 			);
 		}
 
@@ -198,7 +194,7 @@ class CommissionController extends Controller{
 	    	$result[$key]['salonname'] = $value->salonname;
 	    	$result[$key]['sn'] = $value->sn;
 	    	$result[$key]['amount'] = $value->amount;
-	    	$result[$key]['created_at'] = $value->created_at?$value->created_at:$created_at;
+	    	$result[$key]['date'] = $value->date;
 	    }
 		// 触发事件，写入日志
 	    Event::fire('commission.export');
