@@ -4,8 +4,6 @@
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
 	  <script type="text/javascript" src="/js/include.js"></script>
-	  <link rel="stylesheet" href="/css/webuploader.css" />
-      <link rel="stylesheet" href="edit.css" />    
   </head>
   <body>
 		<div class="breadcrumb">
@@ -20,41 +18,76 @@
 	
 	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>message/update/<%=data.id%><%}else{%>message/create<%}%>">
                  <div class="control-group">
-                        <label class="control-label">发送对象：</label>
-						 <div class="control">
-						 <label>
-                    <input type="radio" class="radio" name="bb" value="1"
-                    <%=!data.bb||data.bb==1 ? "checked" : "" %>>
-                    <span>所有臭美发型app安装用户</span>
-                    </label><br/>
-
-                    <label>
-                    <input type="radio" class="radio" name="bb" value="2" 
-                    <%=data.bb==2 ? "checked" : "" %>>
-                     <span>个别手机号码</span> 
-                    </label>
-					<br />
-						<textarea name="a"  class="hide" id="phone" placeholder="每行只能输入一个手机号码" ></textarea>
+                    <label class="control-label">发送对象：</label>
+					<div class="control">
+						<label>
+							<input type="radio" class="radio" name="bb" value="1"
+							<%=!data.bb||data.bb==1 ? "checked" : "" %>>
+							<span>所有臭美发型app安装用户</span>
+						</label>
+						<br/>
+						<label>
+							<input type="radio" class="radio" name="bb" value="2" 
+							<%=data.bb==2 ? "checked" : "" %>>
+							<span>个别手机号码</span> 
+						</label>
+						<br />
+						<style type="text/css">
+							.editor-validate{
+								border-width:1px;
+								border-style:solid;
+								display:inline-block;
+								width:400px;
+								height:auto;
+								border-radius:3px;
+								min-height:74px;
+								padding:5px 10px;
+								margin-top:10px;
+							}
+							.editor-validate li{
+								line-height:1;
+							}
+							.editor-validate input{
+								border:0!important;
+								box-shadow:none!important;
+								line-height:24px;
+								height:24px;
+								padding:0px;
+								min-width:0px!important;
+								width:160px!important;
+							}
+							.editor-validate .control-help{
+								display:none;
+								line-height:24px;
+							}
+						</style>
+						<div class="editor-validate input" style="display:none;">
+							<ul>
+								<li>
+									<input type="text" id="er-1" required requiredmsg="请输入手机号码" pattern="mobile" patternmsg="手机号码不正确" /><label class="control-help" for="er-1"></label>
+								</li>
+							</ul>
+						</div>
+						<input type="hidden" name="receivers" id="receivers" />
 					</div>
                 </div>  
-					
-				<div class="control-group" style="width:800px;margin-left:30px;" >
-						<legend>消息编辑-列表</legend>
-						<hr />
-                </div>
+				<div class="control-separation">
+                    <legend>消息编辑-列表</legend>
+					<hr />
+                </div>	
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>标题：</label>
                     <div class="control">
-                        <input id="password" type="text" required>
+                        <input type="text" required maxlength="32" name="title">
 						<span class="weak">(限制32字以内)</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>摘要：</label>
                     <div class="control">
-					<input type="text" required>
+					<input type="text" required maxlength="64" name="description">
 					<span class="weak">(限制64字以内)</span>
 					</div>
                 </div>
@@ -74,41 +107,110 @@
 						 <input type="checkbox" class="hide" name="images" required requiredmsg="请上传图片" />
 					</div>
                 </div>
-				
-				  <div class="control-group" style="width:800px;margin-left:30px;" >
+				<div class="control-separation">
                     <legend>消息编辑-详情</legend>
-						<hr />
+					<hr />
                 </div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>消息内容：</label>
-                     <label>
-                    <input type="radio" class="radio" name="aa" value="1"
-                    <%=!data.aa||data.aa==1 ? "checked" : "" %>>
-                    <span>信息链接</span>
-					<input type="text" style="width:500px"/>
-                    </label><br/>
-
-                    <label>
-                    <input type="radio" class="radio" name="aa" value="2" 
-                    <%=data.aa==2 ? "checked" : "" %>>
-                    <span>编辑生成</span>
-                    </label>
-					 <span class="control-help" style="display:none;"></span>
+					<div class="control">
+						<label>
+							<input type="radio" name="aa1" value="1" class="radio-editor"
+							<%=!data.aa||data.aa==1 ? "checked" : "" %>>
+							<span>信息链接</span>
+						</label>
+						<label>
+							<input type="radio" name="aa1" value="2" class="radio-editor"
+							<%=data.aa==2 ? "checked" : "" %>>
+							<span>编辑生成</span>
+						</label>
+						<div style="margin-top:10px">
+							<input type="text" name="url" required/>
+							<div id="editor" type="text/plain" style="width:800px;height:300px;"></div>
+						</div>
+					 </div>
                 </div>  
 				<div class="control-group">
-				<label class="control-label" for=""></label>
-				<div class="control">
-				<button class="btn-primary" type="submit">提交</button>
-				<span class="space"></span>
-				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">预览</button>
-				<span class="space"></span>
-				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+					<label class="control-label" for=""></label>
+					<div class="control">
+						<button class="btn-primary" type="submit">提交</button>
+						<span class="space"></span>
+						<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">预览</button>
+					</div>
 				</div>
-			</div>
 		  </form>
 		  </script>
+		 
 	</div>
+	<!--
+		<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+		<script type="text/javascript" src="/ueditor/_examples/editor_api.js"></script>
+		<script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>-->
         <script type="text/javascript">
+			$('#form').one('_ready',function(){
+				//var ue = UE.getEditor('editor');
+				//$('#editor').hide();
+				$('.editor-validate').on('keydown','input',function(e){
+					var $this=$(this);
+					if(e.keyCode==13){
+						var id="er-"+e.timeStamp;
+						var clone=$this.closest('li').clone();
+						clone.children('input').attr('id',id).val('');
+						clone.children('label').attr('for',id).removeAttr('style').text('');
+						$this.closest('ul').append(clone);
+						clone.children('input').focus();
+						e.preventDefault();
+					}
+				}).on('keyup','input',function(e){
+					var $this=$(this);
+					if(e.keyCode==8&&$.trim($this.val())==''){
+						if($this.closest('li').siblings().length!=0){
+							if($this.closest('li').prev().length==1){
+								$this.closest('li').prev().children('input').focus();
+							}else if($this.closest('li').next().length==1){
+								$this.closest('li').next().children('input').focus();
+							}
+							$this.closest('li').remove();
+						}
+					}
+					if(e.keyCode==38){
+						if($this.closest('li').prev().length==1){
+							$this.closest('li').prev().children('input').focus();
+						}
+					}
+					if(e.keyCode==40){
+						if($this.closest('li').next().length==1){
+							$this.closest('li').next().children('input').focus();
+						}
+					}
+				}).on('focus','input',function(){
+					$(this).closest('.editor-validate').addClass('focus');
+				}).on('pass','input',function(){
+					var $this=$(this);
+					$this.closest('.editor-validate').removeClass('focus');
+					lib.ajax({
+						url:'message/checkPhone',
+						type:'POST',
+						data:{
+							receivers:$(this).val()
+						},
+						success:function(data){
+							if(data.result==1&&data.data&&data.data.length>0){
+								$this.trigger('error',{type:'error',errormsg:'没有找到该号码的发型师'})
+							}
+						}
+					});
+				}).on('click',function(e){
+					var $target=$(e.target);
+					if($target.is('li')){
+						target.children('input').addClass('focus');
+					}
+					if($target.is('div')){
+						$(this).find('input').last().focus();
+					}
+				});
+			});
+			 
 			lib.uploader.image({
 				auto:true,
 				server: "http://service.choumei.cn/upload/image",
@@ -128,17 +230,23 @@
 			},function(uploader){
 				
 			});
-			$(function(){
-				$(document).on('change','.radio',function(){
-					var val=$(this).val();
-					if(val==2){
-						$('#phone').show();
-					}else{
-						$('#phone').hide();
-					}
-				})
-				
-			});
+			$(document).on('change','.radio',function(){
+				var val=$(this).val();
+				var editor=$('.editor-validate');
+				if(val==2){
+					editor.slideDown(200);
+					editor.find('input').last().focus();
+				}else{
+					editor.slideUp(200);
+				}
+			}).on('change','.radio-editor',function(){
+				var editor=$('#editor');
+				if($(this).val()==1){
+					editor.hide().prev().show();
+				}else{
+					editor.show().prev().hide();
+				}
+			})
 		</script>  
   </body>
 </html>
