@@ -139,7 +139,7 @@ class ShopCountApi
                 $commission->save();
             }
 
-            ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'订单佣金',date('Y-m-d H:i:s',$order->use_time));
+            ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'佣金率'.$rate.'%',date('Y-m-d H:i:s',$order->use_time));
         }
         $model->insert($insert);
     }

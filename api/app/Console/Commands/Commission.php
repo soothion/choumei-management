@@ -91,7 +91,7 @@ class Commission extends Command
                         $data['created_at'] = $now;
                         $commission->save();
                     }
-                    ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$amount,'订单佣金',$date);
+                    ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$amount,'佣金率'.$rate.'%',$date);
                     $this->info('订单'.$order->ordersn.'处理成功');
                 }                    
                 else
