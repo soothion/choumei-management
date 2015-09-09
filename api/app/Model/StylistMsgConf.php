@@ -4,6 +4,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
+use App\StylistMsgContent;
 class StylistMsgConf extends Model {
 
 	protected $table = 'stylist_msg_conf';
@@ -70,18 +71,48 @@ class StylistMsgConf extends Model {
 	
 	/**
 	 * 添加修改 操作
+	 * 
 	 * */
-	public static function dosave($save,$id = 0)
+	public static function dosave($save,$saveConf,$id = 0)
 	{
 		$query = self::getQuery();
+		$contentQuery = StylistMsgContent::getQuery();
 		if($id)
 		{
+			if($saveConf)
+			{
+				$relust = self::getOnebyId($id);
+				if($saveConf['content'] && $relust->content_id)
+				{
+					$contentQuery->where('id',$relust->content_id)->update($saveConf);
+					
+				}
+				elseif($saveConf['content'] && !$relust->content_id)
+				{
+					$contentId = StylistMsgContent::insertGetId($saveConf);
+					$save['content_id'] = $contentId;
+				}
+				else 
+				{
+					$save['content_id'] = 0;
+				}
+				
+			}
 			$status = $query->where('id',$id)->update($save);
 		}
 		else
 		{
 			$save['addtime'] = time();
-			$status = $query->insertGetId($save);
+			if($saveConf['content'])
+			{
+				$contentId = StylistMsgContent::insertGetId($saveConf);
+			}
+			else
+			{
+				$contentId = 0;
+			}
+			$save['content_id'] = $contentId;
+			$status = $query->insertGetId($save);	
 		}
 		return $status;
 	}
@@ -139,7 +170,7 @@ class StylistMsgConf extends Model {
 			return false;
 		}
 		$fields = array(
-				'id',
+				'stylist_msg_conf.id',
 				'receive_type',
 				'receivers',
 				'title',
@@ -149,9 +180,10 @@ class StylistMsgConf extends Model {
 				'status',
 				'addtime',
 				'onlinetime',
-				'content',
+				//'content_id',
+				'content'
 		);
-		$result = self::select($fields)->where('id','=',$id)->first();
+		$result = self::select($fields)->leftjoin('stylist_msg_content as c', 'c.id', '=', 'stylist_msg_conf.content_id')->where('stylist_msg_conf.id','=',$id)->first();
 		return $result;
 	}
 	
