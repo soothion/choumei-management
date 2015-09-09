@@ -122,6 +122,23 @@ class ShopCountApi
             $data['created_at'] = $date;
 
             $insert[] = $data;
+
+            $commission = \App\Commission::where('salonid','=',$order->salonid)->where('date','=',date('Y-m-d',$order->use_time))->first();
+            if($commission){
+                $commission->update(['amount'=>$amount+$commission->amount]);
+            }
+            else{
+                $commission = new \App\Commission;
+                $commission->sn = $commission::getSn();
+                $commission->salonid = $order->salonid;
+                $commission->amount = $amount;
+                $commission->date = $date;
+                $now = date('Y-m-d H:i:s');
+                $data['updated_at'] = $now;
+                $data['created_at'] = $now;
+                $commission->save();
+            }
+
             ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'订单佣金',date('Y-m-d H:i:s',$order->use_time));
         }
         $model->insert($insert);
@@ -545,10 +562,10 @@ class ShopCountApi
         
         // 按时间搜索
         if (isset($options['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_min']))) {
-            $prepay->where('day', ">=", trim($options['pay_time_min']));
+            $prepay->where('pay_day', ">=", trim($options['pay_time_min']));
         }
         if (isset($options['pay_time_max']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_max']))) {
-            $prepay->where('day', "<=", trim($options['pay_time_max']));
+            $prepay->where('pay_day', "<=", trim($options['pay_time_max']));
         }
         
         // 排序

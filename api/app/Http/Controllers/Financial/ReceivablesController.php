@@ -9,6 +9,7 @@ use App\Merchant;
 use App\Salon;
 use App\PayManage;
 use App\PrepayBill;
+use App\ShopCount;
 class ReceivablesController extends Controller{
 
 	
@@ -278,6 +279,12 @@ class ReceivablesController extends Controller{
 				{
 					return $this->error('数据错误，请重新勾选');
 				}
+				if($val->type == 1)//取财务管理-收款管理中的业务投资款返还(已确认)的单		  		
+				{
+					$salonResult = Salon::select(['merchantId'])->where("salonid","=",$val->salonid)->first();
+					ShopCount::count_bill_by_invest_return_money($val->salonid,$salonResult->merchantId,$val->money);
+				}
+
 				if($val->paymentStyle == 2 || $val->type == 2)
 				{
 					if($val->type == 2)
@@ -409,8 +416,8 @@ class ReceivablesController extends Controller{
 			foreach ($list as $key=>$val)
 			{
 				$value = (array)$val;
-				$result[$key]['salonname'] = $value['salonname'];
 				$result[$key]['sn'] = $value['sn'];
+				$result[$key]['salonname'] = $value['salonname'];
 				$result[$key]['singleNumber'] = $value['singleNumber'];
 				$result[$key]['type'] = $typeArr[$value['type']];
 				$result[$key]['paymentStyle'] = $paymentStyleArr[$value['paymentStyle']];
@@ -426,8 +433,7 @@ class ReceivablesController extends Controller{
 				{
 					$result[$key]['receiptDate'] = date('Y-m-d',$value['receiptDate']);
 				}
-				$result[$key]['checkTime'] = $value['checkTime']?date('Y-m-d H:i:s',$value['checkTime']):'';
-				
+
 				$result[$key]['status'] = $statusArr[$value['status']];
 				$result[$key]['payCode'] = $value['payCode'];
 				$result[$key]['paySingleCode'] = $value['paySingleCode'];
@@ -437,7 +443,7 @@ class ReceivablesController extends Controller{
 		}
 		//导出excel
 		$title = '收款列表'.date('Ymd');
-		$header = ['店铺名称','店铺编号','收款单号','收款类型','收款方式','收款金额','创建日期','制单人','出纳','收款日期','确认收款日期','状态','关联付款单号','关联转付单号'];
+		$header = ['店铺编号','店铺名称','收款单号','收款类型','收款方式','收款金额','创建日期','制单人','出纳','收款日期','状态','关联付款单号','关联转付单号'];
 		Excel::create($title, function($excel) use($result,$header){
 			$excel->sheet('Sheet1', function($sheet) use($result,$header){
 				$sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
