@@ -77,7 +77,7 @@ class ImageStyleController extends Controller{
      
      
      /**
-	 * @api {post} ImageStyle/create 2.添加风格
+	 * @api {post} /ImageStyle/create 2.添加风格
 	 * @apiName insertImage
 	 * @apiGroup Image
 	 * @apiParam {Number} style 必填,风格.
