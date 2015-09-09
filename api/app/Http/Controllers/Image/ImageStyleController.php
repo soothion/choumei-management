@@ -13,6 +13,8 @@ use App\Exceptions\ERROR;
 class ImageStyleController extends Controller{
      /**
 	 * @api {post} /ImageStyle/index 1.图片列表
+	 * 
+	 * @apiName index
 	 * @apiGroup Image
 	 *
 	 * @apiParam {Number} style 可选,风格.
@@ -78,7 +80,7 @@ class ImageStyleController extends Controller{
      
      /**
 	 * @api {post} /ImageStyle/create 2.添加风格
-	 * @apiName insertImage
+	 * @apiName create
 	 * @apiGroup Image
 	 * @apiParam {Number} style 必填,风格.
 	 * @apiParam {Number} length 必填,长度.
@@ -117,9 +119,11 @@ class ImageStyleController extends Controller{
 			throw new ApiException('图片风格插入失败', ERROR::STYLE_CREATE_FAILED);
           }
      }
-     /**
+
+
+    /**
 	 * @api {post} /ImageStyle/destroy/:id 3.停用风格
-	 * @apiName Image
+	 * @apiName destroy
 	 * @apiGroup  Image
 	 *
 	 *@apiParam {Number} id 必填,主键.
@@ -159,7 +163,7 @@ class ImageStyleController extends Controller{
      
        /**
 	 * @api {post} /ImageStyle/update/:id 4.更新风格
-	 * @apiName Image
+	 * @apiName update
 	 * @apiGroup  Image
 	 *
 	 * @apiParam {Number} id 必填,主键.
@@ -207,6 +211,7 @@ class ImageStyleController extends Controller{
      }
     /**
 	 * @api {post} /ImageStyle/show/:id 5.查找一张图片
+	 * @apiName show
 	 * @apiGroup Image
 	 *
 	 * @apiParam {Number} ID 必填，主键.
