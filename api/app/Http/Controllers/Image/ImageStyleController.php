@@ -4,7 +4,7 @@ use App\Http\Controllers\Controller;
 use App\ImageStyle;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
-
+use Log;
 /**
  * Description of ImageStyleController
  *
@@ -104,7 +104,9 @@ class ImageStyleController extends Controller{
 	 */
     public function create()
     {
+            
           $param = $this->param; 
+          Log::info('ImageStyle create param is: ', $param);
           $data=[];
           $data['style']=$param['style'];
           $data['length']=$param['length'];
