@@ -9,6 +9,7 @@ use App\InsteadReceive;
 use App\PrepayBill;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Commission;
+use Log;
 
 class ShopCountApi
 {
@@ -95,11 +96,11 @@ class ShopCountApi
     public static function commissionOrder($options){
         $orders = Order::whereIn("ordersn",$options)
         ->where('order.status',4)
-        ->join('salon_info','salon_info.salonid','=','order.salonid')
-        ->join('salon','salon.salonid','=','order.salonid')
+        ->leftJoin('salon_info','salon_info.salonid','=','order.salonid')
+        ->leftJoin('salon','salon.salonid','=','order.salonid')
         ->select('order.orderid','order.ordersn','order.salonid','order.priceall','order.use_time','salon.merchantId','salon.salonGrade','salon_info.commissionRate')
         ->get();
- 
+
         $insert = [];
         $model = new CommissionLog;
         
@@ -131,7 +132,7 @@ class ShopCountApi
                 $commissionModel = new \App\Commission;
                 $commissionModel->sn = $commissionModel::getSn();
                 $commissionModel->salonid = $order->salonid;
-                $commissionModel->amount = $amount;
+                $commissionModel->amount = $commission;
                 $commissionModel->date = $date;
                 $now = date('Y-m-d H:i:s');
                 $data['updated_at'] = $now;
@@ -152,8 +153,8 @@ class ShopCountApi
     public static function commissionBounty($options){
         $orders = BountyTask::whereIn("btSn",$options)
         ->where('bountry_task.status',4)
-        ->join('salon','salon.salonid','=','bountry_task.salonId')
-        ->join('salon_info','salon_info.salonid','=','bountry_task.salonId')
+        ->leftJoin('salon','salon.salonid','=','bountry_task.salonId')
+        ->leftJoin('salon_info','salon_info.salonid','=','bountry_task.salonId')
         ->select('bountry_task.btId','bountry_task.btSn','bountry_task.salonId','bountry_task.money','bountry_task.endTime','salon.merchantId','salon.salonGrade')
         ->get();
 
