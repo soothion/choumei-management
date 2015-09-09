@@ -167,14 +167,14 @@
                         <label>
                             <input type="radio" class="radio dividendStatus"  value="0" 
                             <%=data.shopType == 3 ? 'name="dividendStatus"' : ''%> 
-                            <%=data.dividendStatus == 0 ? "checked" : "" %>>
+                            <%=data.dividendStatus == "0" ? "checked" : "" %>>
                             <span>加入分红联盟</span>
                         </label>
 
                         <label>
                             <input type="radio" class="radio dividendStatus" value="1" 
                             <%=data.shopType == 3 ? 'name="dividendStatus"' : ''%> 
-                            <%=data.dividendStatus == 1 ? "checked" : "" %>>
+                            <%=data.dividendStatus=="" || data.dividendStatus == "1" ? "checked" : "" %>>
                             <span>退出分红联盟</span>
                         </label>
                     </div>
