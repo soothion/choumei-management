@@ -357,9 +357,22 @@ class MessageController extends Controller{
 	 *
 	 * @apiSuccessExample Success-Response:
 	 *	    {
-	 *	        "result": 1,
-	 *	        "data": null
-	 *	    }
+	 *		    "result": 1,
+	 *		    "token": "",
+	 *		    "data": {
+	 *		        "id": 3,
+	 *		        "receive_type": 1,
+	 *		        "receivers": "",
+	 *		        "title": "测试地方23",
+	 *		        "description": "测试测试2",
+	 *		        "img": "http://s0.hao123img.com/res/r/image/2015-09-06/893f1ca23c591ce3d52dbff655bebcd7.jpg",
+	 *		        "url": "",
+	 *		        "status": 0,
+	 *		        "addtime": 1441768777,
+	 *		        "onlinetime": 0,
+	 *		        "content": "333333333"
+	 *		    }
+	 *		}
 	 *
 	 * @apiErrorExample Error-Response:
 	 *		{
@@ -391,11 +404,15 @@ class MessageController extends Controller{
 	 * @apiParam {String} url 选填,消息内容url.
 	 * @apiParam {String} content 选填,消息内容.
 	 *
+	 *
+	 * @apiSuccess {String} data key 标识（拿着该返回 去泽键那边读取预览信息）.
+	 * 
 	 * @apiSuccessExample Success-Response:
 	 *	    {
-	 *	        "result": 1,
-	 *	        "data": null
-	 *	    }
+	 *		    "result": 1,
+	 *		    "token": "",
+	 *		    "data": 1441777384
+	 *		}
 	 *
 	 * @apiErrorExample Error-Response:
 	 *		{
@@ -414,7 +431,7 @@ class MessageController extends Controller{
 	}
 	
 	/**
-	 * @api {post} /message/getPreview/ 9.预览信息
+	 * @api {post} /message/getPreview/ 9.预览信息（暂不使用）
 	 * @apiName getPreview
 	 * @apiGroup Message
 	 *
