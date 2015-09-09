@@ -74,7 +74,7 @@ class PrepayBill extends Model
     }
     
     /**
-     * 通过收款单生成转付单返还
+     * 通过收款单生成转付单返还 (交易代收款返还)
      */
     public static function makeReturn($params)
     {
@@ -95,6 +95,7 @@ class PrepayBill extends Model
         }
         $code = self::getNewCode(self::TYPE_OF_RETURN);
         $now_date = date("Y-m-d H:i:s");
+        $money_fu = floatval($params['money']) * -1;
         $record = [
             'code'=>$code,
             'salon_id'  => $params['salon_id'],
@@ -103,7 +104,7 @@ class PrepayBill extends Model
             'other_code'  => $params['code'],
             'type'  => self::TYPE_OF_RETURN,
             'uid'  => $params['make_uid'],
-            'pay_money'  => $params['money'],
+            'pay_money'  => $money_fu,//改为负数
             'pay_type'  => $params['receive_type'],
             'state'  => self::STATE_OF_COMPLETED,
             'day'  => $params['require_day'],
@@ -117,11 +118,12 @@ class PrepayBill extends Model
        if($params['receive_type'] == 2)
        {
            $record['id'] = $id;
+           $record['pay_money'] = $params['money'];
            PayManage::makeFromPrepayReturn($record);
        }       
        
        //结算
-       ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['money'],"预付款返还",$now_date);
+       ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $money_fu,"预付款返还",$now_date);
        
        return ['id'=>$id,'code'=>$code];     
     }
