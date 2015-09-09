@@ -29,12 +29,12 @@
 					webkit:/webkit/i.test(ua)
 				}
 			},
-			getFormData:function($form){
+			getFormData:function($form,xss){
 				var data={};
 				var fields=$form.serializeArray();
 				$.each(fields,function(i,field){
 					//防止xss攻击
-					if(field.value){
+					if(field.value&&$form.data('xss')!='none'){
 						field.value=$.trim(field.value.replace(/>/g,'&gt;').replace(/</g,'&lt;'));
 					}
 					if(!data[field.name]){
@@ -56,12 +56,14 @@
 			}
 		},
         ajax: function (options) {
-			options.url=cfg.getHost()+options.url;
-			if(!options.data){
-				options.data={};
-			}
-			if(localStorage.getItem('token')&&options.url.indexOf('/login')==-1){
-				options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
+			if(options.url.indexOf('http://')==-1){
+				options.url=cfg.getHost()+options.url;
+				if(!options.data){
+					options.data={};
+				}
+				if(localStorage.getItem('token')&&options.url.indexOf('/login')==-1){
+					options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
+				}
 			}
 			options.timeout=6000;
 			/*
@@ -218,6 +220,146 @@
 				lib.query._=location.hash.replace('#','');
 			}
         },
+		puploader:{
+			tokenCfg:{
+				request:{
+					userId:'ba6c14bb30e17281',
+					type:1,
+					num:1
+				},
+				count:1,
+				time:new Date().getTime()
+			},
+			use:function(cb){//加载上传资源文件
+				var arr=[
+					'/qiniu/demo/js/plupload/plupload.full.min.js',
+					'/qiniu/demo/js/qiniu.js',
+					'/js/jquery.md5.js'
+				];
+				seajs.use(arr,function(){
+					seajs.use(['/qiniu/demo/js/plupload/i18n/zh_CN.js']);
+					cb &&cb();
+				});
+			},
+			getToken:function(cb){
+				var self=this;
+				var query={
+					'bundle':"FQA5WK2BN43YRM8Z",
+					'version':"5.3",
+					'device-type':window.navigator.appCodeName,
+					'device-uuid':this.random(),
+					'device-model':'',
+					'device-network':'',
+					'device-dpi':window.screen.width+"x"+window.screen.height,
+					'device-os':window.navigator.userAgent,
+					'timestamp':new Date().getTime(),
+					'sequence':this.tokenCfg.time+(this.tokenCfg.count++),
+					'request':JSON.stringify(this.tokenCfg.request)
+				}
+				query.sign=$.md5($.param(query));
+				lib.ajax({
+					url:cfg.url.token,
+					data:query,
+					dataType:'json',
+					success:function(data){
+						if(data.code==0&&data.response&&data.response.data&&data.response.data[0]){
+							cb &&cb(data.response.data[0]);
+						}else{
+							parent.lib.popup.result({
+								text:'获取上传token失败',
+								bool:true
+							});
+						}
+					}
+				});
+			},
+			random:function(len) {
+				len = len || 32;
+				var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+				var maxPos = $chars.length;
+				var pwd = [];
+				for (var i = 0; i < len; i++) {
+					pwd.push($chars.charAt(Math.floor(Math.random() * maxPos)));
+				}
+				return pwd.join("");
+			},
+			create:function(options){
+				var _default={
+					runtimes:'html5,flash,html4',
+					flash_swf_url:'/qiniu/demo/js/plupload/Moxie.swf',
+					domain:cfg.url.upload,
+					dragdrop:true,
+					chunk_size:'4mb'
+				};
+				options=$.extend(_default,options)
+				var uploader = Qiniu.uploader(options);
+				return uploader;
+			},
+			file:function(options,cb){
+				var self=this;
+				this.use(function(){
+					self.getToken(function(data){
+						options.uptoken=data.uptoken;
+						options.max_file_size=data.maxFileSize+'mb';
+						var uploader=self.create(options);
+						uploader.bind('UploadProgress',function(){
+							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
+						});
+						uploader.bind('UploadComplete',function(up,file){
+							parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
+						});
+						uploader.bind('FileUploaded',function(up,file,res){
+							if(res&&res.response&&typeof res.response=='string'){
+								var data=JSON.parse(res.response);
+								//console.log(data);
+							}
+						});
+						uploader.bind('Error',function(up, err, errTip){
+							parent.lib.popup.result({bool:true,text:errTip});
+						});
+						cb &&cb(uploader);
+					});
+				});
+			},
+			image:function(options,cb){
+				options=$.extend({successText:'图片上传成功',loaderText:'图片上传中..'},options) 
+				this.file(options,function(uploader){
+					uploader.bind('FileUploaded',function(up,file,res){
+						if(res&&res.response&&typeof res.response=='string'){
+							var data=JSON.parse(res.response);
+							uploader.createThumbnails && uploader.createThumbnails(data.response)
+						}
+					});
+					if(options.browse_button){
+						var $target=$('#'+options.browse_button).parent();
+						uploader.thumbnails=$target.siblings('.control-thumbnails');
+						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
+							uploader.createThumbnails=function(data){
+								var arr=[data];
+								if(this.getOption()&&this.getOption().postName){
+									arr.postName=this.getOption().postName;
+								}
+								uploader.thumbnails.append(lib.ejs.render({url:'/module/public/template/thumbnails'},{data:arr}))
+								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children().length){
+									uploader.thumbnails.siblings('.control-image-upload').hide();
+								}
+							}
+							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
+								var item=$(this).closest('.control-thumbnails-item');
+								if(item.attr('id')){
+									uploader.removeFile(item.attr('id'));
+								}
+								item.remove();
+								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children().length){
+									uploader.thumbnails.siblings('.control-image-upload').show();
+								}
+							});
+						}
+					}
+					cb &&cb(uploader);
+				});
+			}
+		},
 		uploader:{
 			use:function(cb){//加载上传资源文件
 				seajs.use(['/css/webuploader.css','/js/webuploader.js'],function(){

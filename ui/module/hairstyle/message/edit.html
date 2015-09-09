@@ -18,19 +18,19 @@
 	
 	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>message/update/<%=data.id%><%}else{%>message/create<%}%>">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="message/addingPreview/" data-xss="none">
                  <div class="control-group">
                     <label class="control-label">发送对象：</label>
 					<div class="control">
 						<label>
-							<input type="radio" class="radio" name="bb" value="1"
-							<%=!data.bb||data.bb==1 ? "checked" : "" %>>
+							<input type="radio" class="radio" name="receive_type" value="1"
+							<%=!data.receive_type||data.receive_type==1 ? "checked" : "" %>>
 							<span>所有臭美发型app安装用户</span>
 						</label>
 						<br/>
 						<label>
-							<input type="radio" class="radio" name="bb" value="2" 
-							<%=data.bb==2 ? "checked" : "" %>>
+							<input type="radio" class="radio" name="receive_type" value="2" 
+							<%=data.receive_type==2 ? "checked" : "" %>>
 							<span>个别手机号码</span> 
 						</label>
 						<br />
@@ -87,8 +87,8 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>摘要：</label>
                     <div class="control">
-					<input type="text" required maxlength="64" name="description">
-					<span class="weak">(限制64字以内)</span>
+					<input type="text" required maxlength="32" name="description">
+					<span class="weak">(限制32字以内)</span>
 					</div>
                 </div>
 				 <div class="control-group">
@@ -96,15 +96,17 @@
 					<div class="control">
 						 <div class="control-image">
 								<div class="control-thumbnails" data-max="2"></div>
-								<div class="control-image-upload" id="imageUpload">
-									<i class="fa fa-image"></i>
-									<em>上传列表图片</em>
+								<div class="control-image-upload">
+									<div id="imageUpload">
+										<i class="fa fa-image"></i>
+										<em>上传列表图片</em>
+									</div>
 								</div>
 							</div>
 						 <span class="space"></span>
 						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
 						 <br />
-						 <input type="checkbox" class="hide" name="images" required requiredmsg="请上传图片" />
+						 <input type="checkbox" class="hide" name="images"  requiredmsg="请上传图片" />
 					</div>
                 </div>
 				<div class="control-separation">
@@ -115,41 +117,65 @@
                     <label class="control-label" for=""><span class="red">*</span>消息内容：</label>
 					<div class="control">
 						<label>
-							<input type="radio" name="aa1" value="1" class="radio-editor"
+							<input type="radio" name="switch1" value="1" class="radio-editor"
 							<%=!data.aa||data.aa==1 ? "checked" : "" %>>
 							<span>信息链接</span>
 						</label>
 						<label>
-							<input type="radio" name="aa1" value="2" class="radio-editor"
+							<input type="radio" name="switch1" value="2" class="radio-editor"
 							<%=data.aa==2 ? "checked" : "" %>>
 							<span>编辑生成</span>
 						</label>
 						<div style="margin-top:10px">
-							<input type="text" name="url" required/>
+							<input type="text"  id="url"/>
 							<div id="editor" type="text/plain" style="width:800px;height:300px;"></div>
 						</div>
-					 </div>
+						<input type="hidden" id="hidden" required />
+						<br />
+					</div>
                 </div>  
 				<div class="control-group">
 					<label class="control-label" for=""></label>
 					<div class="control">
 						<button class="btn-primary" type="submit">提交</button>
 						<span class="space"></span>
-						<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">预览</button>
+						<button class="btn" type="submit" id="preview">预览</button>
 					</div>
 				</div>
 		  </form>
 		  </script>
 		 
 	</div>
-	<!--
 		<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
 		<script type="text/javascript" src="/ueditor/_examples/editor_api.js"></script>
-		<script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>-->
+		<script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
         <script type="text/javascript">
 			$('#form').one('_ready',function(){
-				//var ue = UE.getEditor('editor');
-				//$('#editor').hide();
+				var form=$(this).find('form');
+				//window.ue = UE.getEditor('editor');
+				$('#editor').hide();
+				
+				$('#preview').on('click',function(){
+					var action=form.attr('action');
+					form.attr('action','message/addingPreview/');
+					setTimeout(function(){
+						form.attr('action',action);
+					},1000);
+					$('#ueditor_textarea_editorValue').removeAttr('name');
+					var val=$('.radio-editor:checked').val();
+					if(val==1){
+						$('#hidden').attr('name','url').val($('#url').val());
+					}
+					if(val==2){
+						$('#hidden').attr('name','content').val(window.ue.getContent());
+					}
+				});
+				form.on('success',function(e,data){
+					if(data.result==1&&data.data){
+						window.open('preview.html?key='+data.data,'_blank');
+					}
+				})
+				
 				$('.editor-validate').on('keydown','input',function(e){
 					var $this=$(this);
 					if(e.keyCode==13){
@@ -210,7 +236,20 @@
 					}
 				});
 			});
-			 
+			lib.puploader.image({
+				browse_button: 'imageUpload',
+				auto_start:true,
+				postName:"src",
+				filters: {
+				    mime_types : [
+						{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
+					]
+                },
+				init:{
+					
+				}
+			})
+			/*
 			lib.uploader.image({
 				auto:true,
 				server: "http://service.choumei.cn/upload/image",
@@ -229,7 +268,7 @@
 				postName:'images'
 			},function(uploader){
 				
-			});
+			});*/
 			$(document).on('change','.radio',function(){
 				var val=$(this).val();
 				var editor=$('.editor-validate');
@@ -246,6 +285,9 @@
 				}else{
 					editor.show().prev().hide();
 				}
+			});
+			lib.puploader.use(function(){
+				lib.puploader.getToken();
 			})
 		</script>  
   </body>
