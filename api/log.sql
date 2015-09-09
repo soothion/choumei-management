@@ -1,5 +1,6 @@
 
 drop table cm_commission;
+drop table cm_commission_log;
 
 CREATE TABLE `cm_commission` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -10,7 +11,7 @@ CREATE TABLE `cm_commission` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=893 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 CREATE TABLE `cm_commission_log` (
@@ -24,5 +25,4 @@ CREATE TABLE `cm_commission_log` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1207 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
+) ENGINE=InnoDB AUTO_INCREMENT=13176 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
