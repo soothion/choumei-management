@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="zh-CN">
   <head>
       <meta charset="utf-8">
@@ -16,9 +17,9 @@
 		<hr />
 	</div>	
 	
-	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+	<div class="wrapper" ajat="<%if(query.id){%>ImageStyle/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>user/update/<%=data.id%><%}else{%>user/create<%}%>">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>ImageStyle/update/<%=data.id%><%}else{%>ImageStyle/create<%}%>">
 		 <div class="detail-operation">
 				<button class="btn" onclick="history.back()" type="button" >取消</button>
 				<span class="space"></span>
@@ -29,29 +30,38 @@
 					 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>风格名称：</label>
-                    <div class="control">
-					<select required name="city_id"  ajat="list/city#domid=city&tempid=/module/public/template/department&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
+                   <div class="control">
+						<select required name="style">
+						<option value="1" <%=data.style==1?"selected":""%>>可爱</option>
+						<option value="2" <%=data.style==2?"selected":""%>>时尚</option>
+						<option value="3" <%=data.style==3?"selected":""%>>青春</option>
+						<option value="4" <%=data.style==4?"selected":""%>>优雅</option>
+						<option value="5" <%=data.style==5?"selected":""%>>柔美</option>
+						<option value="6" <%=data.style==6?"selected":""%>>知性</option>
+						<option value="7" <%=data.style==7?"selected":""%>>浪漫</option>
+						<option value="8" <%=data.style==8?"selected":""%>>华丽</option>
+						<option value="9" <%=data.style==9?"selected":""%>>摩登</option>
 					</select>
-						 
+					</select>
 				</div>
                 </div>
 			   <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>长度：</label>
                      <label>
-                    <input type="radio" class="radio" name="chang" value="1"
-                    <%=!data.chang||data.chang==1 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="length" value="1"
+                    <%=!data.length||data.length==1 ? "checked" : "" %>>
                     <span>长发</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="chang" value="2" 
-                    <%=data.chang==2 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="length" value="2" 
+                    <%=data.length==2 ? "checked" : "" %>>
                     <span>中发</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="chang" value="3"
-                    <%=data.chang==3 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="length" value="3"
+                    <%=data.length==3 ? "checked" : "" %>>
                     <span>短发</span>
                     </label>
 					 <span class="control-help" style="display:none;"></span>
@@ -59,38 +69,38 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>卷度：</label>
                      <label>
-                    <input type="radio" class="radio" name="juan" value="1"
-                    <%=!data.juan||data.juan==1 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="curl" value="1"
+                    <%=!data.curl||data.curl==1 ? "checked" : "" %>>
                     <span>全卷</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="juan" value="2" 
-                    <%=data.juan==2 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="curl" value="2" 
+                    <%=data.curl==2 ? "checked" : "" %>>
                     <span>半卷</span>
                     </label>
 
                    
 					  <label>
-                    <input type="radio" class="radio" name="juan" value="3"
-                    <%=data.juan==3 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="curl" value="3"
+                    <%=data.curl==3 ? "checked" : "" %>>
                     <span>C卷</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="juan" value="4" 
-                    <%=data.juan==4 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="curl" value="4" 
+                    <%=data.curl==4 ? "checked" : "" %>>
                     <span>外翻</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="juan" value="5"
-                    <%=data.juan==5 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="curl" value="5"
+                    <%=data.curl==5 ? "checked" : "" %>>
                     <span>直发</span>
                     </label>
 					 <label>
-                    <input type="radio" class="radio" name="juan" value="6"
-                    <%=data.juan==6 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="curl" value="6"
+                    <%=data.curl==6 ? "checked" : "" %>>
                     <span>纹理</span>
                     </label>
 					 <span class="control-help" style="display:none;"></span>
@@ -99,25 +109,25 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>颜色：</label>
                      <label>
-                    <input type="radio" class="radio" name="shopType" value="1"
-                    <%=!data.shopType||data.shopType==1 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="color" value="1"
+                    <%=!data.color||data.color==1 ? "checked" : "" %>>
                     <span>冷色</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="shopType" value="2" 
-                    <%=data.shopType==2 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="color" value="2" 
+                    <%=data.color==2 ? "checked" : "" %>>
                     <span>暖色</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="shopType" value="3"
-                    <%=data.shopType==3 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="color" value="3"
+                    <%=data.color==3 ? "checked" : "" %>>
                     <span>中性</span>
                     </label>
 					   <label>
-                    <input type="radio" class="radio" name="shopType" value="3"
-                    <%=data.shopType==3 ? "checked" : "" %>>
+                    <input type="radio" class="radio" name="color" value="4"
+                    <%=data.color==4 ? "checked" : "" %>>
                     <span>时尚</span>
                     </label>
 					 <span class="control-help" style="display:none;"></span>
@@ -125,17 +135,17 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>风格图片：</label>
 					<div class="control">
-						<div class="control-single-image">
-							<img/>
-							<a class="control-image-ud" id="imageUpload">
-								<i class="fa fa-cloud-upload"></i> 
-								上传
-							</a>
-						</div>
-						<br />
-						<span class="weak">(上传文件说明：512*512PX的jpg,png图片格式)</span>
-						<br />
-						<input type="hidden" name="path" required requiredmsg="请上传图片" />
+						 <div class="control-image">
+								<div class="control-thumbnails" data-max="2"></div>
+								<div class="control-image-upload" id="imageUpload">
+									<i class="fa fa-image"></i>
+									<em>上传列表图片</em>
+								</div>
+							</div>
+						 <span class="space"></span>
+						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
+						 <br />
+						 <input type="checkbox" class="" name="img" required requiredmsg="请上传图片" />
 					</div>
                 </div>				
 				<div class="control-group">
@@ -153,29 +163,23 @@
 	 
 	 <script type="text/javascript">
 			lib.uploader.image({
+				auto:true,
 				server: "http://service.choumei.cn/upload/image",
 				pick  : {id:'#imageUpload',multiple:false},
 				resize: false,
 				fileSingleSizeLimit : 2*1024*1024,
-				imageLimitSize:function(){
+				//imageLimitSize:"512*512",
+				imageLimitSize:function(width,height){
 					return true
 				},
 				accept :{
-					title: 'Images',
+					title: 'img',
 					extensions: 'jpg,jpeg,png',
-					mimeTypes: 'image/png,image/jpeg'                
+					mimeTypes: 'image/jpeg,image/png'                
 				},
-				auto:true
+				postName:'img'
 			},function(uploader){
-				uploader.on('uploadSuccess',function(file,res){
-					if(res.result==1){
-						var data=res.data;
-						if(data.main&&data.main.images&&data.main.images[0]){
-							$(this.options.pick.id).siblings('img').attr('src',data.main.images[0].img);
-							$('input[name="path"]').val(data.main.images[0].img);
-						}
-					}
-				})
+				
 			});
 	 </script>
   </body>
