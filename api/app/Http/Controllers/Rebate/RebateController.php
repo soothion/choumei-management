@@ -396,7 +396,7 @@ class RebateController extends Controller{
 			if($rebate->status==1)
 				continue;
 			$date = date('Y-m-d H:i:s');
-			ShopCount::count_bill_by_commission_return_money($rebate->salon_id,$rebate->merchantId,$rebate->amount,'返佣起始日:'.$rebate->start_at.'</br>'.'佣金截止日'.$rebate->end_at.,$date);
+			ShopCount::count_bill_by_commission_return_money($rebate->salon_id,$rebate->merchantId,$rebate->amount,'返佣起始日:'.$rebate->start_at.'</br>'.'佣金截止日'.$rebate->end_at,$date);
 			$update = $rebate->update(['status'=>1,'confirm_at'=>$date,'confirm_by'=>$this->user->name]);
 			$result++;
 		}
