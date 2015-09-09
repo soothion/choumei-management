@@ -206,7 +206,7 @@ class ImageStyleController extends Controller{
             }
      }
     /**
-	 * @api {post} /ImageStyle/show/;id 1.查找一张图片
+	 * @api {post} /ImageStyle/show/:id 1.查找一张图片
 	 * @apiGroup Image
 	 *
 	 * @apiParam {Number} ID 必填，主键.
