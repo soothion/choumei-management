@@ -109,7 +109,7 @@ class Commission extends Command
             ->leftJoin('commission_log','bounty_task.btSn','=','commission_log.ordersn')
             ->leftJoin('salon','salon.salonid','=','bounty_task.salonId')
             ->where('commission_log.id','=',NULL)
-            ->select('bounty_task.btSn as ordersn','bounty_task.money as priceall','bounty_task.endTime as use_time','bounty_task.salonId as salonid','salon.salonGrade','salon.merchantId');
+            ->select('bounty_task.btSn as ordersn','bounty_task.money as priceall','bounty_task.payTime as pay_time','bounty_task.endTime as use_time','bounty_task.salonId as salonid','salon.salonGrade','salon.merchantId');
         $count = $query->count();
         $pageSize = 10000;
         $totalPage = ceil($count/$pageSize);
