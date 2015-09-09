@@ -123,20 +123,20 @@ class ShopCountApi
 
             $insert[] = $data;
 
-            $commission = \App\Commission::where('salonid','=',$order->salonid)->where('date','=',date('Y-m-d',$order->use_time))->first();
-            if($commission){
-                $commission->update(['amount'=>$amount+$commission->amount]);
+            $commissionModel = \App\Commission::where('salonid','=',$order->salonid)->where('date','=',date('Y-m-d',$order->use_time))->first();
+            if($commissionModel){
+                $commissionModel->update(['amount'=>$amount+$commission->amount]);
             }
             else{
-                $commission = new \App\Commission;
-                $commission->sn = $commission::getSn();
-                $commission->salonid = $order->salonid;
-                $commission->amount = $amount;
-                $commission->date = $date;
+                $commissionModel = new \App\Commission;
+                $commissionModel->sn = $commissionModel::getSn();
+                $commissionModel->salonid = $order->salonid;
+                $commissionModel->amount = $amount;
+                $commissionModel->date = $date;
                 $now = date('Y-m-d H:i:s');
                 $data['updated_at'] = $now;
                 $data['created_at'] = $now;
-                $commission->save();
+                $commissionModel->save();
             }
 
             ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'佣金率'.$rate.'%',date('Y-m-d H:i:s',$order->use_time));
@@ -178,6 +178,23 @@ class ShopCountApi
             $data['updated_at'] = $date;
             $data['created_at'] = $date;
             $insert[] = $data;
+
+            $commissionModel = \App\Commission::where('salonid','=',$order->salonid)->where('date','=',date('Y-m-d',$order->use_time))->first();
+            if($commissionModel){
+                $commissionModel->update(['amount'=>$amount+$commission->amount]);
+            }
+            else{
+                $commissionModel = new \App\Commission;
+                $commissionModel->sn = $commissionModel::getSn();
+                $commissionModel->salonid = $order->salonid;
+                $commissionModel->amount = $amount;
+                $commissionModel->date = $date;
+                $now = date('Y-m-d H:i:s');
+                $data['updated_at'] = $now;
+                $data['created_at'] = $now;
+                $commissionModel->save();
+            }
+            
             ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$commission,'赏金单佣金',date('Y-m-d H:i:s',$order->endTime));
         }
         $model->insert($insert);
