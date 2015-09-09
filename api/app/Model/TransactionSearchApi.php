@@ -235,6 +235,39 @@ class TransactionSearchApi
     public static  function getConditionOfTicket($params)
     {
 
+        $salon_fields = [
+            'salonid',
+            'salonname'
+        ];
+        $fundflow_fields = [
+            'record_no',
+            'pay_type',
+        ];
+        $user_fields = [
+            'user_id',
+            'username',
+            'mobilephone',
+        ];
+        $base_fields = [
+            'order_ticket_id',
+            'order_item_id',
+            'ticketno',
+            'salonid',
+            'add_time',
+            'pay_time',
+            'user_id',
+            'ispay',
+        ];
+        
+        $order_by_fields = [
+            'orderid',
+            'ordersn',
+            'priceall',
+            'add_time',
+            'pay_time',
+            'ispay',
+        ];
+        
     }
     
     public static  function getConditionOfRefund($params)
