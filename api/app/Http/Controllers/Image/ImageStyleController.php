@@ -77,7 +77,7 @@ class ImageStyleController extends Controller{
      
      
      /**
-	 * @api {post} ImageStyle/create 2.添加风格
+	 * @api {post} /ImageStyle/create 2.添加风格
 	 * @apiName insertImage
 	 * @apiGroup Image
 	 * @apiParam {Number} style 必填,风格.
@@ -118,7 +118,7 @@ class ImageStyleController extends Controller{
           }
      }
      /**
-	 * @api {post} /ImageStyle/destroy 4.停用风格
+	 * @api {post} /ImageStyle/destroy/:id 4.停用风格
 	 * @apiName Image
 	 * @apiGroup  Image
 	 *
@@ -158,7 +158,7 @@ class ImageStyleController extends Controller{
      }
      
        /**
-	 * @api {post} /ImageStyle/update 4.更新风格
+	 * @api {post} /ImageStyle/update/:id 4.更新风格
 	 * @apiName Image
 	 * @apiGroup  Image
 	 *
@@ -206,7 +206,7 @@ class ImageStyleController extends Controller{
             }
      }
     /**
-	 * @api {post} /ImageStyle/show 1.查找一张图片
+	 * @api {post} /ImageStyle/show/;id 1.查找一张图片
 	 * @apiGroup Image
 	 *
 	 * @apiParam {Number} ID 必填，主键.
