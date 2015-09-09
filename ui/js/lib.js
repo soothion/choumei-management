@@ -295,6 +295,11 @@
 											if(self.options._auto){
 												self.upload();
 											}
+											console.log(self.options.thumb)
+											if(self.options.thumb&&self.createThumbnails){
+												var data=$.extend({},file,{src:src});
+												self.createThumbnails(data);
+											}
 										}
 									}
 									if(typeof self.options.imageLimitSize =='function'){
@@ -303,11 +308,11 @@
 											if(self.options._auto){
 												self.upload();
 											}
-											/*
-											if(self.createThumbnails){
+											console.log(self.options.thumb)
+											if(self.options.thumb&&self.createThumbnails){
 												var data=$.extend({},file,{src:src});
 												self.createThumbnails(data);
-											}*/
+											}
 										}else{
 											self.trigger( 'error', 'IAMGE_SIZE',file);
 										}
@@ -327,7 +332,7 @@
 						if(res.result==1){
 							var data=res.data;
 							if(data.main&&data.main.images&&data.main.images[0]){
-								if(self.createThumbnails){
+								if(!self.options.thumb&&self.createThumbnails){
 									var data=$.extend({},file,{src:data.main.images[0].img});
 									self.createThumbnails(data);
 								}
@@ -748,6 +753,7 @@
 			}
 			var error=this.getErrorDom($target);
 			error.hide();
+			$target.trigger('pass');
 		},
 		required:function(e){//非空校验
 			var $target=$(e.target);

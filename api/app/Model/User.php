@@ -82,6 +82,20 @@ class User extends  Model
     		return '未知';
     	return $mapping[$sex];
     }
+    
+    public static function getUsersByIds($uids) {
+        $users = self::whereIn("user_id", $uids)->get();
+        return $users;
+    }
+
+    public static function getUserById($uid) {
+        $user = Self::getQuery()->where("user_id", "=", $uid)->get();
+        if (empty($user)) {
+            return [];
+        } else {
+            return $user[0];
+        }
+    }
 }
 
-?>
+

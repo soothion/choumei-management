@@ -61,6 +61,12 @@ input[type='text'], input[type='password'], input[type='url'], input[type='numbe
 	-ms-transition: all 0.2s ease 0s;
 	transition: all 0.2s ease 0s;
 }
+.untransition{
+	-webkit-transition:none!important;
+	-moz-transition: none!important;
+	-ms-transition:none!important;
+	transition: none!important;
+}
 textarea{
 	height:100px;
 	line-height:20px;
@@ -373,6 +379,13 @@ aside h2{
 .control-group{
 	margin:30px 0;
 }
+.control-separation{
+	width:800px;
+	margin-left:20px;
+}
+.control-separation legend{
+	padding-left:10px;
+}
 .form-vertical .control-group{
 	display:table;
 	width:100%;
@@ -511,8 +524,8 @@ input:focus+.unit{
 	text-align: center;
 	font-size: 15px;
 	font-weight: bold;
-	width: 196px;
-	height: 138px;
+	width: 150px;
+	height: 150px;
 	line-height: 138px;
 	border: 1px solid #ddd;
 	cursor:pointer;
@@ -530,14 +543,16 @@ input:focus+.unit{
 .control-image-upload .fa{
 	font-size: 40px;
 	position:relative;
-	top:-12px;
 }
 .control-thumbnails-item{
-	width: 196px;
-	height: 138px;
+	width: 150px;
+	height: 150px;
 	border: 1px solid #ddd;
 	position:relative;
 	padding:2px;
+}
+.control-thumbnails-item input{
+	display:none;
 }
 .control-thumbnails-item img{
 	width:100%;

@@ -2,7 +2,7 @@
 	version:'1.3',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
-	dev:'http://192.168.13.46:8090/',
+	dev:'http://192.168.13.46:8040/',
 	test:'',
 	product:'',
 	getHost:function(){
