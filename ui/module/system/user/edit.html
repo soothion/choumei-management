@@ -158,10 +158,12 @@
 			%>
 			<%data=data.data%>
 			<%for(var i=0;i<data.length;i++){%>
+                <%if(data[i].status!=3){%>
 				<label>
 					<input type="checkbox" required <%=sids&&sids.indexOf(data[i].id)>-1?"checked":""%>  name="roles" value="<%=data[i].id%>" <%=protocol.custom.status==3?"disabled":""%> />
 					<span><%=data[i].name%></span>
 				</label>
+                <%}%>
 			<%}%>
 			<div class="control-help" style="display:none"></div>
  
