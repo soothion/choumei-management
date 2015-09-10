@@ -62,7 +62,7 @@ class StylistMsgConf extends Model {
 		if(isset($where['title']) && $where['title'])
 		{
 			$keyword = '%'.$where['title'].'%';
-			$query = $query->where('s.title','like',$keyword);
+			$query = $query->where('title','like',$keyword);
 		}
 		$query = $query->select($fields);
 		return $query;
