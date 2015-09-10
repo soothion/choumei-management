@@ -5,6 +5,7 @@ use App\ImageStyle;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use Log;
+use Config;
 /**
  * Description of ImageStyleController
  *
@@ -56,7 +57,7 @@ class ImageStyleController extends Controller{
      *                      "length":1,
      *                      "curl":1,
      *                      "color":1,
-     *                      "img":"1"
+     *                      "img":"{}"
 	 *	            }
 	 *	        ]
 	 *	    }
@@ -74,6 +75,16 @@ class ImageStyleController extends Controller{
     {
            $param = $this->param; 
            $query =ImageStyle::getAllImage($param);
+           foreach($query['data'] as &$item)
+           {
+               $img = json_decode($item->img);
+               if(json_last_error() || empty($img))
+                   continue;
+               $item->img = $img->thumb;
+               $item->thumb = $img->thumb;
+               $item->original = $img->original;
+               unset($item->img);
+           }
            return $this->success($query);
      }
      
@@ -200,7 +211,8 @@ class ImageStyleController extends Controller{
     public function update($id)
     { 
         $param = $this->param; 
-        if(!empty($id) || empty($param['style']) || empty($param['length']) || empty($param['curl']) || empty($param['color']) || empty($param['original']) || empty($param['thumb']))
+		
+        if(empty($id) || empty($param['style']) || empty($param['length']) || empty($param['curl']) || empty($param['color']) || empty($param['original']) || empty($param['thumb']))
         {
             throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
         }
@@ -257,6 +269,8 @@ class ImageStyleController extends Controller{
          $image=ImageStyle::select($fields)->find($id);
          $imgData = json_decode($image['img'], true);
          $image['img'] = $imgData['original'];
+         $image->original = $imgData['original'];
+         $image->thumb = $imgData['thumb'];
          return $this->success($image);
      }
        

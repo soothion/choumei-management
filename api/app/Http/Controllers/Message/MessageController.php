@@ -38,7 +38,7 @@ class MessageController extends Controller{
 	 * @apiSuccess {String} title 标题.
 	 * @apiSuccess {Number} status 状态 0未上线 1 上线 2删除.
 	 * @apiSuccess {Number} onlinetime 上线时间 时间戳.
-	 *
+	 * @apiSuccess {Number} content_id 富文本内容id.
 	 *
 	 * @apiSuccessExample Success-Response:
 	 *	{
@@ -56,6 +56,7 @@ class MessageController extends Controller{
 	 *	                "title": "嘉美专业烫染",
 	 *	                "status": "0",
 	 *	                "onlinetime": "1441606960",
+	 *					"content_id":2
 	 *	            }
 	 *	        ]
 	 *	    }
