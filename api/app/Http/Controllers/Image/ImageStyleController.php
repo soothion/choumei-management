@@ -200,22 +200,28 @@ class ImageStyleController extends Controller{
     public function update($id)
     { 
         $param = $this->param; 
-    	$image = ImageStyle::find($id);
-    	if(!$image){
-    		 throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
+        if(!empty($id) || empty($param['style']) || empty($param['length']) || empty($param['curl']) || empty($param['color']) || empty($param['original']) || empty($param['thumb']))
+        {
+            throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
         }
-            $data=[];
-            $data['style']=$param['style'];
-            $data['length']=$param['length'];
-            $data['curl']=$param['curl'];
-            $data['color']=$param['color'];
-            $data['img']=$param['img']; 
-            $result=$image->update($data);
-             if($result){
-		  return $this->success();
-            }else{
-                  throw new ApiException('图片风格更新失败', ERROR::STYLE_UPDATE_FAILED);
-            }
+        $fields = ['id', 'style', 'length','curl','color','img','status'];
+        $image=ImageStyle::select($fields)->find($id);
+    	if(!$image && $image['status']!=1){
+            throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
+        }
+        $data=[];
+        $data['style']=$param['style'];
+        $data['length']=$param['length'];
+        $data['curl']=$param['curl'];
+        $data['color']=$param['color'];
+        $img = array('original' => $param['original'], 'thumb' => $param['thumb']);
+        $data['img']=  json_encode($img); 
+        $result=$image->update($data);
+         if($result){
+              return $this->success();
+        }else{
+              throw new ApiException('图片风格更新失败', ERROR::STYLE_UPDATE_FAILED);
+        }
      }
     /**
 	 * @api {post} /ImageStyle/show/:id 5.查找一张图片
@@ -249,6 +255,8 @@ class ImageStyleController extends Controller{
     {
     	 $fields = ['id', 'style', 'length','curl','color','img'];  
          $image=ImageStyle::select($fields)->find($id);
+         $imgData = json_decode($image['img'], true);
+         $image['img'] = $imgData['original'];
          return $this->success($image);
      }
        

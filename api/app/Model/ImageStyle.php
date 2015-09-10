@@ -38,7 +38,8 @@ class ImageStyle  extends Model{
          if(!empty($param['img'])){
 	        $query = $query->where('img','=',$param['img']);
 	}
-        $query = $query->where('status','=',1);      
+        $query = $query->where('status','=',1);  
+        $query = $query->orderBy('id','desc');  
         $page = isset($param['page'])?max($param['page'],1):1;
 	$page_size = isset($param['page_size'])?$param['page_size']:20;
            //手动设置页数
@@ -48,6 +49,12 @@ class ImageStyle  extends Model{
 
       $fields = ['id', 'style', 'length','curl','color','img'];  
       $result = $query->select($fields)->paginate($page_size)->toArray();
+      
+      foreach($result as &$item)
+      {
+          $imgData = json_decode($item['img'], true);
+          $item['img'] = $imgData['thumb'];
+      }
       unset($result['next_page_url']);
       unset($result['prev_page_url']);
       return $result;
