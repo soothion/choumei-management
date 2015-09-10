@@ -6,6 +6,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
+
 class ShopCountLog extends Model
 {
     public $timestamps = false;
@@ -64,7 +66,18 @@ class ShopCountLog extends Model
             $update_method == "increment";
         }
         
+        $record = ['salon_id'=>$salon_id,
+            'type'=>$type,
+            'money'=>$money,
+           // 'balance_money'=>$balance_money,
+            'count_at'=>$time,
+            'remark'=>$remark,
+            'created_at'=>date("Y-m-d H:i:s")];
+        
+        
         //之前的信息
+        
+        DB::beginTransaction();
         $model = self::where('salon_id',$salon_id)->where("count_at","<=",$time)->select("balance_money")->orderBy('count_at','DESC')->orderBy('id','DESC')->first();
 
         if(!empty($model))
@@ -75,19 +88,14 @@ class ShopCountLog extends Model
         {
             $balance_money = $change_money;
         }
+        
+        $record['balance_money'] = $balance_money;
                 
         //插入记录
-        $id = self::insertGetId([
-            'salon_id'=>$salon_id,
-            'type'=>$type,
-            'money'=>$money,
-            'balance_money'=>$balance_money,
-            'count_at'=>$time,
-            'remark'=>$remark,
-            'created_at'=>date("Y-m-d H:i:s")
-        ]);
+        $id = self::insertGetId($record);
         //更新本条记录之后的余额信息
         self::where('salon_id',$salon_id)->where("id","<>",$id)->where("count_at",">=",$time)->{$update_method}("balance_money",abs($money));
+        DB::commit();
         
     }
     
