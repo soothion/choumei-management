@@ -77,7 +77,7 @@ class ShopCountLog extends Model
         
         //之前的信息
         
-        DB::beginTransaction();
+       // DB::beginTransaction();
         $model = self::where('salon_id',$salon_id)->where("count_at","<=",$time)->select("balance_money")->orderBy('count_at','DESC')->orderBy('id','DESC')->first();
 
         if(!empty($model))
@@ -99,10 +99,30 @@ class ShopCountLog extends Model
             'remark'=>$remark,
             'created_at'=>date("Y-m-d H:i:s")
         ]);
-        //更新本条记录之后的余额信息
-        self::where('salon_id',$salon_id)->where("id","<",$id)->where("count_at",">=",$time)->{$update_method}("balance_money",abs($money));
-        DB::commit();
         
+        self::count_after($salon_id,$time,$balance_money);
+        //更新本条记录之后的余额信息
+        //self::where('salon_id',$salon_id)->where("id","<",$id)->where("count_at",">=",$time)->{$update_method}("balance_money",abs($money));
+        //DB::commit();
+        
+    }
+    
+    public static function count_after($salon_id,$count_at,$last_balance)
+    {
+        $items = ShopCountLog::select(['id','type','money'])->where('salon_id',$salon_id)->where('count_at',">=",$count_at)->orderBy('count_at','ASC')->orderBy('id','DESC')->get()->toArray();
+        foreach ($items as $item)
+        {
+            $id = $item['id'];
+            $type = intval($item['type']);
+            $money = floatval($item['money']);
+            $change_money = $money;
+            if($type == ShopCountLog::TYPE_OF_COMMISSION || $type == ShopCountLog::TYPE_OF_SPEND)
+            {
+                $change_money *= -1;
+            }
+            $last_balance += $change_money;
+            ShopCountLog::where('id',$id)->update(['balance_money'=>$last_balance]);
+        }
     }
     
     /**
