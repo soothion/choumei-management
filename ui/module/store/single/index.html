@@ -68,8 +68,8 @@
                  <tr>
                  <td><%=i+1%></td>
 				
-					<td><%=item.salon.sn%></td>
-					<td><%=item.salon.salonname%></td>
+					<td><%=item.salon?item.salon.sn:""%></td>
+					<td><%=item.salon?item.salon.salonname:""%></td>
                   <td><%=item.code%></td>
 				  <td><%=type[item.type]%></td>
 				  <td><%=pay_type[item.pay_type]%></td>
