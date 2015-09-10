@@ -650,6 +650,16 @@ Route::group(['middleware'], function(){
 	'as'=>'bounty.refundDetail',
 	'uses'=>'Bounty\BountyController@refundDetail'
 	    ));
+    
+    Route::any('bounty/accept',array(  //赏金单退款详情
+	'as'=>'bounty.accept',
+	'uses'=>'Bounty\BountyController@accept'
+	    ));
+    
+    Route::any('bounty/reject',array(  //赏金单退款详情
+	'as'=>'bounty.reject',
+	'uses'=>'Bounty\BountyController@reject'
+	    ));
 
     Route::any('requestLog/index',array(  //请求日志列表
 	'as'=>'requestLog.index',

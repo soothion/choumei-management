@@ -236,34 +236,22 @@ class BountyController extends Controller {
      *
      * @apiSuccessExample Success-Response:
      * 	{
-     * 	    "result": 1,
-     * 	    "data": {
-     * 	        "total": 51,
-     * 	        "perPage": 10,
-     * 	        "records": 510,
-     * 	        "currentPage": 1,
-     * 	        "from": 1,
-     * 	        "to": 10,
-     *          "amount":12000,
-     * 	        "data": [
-     * 	            {
-     *                  "btId":
-     *                  "btSn" :"33833797391"
-     *                  "tn" :"1224362901201506096196702838"
-     *                  "payType" :1
-     *                  "money" :200
-     *                  "addTime" :1434332931
-     *                  "hairStylistMobile" :18680370905
-     *                  "userMobile" :18680370905
-     *                  "salonName" :永琪美容美发（南光店）
-     *                  "isPay" :2
-     * 	            }
-     *              ......
-     * 	        ]
-     * 	    }
-     * 	}
-     *
-     *
+     *      "result": 1,
+     *      "token": "",
+     *      "data":{
+     *              "btID": 1903,
+     *              "btSn": "3468005511776",
+     *              "btStatus": "不打赏",
+     *              "endTime": "2015-06-19 10:15:06",
+     *              "payType": "微信",
+     *              "money": 230,
+     *              "refundStatus": "申请退款",
+     *              "tn": "1224362901201506196029751743",
+     *              "userName": "10306986",
+     *              "userMobile": 1111111111,
+     *              "refundType": "原路返还"
+     *          }
+     *  }
      * @apiErrorExample Error-Response:
      * 		{
      * 		    "result": 0,
@@ -282,6 +270,62 @@ class BountyController extends Controller {
             return $this->error("找不到赏金单！");
         }
         return $this->success($detail);
+    }
+
+    /**
+     * @api {post} /bounty/accept 4.赏金单退款通过
+     * @apiName accept
+     * @apiGroup  bounty
+     *
+     * @apiParam {Array} ids 必选,赏金单Id数列.	      * 
+     * @apiSuccess {String} log 退款信息.
+     *
+     * @apiSuccessExample Success-Response:
+     * 	{
+     * 	    "result": 1,
+     * 	    "data": {
+     * 	        "log": "退款成功!",
+     * 	        ]
+     * 	    }
+     * 	}
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "退款失败！"
+     * 		}
+     */
+    function accept() {
+        
+    }
+
+    /**
+     * @api {post} /bounty/reject 5.赏金单退款拒绝
+     * @apiName reject
+     * @apiGroup  bounty
+     *
+     * @apiParam {Array} ids 必选,赏金单Id数列.	      * 
+     * @apiSuccess {String} log 退款信息.
+     *
+     * @apiSuccessExample Success-Response:
+     * 	{
+     * 	    "result": 1,
+     * 	    "data": {
+     * 	        "log": "执行成功!",
+     * 	        ]
+     * 	    }
+     * 	}
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "拒绝原因不能为空！"
+     * 		}
+     */
+    function reject() {
+
     }
 
 }
