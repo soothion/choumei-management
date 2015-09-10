@@ -305,6 +305,7 @@
 				options.multipart=false;
 				this.use(function(){
 					self.getToken(function(data){
+						options.init=options.init||{};
 						options.uptoken=data.uptoken;
 						Qiniu._fileName=data.fileName;
 						if(!options.max_file_size){
@@ -320,9 +321,10 @@
 							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
 						});
 						uploader.bind('UploadComplete',function(up,file){
-							parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
+							//console.log(arguments);
 						});
 						uploader.bind('FileUploaded',function(up,file,res){
+							parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
 							if(res&&res.response&&typeof res.response=='string'){
 								var data=JSON.parse(res.response);
 								console.log(up.getOption().fileName);
@@ -333,7 +335,7 @@
 							}
 						});
 						uploader.bind('Error',function(up, err, errTip){
-							parent.lib.popup.result({bool:true,text:errTip});
+							parent.lib.popup.result({bool:false,text:err.message});
 						});
 						cb &&cb(uploader);
 					});
@@ -352,17 +354,21 @@
 			},
 			image:function(options,cb){
 				options=$.extend({successText:'图片上传成功',loaderText:'图片上传中..'},options);
+				if(options.imageLimitSize){
+					if(options.auto_start===true){
+						options._auto_start=true;
+						options.auto_start=false;
+					}
+					
+				}
 				this.file(options,function(uploader){
-					uploader.bind('FilesAdded',function(up, files){
-						console.log(uploader);
-						plupload.each(files, function(file) {
-							console.log(file);
-						});
-					});
+					
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
 							var data=JSON.parse(res.response);
+							var options=up.getOption();
 							if(data.code==0){
+								parent.lib.popup.result({bool:true,text:options.successText||'图片上传成功'});
 								uploader.createThumbnails && uploader.createThumbnails(data.response);
 								uploader.preview&&uploader.preview(data.response)
 							}
@@ -399,6 +405,22 @@
 								$('input[name="'+this.getOption().postName+'"]').val(data.img);
 							}
 						}
+					}
+					console.log(uploader);
+					if(options.imageLimitSize){
+						uploader.area.find('input[type="file"]').on('change',function(){
+							console.log(lib.puploader.getObjectURL(this.files[0]));
+						});
+						/*
+						uploader.bind('FilesAdded',function(up, files){
+							console.log(uploader);
+							console.log(plupload);
+							plupload.each(files, function(file) {
+								var input=up.area.find('input[type="file"]')[0];
+								console.log(input.files[0]);
+								
+							});
+						});*/
 					}
 					cb &&cb(uploader);
 				});
@@ -643,8 +665,10 @@
                 success: function (data) {
 					if(data){
 						//防止xss攻击
-						data=JSON.stringify(data);
-						data=JSON.parse(data.replace(/>/g,'&gt;').replace(/</g,'&lt;'));
+						if(self.protocol.custom.xss!=='false'){
+							data=JSON.stringify(data);
+							data=JSON.parse(data.replace(/>/g,'&gt;').replace(/</g,'&lt;'));
+						}
 						if(!self.exception(data)){
 							self.template(self.parseResponse(data));
 						}

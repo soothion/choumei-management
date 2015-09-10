@@ -16,9 +16,14 @@
 		<hr />
 	</div>	
 	
-	<div class="wrapper" ajat="<%if(query.id){%>message/getOne?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+	<div class="wrapper" ajat="<%if(query.id){%>message/getOne?id=<%=query.id%><%}%>#domid=form&tempid=form-t&xss=false" id="form">
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%=query._?"message/update":"message/create"%>" data-xss="none">
+				<div class="detail-operation">
+					<button class="btn" onclick="history.back()" type="button" >取消</button>
+					<span class="space"></span>
+					<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
+				</div>
                  <div class="control-group">
                     <label class="control-label">发送对象：</label>
 					<div class="control">
@@ -77,7 +82,7 @@
 							</ul>
 							
 						</div>
-						<input type="hidden" name="receivers" id="receivers" />
+						<input type="hidden" name="receivers" id="receivers" value="<%=data.receivers%>" />
 					</div>
                 </div>  
 				<div class="control-separation">
@@ -148,10 +153,22 @@
 							<span>编辑生成</span>
 						</label>
 						<div style="margin-top:10px">
-							<input type="text"  id="url"/>
+							<input type="text"  id="url" value="<%=data.url%>" style="<%=data.content?"display:none":""%>"/>
 							<div id="editor" type="text/plain" style="width:800px;height:300px;"></div>
+							<div class="hide">
+								<div id="edui_simpleupload" class="edui-box edui-button edui-for-simpleupload edui-default">
+									<div id="edui_simpleupload_state" class="edui-default">
+										<div class="edui-button-wrap edui-default">
+											<div id="edui15_body"  title="单图上传" class="edui-button-body edui-default" >
+												<div class="edui-box edui-icon edui-default" id="ueditor-upload">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<input type="hidden" id="hidden" required />
+						<input type="hidden" id="hidden" required value="<%=data.url||data.content%>" />
 						<br />
 					</div>
                 </div>  
@@ -168,14 +185,44 @@
 		 
 	</div>
 		<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
-		<script type="text/javascript" src="/ueditor/_examples/editor_api.js"></script>
+		<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
 		<script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
         <script type="text/javascript">
-			$('#form').one('_ready',function(){
+			$('#form').one('_ready',function(e,data){
 				var form=$(this).find('form');
+				//编辑器
 				window.ue = UE.getEditor('editor');
-				$('#editor').hide();
+				setTimeout(function(){
+					$('#edui14').after($('#edui_simpleupload'));
+					lib.puploader.image({
+						browse_button: 'ueditor-upload',
+						auto_start:true,
+						postName:"src",
+						filters: {
+							mime_types : [
+								{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
+							]
+						},
+						max_file_size:'1mb'
+					},function(uploader){
+						uploader.bind('FileUploaded',function(up,file,res){
+							if(res&&res.response&&typeof res.response=='string'){
+								var data=JSON.parse(res.response);
+								if(data.code==0&&data.response)
+								UE.getEditor('editor').execCommand('insertHtml','<img src="'+data.response.img +'"/>');
+							}
+						});
+					});
+					if(data.response.url||data.response.title===undefined){
+						$('#editor').hide();
+					}else{
+						console.log(data.response.content);
+						 UE.getEditor('editor').setContent(data.response.content);
+					}
+				},500);
 				
+				
+				//预览消息页面
 				$('#preview').on('click',function(){
 					var action=form.attr('action');
 					form.attr('action','message/addingPreview/');
@@ -206,7 +253,7 @@
 					}
 				})
 				
-				
+				/**添加手机验证**/
 				$('.editor-validate').on('keydown','input',function(e){
 					var $this=$(this);
 					if(e.keyCode==13){
@@ -266,65 +313,21 @@
 						$(this).find('input').last().focus();
 					}
 				});
-			});
-			
-			lib.puploader.image({
-				browse_button: 'imageUpload',
-				auto_start:true,
-				postName:"img",
-				filters: {
-				    mime_types : [
-						{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
-					]
-                },
-				max_file_size:'2mb',
-				init:{}
-			});
-			
-			setTimeout(function(){
-				$('#edui148 .edui-icon').attr('id','ueditor-upload');
+				
+				//图片上传
 				lib.puploader.image({
-					browse_button: 'ueditor-upload',
+					browse_button: 'imageUpload',
 					auto_start:true,
-					postName:"src",
+					postName:"img",
 					filters: {
 						mime_types : [
-							{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
 						]
 					},
-					init:{
-						
-					}
-				},function(uploader){
-					uploader.bind('FileUploaded',function(up,file,res){
-						if(res&&res.response&&typeof res.response=='string'){
-							var data=JSON.parse(res.response);
-							if(data.code==0&&data.response)
-							UE.getEditor('editor').execCommand('insertHtml','<img src="'+data.response.img +'"/>');
-						}
-					});
+					max_file_size:'2mb'
 				});
-			},2000);
-			/*
-			lib.uploader.image({
-				auto:true,
-				server: "http://service.choumei.cn/upload/image",
-				pick  : {id:'#imageUpload',multiple:false},
-				resize: false,
-				fileSingleSizeLimit : 2*1024*1024,
-				//imageLimitSize:"512*512",
-				imageLimitSize:function(width,height){
-					return true
-				},
-				accept :{
-					title: 'Images',
-					extensions: 'jpg,jpeg,png',
-					mimeTypes: 'image/jpeg,image/png'                
-				},
-				postName:'images'
-			},function(uploader){
-				
-			});*/
+			});
+			
 			$(document).on('change','.radio',function(){
 				var val=$(this).val();
 				var editor=$('.editor-validate');
@@ -342,6 +345,8 @@
 					editor.show().prev().hide();
 				}
 			});
+			
+			
 		</script>  
   </body>
 </html>
