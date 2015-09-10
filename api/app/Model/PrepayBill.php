@@ -134,6 +134,7 @@ class PrepayBill extends Model
             !isset($params['code']) ||//三方code
             !isset($params['salon_id']) ||
             !isset($params['merchant_id']) ||
+            !isset($params['type']) ||
             !isset($params['money']) ||//金额
             !isset($params['receive_type']) ||//支付方式
             !isset($params['require_day']) ||//要求付款日期
@@ -150,24 +151,14 @@ class PrepayBill extends Model
             'merchant_id'  => $params['merchant_id'],
             'other_id'  => $params['id'],
             'other_code'  => $params['code'],
-            'type'  => self::TYPE_OF_RETURN,
+            'type'  => $params['type'],
             'uid'  => $params['make_uid'],
             'pay_money'  => $params['money'],
             'pay_type'  => $params['receive_type'],
             'day'  => $params['require_day'],
             'pay_day'  => $params['receive_day'],
-       ];
-        
-       self::makeCompleted($record);
-       $res = self::insertGetId($record);
-       
-       $now_date = date("Y-m-d H:i:s");
-       //如果是账扣支付
-       if($params['receive_type'] == 2)
-       {
-           $record['id'] = $res['id'];
-           PayManage::makeFromPrepayReturn($record);
-       }       
+       ];        
+       $res = self::makeCompleted($record);
        return $res;     
     }
     
