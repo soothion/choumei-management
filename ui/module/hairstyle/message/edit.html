@@ -16,9 +16,9 @@
 		<hr />
 	</div>	
 	
-	<div class="wrapper" ajat="<%if(query.id){%>user/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+	<div class="wrapper" ajat="<%if(query.id){%>message/getOne?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="message/addingPreview/" data-xss="none">
+		<form novalidate method="post" class="form-vertical" data-role="form" action="<%=query._?"message/update":"message/create"%>" data-xss="none">
                  <div class="control-group">
                     <label class="control-label">发送对象：</label>
 					<div class="control">
@@ -63,12 +63,19 @@
 								line-height:24px;
 							}
 						</style>
-						<div class="editor-validate input untransition" style="display:none;">
+						<div class="editor-validate input untransition" style="<%=!data.receive_type||data.receive_type==1 ? "display:none;" : "" %>">
 							<ul>
+								<%if(!data.receivers){
+									data.receivers="";
+									}
+								%>
+								<%data.receivers.split(",").forEach(function(item){%>
 								<li>
-									<input type="text" id="er-1" required requiredmsg="请输入手机号码" pattern="mobile" patternmsg="手机号码不正确" /><label class="control-help" for="er-1"></label>
+									<input type="text" id="er-1" value="<%=item%>" required requiredmsg="请输入手机号码" pattern="mobile" patternmsg="手机号码不正确" /><label class="control-help" for="er-1"></label>
 								</li>
+								<%})%>
 							</ul>
+							
 						</div>
 						<input type="hidden" name="receivers" id="receivers" />
 					</div>
@@ -80,20 +87,21 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>标题：</label>
                     <div class="control">
-                        <input type="text" required maxlength="32" name="title">
+                        <input type="text" required maxlength="32" name="title" value="<%=data.title%>">
 						<span class="weak">(限制32字以内)</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>摘要：</label>
                     <div class="control">
-					<input type="text" required maxlength="32" name="description">
+					<input type="text" required maxlength="32" name="description" value="<%=data.description%>">
 					<span class="weak">(限制32字以内)</span>
 					</div>
                 </div>
 				 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>列表展示图片：</label>
 					<div class="control">
+						<!--
 						 <div class="control-image">
 								<div class="control-thumbnails" data-max="2"></div>
 								<div class="control-image-upload">
@@ -107,6 +115,19 @@
 						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
 						 <br />
 						 <input type="checkbox" class="hide" name="images"  requiredmsg="请上传图片" />
+						 -->
+						  <div class="control-image">
+								<div class="control-single-image">
+									<img src="<%=data.img%>" alt="" />
+									<div class="control-image-ud">
+										<div id="imageUpload">上传图片</div>
+									</div>
+								</div>
+							</div>
+						 <span class="space"></span>
+						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
+						 <br />
+						<input type="hidden" name="img" value="<%=data.img%>" required requiredmsg="请上传图片">
 					</div>
                 </div>
 				<div class="control-separation">
@@ -118,12 +139,12 @@
 					<div class="control">
 						<label>
 							<input type="radio" name="switch1" value="1" class="radio-editor"
-							<%=!data.aa||data.aa==1 ? "checked" : "" %>>
+							<%=data.url||!data.content ? "checked" : "" %>>
 							<span>信息链接</span>
 						</label>
 						<label>
 							<input type="radio" name="switch1" value="2" class="radio-editor"
-							<%=data.aa==2 ? "checked" : "" %>>
+							<%=data.content ? "checked" : "" %>>
 							<span>编辑生成</span>
 						</label>
 						<div style="margin-top:10px">
@@ -137,7 +158,7 @@
 				<div class="control-group">
 					<label class="control-label" for=""></label>
 					<div class="control">
-						<button class="btn-primary" type="submit">提交</button>
+						<button class="btn-primary" type="submit" id="submit">提交</button>
 						<span class="space"></span>
 						<button class="btn" type="submit" id="preview">预览</button>
 					</div>
@@ -155,7 +176,6 @@
 				window.ue = UE.getEditor('editor');
 				$('#editor').hide();
 				
-				
 				$('#preview').on('click',function(){
 					var action=form.attr('action');
 					form.attr('action','message/addingPreview/');
@@ -170,12 +190,22 @@
 					if(val==2){
 						$('#hidden').attr('name','content').val(window.ue.getContent());
 					}
+					form.one('success',function(e,data){
+						if(data.result==1&&data.data){
+							window.open('preview.html?key='+data.data,'_blank');
+						}
+					});
 				});
-				form.on('success',function(e,data){
-					if(data.result==1&&data.data){
-						window.open('preview.html?key='+data.data,'_blank');
+				$('#submit').on('click',function(){
+					var val=$('.radio-editor:checked').val();
+					if(val==1){
+						$('#hidden').attr('name','url').val($('#url').val());
+					}
+					if(val==2){
+						$('#hidden').attr('name','content').val(window.ue.getContent());
 					}
 				})
+				
 				
 				$('.editor-validate').on('keydown','input',function(e){
 					var $this=$(this);
@@ -237,44 +267,44 @@
 					}
 				});
 			});
-			/*
+			
 			lib.puploader.image({
 				browse_button: 'imageUpload',
 				auto_start:true,
-				postName:"src",
+				postName:"img",
 				filters: {
 				    mime_types : [
 						{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
-					]
+					],
+					max_file_size:'2mb'
                 },
-				init:{
-					
-				}
-			});*/
-			setTimeout(function(){
-			$('#edui148 .edui-icon').attr('id','ueditor-upload');
-			lib.puploader.image({
-				browse_button: 'ueditor-upload',
-				auto_start:true,
-				postName:"src",
-				filters: {
-				    mime_types : [
-						{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
-					]
-                },
-				init:{
-					
-				}
-			},function(uploader){
-				uploader.bind('FileUploaded',function(up,file,res){
-					if(res&&res.response&&typeof res.response=='string'){
-						var data=JSON.parse(res.response);
-						if(data.code==0&&data.response)
-						UE.getEditor('editor').execCommand('insertHtml','<img src="'+data.response.img +'"/>');
-					}
-				});
+				init:{}
 			});
-			},2000)
+			
+			setTimeout(function(){
+				$('#edui148 .edui-icon').attr('id','ueditor-upload');
+				lib.puploader.image({
+					browse_button: 'ueditor-upload',
+					auto_start:true,
+					postName:"src",
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
+						]
+					},
+					init:{
+						
+					}
+				},function(uploader){
+					uploader.bind('FileUploaded',function(up,file,res){
+						if(res&&res.response&&typeof res.response=='string'){
+							var data=JSON.parse(res.response);
+							if(data.code==0&&data.response)
+							UE.getEditor('editor').execCommand('insertHtml','<img src="'+data.response.img +'"/>');
+						}
+					});
+				});
+			},2000);
 			/*
 			lib.uploader.image({
 				auto:true,
@@ -312,9 +342,6 @@
 					editor.show().prev().hide();
 				}
 			});
-			lib.puploader.use(function(){
-				lib.puploader.getToken();
-			})
 		</script>  
   </body>
 </html>

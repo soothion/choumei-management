@@ -295,12 +295,24 @@
 				var uploader = Qiniu.uploader(options);
 				return uploader;
 			},
+			createImage:function(){
+				var imagePreview=$('<div style="position:absolute;left:0;top:0;z-index:-1;width:100%;height:100%;overflow:hidden;visibility:hidden;"><img/></div>')
+				$(document.body).append(imagePreview);
+				return imagePreview;
+			},
 			file:function(options,cb){
 				var self=this;
+				options.multipart=false;
 				this.use(function(){
 					self.getToken(function(data){
 						options.uptoken=data.uptoken;
+						Qiniu._fileName=data.fileName;
 						options.max_file_size=data.maxFileSize+'mb';
+						options.init.Key= function(up, file) {
+							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+						   // 该配置必须要在 unique_names: false , save_key: false 时才生效,key即为上传文件名
+						   return Qiniu._fileName;
+						}
 						var uploader=self.create(options);
 						uploader.bind('UploadProgress',function(){
 							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
@@ -311,7 +323,11 @@
 						uploader.bind('FileUploaded',function(up,file,res){
 							if(res&&res.response&&typeof res.response=='string'){
 								var data=JSON.parse(res.response);
-								//console.log(data);
+								console.log(up.getOption().fileName);
+								self.getToken(function(data){
+									Qiniu.token=data.uptoken;
+									Qiniu._fileName=data.fileName;
+								});
 							}
 						});
 						uploader.bind('Error',function(up, err, errTip){
@@ -321,13 +337,32 @@
 					});
 				});
 			},
+			getObjectURL:function(file) {
+				var url = null ; 
+				if (window.createObjectURL!=undefined) { // basic
+					url = window.createObjectURL(file) ;
+				} else if (window.URL!=undefined) { // mozilla(firefox)
+					url = window.URL.createObjectURL(file) ;
+				} else if (window.webkitURL!=undefined) { // webkit or chrome
+					url = window.webkitURL.createObjectURL(file) ;
+				}
+				return url ;
+			},
 			image:function(options,cb){
-				options=$.extend({successText:'图片上传成功',loaderText:'图片上传中..'},options) 
+				options=$.extend({successText:'图片上传成功',loaderText:'图片上传中..'},options);
 				this.file(options,function(uploader){
+					uploader.bind('FilesAdded',function(up, files){
+						plupload.each(files, function(file) {
+							//console.log(file);
+						});
+					});
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
 							var data=JSON.parse(res.response);
-							uploader.createThumbnails && uploader.createThumbnails(data.response)
+							if(data.code==0){
+								uploader.createThumbnails && uploader.createThumbnails(data.response);
+								uploader.preview&&uploader.preview(data.response)
+							}
 						}
 					});
 					if(options.browse_button){
@@ -354,6 +389,12 @@
 									uploader.thumbnails.siblings('.control-image-upload').show();
 								}
 							});
+						}else if($target.closest('.control-single-image').length==1){
+							uploader.area=$target.closest('.control-single-image');
+							uploader.preview=function(data){
+								this.area.find('img').attr('src',data.img);
+								$('input[name="'+this.getOption().postName+'"]').val(data.img);
+							}
 						}
 					}
 					cb &&cb(uploader);

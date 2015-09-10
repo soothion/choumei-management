@@ -48,19 +48,19 @@
 			   <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>长度：</label>
                      <label>
-                    <input type="radio" class="radio" name="length" value="1"
+                    <input type="radio" name="length" value="1"
                     <%=!data.length||data.length==1 ? "checked" : "" %>>
                     <span>长发</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="length" value="2" 
+                    <input type="radio" name="length" value="2" 
                     <%=data.length==2 ? "checked" : "" %>>
                     <span>中发</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="length" value="3"
+                    <input type="radio" name="length" value="3"
                     <%=data.length==3 ? "checked" : "" %>>
                     <span>短发</span>
                     </label>
@@ -69,37 +69,37 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>卷度：</label>
                      <label>
-                    <input type="radio" class="radio" name="curl" value="1"
+                    <input type="radio" name="curl" value="1"
                     <%=!data.curl||data.curl==1 ? "checked" : "" %>>
                     <span>全卷</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="curl" value="2" 
+                    <input type="radio" name="curl" value="2" 
                     <%=data.curl==2 ? "checked" : "" %>>
                     <span>半卷</span>
                     </label>
 
                    
 					  <label>
-                    <input type="radio" class="radio" name="curl" value="3"
+                    <input type="radio" name="curl" value="3"
                     <%=data.curl==3 ? "checked" : "" %>>
                     <span>C卷</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="curl" value="4" 
+                    <input type="radio" name="curl" value="4" 
                     <%=data.curl==4 ? "checked" : "" %>>
                     <span>外翻</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="curl" value="5"
+                    <input type="radio" name="curl" value="5"
                     <%=data.curl==5 ? "checked" : "" %>>
                     <span>直发</span>
                     </label>
 					 <label>
-                    <input type="radio" class="radio" name="curl" value="6"
+                    <input type="radio" name="curl" value="6"
                     <%=data.curl==6 ? "checked" : "" %>>
                     <span>纹理</span>
                     </label>
@@ -109,24 +109,24 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>颜色：</label>
                      <label>
-                    <input type="radio" class="radio" name="color" value="1"
+                    <input type="radio" name="color" value="1"
                     <%=!data.color||data.color==1 ? "checked" : "" %>>
                     <span>冷色</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="color" value="2" 
+                    <input type="radio" name="color" value="2" 
                     <%=data.color==2 ? "checked" : "" %>>
                     <span>暖色</span>
                     </label>
 
                     <label>
-                    <input type="radio" class="radio" name="color" value="3"
+                    <input type="radio" name="color" value="3"
                     <%=data.color==3 ? "checked" : "" %>>
                     <span>中性</span>
                     </label>
 					   <label>
-                    <input type="radio" class="radio" name="color" value="4"
+                    <input type="radio" name="color" value="4"
                     <%=data.color==4 ? "checked" : "" %>>
                     <span>时尚</span>
                     </label>
@@ -136,16 +136,17 @@
                     <label class="control-label" for=""><span class="red">*</span>风格图片：</label>
 					<div class="control">
 						 <div class="control-image">
-								<div class="control-thumbnails" data-max="2"></div>
-								<div class="control-image-upload" id="imageUpload">
-									<i class="fa fa-image"></i>
-									<em>上传列表图片</em>
+								<div class="control-single-image">
+									<img src="" alt="" />
+									<div class="control-image-ud">
+										<div id="imageUpload">上传图片</div>
+									</div>
 								</div>
 							</div>
 						 <span class="space"></span>
 						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
 						 <br />
-						<input type="text" class="radio" name="img" value="http://www.baidu.com">
+						<input type="hidden" name="img" value="http://www.baidu.com">
 					</div>
                 </div>
 					 
@@ -163,7 +164,18 @@
 	</div>
 	 
 	 <script type="text/javascript">
-			
+			lib.puploader.image({
+				browse_button: 'imageUpload',
+				auto_start:true,
+				postName:"img",
+				filters: {
+				    mime_types : [
+						{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
+					],
+					max_file_size:'2mb'
+                },
+				init:{}
+			});
 	 </script>
   </body>
 </html>

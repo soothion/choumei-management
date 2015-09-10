@@ -589,6 +589,7 @@ input:focus+.unit{
 	-webkit-transition:bottom 0.2s ease 0s;
 	-moz-transition:bottom 0.2s ease 0s;
 	transition:bottom 0.2s ease 0s;
+	cursor:pointer;
 }
 .control-image-ud .fa{
 	font-size:18px;

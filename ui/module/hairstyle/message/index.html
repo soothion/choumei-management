@@ -25,19 +25,17 @@
                     <input type="text" placeholder="请输入标题" name="title">
 					<span class="space"></span>
                    <label>状态：</label>
-                   <select name="status">
+                   <select name="status" id="select">
                         <option value="">全部</option>
                         <option value="0">未上线</option>
                         <option value="1">已上线</option>
                     </select>
                 
                     <span class="space"></span>
-                <div id="div_test" style="width:200px;height:200px;border:1px solid red;">
                     <label>上线时间：</label> 
                     <span class="date-group">
                         <input type="date" data-role="start" name="starttime" id="ontime"/>到<input type="date" data-role="end" name="endtime"  id="ontime2"/>
                     </span>
-               </div>
                     <button class="btn" type="submit">查询</button>
                 </div>
 			</form>
@@ -87,28 +85,16 @@
 	</div>
 	
 	  <script type="text/javascript">
-			/*$(function(){
-				$(document).on('change','#select',function(){
-					var val=$("#select").val();
+		
+			$(document).ready(function() {
+				$('#select').on('change',function(){
+					var val=$(this).val();
 					if(val!=1){
-						$("#ontime").attr({"disabled":"disabled"});
-						$("#ontime2").attr({"disabled":"disabled"});
+						$(".date-group input").attr({"disabled":"disabled"});
 					}else{
-						$("#ontime").removeAttr("disabled");
-						$("#ontime2").removeAttr("disabled");
+						$(".date-group input").removeAttr("disabled");
 					}
 				})
-			});*/
-			$(document).ready(function() {
-				var val=$("#select").val();
-				if(val!=1){
-				$("#div_test").attr({"disabled":"disabled"});
-				 
-				} 
-				else{
-						$("#div_test").removeAttr("disabled");
-						 
-					}
 			}); 
 		</script>  
     </body>
