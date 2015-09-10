@@ -174,7 +174,6 @@ class RebateController extends Controller{
 		//分页
 	    $array = $query->select($fields)->get();
 	    foreach ($array as $key => $value) {
-	    	$result[$key]['id'] = $key+1;
 	    	$result[$key]['salonsn'] = $value->salonsn;
 	    	$result[$key]['salonname'] = $value->salonname;
 	    	$result[$key]['sn'] = $value->sn;
@@ -192,7 +191,7 @@ class RebateController extends Controller{
 		
 		//导出excel	   
 		$title = '返佣单列表'.date('Ymd');
-		$header = ['序号','店铺编号','店铺名称','返佣编号','结算起始日','结算截止日','金额','创建日期','确认日期','确认人','制单人','状态'];
+		$header = ['店铺编号','店铺名称','返佣编号','结算起始日','结算截止日','金额','创建日期','确认日期','确认人','制单人','状态'];
 		Excel::create($title, function($excel) use($result,$header){
 					$excel->setTitle('rebate');
 		    		$excel->sheet('Sheet1', function($sheet) use($result,$header){

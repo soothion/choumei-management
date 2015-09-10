@@ -189,7 +189,6 @@ class CommissionController extends Controller{
 	    $array = $query->select($fields)->get();
 	    $result = [];
 	    foreach ($array as $key => $value) {
-	    	$result[$key]['id'] = $key+1;
 	    	$result[$key]['salonsn'] = $value->salonsn;
 	    	$result[$key]['salonname'] = $value->salonname;
 	    	$result[$key]['sn'] = $value->sn;
@@ -201,7 +200,7 @@ class CommissionController extends Controller{
 		
 		//导出excel	   
 		$title = '佣金单列表'.date('Ymd');
-		$header = ['序号','店铺编号','店铺名称','返佣编号','金额','创建日期'];
+		$header = ['店铺编号','店铺名称','返佣编号','金额','创建日期'];
 		Excel::create($title, function($excel) use($result,$header){
 					$excel->setTitle('commission');
 		    		$excel->sheet('Sheet1', function($sheet) use($result,$header){
