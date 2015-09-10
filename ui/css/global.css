@@ -150,10 +150,14 @@ select{
     background:transparent no-repeat right center url('../images/select-down.svg');
 	background-size:20px 20px;
 }
-select:focus,.select-focus{
+select:focus,select.focus{
 	background-image:url('../images/select-up.svg')!important;
 }
-input[disabled],select[disabled],textarea[disabled],.checkbox[disabled]+label,.radio[disabled]+label{
+input[disabled],
+select[disabled],
+textarea[disabled],
+label>input[type="radio"][disabled]+span,
+label>input[type="checkbox"][disabled]+span{
 	opacity:0.6;
 	cursor: not-allowed;
 	background-color:#eee;
@@ -186,10 +190,13 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
     position: fixed;
     width:100%;
     height:100%;
+	background:#000;
     background:rgba(0,0,0,0.5);
     left:0;
     top:0;
     z-index: 999;
+	filter:alpha(opacity=50)\0;
+	filter:alpha(opacity=50)\9\0;
 }
 .popup{
     position: absolute;
@@ -199,6 +206,7 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
     z-index: 1000;
     -webkit-user-select:none;
     user-select:none;
+	line-height: 38px;
     line-height: 2.9rem;
 	/*
 	opacity: 0.2;
@@ -263,7 +271,9 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
     box-shadow:0px 0px 10px rgba(0,0,0,0.1);
 }
 .popup-alert-title{
-    padding:0.5rem 1rem;
+	padding:15px;
+    padding:1.5rem 1rem;
+	line-height: 1.75;
 }
 .popup-alert-cancel,
 .popup-alert-define{
@@ -273,7 +283,7 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
     border-top:1px solid #E9E9E9;
 }
 .popup-footer .flex-item+.flex-item {
-    box-shadow:-1px 0px 0px #E9E9E9
+    border-left:1px solid #E9E9E9;
 }
 .popup-sheet,.popup-sheet-cancel{
     background:#fff;
@@ -335,9 +345,11 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
 }
 .popup-tips-text{
     color:#fff;
+	background:#3E4D5C;
     background:rgba(0,0,0,0.8);
     border-radius: 3px;
     display:inline-block;
+	padding:5px 20px;
     padding:0.4rem 1rem;
     line-height: 1.75;
 	font-size:1.1rem;
@@ -357,16 +369,20 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
 .touch-link:active{
     background-color:rgba(0,0,0,0.05);
 }
-input.radio,input.checkbox{
-    width:0!important;
+label>input[type="radio"],label>input[type="checkbox"]{
+    width:0;
 	opacity:0;
 	margin:0;
+	-webkit-appearance:none;
+    -moz-appearance:none;
+    -ms-appearance:none;
+    appearance:none;
 }
-input.radio+label,input.checkbox+label{
+label>input[type="radio"]+span,label>input[type="checkbox"]+span{
 	display:inline-block;
-	margin-right:20px;
+	margin-right:15px;
 }
-input.radio+label:before,input.checkbox+label:before{
+label>input[type="radio"]+span:before,label>input[type="checkbox"]+span:before{
     display: inline-block;
     width:8px;
     height:8px;
@@ -381,22 +397,20 @@ input.radio+label:before,input.checkbox+label:before{
     -ms-transition:all 0.2s ease 0s;
     transition:all 0.2s ease 0s;
 }
-input.checkbox+label:before{
+label>input[type="checkbox"]+span:before{
     border-radius:0;
     width:6px;
     height:6px;
 }
-input.radio:checked+label:before,input.checkbox:checked+label:before{
+label>input[type="radio"]:checked+span:before,label>input[type="checkbox"]:checked+span:before{
     box-shadow:0px 0px 0px 3px #fff,0px 0px 0px 4px rgba(223,49,49,0.8);
     background:rgba(223,49,49,0.8);
 }
-input.label{
-	width:0px!important;
-	opacity:0;
-	margin:0;
-	padding:0;
+.label{
+	margin:5px 5px 5px 0;
+	display:inline-block;
 }
-input.label+label{
+.label input+span{
 	display:inline-block;
 	vertical-align:middle;
 	border:1px solid #ddd;
@@ -407,10 +421,14 @@ input.label+label{
 	line-height:2.5rem;
 	cursor: pointer;
 }
-input.label:checked+label{
+.label input+span:before{
+	display:none!important;
+}
+.label input:checked+span{
 	border-color:#81aa2f;
 	color:#81aa2f;
 }
+
 .switch{
     display:none;
 }
@@ -487,4 +505,30 @@ input.label:checked+label{
 .drop-menu-item a:hover{
 	background:#2cc870;
 	color:#fff;
+}
+input[type="date"]{
+	position:relative;
+	background:no-repeat right 5px center url('/images/calendar.svg');
+	background-size: 18px 18px;
+}
+::-webkit-clear-button {
+    position:relative;
+	z-index:10;
+	margin-right:5px;
+	font-size:20px;
+	padding:0px 10px;
+	margin-left:5px;
+}
+::-webkit-inner-spin-button {
+	display:none;
+}
+::-webkit-calendar-picker-indicator {
+	position:absolute;
+	width:100%;
+	height:100%;
+	font-size:40px;
+	left:0px;
+	top:0px;
+	color:transparent;
+	background:transparent;
 }

@@ -1,14 +1,22 @@
 ﻿var slug={
-	'user.index':'/module/user/userList.html',
-	'role.index':'/module/role/index.html',
-	'permission.index':'/module/user/powerList.html',
-	'log.index':'/module/user/logList.html',
-	'salon.index':'/module/shop/index.html',
-	'salonAccount.index':'/module/shop/account.html',
-	'merchant.index':'/module/merchant/index.html',
-	'shop_count.index':'/module/shopSettlement/singleList.html',
-	'shop_count.delegate_list':'/module/shopSettlement/collectingOrderList.html',
-	'shop_count.balance':'/module/shopSettlement/fromBalance.html'
+	'user.index':'/module/system/user/index.html',
+	'role.index':'/module/system/role/index.html',
+	'permission.index':'/module/system/power/index.html',
+	'log.index':'/module/system/log/index.html',
+	'salon.index':'/module/store/shop/index.html',
+	'salonAccount.index':'/module/store/account/index.html',
+	'merchant.index':'/module/store/merchant/index.html',
+	'shop_count.index':'/module/store/single/index.html',
+	'shop_count.delegate_list':'/module/store/collection/index.html',
+	'shop_count.balance':'/module/store/balance/index.html',
+	'pay_manage.index':'/module/finance/payment/index.html',
+	'pay_manage.check_list':'/module/finance/approval/index.html#state=2',
+	'pay_manage.confirm_list':'/module/finance/define/index.html#state=3',
+	'receivables.index':'/module/finance/receivables/index.html',
+	'commission.index':'/module/finance/income/index.html',
+	'rebate.index':'/module/finance/income/list.html',
+	'message.index':'/module/hairstyle/message/index.html',
+	'ImageStyle.index':'/module/hairstyle/photo/index.html'
 }
 var access={
 	data:[],
@@ -21,7 +29,7 @@ var access={
 		return this.map[slug];
 	},
 	getData:function(){
-		return JSON.parse(localStorage.getItem('access-data'))
+		return JSON.parse(localStorage.getItem('access.data'))
 	},
 	foreach:function(data){
 		for(var i=0;i<data.length;i++){

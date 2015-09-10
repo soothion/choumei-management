@@ -1,0 +1,7 @@
+﻿<%data.forEach(function(item){%>
+	<div class="control-thumbnails-item" id="<%=item.id%>">
+		<img src="<%=item.img%>" alt="" />
+		<a class="fa fa-times-circle control-thumbnails-remove"></a>
+		<input type="checkbox" checked name="<%=data.postName%>" value="<%=item.img%>" />
+	</div>
+<%})%>

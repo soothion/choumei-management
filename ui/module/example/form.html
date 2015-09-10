@@ -40,14 +40,18 @@
 	<div class="control-group">
   		<label class="control-label" for="">性别</label>
   		<div class="control">
-			<input type="radio" checked="" name="sex" class="radio" id="radio1"><label for="radio1">男</label>
-			<input type="radio" name="sex" class="radio" id="radio2"><label for="radio2">女</label>
+			<label>
+				<input type="radio" name="radio" /><span>男</span>
+			</label>
+			<label>
+				<input type="radio" name="radio" /><span>女</span>
+			</label>
 		</div>
   	</div>
 	<div class="control-group">
   		<label class="control-label" for="">城市</label>
   		<div class="control">
-			<select requiredmsg="请选择城市" required name="city" class="select" id="city">
+			<select requiredmsg="请选择城市" required name="city"  id="city">
 				<option value="">城市</option>
 				<option value="1">深圳</option>
 				<option value="2">上海</option>
@@ -64,10 +68,12 @@
 	<div class="control-group">
   		<label class="control-label" for="">兴趣爱好</label>
   		<div class="control">
-			<input required type="checkbox" value="1" class="checkbox" id="checkbox1" name="love"><label for="checkbox1">吃货</label>
-			<input required type="checkbox" value="2" class="checkbox" id="checkbox2" name="love"><label for="checkbox2">游泳</label>
-			<input required type="checkbox" value="3" class="checkbox" id="checkbox3" name="love"><label for="checkbox3">打篮球</label>
-			<div class="control-help"></div>
+			<label>
+				<input type="checkbox" name="checkbox" required /><span>篮球</span>
+			</label>
+			<label>
+				<input type="checkbox" name="checkbox" required/><span>足球</span>
+			</label>
 		</div>
   	</div>
 	<div class="control-group">

@@ -1,26 +1,48 @@
 ﻿var cfg={
-	version:'1.1',
+	version:'1.4',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
-	dev:'http://192.168.13.46:8090/',
-	test:'',
-	product:'',
+	dev:{
+		host:'http://192.168.13.46:8040/',
+		token:'http://dev-cmweb.choumei.me/v1/file/qiniu/get-token.html',
+		upload:'http://qiniu-plupload.qiniudn.com/',
+		previewMessage:'http://dev-user.choumei.me/'
+	},
+	test:{
+		host:'<#MANAGER_BACK_URL#>',
+		token:'http://test-cmweb.choumei.me/v1/file/qiniu/get-token.html',
+		upload:'http://qiniu-plupload.qiniudn.com/',
+		previewMessage:'http://test-user.choumei.me/'
+	},
+	uat:{
+		host:'<#MANAGER_BACK_URL#>',
+		token:'http://uat-cmweb.choumei.me/v1/file/qiniu/get-token.html',
+		upload:'http://qiniu-plupload.qiniudn.com/',
+		previewMessage:'http://uat-user.choumei.me/'
+	},
+	product:{
+		host:'<#MANAGER_BACK_URL#>',
+		token:'http://cmweb.choumei.me/v1/file/qiniu/get-token.html',
+		upload:'http://qiniu-plupload.qiniudn.com/',
+		previewMessage:'http://user.choumei.me/'
+	},
 	getHost:function(){
-		if(cfg.url&&cfg.url.indexOf('<#')==-1){
-			return cfg.url;	
-		}
-		if(cfg.env){
-			return cfg[cfg.env];
-		}
+		return this[this.env].host;
 	}
 }
-if(!cfg.url&&(cfg.env=='dev'||cfg.env=='test')){
-	cfg.version=Math.random()*10;
+if(location.href.indexOf("http://test-")>-1){
+	cfg.env="test";
+}else if(location.href.indexOf("http://uat-")>-1){
+	cfg.env="uat";
+}else if(cfg.url&&cfg.url.indexOf('<#')==-1){
+	cfg.env="product";
 }
+cfg.url=cfg[cfg.env];
 
 document.writeln('<meta name="renderer" content="webkit|ie-stand">');
 document.writeln('<meta http-equiv=”X-UA-Compatible” content=”IE=edge” > ');
 document.writeln('<meta charset="utf-8">');
+document.writeln('<meta http-equiv="Access-Control-Allow-Origin" content="*">');
 document.writeln('<link rel="icon" href="http://app.choumei.cn/images/logo16.ico" type="image/x-icon">');
 document.writeln('<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">');
 document.writeln('<meta name="apple-mobile-web-app-capable" content="yes">');
@@ -30,10 +52,13 @@ document.writeln('<link rel="stylesheet" href="/awesome/css/font-awesome.min.css
 document.writeln('<link rel="stylesheet" href="/css/reset.css?v='+cfg.version+'" />');
 document.writeln('<link rel="stylesheet" href="/css/global.css?v='+cfg.version+'" />');
 document.writeln('<link rel="stylesheet" href="/css/admin.css?v='+cfg.version+'" />');
+document.writeln('<!--[if lt IE 9]><script type="text/javascript" src="/js/array.js"></script><![endif]-->');
 document.writeln('<script type="text/javascript" src="/js/jquery.min.js?v='+cfg.version+'"></script>');
+document.writeln('<!--[if IE 8]><script type="text/javascript" src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script><![endif]-->');
+document.writeln('<!--[if lt IE 10]><script type="text/javascript" src="/js/jquery.placeholder.js"></script><![endif]-->');
 document.writeln('<script type="text/javascript" src="/js/sea.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/ejs.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/lib.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/access.js?v='+cfg.version+'"></script>');
 document.writeln('<script type="text/javascript" src="/js/admin.js?v='+cfg.version+'"></script>');
-document.writeln('<!--[if IE 9]><script type="text/javascript">var ie9=true;</script><![endif]-->');
+document.writeln('<!--[if lt IE 10]><script type="text/javascript">var ie9=true;</script><![endif]-->');

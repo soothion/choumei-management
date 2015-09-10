@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>用户中心 </a><span>&gt;</span><a href="index.html">用户列表</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>用户列表</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<form data-role="hash">
+				<span class="input-group">
+					<select>
+						<option value="臭美号">臭美号</option>
+						<option value="手机号">手机号</option>
+						<option value="集团邀请码" >集团邀请码</option>
+						<option value="商家邀请码">商家邀请码</option>
+						<option value="活动邀请码">活动邀请码</option>
+					</select>
+					<input type="text" />
+				</span>
+				选择性别
+				<select>
+				    <option value="全部" >全部</option>
+				    <option value="男">男</option>
+				    <option value="女">女</option>
+				    <option value="未知">未知</option>
+				</select>
+				注册时间
+				<span class="date-group">
+					<input type="date" name="start" data-role="start" placeholder="YYYY-MM-DD"/>到<input name="end" type="date" data-role="end" placeholder="YYYY-MM-DD"/>
+				</span>
+				选择地区
+				<select id="province" name="provinceId" required ajat-one="true" style="width:100px" 
+				ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&provinceId=<%=query.provinceId%>" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&citiesId=<%=query.citiesId%>">
+				</select>
+				<select id="city" name="citiesId" required ajat-one="true" style="width:100px" 
+				ajat="<%if(query.provinceId){%>salonList/getProvinces?type=2&areaId=<%=query.provinceId%><%}%>#domid=city&tempid=city_t&citiesId=<%=query.citiesId%>"
+				ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=query.district%>">
+				</select>
+				<select id="area" name="district" 
+				required ajat-one="true"  style="width:100px" 
+				ajat="<%if(query.citiesId){%>salonList/getProvinces?type=3&areaId=<%=query.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=query.district%>"
+				ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=zone&tempid=zone_t&zone=<%=data.zone%>"
+				>
+				</select>
+				<button class="btn" type="submit">搜索</button>
+			</form>
+			<form action="role/export" data-role="export" data-slug="role.export"><button class="btn" type="submit"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+			<div class="table" ajat="role/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<table>
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>臭美号</th>
+                  <th>昵称</th>
+                  <th>性别</th>
+				  <th>会员等级</th>
+				  <th>手机号</th>
+				  <th>地区</th>
+				  <th>集团邀请码</th>
+				  <th>商家邀请码</th>
+				  <th>活动邀请码</th>
+				  <th>注册时间</th>
+				  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>			  
+				<%var data=data.data%>
+				<%data.forEach(function(item,i){%>
+                <tr>
+                  <td><%=i+1%></td>
+                  <td><%=item.name%></td>
+                  <td><%=item.name%></td>
+                  <td><%=item.name%></td>
+                  <td><%=item.name%></td>
+                  <td><%=item.name%></td>
+                  <td><%=item.name%></td>
+                  <td><%=item.name%></td>
+                  <td><%=item.name%></td>
+                  <td><%=item.name%></td>
+                  <td><%=item.name%></td>
+				  <td>
+					 <a class="link" target="_blank" data-slug="role.show,role.update" href="detail.html?id=<%=item.id%>">查看</a>
+					 <form action="" data-role="normal">
+						<button class="link">删除</button>
+					 </form>
+				  </td>
+                </tr>
+				<%})%>
+              </tbody>
+            </table>
+			<div class="pager">
+			</div>
+			</script>
+		</div>
+	</div>
+	<script type="text/template" id="province_t">
+		<option value="">省份</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.pid==protocol.custom.provinceId?"selected":""%> value="<%=item.pid%>"><%=item.pname%></option>
+		<%})%>
+	</script>
+
+	<script type="text/template" id="city_t">
+		<option value="">城市</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.iid==protocol.custom.citiesId?"selected":""%> value="<%=item.iid%>"><%=item.iname%></option>
+		<%})%>
+	</script>
+
+	<script type="text/template" id="area_t">
+		<option value="">地区</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.tid==protocol.custom.district?"selected":""%> value="<%=item.tid%>"><%=item.tname%></option>
+		<%})%>
+	</script>
+	<script type="text/javascript">
+		 
+	</script>
+  </body>
+</html>
