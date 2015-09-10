@@ -499,17 +499,9 @@ class ShopCountController extends Controller
             'sort_type'=>self::T_STRING,
         ]);
         $header = ['店铺编码','店铺名称','代收单号','代收金额','代收日期'];
-        $items = ShopCountApi::getInsteadReceiveCondition($param)->get()->toArray();
-        $count = count($items);
-        if($count > 10000)//一万条以上
-        {
-            echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
-            echo "<h2>你导出的数据超出1W条，会导致系统奔溃，请修改筛选条件分批导出!</h2>";
-            return;
-        }
+        $items = ShopCountApi::getInsteadReceiveCondition($param)->take(10000)->get()->toArray();
         Event::fire('shopcount.delegateExport');         
         $res = self::format_ir_data($items); 
-        unset($items);
         ini_set('memory_limit','256M');
         $this->export_xls("代收单".date("Ymd"), $header, $res);
     }

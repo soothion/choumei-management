@@ -120,7 +120,7 @@ class PrepayBill extends Model
         {
             $count_at = $params['count_at'];
         }
-        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['money'],$remark,$count_at);
+        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['pay_money'],$remark,$count_at);
         
         return ['id'=>$id,'code'=>$code]; 
     }
