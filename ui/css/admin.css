@@ -533,7 +533,7 @@ input:focus+.unit{
 .control-image-upload em{
 	display:block;
 	position:absolute;
-	bottom:30px;
+	bottom:18px;
 	left:0;
 	line-height:30px;
 	text-align:center;

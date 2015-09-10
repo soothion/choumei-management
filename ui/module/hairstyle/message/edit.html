@@ -152,8 +152,9 @@
         <script type="text/javascript">
 			$('#form').one('_ready',function(){
 				var form=$(this).find('form');
-				//window.ue = UE.getEditor('editor');
+				window.ue = UE.getEditor('editor');
 				$('#editor').hide();
+				
 				
 				$('#preview').on('click',function(){
 					var action=form.attr('action');
@@ -236,6 +237,7 @@
 					}
 				});
 			});
+			/*
 			lib.puploader.image({
 				browse_button: 'imageUpload',
 				auto_start:true,
@@ -248,7 +250,31 @@
 				init:{
 					
 				}
-			})
+			});*/
+			setTimeout(function(){
+			$('#edui148 .edui-icon').attr('id','ueditor-upload');
+			lib.puploader.image({
+				browse_button: 'ueditor-upload',
+				auto_start:true,
+				postName:"src",
+				filters: {
+				    mime_types : [
+						{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
+					]
+                },
+				init:{
+					
+				}
+			},function(uploader){
+				uploader.bind('FileUploaded',function(up,file,res){
+					if(res&&res.response&&typeof res.response=='string'){
+						var data=JSON.parse(res.response);
+						if(data.code==0&&data.response)
+						UE.getEditor('editor').execCommand('insertHtml','<img src="'+data.response.img +'"/>');
+					}
+				});
+			});
+			},2000)
 			/*
 			lib.uploader.image({
 				auto:true,
