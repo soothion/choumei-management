@@ -88,13 +88,19 @@ class ShopCountLog extends Model
         {
             $balance_money = $change_money;
         }
-        
-        $record['balance_money'] = $balance_money;
-                
+             
         //插入记录
-        $id = self::insertGetId($record);
+        $id = self::insertGetId([
+            'salon_id'=>$salon_id,
+            'type'=>$type,
+            'money'=>$money,
+            'balance_money'=>$balance_money,
+            'count_at'=>$time,
+            'remark'=>$remark,
+            'created_at'=>date("Y-m-d H:i:s")
+        ]);
         //更新本条记录之后的余额信息
-        self::where('salon_id',$salon_id)->where("id","<>",$id)->where("count_at",">=",$time)->{$update_method}("balance_money",abs($money));
+        self::where('salon_id',$salon_id)->where("id","<",$id)->where("count_at",">=",$time)->{$update_method}("balance_money",abs($money));
         DB::commit();
         
     }
