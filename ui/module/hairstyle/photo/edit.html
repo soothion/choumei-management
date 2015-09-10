@@ -145,7 +145,7 @@
 						 <span class="space"></span>
 						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
 						 <br />
-						 <input type="checkbox" class="" name="img" required requiredmsg="请上传图片" />
+						 <input type="checkbox" value="11" class="" name="img"    />
 					</div>
                 </div>				
 				<div class="control-group">
@@ -162,25 +162,7 @@
 	</div>
 	 
 	 <script type="text/javascript">
-			lib.uploader.image({
-				auto:true,
-				server: "http://service.choumei.cn/upload/image",
-				pick  : {id:'#imageUpload',multiple:false},
-				resize: false,
-				fileSingleSizeLimit : 2*1024*1024,
-				//imageLimitSize:"512*512",
-				imageLimitSize:function(width,height){
-					return true
-				},
-				accept :{
-					title: 'img',
-					extensions: 'jpg,jpeg,png',
-					mimeTypes: 'image/jpeg,image/png'                
-				},
-				postName:'img'
-			},function(uploader){
-				
-			});
+			
 	 </script>
   </body>
 </html>
