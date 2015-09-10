@@ -72,21 +72,18 @@ class ShopCountLog extends Model
            // 'balance_money'=>$balance_money,
             'count_at'=>$time,
             'remark'=>$remark,
-            'created_at'=>date("Y-m-d H:i:s")];
+            'created_at'=>date("Y-m-d H:i:s")           
+        ];
         
         
         //之前的信息
         
        // DB::beginTransaction();
-        $model = self::where('salon_id',$salon_id)->where("count_at","<=",$time)->select("balance_money")->orderBy('count_at','DESC')->orderBy('id','DESC')->first();
-
+        $model = self::where('salon_id',$salon_id)->where("count_at","<",$time)->select("balance_money")->orderBy('count_at','DESC')->orderBy('id','ASC')->first();
+        $balance_money = 0;
         if(!empty($model))
         {
-            $balance_money = floatval($model->balance_money) + $change_money;
-        }
-        else 
-        {
-            $balance_money = $change_money;
+            $balance_money = floatval($model->balance_money) ;
         }
              
         //插入记录
