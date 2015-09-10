@@ -285,19 +285,15 @@ class ReceivablesController extends Controller{
 					ShopCount::count_bill_by_invest_return_money($val->salonid,$salonResult->merchantId,$val->money);
 				}
 
-				if($val->paymentStyle == 2 || $val->type == 2)
+				if($val->paymentStyle == 2 || $val->type == 2) //type 收款类型 1业务投资款返还 2交易代收款返还   paymentStyle 收款方式 1银行存款 2账扣返还 3现金 4支付宝 5财付通
 				{
-					if($val->type == 2)
-					{
-						$payTypeId[$key]['act'] = 1;
-					}
-					elseif($val->type != 2 && $val->paymentStyle == 2)
-					{
-						$payTypeId[$key]['act'] = 2;
-					}
+
+					$payTypeId[$key]['type'] = $val->type;
+					$payTypeId[$key]['paymentStyle'] = $val->paymentStyle;
+
 					$payTypeId[$key]['id'] = $val->id;//账扣返还id
 					$payTypeId[$key]['salonid'] = $val->salonid;
-					$payTypeId[$key]['paymentStyle'] = $val->paymentStyle;
+					
 					$payTypeId[$key]['receiptDate'] = date('Y-m-d',$val->receiptDate);
 					$payTypeId[$key]['checkTime'] = date('Y-m-d');
 					$payTypeId[$key]['addTime'] = date('Y-m-d H:i:s',$val->addTime);
@@ -335,27 +331,28 @@ class ReceivablesController extends Controller{
 				 			'make_uid'=>$v['preparedBy'],
 				 			'make_at'=>$v['addTime'],		 		
 						);
-
-				if($v['act'] == 1)//转付单
+				$status = 0;
+				if($v['paymentStyle'] == 2 && $v['type'] == 1)//账扣返还---业务投资款
 				{
-					$retData = PrepayBill::makeReturn($data);
-					$status = 0;
-					if($retData)
-					{
-						$status = Receivables::where('id', '=', $v['id'])->update(['paySingleCode' => $retData['code'],'paySingleId'=>$retData['id']]);
-					}
-				}
-				else 
-				{
-					$retData = PayManage::makeFromReceive($data);
-					$status = 0;
+					$retData = PayManage::makeFromReceive($data);//付款单
+					
 					if($retData)
 					{
 						$status = Receivables::where('id', '=', $v['id'])->update(['payCode' => $retData['code'],'payId'=>$retData['id']]);
 					}
 				}
 				
-				
+				if($v['type'] == 2)
+				{
+					$data['money'] = '-'.$v['money'];//交易代收款
+					$data['type'] = 3;
+					$retData = PrepayBill::makeReturn($data);
+					if($retData)
+					{
+						$status = Receivables::where('id', '=', $v['id'])->update(['paySingleCode' => $retData['code'],'paySingleId'=>$retData['id']]);
+					}
+				}
+			
 			}
 		}
 		if($status)
@@ -409,7 +406,7 @@ class ReceivablesController extends Controller{
 
 		$result = array();
 		$typeArr = array(0=>'',1=>'业务投资款返还',2=>'交易代收款返还');
-		$paymentStyleArr = array(0=>'',1=>'银行存款',2=>'账扣返还',3=>'现金',4=>'支付宝',5=>'财付通');
+		$paymentStyleArr = array(0=>'',1=>'银行存款',2=>'账扣返还',3=>'现金',4=>'支付宝',5=>'财付通',6=>'其他');
 		$statusArr = array(0=>'',1=>'待确认',2=>'已确认');
 		if($list)
 		{
