@@ -65,6 +65,7 @@ class StylistMsgConf extends Model {
 			$query = $query->where('title','like',$keyword);
 		}
 		$query = $query->select($fields);
+		$query = $query->orderBy($orderName,$order);
 		return $query;
 		
 	}
