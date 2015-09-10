@@ -466,7 +466,7 @@ $(function(){
 		});
 		parent.lib.popup.swiper({list:list,index:item.index()});
 	});
-	$body.on('click','.control-single-image img',function(){
+	$body.on('click','.control-single-image img,.image-preview',function(){
 		var src=$(this).attr('src');
 		if(src){
 			parent.lib.popup.swiper({list:[src],index:0});

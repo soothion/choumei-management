@@ -221,7 +221,7 @@ class BountyTask extends Model {
         $queries = DB::getQueryLog();
         $last_query = end($queries);
         Log::info('Bounty getList getQueryLog is: ', $last_query);
-        Log::info('Bounty getList $bountys is: ', $bountys);
+//        Log::info('Bounty getList $bountys is: ', $bountys);
         //相关的用户信息
         $uids = Utils::get_column_array("userId", $bountys);
         $uids = array_unique($uids);
@@ -232,7 +232,7 @@ class BountyTask extends Model {
         $queries = DB::getQueryLog();
         $last_query = end($queries);
         Log::info('Bounty getList getQueryLog is: ', $last_query);
-        Log::info('Bounty getList $users is: {}' . $users);
+//        Log::info('Bounty getList $users is: {}' . $users);
         //造型师信息
         $hairstylistIds = Utils::get_column_array("hairstylistId", $bountys);
         $hairstylistIds = array_map("intval", $hairstylistIds);
@@ -244,7 +244,7 @@ class BountyTask extends Model {
         $queries = DB::getQueryLog();
         $last_query = end($queries);
         Log::info('Bounty getList getQueryLog is: ', $last_query);
-        Log::info('Bounty getList $hairstylists is: ' . $hairstylists);
+//        Log::info('Bounty getList $hairstylists is: ' . $hairstylists);
         //店铺信息
         $salon_ids = Utils::get_column_array("salonId", $bountys);
         $salon_ids = array_map("intval", $salon_ids);
@@ -256,7 +256,7 @@ class BountyTask extends Model {
         $queries = DB::getQueryLog();
         $last_query = end($queries);
         Log::info('Bounty getList getQueryLog is: ', $last_query);
-        Log::info('Bounty getList $salons is: ' . $salons);
+//        Log::info('Bounty getList $salons is: ' . $salons);
         //支付流水
         $bountySn = Utils::get_column_array("btSn", $bountys);
         $bountySn = array_unique($bountySn);
@@ -267,7 +267,7 @@ class BountyTask extends Model {
         $queries = DB::getQueryLog();
         $last_query = end($queries);
         Log::info('Bounty getList getQueryLog is: ', $last_query);
-        Log::info('Bounty getList $flows is: ' . $flows);
+//        Log::info('Bounty getList $flows is: ' . $flows);
         $items = self::compositeAll($bountys, $users, $salons, $flows, $hairstylists);
         return $items;
     }
@@ -585,8 +585,8 @@ class BountyTask extends Model {
             return null;
         }
         $payment = PaymentLog::getBountyPaymentLogBySn($id, self::BOUNTY_TYPE);
-        Log::info('Bounty detail $payment is: ', $payment);
-        Log::info('Bounty detail $task is: ', $task);
+//        Log::info('Bounty detail $payment is: ', $payment);
+//        Log::info('Bounty detail $task is: ', $task);
 
         $uid = $task['userId'];
         $salon_id = $task['salonId']; //店铺
@@ -602,23 +602,23 @@ class BountyTask extends Model {
         if (!empty($uid)) {
 //		  $user = M("user")->where("`user_id` = {$uid}")->find();
             $user = User::getUserById($uid);
-            Log::info('Bounty detail $user is: ', $user);
+//            Log::info('Bounty detail $user is: ', $user);
         }
         if (!empty($salon_id)) {
 //		  $salon = M("salon")->where("`salonid` = {$salon_id}")->find();
             $salon = Salon::getSalonById($salon_id);
-            Log::info('Bounty detail $salon is: ' . $salon);
+//            Log::info('Bounty detail $salon is: ' . $salon);
         }
         if (!empty($hairstylist_id)) {
 //		   $hairsty = M("hairstylist")->where("`stylistId` = {$hairstylist_id}")->find();
             $hairsty = Hairstylist::getHairstylistById($hairstylist_id);
-            Log::info('Bounty detail $hairsty is: ', $hairsty);
+//            Log::info('Bounty detail $hairsty is: ', $hairsty);
         }
 
         if (!empty($district_id)) {
 //		    $district = M("town")->where("`tid` = {$district_id}")->find();
             $district = Town::getTownById($district_id);
-            Log::info('Bounty detail $district is: ', $district);
+//            Log::info('Bounty detail $district is: ', $district);
         } else if ($district_id == 0) {
             $district['tname'] = "全城全区";
         }
@@ -627,7 +627,7 @@ class BountyTask extends Model {
         if (!empty($zone)) {
 //		    $salon_area = M("salon_area")->where("`areaid` = {$zone}")->find();
             $salon_area = SalonArea::getSalonAreaById($zone);
-            Log::info('Bounty detail $salon_area is: ', $salon_area);
+//            Log::info('Bounty detail $salon_area is: ', $salon_area);
         }
 
         $salon['bountyType'] = self::getSalonBountyTypeName($salon['bountyType']);
@@ -636,7 +636,7 @@ class BountyTask extends Model {
         $task_tmp = self::compositeSingle($task);
 
         $task = array_merge($task, $task_tmp);
-        Log::info('Bounty detail $task is: ', $task);
+//        Log::info('Bounty detail $task is: ', $task);
         $task['user'] = $user;
         $task['salon'] = $salon;
         $task['hairsty'] = $hairsty;
@@ -686,8 +686,8 @@ class BountyTask extends Model {
             return null;
         }
         $payment = PaymentLog::getBountyPaymentLogBySn($id, self::BOUNTY_TYPE);
-        Log::info('Bounty detail $task is: ', $task);
-        Log::info('Bounty detail $payment is: ', $payment);
+//        Log::info('Bounty detail $task is: ', $task);
+//        Log::info('Bounty detail $payment is: ', $payment);
         $uid = $task['userId'];
         $salon_id = $task['salonId']; //店铺
 

@@ -533,7 +533,7 @@ input:focus+.unit{
 .control-image-upload em{
 	display:block;
 	position:absolute;
-	bottom:30px;
+	bottom:18px;
 	left:0;
 	line-height:30px;
 	text-align:center;
@@ -589,6 +589,7 @@ input:focus+.unit{
 	-webkit-transition:bottom 0.2s ease 0s;
 	-moz-transition:bottom 0.2s ease 0s;
 	transition:bottom 0.2s ease 0s;
+	cursor:pointer;
 }
 .control-image-ud .fa{
 	font-size:18px;
@@ -602,6 +603,10 @@ input:focus+.unit{
 .control-single-image img{
 	width:120px;
 	height:120px;
+}
+.image-preview{
+	width:40px;
+	height:40px;
 }
 /**表单 end**/
 

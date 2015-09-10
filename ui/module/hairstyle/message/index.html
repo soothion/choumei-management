@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="zh-CN">
     <head>
         <meta charset="utf-8">       
@@ -20,32 +21,27 @@
         </div>		
         <div class="wrapper">
 			<form data-role="hash">   
-				<div style="float:left">			
-					<label>标题：</label> 
-					<input type="text">	
-				</div>				
+                    <label>标题：</label> 
+                    <input type="text" placeholder="请输入标题" name="title">
 					<span class="space"></span>
-				<div style="float:left">
-				   <label>状态：</label>
-				   <select name="status" >
-						<option value="">全部</option>
-						<option value="1">未上线</option>
-						<option value="2">已上线</option>
-					</select>
-				</div>
-					<span class="space"></span>
-				<div style="float:left">
-					<label>上线时间：</label> 
-					<span class="date-group">
-						<input type="date" data-role="start" name="start"/>到<input type="date" data-role="end" name="end"   />
-					</span>
-				</div>
-				<div style="float:left">
-					<button class="btn" type="submit">查询</button>
-				</div>
+                   <label>状态：</label>
+                   <select name="status" id="select">
+                        <option value="">全部</option>
+                        <option value="0">未上线</option>
+                        <option value="1">已上线</option>
+                    </select>
+                
+                    <span class="space"></span>
+                    <label>上线时间：</label> 
+                    <span class="date-group">
+                        <input type="date" data-role="start" name="starttime" id="ontime"/>到<input type="date" data-role="end" name="endtime"  id="ontime2"/>
+                    </span>
+                    <button class="btn" type="submit">查询</button>
+                </div>
 			</form>
-						  
-           <div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+            
+		  
+		 <div class="table" ajat="message/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -58,26 +54,48 @@
                         </tr>
                     </thead>
                 <tbody>
-				<%var status=["","正常","停用","注销"]%>
-				<%var data=data.data%>
-				<%for(var i=0;i<data.length;i++){%>
-                 <tr>
-                 <td><%=i+1%></td>
-                  <td><%=data[i].name%></td>
-				  <td><%=data[i].username%></td>
-				  <td><%=data[i].created_at%></td>
-                  <td><a class="link" href="edit.html?id=<%=data[i].id%>"  >预览</a>
-				  <a class="link" href="edit.html?id=<%=data[i].id%>" >上线</a>
-				  <a class="link" href="edit.html?id=<%=data[i].id%>">修改</a>
-				   <a class="link" href="edit.html?id=<%=data[i].id%>">删除</a>
-				  </td>
-                  </tr>
-				  <%}%>
+					<%if(data.data){%>
+					 <%var status=["未上线","已上线"]%>
+					 <%data=data.data%>
+					 <%data.forEach(function(item,i){%>
+					 <tr>
+							<td><%=i+1%></td>
+							<td><%=item.title%></td>
+							<td><%=item.onlinetime%></td>
+							<td><%=status[item.status]%></td>
+							<td>
+								<a class="link" href="detail.html?id=<%=item.id%>">预览</a>	
+							<form action="/message/online/?id=<%=item.id%>" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){}});" data-confirm="确认上线" id="form-remove">
+								<button class="link" <%if(item.status==1){%>disabled<%}%>> 上线</button>			 
+							</form>							
+							 
+							<a class="link" href="edit.html?id=<%=item.id%>">修改</a>	
+							<form action="/message/destroy/?id=<%=item.id%>" data-role="normal" data-confirm="确认删除？" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){}});" id="form-remove">
+								<button class="link">删除</button>
+							</form>				   
+						   </td>
+					  </tr>
+					  <%})%>
+					<%}%>
                 </tbody>
             </table>		
 				<div class="pager"> </div>
 			</script>
         </div>
 	</div>
+	
+	  <script type="text/javascript">
+		
+			$(document).ready(function() {
+				$('#select').on('change',function(){
+					var val=$(this).val();
+					if(val!=1){
+						$(".date-group input").attr({"disabled":"disabled"});
+					}else{
+						$(".date-group input").removeAttr("disabled");
+					}
+				})
+			}); 
+		</script>  
     </body>
 </html>

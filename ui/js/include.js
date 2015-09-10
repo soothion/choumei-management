@@ -1,28 +1,44 @@
 ﻿var cfg={
-	version:'1.3',
+	version:'1.4',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
-	dev:'http://192.168.13.46:8040/',
-	test:'',
-	product:'',
+	dev:{
+		host:'http://192.168.13.46:8040/',
+		token:'http://dev-cmweb.choumei.me/v1/file/qiniu/get-token.html',
+		upload:'http://qiniu-plupload.qiniudn.com/'
+	},
+	test:{
+		host:'<#MANAGER_BACK_URL#>',
+		token:'http://test-cmweb.choumei.me/v1/file/qiniu/get-token.html',
+		upload:'http://qiniu-plupload.qiniudn.com/'
+	},
+	uat:{
+		host:'<#MANAGER_BACK_URL#>',
+		token:'http://uat-cmweb.choumei.me/v1/file/qiniu/get-token.html',
+		upload:'http://qiniu-plupload.qiniudn.com/'
+	},
+	product:{
+		host:'<#MANAGER_BACK_URL#>',
+		token:'http://cmweb.choumei.me/v1/file/qiniu/get-token.html',
+		upload:'http://qiniu-plupload.qiniudn.com/'
+	},
 	getHost:function(){
-		if(cfg.url&&cfg.url.indexOf('<#')==-1){
-			return cfg.url;	
-		}
-		if(cfg.env){
-			return cfg[cfg.env];
-		}
+		return this[this.env].host;
 	}
 }
-if(cfg.url.indexOf('<#')>-1&&(cfg.env=='dev'||cfg.env=='test')){
-	//cfg.version=Math.random()*10;
+if(location.href.indexOf("http://test-")>-1){
+	cfg.env="test";
+}else if(location.href.indexOf("http://uat-")>-1){
+	cfg.env="uat";
+}else if(cfg.url&&cfg.url.indexOf('<#')==-1){
+	cfg.env="product";
 }
+cfg.url=cfg[cfg.env];
 
 document.writeln('<meta name="renderer" content="webkit|ie-stand">');
 document.writeln('<meta http-equiv=”X-UA-Compatible” content=”IE=edge” > ');
 document.writeln('<meta charset="utf-8">');
 document.writeln('<meta http-equiv="Access-Control-Allow-Origin" content="*">');
-document.writeln('<meta http-equiv="Access-Control-Allow-Headers" content="token">');
 document.writeln('<link rel="icon" href="http://app.choumei.cn/images/logo16.ico" type="image/x-icon">');
 document.writeln('<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">');
 document.writeln('<meta name="apple-mobile-web-app-capable" content="yes">');
