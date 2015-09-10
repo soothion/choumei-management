@@ -58,7 +58,6 @@
                             <label data-role="hash"><input type="radio" name="paymentStyle" value="3" /><span>现金</span></label>              
                             <label data-role="hash"><input type="radio" name="paymentStyle" value="4" /><span>支付宝</span></label>              
                             <label data-role="hash"><input type="radio" name="paymentStyle" value="5"/><span>财付通</span></label> 
-							<label data-role="hash"><input type="radio" name="paymentStyle" value="6"/><span>其他</span></label>   							
                         </div>
                     </div> 
 					
@@ -98,7 +97,7 @@
 			   <%if(data.data){%>
 				<%var type=["","业务投资款返还","交易代收款返还"]%>
 				<%var status=["","待确认","已确认"]%>
-				<%var paymentStyle=["","银行存款","账扣返还","现金","支付宝","财付通","其他"]%>
+				<%var paymentStyle=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
 				<%var data=data.data%>
 				<%data.forEach(function(item,i){%>
 				<tr>
