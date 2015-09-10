@@ -211,7 +211,8 @@ class ImageStyleController extends Controller{
     public function update($id)
     { 
         $param = $this->param; 
-        if(!empty($id) || empty($param['style']) || empty($param['length']) || empty($param['curl']) || empty($param['color']) || empty($param['original']) || empty($param['thumb']))
+		
+        if(empty($id) || empty($param['style']) || empty($param['length']) || empty($param['curl']) || empty($param['color']) || empty($param['original']) || empty($param['thumb']))
         {
             throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
         }
@@ -268,8 +269,8 @@ class ImageStyleController extends Controller{
          $image=ImageStyle::select($fields)->find($id);
          $imgData = json_decode($image['img'], true);
          $image['img'] = $imgData['original'];
-         $image['original'] = $imgData['original'];
-         $image['thumb'] = $imgData['thumb'];
+         $image->original = $imgData['original'];
+         $image->thumb = $imgData['thumb'];
          return $this->success($image);
      }
        
