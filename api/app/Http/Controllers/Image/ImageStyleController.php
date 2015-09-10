@@ -81,6 +81,9 @@ class ImageStyleController extends Controller{
                if(json_last_error() || empty($img))
                    continue;
                $item->img = $img->thumb;
+               $item->thumb = $img->thumb;
+               $item->original = $img->original;
+               unset($item->img);
            }
            return $this->success($query);
      }
@@ -265,6 +268,8 @@ class ImageStyleController extends Controller{
          $image=ImageStyle::select($fields)->find($id);
          $imgData = json_decode($image['img'], true);
          $image['img'] = $imgData['original'];
+         $image['original'] = $imgData['original'];
+         $image['thumb'] = $imgData['thumb'];
          return $this->success($image);
      }
        
