@@ -155,21 +155,6 @@ class PayManage extends Model
         }
         $now_day = date("Y-m-d");
         $now_date = date("Y-m-d");
-        //新建转付单
-        $prepay_code = PrepayBill::getNewCode(PrepayBill::TYPE_OF_ALREADYPAY);
-        $prepay_id = PrepayBill::insertGetId([
-            'created_at'=>$now_date,
-            'updated_at'=>$now_date,
-            'code'=>$prepay_code,
-            'salon_id'=>$params['salon_id'],
-            'merchant_id'=>$params['merchant_id'],
-            'type'=>PrepayBill::TYPE_OF_ALREADYPAY,
-            'uid'=>$params['make_uid'],
-            'pay_money'=>$params['money'],
-            'state'=>PrepayBill::STATE_OF_COMPLETED,
-            'day'=>$params['require_day'],
-            'pay_day'=>$params['receive_day'],
-        ]);
         
         //新建付款单
         $code = self::makeNewCode(self::TYPE_OF_FJY);
@@ -180,8 +165,6 @@ class PayManage extends Model
             'state'=>self::STATE_OF_PAIED,
             'r_id'=>$params['id'],
             'r_code'=>$params['code'],
-            'p_id'=>$prepay_id,
-            'p_code'=>$prepay_code,
             'salon_id'=>$params['salon_id'],
             'merchant_id'=>$params['merchant_id'],
             'money'=>$params['money'],
@@ -197,11 +180,24 @@ class PayManage extends Model
         ];
         $id = self::insertGetId($record);
         
-        //转付单关联
-        PrepayBill::where('id',$prepay_id)->update(['other_id'=>$id,'other_code'=>$code]);
+        //新建转付单
+        $prepay_params = [ 
+            'other_id'=>$id,
+            'other_code'=>$code,
+            'salon_id'=>$params['salon_id'],
+            'merchant_id'=>$params['merchant_id'],
+            'type'=>PrepayBill::TYPE_OF_ALREADYPAY,
+            'uid'=>$params['make_uid'],
+            'pay_money'=>$params['money'],
+            'pay_type'=>$params['receive_type'],
+            'day'=>$params['require_day'],
+            'pay_day'=>$params['receive_day'],
+            'count_at'=>$params['make_at'],
+        ];
+        $prepay = PrepayBill::makeCompleted($prepay_params);        
         
-        //店铺结算
-        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'], $params['money'],"预付保证金",$params['make_at']);
+        //付款单关联转付单关联
+        self::where('id',$id)->update(['p_id'=>$prepay['id'],'p_code'=>$prepay['code']]);
         
         return ['id'=>$id,'code'=>$code];
     }
