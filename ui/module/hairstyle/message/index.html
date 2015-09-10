@@ -32,12 +32,12 @@
                     </select>
                 
                     <span class="space"></span>
-                
+                <div id="div_test" style="width:200px;height:200px;border:1px solid red;">
                     <label>上线时间：</label> 
                     <span class="date-group">
-                        <input type="date" data-role="start" name="starttime" id="ontime" disabled/>到<input type="date" data-role="end" name="endtime"  id="ontime2" disabled />
+                        <input type="date" data-role="start" name="starttime" id="ontime"/>到<input type="date" data-role="end" name="endtime"  id="ontime2"/>
                     </span>
-               
+               </div>
                     <button class="btn" type="submit">查询</button>
                 </div>
 			</form>
@@ -87,7 +87,7 @@
 	</div>
 	
 	  <script type="text/javascript">
-			$(function(){
+			/*$(function(){
 				$(document).on('change','#select',function(){
 					var val=$("#select").val();
 					if(val!=1){
@@ -98,7 +98,18 @@
 						$("#ontime2").removeAttr("disabled");
 					}
 				})
-			});
+			});*/
+			$(document).ready(function() {
+				var val=$("#select").val();
+				if(val!=1){
+				$("#div_test").attr({"disabled":"disabled"});
+				 
+				} 
+				else{
+						$("#div_test").removeAttr("disabled");
+						 
+					}
+			}); 
 		</script>  
     </body>
 </html>
