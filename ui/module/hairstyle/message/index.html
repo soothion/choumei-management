@@ -34,13 +34,12 @@
                     <span class="space"></span>
                     <label>上线时间：</label> 
                     <span class="date-group">
-                        <input type="date" data-role="start" name="starttime" id="ontime"/>到<input type="date" data-role="end" name="endtime"  id="ontime2"/>
+                        <input type="date" data-role="start" name="starttime" id="ontime1" disabled/>
+						到<input type="date" data-role="end" name="endtime"  id="ontime2" disabled/>
                     </span>
-                    <button class="btn" type="submit">查询</button>
+                    <button class="btn" type="submit">搜索</button>
 			</form>
-            
-		  
-		 <div class="table" ajat="message/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+		 <div class="table" ajat="<%if(query._){%>message/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -60,14 +59,16 @@
 					 <tr>
 							<td><%=i+1%></td>
 							<td><%=item.title%></td>
-							<td><%=item.onlinetime%></td>
+							<td><%=item.onlinetime?lib.tools.getDate(item.onlinetime):""%></td>
 							<td><%=status[item.status]%></td>
 							<td>
 							<a class="link" target="_blank" href="preview.html?key=<%=item.id%>">预览</a>	
+							<%if(item.status!=1){%>
 							<span class="space"></span>
 							<form action="/message/online/?id=<%=item.id%>" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){}});" data-confirm="确认上线" id="form-remove">
-								<button class="link" <%if(item.status==1){%>disabled<%}%>> 上线</button>			 
+								<button class="link"> 上线</button>			 
 							</form>
+							<%}%>
 							<%if(item.status!=1){%>
 							<span class="space"></span> 
 							<a class="link" href="edit.html?id=<%=item.id%>">修改</a>	
@@ -88,7 +89,21 @@
 	</div>
 	
 	  <script type="text/javascript">
-		
+			document.onreadystatechange=function(){};
+			window.filterHashData=function(data){
+				if(data.status!=1){
+					data.starttime="";
+					data.endtime="";
+				}
+			}
+			$(function(){			 
+				if(!lib.query._){
+					$('#ontime2').val(lib.tools.getDate());
+					var time=(new Date().getTime()-7*86400000)/1000;
+					$('#ontime1').val(lib.tools.getDate(time));
+					$('form[data-role="hash"]').submit();
+				}
+			});
 			$(document).ready(function() {
 				$('#select').on('change',function(){
 					var val=$(this).val();

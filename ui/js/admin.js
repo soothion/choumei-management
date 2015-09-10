@@ -98,6 +98,9 @@ $(function(){
 	});
 	
 	/**提交hash地址**/
+	window.filterHashData=function(data){
+		return data;
+	}
 	$body.on('submit','form[data-role="hash"]',function(e){//hash表单提交到hash地址查询
 		$(this).trigger('hash');
 		e.stopPropagation();
@@ -114,6 +117,7 @@ $(function(){
 				data.sort_type="";
 			}
 		}
+		data=window.filterHashData(data);
 		if(lib.tools.hashchange(data)){
 			$(window).trigger('hashchange');
 		}
