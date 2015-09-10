@@ -68,9 +68,7 @@
                      <div class="control">
                        <select required name="paymentStyle"  >							 	
                             <option value="1" <%=data.paymentStyle==1?"selected":""%>>银行存款</option>						 
-                            <%if(!(!data.type||data.type==2)){%>    
-                                <option value="2" <%=data.paymentStyle==2?"selected":""%>>账扣返还</option>
-                            <%}%>
+                            <option value="2" <%=data.paymentStyle==2?"selected":""%>>账扣返还</option>
                             <option value="3" <%=data.paymentStyle==3?"selected":""%>>现金</option> 
                             <option value="4" <%=data.paymentStyle==4?"selected":""%>>支付宝</option>						 
                             <option value="5" <%=data.paymentStyle==5?"selected":""%>>财付通</option>    
@@ -143,16 +141,7 @@
 				}
 				sessionStorage.setItem('preview',JSON.stringify(data));
 				window.open("detail.html?preview=preview");
-			})
-
-            $(".wrapper").delegate('#receivablesType', 'change', function(event) {
-                if($(this).val()=="1"){
-                  $("select[name=paymentStyle] option").eq(0).after("<option value='2'>账扣返还</option>"); 
-                }else{
-                  $("select[name=paymentStyle] option").eq(1).remove(); 
-                }
-            });
-
+			});
 		});		
 	</script> 	
     </body>
