@@ -604,6 +604,10 @@ input:focus+.unit{
 	width:120px;
 	height:120px;
 }
+.image-preview{
+	width:40px;
+	height:40px;
+}
 /**表单 end**/
 
 /**列表 start**/

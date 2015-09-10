@@ -352,8 +352,9 @@
 				options=$.extend({successText:'图片上传成功',loaderText:'图片上传中..'},options);
 				this.file(options,function(uploader){
 					uploader.bind('FilesAdded',function(up, files){
+						console.log(uploader);
 						plupload.each(files, function(file) {
-							//console.log(file);
+							console.log(file);
 						});
 					});
 					uploader.bind('FileUploaded',function(up,file,res){
