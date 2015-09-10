@@ -1049,11 +1049,14 @@
 			}
 		},
 		success:function(data){
+			var self=this;
 			parent.lib.popup.result({
 				bool:true,
 				text:(data.msg||"数据更新成功"),
 				define:function(){
-					history.back();
+					if($(self.el).data('goback')!==false){
+						history.back();
+					}
 				}
 			});
 		},
