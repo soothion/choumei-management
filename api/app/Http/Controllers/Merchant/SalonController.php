@@ -660,6 +660,8 @@ class SalonController extends Controller {
 		DB::beginTransaction();
 		if($where)//修改
 		{
+			$salonId = $whereInfo["salonid"];
+			Salon::setSalonGrade($salonId,$data,$dataInfo,2);//店铺等级调整
 			Salon::where($where)->update($data);
 			$salonTmpInfo = SalonInfo::where($whereInfo)->first();
 			if(!$salonTmpInfo)
@@ -667,19 +669,21 @@ class SalonController extends Controller {
 				DB::table('salon_info')->insertGetId(array("salonid"=>$whereInfo["salonid"]));
 			}
 			$affectid = SalonInfo::where($where)->update($dataInfo);
-			$salonId = $whereInfo["salonid"];
+			
 			if($affectid)
 			{
 				//触发事件，写入日志
 				Event::fire('salon.update','店铺Id:'.$salonId." 店铺名称：".$data['salonname']);
 			}
 			$this->addSalonCode($data,$salonId,2,$joinDividend);//店铺邀请码
+
 		}
 		else //添加
 		{
 			
 			$data['sn'] = Salon::getSn($data['merchantId']);//店铺编号
 			$salonId = DB::table('salon')->insertGetId($data);
+			
 			if($salonId)
 			{
 					$dataInfo["salonid"] = $salonId;
@@ -689,10 +693,10 @@ class SalonController extends Controller {
 						DB::table('merchant')->where("id","=",$data["merchantId"])->increment('salonNum',1);//店铺数量加1
 						//触发事件，写入日志
 						Event::fire('salon.save','店铺Id:'.$salonId." 店铺名称：".$data['salonname']);
-					}
-					
+					}	
 			}
 			$this->addSalonCode($data,$salonId,1,$joinDividend);//添加店铺邀请码
+			Salon::setSalonGrade($salonId,$data,$dataInfo,1);//店铺等级调整
 		}
 		
 		

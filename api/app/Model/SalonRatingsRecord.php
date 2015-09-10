@@ -2,9 +2,10 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Dividend extends Model {
+class SalonRatingsRecord extends Model {
 
-	protected $table = 'dividend';
-
+	protected $table = 'salon_ratings_record';
+	
 	public $timestamps = false;
+
 }
