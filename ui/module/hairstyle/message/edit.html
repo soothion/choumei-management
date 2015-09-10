@@ -168,7 +168,7 @@
 								</div>
 							</div>
 						</div>
-						<input type="hidden" id="hidden" required value="<%=data.url||data.content%>" />
+						<textarea type="hidden" id="hidden" class="hide" required ><%=data.url||data.content%></textarea>
 						<br />
 					</div>
                 </div>  
@@ -237,6 +237,11 @@
 					if(val==2){
 						$('#hidden').attr('name','content').val(window.ue.getContent());
 					}
+					var receivers=[];
+					$('.editor-validate input').each(function(){
+						receivers.push($(this).val());
+					})
+					$('#receivers').val(receivers);
 					form.one('success',function(e,data){
 						if(data.result==1&&data.data){
 							window.open('preview.html?key='+data.data,'_blank');
@@ -244,6 +249,13 @@
 					});
 				});
 				$('#submit').on('click',function(){
+				
+					var receivers=[];
+					$('.editor-validate input').each(function(){
+						receivers.push($(this).val());
+					})
+					$('#receivers').val(receivers);
+					
 					var val=$('.radio-editor:checked').val();
 					if(val==1){
 						$('#hidden').attr('name','url').val($('#url').val());

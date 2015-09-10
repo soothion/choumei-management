@@ -359,10 +359,8 @@
 						options._auto_start=true;
 						options.auto_start=false;
 					}
-					
 				}
 				this.file(options,function(uploader){
-					
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
 							var data=JSON.parse(res.response);
@@ -406,21 +404,20 @@
 							}
 						}
 					}
-					console.log(uploader);
+					//console.log(uploader);
 					if(options.imageLimitSize){
+						/*
 						uploader.area.find('input[type="file"]').on('change',function(){
 							console.log(lib.puploader.getObjectURL(this.files[0]));
 						});
-						/*
+						*/
 						uploader.bind('FilesAdded',function(up, files){
-							console.log(uploader);
-							console.log(plupload);
 							plupload.each(files, function(file) {
 								var input=up.area.find('input[type="file"]')[0];
-								console.log(input.files[0]);
-								
+								//console.log(file);
+								console.log(lib.puploader.getObjectURL(file));
 							});
-						});*/
+						});
 					}
 					cb &&cb(uploader);
 				});
@@ -1122,9 +1119,10 @@
 				data:data,
 				type:this.el.method,
 				success:function(data){
-					$(self.el).trigger('response',data).find('button[type=submit]').attr('disabled',false);;
+					$(self.el).trigger('response',data).find('button[type=submit]').attr('disabled',false);
 				},
 				error:function(xhr,code){
+					$(self.el).find('button[type=submit]').attr('disabled',false);
 					self.fail(null,{})
 				}
 			});

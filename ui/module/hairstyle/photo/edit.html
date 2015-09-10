@@ -146,7 +146,8 @@
 						 <span class="space"></span>
 						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
 						 <br />
-						<input type="hidden" name="img" value="http://www.baidu.com">
+						<input type="hidden" name="thumb" value="<%=data.thumb%>" required requiredmsg="请上传图片">
+						<input type="hidden" name="original" value="<%=data.original%>">
 					</div>
                 </div>
 					 
@@ -162,20 +163,28 @@
 		  </form>
 		  </script>
 	</div>
-	 
 	 <script type="text/javascript">
 			$('#form').on('_ready',function(){
 				lib.puploader.image({
 					browse_button: 'imageUpload',
 					auto_start:true,
 					postName:"img",
-					imageLimitSize:"100*100",
 					filters: {
 						mime_types : [
-							{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
 						]
 					},
 					max_file_size:'2mb'
+				},function(uploader){
+					uploader.bind('FileUploaded',function(up,file,res){
+						if(res&&res.response&&typeof res.response=='string'){
+							var data=JSON.parse(res.response);
+							if(data.code==0){
+								$('input[name="original"]').val(data.response.img);
+								$('input[name="thumb"]').val(data.response.thumbimg);
+							}
+						}
+					});
 				});
 			});
 	 </script>
