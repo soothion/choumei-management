@@ -14,7 +14,7 @@ class Receivables extends Model {
 	/**
 	 * 查询列表
 	 * */
-	public static function getList( $where = '' , $page=1, $page_size=20,$orderName = ' addTime  ',$order = 'desc' )
+	public static function getList( $where = '' , $page=1, $page_size=20,$orderName = ' r.addTime  ',$order = 'desc' )
 	{
 		$fields = array(
 				's.salonid',
@@ -46,7 +46,7 @@ class Receivables extends Model {
 	 * 获取查询对象
 	 * */
 	
-	private static function getQueryByParam($where = '',$orderName = ' addTime  ',$order = 'desc',$fields)
+	private static function getQueryByParam($where = '',$orderName = ' r.addTime  ',$order = 'desc',$fields)
 	{
 		$query =  DB::table('receivables as r')
 		->leftjoin('salon as s', 's.salonid', '=', 'r.salonid')
@@ -105,7 +105,7 @@ class Receivables extends Model {
 	 * 导出
 	 * 
 	 * */
-	public static function getListExport($where = '',$orderName = ' addTime  ',$order = 'desc')
+	public static function getListExport($where = '',$orderName = ' r.addTime  ',$order = 'desc')
 	{
 		$fields = array(
 				's.salonid',

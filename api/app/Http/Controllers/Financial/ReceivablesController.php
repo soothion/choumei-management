@@ -106,7 +106,7 @@ class ReceivablesController extends Controller{
 		$where['paymentStyle'] = isset($param['paymentStyle'])?$param['paymentStyle']:'';//收款方式
 		$where['status'] = isset($param['status'])?$param['status']:'';//收款状态
 		
-		$sort_key = isset($param['sort_key'])?$param['sort_key']:'addTime';
+		$sort_key = isset($param['sort_key'])?$param['sort_key']:'r.addTime';
     	$sort_type = isset($param['sort_type'])?$param['sort_type']:'desc';
 		
 
@@ -399,7 +399,7 @@ class ReceivablesController extends Controller{
 		$where['paymentStyle'] = isset($param['paymentStyle'])?$param['paymentStyle']:'';//收款方式
 		$where['status'] = isset($param['status'])?$param['status']:'';//收款状态
 		
-		$sort_key = isset($param['sort_key'])?$param['sort_key']:'addTime';
+		$sort_key = isset($param['sort_key'])?$param['sort_key']:'r.addTime';
 		$sort_type = isset($param['sort_type'])?$param['sort_type']:'desc';
 		
 		$list = Receivables::getListExport($where,$sort_key,$sort_type);
