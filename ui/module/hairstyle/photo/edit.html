@@ -23,7 +23,7 @@
 			<div class="detail-operation">
 				<button class="btn" onclick="history.back()" type="button" >取消</button>
 				<span class="space"></span>
-				 <button class="btn-primary" type="submit">提交</button>
+				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>ImageStyle.update<%}else{%>ImageStyle.create<%}%>">提交</button>
 			</div>
 		
 		<div class="control-group">
@@ -137,7 +137,7 @@
 					<div class="control">
 						 <div class="control-image">
 								<div class="control-single-image">
-									<img src="" alt="" />
+									<img src="<%=data.thumb%>" alt="" data-original="<%=data.original%>"/>
 									<div class="control-image-ud">
 										<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 									</div>
@@ -154,7 +154,7 @@
 				<div class="control-group">
 					<label class="control-label" for=""></label>
 					<div class="control">
-					<button class="btn-primary" type="submit">提交</button>
+					<button class="btn-primary" data-slug="<%if(query.id){%>ImageStyle.update<%}else{%>ImageStyle.create<%}%>" type="submit">提交</button>
 			   </div>
 			</div>
 			</div>

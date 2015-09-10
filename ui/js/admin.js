@@ -466,12 +466,15 @@ $(function(){
 		var item=$(this).closest('.control-thumbnails-item');
 		var list=[];
 		item.parent().children('.control-thumbnails-item').each(function(){
-			list.push($(this).find('img').attr('src'));
+			var $this=$(this).find('img');
+			var src=$this.data('original')||$this.attr('src');
+			list.push(src);
 		});
 		parent.lib.popup.swiper({list:list,index:item.index()});
 	});
 	$body.on('click','.control-single-image img,.image-preview',function(){
-		var src=$(this).attr('src');
+		var $this=$(this);
+		var src=$this.data('original')||$this.attr('src');
 		if(src){
 			parent.lib.popup.swiper({list:[src],index:0});
 		}

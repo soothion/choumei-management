@@ -14,7 +14,9 @@
 	'pay_manage.confirm_list':'/module/finance/define/index.html#state=3',
 	'receivables.index':'/module/finance/receivables/index.html',
 	'commission.index':'/module/finance/income/index.html',
-	'rebate.index':'/module/finance/income/list.html'
+	'rebate.index':'/module/finance/income/list.html',
+	'message.index':'/module/hairstyle/message/index.html',
+	'ImageStyle.index':'/module/hairstyle/photo/index.html'
 }
 var access={
 	data:[],

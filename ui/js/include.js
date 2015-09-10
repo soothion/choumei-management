@@ -5,22 +5,26 @@
 	dev:{
 		host:'http://192.168.13.46:8040/',
 		token:'http://dev-cmweb.choumei.me/v1/file/qiniu/get-token.html',
-		upload:'http://qiniu-plupload.qiniudn.com/'
+		upload:'http://qiniu-plupload.qiniudn.com/',
+		previewMessage:'http://dev-user.choumei.me/'
 	},
 	test:{
 		host:'<#MANAGER_BACK_URL#>',
 		token:'http://test-cmweb.choumei.me/v1/file/qiniu/get-token.html',
-		upload:'http://qiniu-plupload.qiniudn.com/'
+		upload:'http://qiniu-plupload.qiniudn.com/',
+		previewMessage:'http://test-user.choumei.me/'
 	},
 	uat:{
 		host:'<#MANAGER_BACK_URL#>',
 		token:'http://uat-cmweb.choumei.me/v1/file/qiniu/get-token.html',
-		upload:'http://qiniu-plupload.qiniudn.com/'
+		upload:'http://qiniu-plupload.qiniudn.com/',
+		previewMessage:'http://uat-user.choumei.me/'
 	},
 	product:{
 		host:'<#MANAGER_BACK_URL#>',
 		token:'http://cmweb.choumei.me/v1/file/qiniu/get-token.html',
-		upload:'http://qiniu-plupload.qiniudn.com/'
+		upload:'http://qiniu-plupload.qiniudn.com/',
+		previewMessage:'http://user.choumei.me/'
 	},
 	getHost:function(){
 		return this[this.env].host;

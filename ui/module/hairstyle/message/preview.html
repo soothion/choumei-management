@@ -46,7 +46,14 @@
 		</div>
 		<script type="text/javascript" src="/js/jquery.qrcode.min.js"></script>
 		<script type="text/javascript">
-			var url='http://user.choumei.cn/StylistMsg/preview/key/'+lib.query.key;
+			var url="";
+			if(lib.query.url){
+				url=decodeURIComponent(lib.query.url);
+			}else if(lib.query.key){
+				url=cfg.url.previewMessage+'StylistMsg/preview/key/'+lib.query.key;
+			}else if(lib.query.id){
+				url=cfg.url.previewMessage+'stylistMsg/view/id/'+lib.query.id;
+			}
 			$('iframe').attr('src',url);
 			$('#code').qrcode({ 
 				render: "table", //table方式 
