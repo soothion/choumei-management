@@ -86,7 +86,8 @@ class ImageStyleController extends Controller{
 	 * @apiParam {Number} length 必填,长度.
 	 * @apiParam {Number} curl 必填,卷度.
 	 * @apiParam {Number} color 必填,颜色.
-	 * @apiParam {String} img 必填,图片路径.
+	 * @apiParam {String} original 必填,原图路径.
+         * @apiParam {String} thumb 必填,缩略图路径.
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
@@ -107,12 +108,17 @@ class ImageStyleController extends Controller{
             
           $param = $this->param; 
           Log::info('ImageStyle create param is: ', $param);
+          if(empty($param['style']) || empty($param['length']) || empty($param['curl']) || empty($param['color']) || empty($param['original']) || empty($param['thumb']))
+          {
+              throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
+          }
           $data=[];
           $data['style']=$param['style'];
           $data['length']=$param['length'];
           $data['curl']=$param['curl'];
           $data['color']=$param['color'];
-          $data['img']=$param['img'];
+          $img = array('original' => $param['original'], 'thumb' => $param['thumb']);
+          $data['img']= json_encode($img);
           $data['status']=1;
           $result=ImageStyle::create($data);
           if($result){

@@ -651,5 +651,9 @@ Route::group(['middleware'], function(){
 	'uses'=>'Bounty\BountyController@refundDetail'
 	    ));
 
+    Route::any('requestLog/index',array(  //请求日志列表
+	'as'=>'requestLog.index',
+	'uses'=>'LoginQuery\LoginQueryController@index'
+	    ));
 });
 
