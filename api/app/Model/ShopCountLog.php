@@ -65,7 +65,7 @@ class ShopCountLog extends Model
         }
         
         //之前的信息
-        $model = self::where('salon_id',$salon_id)->where("count_at","<",$time)->select("balance_money")->orderBy('count_at','DESC')->orderBy('id','DESC')->first();
+        $model = self::where('salon_id',$salon_id)->where("count_at","<=",$time)->select("balance_money")->orderBy('count_at','DESC')->orderBy('id','DESC')->first();
 
         if(!empty($model))
         {
