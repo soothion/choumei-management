@@ -29,6 +29,7 @@ class StylistMsgConf extends Model {
 				'status',
 				'addtime',
 				'onlinetime',
+				'content_id',
 		);
 		//手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
