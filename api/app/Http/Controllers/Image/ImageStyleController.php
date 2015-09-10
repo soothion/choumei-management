@@ -5,6 +5,7 @@ use App\ImageStyle;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use Log;
+use Config;
 /**
  * Description of ImageStyleController
  *
@@ -56,7 +57,7 @@ class ImageStyleController extends Controller{
      *                      "length":1,
      *                      "curl":1,
      *                      "color":1,
-     *                      "img":"1"
+     *                      "img":"{}"
 	 *	            }
 	 *	        ]
 	 *	    }
@@ -74,6 +75,13 @@ class ImageStyleController extends Controller{
     {
            $param = $this->param; 
            $query =ImageStyle::getAllImage($param);
+           foreach($query['data'] as &$item)
+           {
+               $img = json_decode($item->img);
+               if(json_last_error() || empty($img))
+                   continue;
+               $item->img = $img->thumb;
+           }
            return $this->success($query);
      }
      

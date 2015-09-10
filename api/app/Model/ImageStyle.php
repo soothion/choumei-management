@@ -49,12 +49,7 @@ class ImageStyle  extends Model{
 
       $fields = ['id', 'style', 'length','curl','color','img'];  
       $result = $query->select($fields)->paginate($page_size)->toArray();
-      
-      foreach($result as &$item)
-      {
-          $imgData = json_decode($item['img'], true);
-          $item['img'] = $imgData['thumb'];
-      }
+     
       unset($result['next_page_url']);
       unset($result['prev_page_url']);
       return $result;
