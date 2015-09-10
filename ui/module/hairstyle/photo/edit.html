@@ -164,17 +164,19 @@
 	</div>
 	 
 	 <script type="text/javascript">
-			lib.puploader.image({
-				browse_button: 'imageUpload',
-				auto_start:true,
-				postName:"img",
-				filters: {
-				    mime_types : [
-						{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
-					],
-					max_file_size:'2mb'
-                },
-				init:{}
+			$('#form').on('_ready',function(){
+				lib.puploader.image({
+					browse_button: 'imageUpload',
+					auto_start:true,
+					postName:"img",
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
+						]
+					},
+					max_file_size:'2mb',
+					init:{}
+				});
 			});
 	 </script>
   </body>

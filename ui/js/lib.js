@@ -307,7 +307,9 @@
 					self.getToken(function(data){
 						options.uptoken=data.uptoken;
 						Qiniu._fileName=data.fileName;
-						options.max_file_size=data.maxFileSize+'mb';
+						if(!options.max_file_size){
+							options.max_file_size=data.maxFileSize+'mb';
+						}
 						options.init.Key= function(up, file) {
 							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
 						   // 该配置必须要在 unique_names: false , save_key: false 时才生效,key即为上传文件名
