@@ -6,6 +6,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\SalonUser;
 use App\Merchant;
+use App\SalonRatingsRecord;
 class Salon extends Model {
 
 	protected $table = 'salon';
@@ -573,6 +574,28 @@ class Salon extends Model {
 		}
 		return $merchantSn->sn.$tps.$sn;	
 	}
+	
+	/**
+	 * 店铺等级调整
+	 * */
+	public static function setSalonGrade($salonid,$data,$dataInfo,$addAct)
+	{
+		$salonResult = self::where(array("salonid"=>$salonid))->first();
+		if($data['changeInTime'] != $salonResult->changeInTime || $data['salonChangeGrade'] != $salonResult->salonChangeGrade || $addAct == 1)//1 代表添加
+		{
+			DB::table('salon_ratings_record')->where("salonid","=",$salonid)->where("changeTime",">",time())->delete();
+			
+			$logRs = SalonRatingsRecord::where(['salonid'=>$salonid])->orderBy('id','desc')->first();
+			if($logRs)
+			{
+				SalonRatingsRecord::where(['id'=>$logRs->id])->update(['endTime'=>$data['changeInTime']-1]);
+			}
+			SalonRatingsRecord::insertGetId(['changeTime'=>$data['changeInTime'],'addTime'=>time(),'grade'=>$data['salonChangeGrade'],'salonid'=>$salonid,'commissionRate'=>$dataInfo['commissionRate']]);
+			
+		}
+	}
+	
+	
 
 }
 
