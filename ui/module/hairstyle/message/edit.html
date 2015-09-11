@@ -226,12 +226,13 @@
 				});
 				
 				//预览消息
-				$('#preview').on('click',function(){
+				$('#preview').on('click',function(e){
 					var val=$('.radio-editor:checked').val();
 					if(val==1){
+						e.stopPropagation();
+						e.preventDefault();
 						window.open('preview.html?url='+encodeURIComponent($('#url').val()),"_blank");
 						return;
-						$('#hidden').attr('name','url').val($('#url').val());
 					}else if(val==2){
 						$('#hidden').attr('name','content').val(window.ue.getContent());
 						var receivers=[];
