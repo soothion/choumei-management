@@ -3,23 +3,24 @@
 use App\Http\Controllers\Controller;
 use App\RequestLog;
 use Log;
-
+use Excel;
+use Event;
 /**
  * Description of LoginQueryController
  *
  * @author zhengjiangang
  */
 
-$fields=['mobilephone','username','bundle','updateTime','deviceOs','version'];
-   /**
-	 * @api {post} /LoginQuery/index 1.登录日志列表
+class LoginQueryController  extends Controller {
+      /**
+	 * @api {post} /LoginQuery/index 1.列出登录日志列表
 	 * 
 	 * @apiName index
 	 * @apiGroup LoginQuery
 	 *
 	 * @apiParam {String} mobilephone 可选,用户手机号.
 	 * @apiParam {String} username 可选,用户臭美号.
-	 * @apiParam {String} bundle 可选,用户设备号.
+	 * @apiParam {String} deviceUuid 可选,用户设备号.
 	 * @apiParam {String} minTime 可选,最小时间.
     	 * @apiParam {String} maxTime 可选,最大时间.
 	 * @apiParam {Number} page 可选,页数.
@@ -69,12 +70,89 @@ $fields=['mobilephone','username','bundle','updateTime','deviceOs','version'];
 	 *		    "msg": "未授权访问"
 	 *		}
     */
-class LoginQueryController  extends Controller {
-     public function index()
+    public function index()
     {
            $param = $this->param; 
            Log::info('LoginQueryController index param is: ', $param);
            $query=RequestLog::getLogSelect($param);
            return $this->success($query);
      }
+     
+       /**
+	 * @api {post} /LoginQuery/export 2.导出日志列表
+	 * 
+	 * @apiName export
+	 * @apiGroup LoginQuery
+	 *
+	 * @apiParam {String} mobilephone 可选,用户手机号.
+	 * @apiParam {String} username 可选,用户臭美号.
+	 * @apiParam {String} deviceUuid 可选,用户设备号.
+	 * @apiParam {String} minTime 可选,最小时间.
+    	 * @apiParam {String} maxTime 可选,最大时间.
+	 * 
+	 * @apiSuccess {Number} total 总数据量.
+	 * @apiSuccess {String} mobilephone 可选,用户手机号.
+	 * @apiSuccess {String} username 可选,用户臭美号.
+	 * @apiSuccess {String} bundle 可选,用户设备号.
+	 * @apiSuccess {String} updateTime 登录时间.
+	 * @apiSuccess {String} deviceOs 手机系统.
+	 * @apiSuccess {String} version APP版本.
+         * 
+         * 
+         * @apiSuccessExample Success-Response:
+         *              {
+	 *		  是一个xml文件
+	 *		}
+         * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+    */
+     
+    public function export()
+    {
+           $param = $this->param; 
+           Log::info('LoginQueryController index param is: ', $param);
+           $query=RequestLog::exportLogSelect($param);
+           $header = ['用户手机号','用户臭美号','用户设备号','登录时间','手机系统','APP版本'];         
+           Event::fire('LoginQuery.export');
+           $this->export_xls("设备登录列表".date("Ymd"),$header,self::format_prepay_data($query));
+           
+     }
+     
+     public function export_xls($filename,$header,$datas)
+     {
+	    Excel::create($filename, function($excel) use($datas,$header){
+	            $excel->sheet('Sheet1', function($sheet) use($datas,$header){
+	            $sheet->fromArray($datas, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+	            $sheet->prependRow(1, $header);//添加表头
+	    
+	        });
+	    })->export('xls');
+      }
+    protected static function format_prepay_data($datas)
+    {
+        $res = [];
+        foreach ($datas as $data) {
+            $mobilephone = isset($data->mobilephone) ? $data->mobilephone : '';
+            $username = isset($data->username) ? $data->username : '';
+            $updateTime = $data->updateTime;
+            $deviceUuid = isset($data->deviceUuid)?$data->deviceUuid:'';
+            $deviceOs = isset($data->deviceOs)?$data->deviceOs:'';
+            $version = isset($data->version)?$data->version:'';
+            
+            $res[] = [
+                $mobilephone,
+                $username,
+                $deviceUuid,
+                $updateTime,
+                $deviceOs,
+                $version
+            ];
+            
+        }
+        return $res;
+    }
+    
 }
