@@ -183,7 +183,7 @@ class StylistMsgConf extends Model {
 				'addtime',
 				'onlinetime',
 				//'content_id',
-				'content'
+				'c.content'
 		);
 		$result = self::select($fields)->leftjoin('stylist_msg_content as c', 'c.id', '=', 'stylist_msg_conf.content_id')->where('stylist_msg_conf.id','=',$id)->first();
 		return $result;
