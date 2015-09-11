@@ -9,7 +9,7 @@
     <body>
         <div class="breadcrumb">
             <a>收入管理</a>
-            <span>&gt;</span><a href="index.html">佣金单</a>
+            <span>&gt;</span><a href="index.html">返佣单</a>
             <div class="flex-box">
                 <div class="flex-item">
                     <h4>返佣单详情</h4>
@@ -63,12 +63,12 @@
 
                         <tr>
                             <td class="td">结算起始日：</td>
-                            <td><%=data.start_at%></td>                            
+                            <td><%=data.start_at && new Date(data.start_at).format("yyyy-MM-dd")%></td>
                         </tr>
 
                         <tr>
                             <td class="td">结算截止日：</td>
-                            <td><%=data.end_at%></td>                            
+                            <td><%=data.end_at && new Date(data.end_at).format("yyyy-MM-dd")%></td>
                         </tr>
 
                         <tr>
@@ -83,7 +83,7 @@
 
                         <tr>
                             <td class="td">创建日期：</td>
-                            <td><%=data.created_at%></td>                            
+                            <td><%=data.created_at && new Date(data.created_at).format("yyyy-MM-dd")%></td>
                         </tr>   
 
                         <tr>
@@ -93,7 +93,7 @@
 
                         <tr>
                             <td class="td">确认日期：</td>
-                            <td><%=data.confirm_at%></td>                            
+                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
                         </tr>
 
                         <tr>

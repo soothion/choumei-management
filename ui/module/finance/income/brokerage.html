@@ -46,7 +46,7 @@
 
                         <tr>
                             <td class="td">确认日期：</td>
-                            <td><%=data.date%></td>                            
+                            <td><%=data.date && new Date(data.date).format("yyyy-MM-dd")%></td>                            
                         </tr>                        
                     </tbody>                     
                 </table>
