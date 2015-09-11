@@ -459,6 +459,7 @@
 										var height=imageLimitSize.split('*')[1];
 										if(image.width()!=width||image.height()!=height){
 											parent.lib.popup.result({bool:false,text:options.sizeErrorText});
+											up.removeFile(file);
 										}else{
 											if(options._auto_start){
 												up.start();
@@ -469,6 +470,7 @@
 									if(typeof imageLimitSize=="function"){
 										if(!imageLimitSize(image.width(),image.height())){
 											parent.lib.popup.result({bool:false,text:options.sizeErrorText});
+											up.removeFile(file);
 										}else{
 											if(options._auto_start){
 												up.start();
