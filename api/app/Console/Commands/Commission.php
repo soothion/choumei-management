@@ -52,8 +52,10 @@ class Commission extends Command
     public function order(){
         $query = Order::leftJoin('commission_log','order.ordersn','=','commission_log.ordersn')
             ->leftJoin('salon','salon.salonid','=','order.salonid')
+            ->join('recommend_code_order','recommend_code_order.ordersn','=','order.ordersn')
             ->where('commission_log.id','=',NULL)
-            ->select('order.ordersn','order.priceall','order.pay_time','order.use_time','order.salonid','salon.salonGrade','salon.merchantId');
+            ->select('order.ordersn','order.priceall','order.pay_time','order.use_time','order.salonid','salon.salonGrade','salon.merchantId','recommend_code_order.recommend_code')
+            ->orderBy('use_time','ASC');
         $count = $query->count();
         $pageSize = 10000;
         $totalPage = ceil($count/$pageSize);
@@ -93,7 +95,10 @@ class Commission extends Command
                         $data['created_at'] = $now;
                         $commission->save();
                     }
-                    ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$amount,'佣金率'.$rate.'%',$date);
+                    $note = '佣金率'.$rate.'%';
+                    if($order->recommend_code)
+                        $note.='</br>邀请码用户消费';
+                    ShopCount::count_bill_by_commission_money($order->salonid,$order->merchantId,$amount,$note,$date);
                     $this->info('订单'.$order->ordersn.'处理成功');
                 }                    
                 else
@@ -110,7 +115,8 @@ class Commission extends Command
             ->leftJoin('commission_log','bounty_task.btSn','=','commission_log.ordersn')
             ->leftJoin('salon','salon.salonid','=','bounty_task.salonId')
             ->where('commission_log.id','=',NULL)
-            ->select('bounty_task.btSn as ordersn','bounty_task.money as priceall','bounty_task.payTime as pay_time','bounty_task.endTime as use_time','bounty_task.salonId as salonid','salon.salonGrade','salon.merchantId');
+            ->select('bounty_task.btSn as ordersn','bounty_task.money as priceall','bounty_task.payTime as pay_time','bounty_task.endTime as use_time','bounty_task.salonId as salonid','salon.salonGrade','salon.merchantId')
+            ->orderBy('endTime','ASC');
         $count = $query->count();
         $pageSize = 10000;
         $totalPage = ceil($count/$pageSize);
