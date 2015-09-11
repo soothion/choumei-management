@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Trans;
 
 use App\Http\Controllers\Controller;
+use App\TransactionSearchApi;
 
 class OrderRefundController extends Controller
 {
@@ -11,13 +12,11 @@ class OrderRefundController extends Controller
      * @apiName index
      * @apiGroup refund
      *
-     * @apiParam {Number} key  1 店铺搜索  2 店铺编号
+     * @apiParam {Number} key  1订单号 2用户手机号 3用户臭美号   4店铺名称 
      * @apiParam {String} keyword  根据key来的关键字
-     * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
-     * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
-     * @apiParam {String} type 0 全部 1 付交易代收款 2 付业务投资款
-     * @apiParam {String} pay_type 0 全部 1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiParam {String} state 0 全部 1 待提交 2待审批 3待付款  4已付款
+     * @apiParam {String} refund_min_time 最小时间 YYYY-MM-DD
+     * @apiParam {String} refund_max_time 最大时间 YYYY-MM-DD
+     * @apiParam {String} state 0 全部  6待审核 7已退款 10退款中  12拒绝退款 (多个用','隔开)
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      * @apiParam {String} sort_key 排序的键 ['id','updated_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
@@ -54,7 +53,19 @@ class OrderRefundController extends Controller
      */
     public function index()
     {
-         
+        $params = $this->parameters([
+            'key' => self::T_INT,
+            'keyword' => self::T_STRING,
+            'refund_min_time' => self::T_STRING,
+            'refund_max_time' => self::T_STRING,
+            'state' => self::T_STRING,
+            'page' => self::T_INT,
+            'page_size' => self::T_INT,
+            'sort_key' => self::T_STRING,
+            'sort_type' => self::T_STRING,
+        ]);
+        $items = TransactionSearchApi::searchOfRefund($params);
+        return $this->success($items);
     }
     
     /**
@@ -94,7 +105,9 @@ class OrderRefundController extends Controller
      */
     public function show($id)
     {
-    
+        $id = intval($id);
+        $item = TransactionSearchApi::refundDetail($id);
+        return $this->success($item);
     }
     
     /**

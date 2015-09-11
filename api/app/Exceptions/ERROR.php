@@ -168,6 +168,24 @@ class ERROR
       * @var unknown
       */
      CONST ORDER_NOT_EXIST = -50601;
+     
+     /**
+      * 臭美券不存在
+      * @var unknown
+      */
+     CONST TICKET_NOT_EXIST = -50602;
+     
+     /**
+      * 退款单不存在
+      * @var unknown
+      */
+     CONST REFUND_NOT_EXIST = -50603;
+     
+     /**
+      * 订单项目不存在
+      * @var unknown
+      */
+     CONST ORDER_ITEM_NOT_EXIST = -50604;
 	 
 	 
 	 ////////////消息模块//////////////

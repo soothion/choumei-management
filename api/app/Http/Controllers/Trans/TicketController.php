@@ -154,7 +154,7 @@ class TicketController extends Controller
     }
     
     /**
-     * @api {get} /ticket/detail/{id} 2.臭美券详情
+     * @api {get} /ticket/show/{id} 2.臭美券详情
      * @apiName detail
      * @apiGroup ticket
      *
@@ -270,9 +270,11 @@ class TicketController extends Controller
      *		    "msg": "未授权访问"
      *		}
      */
-    public function detail($id)
+    public function show($id)
     {
-    
+        $id = intval($id);
+        $item = TransactionSearchApi::ticketDetail($id);
+        return $this->success($item);
     }
     
     /**
