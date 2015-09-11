@@ -52,11 +52,11 @@
                 </tr>
                 <tr>
                   <td>要求付款日期：</td>
-                  <td><%=data.require_day%></td>
+                  <td class="format"><%=data.require_day%></td>
                 </tr>
 				 <tr>
                   <td>创建日期：</td>
-                  <td><%=data.created_at%></td>
+                  <td class="format"><%=data.created_at%></td>
                 </tr>
                 <tr>
                  <td>制单人：</td>
@@ -67,7 +67,7 @@
                   <td><%=data.confirm_user?data.confirm_user.name:""%></td>
                </tr>
 			   <tr>
-                 <td>审批日期：</td>
+                 <td class="format">审批日期：</td>
                   <td><%=data.confirm_at%></td>
                </tr>
 			   <tr>
@@ -76,7 +76,7 @@
                </tr>
 			    <tr>
                   <td>实际付款日期：</td>
-                  <td><%=data.pay_day%></td>
+                  <td class="format"><%=data.pay_day%></td>
                 </tr>
 			   <tr>
                  <td>付款方式：</td>
