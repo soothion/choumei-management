@@ -349,8 +349,14 @@ class MessageController extends Controller{
 		//	throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
 		$row = StylistMsgConf::doOperating($id,1);//1 上线
 		if($row)
+		{
 			return $this->success();
-		return $this->error('上线失败');
+		}
+		else
+		{
+			return $this->error('上线失败');	
+		}
+
 		//throw new ApiException('上线失败', ERROR::UPDATE_FAILED);
 	}
 	
