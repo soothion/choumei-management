@@ -125,6 +125,7 @@
 						  <div class="control-image">
 								<div class="control-single-image">
 									<img src="<%=data.img%>" alt="" />
+									<input type="hidden" name="img" class="original" value="<%=data.img%>" required requiredmsg="请上传图片" data-helpid="image-help">
 									<div class="control-image-ud">
 										<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 									</div>
@@ -133,7 +134,7 @@
 						 <span class="space"></span>
 						 <span class="weak">图片规格：2M以内，支持jpg、png格式建议630*210px</span>
 						 <br />
-						<input type="hidden" name="img" value="<%=data.img%>" required requiredmsg="请上传图片">
+						<div class="control-help" style="display:none;" id="image-help"></div>
 					</div>
                 </div>
 				<div class="control-separation">
@@ -204,10 +205,9 @@
 						postName:"src",
 						filters: {
 							mime_types : [
-								{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
+								{ title : "Image files", extensions : "jpg,gif,png,jpeg" }
 							]
-						},
-						max_file_size:'1mb'
+						}
 					},function(uploader){
 						uploader.bind('FileUploaded',function(up,file,res){
 							if(res&&res.response&&typeof res.response=='string'){
@@ -342,7 +342,6 @@
 				lib.puploader.image({
 					browse_button: 'imageUpload',
 					auto_start:true,
-					postName:"img",
 					filters: {
 						mime_types : [
 							{ title : "Image files", extensions : "jpg,png,jpeg" },

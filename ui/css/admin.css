@@ -510,11 +510,12 @@ input:focus+.unit{
 	vertical-align:middle;
 	box-sizing:border-box;
 }
-.control-image,.control-single-image{
+.control-image{
 	margin-bottom:10px;
 	position:relative;
 }
 .control-single-image{
+	position:relative;
 	overflow:hidden;
 }
 .control-image-upload{

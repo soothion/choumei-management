@@ -324,14 +324,17 @@
 							//console.log(arguments);
 						});
 						uploader.bind('FileUploaded',function(up,file,res){
-							parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
 							if(res&&res.response&&typeof res.response=='string'){
 								var data=JSON.parse(res.response);
-								console.log(up.getOption().fileName);
 								self.getToken(function(data){
 									Qiniu.token=data.uptoken;
 									Qiniu._fileName=data.fileName;
 								});
+								if(data.code==0){
+									parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
+								}else{
+									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
+								}
 							}
 						});
 						uploader.bind('Error',function(up, err, errTip){
@@ -341,19 +344,35 @@
 					});
 				});
 			},
-			getObjectURL:function(file) {
-				var url = null ; 
-				if (window.createObjectURL!=undefined) { // basic
-					url = window.createObjectURL(file) ;
-				} else if (window.URL!=undefined) { // mozilla(firefox)
-					url = window.URL.createObjectURL(file) ;
-				} else if (window.webkitURL!=undefined) { // webkit or chrome
-					url = window.webkitURL.createObjectURL(file) ;
+			getSource:function(file,cb){//file为plupload事件监听函数参数中的file对象,callback为预览图片准备完成的回调函数 
+				if (!file || !/image\//.test(file.type)) return; //确保文件是图片
+				if (file.type == 'image/gif') {//gif使用FileReader进行预览,因为mOxie.Image只支持jpg和png
+					var fr = new mOxie.FileReader();
+					fr.onload = function () {
+						cb(fr.result);
+						fr.destroy();
+						fr = null;
+					}
+					fr.readAsDataURL(file.getSource());
+				} else {
+					var preloader = new mOxie.Image();
+					preloader.onload = function () {
+						//preloader.downsize(300, 300);//先压缩一下要预览的图片,宽300，高300
+						var imgsrc = preloader.type == 'image/jpeg' ? preloader.getAsDataURL('image/jpeg', 80) : preloader.getAsDataURL(); //得到图片src,实质为一个base64编码的数据
+						cb && cb(imgsrc); //callback传入的参数为预览图片的url
+						preloader.destroy();
+						preloader = null;
+					};
+					preloader.load(file.getSource());
 				}
-				return url ;
 			},
 			image:function(options,cb){
-				options=$.extend({successText:'图片上传成功',loaderText:'图片上传中..'},options);
+				options=$.extend({
+					successText:'图片上传成功',
+					failText:'图片上传失败',
+					loaderText:'图片上传中..',
+					sizeErrorText:'图片的大小尺寸不正确'
+				},options);
 				if(options.imageLimitSize){
 					if(options.auto_start===true){
 						options._auto_start=true;
@@ -366,7 +385,6 @@
 							var data=JSON.parse(res.response);
 							var options=up.getOption();
 							if(data.code==0){
-								parent.lib.popup.result({bool:true,text:options.successText||'图片上传成功'});
 								uploader.createThumbnails && uploader.createThumbnails(data.response);
 								uploader.preview&&uploader.preview(data.response)
 							}
@@ -377,11 +395,7 @@
 						uploader.thumbnails=$target.siblings('.control-thumbnails');
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
 							uploader.createThumbnails=function(data){
-								var arr=[data];
-								if(this.getOption()&&this.getOption().postName){
-									arr.postName=this.getOption().postName;
-								}
-								uploader.thumbnails.append(lib.ejs.render({url:'/module/public/template/thumbnails'},{data:arr}))
+								uploader.thumbnails.append(lib.ejs.render({url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},{data:[data]}));
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children().length){
 									uploader.thumbnails.siblings('.control-image-upload').hide();
 								}
@@ -399,23 +413,41 @@
 						}else if($target.closest('.control-single-image').length==1){
 							uploader.area=$target.closest('.control-single-image');
 							uploader.preview=function(data){
-								this.area.find('img').attr('src',data.img);
-								$('input[name="'+this.getOption().postName+'"]').val(data.img);
+								this.area.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
+								this.area.find('input.original').val(data.img);
+								this.area.find('input.thumb').val(data.thumbimg);
 							}
 						}
 					}
-					//console.log(uploader);
 					if(options.imageLimitSize){
-						/*
-						uploader.area.find('input[type="file"]').on('change',function(){
-							console.log(lib.puploader.getObjectURL(this.files[0]));
-						});
-						*/
 						uploader.bind('FilesAdded',function(up, files){
 							plupload.each(files, function(file) {
-								var input=up.area.find('input[type="file"]')[0];
-								//console.log(file);
-								console.log(lib.puploader.getObjectURL(file));
+								var image=lib.puploader.createImage();
+								lib.puploader.getSource(file,function(src){
+									image.attr('src',src);
+									var options=up.getOption();
+									var imageLimitSize=options.imageLimitSize;
+									if(typeof imageLimitSize=="string"){
+										var width=imageLimitSize.split('*')[0];
+										var height=imageLimitSize.split('*')[1];
+										if(image.width()!=width||image.height()!=height){
+											parent.lib.popup.result({bool:false,text:options.sizeErrorText});
+										}else{
+											if(options._auto_start){
+												up.start();
+											}
+										}
+									}
+									if(typeof imageLimitSize=="function"){
+										if(!imageLimitSize(image.width(),image.height())){
+											parent.lib.popup.result({bool:false,text:options.sizeErrorText});
+										}else{
+											if(options._auto_start){
+												up.start();
+											}
+										}
+									}
+								});
 							});
 						});
 					}
@@ -1032,7 +1064,9 @@
 		},
 		getErrorDom:function($target){
 			var error=$target.siblings('.control-help');
-			if($target.parent('label').length==1){
+			if($target.data('helpid')){
+				error=$('#'+$target.data('helpid'));
+			}else if($target.parent('label').length==1){
 				error=$target.parent().siblings('.control-help');
 			}
 			if(error.length==0){
