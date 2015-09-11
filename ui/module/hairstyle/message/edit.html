@@ -193,11 +193,12 @@
 		<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
 		<script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
         <script type="text/javascript">
+			
 			$('#form').one('_ready',function(e,data){
 				var form=$(this).find('form');
 				//编辑器
 				window.ue = UE.getEditor('editor');
-				setTimeout(function(){
+				window.ue.ready(function(){
 					$('#edui14').after($('#edui_simpleupload'));
 					lib.puploader.image({
 						browse_button: 'ueditor-upload',
@@ -220,13 +221,11 @@
 					if(data.response.url||data.response.title===undefined){
 						$('#editor-wrap').hide();
 					}else{
-						console.log(data.response.content);
 						 UE.getEditor('editor').setContent(data.response.content);
 					}
-				},500);
+				});
 				
-				
-				//预览消息页面
+				//预览消息
 				$('#preview').on('click',function(){
 					var val=$('.radio-editor:checked').val();
 					if(val==1){
@@ -236,33 +235,30 @@
 					}
 					if(val==2){
 						$('#hidden').attr('name','content').val(window.ue.getContent());
+						var receivers=[];
+						$('.editor-validate input').each(function(){
+							receivers.push($(this).val());
+						})
+						$('#receivers').val(receivers);
+						form.one('success',function(e,data){
+							if(data.result==1&&data.data){
+								window.open('preview.html?key='+data.data,'_blank');
+							}
+						});
 					}
 					var action=form.attr('action');
 					form.attr('action','message/addingPreview/');
 					setTimeout(function(){
 						form.attr('action',action);
 					},1000);
-					$('#ueditor_textarea_editorValue').removeAttr('name');
-					
-					var receivers=[];
-					$('.editor-validate input').each(function(){
-						receivers.push($(this).val());
-					})
-					$('#receivers').val(receivers);
-					form.one('success',function(e,data){
-						if(data.result==1&&data.data){
-							window.open('preview.html?key='+data.data,'_blank');
-						}
-					});
 				});
+				//提交消息
 				$('#submit').on('click',function(){
-				
 					var receivers=[];
 					$('.editor-validate input').each(function(){
 						receivers.push($(this).val());
-					})
+					});
 					$('#receivers').val(receivers);
-					
 					var val=$('.radio-editor:checked').val();
 					if(val==1){
 						$('#hidden').attr('name','url').val($('#url').val());
