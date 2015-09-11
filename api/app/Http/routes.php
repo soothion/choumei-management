@@ -661,9 +661,13 @@ Route::group(['middleware'], function(){
 	'uses'=>'Bounty\BountyController@reject'
 	    ));
 
-    Route::any('requestLog/index',array(  //请求日志列表
+    Route::any('requestLog/index',array(  //请求、搜索日志列表
 	'as'=>'requestLog.index',
 	'uses'=>'LoginQuery\LoginQueryController@index'
+	    ));
+    Route::any('requestLog/export',array(  //导出日志列表
+	'as'=>'requestLog.export',
+	'uses'=>'LoginQuery\LoginQueryController@export'
 	    ));
 });
 
