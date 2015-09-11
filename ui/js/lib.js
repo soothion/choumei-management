@@ -437,6 +437,7 @@
 												up.start();
 											}
 										}
+										image.parent().remove();
 									}
 									if(typeof imageLimitSize=="function"){
 										if(!imageLimitSize(image.width(),image.height())){
@@ -446,6 +447,7 @@
 												up.start();
 											}
 										}
+										image.parent().remove();
 									}
 								});
 							});
