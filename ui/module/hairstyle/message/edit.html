@@ -232,8 +232,7 @@
 						window.open('preview.html?url='+encodeURIComponent($('#url').val()),"_blank");
 						return;
 						$('#hidden').attr('name','url').val($('#url').val());
-					}
-					if(val==2){
+					}else if(val==2){
 						$('#hidden').attr('name','content').val(window.ue.getContent());
 						var receivers=[];
 						$('.editor-validate input').each(function(){
@@ -245,12 +244,13 @@
 								window.open('preview.html?key='+data.data,'_blank');
 							}
 						});
+						var action=form.attr('action');
+						form.attr('action','message/addingPreview/');
+						setTimeout(function(){
+							form.attr('action',action);
+						},1000);
 					}
-					var action=form.attr('action');
-					form.attr('action','message/addingPreview/');
-					setTimeout(function(){
-						form.attr('action',action);
-					},1000);
+					
 				});
 				//提交消息
 				$('#submit').on('click',function(){
