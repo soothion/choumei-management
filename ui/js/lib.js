@@ -424,7 +424,7 @@
 							plupload.each(files, function(file) {
 								var image=lib.puploader.createImage();
 								lib.puploader.getSource(file,function(src){
-									image.attr('src',src);
+									image=image.find('img').attr('src',src);
 									var options=up.getOption();
 									var imageLimitSize=options.imageLimitSize;
 									if(typeof imageLimitSize=="string"){
