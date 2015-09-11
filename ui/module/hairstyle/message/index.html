@@ -59,7 +59,7 @@
 					 <tr>
 							<td><%=i+1%></td>
 							<td><%=item.title%></td>
-							<td><%=item.onlinetime?lib.tools.getDate(item.onlinetime):""%></td>
+							<td><%=item.onlinetime?new Date(item.onlinetime*1000).format('yyyy-MM-dd hh mm ss'):""%></td>
 							<td><%=status[item.status]%></td>
 							<td>
 							<a class="link" target="_blank" href="<%if(item.content_id){%>preview.html?id=<%=item.id%><%}else{%>preview.html?url=<%=encodeURIComponent(item.url)%><%}%>">预览</a>	
