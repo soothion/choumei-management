@@ -579,7 +579,6 @@ input:focus+.unit{
 }
 .control-image-ud{
 	position:absolute!important;
-	bottom:-32px;
 	bottom:0px;
 	left:0px;
 	width:100%;
@@ -588,9 +587,9 @@ input:focus+.unit{
 	color:#ddd;
 	line-height:32px;
 	text-align:center;
-	-webkit-transition:bottom 0.2s ease 0s;
-	-moz-transition:bottom 0.2s ease 0s;
-	transition:bottom 0.2s ease 0s;
+	-webkit-transition:all 0.2s ease 0s;
+	-moz-transition:all 0.2s ease 0s;
+	transition:all 0.2s ease 0s;
 	cursor:pointer;
 }
 .control-image-ud .fa{
@@ -605,6 +604,19 @@ input:focus+.unit{
 .control-single-image img{
 	width:120px;
 	height:120px;
+}
+.control-single-image img[src=""]+.control-image-ud{
+	height:100%;
+	background:#fff;
+	color:#666;
+}
+.control-single-image img[src=""]+.control-image-ud:hover{
+	background:#eee;
+}
+.control-single-image img[src=""]+.control-image-ud .fa{
+	display:block;
+	font-size:30px;
+	margin-top:30px;
 }
 .image-preview{
 	width:40px;
