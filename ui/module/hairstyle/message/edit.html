@@ -216,9 +216,10 @@
 							}
 						});
 					});
-					if(data.response.url||data.response.title===undefined){
+					if(!data.response.id||!data.response.content){
 						$('#editor-wrap').hide();
-					}else{
+					}
+					if(data.response.content){
 						 UE.getEditor('editor').setContent(data.response.content);
 					}
 				});
@@ -252,7 +253,7 @@
 					
 				});
 				//提交消息
-				$('#submit').on('click',function(){
+				$('#submit').on('click',function(e){
 					var receivers=[];
 					$('.editor-validate input').each(function(){
 						receivers.push($(this).val());
@@ -318,6 +319,7 @@
 					lib.ajax({
 						url:'message/checkPhone',
 						type:'POST',
+						async:false,
 						data:{
 							receivers:$(this).val()
 						},

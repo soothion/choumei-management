@@ -1005,15 +1005,13 @@
 				lib.ajax({
 					url:unique,
 					type:'post',
+					async:false,
 					success:function(data){
 						if(data.result!=1){
 							$target.trigger('error',{type:'unique'});
 						}else{
 							var error=self.getErrorDom($target);
 							error.remove();
-							if(eventData&&eventData.type=='validate'){
-								self.validate(true);
-							}
 						}
 					},
 					done:function(){}
@@ -1160,10 +1158,8 @@
 			});
 		},
 		validate:function(untrigger){
-			if(!untrigger){
-				$(this.el).find(this.selector).trigger('blur',{type:'validate'});
-			}
 			var $form=$(this.el);
+			$form.find(this.selector).trigger('blur');
 			if($form.attr('disabled'))return;
 			var help=$form.find('.control-help:visible');
 			if(help.length==0){
