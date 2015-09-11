@@ -31,7 +31,7 @@
 						<label>
 							<input type="radio" class="radio" name="receive_type" value="1"
 							<%=!data.receive_type||data.receive_type==1 ? "checked" : "" %>>
-							<span>所有臭美发型app安装用户</span>
+							<span>所有臭美发型的发型师</span>
 						</label>
 						<br/>
 						<label>
@@ -77,7 +77,7 @@
 								%>
 								<%data.receivers.split(",").forEach(function(item){%>
 								<li>
-									<input type="text" id="er-1" value="<%=item%>" required requiredmsg="请输入手机号码" pattern="mobile" patternmsg="手机号码不正确" /><label class="control-help" for="er-1"></label>
+									<input type="text" id="er-1" value="<%=item%>" required requiredmsg="请输入手机号码" pattern="mobile" patternmsg="号码格式有误" /><label class="control-help" for="er-1"></label>
 								</li>
 								<%})%>
 							</ul>
@@ -153,10 +153,10 @@
 							<span>编辑生成</span>
 						</label>
 						<div style="margin-top:10px">
-							<input type="text"  id="url" value="<%=data.url%>" style="<%=data.content?"display:none":""%>"/>
+							<input type="text" placeholder="信息链接" id="url" value="<%=data.url%>" style="<%=data.content?"display:none":""%>" pattern="^(http|https)://" patternmsg="链接地址不正确"/>
 							<div id="editor-wrap">
 								<div id="editor" type="text/plain" style="width:800px;height:300px;"></div>
-								<div class="weak">详情中的图片建议为：690x320px</div>
+								<div class="weak">详情中的图片建议尺寸：690x320px</div>
 							</div>
 							<div class="hide">
 								<div id="edui_simpleupload" class="edui-box edui-button edui-for-simpleupload edui-default">

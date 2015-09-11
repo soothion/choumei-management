@@ -87,7 +87,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="table-detail"  style="display:none">
+			<div class="table-detail"  style="_display:none">
 				<form action="">
 				<table>
 					<thead>
@@ -107,7 +107,9 @@
 							<td>头像： 
 								<img src="/images/logo.png" alt="" width="60px" height="60px" id="photo" /> 
 								<span class="space"></span>
-								<a class="btn btn-upload" id="imageUpload">上传图片</a>
+								<span id="imageUpload">
+									<a class="btn btn-upload">上传图片</a>
+								</span>
 								<span class="space"></span>
 								<span class="weak">
 									请上传JPG或PNG格式的图标，尺寸为512×512px，容量小于800KB
@@ -236,6 +238,25 @@
 			}).on('click','.btn-cancel',function(){
 				$(this).closest('.table-detail').hide().prev().show();
 			});
+			
+			lib.puploader.create({
+				domain:"http://service.choumei.cn/upload/image",
+				auto_start:true,
+				browse_button:'imageUpload',
+				filters: {
+					mime_types : [
+						{ title : "Image files", extensions : "jpg,png,jpeg" }
+					]
+				}
+			},function(uploader){
+				uploader.bind('FileUploaded',function(up,file,res){
+					if(res&&res.response&&typeof res.response=='string'){
+						var data=JSON.parse(res.response);
+						console.log(data);
+					}
+				});
+			});
+			/*
 			lib.uploader.image({
 				server: "rebate/upload",
 				pick  : {id:'#imageUpload',multiple:false},
@@ -253,7 +274,7 @@
 				uploader.on('uploadSuccess',function(file,res){
 					//console.log(res);
 				})
-			});
+			});*/
 		</script>
   </body>
 </html>

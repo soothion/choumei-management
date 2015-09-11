@@ -283,17 +283,51 @@
 				}
 				return pwd.join("");
 			},
-			create:function(options){
+			create:function(options,cb){
 				var _default={
 					runtimes:'html5,flash,html4',
 					flash_swf_url:'/qiniu/demo/js/plupload/Moxie.swf',
+					silverlight_xap_url:'/qiniu/demo/js/plupload/Moxie.xap',
 					domain:cfg.url.upload,
 					dragdrop:true,
-					chunk_size:'4mb'
+					multipart:false,
+					init:{
+						Key:function(up, file) {
+							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+						   // 该配置必须要在 unique_names: false , save_key: false 时才生效,key即为上传文件名
+						   return Qiniu._fileName;
+						}
+					}
 				};
-				options=$.extend(_default,options)
-				var uploader = Qiniu.uploader(options);
-				return uploader;
+				options=$.extend(_default,options);
+				if(options.domain.indexOf('qiniu')==-1){
+					seajs.use(['/qiniu/demo/js/plupload/plupload.full.min.js'],function(){
+						seajs.use(['/qiniu/demo/js/plupload/i18n/zh_CN.js']);
+						options.url=options.domain;
+						delete options.runtimes;
+						delete options.dragdrop;
+						delete options.multipart;
+						var uploader=new plupload.Uploader(options);
+						uploader.init();
+						if(options.auto_start){
+							uploader.bind('FilesAdded',function(up,files){
+								up.start();
+							});
+						}
+						uploader.bind('UploadProgress',function(){
+							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
+						});
+						uploader.bind('Error',function(up, err, errTip){
+							parent.lib.popup.result({bool:false,text:err.message});
+						});
+						uploader.bind('FileUploaded',function(up,file,res){
+							parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
+						});
+						cb && cb(uploader)
+					});
+				}else{
+					return Qiniu.uploader(options);
+				}
 			},
 			createImage:function(){
 				var imagePreview=$('<div style="position:absolute;left:0;top:0;z-index:-1;width:100%;height:100%;overflow:hidden;visibility:hidden;"><img/></div>')
@@ -302,19 +336,12 @@
 			},
 			file:function(options,cb){
 				var self=this;
-				options.multipart=false;
 				this.use(function(){
 					self.getToken(function(data){
-						options.init=options.init||{};
 						options.uptoken=data.uptoken;
 						Qiniu._fileName=data.fileName;
 						if(!options.max_file_size){
 							options.max_file_size=data.maxFileSize+'mb';
-						}
-						options.init.Key= function(up, file) {
-							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
-						   // 该配置必须要在 unique_names: false , save_key: false 时才生效,key即为上传文件名
-						   return Qiniu._fileName;
 						}
 						var uploader=self.create(options);
 						uploader.bind('UploadProgress',function(){
@@ -414,8 +441,8 @@
 							uploader.area=$target.closest('.control-single-image');
 							uploader.preview=function(data){
 								this.area.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
-								this.area.find('input.original').val(data.img);
-								this.area.find('input.thumb').val(data.thumbimg);
+								this.area.find('input.original').val(data.img).blur();
+								this.area.find('input.thumb').val(data.thumbimg).blur();
 							}
 						}
 					}
@@ -534,7 +561,6 @@
 											if(self.options._auto){
 												self.upload();
 											}
-											console.log(self.options.thumb)
 											if(self.options.thumb&&self.createThumbnails){
 												var data=$.extend({},file,{src:src});
 												self.createThumbnails(data);
