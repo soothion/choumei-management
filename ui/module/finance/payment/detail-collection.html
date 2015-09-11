@@ -56,7 +56,7 @@
                 </tr>
 				 <tr>
                   <td>创建日期：</td>
-                  <td class="format"><%=data.created_at%></td>
+                  <td class="format"><%=new Date(data.created_at).format("yyyy-MM-dd")%></td>
                 </tr>
                 <tr>
                  <td>制单人：</td>
@@ -67,8 +67,8 @@
                   <td><%=data.confirm_user?data.confirm_user.name:""%></td>
                </tr>
 			   <tr>
-                 <td class="format">审批日期：</td>
-                  <td><%=data.confirm_at%></td>
+                 <td >审批日期：</td>
+                 <td class="format"><%=data.confirm_at%></td>
                </tr>
 			   <tr>
                  <td>出纳：</td>
