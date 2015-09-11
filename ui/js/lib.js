@@ -371,7 +371,7 @@
 					successText:'图片上传成功',
 					failText:'图片上传失败',
 					loaderText:'图片上传中..',
-					sizeErrorText:'图片的大小尺寸不正确'
+					sizeErrorText:'图片的尺寸大小不正确'
 				},options);
 				if(options.imageLimitSize){
 					if(options.auto_start===true){
