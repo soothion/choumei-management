@@ -261,6 +261,7 @@
 					var val=$('.radio-editor:checked').val();
 					if(val==1){
 						$('#hidden').attr('name','url').val($('#url').val());
+						$('#receivers').val('');
 					}
 					if(val==2){
 						$('#hidden').attr('name','content').val(window.ue.getContent());
