@@ -185,7 +185,6 @@ class MessageController extends Controller{
 		}
 		$save['title'] = isset($param['title'])?trim($param['title']):'';
 		$save['description'] = isset($param['description'])?trim($param['description']):'';
-		$save['description'] .= ' '; 
 		$save['img'] = isset($param['img'])?trim($param['img']):'';
 		$save['url'] = isset($param['url'])?trim($param['url']):'';
 		$saveConf['content'] = isset($param['content'])?$param['content']:'';
@@ -204,7 +203,7 @@ class MessageController extends Controller{
 			return $this->error('参数错误');
 		}
 			//throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
-		if(StylistMsgConf::dosave($save,$saveConf,$id))
+		if(StylistMsgConf::dosave($save,$saveConf,$id) !== false)
 		{
 			return $this->success();
 		}
