@@ -9,7 +9,7 @@ class CommissionLog extends Model {
 
 	protected $table = 'commission_log';
 
-	protected $fillable = ['id', 'ordersn','type','salonid', 'amount', 'created_at', 'updated_at','rate','grade'];
+	protected $fillable = ['id', 'ordersn','type','salonid', 'amount', 'created_at', 'updated_at','rate','grade','note'];
 
     public function salon(){
         return $this->belongsTo('App\Salon');
