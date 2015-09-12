@@ -1110,11 +1110,8 @@ class SalonController extends Controller {
 				$result[$key]['salonid'] = $val['salonid'];
 				
 				$result[$key]['recommend_code'] = $val['recommend_code'];
-				if($val['dividendStatus']==0)
-					$result[$key]['dividendStatus'] = '加入分红联盟';
-				if($val['dividendStatus']==1)
-					$result[$key]['dividendStatus'] = '退出分红联盟';
-				else 
+				$result[$key]['dividendStatus'] = $val['dividendStatus']?'退出分红联盟':'加入分红联盟';
+				if($val['dividendStatus']=='')
 					$result[$key]['dividendStatus'] = '';
 				
 				$result[$key]['addr'] = $val['addr'];
