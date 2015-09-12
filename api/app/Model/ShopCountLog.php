@@ -111,7 +111,7 @@ class ShopCountLog extends Model
             $type = intval($item['type']);
             $money = floatval($item['money']);
             $change_money = $money;
-            if($type == ShopCountLog::TYPE_OF_COMMISSION || $type == ShopCountLog::TYPE_OF_SPEND)
+            if($type == ShopCountLog::TYPE_OF_COMMISSION_RETURN || $type == ShopCountLog::TYPE_OF_SPEND)
             {
                 $change_money = bcmul($change_money,-1,2);
             }
