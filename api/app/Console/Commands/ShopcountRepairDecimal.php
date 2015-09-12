@@ -55,11 +55,11 @@ class ShopcountRepairDecimal extends Command
             $num=ShopCount::where('salon_id',$salon_id)->update(['spend_money'=>$money]);
             if($num)
             {
-                $this->info("ok ! salon_id : {$salon_id} ,money:{$money}");
+                //$this->info("ok ! salon_id : {$salon_id} ,money:{$money}");
             }
             else 
             {
-                $this->error("error ! salon_id : {$salon_id} ,money:{$money}");
+                $this->error("[count] error ! salon_id : {$salon_id} ,money:{$money}");
             }
         }
         
@@ -74,11 +74,11 @@ class ShopcountRepairDecimal extends Command
             $num=InsteadReceive::where('salon_id',$salon_id)->where('day',$day)->update(['money'=>$money]);
             if($num)
             {
-                $this->info("ok ! salon_id : {$salon_id} , day:{$day} , money:{$money}");
+                //$this->info("ok ! salon_id : {$salon_id} , day:{$day} , money:{$money}");
             }
             else 
             {
-                $this->error("error ! salon_id : {$salon_id}, day:{$day} , money:{$money}");
+                $this->error("[instead receive] error !  salon_id : {$salon_id}, day:{$day} , money:{$money}");
             }
         }
         
@@ -92,11 +92,11 @@ class ShopcountRepairDecimal extends Command
             $num=ShopCount::where('salon_id',$salon_id)->update(['commission_money'=>$money]);
             if($num)
             {
-                $this->info("ok ! salon_id : {$salon_id} ,money:{$money}");
+                //$this->info("ok ! salon_id : {$salon_id} ,money:{$money}");
             }
             else
             {
-                $this->error("error ! salon_id : {$salon_id} ,money:{$money}");
+                $this->error("[commission] error ! salon_id : {$salon_id} ,money:{$money}");
             }
         }
     }
