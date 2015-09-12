@@ -57,11 +57,12 @@ class Commission extends Model {
 			$query = $query->where('date','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 
+
 		//排序
-		if(isset($param['sort_key'])&&$param['sort_key']){
-			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
-			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
-		}
+    	$sort_key = empty($param['sort_key'])?'confirm_at':$param['sort_key'];
+    	$sort_type = empty($param['sort_type'])?'DESC':$param['sort_type'];
+        $query = $query->orderBy($sort_key,$sort_type);
+
 		return $query;
 	}
 
