@@ -1111,7 +1111,7 @@ class SalonController extends Controller {
 				
 				$result[$key]['recommend_code'] = $val['recommend_code'];
 				$result[$key]['dividendStatus'] = $val['dividendStatus']?'退出分红联盟':'加入分红联盟';
-				if($val['dividendStatus']=='')
+				if(!$val['recommend_code'])
 					$result[$key]['dividendStatus'] = '';
 				
 				$result[$key]['addr'] = $val['addr'];
