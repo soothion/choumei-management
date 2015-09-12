@@ -54,6 +54,7 @@ class CommissionLog extends Command
             ->leftJoin('salon','salon.salonid','=','order.salonid')
             ->leftJoin('recommend_code_order','recommend_code_order.ordersn','=','order.ordersn')
             ->where('commission_log.id','=',NULL)
+            ->where('order.status','=',4)
             ->select('order.ordersn','order.priceall','order.pay_time','order.use_time','order.salonid','salon.salonGrade','salon.merchantId','recommend_code_order.recommend_code')
             ->orderBy('use_time','ASC');
         $count = $query->count();
@@ -96,6 +97,7 @@ class CommissionLog extends Command
             ->leftJoin('commission_log','bounty_task.btSn','=','commission_log.ordersn')
             ->leftJoin('salon','salon.salonid','=','bounty_task.salonId')
             ->where('commission_log.id','=',NULL)
+            ->where('bounty_task.btStatus','=',4)
             ->select('bounty_task.btSn as ordersn','bounty_task.money as priceall','bounty_task.payTime as pay_time','bounty_task.endTime as use_time','bounty_task.salonId as salonid','salon.salonGrade','salon.merchantId')
             ->orderBy('endTime','ASC');
         $count = $query->count();
