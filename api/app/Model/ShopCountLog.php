@@ -47,15 +47,13 @@ class ShopCountLog extends Model
      */
     public static function add_log($salon_id,$type,$money,$time,$remark="")
     {
-        $money = floatval($money);
-        
         $change_money = $money;        
        
         if( $type == self::TYPE_OF_SPEND || $type == self::TYPE_OF_COMMISSION_RETURN)
         {
-            $change_money *= -1;
+            $change_money = bcmul($change_money, -1,2);
         }
-        
+        $change_money =floatval($change_money);
         if(is_numeric($time))
         {
             $time = date("Y-m-d H:i:s",intval($time));
@@ -115,9 +113,9 @@ class ShopCountLog extends Model
             $change_money = $money;
             if($type == ShopCountLog::TYPE_OF_COMMISSION || $type == ShopCountLog::TYPE_OF_SPEND)
             {
-                $change_money *= -1;
+                $change_money = bcmul($change_money,-1,2);
             }
-            $last_balance += $change_money;
+            $last_balance = bcadd($last_balance,$change_money,2);
             ShopCountLog::where('id',$id)->update(['balance_money'=>$last_balance]);
         }
     }

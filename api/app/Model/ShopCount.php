@@ -164,8 +164,7 @@ class ShopCount extends Model
     public static function count_bill($salon_id,$merchant_id,$money,$money_type,$remark="",$count_at="0000-00-00 00:00:00")
     {
         $salon_id = intval($salon_id);
-        $merchant_id = intval($merchant_id);
-        $money = floatval($money);
+        $merchant_id = intval($merchant_id);      
         $items = self::where("salon_id",$salon_id)->get(['id',$money_type])->toArray();
         $now_date = date("Y-m-d H:i:s");
         
@@ -186,14 +185,13 @@ class ShopCount extends Model
                 break;                
         }
         
-        
         if(empty($items) || !isset($items[0]))
         {
             self::create(['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,"{$money_type}"=>$money,'created_at'=>$now_date,'updated_at'=>$now_date]);
         }
         else
         {
-            $now_money = floatval($items[0][$money_type]) + $money;
+            $now_money = bcadd($items[0][$money_type] , $money,2);
             $id = $items[0]['id'];
             self::where('id',$id)->update(['merchant_id'=>$merchant_id,"{$money_type}"=>$now_money,'updated_at'=>$now_date]);
         }
