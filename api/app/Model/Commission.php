@@ -59,7 +59,7 @@ class Commission extends Model {
 
 
 		//排序
-    	$sort_key = empty($param['sort_key'])?'confirm_at':$param['sort_key'];
+    	$sort_key = empty($param['sort_key'])?'date':$param['sort_key'];
     	$sort_type = empty($param['sort_type'])?'DESC':$param['sort_type'];
         $query = $query->orderBy($sort_key,$sort_type);
 
