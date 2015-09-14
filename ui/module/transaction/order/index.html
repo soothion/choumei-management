@@ -18,17 +18,17 @@
             <form data-role="hash">          
                 <div class="input-group input-switch">
                     <select name="key">
+                      <option value="3">用户手机号</option>
                       <option value="1">订单号</option>
                       <option value="2">用户臭美号</option>
-                      <option value="3" selected="selected">用户手机号</option>
                       <option value="4">店铺名称</option>
                     </select>
+                    <input type="text" class="input-search hide" name="keyword" maxlength="16" 
+                    placeholder="请输入用户手机号" />
                     <input type="text" class="input-search" name="keyword" maxlength="16"
                     placeholder="请输入订单号"/>
                     <input type="text" class="input-search hide" name="keyword" maxlength="16" 
                     placeholder="请输入用户臭美号" />
-                    <input type="text" class="input-search hide" name="keyword" maxlength="16" 
-                    placeholder="请输入用户手机号" />
                     <input type="text" class="input-search hide" name="keyword" maxlength="16"  
                     placeholder="请输入店铺名称"/>
                 </div>  
@@ -92,23 +92,30 @@
               </thead>
               <tbody>             
                 <%
-                var status=["正常","停用","注销"]
+                var status = ["","未付款","已付款"];
+                var type   = ["","微信","支付宝","易联","现金券","余额"];
                 %>
                 <%data.data && data.data.forEach(function(item,i){%>
+                <%
+                var arr = [];
+                item.fundflow && item.fundflow.forEach(function(item,i){
+                  arr.push(type[item.pay_type]);
+                })
+                %>  
                 <tr>
                   <td><%=i+1%></td>
                   <td><%=item.ordersn%></td>
-                  <td><%=item.pay_type%></td>
+                  <td><%=arr.join("+")%></td>
                   <td><%=item.priceall%></td>
-                  <td><%=item.add_time%></td>
-                  <td><%=item.pay_time%></td>
-                  <td><%=item.username%></td>
-                  <td><%=item.mobilephone%></td>
-                  <td><%=item.salonname%></td>
-                  <td><%=item.ispay%></td>
+                  <td class="format"><%=item.add_time%></td>
+                  <td class="format"><%=item.pay_time%></td>
+                  <td><%=item.user && item.user.username%></td>
+                  <td><%=item.user && item.user.mobilephone%></td>
+                  <td><%=item.salon && item.salon.salonname%></td>
+                  <td><%=status[item.ispay]%></td>
                   <td>
-                     <a class="link" data-slug="role.show,role.update" target="_blank"
-                     href="orderDetail.html">查看&gt</a>
+                     <a class="link" data-slug="role.show,role.update"
+                     href="detail.html?id=<%=item.orderid%>">查看&gt</a>
                   </td>
                 </tr>
                 <%})%>
