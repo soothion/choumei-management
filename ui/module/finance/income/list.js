@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-08-19 15:54:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-28 14:14:20
+* @Last Modified time: 2015-09-14 10:51:06
 */
 
 (function(){
@@ -38,7 +38,7 @@
 
     var uploader = WebUploader.create({
         swf   : '../../js/Uploader.swf',
-        server: cfg.getHost() + "rebate/upload",
+        server: cfg.getHost() + "rebate/upload?token="+localStorage.getItem('token'),
         pick  : '#import',
         resize: false,
         auto  : true,
@@ -50,6 +50,17 @@
             mimeTypes: 'application/vnd.ms-excel'                
         }                
     });
+
+    var timer = setInterval(function(){
+        var picker = $(".webuploader-pick:eq(0)").next();
+        if(picker){
+            clearInterval(timer);
+            var map = JSON.parse(localStorage.getItem('access.map'));
+            if(!map['rebate.upload']){
+               $("input",picker).attr('disabled','disabled');
+            }
+        }
+    }, 50)     
 
     uploader.on('startUpload',function(){
         parent.lib.popup.tips({text:'<img src="/images/oval.svg" class="loader"/>数据正在导入中...'});       

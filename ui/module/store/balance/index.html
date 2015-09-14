@@ -40,7 +40,6 @@
               <thead>
                 <tr>
                   <th>序号</th>
-				  <th>店铺id</th>
 				  <th>店铺编号</th>
 				  <th>店铺</th>
 				  <th>店铺类型</th>
@@ -63,7 +62,6 @@
 				<%data.forEach&&data.forEach(function(item,i){%>
                 <tr>
                   <td><%=i+1%></td>
-				  <td><%=item.salon?item.salon.salonid:""%></td>
 				  <td><%=item.salon?item.salon.sn:""%></td>
                   <td class="colswrap">
 					<strong><%=item.salon?item.salon.salonname:""%></strong><br />
