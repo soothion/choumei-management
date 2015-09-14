@@ -445,6 +445,7 @@ class TransactionSearchApi
             'cm_order_refund.add_time as add_time',
             'cm_order_refund.status as status',
             'cm_order_refund.money as refund_money',
+            'cm_order_refund.retype as retype',
             'cm_order.priceall_ori as priceall_ori',
             'cm_order.actuallyPay as actuallyPay',
             'cm_order.shopcartsn as shopcartsn',
@@ -524,7 +525,7 @@ class TransactionSearchApi
     public static function countOfTicket($params)
     {
         $base = self::getTicketDataView();
-        $base->selectRaw("SUM(`cm_order`.`actuallyPay`) as `actuallyPay`,SUM(`cm_order.priceall_ori`) as `priceall_ori`");
+        $base->selectRaw("SUM(`cm_order`.`actuallyPay`) as `actuallyPay`,SUM(`cm_order`.`priceall_ori`) as `priceall_ori`");
         self::makeWhereOfTicket($base, $params);
         $res = $base->first();
         if(!empty($res))
