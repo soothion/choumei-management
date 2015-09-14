@@ -84,7 +84,7 @@ class TransactionSearchApi
      */
     public static function orderDetail($id)
     {
-        $base = Order::where('orderid',$id)->select(['ordersn','orderid','priceall','salonid'])->first();
+        $base = Order::where('orderid',$id)->select(['ordersn','orderid','priceall','salonid','actuallyPay','shopcartsn'])->first();
         if(empty($base))
         {
             throw new ApiException("订单 [{$id}] 不存在", ERROR::ORDER_NOT_EXIST);
@@ -126,7 +126,7 @@ class TransactionSearchApi
         }
         $orderItemArr = $orderItem->toArray();
         
-        $order = Order::where('orderid',$orderItemArr['orderid'])->select(['ordersn','orderid','priceall','salonid'])->first();
+        $order = Order::where('orderid',$orderItemArr['orderid'])->select(['ordersn','orderid','priceall','salonid','actuallyPay','shopcartsn'])->first();
         if(empty($order))
         {
             throw new ApiException("订单 orderid [".$orderItemArr['orderid']."] 不存在", ERROR::ORDER_NOT_EXIST);
@@ -149,7 +149,7 @@ class TransactionSearchApi
         }
         $baseArr = $base->toArray();
         
-        $order = Order::where('ordersn',$baseArr['ordersn'])->select(['ordersn','orderid','priceall','salonid'])->first();
+        $order = Order::where('ordersn',$baseArr['ordersn'])->select(['ordersn','orderid','priceall','salonid','actuallyPay','shopcartsn'])->first();
         if(empty($order))
         {
             throw new ApiException("订单 ordersn [".$baseArr['ordersn']."] 不存在", ERROR::ORDER_NOT_EXIST);
@@ -184,6 +184,8 @@ class TransactionSearchApi
         $uid = $ticket['user_id'];
         $salon_id = $order['salonid'];
        
+        //订单流水
+        $paymentlog = PaymentLog::where("ordersn",$ordersn)->select(['ordersn','tn'])->first();
         //用户
         $user = User::where("user_id",$uid)->select(['username','mobilephone'])->first();   
         //店铺    
@@ -202,6 +204,8 @@ class TransactionSearchApi
 
         //用户邀请码
         $recommendCode = RecommendCodeUser::where('user_id',$uid)->select(['recommend_code'])->first();
+        
+        $paymentlogArr = null;
         $userArr = null;
         $salonArr = null;
         $fundflowArr = [];
@@ -209,6 +213,10 @@ class TransactionSearchApi
         $voucherArr = [];
         $commissionArr = null;
         $recommendCodeArr = null;
+        if(!empty($paymentlog))
+        {
+            $paymentlogArr = $paymentlog->toArray();
+        }
         if(!empty($user))
         {
             $userArr = $user->toArray();
@@ -238,12 +246,13 @@ class TransactionSearchApi
             $recommendCodeArr = $recommendCode->toArray();
         }
         
-        $res = [
+        $res = [            
             'order'=>$order,
             'item'=>$orderItem,
             'ticket'=>$ticket,
             'user'=>$userArr,
             'salon'=>$salonArr,
+            'paymentlog'=>$paymentlogArr,
             'fundflows'=>$fundflowArr, 
             'trends'=>$trendArr,
             'vouchers'=>$voucherArr,
@@ -507,7 +516,7 @@ class TransactionSearchApi
         $res = $base->first();
         if(!empty($res))
         {
-             return $order->priceall;
+             return $res->priceall;
         }
         return 0;
     }
