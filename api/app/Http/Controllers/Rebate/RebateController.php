@@ -457,16 +457,16 @@ class RebateController extends Controller{
 		    	if(empty($value[1])||empty($value[3])||empty($value[4])||empty($value[5])||empty($value[6]))
 		    		continue;
 		    	$date = date('Y-m-d H:i:s');
-		    	$salonsn = $value[1];
+		    	$salonsn = $value[0];
 		    	$salonid = $rebate->getSalonid($salonsn);
 		    	if(!$salonid)
 		    		continue;
 		    	$data[$key]['salon_id'] = $salonid;
-		    	$data[$key]['start_at'] = $value[4];
-		    	$data[$key]['end_at'] = $value[5];
-		    	$data[$key]['amount'] = $value[6];
+		    	$data[$key]['start_at'] = $value[3];
+		    	$data[$key]['end_at'] = $value[4];
+		    	$data[$key]['amount'] = $value[5];
 	    		$data[$key]['created_by'] = $this->user->name;
-				$data[$key]['status'] = trim($value[10])=='确认'?1:2;
+				$data[$key]['status'] = trim($value[9])=='确认'?1:2;
 				$data[$key]['created_at'] = $date;
 				$data[$key]['updated_at'] = $date;
 				$data[$key]['status'] = 2;
