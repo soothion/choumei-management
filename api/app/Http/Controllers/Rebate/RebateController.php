@@ -454,7 +454,7 @@ class RebateController extends Controller{
 		    array_shift($array);
 		    $data = [];
 		    foreach ($array as $key => $value) {
-		    	if(empty($value[1])||empty($value[3])||empty($value[4])||empty($value[5])||empty($value[6]))
+		    	if(empty($value[0])||empty($value[2])||empty($value[3])||empty($value[4])||empty($value[5]))
 		    		continue;
 		    	$date = date('Y-m-d H:i:s');
 		    	$salonsn = $value[0];
