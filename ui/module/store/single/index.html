@@ -52,6 +52,7 @@
 								<th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求付款日期 <i class="fa fa-sort"></i></a></th>
 								 <th><a data-role="hash" href="#page=1&sort_key=pay_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">实际付款日期 <i class="fa fa-sort"></i></a></th>
 								<th><a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">创建日期 <i class="fa fa-sort"></i></a></th>
+								 <th><a href="#sort_key=created_at&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>&page=1" data-role="hash">代收日期 <i class="fa fa-sort"></i></a></th>
 								<th>制单人</th>
 								<th><a data-role="hash" href="#page=1&sort_key=state&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">状态 <i class="fa fa-sort"></i></a></th>
 								<th>操作</th>
@@ -75,7 +76,7 @@
 				  <td><%=item.pay_money%></td>
 				  <td><%=item.day%></td>
 				  <td><%=item.pay_day%></td>
-				   <td><%=item.created_at%></td>
+				   <td class="format"><%=item.created_at%></td>
 				  <td><%=item.user?item.user.name:""%></td>				 
 				  <td><%=state[item.state]%></td>
                    <td><a class="link" href="detail.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a>				   
@@ -97,6 +98,7 @@
 				$('form[data-role="hash"]').submit();
 			}
 		});
+		
 	</script>
 </body>
 </html>
