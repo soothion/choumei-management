@@ -135,14 +135,20 @@ class OrderController extends Controller
      * @apiName show
      * @apiGroup order
      *
+     * @apiSuccess {String} ticket 臭美券信息
      * @apiSuccess {String} ticket.ticketno 臭美券密码
-     * @apiSuccess {String} order.ordersn 订单编号
-     * @apiSuccess {String} order.shopcartsn 购物车序号 
+     * @apiSuccess {String} paymentlog 流水信息
      * @apiSuccess {String} paymentlog.tn 第三方流水号
+     * @apiSuccess {String} item 项目信息
      * @apiSuccess {String} item.itemname 项目名称
+     * @apiSuccess {String} salon 店铺信息
      * @apiSuccess {String} salon.salonname 店铺名称
+     * @apiSuccess {String} user 用户信息
      * @apiSuccess {String} user.username 用户臭美号
      * @apiSuccess {String} user.mobilephone 用户手机号
+     * @apiSuccess {String} order 订单信息
+     * @apiSuccess {String} order.ordersn 订单编号
+     * @apiSuccess {String} order.shopcartsn 购物车序号 
      * @apiSuccess {String} order.priceall 订单金额
      * @apiSuccess {String} order.actuallyPay 实付金额
      * @apiSuccess {String} fundflow 金额构成
