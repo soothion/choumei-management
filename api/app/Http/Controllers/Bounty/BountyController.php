@@ -9,6 +9,8 @@ use App\Salon;
 use App\Hairstylist;
 use App\PaymentLog;
 use Log;
+use Event;
+use Excel;
 
 class BountyController extends Controller {
 
@@ -325,7 +327,141 @@ class BountyController extends Controller {
      * 		}
      */
     function reject() {
+        
+    }
 
+    /**
+     * @api {get} /bouty/exportBounty 6.导出赏金单列表
+     * @apiName exportBounty
+     * @apiGroup bounty
+     *
+     * @apiParam {String} keyword 可选,搜索关键词.
+     * @apiParam {String} keywordType 必选,搜索关键词类型，可取"btSn","userName","mobile","salonName".
+     * @apiParam {Number} payType 可选,支付方式：1 网银/2 支付宝/3 微信/4 余额/5 红包/6 优惠券/7 积分/8邀请码兑换.
+     * @apiParam {Number} isPay 可选,支付状态：1否 2是
+     * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
+     * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
+     * @apiParam {String} minTime 可选,交易时间左框.
+     * @apiParam {String} maxTime 可选,交易时间右框.
+     * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
+     * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "未授权访问"
+     * 		}
+     */
+    public function exportBounty() {
+        $param = $this->param;
+        Log::info('Bounty getList param is: ', $param);
+        $query = BountyTask::getQueryByParam($param);
+        $sortable_keys = ['btSn', 'money', 'addTime'];
+        $sortKey = "addTime";
+        $sortType = "DESC";
+        if (isset($param['sortKey']) && in_array($param['sortKey'], $sortable_keys)) {
+            $sortKey = $param['sortKey'];
+            $sortType = $param['sortType'];
+            if (strtoupper($sortType) != "DESC") {
+                $sortType = "ASC";
+            }
+        }
+        $bountys = BountyTask::search($query, 1, -1, $sortKey, $sortType);
+        $header = ['赏金单号', '三方流水号', '支付方式', '下单时间', '造型师手机号', '用户手机号', '店铺名称', '支付状态'];
+        Event::fire('bounty.export');
+        $this->export_xls("赏金单" . date("Ymd"), $header, self::format_exportBounty_data($bountys));
+    }
+
+    /**
+     * @api {get} /bouty/exportRefund 7.导出赏金单退款列表
+     * @apiName exportRefund
+     * @apiGroup bounty
+     *
+     * @apiParam {String} keyword 可选,搜索关键词.
+     * @apiParam {String} keywordType 必选,搜索关键词类型，可取"btSn","userName","mobile","salonName".
+     * @apiParam {Number} payType 可选,支付方式：1 网银/2 支付宝/3 微信/4 余额/5 红包/6 优惠券/7 积分/8邀请码兑换.
+     * @apiParam {Number} isPay 可选,支付状态：1否 2是
+     * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
+     * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
+     * @apiParam {String} minTime 可选,交易时间左框.
+     * @apiParam {String} maxTime 可选,交易时间右框.
+     * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
+     * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "未授权访问"
+     * 		}
+     */
+    public function exportRefund() {
+        $param = $this->param;
+        Log::info('Bounty getList param is: ', $param);
+        $query = BountyTask::getQueryByParam($param);
+        $sortable_keys = ['btSn', 'money', 'addTime'];
+        $sortKey = "addTime";
+        $sortType = "DESC";
+        if (isset($param['sortKey']) && in_array($param['sortKey'], $sortable_keys)) {
+            $sortKey = $param['sortKey'];
+            $sortType = $param['sortType'];
+            if (strtoupper($sortType) != "DESC") {
+                $sortType = "ASC";
+            }
+        }
+        $bountys = BountyTask::search($query, 1, -1, $sortKey, $sortType);
+        $header = ['赏金单号', '支付方式', '退款金额', '申请时间', '用户臭美号', '用户手机号', '店铺名称', '退款状态'];
+        Event::fire('bountyRefund.export');
+        $this->export_xls("赏金退款单" . date("Ymd"), $header, self::format_exportRefund_data($bountys));
+    }
+
+    protected static function format_exportBounty_data($datas) {
+        $res = [];
+        foreach ($datas as $data) {
+            $btSn = isset($data['btSn']) ? $data['btSn'] : '';
+            $tn = isset($data['tn']) ? $data['tn'] : '';
+            $payType = isset($data['payType']) ? $data['payType'] : '';
+            $addTime = isset($data['addTime']) ? $data['addTime'] : '';
+            $hairStylistMobile = isset($data['hairStylistMobile']) ? $data['hairStylistMobile'] : '';
+            $userMobile = isset($data['userMobile']) ? $data['userMobile'] : '';
+            $salonName = isset($data['salonName']) ? $data['salonName'] : '';
+            $isPay = isset($data['isPay']) ? $data['isPay'] : '';
+            $res[] = [
+                $btSn,
+                $tn,
+                $payType,
+                $addTime,
+                $hairStylistMobile,
+                $userMobile,
+                $salonName,
+                $isPay,
+            ];
+        }
+        return $res;
+    }
+
+    protected static function format_exportRefund_data($datas) {
+        $res = [];
+        foreach ($datas as $data) {
+            $btSn = isset($data['btSn']) ? $data['btSn'] : '';
+            $payType = isset($data['payType']) ? $data['payType'] : '';
+            $money = isset($data['money']) ? $data['money'] : '';
+            $endTime = isset($data['endTime']) ? $data['endTime'] : '';
+            $userName = isset($data['userName']) ? $data['userName'] : '';
+            $userMobile = isset($data['userMobile']) ? $data['userMobile'] : '';
+            $salonName = isset($data['salonName']) ? $data['salonName'] : '';
+            $refundStatus = isset($data['refundStatus']) ? $data['refundStatus'] : '';
+            $res[] = [
+                $btSn,
+                $payType,
+                $money,
+                $endTime,
+                $userName,
+                $userMobile,
+                $salonName,
+                $refundStatus,
+            ];
+        }
+        return $res;
     }
 
 }
