@@ -148,14 +148,14 @@ class OrderController extends Controller
      * @apiSuccess {String} fundflow 金额构成
      * @apiSuccess {String} fundflow.pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
      * @apiSuccess {String} fundflow.money 支付金额
-     * @apiSuccess {String} 臭美券动态 trends
-     * @apiSuccess {String} 臭美券动态.时间  trends.add_time
-     * @apiSuccess {String} 臭美券动态.行为  trends.status [2未使用，4使用完成，6申请退款，7退款完成，8退款拒绝,10退款中]
-     * @apiSuccess {String} 臭美券动态.行为  trends.remark 备注信息,为空时显示 上面status 对应的信息
-     * @apiSuccess {String} 代金券动态  vouchers
-     * @apiSuccess {String} 佣金信息  commission
-     * @apiSuccess {String} 店铺优惠码 recommend_code
-     * @apiSuccess {String} 设备信息
+     * @apiSuccess {String} trends 臭美券动态 
+     * @apiSuccess {String} trends.add_time 臭美券动态.时间  
+     * @apiSuccess {String} trends.status 臭美券动态.行为   [2未使用，4使用完成，6申请退款，7退款完成，8退款拒绝,10退款中]
+     * @apiSuccess {String} trends.remark  臭美券动态.行为 备注信息,为空时显示 上面status 对应的信息
+     * @apiSuccess {String} vouchers 代金券动态  
+     * @apiSuccess {String} commission 佣金信息
+     * @apiSuccess {String} recommend_code店铺优惠码
+     * @apiSuccess {String} platform 设备信息
      *
      * @apiSuccessExample Success-Response:
      *       {
