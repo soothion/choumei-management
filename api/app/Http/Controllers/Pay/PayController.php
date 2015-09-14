@@ -598,7 +598,7 @@ class PayController extends Controller
                 $cycle,//回款周期
                 $cycle_day,//回款日期
                 $data['cycle_money'],//周期回款金额
-                $data['created_at'],//创建日期
+                date("Y-m-d",strtotime($data['created_at'])),//创建日期
                 $data['confirm_at'],//审批日期
                 $make_user_name,//制单人
                 $check_user_name,//审批人

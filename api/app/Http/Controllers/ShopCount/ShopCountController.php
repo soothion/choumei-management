@@ -793,7 +793,7 @@ class ShopCountController extends Controller
                 $data['pay_money'],
                 $data['day'],
                 $data['pay_day'],
-                $data['updated_at'],
+                date("Y-m-d",strtotime($data['updated_at'])),
                 $username,
                 $statename
             ];
