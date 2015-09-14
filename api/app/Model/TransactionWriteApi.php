@@ -26,6 +26,7 @@ class TransactionWriteApi
     }
     
     /**
+     * 退款的回调
      */
     public static function call_back_of_alipay()
     {

@@ -329,6 +329,7 @@ class OrderRefundController extends Controller
      * @apiGroup refund
      *
      * @apiSuccess {Number} ids id(多个用','隔开).
+     * @apiSuccess {Number} reason 拒绝原因
      *
      * @apiErrorExample Error-Response:
      *		{

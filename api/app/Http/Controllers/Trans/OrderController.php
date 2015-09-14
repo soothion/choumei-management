@@ -16,8 +16,8 @@ class OrderController extends Controller
      * @apiParam {String} keyword  根据key来的关键字
      * @apiParam {String} pay_time_min 下单最小时间 YYYY-MM-DD
      * @apiParam {String} pay_time_max 下单最大时间 YYYY-MM-DD
-     * @apiParam {String} pay_type 0 全部 1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiParam {String} pay_state 0 全部  1 待提交 2待审批 3待付款  4已付款
+     * @apiParam {String} pay_type 0 全部  1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
+     * @apiParam {String} pay_state 0 全部  1未支付 2已支付
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      * @apiParam {String} sort_key 排序的键 []
