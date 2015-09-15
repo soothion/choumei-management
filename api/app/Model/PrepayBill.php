@@ -147,7 +147,6 @@ class PrepayBill extends Model
             return false;
         }        
         $record = [
-            'code'=>$code,
             'salon_id'  => $params['salon_id'],
             'merchant_id'  => $params['merchant_id'],
             'other_id'  => $params['id'],

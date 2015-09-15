@@ -10,6 +10,8 @@ use App\PrepayBill;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Commission;
 use Log;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class ShopCountApi
 {
@@ -215,7 +217,7 @@ class ShopCountApi
         //状态检查
         if($input_count != $select_count)
         {
-            throw new \Exception("some ordersn in [".implode(",", $order_sns)."] is wrong status");
+            throw new ApiException("some ordersn in [".implode(",", $order_sns)."] is wrong status",ERROR::ORDER_STATUS_WRONG);
         }
         
         $salon_ids = array_column($base_order_infos, "salonid");
@@ -258,7 +260,7 @@ class ShopCountApi
         //状态检查
         if($input_count != $select_count)
         {
-            throw new \Exception("some ordersn in [".implode(",", $order_sns)."] is wrong status");
+            throw new ApiException("some ordersn in [".implode(",", $order_sns)."] is wrong status",ERROR::BOUNTY_STATUS_WRONG);
         }
         
         $salon_ids = array_column($base_order_infos, "salonId");
