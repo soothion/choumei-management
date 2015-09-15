@@ -64,7 +64,7 @@
 							<td>
 							<a class="link" target="_blank" href="<%if(item.content_id){%>preview.html?id=<%=item.id%><%}else{%>preview.html?url=<%=encodeURIComponent(item.url)%><%}%>">预览</a>	
 							<%if(item.status!=1){%>
-							<form class="online" data-slug="message.online" action="/message/online/?id=<%=item.id%>" data-role="normal" data-confirm="确认上线">
+							<form class="online" data-slug="message.online" action="/message/online/?id=<%=item.id%>" data-role="normal" data-confirm="确认上线" onreset="parent.lib.popup.result({bool:true,text:'操作成功',define:function(){location.reload();}});">
 								<span class="space"></span>
 								<button class="link"> 上线</button>			 
 							</form>
@@ -111,17 +111,7 @@
 						$(".date-group input").removeAttr("disabled");
 					}
 				})
-				$(document).on('reset','.online',function(){
-					var $this=$(this);
-					parent.lib.popup.result({
-						bool:true,
-						text:'操作成功',
-						time:2000,
-						define:function(){
-							location.reload();
-						}
-					});
-				})
+
 			});
 		</script>  
     </body>

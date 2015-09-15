@@ -241,7 +241,7 @@
 					cb &&cb();
 				});
 			},
-			getToken:function(cb){
+			getToken:function(){
 				var self=this;
 				var query={
 					'bundle':"FQA5WK2BN43YRM8Z",
@@ -261,9 +261,12 @@
 					url:cfg.url.token,
 					data:query,
 					dataType:'json',
+					async:'false',
 					success:function(data){
 						if(data.code==0&&data.response&&data.response.data&&data.response.data[0]){
-							cb &&cb(data.response.data[0]);
+							Qiniu.token=data.response.data[0].uptoken;
+							Qiniu._fileName=data.response.data[0].fileName;
+							Qiniu.maxFileSize=data.response.data[0].maxFileSize;
 						}else{
 							parent.lib.popup.result({
 								text:'获取上传token失败',
@@ -326,6 +329,7 @@
 						cb && cb(uploader)
 					});
 				}else{
+					this.getToken();
 					return Qiniu.uploader(options);
 				}
 			},
@@ -337,38 +341,33 @@
 			file:function(options,cb){
 				var self=this;
 				this.use(function(){
-					self.getToken(function(data){
-						options.uptoken=data.uptoken;
-						Qiniu._fileName=data.fileName;
-						if(!options.max_file_size){
-							options.max_file_size=data.maxFileSize+'mb';
-						}
-						var uploader=self.create(options);
-						uploader.bind('UploadProgress',function(){
-							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
-						});
-						uploader.bind('UploadComplete',function(up,file){
-							//console.log(arguments);
-						});
-						uploader.bind('FileUploaded',function(up,file,res){
-							if(res&&res.response&&typeof res.response=='string'){
-								var data=JSON.parse(res.response);
-								self.getToken(function(data){
-									Qiniu.token=data.uptoken;
-									Qiniu._fileName=data.fileName;
-								});
-								if(data.code==0){
-									parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
-								}else{
-									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
-								}
-							}
-						});
-						uploader.bind('Error',function(up, err, errTip){
-							parent.lib.popup.result({bool:false,text:err.message});
-						});
-						cb &&cb(uploader);
+					options.uptoken=Qiniu.token;
+					Qiniu._fileName=Qiniu._fileName;
+					if(!options.max_file_size){
+						options.max_file_size=Qiniu.maxFileSize+'mb';
+					}
+					var uploader=self.create(options);
+					uploader.bind('UploadProgress',function(){
+						parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
 					});
+					uploader.bind('UploadComplete',function(up,file){
+						//console.log(arguments);
+					});
+					uploader.bind('FileUploaded',function(up,file,res){
+						if(res&&res.response&&typeof res.response=='string'){
+							var data=JSON.parse(res.response);
+							if(data.code==0){
+								parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
+							}else{
+								parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
+							}
+							self.getToken();
+						}
+					});
+					uploader.bind('Error',function(up, err, errTip){
+						parent.lib.popup.result({bool:false,text:err.message});
+					});
+					cb &&cb(uploader);
 				});
 			},
 			getSource:function(file,cb){//file为plupload事件监听函数参数中的file对象,callback为预览图片准备完成的回调函数 
