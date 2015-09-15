@@ -267,7 +267,7 @@
 						}else{
 							parent.lib.popup.result({
 								text:'获取上传token失败',
-								bool:true
+								bool:false
 							});
 						}
 					}
