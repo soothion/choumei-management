@@ -90,13 +90,14 @@
 	
 	  <script type="text/javascript">
 			document.onreadystatechange=function(){};
-			window.filterHashData=function(data){
-				if(data.status!=1){
-					data.starttime="";
-					data.endtime="";
+			$(function(){		
+				window.filterHashData=function(data){
+					if(data.status!=1){
+						data.starttime="";
+						data.endtime="";
+					}
+					return data;
 				}
-			}
-			$(function(){			 
 				if(!lib.query._){
 					$('#ontime2').val(lib.tools.getDate());
 					var time=(new Date().getTime()-7*86400000)/1000;
