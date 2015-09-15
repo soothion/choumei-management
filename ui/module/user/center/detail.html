@@ -81,10 +81,10 @@
 						</tr>
 						<tr>
 							<td>发长：  无</td>
-							<td>常住地区： 广东,深圳,南山区</td>
+							<td>常住地区： <%=data.area%></td>
 						</tr>
 						<tr>
-							<td colspan="2">生日：1988-04-02</td>
+							<td colspan="2">生日：<%=data.birthday%></td>
 						</tr>
 					</tbody>
 				</table>
@@ -105,9 +105,9 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td>臭美号：  10000000</td>
+							<td>臭美号：  <%=data.username%></td>
 							<td>头像： 
-								<img src="/images/logo.png" alt="" width="60px" height="60px" id="photo" /> 
+								<img src="<%=data.img%>" alt="" width="60px" height="60px" id="photo" /> 
 								<span class="space"></span>
 								<a class="btn btn-upload" id="imageUpload">上传图片</a>
 								<span class="space"></span>
@@ -117,8 +117,8 @@
 							</td>
 						</tr>
 						<tr>
-							<td>昵称： <input type="text" value="小康" /></td>
-							<td>性别： 男</td>
+							<td>昵称： <input type="text" value="<%=data.nickname%>" /></td>
+							<td>性别： <%=sexArr[data.sex]%></td>
 						</tr>
 						<tr>
 							<td>发长：  
@@ -142,7 +142,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2">生日： <input type="date" /></td>
+							<td colspan="2">生日： <input type="date" value="<%=data.birthday%>"/></td>
 						</tr>
 					</tbody>
 				</table>
