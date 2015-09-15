@@ -20,9 +20,19 @@ class ERROR
      CONST UNAUTHORIZED =  -40002;
      
      /**
-      *@param 未授权访问
+      *@param 参数丢失
       */
      CONST PARAMS_LOST =  -40003;
+     
+     /**
+      *@param 功能关闭
+      */
+     CONST SERVER_STOPED =  -40004;
+     
+     /**
+      *@param 未知错误
+      */
+     CONST UNKNOWN_ERROR =  -40005;
 
      
     ////////////用户模块//////////////
@@ -197,6 +207,48 @@ class ERROR
       * @var unknown
       */
      CONST REFUND_STATE_WRONG = -50605;
+     
+     /**
+      * 退款单找不到支付流水信息
+      * @var unknown
+      */
+     CONST REFUND_FLOW_LOST= -50606;
+     
+     /**
+      * 退款单找不到臭美券信息
+      * @var unknown
+      */
+     CONST REFUND_TICKET_LOST= -50607;
+     
+     /**
+      * 退款单找不到臭美券信息
+      * @var unknown
+      */
+     CONST REFUND_TICKET_STATE_WRONG= -50608;
+     
+     /**
+      * 退款单找不到paymentlog信息
+      * @var unknown
+      */
+     CONST REFUND_PAYMENT_LOG_LOST = -50609;
+     
+     /**
+      * 退款关键信息不全
+      * @var unknown
+      */
+     CONST REFUND_LOST_PRIMARY_INFO = -50610;
+     
+     /**
+      * 订单状态不正确
+      * @var unknown
+      */
+     CONST ORDER_STATUS_WRONG = -50610;
+     
+     /**
+      * 赏金单状态不正确
+      * @var unknown
+      */
+     CONST BOUNTY_STATUS_WRONG = -50611;
 	 
 	 
 	 ////////////消息模块//////////////
@@ -263,7 +315,7 @@ class ERROR
      *@param 反馈删除失败
      */
      CONST FEED_DELETE_FAILED =  -50701;
-
+     
 
 
 }

@@ -13,6 +13,8 @@ use Event;
 use App\PrepayBill;
 use App\Utils;
 use Log;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class ShopCountController extends Controller
 {
@@ -156,7 +158,7 @@ class ShopCountController extends Controller
  
     public function create()
     {
-        return $this->error("功能已关闭!");
+        throw new ApiException("功能已关闭!",ERROR::SERVER_STOPED);
 //        $param_must = $this->parameters( 
 //            ['type'=>self::T_INT,
 //             'merchant_id'=>self::T_INT,
@@ -379,7 +381,7 @@ class ShopCountController extends Controller
         }
         else
         {
-            return $this->error("delete error!");
+            throw new ApiException("删除出错!",ERROR::UNKNOWN_ERROR);
         }
     }
     
@@ -745,7 +747,7 @@ class ShopCountController extends Controller
         $passed = ShopCountApi::checkToken($param);
         if(!$passed)
         {
-            return $this->error("Unauthorized",401);
+            throw new ApiException("Unauthorized",ERROR::ACCOUNT_INVALID);
         }
         $orders = explode(",", $param['ordersn']);
         Log::info('请求参数:'.json_encode($param));

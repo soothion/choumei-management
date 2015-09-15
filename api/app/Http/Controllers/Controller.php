@@ -14,6 +14,8 @@ use App\Manager;
 use JWTAuth;
 use App\City;
 use Excel;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 abstract class Controller extends BaseController
 {
@@ -49,13 +51,9 @@ abstract class Controller extends BaseController
 
 	}
 
-	public function error($msg,$code=0){
-		return Response::json([
-			'result'=>0,
-			'msg'=>$msg,
-			'token'=>$this->token,
-			'code'=>$code
-		]);
+	//抛出异常
+	public function error($message = '',$code=0){
+		Throw new ApiException($message,$code);
 	}
 
 	public function success($data=[]){
@@ -111,7 +109,7 @@ abstract class Controller extends BaseController
 	    return false;
 	}
 
-	//二维数据去重
+	//二维数组去重
 	public function array_multiuniue($array){
 		$temp = [];
 		foreach ($array as $key => $value) {
@@ -156,12 +154,12 @@ abstract class Controller extends BaseController
 	        if (isset($source[$key]) ) {
 	            $result = self::filter($source[$key], $filter);
 	            if ($result === false) {
-	                throw new \Exception("Parameter '{$key}' is invalid");
+	                throw new ApiException("Parameter '{$key}' is invalid",ERROR::PARAMS_LOST);
 	            }
 	        }
 	        else {
 	            if ($required) {
-	                throw new \Exception("Parameter '{$key}' is required");
+	                throw new ApiException("Parameter '{$key}' is required",ERROR::PARAMS_LOST);
 	            }
 	            continue;
 	        }

@@ -9,6 +9,8 @@ use App\PayManage;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Utils;
 use Event;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class PayController extends Controller
 {    
@@ -229,7 +231,7 @@ class PayController extends Controller
         }
         else 
         {
-            return $this->error("创建失败");
+            throw new ApiException("创建失败", ERROR::UNKNOWN_ERROR);
         }
     }
 
@@ -390,7 +392,7 @@ class PayController extends Controller
         $ret = PayManage::change($id, $params);
         if(!$ret)
         {
-            return $this->error("修改失败");
+            throw new ApiException("修改失败", ERROR::UNKNOWN_ERROR);
         }
         Event::fire("pay.update",$ret['code']);
         return $this->success(['id'=>$id]);
@@ -423,7 +425,7 @@ class PayController extends Controller
         $res = PayManage::destory($id);
         if(!$res)
         {
-            return $this->error("此单状态或类型不允许删除或者已经删除!");
+            throw new ApiException("此单状态或类型不允许删除或者已经删除!", ERROR::UNKNOWN_ERROR);
         } 
         Event::fire("pay.destroy",$res['code']);
         return $this->success(["ret"=>1]);
@@ -470,7 +472,7 @@ class PayController extends Controller
         $ret = PayManage::check($ids,$params['do'],$uid);
         if(!$ret)
         {
-            return $this->error("单状态不正确或者不存在!");
+            throw new ApiException("单状态不正确或者不存在!",ERROR::UNKNOWN_ERROR);
         }
         Event::fire("pay.check",json_encode(['ids'=>$ids,'type'=>$params['do']],JSON_UNESCAPED_UNICODE));
         return $this->success(["ret"=>1]);
@@ -515,7 +517,7 @@ class PayController extends Controller
         $ret = PayManage::confirm($ids,$params['do'],$uid);
         if(!$ret)
         {
-            return $this->error("单状态不正确或者不存在!");
+            throw new ApiException("单状态不正确或者不存在!",ERROR::UNKNOWN_ERROR);
         }
         Event::fire("pay.confirm",json_encode(['ids'=>$ids,'type'=>$params['do']],JSON_UNESCAPED_UNICODE));
         return $this->success(["ret"=>1]);
