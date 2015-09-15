@@ -275,7 +275,7 @@ class ShopCountApi
             $type = 2;
             $merchant_id = $marchant_info[$salon_id];
             
-            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$money,$time,$type);
+            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$merchant_id,$money,$time,$type);
             if($ret == 1)
             {
                 $res['success'][] = $ordersn;

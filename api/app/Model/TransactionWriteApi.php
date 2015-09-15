@@ -10,10 +10,100 @@ use App\Exceptions\ERROR;
 class TransactionWriteApi
 {
     /**
+     * 退款单状态  正常
+     * @var unknown
+     */
+    CONST REFUND_STATUS_OF_NORMAL = 1;
+    
+    /**
+     * 退回的路径 退回余额
+     * @var unknown
+     */
+    CONST REFUND_RETYPE_REFUND_TO_BALANCE = 2;
+    
+    /**
+     * 订单状态 未使用
+     * @var unknown
+     */
+    CONST ORDER_STATUS_OF_UNUSED = 2;
+    
+    /**
+     * 订单状态 使用部分
+     * @var unknown
+     */
+    CONST ORDER_STATUS_OF_USED_PART = 3;
+    
+    /**
+     * 订单状态 已使用
+     * @var unknown
+     */
+    CONST ORDER_STATUS_OF_USED = 4;
+    
+    /**
+     * 订单状态 申请退款
+     * @var unknown
+     */
+    CONST ORDER_STATUS_OF_APPLIED = 6;
+    
+    /**
+     * 订单状态 退款完成
+     * @var unknown
+     */
+    CONST ORDER_STATUS_OF_REFUND_COMPLETED = 7;
+    
+    /**
+     * 退款失败
+     * @var unknown
+     */    
+    CONST ORDER_STATUS_REFUND_FAILED = 9;
+    
+    /**
+     * 订单状态 退款中
+     * @var unknown
+     */
+    CONST ORDER_STATUS_OF_IN_REFUND = 10;
+    
+    /**
+     * 臭美券 状态  未使用
+     * @var unknown
+     */
+    CONST TICKET_STATUS_OF_UNUSED = 2;
+    
+    /**
+     * 臭美券 状态  已使用
+     * @var unknown
+     */
+    CONST TICKET_STATUS_OF_USED = 4;
+    
+    /**
+     * 臭美券 状态   申请退款
+     * @var unknown
+     */
+    CONST TICKET_STATUS_OF_APPLIED = 6;
+    
+    /**
+     * 臭美券 状态   退款完成
+     * @var unknown
+     */
+    CONST TICKET_STATUS_OF_REFUND_COMPLETED = 7;
+    
+    /**
+     * 臭美券 状态   退款中
+     * @var unknown
+     */
+    CONST TICKET_STATUS_OF_IN_REFUND = 8;
+    
+    /**
      * 银联
      * @var unknown
      */
     CONST REFUND_TO_UNION  = 1;
+    
+    /**
+     * 流水类型  消费
+     * @var unknown
+     */
+    CONST REFUND_CODE_TYPE_OF_CUSTOM = 2;
     
     /**
      * 退款通过
@@ -27,42 +117,44 @@ class TransactionWriteApi
         $refund_indexes = Utils::column_to_key("ordersn",$refunds);
         unset($refunds);
         
+        $fundflow = Fundflow::where('code_type',self::REFUND_CODE_TYPE_OF_CUSTOM)->whereIn('record_no',$ordersns)->select(['ticket_no','record_no'])->get();
+        if(empty($fundflow))
+        {
+            throw new ApiException("找不到退款的支付流水信息",ERROR::REFUND_FLOW_LOST);
+        }        
+        $fundflowArr = $fundflow->toArray();        
+        unset($fundflow);
         
-        // 退款流水信息
-        $fundflows = M("fundflow")->get("", [], [
-            "`record_no` IN ('" . implode("','", $ordersns) . "') AND code_type=2"
-        ]);
-        
-        // 需要退款的臭美券号
-        $ticket_nos = Utils::get_column_array("ticket_no", $fundflows);
-        if (count($ticket_nos) < 1) {
-            $output['err_info'] .= "找不到对应的臭美券";
-            return false;
+        $ticket_nos = array_column($fundflowArr, "ticket_no");
+        $ticket_nos = array_filter($ticket_nos);       
+        if (count($ticket_nos) < 1) 
+        {
+            throw new ApiException("找不到退款的流水中的臭美券信息",ERROR::REFUND_FLOW_LOST);
+        }                
+        $tickets = OrderTicket::whereIn('ticketno',$ticket_nos)->get();        
+        if(empty($tickets))
+        {
+            throw new ApiException("找不到退款单对应的臭美券",ERROR::REFUND_TICKET_LOST);
+        }        
+        $ticketArr = $tickets->toArray();
+        unset($tickets);
+        if(!self::checkArrayColumns($ticketArr, [self::TICKET_STATUS_OF_UNUSED,self::TICKET_STATUS_OF_APPLIED,self::TICKET_STATUS_OF_IN_REFUND], "status"))
+        {
+            throw new ApiException("退款单对应的臭美券状态不正确",ERROR::REFUND_TICKET_STATE_WRONG);
         }
         
-        $ticket_items = M('order_ticket')->get("", [], [
-            "`ticketno` IN ('" . implode("','", $ticket_nos) . "')"
-        ]);
-        if (! self::checkRefundStatus($ticket_items, [
-            2,
-            6,
-            8
-        ])) {
-            $output['err_info'] .= "臭美券状态不正确";
-            return false;
-        }
-        // payment信息
-        $payments = M("payment_log")->get("", [
-            'ordersn',
-            'tn',
-            'device',
-            'batch_no',
-            'alipay_updated'
-        ], [
-            "`ordersn` IN ('" . implode("','", $order_list) . "')"
-        ]);
+        $payments = PaymentLog::whereIn('ordersn',$ordersns)->select(['ordersn','tn','device','batch_no','alipay_updated'])->get();
         
-        $payment_indexes = Utils::column_to_key("ordersn", $payments);
+        if(empty($payments))
+        {
+            throw new ApiException("退款单找不到对应的payment log 信息",ERROR::REFUND_PAYMENT_LOG_LOST);
+        }
+        
+        $paymentArr = $payments->toArray();
+                
+        $payment_indexes = Utils::column_to_key("ordersn", $paymentArr);
+        
+        $refund_items = self::getRefundItems($fundflowArr,$payment_indexes,$refund_indexes);
         
         $alipay_items = []; // 支付宝的退款项
         $wechat_items = []; // 微信的退款项
@@ -357,12 +449,19 @@ class TransactionWriteApi
      * 检查允许的值
      * @param array $items
      * @param array $allowValues
-     * @param string $column_name
+     * @param string|int $column_name
      * @return bool
      */
     public static function checkArrayColumns($items,$allowValues,$column_name)
     {
-    
+        $items = array_column($items, $column_name);
+        foreach ($items as $item)
+        {
+            if(!in_array($item,$allowValues))
+            {
+                return false;
+            }
+        }
         return true;
     }
     
@@ -377,7 +476,7 @@ class TransactionWriteApi
         if ($count < 1) {
             throw new ApiException( "退款id不能为空", ERROR::PARAMS_LOST);
         }
-        $refunds = OrderRefund::whereIn('order_refund_id',$ids)->where('status',1)->select(['ordersn','retype'])->get();
+        $refunds = OrderRefund::whereIn('order_refund_id',$ids)->where('status',self::REFUND_STATUS_OF_NORMAL)->select(['ordersn','retype'])->get();
         if(empty($refunds))
         {
             throw new ApiException( "找不到相关的退款单信息", ERROR::REFUND_STATE_WRONG);
@@ -390,7 +489,7 @@ class TransactionWriteApi
         }
         $ordersns = array_column($refundArr, "ordersn");
         
-        $order = Order::whereIn("ordersn",$ordersns)->whereIn("status",[2,6,8,9,10])->selectRaw("count(*) as num")->first();
+        $order = Order::whereIn("ordersn",$ordersns)->whereIn("status",[self::ORDER_STATUS_OF_UNUSED,self::ORDER_STATUS_OF_APPLIED,8,self::ORDER_STATUS_REFUND_FAILED,self::ORDER_STATUS_OF_IN_REFUND])->selectRaw("count(*) as num")->first();
         if(empty($order))
         {
             throw new ApiException( "找不到相关的订单信息", ERROR::REFUND_STATE_WRONG);
@@ -401,6 +500,127 @@ class TransactionWriteApi
         }
         unset($order);
         return $refundArr;
+    }
+    
+    /**
+     * 
+     * @param array $fundflows
+     * @param array $paymentlogs
+     * @param array $refunds
+     */
+    private static function getRefundItems($fundflows,$paymentlogs,$refunds)
+    {
+        $res = [
+            'union'=>[],
+            'alipay'=>[],
+            'wx'=>[],
+            'balance'=>[],
+            'hongbao'=>[],
+            'youhui'=>[],
+        ];
+        foreach ($fundflows as $flow) {
+            $ordersn = $flow['record_no'];
+            $pay_type = intval($flow['pay_type']);
+            $retype = $refunds_index[$ordersn]['retype'];
+            $user_id = $flow['user_id'];
+            $money = $flow['money'];
+            $rereason = intval($flow['rereason']);
+            $reason = $this->refundDesc[$rereason];
+            $device = null;
+            $tn = "";
+            $batch_no = "";
+            $alipay_updated = 0;
+            if (isset($payment_indexes[$ordersn])) {
+                $tn = $payment_indexes[$ordersn]['tn'];
+                $device = $payment_indexes[$ordersn]['device'];
+                $batch_no = $payment_indexes[$ordersn]['batch_no'];
+                $alipay_updated = intval($payment_indexes[$ordersn]['alipay_updated']);
+            }
+            // 退回到余额
+            if ($retype == 2)
+            {
+                $pay_type = 4;
+            }
+        
+            switch ($pay_type) {
+                case self::REFUND_TO_UNION: // 网银支付
+                    if (empty($tn)) 
+                    {
+                        $output['err_info'] .= "ordersn '{$ordersn}' can not find tn \n";
+                        return false;
+                    }
+                    $fund_ordersn_list[] = $ordersn;
+                    $union_items[] = [
+                        'ordersn' => $ordersn,
+                        'user_id' => $user_id,
+                        'money' => $money,
+                        'tn' => $tn
+                    ];
+                    break;
+                case 2: // 支付宝
+                    if (empty($tn)) {
+                        $output['err_info'] .= "ordersn '{$ordersn}' can not find tn \n";
+                        return false;
+                    }
+                    // ordersn 已经再退款中
+                    if (! empty($batch_no) && (time() - $alipay_updated) < 7200) {
+                        $output['err_info'] .= "ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁 \n";
+                        return false;
+                    }
+                    $fund_ordersn_list[] = $ordersn;
+                    $alipay_items[] = [
+                        'tn' => $tn,
+                        "money" => $money,
+                        "reason" => $reason,
+                        "ordersn" => $ordersn
+                    ];
+                    break;
+                case 3: // 微信
+                    if (empty($tn)) {
+                        $output['err_info'] .= "ordersn '{$ordersn}' can not find tn \n";
+                        return false;
+                    }
+                    if ($device == 2) {
+                        $wx_url = C("WX_REFUND_URL_OF＿WEB");
+                    } else {
+                        $wx_url = C("WX_REFUND_URL_OF＿SDK");
+                    }
+                    $fund_ordersn_list[] = $ordersn;
+                    $wechat_items[] = [
+                        'tn' => $tn,
+                        "money" => $money,
+                        "ordersn" => $ordersn,
+                        'user_id' => $user_id,
+                        'url' => $wx_url
+                    ];
+                    break;
+                case 4: // 余额
+                    $yue_items[] = $flow;
+                    $fund_ordersn_list[] = $ordersn;
+                    break;
+                case 5: // 红包
+                    $hongbao_items[] = $flow;
+                    $fund_ordersn_list[] = $ordersn;
+                    break;
+                case 6: // 优惠码
+                    $youhuicode_items[] = $flow;
+                    $fund_ordersn_list[] = $ordersn;
+                    break;
+                case 10: // 易联
+                    if (empty($tn)) {
+                        $output['err_info'] .= "ordersn '{$ordersn}' can not find tn \n";
+                        return false;
+                    }
+                    $fund_ordersn_list[] = $ordersn;
+                    $yilian_items[] = [
+                        'tn' => $tn,
+                        "money" => $money,
+                        "ordersn" => $ordersn,
+                        'user_id' => $user_id
+                    ];
+                    break;
+            }
+        }
     }
 
 }

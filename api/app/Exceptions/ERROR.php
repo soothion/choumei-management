@@ -197,6 +197,30 @@ class ERROR
       * @var unknown
       */
      CONST REFUND_STATE_WRONG = -50605;
+     
+     /**
+      * 退款单找不到支付流水信息
+      * @var unknown
+      */
+     CONST REFUND_FLOW_LOST= -50606;
+     
+     /**
+      * 退款单找不到臭美券信息
+      * @var unknown
+      */
+     CONST REFUND_TICKET_LOST= -50607;
+     
+     /**
+      * 退款单找不到臭美券信息
+      * @var unknown
+      */
+     CONST REFUND_TICKET_STATE_WRONG= -50608;
+     
+     /**
+      * 退款单找不到paymentlog信息
+      * @var unknown
+      */
+     CONST REFUND_PAYMENT_LOG_LOST = -50609;
 	 
 	 
 	 ////////////消息模块//////////////
