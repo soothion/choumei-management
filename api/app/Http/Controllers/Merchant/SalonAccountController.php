@@ -8,6 +8,8 @@ use DB;
 use App\Salon;
 use App\SalonAccount;
 use Event;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class SalonAccountController extends Controller {
 	
@@ -130,16 +132,16 @@ class SalonAccountController extends Controller {
 		$param = $this->param;
 		if(!isset($param["username"]) || !isset($param["salonid"]) || !isset($param["merchantId"]) || !isset($param["roleType"]))
 		{
-			return $this->error("参数错误");	
+			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
 		}
 		if(!$param["username"] || !$param["merchantId"] || !in_array($param["roleType"], array(1,2)) )
 		{
-			return $this->error("参数错误");	
+			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
 		}
 		$oldRs = $this->getAccount($param["username"]);
 		if($oldRs)
 		{
-			return $this->error("该用户名重复，请重新修改");	
+			throw new ApiException('该用户名重复，请重新修改', ERROR::MERCHANT_ACCOUNT_NAME_IS_ERROR);
 		}
 
 		$save["username"] = $param["username"];
@@ -159,7 +161,7 @@ class SalonAccountController extends Controller {
 		$nums = SalonAccount::getAccountNums($save);//查看管理员个数是否符合要求 
 		if($nums >= 1)
 		{
-			return $this->error($this->addMsg[$param["roleType"]]);
+			throw new ApiException($this->addMsg[$param["roleType"]], ERROR::MERCHANT_ACCOUNT_CONFLICT_IS_ERROR);
 		}
 		$id = SalonAccount::dosave($save);//添加账号
 		if($param["roleType"] == 2)//超级管理员
@@ -175,7 +177,7 @@ class SalonAccountController extends Controller {
 		}	
 		else
 		{
-			return $this->error("更新失败");	
+			throw new ApiException('更新失败', ERROR::MERCHANT_UPDATE_FAILED);
 		}
 	}
 	
@@ -225,7 +227,7 @@ class SalonAccountController extends Controller {
 		$param = $this->param;
 		if(!isset($param['salonUserId']))
 		{
-			return $this->error("参数错误");	
+			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);	
 		}
 		$status = SalonAccount::doUpdate($param['salonUserId'], array("password"=>md5($this->pwd),"upTime"=>time(),"admin_password"=>md5($this->cmPwd)));
 		if($status)
@@ -236,7 +238,7 @@ class SalonAccountController extends Controller {
 		}
 		else
 		{
-			return $this->error("操作失败");
+			throw new ApiException('操作失败', ERROR::MERCHANT_UPDATE_FAILED);
 		}
 	}
 	
@@ -281,7 +283,7 @@ class SalonAccountController extends Controller {
 		$param = $this->param;
 		if(!isset($param['salonUserId']) || !isset($param['type']))
 		{
-			return $this->error("参数错误");	
+			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);	
 		}
 		if($param["type"] == 1)
 		{
@@ -293,7 +295,7 @@ class SalonAccountController extends Controller {
 		}
 		else 
 		{
-			return $this->error("参数异常");
+			throw new ApiException('参数异常', ERROR::MERCHANT_ERROR);	
 		}
 		$status = SalonAccount::doUpdate($param['salonUserId'], array("status"=>$status,"upTime"=>time()));
 		if($status)
@@ -304,7 +306,7 @@ class SalonAccountController extends Controller {
 		}
 		else
 		{
-			return $this->error("操作失败");
+			throw new ApiException('操作失败', ERROR::MERCHANT_UPDATE_FAILED);
 		}
 	}
 	
@@ -356,7 +358,7 @@ class SalonAccountController extends Controller {
 		$param = $this->param;
 		if(!isset($param['salonname']))
 		{
-			return $this->error("参数错误");	
+			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);	
 		}
 		$data = SalonAccount::getSalonNamebyCon($param);
 		return $this->success($data?$data:array());

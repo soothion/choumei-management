@@ -20,9 +20,19 @@ class ERROR
      CONST UNAUTHORIZED =  -40002;
      
      /**
-      *@param 未授权访问
+      *@param 参数丢失
       */
      CONST PARAMS_LOST =  -40003;
+     
+     /**
+      *@param 功能关闭
+      */
+     CONST SERVER_STOPED =  -40004;
+     
+     /**
+      *@param 未知错误
+      */
+     CONST UNKNOWN_ERROR =  -40005;
 
      
     ////////////用户模块//////////////
@@ -197,24 +207,50 @@ class ERROR
       * @var unknown
       */
      CONST REFUND_STATE_WRONG = -50605;
-	 
-	 
-	 ////////////消息模块//////////////
+     
      /**
-     *@param 参数错误
-     */
-     CONST PARAMETER_ERROR =  -50900;
-	 /**
-     *@param 更新失败
-     */
-     CONST UPDATE_FAILED =  -50901;
-	 /**
-     *@param 消息ID不正确
-     */
-     CONST MESSAGE_ID_IS_ERROR  =  -50902;
-
+      * 退款单找不到支付流水信息
+      * @var unknown
+      */
+     CONST REFUND_FLOW_LOST= -50606;
      
+     /**
+      * 退款单找不到臭美券信息
+      * @var unknown
+      */
+     CONST REFUND_TICKET_LOST= -50607;
      
+     /**
+      * 退款单找不到臭美券信息
+      * @var unknown
+      */
+     CONST REFUND_TICKET_STATE_WRONG= -50608;
+     
+     /**
+      * 退款单找不到paymentlog信息
+      * @var unknown
+      */
+     CONST REFUND_PAYMENT_LOG_LOST = -50609;
+     
+     /**
+      * 退款关键信息不全
+      * @var unknown
+      */
+     CONST REFUND_LOST_PRIMARY_INFO = -50610;
+     
+     /**
+      * 订单状态不正确
+      * @var unknown
+      */
+     CONST ORDER_STATUS_WRONG = -50610;
+     
+     /**
+      * 赏金单状态不正确
+      * @var unknown
+      */
+     CONST BOUNTY_STATUS_WRONG = -50611;
+	 
+	 
 	 ////////////图片风格模块//////////////
      /**
      *@param 插入风格失败
@@ -263,7 +299,73 @@ class ERROR
      *@param 反馈删除失败
      */
      CONST FEED_DELETE_FAILED =  -50701;
-
+     
+     ////////////收款模块//////////////
+     /**
+      *@param 参数错误
+      */
+     CONST RECEIVABLES_ERROR =  -50800;
+     /**
+      *@param 更新失败
+      */
+     CONST RECEIVABLES_UPDATE_FAILED =  -50801;
+     /**
+      *@param ID不正确
+      */
+     CONST RECEIVABLES_ID_IS_ERROR  =  -50802;
+     
+     ////////////消息模块//////////////
+     /**
+      *@param 参数错误
+      */
+     CONST PARAMETER_ERROR =  -50900;
+     /**
+      *@param 更新失败
+      */
+     CONST UPDATE_FAILED =  -50901;
+     /**
+      *@param 消息ID不正确
+      */
+     CONST MESSAGE_ID_IS_ERROR  =  -50902;
+      
+     ////////////店铺商户操作模块//////////////
+     /**
+      *@param 参数错误
+      */
+     CONST MERCHANT_ERROR =  -51000;
+     /**
+      *@param 更新失败
+      */
+     CONST MERCHANT_UPDATE_FAILED =  -51001;
+     /**
+      *@param ID不正确
+      */
+     CONST MERCHANT_ID_IS_ERROR  =  -51002;
+     /**
+      *@param 编号重复已经存在
+      */
+     CONST MERCHANT_SN_IS_ERROR  =  -51003;
+     /**
+      *@param 该商户还有正在合作的店铺请先终止该商户所有店铺合作，再删除商户
+      */
+     CONST MERCHANT_STATUS_IS_ERROR  =  -51004;
+     /**
+      *@param 该用户名重复，请重新修改
+      */
+     CONST MERCHANT_ACCOUNT_NAME_IS_ERROR  =  -51010;
+     /**
+      *@param 店铺账号冲突（当前店铺已存在普通用户（或超级管理员），请查询）
+      */
+     CONST MERCHANT_ACCOUNT_CONFLICT_IS_ERROR  =  -51011;
+     /**
+      *@param 店铺状态错误
+      */
+     CONST MERCHANT_SALON_STATUS_IS_ERROR  =  -51020;
+     
+     
+     
+     
+     
 
 
 }

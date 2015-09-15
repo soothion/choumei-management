@@ -6,6 +6,9 @@ use DB;
 use Excel;
 use App\Hairstylist;
 use Illuminate\Support\Facades\Redis as Redis;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
+
 class MessageController extends Controller{
 	
 	private $_redisKey = 'stylist_msg_adding_review';
@@ -190,27 +193,23 @@ class MessageController extends Controller{
 		$saveConf['content'] = isset($param['content'])?$param['content']:'';
 		if(!$save['title'] || !$save['description'])
 		{
-			return $this->error('参数错误');
+			throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
 		}
-		//throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
 		if(($save['receive_type'] == 1 && $receivers) || ($save['receive_type'] == 2 && !$receivers))
 		{
-			return $this->error('参数错误');
+			throw new ApiException('参数错误-发送类型错误', ERROR::PARAMETER_ERROR);
 		}
-			//throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
 		if($saveConf['content'] && $save['url'])
 		{
-			return $this->error('参数错误');
+			throw new ApiException('参数错误-富文本或者url错误', ERROR::PARAMETER_ERROR);
 		}
-			//throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
 		if(StylistMsgConf::dosave($save,$saveConf,$id) !== false)
 		{
 			return $this->success();
 		}
 		else
 		{
-			return $this->error('更新失败');
-			//throw new ApiException('更新失败', ERROR::UPDATE_FAILED);
+			throw new ApiException('更新失败', ERROR::UPDATE_FAILED);
 		}
 
 	}
@@ -307,14 +306,14 @@ class MessageController extends Controller{
 		$result = StylistMsgConf::select(['status'])->where("id","=",$id)->first();;
 		if(!$result)
 		{
-			return $this->error('未知Id');
+			throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
 		}
-			//throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
+
 		$row = StylistMsgConf::doOperating($id,2);
 		if($row)
 			return $this->success();
-		return $this->error('更新失败');
-		//throw new ApiException('更新失败', ERROR::UPDATE_FAILED);
+		throw new ApiException('更新失败', ERROR::UPDATE_FAILED);
+			
 	}
 	
 	/**
@@ -344,9 +343,9 @@ class MessageController extends Controller{
 		$result = StylistMsgConf::select(['status'])->where("id","=",$id)->where("status","=",0)->first();;
 		if(!$result)
 		{
-			return $this->error('未知Id');
+			throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
 		}
-		//	throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
+
 		$row = StylistMsgConf::doOperating($id,1);//1 上线
 		if($row)
 		{
@@ -354,10 +353,10 @@ class MessageController extends Controller{
 		}
 		else
 		{
-			return $this->error('上线失败');	
+			throw new ApiException('上线失败', ERROR::UPDATE_FAILED);
 		}
 
-		//throw new ApiException('上线失败', ERROR::UPDATE_FAILED);
+
 	}
 	
 	/**
@@ -411,9 +410,9 @@ class MessageController extends Controller{
 		$result = StylistMsgConf::getOnebyId($id);
 		if(!$result)
 		{
-			return $this->error('未知Id');
+			throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
 		}
-			//throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
+
 		return $this->success($result);
 	}
 	
@@ -483,8 +482,7 @@ class MessageController extends Controller{
 		$key = $this->_redisKey.$key;
 		if(!$key)
 		{
-			return $this->error('参数错误');
-			//throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
+			throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
 		}
 		$value = Redis::get($key);
 		return $this->success(json_decode($value,true));
