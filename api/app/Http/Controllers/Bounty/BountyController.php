@@ -22,7 +22,7 @@ class BountyController extends Controller {
      * @apiParam {Number} page 可选,页码，默认为1.
      * @apiParam {Number} pageSize 可选,默认为10.
      * @apiParam {String} keyword 可选,搜索关键词.
-     * @apiParam {String} keywordType 必选,搜索关键词类型，可取"btSn","userName","mobile","salonName".
+     * @apiParam {String} keywordType 必选,搜索关键词类型，可取0 赏金单号/1 用户臭美号/2 用户手机号/3 店铺名称.
      * @apiParam {Number} payType 可选,支付方式：1 网银/2 支付宝/3 微信/4 余额/5 红包/6 优惠券/7 积分/8邀请码兑换.
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消

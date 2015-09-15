@@ -93,24 +93,24 @@ class BountyTask extends Model {
             $val = addslashes($val);
             $val = str_replace(['_', '%'], ['\_', '\%'], $val);
             switch ($input ["keywordType"]) {
-                case "btSn" : // 订单号				    
+                case "0" : // 订单号				    
                     $query->where('btSn', 'like', '%' . $val . '%');
                     break;
-                case "userName" : // 用户名					
+                case "1" : // 用户名					
                     $query->whereIn('user_id', function($query) {
                         $query->select('user_id')
                                 ->from("user")
                                 ->where('username', 'like', '%' . $val . '%');
                     });
                     break;
-                case "mobile" : // 用户手机号
+                case "2" : // 用户手机号
                     $query->whereIn('user_id', function($query) {
                         $query->select('user_id')
                                 ->from("user")
                                 ->where('mobilephone', 'like', '%' . $val . '%');
                     });
                     break;
-                case "salonName" ://商铺名称
+                case "3" ://商铺名称
                     $query->whereIn('salonid', function($query) {
                         $query->select('salonid')
                                 ->from("salon")
