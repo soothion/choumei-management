@@ -180,17 +180,32 @@ class BountyTask extends Model {
         }
 
         //交易时间
-        if (!empty($input["minTime"])) {
+        if (!empty($input["minPayTime"])) {
             $minTime = strtotime($input["minTime"]);
             if ($minTime) {
-                $query->where('addTime', '>=', $minTime);
+                $query->where('payTime', '>=', $minTime);
             }
         }
-        if (!empty($input["maxTime"])) {
+        if (!empty($input["maxPayTime"])) {
             $maxTime = strtotime($input["maxTime"]);
             if ($maxTime) {
                 $maxTime += 86399;
-                $query->where('addTime', '<=', $maxTime);
+                $query->where('payTime', '<=', $maxTime);
+            }
+        }
+        
+        //退款时间
+        if (!empty($input["minEndTime"])) {
+            $minTime = strtotime($input["minTime"]);
+            if ($minTime) {
+                $query->where('endTime', '>=', $minTime);
+            }
+        }
+        if (!empty($input["maxEndTime"])) {
+            $maxTime = strtotime($input["maxTime"]);
+            if ($maxTime) {
+                $maxTime += 86399;
+                $query->where('endTime', '<=', $maxTime);
             }
         }
         return $query;
