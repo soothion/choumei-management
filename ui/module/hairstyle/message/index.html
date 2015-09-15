@@ -64,7 +64,7 @@
 							<td>
 							<a class="link" target="_blank" href="<%if(item.content_id){%>preview.html?id=<%=item.id%><%}else{%>preview.html?url=<%=encodeURIComponent(item.url)%><%}%>">预览</a>	
 							<%if(item.status!=1){%>
-							<form class="online" data-slug="message.online" action="/message/online/?id=<%=item.id%>" data-role="normal" data-confirm="确认上线" onreset="parent.lib.popup.result({bool:true,text:'操作成功',define:function(){location.reload();}});">
+							<form class="online" data-slug="message.online" action="/message/online/?id=<%=item.id%>" data-role="normal" data-confirm="确认上线" >
 								<span class="space"></span>
 								<button class="link"> 上线</button>			 
 							</form>
@@ -74,7 +74,7 @@
 							<a class="link" data-slug="message.update" href="edit.html?id=<%=item.id%>">修改</a>	
 							<%}%>
 							<span class="space"></span>
-							<form data-slug="message.destroy" action="/message/destroy/?id=<%=item.id%>" data-role="normal" data-confirm="确认删除？" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){}});" id="form-remove">
+							<form data-slug="message.destroy" action="/message/destroy/?id=<%=item.id%>" data-role="normal" data-confirm="确认删除？" onreset="remove">
 								<button class="link">删除</button>
 							</form>				   
 						   </td>
@@ -113,6 +113,10 @@
 				})
 
 			});
+			$(document).on('reset','.online',function(){
+				$(window).trigger('hashchange');
+				parent.lib.popup.result({bool:true,text:'操作成功'});
+			})
 		</script>  
     </body>
 </html>
