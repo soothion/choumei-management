@@ -9,6 +9,7 @@ use App\Merchant;
 use App\Salon;
 use App\PayManage;
 use App\PrepayBill;
+use App\ShopCount;
 class ReceivablesController extends Controller{
 
 	
@@ -105,7 +106,7 @@ class ReceivablesController extends Controller{
 		$where['paymentStyle'] = isset($param['paymentStyle'])?$param['paymentStyle']:'';//收款方式
 		$where['status'] = isset($param['status'])?$param['status']:'';//收款状态
 		
-		$sort_key = isset($param['sort_key'])?$param['sort_key']:'addTime';
+		$sort_key = isset($param['sort_key'])?$param['sort_key']:'r.addTime';
     	$sort_type = isset($param['sort_type'])?$param['sort_type']:'desc';
 		
 
@@ -278,20 +279,23 @@ class ReceivablesController extends Controller{
 				{
 					return $this->error('数据错误，请重新勾选');
 				}
-				if($val->paymentStyle == 2 || $val->type == 2)
+				if($val->type == 1)//取财务管理-收款管理中的业务投资款返还(已确认)的单		  		
 				{
-					if($val->type == 2)
-					{
-						$payTypeId[$key]['act'] = 1;
-					}
-					elseif($val->type != 2 && $val->paymentStyle == 2)
-					{
-						$payTypeId[$key]['act'] = 2;
-					}
+					$salonResult = Salon::select(['merchantId'])->where("salonid","=",$val->salonid)->first();
+					ShopCount::count_bill_by_invest_return_money($val->salonid,$salonResult->merchantId,$val->money);
+				}
+
+				if($val->paymentStyle == 2 || $val->type == 2) //type 收款类型 1业务投资款返还 2交易代收款返还   paymentStyle 收款方式 1银行存款 2账扣返还 3现金 4支付宝 5财付通
+				{
+
+					$payTypeId[$key]['type'] = $val->type;
+					$payTypeId[$key]['paymentStyle'] = $val->paymentStyle;
+
 					$payTypeId[$key]['id'] = $val->id;//账扣返还id
 					$payTypeId[$key]['salonid'] = $val->salonid;
+					
 					$payTypeId[$key]['receiptDate'] = date('Y-m-d',$val->receiptDate);
-					$payTypeId[$key]['checkTime'] = date('Y-m-d',$val->checkTime);
+					$payTypeId[$key]['checkTime'] = date('Y-m-d');
 					$payTypeId[$key]['addTime'] = date('Y-m-d H:i:s',$val->addTime);
 					
 					$payTypeId[$key]['money'] = $val->money;
@@ -320,33 +324,35 @@ class ReceivablesController extends Controller{
 				 			'salon_id'=>$v['salonid'],
 				 			'merchant_id'=>$v['merchantId'],
 				 			'money'=>$v['money'],
-				 			'receive_type'=>2,
+				 			'receive_type'=>$v['paymentStyle'],
 				 			'require_day'=>$v['receiptDate'],
 				 		 	'receive_day'=>$v['checkTime'],
 				 			'cash_uid'=>$v['cashier'],
 				 			'make_uid'=>$v['preparedBy'],
 				 			'make_at'=>$v['addTime'],		 		
 						);
-				if($v['act'] == 1)//转付单
+				$status = 0;
+				if($v['paymentStyle'] == 2 && $v['type'] == 1)//账扣返还---业务投资款
 				{
-					$retData = PrepayBill::makeReturn($data);
-					$status = 0;
-					if($retData)
-					{
-						$status = Receivables::where('id', '=', $v['id'])->update(['paySingleCode' => $retData['code'],'paySingleId'=>$retData['id']]);
-					}
-				}
-				else 
-				{
-					$retData = PayManage::makeFromReceive($data);
-					$status = 0;
+					$retData = PayManage::makeFromReceive($data);//付款单
+					
 					if($retData)
 					{
 						$status = Receivables::where('id', '=', $v['id'])->update(['payCode' => $retData['code'],'payId'=>$retData['id']]);
 					}
 				}
 				
-				
+				if($v['type'] == 2)
+				{
+					$data['money'] = '-'.$v['money'];//交易代收款
+					$data['type'] = 3;
+					$retData = PrepayBill::makeReturn($data);
+					if($retData)
+					{
+						$status = Receivables::where('id', '=', $v['id'])->update(['paySingleCode' => $retData['code'],'paySingleId'=>$retData['id']]);
+					}
+				}
+			
 			}
 		}
 		if($status)
@@ -393,22 +399,22 @@ class ReceivablesController extends Controller{
 		$where['paymentStyle'] = isset($param['paymentStyle'])?$param['paymentStyle']:'';//收款方式
 		$where['status'] = isset($param['status'])?$param['status']:'';//收款状态
 		
-		$sort_key = isset($param['sort_key'])?$param['sort_key']:'addTime';
+		$sort_key = isset($param['sort_key'])?$param['sort_key']:'r.addTime';
 		$sort_type = isset($param['sort_type'])?$param['sort_type']:'desc';
 		
 		$list = Receivables::getListExport($where,$sort_key,$sort_type);
 
 		$result = array();
 		$typeArr = array(0=>'',1=>'业务投资款返还',2=>'交易代收款返还');
-		$paymentStyleArr = array(0=>'',1=>'银行存款',2=>'账扣返还',3=>'现金',4=>'支付宝',5=>'财付通');
+		$paymentStyleArr = array(0=>'',1=>'银行存款',2=>'账扣返还',3=>'现金',4=>'支付宝',5=>'财付通',6=>'其他');
 		$statusArr = array(0=>'',1=>'待确认',2=>'已确认');
 		if($list)
 		{
 			foreach ($list as $key=>$val)
 			{
 				$value = (array)$val;
-				$result[$key]['salonname'] = $value['salonname'];
 				$result[$key]['sn'] = $value['sn'];
+				$result[$key]['salonname'] = $value['salonname'];
 				$result[$key]['singleNumber'] = $value['singleNumber'];
 				$result[$key]['type'] = $typeArr[$value['type']];
 				$result[$key]['paymentStyle'] = $paymentStyleArr[$value['paymentStyle']];
@@ -424,8 +430,7 @@ class ReceivablesController extends Controller{
 				{
 					$result[$key]['receiptDate'] = date('Y-m-d',$value['receiptDate']);
 				}
-				$result[$key]['checkTime'] = $value['checkTime']?date('Y-m-d H:i:s',$value['checkTime']):'';
-				
+
 				$result[$key]['status'] = $statusArr[$value['status']];
 				$result[$key]['payCode'] = $value['payCode'];
 				$result[$key]['paySingleCode'] = $value['paySingleCode'];
@@ -435,7 +440,7 @@ class ReceivablesController extends Controller{
 		}
 		//导出excel
 		$title = '收款列表'.date('Ymd');
-		$header = ['店铺名称','店铺编号','收款单号','收款类型','收款方式','收款金额','创建日期','制单人','出纳','收款日期','确认收款日期','状态','关联付款单号','关联转付单号'];
+		$header = ['店铺编号','店铺名称','收款单号','收款类型','收款方式','收款金额','创建日期','制单人','出纳','收款日期','状态','关联付款单号','关联转付单号'];
 		Excel::create($title, function($excel) use($result,$header){
 			$excel->sheet('Sheet1', function($sheet) use($result,$header){
 				$sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false

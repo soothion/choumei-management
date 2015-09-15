@@ -9,12 +9,8 @@ class Commission extends Model {
 
 	protected $table = 'commission';
 
-	protected $fillable = ['id', 'ordersn','salonid', 'sn', 'amount', 'created_at', 'updated_at','rate','grade'];
+	protected $fillable = ['id', 'sn','salonid', 'amount', 'created_at', 'updated_at','date'];
 
-    public function salon(){
-        return $this->belongsTo('App\Salon');
-    }    
-    
 	public static function getSn(){
 		$redis = Redis::connection();
 		$key = 'YJ-'.date('ymd');
@@ -34,8 +30,7 @@ class Commission extends Model {
 	}
 
 	public static function getQueryByParam($param){
-		$query = Order::join('salon', 'salon.salonid', '=', 'order.salonid');
-		$query = $query->join('commission', 'commission.ordersn', '=', 'order.ordersn');
+		$query = Self::join('salon', 'salon.salonid', '=', 'commission.salonid');
 		//商户名筛选
 		if(isset($param['merchantname'])&&$param['merchantname']){
 			$query = $query->join('merchant', 'merchant.id', '=', 'salon.merchantId');
@@ -54,19 +49,20 @@ class Commission extends Model {
 
 		//起始时间
 		if(isset($param['start'])&&$param['start']){
-			$query = $query->where('created_at','>=',$param['start']);
+			$query = $query->where('date','>=',$param['start']);
 		}
 
 		//结束时间
 		if(isset($param['end'])&&$param['end']){
-			$query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+			$query = $query->where('date','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
 		}
 
+
 		//排序
-		if(isset($param['sort_key'])&&$param['sort_key']){
-			$param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
-			$query = $query->orderBy($param['sort_key'],$param['sort_type']);
-		}
+    	$sort_key = empty($param['sort_key'])?'date':$param['sort_key'];
+    	$sort_type = empty($param['sort_type'])?'DESC':$param['sort_type'];
+        $query = $query->orderBy($sort_key,$sort_type);
+
 		return $query;
 	}
 

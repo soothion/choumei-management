@@ -50,11 +50,11 @@
                 </tr>
 				<tr>
                   <td>关联收款单号：</td>
-                  <td><%=data.receive_bill_code%></td>
+                  <td><%=data.r_code%></td>
                 </tr>
 				<tr>
                   <td>关联转付单号：</td>
-                  <td><%=data.prepay_bill_code%></td>
+                  <td><%=data.p_code%></td>
                 </tr>
                 <tr>
                   <td>付款类型：</td>
@@ -66,11 +66,11 @@
                 </tr>
                 <tr>
                   <td>要求付款日期：</td>
-                  <td><%=data.require_day%></td>
+                  <td class="format"><%=data.require_day%></td>
                 </tr>
 				 <tr>
                   <td>创建日期：</td>
-                  <td><%=data.created_at%></td>
+                  <td class="format"><%=new Date(data.created_at).format("yyyy-MM-dd")%></td>
                 </tr>
                 <tr>
                  <td>制单人：</td>

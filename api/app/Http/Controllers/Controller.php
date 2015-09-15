@@ -44,7 +44,6 @@ abstract class Controller extends BaseController
 
 	public function __construct(){
 		$this->param = Input::all();
-		$this->user = Manager::first();
 		if(JWTAuth::getToken()){
             $this->user = JWTAuth::parseToken()->authenticate();
             $this->token = JWTAuth::parseToken()->refresh();

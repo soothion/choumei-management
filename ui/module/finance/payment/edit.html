@@ -77,7 +77,7 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>回款周期：</label>
                     <div class="control">			 
-                        <input type="text" name="cycle" maxlength="5" value="<%=data.cycle||""%>" required pattern="number" /><span class="unit">个月</span>                              							  
+                        <input type="text" name="cycle" maxlength="5" min="1" value="<%=data.cycle||""%>" required pattern="number" /><span class="unit">个月</span>                              							  
                     </div>
                 </div>
 				<div class="control-group">

@@ -12,6 +12,7 @@ use App\ShopCount;
 use Event;
 use App\PrepayBill;
 use App\Utils;
+use Log;
 
 class ShopCountController extends Controller
 {
@@ -497,6 +498,7 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);
+
         $header = ['店铺编码','店铺名称','代收单号','代收类型','代收金额','代收日期'];
         $items = ShopCountApi::getInsteadReceiveCondition($param)->get()->toArray();
         $count = count($items);
@@ -508,7 +510,6 @@ class ShopCountController extends Controller
         }
         Event::fire('shopcount.delegateExport');    
         $res = self::format_ir_data($items); 
-        unset($items);
         ini_set('memory_limit','256M');
         $this->export_xls("代收单".date("Ymd"), $header, $res);
     }
@@ -749,16 +750,14 @@ class ShopCountController extends Controller
             'ordersn'=>self::T_STRING,
             'token'=>self::T_STRING,
         ],true);
-//         $passed = ShopCountApi::checkToken($param);
-//         if(!$passed)
-//         {
-//             return $this->error("Unauthorized",401);
-//         }
+        $passed = ShopCountApi::checkToken($param);
+        if(!$passed)
+        {
+            return $this->error("Unauthorized",401);
+        }
         $orders = explode(",", $param['ordersn']);
+        Log::info('请求参数:'.json_encode($param));
 
-        //佣金单结算
-        ShopCountApi::commissionOrder($orders);
-      
         $res = null;
         $str = "";
         if ($param['type'] == 1)
@@ -817,12 +816,10 @@ class ShopCountController extends Controller
             $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
             $salon_id = isset($data['salon']['salonid']) ? $data['salon']['salonid'] : '';
             $salon_sn = isset($data['salon']['sn']) ? $data['salon']['sn'] : '';
-            $typename = "项目消费";
             $res[] = [
                $salon_sn,
                $salon_name,
                $data['code'],
-               $typename,
                $data['money'],
                $data['day']
             ];
@@ -834,7 +831,7 @@ class ShopCountController extends Controller
     {
         $res = [];
         foreach ($datas as $data) {
-            $salon_type = isset($data['salon']['salon_type'])?$data['salon']['salon_type']:'';
+            $salon_type = isset($data['salon']['shopType'])?$data['salon']['shopType']:'';
             $salon_type_name =Utils::getShopTypeName($salon_type);
             $salon_id = isset($data['salon']['salonid']) ? $data['salon']['salonid'] : '';
             $salon_sn = isset($data['salon']['sn'])?$data['salon']['sn']:'';

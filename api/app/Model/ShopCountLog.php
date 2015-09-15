@@ -6,6 +6,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
+
 class ShopCountLog extends Model
 {
     public $timestamps = false;
@@ -45,40 +47,43 @@ class ShopCountLog extends Model
      */
     public static function add_log($salon_id,$type,$money,$time,$remark="")
     {
-        $money = floatval($money);
-        $update_method = "increment";
+        $change_money = $money;        
        
         if( $type == self::TYPE_OF_SPEND || $type == self::TYPE_OF_COMMISSION_RETURN)
         {
-            $update_method = "decrement";
+            $change_money = bcmul($change_money, -1,2);
         }
-        
+        $change_money =floatval($change_money);
         if(is_numeric($time))
         {
             $time = date("Y-m-d H:i:s",intval($time));
         }  
-        //之前的信息
-        $model = self::where('salon_id',$salon_id)->where("count_at","<",$time)->select("balance_money")->first();
-        $balance_money = $money;
-        if(!empty($model))
+        $update_method = "decrement";
+        if($change_money >= 0)
         {
-            if($update_method == "increment")
-            {
-                $balance_money = floatval($model->balance_money) + $money;
-            }
-            else 
-            {
-                $balance_money = floatval($model->balance_money) - $money;
-            }
-        }
-        else 
-        {
-            if($update_method == "decrement")
-            {
-                $balance_money = $money * -1;
-            }
+            $update_method == "increment";
         }
         
+        $record = ['salon_id'=>$salon_id,
+            'type'=>$type,
+            'money'=>$money,
+           // 'balance_money'=>$balance_money,
+            'count_at'=>$time,
+            'remark'=>$remark,
+            'created_at'=>date("Y-m-d H:i:s")           
+        ];
+        
+        
+        //之前的信息
+        
+       // DB::beginTransaction();
+        $model = self::where('salon_id',$salon_id)->where("count_at","<",$time)->select("balance_money")->orderBy('count_at','DESC')->orderBy('id','ASC')->first();
+        $balance_money = 0;
+        if(!empty($model))
+        {
+            $balance_money = floatval($model->balance_money) ;
+        }
+             
         //插入记录
         $id = self::insertGetId([
             'salon_id'=>$salon_id,
@@ -89,9 +94,30 @@ class ShopCountLog extends Model
             'remark'=>$remark,
             'created_at'=>date("Y-m-d H:i:s")
         ]);
-        //更新本条记录之后的余额信息
-        self::where('salon_id',$salon_id)->where("id","<>",$id)->where("count_at",">=",$time)->{$update_method}("balance_money",$money);
         
+        self::count_after($salon_id,$time,$balance_money);
+        //更新本条记录之后的余额信息
+        //self::where('salon_id',$salon_id)->where("id","<",$id)->where("count_at",">=",$time)->{$update_method}("balance_money",abs($money));
+        //DB::commit();
+        
+    }
+    
+    public static function count_after($salon_id,$count_at,$last_balance)
+    {
+        $items = ShopCountLog::select(['id','type','money'])->where('salon_id',$salon_id)->where('count_at',">=",$count_at)->orderBy('count_at','ASC')->orderBy('id','DESC')->get()->toArray();
+        foreach ($items as $item)
+        {
+            $id = $item['id'];
+            $type = intval($item['type']);
+            $money = floatval($item['money']);
+            $change_money = $money;
+            if($type == ShopCountLog::TYPE_OF_COMMISSION_RETURN || $type == ShopCountLog::TYPE_OF_SPEND)
+            {
+                $change_money = bcmul($change_money,-1,2);
+            }
+            $last_balance = bcadd($last_balance,$change_money,2);
+            ShopCountLog::where('id',$id)->update(['balance_money'=>$last_balance]);
+        }
     }
     
     /**

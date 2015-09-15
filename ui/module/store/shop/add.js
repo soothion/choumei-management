@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-27 10:17:14
+* @Last Modified time: 2015-09-06 14:38:27
 */
 
 $(function(){
@@ -82,26 +82,26 @@ $(function(){
         $("#pop-wrapper").hide();
     });
 
-    $("body").on("keyup",function(e){
-        if(e.which >= 65 &&  e.which <= 90){
-            if($("#business").hasClass('select-focus')){
-                var str = String.fromCharCode(e.which).toLowerCase();  
-                var arr = $("#business option[data-py^='"+str+"']");
-                if(arr && arr.length > 0){
-                    //每次scroll前先重置scrollTop
-                    $(".options").scrollTop(0);                    
-                    //ul的top
-                    var top = $(".options").offset().top;
-                    //目标li
-                    var currentLi = $(".options li[value='"+arr.eq(0).val()+"']");
-                    //目标li的top
-                    var currentLiTop = currentLi.offset().top;
-                    //scrollTop的高度
-                    $(".options").scrollTop(currentLiTop-top); 
-                } 
-            }
-        }
-    })
+    // $("body").on("keyup",function(e){
+    //     if(e.which >= 65 &&  e.which <= 90){
+    //         if($("#business").hasClass('select-focus')){
+    //             var str = String.fromCharCode(e.which).toLowerCase();  
+    //             var arr = $("#business option[data-py^='"+str+"']");
+    //             if(arr && arr.length > 0){
+    //                 //每次scroll前先重置scrollTop
+    //                 $(".options").scrollTop(0);                    
+    //                 //ul的top
+    //                 var top = $(".options").offset().top;
+    //                 //目标li
+    //                 var currentLi = $(".options li[value='"+arr.eq(0).val()+"']");
+    //                 //目标li的top
+    //                 var currentLiTop = currentLi.offset().top;
+    //                 //scrollTop的高度
+    //                 $(".options").scrollTop(currentLiTop-top); 
+    //             } 
+    //         }
+    //     }
+    // })
 
     lib.Form.prototype.save = function(data){
         dataFormat(data);

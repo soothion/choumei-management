@@ -60,13 +60,12 @@ class CommissionController extends Controller{
 	 *	        "to": 1,
 	 *	        "data": [
 	 *				{
-	 *				"orderid": 101,
-	 *				"salonid": 780,
+	 *				"id": 101,
 	 *				"salonsn": "SZ0420002",
 	 *				"salonname": "唯那丝（黄金山店）",
 	 *				"sn": "YJ-15082400029",
 	 *				"amount": "100.86",
-	 *				"created_at": "2015-08-24 20:08:47"
+	 *				"date": "2015-08-24"
 	 *				}
 	 *	        ]
 	 *	    }
@@ -99,23 +98,20 @@ class CommissionController extends Controller{
 			$query = $query->groupBy('salon.sn');
 			$fields = array(
 				'commission.id',
-			    'order.orderid',
-				'order.salonid',
 				'salon.sn as salonsn',
 				'salon.salonname',
-				DB::raw('sum(amount) as amount')
+				DB::raw('sum(amount) as amount'),
+				'commission.date'
 			);
 		}
 		else if($param['group']=='day'){
 			$fields = array(
 				'commission.id',
-			    'order.orderid',
-				'order.salonid',
 				'salon.sn as salonsn',
 				'salon.salonname',
 				'commission.sn as sn',
 				'commission.amount as amount',
-				'commission.created_at as created_at',
+				'commission.date'
 			);
 		}
 		$result = $query->select($fields)->paginate($page_size)->toArray();
@@ -171,27 +167,23 @@ class CommissionController extends Controller{
 		});
 
 		if($param['group']=='month'){
-			$created_at = $param['start'].' 到 '.$param['end'];
 			$query = $query->groupBy('salon.sn');
 			$fields = array(
 				'commission.id',
-			    'order.orderid',
-				'order.salonid',
 				'salon.sn as salonsn',
 				'salon.salonname',
-				DB::raw('sum(amount) as amount')
+				DB::raw('sum(amount) as amount'),
+				'commission.date'
 			);
 		}
 		else if($param['group']=='day'){
 			$fields = array(
 				'commission.id',
-			    'order.orderid',
-				'order.salonid',
 				'salon.sn as salonsn',
 				'salon.salonname',
 				'commission.sn as sn',
 				'commission.amount as amount',
-				'commission.created_at as created_at',
+				'commission.date'
 			);
 		}
 
@@ -199,19 +191,18 @@ class CommissionController extends Controller{
 	    $array = $query->select($fields)->get();
 	    $result = [];
 	    foreach ($array as $key => $value) {
-	    	$result[$key]['id'] = $key+1;
 	    	$result[$key]['salonsn'] = $value->salonsn;
 	    	$result[$key]['salonname'] = $value->salonname;
 	    	$result[$key]['sn'] = $value->sn;
 	    	$result[$key]['amount'] = $value->amount;
-	    	$result[$key]['created_at'] = $value->created_at?$value->created_at:$created_at;
+	    	$result[$key]['date'] = $value->date;
 	    }
 		// 触发事件，写入日志
 	    Event::fire('commission.export');
 		
 		//导出excel	   
 		$title = '佣金单列表'.date('Ymd');
-		$header = ['序号','店铺编号','店铺名称','返佣编号','金额','创建日期'];
+		$header = ['店铺编号','店铺名称','返佣编号','金额','创建日期'];
 		Excel::create($title, function($excel) use($result,$header){
 					$excel->setTitle('commission');
 		    		$excel->sheet('Sheet1', function($sheet) use($result,$header){

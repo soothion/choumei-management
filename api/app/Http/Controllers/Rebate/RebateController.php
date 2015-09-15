@@ -176,7 +176,6 @@ class RebateController extends Controller{
 		//分页
 	    $array = $query->select($fields)->get();
 	    foreach ($array as $key => $value) {
-	    	$result[$key]['id'] = $key+1;
 	    	$result[$key]['salonsn'] = $value->salonsn;
 	    	$result[$key]['salonname'] = $value->salonname;
 	    	$result[$key]['sn'] = $value->sn;
@@ -185,6 +184,7 @@ class RebateController extends Controller{
 	    	$result[$key]['amount'] = $value->amount;
 	    	$result[$key]['created_at'] = substr($value->created_at, 0,10);
 	    	$result[$key]['confirm_at'] = substr($value->confirm_at, 0,10);
+	    	$result[$key]['confirm_by'] = $value->confirm_by;
 	    	$result[$key]['created_by'] = $value->created_by;
 	    	$result[$key]['status'] = $value->status==1?'已确认':'待确认';
 	    }
@@ -193,7 +193,7 @@ class RebateController extends Controller{
 		
 		//导出excel	   
 		$title = '返佣单列表'.date('Ymd');
-		$header = ['序号','店铺编号','店铺名称','返佣编号','结算起始日','结算截止日','金额','创建日期','确认日期','制单人','状态'];
+		$header = ['店铺编号','店铺名称','返佣编号','结算起始日','结算截止日','金额','创建日期','确认日期','确认人','制单人','状态'];
 		Excel::create($title, function($excel) use($result,$header){
 					$excel->setTitle('rebate');
 		    		$excel->sheet('Sheet1', function($sheet) use($result,$header){
@@ -231,6 +231,8 @@ class RebateController extends Controller{
 	{
 		$param = $this->param;
 		$rebate = new Rebate;
+		if($param['end_at']<$param['start_at'])
+			return $this->error('截止日不能小于起始日');
 		$param['created_by'] = $this->user->name;
 		$param['status'] = 2;
 		$sn = $rebate->getSn();
@@ -388,14 +390,14 @@ class RebateController extends Controller{
 		
 		$rebates = Rebate::whereIn('id',$param['rebate'])
 			->join('salon','salon.salonid','=','rebate.salon_id')
-			->select(['id','salon_id','amount','merchantId','rebate.status'])
+			->select(['id','salon_id','amount','merchantId','rebate.status','rebate.start_at','rebate.end_at'])
 			->get();
 		$result = 0;
 		foreach ($rebates as $key => $rebate) {
 			if($rebate->status==1)
 				continue;
 			$date = date('Y-m-d H:i:s');
-			ShopCount::count_bill_by_commission_return_money($rebate->salon_id,$rebate->merchantId,$rebate->amount,'返佣单结算',$date);
+			ShopCount::count_bill_by_commission_return_money($rebate->salon_id,$rebate->merchantId,$rebate->amount,'返佣起始日:'.$rebate->start_at.'</br>'.'佣金截止日:'.$rebate->end_at,$date);
 			$update = $rebate->update(['status'=>1,'confirm_at'=>$date,'confirm_by'=>$this->user->name]);
 			$result++;
 		}
@@ -454,19 +456,19 @@ class RebateController extends Controller{
 		    array_shift($array);
 		    $data = [];
 		    foreach ($array as $key => $value) {
-		    	if(empty($value[1])||empty($value[3])||empty($value[4])||empty($value[5])||empty($value[6]))
+		    	if(empty($value[0])||empty($value[2])||empty($value[3])||empty($value[4])||empty($value[5]))
 		    		continue;
 		    	$date = date('Y-m-d H:i:s');
-		    	$salonsn = $value[1];
+		    	$salonsn = $value[0];
 		    	$salonid = $rebate->getSalonid($salonsn);
 		    	if(!$salonid)
 		    		continue;
 		    	$data[$key]['salon_id'] = $salonid;
-		    	$data[$key]['start_at'] = $value[4];
-		    	$data[$key]['end_at'] = $value[5];
-		    	$data[$key]['amount'] = $value[6];
+		    	$data[$key]['start_at'] = $value[3];
+		    	$data[$key]['end_at'] = $value[4];
+		    	$data[$key]['amount'] = $value[5];
 	    		$data[$key]['created_by'] = $this->user->name;
-				$data[$key]['status'] = trim($value[10])=='确认'?1:2;
+				$data[$key]['status'] = trim($value[9])=='确认'?1:2;
 				$data[$key]['created_at'] = $date;
 				$data[$key]['updated_at'] = $date;
 				$data[$key]['status'] = 2;

@@ -98,4 +98,3 @@ class User extends  Model
     }
 }
 
-

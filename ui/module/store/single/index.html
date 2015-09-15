@@ -34,11 +34,9 @@
 					</span>
 				 
 					<button class="btn" type="submit">搜索</button>
+					<button class="btn" form="export" data-slug="shop_count.export"><i class="fa fa-file-excel-o" ></i> 导出</button>			
 			</form>
-			<form action="shop_count/export" data-role="export" data-slug="shop_count.export">
-				<button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
-			</form>					 
-			 
+			  <form action="shop_count/export" data-role="export" id="export" ></form>   
 			  <div class="table" ajat="<%if(query._){%>shop_count/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                  <table>
@@ -54,6 +52,7 @@
 								<th><a data-role="hash" href="#page=1&sort_key=day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求付款日期 <i class="fa fa-sort"></i></a></th>
 								 <th><a data-role="hash" href="#page=1&sort_key=pay_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">实际付款日期 <i class="fa fa-sort"></i></a></th>
 								<th><a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">创建日期 <i class="fa fa-sort"></i></a></th>
+								 
 								<th>制单人</th>
 								<th><a data-role="hash" href="#page=1&sort_key=state&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">状态 <i class="fa fa-sort"></i></a></th>
 								<th>操作</th>
@@ -61,7 +60,7 @@
                     </thead>
                <tbody>
 			<%if(data.data){%>
-				 <%var type=["","付交易代收款","付交易代收款","交易代收款返还"]%>
+				  <%var type=["","付交易代收款","付交易代收款","交易代收款返还"]%>
 				 <%var state=["","已付款","待提交","待审批","待付款"]%>
 				 <%var pay_type=["","银行存款","账扣返还","现金","支付宝","财付通"]%>
 				 <%data=data.data%>
@@ -69,15 +68,15 @@
                  <tr>
                  <td><%=i+1%></td>
 				
-					<td><%=item.salon.sn%></td>
-					<td><%=item.salon.salonname%></td>
+					<td><%=item.salon?item.salon.sn:""%></td>
+					<td><%=item.salon?item.salon.salonname:""%></td>
                   <td><%=item.code%></td>
 				  <td><%=type[item.type]%></td>
 				  <td><%=pay_type[item.pay_type]%></td>
 				  <td><%=item.pay_money%></td>
 				  <td><%=item.day%></td>
 				  <td><%=item.pay_day%></td>
-				   <td><%=item.created_at%></td>
+				  <td class="format"><%=item.created_at%></td>
 				  <td><%=item.user?item.user.name:""%></td>				 
 				  <td><%=state[item.state]%></td>
                    <td><a class="link" href="detail.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a>				   
@@ -99,6 +98,7 @@
 				$('form[data-role="hash"]').submit();
 			}
 		});
+		
 	</script>
 </body>
 </html>

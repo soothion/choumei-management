@@ -31,6 +31,9 @@ class Utils
             case  5:
                 $res = "财付通";
                 break;
+           case  6:
+                $res = "其他";
+                break;
         }
         return $res;
     }

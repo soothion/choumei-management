@@ -6,6 +6,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\SalonUser;
 use App\Merchant;
+use App\SalonRatingsRecord;
 class Salon extends Model {
 
 	protected $table = 'salon';
@@ -42,7 +43,7 @@ class Salon extends Model {
 		    return $page;
 		});
 
-		$query = self::getQuery( $where,$orderName,$order,$fields);
+		$query = self::getQueryByParam( $where,$orderName,$order,$fields);
         $salonList =    $query->paginate($page_size);
         $result = $salonList->toArray();
 
@@ -93,7 +94,7 @@ class Salon extends Model {
 	 * 店铺查询
 	 * 
 	 * */
-	private static function getQuery( $where,$orderName,$order,$fields)
+	private static function getQueryByParam( $where,$orderName,$order,$fields)
 	{
 		$query =  DB::table('salon as s')
 		->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
@@ -178,6 +179,10 @@ class Salon extends Model {
 				's.businessId',
 				's.add_time',
 				's.contractEndTime',
+				's.salonGrade',
+				's.salonChangeGrade',
+				's.changeInTime',
+				's.salonCategory',
 				'i.bankName',
 				'i.beneficiary',
 				'i.bankCard',
@@ -208,6 +213,21 @@ class Salon extends Model {
 				'i.contractPicUrl',
 				'i.licensePicUrl',
 				'i.corporatePicUrl',
+				//财务信息
+				'i.floorDate',
+				'i.advanceFacility',
+				'i.commissionRate',
+				'i.dividendPolicy',
+				'i.rebatePolicy',
+				'i.basicSubsidies',
+				'i.bsStartTime',
+				'i.bsEndTime',
+				'i.strongSubsidies',
+				'i.ssStartTime',
+				'i.ssEndTime',
+				'i.strongClaim',
+				'i.subsidyPolicy',
+				
 				'm.name',
 				'm.id as merchantId',
 				'm.sn as msn',
@@ -218,7 +238,7 @@ class Salon extends Model {
 
 		
 		$rs = array();
-		$query = self::getQuery( $where,$orderName,$order,$fields);
+		$query = self::getQueryByParam( $where,$orderName,$order,$fields);
 		$salonList =    $query->get();
 		if($salonList)
 		{
@@ -572,6 +592,27 @@ class Salon extends Model {
           return $salon[0];
         }
     }
+	
+	/**
+	 * 店铺等级调整
+	 * */
+	public static function setSalonGrade($salonid,$data,$dataInfo,$addAct)
+	{
+		$salonResult = self::where(array("salonid"=>$salonid))->first();
+		if($data['changeInTime'] != $salonResult->changeInTime || $data['salonChangeGrade'] != $salonResult->salonChangeGrade || $addAct == 1)//1 代表添加
+		{
+			DB::table('salon_ratings_record')->where("salonid","=",$salonid)->where("changeTime",">",time())->delete();
+			
+			$logRs = SalonRatingsRecord::where(['salonid'=>$salonid])->orderBy('id','desc')->first();
+			if($logRs)
+			{
+				SalonRatingsRecord::where(['id'=>$logRs->id])->update(['endTime'=>$data['changeInTime']-1]);
+			}
+			SalonRatingsRecord::insertGetId(['changeTime'=>$data['changeInTime'],'addTime'=>time(),'grade'=>$data['salonChangeGrade'],'salonid'=>$salonid,'commissionRate'=>$dataInfo['commissionRate']]);
+			
+		}
+	}
+	
 
 }
 

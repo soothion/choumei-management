@@ -11,10 +11,10 @@
     <body>
         <div class="breadcrumb">
             <a>收入管理</a>
-            <span>&gt;</span><a href="index.html">反佣单</a>
+            <span>&gt;</span><a href="index.html">返佣单</a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>反佣单</h4>
+                    <h4>返佣单</h4>
                 </div>
                 <div class="flex-item">
                     <a class="btn-primary fr" href="add.html?type=add" data-slug="rebate.create">
@@ -58,8 +58,7 @@
                 <i class="fa fa-file-excel-o"></i> 下载模板
             </a> -->
 
-            <button class="btn mr-5" type="button" style="position:relative" id="import" 
-            data-slug="rebate.upload">
+            <button class="btn mr-5" type="button" style="position:relative" id="import" data-slug="rebate.upload">
                 <i class="fa fa-file-excel-o"></i> 导入
             </button>
 
@@ -103,11 +102,11 @@
                                 <td><%=item.salonsn%></td>                        
                                 <td><%=item.salonname%></td>                        
                                 <td><%=item.sn%></td>                        
-                                <td><%=item.start_at%></td>  
-                                <td><%=item.end_at%></td>                        
+                                <td><%=new Date(item.start_at).format("yyyy-MM-dd")%></td>  
+                                <td><%=new Date(item.end_at).format("yyyy-MM-dd")%></td>
                                 <td><%=item.amount%></td>                        
-                                <td><%=item.created_at%></td>                        
-                                <td><%=item.confirm_at%></td>                        
+                                <td><%=new Date(item.created_at).format("yyyy-MM-dd")%></td>
+                                <td><%=new Date(item.confirm_at).format("yyyy-MM-dd")%></td>
                                 <td><%=item.created_by%></td>                        
                                 <td><%=item.status=="1" ? "已确认" : "待确认"%></td>                       
                                 <td><a class="link" href="detail.html?type=detail&id=<%=item.id%>"

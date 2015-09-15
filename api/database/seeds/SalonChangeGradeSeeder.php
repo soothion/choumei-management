@@ -17,7 +17,7 @@ class SalonChangeGradeSeeder extends Seeder
     {
     	$sql = 'update cm_salon set salonGrade=salonChangeGrade where salonGrade!=salonChangeGrade and changeInTime <='.time();
 		$affected = DB::update($sql);
-		echo $affected;
+		echo $affected." ".date("Y-m-d H:i:s")."\r\n";
     }
  
 }

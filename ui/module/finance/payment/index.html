@@ -6,7 +6,7 @@
     </head>
     <body>
         <div class="breadcrumb">
-           <a>收款管理 </a><span>&gt;</span><a href="index.html">付款列表</a>
+           <a>付款管理 </a><span>&gt;</span><a href="index.html">付款列表</a>
 		   <div class="flex-box">
 			<div class="flex-item">
 				<h4>付款列表</h4>
@@ -21,12 +21,12 @@
 				<div class="input-group placeholder-switch">			
 					<select  name="key">
 						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
-						<option value="2" data-placeholder="请输入店铺编号">店铺编号</option>
-						<option value="3" data-placeholder="请输入商户名称">商户名称</option>
+						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
+						<option value="2" data-placeholder="请输入商户名称">商户名称</option>
 					</select>
 					<input type="text" placeholder="请输入店铺名称" name="keyword">
 				</div>
-				<label>付款日期：</label>
+				<label>实际付款日期：</label>
 				<span class="date-group">
 					<input type="date" data-role="start" placeholder="YYYY-MM-DD"  name="pay_time_min"/>
 					到<input type="date" data-role="end"  placeholder="YYYY-MM-DD"  name="pay_time_max"/>
@@ -53,7 +53,7 @@
 							<label data-role="hash"><input type="radio" name="pay_type" value="2"/><span>账扣返还</span></label>              
 							<label data-role="hash"><input type="radio" name="pay_type" value="3"/><span>现金</span></label>              
 							<label data-role="hash"><input type="radio" name="pay_type" value="4"/><span>支付宝</span></label>              
-							<label data-role="hash"><input type="radio" name="pay_type" value="5"/><span>财付通</span></label>              
+							<label data-role="hash"><input type="radio" name="pay_type" value="5"/><span>财付通</span></label>
 						</div>
 					</div>
 					<div class="flex-box">
@@ -106,7 +106,7 @@
 					<td><%=pay_type[item.pay_type]%></td>
 					<td><%=item.require_day%></td>
 					<td><%=item.pay_day%></td>				 
-					<td><%=item.created_at%></td>
+					<td><%=new Date(item.created_at).format("yyyy-MM-dd")%></td>
 					<td><%=item.make_user?item.make_user.name:""%></td>				 
 					<td><%=state[item.state]%></td>
 					<%

@@ -35,8 +35,10 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\PayShow::class,
         \App\Console\Commands\ShopcountRepairDecimal::class,
         \App\Console\Commands\ShopcountRepairLog::class,
+        \App\Console\Commands\ShopcountRepairRes::class,
         \App\Console\Commands\Permissions::class,
         \App\Console\Commands\Commission::class,
+        \App\Console\Commands\CommissionLog::class,
     ];
 
     /**

@@ -7,6 +7,7 @@ use DB;
 use App\ShopCountDetail;
 use App\ShopCount;
 use App\InsteadReceive;
+use App\Commission;
 
 class ShopcountRepairDecimal extends Command
 {
@@ -54,11 +55,11 @@ class ShopcountRepairDecimal extends Command
             $num=ShopCount::where('salon_id',$salon_id)->update(['spend_money'=>$money]);
             if($num)
             {
-                $this->info("ok ! salon_id : {$salon_id} ,money:{$money}");
+                //$this->info("ok ! salon_id : {$salon_id} ,money:{$money}");
             }
             else 
             {
-                $this->error("error ! salon_id : {$salon_id} ,money:{$money}");
+                $this->error("[count] error ! salon_id : {$salon_id} ,money:{$money}");
             }
         }
         
@@ -73,11 +74,29 @@ class ShopcountRepairDecimal extends Command
             $num=InsteadReceive::where('salon_id',$salon_id)->where('day',$day)->update(['money'=>$money]);
             if($num)
             {
-                $this->info("ok ! salon_id : {$salon_id} , day:{$day} , money:{$money}");
+                //$this->info("ok ! salon_id : {$salon_id} , day:{$day} , money:{$money}");
             }
             else 
             {
-                $this->error("error ! salon_id : {$salon_id}, day:{$day} , money:{$money}");
+                $this->error("[instead receive] error !  salon_id : {$salon_id}, day:{$day} , money:{$money}");
+            }
+        }
+        
+        //修复佣金单
+        $items = Commission::select(DB::raw("salonid,SUM(amount) as money"))->groupBy('salonid')->get()->toArray();
+        $this->info("repair Commission!");
+        foreach ($items as $item)
+        {
+            $salon_id = $item['salonid'];
+            $money = floatval($item['money']);
+            $num=ShopCount::where('salon_id',$salon_id)->update(['commission_money'=>$money]);
+            if($num)
+            {
+                //$this->info("ok ! salon_id : {$salon_id} ,money:{$money}");
+            }
+            else
+            {
+                $this->error("[commission] error ! salon_id : {$salon_id} ,money:{$money}");
             }
         }
     }

@@ -27,7 +27,6 @@
                     <tr style="height:60px;">
                         <td class="shop-name">
                             <h1 style="padding-left:0"><%=data.salonname%></h1>
-                            <p>所属商户：<%=data.merchantname%></p>
                         </td>
                         <td class="shop-num">编号：<%=data.salonsn%></td>
                     </tr>                      
@@ -47,7 +46,7 @@
 
                         <tr>
                             <td class="td">确认日期：</td>
-                            <td><%=data.created_at%></td>                            
+                            <td><%=data.date && new Date(data.date).format("yyyy-MM-dd")%></td>                            
                         </tr>                        
                     </tbody>                     
                 </table>

@@ -40,7 +40,6 @@
               <thead>
                 <tr>
                   <th>序号</th>
-				  <th>店铺id</th>
 				  <th>店铺编号</th>
 				  <th>店铺</th>
 				  <th>店铺类型</th>
@@ -50,7 +49,7 @@
 				  <th><a data-role="hash" href="#page=1&sort_key=commission_return_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">佣金返还 <i class="fa fa-sort"></i></a></th>
 				  <th><a data-role="hash" href="#page=1&sort_key=balance_money&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">应收余额 <i class="fa fa-sort"></i></a></th>
 				  <th>付投资款</th>
-				  <th>付投款返还</th>
+				  <th>投款款返还</th>
 				  <th>投资余额</th>
 				  <th>付借款</th>
 				  <th>借款返还</th>
@@ -63,7 +62,6 @@
 				<%data.forEach&&data.forEach(function(item,i){%>
                 <tr>
                   <td><%=i+1%></td>
-				  <td><%=item.salon?item.salon.salonid:""%></td>
 				  <td><%=item.salon?item.salon.sn:""%></td>
                   <td class="colswrap">
 					<strong><%=item.salon?item.salon.salonname:""%></strong><br />
@@ -75,11 +73,11 @@
 				  <td><%=item.commission_money%></td>
 				  <td><%=item.commission_return_money%></td>
                   <td><%=item.balance_money%></td>
+				  <td><%=item.invest_money||"0.00"%></td>
                   <td><%=item.invest_return_money||"0.00"%></td>
                   <td><%=item.invest_balance_money||"0.00"%></td>
 				  <td><%=item.invest_money||"0.00"%></td>
 				  <td><%=item.borrow_return_money||"0.00"%></td>
-				  <td><%=item.borrow_balance_money||"0.00"%></td>
 				  <td><%=item.borrow_balance_money||"0.00"%></td>
                 </tr>
 				<%})%>

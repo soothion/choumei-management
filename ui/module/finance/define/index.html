@@ -6,7 +6,7 @@
     </head>
     <body>
         <div class="breadcrumb">
-           <a>收款管理 </a><span>&gt;</span><a href="index.html">付款确认</a>
+           <a>付款管理 </a><span>&gt;</span><a href="index.html">付款确认</a>
 		   <div class="flex-box">
 			<div class="flex-item">
 				<h4>付款确认</h4>
@@ -21,8 +21,8 @@
 				<div class="input-group placeholder-switch">			
 					<select  name="key">
 						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
-						<option value="2" data-placeholder="请输入店铺编号">店铺编号</option>
-						<option value="3" data-placeholder="请输入商户名称">商户名称</option>
+						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
+						<option value="2" data-placeholder="请输入商户名称">商户名称</option>
 					</select>
 					<input type="text" placeholder="请输入店铺名称" name="keyword">
 				</div>
@@ -69,8 +69,8 @@
 					<td><%=type[item.type]%></td>
 					<td><%=item.money%></td>
 					<td><%=pay_type[item.pay_type]%></td>
-					<td><%=item.require_day%></td>				 
-					<td><%=item.confirm_at%></td>
+					<td class="format"><%=item.require_day%></td>				 
+					<td class="format"><%=item.confirm_at%></td>
 					<td><%=item.make_user?item.make_user.name:""%></td>					 
 					<td><%=state[item.state]%></td>
 					<%
@@ -119,14 +119,14 @@
 				var confirmText="";
 				if($this.data('define')==1){
 					data.do=1;
-					confirmText="你正在给5家店铺支付￥"+count+"，是否继续？"
+					confirmText="你正在给"+checked.length+"家店铺支付￥"+count+"，是否继续？"
 				}
 				if($this.data('define')==2){
 					data.do=2;
 					confirmText="你正在拒绝"+data.ids.length+"家店铺的付款请求，是否继续？"
 				}
 				data.ids=data.ids.toString();
-				parent.lib.popup.alert({
+				parent.lib.popup.confirm({
 					text:confirmText,
 					define:function(){
 						lib.ajax({
