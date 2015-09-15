@@ -64,9 +64,9 @@
 				</span>
 				<button class="btn" type="submit">搜索</button>
 				</form>
-			  <form action="user/export" data-role="export"><button class="btn" type="submit" data-slug="user.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+			  <form action="manager/export" data-role="export"><button class="btn" type="submit" data-slug="manager.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
 						  
-           <div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -100,7 +100,7 @@
 					  <%}%>					 
 				   </td>				  
 				  <td><%=data[i].created_at%></td>
-                  <td><a class="link" href="edit.html?id=<%=data[i].id%>" data-slug="user.show,user.update">查看</a></td>
+                  <td><a class="link" href="edit.html?id=<%=data[i].id%>" data-slug="manager.show,manager.update">查看</a></td>
                   </tr>
 				  <%}%>
                 </tbody>
