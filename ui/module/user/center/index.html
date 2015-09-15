@@ -86,8 +86,8 @@
                   <td><%=item.mobilephone%></td>
                   <td><%=item.area%></td>
                   <td><%=item.companyCode%></td>
-                  <td><%=item.recommendCode%></td>
-                  <td><%=item.recommendCode%></td>
+                  <td><%=item.salonname?item.recommendCode:""%></td>
+                  <td><%=!item.salonname?item.recommendCode:""%></td>
                   <td><%=item.add_time%></td>
 				  <td>
 					 <a class="link" target="_blank" href="detail.html?id=<%=item.user_id%>">查看</a>

@@ -17,12 +17,12 @@
 		<div class="wrapper">
 			<form data-role="hash">
 				反馈日期
-				<input type="date"  placeholder="YYYY-MM-DD"/>
+				<input type="date"  placeholder="YYYY-MM-DD" name="add_time"/>
 				反馈内容
-				<input type="text" />
-				<button class="btn" type="submit">搜索</button>
+				<input type="text" name="keyword" />
+				<button class="btn">搜索</button>
 			</form>
-			<div class="table" ajat="role/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="feed/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
               <thead>
@@ -33,7 +33,7 @@
                   <th>反馈内容</th>
                   <th>反馈来源</th>
 				  <th>反馈时间</th>
-				  <th>操作</th>
+				  <th width="50px">操作</th>
                 </tr>
               </thead>
               <tbody>			  
@@ -41,13 +41,13 @@
 				<%data.forEach(function(item,i){%>
                 <tr>
 				  <td><label><input type="checkbox" name="ids" data-price="<%=item.money%>" form="form" value="<%=item.id%>"/><span></span></label></td>
-                  <td><%=i+1%></td>
-                  <td><%=item.name%></td>
-                  <td><%=status[item.status-1]%></td>
-				  <td><%=item.created_at%></td>
-				  <td><%=item.description%></td>
+                  <td><%=item.id%></td>
+                  <td><%=item.contact%></td>
+                  <td><%=item.content%></td>
+				  <td><%=item.source%></td>
+				  <td><%=item.add_time%></td>
 				  <td>
-					 <form action="" data-role="normal">
+					 <form action="feed/destroy/<%=item.id%>" data-role="normal" onreset="remove">
 						<button class="link">删除</button>
 					 </form>
 				  </td>

@@ -20,7 +20,9 @@
 				用户的成长值=购买金额-退款金额；用户的成长值达到某等级设定的成长值，则用户的等级就为此等级。如用户成长值为305，则用户等级即为V1
 			</p>
 			<br />
-			<div class="table-detail">
+			<div class="table-detail" ajat="level/index#domid=detail&tempid=detail-t">
+				<script type="text/template" id="detail-t">
+				<form action="level/update" data-role="form">
 				<table>
 					<thead>
 						<tr>
@@ -29,76 +31,20 @@
 						</tr>
 					</thead>
 					<tbody>
+						<%data&&data.forEach(function(item,i){%>
 						<tr>
-							<td>V0</td>
-							<td><input type="text" value="0" /></td>
+							<td>V<%=item.level%></td>
+							<td><input type="text" value="<%=item.growth%>" required pattern="number" name="level"/></td>
 						</tr>
-						<tr>
-							<td>V1</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V2</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V3</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V4</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V5</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V6</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V7</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V8</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V9</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V10</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V11</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V12</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V13</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V13</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
-						<tr>
-							<td>V14</td>
-							<td><input type="text" value="0" /></td>
-						</tr>
+						<%})%>
 						<tr>
 							<td></td>
 							<td><button class="btn-primary">保存</button></td>
 						</tr>
 					</tbody>
 				</table>
+				</form>
+				</script>
 			</div>
 		</div>
 	</div>

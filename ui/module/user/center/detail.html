@@ -35,19 +35,12 @@
 					<tbody>
 						<tr>
 							<td>
-								<form action="" data-role="normal">
-									<button class="btn">重置密码</button>
-								</form>
-								<span class="space"></span>
-								<form action="" data-role="normal">
-									<button class="btn">重置支付密码</button>
-								</form>
-								<span class="space"></span>
-								<form action="" data-role="normal">
+								<form action="user/update/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({bool:true,text:'操作成功'})">
 									<button class="btn">解绑当前手机</button>
+									<input type="hidden" name="mobilephone" value="" />
 								</form>
 								<span class="space"></span>
-								<form action="" data-role="normal">
+								<form action="user/destroy/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({bool:true,text:'操作成功',define:function(){history.back();}})">
 									<button class="btn">删除账号</button>
 								</form>
 							</td>
@@ -55,6 +48,9 @@
 					</tbody>
 				</table>
 			</div>
+			<form action="user/update/<%=query.id%>" data-role="normal">
+				<input type="hidden" name="companyCode" value="" />
+			</form>
 			<br />
 			<div class="table-detail">
 				<table>
@@ -90,7 +86,7 @@
 				</table>
 			</div>
 			<div class="table-detail"  style="display:none">
-				<form action="user/update/<%=query.id%>">
+				<form action="user/update/<%=query.id%>" data-role="form">
 				<table>
 					<thead>
 						<tr>
@@ -114,10 +110,11 @@
 								<span class="weak">
 									请上传JPG或PNG格式的图标，尺寸为512×512px，容量小于800KB
 								</span>
+								<input type="hidden" name="img" />
 							</td>
 						</tr>
 						<tr>
-							<td>昵称： <input type="text" value="<%=data.nickname%>" /></td>
+							<td>昵称： <input type="text" name="nickname" value="<%=data.nickname%>" /></td>
 							<td>性别： <%=sexArr[data.sex]%></td>
 						</tr>
 						<tr>
@@ -139,10 +136,11 @@
 								<select>
 									<option value="选择">选择地区</option>
 								</select>
+								<input type="hidden" name="area" />
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2">生日： <input type="date" value="<%=data.birthday%>"/></td>
+							<td colspan="2">生日： <input type="date" name="birthday" value="<%=data.birthday%>"/></td>
 						</tr>
 					</tbody>
 				</table>
@@ -163,33 +161,33 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td>注册时间：  1401794412</td>
+							<td>注册时间：  <%=data.add_time%></td>
 							<td>注册方式：手机注册</td>
 						</tr>
 						<tr>
-							<td>绑定手机号：  15102011866</td>
-							<td>会员等级：V1</td>
+							<td>绑定手机号：  <%=data.mobilephone%></td>
+							<td>会员等级：<%=data.level%></td>
 						</tr>
 						<tr>
-							<td>会员积分：  93</td>
-							<td>成长值：424</td>
+							<td>会员积分：  <%=data.grade%></td>
+							<td>成长值：<%=data.growth%></td>
 						</tr>
 						<tr>
-							<td>登录密码：已设置</td>
-							<td>支付密码：已设置</td>
+							<td>登录密码：<%=data.password?"已设置":"未设置"%></td>
+							<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
 						</tr>
 						<tr>
-							<td>加入集团：南航测控(5062) <span class="space"></span><button class="btn">解绑集团码</button></td>
-							<td>活动邀请码：七夕活动(00250)</td>
+							<td>加入集团：<%=data.companyName%> <span class="space"></span><button class="btn">解绑集团码</button></td>
+							<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
 						</tr>
 						<tr>
-							<td colspan="2">店铺邀请码：丝丝如意(5469)</td>
+							<td colspan="2">店铺邀请码：<%=data.salonname?data.recommendCode:""%></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div class="table-detail" style="display:none">
-				<form action="">
+				<form action="user/update/<%=query.id%>" data-role="form">
 					<table>
 						<thead>
 							<tr>
@@ -204,27 +202,27 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td>注册时间：  1401794412</td>
+								<td>注册时间：  <%=data.add_time%></td>
 								<td>注册方式：手机注册</td>
 							</tr>
 							<tr>
-								<td>绑定手机号：  15102011866</td>
-								<td>会员等级：V1</td>
+								<td>绑定手机号：  <%=data.mobilephone%></td>
+								<td>会员等级：<%=data.level%></td>
 							</tr>
 							<tr>
-								<td>会员积分：  <input type="text" value="321" /></td>
-								<td>成长值：<input type="text" value="321" /></td>
+								<td>会员积分：  <input type="text" value="<%=data.grade%>" name="grade" /></td>
+								<td>成长值：<input type="text" value="<%=data.growth%>" name="growth" /></td>
 							</tr>
 							<tr>
-								<td>登录密码：已设置</td>
-								<td>支付密码：已设置</td>
+								<td>登录密码：<%=data.password?"已设置":"未设置"%></td>
+								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
 							</tr>
 							<tr>
-								<td>加入集团：南航测控(5062) <span class="space"></span><button class="btn">解绑集团码</button></td>
-								<td>活动邀请码：七夕活动(00250)</td>
+								<td>加入集团：<%=data.companyName%> <span class="space"></span><button class="btn">解绑集团码</button></td>
+								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
 							</tr>
 							<tr>
-								<td colspan="2">店铺邀请码：丝丝如意(5469)</td>
+								<td colspan="2">店铺邀请码：<%=data.salonname?data.recommendCode:""%></td>
 							</tr>
 						</tbody>
 					</table>

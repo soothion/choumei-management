@@ -182,6 +182,7 @@ $(function(){
 		var url=$this.attr('action');
 		if(document.activeElement){
 			var $active=$(document.activeElement);
+			$active.attr('disabled',true);
 			if($active.attr('formaction')){
 				url=$active.attr('formaction');
 			}
