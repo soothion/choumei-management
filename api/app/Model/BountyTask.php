@@ -88,7 +88,7 @@ class BountyTask extends Model {
     public static function getQueryByParam($input) {
         $query = Self::getQuery();
         // 是否有输入关键字搜索 
-        if ($input ["keyword"] != "") {
+        if (!empty($input["keyword"])) {
             $val = $input ["keyword"];
             $val = addslashes($val);
             $val = str_replace(['_', '%'], ['\_', '\%'], $val);
