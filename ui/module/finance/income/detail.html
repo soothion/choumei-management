@@ -9,10 +9,10 @@
     <body>
         <div class="breadcrumb">
             <a>收入管理</a>
-            <span>&gt;</span><a href="index.html">佣金单</a>
+            <span>&gt;</span><a href="index.html">返佣单</a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>佣金单详情</h4>
+                    <h4>返佣单详情</h4>
                 </div>
             </div>
         </div>
@@ -49,10 +49,6 @@
                     <tr style="height:60px;">
                         <td class="shop-name">
                                 <h1 style="padding-left:0"><%=data.salonname%></h1>
-                                <p>
-                                    <span>所属商户：</span>
-                                    <span id="merchantname"><%=data.merchantname%></span>
-                                </p>
                         </td>
                         <td class="shop-num">编号：<%= data.salonsn%></td>
                     </tr>                      
@@ -67,12 +63,12 @@
 
                         <tr>
                             <td class="td">结算起始日：</td>
-                            <td><%=data.start_at%></td>                            
+                            <td><%=data.start_at && new Date(data.start_at).format("yyyy-MM-dd")%></td>
                         </tr>
 
                         <tr>
                             <td class="td">结算截止日：</td>
-                            <td><%=data.end_at%></td>                            
+                            <td><%=data.end_at && new Date(data.end_at).format("yyyy-MM-dd")%></td>
                         </tr>
 
                         <tr>
@@ -87,7 +83,7 @@
 
                         <tr>
                             <td class="td">创建日期：</td>
-                            <td><%=data.created_at%></td>                            
+                            <td><%=data.created_at && new Date(data.created_at).format("yyyy-MM-dd")%></td>
                         </tr>   
 
                         <tr>
@@ -97,7 +93,7 @@
 
                         <tr>
                             <td class="td">确认日期：</td>
-                            <td><%=data.confirm_at%></td>                            
+                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
                         </tr>
 
                         <tr>

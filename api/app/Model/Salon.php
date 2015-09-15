@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\SalonUser;
+use App\Merchant;
+use App\SalonRatingsRecord;
 class Salon extends Model {
 
 	protected $table = 'salon';
@@ -12,11 +14,15 @@ class Salon extends Model {
 	public $timestamps = false;
 	
 	//protected $fillable = ['id', 'sn','name','contact','mobile','phone','email','addr','foundingDate','salonNum','addTime' ];
-	
+
+    public function rebate(){
+        return $this->hasMany('App\Rebate');
+    }    
+
 	/**
 	 * 店铺列表
 	 */
-	public static  function getSalonList( $where = '' , $page=1, $page_size=20,$orderName = ' add_time  ',$order = 'desc' )
+	public static  function getSalonList( $where = '' , $page=1, $page_size=20,$orderName = ' s.salonid  ',$order = 'desc' )
 	{
 		$fields = array(
 				's.salonid',
@@ -36,47 +42,8 @@ class Salon extends Model {
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
 		});
-		$query =  DB::table('salon as s')
-            ->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
-            ->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-            ->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
-            ->select($fields)
-            ->orderBy($orderName,$order)
-            ;
-        $query =  $query ->where("salestatus","!=","2");//剔除删除
-       // $query =  $query ->where("m.status","!=","2");//剔除商户删除
-        if(isset($where["shopType"]))
-        {
-        	$query =  $query ->where("shopType","=",$where["shopType"]);
-        }
-		if(isset($where["zone"]))
-        {
-        	$query =  $query ->where("zone","=",$where["zone"]);
-        }
-		if(isset($where["district"]))
-        {
-        	$query =  $query ->where("district","=",$where["district"]);
-        }
-		if(isset($where["businessId"]))
-        {
-        	$query =  $query ->where("businessId","=",$where["businessId"]);
-        }
-		if(isset($where['salonname'])&&$where['salonname'])
-		{
-			$keyword = '%'.$where['salonname'].'%';
-			$query = $query->where('salonname','like',$keyword);
-		}
-		if(isset($where['sn'])&&$where['sn'])
-		{
-			$keyword = '%'.$where['sn'].'%';
-			$query = $query->where('s.sn','like',$keyword);
-		}
-		if(isset($where['merchantName'])&&$where['merchantName'])
-		{
-			$keyword = '%'.$where['merchantName'].'%';
-			$query = $query->where('m.name','like',$keyword);
-		}
-         
+
+		$query = self::getQueryByParam( $where,$orderName,$order,$fields);
         $salonList =    $query->paginate($page_size);
         $result = $salonList->toArray();
 
@@ -123,11 +90,72 @@ class Salon extends Model {
         return $list;
 	}
 	
+	/**
+	 * 店铺查询
+	 * 
+	 * */
+	private static function getQueryByParam( $where,$orderName,$order,$fields)
+	{
+		$query =  DB::table('salon as s')
+		->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
+		->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
+		->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
+		->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
+		->select($fields)
+		->orderBy($orderName,$order)
+		;
+		
+		if(isset($where["salestatus"]))
+		{
+			$query =  $query ->where("s.salestatus","=",$where["salestatus"]);
+		}
+		else
+		{
+			$query =  $query ->where("s.salestatus","!=","2");//剔除删除
+		}
+
+		if(isset($where["shopType"]))
+		{
+			$query =  $query ->where("s.shopType","=",$where["shopType"]);
+		}
+		if(isset($where["zone"]))
+		{
+			$query =  $query ->where("s.zone","=",$where["zone"]);
+		}
+		if(isset($where["district"]))
+		{
+			$query =  $query ->where("s.district","=",$where["district"]);
+		}
+		if(isset($where["businessName"]))
+		{
+			$keyword = '%'.$where['businessName'].'%';
+			$query = $query->where('b.businessName','like',$keyword);
+		}
+		if(isset($where['salonname'])&&$where['salonname'])
+		{
+			$keyword = '%'.$where['salonname'].'%';
+			$query = $query->where('s.salonname','like',$keyword);
+		}
+		if(isset($where['sn'])&&$where['sn'])
+		{
+			$keyword = '%'.$where['sn'].'%';
+			$query = $query->where('s.sn','like',$keyword);
+		}
+		if(isset($where['merchantName'])&&$where['merchantName'])
+		{
+			$keyword = '%'.$where['merchantName'].'%';
+			$query = $query->where('m.name','like',$keyword);
+		}
+		
+		
+		return $query;
+	}
+	
 	
 	/**
 	 * 店铺列表导出
 	 */
-	public static  function getSalonListExport( $where = '',$orderName = 's.add_time  ',$order = 'desc' )
+	public static  function getSalonListExport( $where = '',$orderName = 's.salonid  ',$order = 'desc' )
 	{
 		$fields = array(
 				's.salonid',
@@ -149,6 +177,12 @@ class Salon extends Model {
 				's.sn',
 				's.salestatus',
 				's.businessId',
+				's.add_time',
+				's.contractEndTime',
+				's.salonGrade',
+				's.salonChangeGrade',
+				's.changeInTime',
+				's.salonCategory',
 				'i.bankName',
 				'i.beneficiary',
 				'i.bankCard',
@@ -179,55 +213,32 @@ class Salon extends Model {
 				'i.contractPicUrl',
 				'i.licensePicUrl',
 				'i.corporatePicUrl',
+				//财务信息
+				'i.floorDate',
+				'i.advanceFacility',
+				'i.commissionRate',
+				'i.dividendPolicy',
+				'i.rebatePolicy',
+				'i.basicSubsidies',
+				'i.bsStartTime',
+				'i.bsEndTime',
+				'i.strongSubsidies',
+				'i.ssStartTime',
+				'i.ssEndTime',
+				'i.strongClaim',
+				'i.subsidyPolicy',
+				
 				'm.name',
 				'm.id as merchantId',
+				'm.sn as msn',
 				'b.businessName',
 				'd.status as dividendStatus',
 				'd.recommend_code',	
 		);
 
-		$query =  DB::table('salon as s')
-		->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
-		->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-		->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
-		->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
-		->select($fields)
-		->orderBy($orderName,$order)
-		;
-		$query =  $query ->where("salestatus","!=","2");//剔除删除
-		// $query =  $query ->where("m.status","!=","2");//剔除商户删除
-		if(isset($where["shopType"]))
-		{
-			$query =  $query ->where("shopType","=",$where["shopType"]);
-		}
-		if(isset($where["zone"]))
-		{
-			$query =  $query ->where("zone","=",$where["zone"]);
-		}
-		if(isset($where["district"]))
-		{
-			$query =  $query ->where("s.district","=",$where["district"]);
-		}
-		if(isset($where["businessId"]))
-		{
-			$query =  $query ->where("businessId","=",$where["businessId"]);
-		}
-		if(isset($where['salonname'])&&$where['salonname'])
-		{
-			$keyword = '%'.$where['salonname'].'%';
-			$query = $query->where('salonname','like',$keyword);
-		}
-		if(isset($where['sn'])&&$where['sn'])
-		{
-			$keyword = '%'.$where['sn'].'%';
-			$query = $query->where('s.sn','like',$keyword);
-		}
-		if(isset($where['merchantName'])&&$where['merchantName'])
-		{
-			$keyword = '%'.$where['merchantName'].'%';
-			$query = $query->where('m.name','like',$keyword);
-		}
+		
 		$rs = array();
+		$query = self::getQueryByParam( $where,$orderName,$order,$fields);
 		$salonList =    $query->get();
 		if($salonList)
 		{
@@ -390,7 +401,7 @@ class Salon extends Model {
 	   			    's.district',
 					's.shopType',
 					's.contractTime',
-					's.contractPeriod',
+					//'s.contractPeriod',
 					's.bargainno',
 					's.bcontacts',
 					's.tel',
@@ -400,6 +411,11 @@ class Salon extends Model {
 	                's.sn',
 	                's.salestatus',
 	                's.businessId',
+					's.contractEndTime',
+					's.salonGrade',
+					's.salonChangeGrade',
+					's.changeInTime',
+					's.salonCategory',
 					'i.bankName',
 					'i.beneficiary',
 					'i.bankCard',
@@ -430,6 +446,20 @@ class Salon extends Model {
 					'i.contractPicUrl',
 					'i.licensePicUrl',
 					'i.corporatePicUrl',
+					'i.floorDate',
+					'i.advanceFacility',
+					'i.commissionRate',
+					'i.dividendPolicy',
+					'i.rebatePolicy',
+					'i.basicSubsidies',
+					'i.bsStartTime',
+					'i.bsEndTime',
+					'i.strongSubsidies',
+					'i.ssStartTime',
+					'i.ssEndTime',
+					'i.strongClaim',
+					'i.subsidyPolicy',
+				
 					'm.name',
 					'm.id as merchantId',
 					'b.businessName',
@@ -445,7 +475,7 @@ class Salon extends Model {
 	            ->select($fields)
 	            ->where(array("s.salonid"=>$salonid))
 	            ->first();
-			
+
 			$salonList = (array)$salonList;
 			
 			if($salonList)
@@ -528,6 +558,44 @@ class Salon extends Model {
             }
             return $rs;
 	}
+	
+	/**
+	 * 自动生成店铺编号
+	 * */
+	public static function getSn($merchantId)
+	{
+		$merchantSn = Merchant::where(array("id"=>$merchantId))->select(array("sn"))->first();
+		$sCount = Salon::where(array("merchantId"=>$merchantId))->count();
+		$sn = intval($sCount)+1; //店铺编号，根据商户编号+01，自增长3位
+	    $tps = "";	 
+		for($i=3;$i>strlen($sn);$i--)
+		{
+			$tps .= 0; 
+		}
+		return $merchantSn->sn.$tps.$sn;	
+	}
+	
+	/**
+	 * 店铺等级调整
+	 * */
+	public static function setSalonGrade($salonid,$data,$dataInfo,$addAct)
+	{
+		$salonResult = self::where(array("salonid"=>$salonid))->first();
+		if($data['changeInTime'] != $salonResult->changeInTime || $data['salonChangeGrade'] != $salonResult->salonChangeGrade || $addAct == 1)//1 代表添加
+		{
+			DB::table('salon_ratings_record')->where("salonid","=",$salonid)->where("changeTime",">",time())->delete();
+			
+			$logRs = SalonRatingsRecord::where(['salonid'=>$salonid])->orderBy('id','desc')->first();
+			if($logRs)
+			{
+				SalonRatingsRecord::where(['id'=>$logRs->id])->update(['endTime'=>$data['changeInTime']-1]);
+			}
+			SalonRatingsRecord::insertGetId(['changeTime'=>$data['changeInTime'],'addTime'=>time(),'grade'=>$data['salonChangeGrade'],'salonid'=>$salonid,'commissionRate'=>$dataInfo['commissionRate']]);
+			
+		}
+	}
+	
+	
 
 }
 

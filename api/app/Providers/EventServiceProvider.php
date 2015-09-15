@@ -42,6 +42,25 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\RoleEventListener@onExport',
         ],      
 
+        //佣金单模块
+        'commission.export' => [
+            'App\Listeners\CommissionEventListener@onExport',
+        ], 
+
+        //返佣单模块
+        'rebate.update' => [
+            'App\Listeners\RebateEventListener@onUpdate',
+        ],
+        'rebate.create' => [
+            'App\Listeners\RebateEventListener@onCreate',
+        ],              
+        'rebate.export' => [
+            'App\Listeners\RebateEventListener@onExport',
+        ],      
+        'rebate.confirm' => [
+            'App\Listeners\RebateEventListener@onConfirm',
+        ],      
+
 
         //权限模块
         'permission.update' => [
@@ -99,7 +118,7 @@ class EventServiceProvider extends ServiceProvider
     		'App\Listeners\SalonAccountEventListener@onResetPwd',
     	],
 
-		        //店铺结算相关操作
+        //店铺结算相关操作
         'shopcount.export' => [
             'App\Listeners\ShopcountEventListener@onExport',
         ],
@@ -124,7 +143,27 @@ class EventServiceProvider extends ServiceProvider
         'shopcount.countOrder' => [
             'App\Listeners\ShopcountEventListener@onCountOrder',
         ],
-
+        
+        //付款单相关操作
+        'pay.export' => [
+            'App\Listeners\PayManageEventListener@onExport',
+        ],
+        'pay.store' => [
+            'App\Listeners\PayManageEventListener@onStore',
+        ],
+        'pay.update' => [
+            'App\Listeners\PayManageEventListener@onUpdate',
+        ],
+        'pay.destroy' => [
+            'App\Listeners\PayManageEventListener@onDestroy',
+        ],
+        'pay.check' => [
+            'App\Listeners\PayManageEventListener@onCheck',
+        ],
+        'pay.confirm' => [
+            'App\Listeners\PayManageEventListener@onConfirm',
+        ],
+        
     ];
 
     /**

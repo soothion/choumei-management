@@ -20,6 +20,7 @@
 					<select  name="key">
 						<option value="1" data-placeholder="请输入店铺名">店铺搜索</option>
 						<option value="2" data-placeholder="请输入商户名">商户搜索</option>
+						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
 					</select>
 					<input type="text" placeholder="请输入店铺名" name="keyword">
 				</div>
@@ -39,10 +40,9 @@
 				  <thead>
 					<tr>
 					  <th>序号</th>
-					  <th>代收单号</th>
-					  <th>店铺id</th>
 					  <th>店铺编号</th>
 					  <th>店铺名称</th>
+					  <th>代收单号</th>
 					  <th>代收金额</th>
 					  <th><a href="#sort_key=day&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>&page=1" data-role="hash">代收日期 <i class="fa fa-sort"></i></a></th>
 					  <th>操作</th>
@@ -54,14 +54,13 @@
 					<%data.forEach&&data.forEach(function(item,i){%>
 					<tr>
 					  <td><%=i+1%></td>
-					  <td><%=item.code%></td>
-					  <td><%=item.salon?item.salon.salonid:""%></td>
 					  <td><%=item.salon?item.salon.sn:""%></td>
 					  <td><%=item.salon?item.salon.salonname:""%></td>
+					  <td><%=item.code%></td>
 					  <td><%=item.money%></td>
 					  <td><%=item.day%></td>
 					  <td>
-						 <a class="link" target="_blank" data-slug="shop_count.delegate_detail" href="detail.html?id=<%=item.id%>">查看</a>
+						 <a class="link" data-slug="shop_count.delegate_detail" href="detail.html?id=<%=item.id%>">查看</a>
 					  </td>
 					</tr>
 					<%})%>

@@ -29,6 +29,8 @@
 				<input type="hidden" name="ids" value="<%=query.id%>" />
 				<input type="hidden" name="do" value="2" />
 			</form>
+			<span class="space"></span>
+			<button class="btn" type="button" onclick="history.back()">返回</button>
 		</div>
         <div class="table-detail">
         <table>
@@ -58,7 +60,7 @@
                 </tr>
                 <tr>
                   <td>要求付款日期：</td>
-                  <td><%=data.require_day%></td>
+                  <td class="format"><%=data.require_day%></td>
                 </tr>
 				<tr>
                   <td>回款周期：</td>
@@ -74,7 +76,7 @@
                 </tr>
 				<tr>
                   <td>创建日期：</td>
-                  <td><%=data.created_at%> </td>
+                  <td class="format"><%=data.created_at%> </td>
                 </tr>
                 <tr>
                  <td>制单人：</td>
@@ -86,7 +88,7 @@
                </tr>
 			   <tr>
                  <td>审批日期：</td>
-                  <td><%=data.confirm_at%></td>
+                  <td class="format"><%=data.confirm_at%></td>
                </tr>
 			   <tr>
                  <td>付款方式：</td>

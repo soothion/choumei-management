@@ -33,24 +33,28 @@
                 </div>   
 
                 <div class="form-group">
-                  <span>确认日期:</span>
-				  <span class="date-group">
-					  <input type="date" name="start"/>
-					  <span style="margin:0 10px">至</span>
-					  <input type="date" name="end"/>   
-				  </span>
-				  <span class="space"></span>
-				  <label>
-					<input type="radio" name="group" value="day" checked>
-					<span>按日统计</span>
-				  </label>
-                  
-				  <label>
-					<input type="radio" name="group" value="month">
-					<span>按日统计</span>
-				  </label>
-                  <button id="search_btn" class="btn" type="submit">搜索</button>
-                </div>            
+                    <span>确认日期:</span>
+                    <span class="date-group">
+                    <input type="date" name="start"/>
+                    <span style="margin:0 10px">至</span>
+                    <input type="date" name="end"/>   
+                    </span>
+
+                    <span class="space"></span>
+
+                    <label>
+                    <input type="radio" name="group" value="day" checked>
+                    <span>按日统计</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" name="group" value="month">
+                    <span>按月统计</span>
+                    </label>
+
+                    <button id="search_btn" class="btn" type="submit">搜索</button>
+                </div> 
+
             </form>            
 
             <form action="commission/export" data-role="export">
@@ -69,7 +73,7 @@
                     <th>佣金单号</th>                       
                     <th>金额</th>
                     <th>
-                      <a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">                            
+                      <a data-role="hash" href="#page=1&sort_key=date&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">                            
                           确认日期
                           <i class="fa fa-sort"></i>
                       </a>                       
@@ -86,9 +90,25 @@
                     <td><%=item.sn%></td>                        
                     <td><%=item.amount%></td> 
                     <%if(query.group == 'day'){%>                       
-                      <td><%=item.created_at%></td>
+                      <td><%=item.date%></td>
                     <%}else{%>
-                      <td><%=query.start%> 到 <%=query.end%></td>  
+                      <td>
+                      <%
+                      if(query.start && query.end){
+                      %>
+                        <%=query.start%> 到 <%=query.end%>
+                      <%
+                      }else if(query.start && !query.end){
+                      %>
+                        <%=query.start%> 到
+                      <%                        
+                      }else if(!query.start && query.end){
+                      %>
+                        到 <%=query.end%>
+                      <%                        
+                      }
+                      %>                      
+                      </td>  
                     <%}%>                          
                     <td><a class="link" href="brokerage.html?id=<%=item.id%>" 
                     data-slug="commission.show,commission.update">查看&gt</a></td>  

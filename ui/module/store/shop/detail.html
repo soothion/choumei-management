@@ -104,9 +104,9 @@
                                         <td class="content">分红联盟：</td>
                                         <%
                                             var dividendStatus = "";
-                                            if(data.dividendStatus==0){
+                                            if(data.dividendStatus=="0"){
                                                 dividendStatus = "加入分红联盟";
-                                            }else if(data.dividendStatus==1){
+                                            }else if(data.dividendStatus=="1"){
                                                 dividendStatus = "退出分红联盟";
                                             }
                                         %>
@@ -118,27 +118,31 @@
                                         var salonChangeGradeName="";
 
                                         if(data.salonGrade == "1"){
-                                            salonGradeName = "特级店";
+                                            salonGradeName = "S";
                                         }else if(data.salonGrade == "2"){
-                                            salonGradeName = "A级店";
+                                            salonGradeName = "A";
                                         }else if(data.salonGrade == "3"){
-                                            salonGradeName = "B级店";
+                                            salonGradeName = "B";
                                         }else if(data.salonGrade == "4"){
-                                            salonGradeName = "C级店";
+                                            salonGradeName = "C";
                                         }else if(data.salonGrade == "5"){
+                                            salonGradeName = "新落地";
+                                        }else if(data.salonGrade == "6"){
                                             salonGradeName = "淘汰店";
                                         }
 
                                         if(data.salonChangeGrade == "1"){
-                                            salonChangeGradeName = "特级店";
+                                            salonChangeGradeName = "S";
                                         }else if(data.salonChangeGrade == "2"){
-                                            salonChangeGradeName = "A级店";
+                                            salonChangeGradeName = "A";
                                         }else if(data.salonChangeGrade == "3"){
-                                            salonChangeGradeName = "B级店";
+                                            salonChangeGradeName = "B";
                                         }else if(data.salonChangeGrade == "4"){
-                                            salonChangeGradeName = "C级店";
+                                            salonChangeGradeName = "C";
                                         }else if(data.salonChangeGrade == "5"){
-                                            salonChangeGradeName = "淘汰店";
+                                            salonChangeGradeName = "新落地";
+                                        }else if(data.salonGrade == "6"){
+                                            salonGradeName = "淘汰店";
                                         }
                                     %>
                                     <tr><td class="content">当前等级：</td><td><%=salonGradeName%></td></tr>

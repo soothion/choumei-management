@@ -30,9 +30,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="control-separation">
+                <div class="control-group" style="width:800px;margin-left:30px;" >
                     <legend>付款详情</legend>
-					<hr />
+						<hr />
                 </div>
 				<input type="hidden" name="salon_id" id="salonid" value="<%=data.salon?data.salon.salonid:""%>"/>
 				  <div class="control-group">
@@ -77,7 +77,7 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>回款周期：</label>
                     <div class="control">			 
-                        <input type="text" name="cycle" maxlength="5" value="<%=data.cycle||""%>" required pattern="number" /><span class="unit">个月</span>                              							  
+                        <input type="text" name="cycle" maxlength="5" min="1" value="<%=data.cycle||""%>" required pattern="number" /><span class="unit">个月</span>                              							  
                     </div>
                 </div>
 				<div class="control-group">

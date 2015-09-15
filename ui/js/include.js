@@ -1,4 +1,5 @@
 ﻿var cfg={
+
 	version:'1.4',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
@@ -30,6 +31,7 @@
 		return this[this.env].host;
 	}
 }
+
 if(location.href.indexOf("http://test-")>-1){
 	cfg.env="test";
 }else if(location.href.indexOf("http://uat-")>-1){

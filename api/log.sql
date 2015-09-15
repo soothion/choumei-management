@@ -1,14 +1,28 @@
-alter table cm_positions add department_id int(10) unsigned not null default 1 after id; 
-#删除唯一约束
-alter table cm_positions drop index positions_title_unique;
-alter table cm_departments drop index departments_title_unique;
-truncate table cm_positions;
-truncate table cm_departments;
 
-INSERT INTO `cm_permissions` (`id`, `inherit_id`, `title`, `slug`, `status`, `description`, `note`, `sort`, `show`, `created_at`, `updated_at`)
-VALUES
-	(51, 43, '店铺导出', 'salon.export', 1, NULL, NULL, NULL, 2, '2015-08-11 10:11:14', '2015-08-11 10:11:51'),
-	(52, 26, '商户导出', 'merchant.export', 1, NULL, NULL, NULL, 2, '2015-08-11 10:11:51', '2015-08-11 10:11:51'),
-	(53, 32, '转付单导出', 'shop_count.export', 1, NULL, NULL, 0, 2, '2015-08-11 10:11:51', '2015-08-11 10:11:51'),
-	(54, 31, '代收单导出', 'shop_count.delegate_export', 1, NULL, NULL, 0, 2, '2015-08-11 10:11:51', '2015-08-11 10:11:51'),
-	(55, 31, '往来余额导出', 'shop_count.balance_export', 1, NULL, NULL, 0, 2, '2015-08-11 10:11:51', '2015-08-11 10:11:51');
+drop table cm_commission;
+drop table cm_commission_log;
+
+CREATE TABLE `cm_commission` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sn` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `salonid` int(11) DEFAULT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `date` date NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=893 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+CREATE TABLE `cm_commission_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `ordersn` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '',
+  `type` tinyint(2) NOT NULL DEFAULT '1',
+  `salonid` int(11) DEFAULT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `rate` decimal(4,2) NOT NULL DEFAULT '0.00',
+  `grade` tinyint(2) DEFAULT NULL COMMENT '店铺当前等级 1特级店2A级店3B级店4C级店4淘汰店',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13176 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

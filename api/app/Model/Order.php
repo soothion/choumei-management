@@ -11,6 +11,17 @@ class Order extends  Model
 {
     protected $table = 'order';
     protected $primaryKey = 'orderid';
+    public $timestamps = false;
+
+    protected $fillable = ['commission'];
+
+    public function salonInfo(){
+        return $this->belongsTo('App\SalonInfo','salonid','salonid');
+    }
+
+    public function salon(){
+        return $this->belongsTo('App\Salon','salonid','salonid');
+    }    
 }
 
 ?>

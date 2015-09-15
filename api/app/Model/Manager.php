@@ -113,4 +113,86 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
         return in_array($permission, $permissions);
     }
 
+    public static function getQueryByParam($param=[]){
+        $query = Self::with(['roles'=>function($q){
+            $q->lists('role_id','name');
+        }]);
+
+        $query = $query->with(['department'=>function($q){
+            $q->lists('id','title');
+        }]);
+
+        $query = $query->with(['city'=>function($q){
+            $q->lists('id','title');
+        }]);        
+
+        $query = $query->with(['position'=>function($q){
+            $q->lists('id','title');
+        }]);
+
+        //角色筛选
+        if(isset($param['role_id'])&&$param['role_id']){
+            $ids = RoleManager::where('role_id','=',$param['role_id'])->get(['user_id'])->toArray();
+            $ids = array_values($ids);
+            $query =Manager::whereHas('roles',function($q) use($param){
+                $q->where('role_id','=',$param['role_id']);
+            });
+        }
+
+        //所属部门筛选
+        if(isset($param['department_id'])&&$param['department_id']){
+            $query = $query->where('department_id','=',$param['department_id']);
+        }
+
+        //状态筛选
+        if(isset($param['status'])&&$param['status']){
+            $query = $query->where('status','=',$param['status']);
+        }
+
+        //所属城市
+        if(isset($param['city_id'])&&$param['city_id']){
+            $query = $query->where('city_id','=',$param['city_id']);
+        }
+
+        //起始时间
+        if(isset($param['start'])&&$param['start']){
+            $query = $query->where('created_at','>=',$param['start']);
+        }
+
+        //结束时间
+        if(isset($param['end'])&&$param['end']){
+            $query = $query->where('created_at','<',date('Y-m-d',strtotime('+1 day',strtotime($param['end']))));
+        }
+        //登录帐号筛选
+        if(isset($param['username'])&&$param['username']){
+            $keyword = '%'.$param['username'].'%';
+            $query = $query->where('username','like',$keyword);
+        }       
+        //姓名筛选
+        if(isset($param['name'])&&$param['name']){
+            $keyword = '%'.$param['name'].'%';
+            $query = $query->where('name','like',$keyword);
+        }
+        //角色名筛选
+        if(isset($param['role'])&&$param['role']){
+            $keyword = '%'.$param['role'].'%';
+            $query = $query->whereHas('roles',function($q) use($keyword){
+                $q->where('name','like',$keyword);
+            });
+        }
+
+        //隐藏超级管理员
+        $query = $query->whereHas('roles',function($q){
+            $q->where('roles.id','>',1);
+        });
+
+        //排序
+        if(isset($param['sort_key'])&&$param['sort_key']){
+            $param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
+            $query = $query->orderBy($param['sort_key'],$param['sort_type']);
+        }
+
+        return $query;
+    }
+
 }

@@ -22,58 +22,55 @@ class ShopCount extends Model
         return $this->belongsTo(Salon::class);
     }
 
-    /**
-     * 付给商户钱
-     * 
-     * @param array $option            
-     */
-    public static function payMoney($attrs)
-    {
-        if (isset($attrs['salon_id']) && isset($attrs['merchant_id']) && isset($attrs['pay_money']) && isset($attrs['cost_money'])) {
-            $salon_id = $attrs['salon_id'];
-            $salon = Salon::where('salonid', $salon_id)->first();
-            $attrs['salon_name'] = $salon->salonname;
-            $attrs['salon_type'] = intval($salon->salonType);
-            DB::transaction(function () use($attrs)
-            {
-                $salon_id = $attrs['salon_id'];
-                $class = __CLASS__;
-                $model = new $class();
-                if (empty($salon_id)) {
-                    return false;
-                }                
-                $item = $model->where([
-                    'salon_id' => $salon_id
-                ])->first();
-                if (empty($item)) {
-                    $attrs['balance_money'] = $attrs['cost_money'];
-                    $model::create($attrs);
-                } else {
-                    $id = $item->id;
-                    $attrs = self::mergeMoney($attrs, $item);
-                    unset($attrs['id'],$attrs['salon_id']);
-                    self::where('id',$id)->update($attrs);
-                }
-                return true;
-            });
-            return true;
-        } else {
-            return false;
-        }
-    }
+//     /**
+//      * 付给商户钱
+//      * 
+//      * @param array $option            
+//      */
+//     public static function payMoney($attrs)
+//     {
+//         if (isset($attrs['salon_id']) && isset($attrs['merchant_id']) && isset($attrs['pay_money']) && isset($attrs['cost_money'])) {
+//             $salon_id = $attrs['salon_id'];
+//             DB::transaction(function () use($attrs)
+//             {
+//                 $salon_id = $attrs['salon_id'];
+//                 $class = __CLASS__;
+//                 $model = new $class();
+//                 if (empty($salon_id)) {
+//                     return false;
+//                 }                
+//                 $item = $model->where([
+//                     'salon_id' => $salon_id
+//                 ])->first();
+//                 if (empty($item)) {
+//                     $attrs['balance_money'] = $attrs['cost_money'];
+//                     $model::create($attrs);
+//                 } else {
+//                     $id = $item->id;
+//                     $attrs = self::mergeMoney($attrs, $item);
+//                     unset($attrs['id'],$attrs['salon_id']);
+//                     self::where('id',$id)->update($attrs);
+//                 }
+//                 return true;
+//             });
+//             return true;
+//         } else {
+//             return false;
+//         }
+//     }
     
     /**
      * 店铺订单结算
      */
-    public static function ShopCountOrder($code,$salon_id,$money,$time,$type,$salon_info,$merchant_info)
+    public static function ShopCountOrder($code,$salon_id,$merchant_id,$money,$time,$type)
     {
         $ds_code =InsteadReceive::getNewCode();
        
         $return_code = 0;
-        DB::transaction(function () use($code,$salon_id,$money,$time,$type,$salon_info,$merchant_info,$ds_code,&$return_code)
+        DB::transaction(function () use($code,$salon_id,$merchant_id,$money,$time,$type,$ds_code,&$return_code)
         {           
             $detail = ShopCountDetail::where("code",$code)->where("type",$type)->get()->toArray();
-            $salon_id = isset($salon_info['id']) ? $salon_info['id'] : 0;
+           
             if(!empty($detail))//已存在
             {
                 $return_code = 2;
@@ -84,7 +81,7 @@ class ShopCount extends Model
                 'type' => $type,
                 'money' => $money,
                 'salon_id' => $salon_id,
-                'merchant_id' => isset($merchant_info['id']) ? $merchant_info['id'] : 0,
+                'merchant_id' => $merchant_id,
                 'created_at' => date("Y-m-d H:i:s", $time)
             ]);
             
@@ -93,8 +90,8 @@ class ShopCount extends Model
             {
                 InsteadReceive::create([
                     'code' => $ds_code,
-                    'salon_id' => isset($salon_info['id']) ? $salon_id: 0,
-                    'merchant_id' => isset($merchant_info['id']) ? $merchant_info['id'] : 0,
+                    'salon_id' => $salon_id,
+                    'merchant_id' => $merchant_id,
                     'type' => InsteadReceive::TYPE_OF_ORDER,
                     'money' => $money,
                     'day' => date("Y-m-d", $time),
@@ -103,143 +100,211 @@ class ShopCount extends Model
             }
             else
             {
-                $now_money = intval($ir->money) + $money;
+                $now_money = floatval($ir->money) + $money;
                 InsteadReceive::where('id',$ir->id)->update(['money'=> $now_money]);
             }
-          
-            $shop_counts = ShopCount::where('salon_id',$salon_info['id'])->get(['id','pay_money','cost_money','spend_money','balance_money'])->toArray();
-          
-            if(!empty($shop_counts))
-            {
-                $shop_count = $shop_counts[0];
-                $id = $shop_count['id'];
-                $pay_money = floatval($shop_count['pay_money']);
-                $cost_money = floatval($shop_count['cost_money']);
-                $spend_money = floatval($shop_count['spend_money']) + $money;
-                $balance_money = $cost_money - $spend_money;
-                ShopCount::where('id',$id)->update([
-                'merchant_id'=>isset($merchant_info['id'])?$merchant_info['id']:0,
-                'merchant_name'=>isset($merchant_info['name'])?$merchant_info['name']:'',
-                'salon_name'=>isset($salon_info['salon_name'])?$salon_info['salon_name']:'',
-                'salon_type'=>isset($salon_info['salon_type'])?$salon_info['salon_type']:0,
-                'updated_at'=>date("Y-m-d H:i:s",$time),
-                'pay_money'=>$pay_money,
-                'cost_money'=>$cost_money,
-                'spend_money'=>$spend_money,
-                'balance_money'=>$balance_money,
-                ]);
-            }
-            else 
-            {
-                ShopCount::create([
-                'salon_id'=>isset($salon_info['id'])?$salon_info['id']:0,
-                'merchant_id'=>isset($merchant_info['id'])?$merchant_info['id']:0,
-                'merchant_name'=>isset($merchant_info['name'])?$merchant_info['name']:'',
-                'salon_name'=>isset($salon_info['salon_name'])?$salon_info['salon_name']:'',
-                'salon_type'=>isset($salon_info['salon_type'])?$salon_info['salon_type']:0,
-                'created_at'=>date("Y-m-d H:i:s",$time),               
-                'spend_money'=>$money,
-                'balance_money'=>$money * -1,
-                ]);
-            }
+            $remark = $type == 1 ?"臭美券消费":"打赏金额";
+            ShopCount::count_bill_by_receive_money($salon_id, $merchant_id, $money,$remark,$time);
             $return_code = 1;
             return ;         
         });
         return $return_code;
     }
     
+    
     /**
-     * 删除预付单
-     * @param int $id
+     * 店铺往来结算(多种金额)
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param array $money [type1=>change_money1,type2=>change_money2,...]
      */
-    public static function deletePrepay($id)
+    public static function count_bill_mutil($salon_id,$merchant_id,$money_info)
     {
-        $prepays = PrepayBill::where('id',$id)->get()->toArray();
-        if(empty($prepays) || !isset($prepays[0]))
+        //@todo 暂时不要用    没有流水信息
+//         $salon_id = intval($salon_id);
+//         $merchant_id = intval($merchant_id);
+//         $money_info = array_map("floatval",$money_info);
+//         $types = array_keys($money_info);
+//         $select_keys = $types;
+//         $select_keys[] = 'id';
+//         $items = self::where("salon_id",$salon_id)->get($select_keys)->toArray();
+//         $now_date = date("Y-m-d H:i:s");
+//         if(empty($items) || !isset($items[0]))
+//         {
+//             $records = ['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,'created_at'=>$now_date,'updated_at'=>$now_date];
+//             foreach($money_info as $key => $money)
+//             {
+//                 $records[$key] = $money;
+//             }
+//             self::create($records);
+//         }
+//         else
+//         {
+//             $records = ['merchant_id'=>$merchant_id,'updated_at'=>$now_date];
+//             foreach($types as $type)
+//             {
+//                 $records[$type] = floatval($items[0][$type]) + $money_info[$type];
+//             }
+//             $id = $items[0]['id'];
+//             self::where('id',$id)->update($records);
+//         }
+//         return true;
+    }
+    
+    /**
+     * 店铺往来结算
+     * @param int $salon_id
+     * @param int $merchant_id
+     * @param float $money
+     * @param string $money_type
+     * @param string $remark
+     * @param datetime|timestamp $count_at
+     * @return boolean
+     */
+    public static function count_bill($salon_id,$merchant_id,$money,$money_type,$remark="",$count_at="0000-00-00 00:00:00")
+    {
+        $salon_id = intval($salon_id);
+        $merchant_id = intval($merchant_id);      
+        $items = self::where("salon_id",$salon_id)->get(['id',$money_type])->toArray();
+        $now_date = date("Y-m-d H:i:s");
+        
+        //结算的log
+        switch ($money_type)
         {
-            return true;
+            case "pay_money":
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_PREPAY, $money, $count_at,$remark);
+                break;
+            case "spend_money":
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_SPEND, $money, $count_at,$remark);
+                break;
+            case "commission_money":
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_COMMISSION, $money, $count_at,$remark);
+                break;
+            case "commission_return_money":
+                ShopCountLog::add_log($salon_id, ShopCountLog::TYPE_OF_COMMISSION_RETURN, $money, $count_at,$remark);
+                break;                
         }
-         $prepay = $prepays[0];
-        //只是在预览状态        
-        if($prepay['state'] == 0)
+        
+        if(empty($items) || !isset($items[0]))
         {
-            PrepayBill::delete($id);
-        }
-        //已经生成过
-        else if($prepay['state'] == 1)
-        {
-            $return_code = 0;   
-            DB::transaction(function () use($prepay,&$return_code)
-            {
-                $id = $prepay['id'];
-                $state = $prepay['state'];
-                $salon_id = $prepay['salon_id'];
-                $merchant_id = $prepay['merchant_id'];
-                $type = $prepay['type'];
-                $pay_money = floatval($prepay['pay_money']);
-                $cost_money = floatval($prepay['cost_money']);
-                $shop_counts = ShopCount::where('salon_id',$salon_id)->get(['id','pay_money','cost_money','spend_money','balance_money'])->toArray();
-                $attrs = [];
-                if(!empty($shop_counts) && isset($shop_counts[0]))
-                {
-                    $shop_count = $shop_counts[0];
-                    $old_id = $shop_count['id'];
-                    $old_pay_money = floatval($shop_count['pay_money']);
-                    $old_cost_money = floatval($shop_count['cost_money']);
-                    $old_spend_money = floatval($shop_count['spend_money']);
-                    $old_balance_money = floatval($shop_count['balance_money']);
-                    $attrs['pay_money'] = $old_pay_money - $pay_money;
-                    $attrs['cost_money'] = $old_cost_money - $cost_money;
-                    $attrs['balance_money'] = $attrs['cost_money'] - $old_spend_money;
-                    self::where('id',$old_id)->update($attrs);
-                }
-                else
-                {
-                    $attrs['pay_money'] =  $pay_money * -1;
-                    $attrs['cost_money'] = $cost_money * -1;
-                    $attrs['balance_money'] = $attrs['cost_money'];
-                    $attrs['salon_id'] = $salon_id;
-                    $attrs['merchant_id'] = $merchant_id;
-                    self::create($attrs);
-                }
-                PrepayBill::where('id',$id)->delete();
-            });
-            return true;
+            self::create(['salon_id'=>$salon_id,'merchant_id'=>$merchant_id,"{$money_type}"=>$money,'created_at'=>$now_date,'updated_at'=>$now_date]);
         }
         else
         {
-            return false;
+            $now_money = bcadd($items[0][$money_type] , $money,2);
+            $id = $items[0]['id'];
+            self::where('id',$id)->update(['merchant_id'=>$merchant_id,"{$money_type}"=>$now_money,'updated_at'=>$now_date]);
         }
-    }
-    
-    public static function mergeMoney($attrs,$model)
-    {
-        if(isset($attrs['pay_money']) && isset($attrs['cost_money']))
-        {
-            $attrs['pay_money'] = floatval($model->pay_money) + floatval($attrs['pay_money']);
-            $attrs['cost_money'] = floatval($model->cost_money) + floatval($attrs['cost_money']);
-            $attrs['spend_money'] = floatval($model->spend_money);
-            $attrs['balance_money'] = $attrs['cost_money'] - $attrs['spend_money'];
-        }
-        
-        if(isset($attrs['invest_money']))
-        {
-            $attrs['invest_money'] = floatval($model->invest_money) + floatval($attrs['invest_money']);
-            $attrs['invest_return_money'] = floatval($model->invest_return_money);
-            $attrs['invest_balance_money'] = $attrs['invest_money'] - $attrs['invest_return_money'];;
-        }
-        
-        if(isset($attrs['borrow_money']))
-        {
-            $attrs['borrow_money'] = floatval($model->borrow_money) + floatval($attrs['borrow_money']);
-            $attrs['borrow_return_money'] = floatval($model->borrow_return_money);
-            $attrs['borrow_balance_money'] = $attrs['borrow_money'] - $attrs['borrow_return_money'];;
-        }        
-        return $attrs;
+        return true;
     }
     
     /**
-     * 重写  免得蛋疼
+     * 结算付款
+     * @param int $salon_id
+     * @param int $merchant_id
+     * @param float $money
+     * @param string $remark
+     * @param datetime|timestamp $count_at
+     * @return boolean
+     */
+    public static function count_bill_by_pay_money($salon_id,$merchant_id,$money,$remark="预付保证金",$count_at="0000-00-00 00:00:00")
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "pay_money",$remark,$count_at);
+    }
+  
+    /**
+     * 结算收款款(已消费)
+     * @param int $salon_id
+     * @param int $merchant_id
+     * @param float $money
+     * @param string $remark
+     * @param datetime|timestamp $count_at
+     * @return boolean
+     */
+    public static function count_bill_by_receive_money($salon_id,$merchant_id,$money,$remark="臭美券消费",$count_at="0000-00-00 00:00:00")
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "spend_money",$remark,$count_at);
+    }
+    
+  
+    /**
+     * 结算佣金
+     * @param int $salon_id
+     * @param int $merchant_id
+     * @param float $money
+     * @param string $remark
+     * @param datetime|timestamp $count_at
+     * @return boolean
+     */
+    public static function count_bill_by_commission_money($salon_id,$merchant_id,$money,$remark="",$count_at="0000-00-00 00:00:00")
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "commission_money",$remark,$count_at);
+    }
+    
+    /**
+     * 结算佣金返还
+     * @param int $salon_id
+     * @param int $merchant_id
+     * @param float $money
+     * @param string $remark
+     * @param datetime|timestamp $count_at
+     * @return boolean
+     */
+    public static function count_bill_by_commission_return_money($salon_id,$merchant_id,$money,$remark="",$count_at="0000-00-00 00:00:00")
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "commission_return_money",$remark,$count_at);
+    }
+    
+    /**
+     * 结算投资款
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param unknown $money
+     */
+    public static function count_bill_by_invest_money($salon_id,$merchant_id,$money)
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "invest_money");
+    }
+    
+    /**
+     * 结算投资款(返还)
+     * @param unknown $salon_id
+     * @param unknown $merchant_id
+     * @param unknown $money
+     */
+    public static function count_bill_by_invest_return_money($salon_id,$merchant_id,$money)
+    {
+        return self::count_bill($salon_id, $merchant_id, $money, "invest_return_money");
+    }
+    
+//     public static function mergeMoney($attrs,$model)
+//     {
+//         if(isset($attrs['pay_money']) && isset($attrs['cost_money']))
+//         {
+//             $attrs['pay_money'] = floatval($model->pay_money) + floatval($attrs['pay_money']);
+//             $attrs['cost_money'] = floatval($model->cost_money) + floatval($attrs['cost_money']);
+//             $attrs['spend_money'] = floatval($model->spend_money);
+//             $attrs['balance_money'] = $attrs['cost_money'] - $attrs['spend_money'];
+//         }
+        
+//         if(isset($attrs['invest_money']))
+//         {
+//             $attrs['invest_money'] = floatval($model->invest_money) + floatval($attrs['invest_money']);
+//             $attrs['invest_return_money'] = floatval($model->invest_return_money);
+//             $attrs['invest_balance_money'] = $attrs['invest_money'] - $attrs['invest_return_money'];;
+//         }
+        
+//         if(isset($attrs['borrow_money']))
+//         {
+//             $attrs['borrow_money'] = floatval($model->borrow_money) + floatval($attrs['borrow_money']);
+//             $attrs['borrow_return_money'] = floatval($model->borrow_return_money);
+//             $attrs['borrow_balance_money'] = $attrs['borrow_money'] - $attrs['borrow_return_money'];;
+//         }        
+//         return $attrs;
+//     }
+    
+    /**
+     * 重写 
      * @see \Illuminate\Database\Eloquent\Model::isFillable()
      */
     public function isFillable($key)

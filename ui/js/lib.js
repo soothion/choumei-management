@@ -758,7 +758,14 @@
             this.insert(lib.ejs.render(options,tempData)).trigger('_ready',{protocol:pro,response:data});
             this.hideLoader();
             this.ready();
+            this.format();
             this.destroy();
+        },
+        format : function(){
+            $("td.format").each(function(index,item){
+                var txt = $(this).text();
+                txt && $(this).text(new Date(txt).format("yyyy-MM-dd"));
+            });
         },
         exception:function(data){//异常处理
             var $dom=$(this.dom);
@@ -903,7 +910,7 @@
 				}
 			},
 			number:function(val){
-				var reg=new RegExp('^[0-9]$');
+				var reg=new RegExp('^[0-9]+$');
 				if(!isNaN(val)){
 					if(val.indexOf('.')>-1){
 						return {msg:'输入值不能含小数点'};
@@ -1095,6 +1102,7 @@
 			if($target.data('helpid')){
 				error=$('#'+$target.data('helpid'));
 			}else if($target.parent('label').length==1){
+
 				error=$target.parent().siblings('.control-help');
 			}
 			if(error.length==0){

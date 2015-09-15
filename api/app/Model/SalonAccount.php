@@ -90,7 +90,8 @@ class SalonAccount extends Model {
 	 * */
 	public static function getSalonNamebyCon($where)
 	{
-		$fields = array("merchantId","salonid","salonname","name");
+		$data["data"] = array();
+		$fields = array("merchantId","salonid","salonname","name","s.sn");
 		$query =  DB::table('salon as s')->leftjoin('merchant as m', 'm.id', '=', 's.merchantId');//第一次精确查找
 		if(isset($where['salonname']) && urldecode($where['salonname']))
 		{

@@ -111,7 +111,7 @@
 			  	       </div>					
                     </div>             
                 <div class="control-group">
-                    <legend class="add-title" style="margin-left:70px;" id="title-password"><%if(query.id){%><input type="checkbox" class="checkbox" id="switch" /><label for="switch">重置密码 </label><%}else{%>设置密码<%}%></legend>
+                    <legend class="add-title" style="margin-left:70px;" id="title-password"><%if(query.id){%><label><input type="checkbox" class="checkbox" id="switch" /><span>重置密码</span> </label><%}else{%>设置密码<%}%></legend>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>登陆密码：</label>
@@ -158,10 +158,12 @@
 			%>
 			<%data=data.data%>
 			<%for(var i=0;i<data.length;i++){%>
+                <%if(data[i].status!=3){%>
 				<label>
 					<input type="checkbox" required <%=sids&&sids.indexOf(data[i].id)>-1?"checked":""%>  name="roles" value="<%=data[i].id%>" <%=protocol.custom.status==3?"disabled":""%> />
 					<span><%=data[i].name%></span>
 				</label>
+                <%}%>
 			<%}%>
 			<div class="control-help" style="display:none"></div>
  

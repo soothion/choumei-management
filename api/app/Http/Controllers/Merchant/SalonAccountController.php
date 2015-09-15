@@ -13,7 +13,7 @@ class SalonAccountController extends Controller {
 	
 	private $pwd = "choumei";
 	
-	private $cmPwd = "choumeiapp.123.!";
+	private $cmPwd = "cmm111";
 	
 	private $addMsg = array(
 				1=>"当前店铺已存在普通用户，请查询",
@@ -164,7 +164,7 @@ class SalonAccountController extends Controller {
 		$id = SalonAccount::dosave($save);//添加账号
 		if($param["roleType"] == 2)//超级管理员
 		{
-			Salon::where(array("salonid"=>$param["salonid"]))->update(array("puserid"=>$id));
+			Salon::where(array("merchantId"=>$param["merchantId"]))->update(array("puserid"=>$id));
 		}
 		
 		if($id)
@@ -320,6 +320,7 @@ class SalonAccountController extends Controller {
 	 * @apiSuccess {String} name 商户名称.
 	 * @apiSuccess {Number} salonid 店铺Id.
 	 * @apiSuccess {String} salonname 店铺名称.
+	 * @apiSuccess {String} sn 店铺编号.
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *	{
@@ -329,12 +330,14 @@ class SalonAccountController extends Controller {
 	 *	            "merchantId": 1,
 	 *	            "salonid": 1,
 	 *	            "salonname": "嘉美专业烫染",
+	 *				"sn": "SZ00252",
 	 *				"name": "嘉烫染"
 	 *	        },
 	 *	        {
 	 *	            "merchantId": 33,
 	 *	            "salonid": 804,
-	 *	            "salonname": "臭美腾讯专属高端店"
+	 *	            "salonname": "臭美腾讯专属高端店",
+	 *				"sn": "SZ00252",
 	 *              "name": "嘉美烫染"
 	 *	        },
 	 *	        ......
@@ -356,7 +359,7 @@ class SalonAccountController extends Controller {
 			return $this->error("参数错误");	
 		}
 		$data = SalonAccount::getSalonNamebyCon($param);
-		return $this->success($data);
+		return $this->success($data?$data:array());
 	}
 	
 }

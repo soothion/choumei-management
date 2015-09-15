@@ -460,7 +460,6 @@ $(function(){
 			});
 		}
 	}
-	
 	/**缩略图预览**/
 	$body.on('click','.control-thumbnails-item img',function(e){
 		var item=$(this).closest('.control-thumbnails-item');

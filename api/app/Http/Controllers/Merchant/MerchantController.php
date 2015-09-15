@@ -12,6 +12,7 @@ use DB;
 use App\SalonUser;
 use Excel;
 use Event;
+use Illuminate\Support\Facades\Redis as Redis;
 class MerchantController extends Controller {
 	/**
 	 * @api {post} /merchant/index 1.商户列表
@@ -35,7 +36,7 @@ class MerchantController extends Controller {
 	 * @apiSuccess {String} sn 商户编号.
 	 * @apiSuccess {String} name 用户姓名.
 	 * @apiSuccess {String} contact 联系人.
-	 * @apiSuccess {String} mobile 用户姓名.
+	 * @apiSuccess {String} mobile 联系手机.
 	 * @apiSuccess {String} phone 电话.
 	 * @apiSuccess {String} email 邮箱.
 	 * @apiSuccess {String} addr 地址.
@@ -83,26 +84,7 @@ class MerchantController extends Controller {
 	{
 		
 		$param = $this->param;
-		$query = Merchant::getQuery();
-
-		//状态筛选
-		if(isset($param['name']) && urldecode($param['name']))
-		{
-			$keyword = '%'.urldecode($param['name']).'%';
-			$query = $query->where('name','like',$keyword);
-		}
-		if(isset($param['sn']) && urldecode($param['sn']))
-		{
-			$keyword = '%'.urldecode($param['sn']).'%';
-			$query = $query->where('sn','like',$keyword);
-		}
-		
-		if(isset($param['mobile'])&&$param['mobile'])
-		{
-			$kModile = '%'.$param['mobile'].'%';
-			$query = $query->where('mobile','like',$kModile);
-		}
-		$query = $query->where('status','=',1);//排除删除
+		$query = $this->getQueryByParam($param);
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 
@@ -140,10 +122,9 @@ class MerchantController extends Controller {
 	 * @apiName save
 	 * @apiGroup  merchant
 	 *
-	 * @apiParam {String} sn 必填,商户编号.
 	 * @apiParam {String} name 必填,用户姓名.
 	 * @apiParam {String} contact 必填,联系人.
-	 * @apiParam {String} mobile 必填,用户姓名.
+	 * @apiParam {String} mobile 必填,联系手机.
 	 * @apiParam {String} phone 电话.
 	 * @apiParam {String} email 邮箱.
 	 * @apiParam {String} addr 地址.
@@ -178,10 +159,9 @@ class MerchantController extends Controller {
 	 *
 	 *@apiParam {Number} id 必填,商家Id.
 	 *
-	 * @apiParam {String} sn 必填,商户编号.
 	 * @apiParam {String} name 必填,用户姓名.
 	 * @apiParam {String} contact 必填,联系人.
-	 * @apiParam {String} mobile 必填,用户姓名.
+	 * @apiParam {String} mobile 必填,联系手机.
 	 * @apiParam {String} phone 电话.
 	 * @apiParam {String} email 邮箱.
 	 * @apiParam {String} addr 地址.
@@ -214,11 +194,10 @@ class MerchantController extends Controller {
 	 * */
 	private  function dosave($param)
 	{
-
 		$param["id"] = isset($param["id"])?$param["id"]:0;
 		
 		$query = Merchant::getQuery();
-		if(!$param["name"] || !$param["contact"] || !$param["mobile"]  || !$param["sn"])
+		if(!$param["name"] || !$param["contact"] || !$param["mobile"])
 		{
 			return $this->error("参数错误");
 		}
@@ -226,37 +205,20 @@ class MerchantController extends Controller {
 		if($param["id"])
 		{
 			$save["upTime"] = time();
-			$setTows = $this->getCheckSn($param['sn'],$param["id"]);//检测商户编号
-			if($setTows)
-			{
-				$rows = 0;
-			}
-			else
-			{
-				$rows = $this->getCheckSn($param['sn']);//检测商户编号
-			}
 		}
 		else 
 		{
 			$save["addTime"] = time();
-			$rows = $this->getCheckSn($param['sn']);//检测商户编号
 		}
-
-		if($rows > 0)
-		{
-			return $this->error('商户编号重复');
-		}
-
 		$save["name"] = trim($param["name"])?trim($param["name"]):"";
 		$save["contact"] = trim($param["contact"])?trim($param["contact"]):"";
 		$save["mobile"] = trim($param["mobile"])?trim($param["mobile"]):"";
-		$save["phone"] = trim($param["phone"])?trim($param["phone"]):"";
-		$save["email"] = trim($param["email"])?trim($param["email"]):"";
-		$save["addr"] = trim($param["addr"])?trim($param["addr"]):"";
-		$save["foundingDate"] = trim($param["foundingDate"])?trim($param["foundingDate"]):"";
+		$save["phone"] = isset($param["phone"])?trim($param["phone"]):"";
+		$save["email"] = isset($param["email"])?trim($param["email"]):"";
+		$save["addr"] = isset($param["addr"])?trim($param["addr"]):"";
+		$save["foundingDate"] = isset($param["foundingDate"])?trim($param["foundingDate"]):"";
 		$save["foundingDate"] = strtotime($save["foundingDate"]);
-		$save["sn"] = trim($param["sn"])?trim($param["sn"]):"";
-		
+	
 		if($param["id"])
 		{
 			$status = $query->where('id',$param['id'])->update($save);
@@ -269,7 +231,8 @@ class MerchantController extends Controller {
 		}
 		else
 		{
-			$status = $query->insert($save);
+			$save["sn"] = $this->addMerchantSn();
+			$status = $query->insertGetId($save);
 			if($status)
 			{
 				Event::fire('merchant.save','商户Id:'.$status." 商户名称：".$save['name']);
@@ -285,6 +248,29 @@ class MerchantController extends Controller {
 			return $this->error('商户更新失败');
 		} 
 			
+	}
+	
+	/**
+	 * 生成商户编号
+	 * */
+	private function addMerchantSn()
+	{
+		$redisKey = 'SZ';
+		$value = Redis::hget('merchantSn',$redisKey);
+		$value += 1;
+		if($value <= 1)
+		{
+			$lastId = Merchant::select(['id'])->orderBy('id', 'desc')->first();
+			$value = $lastId->id;
+		}
+		Redis::hset('merchantSn',$redisKey,$value);
+		$sn = intval($value)+20; //生成商户编号 SZ0001    +20避免和之前手动输入的编号冲突
+		$tps = "";
+		for($i=4;$i>strlen($sn);$i--)
+		{
+			$tps .= 0;
+		}
+		return   'SZ'.$tps.$sn;
 	}
 	
 	/**
@@ -476,6 +462,34 @@ class MerchantController extends Controller {
 	}
 	
 	/**
+	 * 商户查询
+	 * */
+	private function getQueryByParam($param)
+	{
+		$query = Merchant::getQuery();
+		
+		//状态筛选
+		if(isset($param['name']) && urldecode($param['name']))
+		{
+			$keyword = '%'.urldecode($param['name']).'%';
+			$query = $query->where('name','like',$keyword);
+		}
+		if(isset($param['sn']) && urldecode($param['sn']))
+		{
+			$keyword = '%'.urldecode($param['sn']).'%';
+			$query = $query->where('sn','like',$keyword);
+		}
+		
+		if(isset($param['mobile'])&&$param['mobile'])
+		{
+			$kModile = '%'.$param['mobile'].'%';
+			$query = $query->where('mobile','like',$kModile);
+		}
+		$query = $query->where('status','=',1);//排除删除
+		return $query;
+	}
+	
+	/**
 	 * @api {post} /merchant/export 7.商户列表导出
 	 * @apiName export
 	 * @apiGroup merchant
@@ -495,33 +509,16 @@ class MerchantController extends Controller {
 	{
 	
 		$param = $this->param;
-		$query = Merchant::getQuery();
-	
-		//状态筛选
-		if(isset($param['name']) && urldecode($param['name']))
-		{
-			$keyword = '%'.urldecode($param['name']).'%';
-			$query = $query->where('name','like',$keyword);
-		}
-		if(isset($param['sn']) && urldecode($param['sn']))
-		{
-			$keyword = '%'.urldecode($param['sn']).'%';
-			$query = $query->where('sn','like',$keyword);
-		}
-	
-		if(isset($param['mobile'])&&$param['mobile'])
-		{
-			$kModile = '%'.$param['mobile'].'%';
-			$query = $query->where('mobile','like',$kModile);
-		}
-		$query = $query->where('status','=',1);//排除删除
+		$query = $this->getQueryByParam($param);
+		
 		$fields = array('name','sn','contact','mobile','phone','email','addr','foundingDate','addTime' );
 		$rs = $query->select($fields)->orderBy('addTime', 'desc')->get();
 		$result = array();
 		foreach ($rs as $key => $value)
 		{
-			$result[$key]['name'] = $value->name;
 			$result[$key]['sn'] = $value->sn;
+			$result[$key]['name'] = $value->name;
+			
 			$result[$key]['contact'] = $value->contact;
 			$result[$key]['mobile'] = $value->mobile;
 			$result[$key]['phone'] = $value->phone;
@@ -533,7 +530,7 @@ class MerchantController extends Controller {
 		Event::fire('merchant.export');
 		//导出excel
 		$title = '商户列表'.date('Ymd');
-		$header = ['商户名称','商户编号','联系人','联系手机','联系座机','联系邮箱','详情地址','成立日期','创建日期']; 
+		$header = ['商户编号','商户名称','联系人','联系手机','联系座机','联系邮箱','详情地址','成立日期','创建日期']; 
 	    Excel::create($title, function($excel) use($result,$header){
 		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
 			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false

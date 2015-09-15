@@ -108,7 +108,7 @@ class Captcha
     /**
      * @var string
      */
-    protected $characters = '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ';
+    protected $characters = 'abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ';
 
     /**
      * @var string

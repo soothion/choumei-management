@@ -637,33 +637,33 @@ Route::group(['middleware'], function(){
   
     //赏金单管理-交易管理
 	Route::any('bounty/getList',array(  //赏金单列表
-	'as'=>'bounty.getList',
-	'uses'=>'Bounty\BountyController@getList'
-	    ));
+		'as'=>'bounty.getList',
+		'uses'=>'Bounty\BountyController@getList'
+    ));
     
     Route::any('bounty/detail',array(  //赏金单详情
-	'as'=>'bounty.detail',
-	'uses'=>'Bounty\BountyController@detail'
-	    ));
+		'as'=>'bounty.detail',
+		'uses'=>'Bounty\BountyController@detail'
+    ));
     
     Route::any('bounty/refundDetail',array(  //赏金单退款详情
-	'as'=>'bounty.refundDetail',
-	'uses'=>'Bounty\BountyController@refundDetail'
-	    ));
+		'as'=>'bounty.refundDetail',
+		'uses'=>'Bounty\BountyController@refundDetail'
+    ));
     
     Route::any('bounty/accept',array(  //赏金单退款详情
-	'as'=>'bounty.accept',
-	'uses'=>'Bounty\BountyController@accept'
-	    ));
+		'as'=>'bounty.accept',
+		'uses'=>'Bounty\BountyController@accept'
+    ));
     
     Route::any('bounty/reject',array(  //赏金单退款详情
-	'as'=>'bounty.reject',
-	'uses'=>'Bounty\BountyController@reject'
-	    ));
+		'as'=>'bounty.reject',
+		'uses'=>'Bounty\BountyController@reject'
+    ));
 
     Route::any('requestLog/index',array(  //请求日志列表
-	'as'=>'requestLog.index',
-	'uses'=>'LoginQuery\LoginQueryController@index'
-	    ));
+		'as'=>'requestLog.index',
+		'uses'=>'LoginQuery\LoginQueryController@index'
+    ));
 });
 

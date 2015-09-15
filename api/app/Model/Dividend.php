@@ -6,4 +6,5 @@ class Dividend extends Model {
 
 	protected $table = 'dividend';
 
+	public $timestamps = false;
 }
