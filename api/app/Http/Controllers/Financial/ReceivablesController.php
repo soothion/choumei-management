@@ -356,7 +356,7 @@ class ReceivablesController extends Controller{
 		if($status)
 		{
 			DB::commit();
-			$this->success();
+			return $this->success();
 		}
 		else
 		{
@@ -560,7 +560,7 @@ class ReceivablesController extends Controller{
 		$status = Receivables::dodel($id);
 		if ($status)
 		{
-			$this->success();
+			return $this->success();
 		}
 		else
 		{
