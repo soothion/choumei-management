@@ -563,10 +563,34 @@ class TransactionSearchApi
         {
             $pay_types = explode(",", $params['pay_type']);
             $pay_types = array_map("intval", $pay_types);
-            $pay_type_str = implode(",", $pay_types);
-            if(!empty($pay_type_str))
+            $pay_types = array_unique($pay_types);
+            
+            if(count($pay_types) == 1)
             {
-                $orderBase->whereRaw('`ordersn` IN (select `record_no` from cm_fundflow where `code_type` = 2 and `pay_type` IN ({$pay_type_str}) )');
+                if($pay_types[0] !== 0)
+                {
+                    $pay_type = $pay_types[0];
+                    $orderBase->whereRaw("`ordersn` IN (select `record_no` from `cm_fundflow` where `code_type` = 2 and `pay_type`  = {$pay_type} )");
+                }
+            }
+            if(count($pay_types) > 1)//多种支付方式都需要存在时
+            {
+                $fundflow_str = null;
+                foreach ($pay_types as $pay_type)
+                {      
+                    if(empty($fundflow_str))
+                    {
+                        $fundflow_str = "select `record_no` from `cm_fundflow` where `code_type` = 2 and `pay_type`  = {$pay_type} AND `record_no`";
+                    }  
+                    else 
+                    {
+                        $fundflow_str = "select `record_no` from `cm_fundflow` where `code_type` = 2 and `pay_type`  = {$pay_type} AND `record_no` IN (".$fundflow_str.") ";
+                    }                 
+                }
+                if(!empty($fundflow_str))
+                {
+                     $orderBase->whereRaw("`ordersn` IN ($fundflow_str)");
+                }               
             }
         }
         

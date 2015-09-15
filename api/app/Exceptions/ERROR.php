@@ -18,6 +18,11 @@ class ERROR
      *@param 未授权访问
      */
      CONST UNAUTHORIZED =  -40002;
+     
+     /**
+      *@param 未授权访问
+      */
+     CONST PARAMS_LOST =  -40003;
 
      
     ////////////用户模块//////////////
@@ -186,6 +191,12 @@ class ERROR
       * @var unknown
       */
      CONST ORDER_ITEM_NOT_EXIST = -50604;
+     
+     /**
+      * 退款单状态不正常
+      * @var unknown
+      */
+     CONST REFUND_STATE_WRONG = -50605;
 	 
 	 
 	 ////////////消息模块//////////////

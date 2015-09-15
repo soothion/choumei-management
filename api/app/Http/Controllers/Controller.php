@@ -15,6 +15,7 @@ use JWTAuth;
 use App\City;
 use Excel;
 use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 abstract class Controller extends BaseController
 {
@@ -154,12 +155,12 @@ abstract class Controller extends BaseController
 	        if (isset($source[$key]) ) {
 	            $result = self::filter($source[$key], $filter);
 	            if ($result === false) {
-	                throw new \Exception("Parameter '{$key}' is invalid");
+	                throw new ApiException("Parameter '{$key}' is invalid",ERROR::PARAMS_LOST);
 	            }
 	        }
 	        else {
 	            if ($required) {
-	                throw new \Exception("Parameter '{$key}' is required");
+	                throw new ApiException("Parameter '{$key}' is required",ERROR::PARAMS_LOST);
 	            }
 	            continue;
 	        }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Trans;
 
 use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;
+use App\TransactionWriteApi;
+use App\Exceptions\ApiException;
 
 class OrderRefundController extends Controller
 {
@@ -320,7 +322,15 @@ class OrderRefundController extends Controller
      */
     public function accept()
     {
-        
+        $params = $this->parameters(['ids'=>self::T_STRING]);
+        $ids = explode(",", $params['ids']);
+        $ids = array_map("intval", $ids);
+        if(count($ids)<1)
+        {
+            throw new ApiException("ids 参数不能为空", $code);
+        }
+        $info = TransactionWriteApi::accpet($ids);
+        $this->success($info);
     }
     
     /**
