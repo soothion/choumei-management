@@ -251,22 +251,6 @@ class ERROR
      CONST BOUNTY_STATUS_WRONG = -50611;
 	 
 	 
-	 ////////////消息模块//////////////
-     /**
-     *@param 参数错误
-     */
-     CONST PARAMETER_ERROR =  -50900;
-	 /**
-     *@param 更新失败
-     */
-     CONST UPDATE_FAILED =  -50901;
-	 /**
-     *@param 消息ID不正确
-     */
-     CONST MESSAGE_ID_IS_ERROR  =  -50902;
-
-     
-     
 	 ////////////图片风格模块//////////////
      /**
      *@param 插入风格失败
@@ -315,6 +299,72 @@ class ERROR
      *@param 反馈删除失败
      */
      CONST FEED_DELETE_FAILED =  -50701;
+     
+     ////////////收款模块//////////////
+     /**
+      *@param 参数错误
+      */
+     CONST RECEIVABLES_ERROR =  -50800;
+     /**
+      *@param 更新失败
+      */
+     CONST RECEIVABLES_UPDATE_FAILED =  -50801;
+     /**
+      *@param ID不正确
+      */
+     CONST RECEIVABLES_ID_IS_ERROR  =  -50802;
+     
+     ////////////消息模块//////////////
+     /**
+      *@param 参数错误
+      */
+     CONST PARAMETER_ERROR =  -50900;
+     /**
+      *@param 更新失败
+      */
+     CONST UPDATE_FAILED =  -50901;
+     /**
+      *@param 消息ID不正确
+      */
+     CONST MESSAGE_ID_IS_ERROR  =  -50902;
+      
+     ////////////店铺商户操作模块//////////////
+     /**
+      *@param 参数错误
+      */
+     CONST MERCHANT_ERROR =  -51000;
+     /**
+      *@param 更新失败
+      */
+     CONST MERCHANT_UPDATE_FAILED =  -51001;
+     /**
+      *@param ID不正确
+      */
+     CONST MERCHANT_ID_IS_ERROR  =  -51002;
+     /**
+      *@param 编号重复已经存在
+      */
+     CONST MERCHANT_SN_IS_ERROR  =  -51003;
+     /**
+      *@param 该商户还有正在合作的店铺请先终止该商户所有店铺合作，再删除商户
+      */
+     CONST MERCHANT_STATUS_IS_ERROR  =  -51004;
+     /**
+      *@param 该用户名重复，请重新修改
+      */
+     CONST MERCHANT_ACCOUNT_NAME_IS_ERROR  =  -51010;
+     /**
+      *@param 店铺账号冲突（当前店铺已存在普通用户（或超级管理员），请查询）
+      */
+     CONST MERCHANT_ACCOUNT_CONFLICT_IS_ERROR  =  -51011;
+     /**
+      *@param 店铺状态错误
+      */
+     CONST MERCHANT_SALON_STATUS_IS_ERROR  =  -51020;
+     
+     
+     
+     
      
 
 

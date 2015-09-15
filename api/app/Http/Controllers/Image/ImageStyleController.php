@@ -4,6 +4,9 @@ use App\Http\Controllers\Controller;
 use App\ImageStyle;
 use Log;
 use Config;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
+
 /**
  * Description of ImageStyleController
  *
@@ -116,11 +119,10 @@ class ImageStyleController extends Controller{
     {
             
           $param = $this->param; 
-          Log::info('ImageStyle create param is: ', $param);
+         // Log::info('ImageStyle create param is: ', $param);
           if(empty($param['style']) || empty($param['length']) || empty($param['curl']) || empty($param['color']) || empty($param['original']) || empty($param['thumb']))
           {
-			  return $this->error('参数错误');
-             // throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
+             throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
           }
           $data=[];
           $data['style']=$param['style'];
@@ -134,8 +136,7 @@ class ImageStyleController extends Controller{
           if($result){
 			return $this->success();
           }else{
-			  return $this->error('图片风格插入失败');
-			//throw new ApiException('图片风格插入失败', ERROR::STYLE_CREATE_FAILED);
+			throw new ApiException('图片风格插入失败', ERROR::STYLE_CREATE_FAILED);
           }
      }
 
@@ -167,8 +168,7 @@ class ImageStyleController extends Controller{
     {  
 		$image = ImageStyle::find($id);
 		if(!$image){
-			 return $this->error('未知图片');
-			//throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
+			throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
                 }
                 $data=[];
 		$data['status']=2;
@@ -176,8 +176,7 @@ class ImageStyleController extends Controller{
 		if($result){
 			return $this->success();
                 }else {
-					 return $this->error('图片删除失败');
-                  // throw new ApiException('图片删除失败', ERROR::STYLE_DELETE_FAILED); 
+                  throw new ApiException('图片删除失败', ERROR::STYLE_DELETE_FAILED); 
                 }
 		
      }
@@ -216,14 +215,12 @@ class ImageStyleController extends Controller{
 		
         if(empty($id) || empty($param['style']) || empty($param['length']) || empty($param['curl']) || empty($param['color']) || empty($param['original']) || empty($param['thumb']))
         {
-			 return $this->error('参数不齐');
-          //  throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
+           throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
         }
         $fields = ['id', 'style', 'length','curl','color','img','status'];
         $image=ImageStyle::select($fields)->find($id);
     	if(!$image && $image['status']!=1){
-			 return $this->error('未知图片');
-            //throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
+            throw new ApiException('未知图片', ERROR::STYLE_NOT_FOUND);
         }
         $data=[];
         $data['style']=$param['style'];
@@ -236,8 +233,7 @@ class ImageStyleController extends Controller{
          if($result){
               return $this->success();
         }else{
-			  return $this->error('图片风格更新失败');
-              //throw new ApiException('图片风格更新失败', ERROR::STYLE_UPDATE_FAILED);
+              throw new ApiException('图片风格更新失败', ERROR::STYLE_UPDATE_FAILED);
         }
      }
     /**
