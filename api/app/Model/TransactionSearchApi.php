@@ -700,10 +700,10 @@ class TransactionSearchApi
     {
         // 按时间搜索
         if (isset($params['refund_min_time']) && !empty($params['refund_min_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['refund_min_time']))) {
-            $base->where("add_time", ">=", strtotime(trim($params['refund_min_time'])));
+            $base->where("order_refund.add_time", ">=", strtotime(trim($params['refund_min_time'])));
         }
         if (isset($params['refund_max_time']) && !empty($params['refund_max_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['refund_max_time']))) {
-            $base->where("add_time", "<=", strtotime(trim($params['refund_max_time'])) + 86399 );
+            $base->where("order_refund.add_time", "<=", strtotime(trim($params['refund_max_time'])) + 86399 );
         }
     
         // 付款状态
@@ -711,13 +711,13 @@ class TransactionSearchApi
         {
             if(intval($params['state']) == 12)//退款失败特殊处理
             {
-                $base->where('status', 2);
+                $base->where('order_refund.status', 2);
             }
             else 
             {
                 $state_ids = explode(",", $params['state']);
                 $state_ids = array_map("intval",$state_ids);
-                $base->whereIn('order_status', $state_ids);
+                $base->whereIn('order.status', $state_ids);
             }            
         }
     
