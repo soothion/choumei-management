@@ -1,5 +1,5 @@
 ﻿var slug={
-	'user.index':'/module/system/user/index.html',
+	'manager.index':'/module/system/user/index.html',
 	'role.index':'/module/system/role/index.html',
 	'permission.index':'/module/system/power/index.html',
 	'log.index':'/module/system/log/index.html',

@@ -14,7 +14,7 @@
 				<h4>用户管理</h4>
 			</div>
 			<div>
-				<a class="btn-primary" href="edit.html" data-slug="user.create"><i class="fa fa-plus"></i>新增</a>
+				<a class="btn-primary" href="edit.html" data-slug="manager.create"><i class="fa fa-plus"></i>新增</a>
 			</div>
 		 </div>		 
         </div>		
@@ -64,9 +64,9 @@
 				</span>
 				<button class="btn" type="submit">搜索</button>
 				</form>
-			  <form action="user/export" data-role="export"><button class="btn" type="submit" data-slug="user.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+			  <form action="manager/export" data-role="export"><button class="btn" type="submit" data-slug="manager.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
 						  
-           <div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
                     <thead>
