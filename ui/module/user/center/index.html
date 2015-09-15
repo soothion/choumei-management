@@ -53,8 +53,8 @@
 				</select>
 				<button class="btn" type="submit">搜索</button>
 			</form>
-			<form action="role/export" data-role="export" data-slug="role.export"><button class="btn" type="submit"><i class="fa fa-file-excel-o"></i> 导出</button></form>
-			<div class="table" ajat="role/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<form action="user/export" data-role="export" data-slug="role.export"><button class="btn" type="submit"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+			<div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
               <thead>
@@ -75,22 +75,23 @@
               </thead>
               <tbody>			  
 				<%var data=data.data%>
+				<%var sexArr=["未知","男","女"]%>
 				<%data.forEach(function(item,i){%>
                 <tr>
                   <td><%=i+1%></td>
-                  <td><%=item.name%></td>
-                  <td><%=item.name%></td>
-                  <td><%=item.name%></td>
-                  <td><%=item.name%></td>
-                  <td><%=item.name%></td>
-                  <td><%=item.name%></td>
-                  <td><%=item.name%></td>
-                  <td><%=item.name%></td>
-                  <td><%=item.name%></td>
-                  <td><%=item.name%></td>
+                  <td><%=item.username%></td>
+                  <td><%=item.nickname%></td>
+                  <td><%=sexArr[item.sex]%></td>
+                  <td><%=item.level%></td>
+                  <td><%=item.mobilephone%></td>
+                  <td><%=item.area%></td>
+                  <td><%=item.companyCode%></td>
+                  <td><%=item.recommendCode%></td>
+                  <td><%=item.recommendCode%></td>
+                  <td><%=item.add_time%></td>
 				  <td>
-					 <a class="link" target="_blank" data-slug="role.show,role.update" href="detail.html?id=<%=item.id%>">查看</a>
-					 <form action="" data-role="normal">
+					 <a class="link" target="_blank" href="detail.html?id=<%=item.user_id%>">查看</a>
+					 <form action="user/destroy/<%=item.user_id%>" data-role="normal">
 						<button class="link">删除</button>
 					 </form>
 				  </td>

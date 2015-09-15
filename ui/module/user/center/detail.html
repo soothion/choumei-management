@@ -22,7 +22,9 @@
 				</div>
 			</div>
 		</div>
-		<div class="wrapper">
+		<div class="wrapper" ajat="user/show/<%=query.id%>#domid=detail&tempid=detail-t" id="detail">
+			<script type="text/template" id="detail-t">
+			<%var sexArr=["未知","男","女"]%>
 			<div class="table-detail">
 				<table>
 					<thead>
@@ -68,14 +70,14 @@
 					</thead>
 					<tbody>
 						<tr>
-							<td>臭美号：  10000000</td>
+							<td>臭美号：  <%=data.username%></td>
 							<td>头像：
-								<img src="/images/logo.png" alt="" width="60px" height="60px" />
+								<img src="<%=data.img%>" alt="" width="60px" height="60px" />
 							</td>
 						</tr>
 						<tr>
-							<td>昵称： 小康 </td>
-							<td>性别： 男</td>
+							<td>昵称：  <%=data.nickname%> </td>
+							<td>性别： <%=sexArr[data.sex]%></td>
 						</tr>
 						<tr>
 							<td>发长：  无</td>
@@ -88,7 +90,7 @@
 				</table>
 			</div>
 			<div class="table-detail"  style="display:none">
-				<form action="">
+				<form action="user/update/<%=query.id%>">
 				<table>
 					<thead>
 						<tr>
@@ -228,31 +230,13 @@
 					</table>
 				</form>
 			</div>
+			</script>
 		</div>
-		<img id="image" src="" alt="" />
 		<script type="text/javascript">
 			$(document).on('click','.btn-edit',function(){
 				$(this).closest('.table-detail').hide().next().show();
 			}).on('click','.btn-cancel',function(){
 				$(this).closest('.table-detail').hide().prev().show();
-			});
-			lib.uploader.image({
-				server: "rebate/upload",
-				pick  : {id:'#imageUpload',multiple:false},
-				auto:true,
-				resize: false,
-				fileSingleSizeLimit : 800*1024,
-				imageLimitSize:"512*512",
-				accept :{
-					title: 'Images',
-					extensions: 'jpg,jpeg,png',
-					mimeTypes: 'image/png,image/jpeg'                
-				},
-				imageId:'photo'
-			},function(uploader){
-				uploader.on('uploadSuccess',function(file,res){
-					//console.log(res);
-				})
 			});
 		</script>
   </body>
