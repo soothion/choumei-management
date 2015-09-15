@@ -4,7 +4,6 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="/js/include.js"></script>
-      <link rel="stylesheet" href="income.css" />
       <style>.first-td{width: 15%;padding-left: 30px!important;}</style>
     </head>
     <body>
@@ -17,63 +16,66 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper" id="table-wrapper">
+        <div class="wrapper" id="table-wrapper" 
+        ajat="<%if(query.id){%><%=query.method%><%=query.id%><%}%>#domid=table-wrapper&tempid=table-t">
+        <script type="text/template" id="table-t">
             <div class="table">
                 <table>
                     <tbody>
+
                         <tr>
                             <td class="first-td">臭美券密码</td>
-                            <td>111</td>
+                            <td><%=data.ticket && data.ticket.ticketno%></td>
                         </tr>
 
                         <tr>
                             <td class="first-td">订单编号</td>
-                            <td>111</td>                            
+                            <td><%=data.order && data.order.ordersn%></td>                            
                         </tr>
 
                         <tr>
                             <td class="first-td">购物车序号</td>
-                            <td>111</td>                            
+                            <td><%=data.order && data.order.shopcartsn%></td>                            
                         </tr> 
 
                         <tr>
                             <td class="first-td">第三方流水号</td>
-                            <td>111</td>
+                            <td><%=data.paymentlog && data.paymentlog.tn%></td>
                         </tr>
 
                         <tr>
                             <td class="first-td">项目名称</td>
-                            <td>111</td>                            
+                            <td><%=data.item && data.item.itemname%></td>                            
                         </tr>
 
                         <tr>
                             <td class="first-td">店铺名称【邀请码】</td>
-                            <td>111</td>                            
+                            <td><%=data.salon && data.salon.salonname%></td>                            
                         </tr> 
 
                         <tr>
                             <td class="first-td">用户臭美号</td>
-                            <td>111</td>
+                            <td><%=data.user && data.user.username%></td>
                         </tr>
 
                         <tr>
                             <td class="first-td">用户手机号</td>
-                            <td>111</td>                            
+                            <td><%=data.user && data.user.mobilephone%></td>                            
                         </tr>
 
                         <tr>
                             <td class="first-td">订单金额</td>
-                            <td>111</td>                            
+                            <td><%=data.order && data.order.priceall%></td>                            
                         </tr> 
 
                         <tr>
                             <td class="first-td">代金券抵扣金额</td>
-                            <td>111</td>
+                            <td><%=%></td>
                         </tr>
 
                         <tr>
                             <td class="first-td">实付金额</td>
-                            <td>111</td>                            
+                            <td><%=data.order && data.order.actuallyPay%></td>                            
                         </tr>
 
                         <tr>
@@ -118,8 +120,8 @@
                                             <td>行为</td>
                                         </tr>
                                         <tr>
-                                            <td>2015-09-02</td>
-                                            <td>为使用</td>
+                                            <td><%=data.trends && data.trends.add_time %></td>
+                                            <td><%=data.trends && data.trends.remark %></td>
                                         </tr>
                                     </tbody>                                
                                 </table>
@@ -200,7 +202,7 @@
                     </tbody>                     
                 </table>
             </div>
-
+        </script>
         </div>
     </body>
 </html>
