@@ -637,11 +637,11 @@ class TransactionSearchApi
         {
             if($params['time_key'] == 1)
             {
-                $time_key_str = "use_time";
+                $time_key_str = "order_ticket.use_time";
             }
             if($params['time_key'] == 2)
             {
-                $time_key_str = "add_time";
+                $time_key_str = "order_ticket.add_time";
             }
         }
         if (isset($params['min_time']) && !empty($params['min_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['min_time']))) {
@@ -654,7 +654,7 @@ class TransactionSearchApi
         // 付款状态
         if(isset($params['state']) && !empty($params['state']))
         {
-            $base->where('status', $params['state']);
+            $base->where('order_ticket.status', $params['state']);
         }
         
         // 关键字搜索
@@ -669,15 +669,15 @@ class TransactionSearchApi
             ], $params['keyword']) . "%";
             if ($key == 1) //臭美券密码
             {
-                $base->where("ticketno",'like',$keyword);
+                $base->where("order_ticket.ticketno",'like',$keyword);
             }
             elseif ($key == 2) //用户手机号
             {
-                 $base->whereRaw("user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
+                 $base->whereRaw("cm_order_ticket.user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
             }
             elseif ($key == 3) //店铺名
             {
-                $base->whereRaw("`salonid` IN (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
+                $base->whereRaw("cm_order.salonid IN (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
                 
             }
             elseif ($key == 4) //用户设备号
@@ -687,11 +687,11 @@ class TransactionSearchApi
             }
             elseif ($key == 5) //代金券编码
             {
-                $base->whereRaw("ordersn in (SELECT `vOrderSn` FROM `cm_voucher` WHERE `vSn` LIKE '{$keyword}')");
+                $base->whereRaw("cm_order.ordersn in (SELECT `vOrderSn` FROM `cm_voucher` WHERE `vSn` LIKE '{$keyword}')");
             }
             elseif ($key == 6) //活动编码
             {
-                $base->whereRaw("ordersn in (SELECT `vOrderSn` FROM `cm_voucher` WHERE `vcSn` LIKE '{$keyword}')");
+                $base->whereRaw("cm_order.ordersn in (SELECT `vOrderSn` FROM `cm_voucher` WHERE `vcSn` LIKE '{$keyword}')");
             }
         }
     }
@@ -700,10 +700,10 @@ class TransactionSearchApi
     {
         // 按时间搜索
         if (isset($params['refund_min_time']) && !empty($params['refund_min_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['refund_min_time']))) {
-            $base->where("add_time", ">=", strtotime(trim($params['refund_min_time'])));
+            $base->where("order_refund.add_time", ">=", strtotime(trim($params['refund_min_time'])));
         }
         if (isset($params['refund_max_time']) && !empty($params['refund_max_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['refund_max_time']))) {
-            $base->where("add_time", "<=", strtotime(trim($params['refund_max_time'])) + 86399 );
+            $base->where("order_refund.add_time", "<=", strtotime(trim($params['refund_max_time'])) + 86399 );
         }
     
         // 付款状态
@@ -711,13 +711,13 @@ class TransactionSearchApi
         {
             if(intval($params['state']) == 12)//退款失败特殊处理
             {
-                $base->where('status', 2);
+                $base->where('order_refund.status', 2);
             }
             else 
             {
                 $state_ids = explode(",", $params['state']);
                 $state_ids = array_map("intval",$state_ids);
-                $base->whereIn('order_status', $state_ids);
+                $base->whereIn('order.status', $state_ids);
             }            
         }
     
@@ -733,19 +733,19 @@ class TransactionSearchApi
             ], $params['keyword']) . "%";
             if ($key == 1) //订单号
             {
-                $base->where("ordersn",'like',$keyword);
+                $base->where("order_refund.ordersn",'like',$keyword);
             }
             elseif ($key == 2) //用户臭美号
             {
-                $base->whereRaw("user_id in (SELECT `user_id` FROM `cm_user` WHERE `username` LIKE '{$keyword}')");
+                $base->whereRaw("cm_order_refund.user_id in (SELECT `user_id` FROM `cm_user` WHERE `username` LIKE '{$keyword}')");
             }
             elseif ($key == 3) //用户手机号
             {
-                $base->whereRaw("user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
+                $base->whereRaw("cm_order_refund.user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
             }
             elseif ($key == 4) //店铺名
             {
-                $base->whereRaw("`salonid` IN (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");    
+                $base->whereRaw("cm_order_refund.salonid IN (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");    
             }
         }
     }

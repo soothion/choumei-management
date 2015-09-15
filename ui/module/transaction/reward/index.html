@@ -7,48 +7,39 @@
   </head>
   <body>
         <div class="breadcrumb">
-            <a>交易管理</a><span>&gt;</span><a href="index.html">交易管理</a>
+            <a>交易管理</a><span>&gt;</span><a href="index.html">赏金单查询</a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>设备号登陆查询</h4>
+                    <h4>赏金单查询</h4>
                 </div>
             </div>
         </div>
         <div class="wrapper">
             <form data-role="hash">          
-                <div class="input-group input-switch">
-                    <select>
-                      <option value="0">赏金单号</option>
-                      <option value="1">店铺名称</option>
-                      <option value="2">用户臭美号</option>
-                      <option value="3">用户手机号</option>
+                <div class="input-group placeholder-switch">
+                    <select name="keywordType">
+                      <option value="0" data-placeholder="请输入赏金单号">赏金单号</option>
+                      <option value="1" data-placeholder="请输入用户臭美号">用户臭美号</option>
+                      <option value="2" data-placeholder="请输入用户手机号" selected="selected">用户手机号</option>
+                      <option value="3" data-placeholder="请输入店铺名称">店铺名称</option>
                     </select>
-                    <input type="text" class="input-search" name="salonname" maxlength="16"
-                    placeholder="请输入订单号"/>
-                    <input type="text" class="input-search hide" name="salonsn" maxlength="16"  
-                    placeholder="请输入店铺名称"/>
-                    <input type="text" class="input-search hide" name="merchantname" maxlength="16"placeholder="请输入用户臭美号" />
-                    <input type="text" class="input-search hide" name="merchantname" maxlength="16"placeholder="请输入用户手机号" />
+                    <input type="text" class="input-search" name="keyword" maxlength="16"
+                    placeholder="请输入用户手机号"/>
                 </div>  
 
                 <span class="date-group">
                     <span style="padding:0 5px 0 15px">支付方式</span>
-                    <select name="status" >
-                        <option value="">全部</option>
-                        <option value="1">余额支付</option>
+                    <select name="payType" >
+                        <option value="0">全部</option>
+                        <option value="1">微信</option>
                         <option value="2">支付宝</option>
-                        <option value="3">微信</option>
-                        <option value="4">银联</option>
-                        <option value="5">支付宝+臭美余额</option>
-                        <option value="6">微信+臭美余额</option>
-                        <option value="7">银联+臭美余额</option>
-                        <option value="8">活动兑换</option>
+                        <option value="3">易联</option>
                     </select>
                 </span>
 
                 <span class="date-group">
                     <span style="padding:0 5px 0 15px">支付状态</span>
-                    <select name="status" >
+                    <select name="isPay" >
                         <option value="">全部</option>
                         <option value="1">未付款</option>
                         <option value="2">已付款</option>
@@ -57,9 +48,9 @@
 
                 <span class="date-group">
                     <span style="padding:0 5px 0 20px">交易时间</span>
-                    <input type="date" name="start" data-role="start" placeholder="YYYY-MM-DD"/>
+                    <input type="date" name="minTime" data-role="start" placeholder="YYYY-MM-DD"/>
                     <span style="padding:0 10px">到</span>
-                    <input name="end" type="date" data-role="end" placeholder="YYYY-MM-DD"/>
+                    <input type="date" name="maxTime" data-role="end" placeholder="YYYY-MM-DD"/>
                 </span>
                 <button class="btn" type="submit">搜索</button>
             </form>
@@ -70,7 +61,7 @@
                 </button>
             </form>
 
-            <div class="table" ajat="role/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <div class="table" ajat="bounty/getList?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
             <table>
               <thead>
@@ -89,20 +80,18 @@
                 </tr>
               </thead>
               <tbody>             
-                <%var status=["正常","停用","注销"]%>
-                <%var data=data.data%>
-                <%data.forEach(function(item,i){%>
+                <%data.data && data.data.forEach(function(item,i){%>
                 <tr>
                   <td><%=i+1%></td>
-                  <td><%=item.name%></td>
-                  <td><%=status[item.status-1]%></td>
-                  <td><%=item.department?item.department.title:""%></td>
-                  <td><%=item.city?item.city.title:""%></td>
-                  <td><%=item.created_at%></td>
-                  <td><%=item.description%></td>
-                  <td><%=item.description%></td>
-                  <td><%=item.description%></td>
-                  <td><%=item.description%></td>
+                  <td><%=item.btSn%></td>
+                  <td><%=item.tn%></td>
+                  <td><%=item.payType%></td>
+                  <td><%=item.money%></td>
+                  <td><%=item.addTime%></td>
+                  <td><%=item.hairStylistMobile%></td>
+                  <td><%=item.userMobile%></td>
+                  <td><%=item.salonName%></td>
+                  <td><%=item.isPay%></td>
                   <td>
                      <a class="link" data-slug="role.show,role.update" href="rewardDetail.html" target="_blank">查看&gt</a>
                   </td>

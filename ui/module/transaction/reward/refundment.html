@@ -2,11 +2,12 @@
 <html lang="zh-CN">
   <head>
       <meta charset="utf-8">
-      <title>臭美管理后台</title>
-      <script type="text/javascript" src="/js/include.js"></script>
+    <title>臭美管理后台</title>
+    <script type="text/javascript" src="/js/include.js"></script>
       <style>
         h3{
-            padding: 0px 20px;
+            padding: 6px 20px;
+            margin:2px;
             border: 1px solid #E6EAF2;
             border-bottom: none;
             font-size: 18px;
@@ -16,133 +17,146 @@
             background-color:#f5f5f5;         
         }
 
-        label.label input:checked + h3 {
-            background-color:inherit;  
+       .active{background-color:inherit;};
+         
+        td a{
+          margin-right: 8px;
+        }
+
+        .tab{
+          position: absolute;
+          top:35px;
+          width:600px;
+          left:30%;
+          border: none;
         }
 
       </style>
   </head>
   <body>
-        <div class="breadcrumb">
-            <a>系统管理</a><span>&gt;</span><a href="index.html">角色管理</a>
-            <div class="flex-box">
-                <div class="flex-item">
-                    <h4>角色管理</h4>
-                </div>
-
-                <div class="flex-item">
-                    <label class="label">
-                        <input type="radio" name="status" class="radio" value="0" checked 
-                        onclick="search(0)">
-                        <h3>全部退款</h3>
-                    </label>
-
-                    <label class="label">
-                        <input type="radio" name="status" class="radio" value="1" onclick="search(1)">
-                        <h3>待审核</h3>
-                    </label>
-
-                    <label class="label">
-                        <input type="radio" name="status" class="radio" value="2" onclick="search(2)">
-                        <h3>已审核</h3>
-                    </label>
-                </div>
-                <div class="flex-item"></div>
-            </div>
+    <div class="breadcrumb">
+      <a>交易管理</a><span>&gt;</span><a href="index.html">交易管理</a>
+      <div class="flex-box">
+        <div class="flex-item">
+          <h4>普通订单退款</h4>
         </div>
-
-        <div class="wrapper">
-            <form data-role="hash" id="form" ajat="#domid=form&tempid=form-t"> 
-                <script type="text/template" id="form-t">     
-                <div class="input-group input-switch">
-                    <select>
-                      <option value="0">订单号</option>
-                      <option value="1">店铺名称</option>
-                      <option value="2">用户臭美号</option>
-                      <option value="3">用户手机号</option>
-                    </select>
-                    <input type="text" class="input-search" name="salonname" maxlength="16"
-                    placeholder="请输入订单号"/>
-                    <input type="text" class="input-search hide" name="salonsn" maxlength="16"  
-                    placeholder="请输入店铺名称"/>
-                    <input type="text" class="input-search hide" name="merchantname" maxlength="16"placeholder="请输入用户臭美号" />
-                    <input type="text" class="input-search hide" name="merchantname" maxlength="16"placeholder="请输入用户手机号" />
-                </div>  
-
-                <span class="date-group">
-                    <span style="padding:0 5px 0 20px">申请退款时间</span>
-                    <input type="date" name="start" data-role="start" placeholder="YYYY-MM-DD"/>
-                    <span style="padding:0 10px">到</span>
-                    <input name="end" type="date" data-role="end" placeholder="YYYY-MM-DD"/>
-                </span>
-
-                <span class="date-group">
-                    <span style="padding:0 5px 0 15px">退款状态</span>
-                    <select name="statusText" >
-                        <option value="">全部</option>
-                        <option value="0">申请退款</option>
-                        <option value="1">退款中</option>
-                        <option value="2">退款成功</option>
-                        <option value="3">退款失败</option>
-                    </select>
-                </span>
-                <input type="hidden" name="statusValue" value="0">
-                <button class="btn" type="submit">搜索</button>
-                </script>
-            </form>
-
-            <form action="role/export" data-role="export" data-slug="role.export">
-                <button class="btn" type="button">
-                    <i class="fa fa-file-excel-o"></i> 导出
-                </button>
-            </form>            
-
-            <div class="table" ajat="role/index?<%=query._%>#domid=table&tempid=table-t" id="table">
-            <script type="text/template" id="table-t">
-            <table>
-              <thead>
-                <tr>
-                  <th>序号</th>
-                  <th>角色姓名</th>
-                  <th>角色状态</th>
-                  <th>所属部门</th>
-                  <th>所属城市</th>
-                  <th>添加时间</th>
-                  <th>角色说明</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody>             
-                <%var status=["正常","停用","注销"]%>
-                <%var data=data.data%>
-                <%data.forEach(function(item,i){%>
-                <tr>
-                  <td><%=i+1%></td>
-                  <td><%=item.name%></td>
-                  <td><%=status[item.status-1]%></td>
-                  <td><%=item.department?item.department.title:""%></td>
-                  <td><%=item.city?item.city.title:""%></td>
-                  <td><%=item.created_at%></td>
-                  <td><%=item.description%></td>
-                  <td>
-                     <a class="link" data-slug="role.show,role.update" target="_blank"
-                     href="orderDetail.html">查看&gt</a>
-                  </td>
-                </tr>
-                <%})%>
-              </tbody>
-            </table>
-            <div class="pager">
-            </div>
-            </script>
-        </div>
+      </div>
     </div>
-    <script>
-      function search(value){
-        $('input[type=hidden]').val(value);
-        lib.ajat('#domid=form&tempid=form-t').template();
-        lib.ajat('role/index?statusss='+value+'#domid=table&tempid=table-t').render();
-      }
-    </script>
+
+    <div class="wrapper">
+        <div id="form" ajat="#domid=form&tempid=form-t" ajat-one="true">
+            <script type="text/template" id="form-t">
+                <div class="tab">            
+                  <h3 <%=(!query.state || query.state=="0") ? "class=active" : ""%>>
+                    <a href="refundment.html?reload=1#state=0">全部退款</a>
+                  </h3>
+
+                  <h3 <%=query.state=="6" ? "class=active" : ""%>>
+                    <a href="refundment.html?reload=2#state=6">待审核</a>
+                  </h3>
+
+                  <h3 <%=query.state=="7,10,12" ? "class=active" : ""%>>
+                    <a href="refundment.html?reload=3#state=7,10,12">已审核</a>
+                  </h3>
+                </div>
+
+                <form data-role="hash" >             
+                  <div class="input-group placeholder-switch">
+                      <select >
+                        <option value="0" data-placeholder="请输入订单号">订单号</option>
+                        <option value="1" data-placeholder="请输入用户臭美号">用户臭美号</option>
+                        <option value="2" data-placeholder="请输入用户手机号" selected="selected">用户手机号</option>
+                        <option value="3" data-placeholder="请输入店铺名称">店铺名称</option>
+                      </select>
+                      <input type="text" class="input-search" name="keyword" maxlength="16"
+                      placeholder="请输入用户手机号"/>
+                  </div>  
+
+                  <span class="date-group">
+                    <span style="padding:0 5px 0 20px">申请退款时间</span>
+                    <input type="date" name="refund_min_time" data-role="start" placeholder="YYYY-MM-DD"/>
+                    <span style="padding:0 10px">到</span>
+                    <input type="date" name="refund_max_time" data-role="end" placeholder="YYYY-MM-DD"/>
+                  </span>
+
+                  <span class="date-group">
+                    <span style="padding:0 5px 0 15px">退款状态</span>
+                    <select name="state" >
+                      <%if(!query.state || query.state === "0"){%>
+                          <option value="0">全部</option>
+                          <option value="6">申请退款</option>
+                          <option value="10">退款中</option>
+                          <option value="7">退款成功</option>
+                          <option value="12">退款失败</option>
+                      <%}else if(query.state === "6"){%>
+                          <option value="6">申请退款</option>
+                      <%}else{%>
+                          <option value="7,10,12">全部</option>
+                          <option value="10">退款中</option>
+                          <option value="7">退款成功</option>
+                          <option value="12">退款失败</option>
+                      <%}%>
+                    </select>
+                  </span>
+
+                  <button class="btn" type="submit">搜索</button>         
+                </form>
+
+                <form action="role/export" data-role="export" data-slug="role.export">
+                  <button class="btn" type="button">
+                  <i class="fa fa-file-excel-o"></i> 导出
+                  </button>
+                </form>  
+            </script>          
+        </div>
+
+      <div class="table" ajat="refund/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+      <script type="text/template" id="table-t">
+      <table>
+        <thead>
+          <tr>
+              <th>序号</th>
+              <th>赏金单号</th>
+              <th>支付方式</th>
+              <th>退款金额</th>
+              <th>申请时间</th>
+              <th>用户臭美号</th>
+              <th>用户手机号</th>
+              <th>现金券编号</th>
+              <th>店铺名称</th>
+              <th>退款状态</th>
+              <th>操作</th>
+          </tr>
+        </thead>
+
+        <tbody>       
+        <%data.data &&　data.data.forEach(function(item,i){%>
+          <tr>
+              <td><%=i+1%></td>
+              <td><%=item.ticketno%></td>
+              <td><%=item.ordersn%></td>
+              <td><%=item.buy_time%></td>
+              <td><%=item.add_time%></td>
+              <td><%=item.salon && item.salon.salonname %></td>
+              <td><%=item.user && item.user.mobilephone%></td>
+              <td><%=item.voucher && item.voucher.vSn%></td>
+              <td><%=item.fundflow && item.fundflow.pay_type%></td>
+              <td><%=item.priceall_ori%></td>
+              <td>
+                <a class="link" href="" >查看</a>
+                <%if(item.order_status == "6"){%>
+                    <a class="link" href="">通过</a>
+                    <a class="link" href="">拒绝</a>
+                <%}%>
+              </td>
+          </tr>
+        <%})%>
+        </tbody>
+      </table>
+      <div class="pager">
+      </div>
+      </script>
+    </div>
+  </div>
   </body>
 </html>
