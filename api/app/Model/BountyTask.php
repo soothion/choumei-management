@@ -636,9 +636,15 @@ class BountyTask extends Model {
         if (!empty($zone)) {
             $salon_area = SalonArea::getSalonAreaById($zone);
         }
-
-        $salon['bountyType'] = self::getSalonBountyTypeName($salon['bountyType']);
-        $hairsty['grade'] = self::getHairstyGradeName($hairsty['grade']);
+        if (!empty($salon['bountyType'])) 
+        {
+            $salon['bountyType'] = self::getSalonBountyTypeName($salon['bountyType']);
+        }
+        if (!empty($hairsty['grade'])) 
+        {
+            $hairsty['grade'] = self::getHairstyGradeName($hairsty['grade']);
+        }
+        
 
         $task_tmp = self::compositeSingle($task);
 
