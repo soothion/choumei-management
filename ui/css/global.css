@@ -162,7 +162,7 @@ label>input[type="checkbox"][disabled]+span{
 	cursor: not-allowed;
 	background-color:#eee;
 }
-button[disabled]{
+button[disabled],form[disabled] button{
 	opacity:0.6;
 	cursor: not-allowed;
 }
