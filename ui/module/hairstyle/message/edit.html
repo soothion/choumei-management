@@ -178,7 +178,7 @@
 				<div class="control-group">
 					<label class="control-label" for=""></label>
 					<div class="control">
-						<button class="btn-primary" type="submit" id="submit" data-slug="<%if(query.id){%>message.update<%}else{%>message.create<%}%>">提交</button>
+						<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>message.update<%}else{%>message.create<%}%>">提交</button>
 						<span class="space"></span>
 						<button class="btn" type="submit" id="preview">预览</button>
 					</div>
@@ -258,7 +258,7 @@
 					
 				});
 				//提交消息
-				$('#submit').on('click',function(e){
+				$('.btn-primary').on('click',function(e){
 					var receivers=[];
 					$('.editor-validate input').each(function(){
 						receivers.push($(this).val());
