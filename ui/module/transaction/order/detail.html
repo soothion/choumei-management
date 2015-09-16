@@ -90,45 +90,31 @@
                                     </thead>
 
                                     <tbody>
-                                        <tr>
-                                            <td rowspan="<%=data.fundflows ? Math.max(data.fundflows.length + 1,2) : 2 %>">臭美余额
-                                            </td>
-                                        </tr>
-
                                         <%if(data.fundflows && data.fundflows.length > 0){%>
+                                            <tr>
+                                                <td rowspan="<%=data.fundflows ? Math.max(data.fundflows.length + 1,2) : 2 %>">臭美余额
+                                                </td>
+                                            </tr>
                                             <%data.fundflows.forEach(function(item,i){%>
                                             <tr>
                                                 <td><%=item.pay_type%></td>
                                                 <td><%=item.money%></td>
                                             </tr>
                                             <%})%>
-                                        <%}else{%>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
                                         <%}%>
-                                         
-
-                                        <tr>
-                                            <td rowspan="<%=data.fundflows ? Math.max(data.fundflows.length + 1,2) : 2 %>">第三方支付
-                                            </td>
-                                        </tr> 
-
+                                            
                                         <%if(data.fundflows && data.fundflows.length > 0){%>
+                                            <tr>
+                                                <td rowspan="<%=data.fundflows ? Math.max(data.fundflows.length + 1,2) : 2 %>">第三方支付
+                                                </td>
+                                            </tr> 
                                             <%data.fundflows.forEach(function(item,i){%>
                                             <tr>
                                                 <td><%=item.pay_type%></td>
                                                 <td><%=item.money%></td>
                                             </tr>
                                             <%})%>
-                                        <%}else{%>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
                                         <%}%>
-
                                     </tbody>                                
                                 </table>
                             </td>                            

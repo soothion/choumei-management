@@ -14,7 +14,8 @@
             width: 120px;
             text-align: center;
             display: inline-block; 
-            background-color:#f5f5f5;         
+            background-color:#f5f5f5;
+            cursor: pointer;         
         }
 
        .active{background-color:inherit;};
@@ -102,9 +103,9 @@
                   <button class="btn" type="submit">搜索</button>         
                 </form>
 
-                <form action="role/export" data-role="export" data-slug="role.export">
-                  <button class="btn" type="button">
-                  <i class="fa fa-file-excel-o"></i> 导出
+                <form data-role="export" action="refund/export" data-slug="role.export">
+                  <button class="btn">
+                    <i class="fa fa-file-excel-o"></i> 导出
                   </button>
                 </form>  
             </script>          
@@ -115,6 +116,9 @@
 			<table>
         <thead>
           <tr>
+              <th style="width:50px">
+                  <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+              </th>          
               <th>序号</th>
               <th>臭美券密码</th>
               <th>订单编号</th>
@@ -151,6 +155,13 @@
         %>
 				<%data.data &&　data.data.forEach(function(item,i){%>
           <tr>
+              <td>
+              <label>
+                  <input type="checkbox" data-id="<%=item.order_refund_id%>" 
+                  <%=item.order_status!="6" ? "disabled" : ""%>/>
+                  <span></span>
+              </label>
+              </td>          
               <td><%=i+1%></td>
               <td><%=item.ticketno%></td>
               <td><%=item.ordersn%></td>
@@ -177,6 +188,14 @@
 				<%})%>
         </tbody>
       </table>
+
+      <%if(data.data && data.total > 0){%>
+      <div class="table-bottom">
+        <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+        <button class="btn" style="margin-right:10px" type="button" data-slug="rebate.confirm">通过</button>
+        <button class="btn" type="button" data-slug="rebate.confirm">拒绝</button>
+      </div>
+      <%}%>
 			<div class="pager">
 			</div>
 			</script>
