@@ -326,6 +326,11 @@ class ERROR
      *@param 反馈删除失败
      */
      CONST FEED_DELETE_FAILED =  -50701;
+
+     /**
+     *@param 反馈为空
+     */
+     CONST FEED_EMPTY =  -50702;
      
 
 
