@@ -27,15 +27,18 @@ class BountyController extends Controller {
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
      * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
-     * @apiParam {String} minTime 可选,交易时间左框.
-     * @apiParam {String} maxTime 可选,交易时间右框.
+     * @apiParam {String} minPayTime 可选,交易时间左框.
+     * @apiParam {String} maxPayTime 可选,交易时间右框.
+     * @apiParam {String} minEndTime 可选,退款时间左框.
+     * @apiParam {String} maxEndTime 可选,退款时间右框.
      * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
      * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
      *
      * @apiSuccess {Number} total 总页数.
-     * @apiSuccess {Number} perPage 分页大小.
+     * @apiSuccess {Number} per_page 分页大小.
      * @apiSuccess {Number} records 总条数.
-     * @apiSuccess {Number} currentPage 当前页面.
+     * @apiSuccess {Number} current_page 当前页面.
+     * @apiSuccess {Number} last_page 当前页面.
      * @apiSuccess {Number} from 起始数.
      * @apiSuccess {Number} to 结束数.
      * @apiSuccess {Number} amount 总金额.
@@ -62,9 +65,9 @@ class BountyController extends Controller {
      * 	    "result": 1,
      * 	    "data": {
      * 	        "total": 51,
-     * 	        "perPage": 10,
+     * 	        "per_page": 10,
      * 	        "records": 510,
-     * 	        "currentPage": 1,
+     * 	        "current_page": 1,
      * 	        "from": 1,
      * 	        "to": 10,
      *              "amount":12000,
@@ -126,8 +129,9 @@ class BountyController extends Controller {
         $res = [];
 
         $res["total"] = ceil($count / $size);
-        $res["perPage"] = $size;
-        $res["correntPage"] = $page;
+        $res["per_page"] = $size;
+        $res["corrent_page"] = $page;
+        $res["last_page"] = $page;
         $res["records"] = $count;
         $res["amount"] = array("amount" => number_format($amount, 2));
         $res['data'] = $bountys;
@@ -139,7 +143,7 @@ class BountyController extends Controller {
      * @apiName detail
      * @apiGroup  bounty
      *
-     * @apiParam {Number} no 必选.	 
+     * @apiParam {Number} no 必选,赏金单号.	 
      *
      * @apiSuccess {Number} btId 赏金单Id.
      * @apiSuccess {String} btSn 赏金单号.
@@ -331,7 +335,7 @@ class BountyController extends Controller {
     }
 
     /**
-     * @api {get} /bouty/exportBounty 6.导出赏金单列表
+     * @api {get} /bounty/exportBounty 6.导出赏金单列表
      * @apiName exportBounty
      * @apiGroup bounty
      *
@@ -341,8 +345,8 @@ class BountyController extends Controller {
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
      * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
-     * @apiParam {String} minTime 可选,交易时间左框.
-     * @apiParam {String} maxTime 可选,交易时间右框.
+     * @apiParam {String} minPayTime 可选,交易时间左框.
+     * @apiParam {String} maxPayTime 可选,交易时间右框.
      * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
      * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
      *
@@ -373,7 +377,7 @@ class BountyController extends Controller {
     }
 
     /**
-     * @api {get} /bouty/exportRefund 7.导出赏金单退款列表
+     * @api {get} /bounty/exportRefund 7.导出赏金单退款列表
      * @apiName exportRefund
      * @apiGroup bounty
      *
@@ -383,8 +387,8 @@ class BountyController extends Controller {
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
      * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
-     * @apiParam {String} minTime 可选,交易时间左框.
-     * @apiParam {String} maxTime 可选,交易时间右框.
+     * @apiParam {String} minEndTime 可选,退款时间左框.
+     * @apiParam {String} maxEndTime 可选,退款时间右框.
      * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
      * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
      *

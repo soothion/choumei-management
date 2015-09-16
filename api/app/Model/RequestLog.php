@@ -25,16 +25,15 @@ class RequestLog  extends Model{
 	        $query = $query->where('bundle','=',$param['bundle']);
 	 }
          
-         if(isset($param['minTime']) && $param['minTime'] && isset($param['maxTime']) && $param['maxTime'] ){
-                $minTime=  strtotime( $param['minTime']);
-                $maxTime=  strtotime($param['maxTime']);
-                if( $minTime){
-                    $query = $query->where('updateTime','>=',$minTime); 
-                }
-                if( $maxTime){
-                    $query = $query->where('updateTime','<=',$maxTime);
-                 }
+         if(isset($param['minTime']) && $param['minTime'] ){
+               
+                    $query = $query->where('updateTime','>=', $param['minTime']); 
          }
+         if( isset($param['maxTime']) && $param['maxTime'] ){
+              
+                    $query = $query->where('updateTime','<=', $param['maxTime']);    
+         }
+         
          $sortable_keys=['updateTime','mobilephone','version'];
          $sortKey = "updateTime";
          $sortType = "DESC";
@@ -73,15 +72,13 @@ class RequestLog  extends Model{
 	        $query = $query->where('bundle','=',$param['bundle']);
 	 }
          
-         if(isset($param['minTime']) && $param['minTime'] && isset($param['maxTime']) && $param['maxTime'] ){
-                $minTime=  strtotime( $param['minTime']);
-                $maxTime=  strtotime($param['maxTime']);
-                if( $minTime){
-                    $query = $query->where('updateTime','>=',$minTime); 
-                }
-                if( $maxTime){
-                    $query = $query->where('updateTime','<=',$maxTime);
-                 }
+         if(isset($param['minTime']) && $param['minTime'] ){
+               
+                    $query = $query->where('updateTime','>=', $param['minTime']); 
+         }
+         if( isset($param['maxTime']) && $param['maxTime'] ){
+              
+                    $query = $query->where('updateTime','<=', $param['maxTime']);    
          }
          $sortable_keys=['updateTime','mobilephone','version'];
          $sortKey = "updateTime";
