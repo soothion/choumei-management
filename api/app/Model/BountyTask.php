@@ -67,6 +67,12 @@ class BountyTask extends Model {
      * @var unknown
      */
     CONST PAYTYPE_WECHAT = 3;
+    
+    /**
+     * 退款方式 易联
+     * @var unknown
+     */
+    CONST PAYTYPE_VOUCHER = 6;
 
     /**
      * 退款方式 易联
@@ -128,7 +134,8 @@ class BountyTask extends Model {
             }
             switch ($payType) {
                 case self::PAYTYPE_ALIPAY :
-                case self::PAYTYPE_UNION_PAY:
+                case self::PAYTYPE_YILIAN:
+                case self::PAYTYPE_VOUCHER:
                 case self::PAYTYPE_WECHAT:
                     $query->where('payType', '=', $payType);
                     break;
@@ -181,13 +188,13 @@ class BountyTask extends Model {
 
         //交易时间
         if (!empty($input["minPayTime"])) {
-            $minTime = strtotime($input["minTime"]);
+            $minTime = strtotime($input["minPayTime"]);
             if ($minTime) {
                 $query->where('payTime', '>=', $minTime);
             }
         }
         if (!empty($input["maxPayTime"])) {
-            $maxTime = strtotime($input["maxTime"]);
+            $maxTime = strtotime($input["maxPayTime"]);
             if ($maxTime) {
                 $maxTime += 86399;
                 $query->where('payTime', '<=', $maxTime);
@@ -196,13 +203,13 @@ class BountyTask extends Model {
         
         //退款时间
         if (!empty($input["minEndTime"])) {
-            $minTime = strtotime($input["minTime"]);
+            $minTime = strtotime($input["minEndTime"]);
             if ($minTime) {
                 $query->where('endTime', '>=', $minTime);
             }
         }
         if (!empty($input["maxEndTime"])) {
-            $maxTime = strtotime($input["maxTime"]);
+            $maxTime = strtotime($input["maxEndTime"]);
             if ($maxTime) {
                 $maxTime += 86399;
                 $query->where('endTime', '<=', $maxTime);
@@ -316,10 +323,10 @@ class BountyTask extends Model {
             $hairstylistId = $bounty['hairstylistId'];
 //			$url = U("/Bounty/detail/no/{$bounty_sn}");           
 //			$refund_url = U("/Bounty/refund_detail/no/{$bounty_sn}");
-            $url = URL::action('Bounty\BountyController@detail');
-            $refund_url = URL::action('Bounty\BountyController@refundDetail');
-            $bounty["operations"] = "<a href=\"{$url}\" target=\"_blank\">查看</a>";
-            $bounty["refund_operations"] = "<a href=\"{$refund_url}\" target=\"_blank\">查看</a>";
+//            $url = URL::action('Bounty\BountyController@detail');
+//            $refund_url = URL::action('Bounty\BountyController@refundDetail');
+//            $bounty["operations"] = "<a href=\"{$url}\" target=\"_blank\">查看</a>";
+//            $bounty["refund_operations"] = "<a href=\"{$refund_url}\" target=\"_blank\">查看</a>";
             $status = intval($bounty['refundStatus']);
 
             $tmp = self::compositeSingle($bounty);
@@ -341,14 +348,14 @@ class BountyTask extends Model {
                 $bounty['hairStylistMobile'] = $hairstylists[$hairstylistId]['mobilephone'];
             }
 
-            if ($status == self::STATUS_APPLY_REFUND) {
-                $bounty["refund_operations"] .= "&nbsp;&nbsp;<a href=\"javascript:;\" class=\"accept_refund\" refund_id=\"{$id}\">通过</a>";
-                $bounty["refund_operations"] .= "&nbsp;&nbsp;<a href=\"javascript:;\" class=\"reject_refund\" refund_id=\"{$id}\">拒绝</a>";
-            }
-
-            if ($status == self::STATUS_IN_REFUND) {
-                $bounty["refund_operations"] .= "&nbsp;&nbsp;<a href=\"javascript:;\" class=\"accept_refund\" refund_id=\"{$id}\">重新退款</a>";
-            }
+//            if ($status == self::STATUS_APPLY_REFUND) {
+//                $bounty["refund_operations"] .= "&nbsp;&nbsp;<a href=\"javascript:;\" class=\"accept_refund\" refund_id=\"{$id}\">通过</a>";
+//                $bounty["refund_operations"] .= "&nbsp;&nbsp;<a href=\"javascript:;\" class=\"reject_refund\" refund_id=\"{$id}\">拒绝</a>";
+//            }
+//
+//            if ($status == self::STATUS_IN_REFUND) {
+//                $bounty["refund_operations"] .= "&nbsp;&nbsp;<a href=\"javascript:;\" class=\"accept_refund\" refund_id=\"{$id}\">重新退款</a>";
+//            }
         }
         return $bountys;
     }
@@ -365,7 +372,7 @@ class BountyTask extends Model {
         $item['btStatus'] = self::getBtStatusStr($task['btStatus'], $task['satisfyType']);
         $item['selectType'] = self::getSelectTypeName($task['selectType']);
         $satisfy = self::getSatisfyTypeStr($task['satisfyType']);
-        $item['refundStatus'] = self::getStatusName($task['refundStatus']);
+        $item['refundStatus'] = $task['refundStatus'];
 
         if ($task['btStatus'] == 4 && $task['satisfyType'] == 2) {
             $item['btStatus'] = "不打赏";
@@ -422,11 +429,14 @@ class BountyTask extends Model {
             case self::PAYTYPE_ALIPAY:
                 $name = "支付宝";
                 break;
-            case self::PAYTYPE_UNION_PAY:
-                $name = "银行卡";
+            case self::PAYTYPE_YILIAN:
+                $name = "易联";
                 break;
             case self::PAYTYPE_WECHAT:
                 $name = "微信";
+                break;
+            case self::PAYTYPE_VOUCHER:
+                $name = "优惠券";
                 break;
         }
         return $name;
@@ -666,7 +676,14 @@ class BountyTask extends Model {
         $detail['isPay'] = $task['isPay'];
         $detail['addTime'] = $task['addTime'];
         $detail['payTime'] = $task['payTime'];
-        $detail['endTime'] = $task['endTime'];
+        if($task['btStatus']=="取消")
+        {
+           $detail['cancelTime'] = $task['endTime']; 
+        }
+        else
+        {
+            $detail['endTime'] = $task['endTime'];
+        }      
         $detail['btStatus'] = $task['btStatus'];
 
         if (!empty($user)) {
@@ -717,8 +734,15 @@ class BountyTask extends Model {
 
         $refundDetail['btID'] = $task['btId'];
         $refundDetail['btSn'] = $task['btSn'];
-        $refundDetail['btStatus'] = $task['btStatus'];
-        $refundDetail['endTime'] = $task['endTime'];
+        $refundDetail['btStatus'] = $task['btStatus'];     
+        if($task['btStatus']=="取消")
+        {
+           $refundDetail['cancelTime'] = $task['endTime']; 
+        }
+        else
+        {
+            $refundDetail['endTime'] = $task['endTime'];
+        }  
         $refundDetail['payType'] = $task['payType'];
         $refundDetail['money'] = $task['money'];
         $refundDetail['refundStatus'] = $task['refundStatus'];
