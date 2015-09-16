@@ -4,6 +4,11 @@
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
 	  <script type="text/javascript" src="/js/include.js"></script>
+	  <style type="text/css">
+		input{
+			margin-right:10px;
+		}
+	  </style>
   </head>
   <body>
 		<div class="breadcrumb">
@@ -34,7 +39,11 @@
 						<%data&&data.forEach(function(item,i){%>
 						<tr>
 							<td>V<%=item.level%></td>
-							<td><input type="text" value="<%=item.growth%>" required pattern="number" name="level"/></td>
+							<td>
+								<input type="text" value="<%=item.growth%>" required pattern="number" name="growth"/>
+								<input type="hidden" value="<%=item.id%>" name="id"/>
+								<input type="hidden" value="<%=item.level%>" name="level"/>
+							</td>
 						</tr>
 						<%})%>
 						<tr>
@@ -49,9 +58,27 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		$('#detail').on('pass',function(){
-			
-		});
+		$('#detail').on('_ready',function(){
+			/*重写getFormData**/
+			lib.tools.getFormData=function($form){
+				var data={
+					level:[]
+				}
+				$form.find('input[name="growth"]').each(function(){
+					var $this=$(this);
+					data.level.push({
+						id:$this.siblings('input[name="id"]').val(),
+						level:$this.siblings('input[name="level"]').val(),
+						growth:$this.val()
+					});
+				});
+				return data;
+			}
+			$('#detail').on('pass','input[type="text"]',function(){
+				var $this=$(this);
+				$this.closest('tr').next().find('input[type="text"]').attr('min',$this.val());
+			});
+		})
 	</script>
   </body>
 </html>

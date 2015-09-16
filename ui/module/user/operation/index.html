@@ -32,7 +32,7 @@
                   <th>联系方式</th>
                   <th>反馈内容</th>
                   <th>反馈来源</th>
-				  <th>反馈时间</th>
+				  <th width="120px">反馈时间</th>
 				  <th width="50px">操作</th>
                 </tr>
               </thead>
@@ -40,14 +40,15 @@
 				<%var data=data.data%>
 				<%data.forEach(function(item,i){%>
                 <tr>
-				  <td><label><input type="checkbox" name="ids" data-price="<%=item.money%>" form="form" value="<%=item.id%>"/><span></span></label></td>
+				  <td><label><input type="checkbox" name="feed" form="destroy" form="form" value="<%=item.id%>"/><span></span></label></td>
                   <td><%=item.id%></td>
                   <td><%=item.contact%></td>
                   <td><%=item.content%></td>
 				  <td><%=item.source%></td>
 				  <td><%=item.add_time%></td>
 				  <td>
-					 <form action="feed/destroy/<%=item.id%>" data-role="normal" onreset="remove">
+					 <form action="feed/destroy" data-role="normal" onreset="remove">
+						<input type="checkbox" value="<%=item.id%>" name="feed" class="hide" checked />
 						<button class="link">删除</button>
 					 </form>
 				  </td>
@@ -55,14 +56,24 @@
 				<%})%>
               </tbody>
             </table>
+			<form action="feed/destroy" id="destroy" data-role="normal" onreset="parent.lib.popup.result({text:'操作成功',define:function(){location.reload()}})"></form>
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<button class="btn" >批量删除</button>
+				<button class="btn" form="destroy" disabled>批量删除</button>
 			</div>
 			<div class="pager">
 			</div>
 			</script>
 		</div>
 	</div>
+	<script type="text/javascript">
+		$('#table').on('change','input',function(){
+			if($('tbody input:checked').length>0){
+				$('.table-bottom button').attr('disabled',false);
+			}else{
+				$('.table-bottom button').attr('disabled',true);
+			}
+		})
+	</script>
   </body>
 </html>
