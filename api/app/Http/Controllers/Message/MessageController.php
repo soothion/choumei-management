@@ -303,7 +303,7 @@ class MessageController extends Controller{
 	{
 		$param = $this->param;
 		$id = $param['id'];
-		$result = StylistMsgConf::select(['status'])->where("id","=",$id)->first();;
+		$result = StylistMsgConf::select(['status'])->where('id','=',$id)->first();;
 		if(!$result)
 		{
 			throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
@@ -340,11 +340,21 @@ class MessageController extends Controller{
 	{
 		$param = $this->param;
 		$id = $param['id'];
-		$result = StylistMsgConf::select(['status'])->where("id","=",$id)->where("status","=",0)->first();;
+		$result = StylistMsgConf::select(['status'])->where('id','=',$id)->first();//status 0初始 1 上线 2删除
+		
 		if(!$result)
 		{
 			throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
 		}
+		elseif($result->status != 0)
+		{
+			throw new ApiException('该消息不是未上线状态', ERROR::MESSAGE_ID_IS_ERROR);
+		}
+		elseif($result->status == 2)
+		{
+			return $this->success();
+		}
+		
 
 		$row = StylistMsgConf::doOperating($id,1);//1 上线
 		if($row)
@@ -353,7 +363,7 @@ class MessageController extends Controller{
 		}
 		else
 		{
-			throw new ApiException('上线失败', ERROR::UPDATE_FAILED);
+			throw new ApiException('上线失败,请重新操作', ERROR::UPDATE_FAILED);
 		}
 
 
