@@ -308,6 +308,10 @@ class MessageController extends Controller{
 		{
 			throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
 		}
+		elseif($result->status == 2)
+		{
+			return $this->success();
+		}
 
 		$row = StylistMsgConf::doOperating($id,2);
 		if($row)
@@ -346,16 +350,15 @@ class MessageController extends Controller{
 		{
 			throw new ApiException('未知Id', ERROR::MESSAGE_ID_IS_ERROR);
 		}
-		elseif($result->status != 0)
-		{
-			throw new ApiException('该消息不是未上线状态', ERROR::MESSAGE_ID_IS_ERROR);
-		}
-		elseif($result->status == 2)
+		if($result->status == 1)
 		{
 			return $this->success();
 		}
+		if($result->status != 0)
+		{
+			throw new ApiException('该消息不是未上线状态', ERROR::MESSAGE_ID_IS_ERROR);
+		}
 		
-
 		$row = StylistMsgConf::doOperating($id,1);//1 上线
 		if($row)
 		{
