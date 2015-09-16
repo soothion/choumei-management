@@ -252,7 +252,7 @@
 						var action=form.attr('action');
 						form.attr('action','message/addingPreview/');
 						setTimeout(function(){
-							form.attr('action',action);
+							form.attr('action',action).attr('disabled',false);
 						},1000);
 					}
 					
