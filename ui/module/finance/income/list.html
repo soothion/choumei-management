@@ -102,11 +102,11 @@
                                 <td><%=item.salonsn%></td>                        
                                 <td><%=item.salonname%></td>                        
                                 <td><%=item.sn%></td>                        
-                                <td><%=new Date(item.start_at).format("yyyy-MM-dd")%></td>  
-                                <td><%=new Date(item.end_at).format("yyyy-MM-dd")%></td>
+                                <td><%=item.start_at && new Date(item.start_at).format("yyyy-MM-dd")%></td>  
+                                <td><%=item.end_at && new Date(item.end_at).format("yyyy-MM-dd")%></td>
                                 <td><%=item.amount%></td>                        
-                                <td><%=new Date(item.created_at).format("yyyy-MM-dd")%></td>
-                                <td><%=new Date(item.confirm_at).format("yyyy-MM-dd")%></td>
+                                <td><%=item.created_at && new Date(item.created_at).format("yyyy-MM-dd")%></td>
+                                <td><%=item.confirm_at && new Date(item.confirm_at).format("yyyy-MM-dd")%></td>
                                 <td><%=item.created_by%></td>                        
                                 <td><%=item.status=="1" ? "已确认" : "待确认"%></td>                       
                                 <td><a class="link" href="detail.html?type=detail&id=<%=item.id%>"

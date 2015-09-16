@@ -135,6 +135,20 @@
         </thead>
 
         <tbody>			  
+        <% 
+        var retypeObj = {"1":"原路返还","2":"退回余额"};
+        var refundObj = {"6":"申请退款","7":"退款成功","10":"退款中","12":"退款失败"};
+        var payObj    = {
+            "1":"微信",
+            "2":"支付宝",
+            "3":"易联",
+            "4":"现金券",
+            "5":"余额",
+            "6":"现金券+支付宝",
+            "7":"现金券+微信",
+            "8":"现金券+易联"
+        };      
+        %>
 				<%data.data &&　data.data.forEach(function(item,i){%>
           <tr>
               <td><%=i+1%></td>
@@ -145,15 +159,15 @@
               <td><%=item.salon && item.salon.salonname %></td>
               <td><%=item.user && item.user.mobilephone%></td>
               <td><%=item.voucher && item.voucher.vSn%></td>
-              <td><%=item.fundflow && item.fundflow.pay_type%></td>
+              <td><%=item.fundflow && payObj[item.fundflow.pay_type]%></td>
               <td><%=item.priceall_ori%></td>
               <td><%=item.actuallyPay%></td>
               <td><%=item.refund_money%></td>
-              <td><%=item.retype%></td>
-              <td><%=item.order_status%></td>
+              <td><%=retypeObj[item.retype]%></td>
+              <td><%=refundObj[item.order_status]%></td>
               <td><%=item.shopcartsn%></td>
               <td>
-                <a class="link" href="" >查看</a>
+                <a class="link" href="detail.html?method=refund/show/&id=<%=item.order_refund_id%>" >查看</a>
                 <%if(item.order_status == "6"){%>
                     <a class="link" href="">通过</a>
                     <a class="link" href="">拒绝</a>

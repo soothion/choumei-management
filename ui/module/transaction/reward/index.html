@@ -33,7 +33,7 @@
                         <option value="0">全部</option>
                         <option value="1">微信</option>
                         <option value="2">支付宝</option>
-                        <option value="3">易联</option>
+                        <option value="10">易联</option>
                     </select>
                 </span>
 
@@ -48,20 +48,20 @@
 
                 <span class="date-group">
                     <span style="padding:0 5px 0 20px">交易时间</span>
-                    <input type="date" name="minTime" data-role="start" placeholder="YYYY-MM-DD"/>
+                    <input type="date" name="minPayTime" data-role="start" placeholder="YYYY-MM-DD"/>
                     <span style="padding:0 10px">到</span>
-                    <input type="date" name="maxTime" data-role="end" placeholder="YYYY-MM-DD"/>
+                    <input type="date" name="maxPayTime" data-role="end" placeholder="YYYY-MM-DD"/>
                 </span>
                 <button class="btn" type="submit">搜索</button>
             </form>
 
-            <form action="role/export" data-role="export" data-slug="role.export">
+            <form action="bounty/exportRefund" data-role="export" data-slug="role.export">
                 <button class="btn" type="submit">
                     <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form>
 
-            <div class="table" ajat="bounty/getList?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <div class="table" ajat="bounty/getList?isRefund=1&<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
             <table>
               <thead>
@@ -93,7 +93,9 @@
                   <td><%=item.salonName%></td>
                   <td><%=item.isPay%></td>
                   <td>
-                     <a class="link" data-slug="role.show,role.update" href="rewardDetail.html" target="_blank">查看&gt</a>
+                     <a class="link" data-slug="role.show,role.update" href="detail.html?no=<%=item.btSn%>">
+                     查看&gt
+                     </a>
                   </td>
                 </tr>
                 <%})%>

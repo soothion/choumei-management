@@ -82,37 +82,53 @@
                             <td class="first-td">金额构成</td>
                             <td>
                                 <table>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">名称</th>
+                                            <th>金额（元）</th>
+                                        </tr>
+                                    </thead>
+
                                     <tbody>
                                         <tr>
-                                            <td colspan="2" style="width:66.6%">名称</td>
-                                            <td>金额（元）</td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:33%">臭美余额</td>
-                                            <td colspan="2">
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>data</td>
-                                                        <td>data</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>data</td>
-                                                        <td>data</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>data</td>
-                                                        <td>data</td>
-                                                    </tr>                                                    
-                                                </tbody>
-                                            </table>
+                                            <td rowspan="<%=data.fundflows ? Math.max(data.fundflows.length + 1,2) : 2 %>">臭美余额
                                             </td>
                                         </tr>
+
+                                        <%if(data.fundflows && data.fundflows.length > 0){%>
+                                            <%data.fundflows.forEach(function(item,i){%>
+                                            <tr>
+                                                <td><%=item.pay_type%></td>
+                                                <td><%=item.money%></td>
+                                            </tr>
+                                            <%})%>
+                                        <%}else{%>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        <%}%>
+                                         
+
                                         <tr>
-                                            <td style="width:33%">第三方支付（0）</td>
-                                            <td>--</td>
-                                            <td>--</td>
-                                        </tr>
+                                            <td rowspan="<%=data.fundflows ? Math.max(data.fundflows.length + 1,2) : 2 %>">第三方支付
+                                            </td>
+                                        </tr> 
+
+                                        <%if(data.fundflows && data.fundflows.length > 0){%>
+                                            <%data.fundflows.forEach(function(item,i){%>
+                                            <tr>
+                                                <td><%=item.pay_type%></td>
+                                                <td><%=item.money%></td>
+                                            </tr>
+                                            <%})%>
+                                        <%}else{%>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        <%}%>
+
                                     </tbody>                                
                                 </table>
                             </td>                            
@@ -122,41 +138,53 @@
                             <td class="first-td">臭美券动态</td>
                             <td>
                                 <table>
+                                    <thead>
+                                        <tr>
+                                            <th>时间</th>
+                                            <th>行为</th>
+                                        </tr>
+                                    </thead>
                                     <tbody>
+                                        <%data.trends && data.trends.forEach(function(obj,i){ %>
                                         <tr>
-                                            <td>时间</td>
-                                            <td>行为</td>
+                                            <td><%=obj.add_time %></td>
+                                            <td><%=obj.remark %></td>
                                         </tr>
-                                        <tr>
-                                            <td><%=data.trends && data.trends.add_time %></td>
-                                            <td><%=data.trends && data.trends.remark %></td>
-                                        </tr>
+                                        <%}) %>
                                     </tbody>                                
                                 </table>
                             </td>
                         </tr>
 
                         <tr>
-                            <td class="first-td">代金券动态</td>
+                            <td class="first-td">券动态</td>
                             <td>
                                 <table>
+                                    <thead>
+                                        <tr>
+                                            <th>活动编码</th>
+                                            <th>券编号</th>
+                                            <th>券金额</th>
+                                            <th>券有效期</th>
+                                            <th>券状态</th>
+                                            <th>时间</th>
+                                        </tr>  
+                                    <thead>                              
                                     <tbody>
+                                        <% data.vouchers && data.vouchers.forEach(function(item,i){ %>
                                         <tr>
-                                            <td>活动编码</td>
-                                            <td>代金券编号</td>
-                                            <td>代金券金额</td>
-                                            <td>代金券有效期</td>
-                                            <td>代金券状态</td>
-                                            <td>时间</td>
+                                            <td><%=item.vOrderSn%></td>
+                                            <td><%=item.vSn%></td>
+                                            <td><%=item.voucher && item.voucher.vUseMoney%></td>
+                                            <td><%=item.voucher && 
+                                            (new Date(item.voucher.vUseStart).format("yyyy-MM-dd") 
+                                             +"  --  "+ 
+                                             new Date(item.voucher.vUseEnd).format("yyyy-MM-dd")) %>
+                                            </td>
+                                            <td><%=item.vStatus%></td>
+                                            <td class="format"><%=new Date(item.vAddTime).format("yyyy-MM-dd")%></td>
                                         </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
+                                        <%}) %>
                                     </tbody>                                
                                 </table>
                             </td>                            
@@ -166,13 +194,15 @@
                             <td class="first-td">佣金信息</td>
                             <td>
                                 <table>
-                                    <tbody>
+                                    <thead>
                                         <tr>
-                                            <td>店铺等级</td>
-                                            <td>佣金率</td>
-                                            <td>佣金</td>
-                                            <td>邀请码（店名）</td>
-                                        </tr>
+                                            <th>店铺等级</th>
+                                            <th>佣金率</th>
+                                            <th>佣金</th>
+                                            <th>邀请码（店名）</th>
+                                        </tr> 
+                                    <thead>                                    
+                                    <tbody>
                                         <tr>
                                             <td></td>
                                             <td></td>
@@ -188,14 +218,16 @@
                             <td class="first-td">设备信息</td>
                             <td>
                                 <table>
-                                    <tbody>
+                                    <thead>
                                         <tr>
-                                            <td>用户设备号</td>
-                                            <td>系统</td>
-                                            <td>手机型号</td>
-                                            <td>网络</td>
-                                            <td>APP版本</td>
+                                            <th>用户设备号</th>
+                                            <th>系统</th>
+                                            <th>手机型号</th>
+                                            <th>网络</th>
+                                            <th>APP版本</th>
                                         </tr>
+                                    <thead>                                  
+                                    <tbody>
                                         <tr>
                                             <td></td>
                                             <td></td>

@@ -701,8 +701,25 @@
         },
         format : function(){
             $("td.format").each(function(index,item){
-                var txt = $(this).text();
-                txt && $(this).text(new Date(txt).format("yyyy-MM-dd"));
+                var val = $(this).text();
+                if(val){
+                	if(isNaN(val)){
+                		$(this).text(new Date(val).format("yyyy-MM-dd"));
+                	}else{
+						$(this).text(new Date(val*1).format("yyyy-MM-dd"));
+                	}
+                }
+            });
+
+            $("td.formatHms").each(function(index,item){
+                var val = $(this).text();
+                if(val){
+                	if(isNaN(val)){
+                		$(this).text(new Date(val).format("yyyy-MM-dd hh:mm:ss"));
+                	}else{
+						$(this).text(new Date(val*1).format("yyyy-MM-dd hh:mm:ss"));
+                	}
+                }
             });
         },
         exception:function(data){//异常处理
