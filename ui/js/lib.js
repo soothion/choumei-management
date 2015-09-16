@@ -196,7 +196,10 @@
 					options.text=(options.bool?"操作成功":"操作失败");
 				}
 				if(options.time===undefined){
-					options.time=2000;
+					options.time=1000;
+				}
+				if(options.bool===undefined){
+					options.bool=true;
 				}
 				options.text='<i class="fa fa-'+(options.bool?"check":"times")+'-circle"></i>'+options.text;
 				this.tips(options)
@@ -933,6 +936,9 @@
 			this.cfg.requiredmsg=this.el.requiredmsg||"未填写";
 			this.cfg.patternmsg=this.el.patternmsg||"不正确";
 			this.bindEvent();
+			this.el.goback=function(){
+				history.back();
+			}
 		},
 		validateFields:function(e,eventData){
 			var $target=$(e.target);
@@ -1124,9 +1130,7 @@
 				bool:true,
 				text:(data.msg||"数据更新成功"),
 				define:function(){
-					if($(self.el).data('goback')!==false){
-						history.back();
-					}
+					self.el.goback();
 				}
 			});
 		},
@@ -1180,9 +1184,8 @@
 		},
 		save:function(data){
 			var $el=$(this.el);
-			var btn=$el.find('button[type=submit]');
-			if(btn.is(':disabled')) return;
-			btn.attr('disabled',true);
+			if($el.attr('disabled')) return;
+			$el.attr('disabled',true);
 			parent.lib.popup.loading({text:'数据正在提交...'});
 			var self=this;
 			lib.ajax({
@@ -1190,10 +1193,10 @@
 				data:data,
 				type:this.el.method,
 				success:function(data){
-					$(self.el).trigger('response',data).find('button[type=submit]').attr('disabled',false);
+					$(self.el).trigger('response',data);
 				},
 				error:function(xhr,code){
-					$(self.el).find('button[type=submit]').attr('disabled',false);
+					$(self.el).attr('disabled',false);
 					self.fail(null,{})
 				}
 			});
