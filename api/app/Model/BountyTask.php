@@ -178,14 +178,19 @@ class BountyTask extends Model {
 //            
 //		}
         //退款状态
-        if (!empty($input["refundStatus"])) {
-            if ($input["refundStatus"] > 9 || $input["refundStatus"] < 5) {
-                return $this->error("赏金单查询退款状态不正确！");
+        $isRefund =intval($input["isRefund"]);
+        if(!empty($isRefund)&&$isRefund==2)
+        {
+            $query->where('refundStatus', '>=', 5);
+            if (!empty($input["refundStatus"])) {
+                if ($input["refundStatus"] > 9 || $input["refundStatus"] < 5) {
+                    return $this->error("赏金单查询退款状态不正确！");
+                }
+                $refundStatus = intval($input["refundStatus"]);
+                $query->where('refundStatus', '=', $refundStatus);
             }
-            $refundStatus = intval($input["refundStatus"]);
-            $query->where('refundStatus', '=', $refundStatus);
         }
-
+        
         //交易时间
         if (!empty($input["minPayTime"])) {
             $minTime = strtotime($input["minPayTime"]);
@@ -735,14 +740,7 @@ class BountyTask extends Model {
         $refundDetail['btID'] = $task['btId'];
         $refundDetail['btSn'] = $task['btSn'];
         $refundDetail['btStatus'] = $task['btStatus'];     
-        if($task['btStatus']=="取消")
-        {
-           $refundDetail['cancelTime'] = $task['endTime']; 
-        }
-        else
-        {
-            $refundDetail['endTime'] = $task['endTime'];
-        }  
+        $refundDetail['endTime'] = $task['endTime'];
         $refundDetail['payType'] = $task['payType'];
         $refundDetail['money'] = $task['money'];
         $refundDetail['refundStatus'] = $task['refundStatus'];

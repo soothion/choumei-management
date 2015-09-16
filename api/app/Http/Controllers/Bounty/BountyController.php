@@ -19,8 +19,9 @@ class BountyController extends Controller {
      * @apiName getList
      * @apiGroup  bounty
      *
+     * @apiParam {Number} isRefund 必选,是否为退款查询：1否 2是.
      * @apiParam {Number} page 可选,页码，默认为1.
-     * @apiParam {Number} pageSize 可选,默认为10.
+     * @apiParam {Number} pageSize 可选,默认为20.
      * @apiParam {String} keyword 可选,搜索关键词.
      * @apiParam {String} keywordType 必选,搜索关键词类型，可取0 赏金单号/1 用户臭美号/2 用户手机号/3 店铺名称.
      * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
@@ -55,8 +56,6 @@ class BountyController extends Controller {
      * @apiSuccess {String} salonName 商铺名称.
      * @apiSuccess {Number} refundStatus 退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
      * @apiSuccess {String} isPay 支付状态：1未支付 2已支付	 
-     * @apiSuccess {String} operations 赏金单操作链接.
-     * @apiSuccess {String} refund_operations 赏金单退款操作链接.
      * 
      *
      *
@@ -107,7 +106,7 @@ class BountyController extends Controller {
         if (isset($param['size']) && !empty($param['size'])) {
             $size = $param['size'];
         } else {
-            $size = 10;
+            $size = 20;
         }
         $query = BountyTask::getQueryByParam($param);
         $sortable_keys = ['btSn', 'money', 'addTime'];
