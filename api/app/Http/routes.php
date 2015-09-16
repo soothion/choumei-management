@@ -155,7 +155,7 @@ Route::any('refund/call_back_of_alipay',array(
 		'as'=>'feed.index',
 		'uses'=>'FeedController@index'
 	));
-	Route::any('feed/destroy/{id}',array(
+	Route::any('feed/destroy',array(
 		'as'=>'feed.destroy',
 		'uses'=>'FeedController@destroy'
 	));

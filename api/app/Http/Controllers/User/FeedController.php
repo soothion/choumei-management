@@ -12,8 +12,8 @@ class FeedController extends Controller{
 	 * @apiName index
 	 * @apiGroup Feed
 	 *
-	 * @apiParam {String} start_at 可选,起始注册时间;
-	 * @apiParam {String} end_at 可选,截止注册时间;
+	 * @apiParam {String} date 反馈日期;
+	 * @apiParam {String} keyword 反馈关键词;
 	 * @apiParam {String} area 可选,区域,省市区用英文逗号,分隔;
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.
@@ -91,18 +91,18 @@ class FeedController extends Controller{
 
 
 	/**
-	 * @api {post} /user/destroy/:id 2.删除反馈信息
+	 * @api {post} /user/destroy 2.删除反馈信息
 	 * @apiName destroy
 	 * @apiGroup Feed
 	 *
-	 * @apiParam {Number} id 反馈ID.
+	 * @apiParam {Array} feed 反馈ID.
 	 */
-	public function destroy($id)
+	public function destroy()
 	{
-		$feed = Feed::find($id);
-		if(!$feed)
-			throw new ApiException('未知反馈', ERROR::FEED_NOT_FOUND);
-		$result = $feed->delete();
+		$param = $this->param;
+		if(empty($param['feed']))
+			throw new ApiException('请指定要删除的内容', ERROR::FEED_EMPTY);
+		$result = Feed::whereIn('feed_id',$param['feed'])->delete();
 		if($result)
 			return $this->success();
 		throw new ApiException('删除失败', ERROR::FEED_DELETE_FAILED);
