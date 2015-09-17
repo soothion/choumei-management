@@ -134,7 +134,7 @@
         <tbody>			  
         <% 
         var retypeObj = {"1":"原路返还","2":"退回余额"};
-        var refundObj = {"6":"申请退款","7":"退款成功","10":"退款中","12":"退款失败"};
+        var refundObj = {"6":"待审核","7":"退款成功","10":"退款中","12":"退款失败"};
         var payObj    = {"2":"支付宝","3":"微信","4":"余额","9":"现金券","10":"易联"};      
         %>
 				<%data.data &&　data.data.forEach(function(item,i){%>
@@ -168,11 +168,12 @@
               <td><%=refundObj[item.order_status]%></td>
               <td><%=item.shopcartsn%></td>
               <td>
-
-                <a class="link" href="detail.html?method=refund/show/&id=<%=item.order_refund_id%>" >查看</a>
-                <%if(item.order_status == "6"){%>
-                    <a class="link" href="">通过</a>
-                    <a class="link" href="">拒绝</a>
+                <a class="link" href="detail.html?method=refund/show/&id=<%=item.order_refund_id%>" >
+                查看&gt
+                </a>
+                <%if(item.order_status=="6"){%>
+                    <a class="link pass"   data-type="0" data-id="<%=item.order_refund_id%>">通过</a>
+                    <a class="link reject" data-type="0" data-id="<%=item.order_refund_id%>">拒绝</a>
                 <%}%>
               </td>
           </tr>
@@ -183,8 +184,12 @@
       <%if(data.data && data.total > 0){%>
       <div class="table-bottom">
         <label class="select-all"><input type="checkbox"/><span>全选</span></label>
-        <button class="btn" style="margin-right:10px" type="button" data-slug="rebate.confirm">通过</button>
-        <button class="btn" type="button" data-slug="rebate.confirm">拒绝</button>
+        <button class="btn pass" data-type="1" style="margin-right:10px" data-slug="rebate.confirm">
+          通过
+        </button>
+        <button class="btn reject" data-type="1"  data-slug="rebate.confirm">
+          拒绝
+        </button>
       </div>
       <%}%>
 			<div class="pager">
@@ -192,5 +197,70 @@
 			</script>
 		</div>
 	</div>
+  <script>
+  $(document).ready(function(){     
+      $(".wrapper").delegate(".reject",'click',function(){
+          var type = $(this).data('type');
+          var arr     = [];          
+          if(type == "0") arr.push($(this).data('id'));
+          if(type == "1") {
+            $('tbody input[type="checkbox"]:checked').each(function(index,obj){
+              arr.push($(obj).data('id'));
+            })
+          }
+          if(type == "1" && arr.length < 1) {
+            lib.popup.alert({text:'请选择具体操作项'});
+            return;
+          }
+          //bounty/reject
+          parent.lib.popup.prompt({
+             text   : '拒绝原因： ',
+             define : function(str){
+
+             }
+          });        
+      });
+
+     $(".wrapper").delegate('.pass', 'click', function(event) {
+          var type = $(this).data('type');
+          var arr = [];
+          var message = "你确定要执行同意操作？";
+          if(type == "0") {
+            arr.push($(this).data('id'));
+          }
+
+          if(type == "1") {
+            $('tbody input[type="checkbox"]:checked').each(function(index,obj){
+              arr.push($(obj).data('id'));
+            })
+          } 
+          if(type == "1" && arr.length < 1) {
+            lib.popup.alert({text:'请选择具体操作项'});
+            return;
+          }         
+          
+          parent.lib.popup.confirm({
+              text:message,
+              define:function(){
+                  lib.ajax({
+                    type : "post",
+                    data : {ids:arr},
+                    url  : 'bounty/accept'
+                  }).done(function(data, status, xhr){
+                    parent.lib.popup.result({
+                      bool:data.result == 1,
+                      text:(data.result == 1 ? "操作成功" : data.msg),
+                      time:2000,
+                      define:function(){
+                          lib.ajat('bounty/getList?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
+                      }
+                    });
+                  });                          
+              }
+          });          
+
+     });
+  });
+  </script>
   </body>
 </html>

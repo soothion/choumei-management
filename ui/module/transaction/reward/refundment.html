@@ -139,7 +139,7 @@
           <tr>
               <td>
               <label>
-                  <input type="checkbox" data-id="<%=item.order_refund_id%>" 
+                  <input type="checkbox" data-id="<%=item.btId%>" 
                   <%=item.refundStatus!="5" ? "disabled" : ""%>/>
                   <span></span>
               </label>
@@ -154,14 +154,21 @@
               <td><%=item.salonName%></td>
               <td><%=statusObj[item.refundStatus]%></td>
               <td>
-                <a class="link" style="margin:0 5px;" href="refundDetail.html?no=<%=item.btSn%>" >查看</a>
+                <a class="link" style="margin:0 5px;" href="refundDetail.html?no=<%=item.btSn%>" >
+                查看&gt
+                </a>
                 <%if(item.refundStatus=="5"){%>
-                    <a class="link operate" style="margin:0 5px;" data-type="0" data-id=<%=item.btId%>>通过</a>
-                    <a class="link operate" style="margin:0 5px;" data-type="1" data-id=<%=item.btId%>>拒绝</a>
+                    <a class="link pass" style="margin:0 5px;" data-type="0" data-id=<%=item.btId%>>
+                    通过
+                    </a>
+                    <a class="link reject" style="margin:0 5px;" data-type="0" data-id=<%=item.btId%>>
+                    拒绝
+                    </a>
                 <%}%>
 
                 <%if(item.refundStatus=="8" || item.refundStatus=="9"){%>
-                    <a class="link operate" style="margin:0 5px;" data-type="2" data-id=<%=item.btId%>>重新退款</a>
+                    <a class="link pass" style="margin:0 5px;" data-type="1" data-id=<%=item.btId%>>重新退款
+                    </a>
                 <%}%>
               </td>
           </tr>
@@ -172,8 +179,8 @@
       <%if(data.data && data.total > 0){%>
       <div class="table-bottom">
         <label class="select-all"><input type="checkbox"/><span>全选</span></label>
-        <button class="btn" style="margin-right:10px" type="button" data-slug="rebate.confirm">通过</button>
-        <button class="btn" type="button" data-slug="rebate.confirm">拒绝</button>
+        <button class="btn pass"   data-type="2" style="margin-right:10px">通过</button>
+        <button class="btn reject" data-type="1" >拒绝</button>
       </div>
       <%}%>      
       <div class="pager">
@@ -182,38 +189,57 @@
     </div>
   </div>
   <script>
-  $(document).ready(function(){
-     $(".table").delegate('a.operate', 'click', function(event) {
-          parent.lib.popup.prompt({
-            'text' : '拒绝原因：  '
-          });
-          return ;
+  $(document).ready(function(){     
+      $(".wrapper").delegate(".reject",'click',function(){
           var type = $(this).data('type');
-          var mothed  = "";
-          var messges = "";
+          var arr     = [];          
+          if(type == "0") arr.push($(this).data('id'));
+          if(type == "1") {
+            $('tbody input[type="checkbox"]:checked').each(function(index,obj){
+              arr.push($(obj).data('id'));
+            })
+          }
+          if(type == "1" && arr.length < 1) {
+            lib.popup.alert({text:'请选择具体操作项'});
+            return;
+          }
+          //bounty/reject
+          parent.lib.popup.prompt({
+             text   : '拒绝原因： ',
+             define : function(str){
+
+             }
+          });        
+      });
+
+     $(".wrapper").delegate('.pass', 'click', function(event) {
+          var type = $(this).data('type');
           var arr = [];
-          if(type == "0"){
-              mothed  = "bounty/accept";
-              arr.push($(this).data('id'));
-              message = "你确定要执行同意操作？";
+          var message = "你确定要执行同意操作？";
+          if(type == "0") {
+            arr.push($(this).data('id'));
           }
-          if(type == "1"){
-              mothed  = "bounty/reject";
-              arr.push($(this).data('id'));
-              message = "你确定要执行拒绝操作？";
+          if(type == "1") {
+            arr.push($(this).data('id'));
+            message = "你确定要执行重新退款操作？";
           }
-          if(type == "2"){
-              mothed  = "bounty/accept";
-              arr.push($(this).data('id'));
-              message = "你确定要执行重新退款操作？";
-          }
+          if(type == "2") {
+            $('tbody input[type="checkbox"]:checked').each(function(index,obj){
+              arr.push($(obj).data('id'));
+            })
+          } 
+          if(type == "2" && arr.length < 1) {
+            lib.popup.alert({text:'请选择具体操作项'});
+            return;
+          }         
+          
           parent.lib.popup.confirm({
               text:message,
               define:function(){
                   lib.ajax({
                     type : "post",
                     data : {ids:arr},
-                    url  : mothed
+                    url  : 'bounty/accept'
                   }).done(function(data, status, xhr){
                     parent.lib.popup.result({
                       bool:data.result == 1,
