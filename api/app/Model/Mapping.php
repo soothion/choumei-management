@@ -1,7 +1,7 @@
 <?php
 /**
  * 数据库字段 数字对应的意思
- * 命名规范  getTablenameColumnname
+ * 命名规范  getTablenameColumnName
  * 
  */
 namespace App;
@@ -125,6 +125,40 @@ class Mapping
                 break;
             case 5:
                 $res = "其他";
+                break;
+        }
+        return $res;
+    }
+    
+    public static function getFundflowPayTypeName($pay_type)
+    {
+        //'1 网银/2 支付宝/3 微信/4 余额/5 红包/6 优惠券/7 积分/8邀请码兑换 /9 现金券/10 易联支付',
+        $res = "";
+        switch (intval($pay_type)) {
+            case 1:
+                $res = "网银";
+                break;
+            case 2:
+                $res = "支付宝";
+                break;
+            case 3:
+                $res = "微信";
+                break;
+            case 4:
+                $res = "余额";
+                break;
+            case 5:
+                $res = "红包";
+            case 6:
+                $res = "优惠券";
+            case 7:
+                $res = "红包";
+            case 8:
+                $res = "邀请码兑换";
+            case 9:
+                $res = "现金券";
+            case 10:
+                $res = "易联";
                 break;
         }
         return $res;

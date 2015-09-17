@@ -270,39 +270,17 @@ class TicketController extends Controller
      * @apiName export
      * @apiGroup ticket
      *
-     * @apiParam {Number} key  1 店铺搜索  2 店铺编号
+     * @apiParam {Number} key  1 臭美券密码 2 用户手机号  3 店铺名称  4 用户设备号  5 代金券编码  6 活动编码
      * @apiParam {String} keyword  根据key来的关键字
-     * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
-     * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
-     * @apiParam {String} type 0 全部 1 付交易代收款 2 付业务投资款
-     * @apiParam {String} pay_type 0 全部 1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiParam {String} state 0 全部 1 待提交 2待审批 3待付款  4已付款
+     * @apiParam {String} time_key  1 消费时间  2付款时间
+     * @apiParam {String} min_time 最小时间 YYYY-MM-DD
+     * @apiParam {String} max_time 最大时间 YYYY-MM-DD
+     * @apiParam {String} state 0 全部  2 未消费 4 已消费 6申请退款 7 退款完成  8 退款中 9 退款失败
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      * @apiParam {String} sort_key 排序的键 ['id','updated_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
      * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
-     *
-     * @apiSuccess {Number} total 总数据量.
-     * @apiSuccess {Number} per_page 分页大小.
-     * @apiSuccess {Number} current_page 当前页面.
-     * @apiSuccess {Number} last_page 当前页面.
-     * @apiSuccess {Number} from 起始数据.
-     * @apiSuccess {Number} to 结束数据.
-     * @apiSuccess {String} code 单号
-     * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
-     * @apiSuccess {String} money 付款金额
-     * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiSuccess {String} require_day 要求付款日期
-     * @apiSuccess {String} pay_day 实际付款日期
-     * @apiSuccess {String} cycle 回款周期
-     * @apiSuccess {String} cycle_day 回款日期
-     * @apiSuccess {String} cycle_money 周期回款金额
-     * @apiSuccess {String} make_user 制单人信息
-     * @apiSuccess {String} confirm_user 审批人信息
-     * @apiSuccess {String} cash_user 出纳人信息
-     * @apiSuccess {String} salon 店铺信息
-     * @apiSuccess {String} state 订单状态  1待提交 2待审批 3:待付款 4:已付款
-     * @apiSuccess {String} confirm_at 审批日期
+     * 
      *
      *
      * @apiErrorExample Error-Response:
@@ -313,6 +291,75 @@ class TicketController extends Controller
      */
     public function export()
     {
+        $params = $this->parameters([
+            'key' => self::T_INT,
+            'keyword' => self::T_STRING,
+            'min_time' => self::T_STRING,
+            'max_time' => self::T_STRING,
+            'state' => self::T_INT,
+            'time_key' => self::T_INT,
+        ]);
+        $items = TransactionSearchApi::getConditionOfOrder($params)->take(10000)
+        ->get()
+        ->toArray();
+        $header = [
+            '序号',
+            '臭美券密码',
+            '订单编号',
+            '支付方式',
+            '付款时间',
+            '消费时间',
+            '用户臭美号',
+            '用户手机号',
+            '用户设备号',
+            '店铺名称',
+            '项目名称',
+            '订单金额',
+            '活动编码',
+            '现金券编号',
+            '现金券面额',
+            '抵扣金额',
+            '实付金额',
+            '购物车序号',
+            '第三方流水',
+        ];
+        $res = self::format_export_data($items);
+        $this->export_xls("臭美券" . date("Ymd"), $header, $res);
+    }
     
+    private static function format_export_data($datas)
+    {
+        $res = [];
+        foreach($datas as $data)
+        {
+            $res[] = [
+                'id'=>$data['order_ticket_id'],
+                'ticketno'=>self::mask_ticketno($data['ticketno']),
+                'ordersn'=>$data['ordersn'],
+                'payname'=>OrderController::getPayNames($data['fundflow']),
+                'money'=>$data['priceall'],
+                'add_time'=>date("Y-m-d H:i:s",intval($data['add_time'])),
+                'use_time'=>intval($data['use_time'])>0?date("Y-m-d H:i:s",intval($data['use_time'])):"", 
+                'username'=>isset($data['user'])&&isset($data['user']['username'])?$data['user']['username']:"",
+                'mobilephone'=>isset($data['user'])&&isset($data['user']['mobilephone'])?$data['user']['mobilephone']:"",
+                'platform_no'=>'',  //#@todo用户设备号  
+                'salonname'=>isset($data['salon'])&&isset($data['salon']['salonname'])?$data['salon']['salonname']:"",
+                'itemname'=>'',//#@todo项目名称
+                'priceall_ori'=>$data['$priceall_ori'],
+                'vcSn'=>isset($data['voucher'])&&isset($data['voucher']['vcSn'])?$data['voucher']['vcSn']:"",
+                'vSn'=>isset($data['voucher'])&&isset($data['voucher']['vSn'])?$data['voucher']['vSn']:"",
+                'voucher_money'=>'',//#@todo现金券面额
+                'voucher_money_used'=>'',//#@todo抵扣金额
+                'actuallyPay'=>$data['actuallyPay'],
+                'shopcartsn'=>$data['shopcartsn'],
+                'tn'=>'',//#@todo第三方流水
+            ];
+        }
+        return $res;
+    }
+    
+    private static function mask_ticketno($ticketno)
+    {
+        return substr($ticketno, 0,2)."*****".substr($ticketno, strlen($ticketno)-3);
     }
 }
