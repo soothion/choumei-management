@@ -13,6 +13,8 @@ use App\SalonUser;
 use Excel;
 use Event;
 use Illuminate\Support\Facades\Redis as Redis;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 class MerchantController extends Controller {
 	/**
 	 * @api {post} /merchant/index 1.商户列表
@@ -199,7 +201,7 @@ class MerchantController extends Controller {
 		$query = Merchant::getQuery();
 		if(!$param["name"] || !$param["contact"] || !$param["mobile"])
 		{
-			return $this->error("参数错误");
+			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
 		}
 		
 		if($param["id"])
@@ -245,7 +247,7 @@ class MerchantController extends Controller {
 		}	 
 		else
 		{
-			return $this->error('商户更新失败');
+			throw new ApiException('商户更新失败', ERROR::MERCHANT_UPDATE_FAILED);
 		} 
 			
 	}
@@ -305,12 +307,12 @@ class MerchantController extends Controller {
 		$param["id"] = isset($param["id"])?$param["id"]:0;
 		if(!$param["id"])
 		{
-			return $this->error('参数错误');
+			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
 		}
 		$flag = $this->selectMerSalonStatus($param['id']);
 		if($flag > 0)
 		{
-			return $this->error('该商户还有正在合作的店铺请先终止该商户所有店铺合作，再删除商户');
+			throw new ApiException('该商户还有正在合作的店铺请先终止该商户所有店铺合作，再删除商户', ERROR::MERCHANT_STATUS_IS_ERROR);
 		}
 		
 		$save["status"] = 2;//1正常 2删除
@@ -340,7 +342,7 @@ class MerchantController extends Controller {
 		}	 
 		else
 		{
-			return $this->error('商户删除失败');
+			throw new ApiException('商户删除失败', ERROR::MERCHANT_UPDATE_FAILED);
 		} 
 		
 	}
@@ -399,13 +401,13 @@ class MerchantController extends Controller {
 
 		if(!$sn)
 		{
-			return $this->error('参数错误');
+			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
 		}
 
 		$snNo = $this->getCheckSn($sn);//检测商铺编号
 		if($snNo)
 		{
-			return $this->error('商户编号重复已经存在');
+			throw new ApiException('商户编号重复已经存在', ERROR::MERCHANT_SN_IS_ERROR);
 		}
 		else 
 		{
@@ -455,7 +457,7 @@ class MerchantController extends Controller {
 		$id = isset($param["id"])?trim($param["id"]):"";	
 		if(!$id)
 		{
-			return $this->error('参数错误');
+			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
 		}
 		$rs = Merchant::find($id);
 		return $this->success($rs);

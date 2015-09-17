@@ -10,6 +10,9 @@ use App\Salon;
 use App\PayManage;
 use App\PrepayBill;
 use App\ShopCount;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
+
 class ReceivablesController extends Controller{
 
 	
@@ -194,15 +197,10 @@ class ReceivablesController extends Controller{
 	{
 		$param = $this->param;
 		$id = isset($param['id'])?$param['id']:0;
-		if(!$id)
+		if(!$id || !Receivables::getCheckRecRsStatus($id))
 		{
-			return $this->error("参数错误");
+			throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
 		}
-		if(!Receivables::getCheckRecRsStatus($id))
-		{
-			return $this->error('数据错误');
-		}
-		
 		
 		return $this->dosave($this->param);
 	}
@@ -222,7 +220,7 @@ class ReceivablesController extends Controller{
 		$save['receiptDate'] = isset($param['receiptDate'])?strtotime($param['receiptDate']):0;
 		if(!$save['salonid'] || !in_array($save['type'], array('1','2'))  || !$save['paymentStyle'] || !$save['money'] || !$save['receiptDate'])
 		{
-			return $this->error("参数错误");
+			throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
 		}
 
 		if(Receivables::dosave($save,$id,$this->user->id))//制单人 未填写
@@ -231,7 +229,7 @@ class ReceivablesController extends Controller{
 		}
 		else
 		{
-			return $this->error('更新失败');
+			throw new ApiException('更新失败', ERROR::RECEIVABLES_UPDATE_FAILED);
 		}
 
 	}
@@ -267,7 +265,7 @@ class ReceivablesController extends Controller{
 		$query = Receivables::getQuery();
 		if(!$idStr)
 		{
-			return $this->error('参数错误');
+			throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
 		}
 		$payTypeId = array();
 		$list = $query->select(['type','type','id','status','paymentStyle','receiptDate','salonid','money','singleNumber','cashier','preparedBy','checkTime','addTime'])->whereIn('id', $idArr)->get();
@@ -277,7 +275,7 @@ class ReceivablesController extends Controller{
 			{
 				if($val->status != 1)
 				{
-					return $this->error('数据错误，请重新勾选');
+					throw new ApiException('数据错误，请重新勾选', ERROR::RECEIVABLES_ERROR);
 				}
 				if($val->type == 1)//取财务管理-收款管理中的业务投资款返还(已确认)的单		  		
 				{
@@ -358,13 +356,13 @@ class ReceivablesController extends Controller{
 		if($status)
 		{
 			DB::commit();
+			return $this->success();
 		}
 		else
 		{
 			DB::rollBack();
+			throw new ApiException('更新失败', ERROR::RECEIVABLES_UPDATE_FAILED);
 		}
-
-		return $status?$this->success():$this->error('操作失败，请重新操作！');
 		
 	}
 	/**
@@ -513,7 +511,7 @@ class ReceivablesController extends Controller{
 		$id = isset($param['id'])?$param['id']:0;
 		if(!$id)
 		{
-			return $this->error('参数错误');
+			throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
 		}
 		$du =  Receivables::getOneById($id);
 		return  $this->success($du);
@@ -552,15 +550,22 @@ class ReceivablesController extends Controller{
 	
 		if(!$id)
 		{
-			return $this->error('参数错误');
+			throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
 		}
 		if(!Receivables::getCheckRecRsStatus($id))
 		{
-			return $this->error('数据错误');
+			throw new ApiException('数据错误', ERROR::RECEIVABLES_ID_IS_ERROR);
 		}
 	
 		$status = Receivables::dodel($id);
-		return $status?$this->success():$this->error('操作失败，请重新操作！');
+		if ($status)
+		{
+			return $this->success();
+		}
+		else
+		{
+			throw new ApiException('更新失败', ERROR::RECEIVABLES_UPDATE_FAILED);
+		}
 	}
 	
 	

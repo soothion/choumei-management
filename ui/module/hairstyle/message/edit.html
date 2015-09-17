@@ -31,7 +31,7 @@
 						<label>
 							<input type="radio" class="radio" name="receive_type" value="1"
 							<%=!data.receive_type||data.receive_type==1 ? "checked" : "" %>>
-							<span>所有臭美发型app安装用户</span>
+							<span>所有臭美发型的发型师</span>
 						</label>
 						<br/>
 						<label>
@@ -77,7 +77,7 @@
 								%>
 								<%data.receivers.split(",").forEach(function(item){%>
 								<li>
-									<input type="text" id="er-1" value="<%=item%>" required requiredmsg="请输入手机号码" pattern="mobile" patternmsg="手机号码不正确" /><label class="control-help" for="er-1"></label>
+									<input type="text" id="er-1" value="<%=item%>" required requiredmsg="请输入手机号码" pattern="mobile" patternmsg="号码格式有误" /><label class="control-help" for="er-1"></label>
 								</li>
 								<%})%>
 							</ul>
@@ -105,7 +105,7 @@
 					</div>
                 </div>
 				 <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>列表展示图片：</label>
+                    <label class="control-label" for="">列表展示图片：</label>
 					<div class="control">
 						<!--
 						 <div class="control-image">
@@ -128,12 +128,11 @@
 									<div class="control-image-ud">
 										<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 									</div>
+									<input type="hidden" name="img" class="original" value="<%=data.img%>" data-helpid="image-help">
 								</div>
 							</div>
-						 <span class="space"></span>
-						 <span class="weak">图片规格：2M以内，支持jpg、png格式建议630*210px</span>
-						 <br />
-						<input type="hidden" name="img" value="<%=data.img%>" required requiredmsg="请上传图片">
+						 <div class="weak">图片规格：2M以内，支持jpg、png格式建议630*210px</div>
+						<div class="control-help" style="display:none;" id="image-help"></div>
 					</div>
                 </div>
 				<div class="control-separation">
@@ -154,10 +153,10 @@
 							<span>编辑生成</span>
 						</label>
 						<div style="margin-top:10px">
-							<input type="text"  id="url" value="<%=data.url%>" style="<%=data.content?"display:none":""%>"/>
+							<input type="text" placeholder="信息链接需以http或者https开头" id="url" value="<%=data.url%>" style="<%=data.content?"display:none":""%>" pattern="^(http|https)://" patternmsg="链接地址不正确"/>
 							<div id="editor-wrap">
 								<div id="editor" type="text/plain" style="width:800px;height:300px;"></div>
-								<div class="weak">详情中的图片建议为：690x320px</div>
+								<div class="weak">详情中的图片建议尺寸：690x320px</div>
 							</div>
 							<div class="hide">
 								<div id="edui_simpleupload" class="edui-box edui-button edui-for-simpleupload edui-default">
@@ -179,7 +178,7 @@
 				<div class="control-group">
 					<label class="control-label" for=""></label>
 					<div class="control">
-						<button class="btn-primary" type="submit" id="submit" data-slug="<%if(query.id){%>message.update<%}else{%>message.create<%}%>">提交</button>
+						<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>message.update<%}else{%>message.create<%}%>">提交</button>
 						<span class="space"></span>
 						<button class="btn" type="submit" id="preview">预览</button>
 					</div>
@@ -192,22 +191,21 @@
 		<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
 		<script type="text/javascript" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
         <script type="text/javascript">
+			
 			$('#form').one('_ready',function(e,data){
 				var form=$(this).find('form');
 				//编辑器
 				window.ue = UE.getEditor('editor');
-				setTimeout(function(){
+				window.ue.ready(function(){
 					$('#edui14').after($('#edui_simpleupload'));
 					lib.puploader.image({
 						browse_button: 'ueditor-upload',
 						auto_start:true,
-						postName:"src",
 						filters: {
 							mime_types : [
-								{ title : "Image files", extensions : "jpg,gif,png,jpeg" },
+								{ title : "Image files", extensions : "jpg,gif,png,jpeg" }
 							]
-						},
-						max_file_size:'1mb'
+						}
 					},function(uploader){
 						uploader.bind('FileUploaded',function(up,file,res){
 							if(res&&res.response&&typeof res.response=='string'){
@@ -217,58 +215,68 @@
 							}
 						});
 					});
-					if(data.response.url||data.response.title===undefined){
+					if(!data.response.id||!data.response.content){
 						$('#editor-wrap').hide();
-					}else{
-						console.log(data.response.content);
+					}
+					if(data.response.content){
 						 UE.getEditor('editor').setContent(data.response.content);
 					}
-				},500);
-				
-				
-				//预览消息页面
-				$('#preview').on('click',function(){
-					var val=$('.radio-editor:checked').val();
-					if(val==1){
-						window.open('preview.html?url='+encodeURIComponent($('#url').val()),"_blank");
-						return;
-						$('#hidden').attr('name','url').val($('#url').val());
-					}
-					if(val==2){
-						$('#hidden').attr('name','content').val(window.ue.getContent());
-					}
-					var action=form.attr('action');
-					form.attr('action','message/addingPreview/');
-					setTimeout(function(){
-						form.attr('action',action);
-					},1000);
-					$('#ueditor_textarea_editorValue').removeAttr('name');
-					
-					var receivers=[];
-					$('.editor-validate input').each(function(){
-						receivers.push($(this).val());
-					})
-					$('#receivers').val(receivers);
-					form.one('success',function(e,data){
-						if(data.result==1&&data.data){
-							window.open('preview.html?key='+data.data,'_blank');
-						}
-					});
 				});
-				$('#submit').on('click',function(){
 				
+				//预览消息
+				$('#preview').on('click',function(e){
+					var val=$('.radio-editor:checked').val();
+					if(val==1){
+						e.stopPropagation();
+						e.preventDefault();
+						var val=$('#url').val();
+						if(val){
+							window.open('preview.html?url='+encodeURIComponent(val),"_blank");
+						}else{
+							$('#hidden').blur();
+							$('#url').focus();
+						}
+					}else if(val==2){
+						$('#hidden').attr('name','content').val(window.ue.getContent());
+						var receivers=[];
+						$('.editor-validate input').each(function(){
+							receivers.push($(this).val());
+						})
+						$('#receivers').val(receivers);
+						form[0].goback=function(){}
+						form.one('success',function(e,data){
+							if(data.result==1&&data.data){
+								window.open('preview.html?key='+data.data,'_blank');
+							}
+						});
+						var action=form.attr('action');
+						form.attr('action','message/addingPreview/');
+						setTimeout(function(){
+							form.attr('action',action).attr('disabled',false);
+						},1000);
+					}
+					
+				});
+				//提交消息
+				$('.btn-primary').on('click',function(e){
 					var receivers=[];
 					$('.editor-validate input').each(function(){
 						receivers.push($(this).val());
-					})
+					});
 					$('#receivers').val(receivers);
-					
 					var val=$('.radio-editor:checked').val();
 					if(val==1){
 						$('#hidden').attr('name','url').val($('#url').val());
 					}
 					if(val==2){
 						$('#hidden').attr('name','content').val(window.ue.getContent());
+					}
+					var type=$('.radio:checked').val();
+					if(type==1){
+						$('#receivers').val('');
+					}
+					form[0].goback=function(){
+						history.back();
 					}
 				})
 				
@@ -314,6 +322,7 @@
 					lib.ajax({
 						url:'message/checkPhone',
 						type:'POST',
+						async:false,
 						data:{
 							receivers:$(this).val()
 						},
@@ -337,7 +346,6 @@
 				lib.puploader.image({
 					browse_button: 'imageUpload',
 					auto_start:true,
-					postName:"img",
 					filters: {
 						mime_types : [
 							{ title : "Image files", extensions : "jpg,png,jpeg" },

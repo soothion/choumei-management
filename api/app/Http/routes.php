@@ -90,7 +90,7 @@ Route::any('refund/call_back_of_alipay',array(
 
 //权限管理后台接口
  //Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
- Route::group(['middleware'], function(){
+Route::group(['middleware'], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -551,7 +551,7 @@ Route::any('refund/call_back_of_alipay',array(
 	Route::any('refund/show/{id}',array(  //退款详情
 	'as'=>'refund.show',
 	'uses'=>'Trans\OrderRefundController@show'
-	    ));
+    ));
 
 	Route::any('refund/export',array(  //退款导出
 		'as'=>'refund.export',
@@ -637,47 +637,34 @@ Route::any('refund/call_back_of_alipay',array(
   
     //赏金单管理-交易管理
 	Route::any('bounty/getList',array(  //赏金单列表
-	'as'=>'bounty.getList',
-	'uses'=>'Bounty\BountyController@getList'
-	    ));
+		'as'=>'bounty.getList',
+		'uses'=>'Bounty\BountyController@getList'
+    ));
     
     Route::any('bounty/detail',array(  //赏金单详情
-	'as'=>'bounty.detail',
-	'uses'=>'Bounty\BountyController@detail'
-	    ));
+		'as'=>'bounty.detail',
+		'uses'=>'Bounty\BountyController@detail'
+    ));
     
     Route::any('bounty/refundDetail',array(  //赏金单退款详情
-	'as'=>'bounty.refundDetail',
-	'uses'=>'Bounty\BountyController@refundDetail'
-	    ));
+		'as'=>'bounty.refundDetail',
+		'uses'=>'Bounty\BountyController@refundDetail'
+    ));
     
     Route::any('bounty/accept',array(  //赏金单退款详情
-	'as'=>'bounty.accept',
-	'uses'=>'Bounty\BountyController@accept'
-	    ));
+		'as'=>'bounty.accept',
+		'uses'=>'Bounty\BountyController@accept'
+    ));
     
     Route::any('bounty/reject',array(  //赏金单退款详情
-	'as'=>'bounty.reject',
-	'uses'=>'Bounty\BountyController@reject'
-	    ));
-    
-    Route::any('bounty/exportBounty',array(  //赏金单退款详情
-	'as'=>'bounty.exportBounty',
-	'uses'=>'Bounty\BountyController@exportBounty'
-	    ));
-    
-    Route::any('bounty/exportRefund',array(  //赏金单退款详情
-	'as'=>'bounty.exportRefund',
-	'uses'=>'Bounty\BountyController@exportRefund'
-	    ));
+		'as'=>'bounty.reject',
+		'uses'=>'Bounty\BountyController@reject'
+    ));
 
-    Route::any('requestLog/index',array(  //请求、搜索日志列表
-	'as'=>'requestLog.index',
-	'uses'=>'LoginQuery\LoginQueryController@index'
-	    ));
-    Route::any('requestLog/export',array(  //导出日志列表
-	'as'=>'requestLog.export',
-	'uses'=>'LoginQuery\LoginQueryController@export'
-	    ));
+    Route::any('requestLog/index',array(  //请求日志列表
+		'as'=>'requestLog.index',
+		'uses'=>'LoginQuery\LoginQueryController@index'
+    ));
+
 });
 

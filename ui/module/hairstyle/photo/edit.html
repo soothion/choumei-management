@@ -141,13 +141,13 @@
 									<div class="control-image-ud">
 										<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 									</div>
+									<input type="hidden" name="thumb" class="thumb" value="<%=data.thumb%>">
+									<input type="hidden" name="original" class="original" value="<%=data.original%>" required requiredmsg="请上传图片" data-helpid="image-help">
 								</div>
 							</div>
 						 <span class="space"></span>
-						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
-						 <br />
-						<input type="hidden" name="thumb" value="<%=data.thumb%>" required requiredmsg="请上传图片">
-						<input type="hidden" name="original" value="<%=data.original%>">
+						 <div class="weak">支持jpg、png格式，图片规格必须为480*600px</div>
+						<div class="control-help" style="display:none" id="image-help"></div>
 					</div>
                 </div>
 					 
@@ -166,23 +166,13 @@
 				lib.puploader.image({
 					browse_button: 'imageUpload',
 					auto_start:true,
-					postName:"img",
+					imageLimitSize:"480*600",
 					filters: {
 						mime_types : [
 							{ title : "Image files", extensions : "jpg,png,jpeg" },
 						]
 					},
 					max_file_size:'2mb'
-				},function(uploader){
-					uploader.bind('FileUploaded',function(up,file,res){
-						if(res&&res.response&&typeof res.response=='string'){
-							var data=JSON.parse(res.response);
-							if(data.code==0){
-								$('input[name="original"]').val(data.response.img);
-								$('input[name="thumb"]').val(data.response.thumbimg);
-							}
-						}
-					});
 				});
 			});
 	 </script>

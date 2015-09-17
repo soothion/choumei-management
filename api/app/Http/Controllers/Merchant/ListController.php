@@ -14,6 +14,8 @@ use App\GetPingYing;
 use App\Town;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class ListController extends Controller {
 
@@ -101,7 +103,7 @@ class ListController extends Controller {
 		$areaId = isset($param["areaId"])?trim($param["areaId"]):0;//对应的上级id
 		if($type != 1 && !$areaId)
 		{
-			return $this->error('参数错误');
+			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
 		}
 		$list = $this->provincesList($type,$areaId);
 		return $this->success($list);

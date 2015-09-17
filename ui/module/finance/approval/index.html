@@ -23,6 +23,7 @@
 						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
 						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
 						<option value="2" data-placeholder="请输入商户名称">商户名称</option>
+
 					</select>
 					<input type="text" placeholder="请输入店铺名称" name="keyword">
 				</div>
@@ -71,6 +72,7 @@
 					<td><%=pay_type[item.pay_type]%></td>
 					<td><%=item.require_day%></td>				 
 					<td><%=new Date(item.created_at).format("yyyy-MM-dd")%></td>
+
 					<td><%=item.make_user?item.make_user.name:""%></td>				 
 					<td><%=state[item.state]%></td>
 					<%

@@ -13,6 +13,8 @@ use App\SalonUser;
 use Excel;
 use Event;
 use App\CompanyCodeCollect;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class SalonController extends Controller {
 		
@@ -505,7 +507,7 @@ class SalonController extends Controller {
 		}
 		if($retMissing)
 		{
-			return $this->error("缺失参数".$retMissing);
+			throw new ApiException("缺失参数".$retMissing, ERROR::MERCHANT_ERROR);
 		}
 		$merchantQuery = Merchant::getQuery();
 		$salonQuery = Salon::getQuery();
@@ -514,7 +516,7 @@ class SalonController extends Controller {
 		$merchantData = $merchantQuery->where(array("id"=>$data["merchantId"],"status"=>1))->get();//商户id 检测
 		if(!$merchantData)
 		{
-			return $this->error("商户id有误");
+			throw new ApiException("商户id有误", ERROR::MERCHANT_ID_IS_ERROR);
 		}
 		$joinDividend = isset($param['dividendStatus'])?intval($param['dividendStatus']):'';
 		if($data["salonid"])
@@ -527,7 +529,7 @@ class SalonController extends Controller {
 			
 			if(!$ordRs)
 			{
-				return $this->error("店铺数据不存在，id错误");
+				throw new ApiException("店铺数据不存在，id错误", ERROR::MERCHANT_ID_IS_ERROR);
 			}
 			
 		}
@@ -547,7 +549,7 @@ class SalonController extends Controller {
 		}
 		else
 		{
-			return $this->error("店铺更新失败");
+			throw new ApiException('店铺更新失败', ERROR::MERCHANT_UPDATE_FAILED);
 		}
 	
 		
@@ -641,7 +643,7 @@ class SalonController extends Controller {
 		$salonid = isset($param["salonid"])?intval($param["salonid"]):0;//店铺id
 		if(!$salonid)
 		{
-			return $this->error("参数错误");
+			throw new ApiException("参数错误", ERROR::MERCHANT_ERROR);
 		}
 		$salonList = Salon::getSalon($salonid);
 		
@@ -861,13 +863,13 @@ class SalonController extends Controller {
 
 		if(!$sn)
 		{
-			return $this->error('参数错误');
+			throw new ApiException("参数错误", ERROR::MERCHANT_ERROR);
 		}
 
 		$snNo = $this->getCheckSn($sn);//检测商铺编号
 		if($snNo)
 		{
-			return $this->error('店铺编号重复已经存在');
+			throw new ApiException("店铺编号重复已经存在", ERROR::MERCHANT_SN_IS_ERROR);
 		}
 		else 
 		{
@@ -908,7 +910,7 @@ class SalonController extends Controller {
 		
 		if(!$salonid || !in_array($type, array(1,2)))
 		{
-			return $this->error('参数错误');
+			throw new ApiException("参数错误", ERROR::MERCHANT_ERROR);
 		}
 		$result = DB::table('salon')
 				->where('salonid',"=", $salonid)
@@ -918,15 +920,16 @@ class SalonController extends Controller {
 		$rs = (array)$result;
 		if(!$rs)
 		{
-			return $this->error('操作店铺不存在');
+			throw new ApiException("操作店铺不存在", ERROR::MERCHANT_ID_IS_ERROR);
 		}
 		if($rs["salestatus"] == 1 && $type == 2)
 		{
-			return $this->error('该店铺不是终止合作的店铺');
+			throw new ApiException("该店铺不是终止合作的店铺", ERROR::MERCHANT_SALON_STATUS_IS_ERROR);
+			
 		}
 		elseif($rs["salestatus"] == 0 && $type == 1)
 		{
-			return $this->error('该店铺已经终止合作');
+			throw new ApiException("该店铺已经终止合作", ERROR::MERCHANT_SALON_STATUS_IS_ERROR);
 		}
 
 		$busId = Salon::doendact($salonid,$type,$rs["merchantId"]);
@@ -937,7 +940,7 @@ class SalonController extends Controller {
 		}
 		else
 		{
-			return $this->error('操作失败请重新再试');
+			throw new ApiException('更新失败', ERROR::MERCHANT_UPDATE_FAILED);
 		}
 		
 		
@@ -987,17 +990,17 @@ class SalonController extends Controller {
 		
 		if(!$salonid)
 		{
-			return $this->error('参数错误');
+			throw new ApiException("参数错误", ERROR::MERCHANT_ERROR);
 		}
 
 		$status = Salon::dodel($salonid);
 		if($status == -1)
 		{
-			return $this->error('该店铺未停止合作');
+			throw new ApiException("该店铺未停止合作", ERROR::MERCHANT_SALON_STATUS_IS_ERROR);
 		}
 		elseif($status == -2 || !$status)
 		{
-			return $this->error('操作失败 或者 数据不存在');
+			throw new ApiException("操作店铺不存在", ERROR::MERCHANT_ID_IS_ERROR);
 		}
 		else 
 		{

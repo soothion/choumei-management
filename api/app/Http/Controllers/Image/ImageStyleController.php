@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\Controller;
 use App\ImageStyle;
-use App\Exceptions\ApiException;
-use App\Exceptions\ERROR;
 use Log;
 use Config;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
+
 /**
  * Description of ImageStyleController
  *
@@ -118,10 +119,10 @@ class ImageStyleController extends Controller{
     {
             
           $param = $this->param; 
-          Log::info('ImageStyle create param is: ', $param);
+         // Log::info('ImageStyle create param is: ', $param);
           if(empty($param['style']) || empty($param['length']) || empty($param['curl']) || empty($param['color']) || empty($param['original']) || empty($param['thumb']))
           {
-              throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
+             throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
           }
           $data=[];
           $data['style']=$param['style'];
@@ -175,7 +176,7 @@ class ImageStyleController extends Controller{
 		if($result){
 			return $this->success();
                 }else {
-                   throw new ApiException('图片删除失败', ERROR::STYLE_DELETE_FAILED); 
+                  throw new ApiException('图片删除失败', ERROR::STYLE_DELETE_FAILED); 
                 }
 		
      }
@@ -214,7 +215,7 @@ class ImageStyleController extends Controller{
 		
         if(empty($id) || empty($param['style']) || empty($param['length']) || empty($param['curl']) || empty($param['color']) || empty($param['original']) || empty($param['thumb']))
         {
-            throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
+           throw new ApiException('参数不齐', ERROR::PARAMETER_ERROR);
         }
         $fields = ['id', 'style', 'length','curl','color','img','status'];
         $image=ImageStyle::select($fields)->find($id);

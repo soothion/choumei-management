@@ -174,15 +174,15 @@ $(function(){
 				});
 			}
 		});
-	}).on('submit','form[data-role="normal"]',function(e,eventData){//一般的数据提交,提交成功后会触发表单reset事件
+	}).on('submit','form[data-role="normal"]',function(e){//一般的数据提交,提交成功后会触发表单reset事件
 		e.preventDefault();
 		var $this=$(this);
-		if($this.is(':disabled')) return;
+		if($this.attr('disabled')) return;
+		$this.attr('disabled',true);
 		var confirm=$this.data('confirm');
 		var url=$this.attr('action');
 		if(document.activeElement){
 			var $active=$(document.activeElement);
-			$active.attr('disabled',true);
 			if($active.attr('formaction')){
 				url=$active.attr('formaction');
 			}
@@ -190,37 +190,46 @@ $(function(){
 				confirm=$active.data('confirm');
 			}
 		}
-		if(!eventData&&confirm){
+		var request=function(){
+			lib.ajax({
+				url:url,
+				data:lib.tools.getFormData($this),
+				type:'POST',
+				success:function(data){
+					setTimeout(function(){
+						$this.attr('disabled',false);
+					},1100);
+					if(data.result==1){
+						if($this.attr('onreset')=="remove"){
+							parent.lib.popup.result({
+								text:"删除成功",
+								define:function(){
+									$this.closest('tr').remove();
+								}
+							});
+						}else{
+							$this.trigger('reset',data);//成功后会触发reset事件
+						}
+					}else{
+						$this.trigger('fail',data);	
+					}
+				},
+				error:function(){
+					$this.attr('disabled',false);
+				}
+			});
+		}
+		if(confirm){
 			parent.lib.popup.confirm({
 				text:confirm,
 				define:function(){
-					$this.trigger('submit',{url:url});
+					request();
 				}
 			});
-			return;
+		}else{
+			request();
 		}
-		lib.ajax({
-			url:(eventData?eventData.url:url),
-			data:lib.tools.getFormData($(this)),
-			type:'POST',
-			success:function(data){
-				if(data.result==1){
-					if($this.attr('onreset')=="remove"){
-						parent.lib.popup.result({
-							bool:true,
-							text:"删除成功",
-							define:function(){
-								$this.closest('tr').remove();
-							}
-						});
-					}else{
-						$this.trigger('reset',data);//成功后会触发reset事件
-					}
-				}else{
-					$this.trigger('fail',data);	
-				}
-			}
-		});
+		
 	}).on('reset','form[data-role="normal"]',function(e){
 		e.preventDefault();
 	});
@@ -461,7 +470,6 @@ $(function(){
 			});
 		}
 	}
-	
 	/**缩略图预览**/
 	$body.on('click','.control-thumbnails-item img',function(e){
 		var item=$(this).closest('.control-thumbnails-item');
