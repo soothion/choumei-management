@@ -18,6 +18,7 @@
 			<form data-role="hash">
 				反馈日期
 				<input type="date"  placeholder="YYYY-MM-DD" name="add_time"/>
+				<span class="space"></span>
 				反馈内容
 				<input type="text" name="keyword" />
 				<button class="btn">搜索</button>
@@ -67,8 +68,8 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		$('#table').on('change','input',function(){
-			if($('tbody input:checked').length>0){
+		$('#table').on('click','input',function(){
+			if($('tbody label input:checked').length>0){
 				$('.table-bottom button').attr('disabled',false);
 			}else{
 				$('.table-bottom button').attr('disabled',true);

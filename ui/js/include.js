@@ -38,7 +38,9 @@ if(location.href.indexOf("http://test-")>-1){
 	cfg.env="product";
 }
 cfg.url=cfg[cfg.env];
-
+if(location.href=="http://manager.choumei.cn/"&&cfg.url.indexOf('<#')!=-1){
+	alert('<#MANAGER_BACK_URL#>占位符没有被替换');
+}
 document.writeln('<meta name="renderer" content="webkit|ie-stand">');
 document.writeln('<meta http-equiv=”X-UA-Compatible” content=”IE=edge” > ');
 document.writeln('<meta charset="utf-8">');
