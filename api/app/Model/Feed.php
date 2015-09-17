@@ -20,14 +20,16 @@ class Feed extends Model {
 	public static function getQueryByParam($param=[]){
         $query = Self::where('is_del','=',0);
 
-        if(!empty($param['start_at'])){
-        	$start_at = strtotime($param['start_at']);
+        if(!empty($param['date'])){
+        	$start_at = strtotime($param['date']);
+            $end_at = strtotime($param['date'])+3600*24;
+            $query = $query->where('add_time','>=',$end_at);
         	$query = $query->where('add_time','>=',$start_at);
         }
 
-        if(!empty($param['end_at'])){
-        	$end_at = strtotime($param['end_at'])+3600*24;
-        	$query = $query->where('add_time','>=',$end_at);
+        if(!empty($param['keyword'])){
+            $keyword = '%'.$param['keyword'].'%';
+        	$query = $query->where('content','like',$keyword);
         }
 
         //排序

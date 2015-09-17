@@ -19,30 +19,34 @@ class BountyController extends Controller {
      * @apiName getList
      * @apiGroup  bounty
      *
+     * @apiParam {Number} isRefund 必选,是否为退款查询：1否 2是.
      * @apiParam {Number} page 可选,页码，默认为1.
-     * @apiParam {Number} pageSize 可选,默认为10.
+     * @apiParam {Number} pageSize 可选,默认为20.
      * @apiParam {String} keyword 可选,搜索关键词.
      * @apiParam {String} keywordType 必选,搜索关键词类型，可取0 赏金单号/1 用户臭美号/2 用户手机号/3 店铺名称.
-     * @apiParam {Number} payType 可选,支付方式：1 网银/2 支付宝/3 微信/4 余额/5 红包/6 优惠券/7 积分/8邀请码兑换.
+     * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
      * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
-     * @apiParam {String} minTime 可选,交易时间左框.
-     * @apiParam {String} maxTime 可选,交易时间右框.
+     * @apiParam {String} minPayTime 可选,交易时间左框.
+     * @apiParam {String} maxPayTime 可选,交易时间右框.
+     * @apiParam {String} minEndTime 可选,退款时间左框.
+     * @apiParam {String} maxEndTime 可选,退款时间右框.
      * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
      * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
      *
      * @apiSuccess {Number} total 总页数.
-     * @apiSuccess {Number} perPage 分页大小.
+     * @apiSuccess {Number} per_page 分页大小.
      * @apiSuccess {Number} records 总条数.
-     * @apiSuccess {Number} currentPage 当前页面.
+     * @apiSuccess {Number} current_page 当前页面.
+     * @apiSuccess {Number} last_page 当前页面.
      * @apiSuccess {Number} from 起始数.
      * @apiSuccess {Number} to 结束数.
      * @apiSuccess {Number} amount 总金额.
      * @apiSuccess {Number} btId 赏金单Id.
      * @apiSuccess {String} btSn 赏金单号.
      * @apiSuccess {String} tn 三方流水号.
-     * @apiSuccess {String} payType 支付方式：1 网银/2 支付宝/3 微信/4 余额/.
+     * @apiSuccess {String} payType 支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
      * @apiSuccess {Number} money 赏金金额/退款金额
      * @apiSuccess {String} addTime 下单时间.
      * @apiSuccess {String} endTime 申请时间.
@@ -50,10 +54,8 @@ class BountyController extends Controller {
      * @apiSuccess {Number} hairStylistMobile 造型师手机号.
      * @apiSuccess {Number} userMobile 用户手机号.
      * @apiSuccess {String} salonName 商铺名称.
-     * @apiSuccess {String} refundStatus 退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
+     * @apiSuccess {Number} refundStatus 退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
      * @apiSuccess {String} isPay 支付状态：1未支付 2已支付	 
-     * @apiSuccess {String} operations 赏金单操作链接.
-     * @apiSuccess {String} refund_operations 赏金单退款操作链接.
      * 
      *
      *
@@ -62,9 +64,9 @@ class BountyController extends Controller {
      * 	    "result": 1,
      * 	    "data": {
      * 	        "total": 51,
-     * 	        "perPage": 10,
+     * 	        "per_page": 10,
      * 	        "records": 510,
-     * 	        "currentPage": 1,
+     * 	        "current_page": 1,
      * 	        "from": 1,
      * 	        "to": 10,
      *              "amount":12000,
@@ -104,7 +106,7 @@ class BountyController extends Controller {
         if (isset($param['size']) && !empty($param['size'])) {
             $size = $param['size'];
         } else {
-            $size = 10;
+            $size = 20;
         }
         $query = BountyTask::getQueryByParam($param);
         $sortable_keys = ['btSn', 'money', 'addTime'];
@@ -126,8 +128,9 @@ class BountyController extends Controller {
         $res = [];
 
         $res["total"] = ceil($count / $size);
-        $res["perPage"] = $size;
-        $res["correntPage"] = $page;
+        $res["per_page"] = $size;
+        $res["current_page"] = $page;
+        $res["last_page"] = $page;
         $res["records"] = $count;
         $res["amount"] = array("amount" => number_format($amount, 2));
         $res['data'] = $bountys;
@@ -139,7 +142,7 @@ class BountyController extends Controller {
      * @apiName detail
      * @apiGroup  bounty
      *
-     * @apiParam {Number} no 必选.	 
+     * @apiParam {Number} no 必选,赏金单号.	 
      *
      * @apiSuccess {Number} btId 赏金单Id.
      * @apiSuccess {String} btSn 赏金单号.
@@ -148,20 +151,21 @@ class BountyController extends Controller {
      * @apiSuccess {String} needsStr 任务需求.
      * @apiSuccess {String} remark 我的需求.
      * @apiSuccess {String} selectType 选择发型师类型.
-     * @apiSuccess {String} payType 支付方式：1 网银/2 支付宝/3 微信/4 余额/.
+     * @apiSuccess {String} payType 支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
      * @apiSuccess {Number} money 赏金金额
      * @apiSuccess {String} isPay 是否支付.
      * @apiSuccess {String} addTime 下单时间.
      * @apiSuccess {String} payTime 支付时间.
      * @apiSuccess {String} tn 三方流水号.   
-     * @apiSuccess {String} endTime 取消时间/完成时间.
+     * @apiSuccess {String} cancelTime 取消时间.
+     * @apiSuccess {String} endTime 完成时间.
      * @apiSuccess {String} salonName 商铺名称.
      * @apiSuccess {String} district 服务区域.
      * @apiSuccess {String} bountyType 店铺类型.
      * @apiSuccess {String} grade 造型师类型.
      * @apiSuccess {String} stylistName 造型师帐号.
      * @apiSuccess {Number} hairStylistMobile 造型师手机号.
-     * @apiSuccess {String} btStatus 订单状态.
+     * @apiSuccess {String} btStatus 订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
      * 
      *
      *
@@ -229,10 +233,10 @@ class BountyController extends Controller {
      * @apiSuccess {String} endTime 申请时间. 
      * @apiSuccess {String} userName 用户臭美号. 
      * @apiSuccess {String} userMobile 用户手机号.
-     * @apiSuccess {String} payType 支付方式：1 网银/2 支付宝/3 微信/4 余额/.
+     * @apiSuccess {String} payType 支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
      * @apiSuccess {Number} money 赏金金额/退款金额
      * @apiSuccess {String} refundType 退款方式.
-     * @apiSuccess {String} refundStatus 退款状态.
+     * @apiSuccess {String} refundStatus 退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
      * 
      *
      *
@@ -331,18 +335,18 @@ class BountyController extends Controller {
     }
 
     /**
-     * @api {get} /bouty/exportBounty 6.导出赏金单列表
+     * @api {get} /bounty/exportBounty 6.导出赏金单列表
      * @apiName exportBounty
      * @apiGroup bounty
      *
      * @apiParam {String} keyword 可选,搜索关键词.
      * @apiParam {String} keywordType 必选,搜索关键词类型，可取"btSn","userName","mobile","salonName".
-     * @apiParam {Number} payType 可选,支付方式：1 网银/2 支付宝/3 微信/4 余额/5 红包/6 优惠券/7 积分/8邀请码兑换.
+     * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
      * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
-     * @apiParam {String} minTime 可选,交易时间左框.
-     * @apiParam {String} maxTime 可选,交易时间右框.
+     * @apiParam {String} minPayTime 可选,交易时间左框.
+     * @apiParam {String} maxPayTime 可选,交易时间右框.
      * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
      * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
      *
@@ -373,18 +377,18 @@ class BountyController extends Controller {
     }
 
     /**
-     * @api {get} /bouty/exportRefund 7.导出赏金单退款列表
+     * @api {get} /bounty/exportRefund 7.导出赏金单退款列表
      * @apiName exportRefund
      * @apiGroup bounty
      *
      * @apiParam {String} keyword 可选,搜索关键词.
      * @apiParam {String} keywordType 必选,搜索关键词类型，可取"btSn","userName","mobile","salonName".
-     * @apiParam {Number} payType 可选,支付方式：1 网银/2 支付宝/3 微信/4 余额/5 红包/6 优惠券/7 积分/8邀请码兑换.
+     * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
      * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
-     * @apiParam {String} minTime 可选,交易时间左框.
-     * @apiParam {String} maxTime 可选,交易时间右框.
+     * @apiParam {String} minEndTime 可选,退款时间左框.
+     * @apiParam {String} maxEndTime 可选,退款时间右框.
      * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
      * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
      *

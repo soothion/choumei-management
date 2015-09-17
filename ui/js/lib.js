@@ -65,7 +65,7 @@
 					options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
 				}
 			}
-			options.timeout=6000;
+			options.timeout=20000;
 			/*
 			options.headers={
 				token:localStorage.getItem('token')
@@ -701,8 +701,25 @@
         },
         format : function(){
             $("td.format").each(function(index,item){
-                var txt = $(this).text();
-                txt && $(this).text(new Date(txt).format("yyyy-MM-dd"));
+                var val = $(this).text();
+                if(val){
+                	if(isNaN(val)){
+                		$(this).text(new Date(val).format("yyyy-MM-dd"));
+                	}else{
+						$(this).text(new Date(val*1).format("yyyy-MM-dd"));
+                	}
+                }
+            });
+
+            $("td.formatHms").each(function(index,item){
+                var val = $(this).text();
+                if(val){
+                	if(isNaN(val)){
+                		$(this).text(new Date(val).format("yyyy-MM-dd hh:mm:ss"));
+                	}else{
+						$(this).text(new Date(val*1).format("yyyy-MM-dd hh:mm:ss"));
+                	}
+                }
             });
         },
         exception:function(data){//异常处理
@@ -920,12 +937,12 @@
 						if(pattern=="number"||pattern=="float"){
 							var min=$target.attr('min')
 							if(min&&parseFloat(val)<parseFloat(min)){
-								$target.trigger('error',{type:'pattern'});
+								$target.trigger('error',{type:'error',errormsg:'输入不能小于'+min});
 								return;
 							}
 							var max=$target.attr('max')
 							if(max&&parseFloat(val)>parseFloat(max)){
-								$target.trigger('error',{type:'pattern'});
+								$target.trigger('error',{type:'error',errormsg:'输入不能大于'+max});
 								return;
 							}
 						}

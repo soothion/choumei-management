@@ -24,7 +24,6 @@
 		</div>
 		<div class="wrapper" ajat="user/show/<%=query.id%>#domid=detail&tempid=detail-t" id="detail">
 			<script type="text/template" id="detail-t">
-			<%var sexArr=["未知","男","女"]%>
 			<div class="table-detail">
 				<table>
 					<thead>
@@ -35,208 +34,271 @@
 					<tbody>
 						<tr>
 							<td>
-								<form action="" data-role="normal">
-									<button class="btn">重置密码</button>
-								</form>
-								<span class="space"></span>
-								<form action="" data-role="normal">
-									<button class="btn">重置支付密码</button>
-								</form>
-								<span class="space"></span>
-								<form action="" data-role="normal">
+								<!--
+								<form action="user/update/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({bool:true,text:'操作成功'})">
 									<button class="btn">解绑当前手机</button>
+									<input type="hidden" name="mobilephone" value="" />
 								</form>
+								-->
 								<span class="space"></span>
-								<form action="" data-role="normal">
+								<form action="user/destroy/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({bool:true,text:'操作成功',define:function(){history.back();}})">
 									<button class="btn">删除账号</button>
 								</form>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<br />
-			<div class="table-detail">
-				<table>
-					<thead>
-						<tr>
-							<th colspan="2" style="line-height:32px">
-								个人资料
-								<div class="fr">
-									<button class="btn btn-edit">编辑</button>
-								</div>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>臭美号：  <%=data.username%></td>
-							<td>头像：
-								<img src="<%=data.img%>" alt="" width="60px" height="60px" />
-							</td>
-						</tr>
-						<tr>
-							<td>昵称：  <%=data.nickname%> </td>
-							<td>性别： <%=sexArr[data.sex]%></td>
-						</tr>
-						<tr>
-							<td>发长：  无</td>
-							<td>常住地区： <%=data.area%></td>
-						</tr>
-						<tr>
-							<td colspan="2">生日：<%=data.birthday%></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="table-detail"  style="display:none">
-				<form action="user/update/<%=query.id%>">
-				<table>
-					<thead>
-						<tr>
-							<th colspan="2" style="line-height:32px">
-								个人资料
-								<div class="fr">
-									<button class="btn btn-cancel" type="button">取消</button>
-									<button class="btn">保存</button>
-								</div>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>臭美号：  <%=data.username%></td>
-							<td>头像： 
-								<img src="<%=data.img%>" alt="" width="60px" height="60px" id="photo" /> 
 								<span class="space"></span>
-								<a class="btn btn-upload" id="imageUpload">上传图片</a>
-								<span class="space"></span>
-								<span class="weak">
-									请上传JPG或PNG格式的图标，尺寸为512×512px，容量小于800KB
-								</span>
+								<button class="btn btn-edit">
+									编辑
+								</button>
+								<button class="btn btn-edit-cancel" style="display:none">
+									取消
+								</button>
 							</td>
-						</tr>
-						<tr>
-							<td>昵称： <input type="text" value="<%=data.nickname%>" /></td>
-							<td>性别： <%=sexArr[data.sex]%></td>
-						</tr>
-						<tr>
-							<td>发长：  
-								<select>
-								  <option value="长发">长发</option>
-								  <option value="中发">中发</option>
-								  <option value="短发">短发</option>
-								</select>
-							</td>
-							<td>
-								常住地区：
-								<select>
-									<option value="选择">选择省份</option>
-								</select>
-								<select>
-									<option value="选择">选择城市</option>
-								</select>
-								<select>
-									<option value="选择">选择地区</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">生日： <input type="date" value="<%=data.birthday%>"/></td>
 						</tr>
 					</tbody>
 				</table>
-				</form>
 			</div>
+			<form action="user/update/<%=query.id%>" data-role="normal" id="companyCode">
+				<input type="hidden" name="companyCode" value="" />
+			</form>
 			<br />
-			<div class="table-detail">
-				<table>
-					<thead>
-						<tr>
-							<th colspan="2" style="line-height:32px">
-								帐户信息
-								<div class="fr">
-									<button class="btn btn-edit">编辑</button>
-								</div>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>注册时间：  1401794412</td>
-							<td>注册方式：手机注册</td>
-						</tr>
-						<tr>
-							<td>绑定手机号：  15102011866</td>
-							<td>会员等级：V1</td>
-						</tr>
-						<tr>
-							<td>会员积分：  93</td>
-							<td>成长值：424</td>
-						</tr>
-						<tr>
-							<td>登录密码：已设置</td>
-							<td>支付密码：已设置</td>
-						</tr>
-						<tr>
-							<td>加入集团：南航测控(5062) <span class="space"></span><button class="btn">解绑集团码</button></td>
-							<td>活动邀请码：七夕活动(00250)</td>
-						</tr>
-						<tr>
-							<td colspan="2">店铺邀请码：丝丝如意(5469)</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="table-detail" style="display:none">
-				<form action="">
+			<form action="user/update/<%=query.id%>" data-role="form" novalidate>
+			<div class="detail">
+				<div class="table-detail">
 					<table>
 						<thead>
 							<tr>
 								<th colspan="2" style="line-height:32px">
-									帐户信息
-									<div class="fr">
-										<button class="btn btn-cancel" type="button">取消</button>
-										<button class="btn">保存</button>
-									</div>
+									个人资料
 								</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<td>注册时间：  1401794412</td>
-								<td>注册方式：手机注册</td>
+								<td>臭美号：  <%=data.username%></td>
+								<td>头像：
+									<img src="<%=data.img%>" alt="" width="60px" height="60px" />
+								</td>
 							</tr>
 							<tr>
-								<td>绑定手机号：  15102011866</td>
-								<td>会员等级：V1</td>
+								<td>昵称：  <%=data.nickname%> </td>
+								<td>性别： <%=data.sex%></td>
 							</tr>
 							<tr>
-								<td>会员积分：  <input type="text" value="321" /></td>
-								<td>成长值：<input type="text" value="321" /></td>
+								<td>发长：  无</td>
+								<td>
+									常住地区： 
+									<%if(data.area){%>
+										<%=data.area.split(",").join("")%>
+									<%}%>
+								</td>
 							</tr>
 							<tr>
-								<td>登录密码：已设置</td>
-								<td>支付密码：已设置</td>
-							</tr>
-							<tr>
-								<td>加入集团：南航测控(5062) <span class="space"></span><button class="btn">解绑集团码</button></td>
-								<td>活动邀请码：七夕活动(00250)</td>
-							</tr>
-							<tr>
-								<td colspan="2">店铺邀请码：丝丝如意(5469)</td>
+								<td colspan="2">生日：<%=data.birthday%></td>
 							</tr>
 						</tbody>
 					</table>
-				</form>
+				</div>
+				<br />
+				<div class="table-detail">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="2" style="line-height:32px">
+									帐户信息
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>注册时间：  <%=data.add_time%></td>
+								<td>注册方式：手机注册</td>
+							</tr>
+							<tr>
+								<td>绑定手机号：  <%=data.mobilephone%></td>
+								<td>会员等级：<%=data.level?"V"+data.level:""%></td>
+							</tr>
+							<tr>
+								<td>会员积分：  <%=data.grade%></td>
+								<td>成长值：<%=data.growth%></td>
+							</tr>
+							<tr>
+								<td>登录密码：<%=data.password?"已设置":"未设置"%></td>
+								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
+							</tr>
+							<tr>
+								<td>加入集团：<%=data.companyName%> <%if(data.companyName){%><span class="space"></span><button form="companyCode" class="btn">解绑集团码</button><%}%></td>
+								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
+							</tr>
+							<tr>
+								<td colspan="2">店铺邀请码：<%=data.salonname?data.recommendCode:""%></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
+			<div class="update" style="display:none">
+				<div class="table-detail">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="2" style="line-height:32px">
+									个人资料
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>臭美号：  <%=data.username%></td>
+								<td>头像： 
+									<div class="control-single-image">
+										<img src="<%=data.img%>" alt="" style="width:100px;height:100px;">
+										<div class="control-image-ud">
+											<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
+										</div>
+										<input type="hidden" name="img" value="<%=data.img%>" required requiredmsg="请上传图片" data-helpid="image-help"  />
+									</div>
+									<span class="space"></span>
+									<span class="weak">
+										请上传JPG或PNG格式的图标，尺寸为512×512px，容量小于800KB
+									</span>
+
+									<div class="control-help" id="image-help" style="display:none;margin-left:38px"></div>
+								</td>
+							</tr>
+							<tr>
+								<td>昵称： <input type="text" name="nickname" value="<%=data.nickname%>" required/></td>
+								<td>性别： <%=data.sex%></td>
+							</tr>
+							<tr>
+								<td>发长：  
+									<select required>
+									  <option value="长发">长发</option>
+									  <option value="中发">中发</option>
+									  <option value="短发">短发</option>
+									</select>
+								</td>
+								<td>
+									常住地区：
+									<span>
+										<select id="province" required style="width:100px"
+										ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&sid=<%=data.area.split(",")[0]%>" 
+										ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&sid=<%=data.area.split(",")[1]%>">
+										</select>
+										<select id="city" required style="width:100px" 
+										ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&sid=<%=data.area.split(",")[2]%>">
+										</select>
+										<select id="area" required  style="width:100px"></select>
+									</span>
+									<input type="hidden" name="area" id="hidden"/>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">生日： <input type="date" name="birthday" value="<%=data.birthday%>" required/></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<br />
+				<div class="table-detail">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="2" style="line-height:32px">
+									帐户信息
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>注册时间：  <%=data.add_time%></td>
+								<td>注册方式：手机注册</td>
+							</tr>
+							<tr>
+								<td>绑定手机号：  <%=data.mobilephone%></td>
+								<td>会员等级：<%=data.level?"V"+data.level:""%></td>
+							</tr>
+							<tr>
+								<td>会员积分：  <input type="text" value="<%=data.grade%>" name="grade" required pattern="number" /></td>
+								<td>成长值：<input type="text" value="<%=data.growth%>" name="growth" required pattern="number"/></td>
+							</tr>
+							<tr>
+								<td>登录密码：<%=data.password?"已设置":"未设置"%></td>
+								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
+							</tr>
+							<tr>
+								<td>加入集团：<%=data.companyName%> <%if(data.companyName){%><span class="space"></span><button class="btn" form="companyName">解绑集团码</button><%}%></td>
+								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
+							</tr>
+							<tr>
+								<td colspan="2">店铺邀请码：<%=data.salonname?data.recommendCode:""%></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<br />
+				<div class="tc">
+					<button class="btn-primary">提交</button>
+				</div>
+			</div>
+			</form>
 			</script>
 		</div>
+		<script type="text/template" id="province_t">
+		<option value="">省份</option>
+		<%data.forEach&&data.forEach(function(item){%>
+			<option <%=item.pname==protocol.custom.sid?"selected":""%> value="<%=item.pid%>"><%=item.pname%></option>
+		<%})%>
+		</script>
+
+		<script type="text/template" id="city_t">
+			<option value="">城市</option>
+			<%data.forEach&&data.forEach(function(item){%>
+				<option <%=item.iname==protocol.custom.sid?"selected":""%> value="<%=item.iid%>"><%=item.iname%></option>
+			<%})%>
+		</script>
+
+		<script type="text/template" id="area_t">
+			<option value="">地区</option>
+			<%data.forEach&&data.forEach(function(item){%>
+				<option <%=item.tname==protocol.custom.sid?"selected":""%> value="<%=item.tid%>"><%=item.tname%></option>
+			<%})%>
+		</script>
 		<script type="text/javascript">
 			$(document).on('click','.btn-edit',function(){
-				$(this).closest('.table-detail').hide().next().show();
-			}).on('click','.btn-cancel',function(){
-				$(this).closest('.table-detail').hide().prev().show();
+				$('.detail').hide().siblings().show();
+				$(this).hide();
+				$('.btn-edit-cancel').show();
+			}).on('click','.btn-edit-cancel',function(){
+				//$('.update').hide().siblings().show();
+				//$(this).hide();
+				//$('.btn-edit').show();
+				window.close();
+			});
+			$('#detail').one('_ready',function(){
+				$('#province,#city,#area').on('change',function(){
+					$('#hidden').val($('#province option:selected').text()+','+$('#city option:selected').text()+','+$('#area option:selected').text());
+				});
+				lib.puploader.image({
+					browse_button: 'imageUpload',
+					auto_start:true,
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
+						]
+					},
+					max_file_size:'800kb'
+				},function(uploader){
+					uploader.bind('FileUploaded',function(up,file,res){
+						if(res&&res.response&&typeof res.response=='string'){
+							var data=JSON.parse(res.response);
+							if(data.code==0){
+								$('input[name="img"]').val(data.response.img);
+								$('#photo').attr('src',data.response.img);
+							}
+						}
+					});
+				});
+			}).on('_ready','#province,#city,#area',function(){
+				$(this).trigger('change');
 			});
 		</script>
   </body>

@@ -16,10 +16,10 @@
 		</div>
 		<div class="wrapper">
 			<form data-role="hash">
-				<input type="text" placeholder="请输入集团名称/集团码" />
+				<input type="text" name="keyword" placeholder="请输入集团名称/集团码" />
 				<button class="btn">搜索</button>
 			</form>
-			<div class="table" ajat="role/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="user/company?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
               <thead>
@@ -35,9 +35,9 @@
 				<%data.forEach(function(item,i){%>
                 <tr>
                   <td><%=i+1%></td>
+                  <td><%=item.code%></td>
                   <td><%=item.name%></td>
-                  <td><%=status[item.status-1]%></td>
-                  <td><%=item.department?item.department.title:""%></td>
+                  <td><%=item.total%></td>
                 </tr>
 				<%})%>
               </tbody>

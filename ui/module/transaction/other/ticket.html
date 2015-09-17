@@ -16,22 +16,17 @@
         </div>
         <div class="wrapper">
             <form data-role="hash">          
-                <div class="input-group input-switch">
+                <div class="input-group placeholder-switch">
                     <select name="key">
-                      <option value="0">臭美券密码</option>
-                      <option value="1">用户手机号</option>
-                      <option value="2">店铺名称</option>
-                      <option value="3">用户设备号</option>
-                      <option value="4">活动编码</option>
+                      <option value="1" data-placeholder="请输入臭美券密码">臭美券密码</option>
+                      <option value="2" data-placeholder="请输入用户手机号" selected="selected">用户手机号</option>
+                      <option value="3" data-placeholder="请输入店铺名称">店铺名称</option>
+                      <option value="4" data-placeholder="请输入用户设备号">用户设备号</option>
+                      <option value="5" data-placeholder="请输入活动编码">活动编码</option>
                     </select>
-                    <input type="text" class="input-search" name=keyword"" maxlength="16"
-                    placeholder="请输入臭美券密码"/>
-                    <input type="text" class="input-search hide" name=keyword" maxlength="16"  
+                    <input type="text" class="input-search" name="keyword" maxlength="16" 
                     placeholder="请输入用户手机号"/>
-                    <input type="text" class="input-search hide" name=keyword"" maxlength="16"placeholder="请输入店铺名称" />
-                    <input type="text" class="input-search hide" name=keyword"" maxlength="16"placeholder="请输入用户设备号" />                                     
-                    <input type="text" class="input-search hide" name=keyword"" maxlength="16"placeholder="请输入活动编码" />
-                </div>  
+                </div> 
 
                 <span class="date-group" style="padding-left:15px">
                     <select name="time_key" >
@@ -94,10 +89,10 @@
                 <tr>
                   <td><%=i+1%></td>
                   <td><%=item.order_ticket_id%></td>
-                  <td><%=item.ticketno%></td>
+                  <td><%=item.ticketno.substr(0,2)+"****"+item.ticketno.substr(item.ticketno.length-2)%></td>
                   <td><%=item.ordersn%></td>
-                  <td><%=item.add_time%></td>
-                  <td><%=item.use_time%></td>
+                  <td class="format"><%=item.add_time%></td>
+                  <td class="format"><%=item.use_time%></td>
                   <td><%=item.voucher && item.voucher.vcSn%></td>
                   <td><%=item.voucher && item.voucher.vSn%></td>
                   <td><%=item.user && item.user.mobilephone%></td>

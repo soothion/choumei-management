@@ -100,7 +100,7 @@
 			</div>
 			  <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>配置角色：</label>      
-<%var sids=[];
+				<%var sids=[];
 				if(data.roles){
 				for(var i=0;i<data.roles.length;i++){
 					sids.push(data.roles[i].id);
@@ -147,7 +147,9 @@
             }
         })
 		$(document.body).on('_ready','#department',function(){
-            $(this).trigger('change');
+			if(!lib.query._){
+				$(this).trigger('change');
+			}
         })
     </script>
 	 

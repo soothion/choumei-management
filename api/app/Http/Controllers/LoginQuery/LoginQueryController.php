@@ -13,7 +13,7 @@ use Event;
 
 class LoginQueryController  extends Controller {
       /**
-	 * @api {post} /LoginQuery/index 1.列出登录日志列表
+	 * @api {post} /requestLog/index 1.列出登录日志列表
 	 * 
 	 * @apiName index
 	 * @apiGroup LoginQuery
@@ -79,7 +79,7 @@ class LoginQueryController  extends Controller {
      }
      
        /**
-	 * @api {post} /LoginQuery/export 2.导出日志列表
+	 * @api {post} /requestLog/export 2.导出日志列表
 	 * 
 	 * @apiName export
 	 * @apiGroup LoginQuery
