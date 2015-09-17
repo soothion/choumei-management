@@ -126,7 +126,7 @@
 	</script>
 	<script type="text/javascript">
 		 $('#province,#city,#area').on('change',function(){
-			$('#hidden').val($('#province').val()+','+$('#city').val()+','+$('#area').val());
+			$('#hidden').val($('#province option:selected').text()+','+$('#city option:selected').text()+','+$('#area option:selected').text());
 		 });
 	</script>
   </body>
