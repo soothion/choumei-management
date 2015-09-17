@@ -71,10 +71,10 @@
                             <td class="first-td">退款方式</td>
                             <td><%=data.refundType%></td>                            
                         </tr>
-
+                        <% var statusObj={"5":"申请退款","6":"退款中","7":"已退款","8":"拒绝退款","9":"失败"}%>
                         <tr>
                             <td class="first-td">退款状态</td>
-                            <td><%=data.refundStatus%></td>                            
+                            <td><%=statusObj[data.refundStatus]%></td>                            
                         </tr>  
 
                     </tbody>                     
