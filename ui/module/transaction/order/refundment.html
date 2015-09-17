@@ -5,31 +5,30 @@
 	  <title>臭美管理后台</title>
 	  <script type="text/javascript" src="/js/include.js"></script>
       <style>
-        h3{
-            padding: 6px 20px;
-            margin:2px;
-            border: 1px solid #E6EAF2;
-            border-bottom: none;
-            font-size: 18px;
-            width: 120px;
-            text-align: center;
-            display: inline-block; 
-            background-color:#f5f5f5;
-            cursor: pointer;         
-        }
-
-       .active{background-color:inherit;};
-         
-        td a{
-          margin-right: 8px;
-        }
-
         .tab{
           position: absolute;
           top:35px;
-          width:600px;
           left:30%;
           border: none;
+        }
+
+        .tab a{
+          width:145px;
+          height:45px;
+          line-height: 45px;
+          margin:2px;
+          border: 1px solid #E6EAF2;
+          border-bottom: none;
+          font-size: 18px;
+          text-align: center;
+          display: inline-block; 
+          background-color:#f5f5f5;           
+        }
+
+       .active{background-color:inherit!important;};
+         
+        td a{
+          margin-right: 8px;
         }
 
       </style>
@@ -48,17 +47,11 @@
         <div id="form" ajat="#domid=form&tempid=form-t" ajat-one="true">
             <script type="text/template" id="form-t">
                 <div class="tab">            
-                  <h3 <%=(!query.state || query.state=="0") ? "class=active" : ""%>>
-                    <a href="refundment.html?reload=1#state=0">全部退款</a>
-                  </h3>
+                    <a href="refundment.html?reload=1#state=0" <%=(!query.state || query.state=="0") ? "class=active" : ""%>>全部退款</a>
 
-                  <h3 <%=query.state=="6" ? "class=active" : ""%>>
-                    <a href="refundment.html?reload=2#state=6">待审核</a>
-                  </h3>
+                    <a href="refundment.html?reload=2#state=6" <%=query.state=="6" ? "class=active" : ""%>>待审核</a>
 
-                  <h3 <%=query.state=="7,10,12" ? "class=active" : ""%>>
-                    <a href="refundment.html?reload=3#state=7,10,12">已审核</a>
-                  </h3>
+                    <a href="refundment.html?reload=3#state=7,10,12" <%=query.state=="7,10,12" ? "class=active" : ""%>>已审核</a>
                 </div>
 
                 <form data-role="hash" >             
@@ -142,18 +135,15 @@
         <% 
         var retypeObj = {"1":"原路返还","2":"退回余额"};
         var refundObj = {"6":"申请退款","7":"退款成功","10":"退款中","12":"退款失败"};
-        var payObj    = {
-            "1":"微信",
-            "2":"支付宝",
-            "3":"易联",
-            "4":"现金券",
-            "5":"余额",
-            "6":"现金券+支付宝",
-            "7":"现金券+微信",
-            "8":"现金券+易联"
-        };      
+        var payObj    = {"2":"支付宝","3":"微信","4":"余额","9":"现金券","10":"易联"};      
         %>
 				<%data.data &&　data.data.forEach(function(item,i){%>
+          <%
+          var arr = [];
+          item.fundflow && item.fundflow.forEach(function(item,i){                  
+            arr.push(payObj[item.pay_type]);
+          })
+          %>            
           <tr>
               <td>
               <label>
@@ -163,14 +153,14 @@
               </label>
               </td>          
               <td><%=i+1%></td>
-              <td><%=item.ticketno%></td>
+              <td><%=item.ticketno.substr(0,2)+"****"+item.ticketno.substr(item.ticketno.length-2)%></td>
               <td><%=item.ordersn%></td>
-              <td><%=item.buy_time%></td>
-              <td><%=item.add_time%></td>
+              <td class="formatHms"><%=item.buy_time%></td>
+              <td class="formatHms"><%=item.add_time%></td>
               <td><%=item.salon && item.salon.salonname %></td>
               <td><%=item.user && item.user.mobilephone%></td>
               <td><%=item.voucher && item.voucher.vSn%></td>
-              <td><%=item.fundflow && payObj[item.fundflow.pay_type]%></td>
+              <td><%=arr.join("+")%></td>
               <td><%=item.priceall_ori%></td>
               <td><%=item.actuallyPay%></td>
               <td><%=item.refund_money%></td>
@@ -178,6 +168,7 @@
               <td><%=refundObj[item.order_status]%></td>
               <td><%=item.shopcartsn%></td>
               <td>
+
                 <a class="link" href="detail.html?method=refund/show/&id=<%=item.order_refund_id%>" >查看</a>
                 <%if(item.order_status == "6"){%>
                     <a class="link" href="">通过</a>

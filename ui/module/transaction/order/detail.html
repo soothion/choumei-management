@@ -50,7 +50,8 @@
 
                         <tr>
                             <td class="first-td">店铺名称【邀请码】</td>
-                            <td><%=data.salon && data.salon.salonname%>【<%=data.recommend_code%>】</td>                            
+                            <td><%=data.salon && data.salon.salonname%>【<%=data.recommend_code && 
+                            data.recommend_code.recommend_code%>】</td>                            
                         </tr> 
 
                         <tr>
@@ -90,28 +91,43 @@
                                     </thead>
 
                                     <tbody>
-                                        <%if(data.fundflows && data.fundflows.length > 0){%>
+                                        <%
+                                        var firstArr  = [],secondArr = [];
+                                        var textArr= {"2":"支付宝","3":"微信","4":"余额","9":"现金券","10":"易联"};
+                                        data.fundflows && data.fundflows.forEach(function(item,i){
+                                            if(item.pay_type=="4" || item.pay_type=="9") {
+                                                firstArr.push({"type":textArr[item.pay_type],"amt":item.money});
+                                            }
+                                            if(item.pay_type=="2" || item.pay_type=="3" || item.pay_type=="10"){
+                                                secondArr.push({"type":textArr[item.pay_type],"amt":item.money});
+                                            }
+                                        });
+                                        %>
+
+                                        <%if(firstArr.length > 0){%>
                                             <tr>
-                                                <td rowspan="<%=data.fundflows ? Math.max(data.fundflows.length + 1,2) : 2 %>">臭美余额
+                                                <td rowspan="<%=Math.max(firstArr.length + 1,2)%>">
+                                                臭美余额
                                                 </td>
                                             </tr>
-                                            <%data.fundflows.forEach(function(item,i){%>
+                                            <%firstArr.forEach(function(item,i){%>
                                             <tr>
-                                                <td><%=item.pay_type%></td>
-                                                <td><%=item.money%></td>
+                                                <td><%=item.type%></td>
+                                                <td><%=item.amt%></td>
                                             </tr>
                                             <%})%>
                                         <%}%>
                                             
-                                        <%if(data.fundflows && data.fundflows.length > 0){%>
+                                        <%if(secondArr.length > 0){%>
                                             <tr>
-                                                <td rowspan="<%=data.fundflows ? Math.max(data.fundflows.length + 1,2) : 2 %>">第三方支付
+                                                <td rowspan="<%=Math.max(secondArr.length + 1,2)%>">
+                                                第三方支付
                                                 </td>
-                                            </tr> 
-                                            <%data.fundflows.forEach(function(item,i){%>
+                                            </tr>
+                                            <%secondArr.forEach(function(item,i){%>
                                             <tr>
-                                                <td><%=item.pay_type%></td>
-                                                <td><%=item.money%></td>
+                                                <td><%=item.type%></td>
+                                                <td><%=item.amt%></td>
                                             </tr>
                                             <%})%>
                                         <%}%>
@@ -131,10 +147,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <%
+                                        var trendsText = {'2':'未使用','4':'使用完成','6':'申请退款',
+                                        '7':'退款完成','8':'退款拒绝','10':'退款中'};
+                                        %>
                                         <%data.trends && data.trends.forEach(function(obj,i){ %>
                                         <tr>
-                                            <td><%=obj.add_time %></td>
-                                            <td><%=obj.remark %></td>
+                                            <td class="formatHms"><%=obj.add_time %></td>
+                                            <td><%=obj.remark || trendsText[obj.status] %></td>
                                         </tr>
                                         <%}) %>
                                     </tbody>                                

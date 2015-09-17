@@ -5,32 +5,27 @@
     <title>臭美管理后台</title>
     <script type="text/javascript" src="/js/include.js"></script>
       <style>
-        h3{
-            padding: 6px 20px;
-            margin:2px;
-            border: 1px solid #E6EAF2;
-            border-bottom: none;
-            font-size: 18px;
-            width: 120px;
-            text-align: center;
-            display: inline-block; 
-            background-color:#f5f5f5;   
-            cursor: pointer;                  
-        }
-
-       .active{background-color:inherit;};
-         
-        td > a{
-           margin: 0 10px;
-        }
-
         .tab{
           position: absolute;
           top:35px;
-          width:600px;
           left:30%;
           border: none;
         }
+
+        .tab a{
+          width:145px;
+          height:45px;
+          line-height: 45px;
+          margin:2px;
+          border: 1px solid #E6EAF2;
+          border-bottom: none;
+          font-size: 18px;
+          text-align: center;
+          display: inline-block; 
+          background-color:#f5f5f5;           
+        }
+
+       .active{background-color:inherit!important;};
 
       </style>
   </head>
@@ -48,17 +43,11 @@
         <div id="form" ajat="#domid=form&tempid=form-t" ajat-one="true">
             <script type="text/template" id="form-t">
                 <div class="tab">            
-                  <h3 <%=(!query.refundStatus || query.refundStatus=="0") ? "class=active" : ""%>>
-                    <a href="refundment.html?reload=1#refundStatus=0">全部退款</a>
-                  </h3>
+                    <a href="refundment.html?reload=1#refundStatus=0" <%=(!query.refundStatus || query.refundStatus=="0") ? "class=active" : ""%>>全部退款</a>
 
-                  <h3 <%=query.refundStatus=="5" ? "class=active" : ""%>>
-                    <a href="refundment.html?reload=2#refundStatus=5">待审核</a>
-                  </h3>
+                    <a href="refundment.html?reload=2#refundStatus=5" <%=query.refundStatus=="5" ? "class=active" : ""%>>待审核</a>
 
-                  <h3 <%=query.refundStatus=="6,7,8,9" ? "class=active" : ""%>>
-                    <a href="refundment.html?reload=3#refundStatus=6,7,8,9">已审核</a>
-                  </h3>
+                    <a href="refundment.html?reload=3#refundStatus=6,7,8,9" <%=query.refundStatus=="6,7,8,9" ? "class=active" : ""%>>已审核</a>
                 </div>
 
                 <form data-role="hash" >             
@@ -195,6 +184,10 @@
   <script>
   $(document).ready(function(){
      $(".table").delegate('a.operate', 'click', function(event) {
+          parent.lib.popup.prompt({
+            'text' : '拒绝原因：  '
+          });
+          return ;
           var type = $(this).data('type');
           var mothed  = "";
           var messges = "";
