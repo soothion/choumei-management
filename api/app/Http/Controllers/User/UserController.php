@@ -84,29 +84,25 @@ class UserController extends Controller{
 	{
 		$total = User::count();
 
+		
+
 		$day = strtotime('today');
 		$week = strtotime('last monday');
 		$month = strtotime(date('Y-m'));
 		
+
 		$data['day'] = User::where('add_time','>=',$day)->count();
 		$data['week'] = User::where('add_time','>=',$week)->count();
 		$data['month'] = User::where('add_time','>=',$month)->count();
 
-		for ($i=14; $i >= 0; $i--) { 
-			if($i==0)
-				$day = 'today';
-			else 
-				$day = "- $i day";
-			$current = strtotime($day);
-			$key = date('Y-m-d',$current);
-			$next = $current+3600*24;
-			$register[$key] = User::whereBetween('add_time',[$current,$next])->count();
-			$users = Order::whereBetween('use_time',[$current,$next])->lists('user_id');
-			$orders = Order::whereIn('user_id',$users)->orderBy('use_time','desc')->groupBy('user_id')->lists('orderid');
-			$first[$key] = Order::whereBetween('use_time',[$current,$next])->whereIn('orderid',$orders)->count();
-		}
-		$data['register'] = $register;
-		$data['first'] = $first;
+		$time = time();
+
+
+		$data['register'] = User::getRegister();
+		$data['first'] = User::getFirst();
+		$cost = time()-$time;
+
+		echo '耗时：'.$cost;die;
 
 		return $this->success($data);
 	}
@@ -126,6 +122,7 @@ class UserController extends Controller{
 	 * @apiParam {String} start_at 可选,起始注册时间;
 	 * @apiParam {String} end_at 可选,截止注册时间;
 	 * @apiParam {String} area 可选,区域,省市区用英文逗号,分隔;
+	 * @apiParam {Number} hair_type 可选,区域,省市区用英文逗号,分隔;
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.
 	 * @apiParam {String} sort_key 排序的键,比如:start_at,end_at;
@@ -153,6 +150,7 @@ class UserController extends Controller{
 	 *	                "growth": null,
 	 *	                "mobilephone": 18500001111,
 	 *	                "area": "",
+	 *	                "hair_type": 2,
 	 *	                "companyCode": null,
 	 *	                "recommendCode": null,
 	 *	                "add_time": "2015-08-27 21:32:36",
@@ -298,6 +296,7 @@ class UserController extends Controller{
 	 * @apiSuccess {String} img 头像地址.
 	 * @apiSuccess {String} nickname 昵称.
 	 * @apiSuccess {String} sex 性别.
+	 * @apiSuccess {Number} hair_type 发长,1为长发,2为中发,3为短发.
 	 * @apiSuccess {String} area 地区.
 	 * @apiSuccess {String} birthday 生日.
 	 * @apiSuccess {String} add_time 注册时间.
@@ -323,6 +322,7 @@ class UserController extends Controller{
 	 *	        "img": "http://img01.choumei.cn/1/1/2015082811011440730900326169088.jpg?imageView2/0/w/100/h/100",
 	 *	        "nickname": "test",
 	 *	        "sex": "女",
+	 *	        "hair_type": 2,
 	 *	        "area": "广东,深圳,南山区",
 	 *	        "birthday": "2008-08-20",
 	 *	        "add_time": "2014-06-03",
@@ -353,6 +353,7 @@ class UserController extends Controller{
 			'img',
 			'nickname',
 			'sex',
+			'hair_type',
 			'area',
 			'birthday',
 			'user.add_time',

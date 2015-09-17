@@ -7,12 +7,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Redis;
+const FIRST_KEY = 'recent.first.user';
+const REGISTER_KEY = 'recent.register.user';
 
 class User extends  Model
 {
     protected $table = 'user';
     protected $primaryKey = 'user_id'; 
-    protected $fillable = ['username','nickname','password','email','img','add_time','last_time','sex','birthday','area','growth','mobilephone','costpwd','companyId'];
+    protected $fillable = ['username','nickname','password','email','img','add_time','last_time','sex','birthday','area','growth','grade','mobilephone','costpwd','companyId'];
     public $timestamps = false;
 
     public static function getQueryByParam($param=[]){
@@ -96,5 +99,67 @@ class User extends  Model
             return $user[0];
         }
     }
+
+    //获取最近15天每天的用户注册数
+    public static function getRegister(){
+        $redis = Redis::connection();
+        $result = [];
+        for ($i=14; $i >= 0; $i--) { 
+            if($i==0)
+                $day = 'today';
+            else 
+                $day = "- $i day";
+            $current = strtotime($day);
+            $day = date('Y-m-d',$current);
+
+            if($count = $redis->hGet(REGISTER_KEY,$day)){
+                $result[$day] = $count;
+            }
+            else{
+                $next = $current+3600*24;
+                $count = User::whereBetween('add_time',[$current,$next])->count();
+                $redis->hSet(REGISTER_KEY,$day,$count);
+            }
+            $result[$day] = $count;
+        }
+        //删除16天前的记录,控制hash不超过16个元素
+        $last = date('Y-m-d',strtotime('-16 day'));
+        $redis->hDel(REGISTER_KEY,$last);
+        return $result;
+    }
+
+
+    //获取最近15天每天的首单用户数
+    public static function getFirst(){
+        $redis = Redis::connection();
+        $result = [];
+        for ($i=14; $i >= 0; $i--){ 
+            if($i==0)
+                $day = 'today';
+            else 
+                $day = "- $i day";
+            $current = strtotime($day);
+            $day = date('Y-m-d',$current);
+
+            if($count = $redis->hGet(FIRST_KEY,$day)){
+                $result[$day] = $count;
+            }
+            else{
+                $next = $current+3600*24;
+                $users = Order::whereBetween('use_time',[$current,$next])->lists('user_id');
+                $orders = Order::whereIn('user_id',$users)->orderBy('use_time','desc')->groupBy('user_id')->lists('orderid');
+                $count = Order::whereBetween('use_time',[$current,$next])->whereIn('orderid',$orders)->count();
+                $redis->hSet(FIRST_KEY,$day,$count);
+            }
+            $result[$day] = $count;
+        }
+        //删除16天前的记录,控制hash不超过16个元素
+        $last = date('Y-m-d',strtotime('-16 day'));
+        $redis->hDel(FIRST_KEY,$last);
+        return $result;
+    }
+
+
+
 }
 
