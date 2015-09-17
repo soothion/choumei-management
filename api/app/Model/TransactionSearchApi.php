@@ -443,7 +443,6 @@ class TransactionSearchApi
             'cm_order_refund.user_id as user_id',
             'cm_order_refund.salonid as salonid',
             'cm_order_refund.add_time as add_time',
-            'cm_order_refund.status as status',
             'cm_order_refund.money as refund_money',
             'cm_order_refund.retype as retype',
             'cm_order.priceall_ori as priceall_ori',
@@ -698,6 +697,9 @@ class TransactionSearchApi
     
     public static function makeWhereOfRefund(&$base,$params)
     {
+        //必要条件 退款状态 为可用
+        $base->where("order_refund.status", TransactionWriteApi::REFUND_STATUS_OF_NORMAL);
+        
         // 按时间搜索
         if (isset($params['refund_min_time']) && !empty($params['refund_min_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['refund_min_time']))) {
             $base->where("order_refund.add_time", ">=", strtotime(trim($params['refund_min_time'])));

@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;
 use App\TransactionWriteApi;
 use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
+use App\Utils;
+use App\AlipaySimple;
 
 class OrderRefundController extends Controller
 {
@@ -322,12 +325,12 @@ class OrderRefundController extends Controller
      */
     public function accept()
     {
-        $params = $this->parameters(['ids'=>self::T_STRING]);
+        $params = $this->parameters(['ids'=>self::T_STRING],true);
         $ids = explode(",", $params['ids']);
         $ids = array_map("intval", $ids);
         if(count($ids)<1)
         {
-            throw new ApiException("ids 参数不能为空", $code);
+            throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
         }
         $info = TransactionWriteApi::accpet($ids);
         $this->success($info);
@@ -349,7 +352,18 @@ class OrderRefundController extends Controller
      */
     public function reject()
     {
-        
+        $params = $this->parameters([
+            'ids'=>self::T_STRING,
+            'reason'=>self::T_STRING,
+        ],true);
+        $ids = explode(",", $params['ids']);
+        $ids = array_map("intval", $ids);
+        if(count($ids)<1)
+        {
+            throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
+        }
+        $info = TransactionWriteApi::reject($ids,$params['remark']);
+        $this->success($info);
     }
     
     /**
@@ -357,6 +371,28 @@ class OrderRefundController extends Controller
      */
     public function call_back_of_alipay()
     {
-        
+        $input = [
+            'GET' => $_GET,
+            "POST" => $_POST
+        ];
+        Utils::log('pay',date("Y-m-d H:i:s") . "\t order " . json_encode($input,JSON_UNESCAPED_UNICODE)."\t\n", "alipay_callback");
+         
+        //以下为debug的写法
+        //$ret = AlipaySimple::callback(array(D("Refund"),"alipayRefundCallback"),[],false);
+         
+        //以下为正式的写法
+        $ret = AlipaySimple::callback(function($args){
+            return TransactionWriteApi::callBackOfAlipay($args);
+        },[]);
+         
+        if($ret)
+        {
+            echo "success";
+        }
+        else
+        {
+            echo "fail";
+        }
+        die();
     }
 }

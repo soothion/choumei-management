@@ -163,4 +163,33 @@ class Utils
 	    curl_close($curl);
 	    return $output;
 	}
+	
+	/**
+	 * 简单记录log的方法
+	 * @param string $content
+	 * @param string $dir
+	 */
+	public static function log($dirname,$content,$filename = '')
+	{
+	    $dir = realpath(dirname(__FILE__).DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."storage").DIRECTORY_SEPARATOR.$dirname.DIRECTORY_SEPARATOR;
+	    
+	    $old_mask = umask(0);
+	    //check & make dir
+	    if (!is_dir($dir)) {
+	        mkdir($dir, 0777, true);
+	    }
+	    
+	    //write file
+	    $file_name = empty($file_name) ? date('Ymd') : $file_name;
+	    $file = $dir . $file_name;
+	    file_put_contents($file . '.log', $content, FILE_APPEND | LOCK_EX);
+	    
+	    //keep small than 1G
+	    if (filesize($file . '.log') > 1000000000) {
+	        rename($file . '.log', $file . '.' . date('YmdHis') . '.log');
+	    }	    
+	    umask($old_mask);
+	}
+	
+	
 }
