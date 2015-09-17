@@ -84,25 +84,16 @@ class UserController extends Controller{
 	{
 		$total = User::count();
 
-		
-
 		$day = strtotime('today');
 		$week = strtotime('last monday');
 		$month = strtotime(date('Y-m'));
-		
 
 		$data['day'] = User::where('add_time','>=',$day)->count();
 		$data['week'] = User::where('add_time','>=',$week)->count();
 		$data['month'] = User::where('add_time','>=',$month)->count();
 
-		$time = time();
-
-
-		$data['register'] = User::getRegister();
-		$data['first'] = User::getFirst();
-		$cost = time()-$time;
-
-		echo '耗时：'.$cost;die;
+		$data['register'] = User::getRecentRegister();
+		$data['first'] = User::getRecentFirst();
 
 		return $this->success($data);
 	}

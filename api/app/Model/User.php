@@ -101,26 +101,26 @@ class User extends  Model
     }
 
     //获取最近15天每天的用户注册数
-    public static function getRegister(){
+    public static function getRecentRegister(){
         $redis = Redis::connection();
         $result = [];
-        for ($i=14; $i >= 0; $i--) { 
-            if($i==0)
-                $day = 'today';
-            else 
-                $day = "- $i day";
-            $current = strtotime($day);
-            $day = date('Y-m-d',$current);
-
-            if($count = $redis->hGet(REGISTER_KEY,$day)){
+        for ($i=14; $i >= 0; $i--){ 
+            //当在的数据实时统计
+            if($i==0){
+                $day = date('Y-m-d',strtotime('today'));
+                $count = Self::getRegisterByDay($day);
                 $result[$day] = $count;
             }
+            //昨天或以前的数据从redis取   
             else{
-                $next = $current+3600*24;
-                $count = User::whereBetween('add_time',[$current,$next])->count();
-                $redis->hSet(REGISTER_KEY,$day,$count);
-            }
-            $result[$day] = $count;
+                $day = date('Y-m-d',strtotime("- $i day"));
+                $count = $redis->hGet(REGISTER_KEY,$day);
+                if($count == NULL){
+                    $count = Self::getRegisterByDay($day);
+                    $redis->hSet(REGISTER_KEY,$day,$count);
+                }
+                $result[$day] = intval($count);
+            }      
         }
         //删除16天前的记录,控制hash不超过16个元素
         $last = date('Y-m-d',strtotime('-16 day'));
@@ -130,33 +130,47 @@ class User extends  Model
 
 
     //获取最近15天每天的首单用户数
-    public static function getFirst(){
+    public static function getRecentFirst(){
         $redis = Redis::connection();
         $result = [];
         for ($i=14; $i >= 0; $i--){ 
-            if($i==0)
-                $day = 'today';
-            else 
-                $day = "- $i day";
-            $current = strtotime($day);
-            $day = date('Y-m-d',$current);
-
-            if($count = $redis->hGet(FIRST_KEY,$day)){
+            //当在的数据实时统计
+            if($i==0){
+                $day = date('Y-m-d',strtotime('today'));
+                $count = Self::getFirstByDay($day);
                 $result[$day] = $count;
             }
+            //昨天或以前的数据从redis取   
             else{
-                $next = $current+3600*24;
-                $users = Order::whereBetween('use_time',[$current,$next])->lists('user_id');
-                $orders = Order::whereIn('user_id',$users)->orderBy('use_time','desc')->groupBy('user_id')->lists('orderid');
-                $count = Order::whereBetween('use_time',[$current,$next])->whereIn('orderid',$orders)->count();
-                $redis->hSet(FIRST_KEY,$day,$count);
-            }
-            $result[$day] = $count;
+                $day = date('Y-m-d',strtotime("- $i day"));
+                $count = $redis->hGet(FIRST_KEY,$day);
+                if($count == NULL){
+                    $count = Self::getFirstByDay($day);
+                    $redis->hSet(FIRST_KEY,$day,$count);
+                }
+                $result[$day] = intval($count);
+            }      
         }
-        //删除16天前的记录,控制hash不超过16个元素
+        //删除16天前的记录,控制hash不超过15个元素
         $last = date('Y-m-d',strtotime('-16 day'));
         $redis->hDel(FIRST_KEY,$last);
         return $result;
+    }
+
+    public static function getFirstByDay($day){
+            $current = strtotime($day);
+            $next = $current+3600*24;
+            $users = Order::whereBetween('use_time',[$current,$next])->lists('user_id');
+            $orders = Order::whereIn('user_id',$users)->orderBy('use_time','desc')->groupBy('user_id')->lists('orderid');
+            $count = Order::whereBetween('use_time',[$current,$next])->whereIn('orderid',$orders)->count();
+            return $count;
+    }
+
+    public static function getRegisterByDay($day){
+        $current = strtotime($day);
+        $next = $current+3600*24;
+        $count = User::whereBetween('add_time',[$current,$next])->count();
+        return $count;
     }
 
 
