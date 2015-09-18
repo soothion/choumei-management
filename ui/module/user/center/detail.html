@@ -35,13 +35,13 @@
 						<tr>
 							<td>
 								<!--
-								<form action="user/update/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({bool:true,text:'操作成功'})">
+								<form action="user/update/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result()">
 									<button class="btn">解绑当前手机</button>
 									<input type="hidden" name="mobilephone" value="" />
 								</form>
 								-->
 								<span class="space"></span>
-								<form action="user/destroy/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({bool:true,text:'操作成功',define:function(){history.back();}})">
+								<form action="user/destroy/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({define:function(){history.back();}})">
 									<button class="btn">删除账号</button>
 								</form>
 								<span class="space"></span>
@@ -60,7 +60,7 @@
 				<input type="hidden" name="companyCode" value="" />
 			</form>
 			<br />
-			<form action="user/update/<%=query.id%>" data-role="form" novalidate>
+			<form action="user/update/<%=query.id%>" data-role="form">
 			<div class="detail">
 				<div class="table-detail">
 					<table>
@@ -169,9 +169,9 @@
 								<td>性别： <%=data.sex%></td>
 							</tr>
 							<tr>
-								<td>发长：  
+								<td>发长：  hair_type
 									<select required>
-									  <option value="长发">长发</option>
+									  <option value="1">长发</option>
 									  <option value="中发">中发</option>
 									  <option value="短发">短发</option>
 									</select>

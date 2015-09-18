@@ -29,7 +29,7 @@
 					webkit:/webkit/i.test(ua)
 				}
 			},
-			getFormData:function($form,xss){
+			getFormData:function($form){
 				var data={};
 				var fields=$form.serializeArray();
 				$.each(fields,function(i,field){
@@ -192,14 +192,15 @@
                 });
             },
 			result:function(options){
+				options=options||{};
+				if(options.bool===undefined){
+					options.bool=true;
+				}
 				if(!options.text){
 					options.text=(options.bool?"操作成功":"操作失败");
 				}
 				if(options.time===undefined){
 					options.time=1000;
-				}
-				if(options.bool===undefined){
-					options.bool=true;
 				}
 				options.text='<i class="fa fa-'+(options.bool?"check":"times")+'-circle"></i>'+options.text;
 				this.tips(options)
@@ -245,6 +246,7 @@
 				});
 			},
 			getToken:function(cb){
+				var self=this;
 				var query={
 					'bundle':"FQA5WK2BN43YRM8Z",
 					'version':"5.3",
@@ -273,6 +275,10 @@
 								bool:true
 							});
 						}
+						clearTimeout(self.timer);
+						self.timer=setTimeout(function(){
+							lib.puploader.getToken.apply(lib.puploader,_arguments);
+						},1000*60);
 					}
 				});
 			},
@@ -356,6 +362,7 @@
 						uploader.bind('FileUploaded',function(up,file,res){
 							if(res&&res.response&&typeof res.response=='string'){
 								var data=JSON.parse(res.response);
+								clearTimeout(self.timer);
 								self.getToken(function(data){
 									Qiniu.token=data.uptoken;
 									Qiniu._fileName=data.fileName;
@@ -766,8 +773,25 @@
         },
         format : function(){
             $("td.format").each(function(index,item){
-                var txt = $(this).text();
-                txt && $(this).text(new Date(txt).format("yyyy-MM-dd"));
+                var val = $(this).text();  
+                if(val){
+                	if(isNaN(val)){
+                		$(this).text(new Date(val).format("yyyy-MM-dd"));
+                	}else{
+                		$(this).text(new Date(val*1).format("yyyy-MM-dd"));
+                	}
+                }
+            });
+
+            $("td.formatHms").each(function(index,item){
+                var val = $(this).text();  
+                if(val){
+                	if(isNaN(val)){
+                		$(this).text(new Date(val).format("yyyy-MM-dd hh:mm:ss"));
+                	}else{
+                		$(this).text(new Date(val*1).format("yyyy-MM-dd hh:mm:ss"));
+                	}
+                }
             });
         },
         exception:function(data){//异常处理
@@ -936,8 +960,19 @@
 			this.cfg.requiredmsg=this.el.requiredmsg||"未填写";
 			this.cfg.patternmsg=this.el.patternmsg||"不正确";
 			this.bindEvent();
-			this.el.goback=function(){
-				history.back();
+			if(!this.el.goback){
+				this.el.goback=function(){
+					if(parent!=window){
+						history.back();
+					}else{
+						window.close();
+					}
+				}
+			}
+			if(!this.el._getFormData){
+				this.el._getFormData=function(){
+					return lib.tools.getFormData($(this))
+				}
 			}
 		},
 		validateFields:function(e,eventData){
@@ -1142,7 +1177,7 @@
 		},
 		bindEvent:function(){
 			var self=this;
-			$(this.el).on('blur',this.selector,function(e,data){
+			$(this.el).attr('novalidate','novalidate').on('blur',this.selector,function(e,data){
 				self.validateFields(e,data);
 			}).on('error',this.selector,function(e,data){
 				self[data.type]&&self[data.type](e,data);
