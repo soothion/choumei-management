@@ -106,6 +106,7 @@
 				if (status === "offline")    msg = "网络异常，请稍后再试!";
 				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
 			}).done(done).done(function(data,status,xhr){
+				//console.log(xhr.getAllResponseHeaders());
 				if(data.token){
 					localStorage.setItem('token',data.token);
 				}
@@ -245,7 +246,6 @@
 			},
 			getToken:function(cb){
 				var self=this;
-				var _arguments=arguments;
 				var query={
 					'bundle':"FQA5WK2BN43YRM8Z",
 					'version':"5.3",
@@ -494,6 +494,167 @@
 					cb &&cb(uploader);
 				});
 			}
+		},
+		uploader:{
+			use:function(cb){//加载上传资源文件
+				seajs.use(['/css/webuploader.css','/js/webuploader.js'],function(){
+					cb &&cb();
+				});
+			},
+			create:function(options){//创建上传对象
+				options.swf='/js/Uploader.swf';
+				if(options.server.indexOf('http://')==-1){
+					options.server=cfg.getHost()+options.server;
+				}
+				return WebUploader.create(options);
+			},
+			createImage:function(){
+				var imagePreview=$('<div style="position:absolute;left:0;top:0;z-index:-1;width:100%;height:100%;overflow:hidden;visibility:hidden;"><img/></div>')
+				$(document.body).append(imagePreview);
+				return imagePreview;
+			},
+			image:function(options,cb){//图片上传
+				var self=this;
+				options.loaderText=options.loaderText||"图片准备上传中";
+				options.successText=options.successText||"图片上传完成";
+				options.errorText=options.errorText||"图片上传失败";
+				if(options.imageLimitSize){
+					if(options.auto===true){
+						options._auto=true;
+						options.auto=false;
+					}
+				}
+				this.file(options,function(uploader){
+					//支持缩略小图预览
+					if(uploader.options.pick.id){
+						var $target=$(uploader.options.pick.id);
+						uploader.thumbnails=$target.siblings('.control-thumbnails');
+						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
+							uploader.createThumbnails=function(data){
+								var arr=[data];
+								arr.postName=this.options.postName;
+								uploader.thumbnails.append(lib.ejs.render({url:'/module/public/template/thumbnails'},{data:arr}))
+								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children().length){
+									uploader.thumbnails.siblings('.control-image-upload').hide();
+								}
+							}
+							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
+								var item=$(this).closest('.control-thumbnails-item');
+								if(item.attr('id')){
+									uploader.removeFile(item.attr('id'));
+								}
+								item.remove();
+								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children().length){
+									uploader.thumbnails.siblings('.control-image-upload').show();
+								}
+							});
+						}
+					}
+					// 当有文件添加进来的时候
+					uploader.on('fileQueued', function( file ) {
+						if(options.imageLimitSize){
+							var self=this;
+							uploader.makeThumb(file, function( error, src ) {
+								if(error){
+									parent.lib.popup.result({bool:false,text:"图片预览失败"});
+									return;
+								}
+								//校验图片尺寸大小
+								var imagePreview=lib.uploader.createImage();
+								imagePreview.children('img').on('load',function(){
+									var $this=$(this);
+									if(typeof self.options.imageLimitSize =='string'){
+										var width=parseInt(self.options.imageLimitSize.split('*')[0]);
+										var height=parseInt(self.options.imageLimitSize.split('*')[1]);
+										if($this.width()!=width||$this.height()!=height){
+											self.trigger( 'error', 'IAMGE_SIZE',file);
+										}else{
+											if(self.options._auto){
+												self.upload();
+											}
+											if(self.options.thumb&&self.createThumbnails){
+												var data=$.extend({},file,{src:src});
+												self.createThumbnails(data);
+											}
+										}
+									}
+									if(typeof self.options.imageLimitSize =='function'){
+										var ret=self.options.imageLimitSize($this.width(),$this.height());
+										if(ret){
+											if(self.options._auto){
+												self.upload();
+											}
+											console.log(self.options.thumb)
+											if(self.options.thumb&&self.createThumbnails){
+												var data=$.extend({},file,{src:src});
+												self.createThumbnails(data);
+											}
+										}else{
+											self.trigger( 'error', 'IAMGE_SIZE',file);
+										}
+									}
+									imagePreview.remove();
+								}).attr('src',src);
+							},1,1);
+						}
+					});
+					uploader.on('uploadSuccess',function(file,res){
+						var self=this;
+						if(this.options.imageId){
+							uploader.makeThumb(file, function( error, src ) {
+								document.getElementById(self.options.imageId).src=src;
+							},1,1);
+						}
+						if(res.result==1){
+							var data=res.data;
+							if(data.main&&data.main.images&&data.main.images[0]){
+								if(!self.options.thumb&&self.createThumbnails){
+									var data=$.extend({},file,{src:data.main.images[0].img});
+									self.createThumbnails(data);
+								}
+							}
+						}
+					});
+					uploader.on('error',function(err){
+						if(err=='IAMGE_SIZE'){
+							parent.lib.popup.result({bool:false,text:"图片的大小尺寸不正确"});
+						}
+					});
+					cb&&cb(uploader);
+				});
+			},
+			file:function(options,cb){//文件上传
+				var self=this;
+				this.use(function(){
+					var uploader=self.create(options);
+					uploader.on('uploadStart',function(file){
+						parent.lib.popup.loading({text:options.loaderText||"文件准备上传中"});
+					});
+					uploader.on('uploadSuccess',function(file){
+						parent.lib.popup.result({bool:true,text:options.successText||"文件上传完成"});
+					});
+					uploader.on('uploadError',function(file){
+						parent.lib.popup.result({bool:false,text:options.errorText||"文件上传失败"});
+					});
+					uploader.on('uploadProgress',function(file, percentage){
+						parent.lib.popup.tips({
+							text:'<img src="/images/oval.svg" class="loader"/><br />“'+file.name+'”文件上传进度：'+(Math.ceil(percentage*100))+"%"
+						});
+					});
+					uploader.on('error',function(err){
+						if(err=='F_EXCEED_SIZE'){
+							parent.lib.popup.result({bool:false,text:"上传文件过大"});
+						}
+						if(err=='Q_EXCEED_NUM_LIMIT '){
+							parent.lib.popup.result({bool:false,text:"上传文件数过大"});
+						}
+						if(err=='Q_TYPE_DENIED '){
+							parent.lib.popup.result({bool:false,text:"上传文件格式不正确"});
+						}
+					});
+					cb&&cb(uploader);
+				});
+			}
 		}
     }
     lib.init();
@@ -611,8 +772,25 @@
         },
         format : function(){
             $("td.format").each(function(index,item){
-                var txt = $(this).text();
-                txt && $(this).text(new Date(txt).format("yyyy-MM-dd"));
+                var val = $(this).text();  
+                if(val){
+                	if(isNaN(val)){
+                		$(this).text(new Date(val).format("yyyy-MM-dd"));
+                	}else{
+                		$(this).text(new Date(val*1).format("yyyy-MM-dd"));
+                	}
+                }
+            });
+
+            $("td.formatHms").each(function(index,item){
+                var val = $(this).text();  
+                if(val){
+                	if(isNaN(val)){
+                		$(this).text(new Date(val).format("yyyy-MM-dd hh:mm:ss"));
+                	}else{
+                		$(this).text(new Date(val*1).format("yyyy-MM-dd hh:mm:ss"));
+                	}
+                }
             });
         },
         exception:function(data){//异常处理
@@ -781,15 +959,8 @@
 			this.cfg.requiredmsg=this.el.requiredmsg||"未填写";
 			this.cfg.patternmsg=this.el.patternmsg||"不正确";
 			this.bindEvent();
-			if(!this.el.goback){
-				this.el.goback=function(){
-					history.back();
-				}
-			}
-			if(!this.el._getFormData){
-				this.el._getFormData=function(){
-					return lib.tools.getFormData($(this))
-				}
+			this.el.goback=function(){
+				history.back();
 			}
 		},
 		validateFields:function(e,eventData){
@@ -994,7 +1165,7 @@
 		},
 		bindEvent:function(){
 			var self=this;
-			$(this.el).attr('novalidate','novalidate').on('blur',this.selector,function(e,data){
+			$(this.el).on('blur',this.selector,function(e,data){
 				self.validateFields(e,data);
 			}).on('error',this.selector,function(e,data){
 				self[data.type]&&self[data.type](e,data);
@@ -1027,7 +1198,7 @@
 			if($form.attr('disabled'))return;
 			var help=$form.find('.control-help:visible');
 			if(help.length==0){
-				var data=this.el._getFormData();
+				var data=lib.tools.getFormData($form);
 				$form.trigger('save',data);
 			}else{
 				$('html,body').animate({scrollTop:help.eq(0).offset().top-50},200);
@@ -1046,9 +1217,6 @@
 				type:this.el.method,
 				success:function(data){
 					$(self.el).trigger('response',data);
-					setTimeout(function(){
-						$(self.el).attr('disabled',false);
-					},1500);
 				},
 				error:function(xhr,code){
 					$(self.el).attr('disabled',false);
@@ -1058,6 +1226,11 @@
 		}
 	}
 	lib.Form=Form;
+	$(document).one('mouseenter','form[data-role="form"]',function(){
+		new lib.Form(this);
+	}).one('touchstart','form[data-role="form"]',function(){
+		new lib.Form(this);
+	});
 	
 	/**
 	*select美化封装
