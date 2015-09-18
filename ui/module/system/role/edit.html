@@ -49,7 +49,7 @@
 	</div>
 	<div class="wrapper" ajat="<%if(query.id){%>role/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>role/update/<%=data.id%><%}else{%>role/create<%}%>">
+		<form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>role/update/<%=data.id%><%}else{%>role/create<%}%>">
 			<div class="detail-operation">
 				<button type="button" class="btn" onclick="history.back()">取消</button>
 				<span class="space"></span>

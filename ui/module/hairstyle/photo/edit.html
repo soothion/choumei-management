@@ -19,7 +19,7 @@
 	
 	<div class="wrapper" ajat="<%if(query.id){%>ImageStyle/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>ImageStyle/update/<%=data.id%><%}else{%>ImageStyle/create<%}%>">
+		<form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>ImageStyle/update/<%=data.id%><%}else{%>ImageStyle/create<%}%>">
 			<div class="detail-operation">
 				<button class="btn" onclick="history.back()" type="button" >取消</button>
 				<span class="space"></span>

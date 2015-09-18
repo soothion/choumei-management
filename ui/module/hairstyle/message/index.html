@@ -20,7 +20,7 @@
 		 </div>		 
         </div>		
         <div class="wrapper">
-			<form data-role="hash">   
+			<form data-role="hash" id="hashform">   
                     <label>标题：</label> 
                     <input type="text" placeholder="请输入标题" name="title">
 					<span class="space"></span>
@@ -91,7 +91,7 @@
 	  <script type="text/javascript">
 			document.onreadystatechange=function(){};
 			$(function(){		
-				window.filterHashData=function(data){
+				document.getElementById("hashform").filter=function(data){
 					if(data.status!=1){
 						data.starttime="";
 						data.endtime="";

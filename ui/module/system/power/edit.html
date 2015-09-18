@@ -18,7 +18,7 @@
     </div>
     <div class="wrapper" ajat="<%if(query.id){%>permission/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 	   <script type="text/template" id="form-t">
-        <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>permission/update/<%=data.id%><%}%>">
+        <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>permission/update/<%=data.id%><%}%>">
 			<div class="detail-operation">
 				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
 				<span class="space"></span>
