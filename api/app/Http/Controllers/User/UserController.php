@@ -34,6 +34,7 @@ class UserController extends Controller{
 	 *	    "result": 1,
 	 *	    "token": "",
 	 *	    "data": {
+	 *	    	"total": 1999,
 	 *	        "day": 0,
 	 *	        "week": 0,
 	 *	        "month": 0,
@@ -82,12 +83,11 @@ class UserController extends Controller{
 	 */
 	public function survey()
 	{
-		$total = User::count();
-
 		$day = strtotime('today');
 		$week = strtotime('last monday');
 		$month = strtotime(date('Y-m'));
 
+		$data['total'] = User::count();
 		$data['day'] = User::where('add_time','>=',$day)->count();
 		$data['week'] = User::where('add_time','>=',$week)->count();
 		$data['month'] = User::where('add_time','>=',$month)->count();
