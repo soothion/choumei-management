@@ -154,7 +154,7 @@
               <td><%=item.salonName%></td>
               <td><%=statusObj[item.refundStatus]%></td>
               <td>
-                <a class="link" style="margin:0 5px;" href="refundDetail.html?no=<%=item.btSn%>" >
+                <a class="link" style="margin:0 5px;"  target="_blank" href="refundDetail.html?no=<%=item.btSn%>" >
                 查看&gt
                 </a>
                 <%if(item.refundStatus=="5"){%>
@@ -203,11 +203,10 @@
             lib.popup.alert({text:'请选择具体操作项'});
             return;
           }
-          //bounty/reject
           parent.lib.popup.prompt({
              text   : '拒绝原因： ',
              define : function(str){
-
+                request('bounty/reject',{ids:arr,reason:str});
              }
           });        
       });
@@ -231,29 +230,31 @@
           if(type == "2" && arr.length < 1) {
             lib.popup.alert({text:'请选择具体操作项'});
             return;
-          }         
-          
+          }                   
           parent.lib.popup.confirm({
               text:message,
               define:function(){
-                  lib.ajax({
-                    type : "post",
-                    data : {ids:arr},
-                    url  : 'bounty/accept'
-                  }).done(function(data, status, xhr){
-                    parent.lib.popup.result({
-                      bool:data.result == 1,
-                      text:(data.result == 1 ? "操作成功" : data.msg),
-                      time:2000,
-                      define:function(){
-                          lib.ajat('bounty/getList?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
-                      }
-                    });
-                  });                          
+                request('bounty/accept',{ids:arr});                         
               }
-          });          
-
+          }); 
      });
+
+    function request(url,params){
+        lib.ajax({
+          url  : url
+          type : "post",
+          data : params,
+        }).done(function(data, status, xhr){
+          parent.lib.popup.result({
+            bool:data.result == 1,
+            text:(data.result == 1 ? "操作成功" : data.msg),
+            time:2000,
+            define:function(){
+                lib.ajat('bounty/getList?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
+            }
+          });
+        }); 
+    }       
   });
   </script>
   </body>

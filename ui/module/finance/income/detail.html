@@ -21,25 +21,21 @@
             <script type="text/template" id="table-t">  
 
                 <div style="position:absolute;right:20px;top:40px;">
+                    <button type="button" class="btn fr mr-20" onclick="window.close()">关闭</button>
                     <%
-                    if(lib.query.type == "perview"){
+                    if(lib.query.type != "perview"){
                     %>
-                        <button type="button" class="btn fr mr-20" onclick="window.close()">关闭预览</button>
-                    <%
-                    }else{
-                    %>
-                        <button type="button" class="btn fr mr-20"  onclick="history.back()">返回</button>
-                        <button type="button" class="btn fr mr-20"  <%=data.status == 1 ? "disabled" : ""%>  onclick="edit()" data-slug="rebate.update">
-                            编辑
-                        </button>
-                        <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
-                            onclick="del(<%=data.id%>)" data-slug="rebate.destory">
-                            删除
-                        </button>
-                        <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
-                            onclick="sure(<%=data.id%>)" data-slug="rebate.confirm">
-                            确认
-                        </button>                  
+                    <button type="button" class="btn fr mr-20"  <%=data.status == 1 ? "disabled" : ""%>  onclick="edit()" data-slug="rebate.update">
+                        编辑
+                    </button>
+                    <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
+                        onclick="del(<%=data.id%>)" data-slug="rebate.destory">
+                        删除
+                    </button>
+                    <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
+                        onclick="sure(<%=data.id%>)" data-slug="rebate.confirm">
+                        确认
+                    </button>                  
                     <%
                     }
                     %>
