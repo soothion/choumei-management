@@ -9,6 +9,8 @@ use Kodeine\Acl\Models\Eloquent\Permission;
 use Event;
 use Excel;
 use Auth;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class ManagerController extends Controller{
 	/**
@@ -228,7 +230,7 @@ class ManagerController extends Controller{
 		$param = $this->param;
 		DB::beginTransaction();
 		if(Manager::where('username','=',$param['username'])->first())
-			return $this->error('用户名已存在');
+			throw new ApiException('用户名已存在', ERROR::USER_EXIST);
 		$param['password'] = bcrypt($param['password']);
 		$user = Manager::create($param);
 		$role = 1;
@@ -247,7 +249,7 @@ class ManagerController extends Controller{
 		else
 		{
 			DB::rollBack();
-			return $this->error('用户创建失败');
+			throw new ApiException('用户创建失败', ERROR::USER_CREATE_FAILED);
 		}
 	}
 
@@ -371,7 +373,7 @@ class ManagerController extends Controller{
 		else
 		{
 			DB::rollBack();
-			return $this->error('用户更新失败');
+			throw new ApiException('用户更新失败', ERROR::USER_UPDATE_FAILED);
 		}
 
 	}
