@@ -351,19 +351,6 @@ class ERROR
       */
      CONST RECEIVABLES_ID_IS_ERROR  =  -50802;
      
-     ////////////消息模块//////////////
-     /**
-      *@param 参数错误
-      */
-     CONST PARAMETER_ERROR =  -50900;
-     /**
-      *@param 更新失败
-      */
-     CONST UPDATE_FAILED =  -50901;
-     /**
-      *@param 消息ID不正确
-      */
-     CONST MESSAGE_ID_IS_ERROR  =  -50902;
       
      ////////////店铺商户操作模块//////////////
      /**
