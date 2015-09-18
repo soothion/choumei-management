@@ -16,7 +16,7 @@
 		</div>			
      <div class="wrapper" ajat="<%if(query.id){%>pay_manage/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>pay_manage/update/<%=query.id%><%}else{%>pay_manage/create<%}%>">
+		  <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>pay_manage/update/<%=query.id%><%}else{%>pay_manage/create<%}%>">
 				<div class="detail-operation">
 					<button class="btn" onclick="history.back()" type="button" >取消</button>
 					<span class="space"></span>
