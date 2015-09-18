@@ -57,7 +57,7 @@
 				<%})%>
               </tbody>
             </table>
-			<form action="feed/destroy" id="destroy" data-role="normal" onreset="parent.lib.popup.result({text:'操作成功',define:function(){location.reload()}})"></form>
+			<form action="feed/destroy" id="destroy" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})"></form>
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
 				<button class="btn" form="destroy" disabled>批量删除</button>

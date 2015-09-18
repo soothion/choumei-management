@@ -69,7 +69,7 @@
 				<label class="control-label" for=""><span class="red">*</span>角色权限</label>
 				<div class="control">
 					<%data.roles.forEach(function(item){%>	
-					<input disabled required checked type="checkbox"  class="checkbox" id="checkbox<%=item.id%>" ><label for="checkbox<%=item.id%>"><%=item.name%></label>
+					<label><input type="checkbox" checked disabled/><span><%=item.name%></span></label>
 					<input type="checkbox" value="<%=item.id%>" name="roles" style="display:none" />
 					<%})%>
 				</div>
@@ -116,16 +116,10 @@
 		<%})%>
 	</script>
 	<script type="text/javascript">
-		/*
 		$('#form').on('_ready',function(){
-			$(this).find('form').off('success').on('success',function(e,data){
-				parent.lib.popup.result({
-					bool:true,
-					text:(data.msg||"数据更新成功"),
-					time:2000
-				});
-			})
-		});*/
+			var form=$(this).find('form')[0];
+			form.goback=function(){}
+		});
 		$(document.body).on('change','#switch',function(){
 			if($(this).is(':checked')){
 				$('input[type="password"]').removeAttr('disabled');

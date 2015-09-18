@@ -29,7 +29,7 @@
 					webkit:/webkit/i.test(ua)
 				}
 			},
-			getFormData:function($form,xss){
+			getFormData:function($form){
 				var data={};
 				var fields=$form.serializeArray();
 				$.each(fields,function(i,field){
@@ -192,14 +192,15 @@
                 });
             },
 			result:function(options){
+				options=options||{};
+				if(options.bool===undefined){
+					options.bool=true;
+				}
 				if(!options.text){
 					options.text=(options.bool?"操作成功":"操作失败");
 				}
 				if(options.time===undefined){
 					options.time=1000;
-				}
-				if(options.bool===undefined){
-					options.bool=true;
 				}
 				options.text='<i class="fa fa-'+(options.bool?"check":"times")+'-circle"></i>'+options.text;
 				this.tips(options)
@@ -959,8 +960,19 @@
 			this.cfg.requiredmsg=this.el.requiredmsg||"未填写";
 			this.cfg.patternmsg=this.el.patternmsg||"不正确";
 			this.bindEvent();
-			this.el.goback=function(){
-				history.back();
+			if(!this.el.goback){
+				this.el.goback=function(){
+					if(parent!=window){
+						history.back();
+					}else{
+						window.close();
+					}
+				}
+			}
+			if(!this.el._getFormData){
+				this.el._getFormData=function(){
+					return lib.tools.getFormData($(this))
+				}
 			}
 		},
 		validateFields:function(e,eventData){
@@ -1165,7 +1177,7 @@
 		},
 		bindEvent:function(){
 			var self=this;
-			$(this.el).on('blur',this.selector,function(e,data){
+			$(this.el).attr('novalidate','novalidate').on('blur',this.selector,function(e,data){
 				self.validateFields(e,data);
 			}).on('error',this.selector,function(e,data){
 				self[data.type]&&self[data.type](e,data);

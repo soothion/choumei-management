@@ -18,7 +18,7 @@
 	
 	<div class="wrapper" ajat="<%if(query.id){%>message/getOne?id=<%=query.id%><%}%>#domid=form&tempid=form-t&xss=false" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="<%=query._?"message/update":"message/create"%>" data-xss="none">
+		<form  method="post" class="form-vertical" data-role="form" action="<%=query._?"message/update":"message/create"%>" data-xss="none">
 				<div class="detail-operation">
 					<button class="btn" onclick="history.back()" type="button" >取消</button>
 					<span class="space"></span>

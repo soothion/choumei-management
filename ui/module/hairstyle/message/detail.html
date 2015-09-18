@@ -38,7 +38,7 @@
 			</form>
 			<span class="space"></span>
 			<form action="shop_count/update/<%=query.id%>" data-role="normal"  
-			onreset="parent.lib.popup.result({bool:true,define:function(){history.back()}})">
+			onreset="parent.lib.popup.result({define:function(){history.back()}})">
 				<button class="btn" <%=data.state!=2?"disabled":""%> data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>
 			</form>
 			<span class="space"></span>

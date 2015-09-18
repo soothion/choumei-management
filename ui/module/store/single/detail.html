@@ -7,7 +7,7 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a>店铺结算 </a><span>&gt;</span><a href="store/single/index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>付款单</span>
+        <a>店铺结算 </a><span>&gt;</span><a href="index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>付款单</span>
     
 		<div class="flex-box">
 			<div class="flex-item">
@@ -32,7 +32,7 @@
 			<%if(query.preview!="preview"){%>
 			<button class="btn" id="upd" onclick="location='edit.html?id=<%=data.id%>'"  data-slug="shop_count.update" <%=data.state==4?"disabled":""%><%=data.state==1?"disabled":""%> >编辑</button>
 			<span class="space"></span>
-			<form action="shop_count/destroy/<%=data.id%>" data-role="remove" data-title="你正在删除转付单，是否继续删除？" id="form-remove">
+			<form action="shop_count/destroy/<%=data.id%>" data-role="normal" data-title="你正在删除转付单，是否继续删除？" onreset="parent.lib.popup.result({text:'删除成功',define:function(){window.close()}})">
 				<input type="hidden" name="id" value="<%=data.id%>" />
 				<button class="btn" name="id" data-slug="shop_count.destroy" <%=data.state==4?"disabled":""%><%=data.state==1?"disabled":""%> >删除</button>				 
 			</form>
@@ -104,12 +104,9 @@
 		</div>
 		  </script>
         
-    </div>
- 
+    </div> 
    <script type="text/javascript">
-	$(document).on('remove','#form-remove',function(){
-		history.back();
-	})
+
    </script>
   </body>
 </html>
