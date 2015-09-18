@@ -56,7 +56,7 @@
 					</tbody>
 				</table>
 			</div>
-			<form action="user/update/<%=query.id%>" data-role="normal" id="companyCode">
+			<form action="user/update/<%=query.id%>" data-role="normal" id="companyCode" onreset="parent.lib.popup.result()">
 				<input type="hidden" name="companyCode" value="" />
 			</form>
 			<br />
@@ -83,7 +83,14 @@
 								<td>性别： <%=data.sex%></td>
 							</tr>
 							<tr>
-								<td>发长：  无</td>
+								<td>发长：  <%if(data.hair_type==1){%>
+										长发
+									<%}else if(data.hair_type==2){%>
+										中发
+									<%}else if(data.hair_type==3){%>
+										短发
+									<%}%>
+									</td>
 								<td>
 									常住地区： 
 									<%if(data.area){%>
@@ -125,7 +132,7 @@
 								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
 							</tr>
 							<tr>
-								<td>加入集团：<%=data.companyName%> <%if(data.companyName){%><span class="space"></span><button form="companyCode" class="btn">解绑集团码</button><%}%></td>
+								<td>加入集团：<%=data.companyName%> <%if(data.companyName){%><span class="space"></span><button form="companyCode" class="btn off-code">解绑集团码</button><%}%></td>
 								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
 							</tr>
 							<tr>
@@ -169,11 +176,11 @@
 								<td>性别： <%=data.sex%></td>
 							</tr>
 							<tr>
-								<td>发长：  hair_type
-									<select required>
-									  <option value="1">长发</option>
-									  <option value="中发">中发</option>
-									  <option value="短发">短发</option>
+								<td>发长：
+									<select name="hair_type">
+									  <option value="1" <%data.hair_type==1?"selected":""%>>长发</option>
+									  <option value="2" <%data.hair_type==2?"selected":""%>>中发</option>
+									  <option value="3" <%data.hair_type==3?"selected":""%>>短发</option>
 									</select>
 								</td>
 								<td>
@@ -225,7 +232,7 @@
 								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
 							</tr>
 							<tr>
-								<td>加入集团：<%=data.companyName%> <%if(data.companyName){%><span class="space"></span><button class="btn" form="companyName">解绑集团码</button><%}%></td>
+								<td>加入集团：<%=data.companyName%> <%if(data.companyName){%><span class="space"></span><button class="btn off-code"  form="companyName">解绑集团码</button><%}%></td>
 								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
 							</tr>
 							<tr>
@@ -299,6 +306,8 @@
 				});
 			}).on('_ready','#province,#city,#area',function(){
 				$(this).trigger('change');
+			}).on('reset','#companyCode',function(){
+				$('.off-code').hide();
 			});
 		</script>
   </body>
