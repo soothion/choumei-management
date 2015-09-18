@@ -47,7 +47,6 @@ class OrderRefundController extends Controller
      * @apiSuccess {String} retype  退款方式 1原路返还 2退回余额
      * @apiSuccess {String} order_status 退款状态  6待审核,7退款完成,10退款中
      * @apiSuccess {String} user_id 付款人id
-     * @apiSuccess {String} status 状态  2未使用，4使用完成，6申请退款，7退款完成,8退款中
      * @apiSuccess {String} shopcartsn 购物车号
      * @apiSuccess {String} user 用户信息
      * @apiSuccess {String} user.username 用户臭美号

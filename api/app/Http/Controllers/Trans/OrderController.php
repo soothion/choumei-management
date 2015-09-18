@@ -38,9 +38,12 @@ class OrderController extends Controller
      * @apiSuccess {String} pay_time 付款时间
      * @apiSuccess {String} user_id 付款人id
      * @apiSuccess {String} ispay 交易状态  1未付款  2 已付款
+     * @apiSuccess {String} user 用户信息
      * @apiSuccess {String} user.username 用户臭美号
      * @apiSuccess {String} user.mobilephone 用户手机号
+     * @apiSuccess {String} salon 店铺信息
      * @apiSuccess {String} salon.salonname 店铺名称
+     * @apiSuccess {String} fundflow 支付信息
      * @apiSuccess {String} fundflow.pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
      *
      * @apiSuccessExample Success-Response:

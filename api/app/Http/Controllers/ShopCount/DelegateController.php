@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ShopCount;
 
 
 use App\Http\Controllers\Controller;

@@ -1,15 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ShopCount;
 
 use App\Http\Controllers\Controller;
 use App\ShopCountApi;
 use Event;
-use App\PrepayBill;
-use App\Utils;
 use Log;
-use App\Exceptions\ApiException;
-use App\Exceptions\ERROR;
 use App\Mapping;
 
 class BalanceController extends Controller
