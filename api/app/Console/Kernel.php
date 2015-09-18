@@ -39,6 +39,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\Permissions::class,
         \App\Console\Commands\Commission::class,
         \App\Console\Commands\CommissionLog::class,
+        \App\Console\Commands\CountOrder::class,
     ];
 
     /**

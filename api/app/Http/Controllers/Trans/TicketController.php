@@ -299,7 +299,7 @@ class TicketController extends Controller
             'state' => self::T_INT,
             'time_key' => self::T_INT,
         ]);
-        $items = TransactionSearchApi::getConditionOfOrder($params)->take(10000)
+        $items = TransactionSearchApi::getConditionOfTicket($params)->take(10000)
         ->get()
         ->toArray();
         $header = [
@@ -345,7 +345,7 @@ class TicketController extends Controller
                 'platform_no'=>'',  //#@todo用户设备号  
                 'salonname'=>isset($data['salon'])&&isset($data['salon']['salonname'])?$data['salon']['salonname']:"",
                 'itemname'=>'',//#@todo项目名称
-                'priceall_ori'=>$data['$priceall_ori'],
+                'priceall_ori'=>$data['priceall_ori'],
                 'vcSn'=>isset($data['voucher'])&&isset($data['voucher']['vcSn'])?$data['voucher']['vcSn']:"",
                 'vSn'=>isset($data['voucher'])&&isset($data['voucher']['vSn'])?$data['voucher']['vSn']:"",
                 'voucher_money'=>'',//#@todo现金券面额

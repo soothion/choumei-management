@@ -312,19 +312,19 @@ Route::group(['middleware'], function(){
     // 代收单列表 搜索
     Route::any('shop_count/delegate_list', array(
         'as' => 'shop_count.delegate_list',
-        'uses' => 'ShopCount\ShopCountController@delegate_list'
+        'uses' => 'ShopCount\DelegateController@index'
     ));
     
     // 代收单详情
     Route::any('shop_count/delegate_detail/{id}', array(
         'as' => 'shop_count.delegate_detail',
-        'uses' => 'ShopCount\ShopCountController@delegate_detail'
+        'uses' => 'ShopCount\DelegateController@show'
     ));
     
     // 往来余额 查询
     Route::any('shop_count/balance', array(
         'as' => 'shop_count.balance',
-        'uses' => 'ShopCount\ShopCountController@balance'
+        'uses' => 'ShopCount\BalanceController@balance'
     ));  
     
     //转付单导出
@@ -336,13 +336,13 @@ Route::group(['middleware'], function(){
     //代收单导出
     Route::any('shop_count/delegate_export', array(
 	    'as' => 'shop_count.delegate_export',
-	    'uses' => 'ShopCount\ShopCountController@delegate_export'
+	    'uses' => 'ShopCount\DelegateController@export'
     ));
     
     //店铺往来导出
     Route::any('shop_count/balance_export', array(
 	    'as' => 'shop_count.balance_export',
-	    'uses' => 'ShopCount\ShopCountController@balance_export'
+	    'uses' => 'ShopCount\BalanceController@export'
     ));
 
 

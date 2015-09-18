@@ -283,32 +283,25 @@ class OrderController extends Controller
         $res = [];
         foreach($datas as $data)
         {
+            $pay_types = array_column($data['fundflow'], "pay_type");
+            $pay_typename_str = '';
+            $pay_names = Mapping::getFundflowPayTypeNames($pay_types);
+            if(count($pay_names)>0)
+            {
+                $pay_typename_str = implode("+", $pay_names);
+            }
             $res[] = [
                 'ordersn'=>$data['ordersn'],
-                'payname'=>self::getPayNames($data['fundflow']),
+                'payname'=>$pay_typename_str,
                 'money'=>$data['priceall'],
                 'add_time'=>date("Y-m-d H:i:s",intval($data['add_time'])),
                 'pay_time'=>intval($data['pay_time'])>0?date("Y-m-d H:i:s",intval($data['pay_time'])):"",
                 'username'=>isset($data['user'])&&isset($data['user']['username'])?$data['user']['username']:"",
                 'mobilephone'=>isset($data['user'])&&isset($data['user']['mobilephone'])?$data['user']['mobilephone']:"",
                 'salonname'=>isset($data['salon'])&&isset($data['salon']['salonname'])?$data['salon']['salonname']:"",
-                'is_pay'=>intval($data['is_pay']) == 1?"未付款":"已付款",
+                'is_pay'=>Mapping::getOrderIsPayName($data['is_pay']),
             ];
         }
         return $res;
-    }
-    
-    public static function getPayNames($fundflows)
-    {
-        $res = [];
-        foreach ($fundflows as $flow)
-        {
-            $res[] = Mapping::getPayTypeName($flow['pay_type']);
-        }
-        if(count($res)>0)
-        {
-            return implode("+", $res);
-        }
-        return "";
     }
 }

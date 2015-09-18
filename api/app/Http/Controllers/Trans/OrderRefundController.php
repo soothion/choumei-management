@@ -9,6 +9,7 @@ use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use App\Utils;
 use App\AlipaySimple;
+use App\Mapping;
 
 class OrderRefundController extends Controller
 {
@@ -290,8 +291,27 @@ class OrderRefundController extends Controller
             'refund_max_time' => self::T_STRING,
             'state' => self::T_STRING,
         ]);
-        $items = TransactionSearchApi::searchOfRefund($params);
-        return $this->success($items);
+        $items = TransactionSearchApi::getConditionOfRefund($params)->take(10000)
+        ->get()
+        ->toArray();
+        $header = [
+            '臭美券密码',
+            '订单编号',
+            '购买时间',
+            '申请退款时间',
+            '店铺名称',
+            '用户手机号',
+            '现金券编号',
+            '支付方式',
+            '金额',
+            '实付金额',
+            '退款金额',
+            '退款方式',
+            '退款状态',
+            '购物车号',
+        ];
+        $res = self::format_data($items);
+        $this->export_xls("退款单 " . date("Ymd"), $header, $res);
     }
     
     /**
@@ -379,5 +399,41 @@ class OrderRefundController extends Controller
             echo "fail";
         }
         die();
+    }
+
+    private static function format_export_data($datas)
+    {
+        $res = [];
+        foreach ($datas as $data) {
+            $pay_types = array_column($data['fundflow'], "pay_type");
+            $pay_typename_str = '';
+            $pay_names = Mapping::getFundflowPayTypeNames($pay_types);
+            if(count($pay_names)>0)
+            {
+                $pay_typename_str = implode("+", $pay_names);
+            }
+            $res[] = [
+                'ticketno' => self::mask_ticketno($data['ticketno']),
+                'ordersn' => $data['ordersn'],
+                'buy_time' => date("Y-m-d H:i:s", intval($data['buy_time'])),
+                'add_time' => intval($data['add_time']) > 0 ? date("Y-m-d H:i:s", intval($data['add_time'])) : "",
+                'salonname' => isset($data['salon']) && isset($data['salon']['salonname']) ? $data['salon']['salonname'] : "",
+                'mobilephone' => isset($data['user']) && isset($data['user']['mobilephone']) ? $data['user']['mobilephone'] : "",
+                'vSn' => isset($data['voucher']) && isset($data['voucher']['vSn']) ? $data['voucher']['vSn'] : "",
+                'payname' => $pay_typename_str,
+                'priceall_ori' => $data['priceall_ori'],
+                'actuallyPay' => $data['actuallyPay'],
+                'refund_money' => $data['refund_money'],
+                'retype' => Mapping::getOrderRefundRetypeName($data['retype']),
+                'order_status' => Mapping::getOrderStatusName($data['order_status'],[6=>'待审核']),
+                'shopcartsn' =>$data['shopcartsn']
+            ];
+        }
+        return $res;
+    }
+
+    private static function mask_ticketno($ticketno)
+    {
+        return substr($ticketno, 0, 2) . "*****" . substr($ticketno, strlen($ticketno) - 3);
     }
 }
