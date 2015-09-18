@@ -26,9 +26,9 @@
 				<span class="date-group">
 				<input type="date" data-role="start" name="start" placeholder="YYYY-MM-DD"/>到<input type="date" data-role="end" name="end" placeholder="YYYY-MM-DD"/>
 				</span>
-				<button class="btn" type="submit">搜索</button>
+				<button class="btn">搜索</button>
 			</form>
-			<form action="log/export" data-role="export"><button class="btn" type="submit" data-slug="log.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+			<form action="log/export" data-role="export"><button class="btn" data-slug="log.export"><i class="fa fa-file-excel-o"></i> 导出</button></form>
             <div class="table" ajat="log/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>

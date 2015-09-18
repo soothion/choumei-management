@@ -25,7 +25,7 @@
 				<div class="detail-operation">
 				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
 				<span class="space"></span>
-				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
+				<button class="btn-primary" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
 			</div>
 				
                   <div class="control-group">
@@ -89,7 +89,7 @@
 				<div class="control">
 				<button class="btn preview" type="button" data-slug="shop_count.preview">预览</button>
 				<%sessionStorage.setItem("preview",JSON.stringify(data))%>
-				<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
+				<button class="btn-primary" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
 				</div>
 			</div>			 
           </form>

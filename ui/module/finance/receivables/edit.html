@@ -26,7 +26,7 @@
 				<div class="detail-operation">
 					<button class="btn" onclick="history.back()" type="button">取消</button>
 					<span class="space"></span>
-					<button class="btn-primary" type="submit" data-slug="<%=query._?"receivables.update":"receivables.save"%>">提交</button>			
+					<button class="btn-primary" data-slug="<%=query._?"receivables.update":"receivables.save"%>">提交</button>			
 			   </div>
 				
                   <div class="control-group">
@@ -101,7 +101,7 @@
 					<div class="control">
 						<button class="btn preview" type="button">预览</button>
 						<%sessionStorage.setItem("preview",JSON.stringify(data))%>
-						<button class="btn-primary" type="submit" data-slug="<%=query._?"receivables.update":"receivables.save"%>">提交</button>				 
+						<button class="btn-primary" data-slug="<%=query._?"receivables.update":"receivables.save"%>">提交</button>				 
 					</div>
 			  </div>	
 		   </form>

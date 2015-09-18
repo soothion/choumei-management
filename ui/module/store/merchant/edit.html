@@ -21,7 +21,7 @@
 			<div class="detail-operation">
 				<button class="btn" onclick="history.back()" type="button">取消</button>
 				<span class="space"></span>
-				<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>" type="submit">提交</button>
+				<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
 			</div>
 			<input type="hidden" name="id" value="<%=data.id||""%>">
 			<%if(query._){%>
@@ -88,7 +88,7 @@
 					<%localStorage.setItem("preview",JSON.stringify(data));%>
 					<button class="btn preview" type="button">预览</button>
 					<span class="space"></span>
-					<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>" type="submit">提交</button>
+					<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
 				</div>
 			</div>
 		</form>
