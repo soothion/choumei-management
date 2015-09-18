@@ -245,6 +245,7 @@
 				});
 			},
 			getToken:function(cb){
+				var self=this;
 				var query={
 					'bundle':"FQA5WK2BN43YRM8Z",
 					'version':"5.3",
@@ -273,6 +274,10 @@
 								bool:true
 							});
 						}
+						clearTimeout(self.timer);
+						self.timer=setTimeout(function(){
+							lib.puploader.getToken.apply(lib.puploader,_arguments);
+						},1000*60);
 					}
 				});
 			},
@@ -356,6 +361,7 @@
 						uploader.bind('FileUploaded',function(up,file,res){
 							if(res&&res.response&&typeof res.response=='string'){
 								var data=JSON.parse(res.response);
+								clearTimeout(self.timer);
 								self.getToken(function(data){
 									Qiniu.token=data.uptoken;
 									Qiniu._fileName=data.fileName;

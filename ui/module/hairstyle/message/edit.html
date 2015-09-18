@@ -372,7 +372,13 @@
 					editor.show().prev().hide();
 				}
 			});
-			
+			$(document).on('click','.edui-for-fullscreen',function(){
+				if($(this).find('.edui-state-checked').length==1){
+					parent.lib.fullpage(true);
+				}else{
+					parent.lib.fullpage(false);
+				}
+			})
 			
 		</script>  
   </body>

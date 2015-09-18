@@ -34,7 +34,7 @@
 
         //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的从新定义
         
-        , toolbars: [["undo","redo","unlink","link","date","time","_simpleupload","bold","italic","underline","forecolor","backcolor","justifyleft","justifycenter","justifyright","justifyjustify","formatmatch","fontsize","fontfamily"]]
+        , toolbars: [["fullscreen","undo","redo","unlink","link","date","time","_simpleupload","bold","italic","underline","forecolor","backcolor","justifyleft","justifycenter","justifyright","justifyjustify","formatmatch","fontsize","fontfamily"]]
         //当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
         //,labelMap:{
         //    'anchor':'', 'undo':''
