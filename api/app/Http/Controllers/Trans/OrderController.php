@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Trans;
 
 use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;
+use App\Mapping;
 
 class OrderController extends Controller
 {
@@ -229,55 +230,85 @@ class OrderController extends Controller
         $item = TransactionSearchApi::orderDetail($id);
         return $this->success($item);
     }
-    
-     /**
+
+    /**
      * @api {get} /order/export 3.订单导出
      * @apiName export
      * @apiGroup order
      *
-     * @apiParam {Number} key  1 店铺搜索  2 店铺编号
-     * @apiParam {String} keyword  根据key来的关键字
-     * @apiParam {String} pay_time_min 付款最小时间 YYYY-MM-DD
-     * @apiParam {String} pay_time_max 付款最大时间 YYYY-MM-DD
-     * @apiParam {String} type 0 全部 1 付交易代收款 2 付业务投资款
-     * @apiParam {String} pay_type 0 全部 1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiParam {String} state 0 全部 1 待提交 2待审批 3待付款  4已付款
-     * @apiParam {Number} page 可选,页数. (从1开始)
-     * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
-     * @apiParam {String} sort_key 排序的键 ['id','updated_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
-     * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
-     *
-     * @apiSuccess {Number} total 总数据量.
-     * @apiSuccess {Number} per_page 分页大小.
-     * @apiSuccess {Number} current_page 当前页面.
-     * @apiSuccess {Number} last_page 当前页面.
-     * @apiSuccess {Number} from 起始数据.
-     * @apiSuccess {Number} to 结束数据.
-     * @apiSuccess {String} code 单号
-     * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
-     * @apiSuccess {String} money 付款金额
-     * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiSuccess {String} require_day 要求付款日期 
-     * @apiSuccess {String} pay_day 实际付款日期 
-     * @apiSuccess {String} cycle 回款周期
-     * @apiSuccess {String} cycle_day 回款日期 
-     * @apiSuccess {String} cycle_money 周期回款金额 
-     * @apiSuccess {String} make_user 制单人信息
-     * @apiSuccess {String} confirm_user 审批人信息
-     * @apiSuccess {String} cash_user 出纳人信息
-     * @apiSuccess {String} salon 店铺信息
-     * @apiSuccess {String} state 订单状态  1待提交 2待审批 3:待付款 4:已付款
-     * @apiSuccess {String} confirm_at 审批日期
-     *
+     * @apiParam {Number} key 1 订单号 2 臭美券密码 3 用户手机号 4 店铺名称
+     * @apiParam {String} keyword 根据key来的关键字
+     * @apiParam {String} pay_time_min 下单最小时间 YYYY-MM-DD
+     * @apiParam {String} pay_time_max 下单最大时间 YYYY-MM-DD
+     * @apiParam {String} pay_type 0 全部 1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
+     * @apiParam {String} pay_state 0 全部 1未支付 2已支付
      *
      * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "未授权访问"
-     *		}
+     * {
+     * "result": 0,
+     * "msg": "未授权访问"
+     * }
      */
     public function export()
     {
-        
+        $params = $this->parameters([
+            'key' => self::T_INT,
+            'keyword' => self::T_STRING,
+            'pay_time_min' => self::T_STRING,
+            'pay_time_max' => self::T_STRING,
+            'pay_type' => self::T_STRING,
+            'pay_state' => self::T_INT
+        ]);
+        $items = TransactionSearchApi::getConditionOfOrder($params)->take(10000)
+            ->get()
+            ->toArray();
+        $header = [
+            '订单编号',
+            '支付方式',
+            '交易金额',
+            '下单时间',
+            '付款时间',
+            '用户臭美号',
+            '用户手机号',
+            '店铺名称',
+            '交易状态'
+        ];
+        $res = self::format_export_data($items);
+        $this->export_xls("普通订单" . date("Ymd"), $header, $res);
+    }
+    
+    
+    private static function format_export_data($datas)
+    {
+        $res = [];
+        foreach($datas as $data)
+        {
+            $res[] = [
+                'ordersn'=>$data['ordersn'],
+                'payname'=>self::getPayNames($data['fundflow']),
+                'money'=>$data['priceall'],
+                'add_time'=>date("Y-m-d H:i:s",intval($data['add_time'])),
+                'pay_time'=>intval($data['pay_time'])>0?date("Y-m-d H:i:s",intval($data['pay_time'])):"",
+                'username'=>isset($data['user'])&&isset($data['user']['username'])?$data['user']['username']:"",
+                'mobilephone'=>isset($data['user'])&&isset($data['user']['mobilephone'])?$data['user']['mobilephone']:"",
+                'salonname'=>isset($data['salon'])&&isset($data['salon']['salonname'])?$data['salon']['salonname']:"",
+                'is_pay'=>intval($data['is_pay']) == 1?"未付款":"已付款",
+            ];
+        }
+        return $res;
+    }
+    
+    public static function getPayNames($fundflows)
+    {
+        $res = [];
+        foreach ($fundflows as $flow)
+        {
+            $res[] = Mapping::getPayTypeName($flow['pay_type']);
+        }
+        if(count($res)>0)
+        {
+            return implode("+", $res);
+        }
+        return "";
     }
 }

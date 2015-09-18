@@ -218,9 +218,9 @@ class TransactionWriteApi
             {
                 throw new ApiException("unknown refund type of {$type}",ERROR::UNKNOWN_ERROR);
             }
-            $res = call_user_func_array(["self",$call_name], [$items]);
+            $res[$type] = call_user_func_array(["self",$call_name], [$items]);
         }
-        return true;
+        return $res;
     }
 
     /**
