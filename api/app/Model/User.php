@@ -7,7 +7,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
-use Redis;
+use Illuminate\Support\Facades\Redis as Redis;
 const FIRST_KEY = 'recent.first.user';
 const REGISTER_KEY = 'recent.register.user';
 
