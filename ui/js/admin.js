@@ -490,11 +490,12 @@ $(function(){
 	/**实例化封装表单**/
 	$('form[data-role="form"]').each(function(){
 		new lib.Form(this);
-	})
+	});
+	$('form[data-role="hash"]').attr('novalidate','novalidate');
 	$body.on('_ready',function(e){
 		$(e.target).find('form[data-role="form"]').each(function(){
 			new lib.Form(this);
-		});
+		}).find('form[data-role="hash"]').attr('novalidate','novalidate');
 	});
 }); 
 
