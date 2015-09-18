@@ -18,13 +18,13 @@
 		host:'<#MANAGER_BACK_URL#>',
 		token:'http://uat-cmweb.choumei.cn/v1/file/qiniu/get-token.html',
 		upload:'http://qiniu-plupload.qiniudn.com/',
-		previewMessage:'http://uat-user.choumei.me/'
+		previewMessage:'http://uat-user.choumei.cn/'
 	},
 	product:{
 		host:'<#MANAGER_BACK_URL#>',
 		token:'http://cmweb.choumei.cn/v1/file/qiniu/get-token.html',
 		upload:'http://qiniu-plupload.qiniudn.com/',
-		previewMessage:'http://user.choumei.me/'
+		previewMessage:'http://user.choumei.cn/'
 	},
 	getHost:function(){
 		return this[this.env].host;
