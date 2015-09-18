@@ -241,9 +241,9 @@
 
     function request(url,params){
         lib.ajax({
-          url  : url
+          url  : url,
           type : "post",
-          data : params,
+          data : params
         }).done(function(data, status, xhr){
           parent.lib.popup.result({
             bool:data.result == 1,
