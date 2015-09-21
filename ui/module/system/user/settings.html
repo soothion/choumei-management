@@ -118,7 +118,7 @@
 	<script type="text/javascript">
 		$('#form').on('_ready',function(){
 			var form=$(this).find('form')[0];
-			form.goback=function(){}
+			form.goback=function(){$(this).removeAttr('disabled');}
 		});
 		$(document.body).on('change','#switch',function(){
 			if($(this).is(':checked')){
