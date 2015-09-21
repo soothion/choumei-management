@@ -41,14 +41,14 @@
 								</form>
 								-->
 								<span class="space"></span>
-								<form data-slug="user.destory" action="user/destroy/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({define:function(){history.back();}})">
+								<form data-slug="user.destory" data-slug="user.destory" action="user/destroy/<%=query.id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){window.close();}})">
 									<button class="btn">删除账号</button>
 								</form>
 								<span class="space"></span>
 								<button class="btn btn-edit" data-slug="user.update">
 									编辑
 								</button>
-								<button class="btn btn-edit-cancel" style="display:none">
+								<button class="btn btn-cancel" style="display:none">
 									取消
 								</button>
 							</td>
@@ -274,12 +274,7 @@
 			$(document).on('click','.btn-edit',function(){
 				$('.detail').hide().siblings().show();
 				$(this).hide();
-				$('.btn-edit-cancel').show();
-			}).on('click','.btn-edit-cancel',function(){
-				//$('.update').hide().siblings().show();
-				//$(this).hide();
-				//$('.btn-edit').show();
-				window.close();
+				$('.btn-cancel').show();
 			});
 			$('#detail').one('_ready',function(){
 				$('#province,#city,#area').on('change',function(){

@@ -21,6 +21,15 @@
         if(type === 'edit'){
             currentData = JSON.parse(sessionStorage.getItem('edit-shop-data')); 
         }
+		if(currentData.contractPicUrl&&typeof currentData.contractPicUrl=='string'){
+			currentData.contractPicUrl=JSON.parse(currentData.contractPicUrl);
+		}
+		if(currentData.licensePicUrl&&typeof currentData.licensePicUrl=='string'){
+			currentData.licensePicUrl=JSON.parse(currentData.licensePicUrl);
+		}
+		if(currentData.corporatePicUrl&&typeof currentData.corporatePicUrl=='string'){
+			currentData.corporatePicUrl=JSON.parse(currentData.corporatePicUrl);
+		}
 		//合同上传
 		lib.puploader.image({
 			browse_button: 'imageUpload1',
@@ -62,6 +71,8 @@
     var initEvent = function(){
         //导航条绑定事件
         $(".flex-item a").on('click',function(e){
+			setURLData();
+            sessionStorage.setItem("edit-shop-data",JSON.stringify(currentData));
             e.preventDefault();           
             location.href = $(this).attr('href') + "?type="+type;
         });
