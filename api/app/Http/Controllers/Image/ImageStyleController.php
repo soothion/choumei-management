@@ -8,12 +8,11 @@ use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 
 /**
- * Description of ImageStyleController
  *
  * @author zhengjiangang
  */
 class ImageStyleController extends Controller{
-     /**
+    /**
 	 * @api {post} /ImageStyle/index 1.图片列表
 	 * 
 	 * @apiName index
@@ -90,7 +89,7 @@ class ImageStyleController extends Controller{
      }
      
      
-     /**
+    /**
 	 * @api {post} /ImageStyle/create 2.添加风格
 	 * @apiName create
 	 * @apiGroup Image
@@ -99,7 +98,7 @@ class ImageStyleController extends Controller{
 	 * @apiParam {Number} curl 必填,卷度.
 	 * @apiParam {Number} color 必填,颜色.
 	 * @apiParam {String} original 必填,原图路径.
-         * @apiParam {String} thumb 必填,缩略图路径.
+     * @apiParam {String} thumb 必填,缩略图路径.
 	 * @apiSuccessExample Success-Response:
 	 *	{
 	 *	    "result": 1,
@@ -146,7 +145,7 @@ class ImageStyleController extends Controller{
 	 * @apiName destroy
 	 * @apiGroup  Image
 	 *
-	 *@apiParam {Number} id 必填,主键.
+	 * @apiParam {Number} id 必填,主键.
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:
@@ -181,7 +180,7 @@ class ImageStyleController extends Controller{
 		
      }
      
-       /**
+    /**
 	 * @api {post} /ImageStyle/update/:id 4.更新风格
 	 * @apiName update
 	 * @apiGroup  Image
@@ -236,6 +235,7 @@ class ImageStyleController extends Controller{
               throw new ApiException('图片风格更新失败', ERROR::STYLE_UPDATE_FAILED);
         }
      }
+     
     /**
 	 * @api {post} /ImageStyle/show/:id 5.查找一张图片
 	 * @apiName show

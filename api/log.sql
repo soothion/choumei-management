@@ -1,6 +1,15 @@
-
-update cm_permissions set slug = 'manager.index' where id=2;
-update cm_permissions set slug = 'manager.show' where id=3;
-update cm_permissions set slug = 'manager.update' where id=4;
-update cm_permissions set slug = 'manager.create' where id=5;
-update cm_permissions set slug = 'manager.export' where id=6;
+INSERT INTO `cm_permissions` (`id`, `inherit_id`, `title`, `slug`, `status`, `description`, `note`, `sort`, `show`, `created_at`, `updated_at`)
+VALUES
+	(105, NULL, '用户管理', '', 1, NULL, NULL, NULL, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(106, 105, '用户中心', '', 1, NULL, NULL, 200, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(107, 106, '用户概况', 'user.survey', 1, NULL, NULL, 800, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(108, 106, '用户列表', 'user.index', 1, NULL, NULL, 700, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(109, 106, '用户导出', 'user.export', 1, NULL, NULL, 600, 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(110, 106, '用户详情', 'user.show', 1, NULL, NULL, 500, 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(111, 106, '用户更新', 'user.update', 1, NULL, NULL, 400, 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(112, 106, '用户集团数', 'user.company', 1, NULL, NULL, 300, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(113, 106, '等级设置', 'level.update', 1, NULL, NULL, 200, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(114, 105, '用户操作', '', 1, NULL, NULL, 100, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(115, 114, '反馈列表', 'feed.index', 1, NULL, NULL, 200, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(116, 114, '删除反馈', 'feed.destory', 1, NULL, NULL, 100, 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+	(117, 106, '用户删除', 'user.destory', 1, NULL, NULL, 400, 2, '0000-00-00 00:00:00', '0000-00-00 00:00:00');

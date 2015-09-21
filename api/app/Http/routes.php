@@ -34,7 +34,12 @@ Route::any('self/update',array(
 	'as'=>'self.update',
 	'uses'=>'SelfController@update'
 ));
-		
+
+//用户等级列表
+Route::any('level/index',array(
+	'as'=>'level.index',
+	'uses'=>'LevelController@index'
+));		
 		
 //列表模块
 Route::any('list/city',array(
@@ -134,6 +139,10 @@ Route::group(['middleware' => ['before','after']], function(){
 	Route::any('user/update/{id}',array(
 		'as'=>'user.update',
 		'uses'=>'UserController@update'
+	));	
+	Route::any('user/destroy/{id}',array(
+		'as'=>'user.destroy',
+		'uses'=>'UserController@destroy'
 	));
 	Route::any('user/company',array(
 		'as'=>'user.company',
@@ -141,10 +150,6 @@ Route::group(['middleware' => ['before','after']], function(){
 	));
 
 	//用户等级模块
-	Route::any('level/index',array(
-		'as'=>'level.index',
-		'uses'=>'LevelController@index'
-	));
 	Route::any('level/update',array(
 		'as'=>'level.update',
 		'uses'=>'LevelController@update'
