@@ -21,6 +21,7 @@ define(function(require,exports,module){
                 self.close();
             });
             popup.on('click', '.popup-alert-cancel', function () {
+				options.cancel && options.cancel();
                 self.close();
             });
             this.overlay();
