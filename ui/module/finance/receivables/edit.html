@@ -24,7 +24,7 @@
 		  <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>receivables/update<%}else{%>receivables/save<%}%>">
 
 				<div class="detail-operation">
-					<button class="btn" onclick="history.back()" type="button">取消</button>
+					<button class="btn btn-cancel" type="button">取消</button>
 					<span class="space"></span>
 					<button class="btn-primary" data-slug="<%=query._?"receivables.update":"receivables.save"%>">提交</button>			
 			   </div>

@@ -51,7 +51,7 @@
 		<script type="text/template" id="form-t">
 		<form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>role/update/<%=data.id%><%}else{%>role/create<%}%>" <%=data.status==3?"disabled":""%>>
 			<div class="detail-operation">
-				<button type="button" class="btn" onclick="history.back()">取消</button>
+				<button type="button" class="btn btn-cancel">取消</button>
 				<span class="space"></span>
 				<button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary" style="<%=data.status==3?"display:none":""%>">提交</button>
 			</div>

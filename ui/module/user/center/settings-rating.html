@@ -76,7 +76,7 @@
 				return data;
 			}
 			form.goback=function(){
-				
+				$(this).removeAttr('disabled');
 			}
 			$('#detail').on('pass','input[type="text"]',function(){
 				var $this=$(this);

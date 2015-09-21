@@ -21,7 +21,7 @@
 		<script type="text/template" id="form-t">
 		<form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>ImageStyle/update/<%=data.id%><%}else{%>ImageStyle/create<%}%>">
 			<div class="detail-operation">
-				<button class="btn" onclick="history.back()" type="button" >取消</button>
+				<button class="btn btn-cancel" type="button" >取消</button>
 				<span class="space"></span>
 				<button class="btn-primary" data-slug="<%if(query.id){%>ImageStyle.update<%}else{%>ImageStyle.create<%}%>">提交</button>
 			</div>

@@ -20,7 +20,7 @@
 		<script type="text/template" id="form-t">
 		<form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>manager/update/<%=data.id%><%}else{%>manager/create<%}%>" <%=data.status==3?"disabled":""%>>
 		 <div class="detail-operation">
-				<button class="btn" onclick="history.back()" type="button" style="<%=data.status==3?"display:none":""%>">取消</button>
+				<button class="btn btn-cancel" type="button" style="<%=data.status==3?"display:none":""%>">取消</button>
 				<span class="space"></span>
 				 <button class="btn-primary" data-slug="<%=query._?"manager.update":"manager.create"%>" style="<%=data.status==3?"display:none":""%>">提交</button>
 			</div>

@@ -20,7 +20,7 @@
 		<script type="text/template" id="form-t">
 		<form  method="post" class="form-vertical" data-role="form" action="<%=query._?"message/update":"message/create"%>" data-xss="none">
 				<div class="detail-operation">
-					<button class="btn" onclick="history.back()" type="button" >取消</button>
+					<button class="btn btn-cancel" type="button" >取消</button>
 					<span class="space"></span>
 					<button class="btn-primary" data-slug="<%if(query.id){%>message.update<%}else{%>message.create<%}%>">提交</button>			
 				</div>

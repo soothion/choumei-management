@@ -247,6 +247,7 @@
 			},
 			getToken:function(cb){
 				var self=this;
+				var _arguments=arguments;
 				var query={
 					'bundle':"FQA5WK2BN43YRM8Z",
 					'version':"5.3",
