@@ -273,7 +273,7 @@ class OrderController extends Controller
      * }
      */
     public function export()
-    {
+    { 
         $params = $this->parameters([
             'key' => self::T_INT,
             'keyword' => self::T_STRING,
@@ -282,9 +282,10 @@ class OrderController extends Controller
             'pay_type' => self::T_STRING,
             'pay_state' => self::T_INT
         ]);
-        $items = TransactionSearchApi::getConditionOfOrder($params)->take(10000)
+        $items = TransactionSearchApi::getConditionOfOrder($params)->take(100)
             ->get()
             ->toArray();
+      
         $header = [
             '订单编号',
             '支付方式',
@@ -322,7 +323,7 @@ class OrderController extends Controller
                 'username'=>isset($data['user'])&&isset($data['user']['username'])?$data['user']['username']:"",
                 'mobilephone'=>isset($data['user'])&&isset($data['user']['mobilephone'])?$data['user']['mobilephone']:"",
                 'salonname'=>isset($data['salon'])&&isset($data['salon']['salonname'])?$data['salon']['salonname']:"",
-                'is_pay'=>Mapping::getOrderIsPayName($data['is_pay']),
+                'is_pay'=>Mapping::getOrderIsPayName($data['ispay']),
             ];
         }
         return $res;

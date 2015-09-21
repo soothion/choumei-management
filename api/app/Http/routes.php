@@ -81,7 +81,7 @@ Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
 // 店铺消费验证  结算
 Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
 
-//退款回调 支付宝
+//退款回调 支付宝 普通单
 Route::any('refund/call_back_of_alipay',array( 
 	'as'=>'refund.call_back_of_alipay',
 	'uses'=>'Trans\OrderRefundController@call_back_of_alipay'
