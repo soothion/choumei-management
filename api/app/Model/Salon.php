@@ -36,14 +36,14 @@ class Salon extends Model {
 				's.add_time',
 				'm.name',
 				'm.id as merchantId',
-				'b.businessName',
+				//'b.businessName',
 			);
 		//手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
 		});
 
-		$query = self::getQueryByParam( $where,$orderName,$order,$fields);
+		$query = self::getQueryByParam( $where,$orderName,$order,$fields,1);
         $salonList =    $query->paginate($page_size);
         $result = $salonList->toArray();
 
@@ -76,6 +76,7 @@ class Salon extends Model {
 			{
 				$rs[$key] = $data[$key];
 			}
+			
 		}
 		
 		foreach($rs as $key=>$val)
@@ -84,6 +85,7 @@ class Salon extends Model {
 			{
 				$rs[$key] = "";
 			}
+			$rs[$key]['businessName'] = BusinessStaff::getBusinessNameById($val['businessId']);//获取业务代表
 		}
 		$list["data"] = $rs;
            
@@ -94,16 +96,18 @@ class Salon extends Model {
 	 * 店铺查询
 	 * 
 	 * */
-	private static function getQueryByParam( $where,$orderName,$order,$fields)
+	private static function getQueryByParam( $where,$orderName,$order,$fields,$act = 0)
 	{
 		$query =  DB::table('salon as s')
-		->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
-		->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-		->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
-		->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
-		->select($fields)
-		->orderBy($orderName,$order)
-		;
+					->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
+					->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
+					//->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
+					->select($fields)
+					->orderBy($orderName,$order);
+		if($act == 0)
+		{
+			$query = $query->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid');
+		}
 		
 		if(isset($where["salestatus"]))
 		{
@@ -146,8 +150,6 @@ class Salon extends Model {
 			$keyword = '%'.$where['merchantName'].'%';
 			$query = $query->where('m.name','like',$keyword);
 		}
-		
-		
 		return $query;
 	}
 	
@@ -231,7 +233,6 @@ class Salon extends Model {
 				'm.name',
 				'm.id as merchantId',
 				'm.sn as msn',
-				'b.businessName',
 				'd.status as dividendStatus',
 				'd.recommend_code',	
 		);
@@ -269,6 +270,7 @@ class Salon extends Model {
 				{
 					$rs[$key] = "";
 				}
+				$rs[$key]['businessName'] = BusinessStaff::getBusinessNameById($val['businessId']);//获取业务代表
 			}	
 		}
 		return $rs;
@@ -291,15 +293,10 @@ class Salon extends Model {
 			$save["status"] = 1;
 		}
 		DB::beginTransaction();
-		$affectid =  DB::table('salon')
-            ->where('salonid', $salonid)
-            ->update($save);
-            
-            
+		$affectid = self::where(['salonid'=>$salonid])->update($save);
 		if($affectid && $type == 1)
 		{
 			SalonUser::where(['salonid'=>$salonid])->update(['status'=>2]);//停用普通用户账号
-			
 			$usersCount = DB::table('salon_user')
 						->where('merchantId',"=" ,$merchantId)
 						->where('salonid',"!=" ,0)
@@ -312,7 +309,7 @@ class Salon extends Model {
 		            ->where('merchantId',"=" ,$merchantId)
 		            ->update(['status'=>2]);
 			}			
-			$flag = DB::table('merchant')->where("id","=",$merchantId)->decrement('salonNum',1);//店铺数量减1
+			$flag = Merchant::where(['id'=>$merchantId])->decrement('salonNum',1);//店铺数量减1
 			
 		}
 		elseif($affectid && $type == 2)
@@ -331,7 +328,7 @@ class Salon extends Model {
 		            ->update(['status'=>1]);
 			}
 			
-			$flag = DB::table('merchant')->where("id","=",$merchantId)->increment('salonNum',1);//店铺数量加1
+			$flag = Merchant::where(['id'=>$merchantId])->increment('salonNum',1);//店铺数量加1
 		}
 		if($flag)
 		{
@@ -511,50 +508,37 @@ class Salon extends Model {
 	 * */
 	public static  function getAreaMes($salonList)
 	{
-			$rs["zoneName"] = "";
-			$rs["districtName"] = "";
-			$rs["citiesName"] = "";
-			$rs["citiesId"] = "";
-			$rs["provinceName"] = "";
-			$rs["provinceId"] = "";
+			$rs['zoneName'] = '';
+			$rs['districtName'] = '';
+			$rs['citiesName'] = '';
+			$rs['citiesId'] = '';
+			$rs['provinceName'] = '';
+			$rs['provinceId'] = '';
 			//商圈
-			$zoneList = DB::table('salon_area')
-                    ->where(array("areaid"=>$salonList["zone"]))
-                    ->first();   
+			$zoneList = SalonArea::where(array('areaid'=>$salonList['zone']))->first();   
             if($zoneList)
             {
-            	$rs["zoneName"] = $zoneList->areaname? $zoneList->areaname:"";
+            	$rs['zoneName'] = $zoneList->areaname? $zoneList->areaname:'';
             } 
 			//区
-			$districtList = DB::table('town')
-                    ->where(array("tid"=>$salonList["district"]))
-                    ->first();  
+			$districtList = Town::where(array('tid'=>$salonList['district']))->first();  
             if($districtList)
             {
-            	$rs["districtName"] = $districtList->tname? $districtList->tname:"";
-			
+            	$rs['districtName'] = $districtList->tname? $districtList->tname:'';
 				//市
-				$cityList = DB::table('city')
-	                    ->where(array("pid"=>$districtList->iid))
-	                    ->first(); 
+				$cityList = SalonCity::where(array('pid'=>$districtList->iid))->first(); 
 	            if($cityList)
 	            {
-	            	$rs["citiesName"] = $cityList->iname? $cityList->iname:"";
-					$rs["citiesId"] = $cityList->iid? $cityList->iid:"";
-				
-				
+	            	$rs['citiesName'] = $cityList->iname? $cityList->iname:'';
+					$rs['citiesId'] = $cityList->iid? $cityList->iid:'';
 					//省
-					$provinceList = DB::table('province')
-	                    ->where(array("pid"=>$cityList->pid))
-	                    ->first();  
+					$provinceList = Province::where(array('pid'=>$cityList->pid))->first();  
 	                if($provinceList) 
 	                {
-	                	$rs["provinceName"] = $provinceList->pname? $provinceList->pname:"";
-						$rs["provinceId"] = $provinceList->pid? $provinceList->pid:"";
+	                	$rs['provinceName'] = $provinceList->pname? $provinceList->pname:'';
+						$rs['provinceId'] = $provinceList->pid? $provinceList->pid:'';
 	                }  
-					
 	            }    
-				
             }
             return $rs;
 	}
