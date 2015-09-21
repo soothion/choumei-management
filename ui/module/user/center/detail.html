@@ -186,14 +186,15 @@
 								<td>
 									常住地区：
 									<span>
-										<select id="province" required style="width:100px"
+										<select id="province" required style="width:100px" requiredmsg="请选择省份"
 										ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&sid=<%=data.area.split(",")[0]%>" 
 										ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&sid=<%=data.area.split(",")[1]%>">
 										</select>
-										<select id="city" required style="width:100px" 
+										<select id="city" required style="width:100px" requiredmsg="请选择城市"
 										ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&sid=<%=data.area.split(",")[2]%>">
 										</select>
-										<select id="area" required  style="width:100px"></select>
+										<select id="area" required  style="width:100px" requiredmsg="请选择城区"></select>
+										<span class="control-help" style="display: none;"></span>
 									</span>
 									<input type="hidden" name="area" id="hidden"/>
 								</td>
