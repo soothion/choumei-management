@@ -19,7 +19,7 @@
 		<script type="text/template" id="form-t">
 		<form novalidate method="post" class="form-vertical" data-role="form" action="<%=query._?"merchant/update":"merchant/save"%>">
 			<div class="detail-operation">
-				<button class="btn" onclick="history.back()" type="button">取消</button>
+				<button class="btn btn-cancel" type="button">取消</button>
 				<span class="space"></span>
 				<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
 			</div>

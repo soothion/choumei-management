@@ -20,7 +20,7 @@
 	   <script type="text/template" id="form-t">
         <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>permission/update/<%=data.id%><%}%>" <%=data.status==3?"disabled":""%>>
 			<div class="detail-operation">
-				<button class="btn" onclick="history.back()" type="button" style="<%=data.status==3?"display:none":""%>">取消</button>
+				<button class="btn btn-cancel" type="button" style="<%=data.status==3?"display:none":""%>">取消</button>
 				<span class="space"></span>
 				 <button class="btn-primary" style=" <%=data.status==3?"display:none":""%>" data-slug="permission.update">提交</button>
 			</div>

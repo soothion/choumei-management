@@ -11,7 +11,7 @@
     <body>
 	
         <div class="breadcrumb">
-            <a>店铺结算</a><span>&gt;</span><a href="store/single/index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑转付单":"新增转付单"%></span>
+            <a>店铺结算</a><span>&gt;</span><a href="index.html">转付单</a><span>&gt;</span><span id="breadcrumb-current"><%=query._?"编辑转付单":"新增转付单"%></span>
 				<div class="flex-box">
 			<div class="flex-item">
 				<h4><%=query._?"编辑转付单":"新增转付单"%></h4>
@@ -23,7 +23,7 @@
 		<script type="text/template" id="form-t">
 		  <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>shop_count/update/<%=data.id%><%}else{%>shop_count/create/<%=data.id%><%}%>">
 				<div class="detail-operation">
-				<button class="btn" onclick="history.back()" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
+				<button class="btn btn-cancel" type="button" <%=data.status==3?"disabled":""%> style="<%=data.status==3?"display:none":""%>">取消</button>
 				<span class="space"></span>
 				<button class="btn-primary" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
 			</div>
