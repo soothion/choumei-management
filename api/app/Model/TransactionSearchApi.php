@@ -49,7 +49,11 @@ class TransactionSearchApi
             return $page;
         });
         $res = $bases->paginate($size)->toArray();
-        $money_info = self::countOfTicket($params);
+        $ordersns = array_column($res['data'], "ordersn");
+        $platforms = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
+        $res['data'] = self::addPlatfromInfos($res['data'],$platforms);
+        unset($platforms);
+        $money_info = self::countOfTicket($params);     
         $res['all_amount'] = $money_info['priceall_ori'];
         $res['paied_amount'] = $money_info['actuallyPay'];
         unset($res['next_page_url']);
@@ -195,15 +199,16 @@ class TransactionSearchApi
         //动态
         $trends = OrderTicketTrends::where("ordersn",$ordersn)->where("ticketno",$ticketno)->orderBy("add_time","ASC")->get(['add_time','status','remark']);
         //代金券
-        $vouchers = VoucherTrend::where("vOrderSn",$ordersn)->with(["voucher"=>function($q){
-            $q->get(['vId','vUseMoney','vUseStart','vUseEnd']);
-        }])->orderBy("vAddTime","ASC")->get();
+        $vouchers = Voucher::where("vOrderSn",$ordersn)->select(['vSn','vcSn','vUseMoney','vUseEnd','vStatus','vUseTime'])->first();
       
         //佣金
         $commission = CommissionLog::where('ordersn',$ordersn)->select(['ordersn','amount','rate','grade'])->first();
 
         //用户邀请码
         $recommendCode = RecommendCodeUser::where('user_id',$uid)->select(['recommend_code'])->first();
+       
+        //设备信息
+        $paltform = RequestLog::getLogByOrdersn($ordersn,['DEVICE_UUID','DEVICE_OS','DEVICE_MODEL','DEVICE_NETWORK','VERSION']); 
         
         $paymentlogArr = null;
         $userArr = null;
@@ -258,6 +263,7 @@ class TransactionSearchApi
             'vouchers'=>$voucherArr,
             'commission'=>$commissionArr,
             'recommend_code'=>$recommendCodeArr,
+            'platform'=>$paltform,
         ];
         return $res;
     }
@@ -362,6 +368,7 @@ class TransactionSearchApi
             'cm_order.ordersn as ordersn',
             'cm_order.salonid as salonid',
             'cm_order.priceall_ori as priceall_ori',
+            'cm_order.priceall as priceall',
             'cm_order.actuallyPay as actuallyPay',
             'cm_order.shopcartsn as shopcartsn',
         ];
@@ -384,6 +391,7 @@ class TransactionSearchApi
             'vOrderSn',
             'vcSn',
             'vSn',
+            'vUseMoney',
         ];
         
         $user_fields = [
@@ -711,16 +719,9 @@ class TransactionSearchApi
         // 付款状态
         if(isset($params['state']) && !empty($params['state']))
         {
-            if(intval($params['state']) == 12)//退款失败特殊处理
-            {
-                $base->where('order_refund.status', 2);
-            }
-            else 
-            {
-                $state_ids = explode(",", $params['state']);
-                $state_ids = array_map("intval",$state_ids);
-                $base->whereIn('order.status', $state_ids);
-            }            
+           $state_ids = explode(",", $params['state']);
+           $state_ids = array_map("intval",$state_ids);
+           $base->whereIn('order.status', $state_ids);    
         }
     
         // 关键字搜索
@@ -750,5 +751,23 @@ class TransactionSearchApi
                 $base->whereRaw("cm_order_refund.salonid IN (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");    
             }
         }
+    }
+    
+    public static function addPlatfromInfos($bases,$platforms)
+    {
+        $platform_index = Utils::column_to_key("ORDER_SN",$platforms);
+        foreach($bases as &$base)
+        {
+            $ordersn = $base['ordersn'];
+            if(isset($platform_index[$ordersn]))
+            {
+                $base['platform'] = $platform_index[$ordersn];
+            }
+            else
+            {
+                $base['platform'] = null;
+            }
+        }
+        return $bases;
     }
 }

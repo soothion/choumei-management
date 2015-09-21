@@ -191,10 +191,83 @@ class OrderRefundController extends Controller
      * @apiSuccess {String} trends.add_time 臭美券动态.时间  
      * @apiSuccess {String} trends.status 臭美券动态.行为   [2未使用，4使用完成，6申请退款，7退款完成，8退款拒绝,10退款中]
      * @apiSuccess {String} trends.remark  臭美券动态.行为 备注信息,为空时显示 上面status 对应的信息
-     * @apiSuccess {String} vouchers 代金券动态  
+     * @apiSuccess {String} vouchers 代金券信息  
+     * @apiSuccess {String} vouchers.vSn 代金券编码 
+     * @apiSuccess {String} vouchers.vcSn 活动编号
+     * @apiSuccess {String} vouchers.vUseMoney 金额
+     * @apiSuccess {String} vouchers.vAddTime 时间  
+     * @apiSuccess {String} vouchers.vUseEnd 有效期
+     * @apiSuccess {String} vouchers.status 状态 1未使用 2已使用 3待激活 5已失效 10 未上线
      * @apiSuccess {String} commission 佣金信息
      * @apiSuccess {String} recommend_code店铺优惠码
      * @apiSuccess {String} platform 设备信息
+     * @apiSuccess {String} platform.DEVICE_UUID 设备号
+     * @apiSuccess {String} platform.DEVICE_OS 设备系统
+     * @apiSuccess {String} platform.DEVICE_MODEL 手机型号
+     * @apiSuccess {String} platform.DEVICE_NETWORK 网络
+     * @apiSuccess {String} platform.VERSION APP版本
+     *
+     * @apiSuccessExample Success-Response:
+     *       {
+     *           "result": 1,
+     *           "token": "",
+     *           "data": {
+     *               "order": {
+     *                   "ordersn": "4187664711988",
+     *                   "orderid": 708851,
+     *                   "priceall": "1.00",
+     *                   "salonid": 84,
+     *                   "actuallyPay": "1.00",
+     *                   "shopcartsn": ""
+     *               },
+     *               "item": {
+     *                   "order_item_id": 150256,
+     *                   "itemname": "柠檬去味吹发变身柠檬女神",
+     *                   "ordersn": "4187664711988"
+     *               },
+     *               "ticket": {
+     *                   "order_ticket_id": 108898,
+     *                   "ticketno": "17170134",
+     *                   "user_id": 306669
+     *               },
+     *               "user": {
+     *                   "username": "10306576",
+     *                   "mobilephone": "18319019483"
+     *               },
+     *               "salon": {
+     *                   "salonname": "苏格护肤造型生活馆（2店）"
+     *               },
+     *               "paymentlog": {
+     *                    "ordersn": "4187664711988",
+     *                    "tn": "1224362901341509107433258086"
+     *               },
+     *               "fundflows": [
+     *                   {
+     *                       "pay_type": 10,
+     *                       "money": "1.00"
+     *                   }
+     *               ],
+     *               "trends": [
+     *                   {
+     *                       "add_time": 1441876684,
+     *                       "status": 2,
+     *                       "remark": "未使用"
+     *                   }
+     *               ],
+     *               "vouchers":
+     *               {
+     *                   "vSn": "CM41678592782",
+     *                   "vcSn": "cm164288",
+     *                   "vOrderSn": "4196296911121",
+     *                   "vUseMoney": 20,
+     *                   "vAddTime": 1441962977,
+     *                   "vUseEnd": 1442505599,
+     *                   "vStatus": 1,
+     *               }
+     *               "commission": null,
+     *               "recommend_code": null
+     *           }
+     *       }
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -309,7 +382,7 @@ class OrderRefundController extends Controller
             '退款状态',
             '购物车号',
         ];
-        $res = self::format_data($items);
+        $res = self::format_export_data($items);
         $this->export_xls("退款单 " . date("Ymd"), $header, $res);
     }
     

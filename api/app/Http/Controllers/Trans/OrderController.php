@@ -162,10 +162,21 @@ class OrderController extends Controller
      * @apiSuccess {String} trends.add_time 臭美券动态.时间  
      * @apiSuccess {String} trends.status 臭美券动态.行为   [2未使用，4使用完成，6申请退款，7退款完成，8退款拒绝,10退款中]
      * @apiSuccess {String} trends.remark  臭美券动态.行为 备注信息,为空时显示 上面status 对应的信息
-     * @apiSuccess {String} vouchers 代金券动态  
+     * @apiSuccess {String} vouchers 代金券信息  
+     * @apiSuccess {String} vouchers.vSn 代金券编码 
+     * @apiSuccess {String} vouchers.vcSn 活动编号
+     * @apiSuccess {String} vouchers.vUseMoney 金额
+     * @apiSuccess {String} vouchers.vAddTime 时间  
+     * @apiSuccess {String} vouchers.vUseEnd 有效期
+     * @apiSuccess {String} vouchers.status 状态 1未使用 2已使用 3待激活 5已失效 10 未上线
      * @apiSuccess {String} commission 佣金信息
      * @apiSuccess {String} recommend_code店铺优惠码
      * @apiSuccess {String} platform 设备信息
+     * @apiSuccess {String} platform.DEVICE_UUID 设备号
+     * @apiSuccess {String} platform.DEVICE_OS 设备系统
+     * @apiSuccess {String} platform.DEVICE_MODEL 手机型号
+     * @apiSuccess {String} platform.DEVICE_NETWORK 网络
+     * @apiSuccess {String} platform.VERSION APP版本
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -214,7 +225,16 @@ class OrderController extends Controller
      *                       "remark": "未使用"
      *                   }
      *               ],
-     *               "vouchers": [],
+     *               "vouchers":
+     *               {
+     *                   "vSn": "CM41678592782",
+     *                   "vcSn": "cm164288",
+     *                   "vOrderSn": "4196296911121",
+     *                   "vUseMoney": 20,
+     *                   "vAddTime": 1441962977,
+     *                   "vUseEnd": 1442505599,
+     *                   "vStatus": 1,
+     *               }
      *               "commission": null,
      *               "recommend_code": null
      *           }

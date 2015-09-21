@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Trans;
 
 use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;
+use App\Mapping;
+use App\RequestLog;
+use Predis\Command\TransactionDiscard;
 
 class TicketController extends Controller
 {
@@ -193,10 +196,21 @@ class TicketController extends Controller
      * @apiSuccess {String} trends.add_time 臭美券动态.时间  
      * @apiSuccess {String} trends.status 臭美券动态.行为   [2未使用，4使用完成，6申请退款，7退款完成，8退款拒绝,10退款中]
      * @apiSuccess {String} trends.remark  臭美券动态.行为 备注信息,为空时显示 上面status 对应的信息
-     * @apiSuccess {String} vouchers 代金券动态  
+     * @apiSuccess {String} vouchers 代金券信息  
+     * @apiSuccess {String} vouchers.vSn 代金券编码 
+     * @apiSuccess {String} vouchers.vcSn 活动编号
+     * @apiSuccess {String} vouchers.vUseMoney 金额
+     * @apiSuccess {String} vouchers.vAddTime 时间  
+     * @apiSuccess {String} vouchers.vUseEnd 有效期
+     * @apiSuccess {String} vouchers.status 状态 1未使用 2已使用 3待激活 5已失效 10 未上线
      * @apiSuccess {String} commission 佣金信息
      * @apiSuccess {String} recommend_code店铺优惠码
      * @apiSuccess {String} platform 设备信息
+     * @apiSuccess {String} platform.DEVICE_UUID 设备号
+     * @apiSuccess {String} platform.DEVICE_OS 设备系统
+     * @apiSuccess {String} platform.DEVICE_MODEL 手机型号
+     * @apiSuccess {String} platform.DEVICE_NETWORK 网络
+     * @apiSuccess {String} platform.VERSION APP版本
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -245,7 +259,16 @@ class TicketController extends Controller
      *                       "remark": "未使用"
      *                   }
      *               ],
-     *               "vouchers": [],
+     *               "vouchers":
+     *               {
+     *                   "vSn": "CM41678592782",
+     *                   "vcSn": "cm164288",
+     *                   "vOrderSn": "4196296911121",
+     *                   "vUseMoney": 20,
+     *                   "vAddTime": 1441962977,
+     *                   "vUseEnd": 1442505599,
+     *                   "vStatus": 1,
+     *               }
      *               "commission": null,
      *               "recommend_code": null
      *           }
@@ -299,9 +322,17 @@ class TicketController extends Controller
             'state' => self::T_INT,
             'time_key' => self::T_INT,
         ]);
-        $items = TransactionSearchApi::getConditionOfTicket($params)->take(10000)
+        $items = TransactionSearchApi::getConditionOfTicket($params)->addSelect('order_item.itemname')->with(['paymentLog'=>function($q){
+            $q->get(['ordersn','tn']);
+        }])->take(100)
         ->get()
         ->toArray();
+        
+        //用户设备信息
+        $ordersns = array_column($items, "ordersn");
+        $platforms = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
+        $items = TransactionSearchApi::addPlatfromInfos($items, $platforms);
+    
         $header = [
             '序号',
             '臭美券密码',
@@ -332,27 +363,33 @@ class TicketController extends Controller
         $res = [];
         foreach($datas as $data)
         {
+            $pay_types = array_column($data['fundflow'], "pay_type");
+            $pay_typename_str = '';
+            $pay_names = Mapping::getFundflowPayTypeNames($pay_types);
+            if(count($pay_names)>0)
+            {
+                $pay_typename_str = implode("+", $pay_names);
+            }
             $res[] = [
                 'id'=>$data['order_ticket_id'],
                 'ticketno'=>self::mask_ticketno($data['ticketno']),
                 'ordersn'=>$data['ordersn'],
-                'payname'=>OrderController::getPayNames($data['fundflow']),
-                'money'=>$data['priceall'],
+                'payname'=>$pay_typename_str,              
                 'add_time'=>date("Y-m-d H:i:s",intval($data['add_time'])),
                 'use_time'=>intval($data['use_time'])>0?date("Y-m-d H:i:s",intval($data['use_time'])):"", 
                 'username'=>isset($data['user'])&&isset($data['user']['username'])?$data['user']['username']:"",
                 'mobilephone'=>isset($data['user'])&&isset($data['user']['mobilephone'])?$data['user']['mobilephone']:"",
-                'platform_no'=>'',  //#@todo用户设备号  
+                'platform_no'=>isset($data['platform'])&&isset($data['platform']['DEVICE_UUID'])? $data['platform']['DEVICE_UUID'] :'',
                 'salonname'=>isset($data['salon'])&&isset($data['salon']['salonname'])?$data['salon']['salonname']:"",
-                'itemname'=>'',//#@todo项目名称
-                'priceall_ori'=>$data['priceall_ori'],
+                'itemname'=>$data['itemname'],
+                'priceall_ori'=>$data['priceall'],
                 'vcSn'=>isset($data['voucher'])&&isset($data['voucher']['vcSn'])?$data['voucher']['vcSn']:"",
                 'vSn'=>isset($data['voucher'])&&isset($data['voucher']['vSn'])?$data['voucher']['vSn']:"",
-                'voucher_money'=>'',//#@todo现金券面额
-                'voucher_money_used'=>'',//#@todo抵扣金额
+                'voucher_money'=>isset($data['voucher'])&&isset($data['voucher']['vUseMoney'])?$data['voucher']['vUseMoney']:'',
+                'voucher_money_used'=>isset($data['voucher'])&&isset($data['voucher']['vUseMoney'])?self::get_voucher_used($data['voucher']['vUseMoney'], $data['priceall']):'',
                 'actuallyPay'=>$data['actuallyPay'],
                 'shopcartsn'=>$data['shopcartsn'],
-                'tn'=>'',//#@todo第三方流水
+                'tn'=>isset($data['payment_log'])&&isset($data['payment_log']['tn'])?$data['payment_log']['tn']:"",
             ];
         }
         return $res;
@@ -361,5 +398,17 @@ class TicketController extends Controller
     private static function mask_ticketno($ticketno)
     {
         return substr($ticketno, 0,2)."*****".substr($ticketno, strlen($ticketno)-3);
+    }
+    
+    private static function get_voucher_used($voucher_money,$order_money)
+    {
+        $voucher_money = floatval($voucher_money);
+        $order_money = floatval($order_money);
+        $max = max($voucher_money,$order_money);
+        if($max >=$order_money)
+        {
+            return $order_money;
+        }
+        return $voucher_money;
     }
 }

@@ -26,4 +26,9 @@ class OrderTicket extends Model
     {
         return $this->belongsTo(\App\Voucher::class,'ordersn','vOrderSn');
     }
+    
+    public function paymentLog()
+    {
+        return $this->belongsTo(\App\PaymentLog::class,'ordersn','ordersn');
+    }
 }

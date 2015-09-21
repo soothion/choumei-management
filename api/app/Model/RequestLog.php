@@ -96,4 +96,24 @@ class RequestLog  extends Model{
          return $result;
         
       }
+      
+      public static function getLogByOrdersn($ordersn,$fields=[])
+      {
+          $base = self::where('ORDER_SN',$ordersn)->where('TYPE','PLC')->select($fields)->orderBy('CREATE_TIME','DESC')->first();
+          if(empty($base))
+          {
+              return null;
+          }
+          return $base->toArray();
+      }
+      
+      public static function getLogsByOrdersns($ordersns,$fields=[])
+      {
+          $bases = self::whereIn('ORDER_SN',$ordersns)->where('TYPE','PLC')->select($fields)->groupBy('ORDER_SN')->orderBy('CREATE_TIME','DESC')->get();
+          if(empty($bases))
+          {
+              return [];
+          }
+          return $bases->toArray();
+      }
 }
