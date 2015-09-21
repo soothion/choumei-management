@@ -323,8 +323,15 @@
 								up.start();
 							});
 						}
+						uploader.bind('UploadFile',function(){
+							var $dom=$('<div class="popup-overlay" style="background:rgba(255,255,255,0.4)"></div>');
+							$(document.body).append($dom);
+						});
 						uploader.bind('UploadProgress',function(){
 							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
+						});
+						uploader.bind('UploadComplete',function(up,file){
+							$('.popup-overlay').remove();
 						});
 						uploader.bind('Error',function(up, err, errTip){
 							parent.lib.popup.result({bool:false,text:err.message});
@@ -363,11 +370,16 @@
 							options.max_file_size=data.maxFileSize+'mb';
 						}
 						var uploader=self.create(options);
+						uploader.bind('UploadFile',function(){
+							var $dom=$('<div class="popup-overlay" style="background:rgba(255,255,255,0.4)"></div>');
+							$(document.body).append($dom);
+						});
 						uploader.bind('UploadProgress',function(){
 							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
 						});
 						uploader.bind('UploadComplete',function(up,file){
 							//console.log(arguments);
+							$('.popup-overlay').remove();
 						});
 						uploader.bind('FileUploaded',function(up,file,res){
 							if(res&&res.response&&typeof res.response=='string'){
