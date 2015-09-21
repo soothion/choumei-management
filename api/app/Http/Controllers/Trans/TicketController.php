@@ -324,7 +324,7 @@ class TicketController extends Controller
         ]);
         $items = TransactionSearchApi::getConditionOfTicket($params)->addSelect('order_item.itemname')->with(['paymentLog'=>function($q){
             $q->get(['ordersn','tn']);
-        }])->take(100)
+        }])->take(5000)
         ->get()
         ->toArray();
         
