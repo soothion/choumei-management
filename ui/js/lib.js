@@ -595,7 +595,6 @@
 											if(self.options._auto){
 												self.upload();
 											}
-											console.log(self.options.thumb)
 											if(self.options.thumb&&self.createThumbnails){
 												var data=$.extend({},file,{src:src});
 												self.createThumbnails(data);
