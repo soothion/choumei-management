@@ -54,7 +54,7 @@
 				<input type="hidden" name="area" id="hidden" />
 				<button class="btn">搜索</button>
 			</form>
-			<form action="user/export" data-role="export" data-slug="role.export"><button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button></form>
+			<form action="user/export" data-role="export" data-slug="user.export"><button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button></form>
 			<div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 				<script type="text/template" id="table-t">
 				<table>
@@ -90,9 +90,9 @@
 					  <td><%=!item.salonname?item.recommendCode:""%></td>
 					  <td><%=item.add_time%></td>
 					  <td>
-						 <a class="link" target="_blank" href="detail.html?id=<%=item.user_id%>">查看</a>
+						 <a class="link" data-slug="user.show,user.update" target="_blank" href="detail.html?id=<%=item.user_id%>">查看</a>
 						 <span class="space"></span>
-						 <form action="user/destroy/<%=item.user_id%>" data-role="normal">
+						 <form data-slug="user.destory" action="user/destroy/<%=item.user_id%>" data-role="normal">
 							<button class="link">删除</button>
 						 </form>
 					  </td>
