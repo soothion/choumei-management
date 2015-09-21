@@ -1238,11 +1238,6 @@
 		}
 	}
 	lib.Form=Form;
-	$(document).one('mouseenter','form[data-role="form"]',function(){
-		new lib.Form(this);
-	}).one('touchstart','form[data-role="form"]',function(){
-		new lib.Form(this);
-	});
 	
 	/**
 	*select美化封装

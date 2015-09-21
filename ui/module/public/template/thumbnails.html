@@ -1,4 +1,4 @@
-﻿<%data.forEach(function(item){%>
+﻿<%data&&data.forEach&&data.forEach(function(item){%>
 	<div class="control-thumbnails-item" id="<%=item.id%>">
 		<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" />
 		<a class="fa fa-times-circle control-thumbnails-remove"></a>
