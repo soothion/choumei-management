@@ -451,12 +451,12 @@
 					});
 					if(options.browse_button){
 						var $target=$('#'+options.browse_button).parent();
-						uploader.thumbnails=$target.siblings('.control-thumbnails');
+						uploader.thumbnails=$target.closest('.control-thumbnails');
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
 							uploader.createThumbnails=function(data){
-								uploader.thumbnails.append(lib.ejs.render({url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},{data:[data]}));
-								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children().length){
-									uploader.thumbnails.siblings('.control-image-upload').hide();
+								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render({url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},{data:[data]}));
+								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children('.control-thumbnails-item').length){
+									uploader.thumbnails.children('.control-image-upload').hide();
 								}
 							}
 							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
@@ -465,10 +465,16 @@
 									uploader.removeFile(item.attr('id'));
 								}
 								item.remove();
-								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children().length){
-									uploader.thumbnails.siblings('.control-image-upload').show();
+								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children('.control-thumbnails-item').length){
+									uploader.thumbnails.children('.control-image-upload').show();
 								}
 							});
+							if(options.imageArray){
+								uploader.thumbnails.prepend(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:options.imageArray}));
+								if(uploader.thumbnails.children('.control-thumbnails-item').length>=uploader.thumbnails.data('max')){
+									uploader.thumbnails.children('.control-image-upload').hide();
+								}
+							}
 						}else if($target.closest('.control-single-image').length==1){
 							uploader.area=$target.closest('.control-single-image');
 							uploader.preview=function(data){

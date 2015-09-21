@@ -21,8 +21,6 @@
         if(type === 'edit'){
             currentData = JSON.parse(sessionStorage.getItem('edit-shop-data')); 
         }
-        //renderImage();
-		$('#control-thumbnails1').html(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:currentData.contractPicUrl}));
 		//合同上传
 		lib.puploader.image({
 			browse_button: 'imageUpload1',
@@ -32,9 +30,9 @@
 					{ title : "Image files", extensions : "jpg,png,jpeg,gif" },
 				]
 			},
-			max_file_size:'10mb'
+			max_file_size:'10mb',
+			imageArray:currentData.contractPicUrl
 		});
-		$('#control-thumbnails2').html(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:currentData.licensePicUrl}));
 		//营业执照上传
 		lib.puploader.image({
 			browse_button: 'imageUpload2',
@@ -44,9 +42,9 @@
 					{ title : "Image files", extensions : "jpg,png,jpeg,gif" },
 				]
 			},
-			max_file_size:'10mb'
+			max_file_size:'10mb',
+			imageArray:currentData.licensePicUrl
 		});
-		$('#control-thumbnails3').html(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:currentData.corporatePicUrl}));
 		//法人执照上传
 		lib.puploader.image({
 			browse_button: 'imageUpload3',
@@ -56,7 +54,8 @@
 					{ title : "Image files", extensions : "jpg,png,jpeg,gif" },
 				]
 			},
-			max_file_size:'10mb'
+			max_file_size:'10mb',
+			imageArray:currentData.corporatePicUrl
 		});
     }
 
