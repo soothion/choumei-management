@@ -47,12 +47,12 @@ class Salon extends Model {
         $salonList =    $query->paginate($page_size);
         $result = $salonList->toArray();
 
-		$list["total"] = $result["total"];
-		$list["per_page"] = $result["per_page"];
-		$list["current_page"] = $result["current_page"];
-		$list["last_page"] = $result["last_page"];
-		$list["from"] = $result["from"];
-		$list["to"] = $result["to"];
+		$list['total'] = $result['total'];
+		$list['per_page'] = $result['per_page'];
+		$list['current_page'] = $result['current_page'];
+		$list['last_page'] = $result['last_page'];
+		$list['from'] = $result['from'];
+		$list['to'] = $result['to'];
 		unset($result['total']);
 		unset($result['per_page']);
 		unset($result['current_page']);
@@ -63,11 +63,11 @@ class Salon extends Model {
 		unset($result['prev_page_url']);
 		$data = array();
 		$rs = array();
-		foreach($result["data"] as $key=>$val)
+		foreach($result['data'] as $key=>$val)
 		{
 			$tmpVal = (array)$val;
 			$data[$key] = $tmpVal;
-			$areaArr = Salon::getAreaMes(array("zone"=>$tmpVal["zone"],"district"=>$tmpVal["district"])) ;
+			$areaArr = Salon::getAreaMes(array('zone'=>$tmpVal['zone'],'district'=>$tmpVal['district'])) ;
 			if($areaArr)
 			{
 				$rs[$key] = array_merge($data[$key],$areaArr);
@@ -83,11 +83,11 @@ class Salon extends Model {
 		{
 			if(is_null($val) == true)//null 数据转化为 空字符串
 			{
-				$rs[$key] = "";
+				$rs[$key] = '';
 			}
 			$rs[$key]['businessName'] = BusinessStaff::getBusinessNameById($val['businessId']);//获取业务代表
 		}
-		$list["data"] = $rs;
+		$list['data'] = $rs;
            
         return $list;
 	}
@@ -109,28 +109,28 @@ class Salon extends Model {
 			$query = $query->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid');
 		}
 		
-		if(isset($where["salestatus"]))
+		if(isset($where['salestatus']))
 		{
-			$query =  $query ->where("s.salestatus","=",$where["salestatus"]);
+			$query =  $query ->where('s.salestatus','=',$where['salestatus']);
 		}
 		else
 		{
-			$query =  $query ->where("s.salestatus","!=","2");//剔除删除
+			$query =  $query ->where('s.salestatus','!=','2');//剔除删除
 		}
 
-		if(isset($where["shopType"]))
+		if(isset($where['shopType']))
 		{
-			$query =  $query ->where("s.shopType","=",$where["shopType"]);
+			$query =  $query ->where('s.shopType','=',$where['shopType']);
 		}
-		if(isset($where["zone"]))
+		if(isset($where['zone']))
 		{
-			$query =  $query ->where("s.zone","=",$where["zone"]);
+			$query =  $query ->where('s.zone','=',$where['zone']);
 		}
-		if(isset($where["district"]))
+		if(isset($where['district']))
 		{
-			$query =  $query ->where("s.district","=",$where["district"]);
+			$query =  $query ->where('s.district','=',$where['district']);
 		}
-		if(isset($where["businessName"]))
+		if(isset($where['businessName']))
 		{
 			$keyword = '%'.$where['businessName'].'%';
 			$query = $query->whereRaw("businessId in (SELECT `id` FROM `cm_business_staff` WHERE `businessName` LIKE '{$keyword}')");
@@ -253,7 +253,7 @@ class Salon extends Model {
 			{
 				$tmpVal = (array)$val;
 				$data[$key] = $tmpVal;
-				$areaArr = Salon::getAreaMes(array("zone"=>$tmpVal["zone"],"district"=>$tmpVal["district"])) ;
+				$areaArr = Salon::getAreaMes(array('zone'=>$tmpVal['zone'],'district'=>$tmpVal['district'])) ;
 				if($areaArr)
 				{
 					$rs[$key] = array_merge($data[$key],$areaArr);
@@ -268,7 +268,7 @@ class Salon extends Model {
 			{
 				if(is_null($val) == true)//null 数据转化为 空字符串
 				{
-					$rs[$key] = "";
+					$rs[$key] = '';
 				}
 				$rs[$key]['businessName'] = BusinessStaff::getBusinessNameById($val['businessId']);//获取业务代表
 			}	
@@ -284,13 +284,13 @@ class Salon extends Model {
 	{
 		if($type == 1)
 		{
-			$save["salestatus"] = 0;
-			$save["status"] = 2;
+			$save['salestatus'] = 0;
+			$save['status'] = 2;
 		}
 		else
 		{
-			$save["salestatus"] = 1;
-			$save["status"] = 1;
+			$save['salestatus'] = 1;
+			$save['status'] = 1;
 		}
 		DB::beginTransaction();
 		$affectid = self::where(['salonid'=>$salonid])->update($save);
@@ -298,15 +298,15 @@ class Salon extends Model {
 		{
 			SalonUser::where(['salonid'=>$salonid])->update(['status'=>2]);//停用普通用户账号
 			$usersCount = DB::table('salon_user')
-						->where('merchantId',"=" ,$merchantId)
-						->where('salonid',"!=" ,0)
-						->where('status',"=" ,1)
+						->where('merchantId','=' ,$merchantId)
+						->where('salonid','!=' ,0)
+						->where('status','=' ,1)
 						->count();
 			if(!$usersCount)
 			{
 				DB::table('salon_user')//停用账号  超级管理员
-		            ->where('salonid',"=" ,0)
-		            ->where('merchantId',"=" ,$merchantId)
+		            ->where('salonid','=' ,0)
+		            ->where('merchantId','=' ,$merchantId)
 		            ->update(['status'=>2]);
 			}			
 			$flag = Merchant::where(['id'=>$merchantId])->decrement('salonNum',1);//店铺数量减1
@@ -316,15 +316,15 @@ class Salon extends Model {
 		{
 			SalonUser::where(['salonid'=>$salonid])->update(['status'=>1]);//恢复普通用户账号
 			$usersCount = DB::table('salon_user')
-						->where('merchantId',"=" ,$merchantId)
-						->where('salonid',"!=" ,0)
-						->where('status',"=" ,1)
+						->where('merchantId','=' ,$merchantId)
+						->where('salonid','!=' ,0)
+						->where('status','=' ,1)
 						->count();
 			if($usersCount)
 			{
 				DB::table('salon_user')//恢复账号  超级管理员
-		            ->where('salonid',"=" ,0)
-		            ->where('merchantId',"=" ,$merchantId)
+		            ->where('salonid','=' ,0)
+		            ->where('merchantId','=' ,$merchantId)
 		            ->update(['status'=>1]);
 			}
 			
@@ -346,7 +346,7 @@ class Salon extends Model {
 	 * */
 	public static function dodel($salonid)
 	{
-		$result = DB::table('salon')->select(["salestatus","merchantId"])->where('salonid', $salonid)->first();
+		$result = DB::table('salon')->select(['salestatus','merchantId'])->where('salonid', $salonid)->first();
 		$rs = (array)$result;	
 		
 		
@@ -354,28 +354,28 @@ class Salon extends Model {
 		{
 			return -2;
 		}
-		elseif($rs["salestatus"] == 1 )
+		elseif($rs['salestatus'] == 1 )
 		{
 			return -1;//未停止合作
 		}
 
 		$affectid =  DB::table('salon')
             ->where('salonid', $salonid)
-            ->update(array("salestatus"=>2,"status"=>3));
+            ->update(array('salestatus'=>2,'status'=>3));
 		
 		SalonUser::where(['salonid'=>$salonid])->update(['status'=>3]);//删除普通用户账号
 		
-		$merchantId = $rs["merchantId"];
+		$merchantId = $rs['merchantId'];
 		$usersCount = DB::table('salon_user')
-		->where('merchantId',"=" ,$merchantId)
-		->where('salonid',"!=" ,0)
-		->where('status',"=" ,1)
+		->where('merchantId','=' ,$merchantId)
+		->where('salonid','!=' ,0)
+		->where('status','=' ,1)
 		->count();
 		if(!$usersCount)
 		{
 			DB::table('salon_user')//删除账号  超级管理员
-			->where('salonid',"=" ,0)
-			->where('merchantId',"=" ,$merchantId)
+			->where('salonid','=' ,0)
+			->where('merchantId','=' ,$merchantId)
 			->update(['status'=>3]);
 		}
 		
@@ -470,7 +470,7 @@ class Salon extends Model {
 	            ->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
 	            ->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
 	            ->select($fields)
-	            ->where(array("s.salonid"=>$salonid))
+	            ->where(array('s.salonid'=>$salonid))
 	            ->first();
 
 			$salonList = (array)$salonList;
@@ -481,12 +481,12 @@ class Salon extends Model {
 				{
 					if(is_null($val) == true)//null 数据转化为 空字符串
 					{
-						$salonList[$key] = "";
+						$salonList[$key] = '';
 					}
 					
-					if($val === "0.00")//0 0.00默认值 数据转化为 空字符串
+					if($val === '0.00')//0 0.00默认值 数据转化为 空字符串
 					{
-						$salonList[$key] = "";
+						$salonList[$key] = '';
 					}
 					
 				}
@@ -494,7 +494,7 @@ class Salon extends Model {
 	
 			if($salonList)
 			{
-				$areaArr = self::getAreaMes(array("zone"=>$salonList["zone"],"district"=>$salonList["district"])) ;
+				$areaArr = self::getAreaMes(array('zone'=>$salonList['zone'],'district'=>$salonList['district'])) ;
 				if($areaArr)
 				{
 					$salonList = array_merge($salonList,$areaArr);
@@ -548,10 +548,10 @@ class Salon extends Model {
 	 * */
 	public static function getSn($merchantId)
 	{
-		$merchantSn = Merchant::where(array("id"=>$merchantId))->select(array("sn"))->first();
-		$sCount = Salon::where(array("merchantId"=>$merchantId))->count();
+		$merchantSn = Merchant::where(array('id'=>$merchantId))->select(array('sn'))->first();
+		$sCount = Salon::where(array('merchantId'=>$merchantId))->count();
 		$sn = intval($sCount)+1; //店铺编号，根据商户编号+01，自增长3位
-	    $tps = "";	 
+	    $tps = '';	 
 		for($i=3;$i>strlen($sn);$i--)
 		{
 			$tps .= 0; 
@@ -561,13 +561,13 @@ class Salon extends Model {
     
     public static function getSalonsByIds($salon_ids)
     {
-        $salons = self::whereIn("salonid",$salon_ids)->get();
+        $salons = self::whereIn('salonid',$salon_ids)->get();
         return $salons;
     }
     
     public static function getSalonById($salon_id)
     {
-        $salon = self::where("salonid","=",$salon_id)->get();
+        $salon = self::where('salonid','=',$salon_id)->get();
         if(empty($salon))
         {
             return null;
@@ -582,10 +582,10 @@ class Salon extends Model {
 	 * */
 	public static function setSalonGrade($salonid,$data,$dataInfo,$addAct)
 	{
-		$salonResult = self::where(array("salonid"=>$salonid))->first();
+		$salonResult = self::where(array('salonid'=>$salonid))->first();
 		if($data['changeInTime'] != $salonResult->changeInTime || $data['salonChangeGrade'] != $salonResult->salonChangeGrade || $addAct == 1)//1 代表添加
 		{
-			DB::table('salon_ratings_record')->where("salonid","=",$salonid)->where("changeTime",">",time())->delete();
+			DB::table('salon_ratings_record')->where('salonid','=',$salonid)->where('changeTime','>',time())->delete();
 			
 			$logRs = SalonRatingsRecord::where(['salonid'=>$salonid])->orderBy('id','desc')->first();
 			if($logRs)
