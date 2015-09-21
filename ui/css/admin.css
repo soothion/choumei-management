@@ -507,7 +507,7 @@ input:focus+.unit{
 .control-thumbnails-item,
 .control-single-image{
 	display:inline-block;
-	vertical-align:middle;
+	vertical-align:top;
 	box-sizing:border-box;
 }
 .control-image{
@@ -551,6 +551,7 @@ input:focus+.unit{
 	border: 1px solid #ddd;
 	position:relative;
 	padding:2px;
+	margin:0px 10px 10px 0px;
 }
 .control-thumbnails-item input{
 	display:none;
