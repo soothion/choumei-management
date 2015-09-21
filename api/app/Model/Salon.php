@@ -133,7 +133,7 @@ class Salon extends Model {
 		if(isset($where["businessName"]))
 		{
 			$keyword = '%'.$where['businessName'].'%';
-			$query = $query->where('b.businessName','like',$keyword);
+			$query = $query->whereRaw("businessId in (SELECT `id` FROM `cm_business_staff` WHERE `businessName` LIKE '{$keyword}')");
 		}
 		if(isset($where['salonname'])&&$where['salonname'])
 		{
