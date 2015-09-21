@@ -303,7 +303,30 @@ class BountyController extends Controller {
      * 		}
      */
     function accept() {
-        
+        var_dump(app_path() . "\ext\Alipay\lib\alipay_notify.class.php");
+        $param = $this->param;
+        Log::info('Bounty accept param is: ', $param);
+        if (empty($param['ids'])) {
+            return $this->error("没有id传递！");
+        }
+        $ids = $param['ids'];       
+        $ids = array_map("intval", $ids);
+//        var_dump($ids);
+////        $model = D("Bounty");
+        $accept_info = null;
+        $ret = BountyTask::accept($ids, $accept_info);
+        var_dump($ret);
+//        $res = [];
+//        if ($ret) { //执行成功
+//            $res['log'] = nl2br($accept_info['info']);
+//            if (!empty($accept_info['alipay_form'])) {
+//                $res['alipay'] = $accept_info['alipay_form'];
+//            }
+//            echo json_encode($res, JSON_UNESCAPED_UNICODE);
+//        } else {
+//            $res['log'] = nl2br($accept_info['err_info']);
+//            echo json_encode($res, JSON_UNESCAPED_UNICODE);
+//        }
     }
 
     /**

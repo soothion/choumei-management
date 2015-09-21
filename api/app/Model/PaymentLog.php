@@ -22,5 +22,9 @@ class PaymentLog extends Model {
             return $flow[0];
         }
     }
+    
+    public static function getBountyPaymentLogBySns($ordersn, $logtype) {
+        return $flow = self::getQuery()->whereIn("ordersn", $ordersn)->where("logtype", "=", $logtype)->get();
+    }
 
 }
