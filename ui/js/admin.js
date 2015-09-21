@@ -485,6 +485,15 @@ $(function(){
 			$(e.target).html('<div class="data-empty tc"><i class="fa fa-frown-o"></i>请求服务异常，<a class="link" onclick="location.reload()">重试</a></div>')
 		}
 	});
+	/**F5刷新**/
+	if(parent!=window){
+		$(window).on('keydown',function(e){
+			if(e.keyCode==116){
+				location.reload();
+				e.preventDefault();
+			}
+		});
+	}
 }); 
 
 Date.prototype.format = function(format){

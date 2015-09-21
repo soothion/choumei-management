@@ -98,6 +98,6 @@ $('#page').on('_ready',function(){//#page _ready事件
 			iframe[0].contentWindow.location.reload();
 			e.preventDefault();
 		}
-	})
+	});
 });
 	
