@@ -139,43 +139,7 @@ $(function(){
 	});
 	
 	/**普通表单提交**/
-	$body.on('submit','form[data-role="remove"]',function(e,bool){//删除提交
-		e.preventDefault();
-		var $this=$(this);
-		if(!bool){
-			parent.lib.popup.confirm({
-				text:($this.data('confirm')||"确认删除此数据吗?"),
-				define:function(){
-					$this.trigger('submit',true);
-				}
-			});
-			return;
-		}
-		var url=$this.attr('action');
-		if(document.activeElement&&document.activeElement.formaction){
-			url=$(document.activeElement).attr('formaction');
-		}
-		lib.ajax({
-			url:url,
-			data:lib.tools.getFormData($(this)),
-			type:'POST',
-			success:function(data){
-				parent.lib.popup.result({
-					bool:data.result==1,
-					text:(data.result==1?"删除成功":data.msg),
-					define:function(){
-						if(data.result==1){
-							if($this.closest('.table').length==1){
-								$this.closest('tr').remove();
-							}
-							$this.trigger('reset',data);
-							$this.trigger('remove');//触发remove事件
-						}
-					}
-				});
-			}
-		});
-	}).on('submit','form[data-role="normal"]',function(e){//一般的数据提交,提交成功后会触发表单reset事件
+	$body.on('submit','form[data-role="normal"]',function(e){//一般的数据提交,提交成功后会触发表单reset事件
 		e.preventDefault();
 		var $this=$(this);
 		if($this.attr('disabled')) return;
@@ -225,6 +189,9 @@ $(function(){
 				text:confirm,
 				define:function(){
 					request();
+				},
+				cancel:function(){
+					$this.attr('disabled',false);
 				}
 			});
 		}else{
