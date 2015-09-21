@@ -32,7 +32,7 @@
 					{ title : "Image files", extensions : "jpg,png,jpeg,gif" },
 				]
 			},
-			max_file_size:'2mb'
+			max_file_size:'10mb'
 		});
 		$('#control-thumbnails2').html(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:currentData.licensePicUrl}));
 		//营业执照上传
@@ -44,7 +44,7 @@
 					{ title : "Image files", extensions : "jpg,png,jpeg,gif" },
 				]
 			},
-			max_file_size:'2mb'
+			max_file_size:'10mb'
 		});
 		$('#control-thumbnails3').html(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:currentData.corporatePicUrl}));
 		//法人执照上传
@@ -56,43 +56,9 @@
 					{ title : "Image files", extensions : "jpg,png,jpeg,gif" },
 				]
 			},
-			max_file_size:'2mb'
+			max_file_size:'10mb'
 		});
     }
-
-    var renderImage = function(){
-		
-        var contractPicUrl = currentData.contractPicUrl;
-        if(contractPicUrl){
-            contractPicUrl = JSON.parse(contractPicUrl);
-            readyConArr    = contractPicUrl;
-            contractPicUrl.forEach(function(obj,index){           
-                $("#con_loader_button").before('<div class="thumbnail" data-type="1"><i index="'+index+'"  class="fa fa-times-circle del"></i><img src="'+obj.thumbimg+'"></div>');               
-            })
-        }
-
-        var licensePicUrl = currentData.licensePicUrl;
-        if(licensePicUrl){
-            licensePicUrl = JSON.parse(licensePicUrl);
-            readyLicArr   = licensePicUrl;
-            licensePicUrl.forEach(function(obj,index){            
-                $("#lic_loader_button").before('<div class="thumbnail" data-type="2"><i index="'+index+'"  class="fa fa-times-circle del"></i><img src="'+obj.thumbimg+'"></div>');      
-            })
-        }
-
-        var corporatePicUrl = currentData.corporatePicUrl;
-        if(corporatePicUrl){
-            corporatePicUrl = JSON.parse(corporatePicUrl);
-            readyCorArr     = corporatePicUrl;
-            corporatePicUrl.forEach(function(obj,index){              
-                $("#cor_loader_button").before('<div class="thumbnail" data-type="3"><i index="'+index+'"  class="fa fa-times-circle del"></i><img src="'+obj.thumbimg+'"></div>');      
-            })                     
-        }
-        hideUploaderButton()        
-    }
-
-
-
 
     var initEvent = function(){
         //导航条绑定事件
