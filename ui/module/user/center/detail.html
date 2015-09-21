@@ -292,7 +292,8 @@
 							{ title : "Image files", extensions : "jpg,png,jpeg" },
 						]
 					},
-					max_file_size:'800kb'
+					max_file_size:'800kb',
+					imageLimitSize:"512*512"
 				},function(uploader){
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
