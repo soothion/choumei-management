@@ -70,6 +70,13 @@ $('#page').on('_ready',function(){//#page _ready事件
 			}
 		});
 	});
+	//F5刷新事件
+	$(window).on('keydown',function(e){
+		if(e.keyCode==116){
+			iframe[0].contentWindow.location.reload();
+			e.preventDefault();
+		}
+	});
 	//ie9修正
 	if(window.ie9){
 		$('.swiper-slide').hide();
@@ -93,11 +100,6 @@ $('#page').on('_ready',function(){//#page _ready事件
 		swiper.slideTo($this.index()+1);
 	}).first().addClass('active');
 	
-	$(window).on('keydown',function(e){
-		if(e.keyCode==116){
-			iframe[0].contentWindow.location.reload();
-			e.preventDefault();
-		}
-	});
+	
 });
 	
