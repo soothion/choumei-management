@@ -1,8 +1,8 @@
 <?php
 namespace App;
 
-require_once (dirname(__FILE__)."/../../ext/lib/alipay_notify.class.php");
-require_once (dirname(__FILE__)."/../../ext/lib/alipay_submit.class.php");
+require_once (dirname(__FILE__)."/../../ext/Alipay/lib/alipay_notify.class.php");
+require_once (dirname(__FILE__)."/../../ext/Alipay/lib/alipay_submit.class.php");
 
 class AlipaySimple
 {    
@@ -48,9 +48,10 @@ class AlipaySimple
         } else {
             $res = $alipay_submit->buildRequestForm($params, "post", "确认退款");
         }
-        if(is_array($res))
+        if($ret_type == self::REFUND_RETURN_TYPE_ARRAY)
         {
-            Utils::log('pay',json_encode($res,JSON_UNESCAPED_UNICODE)."\n", "alipay_refund_form_params");
+            
+            Utils::log('pay',json_encode($res,JSON_UNESCAPED_UNICODE)."\n", "alipay_refund_form_params");           
         }
         else
         {
@@ -137,8 +138,8 @@ class AlipaySimple
         $current_length = strlen($batch_str);
         if ($current_length > $length) {
             $batch_str = substr($batch_str, 0, $length);
-        } else
-            if ($current_length < $length) {
+        } 
+        elseif ($current_length < $length) {
                 $batch_str = str_pad($batch_str, $length - $current_length, "0", STR_PAD_RIGHT);
             }
         return $batch_str;
@@ -225,7 +226,7 @@ class AlipaySimple
      */
     public static function getAlipayPemPath()
     {
-        return dirname(__FILE__)."/../../ext/pem/";
+        return dirname(__FILE__)."/../../ext/Alipay/pem/";
     }
     
     /**
