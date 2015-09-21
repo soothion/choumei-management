@@ -22,6 +22,7 @@
             currentData = JSON.parse(sessionStorage.getItem('edit-shop-data')); 
         }
         //renderImage();
+		$('#control-thumbnails1').html(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:currentData.contractPicUrl}));
 		//合同上传
 		lib.puploader.image({
 			browse_button: 'imageUpload1',
@@ -33,6 +34,7 @@
 			},
 			max_file_size:'2mb'
 		});
+		$('#control-thumbnails2').html(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:currentData.licensePicUrl}));
 		//营业执照上传
 		lib.puploader.image({
 			browse_button: 'imageUpload2',
@@ -44,6 +46,7 @@
 			},
 			max_file_size:'2mb'
 		});
+		$('#control-thumbnails3').html(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:currentData.corporatePicUrl}));
 		//法人执照上传
 		lib.puploader.image({
 			browse_button: 'imageUpload3',
@@ -58,6 +61,7 @@
     }
 
     var renderImage = function(){
+		
         var contractPicUrl = currentData.contractPicUrl;
         if(contractPicUrl){
             contractPicUrl = JSON.parse(contractPicUrl);

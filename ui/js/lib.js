@@ -1210,7 +1210,7 @@
 			if($form.attr('disabled'))return;
 			var help=$form.find('.control-help:visible');
 			if(help.length==0){
-				var data=lib.tools.getFormData($form);
+				var data=this.el._getFormData();
 				$form.trigger('save',data);
 			}else{
 				$('html,body').animate({scrollTop:help.eq(0).offset().top-50},200);
