@@ -37,6 +37,8 @@
     }); 
 
     var uploader = lib.puploader.create({
+		'loaderText':'数据正在导入中...',
+		'successText':'数据导入成功',
         'browse_button' : 'import',
         'domain'        : cfg.getHost() + "rebate/upload?token="+localStorage.getItem('token'),
         'file_data_name': 'rebate',

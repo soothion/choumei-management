@@ -273,7 +273,7 @@
 						}else{
 							parent.lib.popup.result({
 								text:'获取上传token失败',
-								bool:true
+								bool:false
 							});
 						}
 						clearTimeout(self.timer);
@@ -300,7 +300,7 @@
 					silverlight_xap_url:'/qiniu/demo/js/plupload/Moxie.xap',
 					domain:cfg.url.upload,
 					dragdrop:true,
-					multipart:false,
+					multi_selection:false,
 					init:{
 						Key:function(up, file) {
 							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
@@ -316,7 +316,6 @@
 						options.url=options.domain;
 						delete options.runtimes;
 						delete options.dragdrop;
-						delete options.multipart;
 						var uploader=new plupload.Uploader(options);
 						uploader.init();
 						if(options.auto_start){
@@ -331,7 +330,17 @@
 							parent.lib.popup.result({bool:false,text:err.message});
 						});
 						uploader.bind('FileUploaded',function(up,file,res){
-							parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
+							if(res&&res.response&&typeof res.response=='string'){
+								var data=JSON.parse(res.response);
+								if(data.result==1){
+									parent.lib.popup.result({text:options.successText||'文件上传成功'});
+								}else{
+									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
+								}
+								if(data.token){
+									localStorage.setItem('token',data.token);
+								}
+							}
 						});
 						cb && cb(uploader)
 					});
@@ -369,7 +378,7 @@
 									Qiniu._fileName=data.fileName;
 								});
 								if(data.code==0){
-									parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
+									parent.lib.popup.result({text:options.successText||'文件上传成功'});
 								}else{
 									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
 								}
@@ -633,7 +642,7 @@
 						parent.lib.popup.loading({text:options.loaderText||"文件准备上传中"});
 					});
 					uploader.on('uploadSuccess',function(file){
-						parent.lib.popup.result({bool:true,text:options.successText||"文件上传完成"});
+						parent.lib.popup.result({text:options.successText||"文件上传完成"});
 					});
 					uploader.on('uploadError',function(file){
 						parent.lib.popup.result({bool:false,text:options.errorText||"文件上传失败"});
@@ -1163,7 +1172,6 @@
 		success:function(data){
 			var self=this;
 			parent.lib.popup.result({
-				bool:true,
 				text:(data.msg||"数据更新成功"),
 				define:function(){
 					self.el.goback();
