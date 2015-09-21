@@ -507,7 +507,7 @@ $(function(){
 	});
 	/*btn-cancel操作处理*/
 	$body.on('click','.btn-cancel',function(){
-		if(window!=parent){
+		if(window==parent){
 			window.close();
 		}else{
 			history.back();
