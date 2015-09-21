@@ -91,7 +91,8 @@
 	  <script type="text/javascript">
 			document.onreadystatechange=function(){};
 			$(function(){		
-				document.getElementById("hashform").filter=function(data){
+				document.getElementById("hashform")._getFormData=function(){
+					var data=lib.tools.getFormData($(this));
 					if(data.status!=1){
 						data.starttime="";
 						data.endtime="";

@@ -1,5 +1,5 @@
 ﻿var cfg={
-	version:'1.4.2',
+	version:'1.4.3',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
 	dev:{

@@ -328,17 +328,17 @@
                                     <tr>
                                         <td colspan="2" class="content">合同照片：</td>
                                         <td colspan="6" id="con_wrapper">
+											
                                             <%
                                             if(data.contractPicUrl && typeof data.contractPicUrl === "string"){
-                                                var arr = JSON.parse(data.contractPicUrl);
-                                                arr.forEach(function(obj,index){
-                                            %>
-                                                <div class="img-wrapper">
-                                                    <img index="<%=index%>" src="<%=obj.img%>">
-                                                </div> 
+                                                data.contractPicUrl = JSON.parse(data.contractPicUrl);
+                                            }%>
+											<%data.contractPicUrl&&data.contractPicUrl.forEach(function(item){%>
+												<div class="control-thumbnails-item" id="<%=item.id%>">
+													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  />
+												</div>
                                             <%
-                                                });
-                                            }
+                                               });
                                             %>                                                                               
                                         </td>
                                     </tr>
@@ -347,15 +347,15 @@
                                         <td colspan="6" id="lic_wrapper">
                                             <%
                                             if(data.licensePicUrl && typeof data.licensePicUrl === "string"){
-                                                var arr = JSON.parse(data.licensePicUrl);
-                                                arr.forEach(function(obj,index){                                 
+                                                data.licensePicUrl = JSON.parse(data.licensePicUrl);
+											}
                                             %>
-                                                <div class="img-wrapper">
-                                                    <img index="<%=index%>" src="<%=obj.img%>">
-                                                </div> 
+											<%data.licensePicUrl&&data.licensePicUrl.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  />
+												</div> 
                                             <%
                                                 });
-                                            }
                                             %>  
                                         </td>
                                     </tr>
@@ -364,15 +364,15 @@
                                         <td colspan="6" id="cor_wrapper">
                                             <%
                                             if(data.corporatePicUrl && typeof data.corporatePicUrl === "string"){
-                                                var arr = JSON.parse(data.corporatePicUrl);
-                                                arr.forEach(function(obj,index){
+                                                data.corporatePicUrl = JSON.parse(data.corporatePicUrl);
+											}
                                             %>
-                                                <div class="img-wrapper">
-                                                    <img index="<%=index%>" src="<%=obj.img%>">
-                                                </div> 
+											<%data.corporatePicUrl&&data.corporatePicUrl.forEach(function(item){%>
+                                                <div class="control-thumbnails-item" id="<%=item.id%>">
+													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  />
+												</div>
                                             <%
                                                 });
-                                            }
                                             %>  
                                         </td>
                                     </tr>
