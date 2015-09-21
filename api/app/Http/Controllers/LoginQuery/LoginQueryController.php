@@ -12,7 +12,7 @@ use Event;
  */
 
 class LoginQueryController  extends Controller {
-      /**
+    /**
 	 * @api {post} /requestLog/index 1.列出登录日志列表
 	 * 
 	 * @apiName index
@@ -38,33 +38,33 @@ class LoginQueryController  extends Controller {
 	 * @apiSuccess {String} update_time 登录时间.
 	 * @apiSuccess {String} device_os 手机系统.
 	 * @apiSuccess {String} version APP版本.
-         * 
-         * 
-         * @apiSuccessExample Success-Response:
-         * {
-         *      "result":1,
-         *      "token":"",
-         *      "data":
-         *          {
-         *              "total":1,
-         *              "per_page":20,
-         *              "current_page":1,
-         *              "last_page":1,
-         *              "from":1,"to":1,
-         *              "data":[
-         *                      {
-         *                           "mobilephone":"15102011866",
-         *                           "username":"10000000",
-         *                           "bundle":"100000",
-         *                           "updateTime":"0000-00-00 00:00:00",
-         *                           "deviceOs":"ios,
-         *                           "version":"5.4.2"
-         *                      }
-         *                   ]
-         *           }
-         * }
-
-         *  @apiErrorExample Error-Response:
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * {
+     *      "result":1,
+     *      "token":"",
+     *      "data":
+     *          {
+     *              "total":1,
+     *              "per_page":20,
+     *              "current_page":1,
+     *              "last_page":1,
+     *              "from":1,"to":1,
+     *              "data":[
+     *                      {
+     *                           "mobilephone":"15102011866",
+     *                           "username":"10000000",
+     *                           "bundle":"100000",
+     *                           "updateTime":"0000-00-00 00:00:00",
+     *                           "deviceOs":"ios,
+     *                           "version":"5.4.2"
+     *                      }
+     *                   ]
+     *           }
+     * }
+     *
+     *  @apiErrorExample Error-Response:
 	 *		{
 	 *		    "result": 0,
 	 *		    "msg": "未授权访问"
@@ -78,7 +78,7 @@ class LoginQueryController  extends Controller {
            return $this->success($query);
      }
      
-       /**
+    /**
 	 * @api {post} /requestLog/export 2.导出日志列表
 	 * 
 	 * @apiName export
@@ -88,7 +88,7 @@ class LoginQueryController  extends Controller {
 	 * @apiParam {String} username 可选,用户臭美号.
 	 * @apiParam {String} device_uuid 可选,用户设备号.
 	 * @apiParam {String} minTime 可选,最小时间.
-    	 * @apiParam {String} maxTime 可选,最大时间.
+	 * @apiParam {String} maxTime 可选,最大时间.
 	 * 
 	 * @apiSuccess {Number} total 总数据量.
 	 * @apiSuccess {String} mobilephone 可选,用户手机号.
@@ -97,18 +97,14 @@ class LoginQueryController  extends Controller {
 	 * @apiSuccess {String} update_time 登录时间.
 	 * @apiSuccess {String} device_os 手机系统.
 	 * @apiSuccess {String} version APP版本.
-         * 
-         * 
-         * @apiSuccessExample Success-Response:
-         *              {
-	 *		  是一个xml文件
-	 *		}
-         * @apiErrorExample Error-Response:
+     * 
+     * 
+     * @apiErrorExample Error-Response:
 	 *		{
 	 *		    "result": 0,
 	 *		    "msg": "未授权访问"
 	 *		}
-    */
+     */
      
     public function export()
     {
