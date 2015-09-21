@@ -52,12 +52,12 @@ class ImageStyleController extends Controller{
 	 *	        "to": 5,
 	 *	        "data": [
 	 *	            { 
-     *                      "id":3,
-     *                      "style":1,
-     *                      "length":1,
-     *                      "curl":1,
-     *                      "color":1,
-     *                      "img":"{}"
+	 *                      "id":3,
+	 *                      "style":1,
+	 *                      "length":1,
+	 *                      "curl":1,
+	 *                      "color":1,
+	 *                      "img":"{}"
 	 *	            }
 	 *	        ]
 	 *	    }
@@ -190,7 +190,7 @@ class ImageStyleController extends Controller{
 	 * @apiParam {Number} length 必填,长度.
 	 * @apiParam {Number} curl 必填,卷度.
 	 * @apiParam {Number} color 必填,颜色. 
-         * @apiParam {String} img 必填,图片路径.
+     * @apiParam {String} img 必填,图片路径.
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *	{
