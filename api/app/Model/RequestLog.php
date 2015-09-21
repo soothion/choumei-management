@@ -10,7 +10,7 @@ use Illuminate\Pagination\AbstractPaginator;
 class RequestLog  extends Model{
     protected $table = 'request_log';
     protected $primaryKey = 'id'; 
-    protected $fillable = ['userId','bundle','version','deviceType','deviceDpi','deviceModel','deviceNetwork','deviceUuid','deviceCpu','deviceOs','timestamp','sequence','type','createTime','updateTime'];
+    protected $fillable = ['user_id','bundle','version','device_type','device_dpi','device_model','device_network','device_uuid','device_cpu','device_os','timestamp','sequence','type','create_time','update_time'];
     public $timestamps = false;
     
     public static function getLogSelect($param){
@@ -21,21 +21,21 @@ class RequestLog  extends Model{
          if(isset($param['username']) && $param['username']){
 	        $query = $query->where('username','=',$param['username']);
 	 }
-	 if(isset($param['bundle']) && $param['bundle']){
-	        $query = $query->where('bundle','=',$param['bundle']);
+	 if(isset($param['device_uuid']) && $param['device_uuid']){
+	        $query = $query->where('device_uuid','=',$param['device_uuid']);
 	 }
          
          if(isset($param['minTime']) && $param['minTime'] ){
                
-                    $query = $query->where('updateTime','>=', $param['minTime']); 
+                    $query = $query->where('update_time','>=', $param['minTime']); 
          }
          if( isset($param['maxTime']) && $param['maxTime'] ){
               
-                    $query = $query->where('updateTime','<=', $param['maxTime']);    
+                    $query = $query->where('update_time','<=', $param['maxTime']);    
          }
          
-         $sortable_keys=['updateTime','mobilephone','version'];
-         $sortKey = "updateTime";
+         $sortable_keys=['update_time','mobilephone','version'];
+         $sortKey = "update_time";
          $sortType = "DESC";
          if (isset($param['sortKey']) && in_array($param['sortKey'], $sortable_keys)) {
              $sortKey = $param['sortKey'];
@@ -51,8 +51,8 @@ class RequestLog  extends Model{
          AbstractPaginator::currentPageResolver(function() use ($page) {
   	    return $page;
   	 });
-         $fields=['mobilephone','username','deviceUuid','updateTime','deviceOs','version'];
-         $result = $query->select($fields)->join('user','user.user_id','=','request_log.userId')->paginate($page_size)->toArray();
+         $fields=['mobilephone','username','device_uuid','update_time','device_os','version'];
+         $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->paginate($page_size)->toArray();
          unset($result['next_page_url']);
          unset($result['prev_page_url']);
          return $result;
@@ -68,20 +68,20 @@ class RequestLog  extends Model{
          if(isset($param['username']) && $param['username']){
 	        $query = $query->where('username','=',$param['username']);
 	 }
-	 if(isset($param['bundle']) && $param['bundle']){
-	        $query = $query->where('bundle','=',$param['bundle']);
+	 if(isset($param['device_uuid']) && $param['device_uuid']){
+	        $query = $query->where('device_uuid','=',$param['device_uuid']);
 	 }
          
          if(isset($param['minTime']) && $param['minTime'] ){
                
-                    $query = $query->where('updateTime','>=', $param['minTime']); 
+                    $query = $query->where('update_time','>=', $param['minTime']); 
          }
          if( isset($param['maxTime']) && $param['maxTime'] ){
               
-                    $query = $query->where('updateTime','<=', $param['maxTime']);    
+                    $query = $query->where('update_time','<=', $param['maxTime']);    
          }
-         $sortable_keys=['updateTime','mobilephone','version'];
-         $sortKey = "updateTime";
+         $sortable_keys=['update_time','mobilephone','version'];
+         $sortKey = "update_time";
          $sortType = "DESC";
          if (isset($param['sortKey']) && in_array($param['sortKey'], $sortable_keys)) {
              $sortKey = $param['sortKey'];
@@ -91,8 +91,8 @@ class RequestLog  extends Model{
              }
          }
          $query->orderBy($sortKey, $sortType);   
-         $fields=['mobilephone','username','deviceUuid','updateTime','deviceOs','version'];
-         $result = $query->select($fields)->join('user','user.user_id','=','request_log.userId')->get();
+         $fields=['mobilephone','username','device_uuid','update_time','device_os','version'];
+         $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->get();
          return $result;
         
       }

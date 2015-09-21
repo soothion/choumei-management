@@ -96,5 +96,12 @@ $('#page').on('_ready',function(){//#page _ready事件
 		$this.addClass('active').siblings().removeClass('active');
 		swiper.slideTo($this.index()+1);
 	}).first().addClass('active');
+	
+	$(window).on('keydown',function(e){
+		if(e.keyCode==116){
+			iframe[0].contentWindow.location.reload();
+			e.preventDefault();
+		}
+	})
 });
 	

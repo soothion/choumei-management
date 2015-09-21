@@ -15,6 +15,7 @@ use Event;
 use App\CompanyCodeCollect;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use App\BusinessStaff;
 
 class SalonController extends Controller {
 		
@@ -135,8 +136,7 @@ class SalonController extends Controller {
 	
 	public function index()
 	{
-		$where = "";
-		
+		$where = [];
 		$param = $this->param;
 		$shopType = isset($param["shopType"])?intval($param["shopType"]):0;//店铺类型
 		$zone = isset($param["zone"])?$param["zone"]:0;//所属商圈

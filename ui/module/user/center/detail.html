@@ -41,11 +41,11 @@
 								</form>
 								-->
 								<span class="space"></span>
-								<form action="user/destroy/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({define:function(){history.back();}})">
+								<form data-slug="user.destory" action="user/destroy/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({define:function(){history.back();}})">
 									<button class="btn">删除账号</button>
 								</form>
 								<span class="space"></span>
-								<button class="btn btn-edit">
+								<button class="btn btn-edit" data-slug="user.update">
 									编辑
 								</button>
 								<button class="btn btn-edit-cancel" style="display:none">
@@ -132,7 +132,7 @@
 								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
 							</tr>
 							<tr>
-								<td>加入集团：<%=data.companyName%> <%if(data.recommendCode){%><span class="space"></span><button form="companyCode" class="btn off-code">解绑集团码</button><%}%></td>
+								<td>加入集团：<%=data.companyName%> <%if(data.recommendCode){%><span class="space"></span><button data-slug="user.update" form="companyCode" class="btn off-code">解绑集团码</button><%}%></td>
 								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
 							</tr>
 							<tr>
@@ -186,14 +186,15 @@
 								<td>
 									常住地区：
 									<span>
-										<select id="province" required style="width:100px"
+										<select id="province" required style="width:100px" requiredmsg="请选择省份"
 										ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&sid=<%=data.area.split(",")[0]%>" 
 										ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&sid=<%=data.area.split(",")[1]%>">
 										</select>
-										<select id="city" required style="width:100px" 
+										<select id="city" required style="width:100px" requiredmsg="请选择城市"
 										ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&sid=<%=data.area.split(",")[2]%>">
 										</select>
-										<select id="area" required  style="width:100px"></select>
+										<select id="area" required  style="width:100px" requiredmsg="请选择城区"></select>
+										<span class="control-help" style="display: none;"></span>
 									</span>
 									<input type="hidden" name="area" id="hidden"/>
 								</td>
@@ -232,7 +233,7 @@
 								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
 							</tr>
 							<tr>
-								<td>加入集团：<%=data.companyName%> <%if(data.recommendCode){%><span class="space"></span><button class="btn off-code"  form="companyName">解绑集团码</button><%}%></td>
+								<td>加入集团：<%=data.companyName%> <%if(data.recommendCode){%><span class="space"></span><button  data-slug="user.update" class="btn off-code"  form="companyName">解绑集团码</button><%}%></td>
 								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
 							</tr>
 							<tr>
@@ -243,7 +244,7 @@
 				</div>
 				<br />
 				<div class="tc">
-					<button class="btn-primary">提交</button>
+					<button class="btn-primary" data-slug="user.update">提交</button>
 				</div>
 			</div>
 			</form>

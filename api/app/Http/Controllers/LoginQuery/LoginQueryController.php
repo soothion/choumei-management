@@ -20,7 +20,7 @@ class LoginQueryController  extends Controller {
 	 *
 	 * @apiParam {String} mobilephone 可选,用户手机号.
 	 * @apiParam {String} username 可选,用户臭美号.
-	 * @apiParam {String} deviceUuid 可选,用户设备号.
+	 * @apiParam {String} device_uuid 可选,用户设备号.
 	 * @apiParam {String} minTime 可选,最小时间.
     	 * @apiParam {String} maxTime 可选,最大时间.
 	 * @apiParam {Number} page 可选,页数.
@@ -34,9 +34,9 @@ class LoginQueryController  extends Controller {
 	 * @apiSuccess {Number} to 结束数据.
 	 * @apiSuccess {String} mobilephone 可选,用户手机号.
 	 * @apiSuccess {String} username 可选,用户臭美号.
-	 * @apiSuccess {String} bundle 可选,用户设备号.
-	 * @apiSuccess {String} updateTime 登录时间.
-	 * @apiSuccess {String} deviceOs 手机系统.
+	 * @apiSuccess {String} device_uuid 可选,用户设备号.
+	 * @apiSuccess {String} update_time 登录时间.
+	 * @apiSuccess {String} device_os 手机系统.
 	 * @apiSuccess {String} version APP版本.
          * 
          * 
@@ -86,16 +86,16 @@ class LoginQueryController  extends Controller {
 	 *
 	 * @apiParam {String} mobilephone 可选,用户手机号.
 	 * @apiParam {String} username 可选,用户臭美号.
-	 * @apiParam {String} deviceUuid 可选,用户设备号.
+	 * @apiParam {String} device_uuid 可选,用户设备号.
 	 * @apiParam {String} minTime 可选,最小时间.
     	 * @apiParam {String} maxTime 可选,最大时间.
 	 * 
 	 * @apiSuccess {Number} total 总数据量.
 	 * @apiSuccess {String} mobilephone 可选,用户手机号.
 	 * @apiSuccess {String} username 可选,用户臭美号.
-	 * @apiSuccess {String} bundle 可选,用户设备号.
-	 * @apiSuccess {String} updateTime 登录时间.
-	 * @apiSuccess {String} deviceOs 手机系统.
+	 * @apiSuccess {String} device_uuid 可选,用户设备号.
+	 * @apiSuccess {String} update_time 登录时间.
+	 * @apiSuccess {String} device_os 手机系统.
 	 * @apiSuccess {String} version APP版本.
          * 
          * 
@@ -127,17 +127,17 @@ class LoginQueryController  extends Controller {
         foreach ($datas as $data) {
             $mobilephone = isset($data->mobilephone) ? $data->mobilephone : '';
             $username = isset($data->username) ? $data->username : '';
-            $updateTime = $data->updateTime;
-            $deviceUuid = isset($data->deviceUuid)?$data->deviceUuid:'';
-            $deviceOs = isset($data->deviceOs)?$data->deviceOs:'';
+            $update_time = $data->update_time;
+            $device_uuid = isset($data->device_uuid)?$data->device_uuid:'';
+            $device_os = isset($data->device_os)?$data->device_os:'';
             $version = isset($data->version)?$data->version:'';
             
             $res[] = [
                 $mobilephone,
                 $username,
-                $deviceUuid,
-                $updateTime,
-                $deviceOs,
+                $device_uuid,
+                $update_time,
+                $device_os,
                 $version
             ];
             

@@ -472,14 +472,19 @@ $(function(){
 			}
 		}).find('form[data-role="hash"]').attr('novalidate','novalidate');
 	});
-	/*btn-cancel操作处理*/
+	/**btn-cancel操作处理**/
 	$body.on('click','.btn-cancel',function(){
 		if(window==parent){
 			window.close();
 		}else{
 			history.back();
 		}
-	})
+	});
+	$body.on('exception',function(e,data){
+		if(data&&data.errorLevel=='xhr'){
+			$(e.target).html('<div class="data-empty tc"><i class="fa fa-frown-o"></i>请求服务异常，<a class="link" onclick="location.reload()">重试</a></div>')
+		}
+	});
 }); 
 
 Date.prototype.format = function(format){
