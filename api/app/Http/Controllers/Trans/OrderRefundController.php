@@ -391,8 +391,31 @@ class OrderRefundController extends Controller
      * @apiName accept
      * @apiGroup refund
      *
-     * @apiSuccess {Number} ids id(多个用','隔开).
+     * @apiParam {Number} ids id(多个用','隔开).
      *
+     * @apiSuccessExample Success-Response:
+     *     {
+     *        "result": 1,
+     *        "token": "",
+     *        "data": {
+     *            "alipay": {
+     *                "form_args": {
+     *                    "_input_charset": "utf-8",
+     *                    "batch_no": "20150921153317",
+     *                    "batch_num": "1",
+     *                    "detail_data": "2015091600001000780065371963^25.00^买多了/买错了",
+     *                    "notify_url": "http://192.168.13.46:9140/refund/call_back_of_alipay",
+     *                    "partner": "2088701753684258",
+     *                    "refund_date": "2015-09-21 15:33:17",
+     *                    "seller_email": "zfb@choumei.cn",
+     *                    "service": "refund_fastpay_by_platform_pwd",
+     *                    "sign": "b2eb81f50f8de1b04a86e1fddb260f6e",
+     *                    "sign_type": "MD5"
+     *                }
+     *            },
+     *
+     *        }
+     *    }
      *
      * @apiErrorExample Error-Response:
      *		{
@@ -410,7 +433,7 @@ class OrderRefundController extends Controller
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
         }
         $info = TransactionWriteApi::accpet($ids);
-        $this->success($info);
+        return $this->success($info);
     }
     
     /**

@@ -165,7 +165,7 @@ class TransactionWriteApi
         $refund_indexes = Utils::column_to_key("ordersn",$refunds);
         unset($refunds);
         
-        $fundflow = Fundflow::where('code_type',self::REFUND_CODE_TYPE_OF_CUSTOM)->whereIn('record_no',$ordersns)->select(['ticket_no','record_no'])->get();
+        $fundflow = Fundflow::where('code_type',self::REFUND_CODE_TYPE_OF_CUSTOM)->whereIn('record_no',$ordersns)->select(['ticket_no','record_no','pay_type','user_id','money'])->get();
         if(empty($fundflow))
         {
             throw new ApiException("找不到退款的支付流水信息",ERROR::REFUND_FLOW_LOST);
@@ -203,9 +203,9 @@ class TransactionWriteApi
         $payment_indexes = Utils::column_to_key("ordersn", $paymentArr);
         
         $refund_items = self::getRefundItems($fundflowArr,$payment_indexes,$refund_indexes);
-        
+
         // 状态修改为退款中
-        self::modifOrderStatusInRefund($ordersns);
+        //self::modifOrderStatusInRefund($ordersns);
         
         foreach($refund_items as $type => $items)
         {
@@ -213,12 +213,12 @@ class TransactionWriteApi
             {
                 continue;
             }            
-            $call_name = "refundOf".ucfirst($type);
-            if(!method_exists(self, $call_name))
+            $call_name = "refundOf".ucfirst($type);        
+            if(!method_exists(__CLASS__, $call_name))
             {
                 throw new ApiException("unknown refund type of {$type}",ERROR::UNKNOWN_ERROR);
             }
-            $res[$type] = call_user_func_array(["self",$call_name], [$items]);
+            $res[$type] = call_user_func_array(["self",$call_name], [$items]);            
         }
         return $res;
     }
@@ -440,12 +440,12 @@ class TransactionWriteApi
      * @return array
      */
     private static function checkRefundStatus($ids)
-    {
+    {        
         $count = count($ids);
         if ($count < 1) {
             throw new ApiException( "退款id不能为空", ERROR::PARAMS_LOST);
         }
-        $refunds = OrderRefund::whereIn('order_refund_id',$ids)->where('status',self::REFUND_STATUS_OF_NORMAL)->select(['ordersn','retype'])->get();
+        $refunds = OrderRefund::whereIn('order_refund_id',$ids)->where('status',self::REFUND_STATUS_OF_NORMAL)->select(['ordersn','retype','rereason'])->get();
         if(empty($refunds))
         {
             throw new ApiException( "找不到相关的退款单信息", ERROR::REFUND_STATE_WRONG);
@@ -480,12 +480,12 @@ class TransactionWriteApi
      */
     private static function getRefundItems($fundflows,$paymentlogs,$refunds)
     {
-        $wx_refund_url_of_web = env("WX_REFUND_URL_OF＿WEB",null);
-        $wx_refund_url_of_sdk = env("WX_REFUND_URL_OF＿SDK",null);
+        $wx_refund_url_of_web = env("WX_REFUND_URL_OF_WEB",null);
+        $wx_refund_url_of_sdk = env("WX_REFUND_URL_OF_SDK",null);
         if(empty($wx_refund_url_of_web) || empty($wx_refund_url_of_sdk))
         {
-            throw new ApiException("获取配置信息 [WX_REFUND_URL_OF＿WEB] 或者 [WX_REFUND_URL_OF＿SDK] 出错",ERROR::CONFIG_LOST);
-        }
+            throw new ApiException("获取配置信息 [WX_REFUND_URL_OF_WEB] 或者 [WX_REFUND_URL_OF_SDK] 出错",ERROR::CONFIG_LOST);
+        }   
         $res = [
             'union'=>[],
             'alipay'=>[],
@@ -497,13 +497,13 @@ class TransactionWriteApi
         ];
         foreach ($fundflows as $flow) {
             $ordersn = $flow['record_no'];
+            
             if(!isset($refunds[$ordersn]) || !isset($paymentlogs[$ordersn]))
-            {
+            {                
                 throw new ApiException("退款的关键信息不全",ERROR::REFUND_LOST_PRIMARY_INFO);
             }
-            $retype = intval($refunds[$ordersn]['retype']);
-            
-            if(self::REFUND_RETYPE_REFUND_TO_BALANCE === $retype)
+            $retype = intval($refunds[$ordersn]['retype']);      
+            if($retype == self::REFUND_RETYPE_REFUND_TO_BALANCE)
             {
                 $pay_type = self::REFUND_TO_BALANCE;
             }
@@ -511,23 +511,20 @@ class TransactionWriteApi
             {
                 $pay_type = intval($flow['pay_type']);
             }
-            
             $user_id = $flow['user_id'];
             $money = $flow['money'];
-            $reason = Mapping::getfFundflowRereason($flow['rereason']);        
+            $reason = implode(',',Mapping::getRefundRereasonNames(explode(',',$refunds[$ordersn]['rereason'])));        
            
             $device = null;
             $tn = "";
             $batch_no = "";
             $alipay_updated = 0;
-            
             if (isset($paymentlogs[$ordersn])) {
                 $tn = $paymentlogs[$ordersn]['tn'];
                 $device = $paymentlogs[$ordersn]['device'];
                 $batch_no = $paymentlogs[$ordersn]['batch_no'];
                 $alipay_updated = intval($paymentlogs[$ordersn]['alipay_updated']);
             }
-        
             switch ($pay_type) {
                 case self::REFUND_TO_UNION:
                     if (empty($tn)) 
@@ -545,9 +542,9 @@ class TransactionWriteApi
                     if (empty($tn)) {
                         throw  new ApiException("ordersn '{$ordersn}' can not find tn",ERROR::REFUND_CANT_FIND_TN);
                     }
-                    if (! empty($batch_no) && (time() - $alipay_updated) < 7200) {
-                        throw  new ApiException("ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁",ERROR::UNKNOWN_ERROR);
-                    }                    
+//                     if (! empty($batch_no) && (time() - $alipay_updated) < 7200) {
+//                         throw  new ApiException("ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁",ERROR::UNKNOWN_ERROR);
+//                     }                    
                     $res['alipay'][]= [
                         'tn' => $tn,
                         "money" => $money,
@@ -703,12 +700,12 @@ class TransactionWriteApi
      */
     private static function refundOfAlipay()
     {
-        $url = env("ALIPAY_REFUND_NOTIFY_URL",null);
+        $url = env("ALIPAY_REFUND_NOTIFY_URL",null);  
         if(empty($url))
         {
             throw new ApiException("获取配置信息 [ALIPAY_REFUND_NOTIFY_URL] 出错",ERROR::CONFIG_LOST);
         }
-        $args = func_get_args();
+        $args = func_get_args(); 
         if (count($args) < 1) {
             throw new ApiException("必要参数丢失", ERROR::UNKNOWN_ERROR);
         }
@@ -717,15 +714,15 @@ class TransactionWriteApi
         {
             return [];
         }
-        
-        $batch_no = AlipaySimple::getRandomBatchNo();    
+        $batch_no = AlipaySimple::getRandomBatchNo();   
         // 写入退款批次号
         self::UpdateAlipayBatchNo($batch_no, $items);
+        
         $ret = [];
         $data = ['notify_url' => $url,'batch_no' => $batch_no,'detail_data' => $items];
         // 支付宝的表单提交 for debug
         //$ret['form_args'] = AlipaySimple::refund($data,AlipaySimple::REFUND_RETURN_TYPE_HTML);
-        $ret['form_args'] = AlipaySimple::refund($data,AlipaySimple::REFUND_RETURN_TYPE_ARRAY);
+        $ret['form_args'] = AlipaySimple::refund($data,AlipaySimple::REFUND_RETURN_TYPE_ARRAY);     
         return $ret;
     }
     
@@ -823,6 +820,24 @@ class TransactionWriteApi
 	{
 		return md5(md5($ordersn.$user_id.$money).$tn.'choumei.cn');	
 	}
+	
+    /**
+     * 写入支付宝的退款批次号
+     * @param unknown $batch_no
+     * @param unknown $items
+     */
+    private static function UpdateAlipayBatchNo($batch_no,$items)
+    {
+        foreach ($items as $item)
+        {
+            $tn = $item['tn'];
+            $ordersn = $item['ordersn'];
+            PaymentLog::where('tn',$tn)->where('ordersn',$ordersn)->update(
+            ['batch_no'=>$batch_no,'alipay_updated'=>time()]
+            );           
+        }
+    }
+        
 }
 
 ?>

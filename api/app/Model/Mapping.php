@@ -60,10 +60,10 @@ class Mapping
         ];
     }
     
-    public static function FundflowRereasonNames()
+    public static function RefundRereasonNames()
     {
         return [
-            0=>'去过了，不太满意',
+            0=>'去过了,不太满意',
             1=>'朋友/网上评价不好',
             2=>'买多了/买错了',
             3=>'计划有变,没时间去',

@@ -282,7 +282,7 @@ class OrderController extends Controller
             'pay_type' => self::T_STRING,
             'pay_state' => self::T_INT
         ]);
-        $items = TransactionSearchApi::getConditionOfOrder($params)->take(100)
+        $items = TransactionSearchApi::getConditionOfOrder($params)->take(10000)
             ->get()
             ->toArray();
       
