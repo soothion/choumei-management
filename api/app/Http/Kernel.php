@@ -31,5 +31,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'acl.auth' => \App\Http\Middleware\ACLAuthMiddleware::class,
         'jwt.auth' => \App\Http\Middleware\JWTAuthMiddleware::class,
+        'before' => \App\Http\Middleware\BeforeMiddleware::class,
+        'after' => \App\Http\Middleware\AfterMiddleware::class,
     ];
 }
