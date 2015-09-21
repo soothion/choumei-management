@@ -103,7 +103,12 @@ $(function(){
 		e.stopPropagation();
 		e.preventDefault();
 	}).on('hash','form[data-role="hash"]',function(e){//表单自定义hash提交
-		var data=lib.tools.getFormData($(this));
+		var data={};
+		if(this._getFormData){
+			data=this._getFormData();
+		}else{
+			data=lib.tools.getFormData($(this));
+		}
 		if(data.page===undefined){
 			data.page=1;
 			//清除排序条件
@@ -113,9 +118,6 @@ $(function(){
 			if(lib.query.sort_type){
 				data.sort_type="";
 			}
-		}
-		if(this.filter){
-			data=this.filter(data);
 		}
 		if(lib.tools.hashchange(data)){
 			$(window).trigger('hashchange');

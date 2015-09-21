@@ -125,28 +125,6 @@
 			});
 		}});
     });
-
-    $("#table-wrapper").delegate(".img-wrapper","click",function(){
-        var id = $(this).parent().attr("id");
-        var index = $(this).index();
-        if(id === "con_wrapper"){
-            appendImage(JSON.parse(currentData.contractPicUrl || null),index);
-        }
-        if(id === "lic_wrapper"){
-            appendImage(JSON.parse(currentData.licensePicUrl || null),index);           
-        }
-        if(id === "cor_wrapper"){
-            appendImage(JSON.parse(currentData.corporatePicUrl || null),index);           
-        }
-    });
-
-    var appendImage = function(arr,index){
-		var list=[];
-        arr && arr.forEach(function(obj,index){
-			list.push(obj.img);
-        });
-        parent.lib.popup.swiper({list:list,index:index});            
-    };
 })();
 
     function renderMap(){
