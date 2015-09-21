@@ -60,10 +60,6 @@ $('#page').on('_ready',function(){//#page _ready事件
 		$this.parent().siblings().removeClass('active').children('ul').slideUp(200);
 	});
 	
-	$('.refresh').on('click',function(){//刷新事件
-		iframe[0].contentWindow.location.reload();
-	});
-	
 	$('#logout').on('click',function(){//退出事件
 		lib.popup.result({
 			bool: true,
