@@ -204,6 +204,9 @@ class TicketController extends Controller
      * @apiSuccess {String} vouchers.vUseEnd 有效期
      * @apiSuccess {String} vouchers.status 状态 1未使用 2已使用 3待激活 5已失效 10 未上线
      * @apiSuccess {String} commission 佣金信息
+     * @apiSuccess {String} commission.amount 佣金金额
+     * @apiSuccess {String} commission.rate 佣金率
+     * @apiSuccess {String} commission.grade 店铺当前等级 1S 2A 3B 4C 5新落地 6淘汰区
      * @apiSuccess {String} recommend_code店铺优惠码
      * @apiSuccess {String} platform 设备信息
      * @apiSuccess {String} platform.DEVICE_UUID 设备号
@@ -269,8 +272,14 @@ class TicketController extends Controller
      *                   "vUseEnd": 1442505599,
      *                   "vStatus": 1,
      *               }
-     *               "commission": null,
-     *               "recommend_code": null
+     *               "commission": 
+     *                {
+     *                  "ordersn":"2008481211896",
+     *                  "amount":"43.27",
+     *                  "rate":"9.09",
+     *                  "grade":"0"
+     *                },
+     *               "recommend_code": "1168"
      *           }
      *       }
      *
