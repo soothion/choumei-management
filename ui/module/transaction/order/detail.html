@@ -223,12 +223,18 @@
                                         </tr> 
                                     <thead>                                    
                                     <tbody>
+                                    <%var grade={"1":"S","2":"A","3":"B","4":"C","5":"新落地","6":"淘汰区"}%>
+                                    <%if(data.commission){%>
                                         <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td><%=grade[data.commission.grade]%></td>
+                                            <td><%=data.commission.rate%></td>
+                                            <td><%=data.commission.amount%></td>
+                                            <td>
+                                                <%=data.salon && data.salon.salonname%>
+                                                (<%=data.recommend_code && data.recommend_code.recommend_code%>)
+                                            </td>
                                         </tr>
+                                    <%}%>    
                                     </tbody>                                
                                 </table>
                             </td>                            
