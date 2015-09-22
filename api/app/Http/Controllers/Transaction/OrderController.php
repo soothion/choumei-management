@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Transaction;
 use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;
 use App\Mapping;
+use Event;
 
 class OrderController extends Controller
 {
@@ -282,7 +283,7 @@ class OrderController extends Controller
             'pay_type' => self::T_STRING,
             'pay_state' => self::T_INT
         ]);
-        $items = TransactionSearchApi::getConditionOfOrder($params)->take(10000)
+        $items = TransactionSearchApi::getConditionOfOrder($params)->take(5000)
             ->get()
             ->toArray();
       
@@ -298,6 +299,10 @@ class OrderController extends Controller
             '交易状态'
         ];
         $res = self::format_export_data($items);
+        if(!empty($res))
+        {
+            Event::fire("order.export");
+        }
         $this->export_xls("普通订单" . date("Ymd"), $header, $res);
     }
     

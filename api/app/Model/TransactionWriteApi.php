@@ -237,9 +237,12 @@ class TransactionWriteApi
         }
         $refundsArr = $refunds->toArray();
         unset($refunds);
+        if(count($refundsArr)<1)
+        {
+            throw  new ApiException("找不到对应的退款信息", ERROR::PARAMS_LOST);
+        }
         $ticketnos = array_column($refundsArr, "ticketno");
         $ordersns = array_column($refundsArr, "ordersn");
-        
         $ticket_num = OrderTicket::whereIn("ticketno",$ticketnos)->whereNotIn("status",[self::TICKET_STATUS_OF_USED,self::TICKET_STATUS_OF_REFUND_COMPLETED])->count();
         if($ticket_num !== count($ticketnos))
         {

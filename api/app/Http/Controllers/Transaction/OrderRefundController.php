@@ -10,6 +10,8 @@ use App\Exceptions\ERROR;
 use App\Utils;
 use App\AlipaySimple;
 use App\Mapping;
+use Event;
+use App\OrderRefund;
 
 class OrderRefundController extends Controller
 {
@@ -329,6 +331,10 @@ class OrderRefundController extends Controller
             '购物车号',
         ];
         $res = self::format_export_data($items);
+        if(!empty($res))
+        {
+            Event::fire("refund.export");
+        }
         $this->export_xls("退款单 " . date("Ymd"), $header, $res);
     }
     
@@ -392,6 +398,12 @@ class OrderRefundController extends Controller
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
         }
         $info = TransactionWriteApi::accpet($ids);
+        $refunds = OrderRefund::whereIn("order_refund_id",$ids)->get(['ordersn']);         
+        if(!empty($refunds))
+        {
+            $ordersns = array_column($refunds->toArray(), "ordersn");
+            Event::fire("refund.accept",implode(',',$ordersns));
+        }
         return $this->success($info);
     }
     
@@ -420,9 +432,16 @@ class OrderRefundController extends Controller
         if(count($ids)<1)
         {
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
+        }        
+        $info = TransactionWriteApi::reject($ids,$params['reason']);
+       
+        $refunds = OrderRefund::whereIn("order_refund_id",$ids)->get(['ordersn']);   
+        if(!empty($refunds))
+        {
+            $ordersns = array_column($refunds->toArray(), "ordersn");
+            Event::fire("refund.reject",implode(',',$ordersns));
         }
-        $info = TransactionWriteApi::reject($ids,$params['remark']);
-        $this->success($info);
+        return $this->success($info);
     }
     
     /**

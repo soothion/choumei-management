@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;
 use App\Mapping;
 use App\RequestLog;
-use Predis\Command\TransactionDiscard;
+use Event;
 
 class TicketController extends Controller
 {
@@ -355,6 +355,10 @@ class TicketController extends Controller
             '第三方流水',
         ];
         $res = self::format_export_data($items);
+        if(!empty($res))
+        {
+            Event::fire("ticket.export");
+        }
         $this->export_xls("臭美券" . date("Ymd"), $header, $res);
     }
     

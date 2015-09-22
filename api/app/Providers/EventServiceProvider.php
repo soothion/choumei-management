@@ -181,6 +181,23 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\PayManageEventListener@onConfirm',
         ],
         
+        //交易管理
+        'order.export' => [
+            'App\Listeners\TransactionEventListener@onOrderExport',
+        ],
+        'ticket.export' => [
+             'App\Listeners\TransactionEventListener@onTicketExport',
+        ],
+        'refund.export' => [
+             'App\Listeners\TransactionEventListener@onRefundExport',
+        ],
+        'refund.accept' => [
+            'App\Listeners\TransactionEventListener@onAccept',
+        ],
+        'refund.reject' => [
+            'App\Listeners\TransactionEventListener@onReject',
+        ],
+        
     ];
 
     /**
