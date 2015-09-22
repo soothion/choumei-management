@@ -23,20 +23,19 @@ class BeforeMiddleware
 
     	$path = storage_path().'/logs/query.log';
     	$time_now = (new DateTime)->format('Y-m-d H:i:s');
-	    $start = PHP_EOL.'=| '.$request->method().' '.$request->path().' |='.PHP_EOL;
+	    $start = PHP_EOL.'=| '.$time_now.' | '.$request->method().' | '.$request->path().' |='.PHP_EOL;
 	  	File::append($path, $start);
 
-	  	Event::listen('illuminate.query', function($sql, $bindings, $time) use($path,$time_now) {
-		    // Uncomment this if you want to include bindings to queries
+	  	Event::listen('illuminate.query', function($sql, $bindings, $time) use($path) {
 		    $sql = str_replace(array('%', '?'), array('%%', '%s'), $sql);
 		    $sql = vsprintf($sql, $bindings);
-		    $log = $time_now.' | '.$sql.' | '.$time.'ms'.PHP_EOL;
+		    $log = $time.'ms'."\t|\t".$sql.PHP_EOL;
 		  	File::append($path, $log);
 		});
 
 
     	$path = storage_path().'/logs/request.log';
-	    $start = PHP_EOL.'=| '.$time_now.' '.$request->method().' '.$request->path().' '.json_encode($request->input()).' |='.PHP_EOL;
+        $start = PHP_EOL.'=| '.$time_now.' | '.$request->method().' | '.$request->path().' | '.json_encode($request->input()).' |='.PHP_EOL;
 	  	File::append($path, $start);
 
         return $next($request);
