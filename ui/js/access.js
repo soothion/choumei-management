@@ -25,8 +25,8 @@
 	'order.index':'/module/transaction/order/index.html',
 	'refund.index':'/module/transaction/order/refundment.html',
 	'bounty.index':'/module/transaction/reward/index.html', 
-	//'bounty.index':'/module/transaction/reward/refundment.html',
-	//'ticket.index':'/module/transaction/other/device.html',
+	'bounty.refundIndex':'/module/transaction/reward/refundment.html',
+	'requestLog.index':'/module/transaction/other/device.html',
 	'ticket.index':'/module/transaction/other/ticket.html'
 
 }
