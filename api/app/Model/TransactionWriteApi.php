@@ -412,7 +412,7 @@ class TransactionWriteApi
         $order_items_arr = $order_items->toArray();
         foreach ($order_items_arr as $item)
         {
-            SalonItem::where('salon_id',$item['salonid'])->where('itemid',$item['itemid'])->decrement('sold',1);
+            SalonItem::where('salonid',$item['salonid'])->where('itemid',$item['itemid'])->decrement('sold',1);
         }
         return true;
     }
