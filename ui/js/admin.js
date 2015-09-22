@@ -1,5 +1,7 @@
 ﻿(function(){
-	parent.lib.popup.close();//清除父弹出框
+	if(location.href.indexOf('popup=')==-1){
+		parent.lib.popup.close();//清除父弹出框
+	}
 	lib.ajatCount=0;//ajat计件数
 	lib.ajat=function (_protocol) {
 		lib.ajatCount++;//ajat添加计件数
