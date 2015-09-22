@@ -92,7 +92,7 @@
                   <button class="btn" type="submit">搜索</button>         
                 </form>
 
-                <form data-role="export" action="refund/export" data-slug="role.export">
+                <form data-role="export" action="refund/export" data-slug="refund.export">
                   <button class="btn">
                     <i class="fa fa-file-excel-o"></i> 导出
                   </button>
@@ -164,13 +164,19 @@
               <td><%=refundObj[item.order_status]%></td>
               <td><%=item.shopcartsn%></td>
               <td>
-                <a class="link"  target="_blank" href="detail.html?method=refund/show/&id=<%=item.order_refund_id%>" >
+                <a class="link"  target="_blank" href="detail.html?method=refund/show/&id=<%=item.order_refund_id%>
+                data-slug="refund.show">
                 查看&gt
                 </a>
                 <%if(item.order_status=="6"){%>
-                    <a class="link pass" style="margin:0 8px;" data-type="0" data-id="<%=item.order_refund_id%>">通过
+                    <a class="link pass" style="margin:0 8px;" data-type="0" data-slug="refund.accept"
+                    data-id="<%=item.order_refund_id%>">
+                    通过
                     </a>
-                    <a class="link reject" data-type="0" data-id="<%=item.order_refund_id%>">拒绝</a>
+                    <a class="link reject" data-type="0" data-slug="refund.reject" 
+                    data-id="<%=item.order_refund_id%>" >
+                    拒绝
+                    </a>
                 <%}%>
 
                 <%if(item.order_status=="12"){%>
