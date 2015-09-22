@@ -203,9 +203,8 @@ class TransactionWriteApi
         $payment_indexes = Utils::column_to_key("ordersn", $paymentArr);
         
         $refund_items = self::getRefundItems($fundflowArr,$payment_indexes,$refund_indexes);
-
         // 状态修改为退款中
-        //self::modifOrderStatusInRefund($ordersns);
+        self::modifOrderStatusInRefund($ordersns);
         
         foreach($refund_items as $type => $items)
         {
@@ -444,6 +443,7 @@ class TransactionWriteApi
      */
     private static function checkRefundStatus($ids)
     {        
+     
         $count = count($ids);
         if ($count < 1) {
             throw new ApiException( "退款id不能为空", ERROR::PARAMS_LOST);

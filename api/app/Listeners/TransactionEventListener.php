@@ -56,8 +56,6 @@ class TransactionEventListener
     
     public function onAccept($info)
     {
-        var_dump($info);
-        die();
         $data = $this->getLogInfo();
         $data['operation'] = "退款通过";
         $data['object'] = $info;
