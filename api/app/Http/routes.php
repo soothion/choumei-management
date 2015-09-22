@@ -670,6 +670,10 @@ Route::group(['middleware' => ['before','after']], function(){
 		'as'=>'requestLog.index',
 		'uses'=>'LoginQuery\LoginQueryController@index'
     ));
+      Route::any('requestLog/export',array(  //导出日志列表
+		'as'=>'requestLog.export',
+		'uses'=>'LoginQuery\LoginQueryController@export'
+    ));
 
 });
 
