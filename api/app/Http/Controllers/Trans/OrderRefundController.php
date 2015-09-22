@@ -269,60 +269,6 @@ class OrderRefundController extends Controller
      *           }
      *       }
      *
-     * @apiSuccessExample Success-Response:
-     *       {
-     *           "result": 1,
-     *           "token": "",
-     *           "data": {
-     *               "order": {
-     *                   "ordersn": "4187664711988",
-     *                   "orderid": 708851,
-     *                   "priceall": "1.00",
-     *                   "salonid": 84,
-     *                   "actuallyPay": "1.00",
-     *                   "shopcartsn": ""
-     *               },
-     *               "item": {
-     *                   "order_item_id": 150256,
-     *                   "itemname": "柠檬去味吹发变身柠檬女神",
-     *                   "ordersn": "4187664711988"
-     *               },
-     *               "ticket": {
-     *                   "order_ticket_id": 108898,
-     *                   "ticketno": "17170134",
-     *                   "user_id": 306669
-     *               },
-     *               "user": {
-     *                   "username": "10306576",
-     *                   "mobilephone": "18319019483"
-     *               },
-     *               "salon": {
-     *                   "salonname": "苏格护肤造型生活馆（2店）"
-     *               },
-     *               "paymentlog": {
-     *                    "ordersn": "4187664711988",
-     *                    "tn": "1224362901341509107433258086"
-     *               },
-     *               "fundflows": [
-     *                   {
-     *                       "pay_type": 10,
-     *                       "money": "1.00"
-     *                   }
-     *               ],
-     *               "trends": [
-     *                   {
-     *                       "add_time": 1441876684,
-     *                       "status": 2,
-     *                       "remark": "未使用"
-     *                   }
-     *               ],
-     *               "vouchers": [],
-     *               "commission": null,
-     *               "recommend_code": null
-     *           }
-     *       }
-     *
-     *
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
@@ -392,6 +338,11 @@ class OrderRefundController extends Controller
      * @apiGroup refund
      *
      * @apiParam {Number} ids id(多个用','隔开).
+     * 
+     * @apiSuccess {String} alipay 支付宝
+     * @apiSuccess {String} wx 微信
+     * @apiSuccess {String} balance 余额
+     * @apiSuccess {String} yilian 易联
      *
      * @apiSuccessExample Success-Response:
      *     {
@@ -413,7 +364,15 @@ class OrderRefundController extends Controller
      *                    "sign_type": "MD5"
      *                }
      *            },
-     *
+     *            "wx":{
+     *              "info":"退款成功"
+     *            },
+     *            "balance":{
+     *              "info":"退款成功"
+     *            },
+     *            "yilian":{
+     *              "info":"退款失败<br> ordersn:xxxxx tn:xxxxx"
+     *            }
      *        }
      *    }
      *
