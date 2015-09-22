@@ -24,18 +24,230 @@
 				<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
 			</div>
 			<div class="control-group">
-				<legend>项目资料</legend>
+				<legend>新增方式</legend>
             </div>
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>商户名称</label>
+				<label class="control-label" for=""><span class="red">*</span>项目名称：</label>
 				<div class="control">
-					<input type="text" required name="name" maxlength="16">
+					<select>
+					    <option value="可选择已有项目新增闲时特价" selected="">可选择已有项目新增闲时特价</option>
+					    <option value="  洗剪吹">&nbsp; 洗剪吹</option>
+					    <option value="  洗吹">&nbsp; 洗吹</option>
+					    <option value="  烫发">&nbsp; 烫发</option>
+					    <option value="  染发">&nbsp; 染发</option>
+					    <option value="  护发">&nbsp; 护发</option>
+					    <option value="  套餐">&nbsp; 套餐</option>
+					    <option value="  男士快剪">&nbsp; 男士快剪</option>
+					    <option value="  其他">&nbsp; 其他</option>
+					    <option value="  养发">&nbsp; 养发</option>
+					    <option value="  兑换专用">&nbsp; 兑换专用</option>
+					</select>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>联系人</label>
+				<label class="control-label" for=""><span class="red">*</span>项目名称：</label>
 				<div class="control">
-					<input type="text" required name="contact" >
+					<select>
+					  <option value="总监洗剪吹">总监洗剪吹</option>
+					  <option value="普通洗剪吹">普通洗剪吹</option>
+					  <option value="店长洗剪吹">店长洗剪吹</option>
+					</select>
+				</div>
+			</div>
+			<hr />
+			<div class="control-group">
+				<legend>项目资料</legend>
+            </div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>项目名称：</label>
+				<div class="control">
+					<input type="text" required name="name" maxlength="15">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>项目分类：</label>
+				<div class="control">
+					<select>
+						<option value="洗剪吹" selected="">洗剪吹</option>
+						<option value="洗吹">洗吹</option>
+						<option value="烫发">烫发</option>
+						<option value="染发">染发</option>
+						<option value="护发">护发</option>
+						<option value="套餐">套餐</option>
+						<option value="男士快剪">男士快剪</option>
+						<option value="其他">其他</option>
+						<option value="养发">养发</option>
+						<option value="兑换专用">兑换专用</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>快剪等级：</label>
+				<div class="control">
+					<select>
+						<option value="1">普通快剪</option>
+						<option value="2">总监快剪</option>				
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>项目图片：</label>
+				<div class="control">
+					<div class="control-image">
+						<div class="control-single-image">
+							<img src="" alt="">
+							<div class="control-image-ud">
+								<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
+								<input type="hidden" name="img" class="original" data-helpid="image-help">
+							</div>
+						</div>
+					</div>
+					<div class="weak">请上传JPG或PNG格式的图标，此图标将显示在项目列表中</div>
+					<div class="control-help" style="display:none;" id="image-help"></div>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">增值服务：</label>
+				<div class="control">
+					<label><input type="checkbox" name="001" /><span>送手膜</span></label>
+					<label><input type="checkbox" name="001" /><span>送水果</span></label>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>服务详情：</label>
+				<div class="control">
+					<div class="keypress">
+						<textarea maxlength="500" data-helpid="textarea-help" required></textarea>
+					</div>
+					<div class="control-help" style="display:none;" id="textarea-help"></div>
+					<div><a class="link">洗剪吹模板</a><span class="space"></span><a class="link">洗吹模板</a></div>
+				</div>
+			</div>
+			<hr />
+			<legend>项目限制</legend>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>项目有效期：</label>
+				<div class="control">
+					<input type="date" required name="name"><label><input type="checkbox" /><span>无限制</span></label>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>定时上架：</label>
+				<div class="control">
+					<input type="date" required name="name" style="min-width:0;width:130px"><input type="time" required name="name" style="min-width:0;width:110px">
+					<label><input type="checkbox" /><span>无限制</span></label>
+					<span class="control-help" style="display:none;"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>定时下架：</label>
+				<div class="control">
+					<input type="date" required name="name" style="min-width:0;width:130px"><input type="time" required name="name" style="min-width:0;width:110px">
+					<label><input type="checkbox" /><span>无限制</span></label>
+					<span class="control-help" style="display:none;"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>限制购买：</label>
+				<div class="control">
+					<input type="text" required pattern="number" max="99999999"  name="name" placeholder="单人限制购买数">
+					<label><input type="checkbox" /><span>无限制</span></label>
+					<span class="control-help" style="display:none;"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>库存数量：</label>
+				<div class="control">
+					<input type="text" required pattern="number" max="99999999" min="1" name="name" placeholder="限制销售数量">
+					<label><input type="checkbox" /><span>无限制</span></label>
+					<span class="control-help" style="display:none;"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>限制资格：</label>
+				<div class="control">
+					<label><input type="checkbox" /><span>限推荐用户购买</span></label>
+					<label><input type="checkbox" /><span>限首次下单可购买</span></label>
+					<label><input type="checkbox" /><span>无限制</span></label>
+				</div>
+			</div>
+			<hr />
+			<legend>价格设置</legend>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>定价方式：</label>
+				<div class="control">
+					<label><input type="radio" name="radio" /><span>无规格，统一价</span></label>
+					<label><input type="radio" name="radio" /><span>有规格，区间价</span></label>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>原价：</label>
+				<div class="control">
+					<input type="text" required pattern="float" max="99999" min="1" name="name">
+					<input type="text" required pattern="float" name="name" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;"><span class="unit">%</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>臭美价：</label>
+				<div class="control">
+					<input type="text" required pattern="float" max="99999" min="1" name="name">
+					<input type="text" required pattern="float" name="name" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;"><span class="unit">%</span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">集团价：</label>
+				<div class="control">
+					<input type="text" required pattern="float" max="99999" min="1" name="name">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">规格选择：</label>
+				<div class="form-item">
+					<style type="text/css">
+						.form-vertical div.control-label{
+							width:100px;
+							text-align:left;
+						}
+						.form-item hr{
+							margin-top:10px;
+							margin-bottom:10px;
+							border-style:dotted;
+							border-color:#ddd;
+						}
+					</style>
+					<div class="control-label" >
+						<label><input type="checkbox" /><span>性别</span></label>
+					</div>
+					<div class="control">
+						<label><input type="checkbox" disabled /><span>男</span></label>
+						<label><input type="checkbox" disabled /><span>女</span></label>
+					</div>
+					<hr />
+					<div class="control-label" >
+						<label><input type="checkbox" /><span>造型师</span></label>
+					</div>
+					<div class="control">
+						<input type="text" />
+					</div>
+					<hr />
+					<div class="control-label" >
+						<label><input type="checkbox" /><span>发长</span></label>
+					</div>
+					<div class="control">
+						<label><input type="checkbox" disabled /><span>长发</span></label>
+						<label><input type="checkbox" disabled /><span>中发</span></label>
+						<label><input type="checkbox" disabled /><span>短发</span></label>
+						<label><input type="checkbox" disabled /><span>超长发</span></label>
+						<label><input type="checkbox" disabled /><span>超短发</span></label>
+					</div>
+					<hr />
+					<div class="control-label" >
+						<label><input type="checkbox" /><span>药水</span></label>
+					</div>
+					<div class="control">
+						<input type="text" />
+					</div>
+					<hr />
 				</div>
 			</div>
 			<div class="control-group">
@@ -47,20 +259,6 @@
 		</form>
 		</script>
 	</div>
-	<script type="text/javascript">
-		$('#form').on('keyup','.phone-first,.phone-last',function(){
-			$('input[name="phone"]').val($('.phone-first').val()+$('.phone-last').val());
-		}).on('keyup','.phone-first',function(){
-			if($(this).val().length==4){
-				$('.phone-last').focus();
-			}
-		});
-		$(document).on('click','.preview',function(){
-			var data=lib.tools.getFormData($(this).closest('form'));
-			data=$.extend(JSON.parse(localStorage.getItem("preview")),data);
-			localStorage.setItem('preview',JSON.stringify(data));
-			window.open("detail.html?preview=preview");
-		});
-	</script>
+	<script type="text/javascript"></script>
   </body>
 </html>

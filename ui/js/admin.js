@@ -496,6 +496,22 @@ $(function(){
 			}
 		});
 	}
+	/**文本域输入文字提示**/
+	$body.on('focus','.keypress textarea',function(){
+		var $this=$(this);
+		if($this.attr('maxlength')){
+			$this.parent().append('<span class="keypress-help">还可以输入<em>'+(parseInt($this.attr('maxlength'))-$.trim($this.val().length))+'</em>个字</span>');
+		}
+	});
+	$body.on('blur','.keypress textarea',function(){
+		$(this).siblings('.keypress-help').remove();
+	});
+	$body.on('keyup','.keypress textarea',function(){
+		var $this=$(this);
+		if($this.attr('maxlength')){
+			$this.siblings('.keypress-help').children('em').text(parseInt($this.attr('maxlength'))-$.trim($this.val()).length);
+		}
+	});
 }); 
 
 Date.prototype.format = function(format){

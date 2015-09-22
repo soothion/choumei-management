@@ -623,6 +623,25 @@ input:focus+.unit{
 	width:40px;
 	height:40px;
 }
+.keypress{
+	display:inline-block;
+	position:relative;
+	margin-bottom:5px;
+}
+.form-vertical .control .keypress textarea{
+	margin-right:0;
+	width:550px;
+	height:150px;
+}
+.keypress-help{
+	position:absolute;
+	right:16px;
+	bottom:1px;
+	color:#999;
+}
+.keypress-help em{
+	font-weight:bold;
+}
 /**表单 end**/
 
 /**列表 start**/
