@@ -29,7 +29,7 @@
 					<input class="input-search" type="text" placeholder="请输入店铺名" name="salonname">
 					<input class="input-search" type="text" placeholder="请输入商户名" name="name" style="display:none">
 					<input class="input-search" type="text" placeholder="请输入用户名" name="username" style="display:none">
-					<button type="submit" class="btn btn-search">
+					<button class="btn btn-search">
 						<i class="fa fa-search"></i>
 					</button>
 				</div>
@@ -69,7 +69,7 @@
 							<td><%=item.addTime%></td>
 							<td><%=status[item.status-1]%></td>
 							<td>
-								<form data-role="normal" action="salonAccount/resetPwd" data-confirm="确认重置密码？" onreset="parent.lib.popup.result({bool:true})" data-slug="salonAccount.resetPwd">
+								<form data-role="normal" action="salonAccount/resetPwd" data-confirm="确认重置密码？" onreset="parent.lib.popup.result()" data-slug="salonAccount.resetPwd">
 									<input type="hidden" value="<%=item.salonUserId%>" name="salonUserId" />
 									<button class="link">重置密码</button>
 								</form>

@@ -48,13 +48,21 @@
         </div>
     </div>
     <%}%>
-	<%if(options.type=='dialog'){%>
-    <div class="popup-dialog">
+	<%if(options.type=='box'){%>
+    <div class="popup-box">
         <%if(options.title){%>
-        <div class="popup-dialog-title"><%=options.title%></div>
+        <div class="popup-box-title">
+			<%=options.title%>
+			<a class="popup-box-close">X</a>
+		</div>
         <%}%>
-        <div class="popup-dialog-body">
-		<%=options.content%>
+        <div class="popup-box-body">
+			<%if(options.src){%>
+				<%options.src+=options.src.indexOf("#")>-1?"&":"#"+"popup=box"%>
+				<iframe src="<%=options.src%>" frameborder="0"></iframe>
+			<%}else{%>
+				<%=options.content%>
+			<%}%>
         </div>
     </div>
     <%}%>

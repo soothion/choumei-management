@@ -1,5 +1,7 @@
 ﻿(function(){
-	parent.lib.popup.close();//清除父弹出框
+	if(location.href.indexOf('popup=')==-1){
+		parent.lib.popup.close();//清除父弹出框
+	}
 	lib.ajatCount=0;//ajat计件数
 	lib.ajat=function (_protocol) {
 		lib.ajatCount++;//ajat添加计件数
@@ -98,15 +100,17 @@ $(function(){
 	});
 	
 	/**提交hash地址**/
-	window.filterHashData=function(data){
-		return data;
-	}
 	$body.on('submit','form[data-role="hash"]',function(e){//hash表单提交到hash地址查询
 		$(this).trigger('hash');
 		e.stopPropagation();
 		e.preventDefault();
 	}).on('hash','form[data-role="hash"]',function(e){//表单自定义hash提交
-		var data=lib.tools.getFormData($(this));
+		var data={};
+		if(this._getFormData){
+			data=this._getFormData();
+		}else{
+			data=lib.tools.getFormData($(this));
+		}
 		if(data.page===undefined){
 			data.page=1;
 			//清除排序条件
@@ -117,7 +121,6 @@ $(function(){
 				data.sort_type="";
 			}
 		}
-		data=window.filterHashData(data);
 		if(lib.tools.hashchange(data)){
 			$(window).trigger('hashchange');
 		}
@@ -138,51 +141,15 @@ $(function(){
 	});
 	
 	/**普通表单提交**/
-	$body.on('submit','form[data-role="remove"]',function(e,bool){//删除提交
+	$body.on('submit','form[data-role="normal"]',function(e){//一般的数据提交,提交成功后会触发表单reset事件
 		e.preventDefault();
 		var $this=$(this);
-		if(!bool){
-			parent.lib.popup.confirm({
-				text:($this.data('confirm')||"确认删除此数据吗?"),
-				define:function(){
-					$this.trigger('submit',true);
-				}
-			});
-			return;
-		}
-		var url=$this.attr('action');
-		if(document.activeElement&&document.activeElement.formaction){
-			url=$(document.activeElement).attr('formaction');
-		}
-		lib.ajax({
-			url:url,
-			data:lib.tools.getFormData($(this)),
-			type:'POST',
-			success:function(data){
-				parent.lib.popup.result({
-					bool:data.result==1,
-					text:(data.result==1?"删除成功":data.msg),
-					define:function(){
-						if(data.result==1){
-							if($this.closest('.table').length==1){
-								$this.closest('tr').remove();
-							}
-							$this.trigger('reset',data);
-							$this.trigger('remove');//触发remove事件
-						}
-					}
-				});
-			}
-		});
-	}).on('submit','form[data-role="normal"]',function(e,eventData){//一般的数据提交,提交成功后会触发表单reset事件
-		e.preventDefault();
-		var $this=$(this);
-		if($this.is(':disabled')) return;
+		if($this.attr('disabled')) return;
+		$this.attr('disabled',true);
 		var confirm=$this.data('confirm');
 		var url=$this.attr('action');
 		if(document.activeElement){
 			var $active=$(document.activeElement);
-			$active.attr('disabled',true);
 			if($active.attr('formaction')){
 				url=$active.attr('formaction');
 			}
@@ -190,37 +157,49 @@ $(function(){
 				confirm=$active.data('confirm');
 			}
 		}
-		if(!eventData&&confirm){
+		var request=function(){
+			lib.ajax({
+				url:url,
+				data:lib.tools.getFormData($this),
+				type:'POST',
+				success:function(data){
+					setTimeout(function(){
+						$this.attr('disabled',false);
+					},1100);
+					if(data.result==1){
+						if($this.attr('onreset')=="remove"){
+							parent.lib.popup.result({
+								text:"删除成功",
+								define:function(){
+									$this.closest('tr').remove();
+								}
+							});
+						}else{
+							$this.trigger('reset',data);//成功后会触发reset事件
+						}
+					}else{
+						$this.trigger('fail',data);	
+					}
+				},
+				error:function(){
+					$this.attr('disabled',false);
+				}
+			});
+		}
+		if(confirm){
 			parent.lib.popup.confirm({
 				text:confirm,
 				define:function(){
-					$this.trigger('submit',{url:url});
+					request();
+				},
+				cancel:function(){
+					$this.attr('disabled',false);
 				}
 			});
-			return;
+		}else{
+			request();
 		}
-		lib.ajax({
-			url:(eventData?eventData.url:url),
-			data:lib.tools.getFormData($(this)),
-			type:'POST',
-			success:function(data){
-				if(data.result==1){
-					if($this.attr('onreset')=="remove"){
-						parent.lib.popup.result({
-							bool:true,
-							text:"删除成功",
-							define:function(){
-								$this.closest('tr').remove();
-							}
-						});
-					}else{
-						$this.trigger('reset',data);//成功后会触发reset事件
-					}
-				}else{
-					$this.trigger('fail',data);	
-				}
-			}
-		});
+		
 	}).on('reset','form[data-role="normal"]',function(e){
 		e.preventDefault();
 	});
@@ -461,7 +440,6 @@ $(function(){
 			});
 		}
 	}
-	
 	/**缩略图预览**/
 	$body.on('click','.control-thumbnails-item img',function(e){
 		var item=$(this).closest('.control-thumbnails-item');
@@ -480,6 +458,44 @@ $(function(){
 			parent.lib.popup.swiper({list:[src],index:0});
 		}
 	});
+	/**实例化封装表单**/
+	$('form[data-role="form"]').each(function(){
+		if(!this.instance){
+			this.instance="instance";
+			new lib.Form(this);
+		}
+	});
+	$('form[data-role="hash"]').attr('novalidate','novalidate');
+	$body.on('_ready',function(e){
+		$(e.target).find('form[data-role="form"]').each(function(){
+			if(!this.instance){
+				this.instance="instance";
+				new lib.Form(this);
+			}
+		}).find('form[data-role="hash"]').attr('novalidate','novalidate');
+	});
+	/**btn-cancel操作处理**/
+	$body.on('click','.btn-cancel',function(){
+		if(window==parent){
+			window.close();
+		}else{
+			history.back();
+		}
+	});
+	$body.on('exception',function(e,data){
+		if(data&&data.errorLevel=='xhr'){
+			$(e.target).html('<div class="data-empty tc"><i class="fa fa-frown-o"></i>请求服务异常，<a class="link" onclick="location.reload()">重试</a></div>')
+		}
+	});
+	/**F5刷新**/
+	if(parent!=window){
+		$(window).on('keydown',function(e){
+			if(e.keyCode==116){
+				location.reload();
+				e.preventDefault();
+			}
+		});
+	}
 }); 
 
 Date.prototype.format = function(format){

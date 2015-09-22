@@ -20,7 +20,7 @@
 		 </div>		 
         </div>		
         <div class="wrapper">
-			<form data-role="hash">   
+			<form data-role="hash" id="hashform">   
                     <label>标题：</label> 
                     <input type="text" placeholder="请输入标题" name="title">
 					<span class="space"></span>
@@ -35,9 +35,9 @@
                     <label>上线时间：</label> 
                     <span class="date-group">
                         <input type="date" data-role="start" name="starttime" id="ontime1" disabled/>
-						到<input type="date" data-role="end" name="endtime"  id="ontime2" disabled/>
+						至<input type="date" data-role="end" name="endtime"  id="ontime2" disabled/>
                     </span>
-                    <button class="btn" type="submit">搜索</button>
+                    <button class="btn">搜索</button>
 			</form>
 		 <div class="table" ajat="<%if(query._){%>message/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
@@ -59,13 +59,13 @@
 					 <tr>
 							<td><%=i+1%></td>
 							<td><%=item.title%></td>
-							<td><%=item.onlinetime?lib.tools.getDate(item.onlinetime):""%></td>
+							<td><%=item.onlinetime?new Date(item.onlinetime*1000).format('yyyy-MM-dd hh:mm:ss'):""%></td>
 							<td><%=status[item.status]%></td>
 							<td>
 							<a class="link" target="_blank" href="<%if(item.content_id){%>preview.html?id=<%=item.id%><%}else{%>preview.html?url=<%=encodeURIComponent(item.url)%><%}%>">预览</a>	
 							<%if(item.status!=1){%>
-							<span class="space"></span>
-							<form data-slug="message.online" action="/message/online/?id=<%=item.id%>" data-role="normal" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){}});" data-confirm="确认上线" id="form-remove">
+							<form class="online" data-slug="message.online" action="/message/online/?id=<%=item.id%>" data-role="normal" data-confirm="确认上线" >
+								<span class="space"></span>
 								<button class="link"> 上线</button>			 
 							</form>
 							<%}%>
@@ -74,7 +74,7 @@
 							<a class="link" data-slug="message.update" href="edit.html?id=<%=item.id%>">修改</a>	
 							<%}%>
 							<span class="space"></span>
-							<form data-slug="message.destroy" action="/message/destroy/?id=<%=item.id%>" data-role="normal" data-confirm="确认删除？" onreset="parent.lib.popup.result({bool:true,text:'操作成功',time:2000,define:function(){}});" id="form-remove">
+							<form data-slug="message.destroy" action="/message/destroy/?id=<%=item.id%>" data-role="normal" data-confirm="确认删除？" onreset="remove">
 								<button class="link">删除</button>
 							</form>				   
 						   </td>
@@ -90,21 +90,21 @@
 	
 	  <script type="text/javascript">
 			document.onreadystatechange=function(){};
-			window.filterHashData=function(data){
-				if(data.status!=1){
-					data.starttime="";
-					data.endtime="";
+			$(function(){		
+				document.getElementById("hashform")._getFormData=function(){
+					var data=lib.tools.getFormData($(this));
+					if(data.status!=1){
+						data.starttime="";
+						data.endtime="";
+					}
+					return data;
 				}
-			}
-			$(function(){			 
 				if(!lib.query._){
 					$('#ontime2').val(lib.tools.getDate());
 					var time=(new Date().getTime()-7*86400000)/1000;
 					$('#ontime1').val(lib.tools.getDate(time));
 					$('form[data-role="hash"]').submit();
 				}
-			});
-			$(document).ready(function() {
 				$('#select').on('change',function(){
 					var val=$(this).val();
 					if(val!=1){
@@ -113,7 +113,12 @@
 						$(".date-group input").removeAttr("disabled");
 					}
 				})
-			}); 
+
+			});
+			$(document).on('reset','.online',function(){
+				$(window).trigger('hashchange');
+				parent.lib.popup.result({bool:true,text:'操作成功'});
+			})
 		</script>  
     </body>
 </html>

@@ -60,10 +60,6 @@ $('#page').on('_ready',function(){//#page _ready事件
 		$this.parent().siblings().removeClass('active').children('ul').slideUp(200);
 	});
 	
-	$('.refresh').on('click',function(){//刷新事件
-		iframe[0].contentWindow.location.reload();
-	});
-	
 	$('#logout').on('click',function(){//退出事件
 		lib.popup.result({
 			bool: true,
@@ -73,6 +69,13 @@ $('#page').on('_ready',function(){//#page _ready事件
 				location.href='/module/system/user/login.html';
 			}
 		});
+	});
+	//F5刷新事件
+	$(window).on('keydown',function(e){
+		if(e.keyCode==116){
+			iframe[0].contentWindow.location.reload();
+			e.preventDefault();
+		}
 	});
 	//ie9修正
 	if(window.ie9){
@@ -96,5 +99,7 @@ $('#page').on('_ready',function(){//#page _ready事件
 		$this.addClass('active').siblings().removeClass('active');
 		swiper.slideTo($this.index()+1);
 	}).first().addClass('active');
+	
+	
 });
 	

@@ -16,11 +16,11 @@
 		</div>			
      <div class="wrapper" ajat="<%if(query.id){%>pay_manage/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		  <form novalidate method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>pay_manage/update/<%=query.id%><%}else{%>pay_manage/create<%}%>">
+		  <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>pay_manage/update/<%=query.id%><%}else{%>pay_manage/create<%}%>">
 				<div class="detail-operation">
-					<button class="btn" onclick="history.back()" type="button" >取消</button>
+					<button class="btn btn-cancel" type="button" >取消</button>
 					<span class="space"></span>
-					<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
+					<button class="btn-primary" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>			
 				</div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款类型：</label>
@@ -97,7 +97,7 @@
 				<div class="control">
 					<button class="btn preview" type="button">预览</button>
 					<%localStorage.setItem("preview",JSON.stringify(data))%>
-					<button class="btn-primary" type="submit" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
+					<button class="btn-primary" data-slug="<%if(query.id){%>shop_count.update<%}else{%>shop_count.create<%}%>">提交</button>				 
 				</div>
 			</div>			 
           </form>

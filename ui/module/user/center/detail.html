@@ -34,19 +34,21 @@
 					<tbody>
 						<tr>
 							<td>
-								<form action="user/update/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({bool:true,text:'操作成功'})">
+								<!--
+								<form action="user/update/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result()">
 									<button class="btn">解绑当前手机</button>
 									<input type="hidden" name="mobilephone" value="" />
 								</form>
+								-->
 								<span class="space"></span>
-								<form action="user/destroy/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result({bool:true,text:'操作成功',define:function(){history.back();}})">
+								<form data-slug="user.destory" data-slug="user.destory" action="user/destroy/<%=query.id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){window.close();}})">
 									<button class="btn">删除账号</button>
 								</form>
 								<span class="space"></span>
-								<button class="btn btn-edit">
+								<button class="btn btn-edit" data-slug="user.update">
 									编辑
 								</button>
-								<button class="btn btn-edit-cancel" style="display:none">
+								<button class="btn btn-cancel" style="display:none">
 									取消
 								</button>
 							</td>
@@ -54,11 +56,11 @@
 					</tbody>
 				</table>
 			</div>
-			<form action="user/update/<%=query.id%>" data-role="normal" id="companyCode">
+			<form action="user/update/<%=query.id%>" data-role="normal" id="companyCode" onreset="parent.lib.popup.result()">
 				<input type="hidden" name="companyCode" value="" />
 			</form>
 			<br />
-			<form action="user/update/<%=query.id%>" data-role="form" novalidate>
+			<form action="user/update/<%=query.id%>" data-role="form">
 			<div class="detail">
 				<div class="table-detail">
 					<table>
@@ -81,8 +83,20 @@
 								<td>性别： <%=data.sex%></td>
 							</tr>
 							<tr>
-								<td>发长：  无</td>
-								<td>常住地区： <%=data.area%></td>
+								<td>发长：  <%if(data.hair_type==1){%>
+										长发
+									<%}else if(data.hair_type==2){%>
+										中发
+									<%}else if(data.hair_type==3){%>
+										短发
+									<%}%>
+									</td>
+								<td>
+									常住地区： 
+									<%if(data.area){%>
+										<%=data.area.split(",").join("")%>
+									<%}%>
+								</td>
 							</tr>
 							<tr>
 								<td colspan="2">生日：<%=data.birthday%></td>
@@ -118,7 +132,7 @@
 								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
 							</tr>
 							<tr>
-								<td>加入集团：<%=data.companyName%> <%if(data.companyName){%><span class="space"></span><button form="companyCode" class="btn">解绑集团码</button><%}%></td>
+								<td>加入集团：<%=data.companyName%> <%if(data.recommendCode){%><span class="space"></span><button data-slug="user.update" form="companyCode" class="btn off-code">解绑集团码</button><%}%></td>
 								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
 							</tr>
 							<tr>
@@ -147,13 +161,14 @@
 										<div class="control-image-ud">
 											<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 										</div>
+										<input type="hidden" name="img" value="<%=data.img%>" required requiredmsg="请上传图片" data-helpid="image-help"  />
 									</div>
 									<span class="space"></span>
 									<span class="weak">
 										请上传JPG或PNG格式的图标，尺寸为512×512px，容量小于800KB
 									</span>
-									<input type="hidden" name="img" value="<%=data.img%>" required requiredmsg="请上传图片" />
-									<div class="control-help" style="display:none;margin-left:38px"></div>
+
+									<div class="control-help" id="image-help" style="display:none;margin-left:38px"></div>
 								</td>
 							</tr>
 							<tr>
@@ -161,23 +176,27 @@
 								<td>性别： <%=data.sex%></td>
 							</tr>
 							<tr>
-								<td>发长：  
-									<select required>
-									  <option value="长发">长发</option>
-									  <option value="中发">中发</option>
-									  <option value="短发">短发</option>
+								<td>发长：
+									<select name="hair_type">
+									  <option value="1" <%data.hair_type==1?"selected":""%>>长发</option>
+									  <option value="2" <%data.hair_type==2?"selected":""%>>中发</option>
+									  <option value="3" <%data.hair_type==3?"selected":""%>>短发</option>
 									</select>
 								</td>
 								<td>
 									常住地区：
-									<select id="province" required style="width:100px" 
-									ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t">
-									</select>
-									<select id="city" required style="width:100px" ajat="#domid=city&tempid=city_t"
-									ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t">
-									</select>
-									<select id="area" required  style="width:100px" ajat="#domid=area&tempid=area_t"></select>
-									<input type="hidden" name="area" id="hidden" required/>
+									<span>
+										<select id="province" required style="width:100px" requiredmsg="请选择省份"
+										ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&sid=<%=data.area.split(",")[0]%>" 
+										ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&sid=<%=data.area.split(",")[1]%>">
+										</select>
+										<select id="city" required style="width:100px" requiredmsg="请选择城市"
+										ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&sid=<%=data.area.split(",")[2]%>">
+										</select>
+										<select id="area" required  style="width:100px" requiredmsg="请选择城区"></select>
+										<span class="control-help" style="display: none;"></span>
+									</span>
+									<input type="hidden" name="area" id="hidden"/>
 								</td>
 							</tr>
 							<tr>
@@ -214,7 +233,7 @@
 								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
 							</tr>
 							<tr>
-								<td>加入集团：<%=data.companyName%> <%if(data.companyName){%><span class="space"></span><button class="btn" form="companyName">解绑集团码</button><%}%></td>
+								<td>加入集团：<%=data.companyName%> <%if(data.recommendCode){%><span class="space"></span><button  data-slug="user.update" class="btn off-code"  form="companyName">解绑集团码</button><%}%></td>
 								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
 							</tr>
 							<tr>
@@ -225,7 +244,7 @@
 				</div>
 				<br />
 				<div class="tc">
-					<button class="btn-primary">提交</button>
+					<button class="btn-primary" data-slug="user.update">提交</button>
 				</div>
 			</div>
 			</form>
@@ -234,36 +253,32 @@
 		<script type="text/template" id="province_t">
 		<option value="">省份</option>
 		<%data.forEach&&data.forEach(function(item){%>
-			<option <%=item.pid==protocol.custom.provinceId?"selected":""%> value="<%=item.pid%>"><%=item.pname%></option>
+			<option <%=item.pname==protocol.custom.sid?"selected":""%> value="<%=item.pid%>"><%=item.pname%></option>
 		<%})%>
 		</script>
 
 		<script type="text/template" id="city_t">
 			<option value="">城市</option>
 			<%data.forEach&&data.forEach(function(item){%>
-				<option <%=item.iid==protocol.custom.citiesId?"selected":""%> value="<%=item.iid%>"><%=item.iname%></option>
+				<option <%=item.iname==protocol.custom.sid?"selected":""%> value="<%=item.iid%>"><%=item.iname%></option>
 			<%})%>
 		</script>
 
 		<script type="text/template" id="area_t">
 			<option value="">地区</option>
 			<%data.forEach&&data.forEach(function(item){%>
-				<option <%=item.tid==protocol.custom.district?"selected":""%> value="<%=item.tid%>"><%=item.tname%></option>
+				<option <%=item.tname==protocol.custom.sid?"selected":""%> value="<%=item.tid%>"><%=item.tname%></option>
 			<%})%>
 		</script>
 		<script type="text/javascript">
 			$(document).on('click','.btn-edit',function(){
 				$('.detail').hide().siblings().show();
 				$(this).hide();
-				$('.btn-edit-cancel').show();
-			}).on('click','.btn-edit-cancel',function(){
-				$('.update').hide().siblings().show();
-				$(this).hide();
-				$('.btn-edit').show();
+				$('.btn-cancel').show();
 			});
 			$('#detail').one('_ready',function(){
 				$('#province,#city,#area').on('change',function(){
-					$('#hidden').val($('#province').val()+','+$('#city').val()+','+$('#area').val());
+					$('#hidden').val($('#province option:selected').text()+','+$('#city option:selected').text()+','+$('#area option:selected').text());
 				});
 				lib.puploader.image({
 					browse_button: 'imageUpload',
@@ -273,7 +288,8 @@
 							{ title : "Image files", extensions : "jpg,png,jpeg" },
 						]
 					},
-					max_file_size:'800kb'
+					max_file_size:'800kb',
+					imageLimitSize:"512*512"
 				},function(uploader){
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
@@ -285,6 +301,10 @@
 						}
 					});
 				});
+			}).on('_ready','#province,#city,#area',function(){
+				$(this).trigger('change');
+			}).on('reset','#companyCode',function(){
+				$('.off-code').hide();
 			});
 		</script>
   </body>

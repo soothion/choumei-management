@@ -18,6 +18,7 @@
 			<form data-role="hash">
 				反馈日期
 				<input type="date"  placeholder="YYYY-MM-DD" name="add_time"/>
+				<span class="space"></span>
 				反馈内容
 				<input type="text" name="keyword" />
 				<button class="btn">搜索</button>
@@ -56,10 +57,12 @@
 				<%})%>
               </tbody>
             </table>
-			<form action="feed/destroy" id="destroy" data-role="normal" onreset="parent.lib.popup.result({text:'操作成功',define:function(){location.reload()}})"></form>
+			
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<button class="btn" form="destroy" disabled>批量删除</button>
+				<form data-slug="feed.destory" action="feed/destroy" id="destroy" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+					<button class="btn" disabled>批量删除</button>
+				</form>
 			</div>
 			<div class="pager">
 			</div>
@@ -67,8 +70,8 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		$('#table').on('change','input',function(){
-			if($('tbody input:checked').length>0){
+		$('#table').on('click','input',function(){
+			if($('tbody label input:checked').length>0){
 				$('.table-bottom button').attr('disabled',false);
 			}else{
 				$('.table-bottom button').attr('disabled',true);

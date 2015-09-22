@@ -33,7 +33,7 @@
 					  <input type="date" data-role="start"  name="pay_time_min" placeholder="YYYY-MM-DD"/>到<input type="date" data-role="end"  name="pay_time_max" placeholder="YYYY-MM-DD"/>
 					</span>
 				 
-					<button class="btn" type="submit">搜索</button>
+					<button class="btn">搜索</button>
 					<button class="btn" form="export" data-slug="shop_count.export"><i class="fa fa-file-excel-o" ></i> 导出</button>			
 			</form>
 			  <form action="shop_count/export" data-role="export" id="export" ></form>   
@@ -76,10 +76,10 @@
 				  <td><%=item.pay_money%></td>
 				  <td><%=item.day%></td>
 				  <td><%=item.pay_day%></td>
-				  <td class="format"><%=item.created_at%></td>
+				  <td><%=item.created_at?new Date(item.created_at).format("yyyy-MM-dd"):""%></td>
 				  <td><%=item.user?item.user.name:""%></td>				 
 				  <td><%=state[item.state]%></td>
-                   <td><a class="link" href="detail.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a>				   
+                   <td><a class="link" target="_blank" href="detail.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a>				   
 				   </td>
                   </tr>
 				  <%})%>

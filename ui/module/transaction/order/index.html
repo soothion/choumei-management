@@ -31,14 +31,14 @@
                     <span style="padding:0 5px 0 15px">支付方式</span>
                     <select name="pay_type" >
                         <option value="0">全部</option>
-                        <option value="1">微信</option>
+                        <option value="3">微信</option>
                         <option value="2">支付宝</option>
-                        <option value="3">易联</option>
-                        <option value="4">现金券</option>
-                        <option value="5">余额</option>
-                        <option value="6">现金券+支付宝</option>
-                        <option value="7">现金券+微信</option>
-                        <option value="8">现金券+易联</option>
+                        <option value="10">易联</option>
+                        <option value="4">余额</option>
+                        <option value="9">现金券</option>
+                        <option value="9,2">现金券+支付宝</option>
+                        <option value="9,3">现金券+微信</option>
+                        <option value="9,10">现金券+易联</option>
                     </select>
                 </span>
 
@@ -57,7 +57,7 @@
                     <span style="padding:0 10px">到</span>
                     <input type="date" name="pay_time_max" data-role="end" placeholder="YYYY-MM-DD"/>
                 </span>
-                <button class="btn" type="submit">搜索</button>
+                <button class="btn"  type="submit">搜索</button>
             </form>
 
             <form action="order/export" data-role="export" data-slug="role.export">
@@ -86,13 +86,13 @@
               </thead>
               <tbody>             
                 <%
-                var status = ["","未付款","已付款"];
-                var type   = ["","微信","支付宝","易联","现金券","余额"];
+                var status = {"1":"未付款","2":"已付款"};
+                var type   = {"2":"支付宝","3":"微信","4":"余额","9":"现金券","10":"易联"};
                 %>
                 <%data.data && data.data.forEach(function(item,i){%>
                 <%
                 var arr = [];
-                item.fundflow && item.fundflow.forEach(function(item,i){
+                item.fundflow && item.fundflow.forEach(function(item,i){                  
                   arr.push(type[item.pay_type]);
                 })
                 %>  
@@ -101,15 +101,17 @@
                   <td><%=item.ordersn%></td>
                   <td><%=arr.join("+")%></td>
                   <td><%=item.priceall%></td>
-                  <td class="format"><%=item.add_time%></td>
-                  <td class="format"><%=item.pay_time%></td>
+                  <td class="formatHms"><%=item.add_time%></td>
+                  <td class="formatHms"><%=item.pay_time%></td>
                   <td><%=item.user && item.user.username%></td>
                   <td><%=item.user && item.user.mobilephone%></td>
                   <td><%=item.salon && item.salon.salonname%></td>
                   <td><%=status[item.ispay]%></td>
                   <td>
-                     <a class="link" data-slug="role.show,role.update"
+                  <%if(item.ispay=="2"){%>
+                     <a class="link" data-slug="role.show,role.update" target="_blank"
                      href="detail.html?method=order/show/&id=<%=item.orderid%>">查看&gt</a>
+                  <%}%>
                   </td>
                 </tr>
                 <%})%>

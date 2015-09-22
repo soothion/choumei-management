@@ -29,7 +29,7 @@
 					webkit:/webkit/i.test(ua)
 				}
 			},
-			getFormData:function($form,xss){
+			getFormData:function($form){
 				var data={};
 				var fields=$form.serializeArray();
 				$.each(fields,function(i,field){
@@ -192,11 +192,15 @@
                 });
             },
 			result:function(options){
+				options=options||{};
+				if(options.bool===undefined){
+					options.bool=true;
+				}
 				if(!options.text){
 					options.text=(options.bool?"操作成功":"操作失败");
 				}
 				if(options.time===undefined){
-					options.time=2000;
+					options.time=1000;
 				}
 				options.text='<i class="fa fa-'+(options.bool?"check":"times")+'-circle"></i>'+options.text;
 				this.tips(options)
@@ -204,6 +208,11 @@
 			loading:function(options){
 				options.text='<img src="/images/oval.svg" class="loader"/>'+options.text;
 				parent.lib.popup.tips(options);
+			},
+			box:function(options){
+				 seajs.use(this.path,function(a){
+                    a.box(options);
+                });
 			}
         },
 		getFormData:function($form){
@@ -243,6 +252,7 @@
 			},
 			getToken:function(cb){
 				var self=this;
+				var _arguments=arguments;
 				var query={
 					'bundle':"FQA5WK2BN43YRM8Z",
 					'version':"5.3",
@@ -263,6 +273,7 @@
 					dataType:'json',
 					success:function(data){
 						if(data.code==0&&data.response&&data.response.data&&data.response.data[0]){
+							Qiniu.temp=data.response.data[0];
 							cb &&cb(data.response.data[0]);
 						}else{
 							parent.lib.popup.result({
@@ -270,6 +281,10 @@
 								bool:false
 							});
 						}
+						clearTimeout(self.timer);
+						self.timer=setTimeout(function(){
+							lib.puploader.getToken.apply(lib.puploader,_arguments);
+						},1000*60);
 					}
 				});
 			},
@@ -283,17 +298,67 @@
 				}
 				return pwd.join("");
 			},
-			create:function(options){
+			create:function(options,cb){
 				var _default={
 					runtimes:'html5,flash,html4',
 					flash_swf_url:'/qiniu/demo/js/plupload/Moxie.swf',
+					silverlight_xap_url:'/qiniu/demo/js/plupload/Moxie.xap',
 					domain:cfg.url.upload,
 					dragdrop:true,
-					chunk_size:'4mb'
+					multi_selection:false,
+					init:{
+						Key:function(up, file) {
+							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
+						   // 该配置必须要在 unique_names: false , save_key: false 时才生效,key即为上传文件名
+						   return Qiniu._fileName;
+						}
+					}
 				};
-				options=$.extend(_default,options)
-				var uploader = Qiniu.uploader(options);
-				return uploader;
+				options=$.extend(_default,options);
+				if(options.domain.indexOf('qiniu')==-1){
+					seajs.use(['/qiniu/demo/js/plupload/plupload.full.min.js'],function(){
+						seajs.use(['/qiniu/demo/js/plupload/i18n/zh_CN.js']);
+						options.url=options.domain;
+						delete options.runtimes;
+						delete options.dragdrop;
+						var uploader=new plupload.Uploader(options);
+						uploader.init();
+						if(options.auto_start){
+							uploader.bind('FilesAdded',function(up,files){
+								up.start();
+							});
+						}
+						uploader.bind('UploadFile',function(){
+							var $dom=$('<div class="popup-overlay" style="background:rgba(255,255,255,0.4)"></div>');
+							$(document.body).append($dom);
+						});
+						uploader.bind('UploadProgress',function(){
+							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
+						});
+						uploader.bind('UploadComplete',function(up,file){
+							$('.popup-overlay').remove();
+						});
+						uploader.bind('Error',function(up, err, errTip){
+							parent.lib.popup.result({bool:false,text:err.message});
+						});
+						uploader.bind('FileUploaded',function(up,file,res){
+							if(res&&res.response&&typeof res.response=='string'){
+								var data=JSON.parse(res.response);
+								if(data.result==1){
+									parent.lib.popup.result({text:options.successText||'文件上传成功'});
+								}else{
+									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
+								}
+								if(data.token){
+									localStorage.setItem('token',data.token);
+								}
+							}
+						});
+						cb && cb(uploader)
+					});
+				}else{
+					return Qiniu.uploader(options);
+				}
 			},
 			createImage:function(){
 				var imagePreview=$('<div style="position:absolute;left:0;top:0;z-index:-1;width:100%;height:100%;overflow:hidden;visibility:hidden;"><img/></div>')
@@ -302,36 +367,38 @@
 			},
 			file:function(options,cb){
 				var self=this;
-				options.multipart=false;
 				this.use(function(){
 					self.getToken(function(data){
-						options.init=options.init||{};
 						options.uptoken=data.uptoken;
 						Qiniu._fileName=data.fileName;
 						if(!options.max_file_size){
 							options.max_file_size=data.maxFileSize+'mb';
 						}
-						options.init.Key= function(up, file) {
-							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
-						   // 该配置必须要在 unique_names: false , save_key: false 时才生效,key即为上传文件名
-						   return Qiniu._fileName;
-						}
 						var uploader=self.create(options);
+						uploader.bind('UploadFile',function(){
+							var $dom=$('<div class="popup-overlay" style="background:rgba(255,255,255,0.4)"></div>');
+							$(document.body).append($dom);
+						});
 						uploader.bind('UploadProgress',function(){
 							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
 						});
 						uploader.bind('UploadComplete',function(up,file){
 							//console.log(arguments);
+							$('.popup-overlay').remove();
 						});
 						uploader.bind('FileUploaded',function(up,file,res){
-							parent.lib.popup.result({bool:true,text:options.successText||'文件上传成功'});
 							if(res&&res.response&&typeof res.response=='string'){
 								var data=JSON.parse(res.response);
-								console.log(up.getOption().fileName);
+								clearTimeout(self.timer);
 								self.getToken(function(data){
 									Qiniu.token=data.uptoken;
 									Qiniu._fileName=data.fileName;
 								});
+								if(data.code==0){
+									parent.lib.popup.result({text:options.successText||'文件上传成功'});
+								}else{
+									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
+								}
 							}
 						});
 						uploader.bind('Error',function(up, err, errTip){
@@ -341,19 +408,35 @@
 					});
 				});
 			},
-			getObjectURL:function(file) {
-				var url = null ; 
-				if (window.createObjectURL!=undefined) { // basic
-					url = window.createObjectURL(file) ;
-				} else if (window.URL!=undefined) { // mozilla(firefox)
-					url = window.URL.createObjectURL(file) ;
-				} else if (window.webkitURL!=undefined) { // webkit or chrome
-					url = window.webkitURL.createObjectURL(file) ;
+			getSource:function(file,cb){//file为plupload事件监听函数参数中的file对象,callback为预览图片准备完成的回调函数 
+				if (!file || !/image\//.test(file.type)) return; //确保文件是图片
+				if (file.type == 'image/gif') {//gif使用FileReader进行预览,因为mOxie.Image只支持jpg和png
+					var fr = new mOxie.FileReader();
+					fr.onload = function () {
+						cb(fr.result);
+						fr.destroy();
+						fr = null;
+					}
+					fr.readAsDataURL(file.getSource());
+				} else {
+					var preloader = new mOxie.Image();
+					preloader.onload = function () {
+						//preloader.downsize(300, 300);//先压缩一下要预览的图片,宽300，高300
+						var imgsrc = preloader.type == 'image/jpeg' ? preloader.getAsDataURL('image/jpeg', 80) : preloader.getAsDataURL(); //得到图片src,实质为一个base64编码的数据
+						cb && cb(imgsrc); //callback传入的参数为预览图片的url
+						preloader.destroy();
+						preloader = null;
+					};
+					preloader.load(file.getSource());
 				}
-				return url ;
 			},
 			image:function(options,cb){
-				options=$.extend({successText:'图片上传成功',loaderText:'图片上传中..'},options);
+				options=$.extend({
+					successText:'图片上传成功',
+					failText:'图片上传失败',
+					loaderText:'图片上传中..',
+					sizeErrorText:'图片的尺寸大小不正确'
+				},options);
 				if(options.imageLimitSize){
 					if(options.auto_start===true){
 						options._auto_start=true;
@@ -366,7 +449,6 @@
 							var data=JSON.parse(res.response);
 							var options=up.getOption();
 							if(data.code==0){
-								parent.lib.popup.result({bool:true,text:options.successText||'图片上传成功'});
 								uploader.createThumbnails && uploader.createThumbnails(data.response);
 								uploader.preview&&uploader.preview(data.response)
 							}
@@ -374,16 +456,12 @@
 					});
 					if(options.browse_button){
 						var $target=$('#'+options.browse_button).parent();
-						uploader.thumbnails=$target.siblings('.control-thumbnails');
+						uploader.thumbnails=$target.closest('.control-thumbnails');
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
 							uploader.createThumbnails=function(data){
-								var arr=[data];
-								if(this.getOption()&&this.getOption().postName){
-									arr.postName=this.getOption().postName;
-								}
-								uploader.thumbnails.append(lib.ejs.render({url:'/module/public/template/thumbnails'},{data:arr}))
-								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children().length){
-									uploader.thumbnails.siblings('.control-image-upload').hide();
+								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render({url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},{data:[data]}));
+								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children('.control-thumbnails-item').length){
+									uploader.thumbnails.children('.control-image-upload').hide();
 								}
 							}
 							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
@@ -392,30 +470,58 @@
 									uploader.removeFile(item.attr('id'));
 								}
 								item.remove();
-								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children().length){
-									uploader.thumbnails.siblings('.control-image-upload').show();
+								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children('.control-thumbnails-item').length){
+									uploader.thumbnails.children('.control-image-upload').show();
 								}
 							});
+							if(options.imageArray){
+								uploader.thumbnails.prepend(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:options.imageArray}));
+								if(uploader.thumbnails.children('.control-thumbnails-item').length>=uploader.thumbnails.data('max')){
+									uploader.thumbnails.children('.control-image-upload').hide();
+								}
+							}
 						}else if($target.closest('.control-single-image').length==1){
 							uploader.area=$target.closest('.control-single-image');
 							uploader.preview=function(data){
-								this.area.find('img').attr('src',data.img);
-								$('input[name="'+this.getOption().postName+'"]').val(data.img);
+								this.area.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
+								this.area.find('input.original').val(data.img).blur();
+								this.area.find('input.thumb').val(data.thumbimg).blur();
 							}
 						}
 					}
-					//console.log(uploader);
 					if(options.imageLimitSize){
-						/*
-						uploader.area.find('input[type="file"]').on('change',function(){
-							console.log(lib.puploader.getObjectURL(this.files[0]));
-						});
-						*/
 						uploader.bind('FilesAdded',function(up, files){
 							plupload.each(files, function(file) {
-								var input=up.area.find('input[type="file"]')[0];
-								//console.log(file);
-								console.log(lib.puploader.getObjectURL(file));
+								var image=lib.puploader.createImage();
+								lib.puploader.getSource(file,function(src){
+									image=image.find('img').attr('src',src);
+									var options=up.getOption();
+									var imageLimitSize=options.imageLimitSize;
+									if(typeof imageLimitSize=="string"){
+										var width=imageLimitSize.split('*')[0];
+										var height=imageLimitSize.split('*')[1];
+										if(image.width()!=width||image.height()!=height){
+											parent.lib.popup.result({bool:false,text:options.sizeErrorText});
+											up.removeFile(file);
+										}else{
+											if(options._auto_start){
+												up.start();
+											}
+										}
+										image.parent().remove();
+									}
+									if(typeof imageLimitSize=="function"){
+										if(!imageLimitSize(image.width(),image.height())){
+											parent.lib.popup.result({bool:false,text:options.sizeErrorText});
+											up.removeFile(file);
+										}else{
+											if(options._auto_start){
+												up.start();
+											}
+										}
+										image.parent().remove();
+									}
+								});
 							});
 						});
 					}
@@ -500,7 +606,6 @@
 											if(self.options._auto){
 												self.upload();
 											}
-											console.log(self.options.thumb)
 											if(self.options.thumb&&self.createThumbnails){
 												var data=$.extend({},file,{src:src});
 												self.createThumbnails(data);
@@ -513,7 +618,6 @@
 											if(self.options._auto){
 												self.upload();
 											}
-											console.log(self.options.thumb)
 											if(self.options.thumb&&self.createThumbnails){
 												var data=$.extend({},file,{src:src});
 												self.createThumbnails(data);
@@ -560,7 +664,7 @@
 						parent.lib.popup.loading({text:options.loaderText||"文件准备上传中"});
 					});
 					uploader.on('uploadSuccess',function(file){
-						parent.lib.popup.result({bool:true,text:options.successText||"文件上传完成"});
+						parent.lib.popup.result({text:options.successText||"文件上传完成"});
 					});
 					uploader.on('uploadError',function(file){
 						parent.lib.popup.result({bool:false,text:options.errorText||"文件上传失败"});
@@ -701,23 +805,23 @@
         },
         format : function(){
             $("td.format").each(function(index,item){
-                var val = $(this).text();
+                var val = $(this).text();  
                 if(val){
                 	if(isNaN(val)){
                 		$(this).text(new Date(val).format("yyyy-MM-dd"));
                 	}else{
-						$(this).text(new Date(val*1).format("yyyy-MM-dd"));
+                		$(this).text(new Date(val*1).format("yyyy-MM-dd"));
                 	}
                 }
             });
 
             $("td.formatHms").each(function(index,item){
-                var val = $(this).text();
+                var val = $(this).text();  
                 if(val){
                 	if(isNaN(val)){
                 		$(this).text(new Date(val).format("yyyy-MM-dd hh:mm:ss"));
                 	}else{
-						$(this).text(new Date(val*1).format("yyyy-MM-dd hh:mm:ss"));
+                		$(this).text(new Date(val*1).format("yyyy-MM-dd hh:mm:ss"));
                 	}
                 }
             });
@@ -888,6 +992,20 @@
 			this.cfg.requiredmsg=this.el.requiredmsg||"未填写";
 			this.cfg.patternmsg=this.el.patternmsg||"不正确";
 			this.bindEvent();
+			if(!this.el.goback){
+				this.el.goback=function(){
+					if(parent!=window){
+						history.back();
+					}else{
+						window.close();
+					}
+				}
+			}
+			if(!this.el._getFormData){
+				this.el._getFormData=function(){
+					return lib.tools.getFormData($(this))
+				}
+			}
 		},
 		validateFields:function(e,eventData){
 			var $target=$(e.target);
@@ -937,12 +1055,12 @@
 						if(pattern=="number"||pattern=="float"){
 							var min=$target.attr('min')
 							if(min&&parseFloat(val)<parseFloat(min)){
-								$target.trigger('error',{type:'error',errormsg:'输入不能小于'+min});
+								$target.trigger('error',{type:'pattern'});
 								return;
 							}
 							var max=$target.attr('max')
 							if(max&&parseFloat(val)>parseFloat(max)){
-								$target.trigger('error',{type:'error',errormsg:'输入不能大于'+max});
+								$target.trigger('error',{type:'pattern'});
 								return;
 							}
 						}
@@ -967,15 +1085,13 @@
 				lib.ajax({
 					url:unique,
 					type:'post',
+					async:false,
 					success:function(data){
 						if(data.result!=1){
 							$target.trigger('error',{type:'unique'});
 						}else{
 							var error=self.getErrorDom($target);
 							error.remove();
-							if(eventData&&eventData.type=='validate'){
-								self.validate(true);
-							}
 						}
 					},
 					done:function(){}
@@ -1056,7 +1172,10 @@
 		},
 		getErrorDom:function($target){
 			var error=$target.siblings('.control-help');
-			if($target.parent('label').length==1){
+			if($target.data('helpid')){
+				error=$('#'+$target.data('helpid'));
+			}else if($target.parent('label').length==1){
+
 				error=$target.parent().siblings('.control-help');
 			}
 			if(error.length==0){
@@ -1073,11 +1192,11 @@
 			}
 		},
 		success:function(data){
+			var self=this;
 			parent.lib.popup.result({
-				bool:true,
 				text:(data.msg||"数据更新成功"),
 				define:function(){
-					history.back();
+					self.el.goback();
 				}
 			});
 		},
@@ -1089,7 +1208,7 @@
 		},
 		bindEvent:function(){
 			var self=this;
-			$(this.el).on('blur',this.selector,function(e,data){
+			$(this.el).attr('novalidate','novalidate').on('blur',this.selector,function(e,data){
 				self.validateFields(e,data);
 			}).on('error',this.selector,function(e,data){
 				self[data.type]&&self[data.type](e,data);
@@ -1117,14 +1236,12 @@
 			});
 		},
 		validate:function(untrigger){
-			if(!untrigger){
-				$(this.el).find(this.selector).trigger('blur',{type:'validate'});
-			}
 			var $form=$(this.el);
+			$form.find(this.selector).trigger('blur');
 			if($form.attr('disabled'))return;
 			var help=$form.find('.control-help:visible');
 			if(help.length==0){
-				var data=lib.tools.getFormData($form);
+				var data=this.el._getFormData();
 				$form.trigger('save',data);
 			}else{
 				$('html,body').animate({scrollTop:help.eq(0).offset().top-50},200);
@@ -1133,9 +1250,8 @@
 		},
 		save:function(data){
 			var $el=$(this.el);
-			var btn=$el.find('button[type=submit]');
-			if(btn.is(':disabled')) return;
-			btn.attr('disabled',true);
+			if($el.attr('disabled')) return;
+			$el.attr('disabled',true);
 			parent.lib.popup.loading({text:'数据正在提交...'});
 			var self=this;
 			lib.ajax({
@@ -1143,21 +1259,16 @@
 				data:data,
 				type:this.el.method,
 				success:function(data){
-					$(self.el).trigger('response',data).find('button[type=submit]').attr('disabled',false);
+					$(self.el).trigger('response',data);
 				},
 				error:function(xhr,code){
-					$(self.el).find('button[type=submit]').attr('disabled',false);
+					$(self.el).attr('disabled',false);
 					self.fail(null,{})
 				}
 			});
 		}
 	}
 	lib.Form=Form;
-	$(document).one('mouseenter','form[data-role="form"]',function(){
-		new lib.Form(this);
-	}).one('touchstart','form[data-role="form"]',function(){
-		new lib.Form(this);
-	});
 	
 	/**
 	*select美化封装

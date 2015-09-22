@@ -4,7 +4,6 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="/js/include.js"></script>
-      <link rel="stylesheet" href="/css/webuploader.css" />
       <link rel="stylesheet" href="shop.css" />    
     </head>
     <body>
@@ -20,17 +19,15 @@
 			</div>
 			<hr />
         </div>
-	
         <div class="wrapper">
 			<div class="detail-operation form-vertical">
-				<button type="button" class="btn" onclick="history.back()">取消</button>
+				<button type="button" class="btn btn-cancel">取消</button>
 				<span class="space"></span>
 				<button class="btn-primary submit">提交</button>
 			</div>
             <ul class="nav-step flex-box">
                 <li class="flex-item">
                     <a href="add.html">
-					
                         <i class="fa fa-check-circle"></i>
                         <span>1.店铺基本信息</span>
                     </a>
@@ -54,7 +51,7 @@
             <table style="margin-top:20px;">
               <thead>
                 <tr>
-                  <th colspan="2" class="thead">（请选择图片文件，小于10M，支持JPG，PNG，GIF和JPEC格式）</th>
+                  <th colspan="2" class="thead">（请选择图片文件，小于10M，支持JPG，PNG，GIF和JPEG格式）</th>
                 </tr>
               </thead>
 
@@ -63,14 +60,19 @@
 
                 <tr>
                   <td style="width:150px"><span class="conent">合同上传</span><br><span>（选填，限10张）</span></td>
-                  <td id="con_wrapper" class="td-wrapper">                                                              
-                    <div class="upload-btn" id="con_loader_button">
-                      <i class="fa fa-image"></i>
-                      <p class="btn-text">上传合同图片</p>
-                    </div>
+                  <td id="con_wrapper" class="td-wrapper">
+					<div class="control-image">
+						<div class="control-thumbnails" id="control-thumbnails1" data-max="10">
+							<div class="control-image-upload">
+								<div id="imageUpload1">
+									<i class="fa fa-image"></i>
+									<em>上传合同图片</em>
+								</div>
+							</div>
+						</div>
+					</div>
                   </td>
                 </tr>
-
                 <tr style="height:15px"></tr>
 
                 <tr>
@@ -79,11 +81,17 @@
                     <span>（选填，限3张）</span>
                   </td>
 
-                  <td id="lic_wrapper" class="td-wrapper">                                        
-                    <div class="upload-btn" id="lic_loader_button">
-                      <i class="fa fa-image"></i>
-                      <p class="btn-text">上传营业执照</p>
-                    </div>                                 
+                  <td id="lic_wrapper" class="td-wrapper">
+					<div class="control-image">
+						<div class="control-thumbnails" id="control-thumbnails2" data-max="3">
+							<div class="control-image-upload">
+								<div id="imageUpload2">
+									<i class="fa fa-image"></i>
+									<em>上传营业执照</em>
+								</div>
+							</div>
+						</div>
+					</div>
                   </td>
                 </tr>
 
@@ -96,10 +104,16 @@
                   </td>
 
                   <td id="cor_wrapper" class="td-wrapper">
-                    <div class="upload-btn" id="cor_loader_button">
-                      <i class="fa fa-image"></i>
-                      <p class="btn-text">上传法人执照</p>
-                    </div>                                 
+					<div class="control-image">
+						<div class="control-thumbnails" id="control-thumbnails3" data-max="3">
+							<div class="control-image-upload">
+								<div id="imageUpload3">
+									<i class="fa fa-image"></i>
+									<em>上传法人执照</em>
+								</div>
+							</div>
+						</div>
+					</div>
                   </td>
                 </tr>                                
               </tbody>            
@@ -109,7 +123,6 @@
                 <button class="btn-primary submit" >下一步</button>              
             </div>
         </div> 
-        <script type="text/javascript" src="/js/webuploader.js"></script>
         <script type="text/javascript" src="upload.js"></script>  
     </body>
 </html>

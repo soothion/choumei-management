@@ -55,22 +55,20 @@
 	<script type="text/javascript" src="/js/Chart.min.js"></script>
 	<script type="text/javascript">
 		$('#detail').on('_ready',function(e,data){
+			data=data.response;
+			var labels=[];
 			var registerArr=[];
 			for(var name in data.register){
-				registerArr.unshirt(data.register[name]);
+				registerArr.push(data.register[name]);
+				labels.push(name);
 			}
 			var firstArr=[];
 			for(var name in data.first){
-				firstArr.unshirt(data.register[name]);
+				firstArr.push(data.first[name]);
 			}
 			document.getElementById("myChart").width=window.innerWidth-40;
 			var ctx = document.getElementById("myChart").getContext("2d");
-			var labels=[];
-			for(var i=0;i<15;i++){
-				var time=new Date().getTime();
-				time+=1000*60*60*24*i;
-				labels.push(lib.tools.getDate(time/1000));
-			}
+			
 			var data = {
 				labels : labels,
 				datasets : [

@@ -5,32 +5,27 @@
     <title>臭美管理后台</title>
     <script type="text/javascript" src="/js/include.js"></script>
       <style>
-        h3{
-            padding: 6px 20px;
-            margin:2px;
-            border: 1px solid #E6EAF2;
-            border-bottom: none;
-            font-size: 18px;
-            width: 120px;
-            text-align: center;
-            display: inline-block; 
-            background-color:#f5f5f5;   
-            cursor: pointer;                  
-        }
-
-       .active{background-color:inherit;};
-         
-        td > a{
-           margin: 0 10px;
-        }
-
         .tab{
           position: absolute;
           top:35px;
-          width:600px;
           left:30%;
           border: none;
         }
+
+        .tab a{
+          width:145px;
+          height:45px;
+          line-height: 45px;
+          margin:2px;
+          border: 1px solid #E6EAF2;
+          border-bottom: none;
+          font-size: 18px;
+          text-align: center;
+          display: inline-block; 
+          background-color:#f5f5f5;           
+        }
+
+       .active{background-color:inherit!important;};
 
       </style>
   </head>
@@ -48,17 +43,11 @@
         <div id="form" ajat="#domid=form&tempid=form-t" ajat-one="true">
             <script type="text/template" id="form-t">
                 <div class="tab">            
-                  <h3 <%=(!query.refundStatus || query.refundStatus=="0") ? "class=active" : ""%>>
-                    <a href="refundment.html?reload=1#refundStatus=0">全部退款</a>
-                  </h3>
+                    <a href="refundment.html?reload=1#refundStatus=0" <%=(!query.refundStatus || query.refundStatus=="0") ? "class=active" : ""%>>全部退款</a>
 
-                  <h3 <%=query.refundStatus=="5" ? "class=active" : ""%>>
-                    <a href="refundment.html?reload=2#refundStatus=5">待审核</a>
-                  </h3>
+                    <a href="refundment.html?reload=2#refundStatus=5" <%=query.refundStatus=="5" ? "class=active" : ""%>>待审核</a>
 
-                  <h3 <%=query.refundStatus=="6,7,8,9" ? "class=active" : ""%>>
-                    <a href="refundment.html?reload=3#refundStatus=6,7,8,9">已审核</a>
-                  </h3>
+                    <a href="refundment.html?reload=3#refundStatus=6,7,8,9" <%=query.refundStatus=="6,7,8,9" ? "class=active" : ""%>>已审核</a>
                 </div>
 
                 <form data-role="hash" >             
@@ -77,7 +66,7 @@
                     <span style="padding:0 5px 0 15px">支付方式</span>
                     <select name="payType" >
                         <option value="0">全部</option>
-                        <option value="1">微信</option>
+                        <option value="3">微信</option>
                         <option value="2">支付宝</option>
                         <option value="10">易联</option>
                     </select>
@@ -150,7 +139,7 @@
           <tr>
               <td>
               <label>
-                  <input type="checkbox" data-id="<%=item.order_refund_id%>" 
+                  <input type="checkbox" data-id="<%=item.btId%>" 
                   <%=item.refundStatus!="5" ? "disabled" : ""%>/>
                   <span></span>
               </label>
@@ -165,14 +154,21 @@
               <td><%=item.salonName%></td>
               <td><%=statusObj[item.refundStatus]%></td>
               <td>
-                <a class="link" style="margin:0 5px;" href="refundDetail.html?no=<%=item.btSn%>" >查看</a>
+                <a class="link" style="margin:0 5px;"  target="_blank" href="refundDetail.html?no=<%=item.btSn%>" >
+                查看&gt
+                </a>
                 <%if(item.refundStatus=="5"){%>
-                    <a class="link operate" style="margin:0 5px;" data-type="0" data-id=<%=item.btId%>>通过</a>
-                    <a class="link operate" style="margin:0 5px;" data-type="1" data-id=<%=item.btId%>>拒绝</a>
+                    <a class="link pass" style="margin:0 5px;" data-type="0" data-id=<%=item.btId%>>
+                    通过
+                    </a>
+                    <a class="link reject" style="margin:0 5px;" data-type="0" data-id=<%=item.btId%>>
+                    拒绝
+                    </a>
                 <%}%>
 
                 <%if(item.refundStatus=="8" || item.refundStatus=="9"){%>
-                    <a class="link operate" style="margin:0 5px;" data-type="2" data-id=<%=item.btId%>>重新退款</a>
+                    <a class="link pass" style="margin:0 5px;" data-type="1" data-id=<%=item.btId%>>重新退款
+                    </a>
                 <%}%>
               </td>
           </tr>
@@ -183,8 +179,8 @@
       <%if(data.data && data.total > 0){%>
       <div class="table-bottom">
         <label class="select-all"><input type="checkbox"/><span>全选</span></label>
-        <button class="btn" style="margin-right:10px" type="button" data-slug="rebate.confirm">通过</button>
-        <button class="btn" type="button" data-slug="rebate.confirm">拒绝</button>
+        <button class="btn pass"   data-type="2" style="margin-right:10px">通过</button>
+        <button class="btn reject" data-type="1" >拒绝</button>
       </div>
       <%}%>      
       <div class="pager">
@@ -193,48 +189,72 @@
     </div>
   </div>
   <script>
-  $(document).ready(function(){
-     $(".table").delegate('a.operate', 'click', function(event) {
+  $(document).ready(function(){     
+      $(".wrapper").delegate(".reject",'click',function(){
           var type = $(this).data('type');
-          var mothed  = "";
-          var messges = "";
+          var arr     = [];          
+          if(type == "0") arr.push($(this).data('id'));
+          if(type == "1") {
+            $('tbody input[type="checkbox"]:checked').each(function(index,obj){
+              arr.push($(obj).data('id'));
+            })
+          }
+          if(type == "1" && arr.length < 1) {
+            lib.popup.alert({text:'请选择具体操作项'});
+            return;
+          }
+          parent.lib.popup.prompt({
+             text   : '拒绝原因： ',
+             define : function(str){
+                request('bounty/reject',{ids:arr,reason:str});
+             }
+          });        
+      });
+
+     $(".wrapper").delegate('.pass', 'click', function(event) {
+          var type = $(this).data('type');
           var arr = [];
-          if(type == "0"){
-              mothed  = "bounty/accept";
-              arr.push($(this).data('id'));
-              message = "你确定要执行同意操作？";
+          var message = "你确定要执行同意操作？";
+          if(type == "0") {
+            arr.push($(this).data('id'));
           }
-          if(type == "1"){
-              mothed  = "bounty/reject";
-              arr.push($(this).data('id'));
-              message = "你确定要执行拒绝操作？";
+          if(type == "1") {
+            arr.push($(this).data('id'));
+            message = "你确定要执行重新退款操作？";
           }
-          if(type == "2"){
-              mothed  = "bounty/accept";
-              arr.push($(this).data('id'));
-              message = "你确定要执行重新退款操作？";
-          }
+          if(type == "2") {
+            $('tbody input[type="checkbox"]:checked').each(function(index,obj){
+              arr.push($(obj).data('id'));
+            })
+          } 
+          if(type == "2" && arr.length < 1) {
+            lib.popup.alert({text:'请选择具体操作项'});
+            return;
+          }                   
           parent.lib.popup.confirm({
               text:message,
               define:function(){
-                  lib.ajax({
-                    type : "post",
-                    data : {ids:arr},
-                    url  : mothed
-                  }).done(function(data, status, xhr){
-                    parent.lib.popup.result({
-                      bool:data.result == 1,
-                      text:(data.result == 1 ? "操作成功" : data.msg),
-                      time:2000,
-                      define:function(){
-                          lib.ajat('bounty/getList?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
-                      }
-                    });
-                  });                          
+                request('bounty/accept',{ids:arr});                         
               }
-          });          
-
+          }); 
      });
+
+    function request(url,params){
+        lib.ajax({
+          url  : url,
+          type : "post",
+          data : params
+        }).done(function(data, status, xhr){
+          parent.lib.popup.result({
+            bool:data.result == 1,
+            text:(data.result == 1 ? "操作成功" : data.msg),
+            time:2000,
+            define:function(){
+                lib.ajat('bounty/getList?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
+            }
+          });
+        }); 
+    }       
   });
   </script>
   </body>

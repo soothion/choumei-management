@@ -16,7 +16,12 @@
 	'commission.index':'/module/finance/income/index.html',
 	'rebate.index':'/module/finance/income/list.html',
 	'message.index':'/module/hairstyle/message/index.html',
-	'ImageStyle.index':'/module/hairstyle/photo/index.html'
+	'ImageStyle.index':'/module/hairstyle/photo/index.html',
+	'user.survey':'/module/user/center/overview.html',
+	'user.index':'/module/user/center/index.html',
+	'user.company':'/module/user/center/group.html',
+	'level.update':'/module/user/center/settings-rating.html',
+	'feed.index':'/module/user/operation/index.html'
 }
 var access={
 	data:[],

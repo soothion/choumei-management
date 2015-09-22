@@ -1,5 +1,5 @@
 ﻿var cfg={
-	version:'1.4',
+	version:'1.4.4.2',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
 	dev:{
@@ -18,13 +18,13 @@
 		host:'<#MANAGER_BACK_URL#>',
 		token:'http://uat-cmweb.choumei.cn/v1/file/qiniu/get-token.html',
 		upload:'http://qiniu-plupload.qiniudn.com/',
-		previewMessage:'http://uat-user.choumei.me/'
+		previewMessage:'http://uat-user.choumei.cn/'
 	},
 	product:{
 		host:'<#MANAGER_BACK_URL#>',
 		token:'http://cmweb.choumei.cn/v1/file/qiniu/get-token.html',
 		upload:'http://qiniu-plupload.qiniudn.com/',
-		previewMessage:'http://user.choumei.me/'
+		previewMessage:'http://user.choumei.cn/'
 	},
 	getHost:function(){
 		return this[this.env].host;
@@ -38,7 +38,9 @@ if(location.href.indexOf("http://test-")>-1){
 	cfg.env="product";
 }
 cfg.url=cfg[cfg.env];
-
+if(location.href=="http://manager.choumei.cn/"&&cfg.url.indexOf('<#')!=-1){
+	alert('<#MANAGER_BACK_URL#>占位符没有被替换');
+}
 document.writeln('<meta name="renderer" content="webkit|ie-stand">');
 document.writeln('<meta http-equiv=”X-UA-Compatible” content=”IE=edge” > ');
 document.writeln('<meta charset="utf-8">');
