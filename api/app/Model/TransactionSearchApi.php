@@ -215,7 +215,7 @@ class TransactionSearchApi
         $salonArr = null;
         $fundflowArr = [];
         $trendArr = [];
-        $voucherArr = [];
+        $voucherArr = null;
         $commissionArr = null;
         $recommendCodeArr = null;
         if(!empty($paymentlog))
