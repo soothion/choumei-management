@@ -14,25 +14,26 @@
 				</div>
 			</div>
 		</div>
-		<div class="wrapper">
+		<div class="wrapper" ajat="user/survey#domid=detail&tempid=detail-t" id="detail">
+			<script type="text/template" id="detail-t">
 			<div class="table-detail">
 				<table>
 					<tbody>
 						<tr>
 							<td>用户总数</td>
-							<td>947420</td>
+							<td><%=data.total%></td>
 						</tr>
 						<tr>
 							<td>本日新增用户数</td>
-							<td>947420</td>
+							<td><%=data.day%></td>
 						</tr>
 						<tr>
 							<td>本周增用户数</td>
-							<td>947420</td>
+							<td><%=data.week%></td>
 						</tr>
 						<tr>
 							<td>本月新增用户数</td>
-							<td>947420</td>
+							<td><%=data.month%></td>
 						</tr>
 					</tbody>
 				</table>
@@ -49,37 +50,50 @@
 					首单消费数
 				</div>
 			</div>
+		</script>
 	</div>
 	<script type="text/javascript" src="/js/Chart.min.js"></script>
 	<script type="text/javascript">
-		document.getElementById("myChart").width=window.innerWidth-40;
-		var ctx = document.getElementById("myChart").getContext("2d");
-		var labels=[];
-		for(var i=0;i<15;i++){
-			var time=new Date().getTime();
-			time+=1000*60*60*24*i;
-			labels.push(lib.tools.getDate(time/1000))
-		}
-		var data = {
-			labels : labels,
-			datasets : [
-				{
-					fillColor : "rgba(220,220,220,0)",
-					strokeColor : "#E7BFAC",
-					pointColor : "#F6690F",
-					pointStrokeColor : "#fff",
-					data : [865,859,890,1081,1056,855,840,865,859,890,1081,1056,855,840,900]
-				},
-				{
-					fillColor : "rgba(151,187,205,0)",
-					strokeColor : "#FDF9CA",
-					pointColor : "#F7D80D",
-					pointStrokeColor : "#fff",
-					data : [828,848,840,1019,1096,1027,800,828,848,840,1019,1096,1027,800,955]
-				}
-			]
-		}
-		new Chart(ctx).Line(data);
+		$('#detail').on('_ready',function(e,data){
+			var registerArr=[];
+			for(var name in data.register){
+				registerArr.unshirt(data.register[name]);
+			}
+			var firstArr=[];
+			for(var name in data.first){
+				firstArr.unshirt(data.register[name]);
+			}
+			document.getElementById("myChart").width=window.innerWidth-40;
+			var ctx = document.getElementById("myChart").getContext("2d");
+			var labels=[];
+			for(var i=0;i<15;i++){
+				var time=new Date().getTime();
+				time+=1000*60*60*24*i;
+				labels.push(lib.tools.getDate(time/1000));
+			}
+			var data = {
+				labels : labels,
+				datasets : [
+					{
+						fillColor : "rgba(220,220,220,0)",
+						strokeColor : "#E7BFAC",
+						pointColor : "#F6690F",
+						pointStrokeColor : "#fff",
+						data:registerArr
+						//data : [865,859,890,1081,1056,855,840,865,859,890,1081,1056,855,840,900]
+					},
+					{
+						fillColor : "rgba(151,187,205,0)",
+						strokeColor : "#FDF9CA",
+						pointColor : "#F7D80D",
+						pointStrokeColor : "#fff",
+						data:firstArr
+						//data : [828,848,840,1019,1096,1027,800,828,848,840,1019,1096,1027,800,955]
+					}
+				]
+			}
+			new Chart(ctx).Line(data);
+		})
 	</script>
   </body>
 </html>

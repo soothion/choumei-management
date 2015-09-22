@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><a href="index.html">项目列表</a><span>&gt;</span><a href="sort.html">项目排序</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>项目排序</h4>
+				</div>
+			</div>
+		</div>
+		<div class="wrapper">
+			<div class="position-group">
+				<form data-role="hash">
+					<select>
+						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
+						<option value="2" data-placeholder="请输入商户名称">商户名称</option>
+						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
+					</select>
+				</form>
+			 </div>
+			<div class="table" ajat="merchant/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<table>
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>项目名称</th>
+						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">项目分类 <i class="fa fa-sort"></i></a></th>
+						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">规格 <i class="fa fa-sort"></i></a></th>
+						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">原价 <i class="fa fa-sort"></i></a></th>
+						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">臭美价 <i class="fa fa-sort"></i></a></th>
+						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">集团价 <i class="fa fa-sort"></i></a></th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<%data=data.data%>
+					<%data.forEach(function(item,i){%>
+					 <tr>
+						<td><%=i+1%></td>
+						<td><%=item.sn%></td>
+						<td><%=item.name%></td>
+						<td><%=item.salonNum>0?item.salonNum:0%></td>
+						<td><%=item.contact%></td>
+						<td><%=item.contact%></td>
+						<td><%=item.contact%></td>
+						<td>
+							<form action="" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+								<button class="link" data-slug="salon.save" >上移</button>
+							</form>
+							<span class="space"></span>
+							<form action="" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+								<button class="link" data-slug="salon.save" >下移</button>
+							</form>
+						</td>
+					</tr> 
+					<%})%>
+				</tbody>
+			</table>
+			</script>
+		</div>
+	</div>
+  </body>
+</html>

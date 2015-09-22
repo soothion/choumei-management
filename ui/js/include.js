@@ -1,10 +1,9 @@
 ﻿var cfg={
-
 	version:'1.4',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
 	dev:{
-		host:'http://192.168.13.46:8145/',
+		host:'http://192.168.13.46:8140/',
 		token:'http://dev-cmweb.choumei.me/v1/file/qiniu/get-token.html',
 		upload:'http://qiniu-plupload.qiniudn.com/',
 		previewMessage:'http://dev-user.choumei.me/'
@@ -19,19 +18,18 @@
 		host:'<#MANAGER_BACK_URL#>',
 		token:'http://uat-cmweb.choumei.cn/v1/file/qiniu/get-token.html',
 		upload:'http://qiniu-plupload.qiniudn.com/',
-		previewMessage:'http://uat-user.choumei.cn/'
+		previewMessage:'http://uat-user.choumei.me/'
 	},
 	product:{
 		host:'<#MANAGER_BACK_URL#>',
 		token:'http://cmweb.choumei.cn/v1/file/qiniu/get-token.html',
 		upload:'http://qiniu-plupload.qiniudn.com/',
-		previewMessage:'http://user.choumei.cn/'
+		previewMessage:'http://user.choumei.me/'
 	},
 	getHost:function(){
 		return this[this.env].host;
 	}
 }
-
 if(location.href.indexOf("http://test-")>-1){
 	cfg.env="test";
 }else if(location.href.indexOf("http://uat-")>-1){

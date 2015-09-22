@@ -162,7 +162,7 @@ label>input[type="checkbox"][disabled]+span{
 	cursor: not-allowed;
 	background-color:#eee;
 }
-button[disabled],form[disabled] button{
+button[disabled]{
 	opacity:0.6;
 	cursor: not-allowed;
 }
@@ -510,16 +510,14 @@ input[type="date"]{
 	position:relative;
 	background:no-repeat right 5px center url('/images/calendar.svg');
 	background-size: 18px 18px;
-	padding-right:30px!important;
 }
-::-webkit-clear-button,::-webkit-search-cancel-button {
-  -webkit-appearance: none;
-  position: relative;
-  z-index: 10;
-  background: url("/images/close.svg") no-repeat center;
-  background-size: 18px 18px;
-  width: 18px;
-  height: 18px;
+::-webkit-clear-button {
+    position:relative;
+	z-index:10;
+	margin-right:5px;
+	font-size:20px;
+	padding:0px 10px;
+	margin-left:5px;
 }
 ::-webkit-inner-spin-button {
 	display:none;

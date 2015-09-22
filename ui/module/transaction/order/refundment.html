@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        h3{
+            padding: 6px 20px;
+            margin:2px;
+            border: 1px solid #E6EAF2;
+            border-bottom: none;
+            font-size: 18px;
+            width: 120px;
+            text-align: center;
+            display: inline-block; 
+            background-color:#f5f5f5;
+            cursor: pointer;         
+        }
+
+       .active{background-color:inherit;};
+         
+        td a{
+          margin-right: 8px;
+        }
+
+        .tab{
+          position: absolute;
+          top:35px;
+          width:600px;
+          left:30%;
+          border: none;
+        }
+
+      </style>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>交易管理</a><span>&gt;</span><a href="index.html">交易管理</a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>普通订单退款</h4>
+				</div>
+			</div>
+		</div>
+
+    <div class="wrapper">
+        <div id="form" ajat="#domid=form&tempid=form-t" ajat-one="true">
+            <script type="text/template" id="form-t">
+                <div class="tab">            
+                  <h3 <%=(!query.state || query.state=="0") ? "class=active" : ""%>>
+                    <a href="refundment.html?reload=1#state=0">全部退款</a>
+                  </h3>
+
+                  <h3 <%=query.state=="6" ? "class=active" : ""%>>
+                    <a href="refundment.html?reload=2#state=6">待审核</a>
+                  </h3>
+
+                  <h3 <%=query.state=="7,10,12" ? "class=active" : ""%>>
+                    <a href="refundment.html?reload=3#state=7,10,12">已审核</a>
+                  </h3>
+                </div>
+
+                <form data-role="hash" >             
+                  <div class="input-group placeholder-switch">
+                    <select name="key">
+                      <option value="1" data-placeholder="请输入订单号">订单号</option>
+                      <option value="2" selected="selected" data-placeholder="请输入用户手机号">用户手机号</option>
+                      <option value="3" data-placeholder="请输入用户臭美号">用户臭美号</option>
+                      <option value="4" data-placeholder="请输入店铺名称">店铺名称</option>
+                    </select>
+                    <input type="text" class="input-search" name="keyword" maxlength="16" 
+                    placeholder="请输入用户手机号"/>
+                  </div>  
+
+                  <span class="date-group">
+                    <span style="padding:0 5px 0 20px">申请退款时间</span>
+                    <input type="date" name="refund_min_time" data-role="start" placeholder="YYYY-MM-DD"/>
+                    <span style="padding:0 10px">到</span>
+                    <input type="date" name="refund_max_time" data-role="end" placeholder="YYYY-MM-DD"/>
+                  </span>
+
+                  <span class="date-group">
+                    <span style="padding:0 5px 0 15px">退款状态</span>
+                    <select name="state" >
+                      <%if(!query.state || query.state === "0"){%>
+                          <option value="0">全部</option>
+                          <option value="6">申请退款</option>
+                          <option value="10">退款中</option>
+                          <option value="7">退款成功</option>
+                          <option value="12">退款失败</option>
+                      <%}else if(query.state === "6"){%>
+                          <option value="6">申请退款</option>
+                      <%}else{%>
+                          <option value="7,10,12">全部</option>
+                          <option value="10">退款中</option>
+                          <option value="7">退款成功</option>
+                          <option value="12">退款失败</option>
+                      <%}%>
+                    </select>
+                  </span>
+
+                  <button class="btn" type="submit">搜索</button>         
+                </form>
+
+                <form data-role="export" action="refund/export" data-slug="role.export">
+                  <button class="btn">
+                    <i class="fa fa-file-excel-o"></i> 导出
+                  </button>
+                </form>  
+            </script>          
+        </div>
+
+			<div class="table" ajat="refund/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+			<table>
+        <thead>
+          <tr>
+              <th style="width:50px">
+                  <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+              </th>          
+              <th>序号</th>
+              <th>臭美券密码</th>
+              <th>订单编号</th>
+              <th>购买时间</th>
+              <th>申请退款时间</th>
+              <th>店铺名称</th>
+              <th>用户手机号</th>
+              <th>现金券编号</th>
+              <th>支付方式</th>
+              <th>金额</th>
+              <th>实付金额</th>
+              <th>退款金额</th>
+              <th>退款方式</th>
+              <th>退款状态</th>
+              <th>购物车号</th>
+              <th>操作</th>
+          </tr>
+        </thead>
+
+        <tbody>			  
+        <% 
+        var retypeObj = {"1":"原路返还","2":"退回余额"};
+        var refundObj = {"6":"申请退款","7":"退款成功","10":"退款中","12":"退款失败"};
+        var payObj    = {
+            "1":"微信",
+            "2":"支付宝",
+            "3":"易联",
+            "4":"现金券",
+            "5":"余额",
+            "6":"现金券+支付宝",
+            "7":"现金券+微信",
+            "8":"现金券+易联"
+        };      
+        %>
+				<%data.data &&　data.data.forEach(function(item,i){%>
+          <tr>
+              <td>
+              <label>
+                  <input type="checkbox" data-id="<%=item.order_refund_id%>" 
+                  <%=item.order_status!="6" ? "disabled" : ""%>/>
+                  <span></span>
+              </label>
+              </td>          
+              <td><%=i+1%></td>
+              <td><%=item.ticketno%></td>
+              <td><%=item.ordersn%></td>
+              <td><%=item.buy_time%></td>
+              <td><%=item.add_time%></td>
+              <td><%=item.salon && item.salon.salonname %></td>
+              <td><%=item.user && item.user.mobilephone%></td>
+              <td><%=item.voucher && item.voucher.vSn%></td>
+              <td><%=item.fundflow && payObj[item.fundflow.pay_type]%></td>
+              <td><%=item.priceall_ori%></td>
+              <td><%=item.actuallyPay%></td>
+              <td><%=item.refund_money%></td>
+              <td><%=retypeObj[item.retype]%></td>
+              <td><%=refundObj[item.order_status]%></td>
+              <td><%=item.shopcartsn%></td>
+              <td>
+                <a class="link" href="detail.html?method=refund/show/&id=<%=item.order_refund_id%>" >查看</a>
+                <%if(item.order_status == "6"){%>
+                    <a class="link" href="">通过</a>
+                    <a class="link" href="">拒绝</a>
+                <%}%>
+              </td>
+          </tr>
+				<%})%>
+        </tbody>
+      </table>
+
+      <%if(data.data && data.total > 0){%>
+      <div class="table-bottom">
+        <label class="select-all"><input type="checkbox"/><span>全选</span></label>
+        <button class="btn" style="margin-right:10px" type="button" data-slug="rebate.confirm">通过</button>
+        <button class="btn" type="button" data-slug="rebate.confirm">拒绝</button>
+      </div>
+      <%}%>
+			<div class="pager">
+			</div>
+			</script>
+		</div>
+	</div>
+  </body>
+</html>

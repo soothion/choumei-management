@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>.first-td{width: 15%;padding-left: 30px!important;}</style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>交易管理</a>
+            <span>&gt;</span><a href="index.html">臭美券查询</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>臭美券详情</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper" id="table-wrapper" 
+        ajat="<%if(query.id){%><%=query.method%><%=query.id%><%}%>#domid=table-wrapper&tempid=table-t">
+        <script type="text/template" id="table-t">
+            <div class="table">
+                <table>
+                    <tbody>
+
+                        <tr>
+                            <td class="first-td">臭美券密码</td>
+                            <td><%=data.ticket && data.ticket.ticketno%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">订单编号</td>
+                            <td><%=data.order && data.order.ordersn%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">购物车序号</td>
+                            <td><%=data.order && data.order.shopcartsn%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">第三方流水号</td>
+                            <td><%=data.paymentlog && data.paymentlog.tn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">项目名称</td>
+                            <td><%=data.item && data.item.itemname%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">店铺名称【邀请码】</td>
+                            <td><%=data.salon && data.salon.salonname%>【<%=data.recommend_code%>】</td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">用户臭美号</td>
+                            <td><%=data.user && data.user.username%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">用户手机号</td>
+                            <td><%=data.user && data.user.mobilephone%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">订单金额</td>
+                            <td><%=data.order && data.order.priceall%></td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">代金券抵扣金额</td>
+                            <td><%=%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">实付金额</td>
+                            <td><%=data.order && data.order.actuallyPay%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">金额构成</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">名称</th>
+                                            <th>金额（元）</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <%if(data.fundflows && data.fundflows.length > 0){%>
+                                            <tr>
+                                                <td rowspan="<%=data.fundflows ? Math.max(data.fundflows.length + 1,2) : 2 %>">臭美余额
+                                                </td>
+                                            </tr>
+                                            <%data.fundflows.forEach(function(item,i){%>
+                                            <tr>
+                                                <td><%=item.pay_type%></td>
+                                                <td><%=item.money%></td>
+                                            </tr>
+                                            <%})%>
+                                        <%}%>
+                                            
+                                        <%if(data.fundflows && data.fundflows.length > 0){%>
+                                            <tr>
+                                                <td rowspan="<%=data.fundflows ? Math.max(data.fundflows.length + 1,2) : 2 %>">第三方支付
+                                                </td>
+                                            </tr> 
+                                            <%data.fundflows.forEach(function(item,i){%>
+                                            <tr>
+                                                <td><%=item.pay_type%></td>
+                                                <td><%=item.money%></td>
+                                            </tr>
+                                            <%})%>
+                                        <%}%>
+                                    </tbody>                                
+                                </table>
+                            </td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">臭美券动态</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>时间</th>
+                                            <th>行为</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <%data.trends && data.trends.forEach(function(obj,i){ %>
+                                        <tr>
+                                            <td><%=obj.add_time %></td>
+                                            <td><%=obj.remark %></td>
+                                        </tr>
+                                        <%}) %>
+                                    </tbody>                                
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">券动态</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>活动编码</th>
+                                            <th>券编号</th>
+                                            <th>券金额</th>
+                                            <th>券有效期</th>
+                                            <th>券状态</th>
+                                            <th>时间</th>
+                                        </tr>  
+                                    <thead>                              
+                                    <tbody>
+                                        <% data.vouchers && data.vouchers.forEach(function(item,i){ %>
+                                        <tr>
+                                            <td><%=item.vOrderSn%></td>
+                                            <td><%=item.vSn%></td>
+                                            <td><%=item.voucher && item.voucher.vUseMoney%></td>
+                                            <td><%=item.voucher && 
+                                            (new Date(item.voucher.vUseStart).format("yyyy-MM-dd") 
+                                             +"  --  "+ 
+                                             new Date(item.voucher.vUseEnd).format("yyyy-MM-dd")) %>
+                                            </td>
+                                            <td><%=item.vStatus%></td>
+                                            <td class="format"><%=new Date(item.vAddTime).format("yyyy-MM-dd")%></td>
+                                        </tr>
+                                        <%}) %>
+                                    </tbody>                                
+                                </table>
+                            </td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="first-td">佣金信息</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>店铺等级</th>
+                                            <th>佣金率</th>
+                                            <th>佣金</th>
+                                            <th>邀请码（店名）</th>
+                                        </tr> 
+                                    <thead>                                    
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>                                
+                                </table>
+                            </td>                            
+                        </tr> 
+
+                        <tr>
+                            <td class="first-td">设备信息</td>
+                            <td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>用户设备号</th>
+                                            <th>系统</th>
+                                            <th>手机型号</th>
+                                            <th>网络</th>
+                                            <th>APP版本</th>
+                                        </tr>
+                                    <thead>                                  
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>                                
+                                </table>
+                            </td>
+                        </tr>                        
+                    </tbody>                     
+                </table>
+            </div>
+        </script>
+        </div>
+    </body>
+</html>
