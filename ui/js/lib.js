@@ -208,6 +208,11 @@
 			loading:function(options){
 				options.text='<img src="/images/oval.svg" class="loader"/>'+options.text;
 				parent.lib.popup.tips(options);
+			},
+			box:function(options){
+				 seajs.use(this.path,function(a){
+                    a.box(options);
+                });
 			}
         },
 		getFormData:function($form){

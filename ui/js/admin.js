@@ -1,5 +1,7 @@
 ﻿(function(){
-	parent.lib.popup.close();//清除父弹出框
+	if(location.href.indexOf('popup=')==-1){
+		parent.lib.popup.close();//清除父弹出框
+	}
 	lib.ajatCount=0;//ajat计件数
 	lib.ajat=function (_protocol) {
 		lib.ajatCount++;//ajat添加计件数
@@ -485,6 +487,15 @@ $(function(){
 			$(e.target).html('<div class="data-empty tc"><i class="fa fa-frown-o"></i>请求服务异常，<a class="link" onclick="location.reload()">重试</a></div>')
 		}
 	});
+	/**F5刷新**/
+	if(parent!=window){
+		$(window).on('keydown',function(e){
+			if(e.keyCode==116){
+				location.reload();
+				e.preventDefault();
+			}
+		});
+	}
 }); 
 
 Date.prototype.format = function(format){

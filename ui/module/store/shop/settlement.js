@@ -43,6 +43,9 @@
     }
 
     var submit = function(shopData){
+		shopData.contractPicUrl=JSON.stringify(shopData.contractPicUrl);
+		shopData.licensePicUrl=JSON.stringify(shopData.licensePicUrl);
+		shopData.corporatePicUrl=JSON.stringify(shopData.corporatePicUrl);
         lib.ajax({
             type: "post",
             url : (type=="add"?"salon/save":"salon/update"),

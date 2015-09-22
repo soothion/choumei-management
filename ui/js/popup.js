@@ -11,6 +11,7 @@ define(function(require,exports,module){
             });
             this.overlay();
             this.append(popup);
+			options.complete && options.complete();
         },
         confirm: function (options) {
             var self=this;
@@ -26,6 +27,7 @@ define(function(require,exports,module){
             });
             this.overlay();
             this.append(popup);
+			options.complete && options.complete();
         },
         prompt: function (options) {
             options.inputType = options.inputType || 'text';
@@ -46,6 +48,7 @@ define(function(require,exports,module){
             });
             this.overlay();
             this.append(popup);
+			options.complete && options.complete();
         },
         menu: function (options) {
             options.type = 'menu';
@@ -64,6 +67,7 @@ define(function(require,exports,module){
                 self.close();
             });
             this.append(popup);
+			options.complete && options.complete();
         },
 		swiper:function(options){
 			var self=this;
@@ -98,7 +102,36 @@ define(function(require,exports,module){
 					paginationClickable: true,
 					spaceBetween: 0
 				});
+				options.complete && options.complete();
 			});
+		},
+		box:function(options){
+			var self=this;
+			options=$.extend({width:800,height:500,type:"box"},options);
+			var $window=$(window);
+			if(options.width>$window.width()){
+				options.width=$window.width();
+			}
+			if(options.height>$window.height()){
+				options.height=$window.height();
+			}
+			var self=this;
+            var popup = $(new EJS({url: path}).render({options: options}));
+			popup.on('click', '.popup-box-close', function () {
+				self.close();
+			});
+			popup.css({
+				left:"50%",
+				top:"50%",
+				width:options.width,
+				minHeight:options.height,
+				marginTop:-options.height/2,
+				marginLeft:-options.width/2
+			});
+			popup.find('.popup-box-body').css({minHeight:options.height-38});
+            this.overlay();
+            $('body').append(popup);
+			options.complete && options.complete();
 		},
         overlay: function () {
             var $dom=$('<div class="popup-overlay"></div>');

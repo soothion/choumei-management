@@ -151,8 +151,14 @@
                                     </thead>
                                     <tbody>
                                         <%
-                                        var trendsText = {'2':'未使用','4':'使用完成','6':'申请退款',
-                                        '7':'退款完成','8':'退款拒绝','10':'退款中'};
+                                        var trendsText = {
+                                            '2':'未使用',
+                                            '4':'使用完成',
+                                            '6':'申请退款',
+                                            '7':'退款完成',
+                                            '8':'退款拒绝',
+                                            '10':'退款中'
+                                        };
                                         %>
                                         <%data.trends && data.trends.forEach(function(obj,i){ %>
                                         <tr>
@@ -180,20 +186,25 @@
                                         </tr>  
                                     <thead>                              
                                     <tbody>
-                                        <% data.vouchers && data.vouchers.forEach(function(item,i){ %>
+                                        <%
+                                        var statusText= {
+                                            '1':'未使用',
+                                            '2':'已使用',
+                                            '3':'待激活',
+                                            '5':'已失效',
+                                            '10':'未上线'
+                                        };
+                                        %>
+                                        <% if(data.vouchers){%>
                                         <tr>
-                                            <td><%=item.vOrderSn%></td>
-                                            <td><%=item.vSn%></td>
-                                            <td><%=item.voucher && item.voucher.vUseMoney%></td>
-                                            <td><%=item.voucher && 
-                                            (new Date(item.voucher.vUseStart).format("yyyy-MM-dd") 
-                                             +"  --  "+ 
-                                             new Date(item.voucher.vUseEnd).format("yyyy-MM-dd")) %>
-                                            </td>
-                                            <td><%=item.vStatus%></td>
-                                            <td class="format"><%=new Date(item.vAddTime).format("yyyy-MM-dd")%></td>
+                                            <td><%=data.vouchers.vcSn%></td>
+                                            <td><%=data.vouchers.vSn%></td>
+                                            <td><%=data.vouchers.vUseMoney%></td>
+                                            <td class="format"><%=data.vouchers.vUseEnd %></td>
+                                            <td><%=statusText[data.vouchers.vStatus]%></td>
+                                            <td class="format"><%=data.vouchers.vAddTime%></td>
                                         </tr>
-                                        <%}) %>
+                                        <%}%>
                                     </tbody>                                
                                 </table>
                             </td>                            
@@ -237,13 +248,15 @@
                                         </tr>
                                     <thead>                                  
                                     <tbody>
+                                    <%if(data.platform){%>
                                         <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <td><%=data.platform.DEVICE_UUID%></td>
+                                            <td><%=data.platform.DEVICE_OS%></td>
+                                            <td><%=data.platform.DEVICE_MODEL%></td>
+                                            <td><%=data.platform.DEVICE_NETWORK%></td>
+                                            <td><%=data.platform.VERSION%></td>
                                         </tr>
+                                    <%}%>    
                                     </tbody>                                
                                 </table>
                             </td>

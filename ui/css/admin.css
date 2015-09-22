@@ -97,7 +97,7 @@ select:focus,.focus{
 	box-shadow:0 0 10px rgba(102, 175, 233, 0.7);
 }
 label>input[type="radio"]:checked+span:before,label>input[type="checkbox"]:checked+span:before{
-	box-shadow:0px 0px 0px 3px #fff,0px 0px 0px 4px #498ae5;
+	box-shadow:0px 0px 0px 3px #fff,0px 0px 0px 4px #498ae5,0px 0px 3px 4px #498ae5;
     background:#498ae5;
 }
 
@@ -106,7 +106,7 @@ label>input[type="radio"]+span:before{
 	height:6px;
 }
 label>input[type="checkbox"]+span:before{
-	box-shadow:none!important;
+	box-shadow:none;
 	height:12px;
 	width:12px;
 	line-height:12px;
@@ -122,7 +122,7 @@ label>input[type="checkbox"]+span:before{
 }
 label>input[type="checkbox"]:checked+span:before{
 	background:#fff;
-	box-shadow:none;
+	box-shadow:0px 0px 3px #498ae5;
 	color:#498ae5;
 	border-color:#498ae5;
 }
