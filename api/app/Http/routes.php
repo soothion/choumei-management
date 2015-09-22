@@ -89,7 +89,7 @@ Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
 //退款回调 支付宝 普通单
 Route::any('refund/call_back_of_alipay',array( 
 	'as'=>'refund.call_back_of_alipay',
-	'uses'=>'Trans\OrderRefundController@call_back_of_alipay'
+	'uses'=>'Transaction\OrderRefundController@call_back_of_alipay'
 ));
 
 
@@ -520,58 +520,58 @@ Route::group(['middleware' => ['before','after']], function(){
 	//交易管理
 	Route::any('order/index',array(  //订单列表
 		'as'=>'order.index',
-		'uses'=>'Trans\OrderController@index'
+		'uses'=>'Transaction\OrderController@index'
     ));
 	
 	Route::any('order/show/{id}',array(  //订单详情
 		'as'=>'order.show',
-		'uses'=>'Trans\OrderController@show'
+		'uses'=>'Transaction\OrderController@show'
     ));
 	
 	Route::any('order/export',array(  //订单导出
 		'as'=>'order.export',
-		'uses'=>'Trans\OrderController@export'
+		'uses'=>'Transaction\OrderController@export'
     ));
 	
 	Route::any('ticket/index',array(  //臭美券列表
 		'as'=>'ticket.index',
-		'uses'=>'Trans\TicketController@index'
+		'uses'=>'Transaction\TicketController@index'
     ));
 	
 	Route::any('ticket/show/{id}',array(  //臭美券详情
 		'as'=>'ticket.show',
-		'uses'=>'Trans\TicketController@show'
+		'uses'=>'Transaction\TicketController@show'
     ));
 	
 	Route::any('ticket/export',array(  //臭美券导出
 		'as'=>'ticket.export',
-		'uses'=>'Trans\TicketController@export'
+		'uses'=>'Transaction\TicketController@export'
     ));
 	
 	Route::any('refund/index',array(  //退款列表
 		'as'=>'refund.index',
-		'uses'=>'Trans\OrderRefundController@index'
+		'uses'=>'Transaction\OrderRefundController@index'
     ));
 	
 	Route::any('refund/show/{id}',array(  //退款详情
 	'as'=>'refund.show',
-	'uses'=>'Trans\OrderRefundController@show'
+	'uses'=>'Transaction\OrderRefundController@show'
     ));
 
 	Route::any('refund/export',array(  //退款导出
 		'as'=>'refund.export',
-		'uses'=>'Trans\OrderRefundController@export'
+		'uses'=>'Transaction\OrderRefundController@export'
     ));
 	
 	
 	Route::any('refund/accept',array(  //退款通过
 		'as'=>'refund.accept',
-		'uses'=>'Trans\OrderRefundController@accept'
+		'uses'=>'Transaction\OrderRefundController@accept'
     ));
 	
 	Route::any('refund/reject',array(  //退款拒绝
 		'as'=>'refund.reject',
-		'uses'=>'Trans\OrderRefundController@reject'
+		'uses'=>'Transaction\OrderRefundController@reject'
     ));
 	
 	//消息管理

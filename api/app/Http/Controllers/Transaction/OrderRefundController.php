@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Trans;
+namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;

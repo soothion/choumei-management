@@ -1,29 +1,27 @@
 <?php
 
-namespace App\Http\Controllers\Trans;
+namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;
 use App\Mapping;
-use App\RequestLog;
-use Predis\Command\TransactionDiscard;
 
-class TicketController extends Controller
+class OrderController extends Controller
 {
     /**
-     * @api {get} /ticket/index 1.臭美券列表
+     * @api {get} /order/index 1.订单列表
      * @apiName index
-     * @apiGroup ticket
+     * @apiGroup order
      *
-     * @apiParam {Number} key  1 臭美券密码 2 用户手机号  3 店铺名称  4 用户设备号  5 代金券编码  6 活动编码
+     * @apiParam {Number} key  1 订单号  2 臭美券密码 3 用户手机号  4 店铺名称
      * @apiParam {String} keyword  根据key来的关键字
-     * @apiParam {String} time_key  1 消费时间  2付款时间
-     * @apiParam {String} min_time 最小时间 YYYY-MM-DD
-     * @apiParam {String} max_time 最大时间 YYYY-MM-DD
-     * @apiParam {String} state 0 全部  2 未消费 4 已消费 6申请退款 7 退款完成  8 退款中 9 退款失败
+     * @apiParam {String} pay_time_min 下单最小时间 YYYY-MM-DD
+     * @apiParam {String} pay_time_max 下单最大时间 YYYY-MM-DD
+     * @apiParam {String} pay_type 0 全部  1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
+     * @apiParam {String} pay_state 0 全部  1未支付 2已支付
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
-     * @apiParam {String} sort_key 排序的键 ['id','updated_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
+     * @apiParam {String} sort_key 排序的键 []
      * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      *
      * @apiSuccess {Number} total 总数据量.
@@ -32,18 +30,14 @@ class TicketController extends Controller
      * @apiSuccess {Number} last_page 当前页面.
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
-     * @apiSuccess {Number} all_amount 当前条件总应付金额.
-     * @apiSuccess {Number} paied_amount 当前条件实付金额.
-     * @apiSuccess {String} order_ticket_id 臭美券id
-     * @apiSuccess {String} ticketno 臭美券密码
-     * @apiSuccess {String} add_time 付款时间
-     * @apiSuccess {String} use_time 使用时间
+     * @apiSuccess {Number} total_money 当前条件总金额.
+     * @apiSuccess {String} orderid 订单id
      * @apiSuccess {String} ordersn 订单编号
-     * @apiSuccess {String} priceall_ori 应付金额
-     * @apiSuccess {String} actuallyPay 实付金额
+     * @apiSuccess {String} priceall 交易金额
+     * @apiSuccess {String} add_time 下单时间
+     * @apiSuccess {String} pay_time 付款时间
      * @apiSuccess {String} user_id 付款人id
-     * @apiSuccess {String} status 状态  2未使用，4使用完成，6申请退款，7退款完成,8退款中
-     * @apiSuccess {String} shopcartsn 购物车号
+     * @apiSuccess {String} ispay 交易状态  1未付款  2 已付款
      * @apiSuccess {String} user 用户信息
      * @apiSuccess {String} user.username 用户臭美号
      * @apiSuccess {String} user.mobilephone 用户手机号
@@ -51,95 +45,66 @@ class TicketController extends Controller
      * @apiSuccess {String} salon.salonname 店铺名称
      * @apiSuccess {String} fundflow 支付信息
      * @apiSuccess {String} fundflow.pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
-     * @apiSuccess {String} voucher 佣金信息
-     * @apiSuccess {String} voucher.vcSn 活动编号
-     * @apiSuccess {String} voucher.vSn 代金券编号
      *
      * @apiSuccessExample Success-Response:
      *       {
      *           "result": 1,
      *           "token": "",
      *           "data": {
-     *               "total": 108327,
+     *               "total": 149196,
      *               "per_page": 20,
      *               "current_page": 1,
-     *               "last_page": 5417,
+     *               "last_page": 7460,
      *               "from": 1,
      *               "to": 20,
      *               "data": [
      *                   {
-     *                       "order_ticket_id": 108900,
-     *                       "ticketno": "24610518",
-     *                       "add_time": 1441963005,
-     *                       "use_time": 0,
-     *                       "user_id": 707716,
-     *                       "status": 2,
-     *                       "ordersn": "4196296911121",
+     *                       "orderid": 708877,
+     *                       "ordersn": "4219477511889",
+     *                       "priceall": "1.00",
      *                       "salonid": 669,
-     *                       "priceall_ori": "20.00",
-     *                       "actuallyPay": "0.00",
-     *                       "shopcartsn": "",
+     *                       "add_time": 1442194775,
+     *                       "pay_time": 0,
+     *                       "user_id": 878669,
+     *                       "ispay": 1,
      *                       "user": {
-     *                           "user_id": 707716,
-     *                           "username": "10705726",
-     *                           "mobilephone": "18576617068"
+     *                           "user_id": 878669,
+     *                           "username": "10876679",
+     *                           "mobilephone": "18588252193"
      *                       },
      *                       "salon": {
      *                           "salonid": 669,
      *                           "salonname": "苏苏美发"
      *                       },
      *                       "fundflow": [
-     *                           {
-     *                               "record_no": "4196296911121",
-     *                               "pay_type": 9
-     *                           }
-     *                       ],
-     *                       "voucher": {
-     *                           "vOrderSn": "4196296911121",
-     *                           "vcSn": "cm164288",
-     *                           "vSn": "CM41678592782"
-     *                       }
+     *                          {
+     *                              "record_no": "4187664711988",
+     *                              "pay_type": 10
+     *                          },
+     *                       ]
      *                   },
      *                   {
-     *                       "order_ticket_id": 108899,
-     *                       "ticketno": "31789371",
-     *                       "add_time": 1441961991,
-     *                       "use_time": 0,
-     *                       "user_id": 707716,
-     *                       "status": 2,
-     *                       "ordersn": "4196193611328",
+     *                       "orderid": 708876,
+     *                       "ordersn": "4197495931904",
+     *                       "priceall": "249.00",
      *                       "salonid": 7,
-     *                       "priceall_ori": "148.00",
-     *                       "actuallyPay": "49.00",
-     *                       "shopcartsn": "",
+     *                       "add_time": 1441974959,
+     *                       "pay_time": 0,
+     *                       "user_id": 878669,
+     *                       "ispay": 1,
      *                       "user": {
-     *                           "user_id": 707716,
-     *                           "username": "10705726",
-     *                           "mobilephone": "18576617068"
+     *                           "user_id": 878669,
+     *                           "username": "10876679",
+     *                           "mobilephone": "18588252193"
      *                       },
      *                       "salon": {
      *                           "salonid": 7,
      *                           "salonname": "丝凡达护肤造型会所（麒麟店）"
      *                       },
-     *                       "fundflow": [
-     *                           {
-     *                               "record_no": "4196193611328",
-     *                               "pay_type": 9
-     *                           },
-     *                           {
-     *                               "record_no": "4196193611328",
-     *                               "pay_type": 4
-     *                           }
-     *                       ],
-     *                       "voucher": {
-     *                           "vOrderSn": "4196193611328",
-     *                           "vcSn": "cm964309",
-     *                           "vSn": "CM41520035796"
-     *                       }
+     *                       "fundflow": []
      *                   }
      *               ],
-     *               "all_amount": "11240369.00",
-     *               "paied_amount": "42359.01"
+     *               "total_money": "11574991.90"
      *           }
      *       }
      *
@@ -152,26 +117,27 @@ class TicketController extends Controller
      */
     public function index()
     {
-        $params = $this->parameters([
+       $params = $this->parameters([
             'key' => self::T_INT,
             'keyword' => self::T_STRING,
-            'min_time' => self::T_STRING,
-            'max_time' => self::T_STRING,
-            'state' => self::T_INT,
-            'time_key' => self::T_INT,
+            'pay_time_min' => self::T_STRING,
+            'pay_time_max' => self::T_STRING,
+            'pay_type' => self::T_STRING,
+            'pay_state' => self::T_INT,
             'page' => self::T_INT,
             'page_size' => self::T_INT,
             'sort_key' => self::T_STRING,
             'sort_type' => self::T_STRING,
-        ]);
-        $items = TransactionSearchApi::searchOfTicket($params);
-        return $this->success($items);
+       ]);
+       
+       $items = TransactionSearchApi::searchOfOrder($params);
+       return $this->success($items);
     }
-    
+
     /**
-     * @api {get} /ticket/show/{id} 2.臭美券详情
-     * @apiName detail
-     * @apiGroup ticket
+     * @api {get} /order/show/{id} 2.订单详情
+     * @apiName show
+     * @apiGroup order
      *
      * @apiSuccess {String} ticket 臭美券信息
      * @apiSuccess {String} ticket.ticketno 臭美券密码
@@ -284,79 +250,57 @@ class TicketController extends Controller
     public function show($id)
     {
         $id = intval($id);
-        $item = TransactionSearchApi::ticketDetail($id);
+        $item = TransactionSearchApi::orderDetail($id);
         return $this->success($item);
     }
-    
+
     /**
-     * @api {get} /ticket/export 3.臭美券导出
+     * @api {get} /order/export 3.订单导出
      * @apiName export
-     * @apiGroup ticket
+     * @apiGroup order
      *
-     * @apiParam {Number} key  1 臭美券密码 2 用户手机号  3 店铺名称  4 用户设备号  5 代金券编码  6 活动编码
-     * @apiParam {String} keyword  根据key来的关键字
-     * @apiParam {String} time_key  1 消费时间  2付款时间
-     * @apiParam {String} min_time 最小时间 YYYY-MM-DD
-     * @apiParam {String} max_time 最大时间 YYYY-MM-DD
-     * @apiParam {String} state 0 全部  2 未消费 4 已消费 6申请退款 7 退款完成  8 退款中 9 退款失败
-     * @apiParam {Number} page 可选,页数. (从1开始)
-     * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
-     * @apiParam {String} sort_key 排序的键 ['id','updated_at'(创建时间,默认),'code'(付款单号),'type'(付款类型),'pay_money'(付款金额),'cost_money'(换算消费额),'day'(付款日期)]
-     * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
-     * 
-     *
+     * @apiParam {Number} key 1 订单号 2 臭美券密码 3 用户手机号 4 店铺名称
+     * @apiParam {String} keyword 根据key来的关键字
+     * @apiParam {String} pay_time_min 下单最小时间 YYYY-MM-DD
+     * @apiParam {String} pay_time_max 下单最大时间 YYYY-MM-DD
+     * @apiParam {String} pay_type 0 全部 1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
+     * @apiParam {String} pay_state 0 全部 1未支付 2已支付
      *
      * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "未授权访问"
-     *		}
+     * {
+     * "result": 0,
+     * "msg": "未授权访问"
+     * }
      */
     public function export()
-    {
+    { 
         $params = $this->parameters([
             'key' => self::T_INT,
             'keyword' => self::T_STRING,
-            'min_time' => self::T_STRING,
-            'max_time' => self::T_STRING,
-            'state' => self::T_INT,
-            'time_key' => self::T_INT,
+            'pay_time_min' => self::T_STRING,
+            'pay_time_max' => self::T_STRING,
+            'pay_type' => self::T_STRING,
+            'pay_state' => self::T_INT
         ]);
-        $items = TransactionSearchApi::getConditionOfTicket($params)->addSelect('order_item.itemname')->with(['paymentLog'=>function($q){
-            $q->get(['ordersn','tn']);
-        }])->take(5000)
-        ->get()
-        ->toArray();
-        
-        //用户设备信息
-        $ordersns = array_column($items, "ordersn");
-        $platforms = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
-        $items = TransactionSearchApi::addPlatfromInfos($items, $platforms);
-    
+        $items = TransactionSearchApi::getConditionOfOrder($params)->take(10000)
+            ->get()
+            ->toArray();
+      
         $header = [
-            '序号',
-            '臭美券密码',
             '订单编号',
             '支付方式',
+            '交易金额',
+            '下单时间',
             '付款时间',
-            '消费时间',
             '用户臭美号',
             '用户手机号',
-            '用户设备号',
             '店铺名称',
-            '项目名称',
-            '订单金额',
-            '活动编码',
-            '现金券编号',
-            '现金券面额',
-            '抵扣金额',
-            '实付金额',
-            '购物车序号',
-            '第三方流水',
+            '交易状态'
         ];
         $res = self::format_export_data($items);
-        $this->export_xls("臭美券" . date("Ymd"), $header, $res);
+        $this->export_xls("普通订单" . date("Ymd"), $header, $res);
     }
+    
     
     private static function format_export_data($datas)
     {
@@ -371,44 +315,17 @@ class TicketController extends Controller
                 $pay_typename_str = implode("+", $pay_names);
             }
             $res[] = [
-                'id'=>$data['order_ticket_id'],
-                'ticketno'=>self::mask_ticketno($data['ticketno']),
                 'ordersn'=>$data['ordersn'],
-                'payname'=>$pay_typename_str,              
+                'payname'=>$pay_typename_str,
+                'money'=>$data['priceall'],
                 'add_time'=>date("Y-m-d H:i:s",intval($data['add_time'])),
-                'use_time'=>intval($data['use_time'])>0?date("Y-m-d H:i:s",intval($data['use_time'])):"", 
+                'pay_time'=>intval($data['pay_time'])>0?date("Y-m-d H:i:s",intval($data['pay_time'])):"",
                 'username'=>isset($data['user'])&&isset($data['user']['username'])?$data['user']['username']:"",
                 'mobilephone'=>isset($data['user'])&&isset($data['user']['mobilephone'])?$data['user']['mobilephone']:"",
-                'platform_no'=>isset($data['platform'])&&isset($data['platform']['DEVICE_UUID'])? $data['platform']['DEVICE_UUID'] :'',
                 'salonname'=>isset($data['salon'])&&isset($data['salon']['salonname'])?$data['salon']['salonname']:"",
-                'itemname'=>$data['itemname'],
-                'priceall_ori'=>$data['priceall'],
-                'vcSn'=>isset($data['voucher'])&&isset($data['voucher']['vcSn'])?$data['voucher']['vcSn']:"",
-                'vSn'=>isset($data['voucher'])&&isset($data['voucher']['vSn'])?$data['voucher']['vSn']:"",
-                'voucher_money'=>isset($data['voucher'])&&isset($data['voucher']['vUseMoney'])?$data['voucher']['vUseMoney']:'',
-                'voucher_money_used'=>isset($data['voucher'])&&isset($data['voucher']['vUseMoney'])?self::get_voucher_used($data['voucher']['vUseMoney'], $data['priceall']):'',
-                'actuallyPay'=>$data['actuallyPay'],
-                'shopcartsn'=>$data['shopcartsn'],
-                'tn'=>isset($data['payment_log'])&&isset($data['payment_log']['tn'])?$data['payment_log']['tn']:"",
+                'is_pay'=>Mapping::getOrderIsPayName($data['ispay']),
             ];
         }
         return $res;
-    }
-    
-    private static function mask_ticketno($ticketno)
-    {
-        return substr($ticketno, 0,2)."*****".substr($ticketno, strlen($ticketno)-3);
-    }
-    
-    private static function get_voucher_used($voucher_money,$order_money)
-    {
-        $voucher_money = floatval($voucher_money);
-        $order_money = floatval($order_money);
-        $max = max($voucher_money,$order_money);
-        if($max >=$order_money)
-        {
-            return $order_money;
-        }
-        return $voucher_money;
     }
 }
