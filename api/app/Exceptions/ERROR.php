@@ -262,6 +262,59 @@ class ERROR
       * @var unknown
       */
      CONST REFUND_CANT_FIND_TN = -50612;
+     
+     /**
+      * 赏金单没有id传值
+      */
+     CONST BOUNTY_ID_NOT_PASS = -50613;
+     
+     /**
+      * 找不到赏金单
+      * @var unknown
+      */
+     CONST BOUNTY_NOT_FOUND = -50614;
+     
+     /**
+      * 赏金单搜索无此类别关键词
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_KEYWORD_WRONG = -50615;
+     
+     /**
+      * 赏金单搜索暂不支持该支付方式搜索
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_PAYTYPE_WRONG = -50615;
+     
+     /**
+      * 赏金单搜索付款状态不正确
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_ISPAY_WRONG = -50616;
+     
+     /**
+      * 赏金单搜索暂不支持该赏金单状态搜索
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_BTSTATUS_WRONG = -50617;
+     
+     /**
+      * 赏金单查询退款状态不正确
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_REFUNDSTATUS_WRONG = -50618;
+     
+     /**
+      * 赏金单搜索付款状态不正确
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_ISPAY_WRONG = -50616;
+     
+     /**
+      * 赏金单搜索付款状态不正确
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_ISPAY_WRONG = -50616;
 	 
 	 
 	 ////////////消息模块//////////////

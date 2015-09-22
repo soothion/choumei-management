@@ -11,12 +11,13 @@ use App\PaymentLog;
 use Log;
 use Event;
 use Excel;
+use App\Exceptions\ERROR;
 
 class BountyController extends Controller {
 
     /**
-     * @api {post} /bounty/getList 1.赏金单查询列表
-     * @apiName getList
+     * @api {post} /bounty/index 1.赏金单查询列表
+     * @apiName index
      * @apiGroup  bounty
      *
      * @apiParam {Number} isRefund 必选,是否为退款查询：1否 2是.
@@ -95,7 +96,7 @@ class BountyController extends Controller {
      * 		    "msg": "参数有误！"
      * 		}
      */
-    function getList() {
+    function index() {
         $param = $this->param;
         Log::info('Bounty getList param is: ', $param);
         if (isset($param['page']) && !empty($param['page'])) {
@@ -138,8 +139,8 @@ class BountyController extends Controller {
     }
 
     /**
-     * @api {post} /bounty/detail 2.赏金单详情
-     * @apiName detail
+     * @api {post} /bounty/show 2.赏金单详情
+     * @apiName show
      * @apiGroup  bounty
      *
      * @apiParam {Number} no 必选,赏金单号.	 
@@ -205,16 +206,16 @@ class BountyController extends Controller {
      * 		    "message": "参数有误！"
      * 		}
      */
-    function detail() {
+    function show() {
         $param = $this->param;
         Log::info('Bounty detail param is: ', $param);
         if (empty($param['no'])) {
-            return $this->error("没有id传递！");
+            throw new ApiException('没有id传递！', ERROR::BOUNTY_ID_NOT_PASS);
         }
         $id = $param['no'];
         $detail = BountyTask::detail($id);
         if (!$detail) {
-            return $this->error("找不到赏金单！");
+            throw new ApiException('找不到赏金单！', ERROR::BOUNTY_NOT_FOUND);
         }
         return $this->success($detail);
     }
@@ -264,16 +265,16 @@ class BountyController extends Controller {
      * 		    "msg": "参数有误！"
      * 		}
      */
-    function refundDetail() {
+    function refundShow() {
         $param = $this->param;
         Log::info('Bounty refundDetail param is: ', $param);
         if (empty($param['no'])) {
-            return $this->error("没有Sn传递！");
+            throw new ApiException('赏金单详情没有id传值！', ERROR::BOUNTY_ID_NOT_PASS);
         }
         $id = $param['no'];
         $detail = BountyTask::refundDetail($id);
         if (!$detail) {
-            return $this->error("找不到赏金单！");
+            throw new ApiException('找不到赏金单！', ERROR::BOUNTY_NOT_FOUND);
         }
         return $this->success($detail);
     }
@@ -303,11 +304,11 @@ class BountyController extends Controller {
      * 		}
      */
     function accept() {
-        var_dump(app_path() . "\ext\Alipay\lib\alipay_notify.class.php");
+//        var_dump(app_path() . "\ext\Alipay\lib\alipay_notify.class.php");
         $param = $this->param;
         Log::info('Bounty accept param is: ', $param);
         if (empty($param['ids'])) {
-            return $this->error("没有id传递！");
+            throw new ApiException('赏金单没有id传值！', ERROR::BOUNTY_ID_NOT_PASS);
         }
         $ids = $param['ids'];       
         $ids = array_map("intval", $ids);
@@ -315,7 +316,7 @@ class BountyController extends Controller {
 ////        $model = D("Bounty");
         $accept_info = null;
         $ret = BountyTask::accept($ids, $accept_info);
-        var_dump($ret);
+        return $this->success($ret);
 //        $res = [];
 //        if ($ret) { //执行成功
 //            $res['log'] = nl2br($accept_info['info']);
@@ -334,7 +335,8 @@ class BountyController extends Controller {
      * @apiName reject
      * @apiGroup  bounty
      *
-     * @apiParam {Array} ids 必选,赏金单Id数列.	      * 
+     * @apiParam {Array} ids 必选,赏金单Id数列.	  
+     * @apiParam String reason 必选，拒绝退款理由. 
      * @apiSuccess {String} log 退款信息.
      *
      * @apiSuccessExample Success-Response:
@@ -354,7 +356,29 @@ class BountyController extends Controller {
      * 		}
      */
     function reject() {
-        
+        $param = $this->param;
+        Log::info('Bounty accept param is: ', $param);
+        if (empty($param['ids'])) {
+            throw new ApiException('赏金单没有id传值！', ERROR::BOUNTY_ID_NOT_PASS);
+        }
+        $ids = $param['ids'];       
+        $ids = array_map("intval", $ids);
+
+		$reason = $param['reasons'];	
+		$reject_info =null;
+		$ret = $model->reject($ids,$reject_info,$reason);
+		$res = [];
+		if($ret) //执行成功
+		{
+		    $res['log'] = nl2br($reject_info['info']);
+		 
+		    echo json_encode( $res,JSON_UNESCAPED_UNICODE);
+		}
+		else
+		{
+		    $res['log'] = nl2br($reject_info['err_info']);
+		    echo json_encode( $res,JSON_UNESCAPED_UNICODE);
+		}
     }
 
     /**
@@ -382,6 +406,7 @@ class BountyController extends Controller {
     public function exportBounty() {
         $param = $this->param;
         Log::info('Bounty getList param is: ', $param);
+        $param['isRund']=1;
         $query = BountyTask::getQueryByParam($param);
         $sortable_keys = ['btSn', 'money', 'addTime'];
         $sortKey = "addTime";
@@ -396,7 +421,7 @@ class BountyController extends Controller {
         $bountys = BountyTask::search($query, 1, -1, $sortKey, $sortType);
         $header = ['赏金单号', '三方流水号', '支付方式', '下单时间', '造型师手机号', '用户手机号', '店铺名称', '支付状态'];
         Event::fire('bounty.export');
-        $this->export_xls("赏金单" . date("Ymd"), $header, self::format_exportBounty_data($bountys));
+        $this->export_xls("赏金单" . date("Ymd"), $header, BountyTask::format_exportBounty_data($bountys));
     }
 
     /**
@@ -424,6 +449,7 @@ class BountyController extends Controller {
     public function exportRefund() {
         $param = $this->param;
         Log::info('Bounty getList param is: ', $param);
+        $param['isRund']=2;
         $query = BountyTask::getQueryByParam($param);
         $sortable_keys = ['btSn', 'money', 'addTime'];
         $sortKey = "addTime";
@@ -438,57 +464,6 @@ class BountyController extends Controller {
         $bountys = BountyTask::search($query, 1, -1, $sortKey, $sortType);
         $header = ['赏金单号', '支付方式', '退款金额', '申请时间', '用户臭美号', '用户手机号', '店铺名称', '退款状态'];
         Event::fire('bountyRefund.export');
-        $this->export_xls("赏金退款单" . date("Ymd"), $header, self::format_exportRefund_data($bountys));
+        $this->export_xls("赏金退款单" . date("Ymd"), $header, BountyTask::format_exportRefund_data($bountys));
     }
-
-    protected static function format_exportBounty_data($datas) {
-        $res = [];
-        foreach ($datas as $data) {
-            $btSn = isset($data['btSn']) ? $data['btSn'] : '';
-            $tn = isset($data['tn']) ? $data['tn'] : '';
-            $payType = isset($data['payType']) ? $data['payType'] : '';
-            $addTime = isset($data['addTime']) ? $data['addTime'] : '';
-            $hairStylistMobile = isset($data['hairStylistMobile']) ? $data['hairStylistMobile'] : '';
-            $userMobile = isset($data['userMobile']) ? $data['userMobile'] : '';
-            $salonName = isset($data['salonName']) ? $data['salonName'] : '';
-            $isPay = isset($data['isPay']) ? $data['isPay'] : '';
-            $res[] = [
-                $btSn,
-                $tn,
-                $payType,
-                $addTime,
-                $hairStylistMobile,
-                $userMobile,
-                $salonName,
-                $isPay,
-            ];
-        }
-        return $res;
-    }
-
-    protected static function format_exportRefund_data($datas) {
-        $res = [];
-        foreach ($datas as $data) {
-            $btSn = isset($data['btSn']) ? $data['btSn'] : '';
-            $payType = isset($data['payType']) ? $data['payType'] : '';
-            $money = isset($data['money']) ? $data['money'] : '';
-            $endTime = isset($data['endTime']) ? $data['endTime'] : '';
-            $userName = isset($data['userName']) ? $data['userName'] : '';
-            $userMobile = isset($data['userMobile']) ? $data['userMobile'] : '';
-            $salonName = isset($data['salonName']) ? $data['salonName'] : '';
-            $refundStatus = isset($data['refundStatus']) ? $data['refundStatus'] : '';
-            $res[] = [
-                $btSn,
-                $payType,
-                $money,
-                $endTime,
-                $userName,
-                $userMobile,
-                $salonName,
-                $refundStatus,
-            ];
-        }
-        return $res;
-    }
-
 }

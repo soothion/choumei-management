@@ -1,8 +1,8 @@
 <?php
 namespace App\Common;
 use Log;
-require_once (app_path() . "/ext/Alipay/lib/alipay_notify.class.php");
-require_once (app_path() . "/ext/Alipay/lib/alipay_submit.class.php");
+require_once (app_path(). "\\..\\ext\\Alipay\\lib\\alipay_notify.class.php");
+require_once (app_path() . "\\..\\ext\\Alipay\\lib\\alipay_submit.class.php");
 
 class AlipaySimple
 {
@@ -60,7 +60,8 @@ class AlipaySimple
             $res = $alipay_submit->buildRequestForm($params, "post", "确认退款");
         }
         //将生成的数据记录下来
-        simple_log($res."\n", "alipay_refund_form");
+//        simple_log($res."\n", "alipay_refund_form");
+        Log::info("alipay_refund_form is \n".$res);
         return $res;
     }
 

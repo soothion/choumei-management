@@ -641,31 +641,56 @@ Route::group(['middleware' => ['before','after']], function(){
    ));
   
     //赏金单管理-交易管理
-	Route::any('bounty/getList',array(  //赏金单列表
-		'as'=>'bounty.getList',
-		'uses'=>'Bounty\BountyController@getList'
+	Route::any('bounty/index',array(  //赏金单列表
+		'as'=>'bounty.index',
+		'uses'=>'Bounty\BountyController@index'
     ));
     
-    Route::any('bounty/detail',array(  //赏金单详情
-		'as'=>'bounty.detail',
-		'uses'=>'Bounty\BountyController@detail'
+    Route::any('bounty/refundIndex',array(  //赏金单退款列表
+		'as'=>'bounty.refundIndex',
+		'uses'=>'Bounty\BountyController@index'
     ));
     
-    Route::any('bounty/refundDetail',array(  //赏金单退款详情
-		'as'=>'bounty.refundDetail',
-		'uses'=>'Bounty\BountyController@refundDetail'
+    Route::any('bounty/show',array(  //赏金单详情
+		'as'=>'bounty.show',
+		'uses'=>'Bounty\BountyController@show'
     ));
     
-    Route::any('bounty/accept',array(  //赏金单退款详情
+    Route::any('bounty/refundShow',array(  //赏金单退款详情
+		'as'=>'bounty.refundShow',
+		'uses'=>'Bounty\BountyController@refundShow'
+    ));
+    
+    Route::any('bounty/accept',array(  //赏金单退款通过
 		'as'=>'bounty.accept',
 		'uses'=>'Bounty\BountyController@accept'
     ));
     
-    Route::any('bounty/reject',array(  //赏金单退款详情
+    Route::any('bounty/reaccept',array(  //赏金单重新退款通过
+		'as'=>'bounty.reaccept',
+		'uses'=>'Bounty\BountyController@accept'
+    ));
+    
+    Route::any('bounty/reject',array(  //赏金单退款拒绝
 		'as'=>'bounty.reject',
 		'uses'=>'Bounty\BountyController@reject'
     ));
-
+    
+    Route::any('bounty/exportBounty',array(  //导出赏金单列表
+		'as'=>'bounty.exportBounty',
+		'uses'=>'Bounty\BountyController@exportBounty'
+    ));
+    
+    Route::any('bounty/exportRefund',array(  //导出赏金单退款列表
+		'as'=>'bounty.exportRefund',
+		'uses'=>'Bounty\BountyController@exportRefund'
+    ));
+    
+    Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退款回调
+		'as'=>'AlipayRefundNotify.callback_alipay',
+		'uses'=>'Alipay\AlipayRefundNotifyController@callback_alipay'
+    ));
+  
     Route::any('requestLog/index',array(  //请求日志列表
 		'as'=>'requestLog.index',
 		'uses'=>'LoginQuery\LoginQueryController@index'

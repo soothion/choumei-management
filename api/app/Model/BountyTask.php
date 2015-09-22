@@ -125,13 +125,13 @@ class BountyTask extends Model {
                     });
                     break;
                 default:
-                    return $this->error("赏金单搜索无此类别关键词！");
+                    throw new ApiException('赏金单搜索无此类别关键词！', ERROR::BOUNTY_SEARCH_KEYWORD_WRONG);
             }
         }
         if (!empty($input["payType"])) {
             $payType = intval($input["payType"]);
             if ($payType > 9) {
-                return $this->error("赏金单搜索暂不支持该支付方式搜索！");
+                throw new ApiException('赏金单搜索暂不支持该支付方式搜索！', ERROR::BOUNTY_SEARCH_PAYTYPE_WRONG);
             }
             switch ($payType) {
                 case self::PAYTYPE_ALIPAY :
@@ -146,7 +146,7 @@ class BountyTask extends Model {
         //付款状态
         if (!empty($input["isPay"])) {
             if ($input["isPay"] > 2) {
-                return $this->error("赏金单搜索付款状态不正确！");
+                throw new ApiException('赏金单搜索付款状态不正确！', ERROR::BOUNTY_SEARCH_ISPAY_WRONG);
             }
             $isPay = intval($input["isPay"]);
             $query->where('isPay', '=', $isPay);
@@ -156,7 +156,7 @@ class BountyTask extends Model {
         if (!empty($input["btStatus"])) {
             $btStatus = intval($input["btStatus"]);
             if ($btStatus > 5 && $btStatus != 9) {
-                return $this->error("赏金单搜索暂不支持该赏金单状态搜索！");
+                throw new ApiException('赏金单搜索暂不支持该赏金单状态搜索！', ERROR::BOUNTY_SEARCH_BTSTATUS_WRONG);
             }
             if ($btStatus == 5) { //5为不满意状态
                 $query->where('satisfyType', '=', 2);
@@ -185,7 +185,7 @@ class BountyTask extends Model {
                 $query->where('refundStatus', '>=', 5);
                 if (!empty($input["refundStatus"])) {
                     if ($input["refundStatus"] > 9 || $input["refundStatus"] < 5) {
-                        return $this->error("赏金单查询退款状态不正确！");
+                        throw new ApiException('赏金单查询退款状态不正确！', ERROR::BOUNTY_SEARCH_REFUNDSTATUS_WRONG);
                     }
                     $refundStatus = intval($input["refundStatus"]);
                     $query->where('refundStatus', '=', $refundStatus);
@@ -761,6 +761,9 @@ class BountyTask extends Model {
             return $bountyTask[0];
         }
     }
+    public static function getBountyTaskByIds($ids) {
+        return $bountyTasks = Self::getQuery()->whereIn("btId", $ids)->get();
+    }
 
     public static function getRefundBountyTaskByIds($btIds) {
         return $bountyTask = Self::getQuery()->whereIn("btId", $btIds)->where("refundStatus", "<>", 0)->get();
@@ -768,6 +771,14 @@ class BountyTask extends Model {
 
     public static function updateRefundStatus($btIds, $refundStatus) {
         return Self::getQuery()->whereIn("btId", $btIds)->update(["refundStatus" => $refundStatus]);
+    }
+
+    public static function updateRefundStatusBySn($btSns, $refundStatus) {
+        return Self::getQuery()->whereIn("btSn", $btSns)->update(["refundStatus" => $refundStatus]);
+    }
+    
+    public static function updateRejectStatus($ids, $refundStatus,$reason) {
+        return Self::getQuery()->whereIn("btId", $ids)->where('refundStatus','=',self::STATUS_APPLY_REFUND)->update(['refundStatus' => $refundStatus,'cause'=>$reason]);
     }
 
     /**
@@ -835,7 +846,7 @@ class BountyTask extends Model {
             if (!empty($flows_index[$bounty_sn])) {
                 $tn = $flows_index[$bounty_sn]['tn'];
             } else {
-                $output['err_info'] .= "{$bounty_sn} 退款失败!\n";               
+                $output['err_info'] .= "{$bounty_sn} 退款失败!\n";
                 return false;
             }
             switch ($payid) {
@@ -843,7 +854,7 @@ class BountyTask extends Model {
                     $alipay_items[] = ['tn' => $tn, "money" => $money, "reason" => "协商退款"];
                     break;
                 case self::PAYTYPE_WECHAT://微信	
-                    $wechat_items[] = ['bountySn' => $bounty_sn, 'userId' => $userId, 'money' => $money, 'tn' => $tn];
+                    $wechat_items[] = ['bountySn' => $bounty_sn, 'userId' => $userId, 'money' => 0.01, 'tn' => $tn];
                     break;
                 case self::PAYTYPE_UNION_PAY://银联	                 
                     //#@todo         
@@ -858,7 +869,6 @@ class BountyTask extends Model {
             }
         }
 //        var_dump($alipay_items, $wechat_items, $yilian_items, $union_items, $output);
-
 //
         //将订单标记为 退款中
 //        M("bounty_task")->where("`btId` IN (" . implode(",", $ids) . ") AND `refundStatus` in (" . self::STATUS_APPLY_REFUND . ',' . self::STATUS_APPLY_FAILED . ',' . self::STATUS_REFUND_FAILED . ") ")->save(['refundStatus' => self::STATUS_IN_REFUND]);
@@ -867,9 +877,10 @@ class BountyTask extends Model {
         if (count($wechat_items) > 0) {
             $wx_url = env("WXREFUND_URL");
             foreach ($wechat_items as $item) {
-                $item['money']=0.01;
+                $item['money'] = 0.01;
                 $res_str = self::curlRefund($item['bountySn'], $item['userId'], $item['money'], $item['tn'], $wx_url);
 //                simple_log(date("Y-m-d H:i:s") . "\t" . $res_str . "\n", "wx_refund_return");
+                Log::info("wx_refund_return is".$res_str);
                 if (strpos($res_str, "OK") !== false) {
                     $output['info'] .= $item['bountySn'] . " 退款成功\n";
                 } else {
@@ -892,8 +903,7 @@ class BountyTask extends Model {
             //print_r($yilian_items);exit;
             foreach ($yilian_items as $yilian_item) {
                 $data['user_id'] = $yilian_item['user_id'];
-//                $data['amount'] = $yilian_item['money'];
-                $data['amount'] = 0.01;
+                $data['amount'] = $yilian_item['money'];
                 $data['bountysn'] = $yilian_item['bountySn'];
                 $data['tn'] = $yilian_item['tn'];
                 $notify_url = env("YILIAN_REFUND_NOTIFY_URL");
@@ -906,10 +916,9 @@ class BountyTask extends Model {
                 $argStr = json_encode($argc);
                 $param['code'] = $argStr;
                 //print_r($param);exit;
-                var_dump($param,$notify_url);
-//                $yilian_result = self::curlPostRefund($param, $notify_url);
+                $yilian_result = self::curlPostRefund($param, $notify_url);
 //                simple_log(date("Y-m-d H:i:s") . $yilian_result . "\n", "YILIAN_order_refund");
-                //$output['info'] .= $yilian_result."\n";
+                Log::info("yilian result is ".$yilian_result);
                 $resDecode = json_decode($yilian_result, true);
                 if ($resDecode['result'] == 1) {
                     $output['info'] .= $yilian_item['bountySn'] . " 退款成功\n";
@@ -944,8 +953,7 @@ class BountyTask extends Model {
         $argStr = json_encode($argc);
         Log::debug("request parameter:{$argStr}");
         $param['code'] = $argStr;
-//        var_dump($param,$url);
-        return self::httpPost($param,$url);
+        return self::httpPost($param, $url);
     }
 
     /**
@@ -958,6 +966,7 @@ class BountyTask extends Model {
         $curl = curl_init();
         //请求前的信息记录
 //        simple_log(date("Y-m-d H:i:s") . "\t" . json_encode(['url' => $url, 'data' => $data]) . "\n", "REFUND_POST_FLOW");
+        Log::info("wx REFUND_POST_FLOW is". json_encode(['url' => $url, 'data' => $data]));
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_TIMEOUT, self::TIME_OUT);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -970,15 +979,13 @@ class BountyTask extends Model {
         sleep(1);  //暂停1秒
         return $output;
     }
-    
+
     /**
      * 赏金单的支付宝回调地址
      */
-    public static function getAlipayNotifyUrl()
-    {
+    public static function getAlipayNotifyUrl() {
         $url = env("ALIPAY_REFUND_CALLBACK_URL");
-        if(empty($url))
-        {
+        if (empty($url)) {
 //            simple_log("please set the config of `ALIPAY_REFUND_CALLBACK_URL` \n", "refund_error");
 //            throw new \Exception("`ALIPAY_REFUND_CALLBACK_URL` can not be empty!");
             throw new ApiException("`ALIPAY_REFUND_CALLBACK_URL` can not be empty!");
@@ -990,106 +997,159 @@ class BountyTask extends Model {
     public static function encryptionSign($ordersn, $user_id, $money, $tn) {
         return md5(md5($ordersn . $user_id . $money) . $tn . 'choumei.cn');
     }
-    
-     /**
-	 * 通过curl调用远程的服务器
-	 * @param string $orsersn
-	 * @param int $user_id
-	 * @param double $money
-	 * 
-	 */
-	public static function curlPostRefund($data,$url)
-	{
-		//请求前的信息记录
-		simple_log(date("Y-m-d H:i:s")."\t".json_encode(['url'=>$url,'data'=>$data])."\n", "REFUND_POST_FLOW");
-		
-		$curl = curl_init();
-		curl_setopt($curl, CURLOPT_URL, $url);
+
+    /**
+     * 通过curl调用远程的服务器
+     * @param string $orsersn
+     * @param int $user_id
+     * @param double $money
+     * 
+     */
+    public static function curlPostRefund($data, $url) {
+        //请求前的信息记录
+//        simple_log(date("Y-m-d H:i:s") . "\t" . json_encode(['url' => $url, 'data' => $data]) . "\n", "REFUND_POST_FLOW");
+        Log::info("REFUND_POST_FLOW is" . json_encode(['url' => $url, 'data' => $data]));
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_TIMEOUT, self::TIME_OUT);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
-		curl_setopt($curl, CURLOPT_POST, 1);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-		$output = curl_exec($curl);
-		curl_close($curl);		
-		return $output;
-	}
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($curl);
+        curl_close($curl);
+        return $output;
+    }
+
+    /**
+     * 支付宝退款成功的回调
+     */
+    public function alipayCallback() {
+        Log::info("comming alipayCallback!");
+        $args = func_get_args();
+
+        //成功 则改变退款的状态
+        if (isset($args[0]) && isset($args[0]['success']) && count($args[0]['success']) > 0) {
+            $items = $args[0]['success'];
+            $tns = Utils::get_column_array("tn", $items);
+
+            if (count($tns) > 0) {
+//	           $condition[] = "`tn` IN ('".implode("','",$tns)."')";
+//	           $payments = M("payment_log")->get("",['tn','ordersn'],$condition);
+                DB::connection()->setFetchMode(PDO::FETCH_ASSOC);
+                $payments = PaymentLog::getPaymentLogsByTns($tns);
+                $sns = Utils::get_column_array("ordersn", $payments);
+                $payments_index = Utils::column_to_key("ordersn", $payments);
+                if (count($sns) > 0) {
+//	               $update_condition = "`btSn` IN ('".implode("','",$sns)."') AND `refundStatus` IN(".self::STATUS_APPLY_FAILED.",".self::STATUS_APPLY_REFUND.",".self::STATUS_IN_REFUND.")";
+//                   //将赏金单标记为    已退款update
+//	               M('bounty_task')->where($update_condition)->save(['refundStatus'=>self::STATUS_REFUND_COMPLETED]);
+                    self::updateRefundStatusBySn($sns, self::STATUS_REFUND_COMPLETED);
+                }
+            }
+        }
+    }
     
     /**
-	 * 支付宝退款成功的回调
+	 * 拒绝赏金单退款
+	 * @param  array|num $ids        	
+	 * @param array $options        	
 	 */
-	public function alipayCallback()
-	{
-	   $args = func_get_args();
-	   
-	   //成功 则改变退款的状态
-	   if(isset($args[0]) && isset($args[0]['success']) && count($args[0]['success']) > 0)
-	   {
-	       $items = $args[0]['success'];
-	       $tns = Utils::get_column_array("tn",$items);
-	       
-	       if(count($tns) > 0)
-	       {
-	           $condition[] = "`tn` IN ('".implode("','",$tns)."')";
-	           $payments = M("payment_log")->get("",['tn','ordersn'],$condition);
-	           $sns = Utils::get_column_array("ordersn",$payments);
-	           $payments_index = Utils::column_to_key("ordersn",$payments);
-	           if(count($sns) > 0)
-	           {
-	               $update_condition = "`btSn` IN ('".implode("','",$sns)."') AND `refundStatus` IN(".self::STATUS_APPLY_FAILED.",".self::STATUS_APPLY_REFUND.",".self::STATUS_IN_REFUND.")";
-                   //将赏金单标记为    已退款
-	               M('bounty_task')->where($update_condition)->save(['refundStatus'=>self::STATUS_REFUND_COMPLETED]);
-	               
-	               ///新增时  要判断 是否已存在 不要重复写入
-	               ////////////////////暂时不写流水
-// 	               $order_items = M('bounty_order')->get("",['bountySn','userId','salonId','money'],["`bountySn` IN ('".implode("','",$sns)."')"]);
-// 	               $order_index = Utils::column_to_key("bountySn",$order_items);
-	             
-// 	               $fundflow_condtion = [
-// 	                   "`record_no` IN ('".implode("','",$sns). "')",
-// 	                   "`pay_type` = ".self::PAYTYPE_ALIPAY,
-// 	                   "`fftype` = ".self::BOUNTY_TYPE,
-// 	                   "`code_type` = 3",
-// 	               ];
-	               
-// 	               //已存在的流水
-// 	               $exist_fundflows = M('fundflow')->get("",['record_no'],$fundflow_condtion);
-// 	               $exist_fundflow_sns = Utils::get_column_array("record_no");
-// 	               //写入流水记录
-// 	               $fundflow = [
-// 	                   'fftype'=>self::BOUNTY_TYPE,
-// 	                   'crm_ffid'=>'',
-// 	                   'record_no'=>'',
-// 	                   'ticket_no'=>'',
-// 	                   'other_no'=>'',
-// 	                   'user_id'=>'',
-// 	                   'money'=>'',
-// 	                   'pay_type'=>self::PAYTYPE_ALIPAY,
-// 	                   'salonid'=>'',
-// 	                   'code_type'=>3,//3为退款
-// 	                   'add_time'=>time(),
-// 	               ];
-	               
-// 	               foreach($sns as $sn)
-// 	               {
-// 	                 if(in_array($sn, $exist_fundflow_sns))//退款流水已存在  
-// 	                 {
-// 	                     continue;
-// 	                 }
-	                 
-// 	                 $fundflow['record_no'] = $sn;
-// 	                 if(isset($order_index[$sn]))
-// 	                 {
-// 	                     $fundflow['user_id'] = $order_index[$sn]['userId'];
-// 	                     $fundflow['salonid'] = $order_index[$sn]['salonId'];
-// 	                     $fundflow['money'] = $order_index[$sn]['money'];
-// 	                 }
-// 	                 $ret =  M('fundflow')->fast_insert($fundflow);	                                  
-// 	               }               
-	           }
-	       }
-	   }
+	function reject($ids,&$output, $reason) {
+	    $output['err_info'] = "";
+	    $output['info'] = "";
+	    if(is_numeric($ids))
+	    {
+	        $ids = [$ids];
+	    }
+	    $count = count($ids);
+	    if($count < 1)
+	    {
+	        $output['err_info'] = "退款单号不能为空";
+	        return false;
+	    }
+
+	    if(empty($reason))
+	    {
+	        $output['err_info'] = "拒绝原因不能为空";
+	    }
+	    
+//	    $condition[]= "`btId` IN (".implode(",",$ids).")";
+//	    $refunds = M("bounty_task")->get(NULL,[],$condition);
+        DB::connection()->setFetchMode(PDO::FETCH_ASSOC);
+        $refunds=self::getBountyTaskByIds($ids);
+	     
+	    if(!self::checkRefundStatus($refunds))
+	    {
+	        $output['error_info'] = "退款单状态不正确";
+	        return false;
+	    }
+	    
+	    $bountySn = Utils::get_column_array("btSn",$refunds);
+	    $bountySn = array_unique($bountySn);
+	    
+	    //将订单标记为 拒绝退款   
+//	    M("bounty_task")->where("`btId` IN (".implode(",",$ids).") AND `refundStatus` = ".self::STATUS_APPLY_REFUND)->save(
+//	    [
+//	    'refundStatus'=>self::STATUS_APPLY_FAILED ,
+//	    'cause'=>$reason,
+//	    ]
+//	    );	updateRejectStatus
+        self::updateRejectStatus($ids, self::STATUS_APPLY_REFUND,$reason);
+	     
+	    $output['info'] .="执行成功\n";
+	    return true;
 	}
+
+    protected static function format_exportBounty_data($datas) {
+        $res = [];
+        foreach ($datas as $data) {
+            $btSn = isset($data['btSn']) ? $data['btSn'] : '';
+            $tn = isset($data['tn']) ? $data['tn'] : '';
+            $payType = isset($data['payType']) ? $data['payType'] : '';
+            $addTime = isset($data['addTime']) ? $data['addTime'] : '';
+            $hairStylistMobile = isset($data['hairStylistMobile']) ? $data['hairStylistMobile'] : '';
+            $userMobile = isset($data['userMobile']) ? $data['userMobile'] : '';
+            $salonName = isset($data['salonName']) ? $data['salonName'] : '';
+            $isPay = isset($data['isPay']) ? $data['isPay'] : '';
+            $res[] = [
+                $btSn,
+                $tn,
+                $payType,
+                $addTime,
+                $hairStylistMobile,
+                $userMobile,
+                $salonName,
+                $isPay,
+            ];
+        }
+        return $res;
+    }
+
+    protected static function format_exportRefund_data($datas) {
+        $res = [];
+        foreach ($datas as $data) {
+            $btSn = isset($data['btSn']) ? $data['btSn'] : '';
+            $payType = isset($data['payType']) ? $data['payType'] : '';
+            $money = isset($data['money']) ? $data['money'] : '';
+            $endTime = isset($data['endTime']) ? $data['endTime'] : '';
+            $userName = isset($data['userName']) ? $data['userName'] : '';
+            $userMobile = isset($data['userMobile']) ? $data['userMobile'] : '';
+            $salonName = isset($data['salonName']) ? $data['salonName'] : '';
+            $refundStatus = isset($data['refundStatus']) ? $data['refundStatus'] : '';
+            $res[] = [
+                $btSn,
+                $payType,
+                $money,
+                $endTime,
+                $userName,
+                $userMobile,
+                $salonName,
+                $refundStatus,
+            ];
+        }
+        return $res;
+    }
 
 }

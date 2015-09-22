@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Alipay;
 use App\Http\Controllers\Controller;
 Use App\Common\AlipaySimple;
 use App\BountyTask;
+Use Log;
 class AlipayRefundNotifyController extends Controller{
 
 	/**
@@ -17,10 +18,10 @@ class AlipayRefundNotifyController extends Controller{
         Log::info("alipay_callback_bounty's param is",$param);
 	
 	    //以下为debug的写法
-	    //$ret = AlipaySimple::callback(array(D("Bounty"),"alipayCallback"),[],true);
+	    $ret = AlipaySimple::callback(array(D("Bounty"),"alipayCallback"),[],true);
 	
 	    //以下为正式的写法
-	    $ret = AlipaySimple::callback(array(BountyTask,"alipayCallback"),[]);
+//	    $ret = AlipaySimple::callback(array(BountyTask,"alipayCallback"),[]);
 	
 	    if($ret)
 	    {
