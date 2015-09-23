@@ -363,7 +363,11 @@ class ERROR
      CONST MERCHANT_SALON_STATUS_IS_ERROR  =  -51020;
      
      
-     
+     ////////////项目模块//////////////
+     /**
+      *@param 参数错误
+      */
+     CONST ITEM_ERROR =  -52000;
      
      
 

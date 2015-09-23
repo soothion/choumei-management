@@ -76,7 +76,16 @@ Route::any('salon/checkSalonSn',array(  //检测店铺编号
 Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
 	'as'=>'salonAccount.getSalonName',
 	'uses'=>'Merchant\SalonAccountController@getSalonName'
-));		
+));
+Route::any('salonList/getItemType',array(  //获取项目分类
+		'as'=>'salonList.getItemType',
+		'uses'=>'Merchant\ListController@getItemType'
+));
+Route::any('itemInfo/getItems',array(  //获取分类下项目名称
+		'as'=>'itemInfo.getItemByTypeid',
+		'uses'=>'Item\ItemInfoController@getItemByTypeid'
+));
+
 
 // 店铺消费验证  结算
 Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
@@ -664,6 +673,19 @@ Route::group(['middleware'], function(){
     Route::any('requestLog/index',array(  //请求日志列表
 		'as'=>'requestLog.index',
 		'uses'=>'LoginQuery\LoginQueryController@index'
+    ));
+    
+    Route::any('itemInfo/index',array(  //获取项目列表
+    		'as'=>'itemInfo.index',
+    		'uses'=>'Item\ItemInfoController@index'
+    ));
+    Route::any('itemInfo/getAddedService',array(  //获取增值服务
+    		'as'=>'itemInfo.getAddedService',
+    		'uses'=>'Item\ItemInfoController@getAddedService'
+    ));
+    Route::any('itemInfo/create',array(  //创建项目
+    		'as'=>'itemInfo.create',
+    		'uses'=>'Item\ItemInfoController@store'
     ));
 });
 

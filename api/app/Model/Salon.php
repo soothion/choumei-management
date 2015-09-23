@@ -621,7 +621,7 @@ class Salon extends Model {
 			if($affectid)
 			{
 				//触发事件，写入日志
-				//Event::fire('salon.update','店铺Id:'.$salonId.' 店铺名称：'.$data['salonname']);
+				Event::fire('salon.update','店铺Id:'.$salonId.' 店铺名称：'.$data['salonname']);
 			}
 			Dividend::addSalonCode($data,$salonId,2,$joinDividend);//店铺邀请码
 	
@@ -640,7 +640,7 @@ class Salon extends Model {
 				{
 					DB::table('merchant')->where('id','=',$data['merchantId'])->increment('salonNum',1);//店铺数量加1
 					//触发事件，写入日志
-					//Event::fire('salon.save','店铺Id:'.$salonId.' 店铺名称：'.$data['salonname']);
+					Event::fire('salon.save','店铺Id:'.$salonId.' 店铺名称：'.$data['salonname']);
 				}
 			}
 
