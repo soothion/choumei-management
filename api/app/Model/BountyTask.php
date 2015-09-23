@@ -878,7 +878,7 @@ class BountyTask extends Model {
             foreach ($wechat_items as $item) {
                 $res_str = self::curlRefund($item['bountySn'], $item['userId'], $item['money'], $item['tn'], $wx_url);
 //                simple_log(date("Y-m-d H:i:s") . "\t" . $res_str . "\n", "wx_refund_return");
-                Log::info("wx_refund_return is".$res_str);
+                Utils::log('pay', date("Y-m-d H:i:s") . "\t" . $res_str . "\n", "wx_refund_return");
                 if (strpos($res_str, "OK") !== false) {
                     $output['info'] .= $item['bountySn'] . " 退款成功\n";
                 } else {
@@ -898,7 +898,6 @@ class BountyTask extends Model {
 
         //易联退款处理
         if (count($yilian_items) > 0) {
-            //print_r($yilian_items);exit;
             foreach ($yilian_items as $yilian_item) {
                 $data['user_id'] = $yilian_item['user_id'];
                 $data['amount'] = $yilian_item['money'];
@@ -913,10 +912,8 @@ class BountyTask extends Model {
 
                 $argStr = json_encode($argc);
                 $param['code'] = $argStr;
-                //print_r($param);exit;
                 $yilian_result = self::curlPostRefund($param, $notify_url);
-//                Utils::log(date("Y-m-d H:i:s") . $yilian_result . "\n", "YILIAN_order_refund");
-                Log::info("yilian result is ".$yilian_result);
+                Utils::log('pay', date("Y-m-d H:i:s") . $yilian_result . "\n", "YILIAN_order_refund");
                 $resDecode = json_decode($yilian_result, true);
                 if ($resDecode['result'] == 1) {
                     $output['info'] .= $yilian_item['bountySn'] . " 退款成功\n";
@@ -964,7 +961,7 @@ class BountyTask extends Model {
         $curl = curl_init();
         //请求前的信息记录
 //        simple_log(date("Y-m-d H:i:s") . "\t" . json_encode(['url' => $url, 'data' => $data]) . "\n", "REFUND_POST_FLOW");
-        Log::info("wx REFUND_POST_FLOW is". json_encode(['url' => $url, 'data' => $data]));
+        Utils::log('pay', date("Y-m-d H:i:s") . "\t" . json_encode(['url' => $url, 'data' => $data]) . "\n", "REFUND_POST_FLOW");
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_TIMEOUT, self::TIME_OUT);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -984,7 +981,6 @@ class BountyTask extends Model {
     public static function getAlipayNotifyUrl() {
         $url = env("ALIPAY_REFUND_CALLBACK_URL");
         if (empty($url)) {
-//            simple_log("please set the config of `ALIPAY_REFUND_CALLBACK_URL` \n", "refund_error");
             Utils::log('pay', "please set the config of `ALIPAY_REFUND_CALLBACK_URL` \n", "refund_error");
 //            throw new ApiException("`ALIPAY_REFUND_CALLBACK_URL` can not be empty!");
         }
@@ -1005,8 +1001,7 @@ class BountyTask extends Model {
      */
     public static function curlPostRefund($data, $url) {
         //请求前的信息记录
-//        simple_log(date("Y-m-d H:i:s") . "\t" . json_encode(['url' => $url, 'data' => $data]) . "\n", "REFUND_POST_FLOW");
-        Log::info("REFUND_POST_FLOW is" . json_encode(['url' => $url, 'data' => $data]));
+        Utils::log('pay',date("Y-m-d H:i:s") . "\t" . json_encode(['url' => $url, 'data' => $data]) . "\n", "REFUND_POST_FLOW");
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_TIMEOUT, self::TIME_OUT);
@@ -1024,7 +1019,7 @@ class BountyTask extends Model {
      * 支付宝退款成功的回调
      */
     public static function alipayCallback() {
-        Log::info("comming alipayCallback!");
+        Utils::log('pay', "comming bounty alipayCallback!");
         $args = func_get_args();
 
         //成功 则改变退款的状态
