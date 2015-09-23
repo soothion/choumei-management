@@ -837,7 +837,7 @@ class TransactionSearchApi
             'fundflow'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_MANY,'relation'=>['ordersn','record_no']],
             'voucher'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['ordersn','vOrderSn']],
             'user'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['user_id','user_id']],
-            'platfrom'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['ordersn','ORDER_SN']],
+            'platform'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['ordersn','ORDER_SN']],
         ];
         $uids = array_column($datas, "user_id");
      
@@ -852,7 +852,7 @@ class TransactionSearchApi
         $others['fundflow']['datas'] = Fundflow::whereIn("record_no",$ordersns)->where('code_type',TransactionWriteApi::REFUND_CODE_TYPE_OF_CUSTOM)->select($fundflow_fields)->get()->toArray();
         $others['voucher']['datas'] = Voucher::whereIn("vOrderSn",$ordersns)->select($voucher_fields)->get()->toArray();
         $others['user']['datas'] = User::whereIn("user_id",$uids)->select($user_fields)->get()->toArray();
-        $others['platfrom']['datas'] = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
+        $others['platform']['datas'] = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
         return Utils::groupMake($datas, $others);
     }
     

@@ -55,7 +55,9 @@ class TicketController extends Controller
      * @apiSuccess {String} voucher 佣金信息
      * @apiSuccess {String} voucher.vcSn 活动编号
      * @apiSuccess {String} voucher.vSn 代金券编号
-     *
+     * @apiSuccess {String} platform 设备信息
+     * @apiSuccess {String} platform.DEVICE_UUID 设备号
+     * 
      * @apiSuccessExample Success-Response:
      *       {
      *           "result": 1,
@@ -99,6 +101,10 @@ class TicketController extends Controller
      *                           "vOrderSn": "4196296911121",
      *                           "vcSn": "cm164288",
      *                           "vSn": "CM41678592782"
+     *                       },
+     *                       "platform":{
+     *                          "ORDER_SN":"4196296911121",
+     *                          "DEVICE_UUID":"XXXXXXXXXXX"
      *                       }
      *                   },
      *                   {
