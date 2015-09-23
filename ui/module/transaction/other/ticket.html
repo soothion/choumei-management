@@ -66,7 +66,7 @@
               <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">              
                <%if(data.total == 0){%>
                 当前条件筛选条件下所有交易金额统计总应付金额：0.00元  实付金额:  0.00元                 
-               <%else if(data.total > 0 && data.total <= 2000){%>
+               <%}else if(data.total > 0 && data.total <= 2000){%>
                 当前条件筛选条件下所有交易金额统计总应付金额：
                 <%=data.all_amount%>元  实付金额:  <%=data.paied_amount%>元 
               <%}else{%>  
