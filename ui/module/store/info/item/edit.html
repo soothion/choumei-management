@@ -15,9 +15,10 @@
 		</div>
 		<hr />
 	</div>
-	<div class="wrapper" ajat="<%if(query.id){%>merchant/getMerchantList?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+	<div class="wrapper" >
+		<div ajat="<%if(query.id){%>merchant/getMerchantList?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form novalidate method="post" class="form-vertical" data-role="form" action="<%=query._?"merchant/update":"merchant/save"%>">
+		<form method="post" class="form-vertical" data-role="form" action="<%=query._?"merchant/update":"merchant/save"%>">
 			<div class="detail-operation">
 				<button class="btn btn-cancel" type="button">取消</button>
 				<span class="space"></span>
@@ -31,16 +32,16 @@
 				<div class="control">
 					<select>
 					    <option value="可选择已有项目新增闲时特价" selected="">可选择已有项目新增闲时特价</option>
-					    <option value="  洗剪吹">&nbsp; 洗剪吹</option>
-					    <option value="  洗吹">&nbsp; 洗吹</option>
-					    <option value="  烫发">&nbsp; 烫发</option>
-					    <option value="  染发">&nbsp; 染发</option>
-					    <option value="  护发">&nbsp; 护发</option>
-					    <option value="  套餐">&nbsp; 套餐</option>
-					    <option value="  男士快剪">&nbsp; 男士快剪</option>
-					    <option value="  其他">&nbsp; 其他</option>
-					    <option value="  养发">&nbsp; 养发</option>
-					    <option value="  兑换专用">&nbsp; 兑换专用</option>
+					    <option value="洗剪吹">洗剪吹</option>
+					    <option value="洗吹">洗吹</option>
+					    <option value="烫发">烫发</option>
+					    <option value="染发">染发</option>
+					    <option value="护发">护发</option>
+					    <option value="套餐">套餐</option>
+					    <option value="男士快剪">男士快剪</option>
+					    <option value="其他">其他</option>
+					    <option value="养发">养发</option>
+					    <option value="兑换专用">兑换专用</option>
 					</select>
 				</div>
 			</div>
@@ -128,22 +129,24 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>项目有效期：</label>
 				<div class="control">
-					<input type="date" required name="name"><label><input type="checkbox" /><span>无限制</span></label>
+					<input type="date" required name="name"><label><input type="checkbox" checked/><span>无限制</span></label>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定时上架：</label>
 				<div class="control">
-					<input type="date" required name="name" style="min-width:0;width:130px"><input type="time" required name="name" style="min-width:0;width:110px">
-					<label><input type="checkbox" /><span>无限制</span></label>
+					<input type="date" required name="name" style="min-width:0;width:9.5%">
+					<input type="text" required name="name" style="min-width:0;width:9.5%">
+					<label><input type="checkbox" checked /><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定时下架：</label>
 				<div class="control">
-					<input type="date" required name="name" style="min-width:0;width:130px"><input type="time" required name="name" style="min-width:0;width:110px">
-					<label><input type="checkbox" /><span>无限制</span></label>
+					<input type="date" required name="name" style="min-width:0;width:9.5%">
+					<input type="text" required name="name" style="min-width:0;width:9.5%">
+					<label><input type="checkbox" checked/><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
@@ -151,7 +154,7 @@
 				<label class="control-label" for=""><span class="red">*</span>限制购买：</label>
 				<div class="control">
 					<input type="text" required pattern="number" max="99999999"  name="name" placeholder="单人限制购买数">
-					<label><input type="checkbox" /><span>无限制</span></label>
+					<label><input type="checkbox" checked/><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
@@ -159,7 +162,7 @@
 				<label class="control-label" for=""><span class="red">*</span>库存数量：</label>
 				<div class="control">
 					<input type="text" required pattern="number" max="99999999" min="1" name="name" placeholder="限制销售数量">
-					<label><input type="checkbox" /><span>无限制</span></label>
+					<label><input type="checkbox" checked /><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
@@ -168,7 +171,7 @@
 				<div class="control">
 					<label><input type="checkbox" /><span>限推荐用户购买</span></label>
 					<label><input type="checkbox" /><span>限首次下单可购买</span></label>
-					<label><input type="checkbox" /><span>无限制</span></label>
+					<label><input type="checkbox" checked/><span>无限制</span></label>
 				</div>
 			</div>
 			<hr />
@@ -176,7 +179,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定价方式：</label>
 				<div class="control">
-					<label><input type="radio" name="radio" /><span>无规格，统一价</span></label>
+					<label><input type="radio" name="radio" checked /><span>无规格，统一价</span></label>
 					<label><input type="radio" name="radio" /><span>有规格，区间价</span></label>
 				</div>
 			</div>
@@ -214,6 +217,19 @@
 							border-style:dotted;
 							border-color:#ddd;
 						}
+						.form-vertical .btn-plus{
+							width:30px;
+							border-radius:50%;
+							min-width:0;
+							color:#999;
+							border-color:#999;
+							height:30px;
+							padding:0;
+						}
+						.btn-plus i{
+							font-size: 28px;
+							line-height: 31px;
+						}
 					</style>
 					<div class="control-label" >
 						<label><input type="checkbox" /><span>性别</span></label>
@@ -227,7 +243,8 @@
 						<label><input type="checkbox" /><span>造型师</span></label>
 					</div>
 					<div class="control">
-						<input type="text" />
+						<input type="text" style="width:140px;min-width:0;" disabled />
+						<button type="button" class="btn btn-plus" disabled><i class="fa fa-plus"></i></button>
 					</div>
 					<hr />
 					<div class="control-label" >
@@ -245,7 +262,8 @@
 						<label><input type="checkbox" /><span>药水</span></label>
 					</div>
 					<div class="control">
-						<input type="text" />
+						<input type="text" style="width:140px;min-width:0;" disabled />
+						<button type="button" class="btn btn-plus" disabled ><i class="fa fa-plus"></i></button>
 					</div>
 					<hr />
 				</div>
@@ -258,6 +276,7 @@
 			</div>
 		</form>
 		</script>
+		</div>
 	</div>
 	<script type="text/javascript"></script>
   </body>

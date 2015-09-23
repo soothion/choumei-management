@@ -137,6 +137,12 @@ input[type='number'],select,button{
     appearance:none;
 	background:transparent;
 }
+input[type="date"]{
+	position:relative;
+	background:no-repeat right 5px center url('/images/calendar.svg');
+	background-size: 18px 18px;
+	padding-right:30px!important;
+}
 input:focus,
 textarea:focus,
 select:focus{
@@ -532,12 +538,7 @@ label>input[type="radio"]:checked+span:before,label>input[type="checkbox"]:check
 	background:#2cc870;
 	color:#fff;
 }
-input[type="date"]{
-	position:relative;
-	background:no-repeat right 5px center url('/images/calendar.svg');
-	background-size: 18px 18px;
-	padding-right:30px!important;
-}
+
 ::-webkit-clear-button,::-webkit-search-cancel-button {
   -webkit-appearance: none;
   position: relative;
