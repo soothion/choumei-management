@@ -2,11 +2,20 @@
 * @Author: anchen
 * @Date:   2015-09-21 17:44:57
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-21 18:36:18
+* @Last Modified time: 2015-09-23 11:08:11
 */
 
-  $(document).ready(function(){     
-      $(".wrapper").delegate(".reject",'click',function(){
+  $(document).ready(function(){
+      $("#table").delegate('tbody input[type="checkbox"]', 'change', function(event) {
+          var button=$('.table-bottom button');
+          if($('tbody label input:checked').length>0){
+            button.attr('disabled',false);
+          }else{
+            button.attr('disabled',true);
+          }
+      });
+
+      $("#table").delegate(".reject",'click',function(){
           var type = $(this).data('type');
           var arr     = [];          
           if(type == "0") arr.push($(this).data('id'));
@@ -15,10 +24,7 @@
               arr.push($(obj).data('id'));
             })
           }
-          if(type == "1" && arr.length < 1) {
-            lib.popup.alert({text:'请选择具体操作项'});
-            return;
-          }
+
           parent.lib.popup.prompt({
              text   : '拒绝原因： ',
              define : function(str){
@@ -40,7 +46,7 @@
           });        
       });
 
-     $(".wrapper").delegate('.pass', 'click', function(event) {
+     $("#table").delegate('.pass', 'click', function(event) {
           var type = $(this).data('type');
           var arr = [];
           var message = "你确定要执行同意操作？";
@@ -55,11 +61,7 @@
             $('tbody input[type="checkbox"]:checked').each(function(index,obj){
               arr.push($(obj).data('id'));
             })
-          } 
-          if(type == "2" && arr.length < 1) {
-            lib.popup.alert({text:'请选择具体操作项'});
-            return;
-          }          
+          }         
           parent.lib.popup.confirm({
               text:message,
               define:function(){
