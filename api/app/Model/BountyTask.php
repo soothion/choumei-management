@@ -893,7 +893,7 @@ class BountyTask extends Model {
             $notify_url = self::getAlipayNotifyUrl();
             $batch_no = AlipaySimple::getRandomBatchNo();
             //支付宝的表单提交
-            $output['alipay_form'] = AlipaySimple::refund(['notify_url' => $notify_url, 'batch_no' => $batch_no, 'detail_data' => $alipay_items]);
+            $output['alipay_form_args'] = AlipaySimple::refund(['notify_url' => $notify_url, 'batch_no' => $batch_no, 'detail_data' => $alipay_items],2);
         }
 
 
