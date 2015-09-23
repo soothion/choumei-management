@@ -117,7 +117,7 @@
 					localStorage.setItem('token',data.token);
 				}
 			});
-			if(options.timeout&&options.timeout>=20000){
+			if(options.timeout&&options.timeout>=10000){
 				promise.done(function(){
 					parent.lib.popup.close();
 				});
