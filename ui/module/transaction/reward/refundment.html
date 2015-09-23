@@ -291,17 +291,14 @@
                     }
                     if(data.result == "1"){
                         data = data.data;
-                        if(data.alipay && data.alipay.form_args){
+                        if(data.alipay){
                           $.each($("#alipaysubmit").serializeArray(),function(i,field){
-                              $("input[name='"+field.name+"']").val(data.alipay.form_args[field.name])
+                              $("input[name='"+field.name+"']").val(data.alipay[field.name]);
                           })
                           $("#alipaysubmit").submit();
                           return;
                         }
-                        if(data.alipay && data.alipay.info) tip(data.alipay.info);
-                        if(data.wx && data.wx.info) tip(data.wx.info);
-                        if(data.yilian && data.yilian.info) tip(data.yilian.info);
-                        if(data.balance && data.balance.info) tip(data.balance.info);
+                        if(data.msg) tip(data.msg);
                         lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
                     } 
                 });                                       
