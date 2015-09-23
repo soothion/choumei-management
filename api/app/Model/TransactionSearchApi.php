@@ -689,8 +689,7 @@ class TransactionSearchApi
             }
             elseif ($key == 4) //用户设备号
             {
-                //#@todo
-                //$base->whereRaw("user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
+                $base->whereRaw("cm_order.ordersn in (SELECT distinct(`ORDER_SN`) FROM `cm_request_log` WHERE `TYPE` = 'PLC' AND `DEVICE_UUID` LIKE '{$keyword}')");
             }
             elseif ($key == 5) //代金券编码
             {
