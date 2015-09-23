@@ -7,6 +7,8 @@ use DB;
 use Log;
 Use PDO;
 Use URL;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class BountyTask extends Model {
 
@@ -826,7 +828,6 @@ class BountyTask extends Model {
         $yilian_items = []; //易联的退款项
         //支付流水
         $bountySn = Utils::get_column_array("btSn", $refunds);
-//        var_dump($bountySn);
         $bountySn = array_unique($bountySn);
         $flows = [];
         if (count($bountySn) > 0) {

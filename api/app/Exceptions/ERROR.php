@@ -308,13 +308,13 @@ class ERROR
       * 赏金单搜索付款状态不正确
       * @var unknown
       */
-     CONST BOUNTY_SEARCH_ISPAY_WRONG = -50616;
+     CONST BOUNTY_SEARCH_ISPAY_WRONG = -50619;
      
      /**
-      * 赏金单搜索付款状态不正确
+      * 拒接退款需要理由
       * @var unknown
       */
-     CONST BOUNTY_SEARCH_ISPAY_WRONG = -50616;
+     CONST BOUNTY_REJECT_NOREASON = -50620;
 	 
 	 
 	 ////////////消息模块//////////////

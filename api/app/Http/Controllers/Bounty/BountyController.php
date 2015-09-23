@@ -12,6 +12,7 @@ use Log;
 use Event;
 use Excel;
 use App\Exceptions\ERROR;
+use App\Exceptions\ApiException;
 
 class BountyController extends Controller {
 
@@ -364,7 +365,9 @@ class BountyController extends Controller {
         }
         $ids = $param['ids'];       
         $ids = array_map("intval", $ids);
-
+        if (empty($param['reasons'])) {
+            throw new ApiException('拒接退款需要理由！', ERROR::BOUNTY_REJECT_NOREASON);
+        }
 		$reason = $param['reasons'];	
 		$reject_info =null;
 		$ret = $model->reject($ids,$reject_info,$reason);
