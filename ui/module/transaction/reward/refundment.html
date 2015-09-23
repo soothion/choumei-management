@@ -112,7 +112,7 @@
             </script>          
         </div>
 
-      <div class="table" ajat="bounty/getList?isRefund=2&<%=query._%>#domid=table&tempid=table-t" id="table">
+      <div class="table" ajat="bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t" id="table">
       <script type="text/template" id="table-t">
       <%if(data.amount && data.amount.amount){%>
         <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
@@ -274,7 +274,7 @@
             text:(data.result == 1 ? "操作成功" : data.msg),
             time:2000,
             define:function(){
-                lib.ajat('bounty/getList?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
+                lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
             }
           });
         }); 
