@@ -62,10 +62,14 @@
 
             <div class="table" ajat="ticket/index?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
-            <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
-            当前条件筛选条件下所有交易金额统计总应付金额：
-            <%=data.all_amount%>元  实付金额  <%=data.paied_amount%>元 
-            </div>            
+
+            <%if(data.all_amount && data.paied_amount){%>
+              <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
+              当前条件筛选条件下所有交易金额统计总应付金额：
+              <%=data.all_amount%>元  实付金额  <%=data.paied_amount%>元 
+              </div> 
+            <%}%>  
+                     
             <table>
               <thead>
                 <tr>

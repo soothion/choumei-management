@@ -68,9 +68,11 @@
 
             <div class="table" ajat="order/index?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
-            <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
-            当前条件下所有交易金额统计 总金额：<%=data.total_money%>元
-            </div>
+            <%if(data.total_money){%>
+              <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
+              当前条件下所有交易金额统计 总金额：<%=data.total_money%>元
+              </div>
+            <%}%>
             <table>
               <thead>
                 <tr>

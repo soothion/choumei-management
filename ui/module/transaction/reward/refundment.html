@@ -114,9 +114,11 @@
 
       <div class="table" ajat="bounty/getList?isRefund=2&<%=query._%>#domid=table&tempid=table-t" id="table">
       <script type="text/template" id="table-t">
-      <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
-      当前条件下所有交易金额统计 总金额：<%=data.amount && data.amount.amount%>元
-      </div>      
+      <%if(data.amount && data.amount.amount){%>
+        <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
+         当前条件下所有交易金额统计 总金额：<%=data.amount && data.amount.amount%>元
+        </div>  
+      <%}%>     
       <table>
         <thead>
           <tr>
