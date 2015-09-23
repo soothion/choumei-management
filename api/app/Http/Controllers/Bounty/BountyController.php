@@ -125,9 +125,12 @@ class BountyController extends Controller {
         $count = BountyTask::getcount($query);
 
         $bountys = BountyTask::search($query, $page, $size, $sortKey, $sortType);
-
-        $amount = BountyTask::getAmount($bountys);
+        if($count<=2000)
+        {
+            $amount = BountyTask::getAmount($bountys);
+        }
         $res = [];
+        
 
         $res["total"] = ceil($count / $size);
         $res["per_page"] = $size;
