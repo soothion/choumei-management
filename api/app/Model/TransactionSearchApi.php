@@ -683,7 +683,7 @@ class TransactionSearchApi
         // 付款状态
         if(isset($params['state']) && !empty($params['state']))
         {
-            $base->where("order_ticket.status", "=".$params['state']);
+            $base->where("order_ticket.status", $params['state']);
         }
         
         // 关键字搜索
