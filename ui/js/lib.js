@@ -818,8 +818,12 @@
                 if(val){
                 	if(isNaN(val)){
                 		$(this).text(new Date(val).format("yyyy-MM-dd"));
-                	}else{
-                		$(this).text(new Date(val*1000).format("yyyy-MM-dd"));
+                	}else{                		
+                        if(val*1){
+	                		$(this).text(new Date(val*1000).format("yyyy-MM-dd"));                        	
+                        }else{
+                        	$(this).text("");
+                        }
                 	}
                 }
             });
@@ -830,7 +834,11 @@
                 	if(isNaN(val)){
                 		$(this).text(new Date(val).format("yyyy-MM-dd hh:mm:ss"));
                 	}else{
-                		$(this).text(new Date(val*1000).format("yyyy-MM-dd hh:mm:ss"));
+                        if(val*1){
+	                		$(this).text(new Date(val*1000).format("yyyy-MM-dd hh:mm:ss"));
+                        }else{
+                        	$(this).text("");
+                        }
                 	}
                 }
             });
