@@ -986,8 +986,8 @@ class BountyTask extends Model {
         $url = env("ALIPAY_REFUND_CALLBACK_URL");
         if (empty($url)) {
 //            simple_log("please set the config of `ALIPAY_REFUND_CALLBACK_URL` \n", "refund_error");
-//            throw new \Exception("`ALIPAY_REFUND_CALLBACK_URL` can not be empty!");
-            throw new ApiException("`ALIPAY_REFUND_CALLBACK_URL` can not be empty!");
+            Utils::log('pay', "please set the config of `ALIPAY_REFUND_CALLBACK_URL` \n", "refund_error");
+//            throw new ApiException("`ALIPAY_REFUND_CALLBACK_URL` can not be empty!");
         }
         return $url;
     }

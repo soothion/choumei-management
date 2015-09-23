@@ -287,7 +287,7 @@ class BountyController extends Controller {
      *
      * @apiParam {Array} ids 必选,赏金单Id数列.	   
      *  
-     * @apiSuccess {String} log 退款信息
+     * @apiSuccess {String} msg 退款信息
      * @apiSuccess {String} alipay 微信
      *
      * @apiSuccessExample Success-Response:
@@ -331,13 +331,13 @@ class BountyController extends Controller {
 
         $res = [];
         if ($ret) { //执行成功
-            $res['log'] = nl2br($accept_info['info']);
+            $res['msg'] = nl2br($accept_info['info']);
             if (!empty($accept_info['alipay_form_args'])) {
                 $res['alipay'] = $accept_info['alipay_form_args'];
             }
             return $this->success($res);
         } else {
-            $res['log'] = nl2br($accept_info['err_info']);
+            $res['msg'] = nl2br($accept_info['err_info']);
             return $this->success($res);
         }
     }
@@ -349,7 +349,7 @@ class BountyController extends Controller {
      *
      * @apiParam {Array} ids 必选,赏金单Id数列.	  
      * @apiParam {String} reason 必选，拒绝退款理由. 
-     * @apiSuccess {String} log 退款信息.
+     * @apiSuccess {String} msg 退款信息.
      *
      * @apiSuccessExample Success-Response:
      * 	{
@@ -383,11 +383,11 @@ class BountyController extends Controller {
         $ret = BountyTask::reject($ids, $reject_info, $reason);
         $res = [];
         if ($ret) { //执行成功
-            $res['log'] = nl2br($reject_info['info']);
+            $res['msg'] = nl2br($reject_info['info']);
 
             return $this->success(json_encode($res, JSON_UNESCAPED_UNICODE));
         } else {
-            $res['log'] = nl2br($reject_info['err_info']);
+            $res['msg'] = nl2br($reject_info['err_info']);
             return $this->success(json_encode($res, JSON_UNESCAPED_UNICODE));
         }
     }
