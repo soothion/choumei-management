@@ -15,15 +15,14 @@ use Event;
 use App\CompanyCodeCollect;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use App\BusinessStaff;
 
 class SalonController extends Controller {
 		
-	//预定码
-	private $codeArr = array('6890','9988','9966','5988','6990','8668','6666','6888','5800','6688','8918','9898','1200','1201','1202','1299','1211','8608','1206','1207','1208','1298','1210','1279','1212','1213','1222','1215','1217','1218','0202','1258','1290','1220','1221','1223','1224','1887','1881','1890','1818','1877','1876','1875','1873','1872','1871','1870','1869','1868','1867','1866','1865','1863','1861','1860','1858','1857','1856','1855','1853','1852','1851','1850','1839','1836','1835','1832','1831','1900','1909','1828','1827','1826','1825','1823','1822','1821','1820','1901','1902','1903','1905','1906','1907','1226','1227','1287','1230','1286','1717','5917','0628','7777','0718','3333','1111','0805','0810','0822','1777','1010','0626');
-	
     private $addFields = array(
 			    		"merchantId",
 			            "salonname",
+    					"logo",
 						"addr",
 						"addrlati",
 						"addrlong",
@@ -72,7 +71,7 @@ class SalonController extends Controller {
 	* @apiSuccess {Number} to 结束数据.
 	* @apiSuccess {Number} salonid 店铺Id.
 	* @apiSuccess {String} salonname 店铺名称.
-	* @apiSuccess {String} shopType 店铺类型 店铺类型  1预付款店 2投资店 3金字塔店.
+	* @apiSuccess {String} shopType 店铺类型 店铺类型  1预付款店 2投资店 3金字塔店4高端点写字楼店.
 	* @apiSuccess {String} zone 商圈.
 	* @apiSuccess {String} district 行政区域.
 	* @apiSuccess {String} salestatus 状态 0终止合作 1正常合作.
@@ -135,8 +134,7 @@ class SalonController extends Controller {
 	
 	public function index()
 	{
-		$where = "";
-		
+		$where = [];
 		$param = $this->param;
 		$shopType = isset($param["shopType"])?intval($param["shopType"]):0;//店铺类型
 		$zone = isset($param["zone"])?$param["zone"]:0;//所属商圈
@@ -200,7 +198,7 @@ class SalonController extends Controller {
 	* @apiParam {Number} addrlati 必填,地理坐标纬度.
 	* @apiParam {Number} addrlong 必填,地理坐标经度.
 	* @apiParam {Number} zone 必填,所属商圈 .
-	* @apiParam {Number} shopType 必填,店铺类型  1预付款店 2投资店 3金字塔店.
+	* @apiParam {Number} shopType 必填,店铺类型  1预付款店 2投资店 3金字塔店4高端点5写字楼店.
 	* @apiParam {String} contractTime 可选,合同日期  Y-m-d.
 	* @apiParam {String} contractEndTime 可选,合同截止日期 Y-m-d.
 	* @apiParam {String} bargainno 可选,合同编号.
@@ -257,6 +255,10 @@ class SalonController extends Controller {
 	* @apiParam {String} ssEndTime 可选,强补贴截止日.
 	* @apiParam {String} strongClaim 可选,强补贴月交易单数要求.
 	* @apiParam {String} subsidyPolicy 可选,首单指标补贴政策.
+	* @apiParam {String} logo 可选,logo.
+	* @apiParam {String} salonImg[] 可选,店铺图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
+	* @apiParam {String} workImg[] 可选,团队图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
+	* 
 	* @apiDescription 合同图片 营业执照 法人执照 demo
 	*	[
 	*		{
@@ -307,7 +309,7 @@ class SalonController extends Controller {
 	* @apiParam {Number} addrlati 必填,地理坐标纬度.
 	* @apiParam {Number} addrlong 必填,地理坐标经度.
 	* @apiParam {Number} zone 必填,所属商圈 .
-	* @apiParam {Number} shopType 必填,店铺类型  1预付款店 2投资店 3金字塔店.
+	* @apiParam {Number} shopType 必填,店铺类型  1预付款店 2投资店 3金字塔店4高端点5写字楼店.
 	* @apiParam {String} contractTime 可选,合同开始日期  Y-m-d.
 	* @apiParam {String} contractEndTime 可选,合同截止日期 Y-m-d.
 	* @apiParam {String} bargainno 可选,合同编号.
@@ -364,6 +366,10 @@ class SalonController extends Controller {
 	* @apiParam {String} ssEndTime 可选,强补贴截止日.
 	* @apiParam {String} strongClaim 可选,强补贴月交易单数要求.
 	* @apiParam {String} subsidyPolicy 可选,首单指标补贴政策.
+	* @apiParam {String} logo 可选,logo.
+	* @apiParam {String} salonImg[] 可选,店铺图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
+	* @apiParam {String} workImg[] 可选,团队图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
+	* 
 	* 
 	* @apiDescription 合同图片 营业执照 法人执照 demo
 	*	[
@@ -418,6 +424,7 @@ class SalonController extends Controller {
 		$data["salonname"] = isset($param["salonname"])?trim($param["salonname"]):"";//店铺名称
 		$data["district"] = isset($param["district"])?trim($param["district"]):"";//行政地区  
 		$data["addr"] = isset($param["addr"])?trim($param["addr"]):"";//详细街道信息
+		$data["logo"] = isset($param["logo"])?trim($param["logo"]):0;//店铺logo
 		
 		$data["addrlati"] = isset($param["addrlati"])?trim($param["addrlati"]):"";//地理坐标纬度   
 		$data["addrlong"] = isset($param["addrlong"])?trim($param["addrlong"]):"";//地理坐标经度
@@ -492,8 +499,10 @@ class SalonController extends Controller {
 		$dataInfo["strongClaim"] = isset($param["strongClaim"])?trim($param["strongClaim"]):"";//强补贴月交易单数要求
 		$dataInfo["subsidyPolicy"] = isset($param["subsidyPolicy"])?trim($param["subsidyPolicy"]):"";//首单指标补贴政策
 		
+		//店铺图集  团队图集
+		$img['salonImg'] = isset($param['salonImg'])?$param['salonImg']:[];
+		$img['workImg'] = isset($param['workImg'])?$param['workImg']:[];
 		
-
 		//参数检测
 		$postData = array_merge($data,$dataInfo);
 		$retMissing = "";
@@ -502,22 +511,21 @@ class SalonController extends Controller {
 			 if(!$postData[$val])
 			 {
 			 	 $retMissing .= $val."-";
-			 }
-			 
+			 } 
 		}
 		if($retMissing)
 		{
 			throw new ApiException("缺失参数".$retMissing, ERROR::MERCHANT_ERROR);
 		}
+		
 		$merchantQuery = Merchant::getQuery();
 		$salonQuery = Salon::getQuery();
-		
-		
 		$merchantData = $merchantQuery->where(array("id"=>$data["merchantId"],"status"=>1))->get();//商户id 检测
 		if(!$merchantData)
 		{
 			throw new ApiException("商户id有误", ERROR::MERCHANT_ID_IS_ERROR);
 		}
+		
 		$joinDividend = isset($param['dividendStatus'])?intval($param['dividendStatus']):'';
 		if($data["salonid"])
 		{
@@ -526,7 +534,6 @@ class SalonController extends Controller {
 			$dataInfo["upTime"] = time();
 			
 			$ordRs = $salonQuery->where($whereInfo)->select(array("sn"))->get();
-			
 			if(!$ordRs)
 			{
 				throw new ApiException("店铺数据不存在，id错误", ERROR::MERCHANT_ID_IS_ERROR);
@@ -542,7 +549,7 @@ class SalonController extends Controller {
 			$dataInfo["addTime"] = time();
 		}
 		
-		$row = $this->doadd($data,$dataInfo,$where,$whereInfo,$joinDividend);
+		$row = Salon::doadd($data,$dataInfo,$img,$where,$whereInfo,$joinDividend);
 		if($row)
 		{
 			return $this->success();
@@ -636,6 +643,39 @@ class SalonController extends Controller {
 	* @apiSuccess {String} ssEndTime 强补贴截止日 (时间戳).
 	* @apiSuccess {String} strongClaim 强补贴月交易单数要求.
 	* @apiSuccess {String} subsidyPolicy 首单指标补贴政策.
+	* @apiSuccess {String} logo 店铺logo.
+	* @apiSuccess {String} salonImg 店铺图集
+	*   "salonImg": [
+    *        {
+    *           "worksid": 11316,
+    *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364305891.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364305891.jpg\"}",
+    *             "flags": 3
+    *         },
+    *        {
+    *             "worksid": 11315,
+    *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/143434956344103.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_143434956344103.jpg\"}",
+    *             "flags": 3
+    *         },
+    *         {
+    *             "worksid": 11314,
+    *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/143433645017580.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_143433645017580.jpg\"}",
+    *             "flags": 3
+    *         },
+    *         {
+    *             "worksid": 11313,
+    *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364613818.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364613818.jpg\"}",
+    *             "flags": 3
+    *         }
+    *    ],
+    * @apiSuccess {String} workImg 团队图集
+    *     "workImg": [
+    *         {
+    *             "worksid": 11317,
+    *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\"}",
+    *             "flags": 4
+    *         }
+	* 		],
+	* 
 	*/
 	public function getSalon()
 	{
@@ -651,186 +691,6 @@ class SalonController extends Controller {
 	}
 	
 
-	
-	/**
-	 * 添加修改操作
-	 * 
-	 * */
-	private  function doadd($data,$dataInfo,$where='',$whereInfo='',$joinDividend=0)
-	{
-
-		DB::beginTransaction();
-		if($where)//修改
-		{
-			$salonId = $whereInfo["salonid"];
-			Salon::setSalonGrade($salonId,$data,$dataInfo,2);//店铺等级调整
-			Salon::where($where)->update($data);
-			$salonTmpInfo = SalonInfo::where($whereInfo)->first();
-			if(!$salonTmpInfo)
-			{
-				DB::table('salon_info')->insertGetId(array("salonid"=>$whereInfo["salonid"]));
-			}
-			$affectid = SalonInfo::where($where)->update($dataInfo);
-			
-			if($affectid)
-			{
-				//触发事件，写入日志
-				Event::fire('salon.update','店铺Id:'.$salonId." 店铺名称：".$data['salonname']);
-			}
-			$this->addSalonCode($data,$salonId,2,$joinDividend);//店铺邀请码
-
-		}
-		else //添加
-		{
-			
-			$data['sn'] = Salon::getSn($data['merchantId']);//店铺编号
-			$salonId = DB::table('salon')->insertGetId($data);
-			
-			if($salonId)
-			{
-					$dataInfo["salonid"] = $salonId;
-					$affectid = DB::table('salon_info')->insertGetId($dataInfo);
-					if($affectid)
-					{
-						DB::table('merchant')->where("id","=",$data["merchantId"])->increment('salonNum',1);//店铺数量加1
-						//触发事件，写入日志
-						Event::fire('salon.save','店铺Id:'.$salonId." 店铺名称：".$data['salonname']);
-					}	
-			}
-			$this->addSalonCode($data,$salonId,1,$joinDividend);//添加店铺邀请码
-			Salon::setSalonGrade($salonId,$data,$dataInfo,1);//店铺等级调整
-		}
-		
-		
-		
-		//超级管理员设置
-		Salon::where(array('salonid'=>$salonId))->update(array('puserid'=>$this->setAdminAccount($data["merchantId"])));
-		
-		if($affectid)
-		{
-			DB::commit();
-		}
-		else 
-		{
-			DB::rollBack();  
-		}
-		return $affectid;
-
-	}
-
-	/**
-	 * 设置超级管理员账户
-	 * 
-	 * */
-	private function setAdminAccount($merchantId)
-	{
-		$userId = 0;
-		$salonAccount = SalonUser::where(array("merchantId"=>$merchantId,"roleType"=>2,"status"=>1))->select(array("salon_user_id"))->first();
-		if($salonAccount)
-		$userId = $salonAccount->salon_user_id;
-		
-		return $userId;
-		
-	}
-	
-	
-	/**
-	 * 添加店铺邀请码
-	 * act 1添加 2修改
-	 * */
-	private function addSalonCode($data,$salonid,$act,$joinDividend)
-	{
-		if(!$salonid){ return false;}
-		$query = Dividend::getQuery();
-		if($joinDividend == 1)//关闭
-		{
-			$status = 1;
-		}
-		else   //开启
-		{
-			$status = 0;
-		}
-		$info = Dividend::where(array('salon_id'=>$salonid))->first();
-		if($data['shopType'] == 3 && $info)  //金字塔店
-		{
-			$devData['status'] = $status;
-			$devData['update_time'] = time();
-			if($status == 0)
-			{
-				$devData['last_start_time'] = time();
-			}
-			$query->where('salon_id',$salonid)->update($devData);
-		}
-		else if($data['shopType'] != 3 && $info) //修改店铺类型不是 金字塔    --关闭
-		{
-			$query->where('salon_id',$salonid)->update(array('status'=>1,'update_time'=>time()));
-		}
-		elseif ($data['shopType'] == 3 && !$info) //添加
-		{
-			$code = $this->getRecommendCode();
-			$townInfo = Town::where(array("tid"=>$data["district"]))->first();
-			// 写入推荐码表
-			$datas=array (
-					"salon_id" => $salonid,
-					"district" => $townInfo["tname"]?:'',
-					"recommend_code" => $code,
-					"status" => $status,
-					"add_time" => time ()
-			);
-			DB::table('dividend')->insertGetId($datas);
-		}
-		
-	}
-	
-	/**
-	 * 获取推荐码
-	 * 
-	 * @return integer
-	 */
-	private function getRecommendCode() {
-		$code = $this->randNum ( 4 );
-        // 如果不是四位随机数则重新生成
-        if (intval ( $code ) < 1000){
-            return $this->getRecommendCode ();
-        }
-        
-        $codeArr = $this->codeArr;//屏蔽预定码
-        if(in_array($code, $codeArr))
-        {
-        	return $this->getRecommendCode ();
-        }
-
-		// 如果数据库中已在存在则继续执行
-        $codeTmpInfo = Dividend::where(array("recommend_code"=>$code))->first();
-		if ($codeTmpInfo){
-            return $this->getRecommendCode ();
-        }
-        
-        // 集团码
-        $codeComTmpInfo = CompanyCodeCollect::where(array("code"=>$code))->first();
-        if ($codeComTmpInfo){
-        	return $this->getRecommendCode ();
-        }
-
-		return $code;
-	}
-	
-	/**
-	 * 生成随即数字
-	 * @param int $length
-	 * @return string
-	 */
-	private function randNum($length){
-		$pattern = '12356890';    //字符池,可任意修改
-		$key = '';
-	
-		for($i=0;$i<$length;$i++)    {
-			$key .= $pattern{mt_rand(0, strlen($pattern) - 1)};    //生成php随机数
-		}
-	
-		return $key;
-	}
-	
 	
 	/**
 	* @api {post} /salon/checkSalonSn 5.检测店铺编号是否重复
@@ -1008,7 +868,6 @@ class SalonController extends Controller {
 			return $this->success();
 		}
 
-		
 	}
 	
 	
@@ -1054,7 +913,7 @@ class SalonController extends Controller {
 	public function export()
 	{
 		$where = "";
-		$shopTypeArr = array(0=>'',1=>'预付款店',2=>'投资店',3=>'金字塔店');
+		$shopTypeArr = array(0=>'',1=>'预付款店',2=>'投资店',3=>'金字塔店',4=>'高端点',5=>'写字楼店');
 		$accountTypeArr = array(0=>'',1=>'对公帐户',2=>'对私帐户');
 		$statusArr = array(0=>'终止合作',1=>'正常合作',2=>'删除');
 		$gradeArr = array(0=>'',1=>'S',2=>'A',3=>'B',4=>'C',5=>'新落地',6=>'淘汰区');

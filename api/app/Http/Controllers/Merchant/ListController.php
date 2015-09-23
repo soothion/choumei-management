@@ -9,8 +9,6 @@ use App\BusinessStaff;
 use App\Province;
 use App\SalonCity;
 use App\SalonArea;
-use App\GetPingYing;
-
 use App\Town;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
@@ -150,7 +148,6 @@ class ListController extends Controller {
 	 *	        {
 	 *	            "id": 1,
 	 *	            "businessName": "张三",
-	 *	            "py": "zhangsan"
 	 *	        },
 	 *	        ......
 	 *	    ]
@@ -166,15 +163,7 @@ class ListController extends Controller {
 	 */	
     public function getBussesName()
     {
-    	$sql = "SELECT id,businessName from cm_business_staff ORDER BY CONVERT( businessName USING gbk ) COLLATE gbk_chinese_ci ASC";
-    	$result = DB::select($sql);
-    	$rs = array();
-    	foreach ($result as $key=>$val)
-    	{
-    		$rs[$key]['businessName'] = $val->businessName;
-    		$rs[$key]['id'] = $val->id;
-    		//$rs[$key]['py'] = GetPingYing::encode($val->businessName,'all');//中文转拼音
-    	}
+    	$rs = BusinessStaff::getBusinessStaff();
 		return $this->success($rs);
     }
 
