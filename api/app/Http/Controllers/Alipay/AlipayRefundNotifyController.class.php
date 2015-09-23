@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Alipay;
 use App\Http\Controllers\Controller;
-Use App\Common\AlipaySimple;
+Use App\AlipaySimple;
 use App\BountyTask;
-Use Log;
+Use App\Utils;
 class AlipayRefundNotifyController extends Controller{
 
 	/**
@@ -14,14 +14,15 @@ class AlipayRefundNotifyController extends Controller{
 	{
 	    // 记录回调传入的值 
         $param=$this->param;   
-//	    simple_log(date("Y-m-d H:i:s") . "\t " . json_encode($input,JSON_UNESCAPED_UNICODE)."\t\n", "alipay_callback_bounty");
-        Log::info("alipay_callback_bounty's param is",$param);
+	    Utils::log('pay',date("Y-m-d H:i:s") . "\t " . json_encode($param,JSON_UNESCAPED_UNICODE)."\t\n", "alipay_callback_bounty");
 	
 	    //以下为debug的写法
-	    $ret = AlipaySimple::callback(array(D("Bounty"),"alipayCallback"),[],true);
+//	    $ret = AlipaySimple::callback(array(D("Bounty"),"alipayCallback"),[],true);
 	
 	    //以下为正式的写法
-//	    $ret = AlipaySimple::callback(array(BountyTask,"alipayCallback"),[]);
+	    $ret = AlipaySimple::callback(function($args){
+            return BountyTask::alipayCallback($args);
+        },[]);
 	
 	    if($ret)
 	    {

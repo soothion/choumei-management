@@ -7,7 +7,6 @@ use DB;
 use Log;
 Use PDO;
 Use URL;
-Use App\Common\AlipaySimple;
 
 class BountyTask extends Model {
 
@@ -868,11 +867,10 @@ class BountyTask extends Model {
                     $output['err_info'] .= "{$bounty_sn} 不支持该支付方式的退款 \n";
             }
         }
-//        var_dump($alipay_items, $wechat_items, $yilian_items, $union_items, $output);
 //
         //将订单标记为 退款中
 //        M("bounty_task")->where("`btId` IN (" . implode(",", $ids) . ") AND `refundStatus` in (" . self::STATUS_APPLY_REFUND . ',' . self::STATUS_APPLY_FAILED . ',' . self::STATUS_REFUND_FAILED . ") ")->save(['refundStatus' => self::STATUS_IN_REFUND]);
-//        self::updateRefundStatus($ids,self::STATUS_IN_REFUND);
+        self::updateRefundStatus($ids,self::STATUS_IN_REFUND);
         //微信的退款处理
         if (count($wechat_items) > 0) {
             $wx_url = env("WXREFUND_URL");
@@ -917,7 +915,7 @@ class BountyTask extends Model {
                 $param['code'] = $argStr;
                 //print_r($param);exit;
                 $yilian_result = self::curlPostRefund($param, $notify_url);
-//                simple_log(date("Y-m-d H:i:s") . $yilian_result . "\n", "YILIAN_order_refund");
+//                Utils::log(date("Y-m-d H:i:s") . $yilian_result . "\n", "YILIAN_order_refund");
                 Log::info("yilian result is ".$yilian_result);
                 $resDecode = json_decode($yilian_result, true);
                 if ($resDecode['result'] == 1) {

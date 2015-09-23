@@ -316,18 +316,19 @@ class BountyController extends Controller {
 ////        $model = D("Bounty");
         $accept_info = null;
         $ret = BountyTask::accept($ids, $accept_info);
-        return $this->success($ret);
-//        $res = [];
-//        if ($ret) { //执行成功
-//            $res['log'] = nl2br($accept_info['info']);
-//            if (!empty($accept_info['alipay_form'])) {
-//                $res['alipay'] = $accept_info['alipay_form'];
-//            }
-//            echo json_encode($res, JSON_UNESCAPED_UNICODE);
-//        } else {
-//            $res['log'] = nl2br($accept_info['err_info']);
-//            echo json_encode($res, JSON_UNESCAPED_UNICODE);
-//        }
+        
+        $res = [];
+        if ($ret) { //执行成功
+            $res['log'] = nl2br($accept_info['info']);
+            if (!empty($accept_info['alipay_form'])) {
+                $res['alipay'] = $accept_info['alipay_form'];
+            }
+            return $this->success(json_encode($res, JSON_UNESCAPED_UNICODE));
+        } else {
+            $res['log'] = nl2br($accept_info['err_info']);
+            return $this->success(json_encode($res, JSON_UNESCAPED_UNICODE));
+        }
+
     }
 
     /**
@@ -372,12 +373,12 @@ class BountyController extends Controller {
 		{
 		    $res['log'] = nl2br($reject_info['info']);
 		 
-		    echo json_encode( $res,JSON_UNESCAPED_UNICODE);
+		    return $this->success(json_encode($res, JSON_UNESCAPED_UNICODE));
 		}
 		else
 		{
 		    $res['log'] = nl2br($reject_info['err_info']);
-		    echo json_encode( $res,JSON_UNESCAPED_UNICODE);
+		    return $this->success(json_encode($res, JSON_UNESCAPED_UNICODE));
 		}
     }
 
