@@ -112,8 +112,13 @@
             </script>          
         </div>
 
-      <div class="table" ajat="bounty/getList?isRefund=2&<%=query._%>#domid=table&tempid=table-t" id="table">
+      <div class="table" ajat="bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t" id="table">
       <script type="text/template" id="table-t">
+      <%if(data.amount && data.amount.amount){%>
+        <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
+         当前条件下所有交易金额统计 总金额：<%=data.amount && data.amount.amount%>元
+        </div>  
+      <%}%>     
       <table>
         <thead>
           <tr>
@@ -182,18 +187,49 @@
       <%if(data.data && data.total > 0){%>
       <div class="table-bottom">
         <label class="select-all"><input type="checkbox"/><span>全选</span></label>
-        <button class="btn pass"   data-type="2" style="margin-right:10px" data-slug="bounty.accept">通过</button>
-        <button class="btn reject" data-type="1" data-slug="bounty.reject">拒绝</button>
+        <button class="btn pass"   data-type="2" style="margin-right:10px" data-slug="bounty.accept" disabled>
+        通过
+        </button>
+
+        <button class="btn reject" data-type="1" data-slug="bounty.reject" disabled>
+        拒绝
+        </button>
       </div>
       <%}%>      
       <div class="pager">
       </div>
       </script>
     </div>
+
+    <form id='alipaysubmit' name='alipaysubmit' target="_blank" style="display:none" method='post'
+    action='https://mapi.alipay.com/gateway.do?_input_charset=utf-8'>
+        <input type='hidden' name='_input_charset' value=''/>
+        <input type='hidden' name='batch_no' value=''/>
+        <input type='hidden' name='batch_num' value=''/>
+        <input type='hidden' name='detail_data' value=''/>
+        <input type='hidden' name='notify_url' value=''/>
+        <input type='hidden' name='partner' value=''/>
+        <input type='hidden' name='refund_date' value=''/>
+        <input type='hidden' name='seller_email' value=''/>
+        <input type='hidden' name='service' value=''/>
+        <input type='hidden' name='sign' value=''/>
+        <input type='hidden' name='sign_type' value=''/>
+    </form>
+
   </div>
   <script>
-  $(document).ready(function(){     
-      $(".wrapper").delegate(".reject",'click',function(){
+  $(document).ready(function(){ 
+
+      $("#table").delegate('tbody input[type="checkbox"]', 'change', function(event) {
+          var button=$('.table-bottom button');
+          if($('tbody label input:checked').length>0){
+            button.attr('disabled',false);
+          }else{
+            button.attr('disabled',true);
+          }
+      });
+
+      $("#table").delegate(".reject",'click',function(){
           var type = $(this).data('type');
           var arr     = [];          
           if(type == "0") arr.push($(this).data('id'));
@@ -214,7 +250,7 @@
           });        
       });
 
-     $(".wrapper").delegate('.pass', 'click', function(event) {
+     $("#table").delegate('.pass', 'click', function(event) {
           var type = $(this).data('type');
           var arr = [];
           var message = "你确定要执行同意操作？";
@@ -253,7 +289,7 @@
             text:(data.result == 1 ? "操作成功" : data.msg),
             time:2000,
             define:function(){
-                lib.ajat('bounty/getList?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
+                lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
             }
           });
         }); 
