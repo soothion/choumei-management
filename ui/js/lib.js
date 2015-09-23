@@ -65,7 +65,10 @@
 					options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
 				}
 			}
-			options.timeout=10000;
+			options.timeout=options.timeout||9999;
+			if(options.timeout&&options.timeout>=10000){
+				parent.lib.popup.loading({text:'请求可能会比较慢，请耐心等候！',time:options.timeout});
+			}
 			/*
 			options.headers={
 				token:localStorage.getItem('token')
@@ -114,6 +117,11 @@
 					localStorage.setItem('token',data.token);
 				}
 			});
+			if(options.timeout&&options.timeout>=20000){
+				promise.done(function(){
+					parent.lib.popup.close();
+				});
+			}
             return promise;
         },
 		getSession:function(){
@@ -761,7 +769,7 @@
             var self = this;
             var pro=this.protocol;
             $(this.dom).trigger('fetch',{protocol:pro});
-            this.showLoader();
+            //this.showLoader();
             var options={
                 url: pro.url,
                 data: pro.query,
@@ -782,9 +790,7 @@
                     self.exception({errorLevel:'xhr',status:xhr.status,readyState:xhr.readyState,textStatus:textStatus});;
                 }
             };
-            if(pro.custom.cache=='true'){
-                options.cache=true;
-            }
+			options=$.extend(options,pro.custom);
             return lib.ajax(options);
         },
         setExternal:function(data){//引入外部数据，以便模板引擎渲染时能获取；
@@ -801,7 +807,7 @@
             var options = /\/|\./g.test(tempid)?{url: tempid}:{text: document.getElementById(tempid).innerHTML};
 			var tempData=$.extend({data:data,protocol:pro},this.external);
             this.insert(lib.ejs.render(options,tempData)).trigger('_ready',{protocol:pro,response:data});
-            this.hideLoader();
+            //this.hideLoader();
             this.ready();
             this.format();
             this.destroy();
