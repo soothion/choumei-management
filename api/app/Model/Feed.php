@@ -23,8 +23,7 @@ class Feed extends Model {
         if(!empty($param['date'])){
         	$start_at = strtotime($param['date']);
             $end_at = strtotime($param['date'])+3600*24;
-            $query = $query->where('add_time','>=',$end_at);
-        	$query = $query->where('add_time','>=',$start_at);
+            $query = $query->whereBetween('add_time',$start_at,$end_at);
         }
 
         if(!empty($param['keyword'])){
