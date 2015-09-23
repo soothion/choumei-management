@@ -8,6 +8,18 @@ namespace App;
 class Utils
 {
     /**
+     * 组合数据时的一对一
+     * @var unknown
+     */
+    CONST GROUP_MAKE_BY_ONE_TO_ONE = 1;
+    
+    /**
+     * 组合数据时的一对多
+     * @var unknown
+     */
+    CONST GROUP_MAKE_BY_ONE_TO_MANY = 2;
+    
+    /**
      * 获取支付方式
      * @param int $pay_type
      * @return string
@@ -191,5 +203,79 @@ class Utils
 	    umask($old_mask);
 	}
 	
+	public static function groupMake($bases,$others)
+	{
+	    $res = [];
+	    foreach ($bases as $key => $base)
+	    {
+	        $tmp = $base;
+	        foreach($others as $type => $other)
+	        {	
+	            $tmp = self::groupMakeSingle($tmp,$other,$type);
+	        }	        
+	        $res[$key] =  $tmp;
+	    }
+	    return $res;
+	}
 	
+	public static function  groupMakeSingle($base,$other,$key_name)
+	{
+	    $column_name = isset($other['as'])?$other['as']:$key_name;
+	    $main_key = $other['relation'][0];
+	    $relation_key = $other['relation'][1];
+	    $add_to_bases = isset($other['add_to_base'])?$other['add_to_base']:null;
+	    $make_by = $other['make_by'];
+	    $data = $other['datas'];
+	    $need_add = true;
+	    if(count($add_to_bases)<1)
+	    {
+	        $need_add =false;
+	    }	
+	    
+        if($make_by == self::GROUP_MAKE_BY_ONE_TO_ONE)
+        {
+            $other_indexes = self::column_to_key($relation_key,$data);
+            $key =  $base[$main_key];
+            if(isset($other_indexes[$key]))
+            {
+                $base[$column_name] = $other_indexes[$key];
+            }
+            else
+            {
+                $base[$column_name] = null;
+            }
+            
+            if($need_add)
+            {
+                foreach ($add_to_bases as $tmp_key)
+                {
+                    $base[$tmp_key] = isset($other_indexes[$key])&&isset($other_indexes[$key][$tmp_key])?$other_indexes[$key][$tmp_key]:'';
+                }
+            }
+        }
+        
+        if($make_by == self::GROUP_MAKE_BY_ONE_TO_MANY)
+        {
+            $other_indexes = [];
+            foreach($data as $record)
+            {
+                $key = $record[$relation_key];
+                if(!isset($other_indexes[$key]))
+                {
+                    $other_indexes[$key] =[];
+                }
+                $other_indexes[$key][] = $record;
+            }           
+            $key_value =  $base[$main_key];
+            if(isset($other_indexes[$key_value]))
+            {
+                $base[$column_name] = $other_indexes[$key_value];
+            }
+            else
+            {
+                $base[$column_name] = [];
+            }
+        }
+        return $base;
+	}
 }

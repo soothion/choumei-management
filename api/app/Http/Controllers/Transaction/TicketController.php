@@ -7,6 +7,7 @@ use App\TransactionSearchApi;
 use App\Mapping;
 use App\RequestLog;
 use Event;
+use App\PaymentLog;
 
 class TicketController extends Controller
 {
@@ -331,16 +332,14 @@ class TicketController extends Controller
             'state' => self::T_INT,
             'time_key' => self::T_INT,
         ]);
-        $items = TransactionSearchApi::getConditionOfTicket($params)->addSelect('order_item.itemname')->with(['paymentLog'=>function($q){
-            $q->get(['ordersn','tn']);
-        }])->take(5000)
+        $items = TransactionSearchApi::getConditionOfTicket($params)->take(50)
         ->get()
         ->toArray();
-        
+        $items = TransactionSearchApi::makeTicketOtherInfo($items);
         //用户设备信息
         $ordersns = array_column($items, "ordersn");
-        $platforms = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
-        $items = TransactionSearchApi::addPlatfromInfos($items, $platforms);
+        $paymentlogs = PaymentLog::whereIn('ordersn',$ordersns)->select(['ordersn','tn'])->get()->toArray();
+        $items = TransactionSearchApi::addPaymentLogInfos($items, $paymentlogs);
     
         $header = [
             '序号',

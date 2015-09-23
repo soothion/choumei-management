@@ -43,7 +43,7 @@ class TransactionSearchApi
      * @param array $params
      */
     public static function searchOfTicket($params)
-    {
+    {        
         $bases = self::getConditionOfTicket($params);
         // 页数
         $page = isset($params['page']) ? max(intval($params['page']), 1) : 1;
@@ -53,15 +53,13 @@ class TransactionSearchApi
             return $page;
         });
         $res = $bases->paginate($size)->toArray();
-        $ordersns = array_column($res['data'], "ordersn");
-        $platforms = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
-        $res['data'] = self::addPlatfromInfos($res['data'],$platforms);
-        unset($platforms);
+    
+        $res['data'] = self::makeTicketOtherInfo(json_decode(json_encode($res['data'],true),true));
         $money_info = ['priceall_ori'=>'','actuallyPay'=>''];
         if($res['total']<=2000)
         {
-           $money_info = self::countOfTicket($params);   
-        }  
+            $money_info = self::countOfTicket($params);
+        }
         $res['all_amount'] = $money_info['priceall_ori'];
         $res['paied_amount'] = $money_info['actuallyPay'];
         unset($res['next_page_url']);
@@ -359,36 +357,26 @@ class TransactionSearchApi
         return $orderBase->orderBy($order, $order_by);
     }
     
-    public static function getTicketDataView()
-    {
-        return OrderTicket::leftJoin('order_item',function($join){
-                $join->on('order_ticket.order_item_id','=','order_item.order_item_id');
-            })
-            ->leftJoin('order',function($join){
-                $join->on('order_item.orderid','=','order.orderid');
-            });
-    }
-    
     public static  function getConditionOfTicket($params)
     {
         $select_fields = [
             'cm_order_ticket.order_ticket_id as order_ticket_id',
+            'cm_order_ticket.order_item_id as order_item_id',
             'cm_order_ticket.ticketno as ticketno',
             'cm_order_ticket.add_time as add_time',
             'cm_order_ticket.use_time as use_time',
             'cm_order_ticket.user_id as user_id',
             'cm_order_ticket.status as status',
-            'cm_order.ordersn as ordersn',
-            'cm_order.salonid as salonid',
-            'cm_order.priceall_ori as priceall_ori',
-            'cm_order.priceall as priceall',
-            'cm_order.actuallyPay as actuallyPay',
-            'cm_order.shopcartsn as shopcartsn',
+//             'cm_order_item.ordersn as ordersn',
+//             'cm_order_item.salonid as salonid',
+//             'cm_order.priceall_ori as priceall_ori',
+//             'cm_order.priceall as priceall',
+//             'cm_order.actuallyPay as actuallyPay',
+//             'cm_order.shopcartsn as shopcartsn',
         ];
         
-        $base = self::getTicketDataView();
+        $base = OrderTicket::selectRaw(implode(',',$select_fields));
         
-        $base ->selectRaw(implode(",", $select_fields));
         
         self::makeWhereOfTicket($base, $params);
         $salon_fields = [
@@ -413,33 +401,33 @@ class TransactionSearchApi
             'mobilephone',
         ];
         
-        $base->with([
-            'user' => function ($q) use($user_fields)
-            {
-                $q->get($user_fields);
-            }
-        ]);
+//         $base->with([
+//             'user' => function ($q) use($user_fields)
+//             {
+//                 $q->get($user_fields);
+//             }
+//         ]);
         
-        $base->with([
-            'salon' => function ($q) use($salon_fields)
-            {
-                $q->get($salon_fields);
-            }
-        ]);
+//         $base->with([
+//             'salon' => function ($q) use($salon_fields)
+//             {
+//                 $q->get($salon_fields);
+//             }
+//         ]);
         
-        $base->with([
-            'fundflow' => function ($q) use($fundflow_fields)
-            {
-                $q->get($fundflow_fields);
-            }
-        ]);
+//         $base->with([
+//             'fundflow' => function ($q) use($fundflow_fields)
+//             {
+//                 $q->get($fundflow_fields);
+//             }
+//         ]);
         
-        $base->with([
-            'voucher' => function ($q) use($voucher_fields)
-            {
-                $q->where('vStatus',2)->get($voucher_fields);
-            }
-        ]);        
+//         $base->with([
+//             'voucher' => function ($q) use($voucher_fields)
+//             {
+//                 $q->where('vStatus',2)->get($voucher_fields);
+//             }
+//         ]);        
         $base->orderBy('order_ticket_id','DESC');
         return $base;
     }
@@ -537,20 +525,41 @@ class TransactionSearchApi
         $res = $base->first();
         if(!empty($res))
         {
-             return $res->priceall;
+             return floatval($res->priceall);
         }
         return 0;
     }
     
     public static function countOfTicket($params)
     {
-        $base = self::getTicketDataView();
-        $base->selectRaw("SUM(`cm_order`.`actuallyPay`) as `actuallyPay`,SUM(`cm_order`.`priceall_ori`) as `priceall_ori`");
+        $base=OrderTicket::selectRaw("SUM(`cm_order`.`actuallyPay`) as `actuallyPay`,SUM(`cm_order`.`priceall_ori`) as `priceall_ori`");
         self::makeWhereOfTicket($base, $params);
+        $had_join_order_item = false;
+        $joins = $base->getQuery()->joins;
+        if(!empty($joins))
+        {  
+            foreach($joins as $join)
+            {
+                if($join->table == "order_item")
+                {
+                    $had_join_order_item =true;
+                    break;
+                }
+            }
+        }
+        if(!$had_join_order_item)
+        {
+            $base->join('order_item',function($join){
+                $join->on('order_ticket.order_item_id','=','order_item.order_item_id');
+            });
+        }
+        $base->join('order',function($join){
+            $join->on('order.orderid','=','order_item.orderid');
+        });
         $res = $base->first();
         if(!empty($res))
         {
-            return ['actuallyPay'=>$res->actuallyPay,'priceall_ori'=>$res->priceall_ori];
+            return ['actuallyPay'=>floatval($res->actuallyPay),'priceall_ori'=>floatval($res->priceall_ori)];
         }
         return ['actuallyPay'=>0,'priceall_ori'=>0];
     }
@@ -563,7 +572,7 @@ class TransactionSearchApi
         $res = $base->first();
         if(!empty($res))
         {
-            return $res->refund_money;
+            return floatval($res->refund_money);
         }
         return 0;
     }
@@ -650,18 +659,18 @@ class TransactionSearchApi
     }
     
     public static function makeWhereOfTicket(&$base,$params)
-    {
+    {       
         // 按时间搜索
         $time_key_str = "";
         if(isset($params['time_key']))
         {
             if($params['time_key'] == 1)
             {
-                $time_key_str = "order_ticket.use_time";
+                $time_key_str = "use_time";
             }
             if($params['time_key'] == 2)
             {
-                $time_key_str = "order_ticket.add_time";
+                $time_key_str = "add_time";
             }
         }
         if (isset($params['min_time']) && !empty($params['min_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['min_time']))) {
@@ -674,7 +683,7 @@ class TransactionSearchApi
         // 付款状态
         if(isset($params['state']) && !empty($params['state']))
         {
-            $base->where('order_ticket.status', $params['state']);
+            $base->where('status', $params['state']);
         }
         
         // 关键字搜索
@@ -689,28 +698,48 @@ class TransactionSearchApi
             ], $params['keyword']) . "%";
             if ($key == 1) //臭美券密码
             {
-                $base->where("order_ticket.ticketno",'like',$keyword);
+                $base->where("ticketno",'like',$keyword);
             }
             elseif ($key == 2) //用户手机号
             {
-                 $base->whereRaw("cm_order_ticket.user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
+                 $base->whereRaw("user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
             }
             elseif ($key == 3) //店铺名
             {
-                $base->whereRaw("cm_order.salonid IN (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
+                $base->join('order_item',function($join){
+                    $join->on('order_ticket.order_item_id','=','order_item.order_item_id');
+                })->join('salon',function($join) use ($keyword){
+                    $join->on('salon.salonid','=','order_item.salonid')->where('salon.salonname','like',$keyword);
+                });
+                //$base->whereRaw("cm_order_item.salonid IN (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
                 
             }
             elseif ($key == 4) //用户设备号
             {
-                $base->whereRaw("cm_order.ordersn in (SELECT distinct(`ORDER_SN`) FROM `cm_request_log` WHERE `TYPE` = 'PLC' AND `DEVICE_UUID` LIKE '{$keyword}')");
+                $base->join('order_item',function($join){
+                    $join->on('order_ticket.order_item_id','=','order_item.order_item_id');
+                })->join('request_log',function($join) use ($keyword){
+                    $join->on('request_log.ORDER_SN','=','order_item.ordersn')->where('request_log.DEVICE_UUID','like',$keyword)->where('request_log.TYPE','=','PLC');
+                });
+                //$base->whereRaw("cm_order_item.ordersn in (SELECT distinct(`ORDER_SN`) FROM `cm_request_log` WHERE `TYPE` = 'PLC' AND `DEVICE_UUID` LIKE '{$keyword}')");
             }
             elseif ($key == 5) //代金券编码
             {
-                $base->whereRaw("cm_order.ordersn in (SELECT `vOrderSn` FROM `cm_voucher` WHERE `vSn` LIKE '{$keyword}')");
+                $base->join('order_item',function($join){
+                    $join->on('order_ticket.order_item_id','=','order_item.order_item_id');
+                })->join('voucher',function($join) use ($keyword){
+                    $join->on('voucher.vOrderSn','=','order_item.ordersn')->where('voucher.vSn','like',$keyword);
+                });
+                //$base->whereRaw("cm_order_item.ordersn in (SELECT `vOrderSn` FROM `cm_voucher` WHERE `vSn` LIKE '{$keyword}')");
             }
             elseif ($key == 6) //活动编码
             {
-                $base->whereRaw("cm_order.ordersn in (SELECT `vOrderSn` FROM `cm_voucher` WHERE `vcSn` LIKE '{$keyword}')");
+                $base->join('order_item',function($join){
+                    $join->on('order_ticket.order_item_id','=','order_item.order_item_id');
+                })->join('voucher',function($join) use ($keyword){
+                    $join->on('voucher.vOrderSn','=','order_item.ordersn')->where('voucher.vcSn','like',$keyword);
+                });
+                //$base->whereRaw("cm_order_item.ordersn in (SELECT `vOrderSn` FROM `cm_voucher` WHERE `vcSn` LIKE '{$keyword}')");
             }
         }
     }
@@ -765,19 +794,81 @@ class TransactionSearchApi
         }
     }
     
-    public static function addPlatfromInfos($bases,$platforms)
+    public static function makeTicketOtherInfo($datas)
     {
-        $platform_index = Utils::column_to_key("ORDER_SN",$platforms);
+        $order_item_fields = [
+            'order_item_id',
+            'salonid',
+            'ordersn',
+            'itemname',
+        ];
+        $order_fields = [
+            'ordersn',
+            'priceall_ori',
+            'priceall',
+            'actuallyPay',
+            'shopcartsn'
+        ];
+        $salon_fields = [
+            'salonid',
+            'salonname'
+        ];
+        $fundflow_fields = [
+            'record_no',
+            'pay_type',
+        ];
+        
+        $voucher_fields = [
+            'vOrderSn',
+            'vcSn',
+            'vSn',
+            'vUseMoney',
+        ];
+        
+        $user_fields = [
+            'user_id',
+            'username',
+            'mobilephone',
+        ];
+        $others = [
+            'order_item'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'add_to_base'=>['salonid','ordersn','itemname'],'relation'=>['order_item_id','order_item_id']],
+            'order'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'add_to_base'=>['priceall_ori','priceall','actuallyPay','shopcartsn'],'relation'=>['ordersn','ordersn']],
+            'salon'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['salonid','salonid']],
+            'fundflow'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_MANY,'relation'=>['ordersn','record_no']],
+            'voucher'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['ordersn','vOrderSn']],
+            'user'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['user_id','user_id']],
+            'platfrom'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['ordersn','ORDER_SN']],
+        ];
+        $uids = array_column($datas, "user_id");
+     
+        $order_item_ids = array_column($datas, "order_item_id");
+        $others['order_item']['datas'] = OrderItem::whereIn("order_item_id",$order_item_ids)->select($order_item_fields)->get()->toArray();
+        
+        $ordersns = array_column($others['order_item']['datas'], "ordersn");
+        $salon_ids = array_column($others['order_item']['datas'],"salonid");
+        
+        $others['order']['datas'] = Order::whereIn("ordersn",$ordersns)->select($order_fields)->get()->toArray();
+        $others['salon']['datas'] =  Salon::whereIn("salonid",$salon_ids)->select($salon_fields)->get()->toArray();
+        $others['fundflow']['datas'] = Fundflow::whereIn("record_no",$ordersns)->where('code_type',TransactionWriteApi::REFUND_CODE_TYPE_OF_CUSTOM)->select($fundflow_fields)->get()->toArray();
+        $others['voucher']['datas'] = Voucher::whereIn("vOrderSn",$ordersns)->select($voucher_fields)->get()->toArray();
+        $others['user']['datas'] = User::whereIn("user_id",$uids)->select($user_fields)->get()->toArray();
+        $others['platfrom']['datas'] = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
+        return Utils::groupMake($datas, $others);
+    }
+    
+    public static function addPaymentLogInfos($bases,$paymentlog)
+    {
+        $payment_index = Utils::column_to_key("ordersn",$paymentlog);
         foreach($bases as &$base)
         {
             $ordersn = $base['ordersn'];
-            if(isset($platform_index[$ordersn]))
+            if(isset($payment_index[$ordersn]))
             {
-                $base['platform'] = $platform_index[$ordersn];
+                $base['payment_log'] = $payment_index[$ordersn];
             }
             else
             {
-                $base['platform'] = null;
+                $base['payment_log'] = null;
             }
         }
         return $bases;
