@@ -427,7 +427,7 @@ aside h2{
 	padding-right:10px;
 	min-width:100px;
 }
-.form-vertical button:disabled{
+.form-vertical .btn-primary:disabled{
 	cursor: wait;
 }
 .control-error input[type='text'],
@@ -678,6 +678,12 @@ th.colswrap{
 	padding-left:20px;
 	position:relative;
 	height:32px;
+}
+.table-detail legend{
+	margin:10px;
+	font-size:14px;
+	padding:0;
+	font-weight: bold;
 }
 .table-detail-sn{
 	position:absolute;
