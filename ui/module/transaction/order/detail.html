@@ -74,7 +74,12 @@
 
                         <tr>
                             <td class="first-td">代金券抵扣金额</td>
-                            <td><%=%></td>
+                            <%if(data.vouchers && data.order){%>
+                                <%var a = +data.vouchers.vUseMoney; var b = +data.order.priceall%>
+                                <td><%= (a <= b) ? a : b%></td>
+                            <%}else{%>
+                                <td>0.00</td>
+                            <%}%>
                         </tr>
 
                         <tr>
