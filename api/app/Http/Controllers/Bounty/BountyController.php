@@ -338,7 +338,7 @@ class BountyController extends Controller {
      * @apiGroup  bounty
      *
      * @apiParam {Array} ids 必选,赏金单Id数列.	  
-     * @apiParam String reason 必选，拒绝退款理由. 
+     * @apiParam {String} reason 必选，拒绝退款理由. 
      * @apiSuccess {String} log 退款信息.
      *
      * @apiSuccessExample Success-Response:
@@ -365,12 +365,12 @@ class BountyController extends Controller {
         }
         $ids = $param['ids'];       
         $ids = array_map("intval", $ids);
-        if (empty($param['reasons'])) {
+        if (empty($param['reason'])) {
             throw new ApiException('拒接退款需要理由！', ERROR::BOUNTY_REJECT_NOREASON);
         }
-		$reason = $param['reasons'];	
+		$reason = $param['reason'];	
 		$reject_info =null;
-		$ret = $model->reject($ids,$reject_info,$reason);
+		$ret = BountyTask::reject($ids,$reject_info,$reason);
 		$res = [];
 		if($ret) //执行成功
 		{

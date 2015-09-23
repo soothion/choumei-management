@@ -1024,7 +1024,7 @@ class BountyTask extends Model {
     /**
      * 支付宝退款成功的回调
      */
-    public function alipayCallback() {
+    public static function alipayCallback() {
         Log::info("comming alipayCallback!");
         $args = func_get_args();
 
@@ -1055,7 +1055,7 @@ class BountyTask extends Model {
 	 * @param  array|num $ids        	
 	 * @param array $options        	
 	 */
-	function reject($ids,&$output, $reason) {
+	public static function reject($ids,&$output, $reason) {
 	    $output['err_info'] = "";
 	    $output['info'] = "";
 	    if(is_numeric($ids))
@@ -1095,7 +1095,7 @@ class BountyTask extends Model {
 //	    'cause'=>$reason,
 //	    ]
 //	    );	updateRejectStatus
-        self::updateRejectStatus($ids, self::STATUS_APPLY_REFUND,$reason);
+        self::updateRejectStatus($ids, self::STATUS_APPLY_FAILED,$reason);
 	     
 	    $output['info'] .="执行成功\n";
 	    return true;
