@@ -320,7 +320,7 @@ class OrderRefundController extends Controller
             'refund_max_time' => self::T_STRING,
             'state' => self::T_STRING,
         ]);
-        $items = TransactionSearchApi::getConditionOfRefund($params)->take(10000)
+        $items = TransactionSearchApi::getConditionOfRefund($params)->take(5000)
         ->get()
         ->toArray();
         $header = [
