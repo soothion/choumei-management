@@ -31,7 +31,7 @@
   </head>
   <body>
 		<div class="breadcrumb">
-			<a>交易管理</a><span>&gt;</span><a href="index.html">交易管理</a>
+			<a>交易管理</a><span>&gt;</span><a href="index.html">普通订单退款</a>
 			<div class="flex-box">
 				<div class="flex-item">
 					<h4>普通订单退款</h4>
@@ -102,6 +102,9 @@
 
 			<div class="table" ajat="refund/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
+      <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
+      当前条件下所有交易金额统计 订单总金额：<%=data.refund_money%>元
+      </div>      
 			<table>
         <thead>
           <tr>
