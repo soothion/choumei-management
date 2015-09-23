@@ -26,8 +26,12 @@ class TransactionSearchApi
         {
             return $page;
         });
-        $total_money = self::countOfOrder($params);        
+        $total_money = "";        
         $res = $bases->paginate($size)->toArray();
+        if($res['total']<=2000) //两千条以上的不统计
+        {
+            $total_money = self::countOfOrder($params);
+        }
         $res['total_money'] = $total_money;
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
@@ -53,7 +57,11 @@ class TransactionSearchApi
         $platforms = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
         $res['data'] = self::addPlatfromInfos($res['data'],$platforms);
         unset($platforms);
-        $money_info = self::countOfTicket($params);     
+        $money_info = ['priceall_ori'=>'','actuallyPay'=>''];
+        if($res['total']<=2000)
+        {
+           $money_info = self::countOfTicket($params);   
+        }  
         $res['all_amount'] = $money_info['priceall_ori'];
         $res['paied_amount'] = $money_info['actuallyPay'];
         unset($res['next_page_url']);
@@ -76,7 +84,12 @@ class TransactionSearchApi
             return $page;
         });
         $res = $bases->paginate($size)->toArray();
-        $res['refund_money'] = self::countOfRefund($params);
+        $refund_money = '';
+        if($res['total']<=2000)
+        {
+            $refund_money =  self::countOfRefund($params);
+        }
+        $res['refund_money'] = $refund_money;
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
         return $res;
