@@ -28,7 +28,7 @@
 				<legend>新增方式</legend>
             </div>
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>项目名称：</label>
+				<label class="control-label" for=""><span class="red">*</span>选择分类：</label>
 				<div class="control">
 					<select>
 					    <option value="可选择已有项目新增闲时特价" selected="">可选择已有项目新增闲时特价</option>
@@ -46,7 +46,7 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>项目名称：</label>
+				<label class="control-label" for=""><span class="red">*</span>已有项目：</label>
 				<div class="control">
 					<select>
 					  <option value="总监洗剪吹">总监洗剪吹</option>
@@ -62,7 +62,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>项目名称：</label>
 				<div class="control">
-					<input type="text" required name="name" maxlength="15">
+					<input type="text" required name="name" maxlength="15" nospace>
 				</div>
 			</div>
 			<div class="control-group">
@@ -121,7 +121,11 @@
 						<textarea maxlength="500" data-helpid="textarea-help" required></textarea>
 					</div>
 					<div class="control-help" style="display:none;" id="textarea-help"></div>
-					<div><a class="link">洗剪吹模板</a><span class="space"></span><a class="link">洗吹模板</a></div>
+					<div>
+						<a class="link">洗剪吹模板</a><span class="space"></span>
+						<a class="link">洗吹模板</a><span class="space"></span>
+						<a class="link">应用：洗剪吹服务详情模板</a>
+					</div>
 				</div>
 			</div>
 			<hr />
@@ -167,6 +171,22 @@
 				</div>
 			</div>
 			<div class="control-group">
+				<label class="control-label" for=""><span class="red">*</span>项目日库存：</label>
+				<div class="control">
+					<input type="text" required pattern="number" max="99999999" min="1" name="name" placeholder="限制当日销售数量">
+					<label><input type="checkbox" checked /><span>无限制</span></label>
+					<span class="control-help" style="display:none;"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="">消费限制：</label>
+				<div class="control">
+					<input type="text" required pattern="number" max="99999999" min="1" name="name" placeholder="用户使用限制说明">
+					<label><input type="checkbox" checked /><span>无限制</span></label>
+					<span class="control-help" style="display:none;"></span>
+				</div>
+			</div>
+			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>限制资格：</label>
 				<div class="control">
 					<label><input type="checkbox" /><span>限推荐用户购买</span></label>
@@ -179,31 +199,35 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定价方式：</label>
 				<div class="control">
-					<label><input type="radio" name="radio" checked /><span>无规格，统一价</span></label>
-					<label><input type="radio" name="radio" /><span>有规格，区间价</span></label>
+					<label><input class="price-choose" type="radio" name="radio" checked value="1" /><span>无规格，统一价</span></label>
+					<label><input class="price-choose" type="radio" name="radio" value="2"/><span>有规格，区间价</span></label>
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>原价：</label>
-				<div class="control">
-					<input type="text" required pattern="float" max="99999" min="1" name="name">
-					<input type="text" required pattern="float" name="name" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;"><span class="unit">%</span>
+			<div class="price-group">
+				<div class="control-group">
+					<label class="control-label" for=""><span class="red">*</span>原价：</label>
+					<div class="control">
+						<input type="text" required pattern="float" max="99999" min="1" name="name">
+						<input type="text" required pattern="float" name="name" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
+						<span class="unit">%</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for=""><span class="red">*</span>臭美价：</label>
+					<div class="control">
+						<input type="text" required pattern="float" max="99999" min="1" name="name">
+						<input type="text" required pattern="float" name="name" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
+						<span class="unit">%</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="">集团价：</label>
+					<div class="control">
+						<input type="text" required pattern="float" max="99999" min="1" name="name">
+					</div>
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>臭美价：</label>
-				<div class="control">
-					<input type="text" required pattern="float" max="99999" min="1" name="name">
-					<input type="text" required pattern="float" name="name" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;"><span class="unit">%</span>
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="">集团价：</label>
-				<div class="control">
-					<input type="text" required pattern="float" max="99999" min="1" name="name">
-				</div>
-			</div>
-			<div class="control-group">
+			<div class="control-group format-group" style="display:none">
 				<label class="control-label" for="">规格选择：</label>
 				<div class="form-item">
 					<style type="text/css">
@@ -225,10 +249,16 @@
 							border-color:#999;
 							height:30px;
 							padding:0;
+							vertical-align:top;
 						}
 						.btn-plus i{
 							font-size: 28px;
 							line-height: 31px;
+						}
+						.form-item .input-small{
+							width:140px!important;
+							min-width:0!important;
+							margin-bottom:5px;
 						}
 					</style>
 					<div class="control-label" >
@@ -243,8 +273,8 @@
 						<label><input type="checkbox" /><span>造型师</span></label>
 					</div>
 					<div class="control">
-						<input type="text" style="width:140px;min-width:0;" disabled />
-						<button type="button" class="btn btn-plus" disabled><i class="fa fa-plus"></i></button>
+						<input type="text"  class="input-small" disabled />
+						<button type="button" class="btn btn-plus" disabled style="cursor: not-allowed;"><i class="fa fa-plus"></i></button>
 					</div>
 					<hr />
 					<div class="control-label" >
@@ -262,10 +292,41 @@
 						<label><input type="checkbox" /><span>药水</span></label>
 					</div>
 					<div class="control">
-						<input type="text" style="width:140px;min-width:0;" disabled />
-						<button type="button" class="btn btn-plus" disabled ><i class="fa fa-plus"></i></button>
+						<input type="text" class="input-small" disabled />
+						<button type="button" class="btn btn-plus" disabled style="cursor: not-allowed;"><i class="fa fa-plus"></i></button>
 					</div>
 					<hr />
+					<button type="button" class="btn" >生成价格表</button>
+					<input type="text" pattern="float" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;"/>
+					<span class="unit">%</span>
+					<input type="text" pattern="float" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;"/>
+					<span class="unit">%</span>
+					<div class="table">
+						<table>
+							<thead>
+								<tr>
+									<th>性别</th>
+									<th>造型师</th>
+									<th>发长</th>
+									<th>药水</th>
+									<th>原价</th>
+									<th>臭美价</th>
+									<th>集团价</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>男</td>
+									<td>造型师</td>
+									<td>发长</td>
+									<td>药水</td>
+									<td>100</td>
+									<td>100</td>
+									<td>1000</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 			<div class="control-group">
@@ -278,6 +339,21 @@
 		</script>
 		</div>
 	</div>
-	<script type="text/javascript"></script>
+	<script type="text/javascript">
+		$(function(){
+			$(document.body).on('change','.form-item .control-label input',function(){
+				$(this).closest('.control-label').next('.control').find('input,button').attr('disabled',!this.checked);
+			}).on('click','.form-item .btn-plus',function(){
+				$(this).before('<input type="text" class="input-small"/>');
+			}).on('click','.price-choose',function(){
+				if(this.checked&&this.value==1){
+					$('.price-group').show().next('.format-group').hide();
+				}
+				if(this.checked&&this.value==2){
+					$('.price-group').hide().next('.format-group').show();
+				}
+			});
+		});
+	</script>
   </body>
 </html>

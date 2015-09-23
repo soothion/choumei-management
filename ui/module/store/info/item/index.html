@@ -34,6 +34,8 @@
 					</button>
 					&nbsp;
 					<button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
+					&nbsp;
+					<button class="btn"><i class="fa fa-file-excel-o"></i> 导入</button>
 				</div>
 				<div class="filter-box" style="display:none">
 					<div class="flex-box">
@@ -152,8 +154,10 @@
 			<table>
 				<thead>
 					<tr>
+						<th width="50px"><label class="select-all"><input type="checkbox"/><span>全选</span></label></th>
 						<th>序号</th>
 						<th>项目名称</th>
+						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">项目类型  <i class="fa fa-sort"></i></a></th>
 						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">项目分类 <i class="fa fa-sort"></i></a></th>
 						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">规格 <i class="fa fa-sort"></i></a></th>
 						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">原价 <i class="fa fa-sort"></i></a></th>
@@ -166,8 +170,10 @@
 					<%data=data.data%>
 					<%data.forEach(function(item,i){%>
 					 <tr>
+						<td><label><input type="checkbox" name="_ids" form="form" value="<%=item.id%>"/><span></span></label></td>
 						<td><%=i+1%></td>
 						<td><%=item.sn%></td>
+						<td><%=item.name%></td>
 						<td><%=item.name%></td>
 						<td><%=item.salonNum>0?item.salonNum:0%></td>
 						<td><%=item.contact%></td>
@@ -178,12 +184,26 @@
 								<button class="link" data-slug="salon.save" >下架</button>
 							</form>
 							<span class="space"></span>
+							<form action="" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+								<button class="link" data-slug="salon.save" >上架</button>
+							</form>
+							<span class="space"></span>
 							<a class="link" target="_blank" data-slug="merchant.show,merchant.update" href="detail.html?id=<%=item.id%>">查看</a>
 						</td>
 					</tr> 
 					<%})%>
 				</tbody>
 			</table>
+			<%if(data&&data.length>0){%>
+			<div class="table-bottom">
+				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
+				<form action="pay_manage/confirm" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+					<button class="btn" disabled>上架</button>
+					<input type="hidden" name="do" value="1" />
+					<input type="hidden" name="ids" />
+				</form>
+			</div>
+			<%}%>
 			<div class="pager">
 			</div>
 			</script>
