@@ -698,11 +698,11 @@ class TransactionSearchApi
             ], $params['keyword']) . "%";
             if ($key == 1) //臭美券密码
             {
-                $base->where("ticketno",'like',$keyword);
+                $base->where("cm_order_ticket.ticketno",'like',$keyword);
             }
             elseif ($key == 2) //用户手机号
-            {
-                 $base->whereRaw("user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
+            {                
+                 $base->whereRaw("cm_order_ticket.user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
             }
             elseif ($key == 3) //店铺名
             {
