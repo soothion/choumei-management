@@ -106,19 +106,7 @@ small,.small{
 button.block{
     width:100%;
 }
-input[type='text'],
-input[type='password'],
-input[type='url'],
-input[type='number'],
-input[type='email'],
-input[type='url'],
-input[type='tel'],
-input[type='time'],
-input[type='date'],
-input[type='datetime'],
-input[type='datetime-local'],
-input[type='week'],
-input[type='search'],
+input,
 textarea,
 select{
     box-sizing: border-box;
@@ -402,9 +390,11 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
     background-color:rgba(0,0,0,0.05);
 }
 label>input[type="radio"],label>input[type="checkbox"]{
-    width:0;
+    width:0!important;
+	min-width:0!important;
 	opacity:0;
-	margin:0;
+	margin:0!important;
+	padding:0!important;
 	-webkit-appearance:none;
     -moz-appearance:none;
     -ms-appearance:none;

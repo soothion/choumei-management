@@ -48,7 +48,7 @@ h1, h2, h3, h4, h5, h6,legend{
 	border-color:#58A2EC;
 	background:#58A2EC;
 }
-input[type='text'], input[type='password'], input[type='url'], input[type='number'], input[type='email'], input[type='url'], input[type='tel'], input[type='time'], input[type='date'], input[type='datetime'], input[type='datetime-local'], input[type='week'], input[type='search'], textarea, .input{
+input, textarea, .input{
 	width:auto;
 	padding:0px 10px;
 	border-color:#E6EAF2;
@@ -406,12 +406,7 @@ aside h2{
     height: 0;
     visibility: hidden;
 }
-.form-vertical .control input[type='text'],
-.form-vertical .control input[type='password'],
-.form-vertical .control input[type='number'],
-.form-vertical .control input[type='tel'],
-.form-vertical .control input[type='search'],
-.form-vertical .control input[type='date'],
+.form-vertical .control input,
 .form-vertical .control textarea,
 .form-vertical .control select{
 	width:20%;
