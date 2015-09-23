@@ -581,10 +581,10 @@ class TransactionSearchApi
     {
         // 按时间搜索
         if (isset($params['pay_time_min']) && !empty($params['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['pay_time_min']))) {
-            $orderBase->where('day', ">=", strtotime(trim($params['pay_time_min'])));
+            $orderBase->where('add_time', ">=", strtotime(trim($params['pay_time_min'])));
         }
         if (isset($params['pay_time_max']) && !empty($params['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['pay_time_max']))) {
-            $orderBase->where('day', "<=", strtotime(trim($params['pay_time_max'])) + 86399 );
+            $orderBase->where('add_time', "<=", strtotime(trim($params['pay_time_max'])) + 86399 );
         }
         
         //支付方式
@@ -666,11 +666,11 @@ class TransactionSearchApi
         {
             if($params['time_key'] == 1)
             {
-                $time_key_str = "use_time";
+                $time_key_str = "order_ticket.use_time";
             }
             if($params['time_key'] == 2)
             {
-                $time_key_str = "add_time";
+                $time_key_str = "order_ticket.add_time";
             }
         }
         if (isset($params['min_time']) && !empty($params['min_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['min_time']))) {
@@ -683,7 +683,7 @@ class TransactionSearchApi
         // 付款状态
         if(isset($params['state']) && !empty($params['state']))
         {
-            $base->where('status', $params['state']);
+            $base->where("order_ticket.status", "=".$params['state']);
         }
         
         // 关键字搜索
