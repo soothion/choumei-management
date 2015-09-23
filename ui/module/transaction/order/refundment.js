@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-21 17:44:57
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-23 11:08:11
+* @Last Modified time: 2015-09-23 11:44:02
 */
 
   $(document).ready(function(){
@@ -17,7 +17,7 @@
 
       $("#table").delegate(".reject",'click',function(){
           var type = $(this).data('type');
-          var arr     = [];          
+          var arr  = [];          
           if(type == "0") arr.push($(this).data('id'));
           if(type == "1") {
             $('tbody input[type="checkbox"]:checked').each(function(index,obj){
@@ -71,14 +71,11 @@
                   data :  {ids:arr.join(",")}
                 }).done(function(data, status, xhr){
                   if(data.result == "0"){
-                    parent.lib.popup.result({bool:false,text:data.msg,time:2000});
+                    parent.lib.popup.result({bool:false,text:data.msg || "操作失败！"});
                     return;
                   }
-
                   if(data.result == "1"){
-
                     data = data.data;
-
                     if(data.alipay && data.alipay.form_args){
                       $.each($("#alipaysubmit").serializeArray(),function(i,field){
                         $("input[name='"+field.name+"']").val(data.alipay.form_args[field.name])
@@ -86,43 +83,18 @@
                       $("#alipaysubmit").submit();
                       return;
                     }
-
-                    if(data.alipay && data.alipay.info){
-                        parent.lib.popup.result({bool:true,text:data.alipay.info,time:2000});
-                    }
-
-                    if(data.wx && data.wx.info){
-                        parent.lib.popup.result({bool:true,text:data.wx.info,time:2000});
-                    }
-
-                    if(data.yilian && data.yilian.info){
-                        parent.lib.popup.result({bool:true,text:data.yilian.info,time:2000});
-                    }
-
-                    if(data.balance && data.balance.info){
-                        parent.lib.popup.result({bool:true,text:data.yilian.info,time:2000});
-                    }
+                    if(data.alipay && data.alipay.info) tip(data.alipay.info);
+                    if(data.wx && data.wx.info) tip(data.wx.info);
+                    if(data.yilian && data.yilian.info) tip(data.yilian.info);
+                    if(data.balance && data.balance.info) tip(data.balance.info);
                     lib.ajat('refund/index?<%=query._%>#domid=table&tempid=table-t').render();
                   }                                   
                 });                        
               }
-          });          
-     });
-
-     function request(url,params){
-        lib.ajax({
-          url  :  url,
-          type : "post",
-          data :  params
-        }).done(function(data, status, xhr){
-          parent.lib.popup.result({
-            bool:data.result == 1,
-            text:(data.result == 1 ? "操作成功" : data.msg),
-            time:2000,
-            define:function(){
-              lib.ajat('refund/index?<%=query._%>#domid=table&tempid=table-t').render();
-            }
           });
-        });       
-     }
+
+          function tip (msg) {
+              parent.lib.popup.result({bool:true,text:msg});
+          }          
+     });
   });

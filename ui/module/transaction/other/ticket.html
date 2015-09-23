@@ -63,12 +63,16 @@
             <div class="table" ajat="ticket/index?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
 
-            <%if(data.all_amount && data.paied_amount){%>
-              <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
-              当前条件筛选条件下所有交易金额统计总应付金额：
-              <%=data.all_amount%>元  实付金额  <%=data.paied_amount%>元 
+              <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">              
+               <%if(data.total == 0){%>
+                当前条件筛选条件下所有交易金额统计总应付金额：0.00元  实付金额  0.00元                 
+               <%else if(data.total > 0 && data.total <= 2000){%>
+                当前条件筛选条件下所有交易金额统计总应付金额：
+                <%=data.all_amount%>元  实付金额  <%=data.paied_amount%>元 
+              <%}else{%>  
+                筛选结果超出2000条无法统计金额
+              <%}%>  
               </div> 
-            <%}%>  
                      
             <table>
               <thead>

@@ -114,11 +114,15 @@
 
       <div class="table" ajat="bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t" id="table">
       <script type="text/template" id="table-t">
-      <%if(data.amount && data.amount.amount){%>
         <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
-         当前条件下所有交易金额统计 总金额：<%=data.amount && data.amount.amount%>元
+        <%if(data.total == 0){%>
+           当前条件下所有交易金额统计 总金额：0.00元
+        <%}else if(data.total > 0 && data.total<=2000){%> 
+           当前条件下所有交易金额统计 总金额：<%=data.amount && data.amount.amount%>元
+        <%}else{%> 
+          筛选结果超出2000条无法统计金额                
+        <%}%>    
         </div>  
-      <%}%>     
       <table>
         <thead>
           <tr>
@@ -219,7 +223,6 @@
   </div>
   <script>
   $(document).ready(function(){ 
-
       $("#table").delegate('tbody input[type="checkbox"]', 'change', function(event) {
           var button=$('.table-bottom button');
           if($('tbody label input:checked').length>0){
@@ -231,23 +234,31 @@
 
       $("#table").delegate(".reject",'click',function(){
           var type = $(this).data('type');
-          var arr     = [];          
+          var arr  = [];          
           if(type == "0") arr.push($(this).data('id'));
           if(type == "1") {
             $('tbody input[type="checkbox"]:checked').each(function(index,obj){
               arr.push($(obj).data('id'));
             })
           }
-          if(type == "1" && arr.length < 1) {
-            lib.popup.alert({text:'请选择具体操作项'});
-            return;
-          }
           parent.lib.popup.prompt({
              text   : '拒绝原因： ',
              define : function(str){
-                request('bounty/reject',{ids:arr,reason:str});
+                lib.ajax({
+                  url  : 'bounty/reject',
+                  type : "post",
+                  data :  {ids:arr,reason:str}
+                }).done(function(data, status, xhr){
+                  parent.lib.popup.result({
+                    bool:data.result == 1,
+                    text:(data.result == 1 ? "操作成功" : data.msg),
+                    define:function(){
+                      lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
+                    }
+                  });
+                });  
              }
-          });        
+          });                   
       });
 
      $("#table").delegate('.pass', 'click', function(event) {
@@ -265,35 +276,42 @@
             $('tbody input[type="checkbox"]:checked').each(function(index,obj){
               arr.push($(obj).data('id'));
             })
-          } 
-          if(type == "2" && arr.length < 1) {
-            lib.popup.alert({text:'请选择具体操作项'});
-            return;
           }                   
           parent.lib.popup.confirm({
               text:message,
               define:function(){
-                request('bounty/accept',{ids:arr});                         
+                lib.ajax({
+                  url  : 'bounty/accept',
+                  type : "post",
+                  data : {ids:arr}
+                }).done(function(data, status, xhr){
+                    if(data.result == "0"){
+                        parent.lib.popup.result({bool:false,text:data.msg || "操作失败！"});
+                        return;
+                    }
+                    if(data.result == "1"){
+                        data = data.data;
+                        if(data.alipay && data.alipay.form_args){
+                          $.each($("#alipaysubmit").serializeArray(),function(i,field){
+                              $("input[name='"+field.name+"']").val(data.alipay.form_args[field.name])
+                          })
+                          $("#alipaysubmit").submit();
+                          return;
+                        }
+                        if(data.alipay && data.alipay.info) tip(data.alipay.info);
+                        if(data.wx && data.wx.info) tip(data.wx.info);
+                        if(data.yilian && data.yilian.info) tip(data.yilian.info);
+                        if(data.balance && data.balance.info) tip(data.balance.info);
+                        lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
+                    } 
+                });                                       
               }
           }); 
      });
 
-    function request(url,params){
-        lib.ajax({
-          url  : url,
-          type : "post",
-          data : params
-        }).done(function(data, status, xhr){
-          parent.lib.popup.result({
-            bool:data.result == 1,
-            text:(data.result == 1 ? "操作成功" : data.msg),
-            time:2000,
-            define:function(){
-                lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
-            }
-          });
-        }); 
-    }       
+    function tip (msg) {
+        parent.lib.popup.result({bool:true,text:msg});
+    }        
   });
   </script>
   </body>
