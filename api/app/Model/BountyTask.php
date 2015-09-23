@@ -854,7 +854,7 @@ class BountyTask extends Model {
                     $alipay_items[] = ['tn' => $tn, "money" => $money, "reason" => "协商退款"];
                     break;
                 case self::PAYTYPE_WECHAT://微信	
-                    $wechat_items[] = ['bountySn' => $bounty_sn, 'userId' => $userId, 'money' => 0.01, 'tn' => $tn];
+                    $wechat_items[] = ['bountySn' => $bounty_sn, 'userId' => $userId, 'money' => $money, 'tn' => $tn];
                     break;
                 case self::PAYTYPE_UNION_PAY://银联	                 
                     //#@todo         
@@ -876,7 +876,6 @@ class BountyTask extends Model {
         if (count($wechat_items) > 0) {
             $wx_url = env("WXREFUND_URL");
             foreach ($wechat_items as $item) {
-                $item['money'] = 0.01;
                 $res_str = self::curlRefund($item['bountySn'], $item['userId'], $item['money'], $item['tn'], $wx_url);
 //                simple_log(date("Y-m-d H:i:s") . "\t" . $res_str . "\n", "wx_refund_return");
                 Log::info("wx_refund_return is".$res_str);
