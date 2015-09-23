@@ -94,14 +94,14 @@
 			<%if(data.data&&data.data.length>0){%>
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form action="pay_manage/check" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
-					<button class="btn" disabled>审批通过</button>
+				<form action="pay_manage/check" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})" disabled>
+					<button class="btn">审批通过</button>
 					<input type="hidden" name="do" value="1" />
 					<input type="hidden" name="ids" />
 				</form>
 				<span class="space"></span>
-				<form action="pay_manage/check" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
-					<button class="btn" disabled>审批不通过</button>
+				<form action="pay_manage/check" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})" disabled>
+					<button class="btn">审批不通过</button>
 					<input type="hidden" name="do" value="0" />
 					<input type="hidden" name="ids" />
 				</form>
@@ -114,10 +114,11 @@
 	<script type="text/javascript">
 		$(function(){
 			$('#table').on('change','tbody label input',function(){
+				var forms=$('.table-bottom form');
 				if($('tbody label input:checked').length>0){
-					$('.table-bottom button').attr('disabled',false);
+					forms.attr('disabled',false);
 				}else{
-					$('.table-bottom button').attr('disabled',true);
+					forms.attr('disabled',true);
 				}
 				var checked=$('tbody label input:checked');
 				var ids=[];

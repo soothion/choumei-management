@@ -157,6 +157,9 @@ $(function(){
 				confirm=$active.data('confirm');
 			}
 		}
+		if(!confirm&&this.confirm&&typeof this.confirm=='function'){
+			confirm=this.confirm();
+		}
 		var request=function(){
 			lib.ajax({
 				url:url,
