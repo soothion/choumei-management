@@ -79,6 +79,9 @@
 							bool:false
 						});
 					}else{
+						if(data.message){
+							data.msg=data.message;
+						}
 						if(data.code==401||data.code==400){
 							data.msg="登录超时，请重新登录";
 						}
@@ -1260,6 +1263,9 @@
 				type:this.el.method,
 				success:function(data){
 					$(self.el).trigger('response',data);
+					setTimeout(function(){
+						$(self.el).attr('disabled',false);
+					},1500);
 				},
 				error:function(xhr,code){
 					$(self.el).attr('disabled',false);
