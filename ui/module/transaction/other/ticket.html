@@ -54,7 +54,7 @@
                 <button class="btn" type="submit">搜索</button>
             </form>
 
-            <form action="ticket/export" data-role="export" data-slug="role.export">
+            <form action="ticket/export" data-role="export" data-slug="ticket.export">
                 <button class="btn" type="submit">
                     <i class="fa fa-file-excel-o"></i> 导出
                 </button>
@@ -102,7 +102,7 @@
                   <td><%=item.actuallyPay%></td>
                   <td><%=item.shopcartsn%></td>
                   <td>
-                     <a class="link" data-slug="role.show,role.update" target="_blank"
+                     <a class="link" data-slug="ticket.show" target="_blank"
                      href="../order/detail.html?method=ticket/show/&id=<%=item.order_ticket_id%>">查看&gt</a>
                   </td>
                 </tr>

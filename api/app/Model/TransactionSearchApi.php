@@ -26,8 +26,12 @@ class TransactionSearchApi
         {
             return $page;
         });
-        $total_money = self::countOfOrder($params);        
+        $total_money = "";        
         $res = $bases->paginate($size)->toArray();
+        if($res['total']<=2000) //两千条以上的不统计
+        {
+            $total_money = self::countOfOrder($params);
+        }
         $res['total_money'] = $total_money;
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
@@ -53,7 +57,11 @@ class TransactionSearchApi
         $platforms = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
         $res['data'] = self::addPlatfromInfos($res['data'],$platforms);
         unset($platforms);
-        $money_info = self::countOfTicket($params);     
+        $money_info = ['priceall_ori'=>'','actuallyPay'=>''];
+        if($res['total']<=2000)
+        {
+           $money_info = self::countOfTicket($params);   
+        }  
         $res['all_amount'] = $money_info['priceall_ori'];
         $res['paied_amount'] = $money_info['actuallyPay'];
         unset($res['next_page_url']);
@@ -76,7 +84,12 @@ class TransactionSearchApi
             return $page;
         });
         $res = $bases->paginate($size)->toArray();
-        $res['refund_money'] = self::countOfRefund($params);
+        $refund_money = '';
+        if($res['total']<=2000)
+        {
+            $refund_money =  self::countOfRefund($params);
+        }
+        $res['refund_money'] = $refund_money;
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
         return $res;
@@ -215,7 +228,7 @@ class TransactionSearchApi
         $salonArr = null;
         $fundflowArr = [];
         $trendArr = [];
-        $voucherArr = [];
+        $voucherArr = null;
         $commissionArr = null;
         $recommendCodeArr = null;
         if(!empty($paymentlog))
@@ -689,8 +702,7 @@ class TransactionSearchApi
             }
             elseif ($key == 4) //用户设备号
             {
-                //#@todo
-                //$base->whereRaw("user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
+                $base->whereRaw("cm_order.ordersn in (SELECT distinct(`ORDER_SN`) FROM `cm_request_log` WHERE `TYPE` = 'PLC' AND `DEVICE_UUID` LIKE '{$keyword}')");
             }
             elseif ($key == 5) //代金券编码
             {

@@ -65,7 +65,7 @@
 					options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
 				}
 			}
-			options.timeout=6000;
+			options.timeout=10000;
 			/*
 			options.headers={
 				token:localStorage.getItem('token')

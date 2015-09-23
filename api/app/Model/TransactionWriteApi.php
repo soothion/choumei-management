@@ -203,9 +203,8 @@ class TransactionWriteApi
         $payment_indexes = Utils::column_to_key("ordersn", $paymentArr);
         
         $refund_items = self::getRefundItems($fundflowArr,$payment_indexes,$refund_indexes);
-
         // 状态修改为退款中
-        //self::modifOrderStatusInRefund($ordersns);
+        self::modifOrderStatusInRefund($ordersns);
         
         foreach($refund_items as $type => $items)
         {
@@ -237,9 +236,12 @@ class TransactionWriteApi
         }
         $refundsArr = $refunds->toArray();
         unset($refunds);
+        if(count($refundsArr)<1)
+        {
+            throw  new ApiException("找不到对应的退款信息", ERROR::PARAMS_LOST);
+        }
         $ticketnos = array_column($refundsArr, "ticketno");
         $ordersns = array_column($refundsArr, "ordersn");
-        
         $ticket_num = OrderTicket::whereIn("ticketno",$ticketnos)->whereNotIn("status",[self::TICKET_STATUS_OF_USED,self::TICKET_STATUS_OF_REFUND_COMPLETED])->count();
         if($ticket_num !== count($ticketnos))
         {
@@ -409,7 +411,7 @@ class TransactionWriteApi
         $order_items_arr = $order_items->toArray();
         foreach ($order_items_arr as $item)
         {
-            SalonItem::where('salon_id',$item['salonid'])->where('itemid',$item['itemid'])->decrement('sold',1);
+            SalonItem::where('salonid',$item['salonid'])->where('itemid',$item['itemid'])->decrement('sold',1);
         }
         return true;
     }
@@ -441,6 +443,7 @@ class TransactionWriteApi
      */
     private static function checkRefundStatus($ids)
     {        
+     
         $count = count($ids);
         if ($count < 1) {
             throw new ApiException( "退款id不能为空", ERROR::PARAMS_LOST);

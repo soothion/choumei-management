@@ -21,7 +21,14 @@
 	'user.index':'/module/user/center/index.html',
 	'user.company':'/module/user/center/group.html',
 	'level.update':'/module/user/center/settings-rating.html',
-	'feed.index':'/module/user/operation/index.html'
+	'feed.index':'/module/user/operation/index.html',
+	'order.index':'/module/transaction/order/index.html',
+	'refund.index':'/module/transaction/order/refundment.html',
+	'bounty.index':'/module/transaction/reward/index.html', 
+	'bounty.refundIndex':'/module/transaction/reward/refundment.html',
+	'requestLog.index':'/module/transaction/other/device.html',
+	'ticket.index':'/module/transaction/other/ticket.html'
+
 }
 var access={
 	data:[],

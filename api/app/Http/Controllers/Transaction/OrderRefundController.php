@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Trans;
+namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;
@@ -10,6 +10,8 @@ use App\Exceptions\ERROR;
 use App\Utils;
 use App\AlipaySimple;
 use App\Mapping;
+use Event;
+use App\OrderRefund;
 
 class OrderRefundController extends Controller
 {
@@ -199,6 +201,9 @@ class OrderRefundController extends Controller
      * @apiSuccess {String} vouchers.vUseEnd 有效期
      * @apiSuccess {String} vouchers.status 状态 1未使用 2已使用 3待激活 5已失效 10 未上线
      * @apiSuccess {String} commission 佣金信息
+     * @apiSuccess {String} commission.amount 佣金金额
+     * @apiSuccess {String} commission.rate 佣金率
+     * @apiSuccess {String} commission.grade 店铺当前等级 1S 2A 3B 4C 5新落地 6淘汰区
      * @apiSuccess {String} recommend_code店铺优惠码
      * @apiSuccess {String} platform 设备信息
      * @apiSuccess {String} platform.DEVICE_UUID 设备号
@@ -264,64 +269,16 @@ class OrderRefundController extends Controller
      *                   "vUseEnd": 1442505599,
      *                   "vStatus": 1,
      *               }
-     *               "commission": null,
-     *               "recommend_code": null
+     *               "commission": 
+     *                {
+     *                  "ordersn":"2008481211896",
+     *                  "amount":"43.27",
+     *                  "rate":"9.09",
+     *                  "grade":"0"
+     *                },
+     *               "recommend_code": "1168"
      *           }
      *       }
-     *
-     * @apiSuccessExample Success-Response:
-     *       {
-     *           "result": 1,
-     *           "token": "",
-     *           "data": {
-     *               "order": {
-     *                   "ordersn": "4187664711988",
-     *                   "orderid": 708851,
-     *                   "priceall": "1.00",
-     *                   "salonid": 84,
-     *                   "actuallyPay": "1.00",
-     *                   "shopcartsn": ""
-     *               },
-     *               "item": {
-     *                   "order_item_id": 150256,
-     *                   "itemname": "柠檬去味吹发变身柠檬女神",
-     *                   "ordersn": "4187664711988"
-     *               },
-     *               "ticket": {
-     *                   "order_ticket_id": 108898,
-     *                   "ticketno": "17170134",
-     *                   "user_id": 306669
-     *               },
-     *               "user": {
-     *                   "username": "10306576",
-     *                   "mobilephone": "18319019483"
-     *               },
-     *               "salon": {
-     *                   "salonname": "苏格护肤造型生活馆（2店）"
-     *               },
-     *               "paymentlog": {
-     *                    "ordersn": "4187664711988",
-     *                    "tn": "1224362901341509107433258086"
-     *               },
-     *               "fundflows": [
-     *                   {
-     *                       "pay_type": 10,
-     *                       "money": "1.00"
-     *                   }
-     *               ],
-     *               "trends": [
-     *                   {
-     *                       "add_time": 1441876684,
-     *                       "status": 2,
-     *                       "remark": "未使用"
-     *                   }
-     *               ],
-     *               "vouchers": [],
-     *               "commission": null,
-     *               "recommend_code": null
-     *           }
-     *       }
-     *
      *
      * @apiErrorExample Error-Response:
      *		{
@@ -383,6 +340,10 @@ class OrderRefundController extends Controller
             '购物车号',
         ];
         $res = self::format_export_data($items);
+        if(!empty($res))
+        {
+            Event::fire("refund.export");
+        }
         $this->export_xls("退款单 " . date("Ymd"), $header, $res);
     }
     
@@ -392,6 +353,11 @@ class OrderRefundController extends Controller
      * @apiGroup refund
      *
      * @apiParam {Number} ids id(多个用','隔开).
+     * 
+     * @apiSuccess {String} alipay 支付宝
+     * @apiSuccess {String} wx 微信
+     * @apiSuccess {String} balance 余额
+     * @apiSuccess {String} yilian 易联
      *
      * @apiSuccessExample Success-Response:
      *     {
@@ -413,7 +379,15 @@ class OrderRefundController extends Controller
      *                    "sign_type": "MD5"
      *                }
      *            },
-     *
+     *            "wx":{
+     *              "info":"退款成功"
+     *            },
+     *            "balance":{
+     *              "info":"退款成功"
+     *            },
+     *            "yilian":{
+     *              "info":"退款失败<br> ordersn:xxxxx tn:xxxxx"
+     *            }
      *        }
      *    }
      *
@@ -433,6 +407,12 @@ class OrderRefundController extends Controller
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
         }
         $info = TransactionWriteApi::accpet($ids);
+        $refunds = OrderRefund::whereIn("order_refund_id",$ids)->get(['ordersn']);         
+        if(!empty($refunds))
+        {
+            $ordersns = array_column($refunds->toArray(), "ordersn");
+            Event::fire("refund.accept",implode(',',$ordersns));
+        }
         return $this->success($info);
     }
     
@@ -461,9 +441,16 @@ class OrderRefundController extends Controller
         if(count($ids)<1)
         {
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
+        }        
+        $info = TransactionWriteApi::reject($ids,$params['reason']);
+       
+        $refunds = OrderRefund::whereIn("order_refund_id",$ids)->get(['ordersn']);   
+        if(!empty($refunds))
+        {
+            $ordersns = array_column($refunds->toArray(), "ordersn");
+            Event::fire("refund.reject",implode(',',$ordersns));
         }
-        $info = TransactionWriteApi::reject($ids,$params['remark']);
-        $this->success($info);
+        return $this->success($info);
     }
     
     /**

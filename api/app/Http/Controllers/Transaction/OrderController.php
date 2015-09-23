@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Trans;
+namespace App\Http\Controllers\Transaction;
 
 use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;
 use App\Mapping;
+use Event;
 
 class OrderController extends Controller
 {
@@ -170,6 +171,9 @@ class OrderController extends Controller
      * @apiSuccess {String} vouchers.vUseEnd 有效期
      * @apiSuccess {String} vouchers.status 状态 1未使用 2已使用 3待激活 5已失效 10 未上线
      * @apiSuccess {String} commission 佣金信息
+     * @apiSuccess {String} commission.amount 佣金金额
+     * @apiSuccess {String} commission.rate 佣金率
+     * @apiSuccess {String} commission.grade 店铺当前等级 1S 2A 3B 4C 5新落地 6淘汰区
      * @apiSuccess {String} recommend_code店铺优惠码
      * @apiSuccess {String} platform 设备信息
      * @apiSuccess {String} platform.DEVICE_UUID 设备号
@@ -235,8 +239,14 @@ class OrderController extends Controller
      *                   "vUseEnd": 1442505599,
      *                   "vStatus": 1,
      *               }
-     *               "commission": null,
-     *               "recommend_code": null
+     *               "commission": 
+     *                {
+     *                  "ordersn":"2008481211896",
+     *                  "amount":"43.27",
+     *                  "rate":"9.09",
+     *                  "grade":"0"
+     *                },
+     *               "recommend_code": "1168"
      *           }
      *       }
      *
@@ -282,7 +292,7 @@ class OrderController extends Controller
             'pay_type' => self::T_STRING,
             'pay_state' => self::T_INT
         ]);
-        $items = TransactionSearchApi::getConditionOfOrder($params)->take(10000)
+        $items = TransactionSearchApi::getConditionOfOrder($params)->take(5000)
             ->get()
             ->toArray();
       
@@ -298,6 +308,10 @@ class OrderController extends Controller
             '交易状态'
         ];
         $res = self::format_export_data($items);
+        if(!empty($res))
+        {
+            Event::fire("order.export");
+        }
         $this->export_xls("普通订单" . date("Ymd"), $header, $res);
     }
     

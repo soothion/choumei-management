@@ -104,7 +104,7 @@
                   <button class="btn" type="submit">搜索</button>         
                 </form>
 
-                <form action="bounty/exportRefund?isRefund=2" data-role="export" data-slug="role.export">
+                <form action="bounty/exportRefund?isRefund=2" data-role="export" data-slug="bounty.exportRefund">
                   <button class="btn">
                   <i class="fa fa-file-excel-o"></i> 导出
                   </button>
@@ -154,14 +154,17 @@
               <td><%=item.salonName%></td>
               <td><%=statusObj[item.refundStatus]%></td>
               <td>
-                <a class="link" style="margin:0 5px;"  target="_blank" href="refundDetail.html?no=<%=item.btSn%>" >
+                <a class="link" style="margin:0 5px;"  target="_blank" data-slug="bounty.refundShow"
+                href="refundDetail.html?no=<%=item.btSn%>" >
                 查看&gt
                 </a>
                 <%if(item.refundStatus=="5"){%>
-                    <a class="link pass" style="margin:0 5px;" data-type="0" data-id=<%=item.btId%>>
+                    <a class="link pass" style="margin:0 5px;" data-slug="bounty.accept" data-type="0" 
+                    data-id=<%=item.btId%>>
                     通过
                     </a>
-                    <a class="link reject" style="margin:0 5px;" data-type="0" data-id=<%=item.btId%>>
+                    <a class="link reject" style="margin:0 5px;" data-slug="bounty.reject" data-type="0" 
+                    data-id=<%=item.btId%>>
                     拒绝
                     </a>
                 <%}%>
@@ -179,8 +182,8 @@
       <%if(data.data && data.total > 0){%>
       <div class="table-bottom">
         <label class="select-all"><input type="checkbox"/><span>全选</span></label>
-        <button class="btn pass"   data-type="2" style="margin-right:10px">通过</button>
-        <button class="btn reject" data-type="1" >拒绝</button>
+        <button class="btn pass"   data-type="2" style="margin-right:10px" data-slug="bounty.accept">通过</button>
+        <button class="btn reject" data-type="1" data-slug="bounty.reject">拒绝</button>
       </div>
       <%}%>      
       <div class="pager">
