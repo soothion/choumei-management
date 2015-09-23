@@ -131,7 +131,7 @@ class BountyTask extends Model {
         }
         if (!empty($input["payType"])) {
             $payType = intval($input["payType"]);
-            if ($payType > 9) {
+            if ($payType > 10) {
                 throw new ApiException('赏金单搜索暂不支持该支付方式搜索！', ERROR::BOUNTY_SEARCH_PAYTYPE_WRONG);
             }
             switch ($payType) {
