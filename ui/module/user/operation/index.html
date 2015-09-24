@@ -41,14 +41,14 @@
 				<%var data=data.data%>
 				<%data.forEach(function(item,i){%>
                 <tr>
-				  <td><label><input type="checkbox" name="feed" form="destroy" form="form" value="<%=item.id%>"/><span></span></label></td>
+				  <td><label><input type="checkbox" name="feed" form="destory" form="form" value="<%=item.id%>"/><span></span></label></td>
                   <td><%=item.id%></td>
                   <td><%=item.contact%></td>
                   <td><%=item.content%></td>
 				  <td><%=item.source%></td>
 				  <td><%=item.add_time%></td>
 				  <td>
-					 <form action="feed/destroy" data-role="normal" onreset="remove">
+					 <form action="feed/destory" data-role="normal" onreset="remove">
 						<input type="checkbox" value="<%=item.id%>" name="feed" class="hide" checked />
 						<button class="link">删除</button>
 					 </form>
@@ -60,7 +60,7 @@
 			
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form data-slug="feed.destory" action="feed/destroy" disabled id="destroy" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+				<form data-slug="feed.destory" action="feed/destory" disabled id="destory" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
 					<button class="btn">批量删除</button>
 				</form>
 			</div>
