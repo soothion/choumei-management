@@ -57,7 +57,7 @@
 				</table>
 			</div>
 			<form action="user/update/<%=query.id%>" data-role="normal" id="companyCode" onreset="parent.lib.popup.result()">
-				<input type="hidden" name="companyCode" value="" />
+				<input type="hidden" name="companyId" value="" />
 			</form>
 			<br />
 			<form action="user/update/<%=query.id%>" data-role="form">
@@ -132,7 +132,7 @@
 								<td>支付密码：<%=data.costpwd%></td>
 							</tr>
 							<tr>
-								<td>加入集团：<%=data.companyName%> <%if(data.recommendCode){%><span class="space"></span><button data-slug="user.update" form="companyCode" class="btn off-code">解绑集团码</button><%}%></td>
+								<td>加入集团：<%=data.companyName%> <%if(data.companyCode){%><span class="space"></span><button data-slug="user.update" form="companyCode" class="btn off-code">解绑集团码</button><%}%></td>
 								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
 							</tr>
 							<tr>
@@ -161,7 +161,7 @@
 										<div class="control-image-ud">
 											<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 										</div>
-										<input type="hidden" name="img" value="<%=data.img%>" required requiredmsg="请上传图片" data-helpid="image-help"  />
+										<input type="hidden" name="img" class="original" value="<%=data.img%>" required requiredmsg="请上传图片" data-helpid="image-help"  />
 									</div>
 									<span class="space"></span>
 									<span class="weak">
@@ -233,7 +233,7 @@
 								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
 							</tr>
 							<tr>
-								<td>加入集团：<%=data.companyName%> <%if(data.recommendCode){%><span class="space"></span><button  data-slug="user.update" class="btn off-code"  form="companyName">解绑集团码</button><%}%></td>
+								<td>加入集团：<%=data.companyName%> <%if(data.companyCode){%><span class="space"></span><button  data-slug="user.update" class="btn off-code"  form="companyName">解绑集团码</button><%}%></td>
 								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
 							</tr>
 							<tr>
@@ -290,16 +290,6 @@
 					},
 					max_file_size:'800kb',
 					imageLimitSize:"512*512"
-				},function(uploader){
-					uploader.bind('FileUploaded',function(up,file,res){
-						if(res&&res.response&&typeof res.response=='string'){
-							var data=JSON.parse(res.response);
-							if(data.code==0){
-								$('input[name="img"]').val(data.response.img);
-								$('#photo').attr('src',data.response.img);
-							}
-						}
-					});
 				});
 			}).on('_ready','#province,#city,#area',function(){
 				$(this).trigger('change');
