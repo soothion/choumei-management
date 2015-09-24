@@ -181,6 +181,7 @@ class UserController extends Controller{
 		    'user.area',
 		    'company_code.code as companyCode',
 		    'recommend_code_user.recommend_code as recommendCode',
+		    'activity',
 		    'user.add_time'
 		);
 
@@ -241,6 +242,7 @@ class UserController extends Controller{
 		    'user.area',
 		    'company_code.code as companyCode',
 		    'recommend_code_user.recommend_code as recommendCode',
+		    'activity',
 		    'user.add_time'
 		);
 
@@ -256,7 +258,8 @@ class UserController extends Controller{
 	    	$result[$key]['mobilephone'] = $value->mobilephone;
 	    	$result[$key]['area'] = $value->area;
 	    	$result[$key]['companyCode'] = $value->companyCode;
-	    	$result[$key]['recommendCode'] = $value->recommendCode;
+	    	$result[$key]['salonCode'] = $value->activity==1?'':$value->recommendCode;
+	    	$result[$key]['activityCode'] = $value->activity==2?'':$value->recommendCode;
 	    	$result[$key]['add_time'] = date('Y-m-d H:i:s',intval($value->add_time));
 	    }
 
@@ -265,7 +268,7 @@ class UserController extends Controller{
 		
 		//导出excel	   
 		$title = '用户列表'.date('Ymd');
-		$header = ['序号','臭美号','昵称','性别','会员等级','手机号','地区','集团邀请码','商家邀请码','注册时间'];
+		$header = ['序号','臭美号','昵称','性别','会员等级','手机号','地区','集团邀请码','商家邀请码','活动邀请码','注册时间'];
 		Excel::create($title, function($excel) use($result,$header){
 		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
 			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
