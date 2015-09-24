@@ -29,7 +29,7 @@
                         编辑
                     </button>
                     <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
-                        onclick="del(<%=data.id%>)" data-slug="rebate.destory">
+                        onclick="del(<%=data.id%>)" data-slug="rebate.destroy">
                         删除
                     </button>
                     <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
@@ -134,7 +134,7 @@
                     define:function(){
                         lib.ajax({
                             type: "get",
-                            url : "rebate/destory/"+id   
+                            url : "rebate/destroy/"+id   
                         }).done(function(data, status, xhr){
                             if(data.result == 1){
                                 parent.lib.popup.result({
