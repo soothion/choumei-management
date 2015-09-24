@@ -246,6 +246,7 @@ class UserController extends Controller{
 
 		//分页
 	    $array = $query->select($fields)->take(1000)->get();
+	    $result = [];
 	    foreach ($array as $key=>$value) {
 	    	$result[$key]['id'] = $key+1;
 	    	$result[$key]['username'] = $value->username;
@@ -458,6 +459,8 @@ class UserController extends Controller{
 	public function destroy($id)
 	{
 		$user = User::find($id);
+		if(!$user)
+			throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
 		$result = $user->delete();
 		if($result){
 			//触发事件，写入日志
