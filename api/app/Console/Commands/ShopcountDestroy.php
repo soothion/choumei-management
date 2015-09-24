@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Http\Controllers\ShopCount\ShopCountController;
 
-class Shopcountdestroy extends Command
+class ShopcountDestroy extends Command
 {
     /**
      * The name and signature of the console command.
