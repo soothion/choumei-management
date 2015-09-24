@@ -676,6 +676,120 @@ class SalonController extends Controller {
     *         }
 	* 		],
 	* 
+	* @apiSuccessExample Success-Response:
+	*	{
+	*		"result": 1,
+	*		"token": "",
+	*		"data": {
+	*			"salonid": 630,
+	*			"salonname": "choumeitest_salon",
+	*			"addr": "银河系，地球，中国",
+	*			"addrlati": "22.544848",
+	*			"addrlong": "113.951627",
+	*			"zone": 381,
+	*			"district": 3,
+	*			"shopType": 0,
+	*			"contractTime": "",
+	*			"logo": "http://sm.choumei.cn/Uploads/salon/2015-06-04/143338243914194.png",
+	*			"bargainno": "440305201501002101",
+	*			"bcontacts": "",
+	*			"tel": "0755-1234568",
+	*			"phone": "12345678905",
+	*			"corporateName": "",
+	*			"corporateTel": "",
+	*			"sn": "",
+	*			"salestatus": 2,
+	*			"businessId": 0,
+	*			"contractEndTime": "",
+	*			"salonGrade": 0,
+	*			"salonChangeGrade": 0,
+	*			"changeInTime": 0,
+	*			"salonCategory": 0,
+	*			"bankName": "",
+	*			"beneficiary": "",
+	*			"bankCard": "",
+	*			"branchName": "",
+	*			"accountType": "",
+	*			"salonArea": "",
+	*			"dressingNums": "",
+	*			"staffNums": "",
+	*			"stylistNums": "",
+	*			"monthlySales": "",
+	*			"totalSales": "",
+	*			"price": "",
+	*			"payScale": "",
+	*			"payMoney": "",
+	*			"payMoneyScale": "",
+	*			"payCountScale": "",
+	*			"cashScale": "",
+	*			"blowScale": "",
+	*			"hdScale": "",
+	*			"platformName": "",
+	*			"platformScale": "",
+	*			"receptionNums": "",
+	*			"receptionMons": "",
+	*			"setupTime": "",
+	*			"hotdyeScale": "",
+	*			"lastValidity": "",
+	*			"salonType": "",
+	*			"contractPicUrl": "",
+	*			"licensePicUrl": "",
+	*			"corporatePicUrl": "",
+	*			"floorDate": "",
+	*			"advanceFacility": "",
+	*			"commissionRate": "",
+	*			"dividendPolicy": "",
+	*			"rebatePolicy": "",
+	*			"basicSubsidies": "",
+	*			"bsStartTime": "",
+	*			"bsEndTime": "",
+	*			"strongSubsidies": "",
+	*			"ssStartTime": "",
+	*			"ssEndTime": "",
+	*			"strongClaim": "",
+	*			"subsidyPolicy": "",
+	*			"name": "choumeitest",
+	*			"merchantId": 1,
+	*			"businessName": "",
+	*			"dividendStatus": 0,
+	*			"recommend_code": "2818",
+	*			"salonImg": [
+	*				{
+	*					"worksid": 11316,
+	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364305891.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364305891.jpg\"}",
+	*					"flags": 3
+	*				},
+	*				{
+	*					"worksid": 11315,
+	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/143434956344103.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_143434956344103.jpg\"}",
+	*					"flags": 3
+	*				},
+	*				{
+	*					"worksid": 11314,
+	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/143433645017580.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_143433645017580.jpg\"}",
+	*					"flags": 3
+	*				},
+	*				{
+	*					"worksid": 11313,
+	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364613818.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364613818.jpg\"}",
+	*					"flags": 3
+	*				}
+	*			],
+	*			"workImg": [
+	*				{
+	*					"worksid": 11317,
+	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\"}",
+	*					"flags": 4
+	*				}
+	*			],
+	*			"zoneName": "科技园",
+	*			"districtName": "南山区",
+	*			"citiesName": "深圳市",
+	*			"citiesId": 1,
+	*			"provinceName": "广东省",
+	*			"provinceId": 1
+	*		}
+	*	}
 	*/
 	public function getSalon()
 	{
