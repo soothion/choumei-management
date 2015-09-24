@@ -330,6 +330,7 @@ class TicketController extends Controller
      */
     public function export()
     {
+        $start_time = microtime(true);
         $params = $this->parameters([
             'key' => self::T_INT,
             'keyword' => self::T_STRING,
@@ -341,7 +342,9 @@ class TicketController extends Controller
         $items = TransactionSearchApi::getConditionOfTicket($params)->take(5000)
         ->get()
         ->toArray();
-        $items = TransactionSearchApi::makeTicketOtherInfo($items);
+     
+        $items = TransactionSearchApi::makeTicketOtherInfo($items); 
+        
         //用户设备信息
         $ordersns = array_column($items, "ordersn");
         $paymentlogs = PaymentLog::whereIn('ordersn',$ordersns)->select(['ordersn','tn'])->get()->toArray();
@@ -374,6 +377,7 @@ class TicketController extends Controller
             Event::fire("ticket.export");
         }
         $this->export_xls("臭美券" . date("Ymd"), $header, $res);
+       
     }
     
     private static function format_export_data($datas)

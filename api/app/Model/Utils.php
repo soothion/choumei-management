@@ -154,6 +154,23 @@ class Utils
 		return $result;
 	}
 	
+	public static function column_to_group($column_name,$inputs =array())
+	{
+	    $result = array();
+	    if (!empty($inputs)) {
+	        $count = count($inputs);
+	        for ($i = 0; $i < $count; $i++) {
+	            $group_key = $inputs[$i][$column_name];
+	            if(!isset($result[$group_key]))
+	            {
+	                $result[$group_key] = [];
+	            }
+	            $result[$group_key][] = $inputs[$i];
+	        }
+	    }
+	    return $result;
+	}
+	
 	/**
 	 * CURL发送POST请求
 	 * @param string $url
@@ -211,71 +228,38 @@ class Utils
 	        $tmp = $base;
 	        foreach($others as $type => $other)
 	        {	
-	            $tmp = self::groupMakeSingle($tmp,$other,$type);
+	            $column_name = isset($other['as'])?$other['as']:$type;
+	            $key_name = $other['relation'];
+	            $key_value = $tmp[$key_name];
+	            if(isset($other['datas'][$key_value]))
+	            {
+	                $tmp[$column_name] = $other['datas'][$key_value];	             
+	                if(isset($other['add_to_base']) && count($other['add_to_base'])>0)
+	                {
+	                    foreach($other['add_to_base'] as $from_key => $to_key)
+	                    {
+	                        if(is_int($from_key))
+	                        {
+	                            $from_key = $to_key;
+	                        }
+	                        $tmp[$to_key] = isset($other['datas'][$key_value][$from_key])?$other['datas'][$key_value][$from_key]:'';
+	                    }
+	                }
+	            }
+	            else 
+	            {
+	                $tmp[$column_name] = isset($other['make_by'])&&$other['make_by'] == self::GROUP_MAKE_BY_ONE_TO_MANY?[]:null;
+	                if(isset($other['add_to_base']) && count($other['add_to_base'])>0)
+	                {
+	                    foreach($other['add_to_base'] as $from_key => $to_key)
+	                    {	                        
+	                        $tmp[$to_key] = '';
+	                    }
+	                }
+	            }
 	        }	        
 	        $res[$key] =  $tmp;
 	    }
 	    return $res;
-	}
-	
-	public static function  groupMakeSingle($base,$other,$key_name)
-	{
-	    $column_name = isset($other['as'])?$other['as']:$key_name;
-	    $main_key = $other['relation'][0];
-	    $relation_key = $other['relation'][1];
-	    $add_to_bases = isset($other['add_to_base'])?$other['add_to_base']:null;
-	    $make_by = $other['make_by'];
-	    $data = $other['datas'];
-	    $need_add = true;
-	    if(count($add_to_bases)<1)
-	    {
-	        $need_add =false;
-	    }	
-	    
-        if($make_by == self::GROUP_MAKE_BY_ONE_TO_ONE)
-        {
-            $other_indexes = self::column_to_key($relation_key,$data);
-            $key =  $base[$main_key];
-            if(isset($other_indexes[$key]))
-            {
-                $base[$column_name] = $other_indexes[$key];
-            }
-            else
-            {
-                $base[$column_name] = null;
-            }
-            
-            if($need_add)
-            {
-                foreach ($add_to_bases as $tmp_key)
-                {
-                    $base[$tmp_key] = isset($other_indexes[$key])&&isset($other_indexes[$key][$tmp_key])?$other_indexes[$key][$tmp_key]:'';
-                }
-            }
-        }
-        
-        if($make_by == self::GROUP_MAKE_BY_ONE_TO_MANY)
-        {
-            $other_indexes = [];
-            foreach($data as $record)
-            {
-                $key = $record[$relation_key];
-                if(!isset($other_indexes[$key]))
-                {
-                    $other_indexes[$key] =[];
-                }
-                $other_indexes[$key][] = $record;
-            }           
-            $key_value =  $base[$main_key];
-            if(isset($other_indexes[$key_value]))
-            {
-                $base[$column_name] = $other_indexes[$key_value];
-            }
-            else
-            {
-                $base[$column_name] = [];
-            }
-        }
-        return $base;
-	}
+	}	
 }

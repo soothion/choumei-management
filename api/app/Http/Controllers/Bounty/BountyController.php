@@ -30,8 +30,8 @@ class BountyController extends Controller {
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
      * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
-     * @apiParam {String} minPayTime 可选,交易时间左框.
-     * @apiParam {String} maxPayTime 可选,交易时间右框.
+     * @apiParam {String} minAddTime 可选,交易时间左框.
+     * @apiParam {String} maxAddTime 可选,交易时间右框.
      * @apiParam {String} minEndTime 可选,退款时间左框.
      * @apiParam {String} maxEndTime 可选,退款时间右框.
      * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
@@ -406,8 +406,8 @@ class BountyController extends Controller {
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
      * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
-     * @apiParam {String} minPayTime 可选,交易时间左框.
-     * @apiParam {String} maxPayTime 可选,交易时间右框.
+     * @apiParam {String} minAddTime 可选,交易时间左框.
+     * @apiParam {String} maxAddTime 可选,交易时间右框.
      * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
      * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
      *
