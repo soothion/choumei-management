@@ -1221,10 +1221,11 @@
 			});
 		},
 		fail:function(data){
+			/*
 			parent.lib.popup.result({
 				bool:false,
 				text:(data&&data.msg?data.msg:"数据更新失败")
-			});
+			});*/
 		},
 		bindEvent:function(){
 			var self=this;
