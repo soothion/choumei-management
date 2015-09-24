@@ -101,7 +101,7 @@
 								location.href='/index.html';
 							}else{
 								$('.btn-primary').text('登录');
-								help.show().text(data.msg);
+								help.show().text(data.msg||"系统错误!");
 								$('#codeImage').trigger('click');
 							}
 						},

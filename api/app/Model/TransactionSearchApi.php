@@ -630,7 +630,7 @@ class TransactionSearchApi
         }
         
         // 关键字搜索
-        if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty($params['keyword'])) {
+        if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty(trim($params['keyword']))) {
             $key = intval($params['key']);
             $keyword = '%' . str_replace([
                 "%",
@@ -638,7 +638,7 @@ class TransactionSearchApi
             ], [
                 "\\%",
                 "\\_"
-            ], $params['keyword']) . "%";
+            ], trim($params['keyword'])) . "%";
             if ($key == 1) //订单号
             {
                 $orderBase->where("ordersn",'like',$keyword);
@@ -687,7 +687,7 @@ class TransactionSearchApi
         }
         
         // 关键字搜索
-        if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty($params['keyword'])) {
+        if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty(trim($params['keyword']))) {
             $key = intval($params['key']);
             $keyword = '%' . str_replace([
                 "%",
@@ -695,7 +695,7 @@ class TransactionSearchApi
             ], [
                 "\\%",
                 "\\_"
-            ], $params['keyword']) . "%";
+            ], trim($params['keyword'])) . "%";
             if ($key == 1) //臭美券密码
             {
                 $base->where("order_ticket.ticketno",'like',$keyword);
@@ -766,7 +766,7 @@ class TransactionSearchApi
         }
     
         // 关键字搜索
-        if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty($params['keyword'])) {
+        if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty(trim($params['keyword']))) {
             $key = intval($params['key']);
             $keyword = '%' . str_replace([
                 "%",
@@ -774,7 +774,7 @@ class TransactionSearchApi
             ], [
                 "\\%",
                 "\\_"
-            ], $params['keyword']) . "%";
+            ], trim($params['keyword'])) . "%";
             if ($key == 1) //订单号
             {
                 $base->where("order_refund.ordersn",'like',$keyword);

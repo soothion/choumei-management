@@ -376,6 +376,7 @@ class TicketController extends Controller
         {
             Event::fire("ticket.export");
         }
+        @ini_set('memory_limit', '256M');
         $this->export_xls("臭美券" . date("Ymd"), $header, $res);
        
     }
@@ -419,7 +420,8 @@ class TicketController extends Controller
     
     private static function mask_ticketno($ticketno)
     {
-        return substr($ticketno, 0,2)."*****".substr($ticketno, strlen($ticketno)-3);
+        return $ticketno;//需求更改不加密
+        //return substr($ticketno, 0,2)."*****".substr($ticketno, strlen($ticketno)-3);
     }
     
     private static function get_voucher_used($voucher_money,$order_money)

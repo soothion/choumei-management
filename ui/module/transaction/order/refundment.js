@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-21 17:44:57
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-23 11:44:02
+* @Last Modified time: 2015-09-24 15:15:51
 */
 
   $(document).ready(function(){
@@ -33,14 +33,14 @@
                   type : "post",
                   data :  {ids:arr.join(","),reason:str}
                 }).done(function(data, status, xhr){
-                  parent.lib.popup.result({
-                    bool:data.result == 1,
-                    text:(data.result == 1 ? "操作成功" : data.msg),
-                    time:2000,
-                    define:function(){
-                      lib.ajat('refund/index?<%=query._%>#domid=table&tempid=table-t').render();
-                    }
-                  });
+                  if(data.result == "1"){
+                    parent.lib.popup.result({
+                      text:"操作成功",
+                      define:function(){
+                        lib.ajat('refund/index?<%=query._%>#domid=table&tempid=table-t').render();
+                      }
+                    });                    
+                  }
                 });  
              }
           });        
@@ -70,15 +70,11 @@
                   type : "post",
                   data :  {ids:arr.join(",")}
                 }).done(function(data, status, xhr){
-                  if(data.result == "0"){
-                    parent.lib.popup.result({bool:false,text:data.msg || "操作失败！"});
-                    return;
-                  }
                   if(data.result == "1"){
                     data = data.data;
                     if(data.alipay && data.alipay.form_args){
                       $.each($("#alipaysubmit").serializeArray(),function(i,field){
-                        $("input[name='"+field.name+"']").val(data.alipay.form_args[field.name])
+                        $("input[name='"+field.name+"']").val(data.alipay.form_args[field.name]);
                       })
                       $("#alipaysubmit").submit();
                       return;
