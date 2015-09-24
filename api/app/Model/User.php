@@ -21,7 +21,7 @@ class User extends  Model
     public static function getQueryByParam($param=[]){
         $query = Self::leftJoin('company_code','user.companyId','=','company_code.companyId')
         	->leftJoin('recommend_code_user','user.user_id','=','recommend_code_user.user_id')
-            ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
+            ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code');
 
         if(!empty($param['username'])){
         	$username = '%'.$param['username'].'%';
