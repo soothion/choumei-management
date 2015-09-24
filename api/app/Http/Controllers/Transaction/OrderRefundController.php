@@ -496,7 +496,7 @@ class OrderRefundController extends Controller
             }
             $res[] = [
                 'ticketno' => self::mask_ticketno($data['ticketno']),
-                'ordersn' => $data['ordersn'],
+                'ordersn' => ' '.$data['ordersn'],
                 'buy_time' => date("Y-m-d H:i:s", intval($data['buy_time'])),
                 'add_time' => intval($data['add_time']) > 0 ? date("Y-m-d H:i:s", intval($data['add_time'])) : "",
                 'salonname' => isset($data['salon']) && isset($data['salon']['salonname']) ? $data['salon']['salonname'] : "",
@@ -508,7 +508,7 @@ class OrderRefundController extends Controller
                 'refund_money' => $data['refund_money'],
                 'retype' => Mapping::getOrderRefundRetypeName($data['retype']),
                 'order_status' => Mapping::getOrderStatusName($data['order_status'],[6=>'待审核']),
-                'shopcartsn' =>$data['shopcartsn']
+                'shopcartsn' =>' '.$data['shopcartsn']
             ];
         }
         return $res;

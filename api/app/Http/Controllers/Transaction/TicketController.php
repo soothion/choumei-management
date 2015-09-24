@@ -395,7 +395,7 @@ class TicketController extends Controller
             $res[] = [
                 'id'=>$data['order_ticket_id'],
                 'ticketno'=>self::mask_ticketno($data['ticketno']),
-                'ordersn'=>$data['ordersn'],
+                'ordersn'=>' '.$data['ordersn'],
                 'payname'=>$pay_typename_str,              
                 'add_time'=>date("Y-m-d H:i:s",intval($data['add_time'])),
                 'use_time'=>intval($data['use_time'])>0?date("Y-m-d H:i:s",intval($data['use_time'])):"", 
@@ -410,8 +410,8 @@ class TicketController extends Controller
                 'voucher_money'=>isset($data['voucher'])&&isset($data['voucher']['vUseMoney'])?$data['voucher']['vUseMoney']:'',
                 'voucher_money_used'=>isset($data['voucher'])&&isset($data['voucher']['vUseMoney'])?self::get_voucher_used($data['voucher']['vUseMoney'], $data['priceall']):'',
                 'actuallyPay'=>$data['actuallyPay'],
-                'shopcartsn'=>$data['shopcartsn'],
-                'tn'=>isset($data['payment_log'])&&isset($data['payment_log']['tn'])?$data['payment_log']['tn']:"",
+                'shopcartsn'=>' '.$data['shopcartsn'],
+                'tn'=>isset($data['payment_log'])&&isset($data['payment_log']['tn'])?' '.$data['payment_log']['tn']:"",
             ];
         }
         return $res;

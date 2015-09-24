@@ -329,7 +329,7 @@ class OrderController extends Controller
                 $pay_typename_str = implode("+", $pay_names);
             }
             $res[] = [
-                'ordersn'=>$data['ordersn'],
+                'ordersn'=>' '.$data['ordersn'],
                 'payname'=>$pay_typename_str,
                 'money'=>$data['priceall'],
                 'add_time'=>date("Y-m-d H:i:s",intval($data['add_time'])),
