@@ -517,6 +517,7 @@ class OrderRefundController extends Controller
 
     private static function mask_ticketno($ticketno)
     {
-        return substr($ticketno, 0, 2) . "*****" . substr($ticketno, strlen($ticketno) - 3);
+        return $ticketno;//需求更改不加密
+        //return substr($ticketno, 0, 2) . "*****" . substr($ticketno, strlen($ticketno) - 3);
     }
 }
