@@ -21,7 +21,7 @@
             padding:0;
         }
         .tab input[type="date"] {
-            min-width:200px!important;
+            min-width:160px!important;
             width:100%;
             border: none;
             visibility: hidden;
@@ -51,6 +51,28 @@
                 <span class="space"></span>
                 <button class="btn-primary">提交</button>
             </div>  
+
+            <div>
+               <p><strong>所属店铺</strong></p>
+            </div> 
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
+                <div class="control">
+                    <input type="text" name="dressingNums" placeholder="">
+                    <label>
+                        <input type="checkbox" />
+                        <span>修改所属店铺</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
+                <div class="control">
+                    <input type="text" name="dressingNums" placeholder="">
+                </div>
+            </div>             
 
             <div>
                <p><strong>图片</strong></p>
@@ -91,7 +113,15 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>性别：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <label>
+                        <input type="radio" name="sex" checked/>
+                        <span>男</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="sex"/>
+                        <span>女</span>
+                    </label>
                 </div>
             </div> 
 
@@ -126,14 +156,20 @@
             <div class="control-group">
                 <label class="control-label" for="">出生日期：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <input type="date" name="dressingNums" placeholder="">
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for="">身份证件：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <select name="" id="" style="min-width:100px;width:4%;">
+                        <option value="">身份证</option>
+                        <option value="">军官证</option>
+                        <option value="">驾驶证</option>
+                        <option value="">护照</option>
+                    </select>
+                    <input type="text" name="dressingNums" placeholder="" style="min-width:140px;width:12.5%">
                 </div>
             </div> 
 
@@ -166,14 +202,23 @@
             <div class="control-group">
                 <label class="control-label" for="">悬赏等级：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <select name="" id="">
+                        <option value="">请选择</option>
+                        <option value="1">资深发型师</option>
+                        <option value="2">设计总监</option>
+                        <option value="3">美发大师</option>
+                    </select>
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for="">快剪等级：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <select name="" id="">
+                        <option value="">请选择</option>
+                        <option value="1">普通快剪</option>
+                        <option value="2">总监快剪</option>
+                    </select>
                 </div>
             </div>  
 
@@ -183,7 +228,7 @@
             </div> 
 
             <div class="control-group">
-                <label class="control-label" for=""><span class="red">*</span>个性签名：</label>
+                <label class="control-label" for="">个性签名：</label>
                 <div class="control">
                     <div class="keypress">
                         <textarea maxlength="500" data-helpid="textarea-help" required></textarea>

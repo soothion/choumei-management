@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+         .td{width:15%;min-width: 150px;}        
+      </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>收入管理</a>
+            <span>&gt;</span><a href="index.html">返佣单</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>返佣单详情</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">      
+            <div style="position:absolute;right:20px;top:40px;">
+                <button type="button" class="btn mr-20">
+`                   禁用
+                </button>
+                &nbsp;
+                <button type="button" class="btn mr-20">
+                    删除
+                </button>
+                &nbsp;
+                <button type="button" class="btn mr-20">
+                    编辑
+                </button>
+                &nbsp;
+                <button type="button" class="btn mr-20" onclick="window.close()">
+                    关闭
+                </button>                  
+            </div>  
+
+            <div class="table" style="width:70%;float:left" id="table-wrapper">
+                <table>
+                    <tbody>
+                        <tr style="height:60px">
+                            <td colspan="4"><strong style="padding-left:15px;font-size:18px">店铺名称</strong></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">姓名：</td>
+                            <td colspan="3"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">性别：</td>
+                            <td colspan="3"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">手机号：</td>
+                            <td colspan="3"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">微信：</td>
+                            <td colspan="3"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">QQ号：</td>
+                            <td colspan="3"></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="td">邮箱：</td>
+                            <td colspan="3"></td>
+                        </tr>   
+
+                        <tr>
+                            <td class="td">出生日期：</td>
+                            <td colspan="3"></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">证件类型：</td>
+                            <td></td>
+                            <td class="td">证件编号：</td>
+                            <td></td>
+                        </tr>                          
+                    </tbody>                     
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">工作信息</th>                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="td">在职编号：</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">工作年限：</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">门店职位：</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">悬赏等级：</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">快剪等级</td>
+                            <td></td>                            
+                        </tr>                        
+                    </tbody>                     
+                </table> 
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">个人说明</th>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="height:100px">
+                            <td class="td">个性签名：</td>
+                            <td></td>
+                        </tr>
+
+                        <tr style="height:100px">
+                            <td class="td">自我描述：</td>
+                            <td></td>
+                        </tr>                       
+                    </tbody>                     
+                </table>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th colspan="3">教育经历</th>                       
+                    </tr>
+                    <tr>
+                        <th>起始日期</th>                       
+                        <th>截止日期</th>                       
+                        <th>教育院校（培训机构）</th>                       
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>                         
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>2</td>                           
+                        </tr>                      
+                    </tbody>                     
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="5">工作经验</th>                       
+                        </tr>
+                        <tr>
+                            <th>起始日期</th>                       
+                            <th>截止日期</th>                       
+                            <th>门店名称</th>                       
+                            <th>门店职位</th>                       
+                            <th>工作地点</th>                       
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>1</td>                         
+                            <td>1</td>                         
+                            <td>1</td>                         
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>2</td>                           
+                            <td>2</td>                           
+                            <td>2</td>                           
+                        </tr>                      
+                    </tbody>                     
+                </table>                                                                           
+            </div>
+
+            <div style="float:left;margin:15px 0 15px 20px;">
+              <img src="/images/logo.png" style="width:256px;height:256px"/>
+            </div>        
+        </div>
+    </body>
+</html>
