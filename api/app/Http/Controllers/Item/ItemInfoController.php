@@ -18,7 +18,9 @@ class ItemInfoController extends Controller{
 	 * @api {post} /itemInfo/index 1.店铺项目资料列表
 	 * @apiName index
 	 * @apiGroup  itemInfo
-	 *
+	 * 
+	 * @apiParam {Number} key 可选,1店铺 2商户.
+	 * @apiParam {String} keyword 可选,关键字.
 	 * @apiParam {Number} page 可选,页数.
 	 * @apiParam {Number} page_size 可选,分页大小.
 	 * 
