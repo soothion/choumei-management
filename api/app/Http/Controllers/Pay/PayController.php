@@ -423,7 +423,7 @@ class PayController extends Controller
      */
     public function destroy($id)
     {
-        $res = PayManage::destory($id);
+        $res = PayManage::destroy($id);
         if(!$res)
         {
             throw new ApiException("此单状态或类型不允许删除或者已经删除!", ERROR::UNKNOWN_ERROR);

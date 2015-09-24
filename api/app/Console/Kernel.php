@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ShopcountShow::class,
         \App\Console\Commands\ShopcountStore::class,
         \App\Console\Commands\ShopcountUpdate::class,
-        \App\Console\Commands\ShopcountDestory::class,
+        \App\Console\Commands\ShopcountDestroy::class,
         \App\Console\Commands\ShopcountBalance::class,
         \App\Console\Commands\ShopcountDelegateDetail::class,
         \App\Console\Commands\ShopcountDelegateList::class,
