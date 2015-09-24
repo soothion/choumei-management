@@ -45,7 +45,8 @@
                 <div class="tab">            
                     <a href="refundment.html?reload=1#state=0" <%=(!query.state || query.state=="0") ? "class=active" : ""%>>全部退款</a>
 
-                    <a href="refundment.html?reload=2#state=6" <%=query.state=="6" ? "class=active" : ""%>>待审核</a>
+                    <a href="refundment.html?reload=2#state=6,2" <%=query.state=="6,2" ? "class=active" : ""%>>待审核
+                    </a>
 
                     <a href="refundment.html?reload=3#state=7,10,12" <%=query.state=="7,10,12" ? "class=active" : ""%>>已审核</a>
                 </div>
@@ -74,12 +75,12 @@
                     <select name="state" >
                       <%if(!query.state || query.state === "0"){%>
                           <option value="0">全部</option>
-                          <option value="6">申请退款</option>
+                          <option value="6,2">申请退款</option>
                           <option value="10">退款中</option>
                           <option value="7">退款成功</option>
                           <option value="12">退款失败</option>
-                      <%}else if(query.state === "6"){%>
-                          <option value="6">申请退款</option>
+                      <%}else if(query.state === "6,2"){%>
+                          <option value="6,2">申请退款</option>
                       <%}else{%>
                           <option value="7,10,12">全部</option>
                           <option value="10">退款中</option>
@@ -141,7 +142,7 @@
         <tbody>			  
         <% 
         var retypeObj = {"1":"原路返还","2":"退回余额"};
-        var refundObj = {"6":"待审核","7":"退款成功","10":"退款中","12":"退款失败"};
+        var refundObj = {"2":"待审核","6":"待审核","7":"退款成功","10":"退款中","12":"退款失败"};
         var payObj    = {"2":"支付宝","3":"微信","4":"余额","9":"现金券","10":"易联"};      
         %>
 				<%data.data &&　data.data.forEach(function(item,i){%>

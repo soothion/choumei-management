@@ -1098,8 +1098,8 @@ class BountyTask extends Model {
     protected static function format_exportBounty_data($datas) {
         $res = [];
         foreach ($datas as $data) {
-            $btSn = isset($data['btSn']) ? $data['btSn'] : '';
-            $tn = isset($data['tn']) ? $data['tn'] : '';
+            $btSn = isset($data['btSn']) ? ' '.$data['btSn'] : '';
+            $tn = isset($data['tn']) ? ' '.$data['tn'] : '';
             $payType = isset($data['payType']) ? $data['payType'] : '';
             $addTime = isset($data['addTime']) ? $data['addTime'] : '';
             $hairStylistMobile = isset($data['hairStylistMobile']) ? $data['hairStylistMobile'] : '';
@@ -1123,7 +1123,7 @@ class BountyTask extends Model {
     protected static function format_exportRefund_data($datas) {
         $res = [];
         foreach ($datas as $data) {
-            $btSn = isset($data['btSn']) ? $data['btSn'] : '';
+            $btSn = isset($data['btSn']) ? ' '.$data['btSn'] : '';
             $payType = isset($data['payType']) ? $data['payType'] : '';
             $money = isset($data['money']) ? $data['money'] : '';
             $endTime = isset($data['endTime']) ? $data['endTime'] : '';
