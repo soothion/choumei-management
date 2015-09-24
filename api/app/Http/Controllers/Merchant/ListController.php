@@ -170,8 +170,8 @@ class ListController extends Controller {
     
     /**
      * @api {post} /salonList/getItemType 3.获取项目分类
-     * @apiName salonList
-     * @apiGroup  getItemType
+     * @apiName getItemType
+     * @apiGroup  salonList
      *
      *
      *

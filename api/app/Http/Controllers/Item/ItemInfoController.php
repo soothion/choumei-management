@@ -35,16 +35,16 @@ class ItemInfoController extends Controller{
 	 *	    "token": "",
 	 *	    "data": [
 	 *	    {
-     *           "salonid": 691,
-     *           "salonname": "choumeitest_salon",
-     *           "generalNums": 12,
-     *           "specialNums": 43,
-     *           "wareroomNums": 42,
-     *           "hairstyNums": 36
-     *       },
+     *	    	    "salonid": 691,
+     *	    	    "salonname": "choumeitest_salon",
+     *	    	    "generalNums": 12,
+     *	    	    "specialNums": 43,
+     *	    	    "wareroomNums": 42,
+     *	    	    "hairstyNums": 36
+     *	    },
 	 *			......
 	 *	    ]
-	 *	}
+	 *}
 	 *
 	 *
 	 *
@@ -240,7 +240,7 @@ class ItemInfoController extends Controller{
         $data['desc'] = isset($param['desc'])?trim($param['desc']):'';
 
         $data['item_type']      = isset($param['itemType'])?intval($param['itemType']):0;;//'商品类型，1 默认在售，2 限时特价'
-//        if($data['item_type']==2 && empty($data['useLimit'])) $this->alert ('请完善 消费限制 信息');
+//        if($data['item_type']==2 && empty($data['useLimit']))  ('请完善 消费限制 信息');
 
         $data['itemname'] = isset($param['itemname'])?trim($param['itemname']):'';
         $data['itemname'] = preg_replace('/\s+/', '', $data['itemname']);
