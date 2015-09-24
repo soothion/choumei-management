@@ -82,21 +82,20 @@
 							bool:false
 						});
 					}else{
-						if(data.message){
-							data.msg=data.message;
-						}
 						if(data.code==401||data.code==400){
 							data.msg="登录超时，请重新登录";
 						}
-						parent.lib.popup.result({
-							text:"出现异常："+data.msg,
-							bool:false,
-							define:function(){
-								if(data.code==400||data.code==401){
-									parent.location.href="/module/system/user/login.html";
+						if(data.msg){
+							parent.lib.popup.result({
+								text:"出现异常："+data.msg,
+								bool:false,
+								define:function(){
+									if(data.code==400||data.code==401){
+										parent.location.href="/module/system/user/login.html";
+									}
 								}
-							}
-						});
+							});
+						}
 					}
 				}
 			}
