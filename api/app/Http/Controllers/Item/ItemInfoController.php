@@ -289,7 +289,7 @@ class ItemInfoController extends Controller{
         
         //增值服务
         $data['addserviceStr'] = '';
-        $addedService = isset($param['addedService'])?trim($param['addedService']):'';
+        $addedService = isset($param['addedService'])?$param['addedService']:'';
         if($addedService)
         	$data['addserviceStr']=implode(',',$addedService);
         
