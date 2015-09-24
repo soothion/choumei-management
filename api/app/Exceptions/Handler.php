@@ -46,6 +46,7 @@ class Handler extends ExceptionHandler
         // return parent::render($request, $e);
         $data['result'] = 0;
         $data['code'] = 0;
+        $data['msg'] = '';
         $data['token'] = '';
         if(JWTAuth::getToken()){
             try {
@@ -56,8 +57,8 @@ class Handler extends ExceptionHandler
             }
         }
         if($e instanceof ApiException){
-            $data['message'] = $e->getMessage();
             $data['code'] = $e->getCode();
+            $data['msg'] = $e->getMessage();
         }
         else{
             if(Config::get('debug')=='true')
