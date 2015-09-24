@@ -312,6 +312,7 @@ class OrderController extends Controller
         {
             Event::fire("order.export");
         }
+        @ini_set('memory_limit', '256M');
         $this->export_xls("普通订单" . date("Ymd"), $header, $res);
     }
     

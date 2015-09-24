@@ -376,6 +376,7 @@ class TicketController extends Controller
         {
             Event::fire("ticket.export");
         }
+        @ini_set('memory_limit', '256M');
         $this->export_xls("臭美券" . date("Ymd"), $header, $res);
        
     }

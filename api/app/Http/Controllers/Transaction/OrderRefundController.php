@@ -344,6 +344,7 @@ class OrderRefundController extends Controller
         {
             Event::fire("refund.export");
         }
+        @ini_set('memory_limit', '256M');
         $this->export_xls("退款单 " . date("Ymd"), $header, $res);
     }
     
