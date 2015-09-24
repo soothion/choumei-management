@@ -7,10 +7,10 @@
   </head>
   <body>
 	<div class="breadcrumb">
-		<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span>新增项目
+		<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><%=query.id?"编辑":"新增"%>项目
 		<div class="flex-box">
 			<div class="flex-item">
-				<h4>新增项目</h4>
+				<h4><%=query.id?"编辑":"新增"%>项目-<%=query.salonname%></h4>
 			</div>
 		</div>
 		<hr />
@@ -18,74 +18,51 @@
 	<div class="wrapper" >
 		<div ajat="<%if(query.id){%>merchant/getMerchantList?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
-		<form method="post" class="form-vertical" data-role="form" action="<%=query._?"merchant/update":"merchant/save"%>">
+		<form method="post" class="form-vertical" data-role="form" action="<%=query.id?"merchant/update":"itemInfo/create"%>">
 			<div class="detail-operation">
 				<button class="btn btn-cancel" type="button">取消</button>
 				<span class="space"></span>
 				<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
 			</div>
-			<div class="control-group">
-				<legend>新增方式</legend>
-            </div>
+			<%if(query.page=="special"){%>
+			<legend>新增方式</legend>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>选择分类：</label>
 				<div class="control">
-					<select>
-					    <option value="可选择已有项目新增闲时特价" selected="">可选择已有项目新增闲时特价</option>
-					    <option value="洗剪吹">洗剪吹</option>
-					    <option value="洗吹">洗吹</option>
-					    <option value="烫发">烫发</option>
-					    <option value="染发">染发</option>
-					    <option value="护发">护发</option>
-					    <option value="套餐">套餐</option>
-					    <option value="男士快剪">男士快剪</option>
-					    <option value="其他">其他</option>
-					    <option value="养发">养发</option>
-					    <option value="兑换专用">兑换专用</option>
+					<select ajat="salonList/getItemType#domid=type1&tempid=type1-t" id="type1" 
+						ajat-change="itemInfo/getItems?salonid=<%=query.salonid%>&typeid=${value}#domid=project&tempid=project-t">
 					</select>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>已有项目：</label>
 				<div class="control">
-					<select>
-					  <option value="总监洗剪吹">总监洗剪吹</option>
-					  <option value="普通洗剪吹">普通洗剪吹</option>
-					  <option value="店长洗剪吹">店长洗剪吹</option>
-					</select>
+					<select id="project"></select>
 				</div>
 			</div>
 			<hr />
-			<div class="control-group">
-				<legend>项目资料</legend>
-            </div>
+			<%}%>
+			<input type="hidden" name="itemType" value="<%=query.page=="special"?"2":"1"%>" />
+			<input type="hidden" name="salonid" value="<%=query.salonid%>" />
+			<legend>项目资料</legend>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>项目名称：</label>
 				<div class="control">
-					<input type="text" required name="name" maxlength="15" nospace>
+					<input type="text" required name="itemname" maxlength="15" nospace>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>项目分类：</label>
 				<div class="control">
-					<select>
-						<option value="洗剪吹" selected="">洗剪吹</option>
-						<option value="洗吹">洗吹</option>
-						<option value="烫发">烫发</option>
-						<option value="染发">染发</option>
-						<option value="护发">护发</option>
-						<option value="套餐">套餐</option>
-						<option value="男士快剪">男士快剪</option>
-						<option value="其他">其他</option>
-						<option value="养发">养发</option>
-						<option value="兑换专用">兑换专用</option>
+					<select ajat="salonList/getItemType#domid=type&tempid=type-t" id="type" name="typeid"
+					ajat-change="itemInfo/getAddedService?salonid=<%=query.salonid%>&typeid=${value}#domid=service&tempid=service-t">
 					</select>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="control-group" style="display:none" id="level">
 				<label class="control-label" for=""><span class="red">*</span>快剪等级：</label>
 				<div class="control">
-					<select>
+					<select name="fastGrade">
 						<option value="1">普通快剪</option>
 						<option value="2">总监快剪</option>				
 					</select>
@@ -99,26 +76,23 @@
 							<img src="" alt="">
 							<div class="control-image-ud">
 								<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
-								<input type="hidden" name="img" class="original" data-helpid="image-help">
 							</div>
+							<input type="hidden" name="logo" class="original" required data-helpid="image-help">
 						</div>
 					</div>
 					<div class="weak">请上传JPG或PNG格式的图标，此图标将显示在项目列表中</div>
 					<div class="control-help" style="display:none;" id="image-help"></div>
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label" for="">增值服务：</label>
-				<div class="control">
-					<label><input type="checkbox" name="001" /><span>送手膜</span></label>
-					<label><input type="checkbox" name="001" /><span>送水果</span></label>
-				</div>
+			<div id="service">
+			
 			</div>
+			
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>服务详情：</label>
 				<div class="control">
 					<div class="keypress">
-						<textarea maxlength="500" data-helpid="textarea-help" required></textarea>
+						<textarea maxlength="500" name="desc" data-helpid="textarea-help" required></textarea>
 					</div>
 					<div class="control-help" style="display:none;" id="textarea-help"></div>
 					<div>
@@ -133,65 +107,68 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>项目有效期：</label>
 				<div class="control">
-					<input type="date" required name="name"><label><input type="checkbox" checked/><span>无限制</span></label>
+					<input type="date" required name="expTimeInput" disabled>
+					<label><input type="checkbox" checked class="limit"/><span>无限制</span></label>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定时上架：</label>
 				<div class="control">
-					<input type="date" required name="name" style="min-width:0;width:9.5%">
-					<input type="text" required name="name" style="min-width:0;width:9.5%">
-					<label><input type="checkbox" checked /><span>无限制</span></label>
+					<input type="date" required name="name" disabled>
+					<label><input type="checkbox" checked class="limit"/><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定时下架：</label>
 				<div class="control">
-					<input type="date" required name="name" style="min-width:0;width:9.5%">
-					<input type="text" required name="name" style="min-width:0;width:9.5%">
-					<label><input type="checkbox" checked/><span>无限制</span></label>
+					<input type="date" required name="name" disabled>
+					<label><input type="checkbox" checked class="limit"/><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>限制购买：</label>
 				<div class="control">
-					<input type="text" required pattern="number" max="99999999"  name="name" placeholder="单人限制购买数">
-					<label><input type="checkbox" checked/><span>无限制</span></label>
+					<input type="text" required pattern="number" max="99999999"  name="timeLimitInput" placeholder="单人限制购买数"  disabled>
+					<label><input type="checkbox" checked class="limit"/><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
+			<%if(query.page=="item"){%>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>库存数量：</label>
 				<div class="control">
-					<input type="text" required pattern="number" max="99999999" min="1" name="name" placeholder="限制销售数量">
-					<label><input type="checkbox" checked /><span>无限制</span></label>
+					<input type="text" required pattern="number" max="99999999" min="1" name="totalRepInput"  placeholder="限制销售数量" disabled>
+					<label><input type="checkbox" checked class="limit" /><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
+			<%}%>
+			<%if(query.page=="special"){%>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>项目日库存：</label>
 				<div class="control">
-					<input type="text" required pattern="number" max="99999999" min="1" name="name" placeholder="限制当日销售数量">
-					<label><input type="checkbox" checked /><span>无限制</span></label>
+					<input type="text" required pattern="number" max="99999999" min="1" name="repertory" placeholder="限制当日销售数量" disabled>
+					<label><input type="checkbox" checked class="limit" /><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
+			<%}%>
 			<div class="control-group">
 				<label class="control-label" for="">消费限制：</label>
 				<div class="control">
-					<input type="text" required pattern="number" max="99999999" min="1" name="name" placeholder="用户使用限制说明">
-					<label><input type="checkbox" checked /><span>无限制</span></label>
+					<input type="text" required pattern="number" max="99999999" min="1" name="useLimit" maxlength="15" placeholder="用户使用限制说明" disabled>
+					<label><input type="checkbox" checked class="limit" /><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>限制资格：</label>
 				<div class="control">
-					<label><input type="checkbox" /><span>限推荐用户购买</span></label>
-					<label><input type="checkbox" /><span>限首次下单可购买</span></label>
-					<label><input type="checkbox" checked/><span>无限制</span></label>
+					<label><input type="checkbox" name="inviteLimit" disabled/><span>限推荐用户购买</span></label>
+					<label><input type="checkbox" name="firstLimit" disabled/><span>限首次下单可购买</span></label>
+					<label><input type="checkbox" checked class="limit"/><span>无限制</span></label>
 				</div>
 			</div>
 			<hr />
@@ -199,31 +176,35 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定价方式：</label>
 				<div class="control">
-					<label><input class="price-choose" type="radio" name="radio" checked value="1" /><span>无规格，统一价</span></label>
-					<label><input class="price-choose" type="radio" name="radio" value="2"/><span>有规格，区间价</span></label>
+					<label><input class="price-choose" type="radio" name="priceStyle" checked value="1" /><span>无规格，统一价</span></label>
+					<label><input class="price-choose" type="radio" name="priceStyle" value="2"/><span>有规格，区间价</span></label>
 				</div>
 			</div>
 			<div class="price-group">
 				<div class="control-group">
 					<label class="control-label" for=""><span class="red">*</span>原价：</label>
 					<div class="control">
-						<input type="text" required pattern="float" max="99999" min="1" name="name">
-						<input type="text" required pattern="float" name="name" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
-						<span class="unit">%</span>
+						<input type="text" required pattern="number" max="99999" min="1" name="price">
+						<!--
+						<input type="text" pattern="number" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
+						<span class="unit">%</span>-->
+						<span class="control-help" style="display:none;"></span>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label" for=""><span class="red">*</span>臭美价：</label>
 					<div class="control">
-						<input type="text" required pattern="float" max="99999" min="1" name="name">
-						<input type="text" required pattern="float" name="name" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
-						<span class="unit">%</span>
+						<input type="text" required pattern="number" max="99999" min="1" name="priceDis">
+						<!--
+						<input type="text" pattern="number" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
+						<span class="unit">%</span>-->
+						<span class="control-help" style="display:none;"></span>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label" for="">集团价：</label>
 					<div class="control">
-						<input type="text" required pattern="float" max="99999" min="1" name="name">
+						<input type="text" required pattern="number" max="99999" min="1" name="priceGroup">
 					</div>
 				</div>
 			</div>
@@ -339,6 +320,34 @@
 		</script>
 		</div>
 	</div>
+	<script type="text/template" id="type-t">
+		<%data.forEach(function(item){%>
+			<option value="<%=item.typeid%>"><%=item.typename%></option>
+		<%})%>
+	</script>
+	<script type="text/template" id="service-t">
+		<%if(data.length>0){%>
+			<div class="control-group" id="service">
+				<label class="control-label" for="">增值服务：</label>
+				<div class="control" >
+				<%data.forEach&data.forEach(function(item){%>
+					<label><input type="checkbox" name="addedService" value="<%=item.sId%>" checked /><span><%=item.sName%></span></label>
+				<%})%>
+				</div>
+			</div>
+		<%}%>
+	</script>
+	<script type="text/template" id="type1-t">
+		<option value="">可选择已有项目新增闲时特价</option>
+		<%data.forEach(function(item){%>
+			<option value="<%=item.typeid%>"><%=item.typename%></option>
+		<%})%>
+	</script>
+	<script type="text/template" id="project-t">
+		<%data.forEach(function(item){%>
+			<option value="<%=item.itemid%>"><%=item.itemname%></option>
+		<%})%>
+	</script>
 	<script type="text/javascript">
 		$(function(){
 			$(document.body).on('change','.form-item .control-label input',function(){
@@ -352,7 +361,34 @@
 				if(this.checked&&this.value==2){
 					$('.price-group').hide().next('.format-group').show();
 				}
+			}).on('change','#type',function(){
+				if(this.value==8){
+					$('#level').show();
+				}else{
+					$('#level').hide();
+				}
+			}).on('_ready','#type,#type1',function(){
+				$(this).trigger('change');
+			}).on('click','.limit',function(){
+				$(this).parent().siblings('input').attr('disabled',this.checked);
+				$(this).parent().siblings('label').children('input').attr('disabled',this.checked);
 			});
+			$('#form').one('_ready',function(){
+				lib.puploader.image({
+					browse_button: 'imageUpload',
+					auto_start:true,
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
+						]
+					}
+					//max_file_size:'800kb',
+					//imageLimitSize:"512*512"
+				});
+				$('input[name="price"]').on('pass',function(){
+					$('input[name="priceDis"],input[name="priceGroup"]').attr('max',this.value);
+				})
+			})
 		});
 	</script>
   </body>

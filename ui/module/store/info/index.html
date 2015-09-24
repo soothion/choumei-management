@@ -17,20 +17,19 @@
 		<div class="wrapper">
 			<div class="position-group">
 				<form data-role="hash">
-					<div class="input-group input-switch">
-						<select>
-							<option value="0">店铺名称</option>
-							<option value="1">商户名称</option>
+					<div class="input-group placeholder-switch">
+						<select name="key">
+							<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
+							<option value="2" data-placeholder="请输入商户名称">商户名称</option>
 						</select>
-						<input class="input-search" type="text" name="name"  placeholder="请输入店铺名称">
-						<input class="input-search hide" type="text" name="mobile" placeholder="请输入商户名称">
+						<input class="input-search" type="text" name="keyword"  placeholder="请输入店铺名称">
 						<button class="btn btn-search">
 							<i class="fa fa-search"></i>
 						</button>
 					</div>
 				</form>
 			</div>
-			<div class="table" ajat="salon/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="itemInfo/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
 				<thead>
@@ -50,14 +49,14 @@
 					 <tr>
 						<td><%=i+1%></td>
 						<td><%=item.salonname%></td>
-						<td><a href="item/index.html" class="link"><%=item.salonid%></a></td>
-						<td><a href="special/index.html" class="link"><%=item.salonid%></a></td>
-						<td><a href="stylist/index.html" class="link"><%=item.salonid%></a></td>
-						<td><a href="warhouse/index.html" class="link"><%=item.salonid%></a></td>
+						<td><a href="item/index.html?page=item&salonname=<%=item.salonname%>" class="link"><%=item.generalNums%></a></td>
+						<td><a href="item/index.html?page=special&salonname=<%=item.salonname%>" class="link"><%=item.specialNums%></a></td>
+						<td><a href="stylist/index.html" class="link"><%=item.wareroomNums%></a></td>
+						<td><a href="item/index.html?page=warehouse&salonname=<%=item.salonname%>" class="link"><%=item.hairstyNums%></a></td>
 						<td>
-							<a href="item/edit.html" class="link">添加普通项目</a>
+							<a href="item/edit.html?salonid=<%=item.salonid%>&page=item&salonname=<%=item.salonname%>" class="link">添加普通项目</a>
 							<span class="space"></span>
-							<a href="special/edit.html" class="link">添加闲时特价</a>
+							<a href="item/edit.html?salonid=<%=item.salonid%>&page=special&salonname=<%=item.salonname%>" class="link">添加闲时特价</a>
 							<span class="space"></span>
 							<a href="stylist/edit.html" class="link">添加造型师</a>
 						</td>

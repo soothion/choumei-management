@@ -7,17 +7,28 @@
   </head>
   <body>
 		<div class="breadcrumb">
-			<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><a href="index.html">项目列表</a>
+			<%
+				var title="项目列表";
+				if(query.page=="special"){
+					title="项目特价";
+				}else if(query.page=="warehouse"){
+					title="项目仓库";
+				}
+			%>
+			<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><a href="index.html"><%=title%></a>
 			<div class="flex-box">
 				<div class="flex-item">
-					<h4>项目列表</h4>
+					<h4><%=title%>-<%=query.salonname%></h4>
 				</div>
+				<%if(query.page=="item"){%>
 				<div><a href="sort.html" class="btn">项目排序</a></div>
+				<%}%>
 			</div>
 		</div>
 		<div class="wrapper">
 			<form action="merchant/export" data-role="export" id="export" data-slug="merchant.export"></form>
-			<form data-role="hash">
+			<form data-role="hash" ajat="#domid=hash&tempid=hash-t" id="hash">
+				<script type="text/template" id="hash-t">
 				<div class="position-group">
 					<div class="input-group input-switch">
 						<select>
@@ -32,52 +43,19 @@
 					<button class="btn" id="filter-toggle-btn" type="button">
 						筛选条件 <i class="fa fa-angle-down"></i>
 					</button>
+					<%if(query.page=="item"||query.page=="special"){%>
 					&nbsp;
 					<button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
+					<%}%>
+					<%if(query.page=="warehouse"){%>
 					&nbsp;
 					<button class="btn"><i class="fa fa-file-excel-o"></i> 导入</button>
+					<%}%>
 				</div>
 				<div class="filter-box" style="display:none">
 					<div class="flex-box">
 						<div class="filter-title">项目分类：</div>
-						<div class="flex-item">
-							<label data-role="hash">
-								<input type="radio" name="salestatus" value="" checked />
-								<span>全部</span>
-							</label>
-							<label data-role="hash">
-								<input type="radio" name="salestatus" value="1"/>
-								<span>洗剪吹</span>
-							</label>
-							<label data-role="hash">
-								<input type="radio" name="salestatus" value="0"/>
-								<span>洗吹</span>
-							</label>
-							<label data-role="hash">
-								<input type="radio" name="salestatus" value="0"/>
-								<span>烫发</span>
-							</label>
-							<label data-role="hash">
-								<input type="radio" name="salestatus" value="0"/>
-								<span>染发</span>
-							</label>
-							<label data-role="hash">
-								<input type="radio" name="salestatus" value="0"/>
-								<span>护发</span>
-							</label>
-							<label data-role="hash">
-								<input type="radio" name="salestatus" value="0"/>
-								<span>套餐</span>
-							</label>
-							<label data-role="hash">
-								<input type="radio" name="salestatus" value="0"/>
-								<span>发水</span>
-							</label>
-							<label data-role="hash">
-								<input type="radio" name="salestatus" value="0"/>
-								<span>其他</span>
-							</label>
-						</div>
+						<div class="flex-item" ajat="salonList/getItemType#domid=type&tempid=type-t" id="type"></div>
 					</div>
 					<div class="flex-box">
 						<div class="filter-title">项目规格：</div>
@@ -147,17 +125,22 @@
 							</label>
 						</div>
 					</div> 
-				</div> 
+				</div>
+				</script>				
 			</form>
 			<div class="table" ajat="merchant/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
 				<thead>
 					<tr>
+						<%if(query.page=="warehouse"){%>
 						<th width="50px"><label class="select-all"><input type="checkbox"/><span>全选</span></label></th>
+						<%}%>
 						<th>序号</th>
 						<th>项目名称</th>
+						<%if(query.page=="warehouse"){%>
 						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">项目类型  <i class="fa fa-sort"></i></a></th>
+						<%}%>
 						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">项目分类 <i class="fa fa-sort"></i></a></th>
 						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">规格 <i class="fa fa-sort"></i></a></th>
 						<th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">原价 <i class="fa fa-sort"></i></a></th>
@@ -170,23 +153,31 @@
 					<%data=data.data%>
 					<%data.forEach(function(item,i){%>
 					 <tr>
+						<%if(query.page=="warehouse"){%>
 						<td><label><input type="checkbox" name="_ids" form="form" value="<%=item.id%>"/><span></span></label></td>
+						<%}%>
 						<td><%=i+1%></td>
 						<td><%=item.sn%></td>
+						<%if(query.page=="warehouse"){%>
 						<td><%=item.name%></td>
+						<%}%>
 						<td><%=item.name%></td>
 						<td><%=item.salonNum>0?item.salonNum:0%></td>
 						<td><%=item.contact%></td>
 						<td><%=item.contact%></td>
 						<td><%=item.contact%></td>
 						<td>
+							<%if(query.page=="item"||query.page=="special"){%>
 							<form action="" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
 								<button class="link" data-slug="salon.save" >下架</button>
 							</form>
 							<span class="space"></span>
+							<%}%>
+							<%if(query.page=="warehouse"){%>
 							<form action="" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
 								<button class="link" data-slug="salon.save" >上架</button>
 							</form>
+							<%}%>
 							<span class="space"></span>
 							<a class="link" target="_blank" data-slug="merchant.show,merchant.update" href="detail.html?id=<%=item.id%>">查看</a>
 						</td>
@@ -194,6 +185,7 @@
 					<%})%>
 				</tbody>
 			</table>
+			<%if(query.page=="warehouse"){%>
 			<%if(data&&data.length>0){%>
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
@@ -204,10 +196,27 @@
 				</form>
 			</div>
 			<%}%>
+			<%}%>
 			<div class="pager">
 			</div>
 			</script>
 		</div>
 	</div>
+	<script type="text/template" id="type-t">
+		<label data-role="hash">
+			<input type="radio" name="salestatus" value="" checked />
+			<span>全部</span>
+		</label>
+		<%data.forEach(function(item){%>
+			<label data-role="hash">
+				<input type="radio" name="salestatus" value="<%=item.typeid%>"/>
+				<span><%=item.typename%></span>
+			</label>
+		<%})%>
+		<label data-role="hash">
+			<input type="radio" name="salestatus" value="0"/>
+			<span>其他</span>
+		</label>
+	</script>
   </body>
 </html>
