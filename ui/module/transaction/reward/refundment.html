@@ -77,13 +77,13 @@
                     <select name="refundStatus" >
                       <%if(!query.refundStatus || query.refundStatus === "0"){%>
                           <option value="0">全部</option>
-                          <option value="5">申请退款</option>
+                          <option value="5">待审核</option>
                           <option value="6">退款中</option>
                           <option value="7">已退款</option>
                           <option value="8">拒绝退款</option>
                           <option value="9">失败</option>
                       <%}else if(query.refundStatus === "5"){%>
-                          <option value="5">申请退款</option>
+                          <option value="5">待审核</option>
                       <%}else{%>
                           <option value="6,7,8,9">全部</option>
                           <option value="6">退款中</option>
