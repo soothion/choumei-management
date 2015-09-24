@@ -85,17 +85,15 @@
 						if(data.code==401||data.code==400){
 							data.msg="登录超时，请重新登录";
 						}
-						if(data.msg){
-							parent.lib.popup.result({
-								text:"出现异常："+data.msg,
-								bool:false,
-								define:function(){
-									if(data.code==400||data.code==401){
-										parent.location.href="/module/system/user/login.html";
-									}
+						parent.lib.popup.result({
+							text:"出现异常："+data.msg,
+							bool:false,
+							define:function(){
+								if(data.code==400||data.code==401){
+									parent.location.href="/module/system/user/login.html";
 								}
-							});
-						}
+							}
+						});
 					}
 				}
 			}
@@ -109,7 +107,7 @@
 				if (status === "parseerror") msg = "数据响应格式异常!";
 				if (status === "timeout")    msg = "请求超时，请稍后再试!";
 				if (status === "offline")    msg = "网络异常，请稍后再试!";
-				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
+				parent.lib.popup.result({bool:false,text:msg});
 			}).done(done).done(function(data,status,xhr){
 				//console.log(xhr.getAllResponseHeaders());
 				if(data.token){
@@ -117,8 +115,10 @@
 				}
 			});
 			if(options.timeout&&options.timeout>=10000){
-				promise.done(function(){
-					parent.lib.popup.close();
+				promise.done(function(data){
+					if(data.result==1){
+						parent.lib.popup.close();
+					}
 				});
 			}
             return promise;
