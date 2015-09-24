@@ -48,9 +48,6 @@
 								<button class="btn btn-edit" data-slug="user.update">
 									编辑
 								</button>
-								<button class="btn btn-cancel" style="display:none">
-									取消
-								</button>
 							</td>
 						</tr>
 					</tbody>
@@ -245,6 +242,8 @@
 				<br />
 				<div class="tc">
 					<button class="btn-primary" data-slug="user.update">提交</button>
+					<span class="space"></span>
+					<button class="btn btn-cancel">取消</button>
 				</div>
 			</div>
 			</form>
@@ -274,7 +273,6 @@
 			$(document).on('click','.btn-edit',function(){
 				$('.detail').hide().siblings().show();
 				$(this).hide();
-				$('.btn-cancel').show();
 			});
 			$('#detail').one('_ready',function(){
 				$('#province,#city,#area').on('change',function(){
