@@ -136,14 +136,14 @@
                             type: "get",
                             url : "rebate/destroy/"+id   
                         }).done(function(data, status, xhr){
-                            parent.lib.popup.result({
-                                bool:data.result == 1,
-                                text:(data.result == 1 ? "删除成功" : data.msg),
-                                time:2000,
-                                define:function(){
-                                    history.back();
-                                }
-                            });
+                            if(data.result == 1){
+                                parent.lib.popup.result({
+                                    text:"删除成功",
+                                    define:function(){
+                                        history.back();
+                                    }
+                                });                               
+                            }
                         });                          
                     }
                 }); 
@@ -158,14 +158,14 @@
                             data : {rebate:[id]},
                             url : "rebate/confirm"   
                         }).done(function(data, status, xhr){
-                            parent.lib.popup.result({
-                                bool:data.result == 1,
-                                text:(data.result == 1 ? "返佣成功" : data.msg),
-                                time:2000,
-                                define:function(){
-                                    history.back();
-                                }
-                            });
+                            if(data.result == 1){
+                                parent.lib.popup.result({
+                                    text:"返佣成功",
+                                    define:function(){
+                                        history.back();
+                                    }
+                                });
+                            }
                         });                          
                     }
                 });                

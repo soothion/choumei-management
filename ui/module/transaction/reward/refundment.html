@@ -77,13 +77,13 @@
                     <select name="refundStatus" >
                       <%if(!query.refundStatus || query.refundStatus === "0"){%>
                           <option value="0">全部</option>
-                          <option value="5">申请退款</option>
+                          <option value="5">待审核</option>
                           <option value="6">退款中</option>
                           <option value="7">已退款</option>
                           <option value="8">拒绝退款</option>
                           <option value="9">失败</option>
                       <%}else if(query.refundStatus === "5"){%>
-                          <option value="5">申请退款</option>
+                          <option value="5">待审核</option>
                       <%}else{%>
                           <option value="6,7,8,9">全部</option>
                           <option value="6">退款中</option>
@@ -126,9 +126,11 @@
       <table>
         <thead>
           <tr>
+              <%if(query.refundStatus != "6,7,8,9"){%>
               <th style="width:50px">
                   <label class="select-all"><input type="checkbox"/><span>全选</span></label>
-              </th>            
+              </th>
+              <%}%>            
               <th>序号</th>
               <th>赏金单号</th>
               <th>支付方式</th>
@@ -146,13 +148,15 @@
         <% var statusObj={"5":"申请退款","6":"退款中","7":"已退款","8":"拒绝退款","9":"失败"}%>
         <%data.data &&　data.data.forEach(function(item,i){%>
           <tr>
+              <%if(query.refundStatus != "6,7,8,9"){%>
               <td>
               <label>
                   <input type="checkbox" data-id="<%=item.btId%>" 
                   <%=item.refundStatus!="5" ? "disabled" : ""%>/>
                   <span></span>
               </label>
-              </td>           
+              </td>  
+              <%}%>         
               <td><%=i+1%></td>
               <td><%=item.btSn%></td>
               <td><%=item.payType%></td>
@@ -188,7 +192,7 @@
         </tbody>
       </table>
       
-      <%if(data.data && data.total > 0){%>
+      <%if(query.refundStatus != "6,7,8,9" && data.data && data.total > 0){%>
       <div class="table-bottom">
         <label class="select-all"><input type="checkbox"/><span>全选</span></label>
         <button class="btn pass"   data-type="2" style="margin-right:10px" data-slug="bounty.accept" disabled>
@@ -249,13 +253,14 @@
                   type : "post",
                   data :  {ids:arr,reason:str}
                 }).done(function(data, status, xhr){
-                  parent.lib.popup.result({
-                    bool:data.result == 1,
-                    text:(data.result == 1 ? "操作成功" : data.msg),
-                    define:function(){
-                      lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
-                    }
-                  });
+                  if(data.result == "1"){
+                    parent.lib.popup.result({
+                      text:"操作成功",
+                      define:function(){
+                        lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
+                      }
+                    });
+                  }
                 });  
              }
           });                   
@@ -285,10 +290,6 @@
                   type : "post",
                   data : {ids:arr}
                 }).done(function(data, status, xhr){
-                    if(data.result == "0"){
-                        parent.lib.popup.result({bool:false,text:data.msg || "操作失败！"});
-                        return;
-                    }
                     if(data.result == "1"){
                         data = data.data;
                         if(data.alipay){
