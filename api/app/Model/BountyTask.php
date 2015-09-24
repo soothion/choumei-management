@@ -99,27 +99,27 @@ class BountyTask extends Model {
         if (!empty($input["keyword"])) {
             $val = $input ["keyword"];
             $val = addslashes($val);
-            $val = str_replace(['_', '%'], ['\_', '\%'], $val);
+            $val = str_replace(['_', '%'], ['\_', '\%'], $val);          
             switch ($input ["keywordType"]) {
                 case "0" : // 订单号				    
                     $query->where('btSn', 'like', '%' . $val . '%');
                     break;
                 case "1" : // 用户名					
-                    $query->whereIn('user_id', function($query) {
+                    $query->whereIn('userId', function($query)use ($val) {
                         $query->select('user_id')
                             ->from("user")
                             ->where('username', 'like', '%' . $val . '%');
                     });
                     break;
                 case "2" : // 用户手机号
-                    $query->whereIn('user_id', function($query) {
+                    $query->whereIn('userId', function($query)use ($val) {
                         $query->select('user_id')
                             ->from("user")
                             ->where('mobilephone', 'like', '%' . $val . '%');
                     });
                     break;
                 case "3" ://商铺名称
-                    $query->whereIn('salonid', function($query) {
+                    $query->whereIn('salonId', function($query)use ($val) {
                         $query->select('salonid')
                             ->from("salon")
                             ->where('salonname', 'like', '%' . $val . '%');
@@ -195,18 +195,18 @@ class BountyTask extends Model {
         }
 
 
-        //交易时间
-        if (!empty($input["minPayTime"])) {
-            $minTime = strtotime($input["minPayTime"]);
+        //下单时间
+        if (!empty($input["minAddTime"])) {
+            $minTime = strtotime($input["minAddTime"]);
             if ($minTime) {
-                $query->where('payTime', '>=', $minTime);
+                $query->where('addTime', '>=', $minTime);
             }
         }
-        if (!empty($input["maxPayTime"])) {
-            $maxTime = strtotime($input["maxPayTime"]);
+        if (!empty($input["maxAddTime"])) {
+            $maxTime = strtotime($input["maxAddTime"]);
             if ($maxTime) {
                 $maxTime += 86399;
-                $query->where('payTime', '<=', $maxTime);
+                $query->where('addTime', '<=', $maxTime);
             }
         }
 
@@ -1130,7 +1130,7 @@ class BountyTask extends Model {
             $userName = isset($data['userName']) ? $data['userName'] : '';
             $userMobile = isset($data['userMobile']) ? $data['userMobile'] : '';
             $salonName = isset($data['salonName']) ? $data['salonName'] : '';
-            $refundStatus = isset($data['refundStatus']) ? $data['refundStatus'] : '';
+            $refundStatus = isset($data['refundStatus']) ? self::getStatusName($data['refundStatus']): '';
             $res[] = [
                 $btSn,
                 $payType,
