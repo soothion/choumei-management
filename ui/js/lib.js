@@ -82,9 +82,6 @@
 							bool:false
 						});
 					}else{
-						if(data.message){
-							data.msg=data.message;
-						}
 						if(data.code==401||data.code==400){
 							data.msg="登录超时，请重新登录";
 						}
@@ -110,7 +107,7 @@
 				if (status === "parseerror") msg = "数据响应格式异常!";
 				if (status === "timeout")    msg = "请求超时，请稍后再试!";
 				if (status === "offline")    msg = "网络异常，请稍后再试!";
-				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
+				parent.lib.popup.result({bool:false,text:msg});
 			}).done(done).done(function(data,status,xhr){
 				//console.log(xhr.getAllResponseHeaders());
 				if(data.token){
@@ -118,8 +115,10 @@
 				}
 			});
 			if(options.timeout&&options.timeout>=10000){
-				promise.done(function(){
-					parent.lib.popup.close();
+				promise.done(function(data){
+					if(data.result==1){
+						parent.lib.popup.close();
+					}
 				});
 			}
             return promise;
@@ -818,8 +817,12 @@
                 if(val){
                 	if(isNaN(val)){
                 		$(this).text(new Date(val).format("yyyy-MM-dd"));
-                	}else{
-                		$(this).text(new Date(val*1000).format("yyyy-MM-dd"));
+                	}else{                		
+                        if(val*1){
+	                		$(this).text(new Date(val*1000).format("yyyy-MM-dd"));                        	
+                        }else{
+                        	$(this).text("");
+                        }
                 	}
                 }
             });
@@ -830,7 +833,11 @@
                 	if(isNaN(val)){
                 		$(this).text(new Date(val).format("yyyy-MM-dd hh:mm:ss"));
                 	}else{
-                		$(this).text(new Date(val*1000).format("yyyy-MM-dd hh:mm:ss"));
+                        if(val*1){
+	                		$(this).text(new Date(val*1000).format("yyyy-MM-dd hh:mm:ss"));
+                        }else{
+                        	$(this).text("");
+                        }
                 	}
                 }
             });
