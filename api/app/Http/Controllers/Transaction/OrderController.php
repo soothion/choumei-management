@@ -307,8 +307,6 @@ class OrderController extends Controller
             '店铺名称',
             '交易状态'
         ];
-        //超时延长
-        @set_time_limit(30);
         $res = self::format_export_data($items);
         if(!empty($res))
         {

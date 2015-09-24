@@ -796,6 +796,7 @@ class TransactionSearchApi
     
     public static function makeTicketOtherInfo($datas)
     {
+        $start_time = microtime(true);
         $order_item_fields = [
             'order_item_id',
             'salonid',
@@ -831,28 +832,47 @@ class TransactionSearchApi
             'mobilephone',
         ];
         $others = [
-            'order_item'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'add_to_base'=>['salonid','ordersn','itemname'],'relation'=>['order_item_id','order_item_id']],
-            'order'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'add_to_base'=>['priceall_ori','priceall','actuallyPay','shopcartsn'],'relation'=>['ordersn','ordersn']],
-            'salon'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['salonid','salonid']],
-            'fundflow'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_MANY,'relation'=>['ordersn','record_no']],
-            'voucher'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['ordersn','vOrderSn']],
-            'user'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['user_id','user_id']],
-            'platform'=>['make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_ONE,'relation'=>['ordersn','ORDER_SN']],
+            'order_item'=>['add_to_base'=>['salonid','ordersn','itemname'],'relation'=>'order_item_id'],
+            'order'=>['add_to_base'=>['priceall_ori','priceall','actuallyPay','shopcartsn'],'relation'=>'ordersn'],
+            'salon'=>['relation'=>'salonid'],
+            'fundflow'=>['relation'=>'ordersn','make_by'=>Utils::GROUP_MAKE_BY_ONE_TO_MANY],
+            'voucher'=>['relation'=>'ordersn'],
+            'user'=>['relation'=>'user_id'],
+            'platform'=>['relation'=>'ordersn'],
         ];
         $uids = array_column($datas, "user_id");
      
         $order_item_ids = array_column($datas, "order_item_id");
-        $others['order_item']['datas'] = OrderItem::whereIn("order_item_id",$order_item_ids)->select($order_item_fields)->get()->toArray();
+        $order_item_res = OrderItem::whereIn("order_item_id",$order_item_ids)->select($order_item_fields)->get()->toArray();
+        $ordersns = array_column($order_item_res, "ordersn");
+        $salon_ids = array_column($order_item_res,"salonid");
+        $others['order_item']['datas'] = Utils::column_to_key("order_item_id",$order_item_res);
+        unset($order_item_res);
         
-        $ordersns = array_column($others['order_item']['datas'], "ordersn");
-        $salon_ids = array_column($others['order_item']['datas'],"salonid");
+        $order_res = Order::whereIn("ordersn",$ordersns)->select($order_fields)->get()->toArray();
+        $others['order']['datas'] = Utils::column_to_key("ordersn",$order_res);
+        unset($order_res);
         
-        $others['order']['datas'] = Order::whereIn("ordersn",$ordersns)->select($order_fields)->get()->toArray();
-        $others['salon']['datas'] =  Salon::whereIn("salonid",$salon_ids)->select($salon_fields)->get()->toArray();
-        $others['fundflow']['datas'] = Fundflow::whereIn("record_no",$ordersns)->where('code_type',TransactionWriteApi::REFUND_CODE_TYPE_OF_CUSTOM)->select($fundflow_fields)->get()->toArray();
-        $others['voucher']['datas'] = Voucher::whereIn("vOrderSn",$ordersns)->select($voucher_fields)->get()->toArray();
-        $others['user']['datas'] = User::whereIn("user_id",$uids)->select($user_fields)->get()->toArray();
-        $others['platform']['datas'] = RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
+        $salon_res = Salon::whereIn("salonid",$salon_ids)->select($salon_fields)->get()->toArray();
+        $others['salon']['datas'] =  Utils::column_to_key("salonid",$salon_res);
+        unset($salon_res);
+        
+        $fundflow_res = Fundflow::whereIn("record_no",$ordersns)->where('code_type',TransactionWriteApi::REFUND_CODE_TYPE_OF_CUSTOM)->select($fundflow_fields)->get()->toArray();
+        $others['fundflow']['datas'] =  Utils::column_to_group("record_no",$fundflow_res);
+        unset($fundflow_res);
+        
+        $voucher_res =  Voucher::whereIn("vOrderSn",$ordersns)->select($voucher_fields)->get()->toArray();
+        $others['voucher']['datas'] =  Utils::column_to_key("vOrderSn",$voucher_res);
+        unset($voucher_res);
+        
+        $user_res =  User::whereIn("user_id",$uids)->select($user_fields)->get()->toArray();
+        $others['user']['datas'] =  Utils::column_to_key("user_id",$user_res);
+        unset($user_res);
+        
+        $platform_res =  RequestLog::getLogsByOrdersns($ordersns,['ORDER_SN','DEVICE_UUID']);
+        $others['platform']['datas'] =  Utils::column_to_key("ORDER_SN",$platform_res);
+        unset($platform_res);
+             
         return Utils::groupMake($datas, $others);
     }
     

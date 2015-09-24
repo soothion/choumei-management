@@ -339,8 +339,6 @@ class OrderRefundController extends Controller
             '退款状态',
             '购物车号',
         ];
-        //超时延长
-        @set_time_limit(30);
         $res = self::format_export_data($items);
         if(!empty($res))
         {
