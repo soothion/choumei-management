@@ -698,7 +698,7 @@ class TransactionSearchApi
             ], $params['keyword']) . "%";
             if ($key == 1) //臭美券密码
             {
-                $base->where("cm_order_ticket.ticketno",'like',$keyword);
+                $base->where("order_ticket.ticketno",'like',$keyword);
             }
             elseif ($key == 2) //用户手机号
             {                
@@ -781,11 +781,11 @@ class TransactionSearchApi
             }
             elseif ($key == 2) //用户臭美号
             {
-                $base->whereRaw("cm_order_refund.user_id in (SELECT `user_id` FROM `cm_user` WHERE `username` LIKE '{$keyword}')");
+                $base->whereRaw("cm_order_refund.user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");               
             }
             elseif ($key == 3) //用户手机号
             {
-                $base->whereRaw("cm_order_refund.user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
+                $base->whereRaw("cm_order_refund.user_id in (SELECT `user_id` FROM `cm_user` WHERE `username` LIKE '{$keyword}')");
             }
             elseif ($key == 4) //店铺名
             {
