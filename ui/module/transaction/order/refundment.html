@@ -75,12 +75,12 @@
                     <select name="state" >
                       <%if(!query.state || query.state === "0"){%>
                           <option value="0">全部</option>
-                          <option value="6,2">申请退款</option>
+                          <option value="6,2">待审核</option>
                           <option value="10">退款中</option>
                           <option value="7">退款成功</option>
                           <option value="12">退款失败</option>
                       <%}else if(query.state === "6,2"){%>
-                          <option value="6,2">申请退款</option>
+                          <option value="6,2">待审核</option>
                       <%}else{%>
                           <option value="7,10,12">全部</option>
                           <option value="10">退款中</option>
