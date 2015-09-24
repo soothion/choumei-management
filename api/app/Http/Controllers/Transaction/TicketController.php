@@ -338,7 +338,7 @@ class TicketController extends Controller
             'state' => self::T_INT,
             'time_key' => self::T_INT,
         ]);
-        $items = TransactionSearchApi::getConditionOfTicket($params)->take(50)
+        $items = TransactionSearchApi::getConditionOfTicket($params)->take(5000)
         ->get()
         ->toArray();
         $items = TransactionSearchApi::makeTicketOtherInfo($items);
