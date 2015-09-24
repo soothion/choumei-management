@@ -15,7 +15,7 @@ class User extends  Model
 {
     protected $table = 'user';
     protected $primaryKey = 'user_id'; 
-    protected $fillable = ['username','nickname','password','email','img','add_time','last_time','sex','birthday','area','growth','grade','mobilephone','costpwd','companyId'];
+    protected $fillable = ['username','nickname','password','email','img','add_time','last_time','sex','hair_type','birthday','area','growth','grade','mobilephone','costpwd','companyId'];
     public $timestamps = false;
 
     public static function getQueryByParam($param=[]){
@@ -33,7 +33,7 @@ class User extends  Model
         }
 
         if(!empty($param['companyCode'])){
-        	$query = $query->where('company_code_user.companyCode','=',$param['companyCode']);
+        	$query = $query->where('company_code.code','=',$param['companyCode']);
         }
 
         if(!empty($param['recommendCode'])){

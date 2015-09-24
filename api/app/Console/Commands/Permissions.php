@@ -750,7 +750,7 @@ class Permissions extends Command
                                     74 => array(
                                         'id' => 74,
                                         'title' => '删除返佣单',
-                                        'slug' => 'rebate.destory',
+                                        'slug' => 'rebate.destroy',
                                         'status' => 1,
                                         'sort' => NULL,
                                         'show' => 2
