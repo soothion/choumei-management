@@ -342,6 +342,8 @@ class TicketController extends Controller
         ->get()
         ->toArray();
         $items = TransactionSearchApi::makeTicketOtherInfo($items);
+        //超时延长
+        @set_time_limit(30);
         //用户设备信息
         $ordersns = array_column($items, "ordersn");
         $paymentlogs = PaymentLog::whereIn('ordersn',$ordersns)->select(['ordersn','tn'])->get()->toArray();
