@@ -216,7 +216,9 @@ class TransactionSearchApi
         $commission = CommissionLog::where('ordersn',$ordersn)->select(['ordersn','amount','rate','grade'])->first();
 
         //用户邀请码
-        $recommendCode = RecommendCodeUser::where('user_id',$uid)->where('salon_id',$salon_id)->select(['recommend_code'])->orderBy('add_time','DESC')->first();
+        $recommendCode = RecommendCodeUser::where('user_id',$uid)->join('dividend',function($join){
+            $join->on('recommend_code_user.recommend_code','=','dividend.recommend_code')->where('dividend.recommend_code','<>',1);
+        })->select(['recommend_code_user.recommend_code'])->first();
        
         //设备信息
         $paltform = RequestLog::getLogByOrdersn($ordersn,['DEVICE_UUID','DEVICE_OS','DEVICE_MODEL','DEVICE_NETWORK','VERSION']); 
