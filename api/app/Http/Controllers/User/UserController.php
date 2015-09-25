@@ -247,7 +247,7 @@ class UserController extends Controller{
 		);
 
 		//分页
-	    $array = $query->select($fields)->take(1000)->get();
+	    $array = $query->select($fields)->take(5000)->get();
 	    $result = [];
 	    foreach ($array as $key=>$value) {
 	    	$result[$key]['id'] = $key+1;
