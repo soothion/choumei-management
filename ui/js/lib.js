@@ -93,7 +93,7 @@
 							text:data.msg,
 							bool:false,
 							define:function(){
-								if(data.code==400||data.code==401){
+								if(data.code==40000||data.code==40001){
 									parent.location.href="/module/system/user/login.html";
 								}
 							}

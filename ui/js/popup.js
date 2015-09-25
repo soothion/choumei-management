@@ -128,7 +128,8 @@ define(function(require,exports,module){
 				marginTop:-options.height/2,
 				marginLeft:-options.width/2
 			});
-			popup.find('.popup-box-body').css({minHeight:options.height-38});
+			var minHeight=options.height-popup.children('.popup-box-title').outerHeight()-popup.children('.popup-footer').outerHeight();
+			popup.find('.popup-box-body').css({minHeight:minHeight});
             this.overlay();
             $('body').append(popup);
 			options.complete && options.complete();
