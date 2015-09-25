@@ -351,7 +351,6 @@ class TicketController extends Controller
         $items = TransactionSearchApi::addPaymentLogInfos($items, $paymentlogs);
     
         $header = [
-            '序号',
             '臭美券密码',
             '订单编号',
             '支付方式',
@@ -394,7 +393,6 @@ class TicketController extends Controller
                 $pay_typename_str = implode("+", $pay_names);
             }
             $res[] = [
-                'id'=>$data['order_ticket_id'],
                 'ticketno'=>self::mask_ticketno($data['ticketno']),
                 'ordersn'=>' '.$data['ordersn'],
                 'payname'=>$pay_typename_str,              
