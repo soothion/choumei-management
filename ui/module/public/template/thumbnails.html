@@ -1,8 +1,13 @@
 ﻿<%data&&data.forEach&&data.forEach(function(item){%>
-	<div class="control-thumbnails-item" id="<%=item.id%>">
+	<div class="control-thumbnails-item">
 		<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" />
 		<a class="fa fa-times-circle control-thumbnails-remove"></a>
 		<input type="checkbox" name="thumb" class="thumb" value="<%=item.thumbimg%>">
 		<input type="checkbox" name="original" class="original" value="<%=item.img%>">
+		<div class="control-thumbnails-operation flex-box">
+			<span class="control-thumbnails-before flex-item"><i class="fa fa-long-arrow-left"></i></span>
+			<span class="control-thumbnails-edit flex-item"><i class="fa fa-pencil-square-o"></i></span>
+			<span class="control-thumbnails-after flex-item"><i class="fa fa-long-arrow-right"></i></span>
+		</div>
 	</div>
 <%})%>

@@ -65,7 +65,10 @@
 					options.url+=(options.url.indexOf('?')==-1?"?":"&")+"token="+localStorage.getItem('token');
 				}
 			}
-			options.timeout=6000;
+			options.timeout=options.timeout||9999;
+			if(options.timeout&&options.timeout>=10000){
+				parent.lib.popup.loading({text:'请求可能会比较慢，请耐心等候！',time:options.timeout});
+			}
 			/*
 			options.headers={
 				token:localStorage.getItem('token')
@@ -79,14 +82,18 @@
 							bool:false
 						});
 					}else{
-						if(data.code==401||data.code==400){
+						if(data.code==-40000||data.code==-40001){
 							data.msg="登录超时，请重新登录";
+						}else if(data.code==0){
+							data.msg="系统错误！";
+						}else{
+							data.msg="出现异常："+data.msg;
 						}
 						parent.lib.popup.result({
-							text:"出现异常："+data.msg,
+							text:data.msg,
 							bool:false,
 							define:function(){
-								if(data.code==400||data.code==401){
+								if(data.code==-40000||data.code==-40001){
 									parent.location.href="/module/system/user/login.html";
 								}
 							}
@@ -104,13 +111,20 @@
 				if (status === "parseerror") msg = "数据响应格式异常!";
 				if (status === "timeout")    msg = "请求超时，请稍后再试!";
 				if (status === "offline")    msg = "网络异常，请稍后再试!";
-				parent.lib.popup.tips({text:'<i class="fa fa-times-circle"></i>'+msg,time:2000});
+				parent.lib.popup.result({bool:false,text:msg});
 			}).done(done).done(function(data,status,xhr){
 				//console.log(xhr.getAllResponseHeaders());
 				if(data.token){
 					localStorage.setItem('token',data.token);
 				}
 			});
+			if(options.timeout&&options.timeout>=10000){
+				promise.done(function(data){
+					if(data.result==1){
+						parent.lib.popup.close();
+					}
+				});
+			}
             return promise;
         },
 		getSession:function(){
@@ -315,6 +329,9 @@
 					}
 				};
 				options=$.extend(_default,options);
+				if(options.crop){
+					options.multi_selection=false;
+				}
 				if(options.domain.indexOf('qiniu')==-1){
 					seajs.use(['/qiniu/demo/js/plupload/plupload.full.min.js'],function(){
 						seajs.use(['/qiniu/demo/js/plupload/i18n/zh_CN.js']);
@@ -329,8 +346,10 @@
 							});
 						}
 						uploader.bind('UploadFile',function(){
-							var $dom=$('<div class="popup-overlay" style="background:rgba(255,255,255,0.4)"></div>');
-							$(document.body).append($dom);
+							if($('.popup-overlay').length==0){
+								var $dom=$('<div class="popup-overlay" style="background:rgba(255,255,255,0.4)"></div>');
+								$(document.body).append($dom);
+							}
 						});
 						uploader.bind('UploadProgress',function(){
 							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
@@ -375,25 +394,28 @@
 							options.max_file_size=data.maxFileSize+'mb';
 						}
 						var uploader=self.create(options);
-						uploader.bind('UploadFile',function(){
-							var $dom=$('<div class="popup-overlay" style="background:rgba(255,255,255,0.4)"></div>');
-							$(document.body).append($dom);
+						uploader.bind('BeforeUpload',function(up,file){//上传前获取下一个token
+							clearTimeout(self.timer)
+							self.getToken(function(data){
+								Qiniu.token=data.uptoken;
+								Qiniu._fileName=data.fileName;
+							});
+						});
+						uploader.bind('UploadFile',function(){//上传显示禁用层
+							if($('.popup-overlay').length==0){
+								var $dom=$('<div class="popup-overlay" style="background:rgba(255,255,255,0.4)"></div>');
+								$(document.body).append($dom);
+							}
 						});
 						uploader.bind('UploadProgress',function(){
 							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
 						});
 						uploader.bind('UploadComplete',function(up,file){
-							//console.log(arguments);
 							$('.popup-overlay').remove();
 						});
 						uploader.bind('FileUploaded',function(up,file,res){
 							if(res&&res.response&&typeof res.response=='string'){
 								var data=JSON.parse(res.response);
-								clearTimeout(self.timer);
-								self.getToken(function(data){
-									Qiniu.token=data.uptoken;
-									Qiniu._fileName=data.fileName;
-								});
 								if(data.code==0){
 									parent.lib.popup.result({text:options.successText||'文件上传成功'});
 								}else{
@@ -444,21 +466,32 @@
 					}
 				}
 				this.file(options,function(uploader){
+					
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
 							var data=JSON.parse(res.response);
 							var options=up.getOption();
 							if(data.code==0){
-								uploader.createThumbnails && uploader.createThumbnails(data.response);
-								uploader.preview&&uploader.preview(data.response)
+								if(!options.crop){
+									if(up.createThumbnails){
+										up.createThumbnails(data.response)
+									}else{
+										up.preview(up.area,data.response);
+									}
+								}else{//图片裁剪
+									up.trigger('ImageUploaded',data.response);
+								}
 							}
 						}
 					});
 					if(options.browse_button){
 						var $target=$('#'+options.browse_button).parent();
 						uploader.thumbnails=$target.closest('.control-thumbnails');
+						if(!options.crop){
+							uploader.thumbnails.addClass('control-thumbnails-unedit');
+						}
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
-							uploader.createThumbnails=function(data){
+							uploader.createThumbnails=function(data){//创建缩略图
 								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render({url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},{data:[data]}));
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').hide();
@@ -487,6 +520,30 @@
 								this.area.find('input.original').val(data.img).blur();
 								this.area.find('input.thumb').val(data.thumbimg).blur();
 							}
+							uploader.thumbnails.on('click','.control-thumbnails-edit',function(){
+								var $this=$(this).closest('.control-thumbnails-item');
+								var $img=$this.find('img');
+								var original=$img.data('original')?$img.data('original'):$img.attr('src')
+								uploader.trigger('ImageUploaded',{img:original,_this:$this[0]});
+							});
+							uploader.bind('FilesAdded',function(up,files){
+								var files_number=up.getOption().files_number;
+								var exist=up.thumbnails.children().length-1;
+								if(files_number){
+									plupload.each(files, function(file,i) {
+										if(i+exist>=files_number){
+											console.log('ddddddddd')
+											up.removeFile(file);	
+										}
+									});
+								}
+							});
+						}
+						uploader.area=$target.closest('.control-single-image');
+						uploader.preview=function($dom,data){
+							$dom.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
+							$dom.find('input.original').val(data.img).blur();
+							$dom.find('input.thumb').val(data.thumbimg).blur();
 						}
 					}
 					if(options.imageLimitSize){
@@ -529,163 +586,40 @@
 				});
 			}
 		},
-		uploader:{
-			use:function(cb){//加载上传资源文件
-				seajs.use(['/css/webuploader.css','/js/webuploader.js'],function(){
+		cropper:{
+			use:function(cb){
+				seajs.use(['/cropper/cropper.min.css','/cropper/cropper.min.js'],function(){
 					cb &&cb();
 				});
 			},
-			create:function(options){//创建上传对象
-				options.swf='/js/Uploader.swf';
-				if(options.server.indexOf('http://')==-1){
-					options.server=cfg.getHost()+options.server;
-				}
-				return WebUploader.create(options);
-			},
-			createImage:function(){
-				var imagePreview=$('<div style="position:absolute;left:0;top:0;z-index:-1;width:100%;height:100%;overflow:hidden;visibility:hidden;"><img/></div>')
-				$(document.body).append(imagePreview);
-				return imagePreview;
-			},
-			image:function(options,cb){//图片上传
-				var self=this;
-				options.loaderText=options.loaderText||"图片准备上传中";
-				options.successText=options.successText||"图片上传完成";
-				options.errorText=options.errorText||"图片上传失败";
-				if(options.imageLimitSize){
-					if(options.auto===true){
-						options._auto=true;
-						options.auto=false;
-					}
-				}
-				this.file(options,function(uploader){
-					//支持缩略小图预览
-					if(uploader.options.pick.id){
-						var $target=$(uploader.options.pick.id);
-						uploader.thumbnails=$target.siblings('.control-thumbnails');
-						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
-							uploader.createThumbnails=function(data){
-								var arr=[data];
-								arr.postName=this.options.postName;
-								uploader.thumbnails.append(lib.ejs.render({url:'/module/public/template/thumbnails'},{data:arr}))
-								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children().length){
-									uploader.thumbnails.siblings('.control-image-upload').hide();
-								}
-							}
-							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
-								var item=$(this).closest('.control-thumbnails-item');
-								if(item.attr('id')){
-									uploader.removeFile(item.attr('id'));
-								}
-								item.remove();
-								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children().length){
-									uploader.thumbnails.siblings('.control-image-upload').show();
-								}
-							});
-						}
-					}
-					// 当有文件添加进来的时候
-					uploader.on('fileQueued', function( file ) {
-						if(options.imageLimitSize){
-							var self=this;
-							uploader.makeThumb(file, function( error, src ) {
-								if(error){
-									parent.lib.popup.result({bool:false,text:"图片预览失败"});
-									return;
-								}
-								//校验图片尺寸大小
-								var imagePreview=lib.uploader.createImage();
-								imagePreview.children('img').on('load',function(){
-									var $this=$(this);
-									if(typeof self.options.imageLimitSize =='string'){
-										var width=parseInt(self.options.imageLimitSize.split('*')[0]);
-										var height=parseInt(self.options.imageLimitSize.split('*')[1]);
-										if($this.width()!=width||$this.height()!=height){
-											self.trigger( 'error', 'IAMGE_SIZE',file);
-										}else{
-											if(self.options._auto){
-												self.upload();
-											}
-											if(self.options.thumb&&self.createThumbnails){
-												var data=$.extend({},file,{src:src});
-												self.createThumbnails(data);
-											}
-										}
-									}
-									if(typeof self.options.imageLimitSize =='function'){
-										var ret=self.options.imageLimitSize($this.width(),$this.height());
-										if(ret){
-											if(self.options._auto){
-												self.upload();
-											}
-											if(self.options.thumb&&self.createThumbnails){
-												var data=$.extend({},file,{src:src});
-												self.createThumbnails(data);
-											}
-										}else{
-											self.trigger( 'error', 'IAMGE_SIZE',file);
-										}
-									}
-									imagePreview.remove();
-								}).attr('src',src);
-							},1,1);
-						}
-					});
-					uploader.on('uploadSuccess',function(file,res){
-						var self=this;
-						if(this.options.imageId){
-							uploader.makeThumb(file, function( error, src ) {
-								document.getElementById(self.options.imageId).src=src;
-							},1,1);
-						}
-						if(res.result==1){
-							var data=res.data;
-							if(data.main&&data.main.images&&data.main.images[0]){
-								if(!self.options.thumb&&self.createThumbnails){
-									var data=$.extend({},file,{src:data.main.images[0].img});
-									self.createThumbnails(data);
-								}
-							}
-						}
-					});
-					uploader.on('error',function(err){
-						if(err=='IAMGE_SIZE'){
-							parent.lib.popup.result({bool:false,text:"图片的大小尺寸不正确"});
-						}
-					});
-					cb&&cb(uploader);
-				});
-			},
-			file:function(options,cb){//文件上传
-				var self=this;
+			create:function(options){
+				options=$.extend({thumbnails:['300x300'],aspectRatio: 1/1,autoCropArea: 0.5},options);
+				options.src=options.src.split('?')[0];
 				this.use(function(){
-					var uploader=self.create(options);
-					uploader.on('uploadStart',function(file){
-						parent.lib.popup.loading({text:options.loaderText||"文件准备上传中"});
+					var cropper=$(lib.ejs.render({url:"/module/public/template/cropper"},{data:options.src}));
+					$(document.body).append(cropper);
+					parent.lib.fullpage(true);
+					cropper[0].thumbnails={};
+					for(var i=0;i<options.thumbnails.length;i++){
+						cropper[0].thumbnails[options.thumbnails[i]]="";
+					}
+					cropper.on('click','.btn-primary',function(){
+						options.define(cropper[0].thumbnails);
+						cropper.remove();
+						parent.lib.fullpage(false);
 					});
-					uploader.on('uploadSuccess',function(file){
-						parent.lib.popup.result({text:options.successText||"文件上传完成"});
+					cropper.on('click','.btn',function(){
+						cropper.remove();
+						parent.lib.fullpage(false);
 					});
-					uploader.on('uploadError',function(file){
-						parent.lib.popup.result({bool:false,text:options.errorText||"文件上传失败"});
-					});
-					uploader.on('uploadProgress',function(file, percentage){
-						parent.lib.popup.tips({
-							text:'<img src="/images/oval.svg" class="loader"/><br />“'+file.name+'”文件上传进度：'+(Math.ceil(percentage*100))+"%"
-						});
-					});
-					uploader.on('error',function(err){
-						if(err=='F_EXCEED_SIZE'){
-							parent.lib.popup.result({bool:false,text:"上传文件过大"});
+					options.crop=function(e){
+						for(var name in cropper[0].thumbnails){
+							cropper[0].thumbnails[name]=this.src+"?imageMogr2"+"/crop/!"+Math.round(e.width)+"x"+Math.round(e.height)+"a"+Math.round(e.x)+"a"+Math.round(e.y)+"/thumbnail/"+name;
 						}
-						if(err=='Q_EXCEED_NUM_LIMIT '){
-							parent.lib.popup.result({bool:false,text:"上传文件数过大"});
-						}
-						if(err=='Q_TYPE_DENIED '){
-							parent.lib.popup.result({bool:false,text:"上传文件格式不正确"});
-						}
+					}
+					cropper.find('img').on('load',function(){
+						$(this).cropper(options);
 					});
-					cb&&cb(uploader);
 				});
 			}
 		}
@@ -758,7 +692,7 @@
             var self = this;
             var pro=this.protocol;
             $(this.dom).trigger('fetch',{protocol:pro});
-            this.showLoader();
+            //this.showLoader();
             var options={
                 url: pro.url,
                 data: pro.query,
@@ -779,9 +713,7 @@
                     self.exception({errorLevel:'xhr',status:xhr.status,readyState:xhr.readyState,textStatus:textStatus});;
                 }
             };
-            if(pro.custom.cache=='true'){
-                options.cache=true;
-            }
+			options=$.extend(options,pro.custom);
             return lib.ajax(options);
         },
         setExternal:function(data){//引入外部数据，以便模板引擎渲染时能获取；
@@ -798,7 +730,7 @@
             var options = /\/|\./g.test(tempid)?{url: tempid}:{text: document.getElementById(tempid).innerHTML};
 			var tempData=$.extend({data:data,protocol:pro},this.external);
             this.insert(lib.ejs.render(options,tempData)).trigger('_ready',{protocol:pro,response:data});
-            this.hideLoader();
+            //this.hideLoader();
             this.ready();
             this.format();
             this.destroy();
@@ -809,8 +741,12 @@
                 if(val){
                 	if(isNaN(val)){
                 		$(this).text(new Date(val).format("yyyy-MM-dd"));
-                	}else{
-                		$(this).text(new Date(val*1).format("yyyy-MM-dd"));
+                	}else{                		
+                        if(val*1){
+	                		$(this).text(new Date(val*1000).format("yyyy-MM-dd"));                        	
+                        }else{
+                        	$(this).text("");
+                        }
                 	}
                 }
             });
@@ -821,7 +757,11 @@
                 	if(isNaN(val)){
                 		$(this).text(new Date(val).format("yyyy-MM-dd hh:mm:ss"));
                 	}else{
-                		$(this).text(new Date(val*1).format("yyyy-MM-dd hh:mm:ss"));
+                        if(val*1){
+	                		$(this).text(new Date(val*1000).format("yyyy-MM-dd hh:mm:ss"));
+                        }else{
+                        	$(this).text("");
+                        }
                 	}
                 }
             });
@@ -1201,10 +1141,11 @@
 			});
 		},
 		fail:function(data){
+			/*
 			parent.lib.popup.result({
 				bool:false,
 				text:(data&&data.msg?data.msg:"数据更新失败")
-			});
+			});*/
 		},
 		bindEvent:function(){
 			var self=this;
@@ -1260,6 +1201,9 @@
 				type:this.el.method,
 				success:function(data){
 					$(self.el).trigger('response',data);
+					setTimeout(function(){
+						$(self.el).attr('disabled',false);
+					},1500);
 				},
 				error:function(xhr,code){
 					$(self.el).attr('disabled',false);

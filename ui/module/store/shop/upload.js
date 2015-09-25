@@ -40,7 +40,28 @@
 				]
 			},
 			max_file_size:'10mb',
-			imageArray:currentData.contractPicUrl
+			imageArray:currentData.contractPicUrl,
+			multi_selection:true,
+			files_number:10,
+			crop:true
+		},function(uploader){
+			uploader.bind('ImageUploaded',function(up,response){
+				lib.cropper.create({
+					src:response.img,
+					thumbnails:['200x200','400x400'],
+					define:function(data){
+						if(response._this){
+							up.preview($(response._this),{thumbimg:data['200x2400'],img:data['400x400']});
+							return;
+						}
+						if(up.createThumbnails&&!response.edit){
+							up.createThumbnails({thumbimg:data['200x200'],img:data['400x400']});
+						}else{
+							up.preview(up.area,{thumbimg:data['200x200'],img:data['400x400']});
+						}
+					}
+				});
+			});
 		});
 		//营业执照上传
 		lib.puploader.image({
@@ -52,6 +73,8 @@
 				]
 			},
 			max_file_size:'10mb',
+			multi_selection:true,
+			files_number:3,
 			imageArray:currentData.licensePicUrl
 		});
 		//法人执照上传
@@ -64,6 +87,8 @@
 				]
 			},
 			max_file_size:'10mb',
+			multi_selection:true,
+			files_number:3,
 			imageArray:currentData.corporatePicUrl
 		});
     }

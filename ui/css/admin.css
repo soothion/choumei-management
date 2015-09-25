@@ -505,6 +505,9 @@ input:focus+.unit{
 	vertical-align:top;
 	box-sizing:border-box;
 }
+.control-single-image{
+	vertical-align:middle;
+}
 .control-image{
 	margin-bottom:10px;
 	position:relative;
@@ -545,7 +548,6 @@ input:focus+.unit{
 	height: 150px;
 	border: 1px solid #ddd;
 	position:relative;
-	padding:2px;
 	margin:0px 10px 10px 0px;
 }
 .control-thumbnails-item input{
@@ -573,7 +575,7 @@ input:focus+.unit{
 .control-single-image{
 	border:1px solid #ddd;
 }
-.control-image-ud{
+.control-image-ud,.control-thumbnails-operation{
 	position:absolute!important;
 	bottom:0px;
 	left:0px;
@@ -587,6 +589,20 @@ input:focus+.unit{
 	-moz-transition:all 0.2s ease 0s;
 	transition:all 0.2s ease 0s;
 	cursor:pointer;
+}
+.control-thumbnails-operation{
+	font-size:22px;
+	height:0px;
+	overflow:hidden;
+}
+.control-thumbnails-item:hover .control-thumbnails-operation{
+	height:32px;
+}
+.control-thumbnails-operation>span:hover{
+	color:#fff;
+}
+.control-thumbnails-unedit .control-thumbnails-edit{
+	display:none;
 }
 .control-image-ud .fa{
 	font-size:18px;
@@ -1038,6 +1054,42 @@ form[data-role="hash"] input[type="date"]{
 	padding:5px 0;
 }
 
+/**图片裁剪start**/
+.popup-cropper,.popup-cropper-image{
+	position:fixed;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+}
+.popup-cropper{
+	z-index:10000;
+	background:rgba(0,0,0,0.4);
+	
+}
+.popup-cropper-image{
+	text-align:center;
+}
+.popup-cropper-header{
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	z-index:100;
+	background:rgba(255,255,255,0.85);
+	padding:5px 0px;
+	box-shadow:0px 0px 5px rgba(0,0,0,0.1);
+}
+.popup-cropper-title{
+	margin-left:15px;
+	font-size:20px;
+}
+.popup-cropper-operation{
+	margin-right:15px;
+	float:right;
+	margin-top:1px;
+}
+/**图片裁剪end**/
 .ie9 .flex-box{
 	display:table;
 	width:100%;

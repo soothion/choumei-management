@@ -64,6 +64,12 @@
 				<%=options.content%>
 			<%}%>
         </div>
+		 <%if(options.confirm){%>
+		 <div class="flex-box popup-footer">
+            <div class="flex-item"><a class="popup-alert-cancel touch-link"><%=options.cancelText||"取消"%></a></div>
+            <div class="flex-item"><a class="popup-alert-define touch-link"><%=options.defineText||"确定"%></a></div>
+        </div>
+		<%}%>
     </div>
     <%}%>
 	<%if(options.type=='swiper'){%>

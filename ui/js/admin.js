@@ -136,8 +136,13 @@ $(function(){
 		}
 	}).on('submit','form[data-role="export"]',function(e){//导出功能
 		console.log(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
-		window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
 		e.preventDefault();
+		var total=$('#pager-total').val();
+		if(total&&parseInt(total)>5000){
+			parent.lib.popup.result({bool:false,text:"数据大于5000条不能导出"});
+		}else{
+			window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
+		}
 	});
 	
 	/**普通表单提交**/
@@ -156,6 +161,9 @@ $(function(){
 			if($active.data('confirm')){
 				confirm=$active.data('confirm');
 			}
+		}
+		if(!confirm&&this.confirm&&typeof this.confirm=='function'){
+			confirm=this.confirm();
 		}
 		var request=function(){
 			lib.ajax({
@@ -451,6 +459,39 @@ $(function(){
 		});
 		parent.lib.popup.swiper({list:list,index:item.index()});
 	});
+	$body.on('click','.control-thumbnails-before',function(){
+		var $this=$(this);
+		var thumbnail=$this.closest('.control-thumbnails-item');
+		var prev=thumbnail.prev('.control-thumbnails-item')
+		if(prev.length==1){
+			thumbnail.after(prev);
+		}
+	});
+	$body.on('click','.control-thumbnails-after',function(){
+		var $this=$(this);
+		var thumbnail=$this.closest('.control-thumbnails-item');
+		var next=thumbnail.next('.control-thumbnails-item')
+		if(next.length==1){
+			thumbnail.before(next);
+		}
+	});
+	/*
+	$body.on('click','.control-thumbnails-edit',function(){
+		var item=$(this).closest('.control-thumbnails-item');
+		var src=item.find('img').attr('src');
+		if(src){
+			var options={
+				src:src,
+				define:function(src){
+					parent.lib.fullpage(false);
+					item.find('input.thumb,input.original').val(src);
+					item.find('img').attr('src',src).data('original',src);
+					$('.popup-cropper').remove();
+				}
+			}
+			lib.cropper.create(options);
+		}
+	});*/
 	$body.on('click','.control-single-image img,.image-preview',function(){
 		var $this=$(this);
 		var src=$this.data('original')||$this.attr('src');
