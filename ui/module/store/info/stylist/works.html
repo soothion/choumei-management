@@ -32,6 +32,24 @@
             </div>
         </div>
 
+        <div>
+            <form class="form-vertical">
+                <div>
+                    <div style="width:160px;height:120px;border:1px solid gray;">111111111111</div>
+                </div>
+                <div class="control">
+                    <div class="keypress">
+                        <textarea maxlength="140" data-helpid="textarea-help" required></textarea>
+                    </div>
+                    <div class="control-help" style="display:none;" id="textarea-help1"></div>
+                </div>
+                <div style="margin:10px;">                    
+                    <button class="btn-primary" style="margin-right:20px">提交</button>
+                    <button class="btn" type="button">取消</button>
+                </div>                  
+            </form>              
+        </div>
+
         <div class="wrapper">
             <div class="detail-operation">
                 <button id="add_works_btn" class="btn-primary">+新增</button>
@@ -146,7 +164,8 @@
             (function(){
                 $("#add_works_btn").on('click',function(){
                     lib.popup.box({
-                                                
+                       title:'新增作品',
+                       content:'<p>111111111</p>',                  
                     });
                 });
             })()
