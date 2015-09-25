@@ -82,7 +82,7 @@
 							bool:false
 						});
 					}else{
-						if(data.code==40000||data.code==40001){
+						if(data.code==-40000||data.code==-40001){
 							data.msg="登录超时，请重新登录";
 						}else if(data.code==0){
 							data.msg="系统错误！";
@@ -93,7 +93,7 @@
 							text:data.msg,
 							bool:false,
 							define:function(){
-								if(data.code==40000||data.code==40001){
+								if(data.code==-40000||data.code==-40001){
 									parent.location.href="/module/system/user/login.html";
 								}
 							}
@@ -489,7 +489,7 @@
 						var $target=$('#'+options.browse_button).parent();
 						uploader.thumbnails=$target.closest('.control-thumbnails');
 						if(!options.crop){
-							uploader.thumbnails.addClass('.control-thumbnails-unedit');
+							uploader.thumbnails.addClass('control-thumbnails-unedit');
 						}
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
 							uploader.createThumbnails=function(data){//创建缩略图
