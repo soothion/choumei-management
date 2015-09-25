@@ -275,6 +275,8 @@ class OrderController extends Controller
      * @apiParam {String} pay_time_max 下单最大时间 YYYY-MM-DD
      * @apiParam {String} pay_type 0 全部 1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
      * @apiParam {String} pay_state 0 全部 1未支付 2已支付
+     * @apiParam {Number} page 可选,页数. (从1开始)
+     * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      *
      * @apiErrorExample Error-Response:
      * {
@@ -290,9 +292,22 @@ class OrderController extends Controller
             'pay_time_min' => self::T_STRING,
             'pay_time_max' => self::T_STRING,
             'pay_type' => self::T_STRING,
-            'pay_state' => self::T_INT
+            'pay_state' => self::T_INT,
+            'page' => self::T_INT,
+            'page_size' => self::T_INT,
         ]);
-        $items = TransactionSearchApi::getConditionOfOrder($params)->take(5000)
+        $page = isset($params['page'])?$params['page']:1;
+        $page_size = isset($params['page_size'])?$params['page_size']:20;
+        if(empty($page) || $page <1)
+        {
+            $page = 1;
+        }
+        if(empty($page_size) || $page_size > 5000)
+        {
+            $page_size = 20;
+        }
+        $offset = ($page-1) * $page_size;
+        $items = TransactionSearchApi::getConditionOfOrder($params)->take($page_size)->skip($offset)
             ->get()
             ->toArray();
       

@@ -623,6 +623,7 @@ class TransactionWriteApi
         }
         $items = $args[0];
         $ret = [];
+        $ret['info'] = '';
         foreach ($items as $item) {
             self::makeSignForPost($item);            
             $ret['info'] .= "订单号：".$item['ordersn'].", 退款：".$item['ordersn'].", 退款方式：银联\n";
@@ -646,6 +647,7 @@ class TransactionWriteApi
         }
         $items = $args[0];
         $ret = [];
+        $ret['info'] = '';
         foreach ($items as $item) {
             $url = $item['url'];
             unset($item['url']);
@@ -674,6 +676,7 @@ class TransactionWriteApi
         }
         $items = $args[0];
         $ret = [];
+        $ret['info'] = "";
         foreach ($items as $item) {
     
             $argc = array();
@@ -740,6 +743,7 @@ class TransactionWriteApi
         }
         $items = $args[0];
         $ret = [];
+        $ret['info'] = '';
         foreach ($items as $item) {
             $ordersn = $item['ordersn'];
             User::where('user_id',$item['user_id'])->increment("money",$item["money"]);
@@ -764,6 +768,7 @@ class TransactionWriteApi
         }
         $items = $args[0];
         $ret = [];
+        $ret['info'] = '';
         foreach ($items as $item) {
             $ordersn = $item['ordersn'];
             User::where('user_id',$item['user_id'])->increment("packetmoney",$item["money"]);
@@ -788,6 +793,7 @@ class TransactionWriteApi
         }
         $items = $args[0];
         $ret = [];
+        $ret['info'] = '';
         foreach ($items as $item) {
             $ordersn = $item['ordersn'];
             User::where('user_id',$item['user_id'])->increment("couponmoney",$item["money"]);

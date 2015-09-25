@@ -338,8 +338,21 @@ class TicketController extends Controller
             'max_time' => self::T_STRING,
             'state' => self::T_INT,
             'time_key' => self::T_INT,
+            'page' => self::T_INT,
+            'page_size' => self::T_INT,
         ]);
-        $items = TransactionSearchApi::getConditionOfTicket($params)->take(5000)
+        $page = isset($params['page'])?$params['page']:1;
+        $page_size = isset($params['page_size'])?$params['page_size']:20;
+        if(empty($page) || $page <1)
+        {
+            $page = 1;
+        }
+        if(empty($page_size) || $page_size > 5000)
+        {
+            $page_size = 20;
+        }
+        $offset = ($page-1) * $page_size;
+        $items = TransactionSearchApi::getConditionOfTicket($params)->take($page_size)->skip($offset)
         ->get()
         ->toArray();
      

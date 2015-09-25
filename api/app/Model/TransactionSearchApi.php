@@ -28,11 +28,11 @@ class TransactionSearchApi
         });
         $total_money = "";        
         $res = $bases->paginate($size)->toArray();
-        if($res['total']<=2000) //两千条以上的不统计
-        {
-            $total_money = self::countOfOrder($params);
-        }
-        $res['total_money'] = $total_money;
+//         if($res['total']<=2000) //两千条以上的不统计
+//         {
+//             $total_money = self::countOfOrder($params);
+//         }
+//         $res['total_money'] = $total_money;
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
         return $res;
@@ -55,13 +55,13 @@ class TransactionSearchApi
         $res = $bases->paginate($size)->toArray();
     
         $res['data'] = self::makeTicketOtherInfo(json_decode(json_encode($res['data'],true),true));
-        $money_info = ['priceall_ori'=>'','actuallyPay'=>''];
-        if($res['total']<=2000)
-        {
-            $money_info = self::countOfTicket($params);
-        }
-        $res['all_amount'] = $money_info['priceall_ori'];
-        $res['paied_amount'] = $money_info['actuallyPay'];
+//         $money_info = ['priceall_ori'=>'','actuallyPay'=>''];
+//         if($res['total']<=2000)
+//         {
+//             $money_info = self::countOfTicket($params);
+//         }
+//         $res['all_amount'] = $money_info['priceall_ori'];
+//         $res['paied_amount'] = $money_info['actuallyPay'];
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
         return $res;
@@ -82,12 +82,12 @@ class TransactionSearchApi
             return $page;
         });
         $res = $bases->paginate($size)->toArray();
-        $refund_money = '';
-        if($res['total']<=2000)
-        {
-            $refund_money =  self::countOfRefund($params);
-        }
-        $res['refund_money'] = $refund_money;
+//         $refund_money = '';
+//         if($res['total']<=2000)
+//         {
+//             $refund_money =  self::countOfRefund($params);
+//         }
+//         $res['refund_money'] = $refund_money;
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
         return $res;

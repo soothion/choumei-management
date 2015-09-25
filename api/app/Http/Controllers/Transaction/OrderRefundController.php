@@ -312,15 +312,27 @@ class OrderRefundController extends Controller
      */
     public function export()
     {
-        //#@todo
         $params = $this->parameters([
             'key' => self::T_INT,
             'keyword' => self::T_STRING,
             'refund_min_time' => self::T_STRING,
             'refund_max_time' => self::T_STRING,
             'state' => self::T_STRING,
+            'page' => self::T_INT,
+            'page_size' => self::T_INT,
         ]);
-        $items = TransactionSearchApi::getConditionOfRefund($params)->take(5000)
+        $page = isset($params['page'])?$params['page']:1;
+        $page_size = isset($params['page_size'])?$params['page_size']:20;
+        if(empty($page) || $page <1)
+        {
+            $page = 1;
+        }
+        if(empty($page_size) || $page_size > 5000)
+        {
+            $page_size = 20;
+        }
+        $offset = ($page-1) * $page_size;
+        $items = TransactionSearchApi::getConditionOfRefund($params)->take($page_size)->skip($offset)
         ->get()
         ->toArray();
         $header = [
