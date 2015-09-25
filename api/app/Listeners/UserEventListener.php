@@ -82,31 +82,4 @@ class UserEventListener {
 		return Log::create($data);
 	}
 
-	public function onLogin($user)
-	{
-		$data['username'] = $user->username;
-		$data['roles'] = $user->roles->toArray();
-		foreach ($data['roles'] as $key => $value) {
-			$roles[] = $value['name'];
-		}
-		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '登录系统';
-		$data['slug'] = Route::currentRouteName();
-		$data['ip'] = Request::getClientIp();
-		return Log::create($data);
-	}
-
-	public function onLogout($user)
-	{
-		$data['username'] = $user->username;
-		$data['roles'] = $user->roles->toArray();
-		foreach ($data['roles'] as $key => $value) {
-			$roles[] = $value['name'];
-		}
-		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '退出系统';
-		$data['slug'] = Route::currentRouteName();
-		$data['ip'] = Request::getClientIp();
-		return Log::create($data);
-	}
 }
