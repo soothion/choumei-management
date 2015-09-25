@@ -606,6 +606,9 @@ input:focus+.unit{
 .control-thumbnails-operation>span:hover{
 	color:#fff;
 }
+.control-thumbnails-unedit .control-thumbnails-edit{
+	display:none;
+}
 .control-image-ud .fa{
 	font-size:18px;
 	vertical-align:middle;
@@ -1032,7 +1035,7 @@ form[data-role="hash"] input[type="date"]{
 }
 
 /**图片裁剪start**/
-.popup-cropper{
+.popup-cropper,.popup-cropper-image{
 	position:fixed;
 	left:0;
 	top:0;
@@ -1042,22 +1045,29 @@ form[data-role="hash"] input[type="date"]{
 .popup-cropper{
 	z-index:10000;
 	background:rgba(0,0,0,0.4);
+	
 }
-.popup-cropper-header,.popup-cropper-footer{
-	_position:absolute;
+.popup-cropper-image{
+	text-align:center;
+}
+.popup-cropper-header{
+	position:absolute;
 	top:0;
 	left:0;
 	width:100%;
-	line-height:40px;
-	font-size:26px;
 	z-index:100;
-	text-align:center;
-	background:rgba(255,255,255,0.5)
+	background:rgba(255,255,255,0.85);
+	padding:5px 0px;
+	box-shadow:0px 0px 5px rgba(0,0,0,0.1);
 }
-.popup-cropper-footer{
-	top:auto;
-	bottom:0;
-	padding:5px 0;
+.popup-cropper-title{
+	margin-left:15px;
+	font-size:20px;
+}
+.popup-cropper-operation{
+	margin-right:15px;
+	float:right;
+	margin-top:1px;
 }
 /**图片裁剪end**/
 .ie9 .flex-box{
