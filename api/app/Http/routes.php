@@ -92,10 +92,14 @@ Route::any('refund/call_back_of_alipay',array(
 	'uses'=>'Transaction\OrderRefundController@call_back_of_alipay'
 ));
 
+Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退款回调
+	'as'=>'AlipayRefundNotify.callback_alipay',
+	'uses'=>'Alipay\AlipayRefundNotifyController@callback_alipay'
+));
 
 //权限管理后台接口
  Route::group(['middleware' => ['jwt.auth','acl.auth','before','after']], function(){
-//Route::group(['middleware' => ['before','after']], function(){
+// Route::group(['middleware' => ['before']], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -684,12 +688,7 @@ Route::any('refund/call_back_of_alipay',array(
     Route::any('bounty/exportRefund',array(  //导出赏金单退款列表
 		'as'=>'bounty.exportRefund',
 		'uses'=>'Bounty\BountyController@exportRefund'
-    ));
-    
-    Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退款回调
-		'as'=>'AlipayRefundNotify.callback_alipay',
-		'uses'=>'Alipay\AlipayRefundNotifyController@callback_alipay'
-    ));
+    ));   
   
     Route::any('requestLog/index',array(  //请求日志列表
 		'as'=>'requestLog.index',
