@@ -53,12 +53,12 @@ class User extends  Model
 
         if(!empty($param['start_at'])){
         	$start_at = strtotime($param['start_at']);
-        	$query = $query->where('add_time','>=',$start_at);
+        	$query = $query->where('user.add_time','>=',$start_at);
         }
 
         if(!empty($param['end_at'])){
         	$end_at = strtotime($param['end_at'])+3600*24;
-        	$query = $query->where('add_time','>=',$end_at);
+        	$query = $query->where('user.add_time','>=',$end_at);
         }
 
         if(!empty($param['area'])){
@@ -86,8 +86,8 @@ class User extends  Model
     	$sex = intval($sex);
     	$mapping = [
     		0=>'未知',
-    		1=>'男',
-    		2=>'女'
+    		1=>'女',
+    		2=>'男'
     	];
     	if(empty($mapping[$sex]))
     		return '未知';
