@@ -8,15 +8,22 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Illuminate\Support\Facades\Redis as Redis;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+
 const FIRST_KEY = 'recent.first.user';
 const REGISTER_KEY = 'recent.register.user';
 
 class User extends  Model
 {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
+
     protected $table = 'user';
     protected $primaryKey = 'user_id'; 
-    protected $fillable = ['username','nickname','password','email','img','add_time','last_time','sex','birthday','area','growth','grade','mobilephone','costpwd','companyId'];
+    protected $fillable = ['username','nickname','password','email','img','add_time','last_time','sex','hair_type','birthday','area','growth','grade','mobilephone','costpwd','companyId'];
     public $timestamps = false;
+
 
     public static function getQueryByParam($param=[]){
         $query = Self::leftJoin('company_code','user.companyId','=','company_code.companyId')
@@ -33,7 +40,7 @@ class User extends  Model
         }
 
         if(!empty($param['companyCode'])){
-        	$query = $query->where('company_code_user.companyCode','=',$param['companyCode']);
+        	$query = $query->where('company_code.code','=',$param['companyCode']);
         }
 
         if(!empty($param['recommendCode'])){
@@ -170,7 +177,7 @@ class User extends  Model
     public static function getRegisterByDay($day){
         $current = strtotime($day);
         $next = $current+3600*24;
-        $count = User::whereBetween('add_time',[$current,$next])->count();
+        $count = User::withTrashed()->whereBetween('add_time',[$current,$next])->count();
         return $count;
     }
 

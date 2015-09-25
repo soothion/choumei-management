@@ -258,8 +258,8 @@ class UserController extends Controller{
 	    	$result[$key]['mobilephone'] = $value->mobilephone;
 	    	$result[$key]['area'] = $value->area;
 	    	$result[$key]['companyCode'] = $value->companyCode;
-	    	$result[$key]['salonCode'] = $value->activity==1?'':$value->recommendCode;
-	    	$result[$key]['activityCode'] = $value->activity==2?'':$value->recommendCode;
+	    	$result[$key]['salonCode'] = $value->activity==2?$value->recommendCode:'';
+	    	$result[$key]['activityCode'] = $value->activity==1?$value->recommendCode:'';
 	    	$result[$key]['add_time'] = date('Y-m-d H:i:s',intval($value->add_time));
 	    }
 

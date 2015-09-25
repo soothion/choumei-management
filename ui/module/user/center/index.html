@@ -33,8 +33,8 @@
 				选择性别
 				<select name="sex">
 				    <option value="" >全部</option>
-				    <option value="1">男</option>
-				    <option value="2">女</option>
+				    <option value="2">男</option>
+				    <option value="1">女</option>
 				    <option value="0">未知</option>
 				</select>
 				注册时间
@@ -86,8 +86,8 @@
 					  <td><%=item.mobilephone%></td>
 					  <td><%=item.area%></td>
 					  <td><%=item.companyCode%></td>
-					  <td><%=item.salonname?item.recommendCode:""%></td>
-					  <td><%=!item.salonname?item.recommendCode:""%></td>
+					  <td><%=item.activity!=1?item.recommendCode:""%></td>
+					  <td><%=item.activity==1?item.recommendCode:""%></td>
 					  <td><%=item.add_time%></td>
 					  <td>
 						 <a class="link" data-slug="user.show,user.update" target="_blank" href="detail.html?id=<%=item.user_id%>">查看</a>
