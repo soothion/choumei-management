@@ -445,7 +445,7 @@ class UserController extends Controller{
 		$result = $user->update($param);
 
 		if($result){
-			触发事件，写入日志
+			//触发事件，写入日志
 			Event::fire('user.update',array($user));
 			return $this->success();
 		}
@@ -466,7 +466,7 @@ class UserController extends Controller{
 			throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
 		$result = $user->delete();
 		if($result){
-			触发事件，写入日志
+			//触发事件，写入日志
 			Event::fire('user.delete',array($user));
 			return $this->success();
 		}

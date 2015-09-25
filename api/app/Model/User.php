@@ -169,8 +169,8 @@ class User extends  Model
             $current = strtotime($day);
             $next = $current+3600*24;
             $users = Order::whereBetween('use_time',[$current,$next])->lists('user_id');
-            $orders = Order::whereIn('user_id',$users)->orderBy('use_time','desc')->groupBy('user_id')->lists('orderid');
-            $count = Order::whereBetween('use_time',[$current,$next])->whereIn('orderid',$orders)->count();
+            $orders = Order::whereIn('user_id',$users)->where('use_time','!=',0)->orderBy('use_time','desc')->groupBy('user_id')->lists('orderid');
+            $count = Order::whereIn('orderid',$orders)->count();
             return $count;
     }
 

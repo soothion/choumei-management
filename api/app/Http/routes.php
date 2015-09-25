@@ -95,7 +95,7 @@ Route::any('refund/call_back_of_alipay',array(
 
 //权限管理后台接口
  Route::group(['middleware' => ['jwt.auth','acl.auth','before','after']], function(){
-//Route::group(['middleware' => ['before','after']], function(){
+// Route::group(['middleware' => ['before']], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
