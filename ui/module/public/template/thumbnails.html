@@ -1,5 +1,5 @@
 ﻿<%data&&data.forEach&&data.forEach(function(item){%>
-	<div class="control-thumbnails-item" id="<%=item.id%>">
+	<div class="control-thumbnails-item">
 		<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" />
 		<a class="fa fa-times-circle control-thumbnails-remove"></a>
 		<input type="checkbox" name="thumb" class="thumb" value="<%=item.thumbimg%>">

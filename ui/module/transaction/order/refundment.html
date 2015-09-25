@@ -196,7 +196,7 @@
                     </a>
                 <%}%>
 
-                <%if(item.order_status=="12"){%>
+                <%if(item.order_status=="12" || item.order_status=="10"){%>
                     <a class="link pass" style="margin:0 5px;" data-slug="refund.reaccept" data-type="1" 
                     data-id='<%=item.order_refund_id%>'>
                     重新退款
