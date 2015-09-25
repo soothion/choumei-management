@@ -428,8 +428,7 @@ class TicketController extends Controller
     {
         $voucher_money = floatval($voucher_money);
         $order_money = floatval($order_money);
-        $max = max($voucher_money,$order_money);
-        if($max >=$order_money)
+        if($voucher_money >=$order_money)
         {
             return $order_money;
         }
