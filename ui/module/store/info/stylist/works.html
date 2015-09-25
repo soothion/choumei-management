@@ -34,7 +34,7 @@
 
         <div class="wrapper">
             <div class="detail-operation">
-                <button class="btn-primary">+新增</button>
+                <button id="add_works_btn" class="btn-primary">+新增</button>
             </div> 
 
             <div>
@@ -141,5 +141,15 @@
                 </div>
             </div> 
         </div>
+
+        <script type="text/javascript">
+            (function(){
+                $("#add_works_btn").on('click',function(){
+                    lib.popup.box({
+                                                
+                    });
+                });
+            })()
+        </script>
   </body>
 </html>
