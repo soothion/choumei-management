@@ -209,7 +209,7 @@ class Utils
 	    }
 	    
 	    //write file
-	    $file_name = empty($file_name) ? date('Ymd') : $file_name;
+	    $file_name = empty($filename) ? date('Ymd') : $filename;
 	    $file = $dir . $file_name;
 	    file_put_contents($file . '.log', $content, FILE_APPEND | LOCK_EX);
 	    

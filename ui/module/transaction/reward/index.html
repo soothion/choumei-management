@@ -79,11 +79,12 @@
             
               <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
               <%if(data.total == 0){%>
-                 当前条件下所有交易金额统计 总金额：0.00元
-              <%}else if(data.total > 0 && data.total<=2000){%> 
-                 当前条件下所有交易金额统计 总金额：<%=data.amount && data.amount.amount%>元
-              <%}else{%> 
-                筛选结果超出2000条无法统计金额                
+                当前页面下所有赏金金额统计为：0.00元
+              <%}else{ var amount=0;%> 
+                  <%data.data && data.data.forEach(function(item,i){
+                         amount += (+item.money);
+                  })%>   
+                  当前页面下所有赏金金额统计为：<%=amount%>元
               <%}%> 
               </div>  
 

@@ -70,11 +70,12 @@
             <script type="text/template" id="table-t">
               <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
               <%if(data.total == 0){%>
-                当前条件下所有交易金额统计 总金额：0.00元
-              <%}else if(data.total > 0 && data.total <= 2000){%>
-                当前条件下所有交易金额统计 总金额：<%=data.total_money%>元
-              <%}else{%>
-                筛选结果超出2000条无法统计金额
+                当前页面下所有交易金额统计为：0.00元
+              <%}else{ var total_money = 0;%>
+                <%data.data && data.data.forEach(function(item,i){
+                    total_money += (+item.priceall);
+                })%>
+                当前页面下所有交易金额统计为：<%=total_money%>元
               <%}%>
               </div>
             <table>
