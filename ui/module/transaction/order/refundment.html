@@ -106,11 +106,12 @@
 
         <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
         <%if(data.total == 0){%>
-          当前条件下所有交易金额统计 订单总金额：0.00元
-        <%}else if(data.total > 0 && data.total <= 2000){%>
-          当前条件下所有交易金额统计 订单总金额：<%=data.refund_money%>元
-        <%}else{%>
-          筛选结果超出2000条无法统计金额
+          当前页面下所有退款金额统计为：0.00元
+        <%}else{ var refund_money=0;%>
+          <%data.data &&　data.data.forEach(function(item,i){
+            refund_money+=(+item.refund_money);
+          })%>
+          当前页面下所有退款金额统计为：<%=refund_money%>元
         <%}%>
         </div> 
 
