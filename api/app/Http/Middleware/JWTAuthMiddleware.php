@@ -26,7 +26,7 @@ class JWTAuthMiddleware extends BaseMiddleware
             $user = $this->auth->authenticate($token);
         } catch (TokenExpiredException $e) {
             Throw new ApiException('token过期',ERROR::TOKEN_EXPIRED);
-        } catch (JWTException $e) {
+        } catch (\Exception $e) {
             Throw new ApiException('token无效',ERROR::TOKEN_INVILD);
         }
 
