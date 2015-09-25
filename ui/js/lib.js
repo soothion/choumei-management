@@ -394,6 +394,7 @@
 							options.max_file_size=data.maxFileSize+'mb';
 						}
 						var uploader=self.create(options);
+						
 						uploader.bind('BeforeUpload',function(up,file){//上传前获取下一个token
 							clearTimeout(self.timer)
 							self.getToken(function(data){
@@ -466,6 +467,7 @@
 					}
 				}
 				this.file(options,function(uploader){
+					
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
 							var data=JSON.parse(res.response);
@@ -490,7 +492,7 @@
 							uploader.thumbnails.addClass('.control-thumbnails-unedit');
 						}
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
-							uploader.createThumbnails=function(data){
+							uploader.createThumbnails=function(data){//创建缩略图
 								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render({url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},{data:[data]}));
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').hide();
@@ -517,6 +519,18 @@
 								var $img=$this.find('img');
 								var original=$img.data('original')?$img.data('original'):$img.attr('src')
 								uploader.trigger('ImageUploaded',{img:original,_this:$this[0]});
+							});
+							uploader.bind('FilesAdded',function(up,files){
+								var files_number=up.getOption().files_number;
+								var exist=up.thumbnails.children().length-1;
+								if(files_number){
+									plupload.each(files, function(file,i) {
+										if(i+exist>=files_number){
+											console.log('ddddddddd')
+											up.removeFile(file);	
+										}
+									});
+								}
 							});
 						}
 						uploader.area=$target.closest('.control-single-image');
