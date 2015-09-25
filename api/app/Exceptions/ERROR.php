@@ -367,9 +367,28 @@ class ERROR
      /**
       *@param 参数错误
       */
-     CONST ITEM_ERROR =  -52000;
-     
-     
+     CONST ITEM_ERROR =  -51100;
+     /**
+      *@param 当前快剪等级下面无对应等级的造型师，请修改造型师界面中的快剪等级后再添加快剪项目
+      */
+     CONST ITEM_GRADE_ERROR =  -51101;
+     /**
+      *@param 项目有效期时间不正确
+      */
+     CONST ITEM_EXPTIME_ERROR =  -51102;
+     /**
+      *@param 限制次数不正确
+      */
+     CONST ITEM_RESTRICT_ERROR =  -51103;
+     /**
+      *@param 项目id不存在
+      */
+     CONST ITEM_DATA_ERROR =  -51104;
+     /**
+      *@param 项目总库存不正确
+      */
+     CONST ITEM_TOTALREP_ERROR =  -51105;
+
 
 
 }
