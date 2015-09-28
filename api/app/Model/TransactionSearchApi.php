@@ -216,7 +216,7 @@ class TransactionSearchApi
         $commission = CommissionLog::where('ordersn',$ordersn)->select(['ordersn','amount','rate','grade'])->first();
         
         //店铺邀请码
-        $salonRecommendCode = Dividend::where('salonid',$salon_id)->select(['recommend_code'])->first();
+        $salonRecommendCode = Dividend::where('salon_id',$salon_id)->select(['recommend_code'])->first();
 
         //用户邀请码
         $recommendCode = RecommendCodeUser::where('user_id',$uid)->join('dividend',function($join){
