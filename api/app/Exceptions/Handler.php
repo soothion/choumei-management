@@ -48,14 +48,6 @@ class Handler extends ExceptionHandler
         $data['code'] = 0;
         $data['msg'] = '';
         $data['token'] = '';
-        if(JWTAuth::getToken()){
-            try {
-                $data['token'] = JWTAuth::parseToken()->refresh();
-            } 
-            catch (Exception $e){
-                //
-            }
-        }
         if($e instanceof ApiException){
             $data['code'] = $e->getCode();
             $data['msg'] = $e->getMessage();

@@ -41,7 +41,8 @@
 			},
 			max_file_size:'10mb',
 			imageArray:currentData.contractPicUrl,
-			multi_selection:true
+			multi_selection:true,
+			files_number:10
 			//crop:true
 		},function(uploader){
 			/*
@@ -74,6 +75,7 @@
 			},
 			max_file_size:'10mb',
 			multi_selection:true,
+			files_number:3,
 			imageArray:currentData.licensePicUrl
 		});
 		//法人执照上传
@@ -87,6 +89,7 @@
 			},
 			max_file_size:'10mb',
 			multi_selection:true,
+			files_number:3,
 			imageArray:currentData.corporatePicUrl
 		});
     }
