@@ -214,7 +214,10 @@ class TicketController extends Controller
      * @apiSuccess {String} commission.amount 佣金金额
      * @apiSuccess {String} commission.rate 佣金率
      * @apiSuccess {String} commission.grade 店铺当前等级 1S 2A 3B 4C 5新落地 6淘汰区
-     * @apiSuccess {String} recommend_code店铺优惠码
+     * @apiSuccess {String} salonRecommendCode 店铺优惠码(店铺)信息
+     * @apiSuccess {String} salonRecommendCode.recommend_code 店铺优惠码
+     * @apiSuccess {String} recommend_code 店铺优惠码(佣金)信息
+     * @apiSuccess {String} recommend_code.recommend_code 店铺优惠码(佣金)
      * @apiSuccess {String} platform 设备信息
      * @apiSuccess {String} platform.DEVICE_UUID 设备号
      * @apiSuccess {String} platform.DEVICE_OS 设备系统
@@ -286,7 +289,12 @@ class TicketController extends Controller
      *                  "rate":"9.09",
      *                  "grade":"0"
      *                },
-     *               "recommend_code": "1168"
+     *               "recommend_code": {
+     *                  "recommend_code":"1168"
+     *               },
+     *               "salonRecommendCode": {
+     *                  "recommend_code":"1168"
+     *               },
      *           }
      *       }
      *
