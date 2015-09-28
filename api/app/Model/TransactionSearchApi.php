@@ -214,6 +214,9 @@ class TransactionSearchApi
       
         //佣金
         $commission = CommissionLog::where('ordersn',$ordersn)->select(['ordersn','amount','rate','grade'])->first();
+        
+        //店铺邀请码
+        $salonRecommendCode = Dividend::where('salonid',$salon_id)->select(['recommend_code'])->first();
 
         //用户邀请码
         $recommendCode = RecommendCodeUser::where('user_id',$uid)->join('dividend',function($join){
@@ -231,6 +234,7 @@ class TransactionSearchApi
         $voucherArr = null;
         $commissionArr = null;
         $recommendCodeArr = null;
+        $salonRecommendCodeArr = null;
         if(!empty($paymentlog))
         {
             $paymentlogArr = $paymentlog->toArray();
@@ -263,6 +267,10 @@ class TransactionSearchApi
         {
             $recommendCodeArr = $recommendCode->toArray();
         }
+        if(!empty($salonRecommendCode))
+        {
+            $salonRecommendCodeArr = $salonRecommendCode->toArray();
+        }
         
         $res = [            
             'order'=>$order,
@@ -276,6 +284,7 @@ class TransactionSearchApi
             'vouchers'=>$voucherArr,
             'commission'=>$commissionArr,
             'recommend_code'=>$recommendCodeArr,
+            'salonRecommendCode'=>$salonRecommendCodeArr,
             'platform'=>$paltform,
         ];
         return $res;
