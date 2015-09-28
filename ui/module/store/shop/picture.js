@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-28 11:17:09
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-28 14:20:56
+* @Last Modified time: 2015-09-28 15:31:53
 */
 
 (function(){
@@ -62,7 +62,7 @@
             uploader.bind('ImageUploaded',function(up,response){
                 lib.cropper.create({
                     src:response.img,
-                    aspectRatio : 1/1,,
+                    aspectRatio : 1/1,
                     thumbnails  : ['300x300'],
                     define:function(data){
                         if(response._this){
@@ -70,7 +70,7 @@
                             return;
                         }
                         if(up.createThumbnails&&!response.edit){
-                            up.createThumbnails({thumbimg:data['300x300'],img:data['300x300']});
+                            up.createThumbnails({thumbimg:data['300x300'],img:data['300x300'],ratio:1});
                         }else{
                             up.preview(up.area,{thumbimg:data['300x300'],img:data['300x300']});
                         }
@@ -106,7 +106,7 @@
                             return;
                         }
                         if(up.createThumbnails&&!response.edit){
-                            up.createThumbnails({thumbimg:data['1125x405'],img:data['1125x405']});
+                            up.createThumbnails({thumbimg:data['1125x405'],img:data['1125x405'],ratio:1125/405});
                         }else{
                             up.preview(up.area,{thumbimg:data['1125x405'],img:data['1125x405']});
                         }
@@ -142,7 +142,7 @@
                             return;
                         }
                         if(up.createThumbnails&&!response.edit){
-                            up.createThumbnails({thumbimg:data['1125x405'],img:data['1125x405']});
+                            up.createThumbnails({thumbimg:data['1125x405'],img:data['1125x405'],ratio:1125/405});
                         }else{
                             up.preview(up.area,{thumbimg:data['1125x405'],img:data['1125x405']});
                         }

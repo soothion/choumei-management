@@ -549,6 +549,7 @@ input:focus+.unit{
 	border: 1px solid #ddd;
 	position:relative;
 	margin:0px 10px 10px 0px;
+	background-color: #ddd;
 }
 .control-thumbnails-item input{
 	display:none;
