@@ -99,13 +99,13 @@ class TransactionSearchApi
      */
     public static function orderDetail($id)
     {
-        $base = Order::where('orderid',$id)->select(['ordersn','orderid','priceall','salonid','actuallyPay','shopcartsn'])->first();
+        $base = Order::where('orderid',$id)->select(['ordersn','orderid','user_id','priceall','salonid','actuallyPay','shopcartsn'])->first();
         if(empty($base))
         {
             throw new ApiException("订单 [{$id}] 不存在", ERROR::ORDER_NOT_EXIST);
         }
         $baseArr = $base->toArray();
-        $orderItem = OrderItem::where("orderid",$id)->select(['order_item_id','user_id','itemname','ordersn'])->first();
+        $orderItem = OrderItem::where("orderid",$id)->select(['order_item_id','itemname','ordersn'])->first();
         if(empty($orderItem)) //没订单项目
         {
             throw new ApiException("订单项目 orderid [{$id}] 不存在", ERROR::ORDER_ITEM_NOT_EXIST);
@@ -134,14 +134,14 @@ class TransactionSearchApi
         }
         $baseArr = $base->toArray();
         
-        $orderItem = OrderItem::where("order_item_id",$baseArr['order_item_id'])->select(['order_item_id','user_id','orderid','itemname','ordersn'])->first();
+        $orderItem = OrderItem::where("order_item_id",$baseArr['order_item_id'])->select(['order_item_id','orderid','itemname','ordersn'])->first();
         if(empty($orderItem))
         {
             throw new ApiException("订单项目 order_item_id [".$baseArr['order_item_id']."] 不存在", ERROR::ORDER_ITEM_NOT_EXIST);
         }
         $orderItemArr = $orderItem->toArray();
         
-        $order = Order::where('orderid',$orderItemArr['orderid'])->select(['ordersn','orderid','priceall','salonid','actuallyPay','shopcartsn'])->first();
+        $order = Order::where('orderid',$orderItemArr['orderid'])->select(['ordersn','orderid','user_id','priceall','salonid','actuallyPay','shopcartsn'])->first();
         if(empty($order))
         {
             throw new ApiException("订单 orderid [".$orderItemArr['orderid']."] 不存在", ERROR::ORDER_NOT_EXIST);
