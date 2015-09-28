@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-28 11:17:09
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-28 11:37:47
+* @Last Modified time: 2015-09-28 14:20:56
 */
 
 (function(){
@@ -24,22 +24,24 @@
             currentData = JSON.parse(sessionStorage.getItem('edit-shop-data')); 
         }
 
-        if(currentData.contractPicUrl&&typeof currentData.contractPicUrl=='string'){
-            currentData.contractPicUrl=JSON.parse(currentData.contractPicUrl);
+        if(currentData.logo && typeof currentData.logo == 'string'){
+            currentData.logo = [{'imgsrc':currentData.logo}]
         }
 
-        if(currentData.licensePicUrl&&typeof currentData.licensePicUrl=='string'){
-            currentData.licensePicUrl=JSON.parse(currentData.licensePicUrl);
+        if(currentData.salonImg && typeof currentData.salonImg == 'string'){
+            currentData.salonImg = JSON.parse(currentData.salonImg);
         }
 
-        if(currentData.corporatePicUrl&&typeof currentData.corporatePicUrl=='string'){
-            currentData.corporatePicUrl=JSON.parse(currentData.corporatePicUrl);
+        if(currentData.workImg && typeof currentData.workImg == 'string'){
+            currentData.workImg = JSON.parse(currentData.workImg);
         } 
         initUploader();       
     }
 
     var initUploader = function(){
         logoUpload();
+        shopUpload();
+        teamUpload();
     }
 
     var logoUpload = function(){
@@ -52,14 +54,16 @@
                 ]
             },
             max_file_size:'10mb',
-            imageArray:currentData.contractPicUrl,
+            imageArray:currentData.logo,
             multi_selection:true,
-            files_number:10,
+            files_number:1,
             crop:true
         },function(uploader){
             uploader.bind('ImageUploaded',function(up,response){
                 lib.cropper.create({
                     src:response.img,
+                    aspectRatio : 1/1,,
+                    thumbnails  : ['300x300'],
                     define:function(data){
                         if(response._this){
                             up.preview($(response._this),{thumbimg:data['300x300'],img:data['300x300']});
@@ -74,6 +78,78 @@
                 });
             });
         });
+    }
+
+    var shopUpload = function(){
+        lib.puploader.image({
+            browse_button: 'shopUpload',
+            auto_start:true,
+            filters: {
+                mime_types : [
+                    { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+                ]
+            },
+            max_file_size:'10mb',
+            imageArray:currentData.salonImg,
+            multi_selection:true,
+            files_number:4,
+            crop:true
+        },function(uploader){
+            uploader.bind('ImageUploaded',function(up,response){
+                lib.cropper.create({
+                    src:response.img,
+                    aspectRatio : 1125/405,
+                    thumbnails  : ['1125x405'],
+                    define:function(data){
+                        if(response._this){
+                            up.preview($(response._this),{thumbimg:data['1125x405'],img:data['1125x405']});
+                            return;
+                        }
+                        if(up.createThumbnails&&!response.edit){
+                            up.createThumbnails({thumbimg:data['1125x405'],img:data['1125x405']});
+                        }else{
+                            up.preview(up.area,{thumbimg:data['1125x405'],img:data['1125x405']});
+                        }
+                    }
+                });
+            });
+        });        
+    }
+
+    var teamUpload = function(){
+        lib.puploader.image({
+            browse_button: 'teamUpload',
+            auto_start:true,
+            filters: {
+                mime_types : [
+                    { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+                ]
+            },
+            max_file_size:'10mb',
+            imageArray:currentData.workImg,
+            multi_selection:true,
+            files_number:1,
+            crop:true
+        },function(uploader){
+            uploader.bind('ImageUploaded',function(up,response){
+                lib.cropper.create({
+                    src:response.img,
+                    aspectRatio : 1125/405,
+                    thumbnails  : ['1125x405'],
+                    define:function(data){
+                        if(response._this){
+                            up.preview($(response._this),{thumbimg:data['1125x405'],img:data['1125x405']});
+                            return;
+                        }
+                        if(up.createThumbnails&&!response.edit){
+                            up.createThumbnails({thumbimg:data['1125x405'],img:data['1125x405']});
+                        }else{
+                            up.preview(up.area,{thumbimg:data['1125x405'],img:data['1125x405']});
+                        }
+                    }
+                });
+            });
+        });         
     }
 
     init();
