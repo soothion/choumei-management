@@ -687,5 +687,42 @@ Route::group(['middleware'], function(){
     		'as'=>'itemInfo.create',
     		'uses'=>'Item\ItemInfoController@store'
     ));
+    
+    Route::any('Stylist/index',array(  //请求造型师列表
+		'as'=>'Stylist.index',
+		'uses'=>'Stylist\StylistController@index'
+    ));
+     
+    Route::any('Stylist/show/{id}',array(  //查看造型师
+             'as'=>'Stylist.show',
+             'uses'=>'Stylist\StylistController@show'
+    ));
+    
+    Route::any('Stylist/show2/{id}',array(  //编辑造型师
+           'as'=>'Stylist.show2',
+           'uses'=>'Stylist\StylistController@show2'
+    ));
+       
+    Route::any('Stylist/enable/{id}',array(  //启用造型师
+           'as'=>'Stylist.enable',
+           'uses'=>'Stylist\StylistController@enable'
+    ));
+         
+    Route::any('Stylist/disabled/{id}',array(  //禁用造型师
+         'as'=>'Stylist.disabled',
+         'uses'=>'Stylist\StylistController@disabled'
+    ));
+           
+           
+    Route::any('Stylist/destroy/{id}',array(  //删除造型师
+       'as'=>'Stylist.destroy',
+       'uses'=>'Stylist\StylistController@destroy'
+    ));
+    
+    Route::any('Stylist/update/{id}',array(  //修改造型师
+       'as'=>'Stylist.update',
+       'uses'=>'Stylist\StylistController@update'
+
+    ));
 });
 

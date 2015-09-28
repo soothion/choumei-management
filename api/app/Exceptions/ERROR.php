@@ -361,7 +361,39 @@ class ERROR
       *@param 店铺状态错误
       */
      CONST MERCHANT_SALON_STATUS_IS_ERROR  =  -51020;
-     
+     /**
+      *@param 删除造型师错误
+      */
+     CONST MERCHANT_STYLIST_DELETE_ERROR  =  -51021;
+      /**
+      *@param 启用造型师错误
+      */
+     CONST MERCHANT_STYLIST_ENABLE_ERROR  =  -51022; 
+      /**
+      *@param 禁用造型师错误
+      */
+     CONST MERCHANT_STYLIST_DESABLED_ERROR  =  -51023; 
+      /**
+      *@param 未选择修改所属店铺
+      */
+     CONST MERCHANT_STYLIST_SELECT_ERROR  =  -51024; 
+      /**
+      *@param 你有已接单未完成打赏的悬赏单
+      */
+     CONST MERCHANT_STYLIST_NOREWARD_ERROR  =  -51025; 
+      /**
+      *@param 修改造型师错误
+      */
+     CONST MERCHANT_STYLIST_UPDATE_ERROR  =  -51026; 
+      /**
+      *@param 店铺名称不存在
+      */
+     CONST MERCHANT_NOTNAME_ERROR  =  -51027; 
+      /**
+      *@param 没有所属商户
+      */
+     CONST MERCHANT_MERCHANT_ERROR  =  -51028; 
+          
      
      ////////////项目模块//////////////
      /**
