@@ -689,7 +689,7 @@ class TransactionWriteApi
     
             Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($param) . " \t url : {$url} \n", "yilian");
             $respnd = Utils::HttpPost($url, $param);
-    
+            Utils::log("pay", date("Y-m-d H:i:s") . "\t [RESPOND] return:  {$respnd} \n", "yilian");    
             $resDecode = json_decode($respnd, true);
             if (isset($resDecode['result']) && $resDecode['result'] == 1) {
                 $ret['info'] .= $item['ordersn'] . " 退款成功  退款方式 易联\n";
