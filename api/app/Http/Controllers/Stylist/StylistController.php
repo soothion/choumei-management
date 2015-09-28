@@ -440,7 +440,7 @@ class StylistController  extends Controller {
         if($param['checkbox']!=1){
                 throw new ApiException('未选择修改所属店铺', ERROR::MERCHANT_STYLIST_SELECT_ERROR);
         }else {
-            $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>2))->get();
+            $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->get();
             if($task==true){
                  throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
             }
