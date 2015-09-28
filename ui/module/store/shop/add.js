@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-06 14:38:27
+* @Last Modified time: 2015-09-28 11:16:39
 */
 
 $(function(){
@@ -116,7 +116,7 @@ $(function(){
             sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
         }
 		document.body.onbeforeunload=function(){}
-        location.href = "bank.html?type="+type;
+        location.href = "picture.html?type="+type;
     } 
 
     var dataFormat = function(data){      
