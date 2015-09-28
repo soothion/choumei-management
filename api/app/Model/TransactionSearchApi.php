@@ -210,7 +210,7 @@ class TransactionSearchApi
         //动态
         $trends = OrderTicketTrends::where("ordersn",$ordersn)->where("ticketno",$ticketno)->orderBy("add_time","ASC")->get(['add_time','status','remark']);
         //代金券
-        $vouchers = Voucher::where("vOrderSn",$ordersn)->select(['vSn','vcSn','vUseMoney','vUseEnd','vStatus','vUseTime'])->first();
+        $vouchers = Voucher::where("vOrderSn",$ordersn)->select(['vSn','vcSn','vUseMoney','vUseEnd','vStatus','vUseTime','vAddTime'])->first();
       
         //佣金
         $commission = CommissionLog::where('ordersn',$ordersn)->select(['ordersn','amount','rate','grade'])->first();
