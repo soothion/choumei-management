@@ -105,7 +105,7 @@ class TransactionSearchApi
             throw new ApiException("订单 [{$id}] 不存在", ERROR::ORDER_NOT_EXIST);
         }
         $baseArr = $base->toArray();
-        $orderItem = OrderItem::where("orderid",$id)->select(['order_item_id','itemname','ordersn'])->first();
+        $orderItem = OrderItem::where("orderid",$id)->select(['order_item_id','user_id','itemname','ordersn'])->first();
         if(empty($orderItem)) //没订单项目
         {
             throw new ApiException("订单项目 orderid [{$id}] 不存在", ERROR::ORDER_ITEM_NOT_EXIST);
@@ -134,7 +134,7 @@ class TransactionSearchApi
         }
         $baseArr = $base->toArray();
         
-        $orderItem = OrderItem::where("order_item_id",$baseArr['order_item_id'])->select(['order_item_id','orderid','itemname','ordersn'])->first();
+        $orderItem = OrderItem::where("order_item_id",$baseArr['order_item_id'])->select(['order_item_id','user_id','orderid','itemname','ordersn'])->first();
         if(empty($orderItem))
         {
             throw new ApiException("订单项目 order_item_id [".$baseArr['order_item_id']."] 不存在", ERROR::ORDER_ITEM_NOT_EXIST);
@@ -164,7 +164,7 @@ class TransactionSearchApi
         }
         $baseArr = $base->toArray();
         
-        $order = Order::where('ordersn',$baseArr['ordersn'])->select(['ordersn','orderid','priceall','salonid','actuallyPay','shopcartsn'])->first();
+        $order = Order::where('ordersn',$baseArr['ordersn'])->select(['ordersn','orderid','user_id','priceall','salonid','actuallyPay','shopcartsn'])->first();
         if(empty($order))
         {
             throw new ApiException("订单 ordersn [".$baseArr['ordersn']."] 不存在", ERROR::ORDER_NOT_EXIST);
@@ -196,7 +196,7 @@ class TransactionSearchApi
         $ordersn = $order['ordersn'];
         $ticketno = $ticket['ticketno'];
         $ticket_id = $ticket['order_ticket_id'];
-        $uid = $ticket['user_id'];
+        $uid = $order['user_id'];
         $salon_id = $order['salonid'];
        
         //订单流水
