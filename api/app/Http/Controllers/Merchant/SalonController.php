@@ -255,9 +255,9 @@ class SalonController extends Controller {
 	* @apiParam {String} ssEndTime 可选,强补贴截止日.
 	* @apiParam {String} strongClaim 可选,强补贴月交易单数要求.
 	* @apiParam {String} subsidyPolicy 可选,首单指标补贴政策.
+	* @apiParam {array} salonImg[] 可选,店铺图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
+	* @apiParam {array} workImg[] 可选,团队图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
 	* @apiParam {String} logo 可选,logo.
-	* @apiParam {String} salonImg[] 可选,店铺图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
-	* @apiParam {String} workImg[] 可选,团队图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
 	* @apiParam {String} salonLogo 可选,店铺logo（和logo字段对应）.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
 	* @apiDescription 合同图片 营业执照 法人执照 demo
 	*	[
@@ -366,9 +366,9 @@ class SalonController extends Controller {
 	* @apiParam {String} ssEndTime 可选,强补贴截止日.
 	* @apiParam {String} strongClaim 可选,强补贴月交易单数要求.
 	* @apiParam {String} subsidyPolicy 可选,首单指标补贴政策.
+	* @apiParam {array} salonImg[] 可选,店铺图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
+	* @apiParam {array} workImg[] 可选,团队图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
 	* @apiParam {String} logo 可选,logo.
-	* @apiParam {String} salonImg[] 可选,店铺图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
-	* @apiParam {String} workImg[] 可选,团队图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
 	* @apiParam {String} salonLogo 可选,店铺logo（和logo字段对应）.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
 	* 
 	* 
