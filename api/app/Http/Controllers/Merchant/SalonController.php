@@ -646,8 +646,9 @@ class SalonController extends Controller {
 	* @apiSuccess {String} strongClaim 强补贴月交易单数要求.
 	* @apiSuccess {String} subsidyPolicy 首单指标补贴政策.
 	* @apiSuccess {String} logo 店铺logo.
+	* @apiSuccess {String} salonLogo 店铺logo.
 	* @apiSuccess {String} salonImg 店铺图集
-	*   "salonImg": [
+	*   "salonImg": '[
     *        {
     *           "worksid": 11316,
     *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364305891.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364305891.jpg\"}",
@@ -668,15 +669,15 @@ class SalonController extends Controller {
     *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364613818.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364613818.jpg\"}",
     *             "flags": 3
     *         }
-    *    ],
+    *    ]',
     * @apiSuccess {String} workImg 团队图集
-    *     "workImg": [
+    *     "workImg": '[
     *         {
     *             "worksid": 11317,
     *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\"}",
     *             "flags": 4
     *         }
-	* 		],
+	* 		]',
 	* 
 	* @apiSuccessExample Success-Response:
 	*	{
@@ -755,7 +756,7 @@ class SalonController extends Controller {
 	*			"businessName": "",
 	*			"dividendStatus": 0,
 	*			"recommend_code": "2818",
-	*			"salonImg": [
+	*			"salonImg": '[
 	*				{
 	*					"worksid": 11316,
 	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364305891.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364305891.jpg\"}",
@@ -776,14 +777,14 @@ class SalonController extends Controller {
 	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364613818.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364613818.jpg\"}",
 	*					"flags": 3
 	*				}
-	*			],
-	*			"workImg": [
+	*			]',
+	*			"workImg":'[
 	*				{
 	*					"worksid": 11317,
 	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\"}",
 	*					"flags": 4
 	*				}
-	*			],
+	*			]',
 	*			"zoneName": "科技园",
 	*			"districtName": "南山区",
 	*			"citiesName": "深圳市",

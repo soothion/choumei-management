@@ -14,13 +14,15 @@ class SalonWorks extends Model {
 	public static function getSalonWorks($salonid,$type)
 	{
 		if(!$type) return false;
-		return self::where(['flags'=>$type,'salonid'=>$salonid])->select('worksid','imgsrc','flags')->orderBy('worksid','desc')->get()->toArray();
+			$workList = self::where(['flags'=>$type,'salonid'=>$salonid])->select('worksid','imgsrc','flags')->orderBy('worksid','desc')->get()->toArray();
+		return json_encode($workList);
 	}
 	
 	public static function saveImgs($salonid,$type,$imgArr) 
 	{
 		if(!$imgArr || !$salonid || !$type) return false;
 		self::where(['flags'=>$type,'salonid'=>$salonid])->delete();
+		$imgArr = json_encode($imgArr,true);
 		krsort($imgArr);
 		foreach($imgArr as $key=>$val)
 		{
