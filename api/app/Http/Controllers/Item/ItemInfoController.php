@@ -222,7 +222,7 @@ class ItemInfoController extends Controller{
 	 * @apiParam {string} priceGroup 可选,集团价.
 	 * 
 	 * @apiParam {string} normMenu 有规格必填（json字符串）,规格说明  ["sex","hairstylist","longhair","solution"]（sex 性别 hairstylist造型师 longhair发长 solution药水 ）.
-	 * @apiParam {string} normMenu 有规格必填（json字符串）,规格模板价格price 价格 priceDis 臭美价 priceGroup集团价
+	 * @apiParam {string} normarr 有规格必填（json字符串）,规格模板价格price 价格 priceDis 臭美价 priceGroup集团价
 	 * [
 	 *	    {
 	 *	        "type": {
@@ -301,7 +301,7 @@ class ItemInfoController extends Controller{
 	 * @apiParam {string} priceGroup 可选,集团价.
 	 *
 	 * @apiParam {string} normMenu 有规格必填（json字符串）,规格说明  ["sex","hairstylist","longhair","solution"]（sex 性别 hairstylist造型师 longhair发长 solution药水 ）.
-	 * @apiParam {string} normMenu 有规格必填（json字符串）,规格模板价格price 价格 priceDis 臭美价 priceGroup集团价
+	 * @apiParam {string} normarr 有规格必填（json字符串）,规格模板价格price 价格 priceDis 臭美价 priceGroup集团价
 	 * [
 	 *	    {
 	 *	        "type": {
@@ -380,15 +380,21 @@ class ItemInfoController extends Controller{
 			if($data['timingAdded'] < time() || $data['timingShelves'] < time())
 				throw new ApiException('日期或时间设置错误，必须大于当前时间', ERROR::ITEM_ERROR);
 		}
+		elseif($salonItemId && $timingShelves)
+		{
+			$data['timingShelves'] = strtotime($timingShelves);
+			if($data['timingShelves'] < time())
+				throw new ApiException('日期或时间设置错误，必须大于当前时间', ERROR::ITEM_ERROR);
+		}
 		
 		$itemInfo = [];
 		if($salonItemId)
 		{
-			$itemInfo = SalonItem::where(['itemid'=>$salonItemId])->first();
+			$itemInfo = SalonItem::where(['itemid'=>$salonItemId])->select(['itemid','salonid','sold','timingAdded','typeid','norms_cat_id','status'])->first();
 			if(!$itemInfo)
 				throw new ApiException('数据错误,项目id不存在！', ERROR::ITEM_DATA_ERROR);
 			if($itemInfo->salonid != $salonid)
-				throw new ApiException('salinid参数错误', ERROR::ITEM_ERROR);
+				throw new ApiException('salinid参数错误', ERROR::ITEM_ERROR);	
 		}
 		
 		if($data['typeid'] == 8)//男士快剪检测 是否有对应的造型师 快剪等级
@@ -397,6 +403,7 @@ class ItemInfoController extends Controller{
 			if(!$flags)
 				throw new ApiException('当前快剪等级下面无对应等级的造型师，请修改造型师界面中的快剪等级后再添加快剪项目！', ERROR::ITEM_GRADE_ERROR);
 		}
+		
 		
 		if($data['typeid'] == 6 || $data['item_type'] != 1 )//兑换专用  --日库存
 			$data['repertory']  = isset($param['repertory'])?intval($param['repertory']):0;
@@ -477,7 +484,11 @@ class ItemInfoController extends Controller{
 		}
 		else
 		{
-			$data['status'] 	= 1;	//1 上架   2下架   3删除
+			//$data['status'] 	= 1;	//1 上架   2下架   3删除
+			if(strtotime($timingAdded) > time())//上线时间 》 当前时间   下架状态
+				$data['status'] 	= 2;
+			else 
+				$data['status'] 	= 1;
 			$data['uid'] 	= 1;//注意：以前是店铺账号id  现新管理后台默认 管理账号id
 			$data['add_time'] 	= time();
 			$salonItemId = SalonItem::insertGetId($data);
