@@ -197,7 +197,7 @@ class OrderRefundController extends Controller
      * @apiSuccess {String} vouchers.vSn 代金券编码 
      * @apiSuccess {String} vouchers.vcSn 活动编号
      * @apiSuccess {String} vouchers.vUseMoney 金额
-     * @apiSuccess {String} vouchers.vAddTime 时间  
+     * @apiSuccess {String} vouchers..vUseTime 使用时间  
      * @apiSuccess {String} vouchers.vUseEnd 有效期
      * @apiSuccess {String} vouchers.status 状态 1未使用 2已使用 3待激活 5已失效 10 未上线
      * @apiSuccess {String} commission 佣金信息

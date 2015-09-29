@@ -210,7 +210,7 @@ class TransactionSearchApi
         //动态
         $trends = OrderTicketTrends::where("ordersn",$ordersn)->where("ticketno",$ticketno)->orderBy("add_time","ASC")->get(['add_time','status','remark']);
         //代金券
-        $vouchers = Voucher::where("vOrderSn",$ordersn)->select(['vSn','vcSn','vUseMoney','vUseEnd','vStatus','vUseTime','vAddTime'])->first();
+        $vouchers = Voucher::where("vOrderSn",$ordersn)->select(['vId','vSn','vcSn','vUseMoney','vUseEnd','vStatus','vUseTime','vAddTime'])->first();
       
         //佣金
         $commission = CommissionLog::where('ordersn',$ordersn)->select(['ordersn','amount','rate','grade'])->first();
@@ -258,6 +258,16 @@ class TransactionSearchApi
         if(!empty($vouchers))
         {
             $voucherArr = $vouchers->toArray();
+            if(empty($voucherArr['vUseTime']))
+            {
+                $vId = $voucherArr['vId'];
+                $voucherTrend = VoucherTrend::where('vId',$vId)->where('vStatus',2)->order('vAddTime','DESC')->select(['vAddTime'])->first();
+                if(!empty($voucherTrend))
+                {
+                    $voucherTrendArr  = $voucherTrend->toArray();
+                    $voucherArr['vUseTime'] =$voucherTrendArr['vAddTime'];
+                }    
+            }        
         }
         if(!empty($commission))
         {
