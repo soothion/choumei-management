@@ -221,7 +221,9 @@ class TransactionSearchApi
         //用户邀请码
         $recommendCode = RecommendCodeUser::where('user_id',$uid)->join('dividend',function($join){
             $join->on('recommend_code_user.recommend_code','=','dividend.recommend_code')->where('dividend.recommend_code','<>',1);
-        })->select(['recommend_code_user.recommend_code'])->first();
+        })->leftJoin('salon',function($join){
+            $join->on('salon.salonid','=','recommend_code_user.salon_id');
+        })->select(['recommend_code_user.recommend_code','salon.salonname'])->first();
        
         //设备信息
         $paltform = RequestLog::getLogByOrdersn($ordersn,['DEVICE_UUID','DEVICE_OS','DEVICE_MODEL','DEVICE_NETWORK','VERSION']); 

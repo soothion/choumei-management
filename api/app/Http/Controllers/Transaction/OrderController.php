@@ -178,6 +178,7 @@ class OrderController extends Controller
      * @apiSuccess {String} salonRecommendCode.recommend_code 店铺优惠码
      * @apiSuccess {String} recommend_code 店铺优惠码(佣金)信息
      * @apiSuccess {String} recommend_code.recommend_code 店铺优惠码(佣金)
+     * @apiSuccess {String} recommend_code.salonname 店铺优惠码(佣金)
      * @apiSuccess {String} platform 设备信息
      * @apiSuccess {String} platform.DEVICE_UUID 设备号
      * @apiSuccess {String} platform.DEVICE_OS 设备系统
@@ -250,7 +251,8 @@ class OrderController extends Controller
      *                  "grade":"0"
      *                },
      *               "recommend_code": {
-     *                  "recommend_code":"1168"
+     *                  "recommend_code":"1168",
+     *                  "salonname":"choumeitest店",
      *               },
      *               "salonRecommendCode": {
      *                  "recommend_code":"1168"

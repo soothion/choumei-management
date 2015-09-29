@@ -180,7 +180,7 @@ class TicketController extends Controller
      * @apiName detail
      * @apiGroup ticket
      *
-     * @apiSuccess {String} ticket 臭美券信息
+      * @apiSuccess {String} ticket 臭美券信息
      * @apiSuccess {String} ticket.ticketno 臭美券密码
      * @apiSuccess {String} paymentlog 流水信息
      * @apiSuccess {String} paymentlog.tn 第三方流水号
@@ -218,6 +218,7 @@ class TicketController extends Controller
      * @apiSuccess {String} salonRecommendCode.recommend_code 店铺优惠码
      * @apiSuccess {String} recommend_code 店铺优惠码(佣金)信息
      * @apiSuccess {String} recommend_code.recommend_code 店铺优惠码(佣金)
+     * @apiSuccess {String} recommend_code.salonname 店铺优惠码(佣金)
      * @apiSuccess {String} platform 设备信息
      * @apiSuccess {String} platform.DEVICE_UUID 设备号
      * @apiSuccess {String} platform.DEVICE_OS 设备系统
@@ -290,7 +291,8 @@ class TicketController extends Controller
      *                  "grade":"0"
      *                },
      *               "recommend_code": {
-     *                  "recommend_code":"1168"
+     *                  "recommend_code":"1168",
+     *                  "salonname":"choumeitest店",
      *               },
      *               "salonRecommendCode": {
      *                  "recommend_code":"1168"
