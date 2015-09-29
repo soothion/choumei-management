@@ -225,8 +225,8 @@ class BountyController extends Controller {
     }
 
     /**
-     * @api {post} /bounty/refundDetail 3.赏金退款单详情
-     * @apiName refundDetail
+     * @api {post} /bounty/refundShow 3.赏金退款单详情
+     * @apiName refundShow
      * @apiGroup  bounty
      *
      * @apiParam {Number} no 必选,赏金单号.	 
@@ -256,7 +256,7 @@ class BountyController extends Controller {
      *              "endTime": "2015-06-19 10:15:06",
      *              "payType": "微信",
      *              "money": 230,
-     *              "refundStatus": "申请退款",
+     *              "refundStatus": 5,
      *              "tn": "1224362901201506196029751743",
      *              "userName": "10306986",
      *              "userMobile": 1111111111,
