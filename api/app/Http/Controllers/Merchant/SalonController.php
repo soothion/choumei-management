@@ -258,7 +258,7 @@ class SalonController extends Controller {
 	* @apiParam {String} logo 可选,logo.
 	* @apiParam {String} salonImg[] 可选,店铺图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
 	* @apiParam {String} workImg[] 可选,团队图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
-	* 
+	* @apiParam {String} salonLogo 可选,店铺logo（和logo字段对应）.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
 	* @apiDescription 合同图片 营业执照 法人执照 demo
 	*	[
 	*		{
@@ -369,6 +369,7 @@ class SalonController extends Controller {
 	* @apiParam {String} logo 可选,logo.
 	* @apiParam {String} salonImg[] 可选,店铺图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
 	* @apiParam {String} workImg[] 可选,团队图集json字符串.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
+	* @apiParam {String} salonLogo 可选,店铺logo（和logo字段对应）.{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}
 	* 
 	* 
 	* @apiDescription 合同图片 营业执照 法人执照 demo
@@ -424,7 +425,8 @@ class SalonController extends Controller {
 		$data["salonname"] = isset($param["salonname"])?trim($param["salonname"]):"";//店铺名称
 		$data["district"] = isset($param["district"])?trim($param["district"]):"";//行政地区  
 		$data["addr"] = isset($param["addr"])?trim($param["addr"]):"";//详细街道信息
-		$data["logo"] = isset($param["logo"])?trim($param["logo"]):0;//店铺logo
+		$data["logo"] = isset($param["logo"])?trim($param["logo"]):"";//店铺logo
+		$data["salonLogo"] = isset($param["salonLogo"])?trim($param["salonLogo"]):"";//店铺logo  json串  兼容老logo字段
 		
 		$data["addrlati"] = isset($param["addrlati"])?trim($param["addrlati"]):"";//地理坐标纬度   
 		$data["addrlong"] = isset($param["addrlong"])?trim($param["addrlong"]):"";//地理坐标经度
