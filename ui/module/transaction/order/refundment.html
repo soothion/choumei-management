@@ -109,9 +109,9 @@
           当前页面下所有退款金额统计为：0.00元
         <%}else{ var refund_money=0;%>
           <%data.data &&　data.data.forEach(function(item,i){
-            refund_money+=(+item.refund_money);
+            refund_money+=item.refund_money*100;
           })%>
-          当前页面下所有退款金额统计为：<%=refund_money%>元
+          当前页面下所有退款金额统计为：<%=refund_money/100%>元
         <%}%>
         </div> 
 
