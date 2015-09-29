@@ -679,12 +679,19 @@ Route::group(['middleware'], function(){
     		'as'=>'itemInfo.index',
     		'uses'=>'Item\ItemInfoController@index'
     ));
+	
     Route::any('itemInfo/getAddedService',array(  //获取增值服务
     		'as'=>'itemInfo.getAddedService',
     		'uses'=>'Item\ItemInfoController@getAddedService'
     ));
+	
     Route::any('itemInfo/create',array(  //创建项目
     		'as'=>'itemInfo.create',
+    		'uses'=>'Item\ItemInfoController@store'
+    ));
+	
+	Route::any('itemInfo/update',array(  //修改项目
+    		'as'=>'itemInfo.update',
     		'uses'=>'Item\ItemInfoController@store'
     ));
     

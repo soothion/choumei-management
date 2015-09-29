@@ -585,6 +585,11 @@ class ItemInfoController extends Controller{
 			];
 			 
 			$nowid = SalonNormsCat::insertGetId($data);
+			if(!$nowid)
+			{
+				DB::rollBack();
+				throw new ApiException('项目更新失败！', ERROR::ITEM_TOTALREP_ERROR);
+			}
 			foreach($normarr as $ks=>$vs)
 			{
 				foreach($vs['type'] as $vtype)
@@ -644,6 +649,12 @@ class ItemInfoController extends Controller{
 		}
 		else
 		{
+			if($itemInfo)
+			{
+				if($itemInfo->norms_cat_id)
+					SalonNormsCat::delNorms($itemInfo->norms_cat_id);
+			}
+			
 			DB::commit();
 			return $this->success();
 		}
