@@ -439,7 +439,7 @@ class TransactionWriteApi
         {
             $fundflow->where('pay_type',$pay_type);
         }
-        $fundflow->update(['refund_state'=>self::FUNDFLOW_REFUND_COMPLETED]);
+        $fundflow->update(['refund_state'=>self::FUNDFLOW_REFUND_STATE_OF_COMPLETED]);
     }
     
     /**
