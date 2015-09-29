@@ -15,7 +15,15 @@ class SalonWorks extends Model {
 	{
 		if(!$type) return false;
 			$workList = self::where(['flags'=>$type,'salonid'=>$salonid])->select('worksid','imgsrc','flags')->orderBy('worksid','desc')->get()->toArray();
-		return $workList;
+		foreach($workList as $k=>$v)
+		{
+			$imgSrc = json_decode($v['imgsrc'],true);
+			foreach ($imgSrc as $key=>$value)
+			{
+				$result[$k][$key] = $value;
+			}
+		}
+		return json_encode($result);
 	}
 	
 	public static function saveImgs($salonid,$type,$imgArr) 
