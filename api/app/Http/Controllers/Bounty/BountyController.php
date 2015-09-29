@@ -433,7 +433,7 @@ class BountyController extends Controller {
             }
         }
         $bountys = BountyTask::search($query, 1, -1, $sortKey, $sortType);
-        $header = ['赏金单号', '三方流水号', '支付方式', '下单时间', '造型师手机号', '用户手机号', '店铺名称', '支付状态'];
+        $header = ['赏金单号', '三方流水号', '支付方式','赏金金额', '下单时间', '造型师手机号', '用户手机号', '店铺名称', '支付状态'];
         Event::fire('bounty.export');
         $this->export_xls("赏金单" . date("Ymd"), $header, BountyTask::format_exportBounty_data($bountys));
     }

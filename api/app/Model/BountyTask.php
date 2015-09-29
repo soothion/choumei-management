@@ -1101,6 +1101,7 @@ class BountyTask extends Model {
             $btSn = isset($data['btSn']) ? ' '.$data['btSn'] : '';
             $tn = isset($data['tn']) ? ' '.$data['tn'] : '';
             $payType = isset($data['payType']) ? $data['payType'] : '';
+            $money = isset($data['money']) ? $data['money'] : '';
             $addTime = isset($data['addTime']) ? $data['addTime'] : '';
             $hairStylistMobile = isset($data['hairStylistMobile']) ? $data['hairStylistMobile'] : '';
             $userMobile = isset($data['userMobile']) ? $data['userMobile'] : '';
@@ -1110,6 +1111,7 @@ class BountyTask extends Model {
                 $btSn,
                 $tn,
                 $payType,
+                $money,
                 $addTime,
                 $hairStylistMobile,
                 $userMobile,
