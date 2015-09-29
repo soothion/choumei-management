@@ -11,6 +11,21 @@ class SalonItem extends Model {
 
 	public $timestamps = false;
 	
+	public function salonItemType()
+	{
+	    return $this->belongsTo(SalonItemType::class,'typeid','typeid');
+	}
+	
+	public function salonNormsCat()
+	{
+	    return $this->belongsTo(SalonNormsCat::class,'norms_cat_id','salon_norms_cat_id');
+	}
+	
+	public function salon()
+	{
+	    return $this->belongsTo(Salon::class);
+	}
+	
 	/*
 	 * 获取店铺项目资料
 	 * */
