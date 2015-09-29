@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-28 11:17:09
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-28 15:31:53
+* @Last Modified time: 2015-09-29 10:19:09
 */
 
 (function(){
@@ -151,6 +151,41 @@
             });
         });         
     }
+
+    var saveImagesUrl=function(){
+        currentData.logo = [];
+        $('#control-thumbnails1 .control-thumbnails-item').each(function(){
+            var $this=$(this);
+            currentData.logo.push({
+                thumbimg:$this.find('input[name="thumb"]').val(),
+                img:$this.find('input[name="original"]').val()
+            });
+        });
+        currentData.salonImg = [];
+        $('#control-thumbnails2 .control-thumbnails-item').each(function(){
+            var $this=$(this);
+            currentData.salonImg.push({
+                thumbimg:$this.find('input[name="thumb"]').val(),
+                img:$this.find('input[name="original"]').val()
+            });
+        });
+        currentData.workImg = [];
+        $('#control-thumbnails3 .control-thumbnails-item').each(function(){
+            var $this=$(this);
+            currentData.workImg.push({
+                thumbimg:$this.find('input[name="thumb"]').val(),
+                img:$this.find('input[name="original"]').val()
+            });
+        });
+    }
+
+    $(".submit").on('click',function(){
+        document.body.onbeforeunload=function(){}
+        saveImagesUrl();
+        if(type === 'add')  sessionStorage.setItem('add-shop-data',JSON.stringify(currentData));
+        if(type === 'edit') sessionStorage.setItem('edit-shop-data',JSON.stringify(currentData));
+        location.href="bank.html?type="+type;
+    })   
 
     init();
 })();
