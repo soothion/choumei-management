@@ -15,6 +15,7 @@ class SalonWorks extends Model {
 	{
 		if(!$type) return false;
 			$workList = self::where(['flags'=>$type,'salonid'=>$salonid])->select('worksid','imgsrc','flags')->orderBy('worksid','desc')->get()->toArray();
+		if(!$workList) return '';
 		foreach($workList as $k=>$v)
 		{
 			$imgSrc = json_decode($v['imgsrc'],true);
