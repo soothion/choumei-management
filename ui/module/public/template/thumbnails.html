@@ -2,13 +2,13 @@
 	<div class="control-thumbnails-item">
 	    <%if(!item.ratio || item.ratio == 1){%>
 			<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
-			data-originalImage="<%=item.original%>" ratio="<%=item.ratio%>"/>	    
+			data-ratio="<%=item.ratio%>" data-type="<%=item.type%>"/>	    
 	    <%}else if(item.ratio > 1){%>
 			<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" 
-			data-originalImage="<%=item.original%>" ratio="<%=item.ratio%>" style="height:74px;padding-top:37px"/>
+			data-ratio="<%=new Number(item.ratio).toFixed(2)%>" data-type="<%=item.type%>" style="height:74px;padding-top:37px"/>
 	    <%}else{%>
 			<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" 
-			data-originalImage="<%=item.original%>" ratio="<%=item.ratio%>" style="width:74px;padding-left:37px"/>	    
+			data-ratio="<%=new Number(item.ratio).toFixed(2)%>" data-type="<%=item.type%>"  style="width:74px;padding-left:37px"/>	    
 	    <%}%>
 		<a class="fa fa-times-circle control-thumbnails-remove"></a>
 		<input type="checkbox" name="thumb" class="thumb" value="<%=item.thumbimg%>">
