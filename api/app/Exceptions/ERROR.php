@@ -401,8 +401,12 @@ class ERROR
       *@param 创建造型师错误
       */
      CONST MERCHANT_STYLIST_CREATE_ERROR  =  -51030; 
+      /**
+      *@param 手机号码重复
+      */
+     CONST MERCHANT_MOBILEPHONE_ERROR  =  -51031; 
           
-     
+       
      ////////////项目模块//////////////
      /**
       *@param 参数错误

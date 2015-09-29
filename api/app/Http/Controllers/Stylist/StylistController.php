@@ -460,7 +460,14 @@ class StylistController  extends Controller {
                 throw new ApiException('店铺名称不存在', ERROR::MERCHANT_NOTNAME_ERROR);
         } 
         $param['salonid']=$salon->salonid;
- 
+
+        if($stylist['mobilephone']!=$param['mobilephone']){
+                $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->count();
+                if($stylistCount)
+                {
+                        throw new ApiException('手机号码重复', ERROR::MERCHANT_MOBILEPHONE_ERROR);
+                }  
+        }
         $query=Stylist::updateStylist($stylistId,$param);
         if($query){
                 return  $this->success();
@@ -526,6 +533,11 @@ class StylistController  extends Controller {
         }
         if(!isset($param['IDcard'])&&!isset($param['drivingLicense'])&&!isset($param['passport'])&&!isset($param['officerCert'])){   
                 throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+        }
+        $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->count();
+        if($stylistCount)
+        {
+                throw new ApiException('手机号码重复', ERROR::MERCHANT_MOBILEPHONE_ERROR);
         }
         $query= Stylist::createStylist($salonid, $param);
         if($query){
