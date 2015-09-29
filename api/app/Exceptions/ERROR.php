@@ -392,7 +392,15 @@ class ERROR
       /**
       *@param 没有所属商户
       */
-     CONST MERCHANT_MERCHANT_ERROR  =  -51028; 
+     CONST MERCHANT_NOT_MERCHANT_ERROR  =  -51028; 
+      /**
+      *@param 店铺ID出错
+      */
+     CONST MERCHANT_STYLIST_ID_ERROR  =  -51029; 
+      /**
+      *@param 创建造型师错误
+      */
+     CONST MERCHANT_STYLIST_CREATE_ERROR  =  -51030; 
           
      
      ////////////项目模块//////////////

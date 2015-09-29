@@ -163,7 +163,7 @@ class StylistController  extends Controller {
     public function show($stylistId){
         $query=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$query){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_ID_IS_ERROR);  
+		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);  
          }
         return $this->success($query);
     }
@@ -194,7 +194,7 @@ class StylistController  extends Controller {
     public function destroy($stylistId){
        $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
        if(!$stylist){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_ID_IS_ERROR);
+		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
         }   
        $query=Stylist::where(array('stylistId'=>$stylistId))->delete(); 
        if($query){
@@ -231,7 +231,7 @@ class StylistController  extends Controller {
     public function  enable($stylistId){
         $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$stylist){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_ID_IS_ERROR);
+		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
          }
          $data['status']=1;       
          $query=  Stylist::where(array('stylistId'=>$stylistId))->update($data);    
@@ -270,7 +270,7 @@ class StylistController  extends Controller {
      public function  disabled($stylistId){
          $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
          if(!$stylist){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_ID_IS_ERROR);
+		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
           }
          $data['status']=2;       
          $query=  Stylist::where(array('stylistId'=>$stylistId))->update($data);    
@@ -283,8 +283,8 @@ class StylistController  extends Controller {
     }
    
      /**
-     * @api {post} /Stylist/show2/:id 6.编辑造型师
-     * @apiName show2
+     * @api {post} /Stylist/edit/:id 6.编辑造型师
+     * @apiName edit
      * @apiGroup Stylist
      *
      * @apiParam {Number} id 必填,主键.
@@ -369,10 +369,10 @@ class StylistController  extends Controller {
      *		}
      */
     
-    public function show2($stylistId){
+    public function edit($stylistId){
         $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$stylist){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_ID_IS_ERROR); 
+		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR); 
         }
         $field=['salonname','merchantId'];
         $salon=DB::table('salon')->select($field)->where(array("salonid"=>$stylist->salonId))->first(); 
@@ -382,7 +382,7 @@ class StylistController  extends Controller {
         $field2=['name'];
         $merchant=DB::table('merchant')->select($field2)->where(array("id"=>$salon->merchantId))->first();  
         if($merchant===false){
-                throw new ApiException('没有所属商户', ERROR::MERCHANT_ID_IS_ERROR); 
+                throw new ApiException('没有所属商户', ERROR::MERCHANT_NOT_MERCHANT_ERROR); 
         }
         $stylist->salonname=$salon->salonname;
         $stylist->name=$merchant->name;
@@ -447,7 +447,7 @@ class StylistController  extends Controller {
         }      
         $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$stylist){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_ID_IS_ERROR);
+		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
         }     
         if(!isset($param['salonname'])||empty($param['stylistImg'])||!isset($param['stylistName'])||empty($param['sex'])||!isset($param['mobilephone'])||!isset($param['job'])||empty($param['birthday'])||empty($param['sNumber'])||empty($param['workYears'])||empty($param['signature'])){
                 throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
@@ -468,6 +468,71 @@ class StylistController  extends Controller {
                 throw new ApiException('修改造型师失败', ERROR::MERCHANT_STYLIST_UPDATE_ERROR);
         }
     }  
-        
+       
     
+     /**
+     * @api {post} /Stylist/create/:id 8.创建造型师
+     * @apiName create
+     * @apiGroup Stylist
+     *
+     * @apiParam {Number} id 必填,salonId.
+     * @apiParam {String} stylistName 必填,造型师名称.
+     * @apiParam {String} stylistImg 必填,造型师图像.
+     * @apiParam {Number} mobilephone 必填,手机号.
+     * @apiParam {String} signature 必填,个性签名.
+     * @apiParam {Number} checkbox 必填,修改所属店铺 ：1为选中，其他为没选中.
+     * @apiParam {Number} sex 必填,性别.
+     * @apiParam {String} wechat 可选,微信.
+     * @apiParam {String} qq 可选,QQ.
+     * @apiParam {String} email 可选,email.
+     * @apiParam {Number} birthday 必填,出生日期.
+     * @apiParam {String} IDcard 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,身份证.
+     * @apiParam {String} sNumber 必填,在职编号.
+     * @apiParam {Numder} workYears 必填,工作年限.
+     * @apiParam {String} job 必填,门店职位.
+     * @apiParam {Numder} grade 可选,悬赏等级.
+     * @apiParam {Json} workExp 可选,工作经验.
+     * @apiParam {Json} educateExp 可选,教育经历.
+     * @apiParam {String} description 可选,自我描述.
+     * @apiParam {Number} fastGrade 可选,快剪等级.
+     * @apiParam {String} drivingLicense 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,驾驶证.
+     * @apiParam {String} passport 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,护照.
+     * @apiParam {String} officerCert 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,军官证.
+     * @apiParam {String} salonname 必填,店铺名称.
+     *
+     * @apiSuccessExample Success-Response:
+     *	{
+     *	    "result": 1,
+     *	    "msg": "",
+     *	    "data": {
+     *	    }
+     *	}
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "未授权访问"
+     *		}
+     */
+    
+     public function  create($salonid){
+        $param=$this->param;
+        $salon=DB::table('salon')->where(array('salonid'=>$salonid))->first();
+        if(!$salon){
+		throw new ApiException('店铺ID出错', ERROR::MERCHANT_ID_IS_ERROR);
+        } 
+        if(!isset($param['salonname'])||empty($param['stylistImg'])||!isset($param['stylistName'])||empty($param['sex'])||!isset($param['mobilephone'])||!isset($param['job'])||empty($param['birthday'])||empty($param['sNumber'])||empty($param['workYears'])||empty($param['signature'])){
+                throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);     
+        }
+        if(!isset($param['IDcard'])&&!isset($param['drivingLicense'])&&!isset($param['passport'])&&!isset($param['officerCert'])){   
+                throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+        }
+        $query= Stylist::createStylist($salonid, $param);
+        if($query){
+                return  $this->success();
+        }else{
+                throw new ApiException('创建造型师失败', ERROR::MERCHANT_STYLIST_CREATE_ERROR);
+        }
+     }  
+
 }

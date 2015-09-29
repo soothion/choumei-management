@@ -92,11 +92,61 @@ class Stylist  extends Model {
              $data['educateExp']=$param['educateExp'];
         }  
         if(isset($param['description'])&&$param['description']){
-           $data['description']=$param['description'];
+             $data['description']=$param['description'];
         }
         $query=Self::where(array('stylistId'=>$stylistId))->update($data);
         return  $query;
     }
   
- 
+     public static function createStylist($salonid,$param){
+        $data=array();
+        $data['salonId']= $salonid;        
+        $data['stylistImg']=$param['stylistImg'];
+        $data['stylistName']=$param['stylistName'];
+        $data['sex']=$param['sex'];
+        $data['mobilephone']=$param['mobilephone'];
+        $data['job']=$param['job'];
+        $data['birthday']=$param['birthday'];
+        $data['sNumber']=$param['sNumber'];
+        $data['workYears']=$param['workYears'];
+        $data['signature']=$param['signature'];
+        if(isset($param['IDcard'])&&$param['IDcard']){
+             $data['IDcard']=$param['IDcard'];
+        }  
+        if(isset($param['drivingLicense'])&&$param['drivingLicense']){
+             $data['drivingLicense']=$param['drivingLicense'];
+        }  
+        if(isset($param['passport'])&&$param['passport']){
+             $data['passport']=$param['passport'];
+        }  
+        if(isset($param['officerCert'])&&$param['officerCert']){
+             $data['officerCert']=$param['officerCert'];
+        }  
+        if(isset($param['wechat'])&&$param['wechat']){
+             $data['wechat']=$param['wechat'];
+        }
+        if(isset($param['qq'])&&$param['qq']){
+             $data['qq']=$param['qq'];
+        }
+        if(isset($param['email'])&&$param['email']){
+             $data['email']=$param['email'];
+        }
+        if(!empty($param['grade'])){
+             $data['grade']=$param['grade'];
+        }
+        if(!empty($param['fastGrade'])){
+             $data['fastGrade']=$param['fastGrade'];
+        }  
+        if(!empty($param['workExp'])){
+             $data['workExp']=$param['workExp'];
+        }
+        if(!empty($param['educateExp'])){
+             $data['educateExp']=$param['educateExp'];
+        }  
+        if(isset($param['description'])&&$param['description']){
+             $data['description']=$param['description'];
+        }
+        $query=self::create($data);
+        return  $query;
+    }
 }

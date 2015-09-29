@@ -698,9 +698,9 @@ Route::group(['middleware'], function(){
              'uses'=>'Stylist\StylistController@show'
     ));
     
-    Route::any('Stylist/show2/{id}',array(  //编辑造型师
-           'as'=>'Stylist.show2',
-           'uses'=>'Stylist\StylistController@show2'
+    Route::any('Stylist/edit/{id}',array(  //编辑造型师
+           'as'=>'Stylist.edit',
+           'uses'=>'Stylist\StylistController@edit'
     ));
        
     Route::any('Stylist/enable/{id}',array(  //启用造型师
@@ -722,6 +722,11 @@ Route::group(['middleware'], function(){
     Route::any('Stylist/update/{id}',array(  //修改造型师
        'as'=>'Stylist.update',
        'uses'=>'Stylist\StylistController@update'
+
+    ));
+    Route::any('Stylist/create/{id}',array(  //创建造型师
+       'as'=>'Stylist.create',
+       'uses'=>'Stylist\StylistController@create'
 
     ));
 });
