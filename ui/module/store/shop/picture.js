@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-28 11:17:09
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-29 10:19:09
+* @Last Modified time: 2015-09-29 11:37:52
 */
 
 (function(){
@@ -70,7 +70,15 @@
                             return;
                         }
                         if(up.createThumbnails&&!response.edit){
-                            up.createThumbnails({thumbimg:data['300x300'],img:data['300x300'],ratio:1});
+                            up.createThumbnails({
+                                thumbimg:data['300x300'],
+                                img:data['300x300'],
+                                original:response.img,
+                                ratio:1
+                            },function(){
+                                debugger;
+                                saveImagesUrl();
+                            });
                         }else{
                             up.preview(up.area,{thumbimg:data['300x300'],img:data['300x300']});
                         }
@@ -106,7 +114,12 @@
                             return;
                         }
                         if(up.createThumbnails&&!response.edit){
-                            up.createThumbnails({thumbimg:data['1125x405'],img:data['1125x405'],ratio:1125/405});
+                            up.createThumbnails({
+                                thumbimg:data['1125x405'],
+                                img:data['1125x405'],
+                                original:response.img,
+                                ratio:1125/405
+                            });
                         }else{
                             up.preview(up.area,{thumbimg:data['1125x405'],img:data['1125x405']});
                         }
@@ -142,7 +155,14 @@
                             return;
                         }
                         if(up.createThumbnails&&!response.edit){
-                            up.createThumbnails({thumbimg:data['1125x405'],img:data['1125x405'],ratio:1125/405});
+                            up.createThumbnails({
+                                thumbimg:data['1125x405'],
+                                img:data['1125x405'],
+                                original:response.img,
+                                ratio:1125/405
+                            },function(){
+                                saveImagesUrl();                               
+                            });
                         }else{
                             up.preview(up.area,{thumbimg:data['1125x405'],img:data['1125x405']});
                         }
@@ -158,7 +178,9 @@
             var $this=$(this);
             currentData.logo.push({
                 thumbimg:$this.find('input[name="thumb"]').val(),
-                img:$this.find('input[name="original"]').val()
+                img:$this.find('input[name="original"]').val(),
+                original : $this.find('input[name="originalImage"]').val(),
+                ratio : $this.find('input[name="ratio"]').val()
             });
         });
         currentData.salonImg = [];
@@ -166,7 +188,9 @@
             var $this=$(this);
             currentData.salonImg.push({
                 thumbimg:$this.find('input[name="thumb"]').val(),
-                img:$this.find('input[name="original"]').val()
+                img:$this.find('input[name="original"]').val(),
+                original : $this.find('input[name="originalImage"]').val(),
+                ratio : $this.find('input[name="ratio"]').val()
             });
         });
         currentData.workImg = [];
@@ -174,14 +198,22 @@
             var $this=$(this);
             currentData.workImg.push({
                 thumbimg:$this.find('input[name="thumb"]').val(),
-                img:$this.find('input[name="original"]').val()
+                img:$this.find('input[name="original"]').val(),
+                original : $this.find('input[name="originalImage"]').val(),
+                ratio : $this.find('input[name="ratio"]').val()
             });
         });
+        if(type === 'add')  sessionStorage.setItem('add-shop-data',JSON.stringify(currentData));
+        if(type === 'edit') sessionStorage.setItem('edit-shop-data',JSON.stringify(currentData));        
     }
+
+    $(".flex-item a").on('click',function(e){
+        e.preventDefault();
+        location.href = $(this).attr('href') + "?type="+type;
+    });
 
     $(".submit").on('click',function(){
         document.body.onbeforeunload=function(){}
-        saveImagesUrl();
         if(type === 'add')  sessionStorage.setItem('add-shop-data',JSON.stringify(currentData));
         if(type === 'edit') sessionStorage.setItem('edit-shop-data',JSON.stringify(currentData));
         location.href="bank.html?type="+type;

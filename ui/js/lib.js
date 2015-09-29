@@ -491,13 +491,14 @@
 							uploader.thumbnails.addClass('control-thumbnails-unedit');
 						}
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
-							uploader.createThumbnails=function(data){//创建缩略图
+							uploader.createThumbnails=function(data,callback){//创建缩略图
 								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render(
 									{url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},
 									{data:[data]}));
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').hide();
 								}
+								callback && callback();
 							}
 							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
 								var item=$(this).closest('.control-thumbnails-item');
