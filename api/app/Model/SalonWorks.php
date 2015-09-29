@@ -15,7 +15,15 @@ class SalonWorks extends Model {
 	{
 		if(!$type) return false;
 			$workList = self::where(['flags'=>$type,'salonid'=>$salonid])->select('worksid','imgsrc','flags')->orderBy('worksid','desc')->get()->toArray();
-		return json_encode($workList);
+		$result = [];
+		if($workList)
+		{
+			foreach($workList as $val)
+			{
+				$result[] = $val['imgsrc'];
+			}
+		}
+		return json_encode($result);
 	}
 	
 	public static function saveImgs($salonid,$type,$imgArr) 
@@ -28,7 +36,7 @@ class SalonWorks extends Model {
 		{
 			$data = [
 						'salonid' => $salonid,
-						'imgsrc'  => $val,
+						'imgsrc'  => json_encode($val),
 						'flags'   => $type,
 						'add_time' => time(),
 					];
