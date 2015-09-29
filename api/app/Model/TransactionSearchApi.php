@@ -261,7 +261,7 @@ class TransactionSearchApi
             if(empty($voucherArr['vUseTime']))
             {
                 $vId = $voucherArr['vId'];
-                $voucherTrend = VoucherTrend::where('vId',$vId)->where('vStatus',2)->order('vAddTime','DESC')->select(['vAddTime'])->first();
+                $voucherTrend = VoucherTrend::where('vId',$vId)->where('vStatus',2)->orderBy('vAddTime','DESC')->select(['vAddTime'])->first();
                 if(!empty($voucherTrend))
                 {
                     $voucherTrendArr  = $voucherTrend->toArray();
