@@ -689,23 +689,23 @@ Route::group(['middleware'], function(){
     ));
     
     Route::any('Stylist/index',array(  //请求造型师列表
-		'as'=>'Stylist.index',
-		'uses'=>'Stylist\StylistController@index'
+        'as'=>'Stylist.index',
+        'uses'=>'Stylist\StylistController@index'
     ));
      
     Route::any('Stylist/show/{id}',array(  //查看造型师
-             'as'=>'Stylist.show',
-             'uses'=>'Stylist\StylistController@show'
+        'as'=>'Stylist.show',
+        'uses'=>'Stylist\StylistController@show'
     ));
     
     Route::any('Stylist/edit/{id}',array(  //编辑造型师
-           'as'=>'Stylist.edit',
-           'uses'=>'Stylist\StylistController@edit'
+        'as'=>'Stylist.edit',
+        'uses'=>'Stylist\StylistController@edit'
     ));
        
     Route::any('Stylist/enable/{id}',array(  //启用造型师
-           'as'=>'Stylist.enable',
-           'uses'=>'Stylist\StylistController@enable'
+        'as'=>'Stylist.enable',
+        'uses'=>'Stylist\StylistController@enable'
     ));
          
     Route::any('Stylist/disabled/{id}',array(  //禁用造型师
@@ -715,18 +715,18 @@ Route::group(['middleware'], function(){
            
            
     Route::any('Stylist/destroy/{id}',array(  //删除造型师
-       'as'=>'Stylist.destroy',
-       'uses'=>'Stylist\StylistController@destroy'
+        'as'=>'Stylist.destroy',
+        'uses'=>'Stylist\StylistController@destroy'
     ));
     
     Route::any('Stylist/update/{id}',array(  //修改造型师
-       'as'=>'Stylist.update',
-       'uses'=>'Stylist\StylistController@update'
+        'as'=>'Stylist.update',
+        'uses'=>'Stylist\StylistController@update'
 
     ));
     Route::any('Stylist/create/{id}',array(  //创建造型师
-       'as'=>'Stylist.create',
-       'uses'=>'Stylist\StylistController@create'
+        'as'=>'Stylist.create',
+        'uses'=>'Stylist\StylistController@create'
 
     ));
 });
