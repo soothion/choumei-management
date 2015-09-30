@@ -454,7 +454,12 @@ $(function(){
 		var list=[];
 		item.parent().children('.control-thumbnails-item').each(function(){
 			var $this=$(this).find('img');
-			var src=$this.data('original')||$this.attr('src');
+			var src="";
+			if($this.data("type") == "1"){
+				src=$this.attr('src')||$this.data('original');
+			}else{
+				src=$this.data('original')||$this.attr('src');				
+			}
 			list.push(src);
 		});
 		parent.lib.popup.swiper({list:list,index:item.index()});

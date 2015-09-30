@@ -13,7 +13,7 @@ class Item extends Model {
 	public static function getQueryByParam($param=[]){
         $query = Self::getQuery();
 
-
+        $query = $query->leftJoin('salon_itemtype','salon_item.typeid','=','salon_itemtype.typeid');
         //项目名称筛选
         if(!empty($param['itemname'])){
         	$itemname = '%'.$itemname.'%';

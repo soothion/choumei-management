@@ -46,6 +46,11 @@
 		shopData.contractPicUrl=JSON.stringify(shopData.contractPicUrl);
 		shopData.licensePicUrl=JSON.stringify(shopData.licensePicUrl);
 		shopData.corporatePicUrl=JSON.stringify(shopData.corporatePicUrl);
+        shopData.logo      = shopData.salonLogo[0].thumbimg;
+        shopData.salonLogo = JSON.stringify(shopData.salonLogo);
+        shopData.salonImg  = JSON.stringify(shopData.salonImg);
+        shopData.workImg   = JSON.stringify(shopData.workImg);
+
         lib.ajax({
             type: "post",
             url : (type=="add"?"salon/save":"salon/update"),
