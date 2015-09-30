@@ -26,7 +26,87 @@ class WarehouseController extends Controller
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      * @apiParam {String} sort_key 排序的键 ['itemid','salonid','typeid','norms_cat_id','itemname','item_type','minPrice','minPriceOri','minPriceGroup']
      * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
-     *
+     * 
+     * @apiSuccess {Number} total 总数据量.
+     * @apiSuccess {Number} per_page 分页大小.
+     * @apiSuccess {Number} current_page 当前页面.
+     * @apiSuccess {Number} last_page 当前页面.
+     * @apiSuccess {Number} from 起始数据.
+     * @apiSuccess {Number} to 结束数据.
+     * @apiSuccess {String} itemid 项目id
+     * @apiSuccess {String} salonid 店铺id
+     * @apiSuccess {String} itemname 项目名称
+     * @apiSuccess {String} minPriceOri 原价(最低)
+     * @apiSuccess {String} maxPriceOri 原价(最高)
+     * @apiSuccess {String} minPrice 臭美价(最低)
+     * @apiSuccess {String} maxPrice 臭美价(最高)
+     * @apiSuccess {String} minPriceGroup 集团价(最低)
+     * @apiSuccess {String} maxPriceGroup 集团价(最高)
+     * @apiSuccess {String} salon_norms_cat 项目规格信息 (待定)
+     * @apiSuccess {String} item_type 项目类型 (1普通项目2闲时特价)
+     * @apiSuccess {String} salon 店铺信息
+     * @apiSuccess {String} salon.salonname 店铺名
+     * @apiSuccess {String} salon_item_type 项目分类信息
+     * @apiSuccess {String} salon_item_type.typename 项目分类名称
+     * @apiSuccess {String} salon_norms_cat 项目规格信息 (待定)
+     * 
+     * @apiSuccessExample Success-Response:
+     *      {
+     *           "total": 43353,
+     *           "per_page": 20,
+     *           "current_page": 1,
+     *           "last_page": 2168,
+     *           "from": 1,
+     *           "to": 20,
+     *           "data": [
+     *               {
+     *                   "itemid": 44977,
+     *                   "salonid": 1216,
+     *                   "typeid": 10,
+     *                   "norms_cat_id": 0,
+     *                   "itemname": "老姜洗发水",
+     *                   "item_type": 1,
+     *                   "minPrice": 25,
+     *                   "maxPrice": 25,
+     *                   "minPriceOri": 30,
+     *                   "maxPriceOri": 30,
+     *                   "minPriceGroup": "23.00",
+     *                   "maxPriceGroup": "23.00",
+     *                   "salon": {
+     *                       "salonid": 1216,
+     *                       "salonname": "阿伟专业造型"
+     *                   },
+     *                   "salon_item_type": {
+     *                       "typeid": 10,
+     *                       "typename": "其他"
+     *                   },
+     *                   "salon_norms_cat": null
+     *               },
+     *               {
+     *                   "itemid": 44976,
+     *                   "salonid": 1216,
+     *                   "typeid": 10,
+     *                   "norms_cat_id": 0,
+     *                   "itemname": "香缇卡洗发水",
+     *                   "item_type": 1,
+     *                   "minPrice": 21,
+     *                   "maxPrice": 21,
+     *                   "minPriceOri": 25,
+     *                   "maxPriceOri": 25,
+     *                   "minPriceGroup": "19.00",
+     *                   "maxPriceGroup": "19.00",
+     *                   "salon": {
+     *                       "salonid": 1216,
+     *                       "salonname": "阿伟专业造型"
+     *                   },
+     *                   "salon_item_type": {
+     *                       "typeid": 10,
+     *                       "typename": "其他"
+     *                   },
+     *                   "salon_norms_cat": null
+     *               }
+     *           ]
+     *       }
      *
      * @apiErrorExample Error-Response:
      *		{
