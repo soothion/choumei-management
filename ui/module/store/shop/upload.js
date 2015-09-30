@@ -1,11 +1,7 @@
 (function(){
     var type = lib.query.type;
     var currentData = {};
-    var conLoader = {} , licLoader = {} , corLoader = {};
-    var contractArr  = [],licenseArr   = [],corporateArr = []; //图片预览数组
-    var uploadConArr = [],uploadLicArr = [],uploadCorArr = []; //图片真正上传数组
-    var readyConArr  = [],readyLicArr  = [],readyCorArr  = []; //图片已经存在数组（编辑时从服务器返回的图片数组）      
-
+     
     var init = function(){
         initPage();
         initEvent();
@@ -21,128 +17,146 @@
         if(type === 'edit'){
             currentData = JSON.parse(sessionStorage.getItem('edit-shop-data')); 
         }
+
 		if(currentData.contractPicUrl&&typeof currentData.contractPicUrl=='string'){
 			currentData.contractPicUrl=JSON.parse(currentData.contractPicUrl);
 		}
+
 		if(currentData.licensePicUrl&&typeof currentData.licensePicUrl=='string'){
 			currentData.licensePicUrl=JSON.parse(currentData.licensePicUrl);
 		}
+
 		if(currentData.corporatePicUrl&&typeof currentData.corporatePicUrl=='string'){
 			currentData.corporatePicUrl=JSON.parse(currentData.corporatePicUrl);
 		}
-		//合同上传
-		lib.puploader.image({
-			browse_button: 'imageUpload1',
-			auto_start:true,
-			filters: {
-				mime_types : [
-					{ title : "Image files", extensions : "jpg,png,jpeg,gif" },
-				]
-			},
-			max_file_size:'10mb',
-			imageArray:currentData.contractPicUrl,
-			multi_selection:true,
-			files_number:10,
-			crop:true
-		},function(uploader){
-			uploader.bind('ImageUploaded',function(up,response){
-				lib.cropper.create({
-					src:response.img,
-					thumbnails:['200x200','400x400'],
-					define:function(data){
-						if(response._this){
-							up.preview($(response._this),{thumbimg:data['200x2400'],img:data['400x400']});
-							return;
-						}
-						if(up.createThumbnails&&!response.edit){
-							up.createThumbnails({thumbimg:data['200x200'],img:data['400x400']});
-						}else{
-							up.preview(up.area,{thumbimg:data['200x200'],img:data['400x400']});
-						}
-					}
-				});
-			});
-		});
-		//营业执照上传
-		lib.puploader.image({
-			browse_button: 'imageUpload2',
-			auto_start:true,
-			filters: {
-				mime_types : [
-					{ title : "Image files", extensions : "jpg,png,jpeg,gif" },
-				]
-			},
-			max_file_size:'10mb',
-			multi_selection:true,
-			files_number:3,
-			imageArray:currentData.licensePicUrl
-		});
-		//法人执照上传
-		lib.puploader.image({
-			browse_button: 'imageUpload3',
-			auto_start:true,
-			filters: {
-				mime_types : [
-					{ title : "Image files", extensions : "jpg,png,jpeg,gif" },
-				]
-			},
-			max_file_size:'10mb',
-			multi_selection:true,
-			files_number:3,
-			imageArray:currentData.corporatePicUrl
-		});
+
+        initUploader();
     }
 
+    var initUploader = function(){
+        //合同上传
+        lib.puploader.image({
+            browse_button: 'imageUpload1',
+            auto_start:true,
+            filters: {
+                mime_types : [
+                    { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+                ]
+            },
+            max_file_size:'10mb',
+            imageArray:currentData.contractPicUrl,
+            multi_selection:true,
+            files_number:10
+        },function(obj){
+            obj.bind('updateImageData',function(){
+                setURLData();
+            });
+        });
+
+        //营业执照上传
+        lib.puploader.image({
+            browse_button: 'imageUpload2',
+            auto_start:true,
+            filters: {
+                mime_types : [
+                    { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+                ]
+            },
+            max_file_size:'10mb',
+            multi_selection:true,
+            files_number:3,
+            imageArray:currentData.licensePicUrl
+        },function(obj){
+            obj.bind('updateImageData',function(){
+                setURLData();
+            });            
+        });
+
+        //法人执照上传
+        lib.puploader.image({
+            browse_button: 'imageUpload3',
+            auto_start:true,
+            filters: {
+                mime_types : [
+                    { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+                ]
+            },
+            max_file_size:'10mb',
+            multi_selection:true,
+            files_number:3,
+            imageArray:currentData.corporatePicUrl
+        },function(obj){
+            obj.bind('updateImageData',function(){
+                setURLData();
+            });            
+        });
+    }
+
+    var setURLData=function(){
+        currentData.contractPicUrl=[];
+        $('#control-thumbnails1 .control-thumbnails-item').each(function(){
+            var $this=$(this);
+            currentData.contractPicUrl.push({
+                thumbimg:$this.find('input[name="thumb"]').val(),
+                img:$this.find('input[name="original"]').val()
+            });
+        });
+        currentData.licensePicUrl=[];
+        $('#control-thumbnails2 .control-thumbnails-item').each(function(){
+            var $this=$(this);
+            currentData.licensePicUrl.push({
+                thumbimg:$this.find('input[name="thumb"]').val(),
+                img:$this.find('input[name="original"]').val()
+            });
+        });
+        currentData.corporatePicUrl=[];
+        $('#control-thumbnails3 .control-thumbnails-item').each(function(){
+            var $this=$(this);
+            currentData.corporatePicUrl.push({
+                thumbimg:$this.find('input[name="thumb"]').val(),
+                img:$this.find('input[name="original"]').val()
+            });
+        });
+        if(type === 'add')  sessionStorage.setItem('add-shop-data',JSON.stringify(currentData));
+        if(type === 'edit') sessionStorage.setItem('edit-shop-data',JSON.stringify(currentData));   
+    }    
+
     var initEvent = function(){
-        //导航条绑定事件
+        $(".control-thumbnails").on('click','.control-thumbnails-before',function(){
+            var $this=$(this);
+            var thumbnail=$this.closest('.control-thumbnails-item');
+            var prev=thumbnail.prev('.control-thumbnails-item')
+            if(prev.length==1){
+                thumbnail.after(prev);
+                setURLData();  
+            }
+        });
+
+        $(".control-thumbnails").on('click','.control-thumbnails-after',function(){
+            var $this=$(this);
+            var thumbnail=$this.closest('.control-thumbnails-item');
+            var next=thumbnail.next('.control-thumbnails-item')
+            if(next.length==1){
+                thumbnail.before(next);
+                setURLData();  
+            }
+        });
+        
         $(".flex-item a").on('click',function(e){
-			setURLData();
-            sessionStorage.setItem("edit-shop-data",JSON.stringify(currentData));
             e.preventDefault();           
             location.href = $(this).attr('href') + "?type="+type;
         });
 
-		var setURLData=function(){
-			currentData.contractPicUrl=[];
-			$('#control-thumbnails1 .control-thumbnails-item').each(function(){
-				var $this=$(this);
-				currentData.contractPicUrl.push({
-					thumbimg:$this.find('input[name="thumb"]').val(),
-					img:$this.find('input[name="original"]').val()
-				});
-			});
-			currentData.licensePicUrl=[];
-			$('#control-thumbnails2 .control-thumbnails-item').each(function(){
-				var $this=$(this);
-				currentData.licensePicUrl.push({
-					thumbimg:$this.find('input[name="thumb"]').val(),
-					img:$this.find('input[name="original"]').val()
-				});
-			});
-			currentData.corporatePicUrl=[];
-			$('#control-thumbnails3 .control-thumbnails-item').each(function(){
-				var $this=$(this);
-				currentData.corporatePicUrl.push({
-					thumbimg:$this.find('input[name="thumb"]').val(),
-					img:$this.find('input[name="original"]').val()
-				});
-			});
-		}
         $("#preview_btn").on('click',function(){
-			setURLData();
             sessionStorage.setItem("preview-shop-data",JSON.stringify(currentData));
-            window.open("detail.html?type=preview&upload=true");        
+            window.open("detail.html?type=preview");        
         })
 
         $(".submit").on('click',function(){
             document.body.onbeforeunload=function(){}
-			setURLData();
-			if(type === 'add')  sessionStorage.setItem('add-shop-data',JSON.stringify(currentData));
-			if(type === 'edit') sessionStorage.setItem('edit-shop-data',JSON.stringify(currentData));
 			location.href="settlement.html?type="+type;
         })
     }
-
 
     init();
 })();

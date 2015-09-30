@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-28 11:17:09
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-29 18:13:17
+* @Last Modified time: 2015-09-30 15:12:57
 */
 
 (function(){
@@ -40,12 +40,6 @@
     }
 
     var initUploader = function(){
-        logoUpload();
-        shopUpload();
-        teamUpload();
-    }
-
-    var logoUpload = function(){
         lib.puploader.image({
             browse_button: 'logoUpload',
             auto_start:true,
@@ -61,34 +55,10 @@
             crop:true
         },function(uploader){
             uploader.bind('ImageUploaded',function(up,response){
-                lib.cropper.create({
-                    src:response.img,
-                    aspectRatio : 1/1,
-                    thumbnails  : ['300x300'],
-                    define:function(data){
-                        if(response._this){
-                            up.preview($(response._this),{thumbimg:data['300x300'],img:data['300x300']});
-                            return;
-                        }
-                        if(up.createThumbnails&&!response.edit){
-                            up.createThumbnails({
-                                thumbimg:data['300x300'],
-                                img:response.img,
-                                ratio:1,
-                                type : 1
-                            },function(){
-                                saveImagesUrl();
-                            });
-                        }else{
-                            up.preview(up.area,{thumbimg:data['300x300'],img:data['300x300']});
-                        }
-                    }
-                });
+                createThumbnails(up,response,1,'300x300');                
             });
         });
-    }
 
-    var shopUpload = function(){
         lib.puploader.image({
             browse_button: 'shopUpload',
             auto_start:true,
@@ -104,34 +74,11 @@
             crop:true
         },function(uploader){
             uploader.bind('ImageUploaded',function(up,response){
-                lib.cropper.create({
-                    src:response.img,
-                    aspectRatio : 1125/405,
-                    thumbnails  : ['1125x405'],
-                    define:function(data){
-                        if(response._this){
-                            up.preview($(response._this),{thumbimg:data['1125x405'],img:data['1125x405']});
-                            return;
-                        }
-                        if(up.createThumbnails&&!response.edit){
-                            up.createThumbnails({
-                                thumbimg:data['1125x405'],
-                                img:response.img,
-                                ratio:1125/405,
-                                type : 1
-                            },function(){
-                                saveImagesUrl();  
-                            });
-                        }else{
-                            up.preview(up.area,{thumbimg:data['1125x405'],img:data['1125x405']});
-                        }
-                    }
-                });
+                var ratio = new Number(1125/405).toFixed(2);
+                createThumbnails(up,response,ratio,'1125x405');                
             });
-        });        
-    }
+        });
 
-    var teamUpload = function(){
         lib.puploader.image({
             browse_button: 'teamUpload',
             auto_start:true,
@@ -147,31 +94,30 @@
             crop:true
         },function(uploader){
             uploader.bind('ImageUploaded',function(up,response){
-                lib.cropper.create({
-                    src:response.img,
-                    aspectRatio : 1125/405,
-                    thumbnails  : ['1125x405'],
-                    define:function(data){
-                        if(response._this){
-                            up.preview($(response._this),{thumbimg:data['1125x405'],img:data['1125x405']});
-                            return;
-                        }
-                        if(up.createThumbnails&&!response.edit){
-                            up.createThumbnails({
-                                thumbimg:data['1125x405'],
-                                img:response.img,
-                                ratio:1125/405,
-                                type : 1
-                            },function(){
-                                saveImagesUrl();                               
-                            });
-                        }else{
-                            up.preview(up.area,{thumbimg:data['1125x405'],img:data['1125x405']});
-                        }
-                    }
-                });
+                var ratio = new Number(1125/405).toFixed(2);
+                createThumbnails(up,response,ratio,'1125x405');                
             });
-        });         
+        });                 
+    }
+
+    var createThumbnails = function(up,response,ratio,name){
+        lib.cropper.create({
+            src:response.img,
+            aspectRatio : ratio,
+            thumbnails  : [name],
+            define:function(data){
+                if(up.createThumbnails&&!response.edit){
+                    up.createThumbnails({
+                        thumbimg:data[name],
+                        img:response.img,
+                        ratio:ratio,
+                        type : 1
+                    },function(){
+                        saveImagesUrl();                               
+                    });
+                }
+            }
+        });        
     }
 
     var saveImagesUrl=function(){
@@ -181,7 +127,8 @@
             currentData.salonLogo.push({
                 thumbimg:$this.find('input[name="thumb"]').val(),
                 img:$this.find('input[name="original"]').val(),
-                ratio : $this.find('input[name="ratio"]').val()
+                ratio : $this.find('input[name="ratio"]').val(),
+                type  : 1
             });
         });
         currentData.salonImg = [];
@@ -190,7 +137,8 @@
             currentData.salonImg.push({
                 thumbimg:$this.find('input[name="thumb"]').val(),
                 img:$this.find('input[name="original"]').val(),
-                ratio : $this.find('input[name="ratio"]').val()
+                ratio : $this.find('input[name="ratio"]').val(),
+                type  : 1                
             });
         });
         currentData.workImg = [];
@@ -199,7 +147,8 @@
             currentData.workImg.push({
                 thumbimg:$this.find('input[name="thumb"]').val(),
                 img:$this.find('input[name="original"]').val(),
-                ratio : $this.find('input[name="ratio"]').val()
+                ratio : $this.find('input[name="ratio"]').val(),
+                type  : 1                
             });
         });
         if(type === 'add')  sessionStorage.setItem('add-shop-data',JSON.stringify(currentData));
@@ -207,6 +156,41 @@
     }
 
     var initEvent = function(){
+        $(".control-thumbnails").on('click','.control-thumbnails-edit',function(){
+            var item  = $(this).closest('.control-thumbnails-item');
+            var ratio = item.find('img').data('ratio'); 
+            lib.cropper.create({
+                src:item.find('img').data('original'),
+                aspectRatio : item.find('img').data('ratio'),
+                thumbnails  : ratio == "1" ? ['300x300'] : ['1125x405'], 
+                define:function(data){
+                    item.find('img').attr('src',data[ratio == "1" ? '300x300':'1125x405']);
+                    item.find('input.thumb').val(data[ratio == "1" ? '300x300':'1125x405']);
+                    saveImagesUrl();  
+                }                     
+            });
+        });
+
+        $(".control-thumbnails").on('click','.control-thumbnails-before',function(){
+            var $this=$(this);
+            var thumbnail=$this.closest('.control-thumbnails-item');
+            var prev=thumbnail.prev('.control-thumbnails-item')
+            if(prev.length==1){
+                thumbnail.after(prev);
+                saveImagesUrl();  
+            }
+        });
+
+        $(".control-thumbnails").on('click','.control-thumbnails-after',function(){
+            var $this=$(this);
+            var thumbnail=$this.closest('.control-thumbnails-item');
+            var next=thumbnail.next('.control-thumbnails-item')
+            if(next.length==1){
+                thumbnail.before(next);
+                saveImagesUrl();  
+            }
+        });
+
         $(".flex-item a").on('click',function(e){
             e.preventDefault();
             location.href = $(this).attr('href') + "?type="+type;
@@ -214,8 +198,8 @@
 
         $(".preview").on('click',function(){
             sessionStorage.setItem("preview-shop-data",JSON.stringify(currentData));
-            location.href="detail.html?type=preview";
-        })
+            window.open("detail.html?type=preview");
+        })                        
 
         $(".submit").on('click',function(){
             document.body.onbeforeunload=function(){}

@@ -200,7 +200,16 @@
                                             %>
                                             <%data.salonLogo&&data.salonLogo.forEach(function(item){%>
                                                <div class="control-thumbnails-item" id="<%=item.id%>">
-                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  data-type="1"/>
+                                                <%if(!item.ratio || item.ratio == 1){%>
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                    data-ratio="<%=item.ratio%>" data-type="1"/>       
+                                                <%}else if(item.ratio > 1){%>
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" 
+                                                    data-ratio="<%=new Number(item.ratio).toFixed(2)%>" data-type="1" style="height:74px;padding-top:37px"/>
+                                                <%}else{%>
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" 
+                                                    data-ratio="<%=new Number(item.ratio).toFixed(2)%>" data-type="1"  style="width:74px;padding-left:37px"/>      
+                                                <%}%>
                                                 </div> 
                                             <%
                                                 });
@@ -218,7 +227,16 @@
                                             %>
                                             <%data.salonImg&&data.salonImg.forEach(function(item){%>
                                                <div class="control-thumbnails-item" id="<%=item.id%>">
-                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  data-type="1"/>
+                                                    <%if(!item.ratio || item.ratio == 1){%>
+                                                        <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                        data-ratio="<%=item.ratio%>" data-type="1"/>       
+                                                    <%}else if(item.ratio > 1){%>
+                                                        <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" 
+                                                        data-ratio="<%=new Number(item.ratio).toFixed(2)%>" data-type="1" style="height:74px;padding-top:37px"/>
+                                                    <%}else{%>
+                                                        <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" 
+                                                        data-ratio="<%=new Number(item.ratio).toFixed(2)%>" data-type="1"  style="width:74px;padding-left:37px"/>      
+                                                    <%}%>
                                                 </div> 
                                             <%
                                                 });
@@ -236,7 +254,16 @@
                                             %>
                                             <%data.workImg&&data.workImg.forEach(function(item){%>
                                                <div class="control-thumbnails-item" id="<%=item.id%>">
-                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  data-type="1"/>
+                                                <%if(!item.ratio || item.ratio == 1){%>
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                    data-ratio="<%=item.ratio%>" data-type="1"/>       
+                                                <%}else if(item.ratio > 1){%>
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" 
+                                                    data-ratio="<%=new Number(item.ratio).toFixed(2)%>" data-type="1" style="height:74px;padding-top:37px"/>
+                                                <%}else{%>
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" 
+                                                    data-ratio="<%=new Number(item.ratio).toFixed(2)%>" data-type="1"  style="width:74px;padding-left:37px"/>      
+                                                <%}%>
                                                 </div> 
                                             <%
                                                 });
