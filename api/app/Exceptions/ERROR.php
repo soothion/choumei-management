@@ -432,6 +432,23 @@ class ERROR
       *@param 项目总库存不正确
       */
      CONST ITEM_TOTALREP_ERROR =  -51105;
+     
+     
+     ////////////项目仓库//////////////
+     /**
+      *@param 项目不存在或者状态有误
+      */
+     CONST ITEM_LOST_OR_WRONG_STATE =  -51200;
+     
+     /**
+      *@param 项目有效期有误
+      */
+     CONST ITEM_WRONG_EXP_TIME =  -51201;
+     
+     /**
+      *@param 项目库存有误
+      */
+     CONST ITEM_WRONG_TOTAL_REQ =  -51202;
 
 
 

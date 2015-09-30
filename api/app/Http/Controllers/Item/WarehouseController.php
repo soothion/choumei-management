@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Item;
 use App\Http\Controllers\Controller;
 use Illuminate\Pagination\AbstractPaginator;
 use App\SalonItem;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class WarehouseController extends Controller
 {
@@ -130,6 +132,8 @@ class WarehouseController extends Controller
             'sort_type'=>self::T_STRING,
         ]);
         
+        $params['status'] = SalonItem::STATUS_OF_DOWN;
+        
         $itemObj = self::search($params);
         
         //页数
@@ -178,11 +182,48 @@ class WarehouseController extends Controller
      */
     public function puton()
     {
-        
+        $params = $this->parameters([
+            'ids'=>self::T_STRING,
+        ],true);
+        $ids = explode(",", $params['ids']);
+        $ids = array_map("intval", $ids);
+        self::checkUp($ids);
+        $res = SalonItem::whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->update(['status'=>SalonItem::STATUS_OF_UP]);
+        if($res)
+        {
+            return $this->success([]);
+        }                
     }
     
     /**
-     * @api {POST} /warehouse/import 4.导入
+     * @api {get} /warehouse/destroy 4.删除
+     * @apiName destroy
+     * @apiGroup Warehouse
+     *
+     * @apiParam {String} ids  要删除的id (多个逗号隔开)
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "未授权访问"
+     *		}
+     */
+    public function destroy()
+    {
+        $params = $this->parameters([
+            'ids'=>self::T_STRING,
+        ],true);
+        $ids = explode(",", $params['ids']);
+        $ids = array_map("intval", $ids);
+        $res = SalonItem::whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->update(['status'=>SalonItem::STATUS_OF_DELETE]);
+        if($res)
+        {
+            return $this->success([]);
+        }
+    }
+    
+    /**
+     * @api {POST} /warehouse/import 5.导入
      * @apiName import
      * @apiGroup Warehouse
      *
@@ -212,6 +253,10 @@ class WarehouseController extends Controller
 	    
 	    $base = SalonItem::select($base_fields);
 	
+	    if(isset($params['status']) && !empty($params['status']))
+	    {
+	        $base->where('status',$params['status']);
+	    }
 	    if(isset($params['salonid']) && !empty($params['salonid']))
 	    {
 	        $base->where('salonid',$params['salonid']);
@@ -284,5 +329,52 @@ class WarehouseController extends Controller
 	    }
 	    
 	    return $base->orderBy($order, $order_by);
+	}
+	
+	/**
+	 * @param array $itemIds 要上架的salon item ids的数组
+	 * @return array $result 检查的结果 或者 参数错误提示
+	 */
+	public static function checkUp($ids) 
+	{
+	    $ids = array_unique($ids);
+	    $input_count = count($ids);
+	    if($input_count<1)
+	    {
+	        return true;
+	    }  
+	    
+	    $now_time = time();
+	    $items = SalonItem::select(['itemid','itemname','exp_time','total_rep','sold'])->whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->get();
+	    if(empty($items))
+	    {
+	        throw new ApiException("要上架的项目不存在或者状态不正确",ERROR::ITEM_LOST_OR_WRONG_STATE);
+	    }
+	    $itemArr = $items->toArray();
+	    $item_ids = array_column($itemArr, "itemid");
+	    $error_ids = array_diff($item_ids, $ids);
+	    if(count($error_ids)>0)
+	    {
+	        throw new ApiException("ids : [".implode(',', $error_ids)."] 项目不存在或者状态不正确",ERROR::ITEM_LOST_OR_WRONG_STATE);
+	    }
+	    
+	    foreach ($itemArr as $item)
+	    {
+	        $id = $item['itemid'];
+	        $name = $item['item_name'];
+	        $exp_time = intval($item['exp_time']);
+	        $total_rep = intval($item['total_rep']);
+	        $sold = intval($item['sold']);
+	        if($exp_time >0 && $exp_time < $now_time)
+	        {
+	            throw new ApiException("项目 [{$id} : $name] 有效期 [".date("Y-m-d H:i:s",$exp_time)."]应大于当前时间",ERROR::ITEM_WRONG_EXP_TIME);
+	        }
+	        
+	        if($total_rep >0 && $total_rep < $sold)
+	        {
+	            throw new ApiException("项目 [{$id} : $name] 库存[{$total_rep}]应大于已售份数[{$sold}]",ERROR::ITEM_WRONG_TOTAL_REQ);
+	        }
+	    }
+	    return true;
 	}
 }
