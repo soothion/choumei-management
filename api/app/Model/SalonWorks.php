@@ -14,19 +14,30 @@ class SalonWorks extends Model {
 	public static function getSalonWorks($salonid,$type)
 	{
 		if(!$type) return false;
-		return self::where(['flags'=>$type,'salonid'=>$salonid])->select('worksid','imgsrc','flags')->orderBy('worksid','desc')->get()->toArray();
+			$workList = self::where(['flags'=>$type,'salonid'=>$salonid])->select('worksid','imgsrc','flags')->orderBy('worksid','desc')->get()->toArray();
+		if(!$workList) return '';
+		foreach($workList as $k=>$v)
+		{
+			$imgSrc = json_decode($v['imgsrc'],true);
+			foreach ($imgSrc as $key=>$value)
+			{
+				$result[$k][$key] = $value;
+			}
+		}
+		return json_encode($result);
 	}
 	
 	public static function saveImgs($salonid,$type,$imgArr) 
 	{
 		if(!$imgArr || !$salonid || !$type) return false;
 		self::where(['flags'=>$type,'salonid'=>$salonid])->delete();
-		krsort($imgArr);
+		$imgArr = json_decode($imgArr,true);
+		//krsort($imgArr);
 		foreach($imgArr as $key=>$val)
 		{
 			$data = [
 						'salonid' => $salonid,
-						'imgsrc'  => $val,
+						'imgsrc'  => json_encode($val),
 						'flags'   => $type,
 						'add_time' => time(),
 					];

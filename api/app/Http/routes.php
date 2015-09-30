@@ -741,5 +741,26 @@ Route::group(['middleware'], function(){
         'uses'=>'Stylist\StylistController@create'
 
     ));
+
+	    
+    Route::any('warehouse/index',array(  //项目仓库列表
+    'as'=>'warehouse.index',
+    'uses'=>'Item\WarehouseController@index'
+        ));
+    
+    Route::any('warehouse/show/{id}',array(  //项目仓库详情
+    'as'=>'warehouse.show',
+    'uses'=>'Item\WarehouseController@show'
+        ));
+    
+    Route::any('warehouse/puton',array(  //项目仓库上架
+    'as'=>'warehouse.puton',
+    'uses'=>'Item\WarehouseController@puton'
+        ));
+    
+    Route::any('warehouse/import',array(  //项目仓库导入
+    'as'=>'warehouse.import',
+    'uses'=>'Item\WarehouseController@import'
+        ));
 });
 

@@ -255,8 +255,8 @@ class SalonController extends Controller {
 	* @apiParam {String} ssEndTime 可选,强补贴截止日.
 	* @apiParam {String} strongClaim 可选,强补贴月交易单数要求.
 	* @apiParam {String} subsidyPolicy 可选,首单指标补贴政策.
-	* @apiParam {array} salonImg[] 可选,店铺图集json字符串.'{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}'
-	* @apiParam {array} workImg[] 可选,团队图集json字符串.'{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}'
+	* @apiParam {String} salonImg 可选,店铺图集json字符串.'{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}'
+	* @apiParam {String} workImg 可选,团队图集json字符串.'{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}'
 	* @apiParam {String} logo 可选,logo.
 	* @apiParam {String} salonLogo 可选,店铺logo（和logo字段对应）.'{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}'
 	* @apiDescription 合同图片 营业执照 法人执照 demo
@@ -366,8 +366,8 @@ class SalonController extends Controller {
 	* @apiParam {String} ssEndTime 可选,强补贴截止日.
 	* @apiParam {String} strongClaim 可选,强补贴月交易单数要求.
 	* @apiParam {String} subsidyPolicy 可选,首单指标补贴政策.
-	* @apiParam {array} salonImg[] 可选,店铺图集json字符串.'{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}'
-	* @apiParam {array} workImg[] 可选,团队图集json字符串.'{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}'
+	* @apiParam {String} salonImg 可选,店铺图集json字符串.'{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}'
+	* @apiParam {String} workImg 可选,团队图集json字符串.'{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}'
 	* @apiParam {String} logo 可选,logo.
 	* @apiParam {String} salonLogo 可选,店铺logo（和logo字段对应）.'{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343333.jpg"}'
 	* 
@@ -646,38 +646,9 @@ class SalonController extends Controller {
 	* @apiSuccess {String} strongClaim 强补贴月交易单数要求.
 	* @apiSuccess {String} subsidyPolicy 首单指标补贴政策.
 	* @apiSuccess {String} logo 店铺logo.
+	* @apiSuccess {String} salonLogo 店铺logo.
 	* @apiSuccess {String} salonImg 店铺图集
-	*   "salonImg": [
-    *        {
-    *           "worksid": 11316,
-    *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364305891.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364305891.jpg\"}",
-    *             "flags": 3
-    *         },
-    *        {
-    *             "worksid": 11315,
-    *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/143434956344103.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_143434956344103.jpg\"}",
-    *             "flags": 3
-    *         },
-    *         {
-    *             "worksid": 11314,
-    *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/143433645017580.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_143433645017580.jpg\"}",
-    *             "flags": 3
-    *         },
-    *         {
-    *             "worksid": 11313,
-    *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364613818.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364613818.jpg\"}",
-    *             "flags": 3
-    *         }
-    *    ],
     * @apiSuccess {String} workImg 团队图集
-    *     "workImg": [
-    *         {
-    *             "worksid": 11317,
-    *             "imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\"}",
-    *             "flags": 4
-    *         }
-	* 		],
-	* 
 	* @apiSuccessExample Success-Response:
 	*	{
 	*		"result": 1,
@@ -755,35 +726,8 @@ class SalonController extends Controller {
 	*			"businessName": "",
 	*			"dividendStatus": 0,
 	*			"recommend_code": "2818",
-	*			"salonImg": [
-	*				{
-	*					"worksid": 11316,
-	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364305891.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364305891.jpg\"}",
-	*					"flags": 3
-	*				},
-	*				{
-	*					"worksid": 11315,
-	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/143434956344103.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_143434956344103.jpg\"}",
-	*					"flags": 3
-	*				},
-	*				{
-	*					"worksid": 11314,
-	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/143433645017580.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_143433645017580.jpg\"}",
-	*					"flags": 3
-	*				},
-	*				{
-	*					"worksid": 11313,
-	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/14343364613818.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonshop\\/2015-06-15\\/s_14343364613818.jpg\"}",
-	*					"flags": 3
-	*				}
-	*			],
-	*			"workImg": [
-	*				{
-	*					"worksid": 11317,
-	*					"imgsrc": "{\"img\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\",\"thumbimg\":\"http:\\/\\/sm.choumei.cn\\/Uploads\\/salonbrand\\/2015-06-15\\/143434957914358.jpg\"}",
-	*					"flags": 4
-	*				}
-	*			],
+	*			"salonImg": "[{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364305891.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343364305891.jpg"},{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/143434956344103.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_143434956344103.jpg"},{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/143433645017580.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_143433645017580.jpg"},{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343364613818.jpg"}]",
+	*			"workImg":"[{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364305891.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343364305891.jpg"},{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/143434956344103.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_143434956344103.jpg"},{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/143433645017580.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_143433645017580.jpg"},{"img":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/14343364613818.jpg","thumbimg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-15\/s_14343364613818.jpg"}]",
 	*			"zoneName": "科技园",
 	*			"districtName": "南山区",
 	*			"citiesName": "深圳市",

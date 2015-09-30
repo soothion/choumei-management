@@ -186,6 +186,69 @@
                             <table>
                                   <thead>
                                     <tr>
+                                      <th colspan="4" class="content">店铺图片信息</th>
+                                    </tr>
+                                  </thead>                    
+                                <tbody>
+                                    <tr>
+                                        <td colspan="1" class="content">店铺LOGO：</td>
+                                        <td colspan="3" id="con_wrapper">
+                                            <%
+                                            if(data.salonLogo && typeof data.salonLogo === "string"){
+                                                data.salonLogo = JSON.parse(data.salonLogo);
+                                            }
+                                            %>
+                                            <%data.salonLogo&&data.salonLogo.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  data-type="1"/>
+                                                </div> 
+                                            <%
+                                                });
+                                            %>                                         
+                                        </td>
+                                    </tr>  
+
+                                    <tr>
+                                        <td colspan="1" class="content">店铺图片集：</td>
+                                        <td colspan="3" id="con_wrapper"> 
+                                            <%
+                                            if(data.salonImg && typeof data.salonImg === "string"){
+                                                data.salonImg = JSON.parse(data.salonImg);
+                                            }
+                                            %>
+                                            <%data.salonImg&&data.salonImg.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  data-type="1"/>
+                                                </div> 
+                                            <%
+                                                });
+                                            %> 
+                                        </td>
+                                    </tr> 
+
+                                    <tr>
+                                        <td colspan="1" class="content">团队照片：</td>
+                                        <td colspan="3" id="con_wrapper"> 
+                                            <%
+                                            if(data.workImg && typeof data.workImg === "string"){
+                                                data.workImg = JSON.parse(data.workImg);
+                                            }
+                                            %>
+                                            <%data.workImg&&data.workImg.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  data-type="1"/>
+                                                </div> 
+                                            <%
+                                                });
+                                            %> 
+                                        </td>
+                                    </tr>                               
+                                </tbody>
+                            </table>                             
+
+                            <table>
+                                  <thead>
+                                    <tr>
                                       <th colspan="4" class="content">银行账户信息</th>
                                     </tr>
                                   </thead>                      

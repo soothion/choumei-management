@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-06 16:48:38
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-08-28 14:06:05
+* @Last Modified time: 2015-09-29 18:11:08
 */
 
 (function(){
@@ -43,6 +43,7 @@
     if(type === "preview"){
         $("#branchTitle").attr("href","#");
         $("#leafTitle").text("预览");
+
         var data = JSON.parse(sessionStorage.getItem('preview-shop-data'));
         var conArr = JSON.parse(localStorage.getItem("contractPicUrl")); 
         var licArr = JSON.parse(sessionStorage.getItem("licensePicUrl"));
@@ -58,6 +59,10 @@
                 data.corporatePicUrl = sessionStorage.getItem("corporatePicUrl");
             }                            
         }
+
+        data.salonLogo = JSON.stringify(data.salonLogo);
+        data.salonImg  = JSON.stringify(data.salonImg);
+        data.workImg   = JSON.stringify(data.workImg);       
         currentData = data;
         lib.ajat('#domid=table-wrapper&tempid=table-t').template(data);
         createScript();
