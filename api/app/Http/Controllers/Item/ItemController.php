@@ -1,5 +1,8 @@
 <?php namespace App\Http\Controllers;
 
+use App\Item;
+use Illuminate\Pagination\AbstractPaginator;
+
 class ItemController extends Controller{
 
 
@@ -48,7 +51,11 @@ class ItemController extends Controller{
 
 		$fields = array(
 		    'itemid',
-			'itemname'
+			'itemname',
+			'typename',
+			'minPrice',
+			'minPriceOri',
+			'minPriceGroup'
 		);
 
 		//分页

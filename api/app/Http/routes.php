@@ -226,7 +226,12 @@ Route::group(['middleware'], function(){
 		'uses'=>'LogController@export'
 	));
 
-
+	//项目模块
+	Route::any('item/index',array(
+		'as'=>'item.index',
+		'uses'=>'ItemController@index'
+	));
+	
 	//佣金单
 	Route::any('commission/index',array(
 		'as'=>'commission.index',
