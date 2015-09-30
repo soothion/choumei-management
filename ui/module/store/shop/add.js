@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-29 11:36:28
+* @Last Modified time: 2015-09-30 16:48:55
 */
 
 $(function(){
@@ -35,7 +35,7 @@ $(function(){
         shopData = $.extend({},shopData,{
             "merchantId" : lib.query.merchantId,
             "name"       : lib.query.name,
-            addr         : lib.query.addr
+            "addr"       : lib.query.addr
         });      
         lib.ajat('#domid=form&tempid=form-t').template(shopData);
         document.body.onbeforeunload=function(){
