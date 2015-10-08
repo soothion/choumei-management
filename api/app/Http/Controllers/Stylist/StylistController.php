@@ -94,7 +94,7 @@ class StylistController  extends Controller {
      * @apiSuccess {Number} likeNum 喜欢总数.
      * @apiSuccess {String} signature 造型师签名.
      * @apiSuccess {Number} status 状态.
-     * @apiSuccess {Number} sex 性别.
+     * @apiSuccess {Number} sex 性别 0保密 1男 2女.
      * @apiSuccess {String} wechat 微信.
      * @apiSuccess {String} qq QQ.
      * @apiSuccess {String} email email.
@@ -299,7 +299,7 @@ class StylistController  extends Controller {
      * @apiSuccess {Number} likeNum 喜欢总数.
      * @apiSuccess {String} signature 造型师签名.
      * @apiSuccess {Number} status 状态.
-     * @apiSuccess {Number} sex 性别.
+     * @apiSuccess {Number} sex 性别 0保密 1男 2女.
      * @apiSuccess {String} wechat 微信.
      * @apiSuccess {String} qq QQ.
      * @apiSuccess {String} email email.
