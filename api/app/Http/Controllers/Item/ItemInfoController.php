@@ -210,8 +210,9 @@ class ItemInfoController extends Controller{
 	 * @apiParam {string} repertory 可选,日库存（兑换专用+特价项目）.
 	 * @apiParam {string} expTimeInput 可选,项目有效期（Y-m-d） 无限制 不传或0.
 	 * @apiParam {Number} totalRepInput 可选,项目总库存 无限制 不传或0.
-	 * @apiParam {array} addedService 可选,增值服务(数组).
-	 * 
+	 * @apiParam {array}  addedService 可选,增值服务(数组).
+	 * @apiParam {string} timingAdded 可选,定时上架（Y-m-d H:i:s）.
+	 * @apiParam {string} timingShelves 可选,定时下架（Y-m-d H:i:s）.
 	 * @apiParam {string} timeLimitInput 可选,单人限制购买数 无限制 不传或0.
 	 * @apiParam {string} inviteLimit 可选,1 限推荐用户购买 无限制 不传或0.
 	 * @apiParam {string} firstLimit 可选,1 限首次下单可购买  无限制 不传或0.
@@ -289,8 +290,9 @@ class ItemInfoController extends Controller{
 	 * @apiParam {string} repertory 可选,日库存（兑换专用+特价项目）.
 	 * @apiParam {string} expTimeInput 可选,项目有效期（Y-m-d） 无限制 不传或0.
 	 * @apiParam {Number} totalRepInput 可选,项目总库存 无限制 不传或0.
-	 * @apiParam {array} addedService[] 可选,增值服务(数组).
-	 *
+	 * @apiParam {array}  addedService 可选,增值服务(数组).
+	 * @apiParam {string} timingAdded 可选,定时上架（Y-m-d H:i:s）.
+	 * @apiParam {string} timingShelves 可选,定时下架（Y-m-d H:i:s）.
 	 * @apiParam {string} timeLimitInput 可选,单人限制购买数 无限制 不传或0.
 	 * @apiParam {string} inviteLimit 可选,1 限推荐用户购买 无限制 不传或0.
 	 * @apiParam {string} firstLimit 可选,1 限首次下单可购买  无限制 不传或0.

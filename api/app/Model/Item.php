@@ -1,6 +1,7 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Item extends Model {
 
@@ -70,5 +71,20 @@ class Item extends Model {
         $query = $query->orderBy($sort_key,$sort_type);
 
         return $query;
+    }
+
+
+    //根据id获取项目
+    public static function get($id){
+        $item = Self::leftJoin('salon_itemtype','salon_itemtype.typeid','=','salon_item.typeid')
+            ->select('salon_item.itemname','salon_itemtype.typename','salon_item.addserviceStr','salon_item.detail','salon_item.exp_time')
+            ->find($id);
+        return $item;
+    }
+
+    //获取规格
+    public static function getFormat($id){
+        $formats = DB::table('salon_item_formats')->where('salonid','=',$id)->lists('formats_name');
+        return implode($formats, ',');
     }
 }
