@@ -234,6 +234,14 @@ Route::group(['middleware'], function(){
 	Route::any('item/show/{id}',array(
 		'as'=>'item.show',
 		'uses'=>'ItemController@show'
+	));	
+	Route::any('item/type',array(
+		'as'=>'item.type',
+		'uses'=>'ItemController@type'
+	));
+	Route::any('item/sort',array(
+		'as'=>'item.sort',
+		'uses'=>'ItemController@sort'
 	));
 	
 	//佣金单

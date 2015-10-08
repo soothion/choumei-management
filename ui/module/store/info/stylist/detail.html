@@ -19,25 +19,27 @@
             </div>
         </div>
         <div class="wrapper">      
-            <div style="position:absolute;right:20px;top:40px;">
-                <button type="button" class="btn mr-20">
-`                   禁用
-                </button>
-                &nbsp;
-                <button type="button" class="btn mr-20">
-                    删除
-                </button>
-                &nbsp;
-                <button type="button" class="btn mr-20">
-                    编辑
-                </button>
-                &nbsp;
-                <button type="button" class="btn mr-20" onclick="window.close()">
-                    关闭
-                </button>                  
-            </div>  
-
             <div class="table" style="width:70%;float:left" id="table-wrapper">
+                <script type="text/template" id="table-t">
+                <div style="position:absolute;right:20px;top:40px;">
+                    <button type="button" class="btn mr-20 isAble" data-status="<%=data.stylistId%>"
+                    data-action="<%=data.status=="1" ? "Stylist/disabled/" : "Stylist/enable/"%>">
+                        <%=data.status=="1" ? "禁用" : "启用"%>
+                    </button>
+                    &nbsp;
+                    <button type="button" class="btn mr-20 del">
+                        删除
+                    </button>
+                    &nbsp;
+                    <a type="button" class="btn mr-20" href="edit.html#id=<%=data.stylistId%>">
+                        编辑
+                    </a>
+                    &nbsp;
+                    <button type="button" class="btn mr-20" onclick="window.close()">
+                        关闭
+                    </button>                  
+                </div> 
+
                 <table>
                     <tbody>
                         <tr style="height:60px">
@@ -46,44 +48,68 @@
 
                         <tr>
                             <td class="td">姓名：</td>
-                            <td colspan="3"></td>
+                            <td colspan="3"><%=data.stylistName%></td>
                         </tr>
 
                         <tr>
+                            <%var sexText = {"0":"保密","1":"男","2":"女"} %>
                             <td class="td">性别：</td>
-                            <td colspan="3"></td>
+                            <td colspan="3"><%=sexText[data.sex]%></td>
                         </tr>
 
                         <tr>
                             <td class="td">手机号：</td>
-                            <td colspan="3"></td>
+                            <td colspan="3"><%=data.mobilephone%></td>
                         </tr>
 
                         <tr>
                             <td class="td">微信：</td>
-                            <td colspan="3"></td>
+                            <td colspan="3"><%=data.wechat%></td>
                         </tr>
 
                         <tr>
                             <td class="td">QQ号：</td>
-                            <td colspan="3"></td>                            
+                            <td colspan="3"><%=data.qq%></td>                            
                         </tr>
 
                         <tr>
                             <td class="td">邮箱：</td>
-                            <td colspan="3"></td>
+                            <td colspan="3"><%=data.email%></td>
                         </tr>   
 
                         <tr>
                             <td class="td">出生日期：</td>
-                            <td colspan="3"></td>
+                            <td colspan="3" class="format"><%=data.birthday%></td>
                         </tr>
 
-                        <tr>
+                        <tr>                       
+                            <%if(data.IDcard){%>
                             <td class="td">证件类型：</td>
-                            <td></td>
+                            <td>身份证</td>
                             <td class="td">证件编号：</td>
-                            <td></td>
+                            <td><%=data.IDcard%></td>
+                            <%}%>
+
+                            <%if(data.drivingLicense){%>
+                            <td class="td">证件类型：</td>
+                            <td>驾驶证</td>
+                            <td class="td">证件编号：</td>
+                            <td><%=data.drivingLicense%></td>
+                            <%}%>
+
+                            <%if(data.passport){%>
+                            <td class="td">证件类型：</td>
+                            <td>护照</td>
+                            <td class="td">证件编号：</td>
+                            <td><%=data.passport%></td>
+                            <%}%>
+
+                            <%if(data.officerCert){%>
+                            <td class="td">证件类型：</td>
+                            <td>军官证</td>
+                            <td class="td">证件编号：</td>
+                            <td><%=data.officerCert%></td>
+                            <%}%>
                         </tr>                          
                     </tbody>                     
                 </table>
@@ -97,27 +123,30 @@
                     <tbody>
                         <tr>
                             <td class="td">在职编号：</td>
-                            <td></td>
+                            <td><%=data.sNumber%></td>
                         </tr>
 
                         <tr>
                             <td class="td">工作年限：</td>
-                            <td></td>
+                            <td><%=data.workYears%></td>
                         </tr>
 
                         <tr>
                             <td class="td">门店职位：</td>
-                            <td></td>
+                            <td><%=data.job%></td>
                         </tr>
 
                         <tr>
                             <td class="td">悬赏等级：</td>
-                            <td></td>
+                            <%var gradeText = { "0":"没有等级", "1":"美发师", "2":"高级美发师", 
+                            "3":"造型师", "4":"艺术总监"} %>
+                            <td><%=gradeText[data.grade]%></td>
                         </tr>
 
                         <tr>
                             <td class="td">快剪等级</td>
-                            <td></td>                            
+                            <%var fastGradeText = {"0":"没有等级", "1":"普通快剪", "2":"总监快剪"}%>
+                            <td><%=fastGradeText[data.fastGrade]%></td>                            
                         </tr>                        
                     </tbody>                     
                 </table> 
@@ -131,12 +160,12 @@
                     <tbody>
                         <tr style="height:100px">
                             <td class="td">个性签名：</td>
-                            <td></td>
+                            <td><%=data.signature%></td>
                         </tr>
 
                         <tr style="height:100px">
                             <td class="td">自我描述：</td>
-                            <td></td>
+                            <td><%=data.description%></td>
                         </tr>                       
                     </tbody>                     
                 </table>
@@ -199,11 +228,42 @@
                         </tr>                      
                     </tbody>                     
                 </table>                                                                           
-            </div>
-
-            <div style="float:left;margin:15px 0 15px 20px;">
-              <img src="/images/logo.png" style="width:256px;height:256px"/>
-            </div>        
+            </div>               
+            </script>
         </div>
+
+        <div style="float:left;margin:15px 0 15px 20px;">
+          <img src="" style="width:256px;height:256px"/>
+        </div>
+
+        <script>
+            (function(){
+                function init(){
+                    var promise = lib.ajat('Stylist/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
+                    promise.done(function(data){
+                    $('img').attr('src',data.data.stylistImg);                 
+                    }); 
+                }
+
+                $("#table-wrapper").on('click','.isAble',function(){
+                    var action = $(this).data('action');
+                    lib.ajax({
+                        type: "post",
+                        url : action+$(this).data('status')
+                    }).done(function(data, status, xhr){
+                        if(data.result == 1){
+                            parent.lib.popup.result({text:"操作成功"});
+                            init();
+                        }
+                    })
+                })
+
+                $("#table-wrapper").on('click','.del',function(){
+
+                })                
+
+                init();
+            })();
+        </script>          
     </body>
 </html>

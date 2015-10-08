@@ -31,7 +31,7 @@ class StylistController  extends Controller {
      * @apiSuccess {String} sNumber 在职编号.
      * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
      * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪.
-     * @apiSuccess {Number} status 状态.
+     * @apiSuccess {Number} status 状态:1正常;2:禁用..
      * @apiSuccess {Number} num 作品数.
      * 
      * 
@@ -86,6 +86,7 @@ class StylistController  extends Controller {
      *
      * @apiSuccess {Number} stylistId 造型师ID.
      * @apiSuccess {Number} salonId 店铺编号.
+     * @apiSuccess {String} salonname 店铺名称.
      * @apiSuccess {String} stylistName 造型师名称.
      * @apiSuccess {String} stylistImg 造型师图像.
      * @apiSuccess {String} job 职位.
@@ -93,7 +94,7 @@ class StylistController  extends Controller {
      * @apiSuccess {Number} addTime 添加时间.
      * @apiSuccess {Number} likeNum 喜欢总数.
      * @apiSuccess {String} signature 造型师签名.
-     * @apiSuccess {Number} status 状态.
+     * @apiSuccess {Number} status 状态:1正常;2:禁用.
      * @apiSuccess {Number} sex 性别 0保密 1男 2女.
      * @apiSuccess {String} wechat 微信.
      * @apiSuccess {String} qq QQ.
@@ -140,8 +141,8 @@ class StylistController  extends Controller {
      *               "sNumber":"1226",
      *               "workYears":5,
      *               "grade":0,
-     *               "workExp":"{\"wsTime1\":\"\",\"weTime1\":\"\",\"wname1\":\"\",\"wjob1\":\"\",\"waddress1\":\"\",\"wsTime2\":\"\",\"weTime2\":\"\",\"wname2\":\"\",\"wjob2\":\"\",\"waddress2\":\"\",\"wsTime3\":\"\",\"weTime3\":\"\",\"wname3\":\"\",\"wjob3\":\"\",\"waddress3\":\"\",\"wsTime4\":\"\",\"weTime4\":\"\",\"wname4\":\"\",\"wjob4\":\"\",\"waddress4\":\"\",\"wsTime5\":\"\",\"weTime5\":\"\",\"wname5\":\"\",\"wjob5\":\"\",\"waddress5\":\"\"}",
-     *               "educateExp":"{\"sTime1\":\"\",\"eTime1\":\"\",\"name1\":\"\",\"sTime2\":\"\",\"eTime2\":\"\",\"name2\":\"\",\"sTime3\":\"\",\"eTime3\":\"\",\"name3\":\"\",\"sTime4\":\"\",\"eTime4\":\"\",\"name4\":\"\",\"sTime5\":\"\",\"eTime5\":\"\",\"name5\":\"\"}",
+     *               "workExp":"{"wsTime1":"","weTime1":"","wname1":"","wjob1":"","waddress1":"","wsTime2":"","weTime2":"","wname2":"","wjob2":"","waddress2":"","wsTime3":"","weTime3":"","wname3":"","wjob3":"","waddress3":"","wsTime4":"","weTime4":"","wname4":"","wjob4":"","waddress4":"","wsTime5":"","weTime5":"","wname5":"","wjob5":"","waddress5":""}",
+     *               "educateExp":"{"sTime1":"","eTime1":"","name1":"","sTime2":"","eTime2":"","name2":"","sTime3":"","eTime3":"","name3":"","sTime4":"","eTime4":"","name4":"","sTime5":"","eTime5":"","name5":""}",
      *               "description":"asdfasdfasdf",
      *               "gradeType":0,
      *               "osType":0,
@@ -164,7 +165,11 @@ class StylistController  extends Controller {
         $query=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$query){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);  
-         }
+        }
+        $salon=DB::table('salon')->where(array('salonid'=>$query['salonId']))->first();
+        $query->salonname=$salon->salonname;
+        $query->workExp=json_decode($query['workExp'],true);
+        $query->educateExp=json_decode($query['educateExp'],true);
         return $this->success($query);
     }
      
@@ -195,7 +200,11 @@ class StylistController  extends Controller {
        $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
        if(!$stylist){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
-        }   
+       }   
+       $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
+       if($task==true){
+            throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
+       } 
        $query=Stylist::where(array('stylistId'=>$stylistId))->delete(); 
        if($query){
                 return $this->success();
@@ -298,7 +307,7 @@ class StylistController  extends Controller {
      * @apiSuccess {Number} addTime 添加时间.
      * @apiSuccess {Number} likeNum 喜欢总数.
      * @apiSuccess {String} signature 造型师签名.
-     * @apiSuccess {Number} status 状态.
+     * @apiSuccess {Number} status 状态:1正常;2:禁用..
      * @apiSuccess {Number} sex 性别 0保密 1男 2女.
      * @apiSuccess {String} wechat 微信.
      * @apiSuccess {String} qq QQ.
@@ -347,8 +356,8 @@ class StylistController  extends Controller {
      *               "sNumber":"1226",
      *               "workYears":5,
      *               "grade":0,
-     *               "workExp":"{\"wsTime1\":\"\",\"weTime1\":\"\",\"wname1\":\"\",\"wjob1\":\"\",\"waddress1\":\"\",\"wsTime2\":\"\",\"weTime2\":\"\",\"wname2\":\"\",\"wjob2\":\"\",\"waddress2\":\"\",\"wsTime3\":\"\",\"weTime3\":\"\",\"wname3\":\"\",\"wjob3\":\"\",\"waddress3\":\"\",\"wsTime4\":\"\",\"weTime4\":\"\",\"wname4\":\"\",\"wjob4\":\"\",\"waddress4\":\"\",\"wsTime5\":\"\",\"weTime5\":\"\",\"wname5\":\"\",\"wjob5\":\"\",\"waddress5\":\"\"}",
-     *               "educateExp":"{\"sTime1\":\"\",\"eTime1\":\"\",\"name1\":\"\",\"sTime2\":\"\",\"eTime2\":\"\",\"name2\":\"\",\"sTime3\":\"\",\"eTime3\":\"\",\"name3\":\"\",\"sTime4\":\"\",\"eTime4\":\"\",\"name4\":\"\",\"sTime5\":\"\",\"eTime5\":\"\",\"name5\":\"\"}",
+     *               "workExp":"{"wsTime1":"","weTime1":"","wname1":"","wjob1":"","waddress1":"","wsTime2":"","weTime2":"","wname2":"","wjob2":"","waddress2":"","wsTime3":"","weTime3":"","wname3":"","wjob3":"","waddress3":"","wsTime4":"","weTime4":"","wname4":"","wjob4":"","waddress4":"","wsTime5":"","weTime5":"","wname5":"","wjob5":"","waddress5":""}",
+     *               "educateExp":"{"sTime1":"","eTime1":"","name1":"","sTime2":"","eTime2":"","name2":"","sTime3":"","eTime3":"","name3":"","sTime4":"","eTime4":"","name4":"","sTime5":"","eTime5":"","name5":""}",
      *               "description":"asdfasdfasdf",
      *               "gradeType":0,
      *               "osType":0,
@@ -374,6 +383,8 @@ class StylistController  extends Controller {
         if(!$stylist){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR); 
         }
+        $stylist->workExp=json_decode($stylist['workExp'],true);
+        $stylist->educateExp=json_decode($stylist['educateExp'],true);
         $field=['salonname','merchantId'];
         $salon=DB::table('salon')->select($field)->where(array("salonid"=>$stylist->salonId))->first(); 
          if($salon===false){
@@ -440,9 +451,9 @@ class StylistController  extends Controller {
         if($param['checkbox']!=1){
                 throw new ApiException('未选择修改所属店铺', ERROR::MERCHANT_STYLIST_SELECT_ERROR);
         }else {
-            $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->get();
-            if($task==true){
-                 throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
+                $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
+                if($task==true){
+                          throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
             }
         }      
         $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();

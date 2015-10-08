@@ -45,9 +45,11 @@
     </div>
 
     <div class="wrapper">
-        <form class="form-vertical" data-role="form" id="form">
+        <form class="form-vertical" data-role="form" id="form" 
+        ajat="<%if(query.id){%>Stylist/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
+        <script type="text/template" id="form-t">
             <div class="detail-operation">
-                <button type="button" class="btn btn-cancel">取消</button>
+                <button type="button" class="btn btn-cancel" onclick="history.back()">取消</button>
                 <span class="space"></span>
                 <button class="btn-primary">提交</button>
             </div>  
@@ -317,7 +319,16 @@
                 <button class="btn" type="button" id="preview-btn" style="margin-right:20px">取消</button>
                 <button class="btn-primary">提交</button>
             </div>                    
+        </script>
         </form>
     </div>
+
+    <script>
+    (function(){
+        // $("#wrapper").on('click','.btn-cancel',function(){
+        //      if(lib.query.id){}
+        // });
+    })();
+    </script>
   </body>
 </html>
