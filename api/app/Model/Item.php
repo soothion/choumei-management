@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class Item extends Model {
 
@@ -15,6 +17,12 @@ class Item extends Model {
         $query = Self::getQuery();
 
         $query = $query->leftJoin('salon_itemtype','salon_item.typeid','=','salon_itemtype.typeid');
+
+        //店铺筛选
+        if(!empty($param['salonid'])){
+            $query = $query->where('salonid','=',$param['salonid']);
+        }  
+
         //项目名称筛选
         if(!empty($param['itemname'])){
         	$itemname = '%'.$itemname.'%';
@@ -77,8 +85,31 @@ class Item extends Model {
     //根据id获取项目
     public static function get($id){
         $item = Self::leftJoin('salon_itemtype','salon_itemtype.typeid','=','salon_item.typeid')
-            ->select('salon_item.itemname','salon_itemtype.typename','salon_item.addserviceStr','salon_item.detail','salon_item.exp_time')
+            ->leftJoin('salon_item_buylimit','salon_item_buylimit.salon_item_id','=','salon_item.itemid')
+            ->leftJoin('managers','managers.id','=','salon_item.uid')
+            ->select(
+                'itemid',
+                'itemname',
+                'typename',
+                'addserviceStr',
+                'detail',
+                'exp_time',
+                'timingAdded',
+                'timingShelves',
+                'limit_time',
+                'total_rep',
+                'limit_invite',
+                'limit_first',
+                'sold',
+                'up_time',
+                'managers.name',
+                'salon_item.UPDATE_date',
+                'sort_in_type'
+                )
             ->find($id);
+        if(!$item)
+            throw new ApiException('未知项目ID', ERROR::ITEM_NOT_FOUND);
+        $item->prices = Self::getPrice($item->itemid);
         return $item;
     }
 
@@ -86,5 +117,28 @@ class Item extends Model {
     public static function getFormat($id){
         $formats = DB::table('salon_item_formats')->where('salonid','=',$id)->lists('formats_name');
         return implode($formats, ',');
+    }
+
+    //获取价格
+    public static function getPrice($id){
+        $prices = DB::table('salon_item_format_price')
+            ->leftJoin('salon_norms','salon_norms.salon_norms_id','=','salon_item_format_price.salon_norms_id')
+            ->where('itemid','=',$id)
+            ->select('price','price_dis','price_group','salon_norms.salon_item_format_id')
+            ->get();
+
+        foreach ($prices as $key => $price) {
+            $formats_id = explode(',', $price->salon_item_format_id);
+            $formats = DB::table('salon_item_format')->whereIn('salon_item_format_id',$formats_id)->lists('format_name');
+            $formats = implode($formats, ',');
+            $price->formats = $formats;
+            $prices[$key] = $price;
+        }
+
+        return $prices;
+    }
+
+    public static function type(){
+        return DB::table('salon_itemtype')->select('typeid','typename')->get();
     }
 }
