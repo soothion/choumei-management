@@ -23,13 +23,13 @@ class BountyController extends Controller {
      *
      * @apiParam {Number} isRefund 必选,是否为退款查询：1否 2是.
      * @apiParam {Number} page 可选,页码，默认为1.
-     * @apiParam {Number} pageSize 可选,默认为20.
+     * @apiParam {Number} page_size 可选,默认为20.
      * @apiParam {String} keyword 可选,搜索关键词.
      * @apiParam {String} keywordType 必选,搜索关键词类型，可取0 赏金单号/1 用户臭美号/2 用户手机号/3 店铺名称.
      * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
-     * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
+     * @apiParam {String} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
      * @apiParam {String} minAddTime 可选,交易时间左框.
      * @apiParam {String} maxAddTime 可选,交易时间右框.
      * @apiParam {String} minEndTime 可选,退款时间左框.
@@ -37,11 +37,10 @@ class BountyController extends Controller {
      * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
      * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
      *
-     * @apiSuccess {Number} total 总页数.
+     * @apiSuccess {Number} total 总条数.
      * @apiSuccess {Number} per_page 分页大小.
-     * @apiSuccess {Number} records 总条数.
      * @apiSuccess {Number} current_page 当前页面.
-     * @apiSuccess {Number} last_page 当前页面.
+     * @apiSuccess {Number} last_page 最后页面.
      * @apiSuccess {Number} from 起始数.
      * @apiSuccess {Number} to 结束数.
      * @apiSuccess {Number} amount 总金额.
@@ -105,8 +104,8 @@ class BountyController extends Controller {
         } else {
             $page = 1;
         }
-        if (isset($param['size']) && !empty($param['size'])) {
-            $size = $param['size'];
+        if (isset($param['page_size']) && !empty($param['page_size'])) {
+            $size = $param['page_size'];
         } else {
             $size = 20;
         }
@@ -132,11 +131,10 @@ class BountyController extends Controller {
         $res = [];
         
 
-        $res["total"] = ceil($count / $size);
+        $res["total"] = $count;
         $res["per_page"] = $size;
         $res["current_page"] = $page;
-        $res["last_page"] = $page;
-        $res["records"] = $count;
+        $res["last_page"] = ceil($count / $size);
         $res["amount"] = array("amount" => number_format($amount, 2));
         $res['data'] = $bountys;
         return $this->success($res);
@@ -400,6 +398,8 @@ class BountyController extends Controller {
      * @apiName exportBounty
      * @apiGroup bounty
      *
+     * @apiParam {Number} page 可选,页码，默认为1.
+     * @apiParam {Number} page_size 可选,默认为20.
      * @apiParam {String} keyword 可选,搜索关键词.
      * @apiParam {String} keywordType 必选,搜索关键词类型，可取"btSn","userName","mobile","salonName".
      * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
@@ -421,6 +421,16 @@ class BountyController extends Controller {
         $param = $this->param;
         Log::info('Bounty getList param is: ', $param);
         $param['isRund'] = 1;
+        if (isset($param['page']) && !empty($param['page'])) {
+            $page = $param['page'];
+        } else {
+            $page = 1;
+        }
+        if (isset($param['page_size']) && !empty($param['page_size'])) {
+            $size = $param['page_size'];
+        } else {
+            $size = 20;
+        }
         $query = BountyTask::getQueryByParam($param);
         $sortable_keys = ['btSn', 'money', 'addTime'];
         $sortKey = "addTime";
@@ -432,7 +442,7 @@ class BountyController extends Controller {
                 $sortType = "ASC";
             }
         }
-        $bountys = BountyTask::search($query, 1, -1, $sortKey, $sortType);
+        $bountys = BountyTask::search($query, $page, $size, $sortKey, $sortType);
         $header = ['赏金单号', '三方流水号', '支付方式','赏金金额', '下单时间', '造型师手机号', '用户手机号', '店铺名称', '支付状态'];
         Event::fire('bounty.export');
         $this->export_xls("赏金单" . date("Ymd"), $header, BountyTask::format_exportBounty_data($bountys));
@@ -443,6 +453,8 @@ class BountyController extends Controller {
      * @apiName exportRefund
      * @apiGroup bounty
      *
+     * @apiParam {Number} page 可选,页码，默认为1.
+     * @apiParam {Number} page_size 可选,默认为20.
      * @apiParam {String} keyword 可选,搜索关键词.
      * @apiParam {String} keywordType 必选,搜索关键词类型，可取"btSn","userName","mobile","salonName".
      * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
@@ -464,6 +476,16 @@ class BountyController extends Controller {
         $param = $this->param;
         Log::info('Bounty getList param is: ', $param);
         $param['isRund'] = 2;
+        if (isset($param['page']) && !empty($param['page'])) {
+            $page = $param['page'];
+        } else {
+            $page = 1;
+        }
+        if (isset($param['page_size']) && !empty($param['page_size'])) {
+            $size = $param['page_size'];
+        } else {
+            $size = 20;
+        }
         $query = BountyTask::getQueryByParam($param);
         $sortable_keys = ['btSn', 'money', 'addTime'];
         $sortKey = "addTime";
@@ -475,7 +497,7 @@ class BountyController extends Controller {
                 $sortType = "ASC";
             }
         }
-        $bountys = BountyTask::search($query, 1, -1, $sortKey, $sortType);
+        $bountys = BountyTask::search($query, $page, $size, $sortKey, $sortType);
         $header = ['赏金单号', '支付方式', '退款金额', '申请时间', '用户臭美号', '用户手机号', '店铺名称', '退款状态'];
         Event::fire('bountyRefund.export');
         $this->export_xls("赏金退款单" . date("Ymd"), $header, BountyTask::format_exportRefund_data($bountys));

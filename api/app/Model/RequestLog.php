@@ -60,42 +60,42 @@ class RequestLog  extends Model{
       }
       
       
-       public static function exportLogSelect($param){
-         $query = Self::getQuery();
-         if(!empty($param['mobilephone'])){
-	        $query = $query->where('mobilephone','=',$param['mobilephone']);
-	 }
-         if(isset($param['username']) && $param['username']){
-	        $query = $query->where('username','=',$param['username']);
-	 }
-	 if(isset($param['device_uuid']) && $param['device_uuid']){
-	        $query = $query->where('device_uuid','=',$param['device_uuid']);
-	 }
-         
-         if(isset($param['minTime']) && $param['minTime'] ){
-               
-                    $query = $query->where('update_time','>=', $param['minTime']); 
-         }
-         if( isset($param['maxTime']) && $param['maxTime'] ){
-              
-                    $query = $query->where('update_time','<=', $param['maxTime']);    
-         }
-         $sortable_keys=['update_time','mobilephone','version'];
-         $sortKey = "update_time";
-         $sortType = "DESC";
-         if (isset($param['sortKey']) && in_array($param['sortKey'], $sortable_keys)) {
-             $sortKey = $param['sortKey'];
-             $sortType = $param['sortType'];
-             if (strtoupper($sortType) != "DESC") {
-                 $sortType = "ASC";
-             }
-         }
-         $query->orderBy($sortKey, $sortType);   
-         $fields=['mobilephone','username','device_uuid','update_time','device_os','version'];
-         $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->get();
-         return $result;
-        
-      }
+//       public static function exportLogSelect($param){
+//         $query = Self::getQuery();
+//         if(!empty($param['mobilephone'])){
+//	        $query = $query->where('mobilephone','=',$param['mobilephone']);
+//	 }
+//         if(isset($param['username']) && $param['username']){
+//	        $query = $query->where('username','=',$param['username']);
+//	 }
+//	 if(isset($param['device_uuid']) && $param['device_uuid']){
+//	        $query = $query->where('device_uuid','=',$param['device_uuid']);
+//	 }
+//         
+//         if(isset($param['minTime']) && $param['minTime'] ){
+//               
+//                    $query = $query->where('update_time','>=', $param['minTime']); 
+//         }
+//         if( isset($param['maxTime']) && $param['maxTime'] ){
+//              
+//                    $query = $query->where('update_time','<=', $param['maxTime']);    
+//         }
+//         $sortable_keys=['update_time','mobilephone','version'];
+//         $sortKey = "update_time";
+//         $sortType = "DESC";
+//         if (isset($param['sortKey']) && in_array($param['sortKey'], $sortable_keys)) {
+//             $sortKey = $param['sortKey'];
+//             $sortType = $param['sortType'];
+//             if (strtoupper($sortType) != "DESC") {
+//                 $sortType = "ASC";
+//             }
+//         }
+//         $query->orderBy($sortKey, $sortType);   
+//         $fields=['mobilephone','username','device_uuid','update_time','device_os','version'];
+//         $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->get();
+//         return $result;
+//        
+//      }
       
       public static function getLogByOrdersn($ordersn,$fields=[])
       {
