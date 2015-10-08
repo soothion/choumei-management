@@ -2,6 +2,8 @@
 
 use App\Item;
 use Illuminate\Pagination\AbstractPaginator;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class ItemController extends Controller{
 
@@ -51,6 +53,7 @@ class ItemController extends Controller{
 
 		$fields = array(
 		    'itemid',
+		    'salonid',
 			'itemname',
 			'typename',
 			'minPrice',
@@ -60,11 +63,22 @@ class ItemController extends Controller{
 
 		//分页
 	    $result = $query->select($fields)->paginate($page_size)->toArray();
+	    foreach ($result['data'] as $key=>$item) {
+	    	$item->format = Item::getFormat($item->salonid);
+	    }
 	    unset($result['next_page_url']);
 	    unset($result['prev_page_url']);
 	    return $this->success($result);
 	}
 
+
+	public function show($id){
+		$item = Item::get($id);
+		if(!$item)
+			throw new ApiException('未知项目ID', ERROR::ITEM_NOT_FOUND);
+		return $this->success($item);
+			
+	}
 
 
 }

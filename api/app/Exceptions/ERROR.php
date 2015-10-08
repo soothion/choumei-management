@@ -432,6 +432,10 @@ class ERROR
       *@param 项目总库存不正确
       */
      CONST ITEM_TOTALREP_ERROR =  -51105;
+        /**
+      *@param 项目不存在
+      */
+     CONST ITEM_NOT_FOUND =  -51106;
 
 
 

@@ -230,6 +230,10 @@ Route::group(['middleware'], function(){
 	Route::any('item/index',array(
 		'as'=>'item.index',
 		'uses'=>'ItemController@index'
+	));	
+	Route::any('item/show/{id}',array(
+		'as'=>'item.show',
+		'uses'=>'ItemController@show'
 	));
 	
 	//佣金单
