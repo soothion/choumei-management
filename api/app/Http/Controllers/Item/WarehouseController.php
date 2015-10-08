@@ -361,7 +361,7 @@ class WarehouseController extends Controller
 	    foreach ($itemArr as $item)
 	    {
 	        $id = $item['itemid'];
-	        $name = $item['item_name'];
+	        $name = $item['itemname'];
 	        $exp_time = intval($item['exp_time']);
 	        $total_rep = intval($item['total_rep']);
 	        $sold = intval($item['sold']);
