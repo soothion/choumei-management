@@ -146,7 +146,7 @@ class WarehouseController extends Controller
         $res =  $itemObj->paginate($size)->toArray();
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
-        return $res;
+        return $this->success($res);
     }
 
     /**
