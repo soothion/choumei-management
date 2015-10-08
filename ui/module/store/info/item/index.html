@@ -34,7 +34,7 @@
 						<select>
 							<option value="0">项目名称 </option>
 						</select>
-						<input class="input-search" type="text" name="name"  placeholder="请输入项目名称">
+						<input class="input-search" type="text" name="item_name"  placeholder="请输入项目名称">
 						<button class="btn btn-search">
 							<i class="fa fa-search"></i>
 						</button>
@@ -53,6 +53,25 @@
 					<%}%>
 				</div>
 				<div class="filter-box" style="display:none">
+					<%if(query.page=="warehouse"){%>
+					<div class="flex-box">
+						<div class="filter-title">项目类型：</div>
+						<div class="flex-item">
+							<label data-role="hash">
+								<input type="radio" name="type" value="0" checked />
+								<span>全部</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="type" value="1"/>
+								<span>普通项目</span>
+							</label>
+							<label data-role="hash">
+								<input type="radio" name="type" value="2"/>
+								<span>闲时特价</span>
+							</label>
+						</div>
+					</div>
+					<%}%>
 					<div class="flex-box">
 						<div class="filter-title">项目分类：</div>
 						<div class="flex-item" ajat="salonList/getItemType#domid=type&tempid=type-t" id="type"></div>
@@ -61,15 +80,15 @@
 						<div class="filter-title">项目规格：</div>
 						<div class="flex-item">
 							<label data-role="hash">
-								<input type="radio" name="salestatus" value="" checked />
+								<input type="radio" name="norms_cat" value="0" checked />
 								<span>全部</span>
 							</label>
 							<label data-role="hash">
-								<input type="radio" name="salestatus" value="1"/>
+								<input type="radio" name="norms_cat" value="1"/>
 								<span>有规格</span>
 							</label>
 							<label data-role="hash">
-								<input type="radio" name="salestatus" value="0"/>
+								<input type="radio" name="norms_cat" value="2"/>
 								<span>无规格</span>
 							</label>
 						</div>
@@ -78,19 +97,20 @@
 						<div class="filter-title">项目期限：</div>
 						<div class="flex-item">
 							<label data-role="hash">
-								<input type="radio" name="salestatus" value="" checked />
+								<input type="radio" name="exp" value="0" checked />
 								<span>全部</span>
 							</label>
 							<label data-role="hash">
-								<input type="radio" name="salestatus" value="1"/>
+								<input type="radio" name="exp" value="1"/>
 								<span>有期限</span>
 							</label>
 							<label data-role="hash">
-								<input type="radio" name="salestatus" value="0"/>
+								<input type="radio" name="exp" value="2"/>
 								<span>无期限</span>
 							</label>
 						</div>
 					</div> 
+					<%if(query.page=="item"){%>
 					<div class="flex-box">
 						<div class="filter-title">库存数量：</div>
 						<div class="flex-item">
@@ -108,19 +128,20 @@
 							</label>
 						</div>
 					</div> 
+					<%}%>
 					<div class="flex-box">
 						<div class="filter-title">限制资格：</div>
 						<div class="flex-item">
 							<label data-role="hash">
-								<input type="radio" name="salestatus" value="" checked />
+								<input type="radio" name="use_limit" value="0" checked />
 								<span>全部</span>
 							</label>
 							<label data-role="hash">
-								<input type="radio" name="salestatus" value="1"/>
+								<input type="radio" name="use_limit" value="1"/>
 								<span>有限制</span>
 							</label>
 							<label data-role="hash">
-								<input type="radio" name="salestatus" value="0"/>
+								<input type="radio" name="use_limit" value="2"/>
 								<span>无限制</span>
 							</label>
 						</div>
@@ -128,7 +149,7 @@
 				</div>
 				</script>				
 			</form>
-			<div class="table" ajat="merchant/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="<%if(query.page=="item"){%><%}else if(query.page=="special"){%><%}else if(query.page=="warehouse"){%>warehouse/index<%}%>?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
 				<thead>
@@ -154,28 +175,30 @@
 					<%data.forEach(function(item,i){%>
 					 <tr>
 						<%if(query.page=="warehouse"){%>
-						<td><label><input type="checkbox" name="_ids" form="form" value="<%=item.id%>"/><span></span></label></td>
+						<td><label><input type="checkbox" name="_ids" form="form" value="<%=item.itemid%>"/><span></span></label></td>
 						<%}%>
 						<td><%=i+1%></td>
-						<td><%=item.sn%></td>
+						<td><%=item.itemname%></td>
 						<%if(query.page=="warehouse"){%>
-						<td><%=item.name%></td>
+						<td><%=item.item_type%></td>
 						<%}%>
-						<td><%=item.name%></td>
-						<td><%=item.salonNum>0?item.salonNum:0%></td>
-						<td><%=item.contact%></td>
-						<td><%=item.contact%></td>
-						<td><%=item.contact%></td>
+						<td><%=item.typename%></td>
+						<td><%=item.salon_norms_cat%></td>
+						<td><%=item.minPriceOri%></td>
+						<td><%=item.minPrice%></td>
+						<td><%=item.minPriceGroup%></td>
 						<td>
 							<%if(query.page=="item"||query.page=="special"){%>
-							<form action="" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+							<form action="warehouse/puton" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
 								<button class="link" data-slug="salon.save" >下架</button>
+								<input type="hidden" name="ids" value="<%=item.itemid%>" />
 							</form>
 							<span class="space"></span>
 							<%}%>
 							<%if(query.page=="warehouse"){%>
-							<form action="" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+							<form action="warehouse/puton" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
 								<button class="link" data-slug="salon.save" >上架</button>
+								<input type="hidden" name="ids" value="<%=item.itemid%>" />
 							</form>
 							<%}%>
 							<span class="space"></span>
@@ -189,9 +212,8 @@
 			<%if(data&&data.length>0){%>
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form action="pay_manage/confirm" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+				<form action="warehouse/puton" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
 					<button class="btn" disabled>上架</button>
-					<input type="hidden" name="do" value="1" />
 					<input type="hidden" name="ids" />
 				</form>
 			</div>
@@ -204,12 +226,12 @@
 	</div>
 	<script type="text/template" id="type-t">
 		<label data-role="hash">
-			<input type="radio" name="salestatus" value="" checked />
+			<input type="radio" name="type" value="0" checked />
 			<span>全部</span>
 		</label>
 		<%data.forEach(function(item){%>
 			<label data-role="hash">
-				<input type="radio" name="salestatus" value="<%=item.typeid%>"/>
+				<input type="radio" name="type" value="<%=item.typeid%>"/>
 				<span><%=item.typename%></span>
 			</label>
 		<%})%>
