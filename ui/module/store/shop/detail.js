@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-06 16:48:38
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-29 18:11:08
+* @Last Modified time: 2015-09-30 14:02:23
 */
 
 (function(){
@@ -43,26 +43,13 @@
     if(type === "preview"){
         $("#branchTitle").attr("href","#");
         $("#leafTitle").text("预览");
-
-        var data = JSON.parse(sessionStorage.getItem('preview-shop-data'));
-        var conArr = JSON.parse(localStorage.getItem("contractPicUrl")); 
-        var licArr = JSON.parse(sessionStorage.getItem("licensePicUrl"));
-        var corArr = JSON.parse(sessionStorage.getItem("corporatePicUrl"));
-        if(upload === "true"){
-            if(conArr && conArr.length > 0){
-                data.contractPicUrl = localStorage.getItem("contractPicUrl");
-            }
-            if(licArr && licArr.length > 0){
-                data.licensePicUrl = sessionStorage.getItem("licensePicUrl");
-            }  
-            if(corArr && corArr.length > 0){
-                data.corporatePicUrl = sessionStorage.getItem("corporatePicUrl");
-            }                            
-        }
-
-        data.salonLogo = JSON.stringify(data.salonLogo);
-        data.salonImg  = JSON.stringify(data.salonImg);
-        data.workImg   = JSON.stringify(data.workImg);       
+        var data = JSON.parse(sessionStorage.getItem("preview-shop-data"));
+        if($.isArray(data.contractPicUrl)) data.contractPicUrl = JSON.stringify(data.contractPicUrl);
+        if($.isArray(data.licensePicUrl)) data.licensePicUrl = JSON.stringify(data.licensePicUrl);
+        if($.isArray(data.corporatePicUrl)) data.corporatePicUrl = JSON.stringify(data.corporatePicUrl);
+        if($.isArray(data.salonLogo)) data.salonLogo = JSON.stringify(data.salonLogo);
+        if($.isArray(data.salonImg)) data.salonImg = JSON.stringify(data.salonImg);
+        if($.isArray(data.workImg)) data.workImg = JSON.stringify(data.workImg);  
         currentData = data;
         lib.ajat('#domid=table-wrapper&tempid=table-t').template(data);
         createScript();

@@ -43,13 +43,20 @@
     }
 
     var submit = function(shopData){
-		shopData.contractPicUrl=JSON.stringify(shopData.contractPicUrl);
-		shopData.licensePicUrl=JSON.stringify(shopData.licensePicUrl);
-		shopData.corporatePicUrl=JSON.stringify(shopData.corporatePicUrl);
-        shopData.logo      = shopData.salonLogo[0].thumbimg;
-        shopData.salonLogo = JSON.stringify(shopData.salonLogo);
-        shopData.salonImg  = JSON.stringify(shopData.salonImg);
-        shopData.workImg   = JSON.stringify(shopData.workImg);
+        if($.isArray(shopData.contractPicUrl)) 
+            shopData.contractPicUrl = JSON.stringify(shopData.contractPicUrl);
+        if($.isArray(shopData.licensePicUrl)) 
+            shopData.licensePicUrl = JSON.stringify(shopData.licensePicUrl);
+        if($.isArray(shopData.corporatePicUrl)) 
+            shopData.corporatePicUrl = JSON.stringify(shopData.corporatePicUrl);
+        if($.isArray(shopData.salonLogo)){
+            shopData.logo = shopData.salonLogo[0].thumbimg; 
+            shopData.salonLogo = JSON.stringify(shopData.salonLogo);            
+        }
+        if($.isArray(shopData.salonImg)) 
+            shopData.salonImg = JSON.stringify(shopData.salonImg);
+        if($.isArray(shopData.workImg)) 
+            shopData.workImg = JSON.stringify(shopData.workImg);  
 
         lib.ajax({
             type: "post",

@@ -474,7 +474,9 @@
 							if(data.code==0){
 								if(!options.crop){
 									if(up.createThumbnails){
-										up.createThumbnails(data.response)
+										up.createThumbnails(data.response,function(){
+											up.trigger('updateImageData');
+										})
 									}else{
 										up.preview(up.area,data.response);
 									}
@@ -509,6 +511,7 @@
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').show();
 								}
+								uploader.trigger('updateImageData');
 							});
 							if(options.imageArray){
 								uploader.thumbnails.prepend(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:options.imageArray}));

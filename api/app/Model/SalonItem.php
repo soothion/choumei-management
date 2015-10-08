@@ -7,6 +7,24 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Hairstylist;
 class SalonItem extends Model {
 
+    /**
+     * 上架状态
+     * @var unknown
+     */
+    CONST STATUS_OF_UP = 1;
+    
+    /**
+     * 下架状态
+     * @var unknown
+     */
+    CONST STATUS_OF_DOWN = 2;
+    
+    /**
+     * 删除状态
+     * @var unknown
+     */
+    CONST STATUS_OF_DELETE = 3;
+    
 	protected $table = 'salon_item';
 
 	public $timestamps = false;
@@ -23,7 +41,7 @@ class SalonItem extends Model {
 	
 	public function salon()
 	{
-	    return $this->belongsTo(Salon::class);
+	    return $this->belongsTo(Salon::class,'salonid','salonid');
 	}
 	
 	/*

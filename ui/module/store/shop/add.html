@@ -154,6 +154,18 @@
                     <span>金字塔店</span>
                     </label>
 
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="4"
+                    <%=data.shopType==4 ? "checked" : "" %>>
+                    <span>高端店</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="5"
+                    <%=data.shopType==5 ? "checked" : "" %>>
+                    <span>写字楼店</span>
+                    </label>
+
                     <span class="control-help" style="display:none;"></span>
                 </div>
 
@@ -228,7 +240,7 @@
                         if(data.changeInTime==0){
                             data.changeInTime = "";
                         }else if(!isNaN(data.changeInTime)){
-                            data.changeInTime = lib.tools.getDate(data.changeInTime);
+                            data.changeInTime = new Date(data.changeInTime*1000).format("yyyy-MM-dd")
                         }
                         %>   
                         <input type="date" name="changeInTime" value="<%=data.changeInTime%>" max="2030-01-01" placeholder="YYYY-MM-DD" required>
