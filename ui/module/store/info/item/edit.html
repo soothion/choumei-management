@@ -24,7 +24,7 @@
 				<span class="space"></span>
 				<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
 			</div>
-			<%if(query.page=="special"){%>
+			<%if(query.p=="special"){%>
 			<legend>新增方式</legend>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>选择分类：</label>
@@ -42,7 +42,7 @@
 			</div>
 			<hr />
 			<%}%>
-			<input type="hidden" name="itemType" value="<%=query.page=="special"?"2":"1"%>" />
+			<input type="hidden" name="itemType" value="<%=query.p=="special"?"2":"1"%>" />
 			<input type="hidden" name="salonid" value="<%=query.salonid%>" />
 			<legend>项目资料</legend>
 			<div class="control-group">
@@ -135,7 +135,7 @@
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
-			<%if(query.page=="item"){%>
+			<%if(query.p=="item"){%>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>库存数量：</label>
 				<div class="control">
@@ -145,7 +145,7 @@
 				</div>
 			</div>
 			<%}%>
-			<%if(query.page=="special"){%>
+			<%if(query.p=="special"){%>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>项目日库存：</label>
 				<div class="control">
@@ -184,27 +184,27 @@
 				<div class="control-group">
 					<label class="control-label" for=""><span class="red">*</span>原价：</label>
 					<div class="control">
-						<input type="text" required pattern="number" max="99999" min="1" name="price">
-						<!--
+						<span>
+							<input type="text" required pattern="number" maxlength="5" min="1" name="price">
+						</span>
 						<input type="text" pattern="number" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
-						<span class="unit">%</span>-->
-						<span class="control-help" style="display:none;"></span>
+						<span class="unit">%</span>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label" for=""><span class="red">*</span>臭美价：</label>
 					<div class="control">
-						<input type="text" required pattern="number" max="99999" min="1" name="priceDis">
-						<!--
+						<span>
+						<input type="text" required pattern="number" maxlength="5" min="1" name="priceDis">
+						</span>
 						<input type="text" pattern="number" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
-						<span class="unit">%</span>-->
-						<span class="control-help" style="display:none;"></span>
+						<span class="unit">%</span>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label" for="">集团价：</label>
 					<div class="control">
-						<input type="text" required pattern="number" max="99999" min="1" name="priceGroup">
+						<input type="text" required pattern="number" maxlength="5" min="1" name="priceGroup">
 					</div>
 				</div>
 			</div>
@@ -241,72 +241,66 @@
 							min-width:0!important;
 							margin-bottom:5px;
 						}
+						.form-item .table input{
+							width:100%;
+							margin-top:-5px;
+							margin-bottom:-5px;
+						}
 					</style>
 					<div class="control-label" >
-						<label><input type="checkbox" /><span>性别</span></label>
+						<label><input type="checkbox" class="item-checkbox" value="sex" /><span>性别</span></label>
 					</div>
 					<div class="control">
-						<label><input type="checkbox" disabled /><span>男</span></label>
-						<label><input type="checkbox" disabled /><span>女</span></label>
+						<label><input type="checkbox" disabled name="sex" value="男" required/><span>男</span></label>
+						<label><input type="checkbox" disabled name="sex" value="女" required/><span>女</span></label>
 					</div>
 					<hr />
 					<div class="control-label" >
-						<label><input type="checkbox" /><span>造型师</span></label>
+						<label><input type="checkbox" class="item-checkbox" value="hairstylist" /><span>造型师</span></label>
 					</div>
 					<div class="control">
-						<input type="text"  class="input-small" disabled />
+						<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+						<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+						<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+						<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+						<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
 						<button type="button" class="btn btn-plus" disabled style="cursor: not-allowed;"><i class="fa fa-plus"></i></button>
+						<span class="control-help" style="display: none;">请输入造型师</span>
 					</div>
 					<hr />
 					<div class="control-label" >
-						<label><input type="checkbox" /><span>发长</span></label>
+						<label><input type="checkbox" class="item-checkbox" value="longhair" /><span>发长</span></label>
 					</div>
 					<div class="control">
-						<label><input type="checkbox" disabled /><span>长发</span></label>
-						<label><input type="checkbox" disabled /><span>中发</span></label>
-						<label><input type="checkbox" disabled /><span>短发</span></label>
-						<label><input type="checkbox" disabled /><span>超长发</span></label>
-						<label><input type="checkbox" disabled /><span>超短发</span></label>
+						<label><input type="checkbox" disabled name="longhair" value="长发" required/><span>长发</span></label>
+						<label><input type="checkbox" disabled name="longhair" value="中发" required/><span>中发</span></label>
+						<label><input type="checkbox" disabled name="longhair" value="短发" required/><span>短发</span></label>
+						<label><input type="checkbox" disabled name="longhair" value="超长发" required/><span>超长发</span></label>
+						<label><input type="checkbox" disabled name="longhair" value="超短发" required/><span>超短发</span></label>
 					</div>
 					<hr />
 					<div class="control-label" >
-						<label><input type="checkbox" /><span>药水</span></label>
+						<label><input type="checkbox" class="item-checkbox" value="solution" /><span>药水</span></label>
 					</div>
 					<div class="control">
-						<input type="text" class="input-small" disabled />
+						<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+						<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+						<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+						<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+						<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
 						<button type="button" class="btn btn-plus" disabled style="cursor: not-allowed;"><i class="fa fa-plus"></i></button>
+						<span class="control-help" style="display: none;">请输入药水</span>
 					</div>
 					<hr />
-					<button type="button" class="btn" >生成价格表</button>
+					<button type="button" class="btn" id="btn-price" >生成价格表</button>
 					<input type="text" pattern="float" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;"/>
 					<span class="unit">%</span>
 					<input type="text" pattern="float" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;"/>
 					<span class="unit">%</span>
-					<div class="table">
-						<table>
-							<thead>
-								<tr>
-									<th>性别</th>
-									<th>造型师</th>
-									<th>发长</th>
-									<th>药水</th>
-									<th>原价</th>
-									<th>臭美价</th>
-									<th>集团价</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>男</td>
-									<td>造型师</td>
-									<td>发长</td>
-									<td>药水</td>
-									<td>100</td>
-									<td>100</td>
-									<td>1000</td>
-								</tr>
-							</tbody>
-						</table>
+					<input type="hidden" name="normMenu" />
+					<input type="hidden" name="normarr" required requiredmsg="请生成价格表" />
+					<div class="table" id="format-table">
+						
 					</div>
 				</div>
 			</div>
@@ -348,12 +342,42 @@
 			<option value="<%=item.itemid%>"><%=item.itemname%></option>
 		<%})%>
 	</script>
+	<script type="text/template" id="format-table-t">
+	<table>
+		<thead>
+			<tr>
+				<th>性别</th>
+				<th>造型师</th>
+				<th>发长</th>
+				<th>药水</th>
+				<th>原价</th>
+				<th>臭美价</th>
+				<th>集团价</th>
+			</tr>
+		</thead>
+		<tbody>
+			<%data.forEach(function(item){%>
+			<tr>
+				<td><%=item.type.sex%></td>
+				<td><%=item.type.hairstylist%></td>
+				<td><%=item.type.longhair%></td>
+				<td><%=item.type.solution%></td>
+				<td><input type="text"  /></td>
+				<td><input type="text" /></td>
+				<td><input type="text" /></td>
+			</tr>
+			<%})%>
+		</tbody>
+	</table>
+	</script>
 	<script type="text/javascript">
 		$(function(){
 			$(document.body).on('change','.form-item .control-label input',function(){
 				$(this).closest('.control-label').next('.control').find('input,button').attr('disabled',!this.checked);
 			}).on('click','.form-item .btn-plus',function(){
-				$(this).before('<input type="text" class="input-small"/>');
+				var name=$(this).prev().attr('name');
+				$(this).before('<input type="text" class="input-small" maxlength="10" nospace name="'+name+'"/>');
+				$(this).prev().focus();
 			}).on('click','.price-choose',function(){
 				if(this.checked&&this.value==1){
 					$('.price-group').show().next('.format-group').hide();
@@ -379,16 +403,105 @@
 					auto_start:true,
 					filters: {
 						mime_types : [
-							{ title : "Image files", extensions : "jpg,png,jpeg" },
+							{ title : "Image files", extensions : "jpg,png,jpeg" }
 						]
 					}
-					//max_file_size:'800kb',
-					//imageLimitSize:"512*512"
 				});
 				$('input[name="price"]').on('pass',function(){
 					$('input[name="priceDis"],input[name="priceGroup"]').attr('max',this.value);
-				})
-			})
+				});
+				var $format=$('.format-group');
+				$('#btn-price').on('click',function(){
+					var itemCheckbox=$('.item-checkbox:checked');
+					if(itemCheckbox.length==0){
+						parent.lib.popup.alert({text:'至少要选择一个规格项'})
+					}else{
+						$format.find('input[type="text"],input[type="checkbox"]').blur();
+						if($format.find('.control-help:visible').length==0){
+							var sexArr=[];
+							$('input[name="sex"]:checked').each(function(){
+								sexArr.push({sex:this.value});
+							});
+							var longhairArr=[];
+							$('input[name="longhair"]:checked').each(function(){
+								longhairArr.push({longhair:this.value});
+							});
+							var hairstyArr=[];
+							$('input[name="hairstylist"]').each(function(){
+								if(this.value){
+									hairstyArr.push({hairstylist:this.value});
+								}
+							});
+							var solutionArr=[];
+							$('input[name="solution"]').each(function(){
+								if(this.value){
+									solutionArr.push({solution:this.value});
+								}
+							});
+							var array=[];
+							if(sexArr.length>0){
+								array.push(sexArr);
+							}
+							if(longhairArr.length>0){
+								array.push(longhairArr);
+							}
+							if(hairstyArr.length>0){
+								array.push(hairstyArr);
+							}
+							if(solutionArr.length>0){
+								array.push(solutionArr);
+							}
+							var data=[];
+							if(array.length>0){
+								array[0].forEach(function(item1){
+									if(array[1]){
+										array[1].forEach(function(item2){
+											if(array[2]){
+												array[2].forEach(function(item3){
+													if(array[3]){
+														array[3].forEach(function(item4){
+															data.push({type:$.extend({},item1,item2,item3,item4)});
+														});
+													}else{
+														data.push({type:$.extend({},item1,item2,item3)});
+													}
+												});
+											}else{
+												data.push({type:$.extend({},item1,item2)});
+											}
+										});
+									}else{
+										data.push({type:$.extend({},item1)});
+									}
+								});
+							}
+							$('input[name="normarr"]').val(JSON.stringify(data));
+							var normMenu=[];
+							itemCheckbox.each(function(){
+								normMenu.push(this.value);
+							})
+							$('input[name="normMenu"]').val(JSON.stringify(normMenu));
+							$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:data}));
+						}
+					}
+				});
+				$format.on('blur','.input-small',function(e){
+					if(this.disabled) return;
+					var $this=$(this);
+					var arr=[];
+					$this.parent().children('input').each(function(){
+						if(this.value){
+							arr.push(this.value);
+						}
+					})
+					if(arr.length==0){
+						$this.siblings('.control-help').show();
+					}else{
+						$this.siblings('.control-help').hide();
+					}
+					e.stopPropagation();
+				});
+			});
 		});
 	</script>
   </body>

@@ -15,7 +15,7 @@
 			</div>
 		</div>
 		<div class="wrapper">
-			<div class="table-detail" ajat="warehouse/show/<%=query._%>#domid=detail&tempid=detail-t" id="detail">
+			<div class="table-detail" ajat="<%if(query.p=='item'){%>item/show/<%}else if(query.p=='warehouse'){%>warehouse/show/<%}else if(query.p=='special'){%>special/show/<%}%><%=query.id%>#domid=detail&tempid=detail-t" id="detail">
 				<script type="text/template" id="detail-t">
 				<div class="detail-operation">
 					<button class="btn">下架</button><span class="space"></span>
