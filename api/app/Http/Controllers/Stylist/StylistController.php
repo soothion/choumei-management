@@ -31,7 +31,7 @@ class StylistController  extends Controller {
      * @apiSuccess {String} sNumber 在职编号.
      * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
      * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪.
-     * @apiSuccess {Number} status 状态.
+     * @apiSuccess {Number} status 状态:1正常;2:禁用..
      * @apiSuccess {Number} num 作品数.
      * 
      * 
@@ -94,7 +94,7 @@ class StylistController  extends Controller {
      * @apiSuccess {Number} addTime 添加时间.
      * @apiSuccess {Number} likeNum 喜欢总数.
      * @apiSuccess {String} signature 造型师签名.
-     * @apiSuccess {Number} status 状态.
+     * @apiSuccess {Number} status 状态:1正常;2:禁用.
      * @apiSuccess {Number} sex 性别 0保密 1男 2女.
      * @apiSuccess {String} wechat 微信.
      * @apiSuccess {String} qq QQ.
@@ -303,7 +303,7 @@ class StylistController  extends Controller {
      * @apiSuccess {Number} addTime 添加时间.
      * @apiSuccess {Number} likeNum 喜欢总数.
      * @apiSuccess {String} signature 造型师签名.
-     * @apiSuccess {Number} status 状态.
+     * @apiSuccess {Number} status 状态:1正常;2:禁用..
      * @apiSuccess {Number} sex 性别 0保密 1男 2女.
      * @apiSuccess {String} wechat 微信.
      * @apiSuccess {String} qq QQ.
