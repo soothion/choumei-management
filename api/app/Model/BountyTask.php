@@ -818,7 +818,7 @@ class BountyTask extends Model {
             return false;
         }
 //
-        if (!self::checkRefundStatus($refunds, [self::STATUS_APPLY_REFUND, self::STATUS_IN_REFUND])) { //检查状态  允许再次申请
+        if (!self::checkRefundStatus($refunds, [self::STATUS_APPLY_REFUND, self::STATUS_IN_REFUND, self::STATUS_APPLY_FAILED])) { //检查状态  允许再次申请
             $output['err_info'] .= "退款单状态不正确";
             return false;
         }
