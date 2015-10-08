@@ -23,7 +23,7 @@ class BountyController extends Controller {
      *
      * @apiParam {Number} isRefund 必选,是否为退款查询：1否 2是.
      * @apiParam {Number} page 可选,页码，默认为1.
-     * @apiParam {Number} pageSize 可选,默认为20.
+     * @apiParam {Number} page_size 可选,默认为20.
      * @apiParam {String} keyword 可选,搜索关键词.
      * @apiParam {String} keywordType 必选,搜索关键词类型，可取0 赏金单号/1 用户臭美号/2 用户手机号/3 店铺名称.
      * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
@@ -104,8 +104,8 @@ class BountyController extends Controller {
         } else {
             $page = 1;
         }
-        if (isset($param['pageSize']) && !empty($param['pageSize'])) {
-            $size = $param['pageSize'];
+        if (isset($param['page_size']) && !empty($param['page_size'])) {
+            $size = $param['page_size'];
         } else {
             $size = 20;
         }
@@ -399,7 +399,7 @@ class BountyController extends Controller {
      * @apiGroup bounty
      *
      * @apiParam {Number} page 可选,页码，默认为1.
-     * @apiParam {Number} pageSize 可选,默认为20.
+     * @apiParam {Number} page_size 可选,默认为20.
      * @apiParam {String} keyword 可选,搜索关键词.
      * @apiParam {String} keywordType 必选,搜索关键词类型，可取"btSn","userName","mobile","salonName".
      * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
@@ -426,8 +426,8 @@ class BountyController extends Controller {
         } else {
             $page = 1;
         }
-        if (isset($param['pageSize']) && !empty($param['pageSize'])) {
-            $size = $param['pageSize'];
+        if (isset($param['page_size']) && !empty($param['page_size'])) {
+            $size = $param['page_size'];
         } else {
             $size = 20;
         }
@@ -454,7 +454,7 @@ class BountyController extends Controller {
      * @apiGroup bounty
      *
      * @apiParam {Number} page 可选,页码，默认为1.
-     * @apiParam {Number} pageSize 可选,默认为20.
+     * @apiParam {Number} page_size 可选,默认为20.
      * @apiParam {String} keyword 可选,搜索关键词.
      * @apiParam {String} keywordType 必选,搜索关键词类型，可取"btSn","userName","mobile","salonName".
      * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
@@ -481,8 +481,8 @@ class BountyController extends Controller {
         } else {
             $page = 1;
         }
-        if (isset($param['pageSize']) && !empty($param['pageSize'])) {
-            $size = $param['pageSize'];
+        if (isset($param['page_size']) && !empty($param['page_size'])) {
+            $size = $param['page_size'];
         } else {
             $size = 20;
         }
