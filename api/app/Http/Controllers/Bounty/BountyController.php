@@ -37,11 +37,10 @@ class BountyController extends Controller {
      * @apiParam {String} sortKey 可选,排序关键词 "btSn" 赏金单号/ "money" 赏金金额 / "addTime"下单时间.
      * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
      *
-     * @apiSuccess {Number} total 总页数.
+     * @apiSuccess {Number} total 总条数.
      * @apiSuccess {Number} per_page 分页大小.
-     * @apiSuccess {Number} records 总条数.
      * @apiSuccess {Number} current_page 当前页面.
-     * @apiSuccess {Number} last_page 当前页面.
+     * @apiSuccess {Number} last_page 最后页面.
      * @apiSuccess {Number} from 起始数.
      * @apiSuccess {Number} to 结束数.
      * @apiSuccess {Number} amount 总金额.
@@ -132,11 +131,10 @@ class BountyController extends Controller {
         $res = [];
         
 
-        $res["total"] = ceil($count / $size);
+        $res["total"] = $count;
         $res["per_page"] = $size;
         $res["current_page"] = $page;
-        $res["last_page"] = $page;
-        $res["records"] = $count;
+        $res["last_page"] = ceil($count / $size);
         $res["amount"] = array("amount" => number_format($amount, 2));
         $res['data'] = $bountys;
         return $this->success($res);
