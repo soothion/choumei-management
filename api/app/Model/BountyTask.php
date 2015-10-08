@@ -188,8 +188,9 @@ class BountyTask extends Model {
                     if ($input["refundStatus"] > 9 || $input["refundStatus"] < 5) {
                         throw new ApiException('赏金单查询退款状态不正确！', ERROR::BOUNTY_SEARCH_REFUNDSTATUS_WRONG);
                     }
-                    $refundStatus = intval($input["refundStatus"]);
-                    $query->where('refundStatus', '=', $refundStatus);
+//                    $refundStatus = intval($input["refundStatus"]);
+                    $refundStatus=explode(',', $input["refundStatus"]);
+                    $query->whereIn('refundStatus', $refundStatus);
                 }
             }
         }

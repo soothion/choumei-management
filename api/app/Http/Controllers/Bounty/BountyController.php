@@ -29,7 +29,7 @@ class BountyController extends Controller {
      * @apiParam {Number} payType 可选,支付方式：2 支付宝/3 微信/6 优惠券/10 易联.
      * @apiParam {Number} isPay 可选,支付状态：1否 2是
      * @apiParam {Number} btStatus 可选,订单状态：1 待抢单，2 待服务，3 已服务，4 已打赏, 5 不打赏, 9 取消
-     * @apiParam {Number} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
+     * @apiParam {String} refundStatus 可选,退款状态：5申请退款，6退款中，7退款完成, 8拒绝, 9失败
      * @apiParam {String} minAddTime 可选,交易时间左框.
      * @apiParam {String} maxAddTime 可选,交易时间右框.
      * @apiParam {String} minEndTime 可选,退款时间左框.
