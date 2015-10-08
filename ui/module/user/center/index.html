@@ -122,7 +122,20 @@
 	</script>
 	<script type="text/javascript">
 		 $('#province,#city,#area').on('change',function(){
-			$('#hidden').val($('#province option:selected').text()+','+$('#city option:selected').text()+','+$('#area option:selected').text());
+			var array=[];
+			var province=$('#province');
+			if(province.val()){
+				array.push(province.children('option:selected').text());
+			}
+			var city=$('#city');
+			if(city.val()){
+				array.push(city.children('option:selected').text());
+			}
+			var area=$('#area');
+			if(area.val()){
+				array.push(area.children('option:selected').text());
+			}
+			$('#hidden').val(array);
 		 });
 	</script>
   </body>
