@@ -200,7 +200,11 @@ class StylistController  extends Controller {
        $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
        if(!$stylist){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
-        }   
+       }   
+       $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
+       if($task==true){
+            throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
+       } 
        $query=Stylist::where(array('stylistId'=>$stylistId))->delete(); 
        if($query){
                 return $this->success();
@@ -447,9 +451,9 @@ class StylistController  extends Controller {
         if($param['checkbox']!=1){
                 throw new ApiException('未选择修改所属店铺', ERROR::MERCHANT_STYLIST_SELECT_ERROR);
         }else {
-            $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->get();
-            if($task==true){
-                 throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
+                $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
+                if($task==true){
+                          throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
             }
         }      
         $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
