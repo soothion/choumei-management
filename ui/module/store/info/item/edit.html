@@ -187,7 +187,7 @@
 						<span>
 							<input type="text" required pattern="number" maxlength="5" min="1" name="price">
 						</span>
-						<input type="text" pattern="number" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
+						<input type="text" pattern="number" class="choumei-discount" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
 						<span class="unit">%</span>
 					</div>
 				</div>
@@ -197,7 +197,7 @@
 						<span>
 						<input type="text" required pattern="number" maxlength="5" min="1" name="priceDis">
 						</span>
-						<input type="text" pattern="number" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
+						<input type="text" pattern="number" class="group-discount" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
 						<span class="unit">%</span>
 					</div>
 				</div>
@@ -242,9 +242,10 @@
 							margin-bottom:5px;
 						}
 						.form-item .table input{
-							width:100%;
 							margin-top:-5px;
 							margin-bottom:-5px;
+							border:0;
+							box-shadow:none;
 						}
 					</style>
 					<div class="control-label" >
@@ -293,12 +294,13 @@
 					</div>
 					<hr />
 					<button type="button" class="btn" id="btn-price" >生成价格表</button>
-					<input type="text" pattern="float" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;"/>
+					<input type="text" pattern="float" id="choumei-precent" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;"/>
 					<span class="unit">%</span>
-					<input type="text" pattern="float" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;"/>
+					<input type="text" pattern="float" id="group-precent"placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;"/>
 					<span class="unit">%</span>
 					<input type="hidden" name="normMenu" />
-					<input type="hidden" name="normarr" required requiredmsg="请生成价格表" />
+					<!--
+					<input type="hidden" name="normarr" required requiredmsg="请生成价格表" />-->
 					<div class="table" id="format-table">
 						
 					</div>
@@ -346,10 +348,18 @@
 	<table>
 		<thead>
 			<tr>
+				<%if(normMenu.indexOf("sex")>-1){%>
 				<th>性别</th>
+				<%}%>
+				<%if(normMenu.indexOf("hairstylist")>-1){%>
 				<th>造型师</th>
+				<%}%>
+				<%if(normMenu.indexOf("longhair")>-1){%>
 				<th>发长</th>
+				<%}%>
+				<%if(normMenu.indexOf("solution")>-1){%>
 				<th>药水</th>
+				<%}%>
 				<th>原价</th>
 				<th>臭美价</th>
 				<th>集团价</th>
@@ -358,13 +368,21 @@
 		<tbody>
 			<%data.forEach(function(item){%>
 			<tr>
-				<td><%=item.type.sex%></td>
-				<td><%=item.type.hairstylist%></td>
-				<td><%=item.type.longhair%></td>
-				<td><%=item.type.solution%></td>
-				<td><input type="text"  /></td>
-				<td><input type="text" /></td>
-				<td><input type="text" /></td>
+				<%if(normMenu.indexOf("sex")>-1){%>
+				<td data-name="sex"><%=item.type.sex%></td>
+				<%}%>
+				<%if(normMenu.indexOf("hairstylist")>-1){%>
+				<td data-name="hairstylist"><%=item.type.hairstylist%></td>
+				<%}%>
+				<%if(normMenu.indexOf("longhair")>-1){%>
+				<td data-name="longhair"><%=item.type.longhair%></td>
+				<%}%>
+				<%if(normMenu.indexOf("solution")>-1){%>
+				<td data-name="solution"><%=item.type.solution%></td>
+				<%}%>
+				<td data-name="price"><input type="text" class="format-price" pattern="number" min="1" required maxlength="5"/></td>
+				<td data-name="priceDis"><input type="text" pattern="number" min="1" maxlength="5"/></td>
+				<td data-name="priceGroup"><input type="text" pattern="number" min="1" maxlength="5"/></td>
 			</tr>
 			<%})%>
 		</tbody>
@@ -398,6 +416,7 @@
 				$(this).parent().siblings('label').children('input').attr('disabled',this.checked);
 			});
 			$('#form').one('_ready',function(){
+				//图片上传
 				lib.puploader.image({
 					browse_button: 'imageUpload',
 					auto_start:true,
@@ -407,10 +426,27 @@
 						]
 					}
 				});
-				$('input[name="price"]').on('pass',function(){
+				//原价与其他折扣价限制
+				var price=$('input[name="price"]');
+				price.on('pass',function(){
 					$('input[name="priceDis"],input[name="priceGroup"]').attr('max',this.value);
 				});
+				//计算臭美价格
+				$('.choumei-discount').on('blur',function(){
+					var val=price.val();
+					if(val&&!isNaN(val)&&this.value&&!isNaN(this.value)){
+						$('input[name="priceDis"]').val(parseInt(val)*parseInt(this.value)/100);
+					}
+				});
+				//计算集团价格
+				$('.group-discount').on('blur',function(){
+					var val=price.val();
+					if(val&&!isNaN(val)&&this.value&&!isNaN(this.value)){
+						$('input[name="priceGroup"]').val(parseInt(val)*parseInt(this.value)/100);
+					}
+				});
 				var $format=$('.format-group');
+				//生成价格表
 				$('#btn-price').on('click',function(){
 					var itemCheckbox=$('.item-checkbox:checked');
 					if(itemCheckbox.length==0){
@@ -475,16 +511,16 @@
 									}
 								});
 							}
-							$('input[name="normarr"]').val(JSON.stringify(data));
 							var normMenu=[];
 							itemCheckbox.each(function(){
 								normMenu.push(this.value);
-							})
+							});
 							$('input[name="normMenu"]').val(JSON.stringify(normMenu));
-							$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:data}));
+							$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:data,normMenu:normMenu}));
 						}
 					}
 				});
+				//校验性别，发长字段
 				$format.on('blur','.input-small',function(e){
 					if(this.disabled) return;
 					var $this=$(this);
@@ -501,6 +537,47 @@
 					}
 					e.stopPropagation();
 				});
+				//如果输入臭美，集团价折扣则到输入原价后生成臭美，集团价
+				$format.on('focus','.format-price',function(){
+					$(this).one('pass',function(){
+						var $this=$(this);
+						var groupPrecent=$('#group-precent').val();
+						var choumeiPrecent=$('#choumei-precent').val();
+						var val=parseInt($this.val());
+						if(val){
+							if(choumeiPrecent&&!isNaN(choumeiPrecent)){
+								$this.parent().next().children('input').val(choumeiPrecent*val/100);
+							}
+							if(groupPrecent&&!isNaN(groupPrecent)){
+								$this.parent().next().next().children('input').val(groupPrecent*val/100);
+							}
+						}
+					});
+				});
+				var form=$('form')[0];
+				//重写getFormData以添加normarr参数
+				form._getFormData=function(){
+					var data=lib.tools.getFormData($(this));
+					if(data.priceStyle==2){
+						data.normarr=[];
+						$('#format-table tbody tr').each(function(){
+							var obj={type:{}};
+							$(this).children().each(function(){
+								var $this=$(this);
+								if($this.children('input').length==0){
+									obj.type[$this.data('name')]=$this.text();
+								}else{
+									obj[$this.data('name')]=$this.children('input').val();
+								}
+							})
+							data.normarr.push(obj);
+						});
+						data.normarr=JSON.stringify(data.normarr);
+					}
+					return data;
+				}
+				form.goback=function(){
+				}
 			});
 		});
 	</script>
