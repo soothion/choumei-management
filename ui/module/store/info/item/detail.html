@@ -15,11 +15,12 @@
 			</div>
 		</div>
 		<div class="wrapper">
-			<div class="table-detail">
+			<div class="table-detail" ajat="warehouse/show/<%=query._%>#domid=detail&tempid=detail-t" id="detail">
+				<script type="text/template" id="detail-t">
 				<div class="detail-operation">
 					<button class="btn">下架</button><span class="space"></span>
 					<button class="btn">上架</button><span class="space"></span>
-					<a class="btn" href="edit.html">编辑</a><span class="space"></span>
+					<a class="btn" href="edit.html?id=<%=query.id%>">编辑</a><span class="space"></span>
 					<button class="btn btn-cancel">关闭</button>
 				</div>
 				<table>
@@ -164,6 +165,7 @@
 						</tr>
 					</tbody>
 				</table>
+				</script>
 			</div>
 		</div>
   </body>

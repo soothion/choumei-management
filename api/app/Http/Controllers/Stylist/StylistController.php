@@ -29,9 +29,9 @@ class StylistController  extends Controller {
      * @apiSuccess {String} stylistName 造型师名称.
      * @apiSuccess {Number} mobilephone 手机号.
      * @apiSuccess {String} sNumber 在职编号.
-     * @apiSuccess {Numder} grade 悬赏等级.
-     * @apiSuccess {Number} fastGrade 快剪等级.
-     * @apiSuccess {Number} status 状态.
+     * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
+     * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪.
+     * @apiSuccess {Number} status 状态:1正常;2:禁用..
      * @apiSuccess {Number} num 作品数.
      * 
      * 
@@ -86,6 +86,7 @@ class StylistController  extends Controller {
      *
      * @apiSuccess {Number} stylistId 造型师ID.
      * @apiSuccess {Number} salonId 店铺编号.
+     * @apiSuccess {String} salonname 店铺名称.
      * @apiSuccess {String} stylistName 造型师名称.
      * @apiSuccess {String} stylistImg 造型师图像.
      * @apiSuccess {String} job 职位.
@@ -93,8 +94,8 @@ class StylistController  extends Controller {
      * @apiSuccess {Number} addTime 添加时间.
      * @apiSuccess {Number} likeNum 喜欢总数.
      * @apiSuccess {String} signature 造型师签名.
-     * @apiSuccess {Number} status 状态.
-     * @apiSuccess {Number} sex 性别.
+     * @apiSuccess {Number} status 状态:1正常;2:禁用.
+     * @apiSuccess {Number} sex 性别 0保密 1男 2女.
      * @apiSuccess {String} wechat 微信.
      * @apiSuccess {String} qq QQ.
      * @apiSuccess {String} email email.
@@ -102,13 +103,13 @@ class StylistController  extends Controller {
      * @apiSuccess {String} IDcard 身份证.
      * @apiSuccess {String} sNumber 在职编号.
      * @apiSuccess {Numder} workYears 工作年限.
-     * @apiSuccess {Numder} grade 悬赏等级.
+     * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
      * @apiSuccess {Json} workExp 工作经验.
      * @apiSuccess {Json} educateExp 教育经验.
      * @apiSuccess {String} description 自我描述.
      * @apiSuccess {Number} gradeType 悬赏等级.
      * @apiSuccess {Number} osType 造型师使用的设备类型.
-     * @apiSuccess {Number} fastGrade 快剪等级.
+     * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪.
      * @apiSuccess {String} drivingLicense 驾驶证.
      * @apiSuccess {String} passport 护照.
      * @apiSuccess {String} officerCert 军官证.
@@ -140,8 +141,8 @@ class StylistController  extends Controller {
      *               "sNumber":"1226",
      *               "workYears":5,
      *               "grade":0,
-     *               "workExp":"{\"wsTime1\":\"\",\"weTime1\":\"\",\"wname1\":\"\",\"wjob1\":\"\",\"waddress1\":\"\",\"wsTime2\":\"\",\"weTime2\":\"\",\"wname2\":\"\",\"wjob2\":\"\",\"waddress2\":\"\",\"wsTime3\":\"\",\"weTime3\":\"\",\"wname3\":\"\",\"wjob3\":\"\",\"waddress3\":\"\",\"wsTime4\":\"\",\"weTime4\":\"\",\"wname4\":\"\",\"wjob4\":\"\",\"waddress4\":\"\",\"wsTime5\":\"\",\"weTime5\":\"\",\"wname5\":\"\",\"wjob5\":\"\",\"waddress5\":\"\"}",
-     *               "educateExp":"{\"sTime1\":\"\",\"eTime1\":\"\",\"name1\":\"\",\"sTime2\":\"\",\"eTime2\":\"\",\"name2\":\"\",\"sTime3\":\"\",\"eTime3\":\"\",\"name3\":\"\",\"sTime4\":\"\",\"eTime4\":\"\",\"name4\":\"\",\"sTime5\":\"\",\"eTime5\":\"\",\"name5\":\"\"}",
+     *               "workExp":"{"wsTime1":"","weTime1":"","wname1":"","wjob1":"","waddress1":"","wsTime2":"","weTime2":"","wname2":"","wjob2":"","waddress2":"","wsTime3":"","weTime3":"","wname3":"","wjob3":"","waddress3":"","wsTime4":"","weTime4":"","wname4":"","wjob4":"","waddress4":"","wsTime5":"","weTime5":"","wname5":"","wjob5":"","waddress5":""}",
+     *               "educateExp":"{"sTime1":"","eTime1":"","name1":"","sTime2":"","eTime2":"","name2":"","sTime3":"","eTime3":"","name3":"","sTime4":"","eTime4":"","name4":"","sTime5":"","eTime5":"","name5":""}",
      *               "description":"asdfasdfasdf",
      *               "gradeType":0,
      *               "osType":0,
@@ -164,7 +165,11 @@ class StylistController  extends Controller {
         $query=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$query){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);  
-         }
+        }
+        $salon=DB::table('salon')->where(array('salonid'=>$query['salonId']))->first();
+        $query->salonname=$salon->salonname;
+        $query->workExp=json_decode($query['workExp'],true);
+        $query->educateExp=json_decode($query['educateExp'],true);
         return $this->success($query);
     }
      
@@ -298,8 +303,8 @@ class StylistController  extends Controller {
      * @apiSuccess {Number} addTime 添加时间.
      * @apiSuccess {Number} likeNum 喜欢总数.
      * @apiSuccess {String} signature 造型师签名.
-     * @apiSuccess {Number} status 状态.
-     * @apiSuccess {Number} sex 性别.
+     * @apiSuccess {Number} status 状态:1正常;2:禁用..
+     * @apiSuccess {Number} sex 性别 0保密 1男 2女.
      * @apiSuccess {String} wechat 微信.
      * @apiSuccess {String} qq QQ.
      * @apiSuccess {String} email email.
@@ -307,13 +312,13 @@ class StylistController  extends Controller {
      * @apiSuccess {String} IDcard 身份证.
      * @apiSuccess {String} sNumber 在职编号.
      * @apiSuccess {Numder} workYears 工作年限.
-     * @apiSuccess {Numder} grade 悬赏等级.
+     * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
      * @apiSuccess {Json} workExp 工作经验.
      * @apiSuccess {Json} educateExp 教育经验.
      * @apiSuccess {String} description 自我描述.
      * @apiSuccess {Number} gradeType 悬赏等级.
      * @apiSuccess {Number} osType 造型师使用的设备类型.
-     * @apiSuccess {Number} fastGrade 快剪等级.
+     * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪.
      * @apiSuccess {String} drivingLicense 驾驶证.
      * @apiSuccess {String} passport 护照.
      * @apiSuccess {String} officerCert 军官证.
@@ -347,8 +352,8 @@ class StylistController  extends Controller {
      *               "sNumber":"1226",
      *               "workYears":5,
      *               "grade":0,
-     *               "workExp":"{\"wsTime1\":\"\",\"weTime1\":\"\",\"wname1\":\"\",\"wjob1\":\"\",\"waddress1\":\"\",\"wsTime2\":\"\",\"weTime2\":\"\",\"wname2\":\"\",\"wjob2\":\"\",\"waddress2\":\"\",\"wsTime3\":\"\",\"weTime3\":\"\",\"wname3\":\"\",\"wjob3\":\"\",\"waddress3\":\"\",\"wsTime4\":\"\",\"weTime4\":\"\",\"wname4\":\"\",\"wjob4\":\"\",\"waddress4\":\"\",\"wsTime5\":\"\",\"weTime5\":\"\",\"wname5\":\"\",\"wjob5\":\"\",\"waddress5\":\"\"}",
-     *               "educateExp":"{\"sTime1\":\"\",\"eTime1\":\"\",\"name1\":\"\",\"sTime2\":\"\",\"eTime2\":\"\",\"name2\":\"\",\"sTime3\":\"\",\"eTime3\":\"\",\"name3\":\"\",\"sTime4\":\"\",\"eTime4\":\"\",\"name4\":\"\",\"sTime5\":\"\",\"eTime5\":\"\",\"name5\":\"\"}",
+     *               "workExp":"{"wsTime1":"","weTime1":"","wname1":"","wjob1":"","waddress1":"","wsTime2":"","weTime2":"","wname2":"","wjob2":"","waddress2":"","wsTime3":"","weTime3":"","wname3":"","wjob3":"","waddress3":"","wsTime4":"","weTime4":"","wname4":"","wjob4":"","waddress4":"","wsTime5":"","weTime5":"","wname5":"","wjob5":"","waddress5":""}",
+     *               "educateExp":"{"sTime1":"","eTime1":"","name1":"","sTime2":"","eTime2":"","name2":"","sTime3":"","eTime3":"","name3":"","sTime4":"","eTime4":"","name4":"","sTime5":"","eTime5":"","name5":""}",
      *               "description":"asdfasdfasdf",
      *               "gradeType":0,
      *               "osType":0,
@@ -374,6 +379,8 @@ class StylistController  extends Controller {
         if(!$stylist){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR); 
         }
+        $stylist->workExp=json_decode($stylist['workExp'],true);
+        $stylist->educateExp=json_decode($stylist['educateExp'],true);
         $field=['salonname','merchantId'];
         $salon=DB::table('salon')->select($field)->where(array("salonid"=>$stylist->salonId))->first(); 
          if($salon===false){
@@ -409,11 +416,11 @@ class StylistController  extends Controller {
      * @apiParam {String} sNumber 必填,在职编号.
      * @apiParam {Numder} workYears 必填,工作年限.
      * @apiParam {String} job 必填,门店职位.
-     * @apiParam {Numder} grade 可选,悬赏等级.
+     * @apiParam {Numder} grade 可选,悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
      * @apiParam {Json} workExp 可选,工作经验.
      * @apiParam {Json} educateExp 可选,教育经历.
      * @apiParam {String} description 可选,自我描述.
-     * @apiParam {Number} fastGrade 可选,快剪等级.
+     * @apiParam {Number} fastGrade 可选,快剪等级 0没有等级 1普通快剪 2总监快剪.
      * @apiParam {String} drivingLicense 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,驾驶证.
      * @apiParam {String} passport 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,护照.
      * @apiParam {String} officerCert 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,军官证.
@@ -497,11 +504,11 @@ class StylistController  extends Controller {
      * @apiParam {String} sNumber 必填,在职编号.
      * @apiParam {Numder} workYears 必填,工作年限.
      * @apiParam {String} job 必填,门店职位.
-     * @apiParam {Numder} grade 可选,悬赏等级.
+     * @apiParam {Numder} grade 可选,悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
      * @apiParam {Json} workExp 可选,工作经验.
      * @apiParam {Json} educateExp 可选,教育经历.
      * @apiParam {String} description 可选,自我描述.
-     * @apiParam {Number} fastGrade 可选,快剪等级.
+     * @apiParam {Number} fastGrade 可选,快剪等级 0没有等级 1普通快剪 2总监快剪.
      * @apiParam {String} drivingLicense 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,驾驶证.
      * @apiParam {String} passport 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,护照.
      * @apiParam {String} officerCert 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,军官证.

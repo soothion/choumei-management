@@ -92,13 +92,13 @@
 			<%if(data.data&&data.data.length>0){%>
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form action="pay_manage/confirm" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+				<form action="pay_manage/confirm" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 					<button class="btn" disabled>确认付款</button>
 					<input type="hidden" name="do" value="1" />
 					<input type="hidden" name="ids" />
 				</form>
 				<span class="space"></span>
-				<form action="pay_manage/confirm" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+				<form action="pay_manage/confirm" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 					<button class="btn" disabled>拒绝付款</button>
 					<input type="hidden" name="do" value="2" />
 					<input type="hidden" name="ids" />

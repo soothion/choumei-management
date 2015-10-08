@@ -175,7 +175,8 @@ $(function(){
 						$this.attr('disabled',false);
 					},1100);
 					if(data.result==1){
-						if($this.attr('onreset')=="remove"){
+						var successEvent=$this.attr('onsuccess');
+						if(successEvent=="remove"){
 							parent.lib.popup.result({
 								text:"删除成功",
 								define:function(){
@@ -183,9 +184,16 @@ $(function(){
 								}
 							});
 						}else{
-							$this.trigger('reset',data);//成功后会触发reset事件
+							if(successEvent){
+								eval(successEvent);
+							}
+							$this.trigger('success',data);//成功后会触发reset事件
 						}
 					}else{
+						var failEvent=$this.attr('onfail');
+						if(failEvent){
+							eval(successEvent);
+						}
 						$this.trigger('fail',data);	
 					}
 				},
@@ -207,9 +215,6 @@ $(function(){
 		}else{
 			request();
 		}
-		
-	}).on('reset','form[data-role="normal"]',function(e){
-		e.preventDefault();
 	});
 	
 	/**input-switch/placeholder-switch切换**/

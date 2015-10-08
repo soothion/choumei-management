@@ -92,7 +92,7 @@
 					  <td>
 						 <a class="link" data-slug="user.show,user.update" target="_blank" href="detail.html?id=<%=item.user_id%>">查看</a>
 						 <span class="space"></span>
-						 <form data-slug="user.destory" action="user/destroy/<%=item.user_id%>" data-role="normal" onreset="remove">
+						 <form data-slug="user.destory" action="user/destroy/<%=item.user_id%>" data-role="normal" onsuccess="remove">
 							<button class="link">删除</button>
 						 </form>
 					  </td>
