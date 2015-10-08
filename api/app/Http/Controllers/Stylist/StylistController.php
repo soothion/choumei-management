@@ -379,6 +379,8 @@ class StylistController  extends Controller {
         if(!$stylist){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR); 
         }
+        $stylist->workExp=json_decode($stylist['workExp'],true);
+        $stylist->educateExp=json_decode($stylist['educateExp'],true);
         $field=['salonname','merchantId'];
         $salon=DB::table('salon')->select($field)->where(array("salonid"=>$stylist->salonId))->first(); 
          if($salon===false){
