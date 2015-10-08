@@ -83,13 +83,13 @@ class WarehouseController extends Controller
      *                       "typeid": 10,
      *                       "typename": "其他"
      *                   },
-     *                   "salon_norms_cat": null
+     *                   "salon_norms_cat": []
      *               },
      *               {
      *                   "itemid": 44976,
      *                   "salonid": 1216,
      *                   "typeid": 10,
-     *                   "norms_cat_id": 0,
+     *                   "norms_cat_id": 1243,
      *                   "itemname": "香缇卡洗发水",
      *                   "item_type": 1,
      *                   "minPrice": 21,
@@ -106,7 +106,12 @@ class WarehouseController extends Controller
      *                       "typeid": 10,
      *                       "typename": "其他"
      *                   },
-     *                   "salon_norms_cat": null
+     *                   "salon_norms_cat": [
+     *                       "性别",
+     *                       "理发师",
+     *                       "药水",
+     *                       "发长"
+     *                   ]
      *               }
      *           ]
      *       }
@@ -155,11 +160,11 @@ class WarehouseController extends Controller
     }
 
     /**
-     * @api {get} /warehouse/show/{id} 2.项目仓库详情
+     * @api {get} /warehouse/show/{id} 2.项目仓库详情  
      * @apiName show
      * @apiGroup Warehouse
      *
-     *
+     * @apiParam {String} id 参见项目详情 http://192.168.13.46:8150/doc/#api-Item-show
      *
      * @apiErrorExample Error-Response:
      *		{

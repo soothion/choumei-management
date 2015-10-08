@@ -104,7 +104,8 @@ class Item extends Model {
                 'up_time',
                 'managers.name',
                 'salon_item.UPDATE_date',
-                'sort_in_type'
+                'sort_in_type',
+                'status'
                 )
             ->find($id);
         if(!$item)

@@ -138,8 +138,10 @@ class ItemController extends Controller{
 	 * @apiSuccess {Number} price 原价.
 	 * @apiSuccess {Number} price_dis 臭美价.
 	 * @apiSuccess {Number} price_group 集团价.
+	 * @apiSuccess {Number} status 状态 1上架2下架3删除.
 	 * @apiSuccess {Number} salon_item_format_id 规格ID.
 	 * @apiSuccess {Number} formats 规格名称.
+	 * 
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:

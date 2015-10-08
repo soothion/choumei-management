@@ -762,7 +762,7 @@ Route::group(['middleware'], function(){
     
     Route::any('warehouse/show/{id}',array(  //项目仓库详情
     'as'=>'warehouse.show',
-    'uses'=>'Item\WarehouseController@show'
+    'uses'=>'Item\ItemController@show'
         ));
     
     Route::any('warehouse/puton',array(  //项目仓库上架
