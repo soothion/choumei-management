@@ -46,7 +46,7 @@
 
     <div class="wrapper">
         <form class="form-vertical" data-role="form" id="form" 
-        ajat="<%if(query.id){%>Stylist/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
+        ajat="<%if(query.id){%>Stylist/edit/<%=query.id%><%}%>#domid=form&tempid=form-t">
         <script type="text/template" id="form-t">
             <div class="detail-operation">
                 <button type="button" class="btn btn-cancel" onclick="history.back()">取消</button>
@@ -60,8 +60,10 @@
 
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
-                <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                <div class="control complete">
+                    <input type="hidden" name="salon_id" id="salonid" value="<%=data.salonId%>"/>
+                    <input id="search" type="text"  value="<%=data.salonname%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
+                    <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
                     <label>
                         <input type="checkbox" />
                         <span>修改所属店铺</span>
@@ -72,9 +74,10 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <input type="text"  id="merchantname" value="<%=data.name%>" disabled >
+                    <input type="hidden" id="merchantId" required requiredmsg="请店铺搜索到商户" />
                 </div>
-            </div>             
+            </div>                           
 
             <div>
                <p><strong>图片</strong></p>
@@ -103,7 +106,8 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>姓名：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <input type="text" name="stylistName" placeholder="造型师姓名" 
+                    value="<%=data.stylistName%>">
                 </div>
             </div>
 
@@ -111,12 +115,17 @@
                 <label class="control-label" for=""><span class="red">*</span>性别：</label>
                 <div class="control">
                     <label>
-                        <input type="radio" name="sex" checked/>
+                        <input type="radio" name="sex" <%=data.sex=="0"?"checked":""%> />
+                        <span>保密</span>
+                    </label>
+
+                    <label>
+                        <input type="radio" name="sex" <%=data.sex=="1"?"checked":""%>/>
                         <span>男</span>
                     </label>
 
                     <label>
-                        <input type="radio" name="sex"/>
+                        <input type="radio" name="sex" <%=data.sex=="2"?"checked":""%>/>
                         <span>女</span>
                     </label>
                 </div>
@@ -125,48 +134,53 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>手机号码：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <input type="text" name="mobilephone" placeholder="11位有效数字手机号码" 
+                    value="<%=data.mobilephone%>">
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for="">微信号：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <input type="text" name="wechat" placeholder="微信号码" 
+                    value="<%=data.wechat%>">
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for="">QQ号：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <input type="text" name="qq" placeholder="QQ号码" value="<%=data.qq%>">
                 </div>
             </div>  
 
             <div class="control-group">
                 <label class="control-label" for="">邮箱：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <input type="text" name="dressingNums" placeholder="邮箱地址" value="<%=data.email%>">
                 </div>
             </div>  
 
             <div class="control-group">
                 <label class="control-label" for="">出生日期：</label>
                 <div class="control">
-                    <input type="date" name="dressingNums" placeholder="">
+                    <input type="date" name="birthday" placeholder="" 
+                    value="<%=new Date(data.birthday*1000).format('YYYY-MM-dd')%>">
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for="">身份证件：</label>
                 <div class="control">
+
                     <select name="" id="" style="min-width:100px;width:4%;">
-                        <option value="">身份证</option>
-                        <option value="">军官证</option>
-                        <option value="">驾驶证</option>
-                        <option value="">护照</option>
+                        <option value="IDcard">身份证</option>
+                        <option value="officerCert">军官证</option>
+                        <option value="drivingLicense">驾驶证</option>
+                        <option value="passport">护照</option>
                     </select>
-                    <input type="text" name="dressingNums" placeholder="" style="min-width:140px;width:12.5%">
+                    <input type="text" name="num" placeholder="证件编号" 
+                    style="min-width:140px;width:12.5%">
                 </div>
             </div> 
 
@@ -178,14 +192,14 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>在职编号：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <input type="text" name="sNumber" placeholder="在职编号" value="<%=data.sNumber%>">
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>工作年限：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <input type="text" name="workYears" placeholder="工作年限" value="<%=data.workYears%>">
                 </div>
             </div> 
 
@@ -201,9 +215,9 @@
                 <div class="control">
                     <select name="" id="">
                         <option value="">请选择</option>
-                        <option value="1">资深发型师</option>
-                        <option value="2">设计总监</option>
-                        <option value="3">美发大师</option>
+                        <option value="1,2" <%=(data.grade=="1"||data.grade=="2") ? 'selected':''%>>资深发型师</option>
+                        <option value="3" <%=(data.grade=="3") ? 'selected':''%>>设计总监</option>
+                        <option value="4" <%=(data.grade=="4") ? 'selected':''%>>美发大师</option>
                     </select>
                 </div>
             </div> 
@@ -211,10 +225,10 @@
             <div class="control-group">
                 <label class="control-label" for="">快剪等级：</label>
                 <div class="control">
-                    <select name="" id="">
+                    <select name="fastGrade">
                         <option value="">请选择</option>
-                        <option value="1">普通快剪</option>
-                        <option value="2">总监快剪</option>
+                        <option value="1" <%=data.fastGrade=="1" ? 'selected':''%> >普通快剪</option>
+                        <option value="2" <%=data.fastGrade=="2" ? 'selected':''%> >总监快剪</option>
                     </select>
                 </div>
             </div>  
@@ -228,7 +242,7 @@
                 <label class="control-label" for="">个性签名：</label>
                 <div class="control">
                     <div class="keypress">
-                        <textarea maxlength="500" data-helpid="textarea-help" required></textarea>
+                        <textarea maxlength="500" data-helpid="textarea-help" required><%=data.signature%></textarea>
                     </div>
                     <div class="control-help" style="display:none;" id="textarea-help1"></div>
                 </div>
@@ -238,7 +252,7 @@
                 <label class="control-label" for=""><span class="red">*</span>自我描述：</label>
                 <div class="control">
                     <div class="keypress">
-                        <textarea maxlength="500" data-helpid="textarea-help" required></textarea>
+                        <textarea maxlength="500" data-helpid="textarea-help" required><%=data.description%></textarea>
                     </div>
                     <div class="control-help" style="display:none;" id="textarea-help2"></div>
                 </div>
@@ -254,26 +268,17 @@
                             <th>教育院校(培训机构)</th>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="text" ></td>
-                            </tr>
-                            <tr>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="text" ></td>
-                            </tr>
-                            <tr>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="text" ></td>
-                            </tr>
-                            <tr>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="text" ></td>
-                            </tr>                                                                              
+                            <%
+                            var str = JSON.stringify(data.educateExp);                            
+                            var arr = str.substring(2,str.length-2).split(",");                           
+                            %>
+                            <%for(var i = 1 ; i < 6 ; i++){%>
+                                <tr>
+                                    <td><input type="date" placeholder="YYYY-MM-DD" value="<%=arr['sTime'+i]%>"></td>
+                                    <td><input type="date" placeholder="YYYY-MM-DD" value="<%=arr['eTime'+i]%>"></td>
+                                    <td><input type="text" value="<%=arr['name'+i]%>"></td>
+                                </tr>
+                            <%}%>                                                                          
                         </tbody>    
                     </table>
                 </div>
@@ -286,29 +291,24 @@
                         <thead>
                             <th>起始日期</th>
                             <th>截止日期</th>
-                            <th>教育院校(培训机构)</th>
+                            <th>门店名称</th>
+                            <th>门店职位</th>
+                            <th>工作地点</th>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="text" ></td>
-                            </tr>
-                            <tr>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="text" ></td>
-                            </tr>
-                            <tr>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="text" ></td>
-                            </tr>
-                            <tr>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="date" placeholder="YYYY-MM-DD"></td>
-                                <td><input type="text" ></td>
-                            </tr>                                                                              
+                            <%
+                            var str = JSON.stringify(data.workExp);                            
+                            var workArr = str.substring(2,str.length-2).split(",");                           
+                            %>                        
+                            <%for(var i = 0 ; i < 5 ; i++){%>
+                                <tr>
+                                    <td><input type="date" placeholder="YYYY-MM-DD" value="<%=arr['wsTime'+i]%>"></td>
+                                    <td><input type="date" placeholder="YYYY-MM-DD" value="<%=arr['weTime'+i]%>"></td>
+                                    <td><input type="text" value="<%=arr['wname'+i]%>"></td>
+                                    <td><input type="text" value="<%=arr['wjob'+i]%>"></td>
+                                    <td><input type="text" value="<%=arr['waddress'+i]%>"></td>
+                                </tr>
+                            <%}%>                                                                               
                         </tbody>   
                     </table>
                 </div>
