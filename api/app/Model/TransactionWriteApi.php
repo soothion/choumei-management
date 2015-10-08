@@ -154,6 +154,16 @@ class TransactionWriteApi
     CONST ORDER_TRENDS_STATUS_OF_REJECT = 8;
     
     /**
+     * 流水中的退款状态 未退款
+     */
+    CONST FUNDFLOW_REFUND_STATE_OF_UNCOMPLETED = 1;
+    
+    /**
+     * 流水中的退款状态 已退款
+     */
+    CONST FUNDFLOW_REFUND_STATE_OF_COMPLETED = 2;
+    
+    /**
      * 退款通过
      * 
      * @param array $ids            
@@ -165,7 +175,7 @@ class TransactionWriteApi
         $refund_indexes = Utils::column_to_key("ordersn",$refunds);
         unset($refunds);
         
-        $fundflow = Fundflow::where('code_type',self::REFUND_CODE_TYPE_OF_CUSTOM)->whereIn('record_no',$ordersns)->select(['ticket_no','record_no','pay_type','user_id','money'])->get();
+        $fundflow = Fundflow::where('code_type',self::REFUND_CODE_TYPE_OF_CUSTOM)->where('refund_state','<>',self::FUNDFLOW_REFUND_STATE_OF_COMPLETED)->whereIn('record_no',$ordersns)->select(['ticket_no','record_no','pay_type','user_id','money'])->get();
         if(empty($fundflow))
         {
             throw new ApiException("找不到退款的支付流水信息",ERROR::REFUND_FLOW_LOST);
@@ -206,18 +216,43 @@ class TransactionWriteApi
         // 状态修改为退款中
         self::modifOrderStatusInRefund($ordersns);
         
-        foreach($refund_items as $type => $items)
+        //余额
+        if(isset($refund_items['balance']) && count($refund_items['balance'])>0)
         {
-            if(count($items)<1)
-            {
-                continue;
-            }            
-            $call_name = "refundOf".ucfirst($type);        
-            if(!method_exists(__CLASS__, $call_name))
-            {
-                throw new ApiException("unknown refund type of {$type}",ERROR::UNKNOWN_ERROR);
-            }
-            $res[$type] = call_user_func_array(["self",$call_name], [$items]);            
+            $res['balance'] = self::refundOfBalance($refund_items['balance'],$refund_items['specail']);
+        }
+        //红包
+        if(isset($refund_items['hongbao']) && count($refund_items['hongbao'])>0)
+        {
+            $res['hongbao'] = self::refundOfHongbao($refund_items['hongbao'],$refund_items['specail']);
+        }
+        
+        //优惠码
+        if(isset($refund_items['youhui']) && count($refund_items['youhui'])>0)
+        {
+            $res['youhui'] = self::refundOfYouhui($refund_items['youhui'],$refund_items['specail']);
+        }
+        
+        //网银
+        if(isset($refund_items['union']) && count($refund_items['union'])>0)
+        {
+            $res['union'] = self::refundOfUnion($refund_items['union']);
+        }
+        
+        //微信
+        if(isset($refund_items['wx']) && count($refund_items['wx'])>0)
+        {
+            $res['wx'] = self::refundOfWx($refund_items['wx']);
+        }
+        //易联
+        if(isset($refund_items['yilian']) && count($refund_items['yilian'])>0)
+        {
+            $res['yilian'] = self::refundOfYilian($refund_items['yilian']);
+        }
+        //支付宝
+        if(isset($refund_items['alipay']) && count($refund_items['alipay'])>0)
+        {
+            $res['alipay'] = self::refundOfAlipay($refund_items['alipay']);
         }
         return $res;
     }
@@ -375,6 +410,7 @@ class TransactionWriteApi
          
         $fundflows = Fundflow::whereIn('record_no',$ordersns)->where('code_type',self::REFUND_CODE_TYPE_OF_CUSTOM)->get(['record_no','ticket_no']);
         $fundflowsArr = $fundflows->toArray();
+        self::modifFundflowCompleted($ordersns);
         //改为键 避免重复
         $fund_flows = Utils::column_to_key('record_no',$fundflowsArr);
         $ticketnos = array_column($fundflowsArr, "ticket_no");
@@ -391,6 +427,19 @@ class TransactionWriteApi
             ]);
         }
         return true;
+    }
+    
+    /**
+     * 
+     */
+    public static function modifFundflowCompleted($ordersns,$pay_type = null)
+    {
+        $fundflow = Fundflow::whereIn('record_no',$ordersns);
+        if(!empty($pay_type))
+        {
+            $fundflow->where('pay_type',$pay_type);
+        }
+        $fundflow->update(['refund_state'=>self::FUNDFLOW_REFUND_STATE_OF_COMPLETED]);
     }
     
     /**
@@ -497,6 +546,7 @@ class TransactionWriteApi
             'hongbao'=>[],
             'youhui'=>[],
             'yilian'=>[],
+            'specail'=>[],
         ];
         foreach ($fundflows as $flow) {
             $ordersn = $flow['record_no'];
@@ -540,6 +590,7 @@ class TransactionWriteApi
                         'money' => $money,
                         'tn' => $tn
                     ];
+                    $res['specail'][] = $ordersn;
                     break;
                 case self::REFUND_TO_ALIPAY:
                     if (empty($tn)) {
@@ -554,6 +605,7 @@ class TransactionWriteApi
                         "reason" => $reason,
                         "ordersn" => $ordersn
                     ];
+                    $res['specail'][] = $ordersn;
                     break;
                 case self::REFUND_TO_WX: 
                     if (empty($tn)) {
@@ -567,6 +619,7 @@ class TransactionWriteApi
                         'user_id' => $user_id,
                         'url' => $url
                     ];
+                    $res['specail'][] = $ordersn;
                     break;
                 case self::REFUND_TO_BALANCE: 
                    $res['balance'][] = [
@@ -600,6 +653,7 @@ class TransactionWriteApi
                         "ordersn" => $ordersn,
                         'user_id' => $user_id
                     ];
+                    $res['specail'][] = $ordersn;
                     break;
             }
         }
@@ -689,7 +743,7 @@ class TransactionWriteApi
     
             Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($param) . " \t url : {$url} \n", "yilian");
             $respnd = Utils::HttpPost($url, $param);
-    
+            Utils::log("pay", date("Y-m-d H:i:s") . "\t [RESPOND] return:  {$respnd} \n", "yilian");    
             $resDecode = json_decode($respnd, true);
             if (isset($resDecode['result']) && $resDecode['result'] == 1) {
                 $ret['info'] .= $item['ordersn'] . " 退款成功  退款方式 易联\n";
@@ -742,18 +796,25 @@ class TransactionWriteApi
             throw new ApiException("必要参数丢失", ERROR::UNKNOWN_ERROR);
         }
         $items = $args[0];
+        $specail_ordersns = isset($args[1])?$args[1]:[];
         $ret = [];
         $ret['info'] = '';
+        $all_ok_ordersns = [];
         foreach ($items as $item) {
             $ordersn = $item['ordersn'];
+            if(!in_array($ordersn,$specail_ordersns))
+            {
+                $all_ok_ordersns[] =  $ordersn;
+            }
             User::where('user_id',$item['user_id'])->increment("money",$item["money"]);
             $ret['info'] .= "订单号：{$ordersn}, 退款：{$item["money"]}, 退款方式：余额\n";
         }
         // 改为已完成状态
-        $ordersns = array_column($items, "ordersn");
-        self::modifOrderStatusRefundCompleted($ordersns, "余额退款完成");
+        $all_ordersns = array_column($items, "ordersn");
+        self::modifFundflowCompleted($all_ordersns,self::REFUND_TO_BALANCE);
+        self::modifOrderStatusRefundCompleted($all_ok_ordersns, "余额退款完成");
         // 销量减一
-        self::modiSoldNumMinus($ordersns);
+        self::modiSoldNumMinus($all_ordersns);
         return $ret;
     }
     
@@ -767,18 +828,25 @@ class TransactionWriteApi
             throw new ApiException("必要参数丢失", ERROR::UNKNOWN_ERROR);
         }
         $items = $args[0];
+        $specail_ordersns = isset($args[1])?$args[1]:[];
         $ret = [];
         $ret['info'] = '';
+        $all_ok_ordersns = [];
         foreach ($items as $item) {
             $ordersn = $item['ordersn'];
+            if(!in_array($ordersn,$specail_ordersns))
+            {
+                $all_ok_ordersns[] =  $ordersn;
+            }
             User::where('user_id',$item['user_id'])->increment("packetmoney",$item["money"]);
             $ret['info'] .= "订单号：{$ordersn}, 退款：{$item["money"]}, 退款方式：红包\n";
         }
         // 改为已完成状态
-        $ordersns = array_column($items, "ordersn");
-        self::modifOrderStatusRefundCompleted($ordersns, "红包退款完成");
+        $all_ordersns = array_column($items, "ordersn");
+        self::modifFundflowCompleted($all_ordersns,self::REFUND_TO_HONGBAO);
+        self::modifOrderStatusRefundCompleted($all_ok_ordersns, "红包退款完成");
         // 销量减一
-        self::modiSoldNumMinus($ordersns);
+        self::modiSoldNumMinus($all_ordersns);
         return $ret;
     }
     
@@ -792,18 +860,24 @@ class TransactionWriteApi
             throw new ApiException("必要参数丢失", ERROR::UNKNOWN_ERROR);
         }
         $items = $args[0];
+        $specail_ordersns = isset($args[1])?$args[1]:[];
         $ret = [];
         $ret['info'] = '';
+        $all_ok_ordersns = [];
         foreach ($items as $item) {
             $ordersn = $item['ordersn'];
+            if(!in_array($ordersn,$specail_ordersns))
+            {
+                $all_ok_ordersns[] =  $ordersn;
+            }
             User::where('user_id',$item['user_id'])->increment("couponmoney",$item["money"]);
             $ret['info'] .= "订单号：{$ordersn}, 退款：{$item["money"]}, 退款方式：优惠码\n";
         }
         // 改为已完成状态
-        $ordersns = array_column($items, "ordersn");
-        self::modifOrderStatusRefundCompleted($ordersns, "优惠码退款完成");
-        // 销量减一
-        self::modiSoldNumMinus($ordersns);
+        $all_ordersns = array_column($items, "ordersn");
+        self::modifFundflowCompleted($all_ordersns,self::REFUND_TO_YOUHUI);
+        self::modifOrderStatusRefundCompleted($all_ok_ordersns, "优惠码退款完成");      
+        self::modiSoldNumMinus($all_ordersns);
         return $ret;
     }    
     

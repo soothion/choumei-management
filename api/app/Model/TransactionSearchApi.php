@@ -99,7 +99,7 @@ class TransactionSearchApi
      */
     public static function orderDetail($id)
     {
-        $base = Order::where('orderid',$id)->select(['ordersn','orderid','priceall','salonid','actuallyPay','shopcartsn'])->first();
+        $base = Order::where('orderid',$id)->select(['ordersn','orderid','user_id','priceall','salonid','actuallyPay','shopcartsn'])->first();
         if(empty($base))
         {
             throw new ApiException("订单 [{$id}] 不存在", ERROR::ORDER_NOT_EXIST);
@@ -141,7 +141,7 @@ class TransactionSearchApi
         }
         $orderItemArr = $orderItem->toArray();
         
-        $order = Order::where('orderid',$orderItemArr['orderid'])->select(['ordersn','orderid','priceall','salonid','actuallyPay','shopcartsn'])->first();
+        $order = Order::where('orderid',$orderItemArr['orderid'])->select(['ordersn','orderid','user_id','priceall','salonid','actuallyPay','shopcartsn'])->first();
         if(empty($order))
         {
             throw new ApiException("订单 orderid [".$orderItemArr['orderid']."] 不存在", ERROR::ORDER_NOT_EXIST);
@@ -164,7 +164,7 @@ class TransactionSearchApi
         }
         $baseArr = $base->toArray();
         
-        $order = Order::where('ordersn',$baseArr['ordersn'])->select(['ordersn','orderid','priceall','salonid','actuallyPay','shopcartsn'])->first();
+        $order = Order::where('ordersn',$baseArr['ordersn'])->select(['ordersn','orderid','user_id','priceall','salonid','actuallyPay','shopcartsn'])->first();
         if(empty($order))
         {
             throw new ApiException("订单 ordersn [".$baseArr['ordersn']."] 不存在", ERROR::ORDER_NOT_EXIST);
@@ -196,7 +196,7 @@ class TransactionSearchApi
         $ordersn = $order['ordersn'];
         $ticketno = $ticket['ticketno'];
         $ticket_id = $ticket['order_ticket_id'];
-        $uid = $ticket['user_id'];
+        $uid = $order['user_id'];
         $salon_id = $order['salonid'];
        
         //订单流水
@@ -210,15 +210,20 @@ class TransactionSearchApi
         //动态
         $trends = OrderTicketTrends::where("ordersn",$ordersn)->where("ticketno",$ticketno)->orderBy("add_time","ASC")->get(['add_time','status','remark']);
         //代金券
-        $vouchers = Voucher::where("vOrderSn",$ordersn)->select(['vSn','vcSn','vUseMoney','vUseEnd','vStatus','vUseTime'])->first();
+        $vouchers = Voucher::where("vOrderSn",$ordersn)->select(['vId','vSn','vcSn','vUseMoney','vUseEnd','vStatus','vUseTime','vAddTime'])->first();
       
         //佣金
         $commission = CommissionLog::where('ordersn',$ordersn)->select(['ordersn','amount','rate','grade'])->first();
+        
+        //店铺邀请码
+        $salonRecommendCode = Dividend::where('salon_id',$salon_id)->select(['recommend_code'])->first();
 
         //用户邀请码
         $recommendCode = RecommendCodeUser::where('user_id',$uid)->join('dividend',function($join){
             $join->on('recommend_code_user.recommend_code','=','dividend.recommend_code')->where('dividend.recommend_code','<>',1);
-        })->select(['recommend_code_user.recommend_code'])->first();
+        })->leftJoin('salon',function($join){
+            $join->on('salon.salonid','=','recommend_code_user.salon_id');
+        })->select(['recommend_code_user.recommend_code','salon.salonname'])->first();
        
         //设备信息
         $paltform = RequestLog::getLogByOrdersn($ordersn,['DEVICE_UUID','DEVICE_OS','DEVICE_MODEL','DEVICE_NETWORK','VERSION']); 
@@ -231,6 +236,7 @@ class TransactionSearchApi
         $voucherArr = null;
         $commissionArr = null;
         $recommendCodeArr = null;
+        $salonRecommendCodeArr = null;
         if(!empty($paymentlog))
         {
             $paymentlogArr = $paymentlog->toArray();
@@ -254,6 +260,16 @@ class TransactionSearchApi
         if(!empty($vouchers))
         {
             $voucherArr = $vouchers->toArray();
+            if(empty($voucherArr['vUseTime']))
+            {
+                $vId = $voucherArr['vId'];
+                $voucherTrend = VoucherTrend::where('vId',$vId)->where('vStatus',2)->orderBy('vAddTime','DESC')->select(['vAddTime'])->first();
+                if(!empty($voucherTrend))
+                {
+                    $voucherTrendArr  = $voucherTrend->toArray();
+                    $voucherArr['vUseTime'] =$voucherTrendArr['vAddTime'];
+                }    
+            }        
         }
         if(!empty($commission))
         {
@@ -262,6 +278,10 @@ class TransactionSearchApi
         if(!empty($recommendCode))
         {
             $recommendCodeArr = $recommendCode->toArray();
+        }
+        if(!empty($salonRecommendCode))
+        {
+            $salonRecommendCodeArr = $salonRecommendCode->toArray();
         }
         
         $res = [            
@@ -276,6 +296,7 @@ class TransactionSearchApi
             'vouchers'=>$voucherArr,
             'commission'=>$commissionArr,
             'recommend_code'=>$recommendCodeArr,
+            'salonRecommendCode'=>$salonRecommendCodeArr,
             'platform'=>$paltform,
         ];
         return $res;

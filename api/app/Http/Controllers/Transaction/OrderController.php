@@ -167,14 +167,18 @@ class OrderController extends Controller
      * @apiSuccess {String} vouchers.vSn 代金券编码 
      * @apiSuccess {String} vouchers.vcSn 活动编号
      * @apiSuccess {String} vouchers.vUseMoney 金额
-     * @apiSuccess {String} vouchers.vAddTime 时间  
+     * @apiSuccess {String} vouchers.vUseTime 使用时间  
      * @apiSuccess {String} vouchers.vUseEnd 有效期
      * @apiSuccess {String} vouchers.status 状态 1未使用 2已使用 3待激活 5已失效 10 未上线
      * @apiSuccess {String} commission 佣金信息
      * @apiSuccess {String} commission.amount 佣金金额
      * @apiSuccess {String} commission.rate 佣金率
      * @apiSuccess {String} commission.grade 店铺当前等级 1S 2A 3B 4C 5新落地 6淘汰区
-     * @apiSuccess {String} recommend_code店铺优惠码
+     * @apiSuccess {String} salonRecommendCode 店铺优惠码(店铺)信息
+     * @apiSuccess {String} salonRecommendCode.recommend_code 店铺优惠码
+     * @apiSuccess {String} recommend_code 店铺优惠码(佣金)信息
+     * @apiSuccess {String} recommend_code.recommend_code 店铺优惠码(佣金)
+     * @apiSuccess {String} recommend_code.salonname 店铺优惠码(佣金)
      * @apiSuccess {String} platform 设备信息
      * @apiSuccess {String} platform.DEVICE_UUID 设备号
      * @apiSuccess {String} platform.DEVICE_OS 设备系统
@@ -246,7 +250,13 @@ class OrderController extends Controller
      *                  "rate":"9.09",
      *                  "grade":"0"
      *                },
-     *               "recommend_code": "1168"
+     *               "recommend_code": {
+     *                  "recommend_code":"1168",
+     *                  "salonname":"choumeitest店",
+     *               },
+     *               "salonRecommendCode": {
+     *                  "recommend_code":"1168"
+     *               },
      *           }
      *       }
      *

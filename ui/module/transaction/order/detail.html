@@ -53,8 +53,10 @@
 
                         <tr>
                             <td class="first-td">店铺名称【邀请码】</td>
-                            <td><%=data.salon && data.salon.salonname%>【<%=data.recommend_code && 
-                            data.recommend_code.recommend_code%>】</td>                            
+                            <td>
+                             <%=data.salon && data.salon.salonname%>
+                            【<%=data.salonRecommendCode && data.salonRecommendCode.recommend_code%>】
+                            </td>                            
                         </tr> 
 
                         <tr>
@@ -73,7 +75,7 @@
                         </tr> 
 
                         <tr>
-                            <td class="first-td">代金券抵扣金额</td>
+                            <td class="first-td">现金券抵扣金额</td>
                             <%if(data.vouchers && data.order){%>
                                 <%var a = +data.vouchers.vUseMoney; var b = +data.order.priceall%>
                                 <td><%= (a <= b) ? a : b %></td>
@@ -207,7 +209,7 @@
                                             <td><%=data.vouchers.vUseMoney%></td>
                                             <td class="format"><%=data.vouchers.vUseEnd %></td>
                                             <td><%=statusText[data.vouchers.vStatus]%></td>
-                                            <td class="format"><%=data.vouchers.vAddTime%></td>
+                                            <td class="format"><%=data.vouchers.vUseTime%></td>
                                         </tr>
                                         <%}%>
                                     </tbody>                                
@@ -235,8 +237,8 @@
                                             <td><%=data.commission.rate%></td>
                                             <td><%=data.commission.amount%></td>
                                             <td>
-                                                <%=data.salon && data.salon.salonname%>
-                                                (<%=data.recommend_code && data.recommend_code.recommend_code%>)
+                                                <%=data.recommend_code && data.recommend_code.recommend_code%>
+                                                (<%=data.recommend_code && data.recommend_code.salonname%>)
                                             </td>
                                         </tr>
                                     <%}%>    

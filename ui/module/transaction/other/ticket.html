@@ -68,10 +68,10 @@
                  当前页面下所有订单金额统计为：0.00元  实付金额:  0.00元                 
                <%}else{var all_amount = 0 ,paied_amount=0;%>
                 <%data.data && data.data.forEach(function(item,i){
-                  all_amount   += (+item.priceall_ori);
-                  paied_amount += (+item.actuallyPay);
+                  all_amount   += item.priceall_ori*100;
+                  paied_amount += item.actuallyPay*100;
                 })%>
-                当前页面下所有订单金额统计为：<%=all_amount%>元，实付金额:  <%=paied_amount%>元 
+                当前页面下所有订单金额统计为：<%=all_amount/100%>元，实付金额:  <%=paied_amount/100%>元 
               <%}%>
               </div> 
                      
@@ -84,7 +84,6 @@
                   <th>付款时间</th>
                   <th>消费时间</th>
                   <th>活动编码</th>
-                  <th>代金券编码</th>
                   <th>用户手机号</th>
                   <th>用户设备号</th>
                   <th>店铺名称</th>
@@ -105,7 +104,6 @@
                   <td class="formatHms"><%=item.add_time%></td>
                   <td class="formatHms"><%=item.use_time%></td>
                   <td><%=item.voucher && item.voucher.vcSn%></td>
-                  <td><%=item.voucher && item.voucher.vSn%></td>
                   <td><%=item.user && item.user.mobilephone%></td>
                   <td><%=item.platform && item.platform.DEVICE_UUID%></td>
                   <td><%=item.salon && item.salon.salonname%></td>

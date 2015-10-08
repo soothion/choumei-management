@@ -58,7 +58,7 @@ class User extends  Model
 
         if(!empty($param['end_at'])){
         	$end_at = strtotime($param['end_at'])+3600*24;
-        	$query = $query->where('user.add_time','>=',$end_at);
+        	$query = $query->where('user.add_time','<=',$end_at);
         }
 
         if(!empty($param['area'])){
