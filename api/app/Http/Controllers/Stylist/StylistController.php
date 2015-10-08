@@ -86,6 +86,7 @@ class StylistController  extends Controller {
      *
      * @apiSuccess {Number} stylistId 造型师ID.
      * @apiSuccess {Number} salonId 店铺编号.
+     * @apiSuccess {String} salonname 店铺名称.
      * @apiSuccess {String} stylistName 造型师名称.
      * @apiSuccess {String} stylistImg 造型师图像.
      * @apiSuccess {String} job 职位.
@@ -164,7 +165,11 @@ class StylistController  extends Controller {
         $query=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$query){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);  
-         }
+        }
+        $salon=DB::table('salon')->where(array('salonid'=>$query['salonId']))->first();
+        $query->salonname=$salon->salonname;
+        $query->workExp=json_decode($query['workExp'],true);
+        $query->educateExp=json_decode($query['educateExp'],true);
         return $this->success($query);
     }
      
