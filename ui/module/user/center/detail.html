@@ -41,7 +41,7 @@
 								</form>
 								-->
 								<span class="space"></span>
-								<form data-slug="user.destory" data-slug="user.destory" action="user/destroy/<%=query.id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){window.close();}})">
+								<form data-slug="user.destory" data-slug="user.destory" action="user/destroy/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){window.close();}})">
 									<button class="btn">删除账号</button>
 								</form>
 								<span class="space"></span>
@@ -56,7 +56,7 @@
 					</tbody>
 				</table>
 			</div>
-			<form action="user/update/<%=query.id%>" data-role="normal" id="companyCode" onreset="parent.lib.popup.result()">
+			<form action="user/update/<%=query.id%>" data-role="normal" id="companyCode" onsuccess="parent.lib.popup.result()">
 				<input type="hidden" name="companyCode" value="" />
 			</form>
 			<br />
@@ -303,7 +303,7 @@
 				});
 			}).on('_ready','#province,#city,#area',function(){
 				$(this).trigger('change');
-			}).on('reset','#companyCode',function(){
+			}).on('success','#companyCode',function(){
 				$('.off-code').hide();
 			});
 		</script>

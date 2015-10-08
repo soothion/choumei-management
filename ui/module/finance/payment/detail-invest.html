@@ -20,7 +20,7 @@
 		<div class="detail-operation">
 			<%if(data.state==1||data.state==2){%>
 			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" data-confirm="你正在删除此付款单，是否执行删除？" 
-			onreset="parent.lib.popup.result({define:function(){history.back()}})">
+			onsuccess="parent.lib.popup.result({define:function(){history.back()}})">
 				<button class="btn">删除</button>
 			</form>
 			<%}%>
@@ -31,7 +31,7 @@
 			<%if(data.state==1){%>
 			<span class="space"></span>
 			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" 
-			onreset="parent.lib.popup.result({define:function(){history.back()}})">
+			onsuccess="parent.lib.popup.result({define:function(){history.back()}})">
 				<button class="btn">提交</button>
 			</form>
 			<%}%>
