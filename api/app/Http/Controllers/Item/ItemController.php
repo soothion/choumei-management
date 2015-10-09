@@ -56,8 +56,11 @@ class ItemController extends Controller{
 	 *	                "itemname": "老姜洗发水",
 	 *	                "typename": "其他",
 	 *	                "minPrice": 25,
+	 *	                "maxPrice": 25,
 	 *	                "minPriceOri": 30,
+	 *	                "maxPriceOri": 30,
 	 *	                "minPriceGroup": "23.00",
+	 *	                "maxPriceGroup": "23.00",
 	 *	                "format": "性别,造型师"
 	 *	            }
 	 *	        ]
@@ -88,8 +91,11 @@ class ItemController extends Controller{
 			'itemname',
 			'typename',
 			'minPrice',
+			'maxPrice',
 			'minPriceOri',
-			'minPriceGroup'
+			'maxPriceOri',
+			'minPriceGroup',
+			'maxPriceGroup'
 		);
 
 		//分页
