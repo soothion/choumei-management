@@ -104,8 +104,8 @@ class StylistController  extends Controller {
      * @apiSuccess {String} sNumber 在职编号.
      * @apiSuccess {Numder} workYears 工作年限.
      * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
-     * @apiSuccess {Json} workExp 工作经验.
-     * @apiSuccess {Json} educateExp 教育经验.
+     * @apiSuccess {String} workExp 工作经验.
+     * @apiSuccess {String} educateExp 教育经验.
      * @apiSuccess {String} description 自我描述.
      * @apiSuccess {Number} gradeType 悬赏等级.
      * @apiSuccess {Number} osType 造型师使用的设备类型.
@@ -317,8 +317,8 @@ class StylistController  extends Controller {
      * @apiSuccess {String} sNumber 在职编号.
      * @apiSuccess {Numder} workYears 工作年限.
      * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
-     * @apiSuccess {Json} workExp 工作经验.
-     * @apiSuccess {Json} educateExp 教育经验.
+     * @apiSuccess {String} workExp 工作经验.
+     * @apiSuccess {String} educateExp 教育经验.
      * @apiSuccess {String} description 自我描述.
      * @apiSuccess {Number} gradeType 悬赏等级.
      * @apiSuccess {Number} osType 造型师使用的设备类型.
@@ -421,8 +421,8 @@ class StylistController  extends Controller {
      * @apiParam {Numder} workYears 必填,工作年限.
      * @apiParam {String} job 必填,门店职位.
      * @apiParam {Numder} grade 可选,悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
-     * @apiParam {Json} workExp 可选,工作经验.
-     * @apiParam {Json} educateExp 可选,教育经历.
+     * @apiParam {String} workExp 可选,工作经验.
+     * @apiParam {String} educateExp 可选,教育经历.
      * @apiParam {String} description 可选,自我描述.
      * @apiParam {Number} fastGrade 可选,快剪等级 0没有等级 1普通快剪 2总监快剪.
      * @apiParam {String} drivingLicense 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,驾驶证.
@@ -509,8 +509,8 @@ class StylistController  extends Controller {
      * @apiParam {Numder} workYears 必填,工作年限.
      * @apiParam {String} job 必填,门店职位.
      * @apiParam {Numder} grade 可选,悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
-     * @apiParam {Json} workExp 可选,工作经验.
-     * @apiParam {Json} educateExp 可选,教育经历.
+     * @apiParam {String} workExp 可选,工作经验.
+     * @apiParam {String} educateExp 可选,教育经历.
      * @apiParam {String} description 可选,自我描述.
      * @apiParam {Number} fastGrade 可选,快剪等级 0没有等级 1普通快剪 2总监快剪.
      * @apiParam {String} drivingLicense 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,驾驶证.
