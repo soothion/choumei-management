@@ -18,14 +18,17 @@
 			<div class="table-detail" ajat="<%if(query.p=='item'){%>item/show/<%}else if(query.p=='warehouse'){%>warehouse/show/<%}else if(query.p=='special'){%>special/show/<%}%><%=query.id%>#domid=detail&tempid=detail-t" id="detail">
 				<script type="text/template" id="detail-t">
 				<div class="detail-operation">
-					<form action="" data-role="normal" onsuccess="parent.lib.popup.result()">
-						<button class="btn">下架</button><span class="space"></span>
-						<input type="hidden" name="ids" value="<%=query.id%>" />
-					</form>
+					<%if(query.p=="warehouse"){%>
 					<form action="warehouse/puton" data-role="normal" onsuccess="parent.lib.popup.result()">
 						<button class="btn">上架</button><span class="space"></span>
 						<input type="hidden" name="ids" value="<%=query.id%>" />
 					</form>
+					<%}else{%>
+					<form action="" data-role="normal" onsuccess="parent.lib.popup.result()">
+						<button class="btn">下架</button><span class="space"></span>
+						<input type="hidden" name="ids" value="<%=query.id%>" />
+					</form>
+					<%}%>
 					<a class="btn" href="edit.html?<%=query._%>">编辑</a><span class="space"></span>
 					<button class="btn btn-cancel">关闭</button>
 				</div>

@@ -429,7 +429,6 @@
 					 uploader.bind('ImageUploaded',function(up,response){
 						lib.cropper.create({
 							src:response.img,
-							aspectRatio : 1/1,
 							thumbnails  : ["300x300"],
 							define:function(data){
 								$('input[name="logo"]').val(data['300x300']).siblings('img').attr('src',data['300x300']);

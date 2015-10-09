@@ -601,14 +601,17 @@
 			create:function(options){
 				options=$.extend({
 					thumbnails:['300x300'],
-					aspectRatio: 1/1,
-					autoCropArea: 0.5
+					aspectRatio:1/1,
+					checkImageOrigin:false,
+					minCropBoxWidth:250,
+					minCropBoxHeight:250,
+					autoCropArea: 0.0001
 				},options);
 				options.src=options.src.split('?')[0];
 				this.use(function(){
 					var cropper=$(lib.ejs.render({url:"/module/public/template/cropper"},{data:options.src}));
 					cropper.css({opacity:0});
-					$(document.body).append(cropper);
+					var $image=cropper.find('img');
 					parent.lib.fullpage(true);
 					cropper[0].thumbnails={};
 					for(var i=0;i<options.thumbnails.length;i++){
@@ -628,12 +631,23 @@
 							cropper[0].thumbnails[name]=this.src+"?imageMogr2"+"/crop/!"+Math.round(e.width)+"x"+Math.round(e.height)+"a"+Math.round(e.x)+"a"+Math.round(e.y)+"/thumbnail/"+name;
 						}
 					}
-					options.built=function(){
-						cropper.css({opacity:1});
-					}
-					cropper.find('img').on('load',function(){
-						$(this).cropper(options);
+					$image.on('load',function(){
+						var width=$image.width();
+						var height=$image.height();
+						var $win=$(window);
+						var canvasData={
+							width:$image.width(),
+							height:$image.height(),
+							left:($win.width()-width)/2,
+							top:($win.height()-height)/2
+						}
+						options.built=function(){
+							$image.cropper('setCanvasData',canvasData);
+							cropper.css({opacity:1});
+						}
+						$image.cropper(options);
 					});
+					$(document.body).append(cropper);
 				});
 			}
 		}
