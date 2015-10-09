@@ -700,7 +700,7 @@ class TransactionSearchApi
             $base->where($time_key_str, ">=", strtotime(trim($params['min_time'])));
         }
         if (isset($params['max_time']) && !empty($params['max_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['max_time']))) {
-            $base->where($time_key_str, "<=", strtotime(trim($params['max_time'])) + 86399 );
+            $base->where($time_key_str, "<=", strtotime(trim($params['max_time'])) + 86399 )->where($time_key_str, ">", 0 );
         }
         
         // 付款状态
