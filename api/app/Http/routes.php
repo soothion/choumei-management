@@ -243,6 +243,10 @@ Route::group(['middleware'], function(){
 		'as'=>'item.sort',
 		'uses'=>'ItemController@sort'
 	));
+	Route::any('item/export',array(
+		'as'=>'item.export',
+		'uses'=>'ItemController@export'
+	));
 	
 	//佣金单
 	Route::any('commission/index',array(
