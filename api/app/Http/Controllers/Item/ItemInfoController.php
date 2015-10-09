@@ -17,10 +17,11 @@ use App\SalonItemFormat;
 use App\SalonNormsCat;
 use App\SalonNorms;
 use App\Salon;
+use App\Utils;
 class ItemInfoController extends Controller{
 
 	//规格菜单英文标识 保持和前端一致
-	private  $_typeArr = ['sex'=>'性别','hairstylist'=>'造型师','solution'=>'药水','longhair'=>'发长'];
+	private static  $_typeArr = ['sex'=>'性别','hairstylist'=>'造型师','solution'=>'药水','longhair'=>'发长'];
 	
 	/**
 	 * @api {post} /itemInfo/index 1.店铺项目资料列表
@@ -661,12 +662,6 @@ class ItemInfoController extends Controller{
 		}
 		else
 		{
-			if($itemInfo)
-			{
-				if($itemInfo->norms_cat_id)
-					SalonNormsCat::delNorms($itemInfo->norms_cat_id);
-			}
-			
 			DB::commit();
 			return $this->success();
 		}
@@ -783,65 +778,82 @@ class ItemInfoController extends Controller{
 	    $res =  [
 	      'salon_item'=>[],
 	      'salon_item_buylimit'=>[],
-	      'salon_norms_cat'=>[],
-	      'salon_item_format'=>[],
 	      'salon_item_format_price'=>[],
+	      
+	      'salon_norms_cat'=>[],
+	      'salon_item_format'=>[],	      
 	      'salon_item_formats'=>[],
 	      'salon_norms'=>[],
 	    ];
 	    
 	    $now_time = time();
+	    $salon_item = [];
 	    $itemid = isset($param['itemid'])?intval($param['itemid']):null;
-	    $res['salon_item']['salonid'] = isset($param['salonid'])?intval($param['salonid']):0;
-	    $res['salon_item']['typeid'] = isset($param['typeid'])?intval($param['typeid']):0;//分类id
-	    $res['salon_item']['useLimit'] = isset($param['useLimit'])?trim($param['useLimit']):'';//消费限制（特价项目）
-	    $res['salon_item']['logo'] = isset($param['logo'])?trim($param['logo']):'';
-	    $res['salon_item']['desc'] = isset($param['desc'])?trim($param['desc']):'';
-	    $res['salon_item']['item_type']      = isset($param['itemType'])?intval($param['itemType']):0;;//'商品类型，1 默认在售，2 限时特价'
-	    $res['salon_item']['itemname'] = isset($param['itemname'])?trim($param['itemname']):'';
-	    $res['salon_item']['itemname'] = str_replace(' ', '', $res['salon_item']['itemname']);
-	    $res['salon_item']['fastGrade']  = isset($param['fastGrade'])?intval($param['fastGrade']):0;//快剪等级
+	    $salon_item['salonid'] = isset($param['salonid'])?intval($param['salonid']):0;
+	    $salon_item['typeid'] = isset($param['typeid'])?intval($param['typeid']):0;//分类id
+	    $salon_item['useLimit'] = isset($param['useLimit'])?trim($param['useLimit']):'';//消费限制（特价项目）
+	    $salon_item['logo'] = isset($param['logo'])?trim($param['logo']):'';
+	    $salon_item['desc'] = isset($param['desc'])?trim($param['desc']):'';
+	    $salon_item['item_type']      = isset($param['itemType'])?intval($param['itemType']):0;;//'商品类型，1 默认在售，2 限时特价'
+	    $salon_item['itemname'] = isset($param['itemname'])?trim($param['itemname']):'';
+	    $salon_item['itemname'] = str_replace(' ', '', $salon_item['itemname']);
+	    $salon_item['fastGrade']  = isset($param['fastGrade'])?intval($param['fastGrade']):0;//快剪等级
 	    $timingAdded  = isset($param['timingAdded'])?trim($param['timingAdded']):0;//定时上架
 	    $timingShelves  = isset($param['timingShelves'])?trim($param['timingShelves']):0;//定时下架
-	    if($timingAdded && $timingShelves)
+	    
+	    if($timingAdded)
 	    {
-	    	$res['salon_item']['timingAdded'] = strtotime($timingAdded);
-	    	$res['salon_item']['timingShelves'] = strtotime($timingShelves);
+	        $salon_item['timingAdded'] = strtotime($timingAdded);
 	    }
-	    elseif($itemid && $timingShelves)
+	    if($timingShelves)
 	    {
-	    	$res['salon_item']['timingShelves'] = strtotime($timingShelves);
+	        $salon_item['timingShelves'] = strtotime($timingShelves);
+	    }
+	    $salon_item['repertory']  = 0;
+	    if($salon_item['typeid'] == 6 || $salon_item['item_type'] != 1 )//兑换专用  --日库存
+	    {
+	    	$salon_item['repertory']  = isset($param['repertory'])?intval($param['repertory']):0;
 	    }
 	    
-	    if($res['salon_item']['typeid'] == 6 || $res['salon_item']['item_type'] != 1 )//兑换专用  --日库存
-	    	$res['salon_item']['repertory']  = isset($param['repertory'])?intval($param['repertory']):0;
-	    else
-	    	$res['salon_item']['repertory']  = 0;
-	    
+	    $salon_item['exp_time'] = 0;
 	    $expTimeInput = isset($param['expTimeInput'])?trim($param['expTimeInput']):0;//项目使用有效期
 	    if ($expTimeInput)
 	    {
 	    	$expTime = $expTimeInput.' 23:59:00';
 	    	$expTimeStamp = strtotime($expTime);
-	    	//if ($expTimeStamp > time())
-	    		$res['salon_item']['exp_time'] = $expTimeStamp;
-	    }
-	    else
-	    {
-	    	$res['salon_item']['exp_time'] = 0;
+	    	$salon_item['exp_time'] = $expTimeStamp;
 	    }
 	    
-	    $totalRepInput = isset($param['totalRepInput'])?trim($param['totalRepInput']):0;//项目总库存
+	    $salon_item['total_rep'] = 0;
+	    $totalRepInput = isset($param['totalRepInput'])?trim($param['totalRepInput']):0;//项目总库存	    
 	    if($totalRepInput > 0)
-	    	$res['salon_item']['total_rep'] = $totalRepInput;
-	    else
-	    	$res['salon_item']['total_rep'] = 0;
+	    {
+	    	$salon_item['total_rep'] = $totalRepInput;
+	    }	
 	    
 	    //增值服务
-	    $res['salon_item']['addserviceStr'] = '';
+	    $salon_item['addserviceStr'] = '';
 	    $addedService = isset($param['addedService'])?$param['addedService']:'';
 	    if($addedService)
-	    	$res['salon_item']['addserviceStr']=implode(',',$addedService);
+	    {
+	    	$salon_item['addserviceStr']=implode(',',$addedService);
+	    }
+	    $salon_item['up_time'] 	= $now_time;
+	    if(empty($itemid))
+	    {
+	        if(strtotime($timingAdded) > $now_time)//上线时间 》 当前时间   下架状态
+	        {
+	            $salon_item['status'] 	= SalonItem::STATUS_OF_DOWN;
+	        }
+	        else
+	        {
+	            $salon_item['status'] 	= SalonItem::STATUS_OF_UP;
+	        }
+	        //#@todo
+	        $salon_item['uid'] 	= 1;//注意：以前是店铺账号id  现新管理后台默认 管理账号id
+	        $salon_item['add_time'] 	= $now_time;
+	    }
+	    
 	    
 	    //处理购买限制表 开始
 	    //购买资格
@@ -849,31 +861,21 @@ class ItemInfoController extends Controller{
 	    $inviteLimit = isset($param['inviteLimit'])?intval($param['inviteLimit']):0;
 	    $firstLimit = isset($param['firstLimit'])?intval($param['firstLimit']):0;
 	    if ($timeLimitInput >= 0)
+	    {
 	    	  $res['salon_item_buylimit']['limit_time'] = $timeLimitInput;
-	    
+	    }
 	    $res['salon_item_buylimit']['limit_invite'] = $inviteLimit?1:0;
 	    $res['salon_item_buylimit']['limit_first'] = $firstLimit?1:0;
-	    $res['salon_item_buylimit']['update_time'] = time();
-	    if($itemid)
+	    $res['salon_item_buylimit']['update_time'] = $now_time;
+	    if(empty($itemid))
 	    {
-	    	$res['salon_item']['up_time'] 	= time();
+	       $res['salon_item_buylimit']['create_time'] = $now_time;
 	    }
-	    else
-	    {
-	    	if(strtotime($timingAdded) > time())//上线时间 》 当前时间   下架状态
-	    		$res['salon_item']['status'] 	= 2;
-	    	else
-	    		$res['salon_item']['status'] 	= 1;
-	    	$res['salon_item']['uid'] 	= 1;//注意：以前是店铺账号id  现新管理后台默认 管理账号id
-	    	$res['salon_item']['add_time'] 	= time();
-	    	
-	    	$res['salon_item_buylimit']['create_time'] = time();
-	    }
-	    //处理购买限制表 结束
+
+	    //salon_norms_cat
 	    
-	    $priceNorm = SalonItemFormatPrice::where(['itemid'=>$itemid])->first();
-	    if($priceNorm)
-	    	SalonItemFormatPrice::where(['itemid'=>$itemid])->delete();
+	    
+	
 	    
 	    //无规格--价格处理
 	    if($param['priceStyle'] == 1)
@@ -890,11 +892,20 @@ class ItemInfoController extends Controller{
 	    				'salon_norms_id'=>0,
 	    				'add_time'=>time(),	
 	    		];
+	    	$res['salon_item_format_price'][] = $pricetmp;
 	    }
 	    else 
-	    {
-	    	$normMenu = isset($param['normMenu'])?json_decode($param['normMenu'],true):'';
+	    {	        
 	    	$normarr = isset($param['normarr'])?json_decode($param['normarr'],true):'';
+	    	if(count($normarr)<1)
+	    	{
+	    	    //#@todo
+	    	    
+	    	}
+	    	
+	    	$menus =  array_keys($normarr[0]['type']);
+	    	
+	    	
 	    	foreach($normarr as $v)
 	    	{
 	    		foreach($v['type'] as $key=>$val)
@@ -904,12 +915,15 @@ class ItemInfoController extends Controller{
 	    	}
 	    	
 	    	$typeArr = $this->_typeArr;
-	    	$ge = [];
-	    	foreach($normMenu as  $key=>$val)
+	    	$vals = array_values($normMenu);
+	    	$val_idx = [];
+	    	foreach ($vals as $val)
 	    	{
-	    		$gekey = SalonItemFormats::where(['salonid'=>0,'formats_name'=>$typeArr[$val]])->first();
-	    		$formatsIdArr[$val] = $gekey->salon_item_formats_id;
+	    	    $val_idx[] = self::$_typeArr[$val];
 	    	}
+	    	$formatsIdArr = SalonItemFormats::where(['salonid'=>0,'formats_name'=>$typeArr[$val]])->whereIn('formats_name',$val_idx)->get(['formats_name','salon_item_formats_id'])->toArray();
+	    	$formatsIdArr = Utils::column_to_key('formats_name',$formatsIdArr);
+	    	
 	    	$clearVal =[];
 	    	foreach($itemType as $key=>$value)
 	    	{
@@ -917,7 +931,7 @@ class ItemInfoController extends Controller{
 	    		{
 	    			if(!in_array($vt, $clearVal))
 	    			{
-	    				$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[$key]])->first();
+	    				$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[$key]['salon_item_formats_id']])->first();
 	    				if($st)
 	    					$norId = $st->salon_item_format_id;
 	    				else
@@ -934,7 +948,7 @@ class ItemInfoController extends Controller{
 	    			'add_time' => time()
 	    	];
 	    }
-	    $res['salon_item_format_price'][] = $pricetmp;
+	    
 	    //#@todo
 	    
 	
@@ -965,8 +979,10 @@ class ItemInfoController extends Controller{
 	    }
 	    else 
 	    {
+	        //处理购买限制表 结束
 	        $salon_item_id = $itemid;
 	        DB::beginTransaction();
+	        SalonItemFormatPrice::where(['itemid'=>$itemid])->delete();
 	        $salon_item_id = SalonItem::where('itemid',$salon_item_id)->update($datas['salon_item']);
 	        $salon_buylimit_id = SalonItemBuylimit::where('salon_item_id',$salon_item_id)->update($datas['salon_item_buylimit']);
 	        DB::rollBack();
