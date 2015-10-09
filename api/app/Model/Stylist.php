@@ -49,7 +49,7 @@ class Stylist  extends Model {
     public static function  updateStylist($stylistId,$param){
         $data=array();
         $data['salonid']= $param['salonid'];        
-        $data['stylistImg']=$param['stylistImg'];
+//        $data['stylistImg']=$param['stylistImg'];
         $data['stylistName']=$param['stylistName'];
         $data['sex']=$param['sex'];
         $data['mobilephone']=$param['mobilephone'];
@@ -58,6 +58,11 @@ class Stylist  extends Model {
         $data['sNumber']=$param['sNumber'];
         $data['workYears']=$param['workYears'];
         $data['signature']=$param['signature'];
+        
+        $image=  json_decode($param->img,true);
+        $data['stylistImg']=$image->stylistImg;
+        $data['stylistImgCom']=$image->stylistImgCom;
+        
         if(isset($param['IDcard'])&&$param['IDcard']){
              $data['IDcard']=$param['IDcard'];
         }  
@@ -101,7 +106,7 @@ class Stylist  extends Model {
      public static function createStylist($salonid,$param){
         $data=array();
         $data['salonId']= $salonid;        
-        $data['stylistImg']=$param['stylistImg'];
+       // $data['stylistImg']=$param['stylistImg'];
         $data['stylistName']=$param['stylistName'];
         $data['sex']=$param['sex'];
         $data['mobilephone']=$param['mobilephone'];
@@ -110,6 +115,11 @@ class Stylist  extends Model {
         $data['sNumber']=$param['sNumber'];
         $data['workYears']=$param['workYears'];
         $data['signature']=$param['signature'];
+                      
+        $image=  json_decode($param->img,true);
+        $data['stylistImg']=$image->stylistImg;
+        $data['stylistImgCom']=$image->stylistImgCom;
+        
         if(isset($param['IDcard'])&&$param['IDcard']){
              $data['IDcard']=$param['IDcard'];
         }  
