@@ -14,9 +14,8 @@ class Item extends Model {
 
 
 	public static function getQueryByParam($param=[]){
-        $query = Self::getQuery();
 
-        $query = $query->leftJoin('salon_itemtype','salon_item.typeid','=','salon_itemtype.typeid');
+        $query = Self::leftJoin('salon_itemtype','salon_item.typeid','=','salon_itemtype.typeid');
 
         //店铺筛选
         if(!empty($param['salonid'])){
@@ -114,11 +113,6 @@ class Item extends Model {
         return $item;
     }
 
-    //获取规格
-    public static function getFormat($id){
-        $formats = DB::table('salon_item_formats')->where('salonid','=',$id)->lists('formats_name');
-        return implode($formats, ',');
-    }
 
     //获取价格
     public static function getPrice($id){
@@ -130,8 +124,10 @@ class Item extends Model {
 
         foreach ($prices as $key => $price) {
             $formats_id = explode(',', $price->salon_item_format_id);
-            $formats = DB::table('salon_item_format')->whereIn('salon_item_format_id',$formats_id)->lists('format_name');
-            $formats = implode($formats, ',');
+            $formats = DB::table('salon_item_format')
+                ->whereIn('salon_item_format_id',$formats_id)
+                ->leftJoin('salon_item_formats','salon_item_formats.salon_item_formats_id','=','salon_item_format.salon_item_formats_id')
+                ->select('format_name','formats_name','salon_item_format.salon_item_formats_id')->get();
             $price->formats = $formats;
             $prices[$key] = $price;
         }

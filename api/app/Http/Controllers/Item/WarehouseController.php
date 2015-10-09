@@ -153,7 +153,7 @@ class WarehouseController extends Controller
         $datas = $res['data'];
         $norms_cat_ids = array_column($datas, "norms_cat_id");
         $format_infos = SalonItemFormats::getItemsByNormscatids($norms_cat_ids);
-        $res['data'] = self::composite($datas,$format_infos);
+        $res['data'] = SalonItem::composite($datas,$format_infos);
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
         return $this->success($res);
@@ -197,7 +197,7 @@ class WarehouseController extends Controller
         ],true);
         $ids = explode(",", $params['ids']);
         $ids = array_map("intval", $ids);
-        self::checkUp($ids);
+        SalonItem::checkUp($ids);
         $res = SalonItem::whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->update(['status'=>SalonItem::STATUS_OF_UP]);
         if($res)
         {
@@ -352,68 +352,7 @@ class WarehouseController extends Controller
 	    return $base->orderBy($order, $order_by);
 	}
 	
-	/**
-	 * @param array $itemIds 要上架的salon item ids的数组
-	 * @return array $result 检查的结果 或者 参数错误提示
-	 */
-	public static function checkUp($ids) 
-	{
-	    $ids = array_unique($ids);
-	    $input_count = count($ids);
-	    if($input_count<1)
-	    {
-	        return true;
-	    }  
-	    
-	    $now_time = time();
-	    $items = SalonItem::select(['itemid','itemname','exp_time','total_rep','sold'])->whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->get();
-	    if(empty($items))
-	    {
-	        throw new ApiException("要上架的项目不存在或者状态不正确",ERROR::ITEM_LOST_OR_WRONG_STATE);
-	    }
-	    $itemArr = $items->toArray();
-	    $item_ids = array_column($itemArr, "itemid");
-	    $error_ids = array_diff($item_ids, $ids);
-	    if(count($error_ids)>0)
-	    {
-	        throw new ApiException("ids : [".implode(',', $error_ids)."] 项目不存在或者状态不正确",ERROR::ITEM_LOST_OR_WRONG_STATE);
-	    }
-	    
-	    foreach ($itemArr as $item)
-	    {
-	        $id = $item['itemid'];
-	        $name = $item['itemname'];
-	        $exp_time = intval($item['exp_time']);
-	        $total_rep = intval($item['total_rep']);
-	        $sold = intval($item['sold']);
-	        if($exp_time >0 && $exp_time < $now_time)
-	        {
-	            throw new ApiException("项目 [{$id} : $name] 有效期 [".date("Y-m-d H:i:s",$exp_time)."]应大于当前时间",ERROR::ITEM_WRONG_EXP_TIME);
-	        }
-	        
-	        if($total_rep >0 && $total_rep < $sold)
-	        {
-	            throw new ApiException("项目 [{$id} : $name] 库存[{$total_rep}]应大于已售份数[{$sold}]",ERROR::ITEM_WRONG_TOTAL_REQ);
-	        }
-	    }
-	    return true;
-	}
 	
 	
-	public static function composite($items,$formats)
-	{
-	    foreach($items as &$item)
-	    {
-	        $cat_id = $item['norms_cat_id'];
-	        if(isset($formats[$cat_id]))
-	        {
-	            $item['salon_norms_cat'] = $formats[$cat_id];
-	        }
-	        else 
-	        {
-	            $item['salon_norms_cat'] = [];
-	        }
-	    }
-	    return $items;
-	}
+	
 }

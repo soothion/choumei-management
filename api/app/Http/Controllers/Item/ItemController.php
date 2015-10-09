@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\Item;
+use App\SalonItemFormats;
+use App\SalonItem;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
@@ -95,14 +97,17 @@ class ItemController extends Controller{
 			'minPriceOri',
 			'maxPriceOri',
 			'minPriceGroup',
-			'maxPriceGroup'
+			'maxPriceGroup',
+			'norms_cat_id'
 		);
 
 		//分页
 	    $result = $query->select($fields)->paginate($page_size)->toArray();
-	    foreach ($result['data'] as $key=>$item) {
-	    	$item->format = Item::getFormat($item->salonid);
-	    }
+	    //获取规格
+	    $norms_cat_ids = array_column($result['data'], "norms_cat_id");
+        $format_infos = SalonItemFormats::getItemsByNormscatids($norms_cat_ids);
+        $result['data'] = SalonItem::composite($result['data'],$format_infos);
+
 	    unset($result['next_page_url']);
 	    unset($result['prev_page_url']);
 	    return $this->success($result);
@@ -178,7 +183,13 @@ class ItemController extends Controller{
 	 *	                "price_dis": "29.00",
 	 *	                "price_group": "0.00",
 	 *	                "salon_item_format_id": "6988",
-	 *	                "formats": "高级设计师"
+	 *	                "formats": [
+	 *	                    {
+	 *	                        "format_name": "高级设计师",
+	 *	                        "formats_name": "造型师",
+	 *	                        "salon_item_formats_id": 1840
+	 *	                    }
+	 *	                ]
 	 *	            }
 	 *	        ]
 	 *	    }
@@ -269,6 +280,84 @@ class ItemController extends Controller{
 		}
 		return $this->success();
 	}
+
+
+
+	/**
+	 * @api {post} /item/export 5.导出项目
+	 * @apiName export
+	 * @apiGroup Item
+	 *
+	 * @apiParam {String} salonid 可选,店铺ID.
+	 * @apiParam {String} itemname 可选,项目名.
+	 * @apiParam {String} typeid 可选,项目分类.
+	 * @apiParam {Number} norms_cat_id 可选,项目规格,1为有规格,2为无规格.
+	 * @apiParam {String} exp_time 可选,期限限制,1为有期限限制,2为不限制.
+	 * @apiParam {Number} total_rep 可选,库存数,1为有限制,2为无限制.
+	 * @apiParam {Number} buylimit 可选,购买限制,1为首单限制,2为邀请限制.
+	 * @apiParam {String} sort_key 排序的键,比如:start_at,end_at;
+	 * @apiParam {String} sort_type 排序方式,DESC或者ASC;默认DESC
+	 *
+	 *
+	 * @apiSuccess {File} Json文件.
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+	public function export(){
+		$param = $this->param;
+		$query = Item::getQueryByParam($param);
+
+	    $result = $query->take(100)->get();
+
+	    foreach ($result as &$item) {
+	    	$item['prices'] = Item::getPrice($item['itemid']);
+	    }
+
+	    $result = json_encode($result);
+
+		$filename = '项目列表-'.date('Ymd').'.json';
+		header("Content-type: text/plain");
+        header("Accept-Ranges: bytes");
+        header("Content-Disposition: attachment; filename=".$filename);
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0" );
+        header("Pragma: no-cache" );
+        header("Expires: 0" ); 
+        exit($result);
+	}
+
+
+	 /**
+     * @api {get} /item/down/:id 6.下架
+     * @apiName down
+     * @apiGroup item
+     *
+     * @apiParam {Number} id  要下架的id
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "未授权访问"
+     *		}
+     */
+    public function down($id)
+    {	
+    	$item = Item::find($id);
+		if(!$item)
+			throw new ApiException('未知项目ID', ERROR::ITEM_NOT_FOUND);
+
+        $result = $item->update(['status'=>SalonItem::STATUS_OF_DOWN]);
+        if($result)
+        {
+            return $this->success([]);
+        }                
+    }
+    
+    
 
 }
 ?>
