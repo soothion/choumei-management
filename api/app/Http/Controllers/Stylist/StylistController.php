@@ -115,6 +115,7 @@ class StylistController  extends Controller {
      * @apiSuccess {String} officerCert 军官证.
      * @apiSuccess {String} stylistImgCom 造型师头像的缩略图.
      * @apiSuccess {String} img (stylistImg)造型师图像和(stylistImgCom)造型师头像的缩略图的集合.
+     * @apiSuccess {String} reward 1 是你有已接单未完成打赏的悬赏单  2 是没有订单和未完成打赏的单.
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -167,6 +168,12 @@ class StylistController  extends Controller {
         $query=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$query){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);  
+        }
+        $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
+        if($task==true){
+                $query->reward=1;
+        } else{
+                $query->reward=2;
         }
         $salon=DB::table('salon')->where(array('salonid'=>$query['salonId']))->first();
         $query->salonname=$salon->salonname;
@@ -336,6 +343,7 @@ class StylistController  extends Controller {
      * @apiSuccess {String} name 所属商户.
      * @apiSuccess {String} stylistImgCom 造型师头像的缩略图. 
      * @apiSuccess {String} img (stylistImg)造型师图像和(stylistImgCom)造型师头像的缩略图的集合. 
+     * @apiSuccess {String} reward 1 是你有已接单未完成打赏的悬赏单  2 是没有订单和未完成打赏的单.
      * 
      * @apiSuccessExample Success-Response:
      * 
@@ -392,6 +400,12 @@ class StylistController  extends Controller {
         }
         $stylist->workExp=json_decode($stylist['workExp'],true);
         $stylist->educateExp=json_decode($stylist['educateExp'],true);
+        $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
+        if($task==true){
+                $query->reward=1;
+        } else{
+                $query->reward=2;
+        }   
         $field=['salonname','merchantId'];
         $salon=DB::table('salon')->select($field)->where(array("salonid"=>$stylist->salonId))->first(); 
          if($salon===false){
@@ -458,15 +472,7 @@ class StylistController  extends Controller {
            
    public function  update($stylistId){  
         $param=$this->param;
-        $field=['salonid','merchantId'];
-        if($param['checkbox']!=1){
-                throw new ApiException('未选择修改所属店铺', ERROR::MERCHANT_STYLIST_SELECT_ERROR);
-        }else {
-                $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
-                if($task==true){
-                          throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
-            }
-        }      
+        $field=['salonid','merchantId'];    
         $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$stylist){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
@@ -568,5 +574,5 @@ class StylistController  extends Controller {
                 throw new ApiException('创建造型师失败', ERROR::MERCHANT_STYLIST_CREATE_ERROR);
         }
      }  
-
+     
 }
