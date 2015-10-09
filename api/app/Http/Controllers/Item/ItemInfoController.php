@@ -270,7 +270,16 @@ class ItemInfoController extends Controller{
 	public function store()
 	{
 		$param = $this->param;
-		return $this->save($param);
+		$itemid = isset($param['itemid'])?intval($param['itemid']):null;
+		$err_msg = [];
+		$ret = self::filter($param, $err_msg);
+		if(!$ret)
+		{
+		    throw new ApiException($err_msg['msg'],$err_msg['no']);
+		}
+		$data = self::compositeData($param);
+		$res = self::upsert($param,$itemid);
+		return $this->success($res);
 
 	}
 	
@@ -663,6 +672,111 @@ class ItemInfoController extends Controller{
 		
 	}
 	
+	public static function filter($param,&$err_msg)
+	{
+	    $itemid = isset($param['itemid'])?intval($param['itemid']):null;
+	    $is_new = empty($itemid)?true:false;
+	    if(!$param['salonid'] || !$$param['typeid'] || !$param['logo'] || !$param['itemname'] || !$param['desc'] || !in_array($param['priceStyle'], [1,2]))
+	    {
+	        $err_msg = ['msg'=>'参数错误','no'=>ERROR::ITEM_ERROR];
+	        return false;
+	    }
+	        
+	    
+	    return true;
+	}
+	
+	
+	public static function compositeData($param)
+	{
+	    $res =  [
+	      'salon_item'=>[],
+	      'salon_item_buylimit'=>[],
+	      'salon_norms_cat'=>[],
+	      'salon_item_format'=>[],
+	      'salon_item_format_price'=>[],
+	      'salon_item_formats'=>[],
+	      'salon_norms'=>[],
+	    ];
+	    
+	    $now_time = time();
+	    
+	    $res['salon_item']['salonid'] = isset($param['salonid'])?intval($param['salonid']):0;
+	    $res['salon_item']['typeid'] = isset($param['typeid'])?intval($param['typeid']):0;//分类id
+	    $res['salon_item']['useLimit'] = isset($param['useLimit'])?trim($param['useLimit']):'';//消费限制（特价项目）
+	    $res['salon_item']['logo'] = isset($param['logo'])?trim($param['logo']):'';
+	    $res['salon_item']['desc'] = isset($param['desc'])?trim($param['desc']):'';
+	    $res['salon_item']['item_type']      = isset($param['itemType'])?intval($param['itemType']):0;;//'商品类型，1 默认在售，2 限时特价'
+	    $res['salon_item']['itemname'] = isset($param['itemname'])?trim($param['itemname']):'';
+	    $res['salon_item']['itemname'] = str_replace(' ', '', $res['salon_item']['itemname']);
+	    $res['salon_item']['fastGrade']  = isset($param['fastGrade'])?intval($param['fastGrade']):0;//快剪等级
+	    //#@todo
+	    
+	
+	    return $res;
+	}
+	
+	public static function upsert($datas,$itemid=null)
+	{
+	    $datas= [
+	      'salon_item'=>[],
+	      'salon_item_buylimit'=>[],
+	      'salon_norms_cat'=>[],
+	      'salon_item_format'=>[],
+	      'salon_item_format_price'=>[],
+	      'salon_item_formats'=>[],
+	      'salon_norms'=>[],
+	    ];
+	    
+	    $salon_item_id = null;
+	    $salon_buylimit_id = null;
+	    $salon_norms_cat_id = null;
+	    if(empty($itemid))
+	    {
+	        DB::beginTransaction();
+	        $salon_item_id = SalonItem::insertGetId($datas['salon_item']);
+	        $salon_buylimit_id = SalonItem::insertGetId($datas['salon_item_buylimit']);
+	        DB::rollBack();
+	    }
+	    else 
+	    {
+	        $salon_item_id = $itemid;
+	        DB::beginTransaction();
+	        $salon_item_id = SalonItem::where('itemid',$salon_item_id)->update($datas['salon_item']);
+	        $salon_buylimit_id = SalonItemBuylimit::where('salon_item_id',$salon_item_id)->update($datas['salon_item_buylimit']);
+	        DB::rollBack();
+	    }
+	    
+	    DB::beginTransaction();
+	    $salon_norms_cat_id = SalonNormsCat::insertGetId($datas['salon_norms_cat']);
+	    foreach($datas['salon_item_format'] as $format)
+	    {
+	        $tmp_salon_item_format_id = SalonItemFormat::insertGetId($format);
+	    }
+	    foreach($datas['salon_item_format_price'] as $price)
+	    {
+	        $tmp_salon_item_format_price_id = SalonItemFormatPrice::insertGetId($price);
+	    }
+	    foreach($datas['salon_item_formats'] as $formats)
+	    {
+	        $tmp_salon_item_formats_id = SalonItemFormats::insertGetId($formats);
+	    }
+	    foreach($datas['salon_norms'] as $norms)
+	    {
+	        $tmp_norms_id = SalonNorms::insertGetId($norms);
+	    }
+	    
+	    //update relation id
+	    //#@todo
+	    
+	    
+	    DB::rollBack();
+	}
+	
+	public static function add($salon_item,$salon_buylimit)
+	{
+	    
+	}
 	
 }
 ?>
