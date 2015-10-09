@@ -4,6 +4,7 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="/js/include.js"></script>
+      <script type="text/javascript" src="/js/validator.js"></script>
       <style>
         .border-dash{
             width: 100%;
@@ -30,7 +31,10 @@
             min-width:300px!important;
             width:100%;
             border: none;
-            visibility: hidden;
+            visibility:hidden;
+        }
+        .tab td{
+            cursor: pointer;
         }
       </style>
   </head>
@@ -45,8 +49,7 @@
     </div>
 
     <div class="wrapper">
-        <form class="form-vertical" data-role="form" id="form" 
-        ajat="<%if(query.id){%>Stylist/edit/<%=query.id%><%}%>#domid=form&tempid=form-t">
+        <form class="form-vertical" data-role="form" id="form">
         <script type="text/template" id="form-t">
             <div class="detail-operation">
                 <button type="button" class="btn btn-cancel" onclick="history.back()">取消</button>
@@ -54,6 +57,7 @@
                 <button class="btn-primary">提交</button>
             </div>  
 
+            <%if(lib.query.id){%>
             <div>
                <p><strong>所属店铺</strong></p>
             </div> 
@@ -65,7 +69,7 @@
                     <input id="search" type="text"  value="<%=data.salonname%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
                     <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
                     <label>
-                        <input type="checkbox" />
+                        <input type="checkbox" value="1"/>
                         <span>修改所属店铺</span>
                     </label>
                 </div>
@@ -75,9 +79,9 @@
                 <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                 <div class="control">
                     <input type="text"  id="merchantname" value="<%=data.name%>" disabled >
-                    <input type="hidden" id="merchantId" required requiredmsg="请店铺搜索到商户" />
                 </div>
             </div>                           
+            <%}%>
 
             <div>
                <p><strong>图片</strong></p>
@@ -87,11 +91,11 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>个人图片：</label>
                 <div class="control">
-                    <div class="control-thumbnails" id="control-thumbnails1" data-max="10">
-                        <div class="control-image-upload" style="width:160px;height:120px;line-height:115px">
-                            <div id="imageUpload1">
+                    <div class="control-thumbnails" id="control-thumbnails1" data-max="1">
+                        <div class="control-image-upload" style="width:150px;height:150px;line-height:145px">
+                            <div id="personImagesUpload">
                                 <i class="fa fa-image"></i>
-                                <em>上传个人作品</em>
+                                <em>上传个人图片</em>
                             </div>
                         </div>
                     </div> 
@@ -106,8 +110,8 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>姓名：</label>
                 <div class="control">
-                    <input type="text" name="stylistName" placeholder="造型师姓名" 
-                    value="<%=data.stylistName%>">
+                    <input type="text" name="stylistName" placeholder="造型师姓名" maxlength="8"
+                    value="<%=data.stylistName%>" required>
                 </div>
             </div>
 
@@ -115,27 +119,22 @@
                 <label class="control-label" for=""><span class="red">*</span>性别：</label>
                 <div class="control">
                     <label>
-                        <input type="radio" name="sex" <%=data.sex=="0"?"checked":""%> />
-                        <span>保密</span>
-                    </label>
-
-                    <label>
-                        <input type="radio" name="sex" <%=data.sex=="1"?"checked":""%>/>
+                        <input type="radio" name="sex" value="1" <%=(!data.sex||data.sex=="1")?"checked":""%>/>
                         <span>男</span>
                     </label>
 
                     <label>
-                        <input type="radio" name="sex" <%=data.sex=="2"?"checked":""%>/>
+                        <input type="radio" name="sex" value="2" <%=data.sex=="2"?"checked":""%>/>
                         <span>女</span>
                     </label>
+                    <span class="control-help" style="display:none;"></span>
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>手机号码：</label>
                 <div class="control">
-                    <input type="text" name="mobilephone" placeholder="11位有效数字手机号码" 
-                    value="<%=data.mobilephone%>">
+                    <input type="text" name="mobilephone" placeholder="11位有效数字手机号码" value="<%=data.mobilephone%>" maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号" required>
                 </div>
             </div> 
 
@@ -157,30 +156,35 @@
             <div class="control-group">
                 <label class="control-label" for="">邮箱：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="邮箱地址" value="<%=data.email%>">
+                    <input type="text" name="email" placeholder="邮箱地址" value="<%=data.email%>">
                 </div>
             </div>  
 
             <div class="control-group">
-                <label class="control-label" for="">出生日期：</label>
+                <label class="control-label" for=""><span class="red">*</span>出生日期：</label>
+                <%
+                var birthday = "1990-01-01";
+                if(data.birthday){
+                    birthday = new Date(data.birthday*1000).format('yyyy-MM-dd');
+                }
+                %>
                 <div class="control">
-                    <input type="date" name="birthday" placeholder="" 
-                    value="<%=new Date(data.birthday*1000).format('YYYY-MM-dd')%>">
+                    <input type="date" name="birthday" value="<%=birthday%>" required>
                 </div>
             </div> 
 
             <div class="control-group">
-                <label class="control-label" for="">身份证件：</label>
+                <label class="control-label" for=""><span class="red">*</span>身份证件：</label>
                 <div class="control">
-
-                    <select name="" id="" style="min-width:100px;width:4%;">
+                    <select name="cardType" id="" style="min-width:100px;width:4%;" required>
                         <option value="IDcard">身份证</option>
                         <option value="officerCert">军官证</option>
                         <option value="drivingLicense">驾驶证</option>
                         <option value="passport">护照</option>
                     </select>
-                    <input type="text" name="num" placeholder="证件编号" 
-                    style="min-width:140px;width:12.5%">
+                    <input type="text" name="cardNum" placeholder="证件编号" 
+                    style="min-width:140px;width:12.5%" required>
+                    <span class="control-help" style="display:none;"></span>
                 </div>
             </div> 
 
@@ -192,28 +196,28 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>在职编号：</label>
                 <div class="control">
-                    <input type="text" name="sNumber" placeholder="在职编号" value="<%=data.sNumber%>">
+                    <input type="text" name="sNumber" placeholder="在职编号" value="<%=data.sNumber%>" required>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>工作年限：</label>
                 <div class="control">
-                    <input type="text" name="workYears" placeholder="工作年限" value="<%=data.workYears%>">
+                    <input type="text" name="workYears" placeholder="工作年限" value="<%=data.workYears%>" required>
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>门店职位：</label>
                 <div class="control">
-                    <input type="text" name="dressingNums" placeholder="">
+                    <input type="text" name="job" placeholder="门店职位" value="<%=data.job%>" required>
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for="">悬赏等级：</label>
                 <div class="control">
-                    <select name="" id="">
+                    <select name="grade">
                         <option value="">请选择</option>
                         <option value="1,2" <%=(data.grade=="1"||data.grade=="2") ? 'selected':''%>>资深发型师</option>
                         <option value="3" <%=(data.grade=="3") ? 'selected':''%>>设计总监</option>
@@ -239,27 +243,27 @@
             </div> 
 
             <div class="control-group">
-                <label class="control-label" for="">个性签名：</label>
+                <label class="control-label" for=""><span class="red">*</span>个性签名：</label>
                 <div class="control">
                     <div class="keypress">
-                        <textarea maxlength="500" data-helpid="textarea-help" required><%=data.signature%></textarea>
+                        <textarea maxlength="40" data-helpid="textarea-help" name="signature" required><%=data.signature%></textarea>
                     </div>
                     <div class="control-help" style="display:none;" id="textarea-help1"></div>
                 </div>
             </div>
 
             <div class="control-group">
-                <label class="control-label" for=""><span class="red">*</span>自我描述：</label>
+                <label class="control-label" for="">自我描述：</label>
                 <div class="control">
                     <div class="keypress">
-                        <textarea maxlength="500" data-helpid="textarea-help" required><%=data.description%></textarea>
+                        <textarea maxlength="50" data-helpid="textarea-help" name="description" required><%=data.description%></textarea>
                     </div>
                     <div class="control-help" style="display:none;" id="textarea-help2"></div>
                 </div>
             </div> 
 
             <div class="control-group">
-                <label class="control-label" for=""><span class="red">*</span>教育经历：</label>
+                <label class="control-label" for="">教育经历：</label>
                 <div class="control">
                     <table class="table tab">
                         <thead>
@@ -274,9 +278,12 @@
                             %>
                             <%for(var i = 1 ; i < 6 ; i++){%>
                                 <tr>
-                                    <td><input type="date" placeholder="YYYY-MM-DD" value="<%=arr['sTime'+i]%>"></td>
-                                    <td><input type="date" placeholder="YYYY-MM-DD" value="<%=arr['eTime'+i]%>"></td>
-                                    <td><input type="text" value="<%=arr['name'+i]%>"></td>
+                                    <td><input type="date" placeholder="yyyy-MM-dd" name="<%='sTime'+i%>" 
+                                    value="<%=arr['sTime'+i]%>"></td>
+                                    <td><input type="date" placeholder="yyyy-MM-dd" name="<%='eTime'+i%>"
+                                    value="<%=arr['eTime'+i]%>"></td>
+                                    <td><input type="text" name="<%='name'+i%>" 
+                                    value="<%=arr['name'+i]%>"></td>
                                 </tr>
                             <%}%>                                                                          
                         </tbody>    
@@ -300,13 +307,28 @@
                             var str = JSON.stringify(data.workExp);                            
                             var workArr = str.substring(2,str.length-2).split(",");                           
                             %>                        
-                            <%for(var i = 0 ; i < 5 ; i++){%>
+                            <%for(var i = 1 ; i < 6 ; i++){%>
                                 <tr>
-                                    <td><input type="date" placeholder="YYYY-MM-DD" value="<%=arr['wsTime'+i]%>"></td>
-                                    <td><input type="date" placeholder="YYYY-MM-DD" value="<%=arr['weTime'+i]%>"></td>
-                                    <td><input type="text" value="<%=arr['wname'+i]%>"></td>
-                                    <td><input type="text" value="<%=arr['wjob'+i]%>"></td>
-                                    <td><input type="text" value="<%=arr['waddress'+i]%>"></td>
+                                    <td>
+                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='wsTime'+i%>" 
+                                        value="<%=arr['wsTime'+i]%>">
+                                    </td>
+
+                                    <td>
+                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='weTime'+i%>" 
+                                        value="<%=arr['weTime'+i]%>"></td>
+                                    <td>
+                                        <input type="text" name="<%='wname'+i%>" value="<%=arr['wname'+i]%>">
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="<%='wjob'+i%>" value="<%=arr['wjob'+i]%>">
+                                    </td>
+
+                                    <td>
+                                        <input type="text" name="<%='waddress'+i%>" 
+                                        value="<%=arr['waddress'+i]%>">
+                                    </td>
                                 </tr>
                             <%}%>                                                                               
                         </tbody>   
@@ -322,13 +344,6 @@
         </script>
         </form>
     </div>
-
-    <script>
-    (function(){
-        // $("#wrapper").on('click','.btn-cancel',function(){
-        //      if(lib.query.id){}
-        // });
-    })();
-    </script>
+    <script type="text/javascript" src="edit.js"></script>
   </body>
 </html>
