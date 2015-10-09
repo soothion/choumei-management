@@ -167,45 +167,7 @@ class ListController extends Controller {
     	$rs = BusinessStaff::getBusinessStaff();
 		return $this->success($rs);
     }
-    
-    /**
-     * @api {post} /salonList/getItemType 3.获取项目分类
-     * @apiName getItemType
-     * @apiGroup  salonList
-     *
-     *
-     *
-     * @apiSuccessExample Success-Response:
-	 *	{
-	 *	    "result": 1,
-	 *	    "token": "",
-	 *	    "data": [
-	 *	        {
-	 *	            "typename": "洗剪吹",
-	 *	            "typeid": 1
-	 *	        },
-	 *	        {
-	 *	            "typename": "烫发",
-	 *	            "typeid": 2
-	 *	        },
-	 *			......
-	 *	    ]
-	 *	}
-     *
-     *
-     *
-     * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "未授权访问"
-     *		}
-     */
-    public function getItemType()
-    {
-    	$rs = SalonItemType::select(['typename','typeid'])->get();
-    	return $this->success($rs);
-    } 
-    
+     
 }
 
 ?>
