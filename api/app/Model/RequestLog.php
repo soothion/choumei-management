@@ -29,9 +29,9 @@ class RequestLog  extends Model{
                
                     $query = $query->where('update_time','>=', $param['minTime']); 
          }
-         if( isset($param['maxTime']) && $param['maxTime'] ){
-              
-                    $query = $query->where('update_time','<=', $param['maxTime']);    
+         if( isset($param['maxTime']) && $param['maxTime'] ){ 
+             
+                    $query = $query->where('update_time','<=', $param['maxTime'].' 24');    
          }
          
          $sortable_keys=['update_time','mobilephone','version'];

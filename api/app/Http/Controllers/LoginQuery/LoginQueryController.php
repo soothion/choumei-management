@@ -113,7 +113,7 @@ class LoginQueryController  extends Controller {
            $query=RequestLog::getLogSelect($param);
            $header = ['用户手机号','用户臭美号','用户设备号','登录时间','手机系统','APP版本'];         
            Event::fire('LoginQuery.export');
-           $this->export_xls("设备登录列表".date("Ymd"),$header,self::format_prepay_data($query));
+           $this->export_xls("设备登录列表".date("Ymd"),$header,self::format_prepay_data($query["data"]));
            
      }
      
