@@ -3,6 +3,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
+use Log;
 
 class Stylist  extends Model {
     protected $table = 'hairstylist';
@@ -40,8 +41,21 @@ class Stylist  extends Model {
          unset($results['next_page_url']);
          unset($results['prev_page_url']);
          foreach ($results['data'] as $key =>$value) {
-            $results['data'][$key]->num=DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->count();
+            $num=0; 
+            $works= DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->get();
+            foreach ($works as $key1 =>$value) {
+                if(!empty($works['img'])){
+                    $image=  json_decode($works['img'],true);
+                    $num=$num+(count($image)/2);
+                }  else {   
+                    $num=$num+1;
+                }
+                
+             }
+           $results['data'][$key]->num=$num;
+
          }
+         var_dump($results['data']);
          return $results;
     }
  
@@ -49,8 +63,9 @@ class Stylist  extends Model {
     public static function  updateStylist($stylistId,$param){
         $data=array();
         $data['salonid']= $param['salonid'];        
-//        $data['stylistImg']=$param['stylistImg'];
-        $data['stylistName']=$param['stylistName'];
+        if(isset($param['stylistName'])&&$param['stylistName']){
+             $data['stylistName']=$param['stylistName'];
+         }
         $data['sex']=$param['sex'];
         $data['mobilephone']=$param['mobilephone'];
         $data['job']=$param['job'];
@@ -58,11 +73,10 @@ class Stylist  extends Model {
         $data['sNumber']=$param['sNumber'];
         $data['workYears']=$param['workYears'];
         $data['signature']=$param['signature'];
-        
-        $image=  json_decode($param->img,true);
-        $data['stylistImg']=$image->stylistImg;
-        $data['stylistImgCom']=$image->stylistImgCom;
-        
+        $data['stylistImg']=$param['stylistImg'];
+        if(!empty($param['img'])){
+             $data['img']=$param['img'];
+        }
         if(isset($param['IDcard'])&&$param['IDcard']){
              $data['IDcard']=$param['IDcard'];
         }  
@@ -106,7 +120,7 @@ class Stylist  extends Model {
      public static function createStylist($salonid,$param){
         $data=array();
         $data['salonId']= $salonid;        
-       // $data['stylistImg']=$param['stylistImg'];
+        $data['stylistImg']=$param['stylistImg'];
         $data['stylistName']=$param['stylistName'];
         $data['sex']=$param['sex'];
         $data['mobilephone']=$param['mobilephone'];
@@ -116,10 +130,9 @@ class Stylist  extends Model {
         $data['workYears']=$param['workYears'];
         $data['signature']=$param['signature'];
                       
-        $image=  json_decode($param->img,true);
-        $data['stylistImg']=$image->stylistImg;
-        $data['stylistImgCom']=$image->stylistImgCom;
-        
+        if(!empty($param['img'])){
+             $data['img']=$param['img'];
+        }
         if(isset($param['IDcard'])&&$param['IDcard']){
              $data['IDcard']=$param['IDcard'];
         }  
