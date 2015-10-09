@@ -9,6 +9,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\SalonItem;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use App\SalonItemFormats;
 
 class WarehouseController extends Controller
 {
@@ -18,12 +19,12 @@ class WarehouseController extends Controller
      * @apiGroup Warehouse
      * 
      * @apiParam {String} salonid  店铺
-     * @apiParam {String} item_name  项目名称的关键字
-     * @apiParam {String} type 项目类型 0 全部 1普通项目 2闲时特价
-     * @apiParam {String} cat 项目分类 0 全部 1普通项目 2闲时特价
-     * @apiParam {String} norms_cat 项目规格0 全部 1有规格 2无规格
-     * @apiParam {String} exp 项目期限 0 全部 1有期限 2无期限
-     * @apiParam {String} use_limit 限制资格 0 全部 1 限首单 2限推荐
+     * @apiParam {String} itemname  项目名称的关键字
+     * @apiParam {String} typeid 项目类型 0 全部 1普通项目 2闲时特价
+     * @apiParam {String} item_type 项目分类 0 全部 1普通项目 2闲时特价
+     * @apiParam {String} norms_cat_id 项目规格0 全部 1有规格 2无规格
+     * @apiParam {String} exp_time 项目期限 0 全部 1有期限 2无期限
+     * @apiParam {String} buylimit 限制资格 0 全部 1 限首单 2限推荐
      * @apiParam {Number} page 页数 (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      * @apiParam {String} sort_key 排序的键 ['itemid','salonid','typeid','norms_cat_id','itemname','item_type','minPrice','minPriceOri','minPriceGroup']
@@ -82,13 +83,13 @@ class WarehouseController extends Controller
      *                       "typeid": 10,
      *                       "typename": "其他"
      *                   },
-     *                   "salon_norms_cat": null
+     *                   "salon_norms_cat": []
      *               },
      *               {
      *                   "itemid": 44976,
      *                   "salonid": 1216,
      *                   "typeid": 10,
-     *                   "norms_cat_id": 0,
+     *                   "norms_cat_id": 1243,
      *                   "itemname": "香缇卡洗发水",
      *                   "item_type": 1,
      *                   "minPrice": 21,
@@ -105,7 +106,12 @@ class WarehouseController extends Controller
      *                       "typeid": 10,
      *                       "typename": "其他"
      *                   },
-     *                   "salon_norms_cat": null
+     *                   "salon_norms_cat": [
+     *                       "性别",
+     *                       "理发师",
+     *                       "药水",
+     *                       "发长"
+     *                   ]
      *               }
      *           ]
      *       }
@@ -120,12 +126,12 @@ class WarehouseController extends Controller
     {
         $params = $this->parameters([
             'salonid'=>self::T_INT,
-            'item_name'=>self::T_STRING,
-            'type'=>self::T_INT,
-            'cat'=>self::T_INT,
-            'norms_cat'=>self::T_INT,
-            'exp'=>self::T_INT,
-            'use_limit'=>self::T_INT,
+            'itemname'=>self::T_STRING,
+            'typeid'=>self::T_INT,
+            'item_type'=>self::T_INT,
+            'norms_cat_id'=>self::T_INT,
+            'exp_time'=>self::T_INT,
+            'buylimit'=>self::T_INT,
             'page'=>self::T_INT,
             'page_size'=>self::T_INT,
             'sort_key'=>self::T_STRING,
@@ -144,17 +150,21 @@ class WarehouseController extends Controller
         });
         
         $res =  $itemObj->paginate($size)->toArray();
+        $datas = $res['data'];
+        $norms_cat_ids = array_column($datas, "norms_cat_id");
+        $format_infos = SalonItemFormats::getItemsByNormscatids($norms_cat_ids);
+        $res['data'] = self::composite($datas,$format_infos);
         unset($res['next_page_url']);
         unset($res['prev_page_url']);
         return $this->success($res);
     }
 
     /**
-     * @api {get} /warehouse/show/{id} 2.项目仓库详情
+     * @api {get} /warehouse/show/{id} 2.项目仓库详情  
      * @apiName show
      * @apiGroup Warehouse
      *
-     *
+     * @apiParam {String} id 参见项目详情 http://192.168.13.46:8150/doc/#api-Item-show
      *
      * @apiErrorExample Error-Response:
      *		{
@@ -246,9 +256,8 @@ class WarehouseController extends Controller
 	public static function search($params)
 	{
 	    $base_fields = ['itemid','salonid','typeid','norms_cat_id','itemname','item_type','minPrice','maxPrice','minPriceOri','maxPriceOri','minPriceGroup','maxPriceGroup'];
-	    $salon_fields=['salonid','salonname'];
+	 //   $salon_fields=['salonid','salonname'];
 	    $type_fields=['typeid','typename'];
-	    $norms_fields=['salon_norms_cat_id','norms_cat_name'];
 	    $order_fields = ['itemid','salonid','typeid','norms_cat_id','itemname','item_type','minPrice','minPriceOri','minPriceGroup'];
 	    
 	    $base = SalonItem::select($base_fields);
@@ -261,25 +270,37 @@ class WarehouseController extends Controller
 	    {
 	        $base->where('salonid',$params['salonid']);
 	    }
-	    if(isset($params['type']) && !empty($params['type']))
+	    if(isset($params['item_type']) && !empty($params['item_type']))
 	    {
-	        $base->where('item_type',$params['type']);
+	        $base->where('item_type',$params['item_type']);
 	    }
-	    if(isset($params['cat']) && !empty($params['cat']))
+	    if(isset($params['typeid']) && !empty($params['typeid']))
 	    {
-	        $base->where('typeid',$params['cat']);
+	        $base->where('typeid',$params['typeid']);
 	    }
-	    if(isset($params['norms_cat']) && !empty($params['norms_cat']))
+	    if(isset($params['norms_cat_id']) && $params['norms_cat_id'] == 1)
 	    {
 	        $base->where('norms_cat_id','<>',0);
 	    }
-	    if(isset($params['exp']) && !empty($params['exp']))
+	    if(isset($params['exp_time']) && $params['exp_time'] == 1)
 	    {
 	        $base->where('exp_time','<>',0);
 	    }
-	    if(isset($params['use_limit']) && !empty($params['use_limit']))
+	    
+	    if(isset($params['buylimit']) && !empty($params['buylimit']))
 	    {
-	        $base->where('useLimit','<>','');
+	        if($params['buylimit'] == 1)
+	        {
+	            $base->join('salon_item_buylimit',function($join){
+	                $join->on('salon_item_buylimit.salon_item_id','=','salon_item.itemid')->where('salon_item_buylimit.limit_first','=',1);
+	            });
+	        }
+	        elseif($params['buylimit'] == 2)
+	        {
+	            $base->join('salon_item_buylimit',function($join){
+	                $join->on('salon_item_buylimit.salon_item_id','=','salon_item.itemid')->where('salon_item_buylimit.limit_invite','=',1);
+	            });
+	        }
 	    }
 	    
 	    if(isset($params['itemname']) && !empty($params['itemname']))
@@ -294,12 +315,12 @@ class WarehouseController extends Controller
 	        $base->where('itemname','like',$keyword);
 	    }
 	    
-	    $base->with([
-            'salon' => function ($q) use($salon_fields)
-            {
-                $q->get($salon_fields);
-            }
-        ]);	 
+// 	    $base->with([
+//             'salon' => function ($q) use($salon_fields)
+//             {
+//                 $q->get($salon_fields);
+//             }
+//         ]);	 
 
 	    $base->with([
 	        'salonItemType' => function ($q) use($type_fields)
@@ -308,12 +329,12 @@ class WarehouseController extends Controller
 	        }
 	    ]);
 	    
-	    $base->with([
-	        'salonNormsCat' => function ($q) use($norms_fields)
-	        {
-	            $q->get($norms_fields);
-	        }
-	    ]);
+// 	    $base->with([
+// 	        'salonNormsCat' => function ($q) use($norms_fields)
+// 	        {
+// 	            $q->get($norms_fields);
+// 	        }
+// 	    ]);
 
 	    // 排序
 	    if (isset($params['sort_key']) && in_array($params['sort_key'], $order_fields)) {
@@ -376,5 +397,23 @@ class WarehouseController extends Controller
 	        }
 	    }
 	    return true;
+	}
+	
+	
+	public static function composite($items,$formats)
+	{
+	    foreach($items as &$item)
+	    {
+	        $cat_id = $item['norms_cat_id'];
+	        if(isset($formats[$cat_id]))
+	        {
+	            $item['salon_norms_cat'] = $formats[$cat_id];
+	        }
+	        else 
+	        {
+	            $item['salon_norms_cat'] = [];
+	        }
+	    }
+	    return $items;
 	}
 }

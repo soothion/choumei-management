@@ -34,11 +34,6 @@ class SalonItem extends Model {
 	    return $this->belongsTo(SalonItemType::class,'typeid','typeid');
 	}
 	
-	public function salonNormsCat()
-	{
-	    return $this->belongsTo(SalonNormsCat::class,'norms_cat_id','salon_norms_cat_id');
-	}
-	
 	public function salon()
 	{
 	    return $this->belongsTo(Salon::class,'salonid','salonid');
