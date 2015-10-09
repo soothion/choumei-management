@@ -1066,7 +1066,6 @@ form[data-role="hash"] input[type="date"]{
 .popup-cropper{
 	z-index:10000;
 	background:rgba(0,0,0,0.4);
-	
 }
 .popup-cropper-image{
 	text-align:center;

@@ -427,11 +427,11 @@ $(function(){
 	});
 	
 	/**日期控件修正**/
+	seajs.use(['/laydate/laydate.js']);
 	if(!lib.tools.browser().webkit){
-		seajs.use(['/laydate/laydate.js']);
 		$body.on('click','input[type=date]',function(e){
 			var options={
-				format: 'YYYY-MM-DD',
+				format:($(this).attr('format')||'YYYY-MM-DD'),
 				min:this.min,
 				max:this.max,
 				zIndex:1000,
@@ -443,6 +443,21 @@ $(function(){
 			laydate(options);			
 		});
 	}
+	$body.on('click','input[type=_datetime]',function(e){
+		var options={
+			format:($(this).attr('format')||'YYYY-MM-DD hh:mm:ss'),
+			min:this.min,
+			max:this.max,
+			zIndex:1000,
+			istime: true,
+			choose:function(){
+				e.target.focus();
+				$(e.target).removeClass('placeholder');
+			}
+		};
+		laydate(options);			
+	});
+	
 	/**修正IE9**/
 	if(window.ie9){
 		$(document.body).addClass("ie9");

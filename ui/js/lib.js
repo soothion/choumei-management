@@ -599,10 +599,15 @@
 				});
 			},
 			create:function(options){
-				options=$.extend({thumbnails:['300x300'],aspectRatio: 1/1,autoCropArea: 0.5},options);
+				options=$.extend({
+					thumbnails:['300x300'],
+					aspectRatio: 1/1,
+					autoCropArea: 0.5
+				},options);
 				options.src=options.src.split('?')[0];
 				this.use(function(){
 					var cropper=$(lib.ejs.render({url:"/module/public/template/cropper"},{data:options.src}));
+					cropper.css({opacity:0});
 					$(document.body).append(cropper);
 					parent.lib.fullpage(true);
 					cropper[0].thumbnails={};
@@ -622,6 +627,9 @@
 						for(var name in cropper[0].thumbnails){
 							cropper[0].thumbnails[name]=this.src+"?imageMogr2"+"/crop/!"+Math.round(e.width)+"x"+Math.round(e.height)+"a"+Math.round(e.x)+"a"+Math.round(e.y)+"/thumbnail/"+name;
 						}
+					}
+					options.built=function(){
+						cropper.css({opacity:1});
 					}
 					cropper.find('img').on('load',function(){
 						$(this).cropper(options);

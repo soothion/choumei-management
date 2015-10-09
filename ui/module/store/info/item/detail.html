@@ -18,23 +18,29 @@
 			<div class="table-detail" ajat="<%if(query.p=='item'){%>item/show/<%}else if(query.p=='warehouse'){%>warehouse/show/<%}else if(query.p=='special'){%>special/show/<%}%><%=query.id%>#domid=detail&tempid=detail-t" id="detail">
 				<script type="text/template" id="detail-t">
 				<div class="detail-operation">
-					<button class="btn">下架</button><span class="space"></span>
-					<button class="btn">上架</button><span class="space"></span>
-					<a class="btn" href="edit.html?id=<%=query.id%>">编辑</a><span class="space"></span>
+					<form action="" data-role="normal" onsuccess="parent.lib.popup.result()">
+						<button class="btn">下架</button><span class="space"></span>
+						<input type="hidden" name="ids" value="<%=query.id%>" />
+					</form>
+					<form action="warehouse/puton" data-role="normal" onsuccess="parent.lib.popup.result()">
+						<button class="btn">上架</button><span class="space"></span>
+						<input type="hidden" name="ids" value="<%=query.id%>" />
+					</form>
+					<a class="btn" href="edit.html?<%=query._%>">编辑</a><span class="space"></span>
 					<button class="btn btn-cancel">关闭</button>
 				</div>
 				<table>
 					<thead>
 						<tr>
 							<td colspan="2">
-							  卡顿美发（南山店）
+							  <%=query.salonname%>
 							</td>	
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td>项目名称：</td>
-							<td>洗剪吹</td>
+							<td><%=data.itemname%></td>
 						</tr>
 						<tr>
 							<td>项目图片：</td>
@@ -46,15 +52,15 @@
 						</tr>
 						<tr>
 							<td>项目分类：</td>
-							<td>洗剪吹</td>
+							<td><%=data.typename%></td>
 						</tr>
 						<tr>
 							<td>增值服务：</td>
-							<td>洗剪吹</td>
+							<td><%=data.addserviceStr%></td>
 						</tr>
 						<tr>
 							<td>服务详情：</td>
-							<td>按填写的服务项目一样显示，包括回车、空格</td>
+							<td><%=data.detail%></td>
 						</tr>
 					</tbody>
 				</table>
@@ -63,25 +69,35 @@
 					<tbody>
 						<tr>
 							<td> 项目有效期：</td>
-							<td colspan="3">无限制</td>
+							<td colspan="3"><%=data.exp_time?new Date(data.exp_time*1000):"无限制"%></td>
 						</tr>
 						<tr>
 							<td>定时上架：</td>
-							<td>2015-01-01  12：00</td>
+							<td><%=data.timingAdded?new Date(data.timingAdded*1000).format("yyyy-MM-dd hh:mm"):""%></td>
 							<td>定时下架：</td>
-							<td>2015-01-01  12：00</td>
+							<td><%=data.timingShelves?new Date(data.timingShelves*1000).format("yyyy-MM-dd hh:mm"):""%></td>
 						</tr>
 						<tr>
 							<td>限制购买：</td>
-							<td colspan="3">无限制</td>
+							<td colspan="3"><%=data.limit_time?data.limit_time:"无限制"%></td>
 						</tr>	
 						<tr>
 							<td>库存数量：</td>
-							<td colspan="3">2000</td>
+							<td colspan="3"><%=data.total_rep%></td>
 						</tr>
 						<tr>
-							<td>服务详情：</td>
-							<td colspan="3">无限制</td>
+							<td>限制资格：</td>
+							<td colspan="3">
+								<%if(!data.limit_invite&&!data.limit_first){%>
+									无限制
+								<%}%>
+								<%if(data.limit_first){%>
+									限首次下单可购买
+								<%}%>
+								<%if(data.limit_invite){%>
+									限推荐用户购买
+								<%}%>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -90,20 +106,22 @@
 					<tbody>
 						<tr>
 							<td>定价方式：</td>
-							<td>无规格，统一价</td>
+							<td><%=data.prices?"有规格，区间价":"无规格，统一价"%></td>
 						</tr>
+						<%if(!data.prices){%>
 						<tr>
 							<td>原价：</td>
-							<td>￥200</td>
+							<td><%=data.price?"￥"+data.price:""%></td>
 						</tr>
 						<tr>
 							<td>臭美价：</td>
-							<td>￥200</td>
+							<td><%=data.price_dis?"￥"+data.price_dis:""%></td>
 						</tr>	
 						<tr>
 							<td>集团价：</td>
-							<td>￥200</td>
+							<td><%=data.price_group?"￥"+data.price_group:""%></td>
 						</tr>
+						<%}else{%>
 						<tr>
 							<td colspan="2" style="padding-left:5px;">
 								<table>
@@ -116,28 +134,19 @@
 										</tr>
 									</thead>
 									<tbody>
+										<%data.prices&&data.prices.forEach(function(item){%>
 										<tr>
-											<td style="width:auto;min-width:0">男、高级造型师、长发、高级药水</td>
-											<td style="width:auto;min-width:0">￥30</td>
-											<td style="width:auto;min-width:0">￥30</td>
-											<td style="width:auto;min-width:0">￥30</td>
+											<td style="width:auto;min-width:0"><%=item.formats%></td>
+											<td style="width:auto;min-width:0"><%=item.price?"￥"+item.price:""%></td>
+											<td style="width:auto;min-width:0"><%=item.price_dis?"￥"+item.price_dis:""%></td>
+											<td style="width:auto;min-width:0"><%=item.price_group?"￥"+item.price_group:""%></td>
 										</tr>
-										<tr>
-											<td style="width:auto;min-width:0">男、高级造型师、长发、高级药水</td>
-											<td style="width:auto;min-width:0">￥30</td>
-											<td style="width:auto;min-width:0">￥30</td>
-											<td style="width:auto;min-width:0">￥30</td>
-										</tr>
-										<tr>
-											<td style="width:auto;min-width:0">男、高级造型师、长发、高级药水</td>
-											<td style="width:auto;min-width:0">￥30</td>
-											<td style="width:auto;min-width:0">￥30</td>
-											<td style="width:auto;min-width:0">￥30</td>
-										</tr>
+										<%})%>
 									</tbody>
 								</table>
 							</td>
 						</tr>
+						<%}%>
 					</tbody>
 				</table>
 				<legend>其他信息</legend>
@@ -145,23 +154,23 @@
 					<tbody>
 						<tr>
 							<td>已售数量：</td>
-							<td>10000</td>
+							<td><%=data.sold%></td>
 						</tr>
 						<tr>
 							<td>上架时间：</td>
-							<td>2015-01-01  12：00</td>
+							<td><%=data.up_time?new Date(data.up_time*1000).format("yyyy-MM-dd hh:mm"):""%></td>
 						</tr>
 						<tr>
 							<td>上架操作人：</td>
-							<td>张三</td>
+							<td><%=data.name%></td>
 						</tr>	
 						<tr>
 							<td>最后一次修改时间：</td>
-							<td>2015-01-01  12：00</td>
+							<td><%=data.UPDATE_date%></td>
 						</tr>
 						<tr>
 							<td>最后一次修改人：</td>
-							<td>张三</td>
+							<td><%=data.name%></td>
 						</tr>
 					</tbody>
 				</table>

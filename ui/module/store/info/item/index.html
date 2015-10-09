@@ -49,7 +49,9 @@
 					<%}%>
 					<%if(query.p=="warehouse"){%>
 					&nbsp;
-					<button class="btn"><i class="fa fa-file-excel-o"></i> 导入</button>
+					<span style="position:relative">
+						<button class="btn" id="btn-import"><i class="fa fa-file-excel-o"></i> 导入</button>
+					</span>
 					<%}%>
 				</div>
 				<div class="filter-box" style="display:none">
@@ -74,7 +76,7 @@
 					<%}%>
 					<div class="flex-box">
 						<div class="filter-title">项目分类：</div>
-						<div class="flex-item" ajat="salonList/getItemType#domid=type&tempid=type-t" id="type"></div>
+						<div class="flex-item" ajat="item/type#domid=type&tempid=type-t" id="type"></div>
 					</div>
 					<div class="flex-box">
 						<div class="filter-title">项目规格：</div>
@@ -149,7 +151,7 @@
 				</div>
 				</script>				
 			</form>
-			<div class="table" ajat="<%if(query.p=='item'){%>item/index<%}else if(query.p=='special'){%>warehouse/index<%}else if(query.p=='warehouse'){%>warehouse/index<%}%>?<%=query._.replace(/page=\w+&/,'')%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="<%if(query.p=='item'){%>item/index<%}else if(query.p=='special'){%>special/index<%}else if(query.p=='warehouse'){%>warehouse/index<%}%>?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
 				<thead>
@@ -202,7 +204,7 @@
 							</form>
 							<%}%>
 							<span class="space"></span>
-							<a class="link" target="_blank" data-slug="merchant.show,merchant.update" href="detail.html?page=<%=query.p%>&id=<%=item.itemid%>">查看</a>
+							<a class="link" target="_blank" data-slug="merchant.show,merchant.update" href="detail.html?<%=query._%>&id=<%=item.itemid%>">查看</a>
 						</td>
 					</tr> 
 					<%})%>
@@ -237,17 +239,37 @@
 		<%})%>
 	</script>
 	<script type="text/javascript">
-		$('#table').on('click','input',function(){
-			if($('tbody label input:checked').length>0){
-				$('.table-bottom button').attr('disabled',false);
-			}else{
-				$('.table-bottom button').attr('disabled',true);
-			}
-			var arr=[];
-			$('#table label input:checked').each(function(){
-				arr.push(this.value);
+		$(function(){
+			$('#table').on('click','input',function(){
+				if($('tbody label input:checked').length>0){
+					$('.table-bottom button').attr('disabled',false);
+				}else{
+					$('.table-bottom button').attr('disabled',true);
+				}
+				var arr=[];
+				$('#table label input:checked').each(function(){
+					arr.push(this.value);
+				})
+				$('.table-bottom input[name="ids"]').val(arr)
 			})
-			$('.table-bottom input[name="ids"]').val(arr)
+			var uploader = lib.puploader.create({
+				'loaderText':'数据正在导入中...',
+				'successText':'数据导入成功',
+				'browse_button' : 'btn-import',
+				'domain'        : cfg.getHost() + "warehouse/import?token="+localStorage.getItem('token'),
+				'file_data_name': 'rebate',
+				'auto_start'    : true,
+				'filters'       : {mime_types:[{ title : "Excel", extensions : "xls" }],
+								max_file_size : '10mb', //最大只能上传10mb的文件
+								prevent_duplicates : true //不允许选取重复文件
+								}
+			},function(obj){
+				obj.bind('UploadComplete',function(){
+					setTimeout(function(){
+						$(window).trigger('hashchange')           
+					}, 2000)            
+				})
+			});
 		})
 	</script>
   </body>
