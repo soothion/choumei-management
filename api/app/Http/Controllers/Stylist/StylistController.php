@@ -402,9 +402,9 @@ class StylistController  extends Controller {
         $stylist->educateExp=json_decode($stylist['educateExp'],true);
         $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
         if($task==true){
-                $query->reward=1;
+                $stylist->reward=1;
         } else{
-                $query->reward=2;
+                $stylist->reward=2;
         }   
         $field=['salonname','merchantId'];
         $salon=DB::table('salon')->select($field)->where(array("salonid"=>$stylist->salonId))->first(); 
