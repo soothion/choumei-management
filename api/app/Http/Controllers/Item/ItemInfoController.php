@@ -280,7 +280,7 @@ class ItemInfoController extends Controller{
 	 * @apiName createSpecialItem
 	 * @apiGroup  itemInfo
 	 * 
-	 * @apiParam {String} 和添加普通项目参数保值一致
+	 * @apiParam {String} item 和添加普通项目参数保值一致.
 	 * 
 	 */
 	public function createSpecialItem()
