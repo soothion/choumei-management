@@ -53,9 +53,7 @@ class Stylist  extends Model {
                 
              }
            $results['data'][$key]->num=$num;
-
          }
-         var_dump($results['data']);
          return $results;
     }
  
