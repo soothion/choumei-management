@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-10 14:30:38
+* @Last Modified time: 2015-10-10 16:34:34
 */
 
 (function(){       
@@ -14,7 +14,7 @@
             if(data.data && data.data.img) {                    
                 arr.push(JSON.parse(data.data.img));
             }else{
-                arr.push({'thumbimg':data.data.stylistImg,'img':data.data.stylistImg});
+                arr.push({'thumbimg':data.data.stylistImg,'img':data.data.stylistImg,'type':1});
             }
             initUploader(arr);
         });
@@ -42,16 +42,16 @@
             crop:true
         },function(uploader){
             uploader.bind('ImageUploaded',function(up,response){
+                var ratio = new Number(420/492).toFixed(2);
                 lib.cropper.create({
                     src:response.img,
-                    aspectRatio : 1,
+                    aspectRatio : ratio,
                     thumbnails  : ["420x492"],
                     define:function(data){
                         if(up.createThumbnails&&!response.edit){
                             up.createThumbnails({
                                 thumbimg:data["420x492"],
                                 img:response.img,
-                                ratio: 1,
                                 type : 1
                             });
                             $("#form .upload-image-tip").hide();
@@ -61,6 +61,19 @@
             });
         });
     }
+
+    $("#form").on('click','.control-thumbnails-edit',function(){
+        var item  = $(this).closest('.control-thumbnails-item');
+        lib.cropper.create({
+            src:item.find('img').data('original'),
+            aspectRatio :new Number(420/492).toFixed(2),
+            thumbnails  : ["420x492"], 
+            define:function(data){
+                item.find('img').attr('src',data["420x492"]);
+                item.find('input.thumb').val(data["420x492"]); 
+            }                     
+        });
+    });
 
     $("#form").on('click','.tab td',function(){
         $(this).children().css('visibility','visible');
@@ -102,10 +115,23 @@
     });
 
     $('#form').on('change','input.start',function(){
-        var firstTd   = $(this).closest("tr");  
+        var flag = false;
+        $(this).closest("tr").children().each(function(index,obj){
+            if($(obj.childNodes[0]).val()){
+                flag = true; 
+            }
+        });
+        if(flag){
+            $(this).closest("tr").children().each(function(index,obj){
+                $(obj.childNodes[0]).addClass("show");
+                $(obj.childNodes[0]).attr("required",true);
+            })
+        }else{
+            $(this).closest("tr").children().each(function(index,obj){
+                $(obj.childNodes[0]).removeAttr("required");
+            })            
+        }
     });
-
-
 
     function checkedImage(){
         var len = $("#form .control-thumbnails-item img").length;
@@ -123,6 +149,7 @@
         var element = $(".control-thumbnails-item img");
         img['thumbimg'] = element.attr('src');
         img['img']      = element.data('original');
+        img['type']     = element.data('type');
         data.stylistImg = element.attr('src');
         data['img'] = JSON.stringify(img);
         data[data.cardType] = data.cardNum;

@@ -115,7 +115,7 @@
                 <label class="control-label" for=""><span class="red">*</span>姓名：</label>
                 <div class="control">
                     <input type="text" name="stylistName" placeholder="造型师姓名" maxlength="8"
-                    value="<%=data.stylistName%>" required>
+                    value="<%=data.stylistName%>" required="required">
                 </div>
             </div>
 
@@ -311,15 +311,16 @@
                         <tbody>
                             <%if(query.id){%>
                             <%
+
                             var educateExp = JSON.parse(data.educateExp);                    
                             %>
                             <%for(var i = 1 ; i < 6 ; i++){%>
                                 <tr>
                                     <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> start" name="<%='sTime'+i%>" 
                                     value="<%=educateExp['sTime'+i]%>"></td>
-                                    <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> end" name="<%='eTime'+i%>"
+                                    <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> start" name="<%='eTime'+i%>"
                                     value="<%=educateExp['eTime'+i]%>"></td>
-                                    <td><input type="text" name="<%='name'+i%>" 
+                                    <td><input type="text" name="<%='name'+i%>" class="start"
                                     value="<%=educateExp['name'+i]%>" maxLength="16"></td>
                                 </tr>
                             <%}%> 
@@ -342,6 +343,7 @@
                             <%}%>                                                                                                    
                         </tbody>    
                     </table>
+                    <span class="control-help" style="display:none;"></span>
                 </div>
             </div> 
 

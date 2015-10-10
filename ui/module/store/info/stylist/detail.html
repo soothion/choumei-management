@@ -28,11 +28,12 @@
     </head>
     <body>
         <div class="breadcrumb">
-            <a>收入管理</a>
-            <span>&gt;</span><a href="index.html">返佣单</a>
+            <a>店铺管理</a>
+            <span>&gt;</span><a href="index.html">店铺资料</a>
+            <span>&gt;</span><a href="index.html">造型师列表</a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>返佣单详情</h4>
+                    <h4>查看造型师资料</h4>
                 </div>
             </div>
         </div>
@@ -201,7 +202,10 @@
                         <td>截止日期</td>                       
                         <td>教育院校（培训机构）</td>                       
                     </tr>
-                    <% var educateExp = JSON.parse(data.educateExp);%>
+                    <% 
+                    debugger;
+                    var educateExp = JSON.parse(data.educateExp);
+                    %>
                     <%for(var i = 1 ; i < 6 ; i++){%>
                         <tr>
                             <td><%=educateExp['sTime'+i]%></td>
@@ -227,7 +231,10 @@
                             <td>门店职位</td>                       
                             <td>工作地点</td>                       
                         </tr>  
-                        <% var workExp = JSON.parse(data.workExp);%>                                       
+                        <% 
+                        debugger;
+                        var workExp = JSON.parse(data.workExp);
+                        %>                                       
                         <%for(var i = 1 ; i < 6 ; i++){%>
                             <tr>
                                 <td>
