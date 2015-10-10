@@ -196,7 +196,7 @@ class ItemInfoController extends Controller{
 	}
 	
 	/**
-	 * @api {post} /itemInfo/create 4.新增项目
+	 * @api {post} /itemInfo/create 4.新增普通项目
 	 * @apiName create
 	 * @apiGroup  itemInfo
 	 *
@@ -276,7 +276,21 @@ class ItemInfoController extends Controller{
 	}
 	
 	/**
-	 * @api {post} /itemInfo/update 5.修改项目
+	 * @api {post} /itemInfo/createSpecialItem 5.添加特价项目
+	 * @apiName createSpecialItem
+	 * @apiGroup  itemInfo
+	 * 
+	 * @apiParam  和添加普通项目参数保值一致
+	 */
+	public function createSpecialItem()
+	{
+		$param = $this->param;
+		return $this->save($param);
+	
+	}
+	
+	/**
+	 * @api {post} /itemInfo/update 6.修改项目
 	 * @apiName update
 	 * @apiGroup  itemInfo
 	 *
