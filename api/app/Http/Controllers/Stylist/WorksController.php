@@ -224,6 +224,9 @@ class WorksController extends Controller {
      */
     public function  create(){
         $param=$this->param;
+        if(empty($param['img'])||empty($param['stylistId'])){
+             throw new ApiException('创建作品的参数不齐', ERROR::MERCHANT_ERROR);
+        }
         $data['img']=json_encode($param['img']);
         $data['stylistId']=$param['stylistId'];
         if(isset($param['description'])||$param['description']){
@@ -242,6 +245,11 @@ class WorksController extends Controller {
      * @api {post} /Works/uploadfile 6.上传作品集合
      * @apiName uploadfile
      * @apiGroup  Works
+     * 
+     * @apiSuccessExample Success-Response:
+     * 
+     * @apiErrorExample Error-Response:
+     * 
      */
     
     public function uploadfile() {
