@@ -247,9 +247,13 @@ class WorksController extends Controller {
      * @apiGroup  Works
      * 
      * @apiSuccessExample Success-Response:
+     * {
      * 
+     * }
      * @apiErrorExample Error-Response:
-     * 
+     * {
+     *      
+     * }
      */
     
     public function uploadfile() {
