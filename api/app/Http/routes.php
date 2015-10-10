@@ -791,6 +791,16 @@ Route::group(['middleware'], function(){
     'uses'=>'Item\ItemController@show'
         ));
     
+    Route::any('warehouse/detail/{id}',array(  //项目仓库详情
+        'as'=>'warehouse.detail',
+        'uses'=>'Item\OnSaleController@show'
+     ));
+    
+    Route::any('warehouse/destroy',array(  //删除项目
+    'as'=>'warehouse.destroy',
+    'uses'=>'Item\WarehouseController@destroy'
+        ));
+    
     Route::any('warehouse/puton',array(  //项目仓库上架
     'as'=>'warehouse.puton',
     'uses'=>'Item\WarehouseController@puton'

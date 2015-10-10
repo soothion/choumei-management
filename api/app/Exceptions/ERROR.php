@@ -33,7 +33,21 @@ class ERROR
       *@param 未知错误
       */
      CONST UNKNOWN_ERROR =  -40005;
+     
+     /**
+      * @param 上传的文件丢失
+      */
+     CONST UPLOAD_FILE_LOST = -40006;
+     
+     /**
+      * @param 上传的文件后缀名不正确
+      */
+     CONST UPLOAD_FILE_ERR_EXTENSION = -40007;
 
+     /**
+      * @param 上传的文件格式不正确
+      */
+     CONST UPLOAD_FILE_ERR_FORMAT = -40008;
      
     ////////////用户模块//////////////
      /**
