@@ -67,7 +67,7 @@ class Stylist  extends Model {
         $data['sex']=$param['sex'];
         $data['mobilephone']=$param['mobilephone'];
         $data['job']=$param['job'];
-        $data['birthday']=$param['birthday'];
+        $data['birthday']=strtotime($param['birthday']);
         $data['sNumber']=$param['sNumber'];
         $data['workYears']=$param['workYears'];
         $data['signature']=$param['signature'];
@@ -100,13 +100,13 @@ class Stylist  extends Model {
              $data['grade']=$param['grade'];
         }
         if(!empty($param['fastGrade'])){
-             $data['fastGrade']=  json_encode($param['fastGrade']);
+             $data['fastGrade']= $param['fastGrade'];
         }  
         if(!empty($param['workExp'])){
              $data['workExp']=json_encode($param['workExp']);
         }
         if(!empty($param['educateExp'])){
-             $data['educateExp']=$param['educateExp'];
+             $data['educateExp']= json_encode($param['educateExp']);
         }  
         if(isset($param['description'])&&$param['description']){
              $data['description']=$param['description'];
@@ -134,7 +134,7 @@ class Stylist  extends Model {
         $data['sex']=$param['sex'];
         $data['mobilephone']=$param['mobilephone'];
         $data['job']=$param['job'];
-        $data['birthday']=$param['birthday'];
+        $data['birthday']=strtotime($param['birthday']);
         $data['sNumber']=$param['sNumber'];
         $data['workYears']=$param['workYears'];
         $data['signature']=$param['signature'];
