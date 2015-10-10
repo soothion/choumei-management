@@ -37,10 +37,7 @@
 			<script type="text/template" id="table-t">
 			<table>
 				<thead>
-					<tr>
-					<th style="width:50px">
-						<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-					</th>   					     
+					<tr> 					     
 					<th>序号</th>
 					<th>造型师名称</th>
 					<th>手机号</th>
@@ -53,23 +50,23 @@
 					</tr>
 				</thead>
 				<tbody>
-					<%data=data.data%>
+					<%
+					  data=data.data
+                      var gradeText = { "1":"资深发型师","2":"资深发型师","1,2":"资深发型师","3":"设计总监", 
+                      "4":"美发大师"};
+                      var fastGradeText = {"1":"普通快剪", "2":"总监快剪"}
+                      var statusText = {"1":"正常","2":"禁用"};
+					%>
 					<%data.forEach(function(item,i){%>
-						<tr>
-						<td>
-							<label>
-							<input type="checkbox"/>
-							<span></span>
-							</label>
-						</td>  					 
+						<tr>				 
 						<td><%=i+1%></td>
 						<td><%=item.stylistName%></td>
 						<td><%=item.mobilephone%></td>
 						<td><%=item.sNumber%></td>
-						<td><%=item.grade%></td>
-						<td><%=item.fastGrade%></td>
+						<td><%=gradeText[item.grade]%></td>
+						<td><%=fastGradeText[item.fastGrade]%></td>
 						<td><a class="link" href="works.html"><%=item.num%></a></td>
-						<td><%=item.status%></td>
+						<td><%=statusText[item.status]%></td>
 						<td>
 						<a class="link" target="_blank" href="detail.html#id=<%=item.stylistId%>">
 						查看&gt;
@@ -79,13 +76,6 @@
 					<%})%>
 				</tbody>
 			</table>
-
-			<div class="table-bottom">
-				<label class="select-all"><input type="checkbox"/>
-					<span>全选</span>
-				</label>
-				<button class="btn" disabled>批量上架</button>
-			</div>	
 
 			<div class="pager">
 			</div>
