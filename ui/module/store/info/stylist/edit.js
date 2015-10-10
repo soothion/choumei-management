@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-10 16:34:34
+* @Last Modified time: 2015-10-10 18:07:54
 */
 
 (function(){       
@@ -116,22 +116,47 @@
 
     $('#form').on('change','input.start',function(){
         var flag = false;
-        $(this).closest("tr").children().each(function(index,obj){
-            if($(obj.childNodes[0]).val()){
+        var arrTd = $(this).closest("tr").children();
+
+        arrTd.each(function(index,obj){
+            if($(obj).children().val()){
                 flag = true; 
             }
         });
+
         if(flag){
-            $(this).closest("tr").children().each(function(index,obj){
-                $(obj.childNodes[0]).addClass("show");
-                $(obj.childNodes[0]).attr("required",true);
+            arrTd.each(function(index,obj){
+                $(obj).children().addClass("show");
+                if($(obj).children().attr('type')=="date"){
+                    $(obj).children().attr("requiredOther",true); 
+                }else{
+                    $(obj).children().attr("required",true);                    
+                }
             })
         }else{
-            $(this).closest("tr").children().each(function(index,obj){
-                $(obj.childNodes[0]).removeAttr("required");
+            arrTd.each(function(index,obj){
+                $(obj).children().removeAttr("required");
+                $(obj).children().removeAttr("requiredOther");
+                $(obj).children().next() && $(obj).children().next().remove();
             })            
         }
     });
+
+    $('#form').on('blur','input[type=date]',function(){        
+        if($(this).attr("requiredOther")){
+            var arrTd = $(this).closest("tr").children();
+            arrTd.each(function(index,obj){
+                if($(obj).children().attr('type')=="date"){
+                    if($(obj).children().val()){
+                        $(obj).children().next() && $(obj).children().next().remove();
+                    }else{
+                        $(obj).children().next() && $(obj).children().next().remove();
+                        $(obj).children().after('<span class="control-help" style="display:inline-block!important;">未填写</span>');
+                    }
+                }
+            })
+        }
+    })
 
     function checkedImage(){
         var len = $("#form .control-thumbnails-item img").length;
@@ -191,7 +216,7 @@
                 parent.lib.popup.result({
                     text:"操作成功！",
                     define:function(){
-                        //history.back();
+                        history.back();
                     }
                 });                
             }

@@ -333,10 +333,10 @@
                                         <input type="date" class="start" name="<%='sTime'+j%>">
                                     </td>
                                     <td>
-                                        <input type="date" class="end" name="<%='eTime'+j%>">
+                                        <input type="date" class="start" name="<%='eTime'+j%>">
                                     </td>
                                     <td>
-                                        <input type="text" name="<%='name'+j%>" maxLength="16">
+                                        <input type="text" class="start" name="<%='name'+j%>" maxLength="16">
                                     </td>
                                 </tr>
                             <%}%>
@@ -366,25 +366,25 @@
                             <%for(var k = 1 ; k < 6 ; k++){%>
                                 <tr>
                                     <td>
-                                        <input type="date" class="<%= workExp['wsTime'+k] ? 'show':'' %> " placeholder="yyyy-MM-dd" name="<%='wsTime'+k%>" 
+                                        <input type="date" class="<%= workExp['wsTime'+k] ? 'show':'' %> start" placeholder="yyyy-MM-dd" name="<%='wsTime'+k%>" 
                                         value="<%=workExp['wsTime'+k]%>">
                                     </td>
 
                                     <td>
-                                        <input type="date" class="<%= workExp['weTime'+k] ? 'show':'' %> " placeholder="yyyy-MM-dd" name="<%='weTime'+k%>" 
+                                        <input type="date" class="<%= workExp['weTime'+k] ? 'show':'' %> start" placeholder="yyyy-MM-dd" name="<%='weTime'+k%>" 
                                         value="<%=workExp['weTime'+k]%>"></td>
                                     <td>
-                                        <input type="text" name="<%='wname'+k%>" value="<%=workExp['wname'+k]%>" 
+                                        <input type="text" name="<%='wname'+k%>" class="start" value="<%=workExp['wname'+k]%>"
                                         maxLength="16">
                                     </td>
 
                                     <td>
-                                        <input type="text" name="<%='wjob'+k%>" value="<%=workExp['wjob'+k]%>" 
+                                        <input type="text" name="<%='wjob'+k%>" class="start" value="<%=workExp['wjob'+k]%>"
                                         maxLength="8">
                                     </td>
 
                                     <td>
-                                        <input type="text" name="<%='waddress'+k%>" value="<%=workExp['waddress'+k]%>"
+                                        <input type="text" name="<%='waddress'+k%>" class="start" value="<%=workExp['waddress'+k]%>"
                                         maxLength="8">
                                     </td>
                                 </tr>
@@ -395,19 +395,19 @@
                             <%for(var t = 1 ; t < 6 ; t++){%>
                                 <tr>
                                     <td>
-                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='wsTime'+t%>">
+                                        <input type="date" placeholder="yyyy-MM-dd" class="start" name="<%='wsTime'+t%>">
                                     </td>
                                     <td>
-                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='weTime'+t%>">
+                                        <input type="date" placeholder="yyyy-MM-dd" class="start" name="<%='weTime'+t%>">
                                     </td>
                                     <td>
-                                        <input type="text" name="<%='wname'+t%>"  maxLength="16">
+                                        <input type="text" class="start" name="<%='wname'+t%>"  maxLength="16">
                                     </td>
                                     <td>
-                                        <input type="text" name="<%='wjob'+t%>"  maxLength="8">
+                                        <input type="text" class="start" name="<%='wjob'+t%>"  maxLength="8">
                                     </td>
                                     <td>
-                                        <input type="text" name="<%='waddress'+t%>"  maxLength="8">
+                                        <input type="text" class="start" name="<%='waddress'+t%>"  maxLength="8">
                                     </td>
                                 </tr>
                             <%}%>
