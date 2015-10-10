@@ -49,6 +49,7 @@ class SalonItem extends Model {
 	
 	/**
 	 * 添加修改项目
+	 * @param  $priceType 1 无规格 2有规格
 	 * */
 	public static function upsertItem($datas,$priceType,$itemid=null)
 	{
@@ -67,13 +68,25 @@ class SalonItem extends Model {
 	        $salon_buylimit_id = SalonItemBuylimit::insertGetId($datas['salon_item_buylimit']);
 	    }
 	    else 
-	    {
+	    {	
+	    		
 	        SalonItemFormatPrice::where(['itemid'=>$itemid])->delete();
 	        self::where('itemid',$itemid)->update($datas['salon_item']);
 	        $datas['salon_item_buylimit']['salon_item_id'] = $itemid;
 	        $salon_buylimit_id = SalonItemBuylimit::where('salon_item_id',$itemid)->update($datas['salon_item_buylimit']);
 	    }
 	    
+	    $itemInfo = self::where(['itemid'=>$itemid])->select(['itemid','norms_cat_id'])->first()->toArray();
+	    if($itemInfo['norms_cat_id'])
+	    {
+	    	$catNums = self::where(['norms_cat_id'=>$itemInfo['norms_cat_id']])->count();
+	    	if($catNums == 1)//只有当前项目使用规则 就删除原规格
+	    	{
+	    		SalonNormsCat::where(['salon_norms_cat_id'=>$itemInfo['norms_cat_id']])->delete();
+	    		SalonNorms::where(['salon_norms_cat_id'=>$itemInfo['norms_cat_id']])->delete();
+	    	}
+	    }
+	    	
 	    if($priceType == 2)
 	    {
 	   		$salon_norms_cat_id = SalonNormsCat::insertGetId($datas['salon_norms_cat']);

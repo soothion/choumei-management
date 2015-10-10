@@ -610,6 +610,7 @@ class ItemInfoController extends Controller{
 	    //无规格--价格处理
 	    if($param['priceStyle'] == 1)
 	    {
+	    	$salon_item['norms_cat_id'] = 0;
 	    	$priceOriArr[] = $price = isset($param['price'])?intval($param['price']):0;
 	    	$priceGroupArr[] = $priceGroup = isset($param['priceGroup'])?intval($param['priceGroup']):0;
 	    	$priceDisArr[] = $priceDis = isset($param['priceDis'])?intval($param['priceDis']):0;
