@@ -17,11 +17,11 @@ class ItemShelvesSeeder extends Seeder
     public function run()
     {
     	$time = time();
-    	$added = SalonItem::where(['status'=>2])->where('timingAdded','<=',$time)->where('timingAdded','!=',0)->select(['itemid'])->get()->toArray();
+    	$added = SalonItem::where(['status'=>2])->where('timingAdded','<=',$time)->where('timingAdded','!=',0)->whereRaw("(timingShelves > '{$time}' or timingShelves =0 )")->select(['itemid'])->get()->toArray();
 
     	if($added)
     	{
-    		SalonItem::where(['status'=>2])->where('timingAdded','<=',$time)->where('timingAdded','!=',0)->update(['status'=>1,'up_time'=>$time]);
+    		SalonItem::where(['status'=>2])->where('timingAdded','<=',$time)->where('timingAdded','!=',0)->whereRaw("(timingShelves > '{$time}' or timingShelves =0 )")->update(['status'=>1,'up_time'=>$time]);
     		Log::info('定时上架: '.json_encode($added));
     	}
     		

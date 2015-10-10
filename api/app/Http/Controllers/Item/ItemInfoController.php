@@ -369,10 +369,19 @@ class ItemInfoController extends Controller{
 		
 		$data = self::compositeData($param);
 		$res = self::upsert($data,$param['priceStyle'],$itemid);
-		
-		return $this->success($res);
+		if($res)
+		{
+			return $this->success();
+		}
+		else 
+		{
+			throw new ApiException('操作失败',ERROR::ITEM_ERROR);
+		}
 	}
 	
+	/**
+	 * 项目添加修改 参数过滤
+	 * */
 	public static function parametersFilter($param,&$err_msg)
 	{
 	    $itemid = isset($param['itemid'])?intval($param['itemid']):null;
@@ -452,7 +461,11 @@ class ItemInfoController extends Controller{
 	    $priceStyle = isset($param['priceStyle'])?intval($param['priceStyle']):0;//项目规格 选项
 	    if($priceStyle == 1)
 	    {
-	    	
+	    	if($param['price'] < $param['priceDis'] || $param['priceGroup'] > $param['priceDis'])
+	    	{
+	    		$err_msg = ['msg'=>'价格参数错误！','no'=>ERROR::ITEM_ERROR];
+	    		return false;
+	    	}
 	    }
 	    else 
 	    {
@@ -470,7 +483,11 @@ class ItemInfoController extends Controller{
 	    			$err_msg = ['msg'=>'价格参数错误！','no'=>ERROR::ITEM_ERROR];
 	    			return false;
 	    		}
-	    		 
+	    	}
+	    	if(count($normarr)<1)
+	    	{
+	    		$err_msg = ['msg'=>'规格参数错误！','no'=>ERROR::ITEM_ERROR];
+	    		return false;
 	    	}
 	    }
 	    
@@ -478,17 +495,16 @@ class ItemInfoController extends Controller{
 	    return true;
 	}
 	
-	
+	/**
+	 * 组合参数
+	 * */
 	public static function compositeData($param)
 	{
 	    $res =  [
 	      'salon_item'=>[],
 	      'salon_item_buylimit'=>[],
 	      'salon_item_format_price'=>[],
-	      
 	      'salon_norms_cat'=>[],
-	     // 'salon_item_format'=>[],	      
-	     // 'salon_item_formats'=>[],
 	      'salon_norms'=>[],
 	    ];
 	    
@@ -555,14 +571,11 @@ class ItemInfoController extends Controller{
 	        {
 	            $salon_item['status'] 	= SalonItem::STATUS_OF_UP;
 	        }
-	        //#@todo
 	        $salon_item['uid'] 	= 1;//注意：以前是店铺账号id  现新管理后台默认 管理账号id
 	        $salon_item['add_time'] 	= $now_time;
 	    }
 	    
-	    
 	    //处理购买限制表 开始
-	    //购买资格
 	    $timeLimitInput = isset($param['timeLimitInput'])?intval($param['timeLimitInput']):0;
 	    $inviteLimit = isset($param['inviteLimit'])?intval($param['inviteLimit']):0;
 	    $firstLimit = isset($param['firstLimit'])?intval($param['firstLimit']):0;
@@ -578,11 +591,6 @@ class ItemInfoController extends Controller{
 	       $res['salon_item_buylimit']['create_time'] = $now_time;
 	    }
 
-	    //salon_norms_cat
-	    
-	    
-	
-	    
 	    //无规格--价格处理
 	    if($param['priceStyle'] == 1)
 	    {
@@ -605,11 +613,7 @@ class ItemInfoController extends Controller{
 	    {	  
 	    	$normMenu = isset($param['normMenu'])?json_decode($param['normMenu'],true):'';
 	    	$normarr = isset($param['normarr'])?json_decode($param['normarr'],true):'';
-	    	if(count($normarr)<1)
-	    	{
-	    	    //#@todo
-	    	    
-	    	}
+	    	
 	    	$attribute = self::setNorms($normMenu, $normarr);
 
 	    	$res['salon_norms_cat'] = [
@@ -618,7 +622,6 @@ class ItemInfoController extends Controller{
 	    			'add_time' => $now_time,
 	    	];
 	    	
-
 	    	foreach($normarr as $ks=>$vs)
 	    	{
 	    		foreach($vs['type'] as $vtype)
@@ -626,7 +629,6 @@ class ItemInfoController extends Controller{
 	    			$formatsId[$ks][] = $attribute[$vtype];
 	    		}
 	    		$res['salon_norms'][] = [
-	    				//'salon_norms_cat_id' => $nowid,
 	    				'salonid' => $salonid,
 	    				'salon_item_format_id' =>implode(',',$formatsId[$ks]),
 	    				'add_time' => $now_time,
@@ -634,28 +636,23 @@ class ItemInfoController extends Controller{
 	    		$normarr[$ks]['salonNormsMark'] = implode(',',$formatsId[$ks]);
 	    	}
 	    	
-	    	//规则价格入库
+	    	//规则价格
 	    	foreach($normarr as $value)
 	    	{
-	    		$priceData['dis_id'] = 0;
-	    		$priceData['discount'] = 0;
-	    		$priceData['price_dis'] = $value['priceDis'];
-	    		$priceData['price_group'] = $value['priceGroup'];
-	    		$priceData['salonNormsMark'] = $value['salonNormsMark'];
-	    		//$priceData['itemid'] = $salonItemId;
-	    		//$priceData['salon_norms_id'] = $value['salonNormsId'];
-	    		$priceData['price'] = $value['price'];
-	    		$priceData['add_time'] = $now_time;
+	    		$res['salon_item_format_price'][] = [
+	    											'price_dis'=>$value['priceDis'],
+	    											'price_group'=>$value['priceGroup'],
+								    				'salonNormsMark'=>$value['salonNormsMark'],
+								    				'price'=>$value['price'],
+								    				'add_time'=>$now_time,
+	    									];
 	    		$priceDisArr[] = $value['priceDis'];
 	    		$priceGroupArr[] = $value['priceGroup'];
 	    		$priceOriArr[] = $value['price'];
-	    		//$row = SalonItemFormatPrice::insertGetId($priceData);
-	    		$res['salon_item_format_price'][] = $priceData;
 	    	}
 	    	
 	    }
 	    
-	    //更新下项目信息
 	    $salon_item['minPrice'] = min($priceDisArr);
 	    $salon_item['maxPrice'] = max($priceDisArr);
 	    $salon_item['minPriceGroup'] = min($priceGroupArr);
@@ -663,17 +660,15 @@ class ItemInfoController extends Controller{
 	    $salon_item['minPriceOri'] = min($priceOriArr);
 	    $salon_item['maxPriceOri'] = max($priceOriArr);
 	    $res['salon_item'] = $salon_item;
-	    //#@todo
-	    
 	    return $res;
 	}
 	
+	/**
+	 * 处理规格数据入库
+	 * */
 	private static function setNorms($normMenu,$normarr)
 	{
-
 		$menus =  array_keys($normarr[0]['type']);
-		
-		
 		foreach($normarr as $v)
 		{
 			foreach($v['type'] as $key=>$val)
@@ -681,7 +676,6 @@ class ItemInfoController extends Controller{
 				$itemType[$key][]=$val;
 			}
 		}
-		
 		$typeArr = self::$_typeArr;
 		$vals = array_values($normMenu);
 		$val_idx = [];
@@ -712,37 +706,37 @@ class ItemInfoController extends Controller{
 		return $attribute;
 	}
 	
+	
+	/**
+	 * 项目信息入库
+	 * */
 	public static function upsert($datas,$priceType,$itemid=null)
 	{
 	    $salon_buylimit_id = null;
 	    $salon_norms_cat_id = null;
-	   // DB::beginTransaction();
-	   // DB::rollBack();
- 
+	    DB::beginTransaction();
 	    if(empty($itemid))
 	    {
 	        $itemid = SalonItem::insertGetId($datas['salon_item']);
+	        if(!$itemid)
+	        {
+	        	DB::rollBack();
+	        	return false;
+	        }
 	        $datas['salon_item_buylimit']['salon_item_id'] = $itemid;
 	        $salon_buylimit_id = SalonItemBuylimit::insertGetId($datas['salon_item_buylimit']);
 	    }
 	    else 
 	    {
-	        //处理购买限制表 结束
 	        SalonItemFormatPrice::where(['itemid'=>$itemid])->delete();
 	        SalonItem::where('itemid',$itemid)->update($datas['salon_item']);
 	        $datas['salon_item_buylimit']['salon_item_id'] = $itemid;
 	        $salon_buylimit_id = SalonItemBuylimit::where('salon_item_id',$itemid)->update($datas['salon_item_buylimit']);
-	     
 	    }
 	    
 	    if($priceType == 2)
 	    {
-	   		 $salon_norms_cat_id = SalonNormsCat::insertGetId($datas['salon_norms_cat']);
-
-		   /* foreach($datas['salon_item_format'] as $format)
-		    {
-		        $tmp_salon_item_format_id = SalonItemFormat::insertGetId($format);
-		    }*/
+	   		$salon_norms_cat_id = SalonNormsCat::insertGetId($datas['salon_norms_cat']);
 		    foreach($datas['salon_norms'] as $norms)
 		    {
 		    	$norms['salon_norms_cat_id'] = $salon_norms_cat_id;
@@ -761,27 +755,18 @@ class ItemInfoController extends Controller{
 	    		unset($price['salonNormsMark']);
 	    	}
 	        $tmp_salon_item_format_price_id = SalonItemFormatPrice::insertGetId($price);
+	        if(!$tmp_salon_item_format_price_id)
+	        {
+	        	DB::rollBack();
+	        	return false;
+	        }
 	    }
 	    
-	  //  if( $upData['maxPrice'] >= 1000 )   //项目价格大于1000  调整店铺类型
-	    	//Salon::where(['salonid'=>$salonid])->update(['bountyType'=>4]);
-	   /* foreach($datas['salon_item_formats'] as $formats)
-	    {
-
-	        $tmp_salon_item_formats_id = SalonItemFormats::insertGetId($formats);
-	    }*/
-	    
-	    
-	    //update relation id
-	    //#@todo
-	    
-	    
-	   // DB::rollBack();
-	}
+	   if( $datas['salon_item']['maxPrice'] >= 1000 )   //项目价格大于1000  调整店铺类型
+	    	Salon::where(['salonid'=>$salonid])->update(['bountyType'=>4]);
 	
-	public static function add($salon_item,$salon_buylimit)
-	{
-	    
+	   DB::commit();
+	   return true;
 	}
 	
 }
