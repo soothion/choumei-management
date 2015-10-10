@@ -419,6 +419,22 @@ class ERROR
       *@param 手机号码重复
       */
      CONST MERCHANT_MOBILEPHONE_ERROR  =  -51031; 
+           /**
+      *@param 作品ID出错
+      */
+     CONST MERCHANT_WORKS_ID_ERROR  =  -51032; 
+      /**
+      *@param 删除作品失败
+      */
+     CONST MERCHANT_WORKS_DELETE_ERROR  =  -51033; 
+      /**
+      *@param 修改作品失败
+      */
+     CONST MERCHANT_WORKS_SAVE_ERROR  =  -51034; 
+      /**
+      *@param 创建作品失败
+      */
+     CONST MERCHANT_WORKS_CREATE_ERROR  =  -51035; 
           
        
      ////////////项目模块//////////////

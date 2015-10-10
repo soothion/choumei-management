@@ -810,5 +810,30 @@ Route::group(['middleware'], function(){
     'as'=>'warehouse.import',
     'uses'=>'Item\WarehouseController@import'
         ));
+    Route::any('Works/index/{id}',array(  //造型师的作品列表和所在店的其他
+    'as'=>'Works.index',
+    'uses'=>'Stylist\WorksController@index'
+        ));
+    Route::any('Works/del_list/{id}',array(  //删除作品集合
+    'as'=>'Works.del_list',
+    'uses'=>'Stylist\WorksController@del_list'
+        ));
+    Route::any('Works/del/{id}',array(  //删除单个作品
+    'as'=>'Works.del',
+    'uses'=>'Stylist\WorksController@del'
+        ));
+    Route::any('Works/update/{id}',array(  //修改作品集合
+    'as'=>'Works.update',
+    'uses'=>'Stylist\WorksController@update'
+        ));
+    Route::any('Works/create',array(  //新增作品集合
+    'as'=>'Works.create',
+    'uses'=>'Stylist\WorksController@create'
+        ));
+    Route::any('Works/uploadfile',array(  //上传作品集合
+    'as'=>'Works.uploadfile',
+    'uses'=>'Stylist\WorksController@uploadfile'
+        ));
+
 });
 
