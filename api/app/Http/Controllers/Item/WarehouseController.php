@@ -10,6 +10,8 @@ use App\SalonItem;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use App\SalonItemFormats;
+use App\Http\Requests\Request;
+use Event;
 
 class WarehouseController extends Controller
 {
@@ -178,7 +180,25 @@ class WarehouseController extends Controller
     }
     
     /**
-     * @api {get} /warehouse/puton 3.上架
+     * @api {get} /warehouse/detail/{id} 3.项目仓库详情
+     * @apiName show
+     * @apiGroup Warehouse
+     *
+     * @apiParam {String} id 参见项目详情  http://192.168.13.46:8150/doc/#api-OnSale-show
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "未授权访问"
+     *		}
+     */
+    public function detail($id)
+    {
+        //
+    }
+    
+    /**
+     * @api {get} /warehouse/puton 4.上架
      * @apiName puton
      * @apiGroup Warehouse
      *
@@ -199,14 +219,19 @@ class WarehouseController extends Controller
         $ids = array_map("intval", $ids);
         SalonItem::checkUp($ids);
         $res = SalonItem::whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->update(['status'=>SalonItem::STATUS_OF_UP]);
+       
         if($res)
         {
-            return $this->success([]);
-        }                
+            $items = SalonItem::whereIn('itemid',$ids)->get(['itemname'])->toArray();
+            $itemnames =  array_column($items, 'itemname');
+            $info = "上架 [".implode(',',$itemnames)."]";
+            Event::fire('warehouse.puton',$info);
+        }   
+        return $this->success([]);
     }
     
     /**
-     * @api {get} /warehouse/destroy 4.删除
+     * @api {get} /warehouse/destroy 5.删除
      * @apiName destroy
      * @apiGroup Warehouse
      *
@@ -228,15 +253,21 @@ class WarehouseController extends Controller
         $res = SalonItem::whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->update(['status'=>SalonItem::STATUS_OF_DELETE]);
         if($res)
         {
-            return $this->success([]);
+            $items = SalonItem::whereIn('itemid',$ids)->get(['itemname'])->toArray();
+            $itemnames =  array_column($items, 'itemname');
+            $info = "删除 [".implode(',',$itemnames)."]";
+            Event::fire('warehouse.destroy',$info);           
         }
+        return $this->success([]);
     }
     
     /**
-     * @api {POST} /warehouse/import 5.导入
+     * @api {POST} /warehouse/import 6.导入
      * @apiName import
      * @apiGroup Warehouse
      *
+     * @apiParam {String} salon_id  要导入到哪家店铺
+     * @apiParam {File} item 必填,json文件.
      *
      * @apiErrorExample Error-Response:
      *		{
@@ -246,7 +277,35 @@ class WarehouseController extends Controller
      */
 	public function import()
 	{
-	
+	    $params = $this->parameters([
+	        'salon_id'=>self::T_INT,
+	        'item'=>self::T_RAW,
+	    ],true);
+	    $file = Request::file('item');
+	    if(!$file)
+	    {
+	        throw new ApiException("找不到上传的文件",ERROR::UPLOAD_FILE_LOST);
+	    }
+	    $extension = $file->getClientOriginalExtension();
+	    if(strtolower($extension) != "json")
+	    {
+	        throw new ApiException('请上传json文件',ERROR::UPLOAD_FILE_ERR_EXTENSION);
+	    }
+	    $content_str = file_get_contents($file->getPathname());
+	    $datas = @json_decode($content_str);
+	    if(!is_array($datas) || count($datas)<1)
+	    {
+	        throw new ApiException('json文件格式不正确或者内容为空',ERROR::UPLOAD_FILE_ERR_FORMAT);
+	    }
+	    $salon_id = $params['salon_id'];
+	    $items = self::formatDatas($datas,$salon_id);
+	    foreach ($items as $item)
+	    {
+	        $data = ItemInfoController::compositeData($item);
+	        ItemInfoController::upsert($data,$item['priceStyle']);
+	    }
+	    Event::fire('warehouse.import');
+	    return $this->success([]);
 	}
 	
 	/**
@@ -352,7 +411,144 @@ class WarehouseController extends Controller
 	    return $base->orderBy($order, $order_by);
 	}
 	
+	public static function formatDatas($datas,$salon_id)
+	{
+	    $res = [];
+	    foreach($datas as $data)
+	    {
+	        if(!isset($data['typeid']) 
+	            || !isset($data['useLimit'])
+	            || !isset($data['logo'])
+	            || !isset($data['desc'])
+	            || !isset($data['item_type'])
+	            || !isset($data['itemname'])
+	            || !isset($data['fastGrade'])
+	            || !isset($data['repertory'])
+	            || !isset($data['exp_time'])
+	            || !isset($data['total_rep'])
+	            || !isset($data['addserviceStr'])
+	            || !isset($data['timingAdded'])
+	            || !isset($data['timingShelves'])
+	            || !isset($data['limit_time'])
+	            || !isset($data['inviteLimit'])
+	            || !isset($data['limit_first'])
+	            || !isset($data['prices'])
+	            || !isset($data['price'])
+	            || !isset($data['minPriceOri'])
+	            || !isset($data['minPriceGroup'])
+	            )
+	        {
+	            throw new ApiException('json文件格式不正确,缺少必要参数',ERROR::UPLOAD_FILE_ERR_FORMAT);
+	        }
+	        $tmp = [];
+	        $tmp['salonid'] = $salon_id;
+	        $tmp['typeid'] = $data['typeid'];
+	        $tmp['useLimit'] = $data['useLimit'];
+	        $tmp['logo'] = $data['logo'];
+	        $tmp['desc'] = $data['desc'];
+	        $tmp['itemType'] = $data['item_type'];
+	        $tmp['itemname'] = $data['itemname'];
+	        $tmp['fastGrade'] = $data['fastGrade'];
+	        $tmp['repertory'] = $data['repertory'];
+	        $tmp['expTimeInput'] = $data['exp_time'];
+	        $tmp['totalRepInput'] = $data['total_rep'];
+	        if(!empty($data['addserviceStr']))
+	        {
+	           $tmp['addedService'] = explode(',', $data['addserviceStr']);
+	        }
+	        $tmp['timingAdded'] = $data['timingAdded'];
+	        $tmp['timingShelves'] = $data['timingShelves'];
+	        
+	        if(!empty($data['limit_time']))
+	        {
+	           $tmp['timeLimitInput'] = intval($data['limit_time']);
+	        }
+	        if(!empty($data['inviteLimit']))
+	        {
+	            $tmp['inviteLimit'] = intval($data['inviteLimit']);
+	        }
+	        if(!empty($data['limit_first']))
+	        {
+	            $tmp['firstLimit'] = intval($data['limit_first']);
+	        }
+	        
+	        if(count($data['prices'])<1)
+	        {
+	            $tmp['priceStyle'] = 1;
+	            $tmp['price'] = $data['minPriceOri'];
+	            $tmp['priceDis'] = $data['minPrice'];
+	            if(floatval($data['minPriceGroup']) > 0)
+	            {
+	                $tmp['priceGroup'] = floatval($data['minPriceGroup']);
+	            }
+	        }
+	        else
+	        {
+	            $tmp['priceStyle'] = 2;
+	            $normarr = self::formatNormDatas($data['prices']);
+	            $normMenu = array_keys($normarr[0]['type']);
+	            $tmp['normarr'] = json_encode($normarr,JSON_UNESCAPED_UNICODE);
+	            $tmp['normMenu'] = json_encode($normMenu,JSON_UNESCAPED_UNICODE);
+	        }
+	        
+	        $err_msg = [];
+	        $ret = ItemInfoController::parametersFilter($tmp, $err_msg);
+	        if(!$ret)
+	        {
+	            throw new ApiException($err_msg['msg'],$err_msg['no']);
+	        }
+	        $res[] = $tmp;
+	    }
+	    return $res;
+	}
 	
+	public static function formatNormDatas($datas)
+	{
+	    $res = [];
+	    foreach($datas as $data)
+	    {
+	        if(!isset($data['price']) || !isset($data['price_dis']) || !isset($data['price_group']) || !isset($data['formats']) )
+	        {
+	            throw new ApiException('json文件格式不正确,缺少必要参数',ERROR::UPLOAD_FILE_ERR_FORMAT);
+	        }
+	        $tmp = [];
+	        $tmp['price'] = $data['price'];
+	        $tmp['priceDis'] = $data['price_dis'];
+	        $tmp['priceGroup'] = $data['price_group'];
+	        $tmp['type'] = [];
+	        foreach($data['formats'] as $format)
+	        {
+	            if(!isset($format['formats_name']) || !isset($format['format_name']) )
+	            {
+	                throw new ApiException('json文件格式不正确,缺少必要参数',ERROR::UPLOAD_FILE_ERR_FORMAT);
+	            }
+	            $key_val = $format['formats_name'];
+	            $key = self::getNormKey($key_val);
+	            $val = $format['format_name'];
+	            $tmp['type'][$key] = $val;
+	        }
+	        $res[] = $tmp;
+	    }
+	    return $res;
+	}
 	
-	
+	public static function getNormKey($key_val)
+	{
+        $res = "";
+        switch ($key_val) {
+            case "性别":
+                $res = "sex";
+                break;
+            case "造型师":
+                $res = "hairstylist";
+                break;
+            case "药水":
+                $res = "solution";
+                break;
+            case "发长":
+                $res = "longhair";
+                break;
+        }
+	    return $res;
+	}
 }
