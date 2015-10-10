@@ -31,7 +31,7 @@ class Item extends Model {
 
         //项目类型筛选
         if(!empty($param['item_type'])){
-            $query = $query->where('item_type','=',$item_type);
+            $query = $query->where('item_type','=',$param['item_type']);
         }  
 
 	    //项目分类筛选
