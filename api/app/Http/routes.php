@@ -713,7 +713,12 @@ Route::group(['middleware'], function(){
 	
 	Route::any('itemInfo/update',array(  //修改项目
     		'as'=>'itemInfo.update',
-    		'uses'=>'Item\ItemInfoController@store'
+    		'uses'=>'Item\ItemInfoController@update'
+    ));
+	
+	Route::any('itemInfo/createSpecialItem',array(  //创建特价项目
+    		'as'=>'itemInfo.createSpecialItem',
+    		'uses'=>'Item\ItemInfoController@createSpecialItem'
     ));
     
     Route::any('Stylist/index',array(  //请求造型师列表

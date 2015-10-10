@@ -43,7 +43,7 @@
         <a>店铺管理 </a><span>&gt;</span><a href="index.html">店铺资料</a>
         <div class="flex-box">
             <div class="flex-item">
-                <h4>新增造型师</h4>
+                <h4 id="title"></h4>
             </div>
         </div>
     </div>
@@ -66,10 +66,10 @@
                 <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                 <div class="control complete">
                     <input type="hidden" name="salon_id" id="salonid" value="<%=data.salonId%>"/>
-                    <input id="search" type="text"  value="<%=data.salonname%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" required>
+                    <input id="search" type="text"  name="salonname" value="<%=data.salonname%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" disabled required>
                     <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
                     <label>
-                        <input type="checkbox" value="1"/>
+                        <input type="checkbox" value="<%=data.reward%>"/>
                         <span>修改所属店铺</span>
                     </label>
                 </div>
@@ -98,7 +98,8 @@
                                 <em>上传个人图片</em>
                             </div>
                         </div>
-                    </div> 
+                    </div>
+                    <span class="control-help upload-image-tip" style="display:none;">请上传个人图片</span> 
                 </div>
             </div>                                 
 
@@ -272,6 +273,7 @@
                             <th>教育院校(培训机构)</th>
                         </thead>
                         <tbody>
+                            <%if(query.id){%>
                             <%
                             var str = JSON.stringify(data.educateExp);                            
                             var arr = str.substring(2,str.length-2).split(",");                           
@@ -285,7 +287,18 @@
                                     <td><input type="text" name="<%='name'+i%>" 
                                     value="<%=arr['name'+i]%>"></td>
                                 </tr>
-                            <%}%>                                                                          
+                            <%}%> 
+                            <%}%> 
+
+                            <%if(query.salonid){%>
+                            <%for(var i = 1 ; i < 6 ; i++){%>
+                                <tr>
+                                    <td><input type="date" placeholder="yyyy-MM-dd" name="<%='sTime'+i%>"></td>
+                                    <td><input type="date" placeholder="yyyy-MM-dd" name="<%='eTime'+i%>"></td>
+                                    <td><input type="text" name="<%='name'+i%>"></td>
+                                </tr>
+                            <%}%>
+                            <%}%>                                                                                                    
                         </tbody>    
                     </table>
                 </div>
@@ -303,6 +316,7 @@
                             <th>工作地点</th>
                         </thead>
                         <tbody>
+                            <%if(query.id){%>
                             <%
                             var str = JSON.stringify(data.workExp);                            
                             var workArr = str.substring(2,str.length-2).split(",");                           
@@ -330,7 +344,31 @@
                                         value="<%=arr['waddress'+i]%>">
                                     </td>
                                 </tr>
-                            <%}%>                                                                               
+                            <%}%>
+                            <%}%>
+
+                            <%if(query.salonid){%>
+                            <%for(var i = 1 ; i < 6 ; i++){%>
+                                <tr>
+                                    <td>
+                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='wsTime'+i%>">
+                                    </td>
+                                    <td>
+                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='weTime'+i%>">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="<%='wname'+i%>">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="<%='wjob'+i%>">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="<%='waddress'+i%>">
+                                    </td>
+                                </tr>
+                            <%}%>
+                            <%}%>
+
                         </tbody>   
                     </table>
                 </div>

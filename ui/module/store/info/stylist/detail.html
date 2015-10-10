@@ -5,7 +5,25 @@
       <title>臭美管理后台</title>
       <script type="text/javascript" src="/js/include.js"></script>
       <style>
-         .td{width:15%;min-width: 150px;}        
+        .td{width:15%;min-width: 150px;}   
+     
+        .tab td{
+            padding:0;
+            text-align: center!important;
+            height:33px;  
+        }  
+        .tab input[type="date"] {
+            min-width:160px!important;
+            width:100%;
+            border: none;
+            visibility: hidden;
+        }
+        .tab input[type="text"] {
+            min-width:300px!important;
+            width:100%;
+            border: none;
+            visibility:hidden;
+        }           
       </style>
     </head>
     <body>
@@ -27,7 +45,7 @@
                         <%=data.status=="1" ? "禁用" : "启用"%>
                     </button>
                     &nbsp;
-                    <button type="button" class="btn mr-20 del">
+                    <button type="button" class="btn mr-20 del" data-status="<%=data.reward%>">
                         删除
                     </button>
                     &nbsp;
@@ -43,7 +61,9 @@
                 <table>
                     <tbody>
                         <tr style="height:60px">
-                            <td colspan="4"><strong style="padding-left:15px;font-size:18px">店铺名称</strong></td>
+                            <td colspan="4">
+                            <strong style="padding-left:15px;font-size:18px"><%=data.salonname%></strong>
+                            </td>
                         </tr>
 
                         <tr>
@@ -170,62 +190,72 @@
                     </tbody>                     
                 </table>
 
-                <table>
+                <table class="tab">
                     <thead>
                     <tr>
                         <th colspan="3">教育经历</th>                       
                     </tr>
-                    <tr>
-                        <th>起始日期</th>                       
-                        <th>截止日期</th>                       
-                        <th>教育院校（培训机构）</th>                       
-                    </tr>
                     </thead>
                     <tbody>
+                    <tr>
+                        <td>起始日期</td>                       
+                        <td>截止日期</td>                       
+                        <td>教育院校（培训机构）</td>                       
+                    </tr>
+                    <%
+                    var str = JSON.stringify(data.educateExp);                            
+                    var arr = str.substring(2,str.length-2).split(",");                           
+                    %>
+                    <%for(var i = 1 ; i < 6 ; i++){%>
                         <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>                         
+                            <td><%=arr['sTime'+i]%></td>
+                            <td><%=arr['eTime'+i]%></td>
+                            <td><%=arr['name'+i]%></td>
                         </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>2</td>                           
-                        </tr>                      
+                    <%}%>                     
                     </tbody>                     
                 </table>
 
-                <table>
+                <table class="tab">
                     <thead>
                         <tr>
                             <th colspan="5">工作经验</th>                       
                         </tr>
-                        <tr>
-                            <th>起始日期</th>                       
-                            <th>截止日期</th>                       
-                            <th>门店名称</th>                       
-                            <th>门店职位</th>                       
-                            <th>工作地点</th>                       
-                        </tr>
                     </thead>
 
                     <tbody>
                         <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>                         
-                            <td>1</td>                         
-                            <td>1</td>                         
-                        </tr>
+                            <td>起始日期</td>                       
+                            <td>截止日期</td>                       
+                            <td>门店名称</td>                       
+                            <td>门店职位</td>                       
+                            <td>工作地点</td>                       
+                        </tr>                    
+                        <%
+                        var str = JSON.stringify(data.workExp);                            
+                        var workArr = str.substring(2,str.length-2).split(",");                           
+                        %>                        
+                        <%for(var i = 1 ; i < 6 ; i++){%>
+                            <tr>
+                                <td>
+                                    <%=arr['wsTime'+i]%>
+                                </td>
 
-                        <tr>
-                            <td>2</td>
-                            <td>2</td>
-                            <td>2</td>                           
-                            <td>2</td>                           
-                            <td>2</td>                           
-                        </tr>                      
+                                <td>
+                                   <%=arr['weTime'+i]%></td>
+                                <td>
+                                   <%=arr['wname'+i]%>
+                                </td>
+
+                                <td>
+                                    <%=arr['wjob'+i]%>
+                                </td>
+
+                                <td>
+                                    <%=arr['waddress'+i]%>
+                                </td>
+                            </tr>
+                        <%}%>                    
                     </tbody>                     
                 </table>                                                                           
             </div>               
@@ -259,7 +289,30 @@
                 })
 
                 $("#table-wrapper").on('click','.del',function(){
-                    alert(111);
+                    var status = $(this).data("status");
+                    if(status == "1"){
+                        lib.popup.alert({text:'此造型师有未完成打赏的赏金单，完成订单后才能删除'});
+                    }
+                    if(status == "2"){
+                        lib.popup.confirm({
+                            text:'删除造型师后，此造型师的接单记录、作品记录也将一并清除，是否继续删除 ',
+                            define:function(){
+                                lib.ajax({
+                                    type: "post",
+                                    url : "Stylist/destroy/"+lib.query.id
+                                }).done(function(data, status, xhr){
+                                    if(data.result == 1){
+                                        parent.lib.popup.result({
+                                            text:"删除成功",
+                                            define:function(){
+                                                window.close();
+                                            }
+                                        });                                        
+                                    }
+                                });                                 
+                            }
+                        })
+                    }
                 })                
 
                 init();

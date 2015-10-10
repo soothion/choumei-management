@@ -3,6 +3,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
+use Log;
 
 class Stylist  extends Model {
     protected $table = 'hairstylist';
@@ -40,7 +41,18 @@ class Stylist  extends Model {
          unset($results['next_page_url']);
          unset($results['prev_page_url']);
          foreach ($results['data'] as $key =>$value) {
-            $results['data'][$key]->num=DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->count();
+            $num=0; 
+            $works= DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->get();
+            foreach ($works as $key1 =>$value) {
+                if(!empty($works['img'])){
+                    $image=  json_decode($works['img'],true);
+                    $num=$num+(count($image)/2);
+                }  else {   
+                    $num=$num+1;
+                }
+                
+             }
+           $results['data'][$key]->num=$num;
          }
          return $results;
     }
@@ -49,20 +61,20 @@ class Stylist  extends Model {
     public static function  updateStylist($stylistId,$param){
         $data=array();
         $data['salonid']= $param['salonid'];        
-//        $data['stylistImg']=$param['stylistImg'];
-        $data['stylistName']=$param['stylistName'];
+        if(isset($param['stylistName'])&&$param['stylistName']){
+             $data['stylistName']=$param['stylistName'];
+         }
         $data['sex']=$param['sex'];
         $data['mobilephone']=$param['mobilephone'];
         $data['job']=$param['job'];
-        $data['birthday']=$param['birthday'];
+        $data['birthday']=strtotime($param['birthday']);
         $data['sNumber']=$param['sNumber'];
         $data['workYears']=$param['workYears'];
         $data['signature']=$param['signature'];
-        
-        $image=  json_decode($param->img,true);
-        $data['stylistImg']=$image->stylistImg;
-        $data['stylistImgCom']=$image->stylistImgCom;
-        
+        $data['stylistImg']=$param['stylistImg'];
+        if(!empty($param['img'])){
+             $data['img']=$param['img'];
+        }
         if(isset($param['IDcard'])&&$param['IDcard']){
              $data['IDcard']=$param['IDcard'];
         }  
@@ -88,38 +100,48 @@ class Stylist  extends Model {
              $data['grade']=$param['grade'];
         }
         if(!empty($param['fastGrade'])){
-             $data['fastGrade']=  json_encode($param['fastGrade']);
+             $data['fastGrade']= $param['fastGrade'];
         }  
         if(!empty($param['workExp'])){
              $data['workExp']=json_encode($param['workExp']);
         }
         if(!empty($param['educateExp'])){
-             $data['educateExp']=$param['educateExp'];
+             $data['educateExp']= json_encode($param['educateExp']);
         }  
         if(isset($param['description'])&&$param['description']){
              $data['description']=$param['description'];
         }
+        //清理证件,这四个为一个下拉菜单
+        $data2=array();
+        $data2['IDcard']="";
+        $data2['drivingLicense']="";
+        $data2['passport']="";
+        $data2['officerCert']="";
+        $query2=Self::where(array('stylistId'=>$stylistId))->update($data2);
         $query=Self::where(array('stylistId'=>$stylistId))->update($data);
+        //修改失败且清理成功，则回滚数据
+        if($query===false&&$query2==true){
+            DB::rollback();
+        }
         return  $query;
     }
   
      public static function createStylist($salonid,$param){
         $data=array();
         $data['salonId']= $salonid;        
-       // $data['stylistImg']=$param['stylistImg'];
+        $data['stylistImg']=$param['stylistImg'];
         $data['stylistName']=$param['stylistName'];
         $data['sex']=$param['sex'];
         $data['mobilephone']=$param['mobilephone'];
         $data['job']=$param['job'];
-        $data['birthday']=$param['birthday'];
+        $data['birthday']=strtotime($param['birthday']);
         $data['sNumber']=$param['sNumber'];
         $data['workYears']=$param['workYears'];
         $data['signature']=$param['signature'];
                       
-        $image=  json_decode($param->img,true);
-        $data['stylistImg']=$image->stylistImg;
-        $data['stylistImgCom']=$image->stylistImgCom;
-        
+        if(!empty($param['img'])){
+             $data['img']=$param['img'];
+        }
         if(isset($param['IDcard'])&&$param['IDcard']){
              $data['IDcard']=$param['IDcard'];
         }  

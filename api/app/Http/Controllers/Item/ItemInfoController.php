@@ -196,7 +196,7 @@ class ItemInfoController extends Controller{
 	}
 	
 	/**
-	 * @api {post} /itemInfo/create 4.新增项目
+	 * @api {post} /itemInfo/create 4.新增普通项目
 	 * @apiName create
 	 * @apiGroup  itemInfo
 	 *
@@ -271,25 +271,31 @@ class ItemInfoController extends Controller{
 	public function store()
 	{
 		$param = $this->param;
-		$itemid = isset($param['itemid'])?intval($param['itemid']):null;
-		$err_msg = [];
-		$ret = self::parametersFilter($param, $err_msg);
-		if(!$ret)
-		{
-		    throw new ApiException($err_msg['msg'],$err_msg['no']);
-		}
-		return 1;
-		$data = self::compositeData($param);
-		$res = self::upsert($param,$itemid);
-		return $this->success($res);
+		return $this->save($param);
 
 	}
 	
 	/**
-	 * @api {post} /itemInfo/update 5.修改项目
+	 * @api {post} /itemInfo/createSpecialItem 5.添加特价项目
+	 * @apiName createSpecialItem
+	 * @apiGroup  itemInfo
+	 * 
+	 * @apiParam {String} item 和添加普通项目参数保值一致.
+	 * 
+	 */
+	public function createSpecialItem()
+	{
+		$param = $this->param;
+		return $this->save($param);
+	
+	}
+	
+	/**
+	 * @api {post} /itemInfo/update 6.修改项目
 	 * @apiName update
 	 * @apiGroup  itemInfo
 	 *
+	 * @apiParam {Number} itemid  必填,项目id.
 	 * @apiParam {Number} salonid  必填,店铺id.
 	 * @apiParam {Number} typeid 必填,项目分类id.
 	 * @apiParam {string} useLimit 可选,消费限制（特价项目）.
@@ -369,305 +375,29 @@ class ItemInfoController extends Controller{
 	 * */
 	public function save($param)
 	{
-		$data['salonid'] = $salonid = isset($param['salonid'])?intval($param['salonid']):0;
-		$salonItemId	= isset($param['itemid'])?intval($param['itemid']):0;
-		$data['typeid'] = isset($param['typeid'])?intval($param['typeid']):0;//分类id
-		$data['useLimit'] = isset($param['useLimit'])?trim($param['useLimit']):'';//消费限制（特价项目）
-		$data['logo'] = isset($param['logo'])?trim($param['logo']):'';
-		$data['desc'] = isset($param['desc'])?trim($param['desc']):'';
-		$data['item_type']      = isset($param['itemType'])?intval($param['itemType']):0;;//'商品类型，1 默认在售，2 限时特价'
-		$data['itemname'] = isset($param['itemname'])?trim($param['itemname']):'';
-		$data['itemname'] = preg_replace('/\s+/', '', $data['itemname']);
-		$data['fastGrade']  = isset($param['fastGrade'])?intval($param['fastGrade']):0;//快剪等级
-		$timingAdded  = isset($param['timingAdded'])?trim($param['timingAdded']):0;//定时上架
-		$timingShelves  = isset($param['timingShelves'])?trim($param['timingShelves']):0;//定时下架
-
-		$priceStyle = isset($param['priceStyle'])?intval($param['priceStyle']):0;//项目规格 选项
-		if(!$data['salonid'] || !$data['typeid'] || !$data['logo'] || !$data['itemname'] || !$data['desc'] || !in_array($priceStyle, [1,2]))
-			throw new ApiException('参数错误', ERROR::ITEM_ERROR);
-		
-		if($timingAdded && $timingShelves)
+		$itemid = isset($param['itemid'])?intval($param['itemid']):null;
+		$err_msg = [];
+		$ret = self::parametersFilter($param, $err_msg);
+		if(!$ret)
 		{
-			$data['timingAdded'] = strtotime($timingAdded);
-			$data['timingShelves'] = strtotime($timingShelves);
-			if($data['timingAdded'] < time() || $data['timingShelves'] < time())
-				throw new ApiException('日期或时间设置错误，必须大于当前时间', ERROR::ITEM_ERROR);
-		}
-		elseif($salonItemId && $timingShelves)
-		{
-			$data['timingShelves'] = strtotime($timingShelves);
-			if($data['timingShelves'] < time())
-				throw new ApiException('日期或时间设置错误，必须大于当前时间', ERROR::ITEM_ERROR);
+			throw new ApiException($err_msg['msg'],$err_msg['no']);
 		}
 		
-		$itemInfo = [];
-		if($salonItemId)
+		$data = self::compositeData($param);
+		$res = SalonItem::upsertItem($data,$param['priceStyle'],$itemid);
+		if($res)
 		{
-			$itemInfo = SalonItem::where(['itemid'=>$salonItemId])->select(['itemid','salonid','sold','timingAdded','typeid','norms_cat_id','status'])->first();
-			if(!$itemInfo)
-				throw new ApiException('数据错误,项目id不存在！', ERROR::ITEM_DATA_ERROR);
-			if($itemInfo->salonid != $salonid)
-				throw new ApiException('salinid参数错误', ERROR::ITEM_ERROR);	
-		}
-		
-		if($data['typeid'] == 8)//男士快剪检测 是否有对应的造型师 快剪等级
-		{
-			$flags = Hairstylist::checkHairerGrade($data['fastGrade'],$data['salonid']);
-			if(!$flags)
-				throw new ApiException('当前快剪等级下面无对应等级的造型师，请修改造型师界面中的快剪等级后再添加快剪项目！', ERROR::ITEM_GRADE_ERROR);
-		}
-		
-		
-		if($data['typeid'] == 6 || $data['item_type'] != 1 )//兑换专用  --日库存
-			$data['repertory']  = isset($param['repertory'])?intval($param['repertory']):0;
-		else
-			$data['repertory']  = 0;
-		
-		$expTimeInput = isset($param['expTimeInput'])?trim($param['expTimeInput']):0;//项目使用有效期
-		if ($expTimeInput)
-		{
-			$expTime = $expTimeInput.' 23:59:00';
-			$expTimeStamp = strtotime($expTime);
-			if ($expTimeStamp > time())
-				$data['exp_time'] = $expTimeStamp;
-			else
-				throw new ApiException('项目有效期时间不正确！', ERROR::ITEM_EXPTIME_ERROR);
-		}
-		else
-		{
-			$data['exp_time'] = 0;
-		}
-		
-		$totalRepInput = isset($param['totalRepInput'])?trim($param['totalRepInput']):0;//项目总库存
-		if($totalRepInput > 0)
-			$data['total_rep'] = $totalRepInput;
-		else
-			$data['total_rep'] = 0;
-		
-		//增值服务
-		$data['addserviceStr'] = '';
-		$addedService = isset($param['addedService'])?$param['addedService']:'';
-		if($addedService)
-			$data['addserviceStr']=implode(',',$addedService);
-		
-		//购买资格
-		$timeLimitInput = isset($param['timeLimitInput'])?intval($param['timeLimitInput']):0;
-		$inviteLimit = isset($param['inviteLimit'])?intval($param['inviteLimit']):0;
-		$firstLimit = isset($param['firstLimit'])?intval($param['firstLimit']):0;
-		if ($timeLimitInput >= 0)
-			$buyLimit['limit_time'] = $timeLimitInput;
-		else
-			throw new ApiException('限制次数不正确！', ERROR::ITEM_RESTRICT_ERROR);
-		
-		//处理购买限制表 开始
-		$buyLimit['limit_invite'] = $inviteLimit?1:0;
-		$buyLimit['limit_first'] = $firstLimit?1:0;
-		$buyLimit['update_time'] = time();
-		//处理购买限制表 结束
-		
-		DB::beginTransaction();
-		if($salonItemId)
-		{
-			//判断库存设置
-			if($data['total_rep'] > 0 && intval($itemInfo->sold) >= $data['total_rep'])
-				throw new ApiException('项目总库存不正确！', ERROR::ITEM_TOTALREP_ERROR);
-		
-			$data['up_time'] 	= time();
-			 
-			//处理项目基础信息
-			$row = SalonItem::where(['itemid'=>$salonItemId])->update($data);
-			if(!$row)
-			{
-				DB::rollBack();
-				throw new ApiException('项目更新失败！', ERROR::ITEM_TOTALREP_ERROR);
-			}
-		
-			//处理购买限制表
-			$existBuyLimitData =  SalonItemBuylimit::where(['salon_item_id'=>$salonItemId])->first();
-			if($existBuyLimitData)
-			{
-				SalonItemBuylimit::where(['salon_item_id'=>$salonItemId])->update($buyLimit);
-			}
-			else
-			{
-				$buyLimit['create_time'] = time();
-				$buyLimit['salon_item_id'] = $salonItemId;
-				SalonItemBuylimit::insertGetId($buyLimit);
-			}
-		}
-		else
-		{
-			//$data['status'] 	= 1;	//1 上架   2下架   3删除
-			if(strtotime($timingAdded) > time())//上线时间 》 当前时间   下架状态
-				$data['status'] 	= 2;
-			else 
-				$data['status'] 	= 1;
-			$data['uid'] 	= 1;//注意：以前是店铺账号id  现新管理后台默认 管理账号id
-			$data['add_time'] 	= time();
-			$salonItemId = SalonItem::insertGetId($data);
-			if(!$salonItemId)
-			{
-				DB::rollBack();
-				throw new ApiException('项目更新失败！', ERROR::ITEM_TOTALREP_ERROR);
-			}
-			//处理购买限制表 开始
-			$buyLimit['create_time'] = time();
-			$buyLimit['salon_item_id'] = $salonItemId;
-			SalonItemBuylimit::insertGetId($buyLimit);
-			//处理购买限制表 结束
-		}
-		$priceNorm = SalonItemFormatPrice::where(['itemid'=>$salonItemId])->first();
-		if($priceNorm)
-			SalonItemFormatPrice::where(['itemid'=>$salonItemId])->delete();
-		//无规格--价格处理
-		if($priceStyle == 1)
-		{
-			$price = isset($param['price'])?intval($param['price']):0;
-			$priceGroup = isset($param['priceGroup'])?intval($param['priceGroup']):0;
-			$priceDis = isset($param['priceDis'])?intval($param['priceDis']):0;
-			$priceData['dis_id'] = 0;
-			$priceData['discount'] = 0;
-			$priceData['price_dis'] = $priceDisArr[] = $priceDis;//臭美价
-			$priceData['price_group'] = $priceGroupArr[] = $priceGroup;//集团价
-			$priceData['itemid'] = $salonItemId;
-			$priceData['salon_norms_id'] = 0;
-			$priceData['price'] = $priceOriArr[] = $price;//原价
-			$priceData['add_time']=time();
-			$row = SalonItemFormatPrice::insertGetId($priceData);
-			if(!$row)
-			{
-				DB::rollBack();
-				throw new ApiException('项目更新失败！', ERROR::ITEM_TOTALREP_ERROR);
-			}
-		}
-		else
-		{
-			$normMenu = isset($param['normMenu'])?json_decode($param['normMenu'],true):'';
-			$normarr = isset($param['normarr'])?json_decode($param['normarr'],true):'';
-			if(!$normarr || !$normMenu)
-			{
-				DB::rollBack();
-				throw new ApiException('参数错误', ERROR::ITEM_ERROR);
-			}
-			foreach($normarr as $val)
-			{
-				if($val['price'] < $val['priceDis'] || $val['price'] < $val['priceGroup'] || $val['priceDis'] < $val['priceGroup'])
-				{
-					DB::rollBack();
-					throw new ApiException('价格参数错误', ERROR::ITEM_ERROR);
-				}
-				 
-			}
-		
-			foreach($normarr as $v)
-			{
-				foreach($v['type'] as $key=>$val)
-				{
-					$itemType[$key][]=$val;
-				}
-			}
-			 
-			$typeArr = $this->_typeArr;
-			$ge = [];
-			foreach($normMenu as  $key=>$val)
-			{
-				$gekey = SalonItemFormats::where(['salonid'=>0,'formats_name'=>$typeArr[$val]])->first();
-				$formatsIdArr[$val] = $gekey->salon_item_formats_id;
-			}
-			$clearVal =[];
-			foreach($itemType as $key=>$value)
-			{
-				foreach ($value as $kt=>$vt)
-				{
-					if(!in_array($vt, $clearVal))
-					{
-						$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[$key]])->first();
-						if($st)
-							$norId = $st->salon_item_format_id;
-						else
-							$norId = SalonItemFormat::insertGetId(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[$key]]);
-						$attribute[$vt] = $norId;//属性数组
-						$clearVal[] = $vt;
-					}
-				}
-			}
-			$data = [
-					'salonid' => $salonid,
-					'norms_cat_name' => date('YmdHis'),//模板名称
-					'add_time' => time()
-			];
-			 
-			$nowid = SalonNormsCat::insertGetId($data);
-			if(!$nowid)
-			{
-				DB::rollBack();
-				throw new ApiException('项目更新失败！', ERROR::ITEM_TOTALREP_ERROR);
-			}
-			foreach($normarr as $ks=>$vs)
-			{
-				foreach($vs['type'] as $vtype)
-				{
-					$formatsId[$ks][] = $attribute[$vtype];
-				}
-				$data = [
-						'salon_norms_cat_id' => $nowid,
-						'salonid' => $salonid,
-						'salon_item_format_id' =>implode(',',$formatsId[$ks]),
-						'add_time' => time(),
-				];
-				$normarr[$ks]['salonNormsId'] = SalonNorms::insertGetId($data);
-			}
-		
-			//规则价格入库
-			foreach($normarr as $value)
-			{
-				$priceData['dis_id'] = 0;
-				$priceData['discount'] = 0;
-				$priceData['price_dis'] = $value['priceDis'];
-				$priceData['price_group'] = $value['priceGroup'];
-				$priceData['itemid'] = $salonItemId;
-				$priceData['salon_norms_id'] = $value['salonNormsId'];
-				$priceData['price'] = $value['price'];
-				$priceData['add_time'] = time();
-				$priceDisArr[] = $value['priceDis'];
-				$priceGroupArr[] = $value['priceGroup'];
-				$priceOriArr[] = $value['price'];
-				$row = SalonItemFormatPrice::insertGetId($priceData);
-				if(!$row)
-				{
-					DB::rollBack();
-					break;
-					throw new ApiException('项目更新失败！', ERROR::ITEM_TOTALREP_ERROR);
-				}
-			}
-			$upData['norms_cat_id'] = $nowid;
-		
-		}
-		//更新下项目信息
-		$upData['minPrice'] = min($priceDisArr);
-		$upData['maxPrice'] = max($priceDisArr);
-		$upData['minPriceGroup'] = min($priceGroupArr);
-		$upData['maxPriceGroup'] = max($priceGroupArr);
-		$upData['minPriceOri'] = min($priceOriArr);
-		$upData['maxPriceOri'] = max($priceOriArr);
-		
-		if( $upData['maxPrice'] >= 1000 )   //项目价格大于1000  调整店铺类型
-			Salon::where(['salonid'=>$salonid])->update(['bountyType'=>4]);
-		
-		$row = SalonItem::where(['itemid'=>$salonItemId])->update($upData);
-		if(!$row)
-		{
-			DB::rollBack();
-			throw new ApiException('项目更新失败！', ERROR::ITEM_TOTALREP_ERROR);
-		}
-		else
-		{
-			DB::commit();
 			return $this->success();
 		}
-		
+		else 
+		{
+			throw new ApiException('操作失败',ERROR::ITEM_ERROR);
+		}
 	}
 	
+	/**
+	 * 项目添加修改 参数过滤
+	 * */
 	public static function parametersFilter($param,&$err_msg)
 	{
 	    $itemid = isset($param['itemid'])?intval($param['itemid']):null;
@@ -708,7 +438,8 @@ class ItemInfoController extends Controller{
 	    		return false;
 	    	}
 	    	//判断库存设置
-	    	if($param['total_rep'] > 0 && intval($itemInfo->sold) >= $param['total_rep'])
+	    	$total_rep  = isset($param['total_rep'])?trim($param['total_rep']):0;
+	    	if($total_rep > 0 && intval($itemInfo->sold) >= $total_rep)
     		{
     			$err_msg = ['msg'=>'项目总库存不正确！','no'=>ERROR::ITEM_TOTALREP_ERROR];
     			return false;
@@ -746,7 +477,11 @@ class ItemInfoController extends Controller{
 	    $priceStyle = isset($param['priceStyle'])?intval($param['priceStyle']):0;//项目规格 选项
 	    if($priceStyle == 1)
 	    {
-	    	
+	    	if($param['price'] < $param['priceDis'] || $param['priceGroup'] > $param['priceDis'])
+	    	{
+	    		$err_msg = ['msg'=>'价格参数错误！','no'=>ERROR::ITEM_ERROR];
+	    		return false;
+	    	}
 	    }
 	    else 
 	    {
@@ -764,7 +499,11 @@ class ItemInfoController extends Controller{
 	    			$err_msg = ['msg'=>'价格参数错误！','no'=>ERROR::ITEM_ERROR];
 	    			return false;
 	    		}
-	    		 
+	    	}
+	    	if(count($normarr)<1)
+	    	{
+	    		$err_msg = ['msg'=>'规格参数错误！','no'=>ERROR::ITEM_ERROR];
+	    		return false;
 	    	}
 	    }
 	    
@@ -772,24 +511,23 @@ class ItemInfoController extends Controller{
 	    return true;
 	}
 	
-	
+	/**
+	 * 组合参数
+	 * */
 	public static function compositeData($param)
 	{
 	    $res =  [
 	      'salon_item'=>[],
 	      'salon_item_buylimit'=>[],
 	      'salon_item_format_price'=>[],
-	      
 	      'salon_norms_cat'=>[],
-	      'salon_item_format'=>[],	      
-	      'salon_item_formats'=>[],
 	      'salon_norms'=>[],
 	    ];
 	    
 	    $now_time = time();
 	    $salon_item = [];
 	    $itemid = isset($param['itemid'])?intval($param['itemid']):null;
-	    $salon_item['salonid'] = isset($param['salonid'])?intval($param['salonid']):0;
+	    $salon_item['salonid'] = $salonid = isset($param['salonid'])?intval($param['salonid']):0;
 	    $salon_item['typeid'] = isset($param['typeid'])?intval($param['typeid']):0;//分类id
 	    $salon_item['useLimit'] = isset($param['useLimit'])?trim($param['useLimit']):'';//消费限制（特价项目）
 	    $salon_item['logo'] = isset($param['logo'])?trim($param['logo']):'';
@@ -849,14 +587,11 @@ class ItemInfoController extends Controller{
 	        {
 	            $salon_item['status'] 	= SalonItem::STATUS_OF_UP;
 	        }
-	        //#@todo
 	        $salon_item['uid'] 	= 1;//注意：以前是店铺账号id  现新管理后台默认 管理账号id
 	        $salon_item['add_time'] 	= $now_time;
 	    }
 	    
-	    
 	    //处理购买限制表 开始
-	    //购买资格
 	    $timeLimitInput = isset($param['timeLimitInput'])?intval($param['timeLimitInput']):0;
 	    $inviteLimit = isset($param['inviteLimit'])?intval($param['inviteLimit']):0;
 	    $firstLimit = isset($param['firstLimit'])?intval($param['firstLimit']):0;
@@ -872,17 +607,13 @@ class ItemInfoController extends Controller{
 	       $res['salon_item_buylimit']['create_time'] = $now_time;
 	    }
 
-	    //salon_norms_cat
-	    
-	    
-	
-	    
 	    //无规格--价格处理
 	    if($param['priceStyle'] == 1)
 	    {
-	    	$price = isset($param['price'])?intval($param['price']):0;
-	    	$priceGroup = isset($param['priceGroup'])?intval($param['priceGroup']):0;
-	    	$priceDis = isset($param['priceDis'])?intval($param['priceDis']):0;
+	    	$priceOriArr[] = $price = isset($param['price'])?intval($param['price']):0;
+	    	$priceGroupArr[] = $priceGroup = isset($param['priceGroup'])?intval($param['priceGroup']):0;
+	    	$priceDisArr[] = $priceDis = isset($param['priceDis'])?intval($param['priceDis']):0;
+
 	    	$pricetmp = [
 	    				'dis_id'=>0,
 	    				'discount'=>0,
@@ -895,130 +626,100 @@ class ItemInfoController extends Controller{
 	    	$res['salon_item_format_price'][] = $pricetmp;
 	    }
 	    else 
-	    {	        
+	    {	  
+	    	$normMenu = isset($param['normMenu'])?json_decode($param['normMenu'],true):'';
 	    	$normarr = isset($param['normarr'])?json_decode($param['normarr'],true):'';
-	    	if(count($normarr)<1)
-	    	{
-	    	    //#@todo
-	    	    
-	    	}
 	    	
-	    	$menus =  array_keys($normarr[0]['type']);
-	    	
-	    	
-	    	foreach($normarr as $v)
-	    	{
-	    		foreach($v['type'] as $key=>$val)
-	    		{
-	    			$itemType[$key][]=$val;
-	    		}
-	    	}
-	    	
-	    	$typeArr = $this->_typeArr;
-	    	$vals = array_values($normMenu);
-	    	$val_idx = [];
-	    	foreach ($vals as $val)
-	    	{
-	    	    $val_idx[] = self::$_typeArr[$val];
-	    	}
-	    	$formatsIdArr = SalonItemFormats::where(['salonid'=>0,'formats_name'=>$typeArr[$val]])->whereIn('formats_name',$val_idx)->get(['formats_name','salon_item_formats_id'])->toArray();
-	    	$formatsIdArr = Utils::column_to_key('formats_name',$formatsIdArr);
-	    	
-	    	$clearVal =[];
-	    	foreach($itemType as $key=>$value)
-	    	{
-	    		foreach ($value as $kt=>$vt)
-	    		{
-	    			if(!in_array($vt, $clearVal))
-	    			{
-	    				$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[$key]['salon_item_formats_id']])->first();
-	    				if($st)
-	    					$norId = $st->salon_item_format_id;
-	    				else
-	    					$norId = SalonItemFormat::insertGetId(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[$key]]);
-	    				$attribute[$vt] = $norId;//属性数组
-	    				$clearVal[] = $vt;
-	    			}
-	    		}
-	    	}
-	    	
-	    	$data = [
+	    	$attribute = self::setNorms($normMenu, $normarr);
+
+	    	$res['salon_norms_cat'] = [
 	    			'salonid' => $salonid,
 	    			'norms_cat_name' => date('YmdHis'),//模板名称
-	    			'add_time' => time()
+	    			'add_time' => $now_time,
 	    	];
+	    	
+	    	foreach($normarr as $ks=>$vs)
+	    	{
+	    		foreach($vs['type'] as $vtype)
+	    		{
+	    			$formatsId[$ks][] = $attribute[$vtype];
+	    		}
+	    		$res['salon_norms'][] = [
+	    				'salonid' => $salonid,
+	    				'salon_item_format_id' =>implode(',',$formatsId[$ks]),
+	    				'add_time' => $now_time,
+	    		];
+	    		$normarr[$ks]['salonNormsMark'] = implode(',',$formatsId[$ks]);
+	    	}
+	    	
+	    	//规则价格
+	    	foreach($normarr as $value)
+	    	{
+	    		$res['salon_item_format_price'][] = [
+	    											'price_dis'=>$value['priceDis'],
+	    											'price_group'=>$value['priceGroup'],
+								    				'salonNormsMark'=>$value['salonNormsMark'],
+								    				'price'=>$value['price'],
+								    				'add_time'=>$now_time,
+	    									];
+	    		$priceDisArr[] = $value['priceDis'];
+	    		$priceGroupArr[] = $value['priceGroup'];
+	    		$priceOriArr[] = $value['price'];
+	    	}
+	    	
 	    }
 	    
-	    //#@todo
-	    
-	
+	    $salon_item['minPrice'] = min($priceDisArr);
+	    $salon_item['maxPrice'] = max($priceDisArr);
+	    $salon_item['minPriceGroup'] = min($priceGroupArr);
+	    $salon_item['maxPriceGroup'] = max($priceGroupArr);
+	    $salon_item['minPriceOri'] = min($priceOriArr);
+	    $salon_item['maxPriceOri'] = max($priceOriArr);
+	    $res['salon_item'] = $salon_item;
 	    return $res;
 	}
 	
-	public static function upsert($datas,$itemid=null)
+	/**
+	 * 处理规格数据入库
+	 * */
+	private static function setNorms($normMenu,$normarr)
 	{
-	    $datas= [
-	      'salon_item'=>[],
-	      'salon_item_buylimit'=>[],
-	      'salon_norms_cat'=>[],
-	      'salon_item_format'=>[],
-	      'salon_item_format_price'=>[],
-	      'salon_item_formats'=>[],
-	      'salon_norms'=>[],
-	    ];
-	    
-	    $salon_item_id = null;
-	    $salon_buylimit_id = null;
-	    $salon_norms_cat_id = null;
-	    if(empty($itemid))
-	    {
-	        DB::beginTransaction();
-	        $salon_item_id = SalonItem::insertGetId($datas['salon_item']);
-	        $salon_buylimit_id = SalonItem::insertGetId($datas['salon_item_buylimit']);
-	        DB::rollBack();
-	    }
-	    else 
-	    {
-	        //处理购买限制表 结束
-	        $salon_item_id = $itemid;
-	        DB::beginTransaction();
-	        SalonItemFormatPrice::where(['itemid'=>$itemid])->delete();
-	        $salon_item_id = SalonItem::where('itemid',$salon_item_id)->update($datas['salon_item']);
-	        $salon_buylimit_id = SalonItemBuylimit::where('salon_item_id',$salon_item_id)->update($datas['salon_item_buylimit']);
-	        DB::rollBack();
-	    }
-	    
-	    DB::beginTransaction();
-	    $salon_norms_cat_id = SalonNormsCat::insertGetId($datas['salon_norms_cat']);
-	    foreach($datas['salon_item_format'] as $format)
-	    {
-	        $tmp_salon_item_format_id = SalonItemFormat::insertGetId($format);
-	    }
-	    foreach($datas['salon_item_format_price'] as $price)
-	    {
-	        $tmp_salon_item_format_price_id = SalonItemFormatPrice::insertGetId($price);
-	    }
-	    foreach($datas['salon_item_formats'] as $formats)
-	    {
-
-	        $tmp_salon_item_formats_id = SalonItemFormats::insertGetId($formats);
-	    }
-	    foreach($datas['salon_norms'] as $norms)
-	    {
-	        $tmp_norms_id = SalonNorms::insertGetId($norms);
-	    }
-	    
-	    //update relation id
-	    //#@todo
-	    
-	    
-	    DB::rollBack();
+		$menus =  array_keys($normarr[0]['type']);
+		foreach($normarr as $v)
+		{
+			foreach($v['type'] as $key=>$val)
+			{
+				$itemType[$key][]=$val;
+			}
+		}
+		$typeArr = self::$_typeArr;
+		$vals = array_values($normMenu);
+		$val_idx = [];
+		foreach ($vals as $val)
+		{
+			$val_idx[] = self::$_typeArr[$val];
+		}
+		$formatsIdArr = SalonItemFormats::where(['salonid'=>0])->whereIn('formats_name',$val_idx)->get(['formats_name','salon_item_formats_id'])->toArray();
+		$formatsIdArr = Utils::column_to_key('formats_name',$formatsIdArr);
+		
+		$clearVal =[];
+		foreach($itemType as $key=>$value)
+		{
+			foreach ($value as $kt=>$vt)
+			{
+				if(!in_array($vt, $clearVal))
+				{
+					$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$val]]['salon_item_formats_id']])->first();
+					if($st)
+						$norId = $st->salon_item_format_id;
+					else
+						$norId = SalonItemFormat::insertGetId(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$val]]['salon_item_formats_id']]);
+					$attribute[$vt] = $norId;//属性数组
+					$clearVal[] = $vt;
+				}
+			}
+		}
+		return $attribute;
 	}
-	
-	public static function add($salon_item,$salon_buylimit)
-	{
-	    
-	}
-	
 }
 ?>

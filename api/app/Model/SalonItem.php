@@ -1,12 +1,18 @@
 <?php namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use DB;
-use App\Salon;
 use Illuminate\Pagination\AbstractPaginator;
+use App\SalonItem;
+use App\SalonItemBuylimit;
+use App\SalonItemFormatPrice;
+use App\SalonNormsCat;
+use App\Salon;
+use DB;
 use App\Hairstylist;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+
+
 class SalonItem extends Model {
 
     /**
@@ -39,6 +45,68 @@ class SalonItem extends Model {
 	public function salon()
 	{
 	    return $this->belongsTo(Salon::class,'salonid','salonid');
+	}
+	
+	/**
+	 * 添加修改项目
+	 * */
+	public static function upsertItem($datas,$priceType,$itemid=null)
+	{
+	    $salon_buylimit_id = null;
+	    $salon_norms_cat_id = null;
+	    DB::beginTransaction();
+	    if(empty($itemid))
+	    {
+	        $itemid = self::insertGetId($datas['salon_item']);
+	        if(!$itemid)
+	        {
+	        	DB::rollBack();
+	        	return false;
+	        }
+	        $datas['salon_item_buylimit']['salon_item_id'] = $itemid;
+	        $salon_buylimit_id = SalonItemBuylimit::insertGetId($datas['salon_item_buylimit']);
+	    }
+	    else 
+	    {
+	        SalonItemFormatPrice::where(['itemid'=>$itemid])->delete();
+	        self::where('itemid',$itemid)->update($datas['salon_item']);
+	        $datas['salon_item_buylimit']['salon_item_id'] = $itemid;
+	        $salon_buylimit_id = SalonItemBuylimit::where('salon_item_id',$itemid)->update($datas['salon_item_buylimit']);
+	    }
+	    
+	    if($priceType == 2)
+	    {
+	   		$salon_norms_cat_id = SalonNormsCat::insertGetId($datas['salon_norms_cat']);
+		    foreach($datas['salon_norms'] as $norms)
+		    {
+		    	$norms['salon_norms_cat_id'] = $salon_norms_cat_id;
+		    	$tmp_norms_id[$norms['salon_item_format_id']] = SalonNorms::insertGetId($norms);
+		    }
+		    
+		    self::where(['itemid'=>$itemid])->update(['norms_cat_id'=>$salon_norms_cat_id]);
+	    }
+	    
+	    foreach($datas['salon_item_format_price'] as $price)
+	    {
+	    	$price['itemid'] = $itemid;
+	    	if($priceType == 2)
+	    	{
+	    		$price['salon_norms_id'] = $tmp_norms_id[$price['salonNormsMark']];
+	    		unset($price['salonNormsMark']);
+	    	}
+	        $tmp_salon_item_format_price_id = SalonItemFormatPrice::insertGetId($price);
+	        if(!$tmp_salon_item_format_price_id)
+	        {
+	        	DB::rollBack();
+	        	return false;
+	        }
+	    }
+	    
+	   if( $datas['salon_item']['maxPrice'] >= 1000 )   //项目价格大于1000  调整店铺类型
+	    	Salon::where(['salonid'=>$salonid])->update(['bountyType'=>4]);
+	
+	   DB::commit();
+	   return true;
 	}
 	
 	/*

@@ -114,7 +114,7 @@ class StylistController  extends Controller {
      * @apiSuccess {String} passport 护照.
      * @apiSuccess {String} officerCert 军官证.
      * @apiSuccess {String} stylistImgCom 造型师头像的缩略图.
-     * @apiSuccess {String} img (stylistImg)造型师图像和(stylistImgCom)造型师头像的缩略图的集合.
+     * @apiSuccess {String} img 造型师图像和造型师头像的缩略图的集合.
      * @apiSuccess {String} reward 1 是你有已接单未完成打赏的悬赏单  2 是没有订单和未完成打赏的单.
      * 
      * 
@@ -179,10 +179,6 @@ class StylistController  extends Controller {
         $query->salonname=$salon->salonname;
         $query->workExp=json_decode($query['workExp'],true);
         $query->educateExp=json_decode($query['educateExp'],true);
-        $data=array();
-        $data['stylistImg']=$query->stylistImg;
-        $data['stylistImgCom']=$query->stylistImgCom;
-        $query->img=  json_encode($data);
         return $this->success($query);
     }
      
@@ -342,7 +338,7 @@ class StylistController  extends Controller {
      * @apiSuccess {String} salonname 店铺名称.
      * @apiSuccess {String} name 所属商户.
      * @apiSuccess {String} stylistImgCom 造型师头像的缩略图. 
-     * @apiSuccess {String} img (stylistImg)造型师图像和(stylistImgCom)造型师头像的缩略图的集合. 
+     * @apiSuccess {String} img 造型师图像和造型师头像的缩略图的集合. 
      * @apiSuccess {String} reward 1 是你有已接单未完成打赏的悬赏单  2 是没有订单和未完成打赏的单.
      * 
      * @apiSuccessExample Success-Response:
@@ -418,10 +414,6 @@ class StylistController  extends Controller {
         }
         $stylist->salonname=$salon->salonname;
         $stylist->name=$merchant->name;
-        $data=array();
-        $data['stylistImg']=$stylist->stylistImg;
-        $data['stylistImgCom']=$stylist->stylistImgCom;
-        $stylist->img=  json_encode($data);
         return $this->success($stylist);
     }
     
@@ -431,8 +423,9 @@ class StylistController  extends Controller {
      * @apiGroup Stylist
      *
      * @apiParam {Number} id 必填,造型师ID、主键.
-     * @apiParam {String} stylistName 必填,造型师名称.
-     * @apiParam {String} img  (stylistImg)造型师图像和(stylistImgCom)造型师头像的缩略图的集合. 
+     * @apiParam {String} stylistName 可选,造型师名称.
+     * @apiParam {String} stylistImg 必填,造型师图像.
+     * @apiParam {String} img  可选, 造型师图像和造型师头像的缩略图的集合. 
      * @apiParam {Number} mobilephone 必填,手机号.
      * @apiParam {String} signature 必填,个性签名.
      * @apiParam {Number} checkbox 必填,修改所属店铺 ：1为选中，其他为没选中.
@@ -477,7 +470,7 @@ class StylistController  extends Controller {
         if(!$stylist){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
         }     
-        if(!isset($param['salonname'])||empty($param['img'])||!isset($param['stylistName'])||empty($param['sex'])||!isset($param['mobilephone'])||!isset($param['job'])||empty($param['birthday'])||empty($param['sNumber'])||empty($param['workYears'])||empty($param['signature'])){
+        if(!isset($param['stylistImg'])||!isset($param['stylistName'])||empty($param['sex'])||!isset($param['mobilephone'])||!isset($param['job'])||empty($param['birthday'])||empty($param['sNumber'])||empty($param['workYears'])||empty($param['signature'])){
                 throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
         }
         if(!isset($param['IDcard'])&&!isset($param['drivingLicense'])&&!isset($param['passport'])&&!isset($param['officerCert'])){   
@@ -512,10 +505,10 @@ class StylistController  extends Controller {
      *
      * @apiParam {Number} id 必填,salonId.
      * @apiParam {String} stylistName 必填,造型师名称.
-     * @apiParam {String} img   (stylistImg)造型师图像和(stylistImgCom)造型师头像的缩略图的集合. 
+     * @apiParam {String} stylistImg 必填,造型师图像.
+     * @apiParam {String} img  必填,造型师图像和造型师头像的缩略图的集合. 
      * @apiParam {Number} mobilephone 必填,手机号.
      * @apiParam {String} signature 必填,个性签名.
-     * @apiParam {Number} checkbox 必填,修改所属店铺 ：1为选中，其他为没选中.
      * @apiParam {Number} sex 必填,性别.
      * @apiParam {String} wechat 可选,微信.
      * @apiParam {String} qq 可选,QQ.
@@ -533,7 +526,6 @@ class StylistController  extends Controller {
      * @apiParam {String} drivingLicense 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,驾驶证.
      * @apiParam {String} passport 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,护照.
      * @apiParam {String} officerCert 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,军官证.
-     * @apiParam {String} salonname 必填,店铺名称.
      *
      * @apiSuccessExample Success-Response:
      *	{
@@ -556,7 +548,7 @@ class StylistController  extends Controller {
         if(!$salon){
 		throw new ApiException('店铺ID出错', ERROR::MERCHANT_ID_IS_ERROR);
         } 
-        if(!isset($param['salonname'])||empty($param['img'])||!isset($param['stylistName'])||empty($param['sex'])||!isset($param['mobilephone'])||!isset($param['job'])||empty($param['birthday'])||empty($param['sNumber'])||empty($param['workYears'])||empty($param['signature'])){
+        if(!isset($param['stylistImg'])||empty($param['img'])||!isset($param['stylistName'])||empty($param['sex'])||!isset($param['mobilephone'])||!isset($param['job'])||empty($param['birthday'])||empty($param['sNumber'])||empty($param['workYears'])||empty($param['signature'])){
                 throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);     
         }
         if(!isset($param['IDcard'])&&!isset($param['drivingLicense'])&&!isset($param['passport'])&&!isset($param['officerCert'])){   
