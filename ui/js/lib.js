@@ -897,7 +897,9 @@
 			//加载对应的资源
 			var resources=$target.attr('ajat-resources');
 			resources && Ajat.seajs(resources.split(','));
-        });
+        }).on('_ready','select',function(){
+			$(this).trigger('change');
+		});
     }
     Ajat.event();
 	Ajat.seajs=function(arr){

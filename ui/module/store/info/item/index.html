@@ -151,7 +151,7 @@
 				</div>
 				</script>				
 			</form>
-			<div class="table" ajat="<%if(query.p=='item'){%>item/index<%}else if(query.p=='special'){%>special/index<%}else if(query.p=='warehouse'){%>warehouse/index<%}%>?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="<%if(query.p=='item'){%>item/index<%}else if(query.p=='special'){%>onsale/index<%}else if(query.p=='warehouse'){%>warehouse/index<%}%>?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
 				<thead>
@@ -191,9 +191,8 @@
 						<td>￥<%=item.minPriceGroup%></td>
 						<td>
 							<%if(query.p=="item"||query.p=="special"){%>
-							<form action="warehouse/puton" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+							<form action="item/down/<%=item.itemid%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 								<button class="link" data-slug="salon.save" >下架</button>
-								<input type="hidden" name="ids" value="<%=item.itemid%>" />
 							</form>
 							<span class="space"></span>
 							<%}%>
@@ -204,7 +203,7 @@
 							</form>
 							<%}%>
 							<span class="space"></span>
-							<a class="link" target="_blank" data-slug="merchant.show,merchant.update" href="detail.html?<%=query._%>&id=<%=item.itemid%>">查看</a>
+							<a class="link" target="_blank" data-slug="merchant.show,merchant.update" href="detail.html?<%=query._%>&id=<%=item.itemid%>&type=<%=item.item_type==1?"item":"special"%>">查看</a>
 						</td>
 					</tr> 
 					<%})%>

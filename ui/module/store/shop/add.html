@@ -69,15 +69,15 @@
 						ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&provinceId=<%=data.provinceId%>" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>">
 						</select>
 						<select id="city" name="citiesId" class="select min-width" required ajat-one="true" 
-						ajat="<%if(data.provinceId){%>salonList/getProvinces?type=2&areaId=<%=data.provinceId%><%}%>#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>"
 						ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=data.district%>">
+						<option value="">城市</option>
 						</select>
                         
 						<select id="area" name="district" class="select min-width" style="margin-right:10px" 
                         required ajat-one="true"
-						ajat="<%if(data.citiesId){%>salonList/getProvinces?type=3&areaId=<%=data.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=data.district%>"
 						ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=zone&tempid=zone_t&zone=<%=data.zone%>"
 						>
+						<option value="">地区</option>
 						</select>
 						<span class="control-help" style="display:none;"></span>
 						

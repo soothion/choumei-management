@@ -15,7 +15,7 @@
 			</div>
 		</div>
 		<div class="wrapper">
-			<div class="table-detail" ajat="<%if(query.p=='item'){%>item/show/<%}else if(query.p=='warehouse'){%>warehouse/show/<%}else if(query.p=='special'){%>special/show/<%}%><%=query.id%>#domid=detail&tempid=detail-t" id="detail">
+			<div class="table-detail" _ajat="<%if(query.p=='item'){%>item/show/<%}else if(query.p=='warehouse'){%>warehouse/show/<%}else if(query.p=='special'){%>special/show/<%}%><%=query.id%>#domid=detail&tempid=detail-t" id="detail">
 				<script type="text/template" id="detail-t">
 				<div class="detail-operation">
 					<%if(query.p=="warehouse"){%>
@@ -186,6 +186,24 @@
 				</table>
 				</script>
 			</div>
-		</div>
+		</div
+		<script type="text/javascript">
+			$(function(){
+				var ajat="item/show/";
+				if(lib.query.p=="warehouse"){
+					if(lib.query.type=="item"){
+						ajat="warehouse/show/"
+					}
+					if(lib.query.type=="special"){
+						ajat="warehouse/detail/"
+					}
+				}
+				if(lib.query.p=="special"){
+					ajat="onsale/show/"
+				}
+				ajat+=lib.query.id;
+				lib.ajat(ajat+"#domid=detail&tempid=detail-t").render();
+			})
+		</script>
   </body>
 </html>
