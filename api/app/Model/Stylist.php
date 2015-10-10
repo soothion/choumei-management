@@ -111,7 +111,18 @@ class Stylist  extends Model {
         if(isset($param['description'])&&$param['description']){
              $data['description']=$param['description'];
         }
+        //清理证件,这四个为一个下拉菜单
+        $data2=array();
+        $data2['IDcard']="";
+        $data2['drivingLicense']="";
+        $data2['passport']="";
+        $data2['officerCert']="";
+        $query2=Self::where(array('stylistId'=>$stylistId))->update($data2);
         $query=Self::where(array('stylistId'=>$stylistId))->update($data);
+        //修改失败且清理成功，则回滚数据
+        if($query===false&&$query2==true){
+            DB::rollback();
+        }
         return  $query;
     }
   
