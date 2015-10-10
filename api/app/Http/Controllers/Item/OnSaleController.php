@@ -7,12 +7,12 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 
-class ItemController extends Controller{
+class OnSaleController extends Controller{
 
 	/**
-	 * @api {post} /item/index 1.项目列表
+	 * @api {post} /onsale/index 1.闲时特价列表
 	 * @apiName index
-	 * @apiGroup Item
+	 * @apiGroup OnSale
 	 *
 	 * @apiParam {String} salonid 可选,店铺ID.
 	 * @apiParam {String} itemname 可选,项目名.
@@ -78,7 +78,7 @@ class ItemController extends Controller{
 	 */
 	public function index(){
 		$param = $this->param;
-		$param['item_type'] = Item::SALE;
+		$param['item_type'] = Item::ONSALE;
 		$query = Item::getQueryByParam($param);
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
@@ -116,9 +116,9 @@ class ItemController extends Controller{
 
 
 	/**
-	 * @api {post} /item/show/:id 2.项目详情
+	 * @api {post} /onsale/show/:id 2.闲时物价详情
 	 * @apiName show
-	 * @apiGroup Item
+	 * @apiGroup OnSale
 	 *
 	 * @apiParam {String} id 必填,项目ID.
 	 *
@@ -211,83 +211,12 @@ class ItemController extends Controller{
 			
 	}
 
-	/**
-	 * @api {post} /item/type 3.项目分类
-	 * @apiName type
-	 * @apiGroup Item
-	 *
-	 *
-	 * @apiSuccess {Number} typeid  分类ID.
-	 * @apiSuccess {Number} typename 分类名称.
-	 * 
-	 * 
-	 * @apiSuccessExample Success-Response:
-	 *	{
-	 *	    "result": 1,
-	 *	    "token": "",
-	 *	    "data": [
-	 *	        {
-	 *	            "typeid": 1,
-	 *	            "typename": "洗剪吹"
-	 *	        }
-	 *	    ]
-	 *	}	
-	 *
-	 *
-	 * @apiErrorExample Error-Response:
-	 *		{
-	 *		    "result": 0,
-	 *		    "msg": "未授权访问"
-	 *		}
-	 */
-	public function type(){
-		return $this->success(Item::type());
-	}
-
 
 
 	/**
-	 * @api {post} /item/sort 4.项目排序
-	 * @apiName sort
-	 * @apiGroup Item
-	 *
-	 *
-	 * @apiSuccess {Number} sort  分类数组,包含以下两个元素.
-	 * @apiSuccess {Number} itemid  项目ID.
-	 * @apiSuccess {Number} sort_in_type 排序值,大的在前面.
-	 * 
-	 * 
-	 * @apiSuccessExample Success-Response:
-	 *	{
-	 *	    "result": 1,
-	 *	    "token": "",
-	 *	    "data": [
-	 *	    ]
-	 *	}	
-	 *
-	 *
-	 * @apiErrorExample Error-Response:
-	 *		{
-	 *		    "result": 0,
-	 *		    "msg": "未授权访问"
-	 *		}
-	 */
-	public function sort(){
-		$param = $this->param;
-		$sorts = $param['sort'];
-		foreach ($sorts as $sort) {
-			$item = Item::find($sort['itemid']);
-			$item->update(['sort_in_type'=>$sort['sort_in_type']]);
-		}
-		return $this->success();
-	}
-
-
-
-	/**
-	 * @api {post} /item/export 5.导出项目
+	 * @api {post} /onsale/export 3.导出闲时特价
 	 * @apiName export
-	 * @apiGroup Item
+	 * @apiGroup OnSale
 	 *
 	 * @apiParam {String} salonid 可选,店铺ID.
 	 * @apiParam {String} itemname 可选,项目名.
@@ -339,9 +268,9 @@ class ItemController extends Controller{
 
 
 	 /**
-     * @api {get} /item/down/:id 6.下架
+     * @api {get} /onsale/down/:id 4.下架
      * @apiName down
-     * @apiGroup item
+     * @apiGroup OnSale
      *
      * @apiParam {Number} id  要下架的id
      *

@@ -945,11 +945,11 @@
 						return {msg:'输入值不能含小数点'};
 					}
 				}
-				if(reg.test(val)){
-					if(val.length>12){
-						return {msg:'输入值整数不能大于12位且不能有小数点'};
-					}
-				}
+				// if(reg.test(val)){
+				// 	if(val.length>12){
+				// 		return {msg:'输入值整数不能大于12位且不能有小数点'};
+				// 	}
+				// }
 				return reg.test(val);
 			},
 			percent:function(val){

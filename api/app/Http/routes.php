@@ -26,14 +26,17 @@ Route::any('login', 'IndexController@login');
 Route::any('logout', 'IndexController@logout');
 
 //self模块
-Route::any('self/show',array(
-	'as'=>'self.show',
-	'uses'=>'SelfController@show'
-));
-Route::any('self/update',array(
-	'as'=>'self.update',
-	'uses'=>'SelfController@update'
-));
+Route::group(['middleware' => ['jwt.auth']], function(){
+	Route::any('self/show',array(
+		'as'=>'self.show',
+		'uses'=>'SelfController@show'
+	));
+	Route::any('self/update',array(
+		'as'=>'self.update',
+		'uses'=>'SelfController@update'
+	));
+
+});
 		
 		
 //列表模块
@@ -246,6 +249,20 @@ Route::group(['middleware'], function(){
 	Route::any('item/export',array(
 		'as'=>'item.export',
 		'uses'=>'ItemController@export'
+	));
+
+	//闲时特价
+	Route::any('onsale/index',array(
+		'as'=>'onsale.index',
+		'uses'=>'OnSaleController@index'
+	));	
+	Route::any('onsale/show/{id}',array(
+		'as'=>'onsale.show',
+		'uses'=>'OnSaleController@show'
+	));	
+	Route::any('onsale/export',array(
+		'as'=>'onsale.export',
+		'uses'=>'OnSaleController@export'
 	));
 	
 	//佣金单
@@ -772,6 +789,16 @@ Route::group(['middleware'], function(){
     Route::any('warehouse/show/{id}',array(  //项目仓库详情
     'as'=>'warehouse.show',
     'uses'=>'Item\ItemController@show'
+        ));
+    
+    Route::any('warehouse/detail/{id}',array(  //项目仓库详情
+        'as'=>'warehouse.detail',
+        'uses'=>'Item\OnSaleController@show'
+     ));
+    
+    Route::any('warehouse/destroy',array(  //删除项目
+    'as'=>'warehouse.destroy',
+    'uses'=>'Item\WarehouseController@destroy'
         ));
     
     Route::any('warehouse/puton',array(  //项目仓库上架

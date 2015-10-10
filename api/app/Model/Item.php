@@ -10,13 +10,14 @@ class Item extends Model {
 	protected $table = 'salon_item';
     protected $primaryKey = 'itemid';
     public $timestamps = false;
-
+    CONST SALE = 1;//默认在售
+    CONST ONSALE = 2;//闲时特价
 
 
 	public static function getQueryByParam($param=[]){
 
-        $query = Self::leftJoin('salon_itemtype','salon_item.typeid','=','salon_itemtype.typeid');
-
+        $query = Self::leftJoin('salon_itemtype','salon_item.typeid','=','salon_itemtype.typeid')
+            ->Leftjoin('salon_item_buylimit','salon_item_buylimit.salon_item_id','=','salon_item.itemid');
         //店铺筛选
         if(!empty($param['salonid'])){
             $query = $query->where('salonid','=',$param['salonid']);
@@ -28,9 +29,14 @@ class Item extends Model {
             $query = $query->where('itemname','like',$itemname);
         }  
 
+        //项目类型筛选
+        if(!empty($param['item_type'])){
+            $query = $query->where('item_type','=',$item_type);
+        }  
+
 	    //项目分类筛选
         if(!empty($param['typeid'])){
-            $query = $query->where('typeid','=',$param['typeid']);
+            $query = $query->where('salon_item.typeid','=',$param['typeid']);
         }	    
 
         //有无规格筛选
@@ -63,7 +69,6 @@ class Item extends Model {
         //有无资格限制筛选
         if(!empty($param['buylimit'])){
         	$buylimit = intval($param['buylimit']);
-        	$query = $query->join('salon_item_buylimit','salon_item_buylimit.salon_item_id','=','salon_item.itemid');
         	if($buylimit == 1)
         		$query = $query->where('salon_item_buylimit.limit_first','=',1);
 
