@@ -394,8 +394,8 @@ class StylistController  extends Controller {
         if(!$stylist){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR); 
         }
-      //  $stylist->workExp=json_decode($stylist['workExp'],true);
-      //  $stylist->educateExp=json_decode($stylist['educateExp'],true);
+        $stylist->workExp=json_decode($stylist['workExp'],true);
+        $stylist->educateExp=json_decode($stylist['educateExp'],true);
         $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
         if($task==true){
                 $stylist->reward=1;
