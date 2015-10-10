@@ -241,21 +241,6 @@ class WorksController extends Controller {
     }  
     
     
-    /**
-     * @api {post} /Works/uploadfile 6.上传作品集合
-     * @apiName uploadfile
-     * @apiGroup  Works
-     * 
-     * @apiSuccessExample Success-Response:
-     * {
-     * 
-     * }
-     * @apiErrorExample Error-Response:
-     * {
-     *      
-     * }
-     */
-    
     public function uploadfile() {
         $upload = new \Think\Upload();            // 实例化上传类
         $upload->maxSize = 3145728 ;              // 设置附件上传大小
