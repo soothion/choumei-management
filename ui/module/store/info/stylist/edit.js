@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-09 17:56:45
+* @Last Modified time: 2015-10-10 14:30:38
 */
 
 (function(){       
@@ -26,7 +26,6 @@
         initUploader([]);    
     }
     
-
     function initUploader(arr){
         lib.puploader.image({
             browse_button: 'personImagesUpload',
@@ -81,6 +80,33 @@
         }
     });
 
+    $("#form").on('keydown','input[pattern=number]',function(e){   
+        var key = e.which;
+        //alert(key)
+        if ((key > 95 && key < 106) || //小键盘上的0到9  
+            (key > 47 && key < 58) || //大键盘上的0到9  
+            key == 8 || key == 116 || key == 9 || key == 46 || key == 37 || key == 39
+            //不影响正常编辑键的使用(116:f5;8:BackSpace;9:Tab;46:Delete;37:Left;39:Right;)  
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    });
+   
+
+    $('#form').on('autoinput','#search',function(e,data){
+        if(data){
+            $("#salonname").val($(this).val());
+        }
+    });
+
+    $('#form').on('change','input.start',function(){
+        var firstTd   = $(this).closest("tr");  
+    });
+
+
+
     function checkedImage(){
         var len = $("#form .control-thumbnails-item img").length;
         if(len){
@@ -92,17 +118,40 @@
     }
 
     lib.Form.prototype.save = function(data){        
-       if(!checkedImage()) return;
-       var img = {}; 
-       var element = $(".control-thumbnails-item img");
-       img['thumbimg'] = element.attr('src');
-       img['img']      = element.data('original');
-       data.stylistImg = element.attr('src');
-       data['img'] = JSON.stringify(img);
-       data[data.cardType] = data.cardNum;
-       delete data.cardType;
-       delete data.cardNum;      
-       submit(data);
+        if(!checkedImage()) return;
+        var img = {}; 
+        var element = $(".control-thumbnails-item img");
+        img['thumbimg'] = element.attr('src');
+        img['img']      = element.data('original');
+        data.stylistImg = element.attr('src');
+        data['img'] = JSON.stringify(img);
+        data[data.cardType] = data.cardNum;
+        delete data.cardType;
+        delete data.cardNum; 
+        var workExp = {};
+        var educateExp = {};
+        for(var i = 0; i < 6 ; i++){
+            educateExp['sTime'+i]=data['sTime'+i]; 
+            delete data['sTime'+i];
+            educateExp['eTime'+i]=data['eTime'+i];
+            delete data['eTime'+i];
+            educateExp['name'+i]=data['name'+i]; 
+            delete data['name'+i];
+
+            workExp['wsTime'+i]=data['wsTime'+i]; 
+            delete data['wsTime'+i];
+            workExp['weTime'+i]=data['weTime'+i]; 
+            delete data['weTime'+i];
+            workExp['wname'+i]=data['wname'+i]; 
+            delete data['wname'+i];
+            workExp['wjob'+i]=data['wjob'+i]; 
+            delete data['wjob'+i];
+            workExp['waddress'+i]=data['waddress'+i];
+            delete data['waddress'+i];
+        }
+        data['workExp'] = JSON.stringify(workExp);
+        data['educateExp'] = JSON.stringify(educateExp);
+        submit(data);
     }
 
     function submit(data){
@@ -115,7 +164,7 @@
                 parent.lib.popup.result({
                     text:"操作成功！",
                     define:function(){
-                        history.back();
+                        //history.back();
                     }
                 });                
             }

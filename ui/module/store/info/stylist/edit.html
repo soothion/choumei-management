@@ -4,7 +4,6 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="/js/include.js"></script>
-      <script type="text/javascript" src="/js/validator.js"></script>
       <style>
         .border-dash{
             width: 100%;
@@ -31,11 +30,14 @@
             min-width:300px!important;
             width:100%;
             border: none;
-            visibility:hidden;
         }
         .tab td{
             cursor: pointer;
         }
+        .show{
+           visibility: visible!important; 
+        }
+
       </style>
   </head>
   <body>
@@ -66,7 +68,8 @@
                 <label class="control-label" for=""><span class="red">*</span>店铺名称：</label>
                 <div class="control complete">
                     <input type="hidden" name="salon_id" id="salonid" value="<%=data.salonId%>"/>
-                    <input id="search" type="text"  name="salonname" value="<%=data.salonname%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" disabled required>
+                    <input type="hidden" name="salonname" id="salonname" value="<%=data.salonname%>"/>
+                    <input id="search" type="text" value="<%=data.salonname%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" disabled required>
                     <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
                     <label>
                         <input type="checkbox" value="<%=data.reward%>"/>
@@ -143,21 +146,22 @@
                 <label class="control-label" for="">微信号：</label>
                 <div class="control">
                     <input type="text" name="wechat" placeholder="微信号码" 
-                    value="<%=data.wechat%>">
+                    value="<%=data.wechat%>" maxlength="25">
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for="">QQ号：</label>
                 <div class="control">
-                    <input type="text" name="qq" placeholder="QQ号码" value="<%=data.qq%>">
+                    <input type="text" name="qq" placeholder="QQ号码" value="<%=data.qq%>" pattern='number'
+                    maxlength="25">
                 </div>
             </div>  
 
             <div class="control-group">
                 <label class="control-label" for="">邮箱：</label>
                 <div class="control">
-                    <input type="text" name="email" placeholder="邮箱地址" value="<%=data.email%>">
+                    <input type="text" name="email" placeholder="邮箱地址" value="<%=data.email%>" pattern="email">
                 </div>
             </div>  
 
@@ -176,15 +180,46 @@
 
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>身份证件：</label>
-                <div class="control">
+                <div class="control">                   
+                   <%
+                    var cardObj = {};
+                    if(data.IDcard){ 
+                        cardObj['index'] = 'IDcard';
+                        cardObj['value'] = data.IDcard;
+                    }
+                    if(data.officerCert){
+                        cardObj['index'] = 'officerCert';
+                        cardObj['value'] = data.officerCert;
+                    }
+                    if(data.drivingLicense){
+                        cardObj['index'] = 'drivingLicense';
+                        cardObj['value'] = data.drivingLicense;
+                    }
+                    if(data.passport){
+                        cardObj['index'] = 'passport';
+                        cardObj['value'] = data.passport;
+                    }                                      
+                   %>
                     <select name="cardType" id="" style="min-width:100px;width:4%;" required>
-                        <option value="IDcard">身份证</option>
-                        <option value="officerCert">军官证</option>
-                        <option value="drivingLicense">驾驶证</option>
-                        <option value="passport">护照</option>
+                        <option <%=cardObj.index=="IDcard" ? "selected" : ""%> value="IDcard">
+                            身份证
+                        </option>
+
+                        <option <%=cardObj.index=="officerCert" ? "selected" : ""%>  value="officerCert">
+                            军官证
+                        </option>
+
+                        <option <%=cardObj.index=="drivingLicense" ? "selected" : ""%>  value="drivingLicense">
+                            驾驶证
+                        </option>
+
+                        <option <%=cardObj.index=="passport" ? "selected" : ""%>  value="passport">
+                            护照
+                        </option>
                     </select>
+
                     <input type="text" name="cardNum" placeholder="证件编号" 
-                    style="min-width:140px;width:12.5%" required>
+                    style="min-width:140px;width:12.5%" value="<%=cardObj.value%>" maxlength="25" required>
                     <span class="control-help" style="display:none;"></span>
                 </div>
             </div> 
@@ -197,21 +232,22 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>在职编号：</label>
                 <div class="control">
-                    <input type="text" name="sNumber" placeholder="在职编号" value="<%=data.sNumber%>" required>
+                    <input type="text" name="sNumber" placeholder="在职编号" value="<%=data.sNumber%>" pattern='number' maxlength="4" required>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>工作年限：</label>
                 <div class="control">
-                    <input type="text" name="workYears" placeholder="工作年限" value="<%=data.workYears%>" required>
+                    <input type="text" name="workYears" placeholder="工作年限" value="<%=data.workYears%>" 
+                    pattern='number' maxlength="2" required>
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>门店职位：</label>
                 <div class="control">
-                    <input type="text" name="job" placeholder="门店职位" value="<%=data.job%>" required>
+                    <input type="text" name="job" placeholder="门店职位" value="<%=data.job%>" maxlength="8" required>
                 </div>
             </div> 
 
@@ -275,27 +311,32 @@
                         <tbody>
                             <%if(query.id){%>
                             <%
-                            var str = JSON.stringify(data.educateExp);                            
-                            var arr = str.substring(2,str.length-2).split(",");                           
+                            var educateExp = JSON.parse(data.educateExp);                    
                             %>
                             <%for(var i = 1 ; i < 6 ; i++){%>
                                 <tr>
-                                    <td><input type="date" placeholder="yyyy-MM-dd" name="<%='sTime'+i%>" 
-                                    value="<%=arr['sTime'+i]%>"></td>
-                                    <td><input type="date" placeholder="yyyy-MM-dd" name="<%='eTime'+i%>"
-                                    value="<%=arr['eTime'+i]%>"></td>
+                                    <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> start" name="<%='sTime'+i%>" 
+                                    value="<%=educateExp['sTime'+i]%>"></td>
+                                    <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> end" name="<%='eTime'+i%>"
+                                    value="<%=educateExp['eTime'+i]%>"></td>
                                     <td><input type="text" name="<%='name'+i%>" 
-                                    value="<%=arr['name'+i]%>"></td>
+                                    value="<%=educateExp['name'+i]%>" maxLength="16"></td>
                                 </tr>
                             <%}%> 
                             <%}%> 
 
                             <%if(query.salonid){%>
-                            <%for(var i = 1 ; i < 6 ; i++){%>
+                            <%for(var j = 1 ; j < 6 ; j++){%>
                                 <tr>
-                                    <td><input type="date" placeholder="yyyy-MM-dd" name="<%='sTime'+i%>"></td>
-                                    <td><input type="date" placeholder="yyyy-MM-dd" name="<%='eTime'+i%>"></td>
-                                    <td><input type="text" name="<%='name'+i%>"></td>
+                                    <td>
+                                        <input type="date" class="start" name="<%='sTime'+j%>">
+                                    </td>
+                                    <td>
+                                        <input type="date" class="end" name="<%='eTime'+j%>">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="<%='name'+j%>" maxLength="16">
+                                    </td>
                                 </tr>
                             <%}%>
                             <%}%>                                                                                                    
@@ -318,52 +359,53 @@
                         <tbody>
                             <%if(query.id){%>
                             <%
-                            var str = JSON.stringify(data.workExp);                            
-                            var workArr = str.substring(2,str.length-2).split(",");                           
+                            var workExp = JSON.parse(data.workExp);                                                    
                             %>                        
-                            <%for(var i = 1 ; i < 6 ; i++){%>
+                            <%for(var k = 1 ; k < 6 ; k++){%>
                                 <tr>
                                     <td>
-                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='wsTime'+i%>" 
-                                        value="<%=arr['wsTime'+i]%>">
+                                        <input type="date" class="<%= workExp['wsTime'+k] ? 'show':'' %> " placeholder="yyyy-MM-dd" name="<%='wsTime'+k%>" 
+                                        value="<%=workExp['wsTime'+k]%>">
                                     </td>
 
                                     <td>
-                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='weTime'+i%>" 
-                                        value="<%=arr['weTime'+i]%>"></td>
+                                        <input type="date" class="<%= workExp['weTime'+k] ? 'show':'' %> " placeholder="yyyy-MM-dd" name="<%='weTime'+k%>" 
+                                        value="<%=workExp['weTime'+k]%>"></td>
                                     <td>
-                                        <input type="text" name="<%='wname'+i%>" value="<%=arr['wname'+i]%>">
+                                        <input type="text" name="<%='wname'+k%>" value="<%=workExp['wname'+k]%>" 
+                                        maxLength="16">
                                     </td>
 
                                     <td>
-                                        <input type="text" name="<%='wjob'+i%>" value="<%=arr['wjob'+i]%>">
+                                        <input type="text" name="<%='wjob'+k%>" value="<%=workExp['wjob'+k]%>" 
+                                        maxLength="8">
                                     </td>
 
                                     <td>
-                                        <input type="text" name="<%='waddress'+i%>" 
-                                        value="<%=arr['waddress'+i]%>">
+                                        <input type="text" name="<%='waddress'+k%>" value="<%=workExp['waddress'+k]%>"
+                                        maxLength="8">
                                     </td>
                                 </tr>
                             <%}%>
                             <%}%>
 
                             <%if(query.salonid){%>
-                            <%for(var i = 1 ; i < 6 ; i++){%>
+                            <%for(var t = 1 ; t < 6 ; t++){%>
                                 <tr>
                                     <td>
-                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='wsTime'+i%>">
+                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='wsTime'+t%>">
                                     </td>
                                     <td>
-                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='weTime'+i%>">
+                                        <input type="date" placeholder="yyyy-MM-dd" name="<%='weTime'+t%>">
                                     </td>
                                     <td>
-                                        <input type="text" name="<%='wname'+i%>">
+                                        <input type="text" name="<%='wname'+t%>"  maxLength="16">
                                     </td>
                                     <td>
-                                        <input type="text" name="<%='wjob'+i%>">
+                                        <input type="text" name="<%='wjob'+t%>"  maxLength="8">
                                     </td>
                                     <td>
-                                        <input type="text" name="<%='waddress'+i%>">
+                                        <input type="text" name="<%='waddress'+t%>"  maxLength="8">
                                     </td>
                                 </tr>
                             <%}%>

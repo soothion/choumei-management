@@ -250,6 +250,20 @@ Route::group(['middleware'], function(){
 		'as'=>'item.export',
 		'uses'=>'ItemController@export'
 	));
+
+	//闲时特价
+	Route::any('onsale/index',array(
+		'as'=>'onsale.index',
+		'uses'=>'OnSaleController@index'
+	));	
+	Route::any('onsale/show/{id}',array(
+		'as'=>'onsale.show',
+		'uses'=>'OnSaleController@show'
+	));	
+	Route::any('onsale/export',array(
+		'as'=>'onsale.export',
+		'uses'=>'OnSaleController@export'
+	));
 	
 	//佣金单
 	Route::any('commission/index',array(
