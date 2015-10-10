@@ -10,8 +10,8 @@ class Item extends Model {
 	protected $table = 'salon_item';
     protected $primaryKey = 'itemid';
     public $timestamps = false;
-    const DEFAULT = 1;//默认在售
-    const ONSALE = 2;//闲时特价
+    CONST SALE = 1;//默认在售
+    CONST ONSALE = 2;//闲时特价
 
 
 	public static function getQueryByParam($param=[]){

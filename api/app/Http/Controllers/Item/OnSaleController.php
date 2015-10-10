@@ -7,7 +7,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 
-class ItemController extends Controller{
+class OnSaleController extends Controller{
 
 	/**
 	 * @api {post} /onsale/index 1.闲时特价列表

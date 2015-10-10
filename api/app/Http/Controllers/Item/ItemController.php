@@ -78,7 +78,7 @@ class ItemController extends Controller{
 	 */
 	public function index(){
 		$param = $this->param;
-		$param['item_type'] = Item::DEFAULT;
+		$param['item_type'] = Item::SALE;
 		$query = Item::getQueryByParam($param);
 		$page = isset($param['page'])?max($param['page'],1):1;
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
