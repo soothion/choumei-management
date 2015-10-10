@@ -280,6 +280,7 @@ class ItemInfoController extends Controller{
 	 * @apiName update
 	 * @apiGroup  itemInfo
 	 *
+	 * @apiParam {Number} itemid  必填,项目id.
 	 * @apiParam {Number} salonid  必填,店铺id.
 	 * @apiParam {Number} typeid 必填,项目分类id.
 	 * @apiParam {string} useLimit 可选,消费限制（特价项目）.
@@ -368,7 +369,7 @@ class ItemInfoController extends Controller{
 		}
 		
 		$data = self::compositeData($param);
-		$res = self::upsert($data,$param['priceStyle'],$itemid);
+		$res = SalonItem::upsertItem($data,$param['priceStyle'],$itemid);
 		if($res)
 		{
 			return $this->success();
@@ -705,69 +706,5 @@ class ItemInfoController extends Controller{
 		}
 		return $attribute;
 	}
-	
-	
-	/**
-	 * 项目信息入库
-	 * */
-	public static function upsert($datas,$priceType,$itemid=null)
-	{
-	    $salon_buylimit_id = null;
-	    $salon_norms_cat_id = null;
-	    DB::beginTransaction();
-	    if(empty($itemid))
-	    {
-	        $itemid = SalonItem::insertGetId($datas['salon_item']);
-	        if(!$itemid)
-	        {
-	        	DB::rollBack();
-	        	return false;
-	        }
-	        $datas['salon_item_buylimit']['salon_item_id'] = $itemid;
-	        $salon_buylimit_id = SalonItemBuylimit::insertGetId($datas['salon_item_buylimit']);
-	    }
-	    else 
-	    {
-	        SalonItemFormatPrice::where(['itemid'=>$itemid])->delete();
-	        SalonItem::where('itemid',$itemid)->update($datas['salon_item']);
-	        $datas['salon_item_buylimit']['salon_item_id'] = $itemid;
-	        $salon_buylimit_id = SalonItemBuylimit::where('salon_item_id',$itemid)->update($datas['salon_item_buylimit']);
-	    }
-	    
-	    if($priceType == 2)
-	    {
-	   		$salon_norms_cat_id = SalonNormsCat::insertGetId($datas['salon_norms_cat']);
-		    foreach($datas['salon_norms'] as $norms)
-		    {
-		    	$norms['salon_norms_cat_id'] = $salon_norms_cat_id;
-		    	$tmp_norms_id[$norms['salon_item_format_id']] = SalonNorms::insertGetId($norms);
-		    }
-		    
-		    SalonItem::where(['itemid'=>$itemid])->update(['norms_cat_id'=>$salon_norms_cat_id]);
-	    }
-	    
-	    foreach($datas['salon_item_format_price'] as $price)
-	    {
-	    	$price['itemid'] = $itemid;
-	    	if($priceType == 2)
-	    	{
-	    		$price['salon_norms_id'] = $tmp_norms_id[$price['salonNormsMark']];
-	    		unset($price['salonNormsMark']);
-	    	}
-	        $tmp_salon_item_format_price_id = SalonItemFormatPrice::insertGetId($price);
-	        if(!$tmp_salon_item_format_price_id)
-	        {
-	        	DB::rollBack();
-	        	return false;
-	        }
-	    }
-	    
-	   if( $datas['salon_item']['maxPrice'] >= 1000 )   //项目价格大于1000  调整店铺类型
-	    	Salon::where(['salonid'=>$salonid])->update(['bountyType'=>4]);
-	
-	   DB::commit();
-	   return true;
-	}
-	
 }
 ?>
