@@ -26,14 +26,17 @@ Route::any('login', 'IndexController@login');
 Route::any('logout', 'IndexController@logout');
 
 //self模块
-Route::any('self/show',array(
-	'as'=>'self.show',
-	'uses'=>'SelfController@show'
-));
-Route::any('self/update',array(
-	'as'=>'self.update',
-	'uses'=>'SelfController@update'
-));
+Route::group(['middleware' => ['jwt.auth','acl.auth','before','after']], function(){
+	Route::any('self/show',array(
+		'as'=>'self.show',
+		'uses'=>'SelfController@show'
+	));
+	Route::any('self/update',array(
+		'as'=>'self.update',
+		'uses'=>'SelfController@update'
+	));
+
+});
 
 //用户等级列表
 Route::any('level/index',array(
