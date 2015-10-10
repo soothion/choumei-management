@@ -16,7 +16,7 @@
 		<hr />
 	</div>
 	<div class="wrapper" >
-		<div ajat="<%if(query.p=='item'){%>item/show/<%}else if(query.p=='warehouse'){%>warehouse/show/<%}else if(query.p=='special'){%>special/show/<%}%><%=query.id%>#domid=form&tempid=form-t" id="form">
+		<div ajat="<%if(query.p=='item'&&query.id){%>item/show/<%}else if(query.p=='warehouse'&&query.id){%>warehouse/show/<%}else if(query.p=='special'&&query.id){%>special/show/<%}%><%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<form method="post" class="form-vertical" data-role="form" action="<%=query.id?"itemInfo/update":"itemInfo/create"%>">
 			<div class="detail-operation">
@@ -389,20 +389,20 @@
 	</script>
 	<script type="text/javascript">
 		$(function(){
-			$(document.body).on('change','.form-item .control-label input',function(){
+			$(document.body).on('change','.form-item .control-label input',function(){//是否启用对应的项
 				$(this).closest('.control-label').next('.control').find('input,button').attr('disabled',!this.checked);
-			}).on('click','.form-item .btn-plus',function(){
+			}).on('click','.form-item .btn-plus',function(){//增加造型师，药水
 				var name=$(this).prev().attr('name');
 				$(this).before('<input type="text" class="input-small" maxlength="10" nospace name="'+name+'"/>');
 				$(this).prev().focus();
-			}).on('click','.price-choose',function(){
+			}).on('click','.price-choose',function(){//定价类型的切换
 				if(this.checked&&this.value==1){
 					$('.price-group').show().next('.format-group').hide();
 				}
 				if(this.checked&&this.value==2){
 					$('.price-group').hide().next('.format-group').show();
 				}
-			}).on('change','#type',function(){
+			}).on('change','#type',function(){//是否显示快剪等级
 				if(this.value==8){
 					$('#level').show();
 				}else{
@@ -410,7 +410,7 @@
 				}
 			}).on('_ready','#type,#type1',function(){
 				$(this).trigger('change');
-			}).on('click','.limit',function(){
+			}).on('click','.limit',function(){//有无限制状态的切换
 				$(this).parent().siblings('input').attr('disabled',this.checked);
 				$(this).parent().siblings('label').children('input').attr('disabled',this.checked);
 			});
@@ -580,19 +580,24 @@
 				$format.on('focus','.format-price',function(){
 					$(this).one('pass',function(){
 						var $this=$(this);
+						var val=parseInt($this.val());
 						var groupPrecent=$('#group-precent').val();
 						var choumeiPrecent=$('#choumei-precent').val();
-						var val=parseInt($this.val());
 						if(val){
+							var groupInput=$this.parent().next().next().children('input');
+							var choumeiInput=$this.parent().next().children('input');
+							choumeiInput.attr('max',val);
+							groupInput.attr('max',val);
 							if(choumeiPrecent&&!isNaN(choumeiPrecent)){
-								$this.parent().next().children('input').val(Math.round(choumeiPrecent*val/100));
+								choumeiInput.val(Math.round(choumeiPrecent*val/100));
 							}
 							if(groupPrecent&&!isNaN(groupPrecent)){
-								$this.parent().next().next().children('input').val(Math.round(groupPrecent*val/100));
+								groupInput.val(Math.round(groupPrecent*val/100));
 							}
 						}
 					});
 				});
+				
 				var form=$('form')[0];
 				//重写getFormData以添加normarr参数
 				form._getFormData=function(){

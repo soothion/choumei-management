@@ -23,11 +23,12 @@
 						<button class="btn">上架</button><span class="space"></span>
 						<input type="hidden" name="ids" value="<%=query.id%>" />
 					</form>
+					<span class="space"></span>
 					<%}else{%>
-					<form action="" data-role="normal" onsuccess="parent.lib.popup.result()">
-						<button class="btn">下架</button><span class="space"></span>
-						<input type="hidden" name="ids" value="<%=query.id%>" />
+					<form action="item/down/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result()">
+						<button class="btn">下架</button>
 					</form>
+					<span class="space"></span>
 					<%}%>
 					<a class="btn" href="edit.html?<%=query._%>">编辑</a><span class="space"></span>
 					<button class="btn btn-cancel">关闭</button>
@@ -139,7 +140,13 @@
 									<tbody>
 										<%data.prices&&data.prices.forEach(function(item){%>
 										<tr>
-											<td style="width:auto;min-width:0"><%=item.formats%></td>
+											<td style="width:auto;min-width:0">
+											<%var arr=[];
+											item.formats.forEach(function(item2){
+												arr.push(item2.format_name);
+											})%>
+											<%=arr.join("、")%>
+											</td>
 											<td style="width:auto;min-width:0"><%=item.price?"￥"+item.price:""%></td>
 											<td style="width:auto;min-width:0"><%=item.price_dis?"￥"+item.price_dis:""%></td>
 											<td style="width:auto;min-width:0"><%=item.price_group?"￥"+item.price_group:""%></td>

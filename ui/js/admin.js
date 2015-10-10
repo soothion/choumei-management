@@ -165,10 +165,14 @@ $(function(){
 		if(!confirm&&this.confirm&&typeof this.confirm=='function'){
 			confirm=this.confirm();
 		}
+		var data=lib.tools.getFormData($this);
+		if(this._getFormData){
+			data=this._getFormData();
+		}
 		var request=function(){
 			lib.ajax({
 				url:url,
-				data:lib.tools.getFormData($this),
+				data:data,
 				type:'POST',
 				success:function(data){
 					setTimeout(function(){

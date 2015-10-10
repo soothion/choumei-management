@@ -21,14 +21,16 @@
 		<div class="wrapper">
 			<div class="position-group">
 				<form data-role="hash">
-					<select style="min-width:200px;">
-						<option value="1" data-placeholder="请输入店铺名称">店铺名称</option>
-						<option value="2" data-placeholder="请输入商户名称">商户名称</option>
-						<option value="3" data-placeholder="请输入店铺编号">店铺编号</option>
+					<select name="typeid" ajat-one="true" ajat="item/type#domid=type&tempid=type-t" id="type">
+						<script type="text/template" id="type-t">
+							<%data.forEach(function(item){%>
+								<option value="<%=item.typeid%>"><%=item.typename%></option>
+							<%})%>
+						</script>
 					</select>
 				</form>
 			 </div>
-			<div class="table" ajat="item/sort?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="item/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
 				<thead>
@@ -47,7 +49,7 @@
 					<%data=data.data%>
 					<%data.forEach(function(item,i){%>
 					 <tr>
-						<td><%=i+1%></td>
+						<td><%=i+1%><input type="hidden" name="itemid" value="<%=item.itemid%>" data-index="<%=i%>" /></td>
 						<td><%=item.itemname%></td>
 						<td><%=item.typename%></td>
 						<td><%=item.norms_cat_id==1?"有规格":"无规格"%></td>
@@ -56,14 +58,14 @@
 						<td><%=item.minPriceGroup%></td>
 						<td>
 							<%if(i!=0){%>
-							<form action="" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-								<button class="link" data-slug="salon.save" >上移</button>
+							<form action="item/sort" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+								<button class="link" data-slug="salon.save" type="button" data-goto="up" >上移</button>
 							</form>
+							<span class="space"></span>
 							<%}%>
 							<%if(i!=data.length){%>
-							<span class="space"></span>
-							<form action="" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-								<button class="link" data-slug="salon.save" >下移</button>
+							<form action="item/sort" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+								<button class="link" data-slug="salon.save" type="button" data-goto="down">下移</button>
 							</form>
 							<%}%>
 						</td>
@@ -74,5 +76,29 @@
 			</script>
 		</div>
 	</div>
+	<script type="text/javascript">
+		$('#type').on('change',function(){
+			$(this).closest('form').submit();
+		});
+		$('#table').on('click','.link',function(){
+			var $this=$(this);
+			if($this.data('goto')=='up'){
+				$this.closest('tr').after($this.closest('tr').prev());
+			}
+			if($this.data('goto')=='down'){
+				$this.closest('tr').before($this.closest('tr').next());
+			}
+			var form=$this.parent();
+			form[0]._getFormData=function(){
+				var sort=[];
+				$('input[name="itemid"]').each(function(){
+					sort.push({itemid:this.value,sort_in_type:$(this).data('index')});
+				});
+				console.log(sort);
+				return {sort:sort};
+			}
+			form.submit();
+		})
+	</script>
   </body>
 </html>

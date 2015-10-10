@@ -21,7 +21,7 @@
 					<h4><%=title%>-<%=query.salonname%></h4>
 				</div>
 				<%if(query.p=="item"){%>
-				<div><button onclick="location.href='sort.html'" class="btn">项目排序</button></div>
+				<div><button onclick="location.href='sort.html#typeid=1'" class="btn">项目排序</button></div>
 				<%}%>
 			</div>
 		</div>
@@ -257,7 +257,7 @@
 				'successText':'数据导入成功',
 				'browse_button' : 'btn-import',
 				'domain'        : cfg.getHost() + "warehouse/import?token="+localStorage.getItem('token'),
-				'file_data_name': 'rebate',
+				//'file_data_name': 'rebate',
 				'auto_start'    : true,
 				'filters'       : {mime_types:[{ title : "Excel", extensions : "xls" }],
 								max_file_size : '10mb', //最大只能上传10mb的文件
