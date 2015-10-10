@@ -26,7 +26,7 @@ Route::any('login', 'IndexController@login');
 Route::any('logout', 'IndexController@logout');
 
 //self模块
-Route::group(['middleware' => ['jwt.auth','acl.auth','before','after']], function(){
+Route::group(['middleware' => ['jwt.auth']], function(){
 	Route::any('self/show',array(
 		'as'=>'self.show',
 		'uses'=>'SelfController@show'
