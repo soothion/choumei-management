@@ -67,7 +67,7 @@ class Stylist  extends Model {
         $data['sex']=$param['sex'];
         $data['mobilephone']=$param['mobilephone'];
         $data['job']=$param['job'];
-        $data['birthday']=$param['birthday'];
+        $data['birthday']=strtotime($param['birthday']);
         $data['sNumber']=$param['sNumber'];
         $data['workYears']=$param['workYears'];
         $data['signature']=$param['signature'];
@@ -100,14 +100,64 @@ class Stylist  extends Model {
              $data['grade']=$param['grade'];
         }
         if(!empty($param['fastGrade'])){
-             $data['fastGrade']=  json_encode($param['fastGrade']);
+             $data['fastGrade']= $param['fastGrade'];
         }  
+        
+        $educateExp = array(
+		'sTime1'=>$param['sTime1'],
+		'eTime1'=>$param['eTime1'],
+		'name1'=>$param['name1'],
+		'sTime2'=>$param['sTime2'],
+		'eTime2'=>$param['eTime2'],
+		'name2'=>$param['name2'],
+		'sTime3'=>$param['sTime3'],
+		'eTime3'=>$param['eTime3'],
+		'name3'=>$param['name3'],
+		'sTime4'=>$param['sTime4'],
+		'eTime4'=>$param['eTime4'],
+		'name4'=>$param['name4'],
+		'sTime5'=>$param['sTime5'],
+		'eTime5'=>$param['eTime5'],
+		'name5'=>$param['name5']
+		);
+        $workExp = array(
+		'wsTime1'=>$param['wsTime1'],
+		'weTime1'=>$param['weTime1'],
+		'wname1'=>$param['wname1'],
+		'wjob1'=>$param['wjob1'],
+		'waddress1'=>$param['waddress1'],
+		
+		'wsTime2'=>$param['wsTime2'],
+		'weTime2'=>$param['weTime2'],
+		'wname2'=>$param['wname2'],
+		'wjob2'=>$param['wjob2'],
+		'waddress2'=>$param['waddress2'],
+		
+		'wsTime3'=>$param['wsTime3'],
+		'weTime3'=>$param['weTime3'],
+		'wname3'=>$param['wname3'],
+		'wjob3'=>$param['wjob3'],
+		'waddress3'=>$param['waddress3'],
+		
+		'wsTime4'=>$param['wsTime4'],
+		'weTime4'=>$param['weTime4'],
+		'wname4'=>$param['wname4'],
+		'wjob4'=>$param['wjob4'],
+		'waddress4'=>$param['waddress4'],
+		
+		'wsTime5'=>$param['wsTime5'],
+		'weTime5'=>$param['weTime5'],
+		'wname5'=>$param['wname5'],
+		'wjob5'=>$param['wjob5'],
+		'waddress5'=>$param['waddress5']
+	        );
+
         if(!empty($param['workExp'])){
-             $data['workExp']=json_encode($param['workExp']);
+             $data['workExp']=json_encode($workExp);
         }
         if(!empty($param['educateExp'])){
-             $data['educateExp']=$param['educateExp'];
-        }  
+             $data['educateExp']= json_encode($educateExp);
+        }          
         if(isset($param['description'])&&$param['description']){
              $data['description']=$param['description'];
         }
@@ -134,7 +184,7 @@ class Stylist  extends Model {
         $data['sex']=$param['sex'];
         $data['mobilephone']=$param['mobilephone'];
         $data['job']=$param['job'];
-        $data['birthday']=$param['birthday'];
+        $data['birthday']=strtotime($param['birthday']);
         $data['sNumber']=$param['sNumber'];
         $data['workYears']=$param['workYears'];
         $data['signature']=$param['signature'];
@@ -169,11 +219,60 @@ class Stylist  extends Model {
         if(!empty($param['fastGrade'])){
              $data['fastGrade']=$param['fastGrade'];
         }  
+        
+         $educateExp = array(
+		'sTime1'=>$param['sTime1'],
+		'eTime1'=>$param['eTime1'],
+		'name1'=>$param['name1'],
+		'sTime2'=>$param['sTime2'],
+		'eTime2'=>$param['eTime2'],
+		'name2'=>$param['name2'],
+		'sTime3'=>$param['sTime3'],
+		'eTime3'=>$param['eTime3'],
+		'name3'=>$param['name3'],
+		'sTime4'=>$param['sTime4'],
+		'eTime4'=>$param['eTime4'],
+		'name4'=>$param['name4'],
+		'sTime5'=>$param['sTime5'],
+		'eTime5'=>$param['eTime5'],
+		'name5'=>$param['name5']
+		);
+        $workExp = array(
+		'wsTime1'=>$param['wsTime1'],
+		'weTime1'=>$param['weTime1'],
+		'wname1'=>$param['wname1'],
+		'wjob1'=>$param['wjob1'],
+		'waddress1'=>$param['waddress1'],
+		
+		'wsTime2'=>$param['wsTime2'],
+		'weTime2'=>$param['weTime2'],
+		'wname2'=>$param['wname2'],
+		'wjob2'=>$param['wjob2'],
+		'waddress2'=>$param['waddress2'],
+		
+		'wsTime3'=>$param['wsTime3'],
+		'weTime3'=>$param['weTime3'],
+		'wname3'=>$param['wname3'],
+		'wjob3'=>$param['wjob3'],
+		'waddress3'=>$param['waddress3'],
+		
+		'wsTime4'=>$param['wsTime4'],
+		'weTime4'=>$param['weTime4'],
+		'wname4'=>$param['wname4'],
+		'wjob4'=>$param['wjob4'],
+		'waddress4'=>$param['waddress4'],
+		
+		'wsTime5'=>$param['wsTime5'],
+		'weTime5'=>$param['weTime5'],
+		'wname5'=>$param['wname5'],
+		'wjob5'=>$param['wjob5'],
+		'waddress5'=>$param['waddress5']
+	        );
         if(!empty($param['workExp'])){
-             $data['workExp']=json_encode($param['workExp']);
+             $data['workExp']=json_encode($workExp);
         }
         if(!empty($param['educateExp'])){
-             $data['educateExp']=json_encode($param['educateExp']);
+             $data['educateExp']=json_encode($educateExp);
         }  
         if(isset($param['description'])&&$param['description']){
              $data['description']=$param['description'];
