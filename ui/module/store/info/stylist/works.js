@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-12 13:59:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-12 16:42:47
+* @Last Modified time: 2015-10-12 17:15:57
 */
 
 (function(){
@@ -131,6 +131,22 @@
         $("#box").css("display","none");
     });
 
+    function initImageUpload(){
+        lib.puploader.image({
+            browse_button: "worksUpload",
+            thumCss : "add",
+            auto_start:true,
+            filters: {
+                mime_types : [
+                    { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+                ]
+            },
+            max_file_size:'10mb',
+            multi_selection:true,
+            files_number:10
+        });                    
+    }
+
     function submit(){
         var thumbnailsArr = $('.popup .control-thumbnails-item');
         var des = $('.popup #description').val();
@@ -160,21 +176,5 @@
             }                   
         }); 
 
-    }
-
-    function initImageUpload(){
-        lib.puploader.image({
-            browse_button: "worksUpload",
-            thumCss : "add",
-            auto_start:true,
-            filters: {
-                mime_types : [
-                    { title : "Image files", extensions : "jpg,png,jpeg,gif" },
-                ]
-            },
-            max_file_size:'10mb',
-            multi_selection:true,
-            files_number:10
-        });                    
     }
 })()
