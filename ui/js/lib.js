@@ -643,6 +643,7 @@
 						}
 						options.built=function(){
 							$image.cropper('setCanvasData',canvasData);
+							//$image.cropper('setCropBoxData',)
 							cropper.css({opacity:1});
 						}
 						$image.cropper(options);

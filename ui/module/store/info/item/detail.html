@@ -15,7 +15,7 @@
 			</div>
 		</div>
 		<div class="wrapper">
-			<div class="table-detail" _ajat="<%if(query.p=='item'){%>item/show/<%}else if(query.p=='warehouse'){%>warehouse/show/<%}else if(query.p=='special'){%>special/show/<%}%><%=query.id%>#domid=detail&tempid=detail-t" id="detail">
+			<div class="table-detail" id="detail">
 				<script type="text/template" id="detail-t">
 				<div class="detail-operation">
 					<%if(query.p=="warehouse"){%>
@@ -49,9 +49,7 @@
 						<tr>
 							<td>项目图片：</td>
 							<td>
-								<div class="control-thumbnails-item">
-									<img src="/images/logo.png" alt="" />
-								</div>
+								<img src="<%=data.logo%>" class="image-preview" alt="" />
 							</td>
 						</tr>
 						<tr>
@@ -186,7 +184,7 @@
 				</table>
 				</script>
 			</div>
-		</div
+		</div>
 		<script type="text/javascript">
 			$(function(){
 				var ajat="item/show/";

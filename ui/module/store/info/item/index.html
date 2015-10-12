@@ -27,7 +27,7 @@
 		</div>
 		<div class="wrapper">
 			<form action="item/export" data-role="export" id="export" data-slug="merchant.export"></form>
-			<form data-role="hash" ajat="#domid=hash&tempid=hash-t" id="hash">
+			<form data-role="hash" ajat="#domid=hash&tempid=hash-t" id="hash" ajat-one="true">
 				<script type="text/template" id="hash-t">
 				<div class="position-group">
 					<div class="input-group input-switch">
@@ -76,7 +76,7 @@
 					<%}%>
 					<div class="flex-box">
 						<div class="filter-title">项目分类：</div>
-						<div class="flex-item" ajat="item/type#domid=type&tempid=type-t" id="type"></div>
+						<div class="flex-item" ajat="item/type#domid=type&tempid=type-t" id="type" ajat-one="true"></div>
 					</div>
 					<div class="flex-box">
 						<div class="filter-title">项目规格：</div>
@@ -165,7 +165,7 @@
 						<th><a data-role="hash" href="#page=1&sort_key=cat&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">项目类型  <i class="fa fa-sort"></i></a></th>
 						<%}%>
 						<th><a data-role="hash" href="#page=1&sort_key=typeid&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">项目分类 <i class="fa fa-sort"></i></a></th>
-						<th><a data-role="hash" href="#page=1&sort_key=format&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">规格 <i class="fa fa-sort"></i></a></th>
+						<th><a data-role="hash" href="#page=1&sort_key=norms_cat_id&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">规格 <i class="fa fa-sort"></i></a></th>
 						<th><a data-role="hash" href="#page=1&sort_key=minPrice&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">原价 <i class="fa fa-sort"></i></a></th>
 						<th><a data-role="hash" href="#page=1&sort_key=minPriceOri&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">臭美价 <i class="fa fa-sort"></i></a></th>
 						<th><a data-role="hash" href="#page=1&sort_key=minPriceGroup&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">集团价 <i class="fa fa-sort"></i></a></th>
@@ -185,7 +185,7 @@
 						<td><%=item.item_type==1?"普通项目":"闲时特价"%></td>
 						<%}%>
 						<td><%=item.typename%></td>
-						<td><%=item.format%></td>
+						<td><%=item.format?item.format:"无"%></td>
 						<td>￥<%=item.minPriceOri%></td>
 						<td>￥<%=item.minPrice%></td>
 						<td>￥<%=item.minPriceGroup%></td>
@@ -203,7 +203,7 @@
 							</form>
 							<%}%>
 							<span class="space"></span>
-							<a class="link" target="_blank" data-slug="merchant.show,merchant.update" href="detail.html?<%=query._%>&id=<%=item.itemid%>&type=<%=item.item_type==1?"item":"special"%>">查看</a>
+							<a class="link" target="_blank" data-slug="merchant.show,merchant.update" href="detail.html?p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>&id=<%=item.itemid%>&type=<%=item.item_type==1?"item":"special"%>">查看</a>
 						</td>
 					</tr> 
 					<%})%>

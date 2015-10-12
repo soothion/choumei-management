@@ -13,13 +13,13 @@
 					<h4>项目排序</h4>
 				</div>
 				<div>
-					<a href="" class="btn">降序 <i class="fa fa-caret-up"></i></a>
-					<a href="" class="btn">升序 <i class="fa fa-caret-down"></i></a>
+					<a href="#sort_key=sort_in_type&&sort_type=DESC" data-role="hash" class="btn">降序 <i class="fa fa-caret-down"></i></a>
+					<a href="#sort_key=sort_in_type&&sort_type=ASC" data-role="hash" class="btn">升序 <i class="fa fa-caret-up"></i></a>
 				</div>
 			</div>
 		</div>
 		<div class="wrapper">
-			<div class="position-group">
+			<div class="position-group" style="margin-left:-100px">
 				<form data-role="hash">
 					<select name="typeid" ajat-one="true" ajat="item/type#domid=type&tempid=type-t" id="type">
 						<script type="text/template" id="type-t">
@@ -46,10 +46,21 @@
 					</tr>
 				</thead>
 				<tbody>
-					<%data=data.data%>
+					<%data=data.data
+					if(query.sort_type=="ASC"){
+						data.reverse&&data.reverse();
+					}
+					%>
+					
 					<%data.forEach(function(item,i){%>
+					<%
+						var index=i;
+						if(query.sort_type=="ASC"){
+							index=data.length-i;
+						}
+					%>
 					 <tr>
-						<td><%=i+1%><input type="hidden" name="itemid" value="<%=item.itemid%>" data-index="<%=i%>" /></td>
+						<td><%=index%><input type="hidden" name="itemid" value="<%=item.itemid%>" data-index="<%=index%>" /></td>
 						<td><%=item.itemname%></td>
 						<td><%=item.typename%></td>
 						<td><%=item.norms_cat_id==1?"有规格":"无规格"%></td>
@@ -94,7 +105,6 @@
 				$('input[name="itemid"]').each(function(){
 					sort.push({itemid:this.value,sort_in_type:$(this).data('index')});
 				});
-				console.log(sort);
 				return {sort:sort};
 			}
 			form.submit();

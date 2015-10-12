@@ -61,7 +61,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>项目分类：</label>
 				<div class="control">
-					<select ajat="item/type#domid=type&tempid=type-t" id="type" name="typeid"
+					<select ajat="item/type#domid=type&tempid=type-t&sid=<%=data.typeid%>" id="type" name="typeid"
 					ajat-change="itemInfo/getAddedService?salonid=<%=query.salonid%>&typeid=${value}#domid=service&tempid=service-t">
 					</select>
 				</div>
@@ -80,11 +80,11 @@
 				<div class="control">
 					<div class="control-image">
 						<div class="control-single-image">
-							<img src="" alt="">
+							<img src="<%=data.logo%>" alt="">
 							<div class="control-image-ud">
 								<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 							</div>
-							<input type="hidden" name="logo" class="original" required data-helpid="image-help" requiredmsg="请上传项目图片">
+							<input type="hidden" name="logo" class="original" value="<%=data.logo%>" required data-helpid="image-help" requiredmsg="请上传项目图片">
 						</div>
 					</div>
 					<div class="weak">请上传JPG或PNG格式的图标，此图标将显示在项目列表中</div>
@@ -97,8 +97,8 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>服务详情：</label>
 				<div class="control">
-					<div class="keypress">
-						<textarea maxlength="500" name="desc" data-helpid="textarea-help" required><%=data.detail%></textarea>
+					<div class="keypress" maxlength="500">
+						<textarea name="desc" data-helpid="textarea-help" required><%=data.detail%></textarea>
 					</div>
 					<div class="control-help" style="display:none;" id="textarea-help"></div>
 					<div>
@@ -253,59 +253,68 @@
 							margin-bottom:-5px;
 							border:0;
 							box-shadow:none;
+							width:60px;
 						}
 					</style>
-					<div class="control-label" >
-						<label><input type="checkbox" class="item-checkbox" value="sex" /><span>性别</span></label>
+					<div id="format-form">
+						<div class="control-label" >
+							<label><input type="checkbox" class="item-checkbox" value="sex" /><span>性别</span></label>
+						</div>
+						<div class="control">
+							<label><input type="checkbox" disabled name="sex" value="男" required/><span>男</span></label>
+							<label><input type="checkbox" disabled name="sex" value="女" required/><span>女</span></label>
+						</div>
+						<hr />
+						<div class="control-label" >
+							<label><input type="checkbox" class="item-checkbox" value="hairstylist" /><span>造型师</span></label>
+						</div>
+						<div class="control">
+							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
+							<button type="button" class="btn btn-plus" disabled style="cursor: not-allowed;"><i class="fa fa-plus"></i></button>
+							<span class="control-help" style="display: none;">请输入造型师</span>
+						</div>
+						<hr />
+						<div class="control-label" >
+							<label><input type="checkbox" class="item-checkbox" value="longhair" /><span>发长</span></label>
+						</div>
+						<div class="control">
+							<label><input type="checkbox" disabled name="longhair" value="长发" required/><span>长发</span></label>
+							<label><input type="checkbox" disabled name="longhair" value="中发" required/><span>中发</span></label>
+							<label><input type="checkbox" disabled name="longhair" value="短发" required/><span>短发</span></label>
+							<label><input type="checkbox" disabled name="longhair" value="超长发" required/><span>超长发</span></label>
+							<label><input type="checkbox" disabled name="longhair" value="超短发" required/><span>超短发</span></label>
+						</div>
+						<hr />
+						<div class="control-label" >
+							<label><input type="checkbox" class="item-checkbox" value="solution" /><span>药水</span></label>
+						</div>
+						<div class="control">
+							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
+							<button type="button" class="btn btn-plus" disabled style="cursor: not-allowed;"><i class="fa fa-plus"></i></button>
+							<span class="control-help" style="display: none;">请输入药水</span>
+						</div>
+						<hr />
+						<button type="button" class="btn" id="btn-price" >生成价格表</button>
+						<input type="text" pattern="float" id="choumei-precent" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;"/>
+						<span class="unit">%</span>
+						<input type="text" pattern="float" id="group-precent"placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;"/>
+						<span class="unit">%</span>
+						
 					</div>
-					<div class="control">
-						<label><input type="checkbox" disabled name="sex" value="男" required/><span>男</span></label>
-						<label><input type="checkbox" disabled name="sex" value="女" required/><span>女</span></label>
-					</div>
-					<hr />
-					<div class="control-label" >
-						<label><input type="checkbox" class="item-checkbox" value="hairstylist" /><span>造型师</span></label>
-					</div>
-					<div class="control">
-						<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
-						<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
-						<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
-						<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
-						<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
-						<button type="button" class="btn btn-plus" disabled style="cursor: not-allowed;"><i class="fa fa-plus"></i></button>
-						<span class="control-help" style="display: none;">请输入造型师</span>
-					</div>
-					<hr />
-					<div class="control-label" >
-						<label><input type="checkbox" class="item-checkbox" value="longhair" /><span>发长</span></label>
-					</div>
-					<div class="control">
-						<label><input type="checkbox" disabled name="longhair" value="长发" required/><span>长发</span></label>
-						<label><input type="checkbox" disabled name="longhair" value="中发" required/><span>中发</span></label>
-						<label><input type="checkbox" disabled name="longhair" value="短发" required/><span>短发</span></label>
-						<label><input type="checkbox" disabled name="longhair" value="超长发" required/><span>超长发</span></label>
-						<label><input type="checkbox" disabled name="longhair" value="超短发" required/><span>超短发</span></label>
-					</div>
-					<hr />
-					<div class="control-label" >
-						<label><input type="checkbox" class="item-checkbox" value="solution" /><span>药水</span></label>
-					</div>
-					<div class="control">
-						<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
-						<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
-						<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
-						<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
-						<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
-						<button type="button" class="btn btn-plus" disabled style="cursor: not-allowed;"><i class="fa fa-plus"></i></button>
-						<span class="control-help" style="display: none;">请输入药水</span>
-					</div>
-					<hr />
-					<button type="button" class="btn" id="btn-price" >生成价格表</button>
-					<input type="text" pattern="float" id="choumei-precent" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;"/>
-					<span class="unit">%</span>
-					<input type="text" pattern="float" id="group-precent"placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;"/>
-					<span class="unit">%</span>
-					<input type="hidden" name="normMenu" required requiredmsg="请生成价格表"/>
+					<span>
+						<input type="hidden" name="normMenu" required requiredmsg="请生成价格表"/>
+					</span>
+					<span>
+						<input type="hidden" name="normarr" required requiredmsg="请录入两个以上的规格价格，否则请用项目名称体现规格"/>
+					</span>
 					<div class="table" id="format-table">
 						
 					</div>
@@ -323,7 +332,7 @@
 	</div>
 	<script type="text/template" id="type-t">
 		<%data.forEach(function(item){%>
-			<option value="<%=item.typeid%>"><%=item.typename%></option>
+			<option <%=item.typeid==protocol.custom.sid?"selected":""%> value="<%=item.typeid%>"><%=item.typename%></option>
 		<%})%>
 	</script>
 	<script type="text/template" id="service-t">
@@ -385,9 +394,9 @@
 				<%if(normMenu.indexOf("solution")>-1){%>
 				<td data-name="solution"><%=item.type.solution%></td>
 				<%}%>
-				<td data-name="price"><input type="text" class="format-price" pattern="number" min="1" required maxlength="5"/></td>
-				<td data-name="priceDis"><input type="text" pattern="number" min="1" maxlength="5"/></td>
-				<td data-name="priceGroup"><input type="text" pattern="number" min="1" maxlength="5"/></td>
+				<td data-name="price"><input type="text" value="<%=item.price%>" class="format-price" pattern="number" min="1" maxlength="5"/></td>
+				<td data-name="priceDis"><input type="text" value="<%=item.priceDis%>" pattern="number" min="1" maxlength="5"/></td>
+				<td data-name="priceGroup"><input type="text" value="<%=item.priceGroup%>" pattern="number" min="1" maxlength="5"/></td>
 			</tr>
 			<%})%>
 		</tbody>
@@ -439,219 +448,257 @@
 					ajat+=id;
 				}
 				lib.ajat(ajat+"#domid=form&tempid=form-t").render();
-			}
-			init();
 			
-			$('#form').one('_ready',function(e,data){
-				//图片上传
-				lib.puploader.image({
-					browse_button: 'imageUpload',
-					auto_start:true,
-					filters: {
-						mime_types : [
-							{ title : "Image files", extensions : "jpg,png,jpeg" }
-						]
-					},
-					crop:true
-				},function(uploader){
-					 uploader.bind('ImageUploaded',function(up,response){
-						lib.cropper.create({
-							src:response.img,
-							thumbnails  : ["300x300"],
-							define:function(data){
-								$('input[name="logo"]').val(data['300x300']).siblings('img').attr('src',data['300x300']);
-							}
-						});                
+				$('#form').one('_ready',function(e,data){
+					//图片上传
+					lib.puploader.image({
+						browse_button: 'imageUpload',
+						auto_start:true,
+						filters: {
+							mime_types : [
+								{ title : "Image files", extensions : "jpg,png,jpeg" }
+							]
+						},
+						crop:true
+					},function(uploader){
+						 uploader.bind('ImageUploaded',function(up,response){
+							lib.cropper.create({
+								src:response.img,
+								thumbnails  : ["300x300"],
+								define:function(data){
+									$('input[name="logo"]').val(data['300x300']).siblings('img').attr('src',data['300x300']);
+								}
+							});                
+						});
 					});
-				});
-				//反解析有规格的数据
-				if(data.response&&data.response.prices){
-					var parseData={
-						sex:[],
-						hairstylist:[],
-						longhair:[],
-						solution:[]
-					}
-					data.response.prices.forEach(function(item){
-						for(var name in item.type){
-							if(parseData[name]&&parseData[name].indexOf(item.type[name])==-1){
-								parseData[name].push(item.type[name]);
-							}
+					//反解析有规格的数据
+					if(data.response&&data.response.prices){
+						var parseData={
+							sex:[],
+							hairstylist:[],
+							longhair:[],
+							solution:[]
 						}
-					});
-					for(var name in parseData){
-						if(parseData[name].length>0){
-							$(".item-checkbox[value='"+name+"']")[0].checked=true;
-							parseData[name].forEach(function(item){
-								if(name=='sex'||name=='longhair'){
-									$('input[type="checkbox"][value="'+item+'"]').attr({'checked':true,'disabled':false});
-								}else{
-									
+						var normMenu=[];
+						var normarr=[];
+						data.response.prices.forEach(function(item){
+							if(item.formats){
+								var map={
+									"发长":"longhair",
+									"性别":"sex",
+									"造型师":"hairstylist",
+									"药水":"solution"
 								}
-							});
-						}
-					}
-				}
-				
-				//原价与其他折扣价限制
-				var price=$('input[name="price"]');
-				price.on('pass',function(){
-					$('input[name="priceDis"],input[name="priceGroup"]').attr('max',this.value);
-				});
-				//计算臭美价格
-				$('.choumei-discount').on('blur',function(){
-					var val=price.val();
-					if(val&&!isNaN(val)&&this.value&&!isNaN(this.value)){
-						$('input[name="priceDis"]').val(Math.round(parseInt(val)*parseInt(this.value)/100));
-					}
-				});
-				//计算集团价格
-				$('.group-discount').on('blur',function(){
-					var val=price.val();
-					if(val&&!isNaN(val)&&this.value&&!isNaN(this.value)){
-						$('input[name="priceGroup"]').val(Math.round(parseInt(val)*parseInt(this.value)/100));
-					}
-				});
-				var $format=$('.format-group');
-				//生成价格表
-				$('#btn-price').on('click',function(){
-					var itemCheckbox=$('.item-checkbox:checked');
-					if(itemCheckbox.length==0){
-						parent.lib.popup.alert({text:'至少要选择一个规格项'})
-					}else{
-						$format.find('input[type="text"],input[type="checkbox"]').blur();
-						if($format.find('.control-help:visible').length==0){
-							var sexArr=[];
-							$('input[name="sex"]:checked').each(function(){
-								sexArr.push({sex:this.value});
-							});
-							var longhairArr=[];
-							$('input[name="longhair"]:checked').each(function(){
-								longhairArr.push({longhair:this.value});
-							});
-							var hairstyArr=[];
-							$('input[name="hairstylist"]').each(function(){
-								if(this.value){
-									hairstyArr.push({hairstylist:this.value});
-								}
-							});
-							var solutionArr=[];
-							$('input[name="solution"]').each(function(){
-								if(this.value){
-									solutionArr.push({solution:this.value});
-								}
-							});
-							var array=[];
-							if(sexArr.length>0){
-								array.push(sexArr);
+								item.type={};
+								item.formats.forEach(function(item2){
+									var tmp=parseData[map[item2.formats_name]];
+									if(tmp&&tmp.indexOf&&tmp.indexOf(item2.format_name)==-1){
+										parseData[map[item2.formats_name]].push(item2.format_name);
+									}
+									if(normMenu.indexOf(map[item2.formats_name])==-1){
+										normMenu.push(map[item2.formats_name]);
+									}
+									item.type[map[item2.formats_name]]=item2.format_name;
+								});
+								item.price=item.price&&parseInt(item.price)>0?parseInt(item.price):"";
+								item.priceDis=item.price_dis&&parseInt(item.price_dis)>0?parseInt(item.price_dis):"";
+								delete item.price_dis;
+								item.priceGroup=item.price_group&&parseInt(item.price_group)>0?parseInt(item.price_group):"";
+								delete item.price_group;
+								delete item.formats;
+								delete item.salon_item_format_id;
 							}
-							if(longhairArr.length>0){
-								array.push(longhairArr);
-							}
-							if(hairstyArr.length>0){
-								array.push(hairstyArr);
-							}
-							if(solutionArr.length>0){
-								array.push(solutionArr);
-							}
-							var data=[];
-							if(array.length>0){
-								array[0].forEach(function(item1){
-									if(array[1]){
-										array[1].forEach(function(item2){
-											if(array[2]){
-												array[2].forEach(function(item3){
-													if(array[3]){
-														array[3].forEach(function(item4){
-															data.push({type:$.extend({},item1,item2,item3,item4)});
-														});
-													}else{
-														data.push({type:$.extend({},item1,item2,item3)});
-													}
-												});
-											}else{
-												data.push({type:$.extend({},item1,item2)});
-											}
-										});
+						});
+						console.log(data.response.prices);
+						//动态还原输入数据
+						for(var name in parseData){
+							if(parseData[name].length>0){
+								var checkbox=$(".item-checkbox[value='"+name+"']");
+								checkbox[0].checked=true;
+								checkbox.closest('.control-label').next().find('input').attr('disabled',false);
+								var btn=checkbox.closest('.control-label').next().children('button').attr('disabled',false);
+								btn.siblings('input').remove();
+								parseData[name].forEach(function(item){
+									if(name=='sex'||name=='longhair'){
+										$('input[type="checkbox"][value="'+item+'"]').attr({'checked':true});
 									}else{
-										data.push({type:$.extend({},item1)});
+										btn.before('<input type="text" class="input-small" maxlength="10" nospace name="'+name+'" value="'+item+'">');
 									}
 								});
 							}
-							var normMenu=[];
-							itemCheckbox.each(function(){
-								normMenu.push(this.value);
-							});
-							$('input[name="normMenu"]').val(JSON.stringify(normMenu));
-							$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:data,normMenu:normMenu}));
 						}
+						//生成价格表
+						$('input[name="normMenu"]').val(JSON.stringify(normMenu));
+						$('input[name="normarr"]').val(JSON.stringify(data.response.prices));
+						$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:data.response.prices,normMenu:normMenu}));
+						
 					}
-				});
-				//校验性别，发长字段
-				$format.on('blur','.input-small',function(e){
-					if(this.disabled) return;
-					var $this=$(this);
-					var arr=[];
-					$this.parent().children('input').each(function(){
-						if(this.value){
-							arr.push(this.value);
+					
+					//原价与其他折扣价限制
+					var price=$('input[name="price"]');
+					price.on('pass',function(){
+						$('input[name="priceDis"],input[name="priceGroup"]').attr('max',this.value);
+					});
+					//计算臭美价格
+					$('.choumei-discount').on('blur',function(){
+						var val=price.val();
+						if(val&&!isNaN(val)&&this.value&&!isNaN(this.value)){
+							$('input[name="priceDis"]').val(Math.round(parseInt(val)*parseInt(this.value)/100));
 						}
-					})
-					if(arr.length==0){
-						$this.siblings('.control-help').show();
-					}else{
-						$this.siblings('.control-help').hide();
-					}
-					e.stopPropagation();
-				});
-				//如果输入臭美，集团价折扣则到输入原价后生成臭美，集团价
-				$format.on('focus','.format-price',function(){
-					$(this).one('pass',function(){
-						var $this=$(this);
-						var val=parseInt($this.val());
-						var groupPrecent=$('#group-precent').val();
-						var choumeiPrecent=$('#choumei-precent').val();
-						if(val){
-							var groupInput=$this.parent().next().next().children('input');
-							var choumeiInput=$this.parent().next().children('input');
-							choumeiInput.attr('max',val);
-							groupInput.attr('max',val);
-							if(choumeiPrecent&&!isNaN(choumeiPrecent)){
-								choumeiInput.val(Math.round(choumeiPrecent*val/100));
-							}
-							if(groupPrecent&&!isNaN(groupPrecent)){
-								groupInput.val(Math.round(groupPrecent*val/100));
+					});
+					//计算集团价格
+					$('.group-discount').on('blur',function(){
+						var val=price.val();
+						if(val&&!isNaN(val)&&this.value&&!isNaN(this.value)){
+							$('input[name="priceGroup"]').val(Math.round(parseInt(val)*parseInt(this.value)/100));
+						}
+					});
+					var $format=$('#format-form');
+					//生成价格表
+					$('#btn-price').on('click',function(){
+						var itemCheckbox=$('.item-checkbox:checked');
+						if(itemCheckbox.length==0){
+							parent.lib.popup.alert({text:'至少要选择一个规格项'})
+						}else{
+							$format.find('input[type="text"],input[type="checkbox"]').blur();
+							if($format.find('.control-help:visible').length==0){
+								var sexArr=[];
+								$('input[name="sex"]:checked').each(function(){
+									sexArr.push({sex:this.value});
+								});
+								var longhairArr=[];
+								$('input[name="longhair"]:checked').each(function(){
+									longhairArr.push({longhair:this.value});
+								});
+								var hairstyArr=[];
+								$('input[name="hairstylist"]').each(function(){
+									if(this.value){
+										hairstyArr.push({hairstylist:this.value});
+									}
+								});
+								var solutionArr=[];
+								$('input[name="solution"]').each(function(){
+									if(this.value){
+										solutionArr.push({solution:this.value});
+									}
+								});
+								var array=[];
+								if(sexArr.length>0){
+									array.push(sexArr);
+								}
+								if(longhairArr.length>0){
+									array.push(longhairArr);
+								}
+								if(hairstyArr.length>0){
+									array.push(hairstyArr);
+								}
+								if(solutionArr.length>0){
+									array.push(solutionArr);
+								}
+								var data=[];
+								if(array.length>0){
+									array[0].forEach(function(item1){
+										if(array[1]){
+											array[1].forEach(function(item2){
+												if(array[2]){
+													array[2].forEach(function(item3){
+														if(array[3]){
+															array[3].forEach(function(item4){
+																data.push({type:$.extend({},item1,item2,item3,item4)});
+															});
+														}else{
+															data.push({type:$.extend({},item1,item2,item3)});
+														}
+													});
+												}else{
+													data.push({type:$.extend({},item1,item2)});
+												}
+											});
+										}else{
+											data.push({type:$.extend({},item1)});
+										}
+									});
+								}
+								var normMenu=[];
+								itemCheckbox.each(function(){
+									normMenu.push(this.value);
+								});
+								$('input[name="normMenu"]').val(JSON.stringify(normMenu));
+								$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:data,normMenu:normMenu}));
 							}
 						}
 					});
-				});
-				
-				var form=$('form')[0];
-				//重写getFormData以添加normarr参数
-				form._getFormData=function(){
-					var data=lib.tools.getFormData($(this));
-					if(data.priceStyle==2){
-						data.normarr=[];
-						$('#format-table tbody tr').each(function(){
-							var obj={type:{}};
-							$(this).children().each(function(){
-								var $this=$(this);
-								if($this.children('input').length==0){
-									obj.type[$this.data('name')]=$this.text();
-								}else{
-									obj[$this.data('name')]=$this.children('input').val();
+					//校验性别，发长字段
+					$format.on('blur','.input-small',function(e){
+						if(this.disabled) return;
+						var $this=$(this);
+						var arr=[];
+						$this.parent().children('input').each(function(){
+							if(this.value){
+								arr.push(this.value);
+							}
+						})
+						if(arr.length==0){
+							$this.siblings('.control-help').show();
+						}else{
+							$this.siblings('.control-help').hide();
+						}
+						e.stopPropagation();
+					});
+					//如果输入臭美，集团价折扣则到输入原价后生成臭美，集团价
+					$format.on('focus','.format-price',function(){
+						$(this).one('pass',function(){
+							var $this=$(this);
+							var val=parseInt($this.val());
+							var groupPrecent=$('#group-precent').val();
+							var choumeiPrecent=$('#choumei-precent').val();
+							if(val){
+								var groupInput=$this.parent().next().next().children('input');
+								var choumeiInput=$this.parent().next().children('input');
+								choumeiInput.attr('max',val);
+								groupInput.attr('max',val);
+								if(choumeiPrecent&&!isNaN(choumeiPrecent)){
+									choumeiInput.val(Math.round(choumeiPrecent*val/100));
 								}
-							})
-							data.normarr.push(obj);
+								if(groupPrecent&&!isNaN(groupPrecent)){
+									groupInput.val(Math.round(groupPrecent*val/100));
+								}
+							}
 						});
-						data.normarr=JSON.stringify(data.normarr);
+					});
+					$('#format-table').on('blur','input',function(){
+						var normarr=[];
+						var tmp=0;
+						$('#format-table tbody tr').each(function(){
+							var $tr=$(this);
+							var obj={type:{}};
+							$tr.children().each(function(){
+								var $td=$(this);
+								var input=$td.children('input');
+								if(input.length==0){
+									obj.type[$td.data('name')]=$td.text();
+								}else{
+									var price=input.val();
+									obj[$td.data('name')]=(!isNaN(price)?price:"");
+								}
+							});
+							normarr.push(obj);
+							if(obj.price&&obj.priceDis){
+								tmp++;
+							}
+						});
+						if(tmp>=2){
+							$('input[name="normarr"]').val(JSON.stringify(normarr));
+						}else{
+							$('input[name="normarr"]').val('');
+						}
+					});
+					var form=$('form')[0];
+					form.goback=function(){
 					}
-					return data;
-				}
-				form.goback=function(){
-				}
-				
-			});
+				});
+			}
+			init();
 		});
 	</script>
   </body>

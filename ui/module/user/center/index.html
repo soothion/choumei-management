@@ -42,14 +42,13 @@
 					<input type="date" name="start_at" data-role="start" placeholder="YYYY-MM-DD"/>到<input name="end_at" type="date" data-role="end" placeholder="YYYY-MM-DD"/>
 				</span>
 				选择地区
-				<select id="province" required ajat-one="true" style="width:100px" 
+				<select id="province" ajat-one="true" style="width:100px" 
 				ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t">
 				</select>
-				<select id="city" required ajat-one="true" style="width:100px" ajat="#domid=city&tempid=city_t"
+				<select id="city" ajat-one="true" style="width:100px" ajat="#domid=city&tempid=city_t"
 				ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t">
 				</select>
-				<select id="area"
-				required ajat-one="true"  style="width:100px" ajat="#domid=area&tempid=area_t">
+				<select id="area" ajat-one="true"  style="width:100px" ajat="#domid=area&tempid=area_t">
 				</select>
 				<input type="hidden" name="area" id="hidden" />
 				<button class="btn">搜索</button>
