@@ -8,7 +8,7 @@ use DB;
 
 class StylistController  extends Controller {
     /**
-     * @api {post} /Stylist/index 1.造型师列表
+     * @api {post} /Stylist/index/:id 1.造型师列表
      * @apiName list
      * @apiGroup Stylist
      *
@@ -71,9 +71,13 @@ class StylistController  extends Controller {
      *		}
      */
     
-    public function index(){
+    public function index($salonId){
         $param=$this->param;
-        $query=Stylist::getStylistList($param);
+        $salon=Stylist::where(array('salonId'=>$salonId))->count();
+        if(!$salon){
+		throw new ApiException('店铺ID出错', ERROR::MERCHANT_ID_IS_ERROR);  
+        }
+        $query=Stylist::getStylistList($salonId,$param);
         return $this->success($query);
     }
     
