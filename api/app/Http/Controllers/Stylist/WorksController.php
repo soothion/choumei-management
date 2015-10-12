@@ -88,15 +88,20 @@ class WorksController extends Controller {
      *		}
      */
     public function index($stylistId){
-        $field=['stylistId', 'salonId'];
+        $field=['stylistId','stylistName','stylistImg','mobilephone','grade','fastGrade','salonId'];
         $stylist=Stylist::select($field)->where(array('stylistId'=>$stylistId))->first();
         if($stylist===false){
             throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);  
         }
-        $field1=['stylistId','stylistName', 'mobilephone','grade','fastGrade'];
-        $salonStylist=Stylist::select($field1)->where(array('salonId'=>$stylist['salonId']))->get();
+        
+        $salonStylist=Stylist::select($field)->where('salonId','=',$stylist['salonId'])->where('stylistId','<>',$stylistId )->get();
         $field2=['salonname'];
-        $salon=DB::table('salon')->select($field2)->where(array('salonid'=>$stylist['salonId']))->first();
+//        $query2 = $query2->where('mobilephone','=',$param['mobilephone']);
+//        $query2 = $query2->where('mobilephone','=',$param['mobilephone']);
+//         //   and  'stylistId','<>',$stylistId
+        
+        
+        $salon=DB::table('salon')->select($field2)->where(array('salonId'=>$stylist['salonId']))->first();
         $works=Works::where(array('stylistId'=>$stylistId))->orderBy('addTime', 'desc')->get();
         $query=array();
         foreach ($works as $key2 =>$value) {
@@ -119,9 +124,27 @@ class WorksController extends Controller {
              }
            $salonStylist[$key]->num=$num;
            $salonStylist[$key]->uploadNum=DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->count();
-           $salonStylist[$key]->salonname=$salon->salonname;
          }
-        $query['works']=$works;
+         
+        if ($stylist) {
+            $num=0; 
+            $works3= Works::where('stylistId','=',$stylistId)->get();
+            foreach ($works3 as $key7 =>$value) {
+                if(!empty($works1['img'])){
+                    $image=  json_decode($works3['img'],true);
+                    $num=$num+(count($image));
+                }  else {   
+                    $num=$num+1;
+                }
+                
+             }
+           $stylist->num=$num;
+           $stylist->uploadNum=DB::table('hairstylist_works')->where('stylistId','=',$stylistId)->count();
+           $stylist->salonname=$salon->salonname;
+         }
+         
+        $query['works']=$stylist;
+        $query['otherWorks']=$works;
         $query['salon']=$salonStylist;
         return $this->success($query);  
     }
