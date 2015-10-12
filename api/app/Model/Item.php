@@ -93,7 +93,7 @@ class Item extends Model {
             ->leftJoin('managers','managers.id','=','salon_item.userId')
             ->select(
                 'itemid',
-                'itemname',
+                'salon_item.itemname',
                 'typeid',
                 'logo',
                 'typename',
