@@ -2,28 +2,28 @@
 * @Author: anchen
 * @Date:   2015-10-12 13:59:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-12 15:10:07
+* @Last Modified time: 2015-10-12 16:42:47
 */
 
 (function(){
    $("#works-wrapper").on("click",".control-thumbnails-remove",function(){
-        var self = this;
+        var self = $(this);
         parent.lib.popup.confirm({
             text:"正在删除此图片，是否继续?",
             define:function(){
-                var id  = $(self).data("id");  
-                var sib = $(self).parent().siblings();
+                var id  = self.closest('.control-thumbnails').data("id"); 
+                var sib = self.parent().siblings();
                 var str = "";
                 var arr = []; 
                 sib.each(function(i,item){
                     var obj = {
                         "thumbimg" : $(item).find("img").attr("src"),
-                        "img"      : $(item).find("img").attr("img")
+                        "img"      : $(item).find("img").data("original")
                     };
                     arr.push(obj);                        
                 })
                 if(arr.length > 0){
-                    str = JSON.parse(arr);
+                    str = JSON.stringify(arr);
                 }          
                 lib.ajax({
                     type: "post",
@@ -89,13 +89,22 @@
 
     function eidt(self){
        var thumbnail=self.closest('.control-thumbnails');
-       thumbnail.find(img).each(function(i,item){
+       var arr = [];
+       thumbnail.find("img").each(function(i,item){
             var obj = {
-                "thumbimg" : $(item).find("img").attr("src"),
-                "img"      : $(item).find("img").attr("img")
+                "thumbimg" : $(item).attr("src"),
+                "img"      : $(item).data("original")
             };
             arr.push(obj);                        
-        })                    
+        })
+        lib.ajax({
+            type: "post",
+            url : "Works/update/"+thumbnail.data("id"),
+            data:{img:JSON.stringify(arr)}
+        }).done(function(data, status, xhr){
+                  
+        }); 
+
           
     }
 
@@ -123,21 +132,22 @@
     });
 
     function submit(){
-        var arr = $('.popup .control-thumbnails-item');
+        var thumbnailsArr = $('.popup .control-thumbnails-item');
         var des = $('.popup #description').val();
-        if(arr.length == 0) return;
+        if(thumbnailsArr.length == 0) return;
         if(!des) return;
-        arr.each(function(i,item){
+        var arr = [];
+        thumbnailsArr.each(function(i,item){
             var obj = {
                 "thumbimg" : $(item).find("img").attr("src"),
-                "img"      : $(item).find("img").attr("img")
+                "img"      : $(item).find("img").data("original")
             };
             arr.push(obj);  
         });
         lib.ajax({
             type: "post",
             url : "Works/create",
-            data:{stylistId:"",img:JSON.stringify(arr),description:des}
+            data:{stylistId:lib.query.id,img:JSON.stringify(arr),description:des}
         }).done(function(data, status, xhr){
             if(data.result == 1){
                 parent.lib.popup.result({

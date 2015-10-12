@@ -53,26 +53,27 @@
                 </div>
             </div>
         </div>
+
         <div class="wrapper">
+            <div class="detail-operation">
+                <button id="add_works_btn" class="btn-primary">+新增</button>
+            </div> 
+
             <div id="works-wrapper" ajat="Works/index/<%=query.id%>#domid=works-wrapper&tempid=works-t">
                 <script type="text/template" id="works-t">
-                <div class="detail-operation">
-                    <button id="add_works_btn" class="btn-primary">+新增</button>
-                </div> 
-
                 <div style="width:70%;float:left;">
                     <div class="pictrue">
                         <%data.works && data.works.forEach(function(item,i){%>
                             <div class="header">
-                                <span>2015-09-25 11:23:58</span>
+                                <span><%=item.addTime%></span>&nbsp;&nbsp;
                                 <span><%=item.description%></span>
                                 <i class="fa fa-trash-o fa-3x del"></i>
                             </div>
                             <%if(item.thumbImg && item.commoditiesImg){%>
                                 <div class="control-thumbnails" id="control-thumbnails1" data-id="<%=item.recId%>">
                                     <div class="control-thumbnails-item add">                                
-                                        <img src="<%=item.thumbImg%>" img="<%=item.commoditiesImg%>">
-                                        <a class="fa fa-times-circle control-thumbnails-remove" data-id="<%=item.recId%>"></a>
+                                        <img src="<%=item.thumbImg%>" data-original="<%=item.commoditiesImg%>">
+                                        <a class="fa fa-times-circle control-thumbnails-remove"></a>
                                         <div class="control-thumbnails-operation flex-box">
                                             <span class="control-thumbnails-before flex-item">
                                                 <i class="fa fa-long-arrow-left"></i>
@@ -89,8 +90,8 @@
                                 <div class="control-thumbnails" id="control-thumbnails1" data-id="<%=item.recId%>">
                                     <%imgArr.forEach(function(obj,i){ %>                                   
                                         <div class="control-thumbnails-item add">                                
-                                            <img src="<%=obj.thumbimg%>" img="<%=obj.img%>">
-                                            <a class="fa fa-times-circle control-thumbnails-remove" data-id="<%=obj.recId%>"></a>
+                                            <img src="<%=obj.thumbimg%>" data-original="<%=obj.img%>">
+                                            <a class="fa fa-times-circle control-thumbnails-remove"></a>
                                             <div class="control-thumbnails-operation flex-box">
                                                 <span class="control-thumbnails-before flex-item">
                                                     <i class="fa fa-long-arrow-left"></i>
@@ -107,7 +108,7 @@
                     </div>                                                                                    
                 </div>
 
-                <div style="float:left;width:25%;margin:-8px 0px 0px 30px">
+                <div style="float:left;width:25%;margin:-15px 0px 0px 30px">
                 <%
                 var gradeText={ "1":"资深发型师","2":"资深发型师","1,2":"资深发型师","3":"设计总监", "4":"美发大师"};
                 var fastGradeText={"1":"普通快剪", "2":"总监快剪"};                    
@@ -156,7 +157,6 @@
             </div> 
 
             <div id="box" style="display:none;">
-                <form class="form-vertical">
                     <div class="pictrue" style="padding:15px">                  
                         <div class="control-thumbnails" id="control-thumbnails" data-max="9">                
                             <div class="control-image-upload" style="width:160px;height:120px;line-height:120px">
@@ -180,8 +180,7 @@
                             <button id="submitBtn" class="btn-primary" style="margin-right:20px">提交</button>
                             <button id="cancelBtn" class="btn" type="button">取消</button>
                         </div>                                          
-                    </div>
-                </form>              
+                    </div>           
             </div>            
         </div>
     <script type="text/javascript" src="works.js"></script>
