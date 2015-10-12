@@ -84,8 +84,7 @@ class UserController extends Controller{
 	public function survey()
 	{
 		$day = strtotime('today');
-		$timestamp = time();  
-		$week = $timestamp-86400*date('w',$timestamp)+(date('w',$timestamp)>0?86400:-/*6*86400*/518400);  
+		$week = $day-86400*date('w',$day)+(date('w',$day)>0?86400:-/*6*86400*/518400);  
 
 		$month = strtotime(date('Y-m'));
 
