@@ -16,6 +16,7 @@
           cursor: pointer;
       }
       .header{
+          border-top:1px solid rgba(0,0,0,0.05);
           height: 50px;
           line-height: 50px;
           position: relative;      
@@ -29,6 +30,11 @@
       .add{
          width:160px!important;
          height:120px!important;
+      }
+
+      .border-line{
+        border-bottom:1px dashed #ddd;
+        margin:10px 0 10px 0;        
       }
       </style>
   </head>
@@ -53,104 +59,113 @@
                 <button id="add_works_btn" class="btn-primary">+新增</button>
             </div> 
 
-            <div>
+            <div id="works-wrapper" ajat="Works/index/<%=query.id%>#domid=works-wrapper&tempid=works-t">
+                <script type="text/template" id="works-t">
                 <div style="width:70%;float:left;">
                     <div class="pictrue">
-                        <div class="header">
-                            <span>2015-09-25 11:23:58</span>
-                            <span>qqqqqqqqqqqqqqqqq</span>
-                            <i class="fa fa-trash-o fa-3x del"></i>
-                        </div>
-                        <div class="control-thumbnails" id="control-thumbnails1" data-max="1">
-                            <div class="control-thumbnails-item add">                                
-                                <img src="http://img01.choumei.cn/1/7/2015101015311444462281264724511.jpg?imageMogr2/crop/!250x294a94a666/thumbnail/420x492">                                     
-                                <a class="fa fa-times-circle control-thumbnails-remove"></a>
-                                <div class="control-thumbnails-operation flex-box">
-                                    <span class="control-thumbnails-before flex-item"><i class="fa fa-long-arrow-left"></i></span>
-                                    <span class="control-thumbnails-edit flex-item"><i class="fa fa-pencil-square-o"></i></span>
-                                    <span class="control-thumbnails-after flex-item"><i class="fa fa-long-arrow-right"></i></span>
-                                </div>
-                            </div>                                                                               
-                        </div>  
+                        <%data.works && data.works.forEach(function(item,i){%>
+                            <div class="header">
+                                <span>2015-09-25 11:23:58</span>
+                                <span><%=item.description%></span>
+                                <i class="fa fa-trash-o fa-3x del"></i>
+                            </div>
+                            <%if(item.thumbImg && item.commoditiesImg){%>
+                                <div class="control-thumbnails" id="control-thumbnails1" data-id="<%=item.recId%>">
+                                    <div class="control-thumbnails-item add 1">                                
+                                        <img src="<%=item.thumbImg%>" img="<%=item.commoditiesImg%>">
+                                        <a class="fa fa-times-circle control-thumbnails-remove" data-id="<%=item.recId%>"></a>
+                                        <div class="control-thumbnails-operation flex-box">
+                                            <span class="control-thumbnails-before flex-item">
+                                                <i class="fa fa-long-arrow-left"></i>
+                                            </span>
+                                            <span class="control-thumbnails-edit flex-item">
+                                                <i class="fa fa-pencil-square-o"></i>
+                                            </span>
+                                            <span class="control-thumbnails-after flex-item">
+                                                <i class="fa fa-long-arrow-right"></i>
+                                            </span>
+                                        </div>
+                                    </div>                          
+                                </div>                                 
+                            <%}%>
 
-                        <hr/>
+                            <%
+                            if(item.img){ 
+                                var imgArr = JSON.parse(item.img);
+                                imgArr.forEach(function(obj,i){                                
+                            %>
+                                <div class="control-thumbnails" id="control-thumbnails1" data-id="<%=item.recId%>">
+                                    <div class="control-thumbnails-item add">                                
+                                        <img src="<%=obj.thumbimg%>" img="<%=obj.img%>">
+                                        <a class="fa fa-times-circle control-thumbnails-remove" data-id="<%=obj.recId%>"></a>
+                                        <div class="control-thumbnails-operation flex-box">
+                                            <span class="control-thumbnails-before flex-item">
+                                                <i class="fa fa-long-arrow-left"></i>
+                                            </span>
+                                            <span class="control-thumbnails-edit flex-item">
+                                                <i class="fa fa-pencil-square-o"></i>
+                                            </span>
+                                            <span class="control-thumbnails-after flex-item">
+                                                <i class="fa fa-long-arrow-right"></i>
+                                            </span>
+                                        </div>
+                                    </div>
 
-                        <div class="header">
-                            <span>2015-09-25 11:23:58</span>
-                            <span>qqqqqqqqqqqqqqqqq</span>
-                            <i class="fa fa-trash-o fa-3x del"></i>
-                        </div>
-
-                        <div class="control-thumbnails" id="control-thumbnails2" data-max="1">
-                            <div class="control-thumbnails-item add">                                
-                                <img src="http://img01.choumei.cn/1/7/2015101015311444462281264724511.jpg?imageMogr2/crop/!250x294a94a666/thumbnail/420x492">                                     
-                                <a class="fa fa-times-circle control-thumbnails-remove"></a>
-                                <div class="control-thumbnails-operation flex-box">
-                                    <span class="control-thumbnails-before flex-item"><i class="fa fa-long-arrow-left"></i></span>
-                                    <span class="control-thumbnails-edit flex-item"><i class="fa fa-pencil-square-o"></i></span>
-                                    <span class="control-thumbnails-after flex-item"><i class="fa fa-long-arrow-right"></i></span>
-                                </div>
-                            </div>                                                                                     
-                        </div>
+                                    <div class="control-thumbnails-item add">                                
+                                        <img src="<%=obj.thumbimg%>" img="<%=obj.img%>">
+                                        <a class="fa fa-times-circle control-thumbnails-remove" data-id="<%=obj.recId%>"></a>
+                                        <div class="control-thumbnails-operation flex-box">
+                                            <span class="control-thumbnails-before flex-item">
+                                                <i class="fa fa-long-arrow-left"></i>
+                                            </span>
+                                            <span class="control-thumbnails-edit flex-item">
+                                                <i class="fa fa-pencil-square-o"></i>
+                                            </span>
+                                            <span class="control-thumbnails-after flex-item">
+                                                <i class="fa fa-long-arrow-right"></i>
+                                            </span>
+                                        </div>
+                                    </div>                                                                                
+                                </div>                                 
+                            <%})}%>                            
+                        <%})%>
                     </div>                                                                                    
                 </div>
 
                 <div style="float:left;width:25%;margin:-8px 0px 0px 30px">
+                    <%
+                    var gradeText={ "1":"资深发型师","2":"资深发型师","1,2":"资深发型师","3":"设计总监", "4":"美发大师"};
+                    var fastGradeText={"1":"普通快剪", "2":"总监快剪"};                                   
+                    data.salon && data.salon.forEach(function(item,i){
+                    %>
                     <div  class="clearfix" >
-                        <h2 style="border-bottom:1px dashed #ddd;margin-bottom:15px">店铺名称</h2>
+                        <%if(i==0){%>
+                            <h2 class="border-line"><%=item.salonname%></h2>
+                        <%}else{%>
+                            <h3  class="border-line">店内其他造型师</h3>                           
+                        <%}%>
                         <div style="float:left;">
                             <img src="/images/logo.png" style="width:100px;height:100px"/>
                         </div>
                         <div style="float:left;margin-left:10px">
                             <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            张珊,18685543486
+                                <%=item.stylistName%>，<%=item.mobilephone%>
                             </div>
                             <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            资深发型师，总监快剪
+                                <%=gradeText[item.grade]%>，<%=fastGradeText[item.fastGrade]%>
                             </div>
                             <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            作品数：322，上传次数：12
+                            <%if(i==0){%>
+                                 作品数：<%=item.num%>，上传次数：<%=item.uploadNum%>
+                            <%}else{%>
+                                 作品数：<%=item.num%>，上传次数：<%=item.uploadNum%> <a class="designer-link">&gt;</a>
+                            <%}%>
                             </div>
-                        </div>
+                        </div>                         
                     </div>
-
-                    <div class="clearfix" style="border-top:1px dashed #ddd;margin-top:15px">
-                        <h3>店内其他造型师</h3>
-                        <div style="float:left;">
-                            <img src="/images/logo.png" style="width:100px;height:100px"/>
-                        </div>
-                        <div style="float:left;margin-left:10px">
-                            <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            张珊,18685543486
-                            </div>
-                            <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            资深发型师，总监快剪
-                            </div>
-                            <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            作品数：322，上传次数：12 <a class="designer-link">&gt;</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="clearfix" style="border-top:1px dashed #ddd;margin-top:15px">
-                        <h3>店内其他造型师</h3>
-                        <div style="float:left;">
-                            <img src="/images/logo.png" style="width:100px;height:100px"/>
-                        </div>
-                        <div style="float:left;margin-left:10px">
-                            <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            张珊,18685543486
-                            </div>
-                            <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            资深发型师，总监快剪
-                            </div>
-                            <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            作品数：322，上传次数：12 <a class="designer-link">&gt;</a>
-                            </div>
-                        </div>
-                    </div>                      
-                  
+                    <%})%>                                                  
                 </div>
+                </script>
             </div> 
 
             <div id="box" style="display:none;">
@@ -203,6 +218,74 @@
 
         <script type="text/javascript">
             (function(){
+               $("#works-wrapper").on("click",".control-thumbnails-remove",function(){
+                    var self = this;
+                    parent.lib.popup.confirm({
+                        text:"正在删除此图片，是否继续?",
+                        define:function(){
+                            var id  = $(self).data("id");  
+                            var sib = $(self).parent().siblings();
+                            var str = "";
+                            var arr = []; 
+                            sib.each(function(i,item){
+                                var obj = {
+                                    "thumbimg" : $(item).find("img").attr("src"),
+                                    "img"      : $(item).find("img").attr("img")
+                                };
+                                arr.push(obj);                        
+                            })
+                            if(arr.length > 0){
+                                str = JSON.parse(arr);
+                            }          
+                            lib.ajax({
+                                type: "post",
+                                url : "Works/del/"+id,
+                                data: {img : str}    
+                            }).done(function(data, status, xhr){
+                                if(data.result == 1){
+                                    parent.lib.popup.result({
+                                        text:"操作成功！",
+                                        define:function(){
+                                             $(window).trigger('hashchange');    
+                                        }
+                                    });                
+                                }
+                               
+                            });
+                        }
+                    });                                       
+               });
+
+               $("#works-wrapper").on("click",".del",function(){ 
+                    var self = this;
+                    parent.lib.popup.confirm({
+                        text:"正在删除作品，是否继续?",
+                        define:function(){
+                            var id = $(self).parent().next().data("id");
+                            debugger;
+                            lib.ajax({
+                                type: "post",
+                                url : "Works/del_list/"+id 
+                            }).done(function(data, status, xhr){
+                                if(data.result == 1){
+                                    parent.lib.popup.result({
+                                        text:"操作成功！",
+                                        define:function(){
+                                            $(window).trigger('hashchange');    
+                                        }
+                                    });                
+                                }
+                               
+                            }); 
+                        }
+                    });                                       
+                });
+
+                $("#works-wrapper").on("click",".control-thumbnails-edit",function(){   
+              
+               });
+
+            
                 $("#add_works_btn").on('click',function(){
                     lib.popup.box({
                        width:$(window).width(),
@@ -220,7 +303,10 @@
                     });
                     $("#box").css("display","none");
                 });
+
+
             })()
         </script>
+
   </body>
 </html>
