@@ -25,7 +25,7 @@ class Item extends Model {
 
         //项目名称筛选
         if(!empty($param['itemname'])){
-        	$itemname = '%'.$itemname.'%';
+        	$itemname = '%'.$param['itemname'].'%';
             $query = $query->where('itemname','like',$itemname);
         }  
 
@@ -93,11 +93,12 @@ class Item extends Model {
             ->leftJoin('managers','managers.id','=','salon_item.userId')
             ->select(
                 'itemid',
-                'itemname',
+                'salon_item.itemname',
+                'salon_item.typeid',
                 'logo',
                 'typename',
                 'addserviceStr',
-                'detail',
+                'desc',
                 'exp_time',
                 'timingAdded',
                 'timingShelves',

@@ -8,7 +8,7 @@ use App\Exceptions\ERROR;
 use DB;
 class WorksController extends Controller {
     /**
-     * @api {post} /Works/index 1.造型师的作品列表和所在店的其他
+     * @api {post} /Works/index/:id 1.造型师的作品列表和所在店的其他
      * @apiName list
      * @apiGroup Works
      *
@@ -42,7 +42,8 @@ class WorksController extends Controller {
      *                   "stylistId":26,
      *                   "commoditiesImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/143332415715992.jpg",
      *                   "description":"","thumbImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/s_143332415715992.jpg",
-     *                   "img":null
+     *                   "img":null,
+     *                   "addTime":"0000-00-00"
      *               },
      *               {
      *                   "recId":2377,
@@ -50,8 +51,21 @@ class WorksController extends Controller {
      *                   "commoditiesImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/14333241599000.jpg",
      *                   "description":"","thumbImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/s_14333241599000.jpg",
      *                   "img":null
+     *                   "addTime":"0000-00-00"
      *               }
      *            ],
+     *           "salonSelf":
+     *           [
+     *               {
+     *                   "stylistId":26,
+     *                   "stylistName":"\u4f1a\u64b8\u7684\u5b69\u5b50\u4e0d\u4f24\u8eab",
+     *                   "mobilephone":"13545108420",
+     *                   "grade":4,
+     *                   "fastGrade":2,
+     *                   "num":0,
+     *                   "uploadNum":0,
+     *                   "salonname":"choumeitest_salon"
+     *                },
      *           "salon":
      *           [
      *               {
@@ -59,14 +73,18 @@ class WorksController extends Controller {
      *                   "stylistName":"\u4f1a\u64b8\u7684\u5b69\u5b50\u4e0d\u4f24\u8eab",
      *                   "mobilephone":"13545108420",
      *                   "grade":4,
-     *                   "fastGrade":2
+     *                   "fastGrade":2,
+     *                   "num":0,
+     *                   "uploadNum":0,
      *                },
      *               {
-     *                   "stylistId":26,
+     *                   "stylistId":27,
      *                   "stylistName":"\u4f1a\u64b8\u7684\u5b69\u5b50\u4e0d\u4f24\u8eab",
      *                   "mobilephone":"19441001801",
-     *                  "grade":0,
+     *                   "grade":0,
      *                   "fastGrade":2
+     *                   "num":0,
+     *                   "uploadNum":0,
      *               }
      *           ]
      *    }
@@ -80,14 +98,16 @@ class WorksController extends Controller {
      *		}
      */
     public function index($stylistId){
-        $field=['stylistId', 'salonId'];
+        $field=['stylistId','stylistName','stylistImg','mobilephone','grade','fastGrade','salonId'];
         $stylist=Stylist::select($field)->where(array('stylistId'=>$stylistId))->first();
         if($stylist===false){
             throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);  
         }
-        $field1=['stylistId','stylistName', 'mobilephone','grade','fastGrade'];
-        $salonStylist=Stylist::select($field1)->where(array('salonId'=>$stylist['salonId']))->get();
-        $works=Works::where(array('stylistId'=>$stylistId))->orderBy('recId', 'desc')->get();
+        
+        $salonStylist=Stylist::select($field)->where('salonId','=',$stylist['salonId'])->where('stylistId','<>',$stylistId )->get();
+        $field2=['salonname'];      
+        $salon=DB::table('salon')->select($field2)->where(array('salonId'=>$stylist['salonId']))->first();
+        $works=Works::where(array('stylistId'=>$stylistId))->orderBy('addTime', 'desc')->get();
         $query=array();
         foreach ($works as $key2 =>$value) {
              if(!empty($works['img'])){
@@ -101,17 +121,35 @@ class WorksController extends Controller {
             foreach ($works1 as $key1 =>$value) {
                 if(!empty($works1['img'])){
                     $image=  json_decode($works1['img'],true);
-                    $num=$num+(count($image)/2);
+                    $num=$num+(count($image));
                 }  else {   
                     $num=$num+1;
                 }
                 
              }
-           $salonStylist->num=$num;
-
+           $salonStylist[$key]->num=$num;
+           $salonStylist[$key]->uploadNum=DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->count();
          }
-        $salonStylist->uploadNum=DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->count();
+         
+        if ($stylist) {
+            $num=0; 
+            $works3= Works::where('stylistId','=',$stylistId)->get();
+            foreach ($works3 as $key7 =>$value) {
+                if(!empty($works1['img'])){
+                    $image=  json_decode($works3['img'],true);
+                    $num=$num+(count($image));
+                }  else {   
+                    $num=$num+1;
+                }
+                
+             }
+           $stylist->num=$num;
+           $stylist->uploadNum=DB::table('hairstylist_works')->where('stylistId','=',$stylistId)->count();
+           $stylist->salonname=$salon->salonname;
+         }
+         
         $query['works']=$works;
+        $query['salonSelf']=$stylist;
         $query['salon']=$salonStylist;
         return $this->success($query);  
     }
@@ -201,7 +239,7 @@ class WorksController extends Controller {
      * @apiGroup  Works
      *
      * @apiParam {Number} recId 必填,作品id.
-     * @apiParam {String} description 必填,作品描述.
+     * @apiParam {String} img 必填,作品集合.
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -226,14 +264,15 @@ class WorksController extends Controller {
              throw new ApiException('作品ID出错', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
         $data=array();
-        if(isset($param['description'])||$param['description']){
-             $data['description']=$param['description'];
+        if(empty($param['img'])){
+             throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
         }
+        $data['img']=json_encode($param['img']);
         $query=  Works::where(array('recId'=>$recId))->update($data);
         if($query){
-             return $this->success();
+                return $this->success();
         }else{
-             throw new ApiException('修改作品失败', ERROR::MERCHANT_WORKS_SAVE_ERROR);
+                 throw new ApiException('修改单个作品失败', ERROR::MERCHANT_WORKS_SAVE_ERROR);
         }
     }
     
@@ -269,6 +308,7 @@ class WorksController extends Controller {
         }
         $data['img']=json_encode($param['img']);
         $data['stylistId']=$param['stylistId'];
+        $data['addTime']=  date("Y-m-d H:i:s", time());
         if(isset($param['description'])||$param['description']){
              $data['description']=$param['description'];
         }

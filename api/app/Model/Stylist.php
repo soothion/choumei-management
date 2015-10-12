@@ -46,7 +46,7 @@ class Stylist  extends Model {
             foreach ($works as $key1 =>$value) {
                 if(!empty($works['img'])){
                     $image=  json_decode($works['img'],true);
-                    $num=$num+(count($image)/2);
+                    $num=$num+(count($image));
                 }  else {   
                     $num=$num+1;
                 }
