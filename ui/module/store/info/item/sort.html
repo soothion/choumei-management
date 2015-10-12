@@ -47,7 +47,7 @@
 				</thead>
 				<tbody>
 					<%data=data.data
-					if(query.sort_type=="ASC"){
+					if(query.sort_type=="DESC"){
 						data.reverse&&data.reverse();
 					}
 					%>
@@ -55,8 +55,8 @@
 					<%data.forEach(function(item,i){%>
 					<%
 						var index=i;
-						if(query.sort_type=="ASC"){
-							index=data.length-i;
+						if(query.sort_type=="DESC"){
+							index=data.length-i-1;
 						}
 					%>
 					 <tr>
