@@ -220,7 +220,7 @@ class WorksController extends Controller {
         }
         $data=array();
         if(!empty($param['img'])){
-            $data['img']=json_encode($param['img']);
+            $data['img']=$param['img'];
             $query=  Works::where(array('recId'=>$recId))->update($data);
         }else{
             $query=  Works::where(array('recId'=>$recId))->delete();
@@ -266,7 +266,7 @@ class WorksController extends Controller {
         if(empty($param['img'])){
              throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
         }
-        $data['img']=json_encode($param['img']);
+        $data['img']=$param['img'];
         $query=  Works::where(array('recId'=>$recId))->update($data);
         if($query){
                 return $this->success();
