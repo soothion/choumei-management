@@ -177,8 +177,8 @@ class StylistController  extends Controller {
         }
         $salon=DB::table('salon')->where(array('salonid'=>$query['salonId']))->first();
         $query->salonname=$salon->salonname;
-      //  $query->workExp=json_decode($query['workExp'],true);
-       // $query->educateExp=json_decode($query['educateExp'],true);
+        $query->workExp=json_decode($query['workExp'],true);
+        $query->educateExp=json_decode($query['educateExp'],true);
         return $this->success($query);
     }
      
