@@ -30,7 +30,47 @@ class WorksController extends Controller {
      * 
      * 
      * @apiSuccessExample Success-Response:
-     * 
+     * {
+     *    "result":1,
+     *    "token":"",
+     *    "data":
+     *    {
+     *           "works":
+     *           [
+     *               {
+     *                   "recId":2378,
+     *                   "stylistId":26,
+     *                   "commoditiesImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/143332415715992.jpg",
+     *                   "description":"","thumbImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/s_143332415715992.jpg",
+     *                   "img":null
+     *               },
+     *               {
+     *                   "recId":2377,
+     *                   "stylistId":26,
+     *                   "commoditiesImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/14333241599000.jpg",
+     *                   "description":"","thumbImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/s_14333241599000.jpg",
+     *                   "img":null
+     *               }
+     *            ],
+     *           "salon":
+     *           [
+     *               {
+     *                   "stylistId":25,
+     *                   "stylistName":"\u4f1a\u64b8\u7684\u5b69\u5b50\u4e0d\u4f24\u8eab",
+     *                   "mobilephone":"13545108420",
+     *                   "grade":4,
+     *                   "fastGrade":2
+     *                },
+     *               {
+     *                   "stylistId":26,
+     *                   "stylistName":"\u4f1a\u64b8\u7684\u5b69\u5b50\u4e0d\u4f24\u8eab",
+     *                   "mobilephone":"19441001801",
+     *                  "grade":0,
+     *                   "fastGrade":2
+     *               }
+     *           ]
+     *    }
+     *  }
      *
      *
      * @apiErrorExample Error-Response:
@@ -96,7 +136,7 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "删除造型师失败"
+     *		    "msg": "删除作品集合失败"
      *		}
      */
     public function  del_list($recId){
@@ -132,7 +172,7 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "删除造型师失败"
+     *		    "msg": "删除作品失败"
      *		}
      */
     public function  del($recId){
@@ -176,7 +216,7 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "删除造型师失败"
+     *		    "msg": "修改作品失败"
      *		}
      */
     public function  update($recId){
@@ -219,11 +259,14 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "删除造型师失败"
+     *		    "msg": "创建作品失败"
      *		}
      */
     public function  create(){
         $param=$this->param;
+        if(empty($param['img'])||empty($param['stylistId'])){
+             throw new ApiException('创建作品的参数不齐', ERROR::MERCHANT_ERROR);
+        }
         $data['img']=json_encode($param['img']);
         $data['stylistId']=$param['stylistId'];
         if(isset($param['description'])||$param['description']){
@@ -236,14 +279,7 @@ class WorksController extends Controller {
              throw new ApiException('创建作品失败', ERROR::MERCHANT_WORKS_CREATE_ERROR);
         }
     }  
-    
-    
-    /**
-     * @api {post} /Works/uploadfile 6.上传作品集合
-     * @apiName uploadfile
-     * @apiGroup  Works
-     */
-    
+
     public function uploadfile() {
         $upload = new \Think\Upload();            // 实例化上传类
         $upload->maxSize = 3145728 ;              // 设置附件上传大小

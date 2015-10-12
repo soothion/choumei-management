@@ -830,10 +830,6 @@ Route::group(['middleware'], function(){
     'as'=>'Works.create',
     'uses'=>'Stylist\WorksController@create'
         ));
-    Route::any('Works/uploadfile',array(  //上传作品集合
-    'as'=>'Works.uploadfile',
-    'uses'=>'Stylist\WorksController@uploadfile'
-        ));
 
 });
 

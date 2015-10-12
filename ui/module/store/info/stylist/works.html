@@ -5,8 +5,9 @@
       <title>臭美管理后台</title>
       <script type="text/javascript" src="/js/include.js"></script>
       <style>
-      .pictrue img{
-        padding:5px;
+      .pictrue{
+          border:1px solid rgba(0,0,0,0.05);
+          padding-left:15px;
       }
       .designer-link{
           display: inline-block;
@@ -15,10 +16,19 @@
           cursor: pointer;
       }
       .header{
-          height: 40px;
-          line-height: 40px;
-          padding-left: 10px;
-          position: relative;        
+          height: 50px;
+          line-height: 50px;
+          position: relative;      
+      }
+      .del{
+          position: absolute;
+          right: 10px;
+          top: 10px;
+      }
+
+      .add{
+         width:160px!important;
+         height:120px!important;
       }
       </style>
   </head>
@@ -44,53 +54,48 @@
             </div> 
 
             <div>
-                <div style="width:75%;float:left;">
-                    <div class="header">
-                        <span>2015-09-25 11:23:58</span>
-                        <span>qqqqqqqqqqqqqqqqq</span>
-                        <!-- <a class="fa fa-times-circle control-thumbnails-remove"></a> -->
-                    </div>
+                <div style="width:70%;float:left;">
                     <div class="pictrue">
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <hr style="width:97%"/>
-                    </div> 
+                        <div class="header">
+                            <span>2015-09-25 11:23:58</span>
+                            <span>qqqqqqqqqqqqqqqqq</span>
+                            <i class="fa fa-trash-o fa-3x del"></i>
+                        </div>
+                        <div class="control-thumbnails" id="control-thumbnails1" data-max="1">
+                            <div class="control-thumbnails-item add">                                
+                                <img src="http://img01.choumei.cn/1/7/2015101015311444462281264724511.jpg?imageMogr2/crop/!250x294a94a666/thumbnail/420x492">                                     
+                                <a class="fa fa-times-circle control-thumbnails-remove"></a>
+                                <div class="control-thumbnails-operation flex-box">
+                                    <span class="control-thumbnails-before flex-item"><i class="fa fa-long-arrow-left"></i></span>
+                                    <span class="control-thumbnails-edit flex-item"><i class="fa fa-pencil-square-o"></i></span>
+                                    <span class="control-thumbnails-after flex-item"><i class="fa fa-long-arrow-right"></i></span>
+                                </div>
+                            </div>                                                                               
+                        </div>  
 
-                    <div class="header">
-                        <span>2015-09-25 11:23:58</span>
-                        <span>qqqqqqqqqqqqqqqqq</span>
-                    </div>
-                    <div class="pictrue">
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
+                        <hr/>
+
+                        <div class="header">
+                            <span>2015-09-25 11:23:58</span>
+                            <span>qqqqqqqqqqqqqqqqq</span>
+                            <i class="fa fa-trash-o fa-3x del"></i>
+                        </div>
+
+                        <div class="control-thumbnails" id="control-thumbnails2" data-max="1">
+                            <div class="control-thumbnails-item add">                                
+                                <img src="http://img01.choumei.cn/1/7/2015101015311444462281264724511.jpg?imageMogr2/crop/!250x294a94a666/thumbnail/420x492">                                     
+                                <a class="fa fa-times-circle control-thumbnails-remove"></a>
+                                <div class="control-thumbnails-operation flex-box">
+                                    <span class="control-thumbnails-before flex-item"><i class="fa fa-long-arrow-left"></i></span>
+                                    <span class="control-thumbnails-edit flex-item"><i class="fa fa-pencil-square-o"></i></span>
+                                    <span class="control-thumbnails-after flex-item"><i class="fa fa-long-arrow-right"></i></span>
+                                </div>
+                            </div>                                                                                     
+                        </div>
                     </div>                                                                                    
                 </div>
 
-                <div style="float:left;width:20%;margin:25px 0px 0px 20px">
+                <div style="float:left;width:25%;margin:-8px 0px 0px 30px">
                     <div  class="clearfix" >
                         <h2 style="border-bottom:1px dashed #ddd;margin-bottom:15px">店铺名称</h2>
                         <div style="float:left;">
@@ -150,18 +155,29 @@
 
             <div id="box" style="display:none;">
                 <form class="form-vertical">
-                    <div class="pictrue" style="margin:30px 0">                  
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
-                        <span><img src="/images/logo.png" style="width:160px;height:120px"/></span>
+                    <div class="pictrue" style="padding-top:15px">                  
                         <div class="control-thumbnails" id="control-thumbnails1" data-max="10">
-                            <div class="control-image-upload" style="width:160px;height:120px;line-height:115px">
+                            <div class="control-thumbnails-item add">                                
+                                <img src="http://img01.choumei.cn/1/7/2015101015311444462281264724511.jpg?imageMogr2/crop/!250x294a94a666/thumbnail/420x492">                                     
+                                <a class="fa fa-times-circle control-thumbnails-remove"></a>
+                                <div class="control-thumbnails-operation flex-box">
+                                    <span class="control-thumbnails-before flex-item"><i class="fa fa-long-arrow-left"></i></span>
+                                    <span class="control-thumbnails-edit flex-item"><i class="fa fa-pencil-square-o"></i></span>
+                                    <span class="control-thumbnails-after flex-item"><i class="fa fa-long-arrow-right"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="control-thumbnails-item add">                                
+                                <img src="http://img01.choumei.cn/1/7/2015101015311444462281264724511.jpg?imageMogr2/crop/!250x294a94a666/thumbnail/420x492">                                     
+                                <a class="fa fa-times-circle control-thumbnails-remove"></a>
+                                <div class="control-thumbnails-operation flex-box">
+                                    <span class="control-thumbnails-before flex-item"><i class="fa fa-long-arrow-left"></i></span>
+                                    <span class="control-thumbnails-edit flex-item"><i class="fa fa-pencil-square-o"></i></span>
+                                    <span class="control-thumbnails-after flex-item"><i class="fa fa-long-arrow-right"></i></span>
+                                </div>
+                            </div>                              
+
+                            <div class="control-image-upload" style="width:160px;height:120px;line-height:120px">
                                 <div id="imageUpload1">
                                     <i class="fa fa-image"></i>
                                     <em>上传个人作品</em>

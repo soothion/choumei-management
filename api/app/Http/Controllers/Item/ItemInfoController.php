@@ -610,6 +610,7 @@ class ItemInfoController extends Controller{
 	    //无规格--价格处理
 	    if($param['priceStyle'] == 1)
 	    {
+	    	$salon_item['norms_cat_id'] = 0;
 	    	$priceOriArr[] = $price = isset($param['price'])?intval($param['price']):0;
 	    	$priceGroupArr[] = $priceGroup = isset($param['priceGroup'])?intval($param['priceGroup']):0;
 	    	$priceDisArr[] = $priceDis = isset($param['priceDis'])?intval($param['priceDis']):0;
@@ -701,7 +702,6 @@ class ItemInfoController extends Controller{
 		}
 		$formatsIdArr = SalonItemFormats::where(['salonid'=>0])->whereIn('formats_name',$val_idx)->get(['formats_name','salon_item_formats_id'])->toArray();
 		$formatsIdArr = Utils::column_to_key('formats_name',$formatsIdArr);
-		
 		$clearVal =[];
 		foreach($itemType as $key=>$value)
 		{
@@ -709,11 +709,11 @@ class ItemInfoController extends Controller{
 			{
 				if(!in_array($vt, $clearVal))
 				{
-					$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$val]]['salon_item_formats_id']])->first();
+					$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$key]]['salon_item_formats_id']])->first();
 					if($st)
 						$norId = $st->salon_item_format_id;
 					else
-						$norId = SalonItemFormat::insertGetId(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$val]]['salon_item_formats_id']]);
+						$norId = SalonItemFormat::insertGetId(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$key]]['salon_item_formats_id']]);
 					$attribute[$vt] = $norId;//属性数组
 					$clearVal[] = $vt;
 				}
@@ -722,4 +722,5 @@ class ItemInfoController extends Controller{
 		return $attribute;
 	}
 }
+
 ?>
