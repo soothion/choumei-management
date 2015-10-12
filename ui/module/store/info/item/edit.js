@@ -72,7 +72,7 @@
 				});
 			});
 			//反解析有规格的数据
-			if(data.response&&data.response.prices){
+			if(data.response&&data.response.userId!=0&&data.response.prices){
 				var parseData={
 					sex:[],
 					hairstylist:[],
@@ -298,9 +298,6 @@
 					$('input[name="normarr"]').val('');
 				}
 			});
-			var form=$('form')[0];
-			form.goback=function(){
-			}
 		});
 	}
 	init();

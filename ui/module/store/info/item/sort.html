@@ -13,15 +13,15 @@
 					<h4>项目排序</h4>
 				</div>
 				<div>
-					<a href="#sort_key=sort_in_type&&sort_type=DESC" data-role="hash" class="btn">降序 <i class="fa fa-caret-down"></i></a>
-					<a href="#sort_key=sort_in_type&&sort_type=ASC" data-role="hash" class="btn">升序 <i class="fa fa-caret-up"></i></a>
+					<a href="#sort_key=sort_in_type&sort_type=DESC" data-role="hash" class="btn">降序 <i class="fa fa-caret-down"></i></a>
+					<a href="#sort_key=sort_in_type&sort_type=ASC" data-role="hash" class="btn">升序 <i class="fa fa-caret-up"></i></a>
 				</div>
 			</div>
 		</div>
 		<div class="wrapper">
-			<div class="position-group" style="margin-left:-100px">
+			<div class="position-group">
 				<form data-role="hash">
-					<select name="typeid" ajat-one="true" ajat="item/type#domid=type&tempid=type-t" id="type">
+					<select name="typeid" ajat-one="true" ajat="item/type#domid=type&tempid=type-t" style="min-width:300px" id="type">
 						<script type="text/template" id="type-t">
 							<%data.forEach(function(item){%>
 								<option value="<%=item.typeid%>"><%=item.typename%></option>
@@ -54,9 +54,9 @@
 					
 					<%data.forEach(function(item,i){%>
 					<%
-						var index=i;
+						var index=i+1;
 						if(query.sort_type=="DESC"){
-							index=data.length-i-1;
+							index=data.length-i;
 						}
 					%>
 					 <tr>

@@ -483,7 +483,6 @@
 					}
 				}
 				this.file(options,function(uploader){
-					
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
 							var data=JSON.parse(res.response);
@@ -491,6 +490,9 @@
 							if(data.code==0){
 								if(!options.crop){
 									if(up.createThumbnails){
+										if(options.thumb&&data.response.thumbimg){
+											data.response.thumbimg=data.response.thumbimg.replace('w/100/h/100',thumb);
+										}
 										up.createThumbnails(data.response,function(){
 											up.trigger('updateImageData');
 										})
@@ -555,7 +557,6 @@
 								if(files_number){
 									plupload.each(files, function(file,i) {
 										if(i+exist>=files_number){
-											console.log('ddddddddd')
 											up.removeFile(file);	
 										}
 									});
