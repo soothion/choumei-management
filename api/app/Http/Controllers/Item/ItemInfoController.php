@@ -376,6 +376,8 @@ class ItemInfoController extends Controller{
 	public function save($param)
 	{
 		$itemid = isset($param['itemid'])?intval($param['itemid']):null;
+		$param['userId'] = $this->user->id;
+		
 		$err_msg = [];
 		$ret = self::parametersFilter($param, $err_msg);
 		if(!$ret)
@@ -577,6 +579,7 @@ class ItemInfoController extends Controller{
 	    	$salon_item['addserviceStr']=implode(',',$addedService);
 	    }
 	    $salon_item['up_time'] 	= $now_time;
+	    $salon_item['userId'] 	= $param['userId'];
 	    if(empty($itemid))
 	    {
 	        if(strtotime($timingAdded) > $now_time)//上线时间 》 当前时间   下架状态
@@ -587,7 +590,6 @@ class ItemInfoController extends Controller{
 	        {
 	            $salon_item['status'] 	= SalonItem::STATUS_OF_UP;
 	        }
-	        $salon_item['userId'] 	= $this->user->id;
 	        $salon_item['add_time'] 	= $now_time;
 	    }
 	    
