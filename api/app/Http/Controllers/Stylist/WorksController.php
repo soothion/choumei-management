@@ -279,6 +279,7 @@ class WorksController extends Controller {
         }
         $data['img']=json_encode($param['img']);
         $data['stylistId']=$param['stylistId'];
+        $data['addTime']=  date("Y-m-d H:i:s", time());
         if(isset($param['description'])||$param['description']){
              $data['description']=$param['description'];
         }
