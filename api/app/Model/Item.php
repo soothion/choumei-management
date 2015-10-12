@@ -25,7 +25,7 @@ class Item extends Model {
 
         //项目名称筛选
         if(!empty($param['itemname'])){
-        	$itemname = '%'.$itemname.'%';
+        	$itemname = '%'.$param['itemname'].'%';
             $query = $query->where('itemname','like',$itemname);
         }  
 

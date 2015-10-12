@@ -250,6 +250,10 @@ Route::group(['middleware'], function(){
 		'as'=>'item.export',
 		'uses'=>'ItemController@export'
 	));
+	Route::any('item/down',array(
+		'as'=>'item.down',
+		'uses'=>'ItemController@down'
+	));
 
 	//闲时特价
 	Route::any('onsale/index',array(
