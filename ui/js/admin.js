@@ -189,14 +189,16 @@ $(function(){
 							});
 						}else{
 							if(successEvent){
-								eval(successEvent);
+								var fn=eval("(function(){"+successEvent+"})");
+								fn.call($this[0]);
 							}
 							$this.trigger('success',data);//成功后会触发reset事件
 						}
 					}else{
 						var failEvent=$this.attr('onfail');
 						if(failEvent){
-							eval(successEvent);
+							var fn=eval("(function(){"+failEvent+"})");
+							fn.call($this[0]);
 						}
 						$this.trigger('fail',data);	
 					}
