@@ -98,7 +98,7 @@ class Item extends Model {
                 'logo',
                 'typename',
                 'addserviceStr',
-                'detail',
+                'desc',
                 'exp_time',
                 'timingAdded',
                 'timingShelves',
