@@ -85,7 +85,7 @@ class UserController extends Controller{
 	{
 		$day = strtotime('today');
 		$timestamp = time();  
-		$week = date('Y-m-d', $timestamp-86400*date('w',$timestamp)+(date('w',$timestamp)>0?86400:-/*6*86400*/518400));  
+		$week = $timestamp-86400*date('w',$timestamp)+(date('w',$timestamp)>0?86400:-/*6*86400*/518400);  
 
 		$month = strtotime(date('Y-m'));
 
