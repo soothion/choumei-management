@@ -133,7 +133,7 @@ class Item extends Model {
             $formats = DB::table('salon_item_format')
                 ->whereIn('salon_item_format_id',$formats_id)
                 ->leftJoin('salon_item_formats','salon_item_formats.salon_item_formats_id','=','salon_item_format.salon_item_formats_id')
-                ->select('format_name','formats_name','salon_item_format.salon_item_formats_id')->get();
+                ->select('format_name','formats_name','salon_item_format_id','salon_item_format.salon_item_formats_id')->get();
             $price->formats = $formats;
             $prices[$key] = $price;
         }
