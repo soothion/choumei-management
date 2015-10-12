@@ -558,7 +558,10 @@ input:focus+.unit{
 	width:100%;
 	height:100%;
 }
-.control-thumbnails-remove{
+.control-image-single-remove{
+	display:none;
+}
+.control-thumbnails-remove,.control-image-single-remove{
 	position: absolute;
 	right: -6px;
 	top: -6px;
@@ -570,7 +573,7 @@ input:focus+.unit{
 	text-align: center;
 	line-height: 20px;
 }
-.control-thumbnails-remove:hover{
+.control-thumbnails-remove:hover,.control-image-single-remove:hover{
 	color:red;
 }
 .control-single-image{

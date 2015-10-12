@@ -567,7 +567,7 @@
 							$dom.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
 							$dom.find('input.original').val(data.img).blur();
 							$dom.find('input.thumb').val(data.thumbimg).blur();
-							$dom.find('.control-thumbnails-remove').show();
+							$dom.find('.control-image-single-remove').show();
 						}
 					}
 					if(options.imageLimitSize){
