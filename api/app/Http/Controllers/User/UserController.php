@@ -86,7 +86,10 @@ class UserController extends Controller{
 		$day = strtotime('today');
 		$week = date('w');
 		$week = 1-$week;
-		$week = strtotime('+'.$week.' days');
+		if($week==0)
+			$week = $day;
+		else 
+			$week = strtotime('+'.$week.' days');
 		$month = strtotime(date('Y-m'));
 
 		$data['total'] = User::count();
