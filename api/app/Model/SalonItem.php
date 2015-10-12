@@ -11,6 +11,7 @@ use DB;
 use App\Hairstylist;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use Event;
 
 
 class SalonItem extends Model {
@@ -55,9 +56,11 @@ class SalonItem extends Model {
 	{
 	    $salon_buylimit_id = null;
 	    $salon_norms_cat_id = null;
+	    $act = null;
 	    DB::beginTransaction();
 	    if(empty($itemid))
 	    {
+	    	$act = 'add';
 	        $itemid = self::insertGetId($datas['salon_item']);
 	        if(!$itemid)
 	        {
@@ -119,6 +122,15 @@ class SalonItem extends Model {
 	    	Salon::where(['salonid'=>$salonid])->update(['bountyType'=>4]);
 	
 	   DB::commit();
+	   $log = '项目Id:'.$itemid.' 项目名称：'.$datas['salon_item']['itemname'];
+	   if($act == 'add')
+	   {
+	   		Event::fire('ItemInfo.save',$log);
+	   }
+	   else 
+	   {
+	   		Event::fire('ItemInfo.update',$log);
+	   }
 	   return true;
 	}
 	
