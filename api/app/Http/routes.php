@@ -742,7 +742,7 @@ Route::group(['middleware'], function(){
     		'uses'=>'Item\ItemInfoController@createSpecialItem'
     ));
     
-    Route::any('Stylist/index/{id}',array(  //请求造型师列表
+    Route::any('Stylist/index',array(  //请求造型师列表
         'as'=>'Stylist.index',
         'uses'=>'Stylist\StylistController@index'
     ));

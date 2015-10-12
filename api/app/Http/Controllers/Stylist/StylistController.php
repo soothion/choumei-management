@@ -8,11 +8,12 @@ use DB;
 
 class StylistController  extends Controller {
     /**
-     * @api {post} /Stylist/index/:id 1.造型师列表
+     * @api {post} /Stylist/index 1.造型师列表
      * @apiName list
      * @apiGroup Stylist
      *
      * @apiParam {String} stylistName 可选,造型师名称.
+     * @apiParam {String} salonId 可选,店铺ID.
      * @apiParam {String} mobilephone 可选,手机号.
      * @apiParam {String} sortKey 可选,排序字段.
      * @apiParam {String} sortType 可选,排序方式.
@@ -71,13 +72,9 @@ class StylistController  extends Controller {
      *		}
      */
     
-    public function index($salonId){
+    public function index(){
         $param=$this->param;
-        $salon=Stylist::where(array('salonId'=>$salonId))->count();
-        if(!$salon){
-		throw new ApiException('店铺ID出错', ERROR::MERCHANT_ID_IS_ERROR);  
-        }
-        $query=Stylist::getStylistList($salonId,$param);
+        $query=Stylist::getStylistList($param);
         return $this->success($query);
     }
     

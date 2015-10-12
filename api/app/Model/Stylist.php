@@ -10,10 +10,12 @@ class Stylist  extends Model {
     protected $fillable = ['stylistId', 'salonId', 'stylistName','stylistImg','job','mobilephone','addTime','likeNum','signature','status','sex','wechat','qq','email','birthday','IDcard','sNumber','workYears','grade','workExp','educateExp','description','gradeType','osType','fastGrade'];
     public $timestamps = false;
 
-    public static function getStylistList($salonId,$param) {
+    public static function getStylistList($param) {
          $query = Self::getQuery();
          $field=['stylistId','stylistName','mobilephone','sNumber','grade','fastGrade','status'];
-         $query = $query->where('salonId','=',$salonId);
+         if(!empty($param['salonId'])){
+            $query = $query->where('salonId','=',$param['salonId']);
+         }
          if(isset($param['stylistName'])&&$param['stylistName']){
             $query = $query->where('stylistName','=',$param['stylistName']);
          }
