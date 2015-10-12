@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-12 13:59:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-12 17:49:34
+* @Last Modified time: 2015-10-12 19:18:28
 */
 
 (function(){
@@ -125,6 +125,15 @@
                     popup.remove();
                 });
             })
+
+            $('.popup textarea').on('focus',function(){
+                $('.popup #textareaTip').hide();
+
+            })
+            $('.popup textarea').on('blur',function(){
+                var des = $(this).val();
+                if(!des) $('.popup #textareaTip').show();
+            })
             initImageUpload();
            }                  
         });
@@ -134,6 +143,7 @@
     function initImageUpload(){
         lib.puploader.image({
             browse_button: "worksUpload",
+            //thumb : "w/160/h/120",
             auto_start:true,
             filters: {
                 mime_types : [
@@ -144,7 +154,9 @@
             multi_selection:true,
             files_number:9
         },function(uploader){
-            $('.popup .upload-image-tip').hide();
+            uploader.bind('FileUploaded',function(up,response){
+                $('.popup #imagesUploadTip').hide();            
+            });
         });                    
     }
 
@@ -152,10 +164,12 @@
         var thumbnailsArr = $('.popup .control-thumbnails-item');
         var des = $('.popup #description').val();
         if(thumbnailsArr.length == 0) {
-            $('.popup .upload-image-tip').hide();
-            return;
+            $('.popup #imagesUploadTip').show();
         }
-        if(!des) return;
+        if(!des) {
+            if(!des) $('.popup #textareaTip').show();
+        }
+        if(thumbnailsArr.length == 0 || !des) return;
         var arr = [];
         thumbnailsArr.each(function(i,item){
             var obj = {
