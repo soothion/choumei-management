@@ -174,6 +174,14 @@ class EventServiceProvider extends ServiceProvider
         'warehouse.destroy' => [
             'App\Listeners\WarehouseEventListener@onDestroy',
         ],
+    		
+    	//添加修改项目
+		'ItemInfo.save' => [
+    		'App\Listeners\ItemInfoEventListener@onSave',
+    	],
+		'ItemInfo.update' => [
+    		'App\Listeners\ItemInfoEventListener@onUpdate',
+    	],
     ];
 
     /**
