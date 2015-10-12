@@ -185,7 +185,7 @@
 						<td><%=item.item_type==1?"普通项目":"闲时特价"%></td>
 						<%}%>
 						<td><%=item.typename%></td>
-						<td><%=item.format?item.format:"无"%></td>
+						<td><%=item.salon_norms_cat.length>0?item.salon_norms_cat:"无"%></td>
 						<td>￥<%=item.minPriceOri%></td>
 						<td>￥<%=item.minPrice%></td>
 						<td>￥<%=item.minPriceGroup%></td>
@@ -254,16 +254,17 @@
 			var uploader = lib.puploader.create({
 				'loaderText':'数据正在导入中...',
 				'successText':'数据导入成功',
+				'failText':'数据导入失败',
 				'browse_button' : 'btn-import',
-				'domain'        : cfg.getHost() + "warehouse/import?token="+localStorage.getItem('token'),
-				//'file_data_name': 'rebate',
+				'domain'        : cfg.getHost() + "warehouse/import?token="+localStorage.getItem('token')+"&salon_id="+lib.query.salonid,
+				'file_data_name': 'item',
 				'auto_start'    : true,
-				'filters'       : {mime_types:[{ title : "Excel", extensions : "xls" }],
+				'filters'       : {mime_types:[{ title : "json files", extensions : "json" }],
 								max_file_size : '10mb', //最大只能上传10mb的文件
 								prevent_duplicates : true //不允许选取重复文件
 								}
 			},function(obj){
-				obj.bind('UploadComplete',function(){
+				obj.bind('FileUploadedSuccess',function(up){
 					setTimeout(function(){
 						$(window).trigger('hashchange')           
 					}, 2000)            

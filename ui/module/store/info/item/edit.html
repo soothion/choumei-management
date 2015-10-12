@@ -22,7 +22,7 @@
 				<div class="detail-operation">
 					<button class="btn btn-cancel" type="button">取消</button>
 					<span class="space"></span>
-					<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
+					<button form="_form" class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
 				</div>
 				<%if(query.p=="special"&&!query.id){%>
 				<legend>新增方式</legend>
@@ -46,9 +46,9 @@
 				<%}%>
 			</script>
 		</div>
-		<div _ajat="<%if(query.p=='item'&&query.id){%>item/show/<%}else if(query.p=='warehouse'&&query.id){%>warehouse/show/<%}else if(query.p=='special'&&query.id){%>special/show/<%}%><%=query.id%>#domid=form&tempid=form-t" id="form">
+		<div id="form">
 		<script type="text/template" id="form-t">
-		<form method="post" class="form-vertical" data-role="form" action="<%=query.id?"itemInfo/update":(query.p=="item"?"itemInfo/create":"itemInfo/createSpecialItem")%>">
+		<form method="post" id="_form" class="form-vertical" data-role="form" action="<%=query.id?"itemInfo/update":(query.p=="item"?"itemInfo/create":"itemInfo/createSpecialItem")%>">
 			<input type="hidden" name="itemType" value="<%=query.p=="special"?"2":"1"%>" />
 			<input type="hidden" name="salonid" value="<%=query.salonid%>" />
 			<input type="hidden" name="itemid" value="<%=query.id%>" />
@@ -85,6 +85,7 @@
 							<div class="control-image-ud">
 								<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 							</div>
+							<a class="fa fa-times-circle control-thumbnails-remove"></a>
 							<input type="hidden" name="logo" class="original" value="<%=data.logo%>" required data-helpid="image-help" requiredmsg="请上传项目图片">
 						</div>
 					</div>
@@ -99,7 +100,7 @@
 				<label class="control-label" for=""><span class="red">*</span>服务详情：</label>
 				<div class="control">
 					<div class="keypress">
-						<textarea name="desc" data-helpid="textarea-help" maxlength="500" required><%=data.detail%></textarea>
+						<textarea name="desc" data-helpid="textarea-help" maxlength="500" required><%=data.desc%></textarea>
 					</div>
 					<div class="control-help" style="display:none;" id="textarea-help"></div>
 					<div id="template"></div>
@@ -271,7 +272,7 @@
 							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
 							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
 							<input type="text"  class="input-small" disabled maxlength="10" name="hairstylist" nospace/>
-							<button type="button" class="btn btn-plus" disabled style="cursor: not-allowed;"><i class="fa fa-plus"></i></button>
+							<button type="button" class="btn btn-plus" disabled><i class="fa fa-plus"></i></button>
 							<span class="control-help" style="display: none;">请输入造型师</span>
 						</div>
 						<hr />
@@ -295,7 +296,7 @@
 							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
 							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
 							<input type="text"  class="input-small" disabled maxlength="10" nospace name="solution"/>
-							<button type="button" class="btn btn-plus" disabled style="cursor: not-allowed;"><i class="fa fa-plus"></i></button>
+							<button type="button" class="btn btn-plus" disabled><i class="fa fa-plus"></i></button>
 							<span class="control-help" style="display: none;">请输入药水</span>
 						</div>
 						<hr />
@@ -392,8 +393,8 @@
 				<td data-name="solution"><%=item.type.solution%></td>
 				<%}%>
 				<td data-name="price"><input type="text" value="<%=item.price%>" class="format-price" pattern="number" min="1" maxlength="5"/></td>
-				<td data-name="priceDis"><input type="text" value="<%=item.priceDis%>" pattern="number" min="1" maxlength="5"/></td>
-				<td data-name="priceGroup"><input type="text" value="<%=item.priceGroup%>" pattern="number" min="1" maxlength="5"/></td>
+				<td data-name="priceDis"><input type="text" value="<%=item.priceDis%>" class="format-price-dis" pattern="number" min="1" maxlength="5"/></td>
+				<td data-name="priceGroup"><input type="text" value="<%=item.priceGroup%>" class="format-price-group" pattern="number" min="1" maxlength="5"/></td>
 			</tr>
 			<%})%>
 		</tbody>
@@ -473,7 +474,7 @@
 								src:response.img,
 								thumbnails  : ["300x300"],
 								define:function(data){
-									$('input[name="logo"]').val(data['300x300']).siblings('img').attr('src',data['300x300']);
+									up.preview($('.control-single-image'),{img:data['300x300']});
 								}
 							});                
 						});
@@ -488,6 +489,7 @@
 						}
 						var normMenu=[];
 						var normarr=[];
+						var tmpArray=[];
 						data.response.prices.forEach(function(item){
 							if(item.formats){
 								var map={
@@ -498,14 +500,16 @@
 								}
 								item.type={};
 								item.formats.forEach(function(item2){
-									var tmp=parseData[map[item2.formats_name]];
-									if(tmp&&tmp.indexOf&&tmp.indexOf(item2.format_name)==-1){
-										parseData[map[item2.formats_name]].push(item2.format_name);
+									if(map[item2.formats_name]){
+										var tmp=parseData[map[item2.formats_name]];
+										if(tmp&&tmp.indexOf&&tmp.indexOf(item2.format_name)==-1){
+											parseData[map[item2.formats_name]].push(item2.format_name);
+										}
+										if(normMenu.indexOf(map[item2.formats_name])==-1){
+											normMenu.push(map[item2.formats_name]);
+										}
+										item.type[map[item2.formats_name]]=item2.format_name;
 									}
-									if(normMenu.indexOf(map[item2.formats_name])==-1){
-										normMenu.push(map[item2.formats_name]);
-									}
-									item.type[map[item2.formats_name]]=item2.format_name;
 								});
 								item.price=item.price&&parseInt(item.price)>0?parseInt(item.price):"";
 								item.priceDis=item.price_dis&&parseInt(item.price_dis)>0?parseInt(item.price_dis):"";
@@ -515,8 +519,11 @@
 								delete item.formats;
 								delete item.salon_item_format_id;
 							}
+							if(tmpArray.indexOf(JSON.stringify(item))==-1){
+								normarr.push(item);
+								tmpArray.push(JSON.stringify(item));
+							}
 						});
-						console.log(data.response.prices);
 						//动态还原输入数据
 						for(var name in parseData){
 							if(parseData[name].length>0){
@@ -536,8 +543,8 @@
 						}
 						//生成价格表
 						$('input[name="normMenu"]').val(JSON.stringify(normMenu));
-						$('input[name="normarr"]').val(JSON.stringify(data.response.prices));
-						$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:data.response.prices,normMenu:normMenu}));
+						$('input[name="normarr"]').val(JSON.stringify(normarr));
+						$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:normarr,normMenu:normMenu}));
 						
 					}
 					
@@ -653,27 +660,26 @@
 						e.stopPropagation();
 					});
 					//如果输入臭美，集团价折扣则到输入原价后生成臭美，集团价
-					$format.on('focus','.format-price',function(){
-						$(this).one('pass',function(){
-							var $this=$(this);
-							var val=parseInt($this.val());
-							var groupPrecent=$('#group-precent').val();
-							var choumeiPrecent=$('#choumei-precent').val();
-							if(val){
-								var groupInput=$this.parent().next().next().children('input');
-								var choumeiInput=$this.parent().next().children('input');
-								choumeiInput.attr('max',val);
-								groupInput.attr('max',val);
-								if(choumeiPrecent&&!isNaN(choumeiPrecent)){
-									choumeiInput.val(Math.round(choumeiPrecent*val/100));
-								}
-								if(groupPrecent&&!isNaN(groupPrecent)){
-									groupInput.val(Math.round(groupPrecent*val/100));
-								}
+					
+					$('#format-table').on('focus','.format-price-dis',function(){
+						var $this=$(this);
+						var choumeiPrecent=$('#choumei-precent').val();
+						var price=$this.closest('tr').find('input[name="price"]');
+						if(!$this.val()&&choumeiPrecent&&price){
+							if(choumeiPrecent&&!isNaN(choumeiPrecent)&&isNaN(price)){
+								$this.val(Math.round(choumeiPrecent*price/100));
 							}
-						});
-					});
-					$('#format-table').on('blur','input',function(){
+						}
+					}).on('focus','.format-price-group',function(){
+						var $this=$(this);
+						var groupPrecent=$('#group-precent').val();
+						var price=$this.closest('tr').find('input[name="price"]');
+						if(!$this.val()&&groupPrecent&&price){
+							if(groupPrecent&&!isNaN(groupPrecent)&&isNaN(price)){
+								$this.val(Math.round(groupPrecent*price/100));
+							}
+						}
+					}).on('blur','input',function(){
 						var normarr=[];
 						var tmp=0;
 						$('#format-table tbody tr').each(function(){

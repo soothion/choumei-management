@@ -508,16 +508,13 @@ input:focus+.unit{
 	vertical-align:top;
 	box-sizing:border-box;
 }
-.control-single-image{
-	vertical-align:middle;
-}
 .control-image{
 	margin-bottom:10px;
 	position:relative;
 }
 .control-single-image{
 	position:relative;
-	overflow:hidden;
+	vertical-align:middle;
 }
 .control-image-upload{
 	position: relative;
@@ -633,6 +630,9 @@ input:focus+.unit{
 	display:block;
 	font-size:30px;
 	margin-top:30px;
+}
+.control-single-image .control-thumbnails-remove{
+	display:none;
 }
 .image-preview{
 	width:40px;
@@ -1046,12 +1046,13 @@ form[data-role="hash"] input[type="date"]{
 	z-index:100;
 }
 .filter-box .filter-tab+.flex-box{
-	margin-top:-1px;
+	margin-top:-3px;
 }
 .filter-box .filter-tab input:checked+span{
 	border-color:#D7D7D7 #D7D7D7 #fff #D7D7D7;
 	position: relative;
 	z-index: 100;
+	background:#fff;
 }
 .filter-box .filter-tab+.flex-box>.flex-item{
 	border: 1px solid #D7D7D7;

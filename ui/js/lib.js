@@ -216,6 +216,9 @@
 				if(options.time===undefined){
 					options.time=1000;
 				}
+				if(!options.bool){
+					options.time=2000;
+				}
 				options.text='<i class="fa fa-'+(options.bool?"check":"times")+'-circle"></i>'+options.text;
 				this.tips(options)
 			},
@@ -266,7 +269,6 @@
 			},
 			getToken:function(cb){
 				var self=this;
-				var _arguments=arguments;
 				var query={
 					'bundle':"FQA5WK2BN43YRM8Z",
 					'version':"5.3",
@@ -297,7 +299,10 @@
 						}
 						clearTimeout(self.timer);
 						self.timer=setTimeout(function(){
-							lib.puploader.getToken.apply(lib.puploader,_arguments);
+							lib.puploader.getToken(function(data){
+								Qiniu.token=data.uptoken;
+								Qiniu._fileName=data.fileName;
+							});
 						},1000*60);
 					}
 				});
@@ -365,8 +370,14 @@
 								var data=JSON.parse(res.response);
 								if(data.result==1){
 									parent.lib.popup.result({text:options.successText||'文件上传成功'});
+									up.trigger('FileUploadedSuccess',up,file,res);
 								}else{
-									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
+									var msg=options.failText||'文件上传失败';
+									if(data.msg){
+										msg+=",异常信息："+data.msg;
+									}
+									parent.lib.popup.result({bool:false,text:msg});
+									up.trigger('FileUploadedFail',up,file,res);
 								}
 								if(data.token){
 									localStorage.setItem('token',data.token);
@@ -418,8 +429,14 @@
 								var data=JSON.parse(res.response);
 								if(data.code==0){
 									parent.lib.popup.result({text:options.successText||'文件上传成功'});
+									up.trigger('FileUploadedSuccess',up,file,res);
 								}else{
-									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
+									var msg=options.failText||'文件上传失败';
+									if(data.msg){
+										msg+=",异常信息："+data.msg;
+									}
+									parent.lib.popup.result({bool:false,text:msg});
+									up.trigger('FileUploadedFail',up,file,res);
 								}
 							}
 						});
@@ -550,6 +567,7 @@
 							$dom.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
 							$dom.find('input.original').val(data.img).blur();
 							$dom.find('input.thumb').val(data.thumbimg).blur();
+							$dom.find('.control-thumbnails-remove').show();
 						}
 					}
 					if(options.imageLimitSize){
@@ -643,7 +661,13 @@
 						}
 						options.built=function(){
 							$image.cropper('setCanvasData',canvasData);
-							//$image.cropper('setCropBoxData',)
+							var $box=$('.cropper-crop-box');
+							$image.cropper('setCropBoxData',{
+								width:$box.width(),
+								height:$box.height(),
+								left:$box.position().left,
+								top:$box.position().top
+							})
 							cropper.css({opacity:1});
 						}
 						$image.cropper(options);
