@@ -571,9 +571,11 @@ $(function(){
 	/**文本域输入文字提示**/
 	$body.on('focus','.keypress textarea',function(){
 		var $this=$(this);
-		var maxlength=$this.parent().attr('maxlength');
-		if(maxlength){
-			$this.parent().append('<span class="keypress-help">还可以输入<em>'+(parseInt(maxlength)-$.trim($this.val().length))+'</em>个字</span>');
+		//var maxlength=$this.parent().attr('maxlength');
+		var maxlength=$this.attr('maxlength');
+		var value=$this.val();
+		if(maxlength&&value){
+			$this.parent().append('<span class="keypress-help">还可以输入<em>'+(parseInt(maxlength)-$.trim(value.length))+'</em>个字</span>');
 		}
 	});
 	$body.on('blur','.keypress textarea',function(){
@@ -581,9 +583,11 @@ $(function(){
 	});
 	$body.on('keyup','.keypress textarea',function(){
 		var $this=$(this);
-		var maxlength=$this.parent().attr('maxlength');
-		if($this.attr('maxlength')){
-			$this.siblings('.keypress-help').children('em').text(parseInt(maxlength)-$.trim($this.val()).length);
+		//var maxlength=$this.parent().attr('maxlength');
+		var maxlength=$this.attr('maxlength');
+		var value=$this.val();
+		if(maxlength){
+			$this.siblings('.keypress-help').children('em').text(parseInt(maxlength)-$.trim(value).length);
 		}
 	});
 }); 

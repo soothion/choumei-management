@@ -3,6 +3,7 @@
   <head>
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="template.js"></script>
 	  <script type="text/javascript" src="/js/include.js"></script>
   </head>
   <body>
@@ -97,15 +98,11 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>服务详情：</label>
 				<div class="control">
-					<div class="keypress" maxlength="500">
-						<textarea name="desc" data-helpid="textarea-help" required><%=data.detail%></textarea>
+					<div class="keypress">
+						<textarea name="desc" data-helpid="textarea-help" maxlength="500" required><%=data.detail%></textarea>
 					</div>
 					<div class="control-help" style="display:none;" id="textarea-help"></div>
-					<div>
-						<a class="link">洗剪吹模板</a><span class="space"></span>
-						<a class="link">洗吹模板</a><span class="space"></span>
-						<a class="link">应用：洗剪吹服务详情模板</a>
-					</div>
+					<div id="template"></div>
 				</div>
 			</div>
 			<hr />
@@ -402,6 +399,11 @@
 		</tbody>
 	</table>
 	</script>
+	<script type="text/template" id="template-t">
+		<%data&&data.forEach(function(item){%>
+			<a class="link" data-value="<%=item.value%>"><%=item.name%></a><span class="space"></span>
+		<%})%>
+	</script>
 	<script type="text/javascript">
 		$(function(){
 			$(document.body).on('change','.form-item .control-label input',function(){//是否启用对应的项
@@ -417,12 +419,17 @@
 				if(this.checked&&this.value==2){
 					$('.price-group').hide().next('.format-group').show();
 				}
-			}).on('change','#type',function(){//是否显示快剪等级
+			}).on('change','#type',function(){
+				//是否显示快剪等级
 				if(this.value==8){
 					$('#level').show();
 				}else{
 					$('#level').hide();
 				}
+				$('#template').html(lib.ejs.render({text:$('#template-t').html()},{data:templateData['_'+this.value]}));
+				$('#template a').on('click',function(){
+					$('textarea[name="desc"]').val($(this).data('value'));
+				})
 			}).on('click','.limit',function(){//有无限制状态的切换
 				$(this).parent().siblings('input').attr('disabled',this.checked);
 				$(this).parent().siblings('label').children('input').attr('disabled',this.checked);
