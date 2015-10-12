@@ -90,7 +90,7 @@ class Item extends Model {
     public static function get($id){
         $item = Self::leftJoin('salon_itemtype','salon_itemtype.typeid','=','salon_item.typeid')
             ->leftJoin('salon_item_buylimit','salon_item_buylimit.salon_item_id','=','salon_item.itemid')
-            ->leftJoin('managers','managers.id','=','salon_item.uid')
+            ->leftJoin('managers','managers.id','=','salon_item.userId')
             ->select(
                 'itemid',
                 'itemname',
