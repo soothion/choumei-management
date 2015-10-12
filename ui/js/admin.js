@@ -529,6 +529,8 @@ $(function(){
 		if(src){
 			parent.lib.popup.swiper({list:[src],index:0});
 		}
+	}).on('click','.control-image-single-remove',function(){
+		$(this).hide().siblings('img').attr('src','').siblings('input').val("");
 	});
 	/**实例化封装表单**/
 	$('form[data-role="form"]').each(function(){

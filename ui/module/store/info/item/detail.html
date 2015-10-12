@@ -33,155 +33,159 @@
 					<a class="btn" href="edit.html?<%=query._%>">编辑</a><span class="space"></span>
 					<button class="btn btn-cancel">关闭</button>
 				</div>
-				<table>
-					<thead>
-						<tr>
-							<td colspan="2">
-							  <%=query.salonname%>
-							</td>	
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>项目名称：</td>
-							<td><%=data.itemname%></td>
-						</tr>
-						<tr>
-							<td>项目图片：</td>
-							<td>
-								<img src="<%=data.logo%>" class="image-preview" alt="" />
-							</td>
-						</tr>
-						<tr>
-							<td>项目分类：</td>
-							<td><%=data.typename%></td>
-						</tr>
-						<tr>
-							<td>增值服务：</td>
-							<td><%=data.addserviceStr%></td>
-						</tr>
-						<tr>
-							<td>服务详情：</td>
-							<td><%=data.detail%></td>
-						</tr>
-					</tbody>
-				</table>
-				<legend>项目限制</legend>
-				<table>
-					<tbody>
-						<tr>
-							<td> 项目有效期：</td>
-							<td colspan="3"><%=data.exp_time?new Date(data.exp_time*1000):"无限制"%></td>
-						</tr>
-						<tr>
-							<td>定时上架：</td>
-							<td><%=data.timingAdded?new Date(data.timingAdded*1000).format("yyyy-MM-dd hh:mm"):""%></td>
-							<td>定时下架：</td>
-							<td><%=data.timingShelves?new Date(data.timingShelves*1000).format("yyyy-MM-dd hh:mm"):""%></td>
-						</tr>
-						<tr>
-							<td>限制购买：</td>
-							<td colspan="3"><%=data.limit_time?data.limit_time:"无限制"%></td>
-						</tr>	
-						<tr>
-							<td>库存数量：</td>
-							<td colspan="3"><%=data.total_rep%></td>
-						</tr>
-						<tr>
-							<td>限制资格：</td>
-							<td colspan="3">
-								<%if(!data.limit_invite&&!data.limit_first){%>
-									无限制
+				<div class="flex-box">
+					<div class="flex-item">
+						<table>
+							<thead>
+								<tr>
+									<td colspan="2">
+									  <%=query.salonname%>
+									</td>	
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>项目名称：</td>
+									<td><%=data.itemname%></td>
+								</tr>
+								<tr>
+									<td>项目分类：</td>
+									<td><%=data.typename%></td>
+								</tr>
+								<tr>
+									<td>增值服务：</td>
+									<td><%=data.addserviceStr%></td>
+								</tr>
+								<tr>
+									<td>服务详情：</td>
+									<td><%=data.desc.replace(/\n/g,"</br>")%></td>
+								</tr>
+							</tbody>
+						</table>
+						<legend>项目限制</legend>
+						<table>
+							<tbody>
+								<tr>
+									<td> 项目有效期：</td>
+									<td colspan="3"><%=data.exp_time?new Date(data.exp_time*1000):"无限制"%></td>
+								</tr>
+								<tr>
+									<td>定时上架：</td>
+									<td><%=data.timingAdded?new Date(data.timingAdded*1000).format("yyyy-MM-dd hh:mm"):""%></td>
+									<td>定时下架：</td>
+									<td><%=data.timingShelves?new Date(data.timingShelves*1000).format("yyyy-MM-dd hh:mm"):""%></td>
+								</tr>
+								<tr>
+									<td>限制购买：</td>
+									<td colspan="3"><%=data.limit_time?data.limit_time:"无限制"%></td>
+								</tr>	
+								<tr>
+									<td>库存数量：</td>
+									<td colspan="3"><%=data.total_rep%></td>
+								</tr>
+								<tr>
+									<td>限制资格：</td>
+									<td colspan="3">
+										<%if(!data.limit_invite&&!data.limit_first){%>
+											无限制
+										<%}%>
+										<%if(data.limit_first){%>
+											限首次下单可购买
+										<%}%>
+										<%if(data.limit_invite){%>
+											限推荐用户购买
+										<%}%>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<legend>价格设置</legend>
+						<table>
+							<tbody>
+								<tr>
+									<td>定价方式：</td>
+									<td><%=data.prices?"有规格，区间价":"无规格，统一价"%></td>
+								</tr>
+								<%if(!data.prices){%>
+								<tr>
+									<td>原价：</td>
+									<td><%=data.price?"￥"+data.price:""%></td>
+								</tr>
+								<tr>
+									<td>臭美价：</td>
+									<td><%=data.price_dis?"￥"+data.price_dis:""%></td>
+								</tr>	
+								<tr>
+									<td>集团价：</td>
+									<td><%=data.price_group?"￥"+data.price_group:""%></td>
+								</tr>
+								<%}else{%>
+								<tr>
+									<td colspan="2" style="padding-left:5px;">
+										<table>
+											<thead>
+												<tr>
+													<th>规格</th>
+													<th>原价</th>
+													<th>臭美价</th>
+													<th>集团价</th>
+												</tr>
+											</thead>
+											<tbody>
+												<%data.prices&&data.prices.forEach(function(item){%>
+												<tr>
+													<td style="width:auto;min-width:0">
+													<%var arr=[];
+													item.formats.forEach(function(item2){
+														arr.push(item2.format_name);
+													})%>
+													<%=arr.join("、")%>
+													</td>
+													<td style="width:auto;min-width:0"><%=item.price?"￥"+item.price:""%></td>
+													<td style="width:auto;min-width:0"><%=item.price_dis?"￥"+item.price_dis:""%></td>
+													<td style="width:auto;min-width:0"><%=item.price_group?"￥"+item.price_group:""%></td>
+												</tr>
+												<%})%>
+											</tbody>
+										</table>
+									</td>
+								</tr>
 								<%}%>
-								<%if(data.limit_first){%>
-									限首次下单可购买
-								<%}%>
-								<%if(data.limit_invite){%>
-									限推荐用户购买
-								<%}%>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<legend>价格设置</legend>
-				<table>
-					<tbody>
-						<tr>
-							<td>定价方式：</td>
-							<td><%=data.prices?"有规格，区间价":"无规格，统一价"%></td>
-						</tr>
-						<%if(!data.prices){%>
-						<tr>
-							<td>原价：</td>
-							<td><%=data.price?"￥"+data.price:""%></td>
-						</tr>
-						<tr>
-							<td>臭美价：</td>
-							<td><%=data.price_dis?"￥"+data.price_dis:""%></td>
-						</tr>	
-						<tr>
-							<td>集团价：</td>
-							<td><%=data.price_group?"￥"+data.price_group:""%></td>
-						</tr>
-						<%}else{%>
-						<tr>
-							<td colspan="2" style="padding-left:5px;">
-								<table>
-									<thead>
-										<tr>
-											<th>规格</th>
-											<th>原价</th>
-											<th>臭美价</th>
-											<th>集团价</th>
-										</tr>
-									</thead>
-									<tbody>
-										<%data.prices&&data.prices.forEach(function(item){%>
-										<tr>
-											<td style="width:auto;min-width:0">
-											<%var arr=[];
-											item.formats.forEach(function(item2){
-												arr.push(item2.format_name);
-											})%>
-											<%=arr.join("、")%>
-											</td>
-											<td style="width:auto;min-width:0"><%=item.price?"￥"+item.price:""%></td>
-											<td style="width:auto;min-width:0"><%=item.price_dis?"￥"+item.price_dis:""%></td>
-											<td style="width:auto;min-width:0"><%=item.price_group?"￥"+item.price_group:""%></td>
-										</tr>
-										<%})%>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-						<%}%>
-					</tbody>
-				</table>
-				<legend>其他信息</legend>
-				<table>
-					<tbody>
-						<tr>
-							<td>已售数量：</td>
-							<td><%=data.sold%></td>
-						</tr>
-						<tr>
-							<td>上架时间：</td>
-							<td><%=data.up_time?new Date(data.up_time*1000).format("yyyy-MM-dd hh:mm"):""%></td>
-						</tr>
-						<tr>
-							<td>上架操作人：</td>
-							<td><%=data.name%></td>
-						</tr>	
-						<tr>
-							<td>最后一次修改时间：</td>
-							<td><%=data.UPDATE_date%></td>
-						</tr>
-						<tr>
-							<td>最后一次修改人：</td>
-							<td><%=data.name%></td>
-						</tr>
-					</tbody>
-				</table>
+							</tbody>
+						</table>
+						<legend>其他信息</legend>
+						<table>
+							<tbody>
+								<tr>
+									<td>已售数量：</td>
+									<td><%=data.sold%></td>
+								</tr>
+								<tr>
+									<td>上架时间：</td>
+									<td><%=data.up_time?new Date(data.up_time*1000).format("yyyy-MM-dd hh:mm"):""%></td>
+								</tr>
+								<tr>
+									<td>上架操作人：</td>
+									<td><%=data.name%></td>
+								</tr>	
+								<tr>
+									<td>最后一次修改时间：</td>
+									<td><%=data.UPDATE_date%></td>
+								</tr>
+								<tr>
+									<td>最后一次修改人：</td>
+									<td><%=data.name%></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div style="margin-left:20px;">
+						<div style="border:1px solid #E6EAF2;padding:10px;">
+							<h4 style="padding-bottom:5px">项目图片</h4>
+							<img src="<%=data.logo%>"alt="" />
+						</div>
+					</div>
+				</div>
 				</script>
 			</div>
 		</div>
