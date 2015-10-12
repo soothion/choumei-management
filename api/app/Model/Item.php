@@ -10,6 +10,7 @@ class Item extends Model {
 	protected $table = 'salon_item';
     protected $primaryKey = 'itemid';
     public $timestamps = false;
+     protected $fillable = ['status'];
     CONST SALE = 1;//默认在售
     CONST ONSALE = 2;//闲时特价
 
@@ -111,7 +112,8 @@ class Item extends Model {
                 'managers.name',
                 'salon_item.UPDATE_date',
                 'sort_in_type',
-                'salon_item.status'
+                'salon_item.status',
+                'userId'
                 )
             ->find($id);
         if(!$item)

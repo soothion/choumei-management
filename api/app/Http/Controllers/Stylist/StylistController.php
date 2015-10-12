@@ -13,6 +13,7 @@ class StylistController  extends Controller {
      * @apiGroup Stylist
      *
      * @apiParam {String} stylistName 可选,造型师名称.
+     * @apiParam {String} salonId 可选,店铺ID.
      * @apiParam {String} mobilephone 可选,手机号.
      * @apiParam {String} sortKey 可选,排序字段.
      * @apiParam {String} sortType 可选,排序方式.

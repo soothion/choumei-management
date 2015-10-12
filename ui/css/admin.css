@@ -374,7 +374,7 @@ aside h2{
 	font-weight:bold;
 }
 .breadcrumb .btn{
-	color:inherit;
+	color:#666;
 }
 /**面包屑 end**/
 
@@ -515,6 +515,7 @@ input:focus+.unit{
 .control-single-image{
 	position:relative;
 	vertical-align:middle;
+	background-color: #ddd;
 }
 .control-image-upload{
 	position: relative;
@@ -620,14 +621,14 @@ input:focus+.unit{
 .control-single-image img{
 	width:120px;
 	height:120px;
+	display:inline-block;
 }
 .control-single-image img[src=""]+.control-image-ud{
 	height:100%;
-	background:#fff;
+	background:#ddd;
 	color:#666;
-}
-.control-single-image img[src=""]+.control-image-ud:hover{
-	background:#eee;
+	font-size: 15px;
+	font-weight: bold;
 }
 .control-single-image img[src=""]+.control-image-ud .fa{
 	display:block;
