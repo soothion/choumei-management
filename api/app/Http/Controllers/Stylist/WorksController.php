@@ -54,6 +54,18 @@ class WorksController extends Controller {
      *                   "addTime":"0000-00-00"
      *               }
      *            ],
+     *           "salonSelf":
+     *           [
+     *               {
+     *                   "stylistId":26,
+     *                   "stylistName":"\u4f1a\u64b8\u7684\u5b69\u5b50\u4e0d\u4f24\u8eab",
+     *                   "mobilephone":"13545108420",
+     *                   "grade":4,
+     *                   "fastGrade":2,
+     *                   "num":0,
+     *                   "uploadNum":0,
+     *                   "salonname":"choumeitest_salon"
+     *                },
      *           "salon":
      *           [
      *               {
@@ -64,17 +76,15 @@ class WorksController extends Controller {
      *                   "fastGrade":2,
      *                   "num":0,
      *                   "uploadNum":0,
-     *                   "salonname":"choumeitest_salon"
      *                },
      *               {
-     *                   "stylistId":26,
+     *                   "stylistId":27,
      *                   "stylistName":"\u4f1a\u64b8\u7684\u5b69\u5b50\u4e0d\u4f24\u8eab",
      *                   "mobilephone":"19441001801",
      *                   "grade":0,
      *                   "fastGrade":2
      *                   "num":0,
      *                   "uploadNum":0,
-     *                   "salonname":"choumeitest_salon"
      *               }
      *           ]
      *    }
@@ -95,12 +105,7 @@ class WorksController extends Controller {
         }
         
         $salonStylist=Stylist::select($field)->where('salonId','=',$stylist['salonId'])->where('stylistId','<>',$stylistId )->get();
-        $field2=['salonname'];
-//        $query2 = $query2->where('mobilephone','=',$param['mobilephone']);
-//        $query2 = $query2->where('mobilephone','=',$param['mobilephone']);
-//         //   and  'stylistId','<>',$stylistId
-        
-        
+        $field2=['salonname'];      
         $salon=DB::table('salon')->select($field2)->where(array('salonId'=>$stylist['salonId']))->first();
         $works=Works::where(array('stylistId'=>$stylistId))->orderBy('addTime', 'desc')->get();
         $query=array();
@@ -143,8 +148,8 @@ class WorksController extends Controller {
            $stylist->salonname=$salon->salonname;
          }
          
-        $query['works']=$stylist;
-        $query['otherWorks']=$works;
+        $query['works']=$works;
+        $query['salonSelf']=$stylist;
         $query['salon']=$salonStylist;
         return $this->success($query);  
     }
