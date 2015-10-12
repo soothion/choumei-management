@@ -1,5 +1,5 @@
 ﻿<%data&&data.forEach&&data.forEach(function(item){%>
-	<div class="control-thumbnails-item">
+	<div class="control-thumbnails-item <%=item.thumCss%>">
 	    <%if(!item.ratio || item.ratio == 1){%>
 			<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
 			data-ratio="<%=item.ratio%>" data-type="<%=item.type%>"/>	    

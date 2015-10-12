@@ -474,6 +474,7 @@
 							if(data.code==0){
 								if(!options.crop){
 									if(up.createThumbnails){
+										if(options.thumCss) data.response['thumCss'] = options.thumCss;
 										up.createThumbnails(data.response,function(){
 											up.trigger('updateImageData');
 										})
