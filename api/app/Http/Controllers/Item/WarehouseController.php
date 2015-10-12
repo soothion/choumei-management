@@ -291,14 +291,16 @@ class WarehouseController extends Controller
 	    {
 	        throw new ApiException('请上传json文件',ERROR::UPLOAD_FILE_ERR_EXTENSION);
 	    }
+
 	    $content_str = file_get_contents($file->getPathname());
-	    $datas = @json_decode($content_str);
+	    $datas = @json_decode($content_str,true);
 	    if(!is_array($datas) || count($datas)<1)
 	    {
 	        throw new ApiException('json文件格式不正确或者内容为空',ERROR::UPLOAD_FILE_ERR_FORMAT);
 	    }
 	    $salon_id = $params['salon_id'];
 	    $items = self::formatDatas($datas,$salon_id);
+	    
 	    foreach ($items as $item)
 	    {
 	        $data = ItemInfoController::compositeData($item);
@@ -417,6 +419,7 @@ class WarehouseController extends Controller
 	    foreach($datas as $data)
 	    {
 	        if(!isset($data['typeid']) 
+	            || !isset($data['norms_cat_id'])
 	            || !isset($data['useLimit'])
 	            || !isset($data['logo'])
 	            || !isset($data['desc'])
@@ -429,15 +432,14 @@ class WarehouseController extends Controller
 	            || !isset($data['addserviceStr'])
 	            || !isset($data['timingAdded'])
 	            || !isset($data['timingShelves'])
-	            || !isset($data['limit_time'])
-	            || !isset($data['inviteLimit'])
-	            || !isset($data['limit_first'])
 	            || !isset($data['prices'])
-	            || !isset($data['price'])
+	            || !isset($data['minPrice'])
 	            || !isset($data['minPriceOri'])
 	            || !isset($data['minPriceGroup'])
 	            )
 	        {
+	            var_dump($data);
+	            die();
 	            throw new ApiException('json文件格式不正确,缺少必要参数',ERROR::UPLOAD_FILE_ERR_FORMAT);
 	        }
 	        $tmp = [];
@@ -459,20 +461,20 @@ class WarehouseController extends Controller
 	        $tmp['timingAdded'] = $data['timingAdded'];
 	        $tmp['timingShelves'] = $data['timingShelves'];
 	        
-	        if(!empty($data['limit_time']))
+	        if(isset($data['limit_time']) && !empty($data['limit_time']))
 	        {
 	           $tmp['timeLimitInput'] = intval($data['limit_time']);
 	        }
-	        if(!empty($data['inviteLimit']))
+	        if(isset($data['limit_invite']) &&!empty($data['limit_invite']))
 	        {
-	            $tmp['inviteLimit'] = intval($data['inviteLimit']);
+	            $tmp['inviteLimit'] = intval($data['limit_invite']);
 	        }
-	        if(!empty($data['limit_first']))
+	        if(isset($data['limit_first']) &&!empty($data['limit_first']))
 	        {
 	            $tmp['firstLimit'] = intval($data['limit_first']);
 	        }
 	        
-	        if(count($data['prices'])<1)
+	        if(count($data['prices'])<1 || empty($data['norms_cat_id']))
 	        {
 	            $tmp['priceStyle'] = 1;
 	            $tmp['price'] = $data['minPriceOri'];
@@ -485,7 +487,7 @@ class WarehouseController extends Controller
 	        else
 	        {
 	            $tmp['priceStyle'] = 2;
-	            $normarr = self::formatNormDatas($data['prices']);
+	            $normarr = self::formatNormDatas($data['prices']);	          
 	            $normMenu = array_keys($normarr[0]['type']);
 	            $tmp['normarr'] = json_encode($normarr,JSON_UNESCAPED_UNICODE);
 	            $tmp['normMenu'] = json_encode($normMenu,JSON_UNESCAPED_UNICODE);
@@ -493,6 +495,7 @@ class WarehouseController extends Controller
 	        
 	        $err_msg = [];
 	        $ret = ItemInfoController::parametersFilter($tmp, $err_msg);
+	  
 	        if(!$ret)
 	        {
 	            throw new ApiException($err_msg['msg'],$err_msg['no']);
@@ -509,7 +512,7 @@ class WarehouseController extends Controller
 	    {
 	        if(!isset($data['price']) || !isset($data['price_dis']) || !isset($data['price_group']) || !isset($data['formats']) )
 	        {
-	            throw new ApiException('json文件格式不正确,缺少必要参数',ERROR::UPLOAD_FILE_ERR_FORMAT);
+	            throw new ApiException('json文件格式不正确,缺少必要参数of prices',ERROR::UPLOAD_FILE_ERR_FORMAT);
 	        }
 	        $tmp = [];
 	        $tmp['price'] = $data['price'];
@@ -520,7 +523,7 @@ class WarehouseController extends Controller
 	        {
 	            if(!isset($format['formats_name']) || !isset($format['format_name']) )
 	            {
-	                throw new ApiException('json文件格式不正确,缺少必要参数',ERROR::UPLOAD_FILE_ERR_FORMAT);
+	                throw new ApiException('json文件格式不正确,缺少必要参数of formats',ERROR::UPLOAD_FILE_ERR_FORMAT);
 	            }
 	            $key_val = $format['formats_name'];
 	            $key = self::getNormKey($key_val);
