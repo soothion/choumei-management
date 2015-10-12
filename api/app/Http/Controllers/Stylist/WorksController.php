@@ -55,7 +55,6 @@ class WorksController extends Controller {
      *               }
      *            ],
      *           "salonSelf":
-     *           [
      *               {
      *                   "stylistId":26,
      *                   "stylistName":"\u4f1a\u64b8\u7684\u5b69\u5b50\u4e0d\u4f24\u8eab",
@@ -306,7 +305,7 @@ class WorksController extends Controller {
         if(empty($param['img'])||empty($param['stylistId'])){
              throw new ApiException('创建作品的参数不齐', ERROR::MERCHANT_ERROR);
         }
-        $data['img']=json_encode($param['img']);
+        $data['img']=$param['img'];
         $data['stylistId']=$param['stylistId'];
         $data['addTime']=  date("Y-m-d H:i:s", time());
         if(isset($param['description'])||$param['description']){
