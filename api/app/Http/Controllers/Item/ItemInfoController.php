@@ -587,7 +587,7 @@ class ItemInfoController extends Controller{
 	        {
 	            $salon_item['status'] 	= SalonItem::STATUS_OF_UP;
 	        }
-	        $salon_item['uid'] 	= 1;//注意：以前是店铺账号id  现新管理后台默认 管理账号id
+	        $salon_item['userId'] 	= $this->user->id;
 	        $salon_item['add_time'] 	= $now_time;
 	    }
 	    
