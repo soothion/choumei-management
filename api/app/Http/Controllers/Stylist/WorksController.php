@@ -211,7 +211,7 @@ class WorksController extends Controller {
      * @apiGroup  Works
      *
      * @apiParam {Number} recId 必填,作品id.
-     * @apiParam {String} description 必填,作品描述.
+     * @apiParam {String} img 必填,作品集合.
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -236,14 +236,15 @@ class WorksController extends Controller {
              throw new ApiException('作品ID出错', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
         $data=array();
-        if(isset($param['description'])||$param['description']){
-             $data['description']=$param['description'];
+        if(empty($param['img'])){
+             throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
         }
+        $data['img']=json_encode($param['img']);
         $query=  Works::where(array('recId'=>$recId))->update($data);
         if($query){
-             return $this->success();
+                return $this->success();
         }else{
-             throw new ApiException('修改作品失败', ERROR::MERCHANT_WORKS_SAVE_ERROR);
+                 throw new ApiException('修改单个作品失败', ERROR::MERCHANT_WORKS_SAVE_ERROR);
         }
     }
     
