@@ -94,7 +94,7 @@ class Item extends Model {
             ->select(
                 'itemid',
                 'salon_item.itemname',
-                'typeid',
+                'salon_item.typeid',
                 'logo',
                 'typename',
                 'addserviceStr',
