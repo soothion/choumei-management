@@ -121,7 +121,7 @@
                             <%=data.salonSelf.stylistName%>，<%=data.salonSelf.mobilephone%>
                         </div>
                         <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            <%=gradeText[data.salonSelf.grade]%>，<%=fastGradeText[data.salonSelf.fastGrade]%>
+                            <%=gradeText[data.salonSelf.grade]%><%=fastGradeText[data.salonSelf.fastGrade] ? ","+fastGradeText[data.salonSelf.fastGrade] : ""%>
                         </div>
                         <div style="height:33px;vertical-align: middle;line-height: 33px;">
                          作品数：<%=data.salonSelf.num%>，上传次数：<%=data.salonSelf.uploadNum%>
@@ -141,7 +141,7 @@
                             <%=item.stylistName%>，<%=item.mobilephone%>
                         </div>
                         <div style="height:33px;vertical-align: middle;line-height: 33px;">
-                            <%=gradeText[item.grade]%>，<%=fastGradeText[item.fastGrade]%>
+                            <%=gradeText[item.grade]%><%=fastGradeText[item.fastGrade] ? ","+fastGradeText[item.fastGrade] : ""%>
                         </div>
                         <div style="height:33px;vertical-align: middle;line-height: 33px;">
                          作品数：<%=item.num%>，上传次数：<%=item.uploadNum%>
