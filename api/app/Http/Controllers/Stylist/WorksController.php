@@ -8,7 +8,7 @@ use App\Exceptions\ERROR;
 use DB;
 class WorksController extends Controller {
     /**
-     * @api {post} /Works/index 1.造型师的作品列表和所在店的其他
+     * @api {post} /Works/index/:id 1.造型师的作品列表和所在店的其他
      * @apiName list
      * @apiGroup Works
      *
@@ -42,7 +42,8 @@ class WorksController extends Controller {
      *                   "stylistId":26,
      *                   "commoditiesImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/143332415715992.jpg",
      *                   "description":"","thumbImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/s_143332415715992.jpg",
-     *                   "img":null
+     *                   "img":null,
+     *                   "addTime":"0000-00-00"
      *               },
      *               {
      *                   "recId":2377,
@@ -50,6 +51,7 @@ class WorksController extends Controller {
      *                   "commoditiesImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/14333241599000.jpg",
      *                   "description":"","thumbImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/s_14333241599000.jpg",
      *                   "img":null
+     *                   "addTime":"0000-00-00"
      *               }
      *            ],
      *           "salon":
@@ -59,14 +61,20 @@ class WorksController extends Controller {
      *                   "stylistName":"\u4f1a\u64b8\u7684\u5b69\u5b50\u4e0d\u4f24\u8eab",
      *                   "mobilephone":"13545108420",
      *                   "grade":4,
-     *                   "fastGrade":2
+     *                   "fastGrade":2,
+     *                   "num":0,
+     *                   "uploadNum":0,
+     *                   "salonname":"choumeitest_salon"
      *                },
      *               {
      *                   "stylistId":26,
      *                   "stylistName":"\u4f1a\u64b8\u7684\u5b69\u5b50\u4e0d\u4f24\u8eab",
      *                   "mobilephone":"19441001801",
-     *                  "grade":0,
+     *                   "grade":0,
      *                   "fastGrade":2
+     *                   "num":0,
+     *                   "uploadNum":0,
+     *                   "salonname":"choumeitest_salon"
      *               }
      *           ]
      *    }
@@ -87,7 +95,9 @@ class WorksController extends Controller {
         }
         $field1=['stylistId','stylistName', 'mobilephone','grade','fastGrade'];
         $salonStylist=Stylist::select($field1)->where(array('salonId'=>$stylist['salonId']))->get();
-        $works=Works::where(array('stylistId'=>$stylistId))->orderBy('recId', 'desc')->get();
+        $field2=['salonname'];
+        $salon=DB::table('salon')->select($field2)->where(array('salonid'=>$stylist['salonId']))->first();
+        $works=Works::where(array('stylistId'=>$stylistId))->orderBy('addTime', 'desc')->get();
         $query=array();
         foreach ($works as $key2 =>$value) {
              if(!empty($works['img'])){
@@ -101,16 +111,16 @@ class WorksController extends Controller {
             foreach ($works1 as $key1 =>$value) {
                 if(!empty($works1['img'])){
                     $image=  json_decode($works1['img'],true);
-                    $num=$num+(count($image)/2);
+                    $num=$num+(count($image));
                 }  else {   
                     $num=$num+1;
                 }
                 
              }
-           $salonStylist->num=$num;
-
+           $salonStylist[$key]->num=$num;
+           $salonStylist[$key]->uploadNum=DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->count();
+           $salonStylist[$key]->salonname=$salon->salonname;
          }
-        $salonStylist->uploadNum=DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->count();
         $query['works']=$works;
         $query['salon']=$salonStylist;
         return $this->success($query);  
