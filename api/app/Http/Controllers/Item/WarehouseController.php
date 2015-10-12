@@ -10,7 +10,7 @@ use App\SalonItem;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use App\SalonItemFormats;
-use App\Http\Requests\Request;
+use Request;
 use Event;
 
 class WarehouseController extends Controller
