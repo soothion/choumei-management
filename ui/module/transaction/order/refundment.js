@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-21 17:44:57
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-24 15:15:51
+* @Last Modified time: 2015-10-13 18:35:08
 */
 
   $(document).ready(function(){
@@ -70,27 +70,45 @@
                   type : "post",
                   data :  {ids:arr.join(",")}
                 }).done(function(data, status, xhr){
+                  var arr = [];
                   if(data.result == "1"){
                     data = data.data;
+                    if(data.alipay && data.alipay.info){
+                       arr.push(data.alipay.info);
+                    } 
+                    if(data.wx && data.wx.info){
+                      arr.push(data.wx.info);
+                    } 
+                    if(data.yilian && data.yilian.info){
+                      arr.push(data.yilian.info);
+                    }
+                    if(data.balance && data.balance.info){
+                      arr.push(data.balance.info);
+                    }
+                    if(arr.length > 0) tip(arr);
                     if(data.alipay && data.alipay.form_args){
                       $.each($("#alipaysubmit").serializeArray(),function(i,field){
                         $("input[name='"+field.name+"']").val(data.alipay.form_args[field.name]);
                       })
                       $("#alipaysubmit").submit();
-                      return;
                     }
-                    if(data.alipay && data.alipay.info) tip(data.alipay.info);
-                    if(data.wx && data.wx.info) tip(data.wx.info);
-                    if(data.yilian && data.yilian.info) tip(data.yilian.info);
-                    if(data.balance && data.balance.info) tip(data.balance.info);
                     lib.ajat('refund/index?<%=query._%>#domid=table&tempid=table-t').render();
                   }                                   
                 });                        
               }
           });
 
-          function tip (msg) {
-              parent.lib.popup.result({bool:true,text:msg});
+          function tip (arr) {
+            var str = "";
+            arr.forEach(function(s,i){
+              str += s + "<br>";
+            })
+            lib.popup.box({
+                width:600,
+                height:$(window).height()-100,
+                title:'<h1>审批结果</h1>',
+                content:str   
+            });              
           }          
      });
   });

@@ -298,7 +298,6 @@
                               $("input[name='"+field.name+"']").val(data.alipay[field.name]);
                           })
                           $("#alipaysubmit").submit();
-                          return;
                         }
                         if(data.msg) tip(data.msg);
                         lib.ajat('bounty/index?isRefund=2&<%=query._%>#domid=table&tempid=table-t').render();
