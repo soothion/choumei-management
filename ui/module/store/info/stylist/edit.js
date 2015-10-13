@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-13 15:05:11
+* @Last Modified time: 2015-10-13 17:04:35
 */
 
 (function(){       
@@ -76,7 +76,7 @@
     });
 
     $("#form").on('click','.tab td',function(){
-        $(this).children().css('visibility','visible');
+        $(this).children().css('opacity','1');
     });
 
     $("#form").on('click','input[type="checkbox"]',function(){   
@@ -117,7 +117,6 @@
     $('#form').on('change','input.start',function(){
         var flag = false;
         var arrTd = $(this).closest("tr").children();
-
         arrTd.each(function(index,obj){
             if($(obj).children().val()){
                 flag = true; 
@@ -126,8 +125,8 @@
 
         if(flag){
             arrTd.each(function(index,obj){
-                $(obj).children().addClass("show");
                 if($(obj).children().attr('type')=="date"){
+                    $(obj).children().addClass("show");
                     $(obj).children().attr("requiredOther",true); 
                 }else{
                     $(obj).children().attr("required",true);                    
@@ -145,7 +144,7 @@
         }
     });
 
-    $('#form').on('blur','input[type=date]',function(){        
+    $('#form').on('blur','input[type=date]',function(){       
         if($(this).attr("requiredOther")){
             var arrTd = $(this).closest("tr").children();
             arrTd.each(function(index,obj){
