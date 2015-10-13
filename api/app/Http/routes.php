@@ -88,6 +88,11 @@ Route::any('itemInfo/getItems',array(  //获取分类下项目名称
 		'as'=>'itemInfo.getItemByTypeid',
 		'uses'=>'Item\ItemInfoController@getItemByTypeid'
 ));
+Route::any('itemInfo/getAddedService',array(  //获取增值服务
+		'as'=>'itemInfo.getAddedService',
+		'uses'=>'Item\ItemInfoController@getAddedService'
+));
+
 //项目分类列表
 Route::any('item/type',array(
 	'as'=>'item.type',
@@ -722,10 +727,6 @@ Route::any('refund/call_back_of_alipay',array(
     		'uses'=>'Item\ItemInfoController@index'
     ));
 	
-    Route::any('itemInfo/getAddedService',array(  //获取增值服务
-    		'as'=>'itemInfo.getAddedService',
-    		'uses'=>'Item\ItemInfoController@getAddedService'
-    ));
 	
     Route::any('itemInfo/create',array(  //创建项目
     		'as'=>'itemInfo.create',
