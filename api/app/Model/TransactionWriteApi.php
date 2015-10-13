@@ -709,7 +709,7 @@ class TransactionWriteApi
             Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($item) . " \t url : {$url} \n", "wechat");
             $respnd = Utils::HttpPost($url, $item);
             Utils::log("pay", date("Y-m-d H:i:s") . "\t [RESPOND] return:  {$respnd} \n", "wechat");
-            $ret['info'] .= $respnd . "\n";
+            $ret['info'] .= $item['ordersn']." ".$respnd . "\n";
         }
         return $ret;
     }
