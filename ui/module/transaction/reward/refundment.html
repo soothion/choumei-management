@@ -308,9 +308,14 @@
      });
 
     function tip (msg) {
-        parent.lib.popup.result({bool:true,text:msg});
-    }        
-  });
+        lib.popup.box({
+            width:700,
+            height:$(window).height()-100,
+            title:'<h1>操作结果</h1>',
+            content:msg   
+        });              
+      }       
+    });
   </script>
   </body>
 </html>

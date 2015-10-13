@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-21 17:44:57
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-13 18:35:08
+* @Last Modified time: 2015-10-13 19:02:10
 */
 
   $(document).ready(function(){
@@ -104,9 +104,9 @@
               str += s + "<br>";
             })
             lib.popup.box({
-                width:600,
+                width:700,
                 height:$(window).height()-100,
-                title:'<h1>审批结果</h1>',
+                title:'<h1>操作结果</h1>',
                 content:str   
             });              
           }          
