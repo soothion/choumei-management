@@ -274,7 +274,8 @@ class TransactionSearchApi
                     if(!empty($remark)) 
                     {
                         $str .= "({$remark})";
-                    }                   
+                    }
+                    $trend['remark'] = $str;
                 }
             }
         }
