@@ -212,9 +212,9 @@
 							<%
 							var slug=slugObject[query.p];
 							if(query.p=="warehouse"){
-								slug+=(item.item_type==1?",item.show":"onsale.show")
+								slug+=(item.item_type==1?",item.show":",onsale.show")
 							}%>
-							<a class="link" target="_blank" data-slug="merchant.show,iteminfo.update" href="detail.html?p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>&id=<%=item.itemid%>&type=<%=item.item_type==1?"item":"special"%>">查看</a>
+							<a class="link" target="_blank" data-slug="<%=slug%>" href="detail.html?p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>&id=<%=item.itemid%>&type=<%=item.item_type==1?"item":"special"%>">查看</a>
 						</td>
 					</tr> 
 					<%})%>
