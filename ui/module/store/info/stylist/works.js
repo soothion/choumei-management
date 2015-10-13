@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-12 13:59:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-13 09:31:43
+* @Last Modified time: 2015-10-13 13:59:19
 */
 
 (function(){
@@ -27,7 +27,7 @@
                 }          
                 lib.ajax({
                     type: "post",
-                    url : "Works/del/"+id,
+                    url : "works/del/"+id,
                     data: {img : str}    
                 }).done(function(data, status, xhr){
                     if(data.result == 1){
@@ -52,7 +52,7 @@
                 var id = $(self).parent().next().data("id");
                 lib.ajax({
                     type: "post",
-                    url : "Works/del_list/"+id 
+                    url : "works/del_list/"+id 
                 }).done(function(data, status, xhr){
                     if(data.result == 1){
                         parent.lib.popup.result({
@@ -99,7 +99,7 @@
         })
         lib.ajax({
             type: "post",
-            url : "Works/update/"+thumbnail.data("id"),
+            url : "works/update/"+thumbnail.data("id"),
             data:{img:JSON.stringify(arr)}
         }).done(function(data, status, xhr){
                   
@@ -180,7 +180,7 @@
         });
         lib.ajax({
             type: "post",
-            url : "Works/create",
+            url : "works/create",
             data:{stylistId:lib.query.id,img:JSON.stringify(arr),description:des}
         }).done(function(data, status, xhr){
             if(data.result == 1){

@@ -2,13 +2,13 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-10 18:07:54
+* @Last Modified time: 2015-10-13 13:58:49
 */
 
 (function(){       
     if(lib.query.id){
         $("#title").text("编辑造型师");
-        var promise = lib.ajat("Stylist/edit/"+lib.query.id+"#domid=form&tempid=form-t").render();
+        var promise = lib.ajat("stylist/edit/"+lib.query.id+"#domid=form&tempid=form-t").render();
         promise.done(function(data){                
             var arr = [];
             if(data.data && data.data.img) {                    
@@ -209,7 +209,7 @@
     function submit(data){
         lib.ajax({
             type: "post",
-            url : lib.query.id ? "Stylist/update/"+lib.query.id : "Stylist/create/"+lib.query.salonid,
+            url : lib.query.id ? "stylist/update/"+lib.query.id : "stylist/create/"+lib.query.salonid,
             data: data    
         }).done(function(data, status, xhr){
             if(data.result == 1){

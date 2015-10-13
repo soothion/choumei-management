@@ -42,17 +42,18 @@
                 <script type="text/template" id="table-t">
                 <div style="position:absolute;right:20px;top:40px;">
                     <button type="button" class="btn mr-20 isAble" data-status="<%=data.stylistId%>"
-                    data-action="<%=data.status=="1" ? "Stylist/disabled/" : "Stylist/enable/"%>"
-                    data-slug="<%=data.status=="1" ? "disabled" : "enable"%>"
-                    >
-                        <%=data.status=="1" ? "禁用" : "启用"% >
+                    data-action="<%=data.status=="1" ? 'stylist/disabled/' : 'stylist/enable/'%>"
+                    data-slug="<%=data.status=="1" ? 'disabled' : 'enable'%>">
+                        <%=data.status=="1" ? "禁用" : "启用"%>
                     </button>
                     &nbsp;
-                    <button type="button" data-slug="stylist.destroy" class="btn mr-20 del" data-status="<%=data.reward%>">
+                    <button type="button" class="btn mr-20 del" data-status="<%=data.reward%>" 
+                    data-slug="stylist.destroy">
                         删除
                     </button>
                     &nbsp;
-                    <a type="button" class="btn mr-20" href="edit.html#id=<%=data.stylistId%>">
+                    <a type="button" class="btn mr-20" href="edit.html#id=<%=data.stylistId%>" 
+                    data-slug="stylist.update">
                         编辑
                     </a>
                     &nbsp;
@@ -269,7 +270,7 @@
         <script>
             (function(){
                 function init(){
-                    var promise = lib.ajat('Stylist/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
+                    var promise = lib.ajat('stylist/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
                     promise.done(function(data){
                     $('img').attr('src',data.data.stylistImg);                 
                     }); 
@@ -299,7 +300,7 @@
                             define:function(){
                                 lib.ajax({
                                     type: "post",
-                                    url : "Stylist/destroy/"+lib.query.id
+                                    url : "stylist/destroy/"+lib.query.id
                                 }).done(function(data, status, xhr){
                                     if(data.result == 1){
                                         parent.lib.popup.result({
