@@ -29,7 +29,7 @@
     <body>
         <div class="breadcrumb">
             <a>店铺管理</a>
-            <span>&gt;</span><a href="index.html">店铺资料</a>
+            <span>&gt;</span><a href="../index.html">店铺资料</a>
             <span>&gt;</span><a href="index.html">造型师列表</a>
             <div class="flex-box">
                 <div class="flex-item">
@@ -42,11 +42,13 @@
                 <script type="text/template" id="table-t">
                 <div style="position:absolute;right:20px;top:40px;">
                     <button type="button" class="btn mr-20 isAble" data-status="<%=data.stylistId%>"
-                    data-action="<%=data.status=="1" ? "Stylist/disabled/" : "Stylist/enable/"%>">
-                        <%=data.status=="1" ? "禁用" : "启用"%>
+                    data-action="<%=data.status=="1" ? "Stylist/disabled/" : "Stylist/enable/"%>"
+                    data-slug="<%=data.status=="1" ? "disabled" : "enable"%>"
+                    >
+                        <%=data.status=="1" ? "禁用" : "启用"% >
                     </button>
                     &nbsp;
-                    <button type="button" class="btn mr-20 del" data-status="<%=data.reward%>">
+                    <button type="button" data-slug="stylist.destroy" class="btn mr-20 del" data-status="<%=data.reward%>">
                         删除
                     </button>
                     &nbsp;

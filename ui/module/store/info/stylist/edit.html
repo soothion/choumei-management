@@ -42,7 +42,7 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a>店铺管理 </a><span>&gt;</span><a href="index.html">店铺资料</a>
+        <a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a>
         <div class="flex-box">
             <div class="flex-item">
                 <h4 id="title"></h4>
@@ -54,7 +54,7 @@
         <form class="form-vertical" data-role="form" id="form">
         <script type="text/template" id="form-t">
             <div class="detail-operation">
-                <button type="button" class="btn btn-cancel" onclick="history.back()">取消</button>
+                <button type="button" class="btn btn-cancel">取消</button>
                 <span class="space"></span>
                 <button class="btn-primary">提交</button>
             </div>  
@@ -293,7 +293,7 @@
                 <label class="control-label" for="">自我描述：</label>
                 <div class="control">
                     <div class="keypress">
-                        <textarea maxlength="50" data-helpid="textarea-help2" name="description" required><%=data.description%></textarea>
+                        <textarea maxlength="50" data-helpid="textarea-help2" name="description"><%=data.description%></textarea>
                     </div>
                     <div class="control-help" style="display:none;" id="textarea-help2"></div>
                 </div>

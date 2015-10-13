@@ -54,7 +54,7 @@
 
         <div class="wrapper">
             <div class="detail-operation">
-                <button id="add_works_btn" class="btn-primary">+新增</button>
+                <button id="add_works_btn" class="btn-primary" data-slug="works.create">+新增</button>
             </div> 
 
             <div id="works-wrapper" ajat="Works/index/<%=query.id%>#domid=works-wrapper&tempid=works-t">
@@ -65,19 +65,19 @@
                             <div class="header">
                                 <span><%=item.addTime%></span>&nbsp;&nbsp;
                                 <span><%=item.description%></span>
-                                <i class="fa fa-trash-o fa-3x del"></i>
+                                <i class="fa fa-trash-o fa-3x del" data-slug="works.del_list"></i>
                             </div>
                             <%if(item.thumbImg && item.commoditiesImg){%>
                                 <div class="control-thumbnails" id="control-thumbnails1" data-id="<%=item.recId%>">
                                     <div class="control-thumbnails-item">                                
                                         <img src="<%=item.thumbImg%>" data-original="<%=item.commoditiesImg%>">
-                                        <a class="fa fa-times-circle control-thumbnails-remove"></a>
+                                        <a class="fa fa-times-circle control-thumbnails-remove" data-slug="works.del"></a>
                                         <div class="control-thumbnails-operation flex-box">
                                             <span class="control-thumbnails-before flex-item">
-                                                <i class="fa fa-long-arrow-left"></i>
+                                                <i class="fa fa-long-arrow-left" data-slug="works.update"></i>
                                             </span>
                                             <span class="control-thumbnails-after flex-item">
-                                                <i class="fa fa-long-arrow-right"></i>
+                                                <i class="fa fa-long-arrow-right" data-slug="works.update"></i>
                                             </span>
                                         </div>
                                     </div>                         
@@ -89,13 +89,13 @@
                                     <%imgArr.forEach(function(obj,i){ %>                                   
                                         <div class="control-thumbnails-item">                                
                                             <img src="<%=obj.thumbimg%>" data-original="<%=obj.img%>">
-                                            <a class="fa fa-times-circle control-thumbnails-remove"></a>
+                                            <a class="fa fa-times-circle control-thumbnails-remove" data-slug="works.del"></a>
                                             <div class="control-thumbnails-operation flex-box">
                                                 <span class="control-thumbnails-before flex-item">
-                                                    <i class="fa fa-long-arrow-left"></i>
+                                                    <i class="fa fa-long-arrow-left" data-slug="works.update"></i>
                                                 </span>
                                                 <span class="control-thumbnails-after flex-item">
-                                                    <i class="fa fa-long-arrow-right"></i>
+                                                    <i class="fa fa-long-arrow-right" data-slug="works.update"></i>
                                                 </span>
                                             </div>
                                         </div>
