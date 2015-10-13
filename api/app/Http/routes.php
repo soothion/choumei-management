@@ -88,7 +88,11 @@ Route::any('itemInfo/getItems',array(  //获取分类下项目名称
 		'as'=>'itemInfo.getItemByTypeid',
 		'uses'=>'Item\ItemInfoController@getItemByTypeid'
 ));
-
+//项目分类列表
+Route::any('item/type',array(
+	'as'=>'item.type',
+	'uses'=>'ItemController@type'
+));
 
 // 店铺消费验证  结算
 Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
@@ -101,8 +105,8 @@ Route::any('refund/call_back_of_alipay',array(
 
 
 //权限管理后台接口
- // Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
-Route::group(['middleware'], function(){
+ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+// Route::group(['middleware'], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -238,10 +242,6 @@ Route::group(['middleware'], function(){
 		'as'=>'item.show',
 		'uses'=>'ItemController@show'
 	));	
-	Route::any('item/type',array(
-		'as'=>'item.type',
-		'uses'=>'ItemController@type'
-	));
 	Route::any('item/sort',array(
 		'as'=>'item.sort',
 		'uses'=>'ItemController@sort'
