@@ -718,7 +718,7 @@ Route::group(['middleware'], function(){
     ));
     
     Route::any('itemInfo/index',array(  //获取项目列表
-    		'as'=>'itemInfo.index',
+    		'as'=>'info.index',
     		'uses'=>'Item\ItemInfoController@index'
     ));
 	
