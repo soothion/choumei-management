@@ -65,10 +65,10 @@
 						<td><%=item.sNumber%></td>
 						<td><%=gradeText[item.grade]%></td>
 						<td><%=fastGradeText[item.fastGrade]%></td>
-						<td><a class="link" href="works.html#id=<%=item.stylistId%>"><%=item.num%></a></td>
+						<td><a class="link" data-slug="works.index" href="works.html#id=<%=item.stylistId%>"><%=item.num%></a></td>
 						<td><%=statusText[item.status]%></td>
 						<td>
-						<a class="link" target="_blank" href="detail.html#id=<%=item.stylistId%>">
+						<a class="link" target="_blank" data-slug="stylist.show,stylist.edit" href="detail.html#id=<%=item.stylistId%>">
 						查看&gt;
 						</a>
 						</td>
