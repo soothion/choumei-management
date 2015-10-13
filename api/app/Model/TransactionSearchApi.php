@@ -256,6 +256,27 @@ class TransactionSearchApi
         if(!empty($trends))
         {
             $trendArr = $trends->toArray();
+            foreach ($trendArr as &$trend)
+            {
+                $status = $trend['status'];
+                $remark = $trend['remark'];
+                $str = "";
+                if($status == 6 ||  $status == 8)
+                {
+                    if($status == 6)
+                    {
+                        $str = "申请退款";
+                    }
+                    if($status == 8)
+                    {
+                        $str = "退款拒绝";
+                    }
+                    if(!empty($remark)) 
+                    {
+                        $str .= "({$remark})";
+                    }                   
+                }
+            }
         }
         if(!empty($vouchers))
         {
