@@ -686,6 +686,7 @@ class TransactionWriteApi
             Utils::log("pay", date("Y-m-d H:i:s") ."\t [RESPOND] return:  {$respnd} \n","unionpay");
             $ret['info'] .= $respnd . "\n";
         }
+        $ret['info'] = nl2br($ret['info']);
         return $ret;
     }
 
@@ -711,6 +712,7 @@ class TransactionWriteApi
             Utils::log("pay", date("Y-m-d H:i:s") . "\t [RESPOND] return:  {$respnd} \n", "wechat");
             $ret['info'] .= $item['ordersn']." ".$respnd . "\n";
         }
+        $ret['info'] = nl2br($ret['info']);
         return $ret;
     }
     
@@ -751,6 +753,7 @@ class TransactionWriteApi
                 $ret['info'] .= $item['ordersn'] . " 退款失败   退款方式 易联\n";
             }
         }
+        $ret['info'] = nl2br($ret['info']);
         return $ret;
     }
     
@@ -815,6 +818,7 @@ class TransactionWriteApi
         self::modifOrderStatusRefundCompleted($all_ok_ordersns, "余额退款完成");
         // 销量减一
         self::modiSoldNumMinus($all_ordersns);
+        $ret['info'] = nl2br($ret['info']);
         return $ret;
     }
     
@@ -847,6 +851,7 @@ class TransactionWriteApi
         self::modifOrderStatusRefundCompleted($all_ok_ordersns, "红包退款完成");
         // 销量减一
         self::modiSoldNumMinus($all_ordersns);
+        $ret['info'] = nl2br($ret['info']);
         return $ret;
     }
     
@@ -878,6 +883,7 @@ class TransactionWriteApi
         self::modifFundflowCompleted($all_ordersns,self::REFUND_TO_YOUHUI);
         self::modifOrderStatusRefundCompleted($all_ok_ordersns, "优惠码退款完成");      
         self::modiSoldNumMinus($all_ordersns);
+        $ret['info'] = nl2br($ret['info']);
         return $ret;
     }    
     
