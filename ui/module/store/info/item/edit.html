@@ -19,10 +19,22 @@
 	<div class="wrapper" >
 		<div class="form-vertical" id="special" ajat="#domid=special&tempid=special-t">
 			<script type="text/template" id="special-t">
+				<%
+					var updateSlug="itemInfo.update";
+					if(query.p=="warehouse"){
+						if(query.type=="special"){
+							updateSlug="itemInfo.updateSpecialItem"
+						}
+					}
+					if(lib.query.p=="special"){
+						updateSlug="itemInfo.updateSpecialItem"
+					}
+					var createSlug=query.p=="special"?"itemInfo.createSpecialItem":"itemInfo.create";
+				%>
 				<div class="detail-operation">
 					<button class="btn btn-cancel" type="button">取消</button>
 					<span class="space"></span>
-					<button form="_form" class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
+					<button form="_form" class="btn-primary" data-slug="<%=query.id?updateSlug:createSlug%>">提交</button>
 				</div>
 				<%if(query.p=="special"&&!query.id){%>
 				<legend>新增方式</legend>
@@ -319,9 +331,21 @@
 				</div>
 			</div>
 			<div class="control-group">
+				<%
+					var updateSlug="itemInfo.update";
+					if(query.p=="warehouse"){
+						if(query.type=="special"){
+							updateSlug="itemInfo.updateSpecialItem"
+						}
+					}
+					if(lib.query.p=="special"){
+						updateSlug="itemInfo.updateSpecialItem"
+					}
+					var createSlug=query.p=="special"?"itemInfo.createSpecialItem":"itemInfo.create";
+				%>
 				<label class="control-label" for=""></label>
 				<div class="control">
-					<button class="btn-primary" data-slug="<%=query._?"merchant.update":"merchant.save"%>">提交</button>
+					<button class="btn-primary" data-slug="<%=query.id?updateSlug:createSlug%>">提交</button>
 				</div>
 			</div>
 		</form>
