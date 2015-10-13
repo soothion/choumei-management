@@ -748,44 +748,44 @@ Route::any('refund/call_back_of_alipay',array(
     		'uses'=>'Item\ItemInfoController@updateSpecialItem'
     ));
     
-    Route::any('Stylist/index',array(  //请求造型师列表
-        'as'=>'Stylist.index',
+    Route::any('stylist/index',array(  //请求造型师列表
+        'as'=>'stylist.index',
         'uses'=>'Stylist\StylistController@index'
     ));
      
-    Route::any('Stylist/show/{id}',array(  //查看造型师
-        'as'=>'Stylist.show',
+    Route::any('stylist/show/{id}',array(  //查看造型师
+        'as'=>'stylist.show',
         'uses'=>'Stylist\StylistController@show'
     ));
     
-    Route::any('Stylist/edit/{id}',array(  //编辑造型师
-        'as'=>'Stylist.edit',
+    Route::any('stylist/edit/{id}',array(  //编辑造型师
+        'as'=>'stylist.edit',
         'uses'=>'Stylist\StylistController@edit'
     ));
        
-    Route::any('Stylist/enable/{id}',array(  //启用造型师
-        'as'=>'Stylist.enable',
+    Route::any('stylist/enable/{id}',array(  //启用造型师
+        'as'=>'stylist.enable',
         'uses'=>'Stylist\StylistController@enable'
     ));
          
-    Route::any('Stylist/disabled/{id}',array(  //禁用造型师
-         'as'=>'Stylist.disabled',
+    Route::any('stylist/disabled/{id}',array(  //禁用造型师
+         'as'=>'stylist.disabled',
          'uses'=>'Stylist\StylistController@disabled'
     ));
            
            
-    Route::any('Stylist/destroy/{id}',array(  //删除造型师
-        'as'=>'Stylist.destroy',
+    Route::any('stylist/destroy/{id}',array(  //删除造型师
+        'as'=>'stylist.destroy',
         'uses'=>'Stylist\StylistController@destroy'
     ));
     
-    Route::any('Stylist/update/{id}',array(  //修改造型师
-        'as'=>'Stylist.update',
+    Route::any('stylist/update/{id}',array(  //修改造型师
+        'as'=>'stylist.update',
         'uses'=>'Stylist\StylistController@update'
 
     ));
-    Route::any('Stylist/create/{id}',array(  //创建造型师
-        'as'=>'Stylist.create',
+    Route::any('stylist/create/{id}',array(  //创建造型师
+        'as'=>'stylist.create',
         'uses'=>'Stylist\StylistController@create'
 
     ));
@@ -820,24 +820,24 @@ Route::any('refund/call_back_of_alipay',array(
     'as'=>'warehouse.import',
     'uses'=>'Item\WarehouseController@import'
         ));
-    Route::any('Works/index/{id}',array(  //造型师的作品列表和所在店的其他
-    'as'=>'Works.index',
+    Route::any('works/index/{id}',array(  //造型师的作品列表和所在店的其他
+    'as'=>'works.index',
     'uses'=>'Stylist\WorksController@index'
         ));
-    Route::any('Works/del_list/{id}',array(  //删除作品集合
-    'as'=>'Works.del_list',
+    Route::any('works/del_list/{id}',array(  //删除作品集合
+    'as'=>'works.del_list',
     'uses'=>'Stylist\WorksController@del_list'
         ));
-    Route::any('Works/del/{id}',array(  //删除单个作品
-    'as'=>'Works.del',
+    Route::any('works/del/{id}',array(  //删除单个作品
+    'as'=>'works.del',
     'uses'=>'Stylist\WorksController@del'
         ));
-    Route::any('Works/update/{id}',array(  //修改作品集合
-    'as'=>'Works.update',
+    Route::any('works/update/{id}',array(  //修改作品集合
+    'as'=>'works.update',
     'uses'=>'Stylist\WorksController@update'
         ));
-    Route::any('Works/create',array(  //新增作品集合
-    'as'=>'Works.create',
+    Route::any('works/create',array(  //新增作品集合
+    'as'=>'works.create',
     'uses'=>'Stylist\WorksController@create'
         ));
 

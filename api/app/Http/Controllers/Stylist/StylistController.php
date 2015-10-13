@@ -8,7 +8,7 @@ use DB;
 
 class StylistController  extends Controller {
     /**
-     * @api {post} /Stylist/index 1.造型师列表
+     * @api {post} /stylist/index 1.造型师列表
      * @apiName list
      * @apiGroup Stylist
      *
@@ -78,7 +78,7 @@ class StylistController  extends Controller {
     }
     
     /**
-     * @api {post} /Stylist/show/:id 2.查看造型师
+     * @api {post} /stylist/show/:id 2.查看造型师
      * @apiName show
      * @apiGroup Stylist
      *
@@ -183,7 +183,7 @@ class StylistController  extends Controller {
     }
      
     /**
-     * @api {post} /Stylist/destroy/:id  3.删除造型师
+     * @api {post} /stylist/destroy/:id  3.删除造型师
      * @apiName destroy
      * @apiGroup  Stylist
      *
@@ -223,7 +223,7 @@ class StylistController  extends Controller {
     }
 
    /**
-     * @api {post} /Stylist/enable/:id  4.启用造型师
+     * @api {post} /stylist/enable/:id  4.启用造型师
      * @apiName enable
      * @apiGroup  Stylist
      *
@@ -262,7 +262,7 @@ class StylistController  extends Controller {
     }
     
     /**
-      * @api {post} /Stylist/disabled/:id  5.禁用造型师
+      * @api {post} /stylist/disabled/:id  5.禁用造型师
       * @apiName disabled
       * @apiGroup  Stylist
       *
@@ -301,7 +301,7 @@ class StylistController  extends Controller {
     }
    
      /**
-     * @api {post} /Stylist/edit/:id 6.编辑造型师
+     * @api {post} /stylist/edit/:id 6.编辑造型师
      * @apiName edit
      * @apiGroup Stylist
      *
@@ -418,7 +418,7 @@ class StylistController  extends Controller {
     }
     
      /**
-     * @api {post} /Stylist/update/:id 7.修改造型师
+     * @api {post} /stylist/update/:id 7.修改造型师
      * @apiName update
      * @apiGroup Stylist
      *
@@ -499,7 +499,7 @@ class StylistController  extends Controller {
        
     
      /**
-     * @api {post} /Stylist/create/:id 8.创建造型师
+     * @api {post} /stylist/create/:id 8.创建造型师
      * @apiName create
      * @apiGroup Stylist
      *

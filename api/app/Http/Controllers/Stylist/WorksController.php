@@ -8,7 +8,7 @@ use App\Exceptions\ERROR;
 use DB;
 class WorksController extends Controller {
     /**
-     * @api {post} /Works/index/:id 1.造型师的作品列表和所在店的其他
+     * @api {post} /works/index/:id 1.造型师的作品列表和所在店的其他
      * @apiName list
      * @apiGroup Works
      *
@@ -154,7 +154,7 @@ class WorksController extends Controller {
     }
     
     /**
-     * @api {post} /Works/del_list/:id  2.删除作品集合
+     * @api {post} /works/del_list/:id  2.删除作品集合
      * @apiName del_list
      * @apiGroup  Works
      *
@@ -189,7 +189,7 @@ class WorksController extends Controller {
         }
     }
     /**
-     * @api {post} /Works/del/:id  3.删除单个作品
+     * @api {post} /works/del/:id  3.删除单个作品
      * @apiName del
      * @apiGroup  Works
      *
@@ -233,7 +233,7 @@ class WorksController extends Controller {
     }
     
     /**
-     * @api {post} /Works/update/:id  4.修改作品集合
+     * @api {post} /works/update/:id  4.修改作品集合
      * @apiName update
      * @apiGroup  Works
      *
@@ -276,7 +276,7 @@ class WorksController extends Controller {
     }
     
     /**
-     * @api {post} /Works/create 5.新增作品集合
+     * @api {post} /works/create 5.新增作品集合
      * @apiName create
      * @apiGroup  Works
      *
