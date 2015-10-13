@@ -797,7 +797,7 @@ Route::group(['middleware'], function(){
     
     Route::any('warehouse/show/{id}',array(  //项目仓库详情
     'as'=>'warehouse.show',
-    'uses'=>'Item\ItemController@show'
+    'uses'=>'ItemController@show'
         ));
     
     Route::any('warehouse/detail/{id}',array(  //项目仓库详情
