@@ -2,13 +2,13 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-13 13:58:49
+* @Last Modified time: 2015-10-13 15:05:11
 */
 
 (function(){       
     if(lib.query.id){
         $("#title").text("编辑造型师");
-        var promise = lib.ajat("stylist/edit/"+lib.query.id+"#domid=form&tempid=form-t").render();
+        var promise = lib.ajat("stylist/show/"+lib.query.id+"#domid=form&tempid=form-t").render();
         promise.done(function(data){                
             var arr = [];
             if(data.data && data.data.img) {                    
@@ -21,7 +21,7 @@
     }
 
     if(lib.query.salonid){
-        $("#title").text("新增造型师");
+        $("#title").text("新增造型师-"+lib.query.salonname);
         lib.ajat("#domid=form&tempid=form-t").template({});   
         initUploader([]);    
     }
@@ -121,7 +121,7 @@
         arrTd.each(function(index,obj){
             if($(obj).children().val()){
                 flag = true; 
-            }
+            }            
         });
 
         if(flag){
@@ -133,6 +133,9 @@
                     $(obj).children().attr("required",true);                    
                 }
             })
+            if($(this).attr('type')=="date" && $(this).val()){
+                $(this).next() && $(this).next().remove();                 
+            }
         }else{
             arrTd.each(function(index,obj){
                 $(obj).children().removeAttr("required");

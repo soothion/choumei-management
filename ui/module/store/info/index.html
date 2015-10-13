@@ -51,14 +51,14 @@
 						<td><%=item.salonname%></td>
 						<td><a data-slug="item.index" href="item/index.html#p=item&salonid=<%=item.salonid%>&salonname=<%=item.salonname%>" class="link"><%=item.generalNums%></a></td>
 						<td><a data-slug="onsale.index" href="item/index.html#p=special&salonid=<%=item.salonid%>&salonname=<%=item.salonname%>" class="link"><%=item.specialNums%></a></td>
-						<td><a data-slug="stylist.index" href="stylist/index.html?salonId=<%=item.salonid%>" class="link"><%=item.hairstyNums%></a></td>
+						<td><a data-slug="stylist.index" href="stylist/index.html?salonId=<%=item.salonid%>&salonname=<%=item.salonname%>" class="link"><%=item.hairstyNums%></a></td>
 						<td><a data-slug="warehouse.index" href="item/index.html#p=warehouse&salonid=<%=item.salonid%>&salonname=<%=item.salonname%>" class="link"><%=item.wareroomNums%></a></td>
 						<td>
 							<a data-slug="itemInfo.create" href="item/edit.html?salonid=<%=item.salonid%>&p=item&salonname=<%=item.salonname%>" class="link">添加普通项目</a>
 							<span class="space"></span>
 							<a data-slug="itemInfo.createSpecialItem" href="item/edit.html?salonid=<%=item.salonid%>&p=special&salonname=<%=item.salonname%>" class="link">添加闲时特价</a>
 							<span class="space"></span>
-							<a data-slug="stylist.create" href="stylist/edit.html?salonid=<%=item.salonid%>" class="link">添加造型师</a>
+							<a data-slug="stylist.create" href="stylist/edit.html?salonid=<%=item.salonid%>&salonname=<%=item.salonname%>" class="link">添加造型师</a>
 						</td>
 					</tr> 
 					<%})%>
