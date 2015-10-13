@@ -220,7 +220,7 @@ class WorksController extends Controller {
         }
         $data=array();
         if(!empty($param['img'])){
-            $data['img']=json_encode($param['img']);
+            $data['img']=$param['img'];
             $query=  Works::where(array('recId'=>$recId))->update($data);
         }else{
             $query=  Works::where(array('recId'=>$recId))->delete();
@@ -266,7 +266,7 @@ class WorksController extends Controller {
         if(empty($param['img'])){
              throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
         }
-        $data['img']=json_encode($param['img']);
+        $data['img']=$param['img'];
         $query=  Works::where(array('recId'=>$recId))->update($data);
         if($query){
                 return $this->success();
@@ -319,30 +319,30 @@ class WorksController extends Controller {
         }
     }  
 
-    public function uploadfile() {
-        $upload = new \Think\Upload();            // 实例化上传类
-        $upload->maxSize = 3145728 ;              // 设置附件上传大小
-        $upload->allowExts = array('jpg', 'png'); // 设置附件上传类型
-        $upload->savePath = 'menlist/';		  // 设置附件上传目录
-        $return = array('res'=>0,'data'=>'上传失败');
-        $file_info = @current($upload->upload()); //上传成功 获取上传文件信息
-        if(!$file_info){
-               exit(json_encode($return));
-        }else{
-            $pre  = C('IMG_PATH');
-            $file = ltrim(C('UPLOAD_PATH'),'./').$file_info['savepath'].$file_info['savename'];
-            $temp = getimagesize($file);
-            $endName = strtolower(end(explode(".",$file_info['savename'])));
-            if(!in_array($endName, array('jpg', 'png'))){
-            	exit(json_encode(array('res'=>0,'data'=>'图片格式错误！')));
-            }
-            //if(!$temp){exit(json_encode(array('res'=>0,'data'=>'图片格式错误！')));}
-            if($temp[0] != 420 || $temp[1] != 492) exit(json_encode(array('res'=>0,'data'=>'图片尺寸错误')));
-            //if(filesize($file) > 800*1024) exit(json_encode(array('res'=>0,'data'=>'图片大小错误')));  5.0没有大小限制
-            $img = $pre.$file;
-            $return = array('res'=>1,'data'=>$img);
-            exit(json_encode($return));
-        }
-    }
+//    public function uploadfile() {
+//        $upload = new \Think\Upload();            // 实例化上传类
+//        $upload->maxSize = 3145728 ;              // 设置附件上传大小
+//        $upload->allowExts = array('jpg', 'png'); // 设置附件上传类型
+//        $upload->savePath = 'menlist/';		  // 设置附件上传目录
+//        $return = array('res'=>0,'data'=>'上传失败');
+//        $file_info = @current($upload->upload()); //上传成功 获取上传文件信息
+//        if(!$file_info){
+//               exit(json_encode($return));
+//        }else{
+//            $pre  = C('IMG_PATH');
+//            $file = ltrim(C('UPLOAD_PATH'),'./').$file_info['savepath'].$file_info['savename'];
+//            $temp = getimagesize($file);
+//            $endName = strtolower(end(explode(".",$file_info['savename'])));
+//            if(!in_array($endName, array('jpg', 'png'))){
+//            	exit(json_encode(array('res'=>0,'data'=>'图片格式错误！')));
+//            }
+//            //if(!$temp){exit(json_encode(array('res'=>0,'data'=>'图片格式错误！')));}
+//            if($temp[0] != 420 || $temp[1] != 492) exit(json_encode(array('res'=>0,'data'=>'图片尺寸错误')));
+//            //if(filesize($file) > 800*1024) exit(json_encode(array('res'=>0,'data'=>'图片大小错误')));  5.0没有大小限制
+//            $img = $pre.$file;
+//            $return = array('res'=>1,'data'=>$img);
+//            exit(json_encode($return));
+//        }
+//    }
     
 }
