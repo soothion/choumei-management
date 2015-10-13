@@ -741,6 +741,11 @@ Route::group(['middleware'], function(){
     		'as'=>'itemInfo.createSpecialItem',
     		'uses'=>'Item\ItemInfoController@createSpecialItem'
     ));
+	
+	Route::any('itemInfo/updateSpecialItem',array(  //修改特价项目
+    		'as'=>'itemInfo.updateSpecialItem',
+    		'uses'=>'Item\ItemInfoController@updateSpecialItem'
+    ));
     
     Route::any('Stylist/index',array(  //请求造型师列表
         'as'=>'Stylist.index',

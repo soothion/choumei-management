@@ -291,7 +291,22 @@ class ItemInfoController extends Controller{
 	}
 	
 	/**
-	 * @api {post} /itemInfo/update 6.修改项目
+	 * @api {post} /itemInfo/updateSpecialItem 6.修改特价项目
+	 * @apiName updateSpecialItem
+	 * @apiGroup  itemInfo
+	 * 
+	 * @apiParam {String} item 和修改普通项目参数保值一致.
+	 * 
+	 */
+	public function updateSpecialItem()
+	{
+		$param = $this->param;
+		return $this->save($param);
+	
+	}
+	
+	/**
+	 * @api {post} /itemInfo/update 7.修改项目
 	 * @apiName update
 	 * @apiGroup  itemInfo
 	 *
@@ -377,7 +392,6 @@ class ItemInfoController extends Controller{
 	{
 		$itemid = isset($param['itemid'])?intval($param['itemid']):null;
 		$param['userId'] = $this->user->id;
-		
 		$err_msg = [];
 		$ret = self::parametersFilter($param, $err_msg);
 		if(!$ret)
