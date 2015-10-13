@@ -51,8 +51,14 @@ class RequestLog  extends Model{
          AbstractPaginator::currentPageResolver(function() use ($page) {
   	    return $page;
   	 });
-         $fields=['mobilephone','username','device_uuid','update_time','device_os','version'];
+         $fields=['mobilephone','username','device_uuid','update_time','device_os','version','device_type'];
          $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->paginate($page_size)->toArray();
+         foreach ($result["data"] as $key => $value) {
+             if($value->device_type=="WECHAT")
+             {
+                $result["data"][$key]->version="微信公众号（H5）";
+             }
+         }
          unset($result['next_page_url']);
          unset($result['prev_page_url']);
          return $result;
