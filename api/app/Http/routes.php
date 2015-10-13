@@ -758,10 +758,10 @@ Route::any('refund/call_back_of_alipay',array(
         'uses'=>'Stylist\StylistController@show'
     ));
     
-    Route::any('stylist/edit/{id}',array(  //编辑造型师
-        'as'=>'stylist.edit',
-        'uses'=>'Stylist\StylistController@edit'
-    ));
+//    Route::any('stylist/edit/{id}',array(  //编辑造型师
+//        'as'=>'stylist.edit',
+//        'uses'=>'Stylist\StylistController@edit'
+//    ));
        
     Route::any('stylist/enable/{id}',array(  //启用造型师
         'as'=>'stylist.enable',
