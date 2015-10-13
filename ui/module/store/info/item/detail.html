@@ -18,19 +18,30 @@
 			<div class="table-detail" id="detail">
 				<script type="text/template" id="detail-t">
 				<div class="detail-operation">
+					<%
+						var slug="itemInfo.update";
+						if(query.p=="warehouse"){
+							if(query.type=="special"){
+								slug="itemInfo.updateSpecialItem"
+							}
+						}
+						if(lib.query.p=="special"){
+							slug="itemInfo.updateSpecialItem"
+						}
+					%>
 					<%if(query.p=="warehouse"){%>
-					<form action="warehouse/puton" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){self.style.display='none'}})">
+					<form data-slug="warehouse.puton" action="warehouse/puton" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){self.style.display='none'}})">
 						<button class="btn">上架</button><span class="space"></span>
 						<input type="hidden" name="ids" value="<%=query.id%>" />
 					</form>
 					<span class="space"></span>
 					<%}else{%>
-					<form action="item/down/<%=query.id%>" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){self.style.display='none'}})">
+					<form data-slug="item.down" action="item/down/<%=query.id%>" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){self.style.display='none'}})">
 						<button class="btn">下架</button>
 					</form>
 					<span class="space"></span>
 					<%}%>
-					<a class="btn" href="edit.html?<%=query._%>">编辑</a><span class="space"></span>
+					<a data-slug="<%=slug%>" class="btn" href="edit.html?<%=query._%>">编辑</a><span class="space"></span>
 					<button class="btn btn-cancel">关闭</button>
 				</div>
 				<div class="flex-box">
