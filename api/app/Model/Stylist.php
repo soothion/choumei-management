@@ -13,6 +13,9 @@ class Stylist  extends Model {
     public static function getStylistList($param) {
          $query = Self::getQuery();
          $field=['stylistId','stylistName','mobilephone','sNumber','grade','fastGrade','status'];
+         if(!empty($param['salonId'])){
+              $query = $query->where('salonId','=',$param['salonId']);
+         }
          if(isset($param['stylistName'])&&$param['stylistName']){
               $query = $query->where('stylistName','=',$param['stylistName']);
          }
