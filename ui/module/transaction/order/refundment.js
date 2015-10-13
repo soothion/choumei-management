@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-21 17:44:57
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-13 19:02:10
+* @Last Modified time: 2015-10-13 20:08:13
 */
 
   $(document).ready(function(){
@@ -61,7 +61,13 @@
             $('tbody input[type="checkbox"]:checked').each(function(index,obj){
               arr.push($(obj).data('id'));
             })
-          }         
+          }    
+          if(arr.length > 20){
+            parent.lib.popup.alert({
+              text : "一次最多只能操作20条数据！"
+            });
+            return;
+          }               
           parent.lib.popup.confirm({
               text:message,
               define:function(){
@@ -103,7 +109,7 @@
             arr.forEach(function(s,i){
               str += s + "<br>";
             })
-            lib.popup.box({
+            parent.lib.popup.box({
                 width:700,
                 height:$(window).height()-100,
                 title:'<h1>操作结果</h1>',

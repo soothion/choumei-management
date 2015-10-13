@@ -129,7 +129,7 @@ define(function(require,exports,module){
 				marginLeft:-options.width/2
 			});
 			var minHeight=options.height-popup.children('.popup-box-title').outerHeight()-popup.children('.popup-footer').outerHeight();
-			popup.find('.popup-box-body').css({minHeight:minHeight});
+			popup.find('.popup-box-body').css({height:minHeight});
             this.overlay();
             $('body').append(popup);
 			options.complete && options.complete();
