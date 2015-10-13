@@ -631,7 +631,6 @@
 					var cropper=$(lib.ejs.render({url:"/module/public/template/cropper"},{data:options.src}));
 					cropper.css({opacity:0});
 					var $image=cropper.find('img');
-					parent.lib.fullpage(true);
 					cropper[0].thumbnails={};
 					for(var i=0;i<options.thumbnails.length;i++){
 						cropper[0].thumbnails[options.thumbnails[i]]="";
@@ -661,6 +660,7 @@
 							top:($win.height()-height)/2
 						}
 						options.built=function(){
+							parent.lib.fullpage(true);
 							$image.cropper('setCanvasData',canvasData);
 							var $box=$('.cropper-crop-box');
 							$image.cropper('setCropBoxData',{
