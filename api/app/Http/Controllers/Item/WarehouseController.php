@@ -436,10 +436,9 @@ class WarehouseController extends Controller
 	            || !isset($data['minPrice'])
 	            || !isset($data['minPriceOri'])
 	            || !isset($data['minPriceGroup'])
+	            || !isset($data['userId'])
 	            )
 	        {
-	            var_dump($data);
-	            die();
 	            throw new ApiException('json文件格式不正确,缺少必要参数',ERROR::UPLOAD_FILE_ERR_FORMAT);
 	        }
 	        $tmp = [];
@@ -474,7 +473,7 @@ class WarehouseController extends Controller
 	            $tmp['firstLimit'] = intval($data['limit_first']);
 	        }
 	        
-	        if(count($data['prices'])<1 || empty($data['norms_cat_id']))
+	        if(count($data['prices'])<1 || empty($data['norms_cat_id']) || empty($data['userId']))
 	        {
 	            $tmp['priceStyle'] = 1;
 	            $tmp['price'] = $data['minPriceOri'];
