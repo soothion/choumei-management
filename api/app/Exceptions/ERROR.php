@@ -44,6 +44,7 @@ class ERROR
       */
      CONST UPLOAD_FILE_ERR_EXTENSION = -40007;
 
+     /*
       *@param 获取不到配置信息
       */
      CONST CONFIG_LOST =  -40009;
