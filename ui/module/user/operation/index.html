@@ -60,8 +60,8 @@
 			
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form data-slug="feed.destory" action="feed/destroy" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-					<button class="btn" disabled>批量删除</button>
+				<form disabled data-slug="feed.destroy" action="feed/destroy" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+					<button class="btn">批量删除</button>
 				</form>
 			</div>
 			<div class="pager">

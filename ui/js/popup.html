@@ -53,9 +53,9 @@
         <%if(options.title){%>
         <div class="popup-box-title">
 			<%=options.title%>
-			<a class="popup-box-close">X</a>
 		</div>
         <%}%>
+		<a class="popup-box-close fa fa-times-circle"></a>
         <div class="popup-box-body">
 			<%if(options.src){%>
 				<%options.src+=options.src.indexOf("#")>-1?"&":"#"+"popup=box"%>
