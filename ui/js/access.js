@@ -67,6 +67,7 @@ var access={
 				}
 			}
 		});
+		$(document.body).trigger('access');
 	}
 }
 $(function(){
