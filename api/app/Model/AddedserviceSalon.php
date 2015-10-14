@@ -10,8 +10,6 @@ class AddedserviceSalon extends  Model
 
     public $timestamps = false;
     
-    public $timestamps = false;
-    
     /**
      * 新增店铺默认添加所有服务
      * */
