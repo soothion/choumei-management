@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="wrapper" id="table-wrapper" 
-        ajat="<%if(query.no){%>bounty/detail?<%=query._%><%}%>#domid=table-wrapper&tempid=table-t">
+        ajat="<%if(query.no){%>bounty/show?<%=query._%><%}%>#domid=table-wrapper&tempid=table-t">
         <script type="text/template" id="table-t">
             <div class="table">
                 <table>
@@ -92,12 +92,12 @@
 
                         <tr>
                             <td class="first-td">取消时间</td>
-                            <td><%=data.endTime%></td>                            
+                            <td><%=data.cancelTime%></td>                            
                         </tr>
 
                         <tr>
                             <td class="first-td">完成时间</td>
-                            <td><%=%></td>                            
+                            <td><%=data.endTime%></td>                            
                         </tr> 
 
                         <tr>

@@ -154,10 +154,10 @@ class ShopCountApi
      */
     public static function commissionBounty($options){
         $orders = BountyTask::whereIn("btSn",$options)
-        ->where('bountry_task.status',4)
-        ->leftJoin('salon','salon.salonid','=','bountry_task.salonId')
-        ->leftJoin('salon_info','salon_info.salonid','=','bountry_task.salonId')
-        ->select('bountry_task.btId','bountry_task.btSn','bountry_task.salonId','bountry_task.money','bountry_task.endTime','salon.merchantId','salon.salonGrade')
+        ->where('bounty_task.status',4)
+        ->leftJoin('salon','salon.salonid','=','bounty_task.salonId')
+        ->leftJoin('salon_info','salon_info.salonid','=','bounty_task.salonId')
+        ->select('bounty_task.btId','bounty_task.btSn','bounty_task.salonId','bounty_task.money','bounty_task.endTime','salon.merchantId','salon.salonGrade')
         ->get();
 
         $insert = [];

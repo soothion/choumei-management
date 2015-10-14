@@ -17,7 +17,7 @@
 		<div class="wrapper">
 			<form data-role="hash">
 				反馈日期
-				<input type="date"  placeholder="YYYY-MM-DD" name="add_time"/>
+				<input type="date"  placeholder="YYYY-MM-DD" name="date"/>
 				<span class="space"></span>
 				反馈内容
 				<input type="text" name="keyword" />
@@ -72,9 +72,9 @@
 	<script type="text/javascript">
 		$('#table').on('click','input',function(){
 			if($('tbody label input:checked').length>0){
-				$('.table-bottom button').attr('disabled',false);
+				$('.table-bottom form').attr('disabled',false);
 			}else{
-				$('.table-bottom button').attr('disabled',true);
+				$('.table-bottom form').attr('disabled',true);
 			}
 		})
 	</script>

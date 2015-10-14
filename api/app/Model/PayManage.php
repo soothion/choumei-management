@@ -304,7 +304,7 @@ class PayManage extends Model
      * 删除
      * @param unknown $id
      */
-    public static function destory($id)
+    public static function destroy($id)
     {
         $item = self::where('id',$id)->first(['state','type','code']);
         if($item->state  != PayManage::STATE_OF_TO_SUBMIT && $item->state  != PayManage::STATE_OF_TO_CHECK && $item->type  != PayManage::TYPE_OF_FTZ )

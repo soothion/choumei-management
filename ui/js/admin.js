@@ -165,10 +165,13 @@ $(function(){
 		if(!confirm&&this.confirm&&typeof this.confirm=='function'){
 			confirm=this.confirm();
 		}
+<<<<<<< HEAD
 		var data=lib.tools.getFormData($this);
 		if(this._getFormData){
 			data=this._getFormData();
 		}
+=======
+>>>>>>> management_20151010_v1.4.6
 		var request=function(){
 			lib.ajax({
 				url:url,
@@ -490,6 +493,7 @@ $(function(){
 		});
 		parent.lib.popup.swiper({list:list,index:item.index()});
 	});
+<<<<<<< HEAD
 	
 	// $body.on('click','.control-thumbnails-before',function(){
 	// 	var $this=$(this);
@@ -525,6 +529,41 @@ $(function(){
 	// 	}
 	// });
 
+=======
+	$body.on('click','.control-thumbnails-before',function(){
+		var $this=$(this);
+		var thumbnail=$this.closest('.control-thumbnails-item');
+		var prev=thumbnail.prev('.control-thumbnails-item')
+		if(prev.length==1){
+			thumbnail.after(prev);
+		}
+	});
+	$body.on('click','.control-thumbnails-after',function(){
+		var $this=$(this);
+		var thumbnail=$this.closest('.control-thumbnails-item');
+		var next=thumbnail.next('.control-thumbnails-item')
+		if(next.length==1){
+			thumbnail.before(next);
+		}
+	});
+	/*
+	$body.on('click','.control-thumbnails-edit',function(){
+		var item=$(this).closest('.control-thumbnails-item');
+		var src=item.find('img').attr('src');
+		if(src){
+			var options={
+				src:src,
+				define:function(src){
+					parent.lib.fullpage(false);
+					item.find('input.thumb,input.original').val(src);
+					item.find('img').attr('src',src).data('original',src);
+					$('.popup-cropper').remove();
+				}
+			}
+			lib.cropper.create(options);
+		}
+	});*/
+>>>>>>> management_20151010_v1.4.6
 	$body.on('click','.control-single-image img,.image-preview',function(){
 		var $this=$(this);
 		var src=$this.data('original')||$this.attr('src');
@@ -594,6 +633,44 @@ $(function(){
 			$this.siblings('.keypress-help').children('em').text(parseInt(maxlength)-$.trim(value).length);
 		}
 	});
+	/**实例化封装表单**/
+	$('form[data-role="form"]').each(function(){
+		if(!this.instance){
+			this.instance="instance";
+			new lib.Form(this);
+		}
+	});
+	$('form[data-role="hash"]').attr('novalidate','novalidate');
+	$body.on('_ready',function(e){
+		$(e.target).find('form[data-role="form"]').each(function(){
+			if(!this.instance){
+				this.instance="instance";
+				new lib.Form(this);
+			}
+		}).find('form[data-role="hash"]').attr('novalidate','novalidate');
+	});
+	/**btn-cancel操作处理**/
+	$body.on('click','.btn-cancel',function(){
+		if(window==parent){
+			window.close();
+		}else{
+			history.back();
+		}
+	});
+	$body.on('exception',function(e,data){
+		if(data&&data.errorLevel=='xhr'){
+			$(e.target).html('<div class="data-empty tc"><i class="fa fa-frown-o"></i>请求服务异常，<a class="link" onclick="location.reload()">重试</a></div>')
+		}
+	});
+	/**F5刷新**/
+	if(parent!=window){
+		$(window).on('keydown',function(e){
+			if(e.keyCode==116){
+				location.reload();
+				e.preventDefault();
+			}
+		});
+	}
 }); 
 
 Date.prototype.format = function(format){

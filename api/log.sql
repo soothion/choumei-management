@@ -1,28 +1,40 @@
-
-drop table cm_commission;
-drop table cm_commission_log;
-
-CREATE TABLE `cm_commission` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `sn` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '',
-  `salonid` int(11) DEFAULT NULL,
-  `amount` decimal(10,2) NOT NULL,
-  `date` date NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=893 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
-CREATE TABLE `cm_commission_log` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `ordersn` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '',
-  `type` tinyint(2) NOT NULL DEFAULT '1',
-  `salonid` int(11) DEFAULT NULL,
-  `amount` decimal(10,2) NOT NULL,
-  `rate` decimal(4,2) NOT NULL DEFAULT '0.00',
-  `grade` tinyint(2) DEFAULT NULL COMMENT '店铺当前等级 1特级店2A级店3B级店4C级店4淘汰店',
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13176 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+INSERT INTO `cm_permissions` (`id`, `inherit_id`, `title`, `slug`, `status`, `description`, `note`, `sort`, `show`, `created_at`, `updated_at`)
+VALUES
+	(105,NULL,'用户管理','',1,NULL,NULL,NULL,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (106,105,'用户中心','',1,NULL,NULL,200,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (107,106,'用户概况','user.survey',1,NULL,NULL,800,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (108,106,'用户列表','user.index',1,NULL,NULL,700,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (109,106,'用户导出','user.export',1,NULL,NULL,600,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (110,106,'用户详情','user.show',1,NULL,NULL,500,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (111,106,'用户更新','user.update',1,NULL,NULL,400,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (112,106,'用户集团数','user.company',1,NULL,NULL,300,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (113,106,'等级设置','level.update',1,NULL,NULL,200,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (114,105,'用户操作','',1,NULL,NULL,100,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (115,114,'反馈列表','feed.index',1,NULL,NULL,200,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (116,114,'删除反馈','feed.destroy',1,NULL,NULL,100,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (117,106,'用户删除','user.destroy',1,NULL,NULL,400,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (120,NULL,'交易管理','',1,NULL,NULL,140,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (121,120,'交易管理','',1,NULL,NULL,NULL,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (122,121,'设备号登陆查询','requestLog.index',1,NULL,NULL,NULL,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (123,121,'普通订单查询','order.index',1,NULL,NULL,NULL,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (124,121,'臭美券查询','ticket.index',1,NULL,NULL,NULL,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (125,121,'普通订单退款','refund.index',1,NULL,NULL,NULL,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (126,121,'赏金单查询','bounty.index',1,NULL,NULL,NULL,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (127,121,'赏金单退款','bounty.refundIndex',1,NULL,NULL,NULL,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (135,123,'普订单导出','order.export',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (136,124,'臭美券导出','ticket.export',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (137,125,'退款单导出','refund.export',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (138,123,'普订单详情','order.show',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (139,124,'臭美券详情','ticket.show',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (140,125,'退款单详情','refund.show',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (141,125,'退款单通过','refund.accept',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (142,125,'退款单拒绝','refund.reject',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (143,125,'退款单重新退款','refund.reaccept',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (144,122,'导出日志列表','requestLog.export',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (146,126,'赏金单详情','bounty.show',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (147,127,'赏金单退款详情','bounty.refundShow',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (148,127,'赏金单退款通过','bounty.accept',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (149,127,'赏金单退款拒绝','bounty.reject',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (150,126,'导出赏金单列表','bounty.exportBounty',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (151,127,'导出赏金单退款列表','bounty.exportRefund',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),
+        (152,127,'赏金单退款重新退款','bounty.reaccept',1,NULL,NULL,NULL,2,'0000-00-00 00:00:00','0000-00-00 00:00:00');

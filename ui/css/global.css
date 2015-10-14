@@ -378,6 +378,7 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
 .popup-box-body{
 	padding:0px 10px;
 	position:relative;
+    overflow: auto;
 }
 .popup-box-body>iframe{
 	position:absolute;

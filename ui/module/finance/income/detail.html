@@ -29,7 +29,7 @@
                         编辑
                     </button>
                     <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
-                        onclick="del(<%=data.id%>)" data-slug="rebate.destory">
+                        onclick="del(<%=data.id%>)" data-slug="rebate.destroy">
                         删除
                     </button>
                     <button type="button" class="btn fr mr-20" <%=data.status == 1 ? "disabled" : ""%>
@@ -136,14 +136,14 @@
                             type: "get",
                             url : "rebate/destroy/"+id   
                         }).done(function(data, status, xhr){
-                            parent.lib.popup.result({
-                                bool:data.result == 1,
-                                text:(data.result == 1 ? "删除成功" : data.msg),
-                                time:2000,
-                                define:function(){
-                                    history.back();
-                                }
-                            });
+                            if(data.result == 1){
+                                parent.lib.popup.result({
+                                    text:"删除成功",
+                                    define:function(){
+                                        history.back();
+                                    }
+                                });                               
+                            }
                         });                          
                     }
                 }); 
@@ -158,14 +158,14 @@
                             data : {rebate:[id]},
                             url : "rebate/confirm"   
                         }).done(function(data, status, xhr){
-                            parent.lib.popup.result({
-                                bool:data.result == 1,
-                                text:(data.result == 1 ? "返佣成功" : data.msg),
-                                time:2000,
-                                define:function(){
-                                    history.back();
-                                }
-                            });
+                            if(data.result == 1){
+                                parent.lib.popup.result({
+                                    text:"返佣成功",
+                                    define:function(){
+                                        history.back();
+                                    }
+                                });
+                            }
                         });                          
                     }
                 });                

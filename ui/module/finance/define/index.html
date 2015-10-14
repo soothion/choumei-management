@@ -125,8 +125,8 @@
 					ids.push(this.value);
 				});
 				$('.table-bottom input[name="ids"]').val(ids.toString());
-				$('.table-bottom form').eq(0).data('confirm',"你正在给"+checked.length+"家店铺支付￥"+price+"，是否继续？");
-				$('.table-bottom form').eq(1).data('confirm',"你正在拒绝"+checked.length+"家店铺的付款请求，是否继续？");
+				forms.eq(0).data('confirm',"你正在给"+checked.length+"家店铺支付￥"+price+"，是否继续？");
+				forms.eq(1).data('confirm',"你正在拒绝"+checked.length+"家店铺的付款请求，是否继续？");
 			});
 		});
 	</script>

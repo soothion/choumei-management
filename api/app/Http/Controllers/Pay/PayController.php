@@ -11,6 +11,7 @@ use App\Utils;
 use Event;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use App\Mapping;
 
 class PayController extends Controller
 {    
@@ -422,7 +423,7 @@ class PayController extends Controller
      */
     public function destroy($id)
     {
-        $res = PayManage::destory($id);
+        $res = PayManage::destroy($id);
         if(!$res)
         {
             throw new ApiException("此单状态或类型不允许删除或者已经删除!", ERROR::UNKNOWN_ERROR);
@@ -583,8 +584,8 @@ class PayController extends Controller
             $make_user_name = isset($data['make_user']['name'])?$data['make_user']['name']:"";
             $check_user_name = isset($data['confirm_user']['name'])?$data['confirm_user']['name']:"";
             $cash_user_name = isset($data['cash_user']['name'])?$data['cash_user']['name']:"";
-            $pay_type_name = Utils::getPayTypeName($data['pay_type']);
-            $state_name = Utils::getPayManageStateName($data['state']);
+            $pay_type_name = Mapping::getPayTypeName($data['pay_type']);
+            $state_name = Mapping::getPayManageStateName($data['state']);
             $cycle = empty($data['cycle'])?"":$data['cycle']."个月";
             $cycle_day = empty($data['cycle_day'])?"":$data['cycle_day']."号/月";
             $res[] = [

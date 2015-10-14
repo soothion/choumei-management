@@ -44,6 +44,12 @@ class ERROR
       */
      CONST UPLOAD_FILE_ERR_EXTENSION = -40007;
 
+      *@param 获取不到配置信息
+      */
+     CONST CONFIG_LOST =  -40009;
+
+
+
      /**
       * @param 上传的文件格式不正确
       */
@@ -256,15 +262,86 @@ class ERROR
       * 订单状态不正确
       * @var unknown
       */
-     CONST ORDER_STATUS_WRONG = -50610;
+     CONST ORDER_STATUS_WRONG = -50611;
      
      /**
       * 赏金单状态不正确
       * @var unknown
       */
-     CONST BOUNTY_STATUS_WRONG = -50611;
+     CONST BOUNTY_STATUS_WRONG = -50612;
+
+     
+     /**
+      * 退款单找不大流水号
+      * @var unknown
+      */
+     CONST REFUND_CANT_FIND_TN = -50613;
+     
+     /**
+      * 赏金单没有id传值
+      */
+     CONST BOUNTY_ID_NOT_PASS = -50614;
+     
+     /**
+      * 找不到赏金单
+      * @var unknown
+      */
+     CONST BOUNTY_NOT_FOUND = -50615;
+     
+     /**
+      * 赏金单搜索无此类别关键词
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_KEYWORD_WRONG = -50616;
+     
+     /**
+      * 赏金单搜索暂不支持该支付方式搜索
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_PAYTYPE_WRONG = -50617;
+     
+     /**
+      * 赏金单搜索付款状态不正确
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_ISPAY_WRONG = -50618;
+     
+     /**
+      * 赏金单搜索暂不支持该赏金单状态搜索
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_BTSTATUS_WRONG = -50619;
+     
+     /**
+      * 赏金单查询退款状态不正确
+      * @var unknown
+      */
+     CONST BOUNTY_SEARCH_REFUNDSTATUS_WRONG = -50620;
+     
+     /**
+      * 拒接退款需要理由
+      * @var unknown
+      */
+     CONST BOUNTY_REJECT_NOREASON = -50621;
 	 
 	 
+	 ////////////消息模块//////////////
+     /**
+     *@param 参数错误
+     */
+     CONST PARAMETER_ERROR =  -50900;
+	 /**
+     *@param 更新失败
+     */
+     CONST UPDATE_FAILED =  -50901;
+	 /**
+     *@param 消息ID不正确
+     */
+     CONST MESSAGE_ID_IS_ERROR  =  -50902;
+
+     
+     
+
 	 ////////////图片风格模块//////////////
      /**
      *@param 插入风格失败
@@ -313,6 +390,13 @@ class ERROR
      *@param 反馈删除失败
      */
      CONST FEED_DELETE_FAILED =  -50701;
+
+
+     /**
+     *@param 反馈为空
+     */
+     CONST FEED_EMPTY =  -50702;
+
      
      ////////////收款模块//////////////
      /**
@@ -328,19 +412,6 @@ class ERROR
       */
      CONST RECEIVABLES_ID_IS_ERROR  =  -50802;
      
-     ////////////消息模块//////////////
-     /**
-      *@param 参数错误
-      */
-     CONST PARAMETER_ERROR =  -50900;
-     /**
-      *@param 更新失败
-      */
-     CONST UPDATE_FAILED =  -50901;
-     /**
-      *@param 消息ID不正确
-      */
-     CONST MESSAGE_ID_IS_ERROR  =  -50902;
       
      ////////////店铺商户操作模块//////////////
      /**
@@ -478,6 +549,7 @@ class ERROR
       */
      CONST ITEM_WRONG_EXP_TIME =  -51201;
      
+
      /**
       *@param 项目库存有误
       */
@@ -487,7 +559,6 @@ class ERROR
       *@param 项目不存在
       */
      CONST ITEM_NOT_FOUND =  -51106;
-
 
 
 

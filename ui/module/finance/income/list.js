@@ -22,14 +22,14 @@
                         data : {rebate : arr},
                         url : "rebate/confirm"
                     }).done(function(data, status, xhr){
-                        parent.lib.popup.result({
-                            bool:data.result == 1,
-                            text:(data.result == 1 ? "返佣成功" : data.msg),
-                            time:2000,
-                            define:function(){
-                                lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
-                            }
-                        });
+                        if(data.result == 1){
+                            parent.lib.popup.result({
+                                text:"返佣成功",
+                                define:function(){
+                                    lib.ajat('rebate/index?<%=query._%>#domid=table&tempid=table-t').render();
+                                }
+                            });                            
+                        }
                     });                          
                 }
             });

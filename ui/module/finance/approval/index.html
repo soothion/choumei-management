@@ -114,10 +114,11 @@
 	<script type="text/javascript">
 		$(function(){
 			$('#table').on('change','tbody label input',function(){
+				var forms=$('.table-bottom form');
 				if($('tbody label input:checked').length>0){
-					$('.table-bottom button').attr('disabled',false);
+					forms.attr('disabled',false);
 				}else{
-					$('.table-bottom button').attr('disabled',true);
+					forms.attr('disabled',true);
 				}
 				var checked=$('tbody label input:checked');
 				var ids=[];

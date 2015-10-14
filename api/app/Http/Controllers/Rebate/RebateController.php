@@ -11,6 +11,8 @@ use Storage;
 use File;
 use Fileentry;
 use App\ShopCount;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class RebateController extends Controller{
 	/**
@@ -242,7 +244,7 @@ class RebateController extends Controller{
 		    return $this->success();
 		}
 		else 
-			return $this->error('创建失败');
+			throw new ApiException('创建失败', ERROR::REBATE_CREATE_FAILED);
 	}
 
 
@@ -273,7 +275,7 @@ class RebateController extends Controller{
 		$param = $this->param;
 		$rebate = Rebate::find($id);
 		if(!$id)
-			return $this->error('未知返佣单ID');
+			throw new ApiException('未知返佣单', ERROR::REBATE_NOT_FOUND);
 		
 		$result = $rebate->update($param);
 		if($result){
@@ -282,7 +284,7 @@ class RebateController extends Controller{
 		    return $this->success();
 		}
 		else 
-			return $this->error('更新失败');
+			throw new ApiException('更新失败', ERROR::REBATE_UPDATE_FAILED);
 	}
 
 	/**
@@ -348,7 +350,7 @@ class RebateController extends Controller{
 				 ->find($id);
 		
 		if(!$rebate)
-			return $this->error('未知返佣单ID');
+			throw new ApiException('未知返佣单', ERROR::REBATE_NOT_FOUND);
 		return $this->success($rebate); 
 	}
 
@@ -383,7 +385,7 @@ class RebateController extends Controller{
 	{
 		$param = $this->param;
 		if(empty($param['rebate']))
-			return $this->error('必须指定返佣单ID');
+			throw new ApiException('未指定返佣单', ERROR::REBATE_NOT_DEFINED);
 		DB::beginTransaction();
 		
 		$rebates = Rebate::whereIn('id',$param['rebate'])
@@ -413,7 +415,7 @@ class RebateController extends Controller{
 		else
 		{
 			DB::rollback();
-			return $this->error('确认失败');
+			throw new ApiException('确认失败', ERROR::REBATE_UPDATE_FAILED);
 		}
 	}
 
@@ -441,11 +443,11 @@ class RebateController extends Controller{
 	public function upload(){
 		$file = Request::file('rebate');
 		if(!$file)
-			return $this->error('请上传文件');
+			throw new ApiException('请上传文件', ERROR::FILE_EMPTY);
 		$rebate = new Rebate;
 		$extension = $file->getClientOriginalExtension();
 		if(!in_array($extension, ['xls','xlsx']))
-			return $this->error('请上传xls或者xlsx文件');
+			throw new ApiException('请上传xls或者xlsx文件', ERROR::FILE_FORMAT_ERROR);
 
 		$result = false;
 		Excel::load($file->getPathname(), function($reader) use($rebate,&$result){
@@ -484,7 +486,7 @@ class RebateController extends Controller{
 		Storage::disk('local')->put($src,  File::get($file));
  		if($result)
  			return $this->success();
- 		return $this->error('导入失败');
+ 		throw new ApiException('返佣单导入失败', ERROR::REBATE_UPLOAD_FAILED);
 	}
 
 	/**
@@ -511,11 +513,11 @@ class RebateController extends Controller{
 	{
 		$rebate = Rebate::find($id);
 		if(!$rebate)
-			return $this->error('返佣单不存在');
+			throw new ApiException('未知返佣单', ERROR::REBATE_NOT_FOUND);
 		$result = $rebate->delete();
 		if($result)
 			return $this->success();
-		return $this->error('删除失败');
+		throw new ApiException('返佣单删除失败', ERROR::REBATE_DELETE_FAILED);
 	}
 
 

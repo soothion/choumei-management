@@ -508,6 +508,9 @@ input:focus+.unit{
 	vertical-align:top;
 	box-sizing:border-box;
 }
+.control-single-image{
+	vertical-align:middle;
+}
 .control-image{
 	margin-bottom:10px;
 	position:relative;
@@ -1074,6 +1077,10 @@ form[data-role="hash"] input[type="date"]{
 .popup-cropper{
 	z-index:10000;
 	background:rgba(0,0,0,0.4);
+<<<<<<< HEAD
+=======
+	
+>>>>>>> management_20151010_v1.4.6
 }
 .popup-cropper-image{
 	text-align:center;

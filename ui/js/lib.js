@@ -219,6 +219,7 @@
 				if(!options.bool){
 					options.time=2000;
 				}
+
 				options.text='<i class="fa fa-'+(options.bool?"check":"times")+'-circle"></i>'+options.text;
 				this.tips(options)
 			},
@@ -269,6 +270,10 @@
 			},
 			getToken:function(cb){
 				var self=this;
+<<<<<<< HEAD
+=======
+				var _arguments=arguments;
+>>>>>>> management_20151010_v1.4.6
 				var query={
 					'bundle':"FQA5WK2BN43YRM8Z",
 					'version':"5.3",
@@ -299,10 +304,14 @@
 						}
 						clearTimeout(self.timer);
 						self.timer=setTimeout(function(){
+<<<<<<< HEAD
 							lib.puploader.getToken(function(data){
 								Qiniu.token=data.uptoken;
 								Qiniu._fileName=data.fileName;
 							});
+=======
+							lib.puploader.getToken.apply(lib.puploader,_arguments);
+>>>>>>> management_20151010_v1.4.6
 						},1000*60);
 					}
 				});
@@ -370,6 +379,7 @@
 								var data=JSON.parse(res.response);
 								if(data.result==1){
 									parent.lib.popup.result({text:options.successText||'文件上传成功'});
+<<<<<<< HEAD
 									up.trigger('FileUploadedSuccess',up,file,res);
 								}else{
 									var msg=options.failText||'文件上传失败';
@@ -378,6 +388,10 @@
 									}
 									parent.lib.popup.result({bool:false,text:msg});
 									up.trigger('FileUploadedFail',up,file,res);
+=======
+								}else{
+									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
+>>>>>>> management_20151010_v1.4.6
 								}
 								if(data.token){
 									localStorage.setItem('token',data.token);
@@ -405,6 +419,10 @@
 							options.max_file_size=data.maxFileSize+'mb';
 						}
 						var uploader=self.create(options);
+<<<<<<< HEAD
+=======
+						
+>>>>>>> management_20151010_v1.4.6
 						uploader.bind('BeforeUpload',function(up,file){//上传前获取下一个token
 							clearTimeout(self.timer)
 							self.getToken(function(data){
@@ -429,7 +447,10 @@
 								var data=JSON.parse(res.response);
 								if(data.code==0){
 									parent.lib.popup.result({text:options.successText||'文件上传成功'});
+<<<<<<< HEAD
 									up.trigger('FileUploadedSuccess',up,file,res);
+=======
+>>>>>>> management_20151010_v1.4.6
 								}else{
 									var msg=options.failText||'文件上传失败';
 									if(data.msg){
@@ -483,6 +504,7 @@
 					}
 				}
 				this.file(options,function(uploader){
+					
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
 							var data=JSON.parse(res.response);
@@ -490,12 +512,16 @@
 							if(data.code==0){
 								if(!options.crop){
 									if(up.createThumbnails){
+<<<<<<< HEAD
 										if(options.thumb&&data.response.thumbimg){
 											data.response.thumbimg=data.response.thumbimg.replace('w/100/h/100',thumb);
 										}
 										up.createThumbnails(data.response,function(){
 											up.trigger('updateImageData');
 										})
+=======
+										up.createThumbnails(data.response)
+>>>>>>> management_20151010_v1.4.6
 									}else{
 										up.preview(up.area,data.response);
 									}
@@ -512,10 +538,15 @@
 							uploader.thumbnails.addClass('control-thumbnails-unedit');
 						}
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
+<<<<<<< HEAD
 							uploader.createThumbnails=function(data,callback){//创建缩略图
 								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render(
 									{url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},
 									{data:[data]}));
+=======
+							uploader.createThumbnails=function(data){//创建缩略图
+								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render({url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},{data:[data]}));
+>>>>>>> management_20151010_v1.4.6
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').hide();
 								}
@@ -537,6 +568,7 @@
 								if(uploader.thumbnails.children('.control-thumbnails-item').length>=uploader.thumbnails.data('max')){
 									uploader.thumbnails.children('.control-image-upload').hide();
 								}
+<<<<<<< HEAD
 							}
 						}else if($target.closest('.control-single-image').length==1){
 							uploader.area=$target.closest('.control-single-image');
@@ -544,6 +576,8 @@
 								this.area.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
 								this.area.find('input.original').val(data.img).blur();
 								this.area.find('input.thumb').val(data.thumbimg).blur();
+=======
+>>>>>>> management_20151010_v1.4.6
 							}
 							uploader.thumbnails.on('click','.control-thumbnails-edit',function(){
 								var $this=$(this).closest('.control-thumbnails-item');
@@ -557,6 +591,10 @@
 								if(files_number){
 									plupload.each(files, function(file,i) {
 										if(i+exist>=files_number){
+<<<<<<< HEAD
+=======
+											console.log('ddddddddd')
+>>>>>>> management_20151010_v1.4.6
 											up.removeFile(file);	
 										}
 									});
@@ -568,7 +606,10 @@
 							$dom.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
 							$dom.find('input.original').val(data.img).blur();
 							$dom.find('input.thumb').val(data.thumbimg).blur();
+<<<<<<< HEAD
 							$dom.find('.control-image-single-remove').show();
+=======
+>>>>>>> management_20151010_v1.4.6
 						}
 					}
 					if(options.imageLimitSize){
@@ -618,6 +659,7 @@
 				});
 			},
 			create:function(options){
+<<<<<<< HEAD
 				options=$.extend({
 					thumbnails:['300x300'],
 					aspectRatio:1/1,
@@ -631,6 +673,14 @@
 					var cropper=$(lib.ejs.render({url:"/module/public/template/cropper"},{data:options.src}));
 					cropper.css({opacity:0});
 					var $image=cropper.find('img');
+=======
+				options=$.extend({thumbnails:['300x300'],aspectRatio: 1/1,autoCropArea: 0.5},options);
+				options.src=options.src.split('?')[0];
+				this.use(function(){
+					var cropper=$(lib.ejs.render({url:"/module/public/template/cropper"},{data:options.src}));
+					$(document.body).append(cropper);
+					parent.lib.fullpage(true);
+>>>>>>> management_20151010_v1.4.6
 					cropper[0].thumbnails={};
 					for(var i=0;i<options.thumbnails.length;i++){
 						cropper[0].thumbnails[options.thumbnails[i]]="";
@@ -647,6 +697,7 @@
 					options.crop=function(e){
 						for(var name in cropper[0].thumbnails){
 							cropper[0].thumbnails[name]=this.src+"?imageMogr2"+"/crop/!"+Math.round(e.width)+"x"+Math.round(e.height)+"a"+Math.round(e.x)+"a"+Math.round(e.y)+"/thumbnail/"+name;
+<<<<<<< HEAD
 						}
 					}
 					$image.on('load',function(){
@@ -674,6 +725,13 @@
 						$image.cropper(options);
 					});
 					$(document.body).append(cropper);
+=======
+						}
+					}
+					cropper.find('img').on('load',function(){
+						$(this).cropper(options);
+					});
+>>>>>>> management_20151010_v1.4.6
 				});
 			}
 		}

@@ -37,7 +37,13 @@ Route::group(['middleware' => ['jwt.auth']], function(){
 	));
 
 });
-		
+
+
+//用户等级列表
+Route::any('level/index',array(
+	'as'=>'level.index',
+	'uses'=>'LevelController@index'
+));		
 		
 //列表模块
 Route::any('list/city',array(
@@ -102,12 +108,16 @@ Route::any('item/type',array(
 // 店铺消费验证  结算
 Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
 
-//退款回调 支付宝
+//退款回调 支付宝 普通单
 Route::any('refund/call_back_of_alipay',array( 
 	'as'=>'refund.call_back_of_alipay',
-	'uses'=>'Trans\OrderRefundController@call_back_of_alipay'
+	'uses'=>'Transaction\OrderRefundController@call_back_of_alipay'
 ));
 
+Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退款回调
+	'as'=>'AlipayRefundNotify.callback_alipay',
+	'uses'=>'Alipay\AlipayRefundNotifyController@callback_alipay'
+));
 
 //权限管理后台接口
  Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
@@ -155,6 +165,10 @@ Route::any('refund/call_back_of_alipay',array(
 	Route::any('user/update/{id}',array(
 		'as'=>'user.update',
 		'uses'=>'UserController@update'
+	));	
+	Route::any('user/destroy/{id}',array(
+		'as'=>'user.destroy',
+		'uses'=>'UserController@destroy'
 	));
 	Route::any('user/company',array(
 		'as'=>'user.company',
@@ -162,10 +176,6 @@ Route::any('refund/call_back_of_alipay',array(
 	));
 
 	//用户等级模块
-	Route::any('level/index',array(
-		'as'=>'level.index',
-		'uses'=>'LevelController@index'
-	));
 	Route::any('level/update',array(
 		'as'=>'level.update',
 		'uses'=>'LevelController@update'
@@ -176,7 +186,7 @@ Route::any('refund/call_back_of_alipay',array(
 		'as'=>'feed.index',
 		'uses'=>'FeedController@index'
 	));
-	Route::any('feed/destroy/{id}',array(
+	Route::any('feed/destroy',array(
 		'as'=>'feed.destroy',
 		'uses'=>'FeedController@destroy'
 	));
@@ -368,19 +378,19 @@ Route::any('refund/call_back_of_alipay',array(
     // 代收单列表 搜索
     Route::any('shop_count/delegate_list', array(
         'as' => 'shop_count.delegate_list',
-        'uses' => 'ShopCount\ShopCountController@delegate_list'
+        'uses' => 'ShopCount\DelegateController@index'
     ));
     
     // 代收单详情
     Route::any('shop_count/delegate_detail/{id}', array(
         'as' => 'shop_count.delegate_detail',
-        'uses' => 'ShopCount\ShopCountController@delegate_detail'
+        'uses' => 'ShopCount\DelegateController@show'
     ));
     
     // 往来余额 查询
     Route::any('shop_count/balance', array(
         'as' => 'shop_count.balance',
-        'uses' => 'ShopCount\ShopCountController@balance'
+        'uses' => 'ShopCount\BalanceController@balance'
     ));  
     
     //转付单导出
@@ -392,13 +402,13 @@ Route::any('refund/call_back_of_alipay',array(
     //代收单导出
     Route::any('shop_count/delegate_export', array(
 	    'as' => 'shop_count.delegate_export',
-	    'uses' => 'ShopCount\ShopCountController@delegate_export'
+	    'uses' => 'ShopCount\DelegateController@export'
     ));
     
     //店铺往来导出
     Route::any('shop_count/balance_export', array(
 	    'as' => 'shop_count.balance_export',
-	    'uses' => 'ShopCount\ShopCountController@balance_export'
+	    'uses' => 'ShopCount\BalanceController@export'
     ));
 
 
@@ -571,58 +581,58 @@ Route::any('refund/call_back_of_alipay',array(
 	//交易管理
 	Route::any('order/index',array(  //订单列表
 		'as'=>'order.index',
-		'uses'=>'Trans\OrderController@index'
+		'uses'=>'Transaction\OrderController@index'
     ));
 	
 	Route::any('order/show/{id}',array(  //订单详情
 		'as'=>'order.show',
-		'uses'=>'Trans\OrderController@show'
+		'uses'=>'Transaction\OrderController@show'
     ));
 	
 	Route::any('order/export',array(  //订单导出
 		'as'=>'order.export',
-		'uses'=>'Trans\OrderController@export'
+		'uses'=>'Transaction\OrderController@export'
     ));
 	
 	Route::any('ticket/index',array(  //臭美券列表
 		'as'=>'ticket.index',
-		'uses'=>'Trans\TicketController@index'
+		'uses'=>'Transaction\TicketController@index'
     ));
 	
 	Route::any('ticket/show/{id}',array(  //臭美券详情
 		'as'=>'ticket.show',
-		'uses'=>'Trans\TicketController@show'
+		'uses'=>'Transaction\TicketController@show'
     ));
 	
 	Route::any('ticket/export',array(  //臭美券导出
 		'as'=>'ticket.export',
-		'uses'=>'Trans\TicketController@export'
+		'uses'=>'Transaction\TicketController@export'
     ));
 	
 	Route::any('refund/index',array(  //退款列表
 		'as'=>'refund.index',
-		'uses'=>'Trans\OrderRefundController@index'
+		'uses'=>'Transaction\OrderRefundController@index'
     ));
 	
 	Route::any('refund/show/{id}',array(  //退款详情
 	'as'=>'refund.show',
-	'uses'=>'Trans\OrderRefundController@show'
-	    ));
+	'uses'=>'Transaction\OrderRefundController@show'
+    ));
 
 	Route::any('refund/export',array(  //退款导出
 		'as'=>'refund.export',
-		'uses'=>'Trans\OrderRefundController@export'
+		'uses'=>'Transaction\OrderRefundController@export'
     ));
 	
 	
 	Route::any('refund/accept',array(  //退款通过
 		'as'=>'refund.accept',
-		'uses'=>'Trans\OrderRefundController@accept'
+		'uses'=>'Transaction\OrderRefundController@accept'
     ));
 	
 	Route::any('refund/reject',array(  //退款拒绝
 		'as'=>'refund.reject',
-		'uses'=>'Trans\OrderRefundController@reject'
+		'uses'=>'Transaction\OrderRefundController@reject'
     ));
 	
 	//消息管理
@@ -692,35 +702,56 @@ Route::any('refund/call_back_of_alipay',array(
    ));
   
     //赏金单管理-交易管理
-	Route::any('bounty/getList',array(  //赏金单列表
-		'as'=>'bounty.getList',
-		'uses'=>'Bounty\BountyController@getList'
+	Route::any('bounty/index',array(  //赏金单列表
+		'as'=>'bounty.index',
+		'uses'=>'Bounty\BountyController@index'
     ));
     
-    Route::any('bounty/detail',array(  //赏金单详情
-		'as'=>'bounty.detail',
-		'uses'=>'Bounty\BountyController@detail'
+    Route::any('bounty/refundIndex',array(  //赏金单退款列表
+		'as'=>'bounty.refundIndex',
+		'uses'=>'Bounty\BountyController@index'
     ));
     
-    Route::any('bounty/refundDetail',array(  //赏金单退款详情
-		'as'=>'bounty.refundDetail',
-		'uses'=>'Bounty\BountyController@refundDetail'
+    Route::any('bounty/show',array(  //赏金单详情
+		'as'=>'bounty.show',
+		'uses'=>'Bounty\BountyController@show'
     ));
     
-    Route::any('bounty/accept',array(  //赏金单退款详情
+    Route::any('bounty/refundShow',array(  //赏金单退款详情
+		'as'=>'bounty.refundShow',
+		'uses'=>'Bounty\BountyController@refundShow'
+    ));
+    
+    Route::any('bounty/accept',array(  //赏金单退款通过
 		'as'=>'bounty.accept',
 		'uses'=>'Bounty\BountyController@accept'
     ));
     
-    Route::any('bounty/reject',array(  //赏金单退款详情
+    Route::any('bounty/reaccept',array(  //赏金单重新退款通过
+		'as'=>'bounty.reaccept',
+		'uses'=>'Bounty\BountyController@accept'
+    ));
+    
+    Route::any('bounty/reject',array(  //赏金单退款拒绝
 		'as'=>'bounty.reject',
 		'uses'=>'Bounty\BountyController@reject'
     ));
-
+    
+    Route::any('bounty/exportBounty',array(  //导出赏金单列表
+		'as'=>'bounty.exportBounty',
+		'uses'=>'Bounty\BountyController@exportBounty'
+    ));
+    
+    Route::any('bounty/exportRefund',array(  //导出赏金单退款列表
+		'as'=>'bounty.exportRefund',
+		'uses'=>'Bounty\BountyController@exportRefund'
+    ));   
+  
     Route::any('requestLog/index',array(  //请求日志列表
 		'as'=>'requestLog.index',
 		'uses'=>'LoginQuery\LoginQueryController@index'
     ));
+
     
     Route::any('itemInfo/index',array(  //获取项目列表
     		'as'=>'info.index',
@@ -835,6 +866,12 @@ Route::any('refund/call_back_of_alipay',array(
     'as'=>'works.create',
     'uses'=>'Stylist\WorksController@create'
         ));
+
+    Route::any('requestLog/export',array(  //导出日志列表
+		'as'=>'requestLog.export',
+		'uses'=>'LoginQuery\LoginQueryController@export'
+    ));
+
 
 });
 

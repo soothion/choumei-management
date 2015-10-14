@@ -30,6 +30,23 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\UserEventListener@onLogout',
         ],   
 
+        //管理员模块
+        'manager.update' => [
+            'App\Listeners\ManagerEventListener@onUpdate',
+        ],
+        'manager.create' => [
+            'App\Listeners\ManagerEventListener@onCreate',
+        ],      
+        'manager.export' => [
+            'App\Listeners\ManagerEventListener@onExport',
+        ],
+        'login' => [
+            'App\Listeners\ManagerEventListener@onLogin',
+        ],
+        'logout' => [
+            'App\Listeners\ManagerEventListener@onLogout',
+        ],   
+
 
         //角色模块
         'role.update' => [
@@ -164,6 +181,7 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\PayManageEventListener@onConfirm',
         ],
         
+
         //项目仓库
         'warehouse.puton' => [
             'App\Listeners\WarehouseEventListener@onPuton',
@@ -182,6 +200,24 @@ class EventServiceProvider extends ServiceProvider
 		'ItemInfo.update' => [
     		'App\Listeners\ItemInfoEventListener@onUpdate',
     	],
+
+        //交易管理
+        'order.export' => [
+            'App\Listeners\TransactionEventListener@onOrderExport',
+        ],
+        'ticket.export' => [
+             'App\Listeners\TransactionEventListener@onTicketExport',
+        ],
+        'refund.export' => [
+             'App\Listeners\TransactionEventListener@onRefundExport',
+        ],
+        'refund.accept' => [
+            'App\Listeners\TransactionEventListener@onAccept',
+        ],
+        'refund.reject' => [
+            'App\Listeners\TransactionEventListener@onReject',
+        ],
+
     ];
 
     /**

@@ -7,10 +7,10 @@
   </head>
   <body>
         <div class="breadcrumb">
-            <a>交易管理</a><span>&gt;</span><a href="index.html">交易管理</a>
+            <a>交易管理</a><span>&gt;</span><a href="index.html">普通订单查询</a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>设备号登陆查询</h4>
+                    <h4>普通订单查询</h4>
                 </div>
             </div>
         </div>
@@ -60,14 +60,24 @@
                 <button class="btn"  type="submit">搜索</button>
             </form>
 
-            <form action="order/export" data-role="export" data-slug="role.export">
+            <form action="order/export" data-role="export" data-slug="order.export">
                 <button class="btn" type="submit">
                     <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form>
 
-            <div class="table" ajat="order/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <div class="table" ajat="order/index?<%=query._%>#domid=table&tempid=table-t&timeout=30000" id="table">
             <script type="text/template" id="table-t">
+              <div style="font-size: 13px;font-weight:600;margin-bottom: 10px;">
+              <%if(data.total == 0){%>
+                当前页面下所有交易金额统计为：0.00元
+              <%}else{ var total_money = 0;%>
+                <%data.data && data.data.forEach(function(item,i){
+                    total_money += item.priceall*100 ;
+                })%>
+                当前页面下所有交易金额统计为：<%=total_money/100%>元
+              <%}%>
+              </div>
             <table>
               <thead>
                 <tr>
@@ -109,7 +119,7 @@
                   <td><%=status[item.ispay]%></td>
                   <td>
                   <%if(item.ispay=="2"){%>
-                     <a class="link" data-slug="role.show,role.update" target="_blank"
+                     <a class="link" data-slug="order.show" target="_blank"
                      href="detail.html?method=order/show/&id=<%=item.orderid%>">查看&gt</a>
                   <%}%>
                   </td>

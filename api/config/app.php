@@ -95,7 +95,7 @@ return [
     |
     */
 
-    'log' => 'single',
+    'log' => 'daily',
 
     /*
     |--------------------------------------------------------------------------
@@ -147,6 +147,8 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Mews\Captcha\CaptchaServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+
+        Choumei\ChoumeiServiceProvider::class,
 
     ],
 
