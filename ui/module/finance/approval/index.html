@@ -94,14 +94,14 @@
 			<%if(data.data&&data.data.length>0){%>
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form action="pay_manage/check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-					<button class="btn" disabled>审批通过</button>
+				<form disabled action="pay_manage/check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+					<button class="btn">审批通过</button>
 					<input type="hidden" name="do" value="1" />
 					<input type="hidden" name="ids" />
 				</form>
 				<span class="space"></span>
-				<form action="pay_manage/check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-					<button class="btn" disabled>审批不通过</button>
+				<form disabled action="pay_manage/check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+					<button class="btn">审批不通过</button>
 					<input type="hidden" name="do" value="0" />
 					<input type="hidden" name="ids" />
 				</form>
