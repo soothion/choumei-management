@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+      .border-dash{
+          width: 100%;
+          border-top: 1px dashed #ddd;
+          margin: 10px auto;
+      }
+      ul li{
+          text-align: center;
+          border: 1px solid #ddd;
+          height:50px;
+          line-height: 50px;
+          width:200px;
+          float: left;
+      }
+
+      .act{
+        border: 1px solid #58A2EC;
+      }
+      </style> 
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span>
+            <a href="index.html">平台活动</a>
+            <span>&gt;</span>新增活动
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>新增活动</h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div class="wrapper">
+            <form class="form-vertical" data-role="form" id="form">
+                    <div class="detail-operation">
+                        <button type="button" class="btn btn-cancel">取消</button>
+                        <span class="space"></span>
+                        <button class="btn-primary">提交</button>
+                    </div>
+
+                    <ul class="nav-step flex-box">
+                        <li class="flex-item">
+                            <a href="add.html">
+                                <i class="fa fa-check-circle"></i><span>1.活动基本信息</span>
+                            </a>
+                        </li>
+                        <li class="flex-item active"><span class="arrow">2.选择用户</span></li>
+                        <li class="flex-item"><span>3.定义现金券</span></li>
+                    </ul>
+
+
+                    <div class="control-group">
+                        <label class="control-label" for=""><h2>请选择</h2></label>
+                        <div class="control">
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                      <label class="control-label" style="width:105px"></label>
+                      <ul class="tab-menus">
+                          <li class="act">新用户</li>
+                          <li>指定用户</li>
+                          <li>全平台用户</li>
+                          <li>H5用户</li>
+                      </ul>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:105px"></label>
+                        <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="accountType" value="1" >
+                            <span>新注册&nbsp;<span style="color: #ddd;">(活动时间内注册的用户)</span></span>
+                        </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:105px"></label>
+                        <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="accountType" value="1" >
+                            <span>首次消费&nbsp;<span style="color: #ddd;">(活动时间内首次消费后获取)</span></span>
+                        </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:105px"></label>
+                        <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="accountType" value="2" >
+                            <span>指定手机号&nbsp;<span style="color: #ddd;">(活动时间内，无指定项目时活动上线则马上下发)</span></span>
+                            <span style="border: 1px solid #ddd;padding: 8px;">+添加手机号码</span>
+                        </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:105px"></label>
+                        <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="accountType" value="2" >
+                            <span>指定集团码用户&nbsp;<span style="color: #ddd;">(活动时间内填写集团码)</span></span>
+                            <input type="text" />
+                        </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:105px"></label>
+                        <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="accountType" value="2" >
+                            <span>指定活动码用户&nbsp;<span style="color: #ddd;">(活动时间内填写活动码)</span></span>
+                            <input type="text" />
+                        </label>
+                        </div>
+                    </div>
+
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:105px"></label>
+                        <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="accountType" value="2" >
+                            <span>指定店铺码用户&nbsp;<span style="color: #ddd;">(活动时间内填写店铺码)</span></span>
+                            <input type="text" />
+                        </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:105px"></label>
+                        <div class="control">
+                        <label class="checkbox">
+                            <input type="checkbox" name="salonType" value="3">
+                            <span>指定消费项目：</span>
+                        </label>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:120px"></label>
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>洗吹</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>洗剪吹</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>烫发</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>染发</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>护发</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>套餐</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>快剪</span>
+                            </label>                            
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:105px"></label>
+                        <div class="control">
+                        <label class="checkbox">
+                            <input type="checkbox" name="salonType" value="3">
+                            <span>指定消费项目：(全平台用)</span>
+                        </label>
+                        </div>
+                    </div> 
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:120px"></label>
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>洗吹</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>洗剪吹</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>烫发</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>染发</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>护发</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>套餐</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>快剪</span>
+                            </label>                            
+                        </div>
+                    </div> 
+                    
+                    <div class="control-group">
+                        <label class="control-label" style="width:105px"></label>
+                        <div class="control">
+                            <span>满额获取：</span>
+                            <label class="checkbox">
+                                <input type="text" name="salonType" value="">
+                                <strong>元可获取</strong>
+                                <span>（大于或等于该数值可获取，0为不限制，可填写0~999）</span>
+                            </label>
+                        </div>
+                    </div>   
+
+                    <div class="control-group">
+                        <label class="control-label" style="width:105px"></label>
+                        <div class="control">
+                            <label class="checkbox">
+                                <input type="checkbox" name="salonType" value="3">
+                                <span>绑定活动码</span>
+                            </label>
+                            <input type="text" />
+                            <span>（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
+                        </div>
+                    </div>                                                                                                      
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
+                        <button class="btn-primary">下一步</button>
+                    </div>                                                                  
+            </form>
+        </div>
+
+        <script>
+            lib.Form.prototype.save = function(data){
+                location.href = "addTicket.html"
+            }
+        </script>                
+    </body>
+</html>
