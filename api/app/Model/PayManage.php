@@ -80,6 +80,14 @@ class PayManage extends Model
         return $this->belongsTo(Merchant::class);
     }
     
+    /**
+     * 通过提现生成收款dan
+     * @param unknown $params
+     */
+    public static function makeByWithdraw($params)
+    {
+        
+    }
     
     /**
      * 生成(从预付单的交易代收返还生成)
