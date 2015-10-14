@@ -336,7 +336,7 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
     // 往来余额 查询
     Route::any('shop_count/balance', array(
         'as' => 'shop_count.balance',
-        'uses' => 'ShopCount\BalanceController@balance'
+        'uses' => 'ShopCount\BalanceController@index'
     ));  
     
     //转付单导出
