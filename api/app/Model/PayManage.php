@@ -81,7 +81,7 @@ class PayManage extends Model
     }
     
     /**
-     * 通过提现生成收款dan
+     * 通过提现生成收款单
      * @param unknown $params
      */
     public static function makeByWithdraw($params)

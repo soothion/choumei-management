@@ -850,7 +850,7 @@ class TransactionSearchApi
         ];
         $order_fields = [
             'ordersn',
-            'priceall_ori',
+            'priceall as priceall_ori',
             'priceall',
             'actuallyPay',
             'shopcartsn'
