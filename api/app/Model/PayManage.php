@@ -104,12 +104,16 @@ class PayManage extends Model
      */
     public static function makeByWithdraw($w_id)
     {
+        
         $base = SalonMoneyWithdraw::where('id',$w_id)->first();
+      
         if(empty($base))
         {
+           
             throw new ApiException("can not find the data by id [{$w_id}]", ERROR::PAY_WITHDRAW_NOT_EXIST);
         }
         $state = intval($base->state);
+       
         if($state == SalonMoneyWithdraw::STATE_OF_TO_SUBMIT)
         {
             throw new ApiException("the data of id [{$w_id}] is CHECKED and　REJECTED", ERROR::PAY_WITHDRAW_WRONG_STATE);
@@ -117,6 +121,12 @@ class PayManage extends Model
         elseif($state == SalonMoneyWithdraw::STATE_OF_TO_PAY || $state == SalonMoneyWithdraw::STATE_OF_PAIED )
         {
             throw new ApiException("the data of id [{$w_id}] have already submit !", ERROR::PAY_WITHDRAW_WRONG_STATE);
+        }
+        
+        $exist_num = self::where('w_id',$w_id)->count();
+        if($exist_num >0)
+        {
+            throw new ApiException("the data of id [{$w_id}]  already exist !", ERROR::PAY_WITHDRAW_WRONG_STATE);
         }
         
         $code = self::makeNewCode(self::TYPE_OF_FJY);
@@ -130,7 +140,7 @@ class PayManage extends Model
             'salon_uid'=>$base->uid,
             'merchant_id'=>intval($merchant_id),
             'from'=>self::FROM_SHANGMENG,
-            'money'=>$base->moeny,
+            'money'=>$base->money,
             'pay_type'=>1,//统一为银行付款
             'created_at'=>$base->created_at,
             'updated_at'=>$base->created_at

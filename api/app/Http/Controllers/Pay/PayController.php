@@ -641,8 +641,8 @@ class PayController extends Controller
             throw new ApiException("Unauthorized",ERROR::ACCOUNT_INVALID);
         }
         $id = $params['id'];
-        PayManage::makeByWithdraw($id);
-        return $this->success(null);
+        $res = PayManage::makeByWithdraw($id);
+        return $this->success($res);
     }
     
     
