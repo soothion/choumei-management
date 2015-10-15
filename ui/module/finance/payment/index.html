@@ -12,7 +12,7 @@
 				<h4>付款列表</h4>
 			</div>
 			<div>
-				<a class="btn-primary" href="edit.html"><i class="fa fa-plus" ></i>新增</a>
+				<a class="btn-primary" href="edit2.html"><i class="fa fa-plus" ></i>新增</a>
 			</div>
 		</div>
         </div>
@@ -85,6 +85,7 @@
                             <th><a data-role="hash" href="#page=1&sort_key=pay_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">实际付款日期 <i class="fa fa-sort"></i></a></th>
 							<th>创建日期</th>
                             <th>制单人</th>
+							<th>备注</th>
                             <th>状态</th>
                             <th>操作</th>
                         </tr>
@@ -107,7 +108,14 @@
 					<td><%=item.require_day%></td>
 					<td><%=item.pay_day%></td>				 
 					<td><%=new Date(item.created_at).format("yyyy-MM-dd")%></td>
-					<td><%=item.make_user?item.make_user.name:""%></td>				 
+					<td>
+						<%if(item.from==1){%>
+							<%=item.make_user?item.make_user.name:""%>
+						<%}else{%>
+							<%=item.salon_user%>
+						<%}%>
+					</td>
+					<td><%=item.remark%></td>				 
 					<td><%=state[item.state]%></td>
 					<%
 						var page="invest";
