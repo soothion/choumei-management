@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a><span>&gt;</span><a href="index.html">现金券列表</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4> 现金券列表 </h4>
+                </div>
+            </div>      
+        </div> 
+
+        <div class="wrapper">
+            <form data-role="hash">                       
+               <div class="input-group input-switch">
+                    <select>
+                        <option value="0">活动编号</option>
+                        <option value="1">活动名称</option>
+                        <option value="2">现金券编号</option>
+                        <option value="3">用户手机号</option>
+                        <option value="4">使用店铺</option>
+                        <option value="5">分享手机号</option>
+                    </select>
+                    <input type="text" class="input-search" name="username" placeholder="活动编号">
+                    <input type="text" class="input-search hide" name="role" class="hide" placeholder="活动名称">
+                    <input type="text" class="input-search hide" name="name" class="hide" placeholder="现金券编号">
+                    <input type="text" class="input-search hide" name="role" class="hide" placeholder="用户手机号">
+                    <input type="text" class="input-search hide" name="name" class="hide" placeholder="使用店铺">
+                    <input type="text" class="input-search hide" name="name" class="hide" placeholder="分享手机号">
+                </div>
+
+                <span class="space"></span>
+                <label>券状态：</label>
+                <select name="department_id">
+                    <option value="">全部</option>
+                    <option value="1">未使用</option>
+                    <option value="2">已使用</option>
+                    <option value="3">已失效</option>
+                    <option value="3">未兑换</option>
+                </select>  
+
+                <span class="space"></span>
+                <span>添加时间：</span>
+                <span class="date-group">
+                    <input type="date" data-role="start" name="start" placeholder="YYYY-MM-DD"/>
+                    到
+                    <input type="date" data-role="end" name="end" placeholder="YYYY-MM-DD"/>
+                </span>
+                <button class="btn" type="submit">查询</button>
+            </form>
+
+            <form action="manager/export" data-role="export">
+                <button class="btn" data-slug="manager.export">
+                <i class="fa fa-file-excel-o"></i> 导出
+                </button>
+            </form>
+                          
+           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>券编号</th>
+                            <th>活动编号</th>
+                            <th>活动名称</th>
+                            <th>券金额</th>
+                            <th>使用时间</th>
+                            <th>分享手机号</th>
+                            <th>用户手机号</th>
+                            <th>使用店铺</th>
+                            <th>现金券状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <%var status=["","正常","停用","注销"]%>
+                <%var data=data.data%>
+                <%for(var i=0;i<data.length;i++){%>
+                 <tr>
+                  <td><%=i+1%></td>
+                  <td><%=data[i].name%></td>
+                  <td><%=data[i].username%></td>
+                  <td><%=status[data[i].status]%></td>
+                  <td><%=data[i].city?data[i].city.title:""%></td>  
+                  <td><%=data[i].department?data[i].department.title:""%></td>
+                  <td><%=data[i].position?data[i].position.title:""%></td>         
+                  <td><%=data[i].position?data[i].position.title:""%></td>         
+                  <td><%for(var j=0;j<data[i].roles.length;j++){%>
+                      <%=data[i].roles[j].name%>
+                      <%}%>                  
+                   </td>                  
+                  <td><%=data[i].created_at%></td>
+                  <td>
+                  <a class="link" target="_blank" href="detail.html">查看&gt;</a>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <a class="link">失效</a>
+                  </td>
+                  </tr>
+                  <%}%>
+                </tbody>
+            </table>        
+             <div class="pager"> </div>
+            </script>
+        </div>
+            </div>            
+    </body>
+</html>

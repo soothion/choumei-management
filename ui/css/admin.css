@@ -126,7 +126,9 @@ label>input[type="checkbox"]:checked+span:before{
 	color:#498ae5;
 	border-color:#498ae5;
 }
-
+label.switch > input[type="checkbox"]:checked + span {
+  background: #58A2EC;
+ }
 .tab{
 	border:1px solid #E6EAF2;
 }
