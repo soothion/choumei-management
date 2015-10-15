@@ -597,6 +597,16 @@ class Salon extends Model {
 		}
 	}
 	
+	public static function getMercharId($salonid)
+	{
+	   $base = self::where('salonid',$salonid)->select(['merchantId'])->first();
+	   if(empty($base))
+	   {
+	       return null;
+	   }
+	   return $base->merchantId;
+	}
+	
 
 }
 

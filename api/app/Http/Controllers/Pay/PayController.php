@@ -189,6 +189,7 @@ class PayController extends Controller
      * @apiParam {Number} cycle 回款周期 
      * @apiParam {Number} cycle_day 回款日期 
      * @apiParam {Number} cycle_money 周期回款金额 
+     * @apiParam {String} remark 备注
      * 
      * 
      * @apiSuccess {Number} id 成功的id.
@@ -216,14 +217,18 @@ class PayController extends Controller
             'type' => self::T_INT,
             'salon_id' => self::T_INT,
             'merchant_id' => self::T_INT,
-            'money' => self::T_FLOAT,
+            'money' => self::T_FLOAT,            
             'pay_type' => self::T_INT,
+            'remark'=>self::T_STRING,            
+        ],true);
+        $param_plus = $this->parameters([
             'require_day' => self::T_STRING,
             'cycle' => self::T_INT,
             'cycle_day' => self::T_INT,
             'cycle_money' => self::T_FLOAT,
-        ],true);
-        $params['make_uid'] = $this->user->id;      
+        ]);
+        $params['make_uid'] = $this->user->id;  
+        $params = array_merge($params,$param_plus);    
         $res = PayManage::make($params);
         if($res)
         {
@@ -313,17 +318,22 @@ class PayController extends Controller
         $query->with([
             'make_user' => function ($q)
             {
-                $q->lists('id','name');
+                 $q->get(['id','name']);
             }
         ])->with([
             'confirm_user' => function ($q)
             {
-                $q->lists('id','name');
+                 $q->get(['id','name']);
             }
         ])->with([
             'cash_user' => function ($q)
             {
-                $q->lists('id','name');
+                $q->get(['id','name']);
+            }
+        ])->with([
+            'salon_user' => function ($q)
+            {
+                 $q->get(['salon_user_id','username']);
             }
         ])->with([
             'salon' => function ($q)
@@ -556,7 +566,7 @@ class PayController extends Controller
             'sort_key' => self::T_STRING,
             'sort_type' => self::T_STRING,
         ]);    
-        $header = ['店铺编号','店铺名称','付款单号','关联收款单号','关联转付单号','付款类型','付款金额','要求付款日期','实际付款日期','回款周期','回款日期','周期回款金额','创建日期','审批日期','制单人','审批人','出纳','付款方式','状态'];
+        $header = ['店铺编号','店铺名称','付款单号','关联收款单号','关联转付单号','付款类型','付款金额','要求付款日期','实际付款日期','回款周期','回款日期','周期回款金额','创建日期','审批日期','制单人','审批人','出纳','付款方式','状态','备注'];
         $items = PayManage::search($options)->with([
             'cash_user' => function ($q)
             {
@@ -572,6 +582,50 @@ class PayController extends Controller
         $this->export_xls("付款列表".date("Ymd"),$header,self::format_pay_data($items));
     }
     
+    /**
+     * @api {get} /pay_manage/withdraw 8.付款单导出
+     * @apiName withdraw
+     * @apiGroup PayManage
+     *
+     * @apiParam {Number} id  提款的id
+     * @apiParam {String} token  加密的token
+     * 
+     *      
+     * @apiSuccess {String} ret 1 执行成功
+     *
+     * @apiSuccessExample Success-Response:
+     *       {
+     *           "result": 1,
+     *           "data": {
+     *               "ret": 1
+     *           }
+     *       }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "参数有误,执行失败"
+     *		}
+     *
+     */
+    public function withdraw()
+    {
+        $params = $this->parameters(
+            [
+                'id'=>self::T_INT,
+                'token'=>self::T_STRING,
+            ],true);
+        $passed = Utils::checkToken($params);
+        if(!$passed)
+        {
+            throw new ApiException("Unauthorized",ERROR::ACCOUNT_INVALID);
+        }
+        $id = $params['id'];
+        PayManage::makeByWithdraw($id);
+        return $this->success(null);
+    }
+    
     
     public static function  format_pay_data($datas)
     {
@@ -581,7 +635,15 @@ class PayController extends Controller
             $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
             $salon_sn = isset($data['salon']['sn']) ? $data['salon']['sn'] : '';
             $pay_manage_type_name = $data['type'] == 1?"付交易代收款 ":"付业务投资款";
-            $make_user_name = isset($data['make_user']['name'])?$data['make_user']['name']:"";
+            $make_user_name = '';
+            if($data['from'] == PayManage::FROM_LOCAL)
+            {
+                $make_user_name = isset($data['make_user']['name'])?$data['make_user']['name']:"";
+            }
+            else 
+            {
+                $make_user_name = isset($data['salon_user']['username'])?$data['salon_user']['username']:"";
+            }
             $check_user_name = isset($data['confirm_user']['name'])?$data['confirm_user']['name']:"";
             $cash_user_name = isset($data['cash_user']['name'])?$data['cash_user']['name']:"";
             $pay_type_name = Mapping::getPayTypeName($data['pay_type']);
@@ -608,9 +670,11 @@ class PayController extends Controller
                 $cash_user_name,//出纳
                 $pay_type_name,//付款方式
                 $state_name,//状态
+                $data['remark']
             ];
         }
         return $res;
     }
     
+
 }

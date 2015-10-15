@@ -100,6 +100,9 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 	'uses'=>'Alipay\AlipayRefundNotifyController@callback_alipay'
 ));
 
+//商家后台提现
+Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
+
 //权限管理后台接口
  Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 // Route::group(['middleware' => ['before']], function(){

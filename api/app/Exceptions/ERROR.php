@@ -434,8 +434,15 @@ class ERROR
      CONST MERCHANT_SALON_STATUS_IS_ERROR  =  -51020;
      
      
+     /////////////付款单相关//////////////////
+     /**
+      * @param 提现单原数据不存在
+      */
+     CONST PAY_WITHDRAW_NOT_EXIST = -51300;
      
-     
-
+     /**
+      * @param 提现单原状态不正确
+      */
+     CONST PAY_WITHDRAW_WRONG_STATE = -51301;
 
 }

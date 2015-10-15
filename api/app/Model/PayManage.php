@@ -7,6 +7,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class PayManage extends Model
 {
@@ -47,7 +49,18 @@ class PayManage extends Model
      * @var unknown
      */
     const TYPE_OF_FTZ = 2;
-
+    
+    /**
+     * 创建来源
+     * @var unknown
+     */
+    const FROM_LOCAL = 1;
+    
+    /**
+     * 商家后台
+     * @var unknown
+     */
+    const FROM_SHANGMENG = 2;
     
     protected $table = 'pay_manage';
     
@@ -80,13 +93,49 @@ class PayManage extends Model
         return $this->belongsTo(Merchant::class);
     }
     
+    public function salon_user()
+    {
+        return $this->belongsTo(SalonUser::class,'salon_uid','salon_user_id');
+    }
+    
     /**
      * 通过提现生成收款单
      * @param unknown $params
      */
-    public static function makeByWithdraw($params)
+    public static function makeByWithdraw($w_id)
     {
+        $base = SalonMoneyWithdraw::where('id',$w_id)->first();
+        if(empty($base))
+        {
+            throw new ApiException("can not find the data by id [{$w_id}]", ERROR::PAY_WITHDRAW_NOT_EXIST);
+        }
+        $state = intval($base->state);
+        if($state == SalonMoneyWithdraw::STATE_OF_TO_SUBMIT)
+        {
+            throw new ApiException("the data of id [{$w_id}] is CHECKED and　REJECTED", ERROR::PAY_WITHDRAW_WRONG_STATE);
+        }
+        elseif($state == SalonMoneyWithdraw::STATE_OF_TO_PAY || $state == SalonMoneyWithdraw::STATE_OF_PAIED )
+        {
+            throw new ApiException("the data of id [{$w_id}] have already submit !", ERROR::PAY_WITHDRAW_WRONG_STATE);
+        }
         
+        $code = self::makeNewCode(self::TYPE_OF_FJY);
+        $merchant_id = Salon::getMercharId($base->salon_id);
+        $record = [
+            'type' =>self::TYPE_OF_FJY,
+            'code'=>$code,
+            'state'=>self::STATE_OF_TO_CHECK,
+            'w_id'=>$base->id,           
+            'salon_id'=>$base->salon_id,
+            'salon_uid'=>$base->uid,
+            'merchant_id'=>intval($merchant_id),
+            'from'=>self::FROM_SHANGMENG,
+            'money'=>$base->moeny,
+            'pay_type'=>1,//统一为银行付款
+            'created_at'=>$base->created_at,
+            'updated_at'=>$base->created_at
+        ];
+        return self::insertGetId($record);
     }
     
     /**
@@ -198,11 +247,12 @@ class PayManage extends Model
             'uid'=>$params['make_uid'],
             'pay_money'=>$params['money'],
             'pay_type'=>$params['receive_type'],
-            'day'=>$params['require_day'],
             'pay_day'=>$params['receive_day'],
             'count_at'=>$params['make_at'],
         ];
-        $prepay = PrepayBill::makeCompleted($prepay_params);        
+        $prepay = PrepayBill::makeCompleted($prepay_params);      
+
+        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['money'],"预付款返还",$params['make_at']);
         
         //付款单关联转付单关联
         self::where('id',$id)->update(['p_id'=>$prepay['id'],'p_code'=>$prepay['code']]);
@@ -222,10 +272,7 @@ class PayManage extends Model
             !isset($attr['merchant_id']) ||
             !isset($attr['money']) ||
             !isset($attr['pay_type']) ||
-            !isset($attr['require_day']) ||
-            !isset($attr['cycle']) ||
-            !isset($attr['cycle_day']) ||
-            !isset($attr['cycle_money']) ||
+            !isset($attr['remark']) ||
             !isset($attr['make_uid'])
          )
         {
@@ -236,13 +283,24 @@ class PayManage extends Model
             'salon_id'=>intval($attr['salon_id']),
             'merchant_id'=>intval($attr['merchant_id']),
             'money'=>intval($attr['money']),
-            'pay_type'=>intval($attr['pay_type']),
-            'require_day'=>$attr['require_day'],
-            'cycle'=>intval($attr['cycle']),
-            'cycle_day'=>intval($attr['pay_type']),
-            'cycle_money'=>floatval($attr['cycle_money']),
+            'pay_type'=>intval($attr['pay_type']),         
             'make_uid'=>intval($attr['make_uid']),
         ];
+        if($attr['type'] == self::TYPE_OF_FTZ )
+        {
+            if(!isset($attr['require_day']) ||
+            !isset($attr['cycle']) ||
+            !isset($attr['cycle_day']) ||
+            !isset($attr['cycle_money']))
+            {
+                return false;
+            }
+            $record = [
+                'require_day'=>$attr['require_day'],
+                'cycle'=>intval($attr['cycle']),
+                'cycle_day'=>intval($attr['pay_type']),
+                'cycle_money'=>floatval($attr['cycle_money']),];
+        }
         $record['code'] = self::makeNewCode($record['type']);     
         $record['state'] = self::STATE_OF_TO_CHECK;
         $record['created_at'] = $record['updated_at'] =date("Y-m-d H:i:s");
@@ -298,7 +356,7 @@ class PayManage extends Model
         }
         $record['updated_at'] =date("Y-m-d H:i:s");
         $item = self::where('id',$id)->first(['state','code']);     
-        if($item->state  != self::STATE_OF_TO_SUBMIT && $item->state  != self::STATE_OF_TO_CHECK && $item->type  != PayManage::TYPE_OF_FTZ)
+        if($item->state  != self::STATE_OF_TO_SUBMIT && $item->state  != self::STATE_OF_TO_CHECK && $item->type  != self::TYPE_OF_FTZ && $item->from != self::FROM_LOCAL)
         {
             return false;
         }        
@@ -315,7 +373,7 @@ class PayManage extends Model
     public static function destroy($id)
     {
         $item = self::where('id',$id)->first(['state','type','code']);
-        if($item->state  != PayManage::STATE_OF_TO_SUBMIT && $item->state  != PayManage::STATE_OF_TO_CHECK && $item->type  != PayManage::TYPE_OF_FTZ )
+        if($item->state  != self::STATE_OF_TO_SUBMIT && $item->state  != self::STATE_OF_TO_CHECK && $item->type  != self::TYPE_OF_FTZ && $item->from != self::FROM_LOCAL)
         {
             return false;
         }
@@ -340,17 +398,15 @@ class PayManage extends Model
             return false;
         }
         
-        $items = self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_CHECK)->get(['p_id'])->toArray();
+        $items = self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_CHECK)->get(['from','w_id'])->toArray();
         if(count($ids) !== count($items))
         {
             return false;
         }
         $state = self::STATE_OF_TO_SUBMIT;
-        $prepay_state = PrepayBill::STATE_OF_TO_SUBMIT;
         if($opera)
         {
             $state = self::STATE_OF_TO_PAY;
-            $prepay_state = PrepayBill::STATE_OF_TO_PAY;
         }
         self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_CHECK)->update(
             [
@@ -358,13 +414,9 @@ class PayManage extends Model
                 'confirm_uid' => intval($uid),  
                 'confirm_at' => date("Y-m-d"),
             ]
-        );
-        $pids = array_column($items, "p_id");
-        PrepayBill::whereIn('id',$pids)->where('state',PrepayBill::STATE_OF_TO_CHECK)->update(
-        [
-            'state'=>$prepay_state,
-        ]
-        );
+        );        
+        $useful_wids = array_column($items, 'w_id');      
+        SalonMoneyWithdraw::whereIn('id',$useful_wids)->update(['state'=>$state,'updated_at'=>date("Y-m-d H:i:s")]);
         return true;
     }
     
@@ -386,18 +438,18 @@ class PayManage extends Model
             return false;
         }
         
-        $items = self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_PAY)->get(['salon_id','merchant_id','money','p_id','type'])->toArray();
+        $items = self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_PAY)->get()->toArray();
         if(count($ids) !== count($items))
         {
             return false;
         }
-        $now_day = date("Y-m-d");
+        $now_time = time();
+        $now_day = date("Y-m-d",$now_time);
+        $now_date = date("Y-m-d H:i:s",$now_time);
         $state = self::STATE_OF_TO_CHECK;
-        $prepay_state = PrepayBill::STATE_OF_TO_CHECK;
         if($opera)
         {
             $state = self::STATE_OF_PAIED;
-            $prepay_state = PrepayBill::STATE_OF_COMPLETED;
         }
         self::whereIn('id',$ids)->where('state',self::STATE_OF_TO_PAY)->update(
             [
@@ -406,30 +458,46 @@ class PayManage extends Model
                 'pay_day' => $now_day,                
             ]
         );
-        $pids = array_column($items, "p_id");
-        PrepayBill::whereIn('id',$pids)->where('state',PrepayBill::STATE_OF_TO_PAY)->update(
-            [
-            'state'=>$prepay_state,
-            'pay_day'=>$now_day,
-            ]
-        );
         
-        //如果是确认付款  则结算
+        $w_ids = array_column($items, 'w_id');
+        self::whereIn('id',$w_ids)->update([
+            'state'=>$state,
+            'updated_at'=>$now_date
+        ]);
+        
+        //如果是确认付款
         if($opera)
         {
             foreach($items as $item)
-            {
+            {                
                 if($item['type'] == self::TYPE_OF_FJY)
                 {
                     $money = floatval($item['money']);
                     $remark = "预付款返还";
+                    $type = PrepayBill::TYPE_OF_RETURN;
                     if($money >= 0)
                     {
+                        $type = PrepayBill::TYPE_OF_ALREADYPAY;
                         $remark = "预付保证金";
                     }
+                    //生成转付单
+                    $record = [
+                        'other_id'=>$item['id'],
+                        'other_code'=>$item['code'],
+                        'salon_id'=>$item['salon_id'],
+                        'merchant_id'=>$item['merchant_id'],
+                        'type'=>$type,
+                        'uid'=>$uid,
+                        'pay_money'=>$item['money'],
+                        'pay_type'=>$item['pay_type'],
+                        'pay_day'=>$now_day,
+                    ];
+                    $res = PrepayBill::makeCompleted($record);
+                    self::where('id',$item['id'])->update(['p_id'=>$res['id'],'p_code'=>$res['code']]);
+                    //结算
                     ShopCount::count_bill_by_pay_money($item['salon_id'], $item['merchant_id'],$money,$remark,time());
                 }
-                if($item['type'] == self::TYPE_OF_FTZ)
+                elseif($item['type'] == self::TYPE_OF_FTZ)
                 {                   
                     ShopCount::count_bill_by_invest_money($item['salon_id'], $item['merchant_id'], $item['money']);
                 }
@@ -478,6 +546,9 @@ class PayManage extends Model
             'code',
             'type',
             'salon_id',
+            'salon_uid',
+            'from',
+            'remark',
             'merchant_id',
             'make_uid',
             'confirm_uid',
@@ -548,7 +619,14 @@ class PayManage extends Model
         $base->with([
             'make_user' => function ($q)
             {
-                $q->lists('id','name');
+                $q->get(['id','name']);
+            }
+        ]);
+        
+        $base->with([
+            'salon_user' => function ($q)
+            {
+                $q->get(['salon_user_id','username']);
             }
         ]);
     
@@ -557,7 +635,7 @@ class PayManage extends Model
             $base->where('pay_day', ">=", trim($options['pay_time_min']));
         }
         if (isset($options['pay_time_max']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_max']))) {
-            $base->where('pay_day', "<=", trim($options['pay_time_max']));
+            $base->where('pay_day', "<=", trim($options['pay_time_max']))->where('pay_day','>','1970-01-01');
         }
         
         
