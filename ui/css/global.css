@@ -456,43 +456,50 @@ label>input[type="radio"]:checked+span:before,label>input[type="checkbox"]:check
 	color:#81aa2f;
 }
 
-.switch{
-    display:none;
+label.switch {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 100%; 
+  position: relative;
 }
-.switch+label,.switch+label:after{
-    border-radius:5em;
-    display:inline-block;
-    width:50px;
-    height:24px;
-    position:relative;
-    vertical-align: middle;
-    background:#999;
-    -webkit-transition:all 0.2s ease 0;
-    -moz-transition:all 0.2s ease 0;
-    -ms-transition:all 0.2s ease 0;
-    transition:all 0.2s ease 0;
+
+label.switch > input[type="checkbox"] + span:before {
+  display: none !important; }
+
+label.switch > input[type="checkbox"] + span, label.switch > input[type="checkbox"] + span:after {
+  -webkit-border-radius: 5em;
+  -moz-border-radius: 5em;
+  border-radius: 5em;
+  width: 50px;
+  height: 24px;
+  background: #999;
+  -webkit-transition: all 0.2s ease 0;
+  -moz-transition: all 0.2s ease 0;
+  -ms-transition: all 0.2s ease 0;
+  transition: all 0.2s ease 0; }
+
+label.switch > input[type="checkbox"] + span:after {
+  width: 22px;
+  height: 22px;
+  content: ' ';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  margin: 0;
+  background: #fff;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  border: 0; }
+
+label.switch > input[type="checkbox"]:checked + span {
+  background: rgba(223,49,49,0.8);
 }
-.switch+label:after{
-    width:22px;
-    height:22px;
-    content:' ';
-    position:absolute;
-    top: 1px;
-    left:1px;
-    background:#fff;
-}
-.switch:checked+label{
-    background:rgba(223,49,49,0.75);
-}
-.switch:checked+label:after{
-    left:27px;
-    background:#fff;
-}
-.loader{
-    width:26px;
-    margin:-2px 5px 0px -5px;
-    vertical-align:middle;
-}
+
+label.switch > input[type="checkbox"]:checked + span:after {
+  left: 27px;
+  background: #fff; }
 .drop-menu{
 	position:relative;
 	display:inline-block;
