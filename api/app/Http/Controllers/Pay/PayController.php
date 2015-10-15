@@ -40,7 +40,7 @@ class PayController extends Controller
      * @apiSuccess {Number} to 结束数据.
      * @apiSuccess {String} code 单号
      * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
-     * @apiSuccess {String} from 来源 1 本系统 2 商家后台
+     * @apiSuccess {String} data.from 来源 1 本系统 2 商家后台
      * @apiSuccess {String} money 付款金额
      * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
      * @apiSuccess {String} require_day 要求付款日期 
@@ -264,7 +264,7 @@ class PayController extends Controller
      * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
      * @apiSuccess {String} money 付款金额
      * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiSuccess {String} from 来源 1 本系统 2 商家后台
+     * @apiSuccess {String} data.from 来源 1 本系统 2 商家后台
      * @apiSuccess {String} require_day 要求付款日期 
      * @apiSuccess {String} pay_day 实际付款日期 
      * @apiSuccess {String} cycle 回款周期
