@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a><span>&gt;</span><a href="index.html">红包列表</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4> 红包列表 </h4>
+                </div>
+            </div>      
+        </div> 
+
+        <div class="wrapper">
+            <form data-role="hash">                       
+               <div class="input-group input-switch">
+                    <select>
+                        <option value="0">店铺名称</option>
+                    </select>
+                    <input type="text" class="input-search" name="username" placeholder="店铺名称">
+                </div>
+
+                <span class="space"></span>
+                <label>所属星级：</label>
+                <select name="department_id">
+                    <option value="">全部</option>
+                    <option value="1">LV1</option>
+                    <option value="2">LV2</option>
+                    <option value="3">LV3</option>
+                    <option value="4">LV4</option>
+                    <option value="5">LV5</option>
+                    <option value="6">LV6</option>
+                    <option value="7">LV7</option>
+                </select>  
+
+                <button class="btn" type="submit">查询</button>
+            </form>
+                         
+           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>店铺名称</th>
+                            <th>所属星级</th>
+                            <th>店铺累计积分</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                      <%var status=["","正常","停用","注销"]%>
+                      <%var data=data.data%>
+                      <%for(var i=0;i<data.length;i++){%>
+                        <tr>
+                            <td><%=i+1%></td>
+                            <td><%=data[i].name%></td>
+                            <td><%=data[i].username%></td>
+                            <td><%=status[data[i].status]%></td>
+                            <td>
+                            <a class="link">增加积分</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a class="link">减少积分</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a class="link" href="detail.html">积分详情</a>
+                            </td>      
+                        </tr>
+                        <%}%>                    
+                    </tbody>
+            </table>        
+             <div class="pager"> </div>
+            </script>
+        </div>
+            </div>            
+    </body>
+</html>

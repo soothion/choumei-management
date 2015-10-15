@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+        <style>
+        td input{
+            border:none;
+        }
+        .save{
+            display: none;
+        }  
+        .cancel{
+            display: none;
+        } 
+        td input{
+            display:none;
+        }    
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>系统配置</a>
+            <span>&gt;</span><a href="index.html">店铺APP显示配置</a>
+             <div class="flex-box">
+                <div class="flex-item">
+                    <h4>店铺APP显示配置</h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+        <div class="wrapper">        
+        <form class="form-vertical" data-role="form" id="form">
+          <div class="table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>合法情况</th>
+                                <th>很满意</th>
+                                <th>满意</th>
+                                <th>不满意</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                           <tr>
+                               <td>LV1</td>
+                               <td>
+                                   <span>1</span>
+                                   <input type="text" value="1" disabled="disabled" required/>
+                               </td>
+                               <td>
+                                   <span>1</span>
+                                   <input type="text" value="1" disabled="disabled" required/>
+                               </td>
+                               <td>
+                                   <strong>减</strong>
+                                   <span>1</span>
+                                   <input type="text" value="1" disabled="disabled" required/>
+                               </td>
+                               <td>
+                                   <a class="link edit">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                   <button class="link save">保存</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                   <a class="link cancel">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                               </td>
+                           </tr>
+                        </tbody>
+                    </table>
+                </div> 
+            </form>                        
+        </div>
+        <script type="text/javascript">
+            $("#form").on('click','.edit',function(e){
+                  e.preventDefault();
+                  $(this).closest("tr").find("span").hide();
+                  $(this).closest("tr").find("input").removeAttr('disabled');
+                  $(this).closest("tr").find("input").show();
+                  $(this).siblings().show(); 
+            })
+
+            $("#form").on('click','.save',function(e){
+                 e.preventDefault();
+            })
+
+            $("#form").on('click','.cancel',function(e){
+                  e.preventDefault();
+                  $(this).closest("tr").find("span").show();
+                  $(this).closest("tr").find("input").attr('disabled','disabled');
+                  $(this).closest("tr").find("input").hide();
+                  $(this).hide();
+                  $(this).parent().find(".save").hide(); 
+                  $(this).parent().find(".edit").show();               
+            })                        
+        </script>
+    </body>
+</html>
