@@ -531,6 +531,10 @@ class SalonController extends Controller {
 		$joinDividend = isset($param['dividendStatus'])?intval($param['dividendStatus']):'';
 		if($data["salonid"])
 		{
+			if(!$data['sn'])
+			{
+				throw new ApiException("参数错误", ERROR::MERCHANT_ERROR);
+			}
 			$whereInfo["salonid"] = $data["salonid"];
 			$where["salonid"] = $data["salonid"];
 			$dataInfo["upTime"] = time();
