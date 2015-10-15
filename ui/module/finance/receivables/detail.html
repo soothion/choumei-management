@@ -110,8 +110,12 @@
 					  <td> 收款金额： </td>
 					  <td> <%=data.money%> </td>
                 </tr>
-				<%}else{%> 
 				<%}%>
+				<tr>
+                  <td>备注：</td>
+                  <td><%=data.remark%></td>
+                </tr>
+				<%if(query.preview!="preview"){%>
 				 <tr>
 					  <td>创建日期：</td>
 					  <td>
@@ -150,6 +154,7 @@
 					  <td>状态：</td>
 					  <td><%=status[data.status]%></td>
                 </tr>
+				<%}%>
             </tbody>
          </table>
 	   </script>

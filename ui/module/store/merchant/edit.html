@@ -28,7 +28,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>商户编号</label>
 				<div class="control">
-					<input type="text"  value="<%=data.sn||""%>" disabled >
+					<input type="text" name="sn" maxlength="16" value="<%=data.sn||""%>" required data-value="<%=data.sn||""%>" unique="merchant/checkMerchantSn?sn=${value}" uniquemsg="商户编号重复">
 				</div>
 			</div>
 			<%}%>

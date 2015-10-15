@@ -18,6 +18,7 @@
    <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
+			<%if(data.from==1){%>
 			<%if(data.state==1||data.state==2){%>
 			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" data-confirm="你正在删除此付款单，是否执行删除？" 
 			onreset="parent.lib.popup.result({define:function(){history.back()}})">
@@ -34,6 +35,7 @@
 			onreset="parent.lib.popup.result({define:function(){history.back()}})">
 				<button class="btn">提交</button>
 			</form>
+			<%}%>
 			<%}%>
 			<span class="space"></span>
 			<button class="btn btn-cancel" type="button">返回</button>
@@ -79,6 +81,10 @@
 				 <tr>
                   <td>周期回款金额：</td>
                   <td><%=data.cycle_money%><span class="weak"> <span class="space"></span>尾差金额在最后一个回款周期补回</span></td>
+                </tr>
+				<tr>
+                  <td>备注：</td>
+                  <td><%=data.remark%></td>
                 </tr>
 				<tr>
                   <td>创建日期：</td>

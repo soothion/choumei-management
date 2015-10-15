@@ -103,21 +103,7 @@ class MerchantController extends Controller {
 	    return $this->success($result);
 	}
 	
-	
-	/**
-	 * 检测商户编号是否存在
-	 * 
-	 * */
-	public function getCheckSn($sn,$id=0)
-	{
-		$query = Merchant::getQuery();
-		$query->where('sn',$sn);
-		if($id)
-		{
-			$query->where('id',$id);
-		}
-		return  $query->count();
-	}
+
 	
 	/**
 	 * @api {post} /merchant/save 2.添加商户
@@ -161,6 +147,7 @@ class MerchantController extends Controller {
 	 *
 	 *@apiParam {Number} id 必填,商家Id.
 	 *
+	 * @apiParam {String} sn 必填,商户编号.
 	 * @apiParam {String} name 必填,用户姓名.
 	 * @apiParam {String} contact 必填,联系人.
 	 * @apiParam {String} mobile 必填,联系手机.
@@ -197,9 +184,16 @@ class MerchantController extends Controller {
 	private  function dosave($param)
 	{
 		$param["id"] = isset($param["id"])?$param["id"]:0;
-		
-		$query = Merchant::getQuery();
-		if(!$param["name"] || !$param["contact"] || !$param["mobile"])
+		$save["name"] = isset($param["name"])?trim($param["name"]):"";
+		$save["sn"] = isset($param["sn"])?trim($param["sn"]):"";
+		$save["contact"] = isset($param["contact"])?trim($param["contact"]):"";
+		$save["mobile"] = isset($param["mobile"])?trim($param["mobile"]):"";
+		$save["phone"] = isset($param["phone"])?trim($param["phone"]):"";
+		$save["email"] = isset($param["email"])?trim($param["email"]):"";
+		$save["addr"] = isset($param["addr"])?trim($param["addr"]):"";
+		$save["foundingDate"] = isset($param["foundingDate"])?trim($param["foundingDate"]):"";
+		$save["foundingDate"] = strtotime($save["foundingDate"]);
+		if(!$save["name"] || !$save["contact"] || !$save["mobile"])
 		{
 			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
 		}
@@ -207,23 +201,21 @@ class MerchantController extends Controller {
 		if($param["id"])
 		{
 			$save["upTime"] = time();
-		}
-		else 
-		{
-			$save["addTime"] = time();
-		}
-		$save["name"] = trim($param["name"])?trim($param["name"]):"";
-		$save["contact"] = trim($param["contact"])?trim($param["contact"]):"";
-		$save["mobile"] = trim($param["mobile"])?trim($param["mobile"]):"";
-		$save["phone"] = isset($param["phone"])?trim($param["phone"]):"";
-		$save["email"] = isset($param["email"])?trim($param["email"]):"";
-		$save["addr"] = isset($param["addr"])?trim($param["addr"]):"";
-		$save["foundingDate"] = isset($param["foundingDate"])?trim($param["foundingDate"]):"";
-		$save["foundingDate"] = strtotime($save["foundingDate"]);
-	
-		if($param["id"])
-		{
-			$status = $query->where('id',$param['id'])->update($save);
+			$result = Merchant::where(['id'=>$param['id']])->select('sn')->first();
+			if(!$result)
+			{
+				throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
+			}
+			if($result->sn != $param['sn'])
+			{
+				$snCount = Merchant::getCheckSn($param['sn']);//检测商户编号
+				if($snCount)
+				{
+					throw new ApiException('商户编号重复已经存在', ERROR::MERCHANT_SN_IS_ERROR);
+				}
+			}
+			
+			$status = Merchant::where(['id'=>$param['id']])->update($save);
 			if($status)
 			{
 				//触发事件，写入日志
@@ -233,8 +225,9 @@ class MerchantController extends Controller {
 		}
 		else
 		{
-			$save["sn"] = $this->addMerchantSn();
-			$status = $query->insertGetId($save);
+			$save["addTime"] = time();
+			$save["sn"] = Merchant::addMerchantSn();
+			$status = Merchant::insertGetId($save);
 			if($status)
 			{
 				Event::fire('merchant.save','商户Id:'.$status." 商户名称：".$save['name']);
@@ -252,28 +245,7 @@ class MerchantController extends Controller {
 			
 	}
 	
-	/**
-	 * 生成商户编号
-	 * */
-	private function addMerchantSn()
-	{
-		$redisKey = 'SZ';
-		$value = Redis::hget('merchantSn',$redisKey);
-		$value += 1;
-		if($value <= 1)
-		{
-			$lastId = Merchant::select(['id'])->orderBy('id', 'desc')->first();
-			$value = $lastId->id;
-		}
-		Redis::hset('merchantSn',$redisKey,$value);
-		$sn = intval($value)+20; //生成商户编号 SZ0001    +20避免和之前手动输入的编号冲突
-		$tps = "";
-		for($i=4;$i>strlen($sn);$i--)
-		{
-			$tps .= 0;
-		}
-		return   'SZ'.$tps.$sn;
-	}
+
 	
 	/**
 	 * @api {post} /merchant/del 4.删除商户
@@ -302,8 +274,6 @@ class MerchantController extends Controller {
 	public function del()
 	{
 		$param = $this->param;
-		$query = Merchant::getQuery();
-		
 		$param["id"] = isset($param["id"])?$param["id"]:0;
 		if(!$param["id"])
 		{
@@ -317,27 +287,19 @@ class MerchantController extends Controller {
 		
 		$save["status"] = 2;//1正常 2删除
 		$save["uptime"] = time();
-		$status = $query->where('id',$param['id'])->update($save);
-		
-		SalonUser::where(['merchantId'=>$param['id']])->update(['status'=>3]);//删除普通用户账号
+		$status = Merchant::where(['id'=>$param['id']])->update($save);
+		SalonUser::where(['merchantId'=>$param['id']])->update(['status'=>SalonUser::STATUS_DEl]);//删除普通用户账号
 		
 		$merchantId = $param['id'];
-		$usersCount = DB::table('salon_user')
-		->where('merchantId',"=" ,$merchantId)
-		->where('salonid',"!=" ,0)
-		->where('status',"=" ,1)
-		->count();
+		$usersCount = SalonUser::where(['merchantId'=>$merchantId,'status'=>1])->where('salonid','!=',0)->count();
 		if(!$usersCount)
 		{
-			DB::table('salon_user')//删除账号  超级管理员
-			->where('salonid',"=" ,0)
-			->where('merchantId',"=" ,$merchantId)
-			->update(['status'=>3]);
+			SalonUser::where(['merchantId'=>$merchantId,'salonid'=>0])->update(['status'=>SalonUser::STATUS_DEl]);//删除账号  超级管理员
 		}
 
 		if($status)
 		{
-			Event::fire('merchant.del','商户Id:'.$param['id']." 商户名称：".$this->getMerchantName($param['id']));
+			Event::fire('merchant.del','商户Id:'.$param['id']." 商户名称：".Merchant::getMerchantName($param['id']));
 			return $this->success();
 		}	 
 		else
@@ -348,26 +310,12 @@ class MerchantController extends Controller {
 	}
 	
 	/**
-	 * 查询商户名
-	 * */
-	private function getMerchantName($id)
-	{
-		$query = Merchant::getQuery();
-		$query->where('id',$id);
-		$rs = $query->select('name')->first();
-		return $rs->name;
-	}
-	
-	/**
 	 * 删除查看是否有合作的店铺
 	 * 
 	 * */
 	private function selectMerSalonStatus($merchantId)
 	{
-		$query = Salon::getQuery();
-		$query->where('merchantId',$merchantId);
-		$query->where('salestatus',1);//salestatus 0暂停 1正常 2删除
-		return $query->count();
+		return Salon::where(['merchantId'=>$merchantId,'status'=>1])->count();
 	}
 	
 	/**
@@ -404,7 +352,7 @@ class MerchantController extends Controller {
 			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
 		}
 
-		$snNo = $this->getCheckSn($sn);//检测商铺编号
+		$snNo = Merchant::getCheckSn($sn);//检测商铺编号
 		if($snNo)
 		{
 			throw new ApiException('商户编号重复已经存在', ERROR::MERCHANT_SN_IS_ERROR);

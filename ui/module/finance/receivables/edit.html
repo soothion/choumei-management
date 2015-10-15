@@ -20,9 +20,7 @@
 		
      <div class="wrapper" ajat="<%if(query.id){%>receivables/getone?id=<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
- 
 		  <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>receivables/update<%}else{%>receivables/save<%}%>">
-
 				<div class="detail-operation">
 					<button class="btn btn-cancel" type="button">取消</button>
 					<span class="space"></span>
@@ -95,7 +93,12 @@
                     </div>
 
                 </div>
-				
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>备注：</label>
+                    <div class="control">
+                        <input type="text" required name="remark" value="<%=data.remark||""%>" maxlength="15"  >
+                    </div>
+                </div>
                <div class="control-group">
 					<label class="control-label" for=""></label>
 					<div class="control">

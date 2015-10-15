@@ -14,7 +14,8 @@
 			</div>
 			<hr />
 		</div>			
-     <div class="wrapper" ajat="<%if(query.id){%>pay_manage/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
+     <div class="wrapper" >
+		<div ajat="<%if(query.id){%>pay_manage/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		  <form method="post" class="form-vertical" data-role="form" action="<%if(query.id){%>pay_manage/update/<%=query.id%><%}else{%>pay_manage/create<%}%>">
 				<div class="detail-operation">
@@ -25,8 +26,9 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>付款类型：</label>
                     <div class="control">
-                       <select required name="type"   style="width:20%;" <%=query.id?"disabled":""%>>
-							<option value="2">付业务投资款</option>
+                       <select id="type" required name="type"   style="width:20%;" <%=query.id?"disabled":""%>>
+							<option value="edit2.html">付交易代收款</option>
+							<option selected value="2">付业务投资款</option>
                         </select>
                     </div>
                 </div>
@@ -92,6 +94,12 @@
                         <input type="text" name="cycle_money" value="<%=data.cycle_money||""%>" required pattern="float"/> <span class="weak">尾差金额在最后一个回款周期补回</span>                             							  
                     </div>
                 </div>
+				<div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>备注：</label>
+                    <div class="control">
+                        <input type="text" required name="remark" value="<%=data.remark||""%>" maxlength="15"  >
+                    </div>
+                </div>
                <div class="control-group">
 				<label class="control-label" for=""></label>
 				<div class="control">
@@ -103,9 +111,9 @@
           </form>
 			</script>
         </div>
-       
+       </div>
 		<script type="text/javascript">
-		$(function(){			
+		$('#form').on('_ready',function(){
 			$(document).on('blur','input[name="cycle_money"]',function(){
 				var $this=$(this);
 				var cycle_money=$this.val();
@@ -114,7 +122,11 @@
 					$this.trigger('error',{type:'error',errormsg:"周期回款金额不能大于付款金额"});
 				}
 			});
-		
+			$('#type').on('change',function(){
+				if(this.value.indexOf(".html")>-1){
+					location.href=this.value
+				}
+			});
 			$(document).on('click','.preview',function(){
 				var data=lib.tools.getFormData($(this).closest('form'));
 				data=$.extend(JSON.parse(localStorage.getItem("preview")),data);
