@@ -7,6 +7,7 @@ use DB;
 use App\SalonUser;
 use App\Merchant;
 use App\SalonRatingsRecord;
+use App\Model\SalonScoreLog;
 class Salon extends Model {
 
 	protected $table = 'salon';
@@ -596,7 +597,31 @@ class Salon extends Model {
 			
 		}
 	}
-	
+        
+        /*
+         * 更新店铺积分
+         */
+
+    public static function updateScore($salonInfo, $score,$options,$userName) {
+        DB::beginTransaction();
+        $updateRes = Salon::where(['salonid' => $options['salonid']])->update(['score' => $score]);
+        $saveStatus = false;
+        if ($updateRes) {
+            $saveStatus = SalonScoreLog::Create([
+                        'salon_id' => $salonInfo->salonid,
+                        'score' => $options['type'] == 1 ? "+" . $options['score'] : "-" . $options['score'],
+                        'msg' => $userName . $options['msg'],
+                        'add_time' => time(),
+            ]);
+        }
+        if ($saveStatus) {
+            DB::commit();
+            return true;
+        } else {
+            DB::rollback();
+            return false;
+        }
+    }
 
 }
 

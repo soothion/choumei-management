@@ -336,7 +336,7 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
     // 往来余额 查询
     Route::any('shop_count/balance', array(
         'as' => 'shop_count.balance',
-        'uses' => 'ShopCount\BalanceController@balance'
+        'uses' => 'ShopCount\BalanceController@index'
     ));  
     
     //转付单导出
@@ -419,6 +419,31 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'uses'=>'Merchant\SalonController@del'
 	));		
 	
+    //店铺星级配置管理
+    Route::any('starconf/index', array(//星级积分列表
+        'as' => 'starconf.index',
+        'uses' => 'Merchant\StarconfController@index'
+    ));
+    Route::any('starconf/update', array(//星级积分更新
+        'as' => 'starconf.update',
+        'uses' => 'Merchant\StarconfController@update'
+    ));
+
+    //店铺星级积分管理
+    Route::any('salonstar/index', array(//星级积分列表
+        'as' => 'salonstar.index',
+        'uses' => 'Merchant\SalonstarController@index'
+    ));
+     Route::any('salonstar/update', array(//增加/减少 积分
+        'as' => 'salonstar.update',
+        'uses' => 'Merchant\SalonstarController@update'
+    ));
+      Route::any('salonstar/show', array(//积分详情
+        'as' => 'salonstar.show',
+        'uses' => 'Merchant\SalonstarController@show'
+    ));
+    
+
 
 	Route::any('salonAccount/index',array(  //店铺账号列表
 		'as'=>'salonAccount.index',
