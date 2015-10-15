@@ -396,6 +396,11 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
 .touch-link:active{
     background-color:rgba(0,0,0,0.05);
 }
+.loader {
+  width: 26px;
+  margin: -2px 5px 0px -5px;
+  vertical-align: middle;
+}
 label>input[type="radio"],label>input[type="checkbox"]{
     width:0;
 	opacity:0;
