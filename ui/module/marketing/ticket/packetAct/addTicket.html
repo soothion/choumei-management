@@ -8,6 +8,34 @@
       input{
         width:100px!important;
       }
+      .box-continer{
+         width:100%;
+         overflow:hidden;
+      }
+      .box{
+        position: relative;
+        width:410px;
+        height:190px;
+        border:1px solid #ddd;
+        margin:10px;
+        float:left;        
+      }
+      .remove{
+          position: absolute;
+          right: 20px;
+          font-size: 1.5rem;
+          top: 10px;
+          cursor: pointer;        
+      }
+      .box div{
+        margin: 15px;
+      }
+      .box button{
+        cursor: pointer;
+      }
+      span.label{
+        width:60px ;display:inline-block;       
+      }
       </style>
     </head>
     <body>
@@ -43,49 +71,73 @@
                         <li class="flex-item"><span>4.H5页面配置</span></li>
                     </ul>
 
-                    <div style="position:relative;width:400px;height:150px;border:1px solid #ddd;margin:15px;float:left">
-                        <div style="margin:10px;">
-                            <span style="width:70px ;display:inline-block">选择类型：</span>
-                            <select name="department_id">
-                                <option value="">全部</option>
-                                <option value="1">未使用</option>
-                                <option value="2">已使用</option>
-                                <option value="3">已失效</option>
-                                <option value="3">未兑换</option>
-                            </select>
+                    <div class="box-continer">
+                        <div class="box">
+                            <div>
+                                <span>选择类型：</span>
+                                <select name="department_id" required>
+                                    <option value="1">洗剪吹卷</option>
+                                    <option value="2">洗吹券</option>
+                                    <option value="3">烫发券</option>
+                                    <option value="4">染发券</option>
+                                    <option value="5">护发发券</option>
+                                    <option value="6">套餐券</option>
+                                    <option value="7">限时特价券</option>
+                                    <option value="8">快剪券</option>
+                                    <option value="9">无限制券</option>
+                                    <option value="10">赏金券</option>
+                                </select>
+                                <span class="remove">X</span>
+                            </div>
+
+                            <hr />
+
+                            <div>
+                                <span>金额数量：</span>
+                                <input type="text" required/>
+                                &nbsp;&nbsp;
+                                <span>元</span>
+                                &nbsp;&nbsp;
+                                <span>X</span>
+                                &nbsp;&nbsp;
+                                <input type="text" required/>
+                                &nbsp;&nbsp;
+                                <span>张</span>
+                                <p class="control-help" style="display:none;"></p>
+                            </div>
+
+                            <div>
+                                <span>有效时间：</span>
+                                <input type="text" required/>
+                                &nbsp;&nbsp;
+                                <span>天</span>
+                                &nbsp;
+                                <span>满</span>
+                                &nbsp;&nbsp;
+                                <input type="text" required/>
+                                &nbsp;&nbsp;
+                                <span>元</span>                          
+                                <span>可用</span>  
+                                <p class="control-help" style="display:none;"></p>                          
+                            </div>  
+                                                                    
                         </div>
 
-                        <hr />
 
-                        <div style="margin:10px">
-                            <span style="width:70px ;display:inline-block">金额数量：</span>
-                            <input type="text" />
-                            <span>元</span>
-                            <span>X</span>
-                            <input type="text" />
-                            <span>张</span>
-                        </div>
-
-                        <div style="margin:10px">
-                            <span style="width:70px ;display:inline-block">有效时间：</span>
-                            <input type="text" />
-                            <span>天</span>
-                            <span>满</span>
-                            <input type="text" />
-                            <span>元</span>                            
-                            <span>可用</span>                            
-                        </div>                  
-                    </div>
-
-                    <div style="position:relative;width:400px;height:150px;border:1px dashed #ddd;margin:15px;float:left">
-                            <div style="text-align: center;margin-top: 30px;">
+                        <div class="box">
+                            <div style="text-align:center;margin-top:40px;">
                                 <button type="button">
-                                    <span style="font-size: 3rem;color:#ddd;">+</span><br>
+                                    <span style="font-size: 4rem;color:#ddd;">+</span><br>
                                     <span style="font-size: 15px;color:#ddd;font-weight: 900;">添加券</span>
                                 </button>
                             </div>            
-                    </div>                      
-                                                                 
+                        </div>                                                 
+                    </div>
+
+                    <div class="control-group" style="margin-left:15px">
+                        <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
+                        <button class="btn-primary">下一步</button>
+                    </div>                                                                                     
             </form>
         </div> 
         <script>
