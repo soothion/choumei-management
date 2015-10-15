@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script> 
+      <style>
+      .title{
+          display: inline-block;
+          font-weight: bold;
+          font-size: 15px;
+          padding-left: 5px;
+          width: 150px;"        
+      }
+      table{
+        margin : 30px;
+      }
+      </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span>
+            <a href="index.html">平台活动</a>
+            <span>&gt;</span>新增活动
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>新增活动</h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div class="wrapper">
+            <div class="detail-operation form-vertical">
+                <button type="button" class="btn btn-cancel">取消</button>
+                <span class="space"></span>
+                <button class="btn-primary submit">提交</button>
+            </div>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td style="width:180px">
+                            <span class="title">微信/朋友圈分享icon</span>
+                        </td>
+
+                        <td>
+                            <div class="control-image">
+                                <div class="control-thumbnails" id="control-thumbnails1" data-max="10">
+                                    <div class="control-image-upload">
+                                        <div id="imageUpload1">
+                                            <i class="fa fa-image"></i>
+                                            <em>上传合同图片</em>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                      
+                        </td>
+
+                        <td>
+                            <div style="margin:10px">
+                                <input type="text" placeholder="填写分享标题" style="width:300px"/>
+                                <span style="color:#ddd">（必填，最多24个汉字)</span>
+                            </div>
+                            <div style="margin:10px">
+                                <textarea name=""placeholder="填写分享摘要" style="width:300px"></textarea>
+                                <span style="color:#ddd">（必填，最多28个汉字)</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td style="width:180px">
+                            <span class="title">H5红包页面背景图</span>
+                        </td>
+
+                        <td>
+                            <div class="control-image">
+                                <div class="control-thumbnails" id="control-thumbnails1" data-max="10">
+                                    <div class="control-image-upload">
+                                        <div id="imageUpload1">
+                                            <i class="fa fa-image"></i>
+                                            <em>上传合同图片</em>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                      
+                        </td>
+
+                        <td>
+                          <div style="width:250px;height:300px;border:1px dashed #ddd;margin:30px">
+                              <div style="width:200px;height:200px;border:1px dashed #ddd;margin:80px 0 0 25px">
+                                  
+                              </div>
+                          </div>  
+                        </td>
+                    </tr>
+                </tbody>
+            </table> 
+
+            <div style="margin:50px 160px;" class="form-vertical">
+                <button class="btn" type="button" id="preview_btn" style="margin-right:20px">预览</button>
+                <button class="btn-primary submit" >下一步</button>              
+            </div>           
+        </div> 
+
+        <script>
+            lib.Form.prototype.save = function(data){
+                location.href = "addImage.html"
+            }
+        </script>      
+    </body>
+</html>

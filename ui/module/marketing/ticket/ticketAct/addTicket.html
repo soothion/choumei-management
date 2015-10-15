@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+      .border-dash{
+          width: 100%;
+          border-top: 1px dashed #ddd;
+          margin: 10px auto;
+      }
+      ul li{
+          text-align: center;
+          border: 1px solid #ddd;
+          height:50px;
+          line-height: 50px;
+          width:200px;
+          float: left;
+      }
+
+      .act{
+        border: 1px solid #58A2EC;
+      }
+      </style> 
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span>
+            <a href="index.html">平台活动</a>
+            <span>&gt;</span>新增活动
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>新增活动</h4>
+                </div>
+            </div>
+            <hr />
+        </div>
+
+        <div class="wrapper">
+                    <div class="detail-operation">
+                        <button type="button" class="btn btn-cancel">取消</button>
+                        <span class="space"></span>
+                        <button class="btn-primary">提交</button>
+                    </div>
+
+                    <ul class="nav-step flex-box">
+                        <li class="flex-item">
+                            <a href="add.html">
+                                <i class="fa fa-check-circle"></i>
+                                <span>1.活动基本信息</span>
+                            </a>
+                        </li>
+
+                        <li class="flex-item"> 
+                            <a href="add.html">
+                                <i class="fa fa-check-circle"></i>
+                                <span>2.选择用户</span>
+                            </a>
+                        </li>
+                        <li class="flex-item active"><span class="arrow">3.定义现金券</span></li>
+                    </ul>
+
+                   <form class="form-vertical" data-role="form" id="form">
+                    <table class="table" width="100%">
+                        <thead>
+                            <tr>
+                                <th>现金券设定</th>
+                            </tr>                              
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="margin:15px">
+                                        <span style="display: inline-block;width:130px">券金额:</span>
+                                        <input type="text" />
+                                        <strong>元</strong>
+                                        <span>（不可修改，可填写1~999)</span>
+                                    </div>
+
+                                    <div style="margin:15px">
+                                        <span style="display: inline-block;width:130px">满额使用(单个项目)</span>
+                                        <input type="text" />
+                                        <strong>元 以上可用</strong>
+                                        <span>(大于或等于该数值可使用，0为不限制，可填写0~999) </span>
+                                    </div>
+                                </td>
+                            </tr>    
+
+                            <tr>
+                                <td>
+                                    <div style="margin:15px">
+                                        <span style="display: inline-block;width:130px">券总数:</span>
+
+                                        <label class="radio">
+                                            <input type="radio" name="accountType" value="2" >
+                                            <span>不限</span>
+                                        </label>
+
+                                        <label class="radio">
+                                            <input type="radio" name="accountType" value="2" >
+                                            <span>自定义</span>
+                                        </label>
+
+                                        <input type="text" />
+                                        <strong>张</strong>
+                                        <span>(不可修改，可填写1~999）</span>
+                                    </div>                                    
+                                </td>
+                            </tr>  
+
+                            <tr>
+                                <td>
+                                    <div style="margin:15px">
+                                        <span style="display: inline-block;width:130px">领券上限：</span>
+                                        <input type="text" />
+                                        <strong>张</strong>
+                                        <span>(每人本活动领券总上限，每次活动只可获取一张)</span>
+                                    </div>                                     
+                                </td>
+                            </tr>                              
+                        </tbody>
+                    </table>
+
+
+                    <table class="table" width="100%">
+                        <thead>
+                            <tr>
+                                <th colspan="2">时间限制</th>
+                            </tr>                              
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>活动（获取）时间</td>
+                                <td>
+                                    <input type="date" />
+                                    <span>至</span>
+                                    <input type="date" />
+                                </td>
+                            </tr>    
+
+                            <tr>
+                                <td>券有效时间</td>
+                                <td>
+                                    <div style="margin:15px">
+                                        <label class="radio">
+                                            <input type="radio" name="accountType" value="2" >
+                                            <span>指定有效期</span>
+                                        </label> 
+                                        <input type="date" />
+                                        <span>至</span>
+                                        <input type="date" />                                                                               
+                                    </div>
+                                    <div style="margin:15px">
+                                        <label class="radio">
+                                            <input type="radio" name="accountType" value="2" >
+                                            <span>自定义有效期区间</span>
+                                        </label>
+                                        <input type="text" />
+                                        <span>天内有效（获取现金券后）</span>                                                                                
+                                    </div>
+                                </td>
+                            </tr>                               
+                        </tbody>
+                    </table>
+
+                    <table class="table" width="100%">
+                        <thead>
+                            <tr>
+                                <th>使用限制</th>
+                            </tr>                              
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="margin:10px">指定项目类别支付可用</div>
+                                    <div>
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="salonType" value="3">
+                                            <span>洗吹</span>
+                                        </label>                        <label class="checkbox">
+                                            <input type="checkbox" name="salonType" value="3">
+                                            <span>洗剪吹</span>
+                                        </label>                        <label class="checkbox">
+                                            <input type="checkbox" name="salonType" value="3">
+                                            <span>烫发</span>
+                                        </label>                        <label class="checkbox">
+                                            <input type="checkbox" name="salonType" value="3">
+                                            <span>染发</span>
+                                        </label>                        <label class="checkbox">
+                                            <input type="checkbox" name="salonType" value="3">
+                                            <span>护发</span>
+                                        </label>                        <label class="checkbox">
+                                            <input type="checkbox" name="salonType" value="3">
+                                            <span>套餐</span>
+                                        </label>                        
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="salonType" value="3">
+                                            <span>快剪</span>
+                                        </label>                                        
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="salonType" value="3">
+                                        <span>限制首单使用</span>
+                                    </label>                                      
+                                </td>                                
+                            </tr>                                   
+                        </tbody>
+                    </table>
+
+                    <table class="table" width="100%">
+                        <thead>
+                            <tr>
+                                <th colspan="2">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="salonType" value="3">
+                                        <span>发送手机短信</span>
+                                    </label> 
+                                </th>
+                            </tr>                              
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>手机短信内容</td>
+                                <td><textarea name=""></textarea></td>
+                            </tr>                                 
+                        </tbody>
+                    </table>                                                                                                                                               
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
+                        <button class="btn-primary">下一步</button>
+                    </div> 
+                    </form>                                                                 
+        </div>
+
+        <script>
+            lib.Form.prototype.save = function(data){
+                location.href = "addTicket.html"
+            }
+        </script>                
+    </body>
+</html>

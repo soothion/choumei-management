@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <link rel="stylesheet" href="income.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理 </a>
+            <span>&gt;</span><a href="index.html">兑换活动</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>活动概况</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">        
+            <div class="table" style="margin:0" id="table-wrapper">
+                <div class="detail-operation">
+                        <a href='addBase.html'>
+                            <button class="btn">编辑</button>
+                        </a>
+                    <button class="btn" type="button" onclick="window.close()">关闭</button>  
+                </div>  
+                        
+                <table>
+                    <tbody>
+                        <tr>
+                            <td class="td">活动名称</td>
+                            <td><%=data.sn%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动简介</td>
+                            <td><%=data.start_at && new Date(data.start_at).format("yyyy-MM-dd")%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动时间</td>
+                            <td><%=data.end_at && new Date(data.end_at).format("yyyy-MM-dd")%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动状态</td>
+                            <td><%=data.amount%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">券总数</td>
+                            <td><%=data.created_by%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td class="td">券预算总金额</td>
+                            <td><%=data.created_at && new Date(data.created_at).format("yyyy-MM-dd")%></td>
+                        </tr>   
+
+                        <tr>
+                            <td class="td">申请部门</td>
+                            <td><%=data.confirm_by%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">负责人</td>
+                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                        </tr>  
+
+                        <tr>
+                            <td class="td">已兑换数</td>
+                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                        </tr>  
+
+                        <tr>
+                            <td class="td">已兑换金额</td>
+                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">已使用数</td>
+                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">已消费数</td>
+                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                        </tr>  
+
+                        <tr>
+                            <td class="td">已消费数金额</td>
+                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                        </tr> 
+
+                        <tr>
+                            <td class="td">已失效数</td>
+                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">实体券编号和密码</td>
+                            <td><a class="link">查看实体券编码和密码</a></td>
+                        </tr>                                                                                                          
+                    </tbody>                     
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
