@@ -40,6 +40,7 @@ class PayController extends Controller
      * @apiSuccess {Number} to 结束数据.
      * @apiSuccess {String} code 单号
      * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
+     * @apiSuccess {String} from 来源 1 本系统 2 商家后台
      * @apiSuccess {String} money 付款金额
      * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
      * @apiSuccess {String} require_day 要求付款日期 
@@ -53,6 +54,7 @@ class PayController extends Controller
      * @apiSuccess {String} salon 店铺信息
      * @apiSuccess {String} state 订单状态  1待提交 2待审批 3:待付款 4:已付款
      * @apiSuccess {String} confirm_at 审批日期
+     * @apiSuccess {String} salon_user 制单人信息(为商家后台时)
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -72,6 +74,7 @@ class PayController extends Controller
      *                   "salon_id": 1,
      *                   "merchant_id": 2,
      *                   "money": "333.66",
+     *                   "from":1,
      *                   "pay_type": 1,
      *                   "require_day": "2015-08-14",
      *                   "pay_day": "0000-00-00",
@@ -91,6 +94,10 @@ class PayController extends Controller
      *                       "id": 1,
      *                       "name": "这是用户名Admin"
      *                   },
+     *                   "salon_user": {
+     *                       "salon_user_id": 1,
+     *                       "username": "商家后台用户名"
+     *                   },
      *                   "confirm_user": null,
      *                   "cash_user": null,
      *                   "salon": {
@@ -107,6 +114,7 @@ class PayController extends Controller
      *                   "merchant_id": 2,
      *                   "money": "333.66",
      *                   "pay_type": 1,
+     *                   "from":1,
      *                   "require_day": "2015-08-14",
      *                   "pay_day": "0000-00-00",
      *                   "cycle": 30,
@@ -124,6 +132,10 @@ class PayController extends Controller
      *                   "make_user": {
      *                       "id": 1,
      *                       "name": "这是用户名Admin"
+     *                   },
+     *                   "salon_user": {
+     *                       "salon_user_id": 1,
+     *                       "username": "商家后台用户名"
      *                   },
      *                   "confirm_user": null,
      *                   "cash_user": null,
@@ -252,6 +264,7 @@ class PayController extends Controller
      * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
      * @apiSuccess {String} money 付款金额
      * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
+     * @apiSuccess {String} from 来源 1 本系统 2 商家后台
      * @apiSuccess {String} require_day 要求付款日期 
      * @apiSuccess {String} pay_day 实际付款日期 
      * @apiSuccess {String} cycle 回款周期
@@ -263,6 +276,7 @@ class PayController extends Controller
      * @apiSuccess {String} salon 店铺信息
      * @apiSuccess {String} state 订单状态  1待提交 2待审批 3待付款 4已付款
      * @apiSuccess {String} confirm_at 审批日期
+     * @apiSuccess {String} salon_user 制单人信息(为商家后台时)
      * 
      * @apiSuccessExample Success-Response:
      *        {
@@ -275,6 +289,7 @@ class PayController extends Controller
      *                "type": 2,
      *                "salon_id": 1,
      *                "merchant_id": 2,
+     *                "from":1,
      *                "money": "333.66",
      *                "pay_type": 1,
      *                "require_day": "2015-08-14",
@@ -294,6 +309,10 @@ class PayController extends Controller
      *                "make_user": {
      *                    "id": 1,
      *                    "name": "这是用户名Admin"
+     *                },
+     *                 "salon_user": {
+     *                     "salon_user_id": 1,
+     *                     "username": "商家后台用户名"
      *                },
      *                "confirm_user": null,
      *                "cash_user": null,
