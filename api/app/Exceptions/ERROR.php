@@ -434,6 +434,35 @@ class ERROR
      CONST MERCHANT_SALON_STATUS_IS_ERROR  =  -51020;
      
      
+     ////////////APP店铺配置模块//////////////
+     /**
+      *@param 请输入有效积分数值
+      */
+     CONST STAR_CONF_SCORE_IS_ERROR=-52000;
+     /**
+      *@param 更新星级积分失败
+      */
+     CONST STAR_CONF_UPDATE_IS_ERROR=-52001;
+     /**
+      *@param 未找到相应的星级积分等级
+      */
+     CONST STAR_CONF_LEVEL_IS_ERROR=-52002;
+     /**
+      *@param 未找到该店铺信息
+      */
+      CONST STAR_CONF_SALON_INFO_IS_ERROR=-52003;
+      /**
+      *@param 修改店铺积分失败
+      */
+      CONST STAR_CONF_UPDATE_SALON_SCORE_FAILED=-52004;
+      /**
+      *@param 未找到该评分类型
+      */
+      CONST SCORE_CONF_FAILED=-52005;
+      /**
+      *@param 更新评分分值配置失败
+      */
+      CONST SCORE_CONF_UPDATE_FAILED=-52006;
      
      
 

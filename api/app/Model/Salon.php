@@ -610,8 +610,8 @@ class Salon extends Model {
             $saveStatus = SalonScoreLog::Create([
                         'salon_id' => $salonInfo->salonid,
                         'score' => $options['type'] == 1 ? "+" . $options['score'] : "-" . $options['score'],
-                        'msg' => $userName . $options['msg'],
-                        'add_time' => time(),
+                        'description' => $userName . $options['msg'],
+                        'create_time' => date("Y-m-d H:i:s",time()),
             ]);
         }
         if ($saveStatus) {

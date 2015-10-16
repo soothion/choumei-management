@@ -9,27 +9,33 @@ use Illuminate\Pagination\AbstractPaginator;
 class SalonScoreLog extends Model {
 
     protected $table = 'salon_score_log';
-    protected $fillable = array('salon_id', 'score', 'msg', 'status', 'add_time', 'update_time');
+    protected $fillable = array('salon_id', 'score', 'description', 'create_time');
     public $timestamps = false;
 
     public static function getLogList($options, $startTime, $endTime, $page, $size) {
-        $query = self::select(['score', 'msg', 'add_time']);
+        $query = self::select(['score', 'description', 'create_time']);
         DB::enableQueryLog();
         $query->where('salon_id', $options['salonid']);
         if (!empty($startTime)) {
-            $startTime = strtotime($startTime);
-            $query->where('add_time', '>', $startTime);
+            $query->where('create_time', '>=', $startTime);
         }
         if (!empty($endTime)) {
-            $endTime = strtotime($endTime);
-            $query->where('add_time', '<', $endTime);
+            $query->where('create_time', '<=', $endTime);
         }
+        $query->orderBy('create_time', 'desc');
         AbstractPaginator::currentPageResolver(function () use($page) {
             return $page;
         });
         $salonList = $query->paginate($size)->toArray();
+        $salonInfo = \App\Salon::select(['score'])->find($options['salonid']);
+        foreach ($salonList['data'] as $key => $val) {
+            if ($key != 0) {
+                $salonList['data'][$key]['totalScore'] = $salonList['data'][$key - 1]['totalScore'] - $salonList['data'][$key - 1]['score'];
+            } else {
+                $salonList['data'][$key]['totalScore'] = $salonInfo->score;
+            }
+        }
 //        print_r(DB::getQueryLog());
-//        exit;
         unset($salonList['next_page_url']);
         unset($salonList['prev_page_url']);
         return $salonList;
