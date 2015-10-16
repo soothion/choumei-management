@@ -42,8 +42,6 @@
                     <span></span>
                 </label>                
             </div>
-            <form class="form-vertical" action="starconf/update" data-role="form" id="form">
-
                 <div class="table" ajat="starconf/index#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id="table-t">
                     <table>
@@ -62,12 +60,10 @@
                                <td><%=item.level%></td>
                                <td><a class="link"><%=item.salonCount%></a></td>
                                <td>
-                                   <span><%=item.score%></span>
-                                   <input type="hide" class="hide"name="id" value="<%=item.id%>" disabled="disabled"/>
-                                   <input type="text" class="show" name="score" value="<%=item.score%>" 
-                                   disabled="disabled"  levelId="<%=item.id%>" 
-                                   required/>
-
+                                   <span class="score"><%=item.score%></span>
+                                   <input type="hide" name="id" value="<%=item.id%>" />
+                                   <input type="text" name="score" value="<%=item.score%>" />
+                                   <span class="control-help" style="display:none">未填写</span>
                                </td>
                                <td>
                                    <button class="link edit">编辑</button>
@@ -81,7 +77,6 @@
                     </table>
                 </script>
                 </div>                
-            </form>
 		</div>
     <script src="index.js"></script>
     </body>
