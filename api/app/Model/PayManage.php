@@ -292,9 +292,10 @@ class PayManage extends Model
             'type'=>intval($attr['type']),
             'salon_id'=>intval($attr['salon_id']),
             'merchant_id'=>intval($attr['merchant_id']),
-            'money'=>intval($attr['money']),
+            'money'=>floatval($attr['money']),
             'pay_type'=>intval($attr['pay_type']),         
             'make_uid'=>intval($attr['make_uid']),
+            'remark'=>$attr['remark'],
         ];
         if($attr['type'] == self::TYPE_OF_FTZ )
         {
@@ -305,11 +306,12 @@ class PayManage extends Model
             {
                 return false;
             }
-            $record = [
+            $record_plus = [
                 'require_day'=>$attr['require_day'],
                 'cycle'=>intval($attr['cycle']),
                 'cycle_day'=>intval($attr['pay_type']),
                 'cycle_money'=>floatval($attr['cycle_money']),];
+            $record =array_merge($record,$record_plus);
         }
         $record['code'] = self::makeNewCode($record['type']);     
         $record['state'] = self::STATE_OF_TO_CHECK;
@@ -470,7 +472,7 @@ class PayManage extends Model
         );
         
         $w_ids = array_column($items, 'w_id');
-        self::whereIn('id',$w_ids)->update([
+        SalonMoneyWithdraw::whereIn('id',$w_ids)->update([
             'state'=>$state,
             'updated_at'=>$now_date
         ]);
