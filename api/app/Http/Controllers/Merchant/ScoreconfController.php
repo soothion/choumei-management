@@ -10,7 +10,7 @@ use App\Model\ScoreConf;
 class ScoreconfController extends Controller {
 
     /**
-     * @api {post} /scoreconf/index 1.星级对应积分配置列表
+     * @api {post} /scoreconf/index 1.评分对应分值配置列表
      * @apiName index
      * @apiGroup scoreconf
      *
@@ -52,7 +52,7 @@ class ScoreconfController extends Controller {
     }
 
     /**
-     * @api {post} /scoreconf/update 2.更新配置分值
+     * @api {post} /scoreconf/update 2.更新评分配置分值
      * @apiName update
      * @apiGroup scoreconf
      *
