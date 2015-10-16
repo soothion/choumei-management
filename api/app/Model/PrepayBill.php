@@ -157,7 +157,7 @@ class PrepayBill extends Model
            $remark = "预付保证金";
        }
        $count_at = date("Y-m-d H:i:s");
-       ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['pay_money'],$remark,$count_at);
+       ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['money'],$remark,$count_at);
        return $res;     
     }
     
