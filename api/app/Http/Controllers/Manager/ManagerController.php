@@ -228,11 +228,11 @@ class ManagerController extends Controller{
 	public function create()
 	{
 		$param = $this->param;
-		DB::beginTransaction();
 		if(Manager::where('username','=',$param['username'])->first())
 			throw new ApiException('用户名已存在', ERROR::USER_EXIST);
 		$param['password'] = bcrypt($param['password']);
 		$user = Manager::create($param);
+		DB::beginTransaction();
 		$role = 1;
 		if(isset($param['roles'])){
 			$roles = $param['roles'];
@@ -315,6 +315,8 @@ class ManagerController extends Controller{
 	public function show($id)
 	{
 		$user = Manager::with('roles')->find($id);
+		if(!$user)
+			throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
 		return $this->success($user);
 	}
 
