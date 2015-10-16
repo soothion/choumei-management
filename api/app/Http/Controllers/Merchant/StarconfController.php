@@ -10,7 +10,7 @@ use App\Exceptions\ERROR;
 class StarconfController extends Controller {
 
     /**
-     * @api {post} starconf/index 1.星级对应积分配置列表
+     * @api {post} /starconf/index 1.星级对应积分配置列表
      * @apiName index
      * @apiGroup starconf
      *
@@ -54,7 +54,7 @@ class StarconfController extends Controller {
     }
 
     /**
-     * @api {post} starconf/update 2.更新起始积分分值
+     * @api {post} /starconf/update 2.更新起始积分分值
      * @apiName update
      * @apiGroup starconf
      *

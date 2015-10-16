@@ -12,7 +12,7 @@ use App\Exceptions\ERROR;
 class SalonstarController extends Controller {
 
     /**
-     * @api {post} salonstar/index 1.店铺星级积分管理列表
+     * @api {post} /salonstar/index 1.店铺星级积分管理列表
      * @apiName index
      * @apiGroup salonstar
      *
@@ -96,7 +96,7 @@ class SalonstarController extends Controller {
     }
 
     /**
-     * @api {post} salonstar/update 2.增加/减少积分
+     * @api {post} /salonstar/update 2.增加/减少积分
      * @apiName update
      * @apiGroup salonstar
      *
@@ -162,7 +162,7 @@ class SalonstarController extends Controller {
     }
 
     /**
-     * @api {post} salonstar/show 3.积分详情
+     * @api {post} /salonstar/show 3.积分详情
      * @apiName show
      * @apiGroup salonstar
      *
