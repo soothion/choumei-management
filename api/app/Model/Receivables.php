@@ -5,11 +5,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Redis as Redis;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
+use App\PayManage;
+use App\PrepayBill;
 class Receivables extends Model {
 
 	protected $table = 'receivables';
 	
 	public $timestamps = false;
+	
+	public  static 	$typeArr = [0=>'',1=>'业务投资款返还',2=>'交易代收款返还'] ;
+	
+	public  static 	$paymentStyleArr =  [0=>'',1=>'银行存款',2=>'账扣返还',3=>'现金',4=>'支付宝',5=>'财付通',6=>'其他'];
+	
+	public  static 	$statusArr =  [0=>'',1=>'待确认',2=>'已确认'];
 	
 	/**
 	 * 查询列表
@@ -29,6 +37,7 @@ class Receivables extends Model {
 				'r.status',
 				'r.receiptDate',
 				'r.id',
+				'r.remark',
 				'mg.name as preparedByName',
 			);
 		//手动设置页数
@@ -73,14 +82,20 @@ class Receivables extends Model {
 		{
 			$query =  $query ->where('r.status','=',$where['status']);
 		}
-		if(isset($where['startTime']) && $where['startTime']  && $where['endTime'])
+		$selectStatus = 0;
+		if(isset($where['startTime']) && $where['startTime'])
 		{
 			$query =  $query ->where('r.receiptDate','>=',$where['startTime']);
+			$selectStatus = 1;
+		}
+		if(isset($where['endTime']) && $where['endTime'])
+		{
 			$query =  $query ->where('r.receiptDate','<=',$where['endTime']);
-			if(!$where['status'])
-			{
-				$query =  $query ->where('r.status','=',2);//只要确认的收款
-			}
+			$selectStatus = 1;
+		}
+		if($selectStatus)
+		{
+			$query =  $query ->where('r.status','=',2);//只要确认的收款
 		}
 		if(isset($where['salonname']) && $where['salonname'])
 		{
@@ -122,6 +137,7 @@ class Receivables extends Model {
 				'r.id',
 				'r.checkTime',
 				'r.payCode',
+				'r.remark',
 				'r.paySingleCode',
 				'mg.name as preparedByName',
 				'mgs.name as cashierName',
@@ -170,19 +186,17 @@ class Receivables extends Model {
 	 * */
 	public static function dosave($save,$id = 0,$user = 0)
 	{
-		$query = self::getQuery();
-
 		if($id)
 		{
 			$save['upTime'] = time();
-			$status = $query->where('id',$id)->update($save);
+			$status = self::where('id',$id)->update($save);
 		}
 		else
 		{
 			$save['addTime'] = time();
 			$save['preparedBy'] = $user;
 			$save['singleNumber'] = self::createSingleNumber($save['type']);//收款单号
-			$status = $query->insertGetId($save);
+			$status = self::insertGetId($save);
 		}
 		return $status;
 	}
@@ -215,6 +229,7 @@ class Receivables extends Model {
 				'r.id',
 				'r.checkTime',
 				'r.payCode',
+				'r.remark',
 				'r.paySingleCode',
 				'mg.name as preparedByName',
 				'mgs.name as cashierName',
@@ -238,9 +253,8 @@ class Receivables extends Model {
 		{
 			return false;
 		}
-		$query = self::getQuery();
 		$save['upTime'] = time();
-		$status = $query->where('id',$id)->update(['status'=>3,'upTime'=>time()]);//删除
+		$status = self::where('id',$id)->update(['status'=>3,'upTime'=>time()]);//删除
 		return $status;
 	}
 	
@@ -263,6 +277,78 @@ class Receivables extends Model {
 			return true;
 		}
 		
+	}
+	
+	/**
+	 * 确认收款
+	 * var  type 		   收款类型1业务投资款返还 2交易代收款返还
+	 * var  paymentStyle 收款方式 1银行存款2账扣返还3现金4支付宝5财付通.
+	 * 
+	 * */
+	public static function confirmReceivables($idArr,$userId,$payTypeId)
+	{
+		DB::beginTransaction();
+		//更新状态
+		$status = Self::whereIn('id', $idArr)->update(['checkTime'=>time(),'status'=>2,'cashier'=>$userId]);
+		if(!$status)
+		{
+			DB::rollBack();
+			return false;
+		}
+		
+		if($payTypeId && $status)
+		{
+			//选择为账扣返还类型时，确认付款后自动在付款单中生成‘付交易代收款’单，且此订单为已付款状态。同时在转付单生成‘付交易代收款’单，此订单也为已付款状态
+			foreach ($payTypeId as $k=>$v)
+			{
+				$data = [
+						'id'			=>	$v['id'],
+						'code'			=>	$v['singleNumber'],
+						'salon_id'		=>	$v['salonid'],
+						'merchant_id'	=>	$v['merchantId'],
+						'money'			=>	$v['money'],
+						'receive_type'	=>	$v['paymentStyle'],
+						'require_day'	=>	$v['receiptDate'],
+						'receive_day'	=>	$v['checkTime'],
+						'cash_uid'		=>	$v['cashier'],
+						'make_uid'		=>	$v['preparedBy'],
+						'make_at'		=>	$v['addTime'],
+						'remark'		=>	$v['remark'],
+					];
+				if($v['paymentStyle'] == 2 && $v['type'] == 1)//账扣返还---业务投资款
+				{
+					$retData = PayManage::makeFromReceive($data);//付款单
+					if($retData)
+					{
+						$status = Receivables::where('id', '=', $v['id'])->update(['payCode' => $retData['code'],'payId'=>$retData['id']]);
+						if(!$status)
+						{
+							DB::rollBack();
+							return false;
+						}
+					}
+				}
+		
+				if($v['type'] == 2)
+				{
+					$data['money'] = '-'.$v['money'];//交易代收款
+					$data['type'] = 3;
+					$retData = PrepayBill::makeReturn($data);
+					if($retData)
+					{
+						$status = self::where('id', '=', $v['id'])->update(['paySingleCode' => $retData['code'],'paySingleId'=>$retData['id']]);
+						if(!$status)
+						{
+							DB::rollBack();
+							return false;
+						}
+					}
+				}
+					
+			}
+		}
+		DB::commit();
+		return true;
 	}
 	
 	

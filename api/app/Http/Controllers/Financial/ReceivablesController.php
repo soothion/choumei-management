@@ -142,6 +142,7 @@ class ReceivablesController extends Controller{
 	 * @apiParam {Number} type 必填,收款类型1业务投资款返还 2交易代收款返还.
 	 * @apiParam {Number} paymentStyle 必填,收款方式 1银行存款2账扣返还3现金4支付宝5财付通.
 	 * @apiParam {String} money 必填,收款金额.
+	 * @apiParam {String} remark 选填,备注信息.
 	 * @apiParam {String} receiptDate 必填,收款日期(Y-m-d H:i:s).
 	 * 
 	 * 
@@ -175,6 +176,7 @@ class ReceivablesController extends Controller{
 	 * @apiParam {Number} type 必填,收款类型1业务投资款返还 2交易代收款返还.
 	 * @apiParam {Number} paymentStyle 必填,收款方式 1银行存款2账扣返还3现金4支付宝5财付通.
 	 * @apiParam {String} money 必填,收款金额.
+	 * @apiParam {String} remark 选填,备注信息.
 	 * @apiParam {String} receiptDate 必填,收款日期(Y-m-d H:i:s).
 	 * 
 	 * 
@@ -217,6 +219,7 @@ class ReceivablesController extends Controller{
 		$save['type'] = isset($param['type'])?$param['type']:0;
 		$save['paymentStyle'] = isset($param['paymentStyle'])?$param['paymentStyle']:0;
 		$save['money'] = isset($param['money'])?$param['money']:0;
+		$save['remark'] = isset($param['remark'])?$param['remark']:0;
 		$save['receiptDate'] = isset($param['receiptDate'])?strtotime($param['receiptDate']):0;
 		if(!$save['salonid'] || !in_array($save['type'], array('1','2'))  || !$save['paymentStyle'] || !$save['money'] || !$save['receiptDate'])
 		{
@@ -262,106 +265,49 @@ class ReceivablesController extends Controller{
 		$param = $this->param;
 		$idStr = isset($param['idStr'])?$param['idStr']:0;
 		$idArr = explode(',', $idStr);
-		$query = Receivables::getQuery();
 		if(!$idStr)
 		{
 			throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
 		}
-		$payTypeId = array();
-		$list = $query->select(['type','type','id','status','paymentStyle','receiptDate','salonid','money','singleNumber','cashier','preparedBy','checkTime','addTime'])->whereIn('id', $idArr)->get();
-		if($list)
+		$payTypeId = [];
+		$list = Receivables::select(['type','type','id','status','paymentStyle','receiptDate','salonid','money','singleNumber','cashier','preparedBy','checkTime','addTime','remark'])->whereIn('id', $idArr)->get();
+		foreach($list as $key=>$val)
 		{
-			foreach($list as $key=>$val)
+			if($val->status != 1)
 			{
-				if($val->status != 1)
-				{
-					throw new ApiException('数据错误，请重新勾选', ERROR::RECEIVABLES_ERROR);
-				}
-				if($val->type == 1)//取财务管理-收款管理中的业务投资款返还(已确认)的单		  		
-				{
-					$salonResult = Salon::select(['merchantId'])->where("salonid","=",$val->salonid)->first();
-					ShopCount::count_bill_by_invest_return_money($val->salonid,$salonResult->merchantId,$val->money);
-				}
-
-				if($val->paymentStyle == 2 || $val->type == 2) //type 收款类型 1业务投资款返还 2交易代收款返还   paymentStyle 收款方式 1银行存款 2账扣返还 3现金 4支付宝 5财付通
-				{
-
-					$payTypeId[$key]['type'] = $val->type;
-					$payTypeId[$key]['paymentStyle'] = $val->paymentStyle;
-
-					$payTypeId[$key]['id'] = $val->id;//账扣返还id
-					$payTypeId[$key]['salonid'] = $val->salonid;
-					
-					$payTypeId[$key]['receiptDate'] = date('Y-m-d',$val->receiptDate);
-					$payTypeId[$key]['checkTime'] = date('Y-m-d');
-					$payTypeId[$key]['addTime'] = date('Y-m-d H:i:s',$val->addTime);
-					
-					$payTypeId[$key]['money'] = $val->money;
-					$merchantId = Salon::select(['merchantId'])->where("salonid","=",$val->salonid)->first();
-					$payTypeId[$key]['merchantId'] = $merchantId->merchantId;
-					$payTypeId[$key]['singleNumber'] =$val->singleNumber;
-					$payTypeId[$key]['cashier'] =$val->cashier;
-					$payTypeId[$key]['preparedBy'] =$val->preparedBy;
-				}
+				throw new ApiException('数据错误，请重新勾选', ERROR::RECEIVABLES_ERROR);
+			}
+			$salonResult = Salon::select(['merchantId'])->where(['salonid'=>$val->salonid])->first();
+			if($val->type == 1)//取财务管理-收款管理中的业务投资款返还(已确认)的单		  		
+			{
+				ShopCount::count_bill_by_invest_return_money($val->salonid,$salonResult->merchantId,$val->money);
+			}
+			if($val->paymentStyle == 2 || $val->type == 2) //type 收款类型 1业务投资款返还 2交易代收款返还   paymentStyle 收款方式 1银行存款 2账扣返还 3现金 4支付宝 5财付通
+			{
+				$payTypeId[$key]['type'] 			= $val->type;
+				$payTypeId[$key]['paymentStyle']    = $val->paymentStyle;
+				$payTypeId[$key]['id'] 				= $val->id;//账扣返还id
+				$payTypeId[$key]['salonid'] 		= $val->salonid;
+				$payTypeId[$key]['receiptDate'] 	= date('Y-m-d',$val->receiptDate);
+				$payTypeId[$key]['checkTime'] 		= date('Y-m-d');
+				$payTypeId[$key]['addTime'] 		= date('Y-m-d H:i:s',$val->addTime);
+				$payTypeId[$key]['money']		    = $val->money;
+				$payTypeId[$key]['merchantId'] 		= $salonResult->merchantId;
+				$payTypeId[$key]['singleNumber'] 	= $val->singleNumber;
+				$payTypeId[$key]['cashier']		    = $val->cashier;
+				$payTypeId[$key]['preparedBy'] 		= $val->preparedBy;
+				$payTypeId[$key]['remark'] 			= $val->remark;
 			}
 		}
-		DB::beginTransaction();
-		//更新状态
-		$status = $query ->whereIn('id', $idArr)->update(['checkTime'=>time(),'status'=>2,'cashier'=>$this->user->id]);
-		
-		if($payTypeId && $status)
+		$row = Receivables::confirmReceivables($idArr,$this->user->id,$payTypeId);
+		//$row = Receivables::confirmReceivables($idArr,1,$payTypeId);
+		if($row)
 		{
-
-			//选择为账扣返还类型时，确认付款后自动在付款单中生成‘付交易代收款’单，且此订单为已付款状态。同时在转付单生成‘付交易代收款’单，此订单也为已付款状态
-			foreach ($payTypeId as $k=>$v)
-			{
-
-				 $data = array(
-				 			'id'=>$v['id'],
-				 			'code'=>$v['singleNumber'],
-				 			'salon_id'=>$v['salonid'],
-				 			'merchant_id'=>$v['merchantId'],
-				 			'money'=>$v['money'],
-				 			'receive_type'=>$v['paymentStyle'],
-				 			'require_day'=>$v['receiptDate'],
-				 		 	'receive_day'=>$v['checkTime'],
-				 			'cash_uid'=>$v['cashier'],
-				 			'make_uid'=>$v['preparedBy'],
-				 			'make_at'=>$v['addTime'],		 		
-						);
-				$status = 0;
-				if($v['paymentStyle'] == 2 && $v['type'] == 1)//账扣返还---业务投资款
-				{
-					$retData = PayManage::makeFromReceive($data);//付款单
-					
-					if($retData)
-					{
-						$status = Receivables::where('id', '=', $v['id'])->update(['payCode' => $retData['code'],'payId'=>$retData['id']]);
-					}
-				}
-				
-				if($v['type'] == 2)
-				{
-					$data['money'] = '-'.$v['money'];//交易代收款
-					$data['type'] = 3;
-					$retData = PrepayBill::makeReturn($data);
-					if($retData)
-					{
-						$status = Receivables::where('id', '=', $v['id'])->update(['paySingleCode' => $retData['code'],'paySingleId'=>$retData['id']]);
-					}
-				}
-			
-			}
-		}
-		if($status)
-		{
-			DB::commit();
 			return $this->success();
 		}
 		else
 		{
-			DB::rollBack();
-			throw new ApiException('更新失败', ERROR::RECEIVABLES_UPDATE_FAILED);
+			throw new ApiException('操作失败', ERROR::RECEIVABLES_UPDATE_FAILED);
 		}
 		
 	}
@@ -401,11 +347,10 @@ class ReceivablesController extends Controller{
 		$sort_type = isset($param['sort_type'])?$param['sort_type']:'desc';
 		
 		$list = Receivables::getListExport($where,$sort_key,$sort_type);
-
-		$result = array();
-		$typeArr = array(0=>'',1=>'业务投资款返还',2=>'交易代收款返还');
-		$paymentStyleArr = array(0=>'',1=>'银行存款',2=>'账扣返还',3=>'现金',4=>'支付宝',5=>'财付通',6=>'其他');
-		$statusArr = array(0=>'',1=>'待确认',2=>'已确认');
+		$result = [];
+		$typeArr = Receivables::$typeArr;
+		$paymentStyleArr = Receivables::$paymentStyleArr;
+		$statusArr = Receivables::$statusArr;
 		if($list)
 		{
 			foreach ($list as $key=>$val)
@@ -428,13 +373,10 @@ class ReceivablesController extends Controller{
 				{
 					$result[$key]['receiptDate'] = date('Y-m-d',$value['receiptDate']);
 				}
-
 				$result[$key]['status'] = $statusArr[$value['status']];
 				$result[$key]['payCode'] = $value['payCode'];
 				$result[$key]['paySingleCode'] = $value['paySingleCode'];
-				
 			}
-		
 		}
 		//导出excel
 		$title = '收款列表'.date('Ymd');
@@ -567,11 +509,5 @@ class ReceivablesController extends Controller{
 			throw new ApiException('更新失败', ERROR::RECEIVABLES_UPDATE_FAILED);
 		}
 	}
-	
-	
-	
-	
-
-
 }
 ?>
