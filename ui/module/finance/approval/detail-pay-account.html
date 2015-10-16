@@ -80,7 +80,13 @@
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.make_user?data.make_user.name:""%></td>
+                  <td>
+					<%if(data.from==1){%>
+						<%=data.make_user?data.make_user.name:""%>
+					<%}else{%>
+						<%=data.salon_user?data.salon_user.username:""%>
+					<%}%>
+				  </td>
                </tr>
 			   <tr>
                  <td>付款方式：</td>

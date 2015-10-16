@@ -31,7 +31,7 @@
 			<%}%>
 			<%if(data.state==1){%>
 			<span class="space"></span>
-			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" 
+			<form action="pay_manage/update/<%=query.id%>" data-role="normal" 
 			onreset="parent.lib.popup.result({define:function(){history.back()}})">
 				<button class="btn">提交</button>
 			</form>
@@ -92,7 +92,13 @@
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.make_user?data.make_user.name:""%></td>
+                  <td>
+					<%if(data.from==1){%>
+						<%=data.make_user?data.make_user.name:""%>
+					<%}else{%>
+						<%=data.salon_user?data.salon_user.username:""%>
+					<%}%>
+				  </td>
                </tr>
 			   <tr>
                  <td>出纳：</td>

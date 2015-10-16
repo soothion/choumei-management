@@ -18,6 +18,10 @@
    <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
+			<%if(data.state==1||data.state==2){%>
+			<a class="btn" href="edit2.html?id=<%=query.id%>">编辑</a>
+			<span class="space"></span>
+			<%}%>
 			<button class="btn btn-cancel" type="button">返回</button>
 		</div>
         <div class="table-detail">
@@ -68,7 +72,13 @@
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.make_user?data.make_user.name:""%></td>
+                  <td>
+					<%if(data.from==1){%>
+						<%=data.make_user?data.make_user.name:""%>
+					<%}else{%>
+						<%=data.salon_user?data.salon_user.username:""%>
+					<%}%>
+				  </td>
                </tr>
 			   <tr>
                  <td>审批人：</td>
