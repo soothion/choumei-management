@@ -120,8 +120,8 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 ));
 
 //权限管理后台接口
- Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
-// Route::group(['middleware'], function(){
+ // Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+Route::group(['middleware'=>['before','after']], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
