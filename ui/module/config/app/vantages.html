@@ -15,7 +15,9 @@
         .hide{
             display:none!important;
         }
-
+        th{
+          width:20%;
+        }
         </style>
     </head>
     <body>
@@ -93,9 +95,12 @@
             <div id="box" style="display:none">
                 <form novalidate method="post" class="form-vertical" data-role="form">
                     <div class="control-group">
-                        <label class="control-label" for=""><span class="red">*</span id="labelText">增加积分：</label>
+                        <label class="control-label" for="">
+                            <span class="red">*</span>
+                            <span id="labelText">增加积分：</span>
+                        </label>
                         <div class="control">
-                            <input type="text" name="score" required maxlength="6">
+                            <input type="text" name="score" required pattern="number" maxlength="9">
                             <span>分</span>
                             <span class="control-help" style="display:none">未填写</span>
                         </div>

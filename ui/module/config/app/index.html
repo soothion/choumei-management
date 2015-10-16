@@ -20,7 +20,13 @@
           display: none;
           border: 1px solid #58A2EC;
           margin-right: 15px;          
-        }  
+        }
+        .show{
+            display:inline-block!important;
+        }
+        th{
+          width:25%;
+        }    
         </style>
     </head>
     <body>
@@ -61,13 +67,12 @@
                                <td><a class="link"><%=item.salonCount%></a></td>
                                <td>
                                    <span class="score"><%=item.score%></span>
-                                   <input type="hide" name="id" value="<%=item.id%>" />
-                                   <input type="text" name="score" value="<%=item.score%>" />
+                                   <input type="text" name="score" value="<%=item.score%>" pattern="number" maxlength="9"/>
                                    <span class="control-help" style="display:none">未填写</span>
                                </td>
                                <td>
                                    <button class="link edit">编辑</button>
-                                   <button class="link save">保存</button>
+                                   <button class="link save" data-score="<%=item.id%>">保存</button>
                                    <span class="line"></span>
                                    <a class="link cancel">取消</a>
                                </td>
