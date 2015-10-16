@@ -18,17 +18,17 @@
 
         <div class="wrapper">
             <form data-role="hash">                       
-                <span>积分变化时间</span>
+                <span>积分变化时间：</span>
                 <span class="date-group">
-                    <input type="date" data-role="start" name="start" placeholder="yyyy-MM-dd"/>
+                    <input type="date" data-role="start" name="start_time" placeholder="yyyy-MM-dd"/>
                     到
-                    <input type="date" data-role="end" name="end" placeholder="yyyy-MM-dd"/>
+                    <input type="date" data-role="end" name="end_time" placeholder="yyyy-MM-dd"/>
                 </span>
                 <button class="btn" type="submit">查询</button>
             </form>
 
                           
-           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="salonstar/show?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -41,14 +41,13 @@
                     </thead>
 
                     <tbody>
-                      <%var status=["","正常","停用","注销"]%>
                       <%var data=data.data%>
                       <%for(var i=0;i<data.length;i++){%>
                        <tr>
-                        <td><%=i+1%></td>
-                        <td><%=data[i].name%></td>
-                        <td><%=data[i].username%></td>
-                        <td><%=status[data[i].status]%></td>
+                        <td><%=data[i].create_time%></td>
+                        <td><%=data[i].description%></td>
+                        <td><%=data[i].score%></td>
+                        <td><%=data[i].totalScore%></td>
                         </tr>
                         <%}%>                    
                     </tbody>
