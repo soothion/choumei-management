@@ -36,7 +36,7 @@ class StylistTest extends TestCase
                 'stylistName'=>$stylist->stylistName,
              ]);
 
-        //筛选username,搜索不存在的用户名,返回空数据
+        //筛选电话,搜索不存在的用户名,返回空数据
         $this->post('stylist/index',['mobilephone'=>str_random(20)])            
              ->seeJson([
                 'data'=>[],
