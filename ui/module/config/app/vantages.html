@@ -41,7 +41,7 @@
                 <button class="btn" type="submit">查询</button>
             </form>
                          
-           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="salonstar/index#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -64,9 +64,9 @@
                             <td><%=data[i].username%></td>
                             <td><%=status[data[i].status]%></td>
                             <td>
-                            <a class="link">增加积分</a>
+                            <a class="link add">增加积分</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a class="link">减少积分</a>
+                            <a class="link minus">减少积分</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             <a class="link" href="detail.html">积分详情</a>
                             </td>      
@@ -76,7 +76,52 @@
             </table>        
              <div class="pager"> </div>
             </script>
-        </div>
+            </div>
+
+            <div id="box" style="display:none">
+                <form class="form-vertical" data-role="form" id="form">
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span id="labelText">增加积分：</label>
+                        <div class="control">
+                            <input type="text" >
+                            <span>分</span>
+                        </div>
+                    </div> 
+                    <div class="control-group">
+                        <label class="control-label" for=""><span class="red">*</span>原因说明：</label>
+                        <div class="control">
+                            <textarea name=""></textarea>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for=""></label>
+                        <button class="btn" type="button" id="preview-btn" style="margin-right:20px">取消</button>
+                        <button class="btn-primary">提交</button>
+                    </div>                
+                </form>                
             </div>            
+        </div> 
+        <script>
+            $(".wrapper").on('click','a.add',function(){
+                var elements = $("#box").css("dispaly","");
+                lib.popup.box({
+                    title:'增加积分',
+                    height:300,
+                    width:600,
+                    content:elements.html()
+                });                        
+            });
+
+            $(".wrapper").on('click','a.minus',function(){
+                var elements = $("#box").css("dispaly","");
+                elements.find("#labelText").text("减少积分");
+                lib.popup.box({
+                    title:'减少积分',
+                    height:300,
+                    width:600,
+                    content:elements.html()
+                });                        
+            });            
+        </script>           
     </body>
 </html>

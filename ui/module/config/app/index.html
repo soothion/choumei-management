@@ -11,8 +11,16 @@
             display: none;
         }  
         .cancel{
-            display: none;
-        }     
+            display: none;           
+        } 
+        .form-vertical button{
+          min-width: 40px!important;
+        }  
+        .line{
+          display: none;
+          border: 1px solid #58A2EC;
+          margin-right: 15px;          
+        }  
         </style>
     </head>
     <body>
@@ -27,16 +35,17 @@
 			<hr />
         </div>
         <div class="wrapper">        
-            <form class="form-vertical" data-role="form" id="form">
-                <div>
-                    <span>开启/暂停店铺星级</span>
-                    <label class="switch">
-                        <input type="checkbox" name="checkbox" />
-                        <span></span>
-                    </label>                
-                </div>
+            <div>
+                <span>开启/暂停店铺星级</span>
+                <label class="switch">
+                    <input type="checkbox" name="checkbox" checked/>
+                    <span></span>
+                </label>                
+            </div>
+            <form class="form-vertical" action="starconf/update" data-role="form" id="form">
 
-                <div class="table">
+                <div class="table" ajat="starconf/index#domid=table&tempid=table-t" id="table">
+                <script type="text/template" id="table-t">
                     <table>
                         <thead>
                             <tr>
@@ -48,48 +57,32 @@
                         </thead>
 
                         <tbody>
+                        <% data && data.forEach(function(item,i){ %>
                            <tr>
-                               <td>LV1</td>
-                               <td>12306</td>
+                               <td><%=item.level%></td>
+                               <td><a class="link"><%=item.salonCount%></a></td>
                                <td>
-                                   <span>1</span>
-                                   <input type="text" value="1" disabled="disabled" required/>
+                                   <span><%=item.score%></span>
+                                   <input type="hide" class="hide"name="id" value="<%=item.id%>" disabled="disabled"/>
+                                   <input type="text" class="show" name="score" value="<%=item.score%>" 
+                                   disabled="disabled"  levelId="<%=item.id%>" 
+                                   required/>
+
                                </td>
                                <td>
-                                   <a class="link edit">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                   <button class="link save">保存</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                   <a class="link cancel">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                   <button class="link edit">编辑</button>
+                                   <button class="link save">保存</button>
+                                   <span class="line"></span>
+                                   <a class="link cancel">取消</a>
                                </td>
                            </tr>
+                         <%})%>  
                         </tbody>
                     </table>
+                </script>
                 </div>                
-
             </form>
 		</div>
-		<script type="text/javascript">
-            $("#form").on('click','.edit',function(e){
-                  e.preventDefault();
-                  $(this).closest("tr").find("span").hide();
-                  $(this).closest("tr").find("input").removeAttr('disabled');
-                  $(this).closest("tr").find("input").show();
-                  $(this).siblings().show(); 
-
-            })
-
-            $("#form").on('click','.save',function(e){
-
-            })
-
-            $("#form").on('click','.cancel',function(e){
-                  e.preventDefault();
-                  $(this).closest("tr").find("span").show();
-                  $(this).closest("tr").find("input").attr('disabled','disabled');
-                  $(this).closest("tr").find("input").hide();
-                  $(this).hide();
-                  $(this).parent().find(".save").hide(); 
-                  $(this).parent().find(".edit").show();                
-            })                        
-		</script>
+    <script src="index.js"></script>
     </body>
 </html>
