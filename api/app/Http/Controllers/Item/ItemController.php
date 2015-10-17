@@ -6,6 +6,7 @@ use App\SalonItem;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use DB;
 
 class ItemController extends Controller{
 
