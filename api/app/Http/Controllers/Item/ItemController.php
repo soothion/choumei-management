@@ -244,7 +244,7 @@ class ItemController extends Controller{
 		return $this->success(
 			Item::where('status','=',1)
 			->orderBy('sortlt desc')
-			->type()
+			->get()
 			);
 	}
 
