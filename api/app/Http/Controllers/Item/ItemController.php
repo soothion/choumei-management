@@ -242,7 +242,8 @@ class ItemController extends Controller{
 	 */
 	public function type(){
 		return $this->success(
-			Item::where('status','=',1)
+			DB::table('salon_itemtype')
+			->where('status','=',1)
 			->orderBy('sortIt','desc')
 			->get()
 			);
