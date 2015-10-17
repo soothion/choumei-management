@@ -44,7 +44,8 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
                     <div class="control">
-                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10" disabled>
+                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10" disabled
+                        data-value="<%=data.sn||""%>" unique="salon/checkSalonSn?sn=${value}" uniquemsg="店铺编号重复">
                     </div>
                 </div> 
                 <div class="control-group">
@@ -69,45 +70,6 @@
 						</select>
 						<select id="city" name="citiesId" class="select min-width" required ajat-one="true" 
 						ajat="<%if(data.provinceId){%>salonList/getProvinces?type=2&areaId=<%=data.provinceId%><%}%>#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>"
-						ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=data.district%>">
-						</select>
-                        
-						<select id="area" name="district" class="select min-width" style="margin-right:10px" 
-                        required ajat-one="true"
-						ajat="<%if(data.citiesId){%>salonList/getProvinces?type=3&areaId=<%=data.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=data.district%>"
-						ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=zone&tempid=zone_t&zone=<%=data.zone%>"
-						>
-						</select>
-						<span class="control-help" style="display:none;"></span>
-						
-                </div>
-
-                <div class="control-group" style="margin:0">
-                    <label class="control-label" for=""></label>
-                    <textarea class="textarea" name="addr" id="address" placeholder="详细街道信息" 
-                    maxlength="50" required ><%=data.addr%></textarea>
-                </div>                  
-
-                <div class="control-group" style="margin:0">
-                    <label class="control-label" for=""></label>
-                    <div class="textarea-bar">
-                        <span class="area-coor">地理坐标：</span>
-                        <span  id="coorMarker"><%=data.addrlati && data.addrlong ? '已标记' : '未标记'%></span>                         
-                        <button class="btn area-btn" id="addCoordinate" type="button">
-                            <i class="fa fa-map-marker"></i> 
-                            <span>添加坐标</span>
-                        </button>
-                    </div>
-                    <input id="coorMarkerInput" name="lngLat" type='hidden' required requiredmsg="未标记"
-                    value="<%=data.addrlati && data.addrlong ? data.addrlati+','+data.addrlong : ''%>">
-                    <span class="control-help"  style="display:none;"></span>
-                </div>    
-
-                <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>所属商圈：</label>
-
-					<div class="control control-circle" id="zone" ajat="<%if(data.district){%>salonList/getProvinces?type=4&areaId=<%=data.district%><%}%>#domid=zone&tempid=zone_t&zone=<%=data.zone%>">
-
 					</div>
                 </div>
 

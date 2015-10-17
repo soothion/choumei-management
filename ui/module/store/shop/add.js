@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-02 14:29:33
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-09-06 14:38:27
+* @Last Modified time: 2015-10-17 11:00:27
 */
 
 $(function(){
@@ -18,6 +18,7 @@ $(function(){
         if(option && option.length > 0) {
             option.attr("selected","selected");
         }
+        $("input[name=sn]").removeAttr("disabled");
         $("input[name='shopType']").on('change',function(){
             if($(this).val() == 3){
                 $(".forShopType").removeClass("hidden");
