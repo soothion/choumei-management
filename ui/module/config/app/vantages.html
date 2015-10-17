@@ -22,10 +22,10 @@
     </head>
     <body>
         <div class="breadcrumb">
-            <a>券活动管理</a><span>&gt;</span><a href="index.html">红包列表</a>
+            <a>系统配置></a><span>&gt;</span><a href="vantages.html">店铺星级积分管理</a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4> 红包列表 </h4>
+                    <h4> 店铺星级积分管理 </h4>
                 </div>
             </div>      
         </div> 
@@ -82,7 +82,7 @@
                             <span class="line"></span>
                             <a class="link minus" data-score="<%=data[i].score%>" data-salonid="<%=data[i].salonid%>">减少积分</a>
                             <span class="line"></span>
-                            <a class="link" href="detail.html?salonid=<%=data[i].salonid%>">积分详情</a>
+                            <a class="link" href="detail.html?salonid=<%=data[i].salonid%>&salonname=<%=data[i].salonname%>">积分详情</a>
                             </td>      
                         </tr>
                         <%}%>                    
