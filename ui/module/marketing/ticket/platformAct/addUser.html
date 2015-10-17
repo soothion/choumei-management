@@ -22,7 +22,7 @@
         border: 1px solid #58A2EC;
       }
       
-      input{
+      input[type=text]{
         width:100px!important;
         min-width: 100px!important;
       }
@@ -59,12 +59,18 @@
 
                 <ul class="nav-step flex-box">
                     <li class="flex-item">
-                        <a href="add.html">
+                        <a href="addBase.html">
                             <i class="fa fa-check-circle"></i><span>1.活动基本信息</span>
                         </a>
                     </li>
-                    <li class="flex-item active"><span class="arrow">2.选择用户</span></li>
-                    <li class="flex-item"><span>3.定义现金券</span></li>
+
+                    <li class="flex-item active">
+                        <span class="arrow">2.选择用户</span>
+                    </li>
+
+                    <li class="flex-item">
+                        <span>3.定义现金券</span>
+                    </li>
                 </ul>
 
 
@@ -75,7 +81,7 @@
                 </div> 
 
                 <div class="control-group">
-                  <label class="control-label" style="width:105px"></label>
+                  <label class="control-label" style="width:100px"></label>
                       <a class="tab-menus <%=(!query.menus || query.menus=='1') ? 'act' : '' %>" href="#menus=1">
                           新用户
                       </a>
@@ -95,80 +101,81 @@
 
                 <%if(!query.menus || query.menus=='1'){%>
                 <div class="control-group">
-                    <label class="control-label" style="width:105px"></label>
+                    <label class="control-label" style="width:100px"></label>
                     <div class="control">
-                    <label class="radio">
-                        <input type="radio" checked="checked" name="accountType" value="1" >
-                        <span>新注册&nbsp;<span style="color: #ddd;">(活动时间内注册的用户)</span></span>
-                    </label>
+                        <label class="radio">
+                            <input type="radio" checked="checked" name="accountType" value="1" >
+                            <span>新注册&nbsp;<span style="color: #ddd;">(活动时间内注册的用户)</span></span>
+                        </label>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" style="width:105px"></label>
+                    <label class="control-label" style="width:100px"></label>
                     <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="accountType" value="1" >
-                        <span>
-                            首次消费&nbsp;
-                            <span style="color: #ddd;">(活动时间内首次消费后获取)</span>
-                        </span>
-                    </label>
+                        <label class="radio">
+                            <input type="radio" name="accountType" value="1" >
+                            <span>
+                                首次消费&nbsp;
+                                <span style="color: #ddd;">(活动时间内首次消费后获取)</span>
+                            </span>
+                        </label>
                     </div>
                 </div>
                 <%}%>
 
                 <%if(query.menus=='2'){%>
                 <div class="control-group">
-                    <label class="control-label" style="width:105px"></label>
+                    <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="accountType" value="2" >
+                        <input type="radio" name="accountType" value="1" checked>
                         <span>指定手机号&nbsp;<span style="color: #ddd;">(活动时间内，无指定项目时活动上线则马上下发)</span></span>
-                        <a class="link mobile-button">+添加手机号码</a>
+                        <input  type="button" class="link mobile-button cascade" value="+添加手机号码" />
+                        <input  type="hidden" class="cascade" required requiredmsg="请添加手机号码"/>
                     </label>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" style="width:105px"></label>
+                    <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="accountType" value="2" >
+                        <input type="radio" name="accountType" value="2">
                         <span>指定集团码用户&nbsp;<span style="color: #ddd;">(活动时间内填写集团码)</span></span>
-                        <input type="text" />
+                        <input type="text" class="cascade" placeholder="输入集团码" pattern='number' disabled required/>
                     </label>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" style="width:105px"></label>
+                    <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="accountType" value="2" >
+                        <input type="radio" name="accountType" value="3" >
                         <span>指定活动码用户&nbsp;<span style="color: #ddd;">(活动时间内填写活动码)</span></span>
-                        <input type="text" />
+                        <input type="text" class="cascade" placeholder="输入活动码"pattern='number' disabled required/>
                     </label>
                     </div>
                 </div>
 
 
                 <div class="control-group">
-                    <label class="control-label" style="width:105px"></label>
+                    <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="accountType" value="2" >
+                        <input type="radio" name="accountType" value="4" >
                         <span>指定店铺码用户&nbsp;<span style="color: #ddd;">(活动时间内填写店铺码)</span></span>
-                        <input type="text" />
+                        <input type="text" class="cascade" placeholder="输入店铺码" pattern='number' disabled required/>
                     </label>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label" style="width:105px"></label>
+                    <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="checkbox">
-                        <input id="consumeItems" type="checkbox" name="salonType" value="3">
+                        <input id="consumeItems" type="checkbox" name="salonType" value="5">
                         <span>指定消费项目：</span>
                     </label>
                     </div>
@@ -211,7 +218,7 @@
 
                 <%if(query.menus=='3'){%>
                 <div class="control-group">
-                    <label class="control-label" style="width:105px"></label>
+                    <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="checkbox">
                         <input type="checkbox" name="salonType" value="3">
@@ -255,13 +262,13 @@
                 </div> 
                 
                 <div class="control-group">
-                    <label class="control-label" style="width:105px"></label>
+                    <label class="control-label" style="width:100px"></label>
                     <div class="control">
                         <span>满额获取：</span>
                         <label class="checkbox">
                             <input type="text" name="salonType" value="">
                             <strong>元&nbsp;&nbsp;&nbsp;&nbsp;可获取</strong>
-                            <span>（大于或等于该数值可获取，0为不限制，可填写0~999）</span>
+                            <span style="color: #ddd;">（大于或等于该数值可获取，0为不限制，可填写0~999）</span>
                         </label>
                     </div>
                 </div>   
@@ -269,20 +276,20 @@
 
                 <%if(query.menus=='4'){%>
                 <div class="control-group">
-                    <label class="control-label" style="width:105px"></label>
+                    <label class="control-label" style="width:100px"></label>
                     <div class="control">
                         <label class="checkbox">
                             <input type="checkbox" name="salonType" value="3">
                             <span>绑定活动码</span>
                         </label>
                         <input type="text" />
-                        <span>（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
+                        <span style="color: #ddd;">（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
                     </div>
                 </div>
                 <%}%>  
 
                 <div class="control-group">
-                    <label class="control-label" for=""></label>
+                    <label class="control-label" style="width:100px"></label>
                     <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
                     <button class="btn-primary">下一步</button>
                 </div>                                                                  
@@ -292,14 +299,51 @@
 
         <script>
             $("#form").on('change','#consumeItems',function(){              
-               if($(this).attr('checked')){
-                   $(this).removeAttr('checked');
-                   $("#consumeItemsDiv").hide();
-               }else{
+                if($(this).attr('checked')){
+                    $(this).removeAttr('checked');
+                    $("#consumeItemsDiv").hide();
+                }else{
                     $(this).attr('checked','checked');
                     $("#consumeItemsDiv").show();
-               }
-            })
+                }
+            });
+
+            $("#form").on('click','input[type=radio]',function(){
+                $('input.cascade').attr('disabled','disabled');
+                $(this).parent().find('input.cascade').removeAttr('disabled');
+            });
+
+            $("#form").on('click','input[type=button]',function(){
+               var html  = "<div style='margin-top:10px'><textarea style='width:100%;height:300px'></textarea></div>";
+                   html += "<div style='margin:20px 0 0 30%'><button class='btn' style='margin-right:20px' type='button'>";
+                   html += "取消</button><button class='btn-primary'>保存</button></div>";
+                   html += "<div style='width:100%;'><h3 style='color:red'>添加失败的手机号码如下：</h3>";
+                   html += "<div>18682243486,18682243486,18682243486,18682243486,18682243486,18682243486,18682243486,<br>18682243486,18682243486,18682243486,18682243486,18682243486,18682243486,18682243486,<br>18682243486,18682243486,18682243486,18682243486,18682243486,18682243486,<br>18682243486,18682243486</div></div>";
+                   lib.popup.box({
+                       title:'添加手机号码',
+                       width:680,
+                       content:html,
+                       complete:function(){
+
+                       }
+                   });
+            });
+
+
+
+            $("#form").on('keydown',"input[pattern='number']",function(e){
+                var key = e.which;
+                //alert(key)
+                if ((key > 95 && key < 106) || //小键盘上的0到9  
+                    (key > 47 && key < 58) || //大键盘上的0到9  
+                    key == 8 || key == 116 || key == 9 || key == 46 || key == 37 || key == 39
+                    //不影响正常编辑键的使用(116:f5;8:BackSpace;9:Tab;46:Delete;37:Left;39:Right;)  
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });            
 
             lib.Form.prototype.save = function(data){
                 location.href = "addTicket.html"
