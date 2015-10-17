@@ -241,7 +241,11 @@ class ItemController extends Controller{
 	 *		}
 	 */
 	public function type(){
-		return $this->success(Item::where('status','=',1)->type());
+		return $this->success(
+			Item::where('status','=',1)
+			->orderBy('sortlt desc')
+			->type()
+			);
 	}
 
 
