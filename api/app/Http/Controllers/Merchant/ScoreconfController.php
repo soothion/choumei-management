@@ -60,7 +60,6 @@ class ScoreconfController extends Controller {
      * @apiParam {Number} verySatisfy 很满意分值.
      * @apiParam {Number} satisfy 满意分值
      * @apiParam {String} unsatisfy 不满意分值
-      .
      *
      * 
      * @apiSuccessExample Success-Response:

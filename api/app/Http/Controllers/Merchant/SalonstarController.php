@@ -104,7 +104,6 @@ class SalonstarController extends Controller {
      * @apiParam {Number} type 1 增加 2减少(只能为1或2).
      * @apiParam {Number} score 积分数
      * @apiParam {String} msg 可选，原因说明
-      .
      *
      * 
      * @apiSuccessExample Success-Response:
@@ -171,7 +170,6 @@ class SalonstarController extends Controller {
      * @apiParam {String} end_time 可选，积分变化结束时间.
      * @apiParam {Number} page 可选,页数.
      * @apiParam {Number} page_size 可选,分页大小.
-      .
      *
      * @apiSuccess {Number} total 总数据量.
      * @apiSuccess {Number} per_page 分页大小.

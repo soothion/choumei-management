@@ -60,7 +60,6 @@ class StarconfController extends Controller {
      *
      * @apiParam {Number} id 记录ID.
      * @apiParam {Number} score 分值.
-      .
      *
      * 
      * @apiSuccessExample Success-Response:
