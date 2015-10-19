@@ -732,10 +732,22 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'requestLog.index',
 		'uses'=>'LoginQuery\LoginQueryController@index'
     ));
-      Route::any('requestLog/export',array(  //导出日志列表
+    Route::any('requestLog/export',array(  //导出日志列表
 		'as'=>'requestLog.export',
 		'uses'=>'LoginQuery\LoginQueryController@export'
     ));
-
+    
+    // 代金劵处理模块
+    Route::any('voucher/list',array(  //导出日志列表
+		'as'=>'voucher.list',
+		'uses'=>'VoucherTicket\TicketController@ticketList'
+    ));
+    Route::any('voucher/invalidStatus',array(  //导出日志列表
+		'as'=>'voucher.invalidStatus',
+		'uses'=>'VoucherTicket\TicketController@invalidStatus'
+    ));
+    Route::any('voucher/info/{id}',array(  //导出日志列表
+		'as'=>'voucher.info',
+		'uses'=>'VoucherTicket\TicketController@info'
+    ));
 });
-
