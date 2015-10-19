@@ -449,13 +449,13 @@ class PlatformController extends Controller{
      * 
      * 
 	 * 
-	 * @apiSuccess {String} code 活动码编号.
+	 * @apiSuccess {String} actNo 活动码编号.
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *		{
 	 *		    "result": 1,
 	 *		    "data":  {
-     *               "code": "cm475526"
+     *               "actNo": "cm475526"
      *           }
 	 *		}
 	 *
@@ -477,7 +477,7 @@ class PlatformController extends Controller{
         $count = \App\VoucherConf::where( 'vcSn' , '=' , $code )->count();
         if($count) 
             return $this->getActNum();
-        $code = ['code'=>$code];
+        $code = ['actNo'=>$code];
         return $this->success($code);
    }
     /***
@@ -692,6 +692,76 @@ class PlatformController extends Controller{
             unset( $res['data'][$key]['DEPARTMENT_ID'] );
         }
         return $this->success( $res );
+    }
+    public function actView($id){
+        if( empty($id) )
+            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
+        $voucherConfInfo = \App\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney'])
+                ->where(['vcId'=>$id])
+                ->first()
+                ->toArray();
+        
+        $voucherConfInfo['actTime'] = '';
+        if( empty( $voucherConfInfo['getStart'] ) && empty($voucherConfInfo['getEnd']) )
+            $voucherConfInfo['actTime'] = '无限期活动';
+        if( !empty($voucherConfInfo['getStart']) && empty($voucherConfInfo['getEnd']) )
+            $voucherConfInfo['actTime'] = '开始时间：' . date('Y-m-d H:i:s', $voucherConfInfo['getStart']);
+        if( !empty($voucherConfInfo['getEnd']) && empty($voucherConfInfo['getStart']) )
+            $voucherConfInfo['actTime'] = '结束时间：' . date('Y-m-d H:i:s', $voucherConfInfo['getEnd']);
+        if( !empty( $voucherConfInfo['getStart'] ) && !empty($voucherConfInfo['getEnd']) )
+            $voucherConfInfo['actTime'] = date('Y-m-d H:i:s', $voucherConfInfo['getStart']) . ' - ' . date('Y-m-d H:i:s', $voucherConfInfo['getEnd']);
+        $voucherConfInfo['department'] = '';
+        if( !empty($voucherConfInfo['DEPARTMENT_ID']) ){
+            $department = \App\Department::select(['title'])->where(['id'=>$voucherConfInfo['DEPARTMENT_ID']])->first();
+            $voucherConfInfo['department'] = $department['title'];
+        }
+        $voucherConfInfo['manager'] = '';
+        if( !empty($voucherConfInfo['MANAGER_ID']) ){
+            $manager = \App\Manager::select(['name'])->where(['id'=>$voucherConfInfo['MANAGER_ID']])->first();
+            $voucherConfInfo['manager'] = $manager['name'];
+        }
+        $voucherConfInfo['totalNum'] = '无上限';
+        $voucherConfInfo['budget'] = ' - ';
+        if( empty( $voucherConfInfo['useTotalNum'] )){
+            $voucherConfInfo['totalNum'] = $voucherConfInfo['useTotalNum'];
+            $voucherConfInfo['budget'] = $voucherConfInfo['useTotalNum'] * $voucherConfInfo['useMoney'];
+        }
+        
+        $voucherConfInfo['companyCode'] = '-';
+        $voucherConfInfo['activityCode'] = '-';
+        $voucherConfInfo['dividendCode'] = '-';
+        if( !empty($voucherConfInfo['getCodeType']) ){
+            $temp = ['','dividendCode','companyCode','activityCode'];
+            $voucherConfInfo[ $voucherConfInfo['getCodeType'] ] = $voucherConfInfo['getCode'];
+        }
+        // 劵情况统计情况
+        $voucherConfInfo['allNum'] = 0;
+        $voucherConfInfo['allMoney'] = 0;
+        $voucherConfInfo['useNum'] = 0;
+        $voucherConfInfo['useMoney'] = 0;
+        $voucherConfInfo['consumeNum'] = 0;
+        $voucherConfInfo['consumeMoney'] = 0;
+        $voucherConfInfo['invalidNum'] = 0;
+//        $totalNum = \App\VoucherConf::where(['vcId'=>$voucherConfInfo['vcId']])
+//                ->where(['vStatus','<>',10])
+//                ->where(['vStatus','<>',3])
+//                ->count();
+//        if( empty($totalNum) ){
+//            return $this->success( $voucherConfInfo );
+//        }
+//        $voucherConfInfo['allNum'] = $totalNum;
+//        $voucherConfInfo['allMoney'] = $totalNum * $voucherConfInfo['useMoney'];
+//        
+//        unset( $voucherConfInfo['getStart'] );
+//        unset( $voucherConfInfo['getEnd'] );
+//        unset( $voucherConfInfo['DEPARTMENT_ID'] );
+//        unset( $voucherConfInfo['useMoney'] );
+//        unset( $voucherConfInfo['useTotalNum'] );
+//        unset( $voucherConfInfo['getCodeType'] );
+//        unset( $voucherConfInfo['getCode'] );
+            
+        print_r( $voucherConfInfo );
+        
     }
     // 校验集团码
     private function getGroupExists( $code ){
