@@ -444,11 +444,11 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
     ));
     
     //评分对应分值配置
-     Route::any('scoreconf/index', array(//星级积分列表
+     Route::any('scoreconf/index', array(//评分配置列表
         'as' => 'scoreconf.index',
         'uses' => 'Merchant\ScoreconfController@index'
     ));
-      Route::any('scoreconf/update', array(//星级积分列表
+      Route::any('scoreconf/update', array(//评分配置跟新
         'as' => 'scoreconf.update',
         'uses' => 'Merchant\ScoreconfController@update'
     ));
@@ -736,6 +736,7 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'requestLog.export',
 		'uses'=>'LoginQuery\LoginQueryController@export'
     ));
+
     
     // 代金劵处理模块
     Route::any('voucher/list',array(  
@@ -816,4 +817,62 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'platform.closeConf',
 		'uses'=>'Promotion\PlatformController@closeConf'
     ));
+
+      
+        //红包活动管理
+    Route::any('laisee/create', array(//新增红包活动
+        'as' => 'laisee.create',
+        'uses' => 'Laisee\LaiseeController@create'
+    ));
+
+    Route::any('laisee/update', array(//修改红包活动
+        'as' => 'laisee.update',
+        'uses' => 'Laisee\LaiseeController@update'
+    ));
+
+    Route::any('laisee/index', array(// 红包活动列表
+        'as' => 'laisee.index',
+        'uses' => 'Laisee\LaiseeController@index'
+    ));
+    Route::any('laisee/show/{id}', array(// 活动概况
+        'as' => 'laisee.show',
+        'uses' => 'Laisee\LaiseeController@show'
+    ));
+     Route::any('laisee/export', array(// 活动列表导出
+        'as' => 'laisee.export',
+        'uses' => 'Laisee\LaiseeController@export'
+    ));
+    Route::any('laisee/online/{id}', array(// 活动上线
+        'as' => 'laisee.online',
+        'uses' => 'Laisee\LaiseeController@online'
+    ));
+    Route::any('laisee/offline/{id}', array(// 活动下线
+        'as' => 'laisee.offline',
+        'uses' => 'Laisee\LaiseeController@offline'
+    ));
+    Route::any('laisee/close/{id}', array(// 活动关闭
+        'as' => 'laisee.close',
+        'uses' => 'Laisee\LaiseeController@close'
+    ));
+    
+    Route::any('bonus/index', array(// 红包列表
+        'as' => 'laisee.index',
+        'uses' => 'Laisee\BonusController@index'
+    ));
+    Route::any('bonus/export', array(// 红包列表导出
+        'as' => 'bonus.export',
+        'uses' => 'Laisee\BonusController@export'
+    ));
+    Route::any('bonus/show/{id}', array(// 红包详情
+        'as' => 'bonus.show',
+        'uses' => 'Laisee\BonusController@show'
+    ));
+    Route::any('/bonus/close/{id}', array(// 红包详情
+        'as' => 'bonus.close',
+        'uses' => 'Laisee\BonusController@close'
+    ));
+    
+    
 });
+
+
