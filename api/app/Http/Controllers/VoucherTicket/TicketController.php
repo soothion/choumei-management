@@ -17,7 +17,7 @@ class TicketController extends Controller {
 	 * @apiName list
 	 * @apiGroup voucher
 	 *
-	 * @apiParam {Number} keywordType 可选,关键词类型. 1.活动编号 2. 活动名称 3.现金劵编号 4.用户手机号 5.用户手机号 6.使用店铺 7. 分享手机号
+	 * @apiParam {Number} keywordType 可选,关键词类型. 1.活动编号 2. 活动名称 3.现金劵编号 4.用户手机号  5.使用店铺 6. 分享手机号
 	 * @apiParam {String} keyword 可选,关键词.
 	 * @apiParam {int} status 可选,劵状态.
 	 * @apiParam {String} startTime 可选,使用时间 起始日期Y-m-d H:i:s.
@@ -33,14 +33,16 @@ class TicketController extends Controller {
 	 * @apiSuccess {Number} to 结束数据.
 	 * @apiSuccess {Number} vId 代金券id
 	 * @apiSuccess {Number} vSn 代金券编号
+	 * @apiSuccess {Number} vcSn 活动编号
 	 * @apiSuccess {Number} vcTitle 活动标题.
 	 * @apiSuccess {String} vOrderSn 关联订单号.
 	 * @apiSuccess {String} vUseMoney 代金券金额.
-	 * @apiSuccess {String} vUseStart 可使用时间 起始(0 表示不限制)
-	 * @apiSuccess {Number} vUseEnd 可使用时间 结束(0 表示不限制)
+	 * @apiSuccess {String} vUseTime 使用时间
 	 * @apiSuccess {Number} vMobilephone 用户手机号
 	 * @apiSuccess {String} vSalonName 店铺名.
+	 * @apiSuccess {String} vSalonName 店铺名.
 	 * @apiSuccess {Number} vStatus 状态: 1未使用 2已使用 3待激活 4活动关闭 5已失效
+	 * @apiSuccess {Number} REDEEM_CODE 兑换码
 	 * 
 	 *
 	 *
@@ -120,10 +122,12 @@ class TicketController extends Controller {
 		    return $page;
 		});
 		
-        $list = $obj->select(['vId','vSn','vSn','vcTitle','vOrderSn','vUseMoney','vUseStart','vUseEnd','vMobilephone','vSalonName','vStatus'])->orderBy('vId','DESC')->paginate($pageSize)->toArray();
+        $list = $obj->select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE'])
+                ->orderBy('vId','DESC')
+                ->paginate($pageSize)
+                ->toArray();
         foreach($list['data'] as $key => $val ){
-            $list['data'][$key]['vUseStart'] = date('Y-m-d H:i:s',$val['vUseStart']);
-            $list['data'][$key]['vUseEnd'] = date('Y-m-d H:i:s',$val['vUseEnd']);
+            $list['data'][$key]['vUseTime'] = empty($list['data'][$key]['vUseTime']) ? '' : date('Y-m-d H:i:s',$val['vUseTime']);
         }
         return $this->success( $list );
     }
