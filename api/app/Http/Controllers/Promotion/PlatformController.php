@@ -297,9 +297,7 @@ class PlatformController extends Controller{
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
         if( isset($post['sendSms']) )
-            $data['SMS_ON_GAINED'] = '【臭美美发】您已成功兑换一张'.$data['useMoney'].'元现金券，快去使用吧！退订回TD，下载臭美最新APP '. self::$downloadUrl;
-        else
-            $data['SMS_ON_GAINED'] = '亲爱的，'.$data['useMoney'].'元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址' . self::$downloadUrl;
+            $data['SMS_ON_GAINED'] = $post['sendSms'];
         
         $data['status'] = 2;
         $data['ADD_TIME'] = date('Y-m-d H:i:s');
@@ -607,6 +605,7 @@ class PlatformController extends Controller{
                 return $page;
             });
             $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME','getStart','getEnd','DEPARTMENT_ID','status','useEnd'])
+                    ->where(['vType'=>1])
                     ->orderBy('vcId','desc')
                     ->paginate($pageSize)
                     ->toArray();
@@ -765,6 +764,7 @@ class PlatformController extends Controller{
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
         $voucherConfInfo = \App\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney'])
                 ->where(['vcId'=>$id])
+                ->where(['vType'=>1])
                 ->first()
                 ->toArray();
         
@@ -853,6 +853,118 @@ class PlatformController extends Controller{
         return $this->success( $voucherConfInfo );
         
     }
+    /***
+	 * @api {post} /platform/actInfo/:id 9.读取平台活动
+	 * @apiName actView
+	 * @apiGroup Platform
+	 *
+	 * @apiParam {Number} id 平台活动id
+     * 
+     * 
+     * 
+	 * @apiSuccess {Number} selectItem 用户选择栏 1. 新用户 2. 指定用户 3.全平台用户 4.H5用户
+	 * @apiSuccess {Number} vcId 活动配置
+	 * @apiSuccess {String} vcTitle 活动名称
+	 * @apiSuccess {String} vcSn 活动编号
+	 * @apiSuccess {Number} vcRemark 活动简介.
+	 * @apiSuccess {Number} DEPARTMENT_ID 部门.
+	 * @apiSuccess {Number} MANAGER_ID 负责人.
+	 * @apiSuccess {Number} useMoney 代金劵金额
+	 * @apiSuccess {Number} useTotalNum 代金券可领总数
+	 * @apiSuccess {Number} useItemTypes 限制可使用项目类别格式为（,1,2,）
+	 * @apiSuccess {Number} useLimitTypes 使用限制类型 2 为限制首单
+	 * @apiSuccess {Number} useNeedMoney 限制项目需满足金额才可使用
+	 * @apiSuccess {String} useStart    可使用时间.起始(0 表示不限制)
+	 * @apiSuccess {String} useEnd      可使用时间.结束(0 表示不限制)
+	 * @apiSuccess {Number} getTypes 用户获取条件(为空时表示不限制)1.用户注册，2.首次消费，3.手机号码 4.全平台用户 5.H5用户
+	 * @apiSuccess {String} getItemTypes 可获取项目类别(多个用逗号隔开 为空时表示不限制)
+	 * @apiSuccess {Number} getCodeType     可获取码类型 (1 店铺码 2集团码 3.活动码)(0 表示不限制)
+	 * @apiSuccess {String} getCode         码
+	 * @apiSuccess {Number} getNumMax       个人可获取最大券数
+	 * @apiSuccess {String} activityCode 指定活动获取
+	 * @apiSuccess {String} getStart 可获取时间 起始(0 表示不限制)
+	 * @apiSuccess {String} getEnd   可获取时间 结束(0 表示不限制)
+	 * @apiSuccess {String} getNeedMoney 获取需满足金额(0表示不限制)
+	 * @apiSuccess {String} SMS_ON_GAINED 获取代金券时下发的短信内容
+	 * @apiSuccess {String} FEW_DAY 获取代金劵后多少天内可用
+	 * @apiSuccess {String} consumeMoney 已消费数金额
+	 * @apiSuccess {String} status 1. 进行中 2. 暂停 3.已关闭 4. 已结束
+	 * 
+     * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+     *           "result": 1,
+     *           "token": "",
+     *           "data": {
+     *                       "selectItem": 2
+     *                       "vcId": 10,
+     *                       "vcTitle": "指定项目7可以获取",
+     *                       "vcSn": "cm718745",
+     *                       "vcRemark": "顶顶顶顶",
+     *                       "useMoney": 10,
+     *                       "useTotalNum": 0,
+     *                       "useItemTypes": "",
+     *                       "useLimitTypes": "",
+     *                       "useNeedMoney": 100,
+     *                       "useStart": 1437580800,
+     *                       "useEnd": 1437753599,
+     *                       "getTypes": "0",
+     *                       "getItemTypes": ",7,",
+     *                       "getCodeType": 0,
+     *                       "getCode": "",
+     *                       "getNumMax": 1,
+     *                       "getStart": 1436284800,
+     *                       "getEnd": 1438271999,
+     *                       "getNeedMoney": 0,
+     *                       "SMS_ON_GAINED": "",
+     *                       "FEW_DAY": 0
+     *           }
+     *       }
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 ***/
+    public function getInfo($id){
+        if( empty($id) )
+            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
+        $voucherConfInfo = \App\VoucherConf::where(['vcId'=>$id])
+                ->where(['vType'=>1])
+                ->first()
+                ->toArray();
+        if( in_array($voucherConfInfo['getTypes'],[1,2]) )
+            $voucherConfInfo['selectItem'] = 1;
+        if( $voucherConfInfo['getTypes'] == 3 ){
+            $voucherConfInfo['selectItem'] = 2;
+            $phoneList = \App\Voucher::select(['vMobilephone'])->where(['vcId'=>$id])->get();
+            $temp = [];
+            foreach( $phoneList as $val ){
+                $temp[] = $val['vMobilephone'];
+            }
+            $voucherConfInfo['phoneList'] = $temp;
+        }
+        if( empty($voucherConfInfo['getTypes']) && ( in_array($voucherConfInfo['getCodeType'],[1,2,3]) || $voucherConfInfo['getItemTypes']) ){
+            $voucherConfInfo['selectItem'] = 2;
+        }
+        if( $voucherConfInfo['getTypes'] == 4 )
+            $voucherConfInfo['selectItem'] = 3;
+        if( $voucherConfInfo['getTypes'] == 5 )
+            $voucherConfInfo['selectItem'] = 4;
+        
+        unset( $voucherConfInfo['vcStart'] );
+        unset( $voucherConfInfo['vcEnd'] );
+        unset( $voucherConfInfo['status'] );
+        unset( $voucherConfInfo['vType'] );
+        unset( $voucherConfInfo['IS_REDEEM_CODE'] );
+        unset( $voucherConfInfo['ADD_TIME'] );
+        unset( $voucherConfInfo['DEPARTMENT_ID'] );
+        unset( $voucherConfInfo['MANAGER_ID'] );
+        
+        return $this->success( $voucherConfInfo );
+    }
     // 校验集团码
     private function getGroupExists( $code ){
         $count = \App\CompanyCode::where( 'code' ,'=', $code )
@@ -904,13 +1016,9 @@ class PlatformController extends Controller{
    // 获取代金劵状态
    private function getVoucherStatusByActId( $vcSn , $useEnd ){
             // 总的发放数
-//            $allNum = $voucherModel->where( $where . ' and vStatus != 10' , $condition )->count();
             $allNum = \App\Voucher::where( ['vcSn'=>$vcSn])->where('vStatus','<>',10)->count();
             // 已发放数
-//            $useNum = $voucherModel->where( $where . ' and vStatus = 2' , $condition )->count();
             $useNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>2] )->count();
-            
-//            $invalidNum = $voucherModel->where( $where . ' and vStatus = 5' , $condition )->count();
             $invalidNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>5] )->count();
             if( !empty($invalidNum) )
                 return array( $allNum , $useNum , $invalidNum );
