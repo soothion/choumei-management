@@ -693,6 +693,73 @@ class PlatformController extends Controller{
         }
         return $this->success( $res );
     }
+    /***
+	 * @api {post} /platform/actView/:id 8.平台活动概览
+	 * @apiName actView
+	 * @apiGroup Platform
+	 *
+	 * @apiParam {Number} id 平台活动id
+     * 
+     * 
+     * 
+	 * @apiSuccess {String} vcTitle 活动名称
+	 * @apiSuccess {String} vcSn 活动编号
+	 * @apiSuccess {Number} vcRemark 活动简介.
+	 * @apiSuccess {String} status 1. 进行中 2. 暂停 3.已关闭 4. 已结束
+	 * @apiSuccess {Number} actTime 活动时间.
+	 * @apiSuccess {Number} department 部门.
+	 * @apiSuccess {Number} manager 负责人.
+	 * @apiSuccess {Number} totalNum 现金券总张数上限.
+	 * @apiSuccess {String} budget 现金券预算总金额
+	 * @apiSuccess {String} ADD_TIME 添加时间
+	 * @apiSuccess {String} department 申请部门
+	 * @apiSuccess {String} companyCode 指定集团获取
+	 * @apiSuccess {String} activityCode 指定活动获取
+	 * @apiSuccess {String} dividendCode 指定店铺获取
+	 * @apiSuccess {String} allNum 已发放数
+	 * @apiSuccess {String} allMoney 已发放金额
+	 * @apiSuccess {String} invalidNum 已失效数
+	 * @apiSuccess {String} useNumed 已使用数
+	 * @apiSuccess {String} useMoneyed 已使用总金额
+	 * @apiSuccess {String} consumeNum 已消费数
+	 * @apiSuccess {String} consumeMoney 已消费数金额
+	 * @apiSuccess {String} invalidNum 已失效数
+	 * 
+     * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+     *           "result": 1,
+     *           "token": "",
+     *           "data": {
+     *               "vcTitle": "指定项目7可以获取",
+     *               "vcSn": "cm718745",
+     *               "vcRemark": "顶顶顶顶",
+     *               "status": 2,
+     *               "actTime": "2015-07-08 00:00:00 - 2015-07-30 23:59:59",
+     *               "department": "",
+     *               "manager": "",
+     *               "totalNum": 0,
+     *               "budget": 0,
+     *               "companyCode": "-",
+     *               "activityCode": "-",
+     *               "dividendCode": "-",
+     *               "allNum": 128,
+     *               "allMoney": 1280,
+     *               "useNumed": 34,
+     *               "useMoneyed": 340,
+     *               "consumeNum": 0,
+     *               "consumeMoney": 0,
+     *               "invalidNum": 3
+     *           }
+     *       }
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 ***/
     public function actView($id){
         if( empty($id) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
@@ -737,30 +804,53 @@ class PlatformController extends Controller{
         // 劵情况统计情况
         $voucherConfInfo['allNum'] = 0;
         $voucherConfInfo['allMoney'] = 0;
-        $voucherConfInfo['useNum'] = 0;
-        $voucherConfInfo['useMoney'] = 0;
+        $voucherConfInfo['useNumed'] = 0;
+        $voucherConfInfo['useMoneyed'] = 0;
         $voucherConfInfo['consumeNum'] = 0;
         $voucherConfInfo['consumeMoney'] = 0;
         $voucherConfInfo['invalidNum'] = 0;
-//        $totalNum = \App\VoucherConf::where(['vcId'=>$voucherConfInfo['vcId']])
-//                ->where(['vStatus','<>',10])
-//                ->where(['vStatus','<>',3])
-//                ->count();
-//        if( empty($totalNum) ){
-//            return $this->success( $voucherConfInfo );
-//        }
-//        $voucherConfInfo['allNum'] = $totalNum;
-//        $voucherConfInfo['allMoney'] = $totalNum * $voucherConfInfo['useMoney'];
-//        
-//        unset( $voucherConfInfo['getStart'] );
-//        unset( $voucherConfInfo['getEnd'] );
-//        unset( $voucherConfInfo['DEPARTMENT_ID'] );
-//        unset( $voucherConfInfo['useMoney'] );
-//        unset( $voucherConfInfo['useTotalNum'] );
-//        unset( $voucherConfInfo['getCodeType'] );
-//        unset( $voucherConfInfo['getCode'] );
+        
+        $totalNum = \App\Voucher::whereRaw( 'vcId='.$id.' and vStatus<>10 and vStatus<>3 ' )
+                ->count();
+        if( empty($totalNum) ){
+            return $this->success( $voucherConfInfo );
+        }
+        $voucherConfInfo['allNum'] = $totalNum;
+        $voucherConfInfo['allMoney'] = $totalNum * $voucherConfInfo['useMoney'];
+        
+        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>2] )
+                ->count();
+        $voucherConfInfo['useNumed'] = $useNumed;
+        $voucherConfInfo['useMoneyed'] = $useNumed * $voucherConfInfo['useMoney'];
+        
+        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>5] )
+                ->count();
+        $voucherConfInfo['invalidNum'] = $useNumed;
+        
+        // 查找已消费数
+        if( !empty($useNumed) ){
+            $order = Voucher::select(['vOrderSn'])->where( ['vcId'=>$id,'vStatus'=>2] )->get()->toArray();
+            $consumeNum = 0;
+            foreach( $order as $val ){
+                $t = \App\Order::where(['ordersn'=>$val['vOrderSn'],'status'=>4])->count();
+                if( $t )
+                    $consumeNum++;
+            }
+            $voucherConfInfo['consumeNum'] = 0;
+            $voucherConfInfo['consumeMoney'] = 0;
+        }
+        if( time() > $voucherConfInfo['getEnd'] )
+            $voucherConfInfo['status'] = 4;
+        unset( $voucherConfInfo['getStart'] );
+        unset( $voucherConfInfo['getEnd'] );
+        unset( $voucherConfInfo['DEPARTMENT_ID'] );
+        unset( $voucherConfInfo['MANAGER_ID'] );
+        unset( $voucherConfInfo['useMoney'] );
+        unset( $voucherConfInfo['useTotalNum'] );
+        unset( $voucherConfInfo['getCodeType'] );
+        unset( $voucherConfInfo['getCode'] );
             
-        print_r( $voucherConfInfo );
+        return $this->success( $voucherConfInfo );
         
     }
     // 校验集团码

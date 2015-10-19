@@ -796,5 +796,8 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'platform.list',
 		'uses'=>'Promotion\PlatformController@confList'
     ));
-});
-    
+    Route::any('platform/actView/{id}',array(  
+		'as'=>'platform.actView',
+		'uses'=>'Promotion\PlatformController@actView'
+    ));
+});   
