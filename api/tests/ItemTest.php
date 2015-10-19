@@ -34,63 +34,17 @@ class ItemTest extends TestCase
              ]);
     }
     
-    
-    public function testUpdate(){
-         $this->withoutEvents();
-         $item = Item::first();
-         $id=$item->itemid;
-         
-//         $token=[$id,
-//                'salonid'=>36,
-//                'typeid'=>666,
-//                'logo'=>1,'desc'=>1,
-//                'itemType'=>1,
-//               'itemname'=>str_random(20),
-//                'priceStyle'=>1,
-//                'price'=>1,
-//                'priceDis'=>1,
-//                'normMenu'=>str_random(20),
-//                'normarr'=>str_random(20)
-//             ];
-//         $this->post("itemInfo/update/$id",$token)            
-//             ->seeJson([
-//                'result'=>1
-//             ]); 
-//         
-         
-    }
-    
-     public function testUpdateSpecialItem(){
-          $this->withoutEvents();
-          
-          
-     }
-     public function testCrateSpecialItem(){
-                    $this->withoutEvents();
-//          $item = Item::first();
-//          $item->itemname=str_random(20);
-//          $field=['salonid','typeid','useLimit','logo','desc','itemType','itemname','priceStyle','price','priceDis','normMenu','normarr'];
-//          $item = DB::table('salon_item')->select($field)->first();
-     
-          
-//          $token=[
-//                'salonid'=>36,
-//                'typeid'=>666,
-//                'logo'=>1,'desc'=>1,
-//                'itemType'=>1,
-//               'itemname'=>str_random(20),
-//                'priceStyle'=>1,
-//                'price'=>1,
-//                'priceDis'=>1,
-//                'normMenu'=>str_random(20),
-//                'normarr'=>str_random(20)
-//             ];
-//          $this->post('itemInfo/create',$token)            
-//             ->seeJson([
-//                'result'=>1
-//             ]); 
-          
-          
-     }
+        public function testShow(){
+            $item = Item::first();
+            $id = $item->itemid;
+            $this->get("item/show/$id")
+                 ->seeJson(['result'=>1]);
+
+            $id = 999999;
+            $this->get("item/show/$id") 
+                 ->seeJson([
+                        'result'=>0
+                ]); 
+        }
 
 }
