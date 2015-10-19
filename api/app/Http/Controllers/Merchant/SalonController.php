@@ -973,7 +973,7 @@ class SalonController extends Controller {
 	public function export()
 	{
 		$where = "";
-		$shopTypeArr = array(0=>'',1=>'预付款店',2=>'投资店',3=>'金字塔店',4=>'高端点',5=>'写字楼店');
+		$shopTypeArr = array(0=>'',1=>'预付款店',2=>'投资店',3=>'金字塔店',4=>'高端店',5=>'写字楼店');
 		$accountTypeArr = array(0=>'',1=>'对公帐户',2=>'对私帐户');
 		$statusArr = array(0=>'终止合作',1=>'正常合作',2=>'删除');
 		$gradeArr = array(0=>'',1=>'S',2=>'A',3=>'B',4=>'C',5=>'新落地',6=>'淘汰区');
