@@ -62,7 +62,14 @@
                     <div class="control">
                         <input type="text" id="amount" name="amount" required>
                     </div>
-                </div>  
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="">备注：</label>
+                    <div class="control">
+                        <input type="text" id="note" name="note" maxlength="15">
+                    </div>
+                </div>                   
 
                 <div class="control-group">
                     <label class="control-label" for=""></label>
@@ -86,6 +93,7 @@
                 $("#amount").val(obj.amount);
                 $('#merchantId').val(obj.merchantid);
                 $("#merchantname").val(obj.merchantname);
+                $("#note").val(obj.note);
                 $("form").attr('action','rebate/update/'+obj.id);
             }
 
@@ -103,6 +111,7 @@
                 obj.start_at = $("#start_at").val(); 
                 obj.end_at   = $("#end_at").val();
                 obj.amount   = $("#amount").val();
+                obj.note   = $("#note").val();
                 if(type == "add"){
                     sessionStorage.setItem("income-rebate-perview",JSON.stringify(obj));
                 }else{

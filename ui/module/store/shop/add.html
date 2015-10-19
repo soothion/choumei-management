@@ -44,7 +44,8 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
                     <div class="control">
-                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10" disabled>
+                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10" disabled
+                        data-value="<%=data.sn||""%>" unique="salon/checkSalonSn?sn=${value}" uniquemsg="店铺编号重复">
                     </div>
                 </div> 
                 <div class="control-group">
@@ -69,7 +70,7 @@
 						</select>
 						<select id="city" name="citiesId" class="select min-width" required ajat-one="true" 
 						ajat="<%if(data.provinceId){%>salonList/getProvinces?type=2&areaId=<%=data.provinceId%><%}%>#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>"
-						ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=data.district%>">
+						ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=data.district%>,salonList/getBussesName?cityid=${value}#domid=business&tempid=business_t&businessId=<%=data.businessId%>">
 						</select>
                         
 						<select id="area" name="district" class="select min-width" style="margin-right:10px" 
@@ -305,8 +306,7 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>业务代表：</label>
-                    <div class="control control-circle"  id="business" required 
-                    ajat="salonList/getBussesName#domid=business&tempid=business_t&businessId=<%=data.businessId%>">
+                    <div class="control control-circle"  id="business" ajat="<%if(data.businessId){%>salonList/getBussesName?cityid=<%=data.citiesId%><%}%>#domid=business&tempid=business_t&businessId=<%=data.businessId%>">
 
                     </div>
                 </div>
@@ -391,7 +391,11 @@
                     <span><%=item.businessName%></span>
                 </label>
             <%})%>
-            <span class="control-help" style="display:none;"></span>
+            <%if(data.length>0){%>
+                <div class="control-help" style="display:none;"></div>
+            <%}else{%>
+                <input type="hidden" name="businessId" required requiredmsg="请选择业务代表"/>
+            <%}%>
         </script>
 
 		<script type="text/template" id="zone_t">
