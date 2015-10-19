@@ -122,7 +122,7 @@ class Item extends Model {
                 'salon_item.UPDATE_date',
                 'sort_in_type',
                 'salon_item.status',
-                'salon_item.userId',
+                'salon_item.userId'
                 )
             ->find($id);
         if(!$item)
