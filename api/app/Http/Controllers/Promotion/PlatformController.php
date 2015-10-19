@@ -1030,6 +1030,78 @@ class PlatformController extends Controller{
             return $this->error('插入数据失败，请稍后再试');
         return $this->success();
     }
+    /***
+	 * @api {get} /platfrom/offlineConf 11.编辑平台下线操作
+	 * @apiName offlineConf
+	 * @apiGroup Platform
+	 *
+	 *@apiParam {Number} id                   必填        活动配置id
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+	 *		    "result": 1,
+	 *		    "data": "",
+	 *		}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "下线失败，请重新下线"
+	 *		}
+	 ***/
+    public function offlineConf( $id ){
+        if( empty($id) )
+            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
+        $update = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>2]);
+        if( empty( $update ) )
+            return $this->error('下线失败，请重新下线');
+        return $this->success();
+    }
+    /***
+	 * @api {get} /platfrom/closeConf 11.编辑平台下线操作
+	 * @apiName closeConf
+	 * @apiGroup Platform
+	 *
+	 *@apiParam {Number} id                   必填        活动配置id
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+	 *		    "result": 1,
+	 *		    "data": "",
+	 *		}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "关闭失败，请重新下线"
+	 *		}
+	 ***/
+    public function closeConf( $id ){
+        $conf = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
+        if( $conf )
+            \App\Voucher::where(['vcId'=>$id])->whereIn('vStatus',[1,3])->update(['vStatus'=>5]);
+        else
+            return $this->error('关闭失败，请重新关闭');
+        return $this->success();
+    }
     // 校验集团码
     private function getGroupExists( $code ){
         $count = \App\CompanyCode::where( 'code' ,'=', $code )
