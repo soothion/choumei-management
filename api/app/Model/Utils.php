@@ -159,7 +159,7 @@ class Utils
     {
     	$res = "";
     	switch (intval($type)) {
-    		case 0:
+    		case 1:
     			$res = "对公帐户";
     			break;
     		case 2:
