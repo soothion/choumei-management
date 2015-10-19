@@ -1067,7 +1067,7 @@ class PlatformController extends Controller{
         return $this->success();
     }
     /***
-	 * @api {get} /platfrom/closeConf 11.编辑平台下线操作
+	 * @api {get} /platfrom/closeConf 12.编辑平台关闭操作
 	 * @apiName closeConf
 	 * @apiGroup Platform
 	 *
