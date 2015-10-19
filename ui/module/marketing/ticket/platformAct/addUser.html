@@ -49,7 +49,7 @@
         </div>
 
         <div class="wrapper">
-            <form class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
+            <form class="form-vertical" data-role="form" id="form">
             <script type="text/template" id="form-t">
                 <div class="detail-operation">
                     <button type="button" class="btn btn-cancel">取消</button>
@@ -59,7 +59,7 @@
 
                 <ul class="nav-step flex-box">
                     <li class="flex-item">
-                        <a href="addBase.html">
+                        <a href="addBase.html?type=add">
                             <i class="fa fa-check-circle"></i><span>1.活动基本信息</span>
                         </a>
                     </li>
@@ -82,29 +82,32 @@
 
                 <div class="control-group">
                   <label class="control-label" style="width:100px"></label>
-                      <a class="tab-menus <%=(!query.menus || query.menus=='1') ? 'act' : '' %>" href="#menus=1">
+                      <% query.selectItemType;debugger;%>
+                      <a class="tab-menus <%=(!query.selectItemType || query.selectItemType=='1') ? 'act' : '' %>" href="?type=<%=query.type%>&menus=1#selectItemType=1">
                           新用户
                       </a>
 
-                      <a class="tab-menus <%=query.menus=='2'? 'act' : '' %>" href="#menus=2">
+                      <a class="tab-menus <%=query.selectItemType=='2'? 'act' : '' %>" href="?type=<%=query.type%>&menus=2#selectItemType=2">
                           指定用户
                       </a>
 
-                      <a class="tab-menus <%=query.menus=='3'? 'act' : '' %>" href="#menus=3">
+                      <a class="tab-menus <%=query.selectItemType=='3'? 'act' : '' %>" href="?type=<%=query.type%>&menus=3#selectItemType=3">
                           全平台用户
                       </a>
 
-                      <a class="tab-menus <%=query.menus=='4'? 'act' : '' %>" href="#menus=4">
+                      <a class="tab-menus <%=query.selectItemType=='4'? 'act' : '' %>" href="?type=<%=query.type%>&menus=4#selectItemType=4">
                           H5用户
                       </a>
+                      <input type="hidden" name="selectItemType" value="<%=query.selectItemType || 1 %>">
                 </div> 
 
-                <%if(!query.menus || query.menus=='1'){%>
+                <%if(!query.selectItemType || query.selectItemType=='1'){%>
                 <div class="control-group">
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                         <label class="radio">
-                            <input type="radio" checked="checked" name="accountType" value="1" >
+                            <input type="radio" checked="checked" name="selectUseType" value="1" 
+                            <%=!data.selectUseType || data.selectUseType == '1' ? 'checked' : '' %>>
                             <span>新注册&nbsp;<span style="color: #ddd;">(活动时间内注册的用户)</span></span>
                         </label>
                     </div>
@@ -114,7 +117,7 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                         <label class="radio">
-                            <input type="radio" name="accountType" value="1" >
+                            <input type="radio" name="selectUseType" value="2" <%=data.selectUseType=='2' ? 'checked':'' %>>
                             <span>
                                 首次消费&nbsp;
                                 <span style="color: #ddd;">(活动时间内首次消费后获取)</span>
@@ -124,16 +127,24 @@
                 </div>
                 <%}%>
 
-                <%if(query.menus=='2'){%>
+                <%if(query.selectItemType=='2'){%>
                 <div class="control-group">
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="accountType" value="1" checked>
+                        <input type="radio" name="selectUseType" value="3" <%=data.selectUseType == '3' ? 'checked' : '' %>
+                        required >
                         <span>指定手机号&nbsp;<span style="color: #ddd;">(活动时间内，无指定项目时活动上线则马上下发)</span></span>
-                        <input  type="button" class="link mobile-button cascade" value="+添加手机号码" />
-                        <input  type="hidden" class="cascade" required requiredmsg="请添加手机号码"/>
+                        <input  type="button" class="link mobile-button cascade" value="+添加手机号码" disabled/>
                     </label>
+                    <%if(data.selectUseType == '3'){%>
+                        <input  type="hidden" class="cascade" msg="请添加手机号码" name="phoneList"
+                         value="<%=sessionStorage.getItem('add-user-moblie')%>" required/>
+                    <%}else{%>
+                        <input  type="hidden" class="cascade" msg="请添加手机号码" name="phoneList"
+                         value="<%=sessionStorage.getItem('add-user-moblie')%>" required disabled/>
+                    <%}%>                    
+
                     </div>
                 </div>
 
@@ -141,10 +152,16 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="accountType" value="2">
+                        <input type="radio" name="selectUseType" value="4" <%=data.selectUseType == '4' ? 'checked' : '' %> 
+                        required>
                         <span>指定集团码用户&nbsp;<span style="color: #ddd;">(活动时间内填写集团码)</span></span>
-                        <input type="text" class="cascade" placeholder="输入集团码" pattern='number' disabled required/>
                     </label>
+                    <%if(data.selectUseType == '4'){%>
+                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' 
+                        value="<%=data.code%>"/>
+                    <%}else{%>
+                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
+                    <%}%>
                     </div>
                 </div>
 
@@ -152,10 +169,16 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="accountType" value="3" >
+                        <input type="radio" name="selectUseType" value="5" <%=data.selectUseType == '5' ? 'checked' : '' %>
+                        required>
                         <span>指定活动码用户&nbsp;<span style="color: #ddd;">(活动时间内填写活动码)</span></span>
-                        <input type="text" class="cascade" placeholder="输入活动码"pattern='number' disabled required/>
                     </label>
+                    <%if(data.selectUseType == '5'){%>
+                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' 
+                        value="<%=data.code%>"/>
+                    <%}else{%>
+                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
+                    <%}%>
                     </div>
                 </div>
 
@@ -164,10 +187,15 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="accountType" value="4" >
+                        <input type="radio" name="selectUseType" value="6" required>
                         <span>指定店铺码用户&nbsp;<span style="color: #ddd;">(活动时间内填写店铺码)</span></span>
-                        <input type="text" class="cascade" placeholder="输入店铺码" pattern='number' disabled required/>
                     </label>
+                    <%if(data.selectUseType == '6'){%>
+                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' 
+                        value="<%=data.code%>"/>
+                    <%}else{%>
+                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
+                    <%}%>                    
                     </div>
                 </div>
 
@@ -175,7 +203,7 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="checkbox">
-                        <input id="consumeItems" type="checkbox" name="salonType" value="5">
+                        <input id="consumeItems" type="checkbox" >
                         <span>指定消费项目：</span>
                     </label>
                     </div>
@@ -183,106 +211,56 @@
 
                 <div id="consumeItemsDiv" class="control-group" style="display:none">
                     <label class="control-label" style="width:120px"></label>
-                    <div class="control">
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>洗吹</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>洗剪吹</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>烫发</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>染发</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>护发</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>套餐</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>快剪</span>
-                        </label>                            
+                    <div class="control" id="control" ajat-one="true" 
+                    ajat="platform/getItemType#domid=control&tempid=control-t&getItemTypes=<%=data.getItemTypes%>">
+                           
                     </div>
                 </div>
                 <%}%>
 
-                <%if(query.menus=='3'){%>
+                <%if(query.selectItemType=='3'){%>
                 <div class="control-group">
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="checkbox">
-                        <input type="checkbox" name="salonType" value="3">
+                        <input type="checkbox" id="consumeItems">
                         <span>指定消费项目：(全平台用)</span>
                     </label>
                     </div>
                 </div> 
 
-                <div class="control-group">
+                <div id="consumeItemsDiv" class="control-group">
                     <label class="control-label" style="width:120px"></label>
-                    <div class="control">
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>洗吹</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>洗剪吹</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>烫发</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>染发</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>护发</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>套餐</span>
-                        </label>
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
-                            <span>快剪</span>
-                        </label>                            
+                    <div class="control" id="control" ajat-one="true" 
+                    ajat="platform/getItemType#domid=control&tempid=control-t&getItemTypes=<%=data.getItemTypes%>">
+                           
                     </div>
-                </div> 
+                </div>
                 
                 <div class="control-group">
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                         <span>满额获取：</span>
                         <label class="checkbox">
-                            <input type="text" name="salonType" value="">
+                            <input type="text" name="enoughMoeny" required value="0">
                             <strong>元&nbsp;&nbsp;&nbsp;&nbsp;可获取</strong>
                             <span style="color: #ddd;">（大于或等于该数值可获取，0为不限制，可填写0~999）</span>
+                            <span class="control-help" style="display:none;"></span>
                         </label>
                     </div>
                 </div>   
                 <%}%>
 
-                <%if(query.menus=='4'){%>
+                <%if(query.selectItemType=='4'){%>
                 <div class="control-group">
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
-                        <label class="checkbox">
-                            <input type="checkbox" name="salonType" value="3">
+                        <label class="checkbox" required>
+                            <input type="checkbox" checked required>
                             <span>绑定活动码</span>
                         </label>
-                        <input type="text" />
+
+                        <input type="text" name="code" required value="000"/>
                         <span style="color: #ddd;">（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
                     </div>
                 </div>
@@ -293,61 +271,19 @@
                     <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
                     <button class="btn-primary">下一步</button>
                 </div>                                                                  
-            </script>
+            </script>          
             </form>
         </div>
 
-        <script>
-            $("#form").on('change','#consumeItems',function(){              
-                if($(this).attr('checked')){
-                    $(this).removeAttr('checked');
-                    $("#consumeItemsDiv").hide();
-                }else{
-                    $(this).attr('checked','checked');
-                    $("#consumeItemsDiv").show();
-                }
-            });
-
-            $("#form").on('click','input[type=radio]',function(){
-                $('input.cascade').attr('disabled','disabled');
-                $(this).parent().find('input.cascade').removeAttr('disabled');
-            });
-
-            $("#form").on('click','input[type=button]',function(){
-               var html  = "<div style='margin-top:10px'><textarea style='width:100%;height:300px'></textarea></div>";
-                   html += "<div style='margin:20px 0 0 30%'><button class='btn' style='margin-right:20px' type='button'>";
-                   html += "取消</button><button class='btn-primary'>保存</button></div>";
-                   html += "<div style='width:100%;'><h3 style='color:red'>添加失败的手机号码如下：</h3>";
-                   html += "<div>18682243486,18682243486,18682243486,18682243486,18682243486,18682243486,18682243486,<br>18682243486,18682243486,18682243486,18682243486,18682243486,18682243486,18682243486,<br>18682243486,18682243486,18682243486,18682243486,18682243486,18682243486,<br>18682243486,18682243486</div></div>";
-                   lib.popup.box({
-                       title:'添加手机号码',
-                       width:680,
-                       content:html,
-                       complete:function(){
-
-                       }
-                   });
-            });
-
-
-
-            $("#form").on('keydown',"input[pattern='number']",function(e){
-                var key = e.which;
-                //alert(key)
-                if ((key > 95 && key < 106) || //小键盘上的0到9  
-                    (key > 47 && key < 58) || //大键盘上的0到9  
-                    key == 8 || key == 116 || key == 9 || key == 46 || key == 37 || key == 39
-                    //不影响正常编辑键的使用(116:f5;8:BackSpace;9:Tab;46:Delete;37:Left;39:Right;)  
-                ) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });            
-
-            lib.Form.prototype.save = function(data){
-                location.href = "addTicket.html"
-            }
-        </script>                
+        <script type="text/template" id="control-t">
+        <%data.forEach&&data.forEach(function(item,i){%>
+            <label class="checkbox">
+                <input type="checkbox" <%=item.typeid == protocol.custom.getItemTypes ? "checked":""%> name="getItemTypes" value="<%=item.typeid%>" disabled>
+                <span><%=item.typename%></span>
+            </label> 
+        <%})%>
+        </script>   
+               
+        <script src="addUser.js"></script>                
     </body>
 </html>

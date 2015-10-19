@@ -51,16 +51,23 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>活动名称：</label>
                     <div class="control">
-                        <input type="text" name="actName" value="" placeholder="活动名称" 
-                        maxlength="12" required value="<%=data.actName%>">
+                        <input type="text" name="actName" value="<%=data.actName%>" placeholder="活动名称" 
+                        maxlength="12" required >
                     </div>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>活动编号：</label>
-                    <div class="control" id="control" ajat="<%if(!data.code){%>platform/getActNum<%}%>#domid=control&tempid=input-t" ajat-one="true">
+                    <%if(data.actNo){%>
+                    <div class="control" id="control">
+                        <input type="text" name="actNo" value="<%=data.actNo%>" readOnly required>
+                    </div>
+                    <%}else{%>
+                    <div class="control" id="control" ajat="<%if(!data.actNo){%>platform/getActNum<%}%>#domid=control&tempid=input-t" ajat-one="true">
  
                     </div>
+                    <%}%>
+
                 </div> 
 
                 <div class="control-group">
@@ -73,8 +80,8 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
                     <div class="control">
-                        <select name="department_id" id="department" required ajat-one="true" ajat="platform/getRequestDepartment#domid=department&tempid=department-t&departmentId=<%=data.departmentId%>"
-                        ajat-change="paltform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&managerId=<%=data.managerId%>">
+                        <select name="departmentId" id="department" required ajat-one="true" ajat="platform/getRequestDepartment#domid=department&tempid=department-t&departmentId=<%=data.departmentId%>"
+                        ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager-t&managerId=<%=data.managerId%>">
 
                         </select>  
                     </div>
@@ -82,9 +89,9 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>负责人：</label>
-                    <label class="label" id="manager" ajat-one="true" ajat="platform/getRequestDepartment/<%=data.departmentId || 0%>#domid=manager&tempid=manager-t&managerId=<%=data.managerId%>">
+                   <div class="control" id="manager" ajat-one="true" ajat="platform/getDepartmentManager/<%=data.departmentId || 0 %>#domid=manager&tempid=manager-t&managerId=<%=data.managerId%>">
 
-                    </label>
+                    </div>
                     <span class="control-help" style="display:none;"></span>
                 </div>
 
@@ -95,11 +102,10 @@
                 </div>
                 </script>                                                                  
             </form>
-            <script src="addBase.js"></script>
         </div> 
 
         <script type="text/template" id="input-t">  
-            <input type="text" name="code" value="<%=data.code%>" readOnly>
+            <input type="text" name="actNo" value="<%=data.actNo%>" readOnly>
         </script>
 
         <script type="text/template" id="department-t">  
@@ -114,16 +120,13 @@
 
         <script type="text/template" id="manager-t">  
         <%data.forEach&&data.forEach(function(item,i){%>
-            <input type="radio" class="label" <%=item.id==protocol.custom.managerId?"checked":""%> name="managerId" 
-            value="<%=itme.id%>" required>
-            <span><%=itme.name%></span>  
+            <label class="label">
+                <input type="radio" name="managerId" value="<%=item.id%>" required <%=item.id == protocol.custom.managerId ? "checked":""%>>
+                <span><%=item.name%></span>
+            </label>            
         <%})%>     
         </script>        
 
-        <script>
-            lib.Form.prototype.save = function(data){
-                location.href = "addUser.html"
-            }
-        </script>      
+        <script src="addBase.js"></script>     
     </body>
 </html>
