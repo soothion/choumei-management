@@ -43,5 +43,12 @@ class WarehouseTest extends TestCase
                 'data'=>[]
              ]);
     }
-
+  
+    public function testDel(){
+           $token=['ids'=>'192'];
+           $this->post("warehouse/destroy",$token)            
+             ->seeJson([
+                'result'=>1
+             ]);
+    }
 }

@@ -91,43 +91,43 @@ class StylistTest extends TestCase
     }
     
     
-    public function testCreate(){
-        $this->withoutEvents();
-        //创建用户
-        $salon=DB::table("salon")->first();
-        $id=$salon->salonid;
-        $stylist = [
-            'salonId'=>630,
-            'stylistName'=>"ww",
-            'img'=>"ee",
-            'mobilephone'=>13454546698,
-            'signature'=>"ewwe",
-            'sex'=>1,
-            'stylistImg'=>"qwee",
-            'birthday'=>"1434337405",
-            'IDcard'=>"sdqwrdsaf",
-            'sNumber'=>88,
-            'job'=>"wrqwer",
-            'workYears'=>8,
-           ];
-//        $field=['stylistId', 'salonId', 'stylistName','stylistImg','job','addTime','likeNum','signature','status','sex','qq','email','birthday','IDcard','sNumber','workYears','grade','workExp','educateExp','description','gradeType','osType','fastGrade'];
-//        $stylist1=  Stylist::select($field)->first();
-//        $stylist1['mobilephone']=13756565346;
-//        $stylist= json_decode($stylist1,true);
-        $this->post('stylist/create',$stylist)            
-             ->seeJson([
-                'result'=>1
-             ]);
-        //判断数据库是否存在此记录
-        $this->seeInDatabase('hairstylist', ['mobilephone' => $stylist['mobilephone']]); 
-
-        //判断电话重复
-        $this->post('stylist/create',$stylist)            
-             ->seeJson([
-                'result'=>0,
-                'code'=>ERROR::USER_EXIST,
-             ]);
-    }
-     
-
+//    public function testCreate(){
+//        $this->withoutEvents();
+//        //创建用户
+//        $salon=DB::table("salon")->first();
+//        $id=$salon->salonid;
+//        $stylist = [
+//            'salonId'=>630,
+//            'stylistName'=>"ww",
+//            'img'=>"ee",
+//            'mobilephone'=>13454546698,
+//            'signature'=>"ewwe",
+//            'sex'=>1,
+//            'stylistImg'=>"qwee",
+//            'birthday'=>"1434337405",
+//            'IDcard'=>"sdqwrdsaf",
+//            'sNumber'=>88,
+//            'job'=>"wrqwer",
+//            'workYears'=>8,
+//           ];
+////        $field=['stylistId', 'salonId', 'stylistName','stylistImg','job','addTime','likeNum','signature','status','sex','qq','email','birthday','IDcard','sNumber','workYears','grade','workExp','educateExp','description','gradeType','osType','fastGrade'];
+////        $stylist1=  Stylist::select($field)->first();
+////        $stylist1['mobilephone']=13756565346;
+////        $stylist= json_decode($stylist1,true);
+//        $this->post('stylist/create',$stylist)            
+//             ->seeJson([
+//                'result'=>1
+//             ]);
+//        //判断数据库是否存在此记录
+//        $this->seeInDatabase('hairstylist', ['mobilephone' => $stylist['mobilephone']]); 
+//
+//        //判断电话重复
+//        $this->post('stylist/create',$stylist)            
+//             ->seeJson([
+//                'result'=>0,
+//                'code'=>ERROR::USER_EXIST,
+//             ]);
+//    }
+   
+    
 }
