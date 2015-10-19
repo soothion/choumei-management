@@ -3,7 +3,13 @@
     <head>
       <meta charset="utf-8">
       <title>臭美管理后台</title>
-      <script type="text/javascript" src="/js/include.js"></script> 
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        textarea{
+            height:150px!important;
+            width:500px!important;            
+        }
+      </style> 
     </head>
     <body>
         <div class="breadcrumb">
@@ -21,6 +27,7 @@
 
         <div class="wrapper">
             <form class="form-vertical" data-role="form" id="form">
+            <script type="text/template" id="form-t">  
                 <div class="detail-operation">
                     <button type="button" class="btn btn-cancel">取消</button>
                     <span class="space"></span>
@@ -44,46 +51,39 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>活动名称：</label>
                     <div class="control">
-                        <input type="text" name="bankName" value="" placeholder="活动名称" 
-                        maxlength="12" required >
+                        <input type="text" name="actName" value="" placeholder="活动名称" 
+                        maxlength="12" required value="<%=data.actName%>">
                     </div>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>活动编号：</label>
-                    <div class="control">
-                        <input type="text" name="beneficiary" value="" >
+                    <div class="control" id="control" ajat="<%if(!data.code){%>platform/getActNum<%}%>#domid=control&tempid=input-t" ajat-one="true">
+ 
                     </div>
                 </div> 
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>活动简介：</label>
                     <div class="control">
-                    <textarea maxlength="5000" placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符" required style="height:150px;width:500px"></textarea>
+                    <textarea maxlength="5000" name="actIntro" required placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符"  ><%=data.actIntro%></textarea>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
                     <div class="control">
-                        <select name="department_id" required>
-                            <option value="">全部</option>
-                            <option value="1">客服部</option>
-                            <option value="2">产品部</option>
-                            <option value="3">运营部</option>
-                            <option value="3">商务部</option>
-                            <option value="3">企划部</option>
-                            <option value="3">市场部</option>
-                            <option value="3">其他部门</option>
+                        <select name="department_id" id="department" required ajat-one="true" ajat="platform/getRequestDepartment#domid=department&tempid=department-t&departmentId=<%=data.departmentId%>"
+                        ajat-change="paltform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&managerId=<%=data.managerId%>">
+
                         </select>  
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>负责人：</label>
-                    <label class="label">
-                        <input type="radio" class="label" checked="checked" name="businessId" value="1" required>
-                        <span>李楠</span>
+                    <label class="label" id="manager" ajat-one="true" ajat="platform/getRequestDepartment/<%=data.departmentId || 0%>#domid=manager&tempid=manager-t&managerId=<%=data.managerId%>">
+
                     </label>
                     <span class="control-help" style="display:none;"></span>
                 </div>
@@ -92,9 +92,34 @@
                     <label class="control-label" for=""></label>
                     <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
                     <button class="btn-primary">下一步</button>
-                </div>                                                                  
+                </div>
+                </script>                                                                  
             </form>
+            <script src="addBase.js"></script>
         </div> 
+
+        <script type="text/template" id="input-t">  
+            <input type="text" name="code" value="<%=data.code%>" readOnly>
+        </script>
+
+        <script type="text/template" id="department-t">  
+            <option value="">全部</option>
+            <%data.forEach&&data.forEach(function(item,i){%>
+                <option <%=item.id==protocol.custom.departmentId?"selected":""%> value="<%=item.id%>">
+                <%=item.title%>
+                </option>
+            <%})%>
+        </script> 
+
+
+        <script type="text/template" id="manager-t">  
+        <%data.forEach&&data.forEach(function(item,i){%>
+            <input type="radio" class="label" <%=item.id==protocol.custom.managerId?"checked":""%> name="managerId" 
+            value="<%=itme.id%>" required>
+            <span><%=itme.name%></span>  
+        <%})%>     
+        </script>        
+
         <script>
             lib.Form.prototype.save = function(data){
                 location.href = "addUser.html"
