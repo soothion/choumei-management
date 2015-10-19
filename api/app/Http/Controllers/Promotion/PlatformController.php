@@ -403,7 +403,7 @@ class PlatformController extends Controller{
     /***
 	 * @api {post} /paltform/getDepartmentManager/:id 4.获取部门分类的负责人
 	 * @apiName getDepartmentManager
-	 * @apiGroup Paltform
+	 * @apiGroup Platform
 	 *
 	 * @apiParam {Number} id 部门id.
      * 

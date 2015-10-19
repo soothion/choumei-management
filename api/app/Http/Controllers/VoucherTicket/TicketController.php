@@ -100,12 +100,12 @@ class TicketController extends Controller {
         if($status){
 			if ($status == 1)
                 $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
+			elseif ($status == 2)
+                $obj->where( 'vStatus','=',2 );
 			elseif ($status == 3)
-                $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
-			elseif ($status == 5)
                 $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
-			else
-                $obj->where('vStatus','=',$status);
+			elseif( $status == 4)
+                $obj->where('vStatus','=',1)->where('len(REDEEM_CODE)','<>',12);
         }
 
         if($startTime && empty($endTime))
