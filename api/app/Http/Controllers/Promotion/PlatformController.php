@@ -302,6 +302,7 @@ class PlatformController extends Controller{
             $data['SMS_ON_GAINED'] = '亲爱的，'.$data['useMoney'].'元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址' . self::$downloadUrl;
         
         $data['status'] = 2;
+        $data['ADD_TIME'] = date('Y-m-d H:i:s');
         
 //        $addRes = M('voucher_conf')->add($data);
         $addRes = \App\VoucherConf::insertGetId( $data );
@@ -401,7 +402,7 @@ class PlatformController extends Controller{
         return $this->success( $departmant );
     }
     /***
-	 * @api {post} /paltform/getDepartmentManager/:id 4.获取部门分类的负责人
+	 * @api {post} /platform/getDepartmentManager/:id 4.获取部门分类的负责人
 	 * @apiName getDepartmentManager
 	 * @apiGroup Platform
 	 *
@@ -411,6 +412,7 @@ class PlatformController extends Controller{
 	 * 
 	 * @apiSuccess {Number} id 部门负责人.
 	 * @apiSuccess {String} name 部门负责人.
+	 * @apiSuccess {Number} department_id 对应部门id.
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *		{
@@ -433,7 +435,10 @@ class PlatformController extends Controller{
     public function getDepartmentManager($id){
         if( !isset($id) )
             throw new ApiException('获取信息失败', ERROR::RECEIVABLES_ERROR);
-        $manager = \App\Manager::select(['id','name'])->where('department_id','=',$id)->get();
+        if($id == 0)
+            $manager = \App\Manager::select(['id','name','department_id'])->get();
+        else
+            $manager = \App\Manager::select(['id','name','department_id'])->where('department_id','=',$id)->get();
         return $this->success( $manager );
     }
     /***
@@ -484,7 +489,7 @@ class PlatformController extends Controller{
 	 * @apiParam {String} code 各类码.
      * 
      * 
-	 * 
+	 * @apiSuccess {String} exists 1 存在 0 不存在.
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *		{
@@ -516,6 +521,177 @@ class PlatformController extends Controller{
             $exists = $this->getActivityExists( $code ); 
         $return = ['exists'=>$exists];
         return $this->success( $return );
+    }
+    /***
+	 * @api {post} /platform/conList 7.平台活动配置列表
+	 * @apiName list
+	 * @apiGroup Platform
+	 *
+	 * @apiParam {Number} selectItem 可选 选择的项 1: 活动编号 2.活动名称
+	 * @apiParam {String} number 可选 对应项查询的字符.
+	 * @apiParam {Number} status 可选 活动状态. 1. 进行中 2. 暂停 3.已关闭 4. 已结束
+	 * @apiParam {String} department 部门id
+	 * @apiParam {String} startTime 活动开始时间
+	 * @apiParam {String} endTime 活动结束时间
+	 * @apiParam {String} page 第几页
+	 * @apiParam {String} pageSize 每页请求条数默认为12
+     * 
+     * 
+	 * @apiSuccess {Number} total 总数据量.
+	 * @apiSuccess {Number} per_page 分页大小.
+	 * @apiSuccess {Number} current_page 当前页面.
+	 * @apiSuccess {Number} last_page 当前页面.
+	 * @apiSuccess {Number} from 起始数据.
+	 * @apiSuccess {Number} to 结束数据.
+	 * @apiSuccess {String} vcId 平台配置id
+	 * @apiSuccess {String} vcTitle 活动名称
+	 * @apiSuccess {String} ADD_TIME 添加时间
+	 * @apiSuccess {String} department 申请部门
+	 * @apiSuccess {String} status 1. 进行中 2. 暂停 3.已关闭 4. 已结束
+	 * @apiSuccess {String} allNum 总的发放数
+	 * @apiSuccess {String} useNum 已发放数
+	 * @apiSuccess {String} invalidNum 已失效数
+	 * @apiSuccess {String} actTime 活动时间
+	 * 
+     * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+     *           "result": 1,
+     *           "token": "",
+     *           "data": {
+     *               "total": 82,
+     *               "per_page": 12,
+     *               "current_page": 1,
+     *               "last_page": 7,
+     *               "next_page_url": "http://man.lu/platform/list/?page=2",
+     *               "prev_page_url": null,
+     *               "from": 1,
+     *               "to": 12,
+     *               "data": [
+     *                   {
+     *                       "vcId": 92,
+     *                       "vcTitle": "我的测试哈哈哈",
+     *                       "ADD_TIME": "0000-00-00 00:00:00",
+     *                       "DEPARTMENT_ID": 3,
+     *                       "status": 2,
+     *                       "allNum": 0,
+     *                       "useNum": 0,
+     *                       "invalidNum": 0,
+     *                       "actTime": "无限期活动"
+     *                   },
+     *                  ...
+     *              }
+     *          }
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 ***/
+    public function confList(){
+        $post = $this->param;
+        $actSelect = isset($post['selectItem']) ? $post['selectItem'] : '';
+        $actNumber = isset($post['number']) ? urldecode($post['number']) : '';
+        $actStatus = isset($post['status']) ? $post['status'] : '';
+        $actDepartment = isset($post['department']) ? $post['department'] : '';
+        $actStartTime = isset($post['startTime']) ? $post['startTime'] : '';
+        $actEndTime = isset($post['endTime']) ? $post['endTime'] : '';
+        $page = isset( $post['page'] ) ? $post['page'] : 1;
+        $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 12;
+        
+        if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
+            //手动设置页数
+            AbstractPaginator::currentPageResolver(function() use ($page) {
+                return $page;
+            });
+            $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME','getStart','getEnd','DEPARTMENT_ID','status','useEnd'])
+                    ->orderBy('vcId','desc')
+                    ->paginate($pageSize)
+                    ->toArray();
+            if( empty($res) ) return $this->success();
+            
+            foreach( $res['data'] as $key=>$val ){
+                $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+                $res['data'][$key]['allNum'] = $statistics[0];
+                $res['data'][$key]['useNum'] = $statistics[1];
+                $res['data'][$key]['invalidNum'] = $statistics[2];
+                $res['data'][$key]['actTime'] = '';
+                if( empty( $val['getStart'] ) && empty($val['getEnd']) )
+                    $res['data'][$key]['actTime'] = '无限期活动';
+                if( !empty($val['getStart']) && empty($val['getEnd']) )
+                    $res['data'][$key]['actTime'] = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
+                if( !empty($val['getEnd']) && empty($val['getStart']) )
+                    $res['data'][$key]['actTime'] = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
+                if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
+                    $res['data'][$key]['actTime'] = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
+                $res['data'][$key]['department'] = '';
+                if( !empty($val['DEPARTMENT_ID']) ){
+                    $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
+                    $res['data'][$key]['department'] = $department['title'];
+                }
+                unset( $res['data'][$key]['vcSn'] );
+                unset( $res['data'][$key]['useEnd'] );
+                unset( $res['data'][$key]['getStart'] );
+                unset( $res['data'][$key]['getEnd'] );
+                unset( $res['data'][$key]['DEPARTMENT_ID'] );
+            }
+            return $this->success( $res );
+        }
+        $where = '1';
+        $actType = array('','vcSn','vcTitle');
+        $obj = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME','getStart','getEnd','DEPARTMENT_ID','status','useEnd']);
+        if( !empty($actSelect) && !empty($actNumber) )
+            $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
+        
+        if( !empty($actStatus) ){
+//            $where .= ' and status = %d ';
+//            $condition[] = $actStatus;
+            if( $actStatus != 4 )
+                $obj::where('status','=',$actStatus);
+            else
+                $obj::where('getEnd','<',time());
+        }
+        if( !empty($actStartTime) && !empty($actEndTime))
+            $obj->whereRaw(' and  (getStart <= '.$actStartTime .' and getEnd >= '.$actStartTime .') or (getStart <= '.$actEndTime .' and getEnd >= '.$actEndTime .' )');
+        if( !empty( $actDepartment ) )
+            $obj->where('DEPARTMENT_ID','=',$actDepartment);
+        //手动设置页数
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
+        $res = $obj->orderBy('vcId','desc')
+                    ->paginate($pageSize)
+                    ->toArray();
+        if( empty($res) ) return $this->success();
+            
+        foreach( $res['data'] as $key=>$val ){
+            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+            $res['data'][$key]['allNum'] = $statistics[0];
+            $res['data'][$key]['useNum'] = $statistics[1];
+            $res['data'][$key]['invalidNum'] = $statistics[2];
+            $res['data'][$key]['actTime'] = '';
+            if( empty( $val['getStart'] ) && empty($val['getEnd']) )
+                $res['data'][$key]['actTime'] = '无限期活动';
+            if( !empty($val['getStart']) && empty($val['getEnd']) )
+                $res['data'][$key]['actTime'] = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
+            if( !empty($val['getEnd']) && empty($val['getStart']) )
+                $res['data'][$key]['actTime'] = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
+            if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
+                $res['data'][$key]['actTime'] = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
+            $res['data'][$key]['department'] = '';
+            if( !empty($val['DEPARTMENT_ID']) ){
+                $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
+                $res['data'][$key]['department'] = $department['title'];
+            }
+            unset( $res['data'][$key]['vcSn'] );
+            unset( $res['data'][$key]['useEnd'] );
+            unset( $res['data'][$key]['getStart'] );
+            unset( $res['data'][$key]['getEnd'] );
+            unset( $res['data'][$key]['DEPARTMENT_ID'] );
+        }
+        return $this->success( $res );
     }
     // 校验集团码
     private function getGroupExists( $code ){
@@ -565,4 +741,25 @@ class PlatformController extends Controller{
         return $code;
           
    }
+   // 获取代金劵状态
+   private function getVoucherStatusByActId( $vcSn , $useEnd ){
+            // 总的发放数
+//            $allNum = $voucherModel->where( $where . ' and vStatus != 10' , $condition )->count();
+            $allNum = \App\Voucher::where( ['vcSn'=>$vcSn])->where('vStatus','<>',10)->count();
+            // 已发放数
+//            $useNum = $voucherModel->where( $where . ' and vStatus = 2' , $condition )->count();
+            $useNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>2] )->count();
+            
+//            $invalidNum = $voucherModel->where( $where . ' and vStatus = 5' , $condition )->count();
+            $invalidNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>5] )->count();
+            if( !empty($invalidNum) )
+                return array( $allNum , $useNum , $invalidNum );
+            // 已失效数
+            if( empty($useEnd) ||  time()<$useEnd ){
+                $invalidNum = 0;
+            }else{
+                $invalidNum = $allNum - $useNum;
+            }
+            return array( $allNum , $useNum , $invalidNum );
+        }
 }

@@ -742,7 +742,7 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'voucher.list',
 		'uses'=>'VoucherTicket\TicketController@ticketList'
     ));
-    Route::any('voucher/invalidStatus',array( 
+    Route::any('voucher/invalidStatus/{id}',array( 
 		'as'=>'voucher.invalidStatus',
 		'uses'=>'VoucherTicket\TicketController@invalidStatus'
     ));
@@ -792,6 +792,9 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'platform.checkSerial',
 		'uses'=>'Promotion\PlatformController@checkSerial'
     ));
+    Route::any('platform/list',array(  
+		'as'=>'platform.list',
+		'uses'=>'Promotion\PlatformController@confList'
+    ));
 });
-
     
