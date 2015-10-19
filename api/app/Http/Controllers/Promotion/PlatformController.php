@@ -855,7 +855,7 @@ class PlatformController extends Controller{
     }
     /***
 	 * @api {post} /platform/actInfo/:id 9.读取平台活动
-	 * @apiName actView
+	 * @apiName actInfo
 	 * @apiGroup Platform
 	 *
 	 * @apiParam {Number} id 平台活动id
