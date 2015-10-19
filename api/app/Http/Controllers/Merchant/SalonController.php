@@ -16,6 +16,7 @@ use App\CompanyCodeCollect;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use App\BusinessStaff;
+use App\Utils;
 
 class SalonController extends Controller {
 		
@@ -972,14 +973,7 @@ class SalonController extends Controller {
 	
 	public function export()
 	{
-		$where = "";
-		$shopTypeArr = array(0=>'',1=>'预付款店',2=>'投资店',3=>'金字塔店',4=>'高端店',5=>'写字楼店');
-		$accountTypeArr = array(0=>'',1=>'对公帐户',2=>'对私帐户');
-		$statusArr = array(0=>'终止合作',1=>'正常合作',2=>'删除');
-		$gradeArr = array(0=>'',1=>'S',2=>'A',3=>'B',4=>'C',5=>'新落地',6=>'淘汰区');
-		$salonCategoryArr = array(0=>'',1=>'工作室',2=>'店铺');
-		
-		
+		$where = [];
 		$param = $this->param;
 		$shopType = isset($param["shopType"])?intval($param["shopType"]):0;//店铺类型
 		$zone = isset($param["zone"])?$param["zone"]:0;//所属商圈
@@ -1020,7 +1014,7 @@ class SalonController extends Controller {
 			$where["businessName"] = $businessName;
 		}
 		$list = Salon::getSalonListExport($where,$sort_key,$sort_type);
-		$result = array();
+		$result = [];
 		if($list)
 		{
 			foreach($list as $key=>$val)
@@ -1030,41 +1024,26 @@ class SalonController extends Controller {
 				$result[$key]['name'] = $val['name'];
 				$result[$key]['msn'] = $val['msn'];
 				$result[$key]['salonid'] = $val['salonid'];
-				
 				$result[$key]['recommend_code'] = $val['recommend_code'];
 				$result[$key]['dividendStatus'] = $val['dividendStatus']?'退出分红联盟':'加入分红联盟';
 				if(!$val['recommend_code'])
 					$result[$key]['dividendStatus'] = '';
 				
 				$result[$key]['addr'] = $val['addr'];
-				//$result[$key]['districtName'] = $val['districtName'];
-				
 				$result[$key]['provinceName'] = $val['provinceName'];
 				$result[$key]['citiesName'] = $val['citiesName'];
 				$result[$key]['districtName'] = $val['districtName'];
 				$result[$key]['zoneName'] = $val['zoneName'];
 
-				$result[$key]['shopType'] = $shopTypeArr[$val['shopType']];
-				$result[$key]['salonCategory'] = $salonCategoryArr[$val['salonCategory']];
-				$result[$key]['salonGrade'] = $gradeArr[$val['salonGrade']];
-				$result[$key]['salonChangeGrade'] = $gradeArr[$val['salonChangeGrade']];
+				$result[$key]['shopType'] = Utils::getShopTypeName($val['shopType']);
+				$result[$key]['salonCategory'] = Utils::getSalonCategoryName($val['salonCategory']);
+				$result[$key]['salonGrade'] = Utils::getSalonGradeName($val['salonGrade']);
+				$result[$key]['salonChangeGrade'] = Utils::getSalonGradeName($val['salonChangeGrade']);
 				$result[$key]['changeInTime'] = $val['changeInTime']?date('Y-m-d',$val['changeInTime']):'';
-			
-				$result[$key]['salestatus'] = $statusArr[$val['salestatus']];
-				
+				$result[$key]['salestatus'] = Utils::getSalonStatusName($val['salestatus']);
 				$result[$key]['add_time'] = $val['add_time']?date('Y-m-d H:i:s',$val['add_time']):'';
-				
 				$result[$key]['contractTime'] = $val['contractTime']?date('Y-m-d',$val['contractTime']):'';
 				$result[$key]['contractEndTime'] = $val['contractEndTime']?date('Y-m-d',$val['contractEndTime']):'';
-				/*$contractPeriod = $val['contractPeriod']?explode('_',$val['contractPeriod']):'';  合同期限  V1.3版本暂时去掉
-				if($contractPeriod)
-				{
-					$result[$key]['contractPeriod'] = $contractPeriod[0].'年'.$contractPeriod[1]."月";
-				}
-				else
-				{
-					$result[$key]['contractPeriod'] = '';
-				}*/
 				
 				$result[$key]['bargainno'] = $val['bargainno'];
 				$result[$key]['bcontacts'] = $val['bcontacts'];
@@ -1078,8 +1057,7 @@ class SalonController extends Controller {
 				$result[$key]['branchName'] = $val['branchName'];
 				$result[$key]['beneficiary'] = $val['beneficiary'];
 				$result[$key]['bankCard'] = ' '.$val['bankCard'];
-				$result[$key]['accountType'] = $val['accountType']?$accountTypeArr[$val['accountType']]:'';
-
+				$result[$key]['accountType'] = Utils::getSalonAccountTypeName($val['accountType']);
 				//财务信息
 				$result[$key]['floorDate'] = $val['floorDate']?date('Y-m-d',$val['floorDate']):'';
 				$result[$key]['advanceFacility'] = $val['advanceFacility'];
