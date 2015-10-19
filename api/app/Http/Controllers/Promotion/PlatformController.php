@@ -182,7 +182,7 @@ class PlatformController extends Controller{
         return $this->success( $this->_getItemType() );
     }
     /***
-	 * @api {get} /paltfrom/add 2.添加平台代金劵活动
+	 * @api {get} /platfrom/add 2.添加平台代金劵活动
 	 * @apiName add
 	 * @apiGroup Platform
 	 *
@@ -965,7 +965,7 @@ class PlatformController extends Controller{
         return $this->success( $voucherConfInfo );
     }
     /***
-	 * @api {get} /paltfrom/editConf 10.编辑平台代金劵活动
+	 * @api {get} /platfrom/editConf 10.编辑平台代金劵活动
 	 * @apiName editConf
 	 * @apiGroup Platform
 	 *
