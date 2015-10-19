@@ -29,7 +29,7 @@ class Item extends Model {
 
         //状态筛选
         if(!empty($param['status'])){
-            $query = $query->where('status','=',$param['status']);
+            $query = $query->where('salon_item.status','=',$param['status']);
         }  
 
         //项目名称筛选
