@@ -193,8 +193,8 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定价方式：</label>
 				<div class="control">
-					<label><input class="price-choose" type="radio" name="priceStyle" <%=!data.prices?"checked":""%> value="1" /><span>无规格，统一价</span></label>
-					<label><input class="price-choose" type="radio" name="priceStyle" <%=data.prices?"checked":""%> value="2"/><span>有规格，区间价</span></label>
+					<label><input class="price-choose" type="radio" name="priceStyle" <%=!data.price?"checked":""%> value="1" /><span>无规格，统一价</span></label>
+					<label><input class="price-choose" type="radio" name="priceStyle" <%=data.price?"checked":""%> value="2"/><span>有规格，区间价</span></label>
 				</div>
 			</div>
 			<div class="price-group" style="<%=data.prices?"display:none":""%>">
@@ -202,20 +202,26 @@
 					<label class="control-label" for=""><span class="red">*</span>原价：</label>
 					<div class="control">
 						<span>
-							<input type="text" required pattern="number" maxlength="5" min="1" name="price" value="<%=data.price%>">
+						<input type="text" data-helpid="help5" required requiredmsg="请输入原价" pattern="number" maxlength="5" min="1" name="price" value="<%=data.price%>">
 						</span>
+						<span>
 						<input type="text" pattern="number" class="choumei-discount" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
 						<span class="unit">%</span>
+						</span>
+						<span class="control-help" id="help5" style="display:none"></span>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label" for=""><span class="red">*</span>臭美价：</label>
 					<div class="control">
 						<span>
-						<input type="text" required pattern="number" maxlength="5" min="1" name="priceDis" value="<%=data.price_dis%>">
+						<input type="text" data-helpid="help6" required requiredmsg="请输入臭美价" pattern="number" maxlength="5" min="1" name="priceDis" value="<%=data.price_dis%>">
 						</span>
+						<span>
 						<input type="text" pattern="number" class="group-discount" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
 						<span class="unit">%</span>
+						</span>
+						<span class="control-help" id="help6" style="display:none"></span>
 					</div>
 				</div>
 				<div class="control-group">

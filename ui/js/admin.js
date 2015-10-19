@@ -443,7 +443,7 @@ $(function(){
 				zIndex:1000,
 				choose:function(){
 					e.target.focus();
-					$(e.target).removeClass('placeholder');
+					$(e.target).removeClass('placeholder').trigger("choose");
 				}
 			};
 			laydate(options);			
@@ -458,7 +458,7 @@ $(function(){
 			istime: true,
 			choose:function(){
 				e.target.focus();
-				$(e.target).removeClass('placeholder');
+				$(e.target).removeClass('placeholder').trigger("choose");
 			}
 		};
 		laydate(options);			

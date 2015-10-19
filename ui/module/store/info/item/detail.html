@@ -115,9 +115,9 @@
 							<tbody>
 								<tr>
 									<td>定价方式：</td>
-									<td><%=data.prices?"有规格，区间价":"无规格，统一价"%></td>
+									<td><%=!data.price?"有规格，区间价":"无规格，统一价"%></td>
 								</tr>
-								<%if(!data.prices){%>
+								<%if(data.price){%>
 								<tr>
 									<td>原价：</td>
 									<td><%=data.price?"￥"+data.price:""%></td>
@@ -131,6 +131,7 @@
 									<td><%=data.price_group?"￥"+data.price_group:""%></td>
 								</tr>
 								<%}else{%>
+								<%if(data.userId!=0){%>
 								<tr>
 									<td colspan="2" style="padding-left:5px;">
 										<table>
@@ -161,6 +162,7 @@
 										</table>
 									</td>
 								</tr>
+								<%}%>
 								<%}%>
 							</tbody>
 						</table>

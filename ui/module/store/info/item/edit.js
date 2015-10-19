@@ -28,6 +28,12 @@
 		$(this).parent().siblings('label').children('input').attr('disabled',this.checked);
 	}).on('change','#project',function(){//选择项目后渲染出对应的项目详情
 		init(this.value);
+	}).on('choose','input[name="timingAdded"]',function(){
+		var timingShelves=$('input[name="timingShelves"]')
+		timingShelves.attr('min',this.value);
+		if(timingShelves.val()&&new Date(this.value).getTime()>new Date(timingShelves.val()).getTime()){
+			timingShelves.val("");
+		}
 	});
 	var init=function(id){
 		id=id||lib.query.id;
@@ -72,7 +78,7 @@
 				});
 			});
 			//反解析有规格的数据
-			if(data.response&&data.response.userId!=0&&data.response.prices){
+			if(data.response&&!data.response.price&&data.response.userId!=0&&data.response.prices){
 				var parseData={
 					sex:[],
 					hairstylist:[],
@@ -154,7 +160,7 @@
 			});
 			//计算集团价格
 			$('.group-discount').on('blur',function(){
-				var val=price.val();
+				var val=$('input[name="priceDis"]').val();
 				if(val&&!isNaN(val)&&this.value&&!isNaN(this.value)){
 					$('input[name="priceGroup"]').val(Math.round(parseInt(val)*parseInt(this.value)/100));
 				}
@@ -256,18 +262,18 @@
 			$('#format-table').on('focus','.format-price-dis',function(){
 				var $this=$(this);
 				var choumeiPrecent=$('#choumei-precent').val();
-				var price=$this.closest('tr').find('input[name="price"]');
+				var price=$this.closest('tr').find('.format-price').val();
 				if(!$this.val()&&choumeiPrecent&&price){
-					if(choumeiPrecent&&!isNaN(choumeiPrecent)&&isNaN(price)){
+					if(choumeiPrecent&&!isNaN(choumeiPrecent)&&!isNaN(price)){
 						$this.val(Math.round(choumeiPrecent*price/100));
 					}
 				}
 			}).on('focus','.format-price-group',function(){
 				var $this=$(this);
 				var groupPrecent=$('#group-precent').val();
-				var price=$this.closest('tr').find('input[name="price"]');
+				var price=$this.closest('tr').find('.format-price-dis').val();
 				if(!$this.val()&&groupPrecent&&price){
-					if(groupPrecent&&!isNaN(groupPrecent)&&isNaN(price)){
+					if(groupPrecent&&!isNaN(groupPrecent)&&!isNaN(price)){
 						$this.val(Math.round(groupPrecent*price/100));
 					}
 				}
