@@ -157,9 +157,8 @@ class TicketController extends Controller {
     public function invalidStatus($id){
 		if( !isset( $id ) )
             throw new ApiException('更新失败', ERROR::RECEIVABLES_ERROR);
-        $res = Voucher::where( ["vId",$id] )
-                ->where('vStatus',1)
-                ->update(['vStatus',5]);
+        $res = Voucher::where( ["vId"=>$id,'vStatus'=>1] )
+                ->update(['vStatus'=>5]);
         if( !empty( $res ) )
             return $this->success();
         throw new ApiException('更新失败', ERROR::RECEIVABLES_ERROR);
@@ -177,7 +176,7 @@ class TicketController extends Controller {
 	 * 
 	 * @apiSuccess {Number} vcId 活动id.
 	 * @apiSuccess {String} vcSn 活动编号
-	 * @apiSuccess {String} vSn 分类名称
+	 * @apiSuccess {String} vSn 代金券编号
 	 * @apiSuccess {String} vAddTime 获取时间
 	 * @apiSuccess {String} vMobilephone 用户手机号
 	 * @apiSuccess {String} vUseMoney 代金券金额
@@ -192,6 +191,7 @@ class TicketController extends Controller {
 	 * @apiSuccess {String} isPay 支付
 	 * @apiSuccess {String} getText 获取条件
 	 * @apiSuccess {String} useLimitText 使用限制
+	 * @apiSuccess {String} vStatus 劵状态 状态: 1未使用 2已使用 3待激活 4活动关闭 5已失效
 	 * 
 	 * @apiSuccessExample Success-Response:
 	 *		{
@@ -234,7 +234,7 @@ class TicketController extends Controller {
 		if( !isset( $id ) )
             throw new ApiException('更新失败', ERROR::RECEIVABLES_ERROR);
         $allItemType = $this->_getItemType();
-        $voucherInfo = Voucher::select(['vcId','vcSn','vSn','vAddTime','vMobilephone','vUseMoney','vUseTime','vUseStart','vUseEnd','vOrderSn','vSalonName','vItemName','vcTitle','REDEEM_CODE'])
+        $voucherInfo = Voucher::select(['vcId','vcSn','vSn','vAddTime','vMobilephone','vUseMoney','vUseTime','vUseStart','vUseEnd','vOrderSn','vSalonName','vItemName','vcTitle','REDEEM_CODE','vStatus'])
                 ->where('vId','=',$id)
                 ->first()
                 ->toArray();
@@ -297,6 +297,7 @@ class TicketController extends Controller {
         }
         if( !empty( $voucherConfInfo['useNeedMoney'] ) )
             $voucherInfo['useLimitText'] .= "项目消费满". $voucherConfInfo['useNeedMoney'] ."元使用;";
+            
         return $this->success( $voucherInfo );
 	}
     // 获取分类
