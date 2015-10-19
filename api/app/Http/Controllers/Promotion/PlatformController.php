@@ -887,8 +887,6 @@ class PlatformController extends Controller{
 	 * @apiSuccess {String} getNeedMoney 获取需满足金额(0表示不限制)
 	 * @apiSuccess {String} SMS_ON_GAINED 获取代金券时下发的短信内容
 	 * @apiSuccess {String} FEW_DAY 获取代金劵后多少天内可用
-	 * @apiSuccess {String} consumeMoney 已消费数金额
-	 * @apiSuccess {String} status 1. 进行中 2. 暂停 3.已关闭 4. 已结束
 	 * 
      * 
 	 * @apiSuccessExample Success-Response:
