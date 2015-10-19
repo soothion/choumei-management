@@ -738,16 +738,60 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
     ));
     
     // 代金劵处理模块
-    Route::any('voucher/list',array(  //导出日志列表
+    Route::any('voucher/list',array(  
 		'as'=>'voucher.list',
 		'uses'=>'VoucherTicket\TicketController@ticketList'
     ));
-    Route::any('voucher/invalidStatus',array(  //导出日志列表
+    Route::any('voucher/invalidStatus',array( 
 		'as'=>'voucher.invalidStatus',
 		'uses'=>'VoucherTicket\TicketController@invalidStatus'
     ));
-    Route::any('voucher/info/{id}',array(  //导出日志列表
+    Route::any('voucher/info/{id}',array( 
 		'as'=>'voucher.info',
 		'uses'=>'VoucherTicket\TicketController@info'
     ));
+    // 代金劵
+    Route::any('voucher/list',array(  
+		'as'=>'voucher.list',
+		'uses'=>'VoucherTicket\TicketController@ticketList'
+    ));
+    Route::any('voucher/invalidStatus',array( 
+		'as'=>'voucher.invalidStatus',
+		'uses'=>'VoucherTicket\TicketController@invalidStatus'
+    ));
+    Route::any('voucher/info/{id}',array( 
+		'as'=>'voucher.info',
+		'uses'=>'VoucherTicket\TicketController@info'
+    ));
+    // 代金劵活动配置
+    Route::any('platform/getItemType',array(  
+		'as'=>'platform.getItemType',
+		'uses'=>'Promotion\PlatformController@getItemType'
+    ));
+    Route::any('platform/add',array(  
+		'as'=>'platform.add',
+		'uses'=>'Promotion\PlatformController@addVoucherConf'
+    ));
+    Route::any('platform/getRequestDepartment',array(  
+		'as'=>'platform.getRequestDepartment',
+		'uses'=>'Promotion\PlatformController@getRequestDepartment'
+    ));
+    Route::any('platform/getDepartmentManager/{id}',array(  
+		'as'=>'platform.getDepartmentManager',
+		'uses'=>'Promotion\PlatformController@getDepartmentManager'
+    ));
+    Route::any('platform/getActNum',array(  
+		'as'=>'platform.getActNum',
+		'uses'=>'Promotion\PlatformController@getActNum'
+    ));
+    Route::any('platform/getActNum',array(  
+		'as'=>'platform.getActNum',
+		'uses'=>'Promotion\PlatformController@getActNum'
+    ));
+    Route::any('platform/checkSerial',array(  
+		'as'=>'platform.checkSerial',
+		'uses'=>'Promotion\PlatformController@checkSerial'
+    ));
 });
+
+    
