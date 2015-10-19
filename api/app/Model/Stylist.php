@@ -14,13 +14,13 @@ class Stylist  extends Model {
          $query = Self::getQuery();
          $field=['stylistId','stylistName','mobilephone','sNumber','grade','fastGrade','status'];
          if(!empty($param['salonId'])){
-              $query = $query->where('salonId','=',$param['salonId']);
+              $query = $query->where('salonId','like','%'.$param['salonId'].'%');
          }
          if(isset($param['stylistName'])&&$param['stylistName']){
-              $query = $query->where('stylistName','=',$param['stylistName']);
+              $query = $query->where('stylistName','like','%'.$param['stylistName'].'%');
          }
          if(!empty($param['mobilephone'])){
-            $query = $query->where('mobilephone','=',$param['mobilephone']);
+            $query = $query->where('mobilephone','like','%'.$param['mobilephone'].'%');
          }
          $sortable_keys=['addTime','grade','fastGrade','status'];
          $sortKey = "addTime";
