@@ -804,4 +804,8 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'platform.getInfo',
 		'uses'=>'Promotion\PlatformController@getInfo'
     ));
+    Route::any('platform/editConf',array(  
+		'as'=>'platform.editConf',
+		'uses'=>'Promotion\PlatformController@editConf'
+    ));
 });

@@ -287,7 +287,7 @@ class PlatformController extends Controller{
         $data['getNumMax'] = $post['getSingleLimit'];
         $data['DEPARTMENT_ID'] = $post['departmentId'];
         $data['MANAGER_ID'] = $post['managerId'];
-        if( isset($post['singleEnoughMoney']) ) $data['USE_SINGLE_ITEM_ENOUGH_MONEY'] = $post['singleEnoughMoney'];
+        if( isset($post['singleEnoughMoney']) ) $data['getNeedMoney'] = $post['singleEnoughMoney'];
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart']);
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']);
@@ -296,6 +296,7 @@ class PlatformController extends Controller{
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = $post['addActLimitEndTime'];
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
+        if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
         if( isset($post['sendSms']) )
             $data['SMS_ON_GAINED'] = $post['sendSms'];
         
@@ -962,6 +963,72 @@ class PlatformController extends Controller{
         unset( $voucherConfInfo['MANAGER_ID'] );
         
         return $this->success( $voucherConfInfo );
+    }
+    /***
+	 * @api {get} /paltfrom/editConf 10.编辑平台代金劵活动
+	 * @apiName editConf
+	 * @apiGroup Platform
+	 *
+	 *@apiParam {String} vcId                   必填        活动配置id
+	 *@apiParam {String} actName                可选        活动名称
+	 *@apiParam {String} actIntro               可选        活动介绍
+	 *@apiParam {Number} departmentId           可选        部门id
+	 *@apiParam {Number} managerId              可选        部门负责人id
+     *@apiParam {String} useLimitTypes          可选        限制首单使用值为2
+     *@apiParam {String} limitItemTypes         可选        可使用的项目格式如 ",2,3,"
+     *@apiParam {Number} enoughMoeny            可选        满额可用
+     *@apiParam {String} getTimeStart           可选        劵获取开始时间如 2015-10-16 00:00:00
+     *@apiParam {String} getTimeEnd             可选        卷获取结束时间   2015-10-16 23:59:59
+	 *@apiParam {String} addActLimitStartTime   可选        代金劵可使用开始时间 2015-10-16 00:00:00
+	 *@apiParam {String} addActLimitEndTime     可选        代金劵可使用结束时间 2015-10-16 23:59:59
+     *@apiParam {Number} fewDay                 可选        劵获取多少天内可用 （和上面劵可使用时间必须达到传其一）
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+	 *		    "result": 1,
+	 *		    "data": "",
+	 *		}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "添加失败"
+	 *		}
+	 ***/
+    public function editConf(){
+        $post = $this->param;
+        if( empty( $post['id'] ) )
+            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
+        $id = $post['id'];
+        
+        $data = array();
+        if( isset( $post['actName'] ) )  $data['vcTitle'] = $post['actName'];
+        if( isset( $post['actIntro'] ) ) $data['vcRemark'] = $post['actIntro'];
+        if( isset( $post['departmentId'] ) ) $data['DEPARTMENT_ID'] = $post['departmentId'];
+        if( isset( $post['managerId'] ) ) $data['MANAGER_ID'] = $post['managerId'];
+        if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart']);
+        if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']);
+        if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
+        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = $post['addActLimitStartTime'];
+        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = $post['addActLimitEndTime'];
+        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
+        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
+        if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
+        
+        $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
+        
+        if( empty($addRes) )
+            return $this->error('插入数据失败，请稍后再试');
+        return $this->success();
     }
     // 校验集团码
     private function getGroupExists( $code ){
