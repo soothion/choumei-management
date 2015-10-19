@@ -13,6 +13,9 @@ class Item extends Model {
      protected $fillable = ['status'];
     CONST SALE = 1;//默认在售
     CONST ONSALE = 2;//闲时特价
+    CONST UP = 1;//上架
+    CONST DOWN = 2;//下架
+    CONST DELETE = 3;//删除
 
 
 	public static function getQueryByParam($param=[]){
@@ -22,6 +25,11 @@ class Item extends Model {
         //店铺筛选
         if(!empty($param['salonid'])){
             $query = $query->where('salonid','=',$param['salonid']);
+        }          
+
+        //状态筛选
+        if(!empty($param['status'])){
+            $query = $query->where('status','=',$param['status']);
         }  
 
         //项目名称筛选
@@ -96,6 +104,7 @@ class Item extends Model {
                 'itemid',
                 'salon_item.itemname',
                 'salon_item.typeid',
+                'salon_item.norms_cat_id',
                 'logo',
                 'typename',
                 'addserviceStr',
