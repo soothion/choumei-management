@@ -115,20 +115,20 @@
 							<tbody>
 								<tr>
 									<td>定价方式：</td>
-									<td><%=!data.price?"有规格，区间价":"无规格，统一价"%></td>
+									<td><%=data.norms_cat_id==1?"有规格，区间价":"无规格，统一价"%></td>
 								</tr>
-								<%if(data.price){%>
+								<%if(data.norms_cat_id==0||data.userId==0){%>
 								<tr>
 									<td>原价：</td>
-									<td><%=data.price?"￥"+data.price:""%></td>
+									<td><%=data.prices&&data.prices[0]&&data.prices[0].price?"￥"+data.prices[0].price:""%></td>
 								</tr>
 								<tr>
 									<td>臭美价：</td>
-									<td><%=data.price_dis?"￥"+data.price_dis:""%></td>
+									<td><%=data.prices&&data.prices[0]&&data.prices[0].price_dis?"￥"+data.prices[0].price_dis:""%></td>
 								</tr>	
 								<tr>
 									<td>集团价：</td>
-									<td><%=data.price_group?"￥"+data.price_group:""%></td>
+									<td><%=data.prices&&data.prices[0]&&data.prices[0].price_group?"￥"+data.prices[0].price_group:""%></td>
 								</tr>
 								<%}else{%>
 								<%if(data.userId!=0){%>

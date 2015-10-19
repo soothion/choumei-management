@@ -193,16 +193,16 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定价方式：</label>
 				<div class="control">
-					<label><input class="price-choose" type="radio" name="priceStyle" <%=!data.price?"checked":""%> value="1" /><span>无规格，统一价</span></label>
-					<label><input class="price-choose" type="radio" name="priceStyle" <%=data.price?"checked":""%> value="2"/><span>有规格，区间价</span></label>
+					<label><input class="price-choose" type="radio" name="priceStyle" <%=!data.norms_cat_id||data.userId==0?"checked":""%> value="1" /><span>无规格，统一价</span></label>
+					<label><input class="price-choose" type="radio" name="priceStyle" <%=data.norms_cat_id==1?"checked":""%> value="2"/><span>有规格，区间价</span></label>
 				</div>
 			</div>
-			<div class="price-group" style="<%=data.prices?"display:none":""%>">
+			<div class="price-group" style="<%=data.norms_cat_id==1||data.userId!=0?"display:none":""%>">
 				<div class="control-group">
 					<label class="control-label" for=""><span class="red">*</span>原价：</label>
 					<div class="control">
 						<span>
-						<input type="text" data-helpid="help5" required requiredmsg="请输入原价" pattern="number" maxlength="5" min="1" name="price" value="<%=data.price%>">
+						<input type="text" data-helpid="help5" required requiredmsg="请输入原价" pattern="number" maxlength="5" min="1" name="price" value="<%=data.prices&&data.prices[0]&&data.prices[0].price?Math.ceil(data.prices[0].price):""%>">
 						</span>
 						<span>
 						<input type="text" pattern="number" class="choumei-discount" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
@@ -215,7 +215,7 @@
 					<label class="control-label" for=""><span class="red">*</span>臭美价：</label>
 					<div class="control">
 						<span>
-						<input type="text" data-helpid="help6" required requiredmsg="请输入臭美价" pattern="number" maxlength="5" min="1" name="priceDis" value="<%=data.price_dis%>">
+						<input type="text" data-helpid="help6" required requiredmsg="请输入臭美价" pattern="number" maxlength="5" min="1" name="priceDis" value="<%=data.prices&&data.prices[0]&&data.prices[0].price_dis?Math.ceil(data.prices[0].price_dis):""%>">
 						</span>
 						<span>
 						<input type="text" pattern="number" class="group-discount" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
@@ -227,11 +227,11 @@
 				<div class="control-group">
 					<label class="control-label" for="">集团价：</label>
 					<div class="control">
-						<input type="text" pattern="number" maxlength="5" min="1" name="priceGroup" value="<%=data.price_group%>">
+						<input type="text" pattern="number" maxlength="5" min="1" name="priceGroup" value="<%=data.prices&&data.prices[0]&&data.prices[0].price_group?Math.ceil(data.prices[0].price_group):""%>">
 					</div>
 				</div>
 			</div>
-			<div class="control-group format-group" style="<%=!data.prices?"display:none":""%>">
+			<div class="control-group format-group" style="<%=!data.norms_cat_id?"display:none":""%>">
 				<label class="control-label" for="">规格选择：</label>
 				<div class="form-item">
 					<style type="text/css">

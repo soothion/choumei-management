@@ -78,7 +78,7 @@
 				});
 			});
 			//反解析有规格的数据
-			if(data.response&&!data.response.price&&data.response.userId!=0&&data.response.prices){
+			if(data.response&&!data.norms_cat_id==1&&data.response.userId!=0&&data.response.prices){
 				var parseData={
 					sex:[],
 					hairstylist:[],
