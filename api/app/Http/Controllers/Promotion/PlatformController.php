@@ -497,7 +497,6 @@ class PlatformController extends Controller{
                     $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                     $res['data'][$key]['department'] = $department['title'];
                 }
-                unset( $res['data'][$key]['vcSn'] );
                 unset( $res['data'][$key]['useEnd'] );
                 unset( $res['data'][$key]['getStart'] );
                 unset( $res['data'][$key]['getEnd'] );
