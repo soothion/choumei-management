@@ -575,8 +575,7 @@ $(function(){
 	/**文本域输入文字提示**/
 	$body.on('focus','.keypress textarea',function(){
 		var $this=$(this);
-		//var maxlength=$this.parent().attr('maxlength');
-		var maxlength=$this.attr('maxlength');
+		var maxlength=$this.parent().attr('maxlength');
 		var value=$this.val();
 		if(maxlength&&value){
 			$this.parent().append('<span class="keypress-help">还可以输入<em>'+(parseInt(maxlength)-$.trim(value.length))+'</em>个字</span>');
@@ -587,12 +586,17 @@ $(function(){
 	});
 	$body.on('keyup','.keypress textarea',function(){
 		var $this=$(this);
-		//var maxlength=$this.parent().attr('maxlength');
-		var maxlength=$this.attr('maxlength');
+		var maxlength=$this.parent().attr('maxlength');
 		var value=$this.val();
+		if(value.length>maxlength){
+			$this.val(value.substring(0,maxlength));
+			value=value.substring(0,maxlength);
+		}
 		if(maxlength){
 			$this.siblings('.keypress-help').children('em').text(parseInt(maxlength)-$.trim(value).length);
 		}
+	}).on('click',function(e){
+		console.log(e);
 	});
 	/**实例化封装表单**/
 	$('form[data-role="form"]').each(function(){

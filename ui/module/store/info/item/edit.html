@@ -111,8 +111,8 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>服务详情：</label>
 				<div class="control">
-					<div class="keypress">
-						<textarea name="desc" data-helpid="textarea-help" maxlength="500" required><%=data.desc%></textarea>
+					<div class="keypress" maxlength="500">
+						<textarea name="desc" data-helpid="textarea-help" required><%=data.desc%></textarea>
 					</div>
 					<div class="control-help" style="display:none;" id="textarea-help"></div>
 					<div id="template"></div>
@@ -159,6 +159,9 @@
 					<input type="text" required pattern="number" max="99999999" min="1" name="totalRepInput"  placeholder="限制销售数量" <%if(data.total_rep){%>value="<%=data.total_rep%>"<%}else{%>disabled<%}%>>
 					<label><input type="checkbox" <%=!data.total_rep?"checked":""%> class="limit" /><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
+					<%if(query.id){%>
+					<p class="weak">已售<%=data.sold%>份</p>
+					<%}%>
 				</div>
 			</div>
 			<%}%>
@@ -169,6 +172,7 @@
 					<input type="text" required pattern="number" max="99999999" min="1" name="repertory" placeholder="限制当日销售数量" value="<%=data.repertory?data.repertory:""%>">
 				</div>
 			</div>
+			
 			<div class="control-group">
 				<label class="control-label" for="">消费限制：</label>
 				<div class="control">
