@@ -123,7 +123,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>项目有效期：</label>
 				<div class="control">
-					<input type="date" required name="expTimeInput" min="<%=new Date(new Date().getTime()+1000*60*60*24).format("yyyy-MM-dd")%>" <%if(data.exp_time){%>value="<%=new Date(data.exp_time*1000).format("yyyy-MM-dd")%>"<%}else{%>disabled<%}%>>
+					<input type="date" required name="expTimeInput" <%if(!query.id){%>min="<%=new Date(new Date().getTime()+1000*60*60*24).format("yyyy-MM-dd")%>"<%}%> <%if(data.exp_time){%>value="<%=new Date(data.exp_time*1000).format("yyyy-MM-dd")%>"<%}else{%>disabled<%}%>>
 					<label><input type="checkbox" <%=!data.exp_time?"checked":""%> class="limit"/><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
