@@ -64,7 +64,7 @@
                             <td>
                                 <div style="margin:15px">
                                     <span style="display: inline-block;width:130px">券金额:</span>
-                                    <input type="text" name="money" required maxlength="3" value="1" />
+                                    <input type="text" name="money" required maxlength="3" value="<%=data.money||1%>" />
                                     <strong>元&nbsp;&nbsp;&nbsp;</strong>
                                     <span style="color: #ddd;">（不可修改，可填写1~999)</span>
                                     <span class="control-help" style="display:none;"></span>
@@ -72,7 +72,7 @@
 
                                 <div style="margin:15px">
                                     <span style="display: inline-block;width:130px">满额使用(单个项目)</span>
-                                    <input type="text" name="singleEnoughMoney" required value="0"/>
+                                    <input type="text" name="singleEnoughMoney" required value="<%=data.singleEnoughMoney ||0%>"/>
                                     <strong>元&nbsp;&nbsp;&nbsp;以上可用</strong>
                                     <span style="color: #ddd;">(大于或等于该数值可使用，0为不限制，可填写0~999) </span>
                                     <span class="control-help" style="display:none;"></span>
@@ -86,8 +86,9 @@
                                     <label class="radio">
                                         <input type="radio" class="ticketNum" name="checkTotalNumber" value="0" checked>
                                         <span>不限</span>
+                                        <input type="hidden" class="ticketNumHidden" name="totalNumber" value="0">
                                     </label>
-                                    <input type="hidde" class="ticketNumHidden" name="totalNumber" value="0">
+                                    
 
                                     <span style="margin-right: 15px;border-left:1px solid #ddd"></span>
 
@@ -107,7 +108,7 @@
 
                                 <div style="margin:15px">
                                     <span style="display: inline-block;width:130px">领券上限：</span>
-                                    <input type="text" name="getSingleLimit" value="1" maxlength="6" required pattern='number'/>
+                                    <input type="text" name="getSingleLimit" value="<%=data.getSingleLimit%>" maxlength="6" required pattern='number'/>
                                     <strong>张&nbsp;&nbsp;&nbsp;</strong>
                                     <span style="color: #ddd;">(每人本活动领券总上限，每次活动只可获取一张)</span>
                                     <span class="control-help" style="display:none;"></span>
@@ -129,9 +130,9 @@
                             <tr>
                                 <td>活动（获取）时间</td>
                                 <td>
-                                    <input type="date" name="getTimeStart" required/>
+                                    <input type="date" name="getTimeStart" value="<%=data.getTimeStart%>" required/>
                                     <span>至</span>
-                                    <input type="date" name="getTimeEnd" required/>
+                                    <input type="date" name="getTimeEnd" value="<%=data.getTimeEnd%>" required/>
                                     <span class="control-help" style="display:none;"></span>
                                 </td>
                             </tr>    
@@ -141,13 +142,16 @@
                                 <td>
                                     <div style="margin:15px">
                                         <label class="radio">
-                                            <input type="radio" class="avaDateRadio" name="avaDate" value="1" checked="checked">
+                                            <input type="radio" class="avaDateRadio" name="avaDate" value="1" 
+                                            <%=data.addActLimitStartTime ? 'checked' :'' %>>
                                             <span>指定有效期</span>
                                         </label> 
 
-                                        <input type="date" id="avaDateStart" name="addActLimitStartTime" required/>
+                                        <input type="date" id="avaDateStart" name="addActLimitStartTime" 
+                                        value="<%=data.addActLimitStartTime%>" <%=data.addActLimitStartTime ? '' :'disabled' %> required/>
                                         <span>至</span>
-                                        <input type="date" id="avaDateEnd" name="addActLimitEndTime" required/>
+                                        <input type="date" id="avaDateEnd" name="addActLimitEndTime" 
+                                        value="<%=data.addActLimitEndTime%>" <%=data.addActLimitStartTime ? '' :'disabled' %> required/>
                                         <span class="control-help" style="display:none;"></span>        
                                     </div>
 
@@ -155,11 +159,12 @@
 
                                     <div style="margin:15px">
                                         <label class="radio">
-                                            <input type="radio" class="avaDateRadio" name="avaDate" value="2" >
+                                            <input type="radio" class="avaDateRadio" name="avaDate" value="2" 
+                                            <%=data.fewDay ? 'checked' :'' %>>
                                             <span>自定义有效期区间</span>
                                         </label>
-                                        <input type="text" id="avaDay" name="fewDay" disabled="disabled" required 
-                                        pattern='number'/>
+                                        <input type="text" id="avaDay" name="fewDay" value="<%=data.fewDay%>" required
+                                        <%=data.fewDay ? '' :'disabled' %>  pattern='number'/>
                                         <span style="color: #ddd;">天内有效（获取现金券后）</span>
                                         <span class="control-help" style="display:none;"></span> 
                                     </div>    
@@ -179,7 +184,7 @@
                     <tr>
                         <td>
                             <div style="margin:10px"><strong>指定项目类别支付可用</strong></div>
-                            <div id="itemType" ajat-one="true" ajat="platform/getItemType#domid=itemType&tempid=itemType-t&getItemTypes=<%=data.getItemTypes%>">
+                            <div id="itemType" ajat-one="true" ajat="platform/getItemType#domid=itemType&tempid=itemType-t&limitItemTypes=<%=data.limitItemTypes%>">
 
                             </div>
                         </td>
@@ -188,7 +193,7 @@
                     <tr>
                     <td>
                     <label class="checkbox">
-                    <input type="checkbox" name="useLimitTypes" value="2">
+                    <input type="checkbox" name="useLimitTypes" value="2" <%=data.useLimitTypes ? 'checked':''%>>
                     <span>限制首单使用</span>
                     </label>                                      
                     </td>                                
@@ -201,7 +206,7 @@
                     <tr>
                         <th colspan="2">
                             <label class="checkbox">
-                                <input type="checkbox" id="smsControl">
+                                <input type="checkbox" id="smsControl" <%=data.sendSms ? 'checked' : ''%>>
                                 <span>发送手机短信</span>
                             </label> 
                         </th>
@@ -212,7 +217,8 @@
                     <tr>
                     <td>手机短信内容</td>
                     <td><textarea name="sendSms" maxlength="500" id="smsTextArea"
-                    placeholder="限制500个汉字的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" style="width: 500px;" disabled></textarea></td>
+                    placeholder="限制500个汉字的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" style="width: 500px;" 
+                    <%=data.sendSms ? '' : 'disabled'%>><%=data.sendSms%></textarea></td>
                     </tr>                                 
                 </tbody>
                 </table>                                                                                                                                               
@@ -225,9 +231,19 @@
         </div>
 
         <script type="text/template" id="itemType-t">
+            <%
+            var itemsObj = {};
+            if(protocol.custom.limitItemTypes){
+                var items = protocol.custom.limitItemTypes.split(",");
+                items.forEach(function(item,i){
+                    itemsObj[item] = true;
+                });
+            }
+            %>        
             <%data.forEach&&data.forEach(function(item,i){%>
                 <label class="checkbox">
-                    <input type="checkbox" name="limitItemTypes" value="<%=item.typeid%>" <%=item.typeid == protocol.custom.getItemTypes ? "checked":""%> required>
+                    <input type="checkbox" name="limitItemTypes" value="<%=item.typeid%>" 
+                    <%=itemsObj[item.typeid] ? "checked":""%>>
                     <span><%=item.typename%></span>
                 </label> 
             <%})%>

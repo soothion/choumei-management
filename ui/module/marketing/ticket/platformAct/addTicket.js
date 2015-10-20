@@ -2,20 +2,21 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-20 12:50:19
+* @Last Modified time: 2015-10-20 19:06:39
 */
 
 (function(){
     var type = lib.query.type;
     var selectItemType = lib.query.selectItemType || 1; 
     if(type == 'add'){
-        var ticketData = JSON.parse(sessionStorage.getItem('add-ticket-data')) || {};
-        lib.ajat('#domid=form&tempid=form-t').template(ticketData);    
+        var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
+        lib.ajat('#domid=form&tempid=form-t').template(baseData);    
     }
 
     if(type == 'edit'){
-
-    }  
+        var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+        lib.ajat('#domid=form&tempid=form-t').template(editData);
+    }
 
     $("#form").on('click','.ticketNum',function(){
         if($(this).val()=="1"){
@@ -70,19 +71,26 @@
     })
 
     lib.Form.prototype.save = function(data){
+      var submitData = {};
       if(data.limitItemTypes){
          data.limitItemTypes = data.limitItemTypes.join(",");
       }
       if(data.useLimitTypes){
         data.useLimitTypes = data.useLimitTypes[0];
       }
-      var basaData = JSON.parse(sessionStorage.getItem('add-base-data'));
-      basaData = $.extend({},basaData,data);
+      if(type == 'add'){    
+          var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
+          submitData = $.extend({},addData,data);           
+      }
+      if(type == 'edit'){
+          var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+          submitData = $.extend({},editData,data);   
+      }
 
       lib.ajax({
           type: "post",
           url : (type=="add"?"platform/add":"platform/editConf"),
-          data: basaData    
+          data: submitData    
       }).done(function(data, status, xhr){
          if(data.result == 1){
             parent.lib.popup.result({
@@ -91,7 +99,6 @@
                 define:function(){
                     sessionStorage.removeItem('add-base-data'); 
                     sessionStorage.removeItem('edit-base-data');
-                    sessionStorage.removeItem('add-user-moblie');
                     document.body.onbeforeunload=function(){}
                     if(type=='add')  location.href="/module/marketing/ticket/platformAct/index.html";
                     if(type=='edit') location.href="/module/marketing/ticket/platformAct/detail.html?id="+data.vcId;
