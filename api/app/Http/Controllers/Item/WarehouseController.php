@@ -306,7 +306,7 @@ class WarehouseController extends Controller
 	        $data = ItemInfoController::compositeData($item);
 	        SalonItem::upsertItem($data,$item['priceStyle'],$salon_id);
 	    }
-	    Event::fire('warehouse.import');
+	   // Event::fire('warehouse.import');
 	    return $this->success([]);
 	}
 	
@@ -453,6 +453,7 @@ class WarehouseController extends Controller
 	        $tmp['repertory'] = $data['repertory'];
 	        $tmp['expTimeInput'] = $data['exp_time'];
 	        $tmp['totalRepInput'] = $data['total_rep'];
+	        $tmp['priceGroup'] = 0;
 	        if(!empty($data['addserviceStr']))
 	        {
 	           $tmp['addedService'] = explode(',', $data['addserviceStr']);
