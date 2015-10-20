@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-13 17:04:35
+* @Last Modified time: 2015-10-20 20:38:45
 */
 
 (function(){       
@@ -143,6 +143,30 @@
             })            
         }
     });
+
+    $("#form").on('change','input.min',function(){
+        var minDate = new Date($(this).val());
+        var input   = $(this).parent().next().find('input.max');
+        if(input.val()){
+            var maxDate = new Date(input.val());
+            if(minDate > maxDate){
+                input.val("");
+            }
+        }
+        input.attr("min",$(this).val());
+    });
+
+    $("#form").on('change','input.max',function(){
+        var maxDate = new Date($(this).val());
+        var input   = $(this).parent().prev().find('input.min');
+        if(input.val()){
+            var minDate = new Date(input.val());
+            if(minDate > maxDate){
+                input.val("");
+            }
+        }
+        input.attr("max",$(this).val());
+    })    
 
     $('#form').on('blur','input[type=date]',function(){       
         if($(this).attr("requiredOther")){

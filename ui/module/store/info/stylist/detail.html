@@ -41,9 +41,10 @@
             <div class="table" style="width:70%;float:left" id="table-wrapper">
                 <script type="text/template" id="table-t">
                 <div style="position:absolute;right:20px;top:40px;">
-                    <button type="button" class="btn mr-20 isAble" data-status="<%=data.stylistId%>"
+                    <button type="button" class="btn mr-20 isAble" data-stylistId="<%=data.stylistId%>"
                     data-action="<%=data.status=="1" ? 'stylist/disabled/' : 'stylist/enable/'%>"
-                    data-slug="<%=data.status=="1" ? 'stylist.disabled' : 'stylist.enable'%>">
+                    data-slug="<%=data.status=="1" ? 'stylist.disabled' : 'stylist.enable'%>"
+                    data-reward="<%=data.reward%>" data-status="<%=data.status%>"> 
                         <%=data.status=="1" ? "禁用" : "启用"%>
                     </button>
                     &nbsp;
@@ -277,10 +278,16 @@
                 }
 
                 $("#table-wrapper").on('click','.isAble',function(){
+                    var reward = $(this).data("reward");
+                    var status = $(this).data("status");
+                    if(reward == "1" && status=="1"){
+                        lib.popup.alert({text:'此造型师有未完成打赏的赏金单，完成订单后才能禁用'});
+                        return;
+                    }                    
                     var action = $(this).data('action');
                     lib.ajax({
                         type: "post",
-                        url : action+$(this).data('status')
+                        url : action+$(this).data('stylistid')
                     }).done(function(data, status, xhr){
                         if(data.result == 1){
                             parent.lib.popup.result({text:"操作成功"});
@@ -293,6 +300,7 @@
                     var status = $(this).data("status");
                     if(status == "1"){
                         lib.popup.alert({text:'此造型师有未完成打赏的赏金单，完成订单后才能删除'});
+                        return;
                     }
                     if(status == "2"){
                         lib.popup.confirm({
