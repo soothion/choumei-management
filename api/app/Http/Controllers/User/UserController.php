@@ -183,7 +183,7 @@ class UserController extends Controller{
 		);
 
 		//分页
-	    $result = $query->select($fields)->take($page_size)->skip($offset)->toArray();
+	    $result = $query->select($fields)->take($page_size)->skip($offset)->get()->toArray();
 	    foreach ($result as $key=>$user) {
 	    	$user['level'] = User::getLevel($user['growth']);
 	    	$user['sex'] = User::getSex($user['sex']);
