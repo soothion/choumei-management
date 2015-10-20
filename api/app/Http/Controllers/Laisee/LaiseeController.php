@@ -47,6 +47,7 @@ class LaiseeController extends Controller {
      * @apiSuccess {Number} giftNum 礼包领取数.
      * @apiSuccess {String} create_time 创建时间.
      * @apiSuccess {String} start_time 上线时间.
+     * @apiSuccess {String} status 活动状态 (N已结束 Y进行中).
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -56,13 +57,30 @@ class LaiseeController extends Controller {
      * 	    "data": {
      * 	        "data": [
      * 	            {
-     * 	                "id": 1,
-     * 	                "level": 1,
-     * 	                "score": 0,
-     * 	                "add_time": 0,
-     * 	                "update_time": 0,
-     * 	                "salonCount": 992,
-     * 	            }
+     *           "id": 2,
+     *           "laisee_name": "范德萨的范德萨",
+     *           "start_time": "2012-10-19",
+     *           "end_time": "2019-10-15",
+     *           "status": "Y",
+     *           "vcsns": "cm299012,cm310470",
+     *           "gift_vcsn": "cm833715",
+     *           "over_time": 172800,
+     *           "total_money": "1000",
+     *           "used_total_money": "0",
+     *           "amount_warning": 0,
+     *           "warning_phone": "",
+     *           "share_icon": "",
+     *           "share_title": "",
+     *           "share_desc": "",
+     *           "bonus_bg_img": "",
+     *           "lc_remark": "",
+     *           "sms_on_gained": "",
+     *           "create_time": "2015-10-19 12:12:48",
+     *           "voucherNum": "6",
+     *           "receiveNum": 6,
+     *           "usedNum": 1,
+     *           "giftNum": 0
+     *       }
      * 	        ]
      * 	    }
      * 	}
@@ -87,7 +105,7 @@ class LaiseeController extends Controller {
 //            \Illuminate\Support\Facades\DB::enableQueryLog();
             $vcsnWhere = $val['vcsns'] . "," . $val['gift_vcsn'];
             $val['voucherNum'] = VoucherConf::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->sum('useTotalNum'); //现金券总数
-            $val['receiveNum'] = Laisee::where('id', $val['id'])->whereNotNull('mobilephone')->count(); //已领取数  TODO Laisee::where('id', $val['id']) ID需要改
+            $val['receiveNum'] = Laisee::where('laisee_config_id', $val['id'])->whereNotNull('mobilephone')->count(); //已领取数  TODO Laisee::where('id', $val['id']) ID需要改
             $val['usedNum'] = Voucher::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->where('vStatus', 2)->count();  //已使用数
             $val['giftNum'] = !empty($val['gift_vcsn']) ? Laisee::where('id', $val['id'])->whereIn('vcsn', explode(",", $val['gift_vcsn']))->whereNotNull('mobilephone')->count() : 0;  //礼包领取数
         }
@@ -132,7 +150,7 @@ class LaiseeController extends Controller {
             $data[$key]['laisee_name'] = $val['laisee_name'];
             $vcsnWhere = $val['vcsns'] . "," . $val['gift_vcsn'];
             $data[$key]['voucherNum'] = VoucherConf::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->sum('useTotalNum'); //现金券总数
-            $data[$key]['receiveNum'] = Laisee::where('id', $val['id'])->whereNotNull('mobilephone')->count(); //已领取数  TODO Laisee::where('id', $val['id']) ID需要改
+            $data[$key]['receiveNum'] = Laisee::where('laisee_config_id', $val['id'])->whereNotNull('mobilephone')->count(); //已领取数  TODO Laisee::where('id', $val['id']) ID需要改
             $data[$key]['usedNum'] = Voucher::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->where('vStatus', 2)->count();  //已使用数
             $data[$key]['giftNum'] = !empty($val['gift_vcsn']) ? Laisee::where('id', $val['id'])->whereIn('vcsn', explode(",", $val['gift_vcsn']))->whereNotNull('mobilephone')->count() : 0;  //礼包领取数
             $data[$key]['create_time'] = $val['create_time'];
@@ -151,30 +169,30 @@ class LaiseeController extends Controller {
     }
 
     /**
-     * @api {post} /laisee/create 2.新增红包活动
+     * @api {post} /laisee/create 3.新增红包活动
      * @apiName create
      * @apiGroup Laisee
      *
-     * @apiParam {String} vcTitle 红包名称.
-     * @apiParam {String} vcRemark 活动简介.
+     * @apiParam {String} laisee_name 红包名称.
+     * @apiParam {String} lc_remark 活动简介.
      * @apiParam {Number} effective  有效天数.
      * @apiParam {Number} total_money 活动领取金额上限.
      * @apiParam {Number} amount_warning 红包领取金额预警(只需要数字).
      * @apiParam {String} warning_phone 可选，预警提醒的手机号码用,号隔开.
-     * @apiParam {String} sms_on_agined 获取代金券时下发的短信内容（模板）.
+     * @apiParam {String} sms_on_agined 可选，获取代金券时下发的短信内容（模板）.
      * 
-     * @apiParam {Number} vUseItemTypes 现金券类型[].
-     * @apiParam {Number} vUseMoney 现金券金额.
-     * @apiParam {Number} vNumber 现金券数量.
-     * @apiParam {Number} vDay 有效时间.
-     * @apiParam {Number} vGetNeedMoney 满多少可用.
+     * @apiParam {Number} vUseItemTypes 现金券类型，多个以逗号隔开.
+     * @apiParam {Number} vUseMoney 现金券金额,多个以逗号隔开.
+     * @apiParam {Number} vNumber 现金券数量,多个以逗号隔开.
+     * @apiParam {Number} vDay 有效时间,多个以逗号隔开.
+     * @apiParam {Number} vGetNeedMoney 满多少可用,多个以逗号隔开.
      * 
-     * @apiParam {Number} gUseItemTypes 礼包 现金券类型[].
-     * @apiParam {Number} gUseMoney 礼包 现金券金额.
-     * @apiParam {Number} gNumber 礼包 现金券数量.
-     * @apiParam {Number} gDay 礼包 有效时间.
-     * @apiParam {Number} gGetNeedMoney 礼包 满多少可用.
-     * @apiParam {Number} gGetNeedMoney 礼包 满多少可用.
+     * @apiParam {Number} gUseItemTypes 礼包 现金券类型,多个以逗号隔开.
+     * @apiParam {Number} gUseMoney 礼包 现金券金额,多个以逗号隔开.
+     * @apiParam {Number} gNumber 礼包 现金券数量,多个以逗号隔开.
+     * @apiParam {Number} gDay 礼包 有效时间,多个以逗号隔开.
+     * @apiParam {Number} gGetNeedMoney 礼包 满多少可用,多个以逗号隔开.
+     * @apiParam {Number} gGetNeedMoney 礼包 满多少可用,多个以逗号隔开.
      * 
      * @apiParam {String} share_icon 分享ICON.
      * @apiParam {String} share_title 分享标题.
@@ -198,7 +216,7 @@ class LaiseeController extends Controller {
     }
 
     /**
-     * @api {post} /laisee/create 3.修改红包活动
+     * @api {post} /laisee/update 4.修改红包活动
      * @apiName create
      * @apiGroup Laisee
      *
@@ -210,26 +228,28 @@ class LaiseeController extends Controller {
      * @apiParam {String} warning_phone 可选，预警提醒的手机号码用,号隔开.
      * @apiParam {String} sms_on_agined 获取代金券时下发的短信内容（模板）.
      * 
+     * @apiParam {String} vVcId 现金券配置信息id，多个以逗号隔开.
      * @apiParam {Number} vUseItemTypes 现金券类型[].
      * @apiParam {Number} vUseMoney 现金券金额.
      * @apiParam {Number} vNumber 现金券数量.
      * @apiParam {Number} vDay 有效时间.
      * @apiParam {Number} vUseNeedMoney 满多少可用.
      * 
+     * @apiParam {String} gVcId 礼包配置信息id，多个以逗号隔开.
      * @apiParam {Number} gUseItemTypes 礼包 现金券类型[].
      * @apiParam {Number} gUseMoney 礼包 现金券金额.
      * @apiParam {Number} gNumber 礼包 现金券数量.
      * @apiParam {Number} gDay 礼包 有效时间.
      * @apiParam {Number} gUseNeedMoney 礼包 满多少可用.
      * 
+     * @apiParam {String} delVcId 删除的现金券配置信息id，多个以逗号隔开.
+     * @apiParam {String} delGiftVcId 删除的礼包配置信息id，多个以逗号隔开.
+     * 
      * @apiParam {String} share_icon 分享ICON.
      * @apiParam {String} share_title 分享标题.
      * @apiParam {String} share_desc 分享摘要.
      * @apiParam {String} bonus_bg_img 红包页面背景图片.
-     * @apiParam {String} vVcId 现金券配置信息id，多个以逗号隔开.
-     * @apiParam {String} gVcId 礼包配置信息id，多个以逗号隔开.
-     * @apiParam {String} delVcId 删除的现金券配置信息id，多个以逗号隔开.
-     * @apiParam {String} delGiftVcId 删除的礼包配置信息id，多个以逗号隔开.
+     * 
      * 
      * @apiSuccessExample Success-Response:
      * 	    {
@@ -397,8 +417,8 @@ class LaiseeController extends Controller {
             }
             $laisee->budget_amount = $voucherAmount + $giftAmount;
             $laisee->over_time = $laisee->over_time / 86400;
-            $laisee->receiveNum = Laisee::where('id', $laisee->id)->whereNotNull('mobilephone')->count();  //TODO  id=>$laisee->id 需调整
-            $laisee->receiveAmount = Laisee::where('id', $laisee->id)->whereNotNull('mobilephone')->sum('value'); //TODO
+            $laisee->receiveNum = Laisee::where('laisee_config_id', $laisee->id)->whereNotNull('mobilephone')->count();  //TODO  id=>$laisee->id 需调整
+            $laisee->receiveAmount = Laisee::where('laisee_config_id', $laisee->id)->whereNotNull('mobilephone')->sum('value'); //TODO
 //             print_r(DB::getQueryLog());
             $usedWhere = $laisee->vcsns . "," . $laisee->gift_vcsn;
             $laisee->usedNum = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->where('vStatus', 2)->count();

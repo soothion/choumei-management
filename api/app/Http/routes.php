@@ -867,7 +867,7 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
         'as' => 'bonus.show',
         'uses' => 'Laisee\BonusController@show'
     ));
-    Route::any('/bonus/close/{id}', array(// 红包详情
+    Route::any('/bonus/close/{id}', array(// 红包失效 
         'as' => 'bonus.close',
         'uses' => 'Laisee\BonusController@close'
     ));
