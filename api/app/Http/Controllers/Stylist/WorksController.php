@@ -25,9 +25,9 @@ class WorksController extends Controller {
      * @apiSuccess {Number} stylistId 造型师ID.
      * @apiSuccess {String} commoditiesImg 作品集.
      * @apiSuccess {String} description 作品描述.
-     * @apiSuccess {String} thumbImg 作品集缩略图.
-     * @apiSuccess {String} img 作品集合  以（作品集和作品集缩略图）为一个单元.
-     * 
+     * @apiSuccess {String} thumbImg 老版本作品集缩略图.
+     * @apiSuccess {String} works['img'] 新版本作品集合  以（作品集和作品集缩略图）为一个单元.
+     * @apiSuccess {String} salon['img'] 造型师头像缩略图
      * 
      * @apiSuccessExample Success-Response:
      * {
@@ -62,6 +62,8 @@ class WorksController extends Controller {
      *                   "grade":4,
      *                   "fastGrade":2,
      *                   "num":0,
+     *                   "stylistImg":"www.douyuTV.com"，
+     *                   "img":null,
      *                   "uploadNum":0,
      *                   "salonname":"choumeitest_salon"
      *                },
@@ -74,6 +76,8 @@ class WorksController extends Controller {
      *                   "grade":4,
      *                   "fastGrade":2,
      *                   "num":0,
+     *                   "stylistImg":"www.douyuTV.com"，
+     *                   "img":null,
      *                   "uploadNum":0,
      *                },
      *               {
@@ -97,7 +101,7 @@ class WorksController extends Controller {
      *		}
      */
     public function index($stylistId){
-        $field=['stylistId','stylistName','stylistImg','mobilephone','grade','fastGrade','salonId'];
+        $field=['stylistId','stylistName','stylistImg','mobilephone','grade','fastGrade','salonId','img'];
         $stylist=Stylist::select($field)->where(array('stylistId'=>$stylistId))->first();
         if($stylist===false){
             throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);  
@@ -150,6 +154,7 @@ class WorksController extends Controller {
         $query['works']=$works;
         $query['salonSelf']=$stylist;
         $query['salon']=$salonStylist;
+        
         return $this->success($query);  
     }
     
