@@ -147,6 +147,139 @@ class TicketController extends Controller {
         }
         return $this->success( $list );
     }
+    /**
+	 * @api {post} /voucher/exportTicketList 4.导出现金卷列表
+	 * @apiName exportTicketList
+	 * @apiGroup voucher
+	 *
+	 * @apiParam {Number} keywordType 可选,关键词类型. 1.活动编号 2. 活动名称 3.现金劵编号 4.用户手机号  5.使用店铺 6. 分享手机号 7.兑换密码
+	 * @apiParam {String} keyword 可选,关键词.
+	 * @apiParam {int} status 可选,劵状态.
+	 * @apiParam {String} startTime 可选,使用时间 起始日期Y-m-d H:i:s.
+	 * @apiParam {String} endTime 可选,使用时间 结束日期Y-m-d H:i:s.
+	 * @apiParam {Number} page 可选,页数. 默认为1第一页
+	 * @apiParam {Number} pageSize 可选,分页大小. 默认为20
+	 *
+	 * 
+	 *
+	 *
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "data": ""
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 */
+    public function exportTicketList(){
+        $post = $this->param;
+        $keyword = isset( $post['keyword'] ) ? $post['keyword'] : '';
+        $status = isset($post['status']) ? $post['status'] : '';
+        $startTime = isset( $post['startTime'] ) ? strtotime($post['startTime']) : '';
+        $endTime = isset( $post['endTime'] ) ? strtotime($post['endTime']) : '';
+        $page = isset($param['page'])?$param['page']:1;
+		$pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+        $keywordType = isset($post['keywordType']) ? $post['keywordType'] : '';
+        $obj = Voucher::select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE','vUseEnd'])->where('vStatus','<>',10);
+        if($keyword && !empty($keywordType)){
+            $selectType = array('','vcSn','vcTitle','vSn','vMobilephone','vSalonName','','REDEEM_CODE'); // 目前缺少分享手机号
+//            分享手机号查询
+            if( $keywordType == 6 ){
+                $obj = DB::table('laisee')->select(['voucher.vId','voucher.vSn','voucher.vcSn','voucher.vcTitle'
+                        ,'voucher.vOrderSn','voucher.vUseMoney','voucher.vUseTime','voucher.vMobilephone','voucher.vSalonName','voucher.vStatus','voucher.REDEEM_CODE'])
+                        ->leftjoin('voucher','laisee.vsn','=','voucher.vSn')
+                        ->leftjoin('salon_itemcomment','laisee.item_comment_id','=','salon_itemcomment.itemcommentid')
+                        ->leftjoin('user','salon_itemcomment.user_id','=','user.user_id')
+                        ->where('user.mobilephone','like',"%$keyword%")
+                        ->where('vStatus','<>',10);
+                
+            }elseif( in_array($keywordType,[1,2,3,4,5]) )
+                $obj->where( $selectType[ $keywordType ] , 'like' , "%$keyword%" );
+            elseif( $keywordType == 7 ){
+                $des = new \Service\NetDesCrypt;
+                $des->setKey( self::$DES_KEY );
+                $encrypt = $des->encrypt( $keyword );
+                $obj->whereRaw('REDEEM_CODE like "%'.$keyword.'%" or REDEEM_CODE like "%'.$encrypt.'%"');
+            }
+        }
+
+        if($status){
+			if ($status == 1)
+                $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
+			elseif ($status == 2)
+                $obj->where( 'vStatus','=',2 );
+			elseif ($status == 3)
+                $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
+			elseif( $status == 4)
+                $obj->where('vStatus','=',1)->where('len(REDEEM_CODE)','<>',12);
+        }
+
+        if($startTime && empty($endTime))
+            $obj->where('vUseTime','>=',$startTime);
+        
+        if($endTime && empty($startTime))
+            $obj->where('vUseTime','<=',$endTime);
+        
+        if($startTime && $endTime)
+            $obj->whereBetween('vUseTime',[$startTime,$endTime]);
+        $count =  $obj->count();
+        if( $count > 5000 ){
+            //手动设置页数
+            AbstractPaginator::currentPageResolver(function() use ($page) {
+                return $page;
+            });
+            $list = $obj->orderBy('vId','DESC')
+                ->paginate($pageSize)
+                ->toArray();
+            $list = $list['data'];
+        }else{
+            $list = $obj->orderBy('vId','DESC')
+                ->get()
+                ->toArray();
+        }
+//        echo "<pre>";
+//        print_r( $list );exit;
+        $tempData = [];
+        $i = 0;
+        $t = ['','未使用','已使用','待激活','活动关闭','已失效'];
+        foreach($list as $key => $val ){
+            $tempData[$key][] = $i++;
+            $tempData[$key][] = $val['vSn'];
+            $tempData[$key][] = $val['REDEEM_CODE'];
+            $tempData[$key][] = $val['vcSn'];
+            $tempData[$key][] = $val['vcTitle'];
+            $tempData[$key][] = $val['vOrderSn'];
+            $tempData[$key][] = $val['vUseMoney'];
+            $tempData[$key][] = empty($list['data'][$key]['vUseTime']) ? '' : date('Y-m-d H:i:s',$val['vUseTime']);
+            $tempData[$key][] = $val['vMobilephone'];
+            $tempData[$key][] = $val['vSalonName'];
+            
+            if( $val['vUseEnd'] < time() ){
+                $tempData[$key][] = $t[ 5 ];
+            }else{
+                if( !empty( $val['REDEEM_CODE'] ) && $val['vStatus'] == 10 )
+                    $tempData[$key][] = '未兑换';
+                elseif( in_array($val['vStatus'],[1,2,3,4,5]) )
+                    $tempData[$key][] = $t[ $val['vStatus'] ];
+            }
+        }
+//        unset( $list );
+        $title = '现金卷查询列表' .date('Ymd');
+        //导出excel	   
+        $header = ['序号','券编号','兑换密码','活动编号','活动名称','订单号','券金额','使用时间','用户手机号','使用店铺','现金券状态'];
+        Excel::create($title, function($excel) use($tempData,$header){
+            $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
+                    $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+                    $sheet->prependRow(1, $header);//添加表头
+
+                });
+        })->export('xls');
+    }
     /***
 	 * @api {get} /voucher/invalidStatus/:id 2.作废现金卷
 	 * @apiName invalidStatus

@@ -752,6 +752,10 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'voucher.info',
 		'uses'=>'VoucherTicket\TicketController@info'
     ));
+    Route::any('voucher/exportTicketList',array( 
+		'as'=>'voucher.exportTicketList',
+		'uses'=>'VoucherTicket\TicketController@exportTicketList'
+    ));
     // 平台活动配置
     Route::any('platform/getItemType',array(  
 		'as'=>'platform.getItemType',

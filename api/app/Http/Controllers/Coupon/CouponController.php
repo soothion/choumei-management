@@ -905,7 +905,7 @@ class CouponController extends Controller{
                 $tempData[$key][] = $department;
             }
             unset( $res );
-            $title = '代金劵查询列表' .date('Ymd');
+            $title = '代金劵活动查询列表' .date('Ymd');
             //导出excel	   
             $header = ['序号','活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门'];
             Excel::create($title, function($excel) use($tempData,$header){
