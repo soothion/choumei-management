@@ -555,6 +555,11 @@ class ERROR
       *@param 项目库存有误
       */
      CONST ITEM_WRONG_TOTAL_REQ =  -51202;
+     
+     /**
+      *@param 项目价格有误
+      */
+     CONST ITEM_WRONG_PRICE =  -51207;
 
      /**
       *@param 项目不存在
