@@ -168,7 +168,7 @@ class PlatformController extends Controller{
         $data['ADD_TIME'] = date('Y-m-d H:i:s');
         
 //        $addRes = M('voucher_conf')->add($data);
-        $addRes = \App\VoucherConf::insertGetId( $data );
+        $addRes = \App\Model\VoucherConf::insertGetId( $data );
 //        print_r( $data );
         if( $data['getTypes'] == '3' ){
 //            $voucherModel = M('voucher');
@@ -337,7 +337,7 @@ class PlatformController extends Controller{
             $end .= rand(0, 9);
         }
         $code = "cm" . $pre  . $end;
-        $count = \App\VoucherConf::where( 'vcSn' , '=' , $code )->count();
+        $count = \App\Model\VoucherConf::where( 'vcSn' , '=' , $code )->count();
         if($count) 
             return $this->getActNum();
         $code = ['actNo'=>$code];
@@ -386,7 +386,7 @@ class PlatformController extends Controller{
         return $this->success( $return );
     }
     /***
-	 * @api {post} /platform/conList 7.平台活动配置列表
+	 * @api {post} /platform/list 7.平台活动配置列表
 	 * @apiName list
 	 * @apiGroup Platform
 	 *
@@ -471,7 +471,7 @@ class PlatformController extends Controller{
             AbstractPaginator::currentPageResolver(function() use ($page) {
                 return $page;
             });
-            $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME','getStart','getEnd','DEPARTMENT_ID','status','useEnd'])
+            $res = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME','getStart','getEnd','DEPARTMENT_ID','status','useEnd'])
                     ->where(['vType'=>1])
                     ->orderBy('vcId','desc')
                     ->paginate($pageSize)
@@ -507,7 +507,7 @@ class PlatformController extends Controller{
         }
         $where = '1';
         $actType = array('','vcSn','vcTitle');
-        $obj = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME','getStart','getEnd','DEPARTMENT_ID','status','useEnd']);
+        $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME','getStart','getEnd','DEPARTMENT_ID','status','useEnd']);
         if( !empty($actSelect) && !empty($actNumber) )
             $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
         
@@ -628,7 +628,7 @@ class PlatformController extends Controller{
     public function actView($id){
         if( empty($id) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $voucherConfInfo = \App\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney'])
+        $voucherConfInfo = \App\Model\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney'])
                 ->where(['vcId'=>$id])
                 ->where(['vType'=>1])
                 ->first()
@@ -795,7 +795,7 @@ class PlatformController extends Controller{
     public function getInfo($id){
         if( empty($id) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $voucherConfInfo = \App\VoucherConf::where(['vcId'=>$id])
+        $voucherConfInfo = \App\Model\VoucherConf::where(['vcId'=>$id])
                 ->where(['vType'=>1])
                 ->first()
                 ->toArray();
@@ -889,7 +889,7 @@ class PlatformController extends Controller{
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
         if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
         
-        $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
+        $addRes = \App\Model\VoucherConf::where(['vcId'=>$id])->update( $data );
         
         if( empty($addRes) )
             return $this->error('插入数据失败，请稍后再试');
@@ -926,7 +926,7 @@ class PlatformController extends Controller{
     public function offlineConf( $id ){
         if( empty($id) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $update = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>2]);
+        $update = \App\Model\VoucherConf::where(['vcId'=>$id])->update(['status'=>2]);
         if( empty( $update ) )
             return $this->error('下线失败，请重新下线');
         return $this->success();
@@ -960,7 +960,7 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function closeConf( $id ){
-        $conf = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
+        $conf = \App\Model\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
         if( $conf )
             \App\Voucher::where(['vcId'=>$id])->whereIn('vStatus',[1,3])->update(['vStatus'=>5]);
         else
