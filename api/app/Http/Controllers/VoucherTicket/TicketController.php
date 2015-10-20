@@ -13,7 +13,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ERROR;
 
 class TicketController extends Controller {
-    private static  $DES_KEY = 'authorlsptime20141225qqq';
+    private static  $DES_KEY = "authorlsptime20141225\0\0\0";
     /**
 	 * @api {post} /voucher/list 1.现金卷列表
 	 * @apiName list
