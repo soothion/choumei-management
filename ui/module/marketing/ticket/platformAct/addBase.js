@@ -1,14 +1,16 @@
 (function(){
     var type = lib.query.type;
-    var selectItemType = lib.query.selectItemType || 1; 
+    var selectItemType = ""; 
 
     if(type == 'add'){
+        selectItemType = lib.query.selectItemType || 1; 
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data')) || {};
         lib.ajat('#domid=form&tempid=form-t').template(baseData);    
     }
 
     if(type == 'edit'){
         var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+        selectItemType = editData.selectItemType || 1; 
         lib.ajat('#domid=form&tempid=form-t').template(editData);
     }
 

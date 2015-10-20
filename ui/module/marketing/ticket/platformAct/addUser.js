@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-20 16:02:39
+* @Last Modified time: 2015-10-20 19:07:26
 */
 
 (function(){
@@ -10,13 +10,19 @@
     var selectItemType = lib.query.selectItemType || 1; 
 
     if(type == 'add'){
-        var baseData = JSON.parse(sessionStorage.getItem('add-base-data')) || {};
+        var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
+        if(baseData.selectItemType == "3" && baseData.getItemTypes){
+            $("#consumeItemsAll").attr('checked','checked');
+        }        
         lib.ajat('#domid=form&tempid=form-t').template(baseData);    
     }
 
     if(type == 'edit'){
-        var editData = JSON.parse(sessionStorage.getItem('edit-base-data')) || {};
-        lib.ajat('#domid=form&tempid=form-t').template(editData); 
+        var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+        lib.ajat('#domid=form&tempid=form-t').template(editData);
+        if(editData.selectItemType == "3" && editData.getItemTypes){
+            $("#consumeItemsAll").attr('checked','checked');
+        }
     }
 
     /**
@@ -56,9 +62,8 @@
      */
     $("#form").on('click','.mobile-button',function(){
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
-        baseData.selectUseType = "3";
         sessionStorage.setItem('add-base-data',JSON.stringify(baseData));
-        window.location.href = "addMobile.html";
+        window.location.href = "addMobile.html?type="+type+'&selectItemType='+selectItemType;
     })
 
     /**
@@ -120,6 +125,7 @@
     });            
 
     lib.Form.prototype.save = function(data){
+
         if(data.getItemTypes && data.getItemTypes.length>0){
             data.getItemTypes = data.getItemTypes.join(",");
         }
