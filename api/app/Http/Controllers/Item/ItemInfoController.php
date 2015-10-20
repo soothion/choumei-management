@@ -21,7 +21,7 @@ use App\Utils;
 class ItemInfoController extends Controller{
 
 	//规格菜单英文标识 保持和前端一致
-	private static  $_typeArr = ['sex'=>'性别','hairstylist'=>'造型师','solution'=>'药水','longhair'=>'发长'];
+	private static  $_typeArr = ['sex'=>'性别','hairstylist'=>'造型师','longhair'=>'发长','solution'=>'药水'];
 	
 	/**
 	 * @api {post} /itemInfo/index 1.店铺项目资料列表
@@ -735,16 +735,16 @@ class ItemInfoController extends Controller{
 		{
 			foreach ($value as $kt=>$vt)
 			{
-				if(!in_array($vt, $clearVal))
-				{
-					$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$key]]['salon_item_formats_id']])->first();
-					if($st)
-						$norId = $st->salon_item_format_id;
-					else
+				//if(!in_array($vt, $clearVal))
+				//{
+					//$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$key]]['salon_item_formats_id']])->first();
+					//if($st)
+					//	$norId = $st->salon_item_format_id;
+					//else
 						$norId = SalonItemFormat::insertGetId(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$key]]['salon_item_formats_id']]);
 					$attribute[$vt] = $norId;//属性数组
 					$clearVal[] = $vt;
-				}
+				//}
 			}
 		}
 		return $attribute;
