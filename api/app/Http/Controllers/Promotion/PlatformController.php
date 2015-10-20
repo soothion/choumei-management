@@ -46,7 +46,7 @@ class PlatformController extends Controller{
         return $this->success( $this->_getItemType() );
     }
     /***
-	 * @api {get} /platfrom/add 2.添加平台代金劵活动
+	 * @api {get} /platform/add 2.添加平台代金劵活动
 	 * @apiName add
 	 * @apiGroup Platform
 	 *
@@ -829,7 +829,7 @@ class PlatformController extends Controller{
         return $this->success( $voucherConfInfo );
     }
     /***
-	 * @api {get} /platfrom/editConf 10.编辑平台代金劵活动
+	 * @api {get} /platform/editConf 10.编辑平台代金劵活动
 	 * @apiName editConf
 	 * @apiGroup Platform
 	 *
@@ -895,7 +895,7 @@ class PlatformController extends Controller{
         return $this->success();
     }
     /***
-	 * @api {get} /platfrom/offlineConf 11.编辑平台下线操作
+	 * @api {get} /platform/offlineConf/{:id} 11.编辑平台下线操作
 	 * @apiName offlineConf
 	 * @apiGroup Platform
 	 *
@@ -931,7 +931,7 @@ class PlatformController extends Controller{
         return $this->success();
     }
     /***
-	 * @api {get} /platfrom/closeConf 12.编辑平台关闭操作
+	 * @api {get} /platform/closeConf/{:id} 12.编辑平台关闭操作
 	 * @apiName closeConf
 	 * @apiGroup Platform
 	 *

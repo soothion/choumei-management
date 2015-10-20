@@ -7,17 +7,19 @@ use App\Http\Controllers\Controller;
 use DB;
 use Excel;
 use App\Voucher;
+use Service\NetDesCrypt;
 use App\Exceptions\ApiException;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ERROR;
 
 class TicketController extends Controller {
+    private static  $DES_KEY = "authorlsptime20141225\0\0\0";
     /**
 	 * @api {post} /voucher/list 1.现金卷列表
 	 * @apiName list
 	 * @apiGroup voucher
 	 *
-	 * @apiParam {Number} keywordType 可选,关键词类型. 1.活动编号 2. 活动名称 3.现金劵编号 4.用户手机号  5.使用店铺 6. 分享手机号
+	 * @apiParam {Number} keywordType 可选,关键词类型. 1.活动编号 2. 活动名称 3.现金劵编号 4.用户手机号  5.使用店铺 6. 分享手机号 7.兑换密码
 	 * @apiParam {String} keyword 可选,关键词.
 	 * @apiParam {int} status 可选,劵状态.
 	 * @apiParam {String} startTime 可选,使用时间 起始日期Y-m-d H:i:s.
@@ -89,12 +91,28 @@ class TicketController extends Controller {
         $endTime = isset( $post['endTime'] ) ? strtotime($post['endTime']) : '';
         $page = isset($param['page'])?$param['page']:1;
 		$pageSize = isset($param['pageSize'])?$param['pageSize']:20;
-        $obj = Voucher::where('vStatus','<>',10);
-        if($keyword){
-            $keywordType = $post['keywordType'];
-            $selectType = array('','vcSn','vcTitle','vSn','vMobilephone','vSalonName'); // 目前缺少分享手机号
-            if( !empty( $selectType[ $keywordType ] ) )
+        $keywordType = isset($post['keywordType']) ? $post['keywordType'] : '';
+        $obj = Voucher::select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE'])->where('vStatus','<>',10);
+        if($keyword && !empty($keywordType)){
+            $selectType = array('','vcSn','vcTitle','vSn','vMobilephone','vSalonName','','REDEEM_CODE'); // 目前缺少分享手机号
+//            分享手机号查询
+            if( $keywordType == 6 ){
+                $obj = DB::table('laisee')->select(['voucher.vId','voucher.vSn','voucher.vcSn','voucher.vcTitle'
+                        ,'voucher.vOrderSn','voucher.vUseMoney','voucher.vUseTime','voucher.vMobilephone','voucher.vSalonName','voucher.vStatus','voucher.REDEEM_CODE'])
+                        ->leftjoin('voucher','laisee.vsn','=','voucher.vSn')
+                        ->leftjoin('salon_itemcomment','laisee.item_comment_id','=','salon_itemcomment.itemcommentid')
+                        ->leftjoin('user','salon_itemcomment.user_id','=','user.user_id')
+                        ->where('user.mobilephone','like',"%$keyword%")
+                        ->where('vStatus','<>',10);
+                
+            }elseif( in_array($keywordType,[1,2,3,4,5]) )
                 $obj->where( $selectType[ $keywordType ] , 'like' , "%$keyword%" );
+            elseif( $keywordType == 7 ){
+                $des = new \Service\NetDesCrypt;
+                $des->setKey( self::$DES_KEY );
+                $encrypt = $des->encrypt( $keyword );
+                $obj->whereRaw('REDEEM_CODE like "%'.$keyword.'%" or REDEEM_CODE like "%'.$encrypt.'%"');
+            }
         }
 
         if($status){
@@ -121,9 +139,7 @@ class TicketController extends Controller {
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
 		});
-		
-        $list = $obj->select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE'])
-                ->orderBy('vId','DESC')
+        $list = $obj->orderBy('vId','DESC')
                 ->paginate($pageSize)
                 ->toArray();
         foreach($list['data'] as $key => $val ){
