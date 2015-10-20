@@ -669,6 +669,9 @@ class ItemInfoController extends Controller{
 	    		$normarr[$ks]['salonNormsMark'] = implode(',',$formatsId[$ks]);
 	    	}
 	    	
+	    	$priceDisArr = [];
+	    	$priceGroupArr = [];
+	    	$priceOriArr = [];
 	    	//规则价格
 	    	foreach($normarr as $value)
 	    	{
@@ -695,12 +698,12 @@ class ItemInfoController extends Controller{
 	    	
 	    }
 	    
-	    $salon_item['minPrice'] = min($priceDisArr);
-	    $salon_item['maxPrice'] = max($priceDisArr);
-	    $salon_item['minPriceGroup'] = min($priceGroupArr);
-	    $salon_item['maxPriceGroup'] = max($priceGroupArr);
-	    $salon_item['minPriceOri'] = min($priceOriArr);
-	    $salon_item['maxPriceOri'] = max($priceOriArr);
+	    $salon_item['minPrice'] = $priceDisArr?min($priceDisArr):0;
+	    $salon_item['maxPrice'] = $priceDisArr?max($priceDisArr):0;
+	    $salon_item['minPriceGroup'] = $priceGroupArr?min($priceGroupArr):0;
+	    $salon_item['maxPriceGroup'] = $priceGroupArr?max($priceGroupArr):0;
+	    $salon_item['minPriceOri'] = $priceOriArr?min($priceOriArr):0;
+	    $salon_item['maxPriceOri'] = $priceOriArr?max($priceOriArr):0;
 	    $res['salon_item'] = $salon_item;
 	    return $res;
 	}
