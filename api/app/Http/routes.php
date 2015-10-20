@@ -738,20 +738,8 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
     ));
 
     
-    // 代金劵处理模块
-    Route::any('voucher/list',array(  
-		'as'=>'voucher.list',
-		'uses'=>'VoucherTicket\TicketController@ticketList'
-    ));
-    Route::any('voucher/invalidStatus/{id}',array( 
-		'as'=>'voucher.invalidStatus',
-		'uses'=>'VoucherTicket\TicketController@invalidStatus'
-    ));
-    Route::any('voucher/info/{id}',array( 
-		'as'=>'voucher.info',
-		'uses'=>'VoucherTicket\TicketController@info'
-    ));
-    // 代金劵
+    
+    // 劵
     Route::any('voucher/list',array(  
 		'as'=>'voucher.list',
 		'uses'=>'VoucherTicket\TicketController@ticketList'
@@ -764,7 +752,7 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'voucher.info',
 		'uses'=>'VoucherTicket\TicketController@info'
     ));
-    // 代金劵活动配置
+    // 平台活动配置
     Route::any('platform/getItemType',array(  
 		'as'=>'platform.getItemType',
 		'uses'=>'Promotion\PlatformController@getItemType'
@@ -820,6 +808,51 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
     Route::any('platform/upConf/{id}',array(  
 		'as'=>'platform.upConf',
 		'uses'=>'Promotion\PlatformController@upConf'
+    ));
+    // 代金劵配置
+    Route::any('coupon/add',array(  
+		'as'=>'coupon.add',
+		'uses'=>'Coupon\CouponController@addConf'
+    ));
+    Route::any('coupon/list',array(  
+		'as'=>'coupon.list',
+		'uses'=>'Coupon\CouponController@confList'
+    ));
+    Route::any('coupon/actView/{id}',array(  
+		'as'=>'coupon.actView',
+		'uses'=>'Coupon\CouponController@actView'
+    ));
+    Route::any('coupon/getInfo/{id}',array(  
+		'as'=>'coupon.getInfo',
+		'uses'=>'Coupon\CouponController@getInfo'
+    ));
+    Route::any('coupon/editConf',array(  
+		'as'=>'coupon.editConf',
+		'uses'=>'Coupon\CouponController@editConf'
+    ));
+    Route::any('coupon/offlineConf/{id}',array(  
+		'as'=>'coupon.offlineConf',
+		'uses'=>'Coupon\CouponController@offlineConf'
+    ));
+    Route::any('coupon/closeConf/{id}',array(  
+		'as'=>'coupon.closeConf',
+		'uses'=>'Coupon\CouponController@closeConf'
+    ));
+    Route::any('coupon/upConf/{id}',array(  
+		'as'=>'coupon.upConf',
+		'uses'=>'Coupon\CouponController@upConf'
+    ));
+    Route::any('coupon/upConf/add',array(  
+		'as'=>'coupon.add',
+		'uses'=>'Coupon\CouponController@addConf'
+    ));
+    Route::any('coupon/upConf/add',array(  
+		'as'=>'coupon.add',
+		'uses'=>'Coupon\CouponController@addConf'
+    ));
+    Route::any('coupon/upConf/add',array(  
+		'as'=>'coupon.add',
+		'uses'=>'Coupon\CouponController@addConf'
     ));
 
 
