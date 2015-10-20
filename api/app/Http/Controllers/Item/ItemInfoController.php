@@ -400,7 +400,7 @@ class ItemInfoController extends Controller{
 		}
 		
 		$data = self::compositeData($param);
-		$res = SalonItem::upsertItem($data,$param['priceStyle'],$itemid);
+		$res = SalonItem::upsertItem($data,$param['priceStyle'],$param['salonid'],$itemid);
 		if($res)
 		{
 			return $this->success();
