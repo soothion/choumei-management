@@ -13,143 +13,7 @@ use App\Exceptions\ERROR;
 
 class PlatformController extends Controller{
     private static $downloadUrl = "http://t.cn/RZXyLPg";
-	/**
-	 * 活动列表
-	 */
-	public function index()
-	{
-		$param = $this->param;
-		$query = Promotion::getQueryByParam($param);
-
-		$page = isset($param['page'])?max($param['page'],1):1;
-		$page_size = isset($param['page_size'])?$param['page_size']:20;
-
-		//手动设置页数
-		AbstractPaginator::currentPageResolver(function() use ($page) {
-		    return $page;
-		});
-
-		$fields = array(
-			'title',
-			'sn',
-			'sum',
-			'created_at',
-			'start_at',
-			'end_at',
-			'departments.title as department',
-			'status'
-		);
-
-		//分页
-	    $result = $query->select($fields)->paginate($page_size)->toArray();
-	    unset($result['next_page_url']);
-	    unset($result['prev_page_url']);
-	    $queries = DB::getQueryLog();
-	    return $this->success($result);
-
-	}
-
-
-	/**
-	 * 导出活动
-	 */
-	public function export()
-	{
-		$param = $this->param;
-		$query = Promotion::getQueryByParam($param);
-
-		$page = isset($param['page'])?max($param['page'],1):1;
-		$page_size = isset($param['page_size'])?$param['page_size']:20;
-
-		//手动设置页数
-		AbstractPaginator::currentPageResolver(function() use ($page) {
-		    return $page;
-		});
-
-		$fields = array(
-			'title',
-			'sn',
-			'sum',
-			'created_at',
-			'start_at',
-			'end_at',
-			'departments.title as department',
-			'status'
-		);
-
-		//分页
-	    $array = $query->select($fields)->take(5000)->get();
-	    $result = [];
-	    foreach ($array as $key=>$value) {
-	    	$result[$key]['id'] = $key+1;
-	    	$result[$key]['title'] = $value->title;
-	    	$result[$key]['sn'] = $value->sn;
-	    	$result[$key]['sum'] = $value->sum;
-	    	$result[$key]['created_at'] = $value->created_at;
-	    	$result[$key]['start_at'] = $value->start_at;
-	    	$result[$key]['end_at'] = $value->end_at;
-	    	$result[$key]['department'] = $value->department;
-	    	$result[$key]['status'] = $value->status;
-	    }
-
-		// 触发事件，写入日志
-	    // Event::fire('promotion.export');
-		
-		//导出excel	   
-		$title = '用户列表'.date('Ymd');
-		$header = ['序号','活动名称','活动编码','总数上限','活动时间','申请部门','活动状态'];
-		Excel::create($title, function($excel) use($result,$header){
-		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
-			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
-	        		$sheet->prependRow(1, $header);//添加表头
-
-			    });
-		})->export('xls');
-
-	}
-
-	/**
-	 * 查看活动
-	 */
-	public function show($id)
-	{
 	
-	}
-
-	/**
-	 * 下线活动
-	 */
-	public function offline($id)
-	{
-		$promotion = Promotion::find($id);
-		if(!$promotion)
-			throw new ApiException('活动不存在', ERROR::PROMOTION_NOT_FOUND);
-		$result = $promotion->update(['statis'=>'offline']);
-		if($result){
-			//触发事件，写入日志
-			Event::fire('user.offline',array($promotion));
-			return $this->success();
-		}
-		throw new ApiException('活动下线失败', ERROR::PROMOTION_OFFLINE_FAILED);
-	}
-
-	/**
-	 * 关闭活动
-	 */
-	public function close($id)
-	{
-		$promotion = Promotion::find($id);
-		if(!$promotion)
-			throw new ApiException('活动不存在', ERROR::PROMOTION_NOT_FOUND);
-		$result = $promotion->update(['statis'=>'closed']);
-		if($result){
-			//触发事件，写入日志
-			Event::fire('user.closed',array($promotion));
-			return $this->success();
-		}
-		throw new ApiException('活动关闭失败', ERROR::PROMOTION_CLOSED_FAILED);
-	}
-
     /***
 	 * @api {get} /platform/getItemType 1.获取项目分类名称
 	 * @apiName getItemType
@@ -543,6 +407,7 @@ class PlatformController extends Controller{
 	 * @apiSuccess {Number} from 起始数据.
 	 * @apiSuccess {Number} to 结束数据.
 	 * @apiSuccess {String} vcId 平台配置id
+	 * @apiSuccess {String} vcSn 活动编号
 	 * @apiSuccess {String} vcTitle 活动名称
 	 * @apiSuccess {String} ADD_TIME 添加时间
 	 * @apiSuccess {String} department 申请部门
@@ -569,6 +434,7 @@ class PlatformController extends Controller{
      *               "data": [
      *                   {
      *                       "vcId": 92,
+     *                       "vcSn": cm222292,
      *                       "vcTitle": "我的测试哈哈哈",
      *                       "ADD_TIME": "0000-00-00 00:00:00",
      *                       "DEPARTMENT_ID": 3,
@@ -685,7 +551,6 @@ class PlatformController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $res['data'][$key]['department'] = $department['title'];
             }
-            unset( $res['data'][$key]['vcSn'] );
             unset( $res['data'][$key]['useEnd'] );
             unset( $res['data'][$key]['getStart'] );
             unset( $res['data'][$key]['getEnd'] );
@@ -1102,6 +967,45 @@ class PlatformController extends Controller{
             return $this->error('关闭失败，请重新关闭');
         return $this->success();
     }
+    public function upConf(){
+        $vcId = $_POST['vcId'];
+        $voucherConfModel = M('voucher_conf');
+        $where = 'vcId = %d';
+        $condition = array($vcId);
+        $data = array( 'status'=>1 );
+        $voucherConfModel->where($where,$condition)->save($data);
+
+        // 修改voucher表中手机是否已经注册
+        $voucherModel = M('voucher');
+        $field = array('vMobilephone');
+        $where = 'vStatus=10 and vcId=%d';
+        $phoneList = $voucherModel->field( $field )->where($where,array($vcId))->select();
+
+        //判断当前活动是否勾选了消费类项目
+        $voucherConf=M("voucher_conf")->field(array('getItemTypes,getNeedMoney,getStart,getEnd'))->where(array('vcId'=>$vcId))->find();
+        $getItemTypes=$voucherConf['getItemTypes'];
+        $getNeedMoney=$voucherConf['getNeedMoney'];
+
+        foreach( $phoneList as $val ){
+            $voucherData = array();
+            $where1 = 'vStatus=10 AND vMobilephone ="'.$val['vMobilephone'].'"';
+            $voucherStatus = $this->verifyUserPhoneExists($val['vMobilephone']);
+            // 统一处理 不管有无注册过
+            $nowTime=  time();
+        if(!empty($getItemTypes)||!empty($getNeedMoney)||(!empty($voucherConf['getStart']) && $nowTime< $voucherConf['getStart'])){  //其中一个不为空则有消费类型  将状态改为3 待激活   
+                $voucherData['vStatus']=3;
+            }else{ 
+               $voucherData['vStatus'] = empty( $voucherStatus ) ? 3 : 1;
+            }
+
+//                $voucherData['vStatus'] = 3;
+            $voucherData['vUserId'] = empty( $voucherStatus ) ? 0 : $voucherStatus['user_id'];
+            $voucherModel->where($where1)->save($voucherData);
+        }
+        $this->verifyPhone( $vcId );
+        $this->upActCoupon( $vcId );
+        exit(json_encode(array('result'=>1)) );
+    }
     // 校验集团码
     private function getGroupExists( $code ){
         $count = \App\CompanyCode::where( 'code' ,'=', $code )
@@ -1152,19 +1056,24 @@ class PlatformController extends Controller{
    }
    // 获取代金劵状态
    private function getVoucherStatusByActId( $vcSn , $useEnd ){
-            // 总的发放数
-            $allNum = \App\Voucher::where( ['vcSn'=>$vcSn])->where('vStatus','<>',10)->count();
-            // 已发放数
-            $useNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>2] )->count();
-            $invalidNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>5] )->count();
-            if( !empty($invalidNum) )
-                return array( $allNum , $useNum , $invalidNum );
-            // 已失效数
-            if( empty($useEnd) ||  time()<$useEnd ){
-                $invalidNum = 0;
-            }else{
-                $invalidNum = $allNum - $useNum;
-            }
+        // 总的发放数
+        $allNum = \App\Voucher::where( ['vcSn'=>$vcSn])->where('vStatus','<>',10)->count();
+        // 已发放数
+        $useNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>2] )->count();
+        $invalidNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>5] )->count();
+        if( !empty($invalidNum) )
             return array( $allNum , $useNum , $invalidNum );
+        // 已失效数
+        if( empty($useEnd) ||  time()<$useEnd ){
+            $invalidNum = 0;
+        }else{
+            $invalidNum = $allNum - $useNum;
         }
+        return array( $allNum , $useNum , $invalidNum );
+    }
+    // 验证手机号码是否存在
+    private function verifyUserPhoneExists( $phone ){
+        $exists = \App\User::select(['user_id','os_type'])->where(['mobilephone'=>$phone])->first();
+        return $exists;
+    }
 }
