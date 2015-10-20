@@ -47,8 +47,8 @@ class Stylist  extends Model {
             $num=0; 
             $works= DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->get();
             foreach ($works as $key1 =>$value) {
-                if(!empty($works['img'])){
-                    $image=  json_decode($works['img'],true);
+                if(!empty($value['img'])){
+                    $image=  json_decode($value['img'],true);
                     $num=$num+(count($image));
                 }  else {   
                     $num=$num+1;

@@ -140,29 +140,33 @@
 					}
 				}
 				//生成价格表
+				$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:normarr,normMenu:normMenu}));
 				$('input[name="normMenu"]').val(JSON.stringify(normMenu));
 				$('input[name="normarr"]').val(JSON.stringify(normarr));
-				$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:normarr,normMenu:normMenu}));
-				
 			}
 			
 			//原价与其他折扣价限制
-			var price=$('input[name="price"]');
-			price.on('pass',function(){
-				$('input[name="priceDis"],input[name="priceGroup"]').attr('max',this.value);
+			var $price=$('input[name="price"]');
+			$price.on('pass',function(){
+				$('input[name="priceDis"]').attr('max',this.value);
 			});
+			$('input[name="priceDis"]').on('pass',function(){
+				$('input[name="priceGroup"]').attr('max',this.value);
+			})
 			//计算臭美价格
 			$('.choumei-discount').on('blur',function(){
-				var val=price.val();
+				var val=$price.val();
 				if(val&&!isNaN(val)&&this.value&&!isNaN(this.value)){
-					$('input[name="priceDis"]').val(Math.round(parseInt(val)*parseInt(this.value)/100));
+					var num=Math.round(parseInt(val)*parseInt(this.value)/100);
+					$('input[name="priceDis"]').attr('max',val).val(num>0?num:"");
 				}
 			});
 			//计算集团价格
 			$('.group-discount').on('blur',function(){
 				var val=$('input[name="priceDis"]').val();
 				if(val&&!isNaN(val)&&this.value&&!isNaN(this.value)){
-					$('input[name="priceGroup"]').val(Math.round(parseInt(val)*parseInt(this.value)/100));
+					var num=Math.round(parseInt(val)*parseInt(this.value)/100);
+					$('input[name="priceGroup"]').attr('max',val).val(num>0?num:"");
 				}
 			});
 			var $format=$('#format-form');
@@ -198,11 +202,11 @@
 						if(sexArr.length>0){
 							array.push(sexArr);
 						}
-						if(longhairArr.length>0){
-							array.push(longhairArr);
-						}
 						if(hairstyArr.length>0){
 							array.push(hairstyArr);
+						}
+						if(longhairArr.length>0){
+							array.push(longhairArr);
 						}
 						if(solutionArr.length>0){
 							array.push(solutionArr);
@@ -258,24 +262,25 @@
 				e.stopPropagation();
 			});
 			//如果输入臭美，集团价折扣则到输入原价后生成臭美，集团价
-			
-			$('#format-table').on('focus','.format-price-dis',function(){
+			$('#format-table').on('blur','.format-price',function(){
 				var $this=$(this);
-				var choumeiPrecent=$('#choumei-precent').val();
-				var price=$this.closest('tr').find('.format-price').val();
-				if(!$this.val()&&choumeiPrecent&&price){
-					if(choumeiPrecent&&!isNaN(choumeiPrecent)&&!isNaN(price)){
-						$this.val(Math.round(choumeiPrecent*price/100));
+				var value=$this.val();
+				if(value&&!isNaN(value)){
+					//生成臭美价
+					var choumeiPrecent=$('#choumei-precent').val();
+					if(choumeiPrecent&&!isNaN(choumeiPrecent)){
+						var price=Math.round(parseInt(choumeiPrecent)*parseInt(value)/100);
+						if(price>0){
+							$this.closest('tr').find(".format-price-dis").attr('max',value).val(price>0?price:"");
+						}
+						//生成集团价
+						var groupPrecent=$('#group-precent').val();
+						if(groupPrecent&&!isNaN(groupPrecent)){
+							var num=Math.round(parseInt(groupPrecent)*price/100);
+							$this.closest('tr').find('.format-price-group').attr('max',price).val(num>0?num:"");
+						}
 					}
-				}
-			}).on('focus','.format-price-group',function(){
-				var $this=$(this);
-				var groupPrecent=$('#group-precent').val();
-				var price=$this.closest('tr').find('.format-price-dis').val();
-				if(!$this.val()&&groupPrecent&&price){
-					if(groupPrecent&&!isNaN(groupPrecent)&&!isNaN(price)){
-						$this.val(Math.round(groupPrecent*price/100));
-					}
+					
 				}
 			}).on('blur','input',function(){
 				var normarr=[];
@@ -303,7 +308,15 @@
 				}else{
 					$('input[name="normarr"]').val('');
 				}
+			}).on('pass','input',function(){
+				//$(this).parent().next().find('input').attr("max",this.value);
 			});
+			$('.choumei-discount,.group-discount,#choumei-precent,#group-precent').on('keyup',function(){
+				this.value=this.value.replace(/\D/g,"").replace(/^0/g,"");
+				if(this.value&&parseInt(this.value)>100){
+					this.value=100;
+				}
+			})
 		});
 	}
 	init();
