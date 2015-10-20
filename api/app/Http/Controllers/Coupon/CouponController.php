@@ -668,6 +668,8 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function closeConf( $id ){
+        if( empty($id) )
+            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
         $conf = \App\Model\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
         if( $conf )
             \App\Voucher::where(['vcId'=>$id])->whereIn('vStatus',[1,3])->update(['vStatus'=>5]);
@@ -704,6 +706,8 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function upConf($vcId){
+        if( empty($id) )
+            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
         // 修改配置表中为已上线状态
         \App\Model\VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
         // 修改voucher表中手机是否已经注册
@@ -731,6 +735,47 @@ class CouponController extends Controller{
         }
         $this->upActCoupon( $vcId );
         return $this->success();
+    }
+    /***
+	 * @api {get} /coupon/getCoupon/{:id} 9.查看实体券编码和密码
+	 * @apiName getCoupon
+	 * @apiGroup Coupon
+	 *
+	 *@apiParam {Number} id                   必填     代金劵配置id
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+	 *		    "result": 1,
+	 *		    "data": [
+     *              {
+     *                   "vSn": "DH45331379719",
+     *                   "REDEEM_CODE": "3a7abe91c69e2a6ab2d49ffad6905846",
+     *                   "vUseMoney": 50
+     *               },
+     *             .....
+     *         ],
+	 *		}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "关闭失败，请重新下线"
+	 *		}
+	 ***/
+    public function getCoupon($vcId){
+        if( empty($vcId) )
+            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
+        $coupon = \App\Voucher::select(['vSn','REDEEM_CODE','vUseMoney'])->where(['vcId'=>$vcId])->get();
+        return $this->success( $coupon );
     }
     
     // 获取分类

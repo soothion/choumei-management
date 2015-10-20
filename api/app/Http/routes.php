@@ -854,6 +854,10 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'coupon.add',
 		'uses'=>'Coupon\CouponController@addConf'
     ));
+    Route::any('coupon/getCoupon/{id}',array(  
+		'as'=>'coupon.getCoupon',
+		'uses'=>'Coupon\CouponController@getCoupon'
+    ));
 
 
     //红包活动管理
