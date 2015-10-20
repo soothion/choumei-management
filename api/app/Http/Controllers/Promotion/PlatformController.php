@@ -409,12 +409,12 @@ class PlatformController extends Controller{
 	 * @apiSuccess {String} vcId 平台配置id
 	 * @apiSuccess {String} vcSn 活动编号
 	 * @apiSuccess {String} vcTitle 活动名称
-	 * @apiSuccess {String} ADD_TIME 添加时间
+	 * @apiSuccess {String} addTime 添加时间
 	 * @apiSuccess {String} department 申请部门
 	 * @apiSuccess {String} status 1. 进行中 2. 暂停 3.已关闭 4. 已结束
 	 * @apiSuccess {String} allNum 总的发放数
 	 * @apiSuccess {String} useNum 已发放数
-	 * @apiSuccess {String} invalidNum 已失效数
+	 * @apiSuccess {String} totalNum 代金劵可领总数
 	 * @apiSuccess {String} actTime 活动时间
 	 * 
      * 
@@ -436,12 +436,12 @@ class PlatformController extends Controller{
      *                       "vcId": 92,
      *                       "vcSn": cm222292,
      *                       "vcTitle": "我的测试哈哈哈",
-     *                       "ADD_TIME": "0000-00-00 00:00:00",
-     *                       "DEPARTMENT_ID": 3,
+     *                       "addTime": "0000-00-00 00:00:00",
+     *                       "departmentId": 3,
      *                       "status": 2,
      *                       "allNum": 0,
      *                       "useNum": 0,
-     *                       "invalidNum": 0,
+     *                       "totalNum": 0,
      *                       "actTime": "无限期活动"
      *                   },
      *                  ...
@@ -471,7 +471,7 @@ class PlatformController extends Controller{
             AbstractPaginator::currentPageResolver(function() use ($page) {
                 return $page;
             });
-            $res = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME','getStart','getEnd','DEPARTMENT_ID','status','useEnd'])
+            $res = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
                     ->where(['vType'=>1])
                     ->orderBy('vcId','desc')
                     ->paginate($pageSize)
@@ -506,20 +506,18 @@ class PlatformController extends Controller{
         }
         $where = '1';
         $actType = array('','vcSn','vcTitle');
-        $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME','getStart','getEnd','DEPARTMENT_ID','status','useEnd']);
+        $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
         if( !empty($actSelect) && !empty($actNumber) )
-            $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
+            $obj->where( $actType[ $actSelect ] , 'like' , "'%".$actNumber."%'" );
         
         if( !empty($actStatus) ){
-//            $where .= ' and status = %d ';
-//            $condition[] = $actStatus;
             if( $actStatus != 4 )
-                $obj::where('status','=',$actStatus);
+                $obj->where('status','=',$actStatus);
             else
-                $obj::where('getEnd','<',time());
+                $obj->where('getEnd','<',time());
         }
         if( !empty($actStartTime) && !empty($actEndTime))
-            $obj->whereRaw(' and  (getStart <= '.$actStartTime .' and getEnd >= '.$actStartTime .') or (getStart <= '.$actEndTime .' and getEnd >= '.$actEndTime .' )');
+            $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
         if( !empty( $actDepartment ) )
             $obj->where('DEPARTMENT_ID','=',$actDepartment);
         //手动设置页数
@@ -535,7 +533,7 @@ class PlatformController extends Controller{
             $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
             $res['data'][$key]['allNum'] = $statistics[0];
             $res['data'][$key]['useNum'] = $statistics[1];
-            $res['data'][$key]['invalidNum'] = $statistics[2];
+//            $res['data'][$key]['invalidNum'] = $statistics[2];
             $res['data'][$key]['actTime'] = '';
             if( empty( $val['getStart'] ) && empty($val['getEnd']) )
                 $res['data'][$key]['actTime'] = '无限期活动';
