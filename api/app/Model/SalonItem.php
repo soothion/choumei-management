@@ -202,7 +202,7 @@ class SalonItem extends Model {
 	    }  
 	    
 	    $now_time = time();
-	    $items = SalonItem::select(['itemid','itemname','exp_time','total_rep','sold'])->whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->get();
+	    $items = SalonItem::select(['itemid','itemname','exp_time','total_rep','sold','minPrice','minPriceOri'])->whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->get();
 	    if(empty($items))
 	    {
 	        throw new ApiException("要上架的项目不存在或者状态不正确",ERROR::ITEM_LOST_OR_WRONG_STATE);
@@ -222,6 +222,12 @@ class SalonItem extends Model {
 	        $exp_time = intval($item['exp_time']);
 	        $total_rep = intval($item['total_rep']);
 	        $sold = intval($item['sold']);
+	        $min_price = floatval($item['minPrice']);
+	        $min_price_ori = floatval($item['minPriceOri']);
+	        if($min_price<=0 || $min_price_ori<=0)
+	        {
+	            throw new ApiException("项目 [{$id} : $name] 价格小于 0 ",ERROR::ITEM_WRONG_PRICE);
+	        }
 	        if($exp_time >0 && $exp_time < $now_time)
 	        {
 	            throw new ApiException("项目 [{$id} : $name] 有效期 [".date("Y-m-d H:i:s",$exp_time)."]应大于当前时间",ERROR::ITEM_WRONG_EXP_TIME);
