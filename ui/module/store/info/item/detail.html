@@ -7,10 +7,10 @@
   </head>
   <body>
 		<div class="breadcrumb">
-			<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><a href="index.html#p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>">项目列表</a><span>&gt;</span>查看项目详情
+			<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><a href="index.html#p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>">项目列表</a><span>&gt;</span>查看<%=query.p=="special"?"闲时特价":"项目"%>详情
 			<div class="flex-box">
 				<div class="flex-item">
-					<h4>查看项目详情</h4>
+					<h4>查看<%=query.p=="special"?"闲时特价":"项目"%>详情</h4>
 				</div>
 			</div>
 		</div>
@@ -32,6 +32,11 @@
 					<%if(query.p=="warehouse"){%>
 					<form data-slug="warehouse.puton" action="warehouse/puton" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){self.style.display='none'}})">
 						<button class="btn">上架</button><span class="space"></span>
+						<input type="hidden" name="ids" value="<%=query.id%>" />
+					</form>
+					<span class="space"></span>
+					<form data-slug="warehouse.destroy" action="warehouse/destroy" data-role="normal" data-confirm="您正在删除此项目，是否继续 " onsuccess="var self=this;parent.lib.popup.result({define:function(){window.close()}})">
+						<button class="btn">删除</button><span class="space"></span>
 						<input type="hidden" name="ids" value="<%=query.id%>" />
 					</form>
 					<span class="space"></span>
@@ -120,15 +125,15 @@
 								<%if(data.norms_cat_id==0||data.userId==0){%>
 								<tr>
 									<td>原价：</td>
-									<td><%=data.prices&&data.prices[0]&&data.prices[0].price?"￥"+data.prices[0].price:""%></td>
+									<td><%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price)?"￥"+parseInt(data.prices[0].price):""%></td>
 								</tr>
 								<tr>
 									<td>臭美价：</td>
-									<td><%=data.prices&&data.prices[0]&&data.prices[0].price_dis?"￥"+data.prices[0].price_dis:""%></td>
+									<td><%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price_dis)?"￥"+parseInt(data.prices[0].price_dis):""%></td>
 								</tr>	
 								<tr>
 									<td>集团价：</td>
-									<td><%=data.prices&&data.prices[0]&&data.prices[0].price_group?"￥"+data.prices[0].price_group:""%></td>
+									<td><%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price_group)?"￥"+parseInt(data.prices[0].price_group):""%></td>
 								</tr>
 								<%}else{%>
 								<%if(data.userId!=0){%>

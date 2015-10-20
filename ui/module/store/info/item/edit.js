@@ -35,6 +35,9 @@
 			timingShelves.val("");
 		}
 	});
+	$('#type1').on('change',function(){
+		$('#project').html("");
+	})
 	var init=function(id){
 		id=id||lib.query.id;
 		var ajat="";
@@ -285,7 +288,8 @@
 			}).on('blur','input',function(){
 				var normarr=[];
 				var tmp=0;
-				$('#format-table tbody tr').each(function(){
+				var trs=$('#format-table tbody tr');
+				trs.each(function(){
 					var $tr=$(this);
 					var obj={type:{}};
 					$tr.children().each(function(){
@@ -304,12 +308,25 @@
 					}
 				});
 				if(tmp>=2){
-					$('input[name="normarr"]').val(JSON.stringify(normarr));
+					$('input[name="normarr"]').val(JSON.stringify(normarr)).data("length",tmp);
 				}else{
-					$('input[name="normarr"]').val('');
+					$('input[name="normarr"]').val('').data("length",tmp);
+					
 				}
-			}).on('pass','input',function(){
-				//$(this).parent().next().find('input').attr("max",this.value);
+			}).on('error','input[name="normarr"]',function(){
+				var length=$(this).data("length")?parseInt($(this).data("length")):0;
+				$('#format-table tbody tr').each(function(i){
+					var $tr=$(this);
+					if(i<length){
+						var input=$tr.children('input');
+						if(!input.eq(0).val()){
+							input.eq(0).addClass('err')
+						}
+						if(!input.eq(1).val()){
+							input.eq(1).addClass('err')
+						}
+					}
+				})
 			});
 			$('.choumei-discount,.group-discount,#choumei-precent,#group-precent').on('keyup',function(){
 				this.value=this.value.replace(/\D/g,"").replace(/^0/g,"");
