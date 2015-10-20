@@ -1015,8 +1015,8 @@ class PlatformController extends Controller{
         return $this->success();
     }
     /***
-	 * @api {post} /platform/list 14.导出平台活动配置列表
-	 * @apiName list
+	 * @api {post} /platform/exportList 14.导出平台活动配置列表
+	 * @apiName exportList
 	 * @apiGroup Platform
 	 *
 	 * @apiParam {Number} selectItem 可选 选择的项 1: 活动编号 2.活动名称
