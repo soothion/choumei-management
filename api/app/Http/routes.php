@@ -809,6 +809,10 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'platform.upConf',
 		'uses'=>'Promotion\PlatformController@upConf'
     ));
+    Route::any('platform/exportList',array(  
+		'as'=>'platform.exportList',
+		'uses'=>'Promotion\PlatformController@exportList'
+    ));
     // 代金劵配置
     Route::any('coupon/add',array(  
 		'as'=>'coupon.add',
