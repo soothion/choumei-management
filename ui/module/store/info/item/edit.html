@@ -166,17 +166,13 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>项目日库存：</label>
 				<div class="control">
-					<input type="text" required pattern="number" max="99999999" min="1" name="repertory" placeholder="限制当日销售数量" <%if(data.total_rep){%>value="<%=data.total_rep%>"<%}else{%>disabled<%}%>>
-					<label><input type="checkbox" <%=!data.total_rep?"checked":""%> class="limit" /><span>无限制</span></label>
-					<span class="control-help" style="display:none;"></span>
+					<input type="text" required pattern="number" max="99999999" min="1" name="repertory" placeholder="限制当日销售数量" value="<%=data.total_rep%>">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="">消费限制：</label>
 				<div class="control">
-					<input type="text" required pattern="number" max="99999999" min="1" name="useLimit" maxlength="15" placeholder="用户使用限制说明" <%if(data.total_rep){%>value="<%=data.total_rep%>"<%}else{%>disabled<%}%>>
-					<label><input type="checkbox" <%=!data.exp_time?"checked":""%> class="limit" /><span>无限制</span></label>
-					<span class="control-help" style="display:none;"></span>
+					<input type="text" pattern="number" max="99999999" min="1" name="useLimit" maxlength="15" placeholder="用户使用限制说明" value="<%=data.total_rep%>">
 				</div>
 			</div>
 			<%}%>
@@ -193,11 +189,11 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定价方式：</label>
 				<div class="control">
-					<label><input class="price-choose" type="radio" name="priceStyle" <%=!data.norms_cat_id||data.userId==0?"checked":""%> value="1" /><span>无规格，统一价</span></label>
-					<label><input class="price-choose" type="radio" name="priceStyle" <%=data.norms_cat_id==1?"checked":""%> value="2"/><span>有规格，区间价</span></label>
+					<label><input class="price-choose" type="radio" name="priceStyle" <%=!(data.norms_cat_id==1&&data.userId!=0)?"checked":""%> value="1" /><span>无规格，统一价</span></label>
+					<label><input class="price-choose" type="radio" name="priceStyle" <%=data.norms_cat_id==1&&data.userId!=0?"checked":""%> value="2"/><span>有规格，区间价</span></label>
 				</div>
 			</div>
-			<div class="price-group" style="<%=data.norms_cat_id==1||data.userId!=0?"display:none":""%>">
+			<div class="price-group" style="<%=data.norms_cat_id==1&&data.userId!=0?"display:none":""%>">
 				<div class="control-group">
 					<label class="control-label" for=""><span class="red">*</span>原价：</label>
 					<div class="control">
@@ -205,7 +201,7 @@
 						<input type="text" data-helpid="help5" required requiredmsg="请输入原价" pattern="number" maxlength="5" min="1" name="price" value="<%=data.prices&&data.prices[0]&&data.prices[0].price?Math.ceil(data.prices[0].price):""%>">
 						</span>
 						<span>
-						<input type="text" pattern="number" class="choumei-discount" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
+						<input type="text" pattern="number" max="100" class="choumei-discount" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
 						<span class="unit">%</span>
 						</span>
 						<span class="control-help" id="help5" style="display:none"></span>
@@ -218,7 +214,7 @@
 						<input type="text" data-helpid="help6" required requiredmsg="请输入臭美价" pattern="number" maxlength="5" min="1" name="priceDis" value="<%=data.prices&&data.prices[0]&&data.prices[0].price_dis?Math.ceil(data.prices[0].price_dis):""%>">
 						</span>
 						<span>
-						<input type="text" pattern="number" class="group-discount" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
+						<input type="text" pattern="number" class="group-discount"  max="100" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
 						<span class="unit">%</span>
 						</span>
 						<span class="control-help" id="help6" style="display:none"></span>
@@ -231,7 +227,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="control-group format-group" style="<%=!data.norms_cat_id?"display:none":""%>">
+			<div class="control-group format-group" style="<%=!(data.norms_cat_id==1&&data.userId!=0)?"display:none":""%>">
 				<label class="control-label" for="">规格选择：</label>
 				<div class="form-item">
 					<style type="text/css">
@@ -319,17 +315,14 @@
 						</div>
 						<hr />
 						<button type="button" class="btn" id="btn-price" >生成价格表</button>
-						<input type="text" pattern="float" id="choumei-precent" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;"/>
+						<input type="text" pattern="number" id="choumei-precent" placeholder="臭美价折扣"  max="100" class="input-unit" style="width:110px;min-width:0;"/>
 						<span class="unit">%</span>
-						<input type="text" pattern="float" id="group-precent"placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;"/>
+						<input type="text" pattern="number" id="group-precent"placeholder="集团价折扣"  max="100" class="input-unit" style="width:110px;min-width:0;"/>
 						<span class="unit">%</span>
 						
 					</div>
 					<span>
 						<input type="hidden" name="normMenu" required requiredmsg="请生成价格表"/>
-					</span>
-					<span>
-						<input type="hidden" name="normarr" required requiredmsg="请录入两个以上的规格价格，否则请用项目名称体现规格"/>
 					</span>
 					<div class="table" id="format-table">
 						
@@ -429,6 +422,8 @@
 			<%})%>
 		</tbody>
 	</table>
+	<br />
+	<input type="hidden" name="normarr" required requiredmsg="请录入两个以上的规格价格，否则请用项目名称体现规格"/>
 	</script>
 	<script type="text/template" id="template-t">
 		<%data&&data.forEach(function(item){%>
