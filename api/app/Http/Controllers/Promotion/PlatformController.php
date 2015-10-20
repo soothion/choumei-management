@@ -12,7 +12,6 @@ use App\Exceptions\ERROR;
 
 
 class PlatformController extends Controller{
-    private static $downloadUrl = "http://t.cn/RZXyLPg";
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
 	
     /***
@@ -413,8 +412,8 @@ class PlatformController extends Controller{
 	 * @apiSuccess {String} addTime 添加时间
 	 * @apiSuccess {String} department 申请部门
 	 * @apiSuccess {String} status 1. 进行中 2. 暂停 3.已关闭 4. 已结束
-	 * @apiSuccess {String} allNum 总的发放数
-	 * @apiSuccess {String} useNum 已发放数
+	 * @apiSuccess {String} allNum 发放数
+	 * @apiSuccess {String} useNum 使用数
 	 * @apiSuccess {String} totalNum 代金劵可领总数
 	 * @apiSuccess {String} actTime 活动时间
 	 * 
@@ -473,7 +472,7 @@ class PlatformController extends Controller{
                 return $page;
             });
             $res = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
-                    ->where(['vType'=>1])
+                    ->where(['vType'=>1,'IS_REDEEM_CODE'=>'N'])
                     ->orderBy('vcId','desc')
                     ->paginate($pageSize)
                     ->toArray();
@@ -508,6 +507,7 @@ class PlatformController extends Controller{
         $where = '1';
         $actType = array('','vcSn','vcTitle');
         $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
+        $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'N']);
         if( !empty($actSelect) && !empty($actNumber) )
             $obj->where( $actType[ $actSelect ] , 'like' , "'%".$actNumber."%'" );
         
@@ -627,8 +627,7 @@ class PlatformController extends Controller{
         if( empty($id) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
         $voucherConfInfo = \App\Model\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney'])
-                ->where(['vcId'=>$id])
-                ->where(['vType'=>1])
+                ->where(['vcId'=>$id,'IS_REDEEM_CODE'=>'N','vType'=>1])
                 ->first()
                 ->toArray();
         
@@ -726,7 +725,7 @@ class PlatformController extends Controller{
      * 
      * 
      * 
-	 * @apiSuccess {Number} selectItem 用户选择栏 1. 新用户 2. 指定用户 3.全平台用户 4.H5用户
+	 * @apiSuccess {Number} selectItemType 用户选择栏 1. 新用户 2. 指定用户 3.全平台用户 4.H5用户
 	 * @apiSuccess {Number} vcId 活动配置
 	 * @apiSuccess {String} actName 活动名称
 	 * @apiSuccess {String} actNo 活动编号
@@ -778,7 +777,7 @@ class PlatformController extends Controller{
      *                       "getTypes": "0",
      *                       "sendSms": "",
      *                        "getCodeType": 0,
-     *                       "selectItem": 2
+     *                       "selectItemType": 2
      *           }
      *       }
 	 *
@@ -796,14 +795,13 @@ class PlatformController extends Controller{
             ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','getItemTypes','useLimitTypes'
             ,'useNeedMoney as enoughMoeny','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
             ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType'])
-                ->where(['vcId'=>$id])
-                ->where(['vType'=>1])
+                ->where(['vcId'=>$id,'IS_REDEEM_CODE'=>'N','vType'=>1])
                 ->first()
                 ->toArray();
         if( in_array($voucherConfInfo['getTypes'],[1,2]) )
-            $voucherConfInfo['selectItem'] = 1;
+            $voucherConfInfo['selectItemType'] = 1;
         if( $voucherConfInfo['getTypes'] == 3 ){
-            $voucherConfInfo['selectItem'] = 2;
+            $voucherConfInfo['selectItemType'] = 2;
             $phoneList = \App\Voucher::select(['vMobilephone'])->where(['vcId'=>$id])->get();
             $temp = [];
             foreach( $phoneList as $val ){
@@ -812,12 +810,12 @@ class PlatformController extends Controller{
             $voucherConfInfo['phoneList'] = $temp;
         }
         if( empty($voucherConfInfo['getTypes']) && ( in_array($voucherConfInfo['code'],[1,2,3]) || $voucherConfInfo['getItemTypes']) ){
-            $voucherConfInfo['selectItem'] = 2;
+            $voucherConfInfo['selectItemType'] = 2;
         }
         if( $voucherConfInfo['getTypes'] == 4 )
-            $voucherConfInfo['selectItem'] = 3;
+            $voucherConfInfo['selectItemType'] = 3;
         if( $voucherConfInfo['getTypes'] == 5 )
-            $voucherConfInfo['selectItem'] = 4;
+            $voucherConfInfo['selectItemType'] = 4;
         
         return $this->success( $voucherConfInfo );
     }
