@@ -49,13 +49,7 @@
 				<option value="3">注销</option></select>
 				<span class="space"></span>
 				<label>所属城市</label>
-				<select  name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=city-c" id ="city">
-				   <script type="text/template" id="city-c">
-				   <option value="">全部</option>
-				   <%for(var i=0;i<data.length;i++){%>
-				   <option value="<%=data[i].id%>"><%=data[i].title%></option>
-				   <%}%>
-				   </script>
+				<select  name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=/module/public/template/city" id ="city">
 				</select>
 				<span class="space"></span>
 				添加时间
