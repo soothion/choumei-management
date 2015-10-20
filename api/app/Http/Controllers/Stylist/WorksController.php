@@ -118,8 +118,8 @@ class WorksController extends Controller {
             $num=0; 
             $works1= Works::where('stylistId','=',$value->stylistId)->get();
             foreach ($works1 as $key1 =>$value) {
-                if(!empty($works1['img'])){
-                    $image=  json_decode($works1['img'],true);
+                if(!empty($value['img'])){
+                    $image=  json_decode($value['img'],true);
                     $num=$num+(count($image));
                 }  else {   
                     $num=$num+1;
@@ -134,8 +134,8 @@ class WorksController extends Controller {
             $num=0; 
             $works3= Works::where('stylistId','=',$stylistId)->get();
             foreach ($works3 as $key7 =>$value) {
-                if(!empty($works1['img'])){
-                    $image=  json_decode($works3['img'],true);
+                if(!empty($value['img'])){
+                    $image=  json_decode($value['img'],true);
                     $num=$num+(count($image));
                 }  else {   
                     $num=$num+1;
