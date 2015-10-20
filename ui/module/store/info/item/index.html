@@ -60,15 +60,15 @@
 						<div class="filter-title">项目类型：</div>
 						<div class="flex-item">
 							<label data-role="hash">
-								<input type="radio" name="cat" value="0" checked />
+								<input type="radio" name="item_type" value="0" checked />
 								<span>全部</span>
 							</label>
 							<label data-role="hash">
-								<input type="radio" name="cat" value="1"/>
+								<input type="radio" name="item_type" value="1"/>
 								<span>普通项目</span>
 							</label>
 							<label data-role="hash">
-								<input type="radio" name="cat" value="2"/>
+								<input type="radio" name="item_type" value="2"/>
 								<span>闲时特价</span>
 							</label>
 						</div>
@@ -191,7 +191,13 @@
 						<td><%=item.item_type==1?"普通项目":"闲时特价"%></td>
 						<%}%>
 						<td><%=item.typename%></td>
-						<td><%=item.salon_norms_cat.length>0?item.salon_norms_cat:"无"%></td>
+						<td>
+							<%if(item.userId!=0){%>
+								<%=item.salon_norms_cat.length>0?item.salon_norms_cat:"无"%>
+							<%}else{%>
+								<%=item.salon_norms_cat.length>0?item.salon_norms_cat:""%>
+							<%}%>
+						</td>
 						<td>￥<%=item.minPriceOri%><%if(item.salon_norms_cat.length>0){%>-<%=item.maxPriceOri%><%}%></td>
 						<td>￥<%=item.minPrice%><%if(item.salon_norms_cat.length>0){%>-<%=item.maxPrice%><%}%></td>
 						<td>￥<%=item.minPriceGroup%><%if(item.salon_norms_cat.length>0){%>-<%=item.maxPriceGroup%><%}%></td>

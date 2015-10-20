@@ -12,25 +12,17 @@ use App\Exceptions\ERROR;
 use App\SalonItemFormats;
 use Request;
 use Event;
+use App\Item;
 
 class WarehouseController extends Controller
 {
     /**
-     * @api {get} /warehouse/index 1.项目仓库列表
+     * @api {get} /warehouse/index 1.项目仓库列表    参见项目列表
      * @apiName index
      * @apiGroup Warehouse
      * 
      * @apiParam {String} salonid  店铺
-     * @apiParam {String} itemname  项目名称的关键字
-     * @apiParam {String} typeid 项目类型 0 全部 1普通项目 2闲时特价
      * @apiParam {String} item_type 项目分类 0 全部 1普通项目 2闲时特价
-     * @apiParam {String} norms_cat_id 项目规格0 全部 1有规格 2无规格
-     * @apiParam {String} exp_time 项目期限 0 全部 1有期限 2无期限
-     * @apiParam {String} buylimit 限制资格 0 全部 1 限首单 2限推荐
-     * @apiParam {Number} page 页数 (从1开始)
-     * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
-     * @apiParam {String} sort_key 排序的键 ['itemid','salonid','typeid','norms_cat_id','itemname','item_type','minPrice','minPriceOri','minPriceGroup']
-     * @apiParam {String} sort_type 排序的方式 ASC正序 DESC倒叙 (默认)
      * 
      * @apiSuccess {Number} total 总数据量.
      * @apiSuccess {Number} per_page 分页大小.
@@ -126,39 +118,47 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        $params = $this->parameters([
-            'salonid'=>self::T_INT,
-            'itemname'=>self::T_STRING,
-            'typeid'=>self::T_INT,
-            'item_type'=>self::T_INT,
-            'norms_cat_id'=>self::T_INT,
-            'exp_time'=>self::T_INT,
-            'buylimit'=>self::T_INT,
-            'page'=>self::T_INT,
-            'page_size'=>self::T_INT,
-            'sort_key'=>self::T_STRING,
-            'sort_type'=>self::T_STRING,
-        ]);
+        $param = $this->param;
+        if(isset($param['item_type']) && !empty($param['item_type']))
+        {
+            $param['item_type'] = intval($param['item_type']);
+        }
+        $param['status'] = Item::DOWN;
+        $query = Item::getQueryByParam($param);
+        $page = isset($param['page'])?max($param['page'],1):1;
+        $page_size = isset($param['page_size'])?$param['page_size']:20;
         
-        $params['status'] = SalonItem::STATUS_OF_DOWN;
-        
-        $itemObj = self::search($params);
-        
-        //页数
-        $page = isset($params['page'])?max(intval($params['page']),1):1;
-        $size = isset($params['page_size'])?max(intval($params['page_size']),1):20;
+        //手动设置页数
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });
         
-        $res =  $itemObj->paginate($size)->toArray();
-        $datas = $res['data'];
-        $norms_cat_ids = array_column($datas, "norms_cat_id");
-        $format_infos = SalonItemFormats::getItemsByNormscatids($norms_cat_ids);
-        $res['data'] = SalonItem::composite($datas,$format_infos);
-        unset($res['next_page_url']);
-        unset($res['prev_page_url']);
-        return $this->success($res);
+            $fields = array(
+                'itemid',
+                'salonid',
+                'item_type',
+                'itemname',
+                'typename',
+                'minPrice',
+                'maxPrice',
+                'minPriceOri',
+                'maxPriceOri',
+                'minPriceGroup',
+                'maxPriceGroup',
+                'norms_cat_id',
+                'sort_in_type'
+            );
+        
+            //分页
+            $result = $query->select($fields)->paginate($page_size)->toArray();
+            //获取规格
+            $norms_cat_ids = array_column($result['data'], "norms_cat_id");
+            $format_infos = SalonItemFormats::getItemsByNormscatids($norms_cat_ids);
+            $result['data'] = SalonItem::composite($result['data'],$format_infos);
+        
+            unset($result['next_page_url']);
+            unset($result['prev_page_url']);
+            return $this->success($result);
     }
 
     /**
