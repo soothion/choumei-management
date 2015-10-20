@@ -99,7 +99,7 @@ class PayManage extends Model
     }
     
     /**
-     * 通过提现生成收款单
+     * 通过提现生成付款单
      * @param unknown $params
      */
     public static function makeByWithdraw($w_id)
@@ -149,7 +149,7 @@ class PayManage extends Model
     }
     
     /**
-     * 生成(从预付单的交易代收返还生成)
+     * 生成(从预付单的交易代收返还生成)  废弃
      * @param unknown $params
      */
     public static function makeFromPrepayReturn($params)
@@ -215,7 +215,8 @@ class PayManage extends Model
             !isset($params['receive_day']) ||//实际付款日期
             !isset($params['cash_uid'])    ||//确认人
             !isset($params['make_uid']) ||//制单人
-            !isset($params['make_at'])//创建日期
+            !isset($params['make_at']) ||//创建日期
+            !isset($params['remark'])//备注
         )
         {
             return false;
@@ -242,6 +243,7 @@ class PayManage extends Model
             'confirm_uid'=>$params['cash_uid'],
             'cash_uid'=>$params['cash_uid'],
             'confirm_at'=>$params['receive_day'],
+            'remark'=>$params['remark'],
             'created_at'=>$params['make_at'],
             'updated_at'=>date('Y-m-d H:i:s')
         ];
@@ -258,6 +260,7 @@ class PayManage extends Model
             'pay_money'=>$params['money'],
             'pay_type'=>$params['receive_type'],
             'pay_day'=>$params['receive_day'],
+            'remark'=>$params['remark'],
             'count_at'=>$params['make_at'],
         ];
         $prepay = PrepayBill::makeCompleted($prepay_params);      
@@ -503,6 +506,7 @@ class PayManage extends Model
                         'pay_money'=>$item['money'],
                         'pay_type'=>$item['pay_type'],
                         'pay_day'=>$now_day,
+                        'remark'=>$item['remark'],
                     ];
                     $res = PrepayBill::makeCompleted($record);
                     self::where('id',$item['id'])->update(['p_id'=>$res['id'],'p_code'=>$res['code']]);

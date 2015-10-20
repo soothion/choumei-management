@@ -83,7 +83,8 @@ class PrepayBill extends Model
             ! isset($params['uid']) || // 制单人
             ! isset($params['pay_money']) || //  金额
             ! isset($params['pay_type']) || // 支付方式
-            ! isset($params['pay_day']) // 实际付款日期
+            ! isset($params['pay_day']) || // 实际付款日期
+            ! isset($params['remark']) // 备注
          )
         {
             return false;
@@ -103,6 +104,7 @@ class PrepayBill extends Model
             'pay_type'  => $params['pay_type'],
             'state'  => self::STATE_OF_COMPLETED,
             'pay_day'  => $params['pay_day'],
+            'remark'  => $params['remark'],
             'created_at' => $now_date,
             'updated_at' => $now_date,
         ];
@@ -134,7 +136,8 @@ class PrepayBill extends Model
             !isset($params['receive_day']) ||//实际付款日期
             !isset($params['cash_uid'])    ||//确认人
             !isset($params['make_uid']) ||//制单人
-            !isset($params['make_at'])//创建日期
+            !isset($params['make_at']) ||//创建日期
+            !isset($params['remark']) // 备注
         )
         {
             return false;
@@ -149,6 +152,7 @@ class PrepayBill extends Model
             'pay_money'  => $params['money'],
             'pay_type'  => $params['receive_type'],
             'pay_day'  => $params['receive_day'],
+            'remark'  => $params['remark'],
        ];        
        $res = self::makeCompleted($record);
        $remark = "预付款返还";
