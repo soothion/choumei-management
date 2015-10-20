@@ -15,7 +15,7 @@ use App\Exceptions\ERROR;
 class TicketController extends Controller {
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
     /**
-	 * @api {get} /voucher/list 1.现金卷列表
+	 * @api {get} /voucher/list 1.卷列表
 	 * @apiName list
 	 * @apiGroup voucher
 	 *
@@ -148,7 +148,7 @@ class TicketController extends Controller {
         return $this->success( $list );
     }
     /**
-	 * @api {get} /voucher/exportTicketList 4.导出现金卷列表
+	 * @api {get} /voucher/exportTicketList 4.导出卷列表
 	 * @apiName exportTicketList
 	 * @apiGroup voucher
 	 *
@@ -281,7 +281,7 @@ class TicketController extends Controller {
         })->export('xls');
     }
     /***
-	 * @api {get} /voucher/invalidStatus/:id 2.作废现金卷
+	 * @api {get} /voucher/invalidStatus/:id 2.作废卷
 	 * @apiName invalidStatus
 	 * @apiGroup voucher
 	 *
