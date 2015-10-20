@@ -7,7 +7,7 @@
   </head>
   <body>
 		<div class="breadcrumb">
-			<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><a href="index.html">项目列表</a><span>&gt;</span>查看项目详情
+			<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><a href="index.html#p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>">项目列表</a><span>&gt;</span>查看项目详情
 			<div class="flex-box">
 				<div class="flex-item">
 					<h4>查看项目详情</h4>
@@ -78,7 +78,7 @@
 							<tbody>
 								<tr>
 									<td> 项目有效期：</td>
-									<td colspan="3"><%=data.exp_time?new Date(data.exp_time*1000):"无限制"%></td>
+									<td colspan="3"><%=data.exp_time?new Date(data.exp_time*1000).format("yyyy-MM-dd"):"无限制"%></td>
 								</tr>
 								<tr>
 									<td>定时上架：</td>
@@ -115,7 +115,7 @@
 							<tbody>
 								<tr>
 									<td>定价方式：</td>
-									<td><%=data.norms_cat_id==1&&data.userId!=0?"有规格，区间价":"无规格，统一价"%></td>
+									<td><%=data.norms_cat_id==0||data.userId==0?"无规格，统一价":"有规格，区间价"%></td>
 								</tr>
 								<%if(data.norms_cat_id==0||data.userId==0){%>
 								<tr>

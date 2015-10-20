@@ -21,7 +21,7 @@
 					<h4><%=title%>-<%=query.salonname%></h4>
 				</div>
 				<%if(query.p=="item"){%>
-				<div><a href="sort.html#typeid=1&salonid=<%=query.salonid%>" data-slug="item.sort" class="btn">项目排序</a></div>
+				<div><a href="sort.html#typeid=1&<%=query._%>" data-slug="item.sort" class="btn">项目排序</a></div>
 				<%}%>
 			</div>
 		</div>
@@ -192,9 +192,9 @@
 						<%}%>
 						<td><%=item.typename%></td>
 						<td><%=item.salon_norms_cat.length>0?item.salon_norms_cat:"无"%></td>
-						<td>￥<%=item.minPriceOri%></td>
-						<td>￥<%=item.minPrice%></td>
-						<td>￥<%=item.minPriceGroup%></td>
+						<td>￥<%=item.minPriceOri%><%if(item.salon_norms_cat.length>0){%>-<%=item.maxPriceOri%><%}%></td>
+						<td>￥<%=item.minPrice%><%if(item.salon_norms_cat.length>0){%>-<%=item.maxPrice%><%}%></td>
+						<td>￥<%=item.minPriceGroup%><%if(item.salon_norms_cat.length>0){%>-<%=item.maxPriceGroup%><%}%></td>
 						<td>
 							<%if(query.p=="item"||query.p=="special"){%>
 							<form data-slug="item.down" action="item/down/<%=item.itemid%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
