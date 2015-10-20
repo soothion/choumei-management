@@ -784,6 +784,26 @@ class CouponController extends Controller{
 	 *
 	 *@apiParam {Number} id                   必填     代金劵配置id
      * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+	 *		    "result": 1,
+	 *		    "data": "",
+	 *		}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "关闭失败，请重新下线"
+	 *		}
 	 ***/
     public function exportCoupon($vcId){
         if( empty($vcId) )
