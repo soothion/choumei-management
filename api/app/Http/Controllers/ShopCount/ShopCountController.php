@@ -150,7 +150,7 @@ class ShopCountController extends Controller
             'sort_type'=>self::T_STRING,
         ]);  
         $header = ['店铺名称','付款单号','付款类型','支付方式','付款金额','实际付款日期','备注','创建日期','制单人','状态','店铺编码','店铺id'];      
-        $items = ShopCountApi::getPrepayCondition($param)->addSelect('updated_at')->addSelect('remark')->get()->toArray(); 
+        $items = ShopCountApi::getPrepayCondition($param)->addSelect('updated_at')->get()->toArray(); 
         Event::fire('shopcount.export');
         $this->export_xls("转付单".date("Ymd"),$header,self::format_prepay_data($items));
     }

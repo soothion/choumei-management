@@ -523,6 +523,7 @@ class ShopCountApi
             'uid',
             'pay_money',
             'pay_type',
+            'remark',
             //'cost_money',
             'day',
             'pay_day',
