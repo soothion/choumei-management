@@ -125,7 +125,9 @@ $(function(){
         data.addrlong = arr[1];
         delete data.lngLat;
     } 
-
+	$(document.body).on('blur',"input[name='contractTime']",function(){
+		$('input[name="contractEndTime"]').attr('min',this.value);
+	})
 
 });
 

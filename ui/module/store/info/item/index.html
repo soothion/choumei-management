@@ -195,7 +195,7 @@
 							<%if(item.userId!=0){%>
 								<%=item.salon_norms_cat.length>0?item.salon_norms_cat:"无"%>
 							<%}else{%>
-								<%=item.salon_norms_cat.length>0?item.salon_norms_cat:""%>
+								<%=item.salon_norms_cat.length>0?"":"无"%>
 							<%}%>
 						</td>
 						<td>￥<%=item.minPriceOri%><%if(item.salon_norms_cat.length>0){%>-<%=item.maxPriceOri%><%}%></td>

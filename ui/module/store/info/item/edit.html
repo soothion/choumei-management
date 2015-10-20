@@ -202,7 +202,7 @@
 					<label class="control-label" for=""><span class="red">*</span>原价：</label>
 					<div class="control">
 						<span>
-						<input type="text" data-helpid="help5" required requiredmsg="请输入原价" pattern="number" maxlength="5" min="1" name="price" value="<%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price)?Math.ceil(data.prices[0].price):""%>">
+						<input type="text" data-helpid="help5" required requiredmsg="请输入原价" pattern="number" maxlength="5" min="1" name="price" <%if(data.norms_cat_id==0){%>value="<%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price)?Math.ceil(data.prices[0].price):""%>" <%}%>>
 						</span>
 						<span>
 						<input type="text" pattern="number" max="100" class="choumei-discount" placeholder="臭美价折扣" class="input-unit" style="width:110px;min-width:0;">
@@ -215,7 +215,7 @@
 					<label class="control-label" for=""><span class="red">*</span>臭美价：</label>
 					<div class="control">
 						<span>
-						<input type="text" data-helpid="help6" required requiredmsg="请输入臭美价" pattern="number" maxlength="5" min="1" name="priceDis" value="<%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price_dis)?Math.ceil(data.prices[0].price_dis):""%>">
+						<input type="text" data-helpid="help6" required requiredmsg="请输入臭美价" pattern="number" maxlength="5" min="1" name="priceDis" <%if(data.norms_cat_id==0){%> value="<%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price_dis)?Math.ceil(data.prices[0].price_dis):""%>"  <%}%>>
 						</span>
 						<span>
 						<input type="text" pattern="number" class="group-discount"  max="100" placeholder="集团价折扣" class="input-unit" style="width:110px;min-width:0;">
@@ -227,7 +227,7 @@
 				<div class="control-group">
 					<label class="control-label" for="">集团价：</label>
 					<div class="control">
-						<input type="text" pattern="number" maxlength="5" min="1" name="priceGroup" value="<%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price_group)?Math.ceil(data.prices[0].price_group):""%>">
+						<input type="text" pattern="number" maxlength="5" min="1" name="priceGroup" <%if(data.norms_cat_id==0){%> value="<%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price_group)?Math.ceil(data.prices[0].price_group):""%>"  <%}%>>
 					</div>
 				</div>
 			</div>
