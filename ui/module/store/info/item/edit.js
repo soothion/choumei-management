@@ -286,6 +286,7 @@
 					
 				}
 			}).on('blur','input',function(){
+				$(this).removeClass("err");
 				var normarr=[];
 				var tmp=0;
 				var trs=$('#format-table tbody tr');
@@ -310,21 +311,26 @@
 				if(tmp>=2){
 					$('input[name="normarr"]').val(JSON.stringify(normarr)).data("length",tmp);
 				}else{
-					$('input[name="normarr"]').val('').data("length",tmp);
+					$('input[name="normarr"]').val('').data("length",2-tmp);
 					
 				}
+			}).on('pass','input',function(){
+				var $this=$(this)
+				$this.parent().next().find('input').attr('max',$this.val());
+				
 			}).on('error','input[name="normarr"]',function(){
 				var length=$(this).data("length")?parseInt($(this).data("length")):0;
 				$('#format-table tbody tr').each(function(i){
 					var $tr=$(this);
-					if(i<length){
-						var input=$tr.children('input');
+					var input=$tr.find('input');
+					if(length!=0&&(!input.eq(0).val()||!input.eq(1).val())){
 						if(!input.eq(0).val()){
 							input.eq(0).addClass('err')
 						}
 						if(!input.eq(1).val()){
 							input.eq(1).addClass('err')
 						}
+						length--;
 					}
 				})
 			});
