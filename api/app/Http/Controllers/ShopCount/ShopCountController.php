@@ -149,8 +149,8 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);  
-        $header = ['店铺编码','店铺名称','付款单号','付款类型','支付方式','付款金额','要求付款日期','实际付款日期','创建日期','制单人','状态'];      
-        $items = ShopCountApi::getPrepayCondition($param)->addSelect('updated_at')->get()->toArray(); 
+        $header = ['店铺名称','付款单号','付款类型','支付方式','付款金额','实际付款日期','备注','创建日期','制单人','状态','店铺编码','店铺id'];      
+        $items = ShopCountApi::getPrepayCondition($param)->addSelect('updated_at')->addSelect('remark')->get()->toArray(); 
         Event::fire('shopcount.export');
         $this->export_xls("转付单".date("Ymd"),$header,self::format_prepay_data($items));
     }
@@ -476,18 +476,19 @@ class ShopCountController extends Controller
             $pay_type_name = Mapping::getPayTypeName($data['pay_type']);
             $username = $data['user']['name'];
             $statename = Mapping::getPrepayStateName($data['state']);
-            $res[] = [
-                $salon_sn,
+            $res[] = [               
                 $salon_name,
                 $data['code'],
                 $typename,
                 $pay_type_name,
                 $data['pay_money'],
-                $data['day'],
                 $data['pay_day'],
+                $data['remark'],
                 date("Y-m-d",strtotime($data['updated_at'])),
                 $username,
-                $statename
+                $statename,
+                $salon_sn,
+                $data['salon_id'],
             ];
         }
         return $res;
