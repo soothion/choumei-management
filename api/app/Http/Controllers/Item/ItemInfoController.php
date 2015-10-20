@@ -679,9 +679,18 @@ class ItemInfoController extends Controller{
 								    				'price'=>$value['price'],
 								    				'add_time'=>$now_time,
 	    									];
-	    		$priceDisArr[] = $value['priceDis'];
-	    		$priceGroupArr[] = $value['priceGroup'];
-	    		$priceOriArr[] = $value['price'];
+	    		if($value['priceDis'])
+	    		{
+	    			$priceDisArr[] = $value['priceDis'];
+	    		}
+	    		if($value['priceGroup'])
+	    		{
+	    			$priceGroupArr[] = $value['priceGroup'];
+	    		}
+	    		if($value['price'])
+	    		{
+	    			$priceOriArr[] = $value['price'];
+	    		}
 	    	}
 	    	
 	    }
