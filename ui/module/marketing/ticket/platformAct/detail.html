@@ -4,7 +4,11 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="/js/include.js"></script>
-      <link rel="stylesheet" href="income.css" />
+      <style>
+        td:first-of-type{
+            width:15%;
+        }
+      </style>
     </head>
     <body>
         <div class="breadcrumb">
@@ -17,114 +21,130 @@
             </div>
         </div>
         <div class="wrapper">
-            <div class="table" style="margin:0" id="table-wrapper">
+            <div class="table" style="margin:0" id="table-wrapper" ajat="platform/actView/<%=query.id%>#domid=table-wrapper&tempid=table-t">
+            <script type="text/template" id="table-t">
                 <div class="detail-operation">
-                        <a href='addBase.html'>
-                            <button class="btn">编辑</button>
-                        </a>
+                    <button class="btn edit-button">编辑</button>
+                    &nbsp;&nbsp;
                     <button class="btn" type="button" onclick="window.close()">关闭</button>  
                 </div>              
                 <table>
                     <tbody>
                         <tr>
                             <td class="td">活动名称</td>
-                            <td><%=data.sn%></td>
+                            <td><%=data.vcTitle%></td>
                         </tr>
 
                         <tr>
                             <td class="td">活动编号</td>
-                            <td><%=data.start_at && new Date(data.start_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.vcSn%></td>
                         </tr>
 
                         <tr>
                             <td class="td">活动简介</td>
-                            <td><%=data.end_at && new Date(data.end_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.vcRemark%></td>
                         </tr>
 
                         <tr>
                             <td class="td">活动时间</td>
-                            <td><%=data.amount%></td>
+                            <td><%=data.actTime%></td>
                         </tr>
 
                         <tr>
                             <td class="td">活动状态</td>
-                            <td><%=data.created_by%></td>                            
+                            <% var statusText = {'1':'进行中', '2': '下线', '3':'已关闭', '4': '已结束'}%>
+                            <td><%=statusText[data.status]%></td>                            
                         </tr>
 
                         <tr>
                             <td class="td">申请部门</td>
-                            <td><%=data.created_at && new Date(data.created_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.department%></td>
                         </tr>   
 
                         <tr>
                             <td class="td">负责人</td>
-                            <td><%=data.confirm_by%></td>
+                            <td><%=data.manager%></td>
                         </tr>
 
                         <tr>
                             <td class="td">现金券总张数上限</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.totalNum%></td>
                         </tr>  
 
                         <tr>
                             <td class="td">现金券预算总金额</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.budget%></td>
                         </tr>  
 
                         <tr>
                             <td class="td">指定集团获取</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.companyCode%></td>
                         </tr> 
 
                         <tr>
                             <td class="td">指定活动获取</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.activityCode%></td>
                         </tr> 
 
                         <tr>
                             <td class="td">指定店铺获取</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.dividendCode%></td>
                         </tr>
 
                         <tr>
                             <td class="td">已发放数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.allNum%></td>
                         </tr>  
 
                         <tr>
                             <td class="td">已发放金额</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.allMoney%></td>
                         </tr> 
 
                         <tr>
                             <td class="td">已使用数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.useNumed%></td>
                         </tr> 
 
                         <tr>
                             <td class="td">已使用总金额</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.useMoneyed%></td>
                         </tr>
 
 
                         <tr>
                             <td class="td">已消费数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.consumeNum%></td>
                         </tr> 
 
                         <tr>
                             <td class="td">已消费数金额</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.consumeMoney%></td>
                         </tr>
 
                         <tr>
                             <td class="td">已失效数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.invalidNum%></td>
                         </tr>                                                      
                                                                                 
                     </tbody>                     
                 </table>
+            </script>
             </div>
         </div>
+
+        <script>
+            $("#table-wrapper").on('click',".edit-button",function(){
+                lib.ajax({
+                    type: "post",
+                    url : 'platform/getInfo/'+lib.query.id
+                }).done(function(data, status, xhr){
+                    if(data.result == 1){
+                        sessionStorage.setItem('edit-base-data',JSON.stringify(data.data));  
+                        location.href = "addBase.html?type=edit&id="+lib.query.id;                        
+                    }
+                });
+            })
+        </script>    
     </body>
 </html>

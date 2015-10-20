@@ -8,7 +8,8 @@
     }
 
     if(type == 'edit'){
-        
+        var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+        lib.ajat('#domid=form&tempid=form-t').template(editData);
     }
 
     $("#form").on('click',".flex-item a",function(e){
@@ -17,7 +18,16 @@
     });
 
     lib.Form.prototype.save = function(data){
-        sessionStorage.setItem('add-base-data',JSON.stringify(data));
+        if(type == 'add'){    
+            var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
+            addData = $.extend({},addData,data);
+            sessionStorage.setItem('add-base-data',JSON.stringify(addData));             
+        }
+        if(type == 'edit'){
+            var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+            editData = $.extend({},editData,data);
+            sessionStorage.setItem('edit-base-data',JSON.stringify(editData));     
+        }
         location.href = "addUser.html?type="+type+"&selectItemType="+selectItemType;
     }    
 

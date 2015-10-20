@@ -80,7 +80,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
                     <div class="control">
-                        <select name="departmentId" id="department" required ajat-one="true" ajat="platform/getRequestDepartment#domid=department&tempid=department-t&departmentId=<%=data.departmentId%>"
+                        <select name="departmentId" id="department" required ajat-one="true" ajat="platform/getRequestDepartment#domid=department&tempid=department-t&departmentId=<%=data.departmentId||8%>"
                         ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager-t&managerId=<%=data.managerId%>">
 
                         </select>  
@@ -89,7 +89,7 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>负责人：</label>
-                   <div class="control" id="manager" ajat-one="true" ajat="platform/getDepartmentManager/<%=data.departmentId || 0 %>#domid=manager&tempid=manager-t&managerId=<%=data.managerId%>">
+                   <div class="control" id="manager" ajat-one="true" ajat="platform/getDepartmentManager/<%=data.departmentId || 8 %>#domid=manager&tempid=manager-t&managerId=<%=data.managerId%>">
 
                     </div>
                     <span class="control-help" style="display:none;"></span>
@@ -109,9 +109,8 @@
         </script>
 
         <script type="text/template" id="department-t">  
-            <option value="">全部</option>
             <%data.forEach&&data.forEach(function(item,i){%>
-                <option <%=item.id==protocol.custom.departmentId?"selected":""%> value="<%=item.id%>">
+                <option <%=(item.id==protocol.custom.departmentId)?"selected":""%> value="<%=item.id%>">
                 <%=item.title%>
                 </option>
             <%})%>

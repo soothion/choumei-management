@@ -24,43 +24,42 @@
         <div class="wrapper">
             <form data-role="hash">                       
                <div class="input-group input-switch">
-                    <select>
-                        <option value="0">活动编号</option>
-                        <option value="1">活动名称</option>
+                    <select name="selectItem">
+                        <option value="1" data-placeholder="活动编号">活动编号</option>
+                        <option value="2" data-placeholder="活动名称">活动名称</option>
                     </select>
-                    <input type="text" class="input-search" name="username" placeholder="活动编号">
-                    <input type="text" class="input-search hide" name="role" class="hide" placeholder="活动名称">
+                    <input type="text" class="input-search" name="number" placeholder="活动编号">
                 </div>
 
                 <span class="space"></span>
                 <label>活动状态：</label>
-                <select name="department_id">
+                <select name="status">
                     <option value="">全部</option>
                     <option value="1">进行中</option>
                     <option value="2">暂停</option>
                     <option value="3">已关闭</option>
-                    <option value="3">已结束</option>
+                    <option value="4">已结束</option>
                 </select>
 
                 <span class="space"></span>
                 <label>申请部门</label>
-                <select name="department_id">
-                    <option value="">全部</option>
-                    <option value="1">客服部</option>
-                    <option value="2">产品部</option>
-                    <option value="3">运营部</option>
-                    <option value="3">商务部</option>
-                    <option value="3">企划部</option>
-                    <option value="3">市场部</option>
-                    <option value="3">其他部门</option>
+                <select name="department" id="department" ajat="platform/getRequestDepartment#domid=department&tempid=department-t" ajat-one="true">
+                    <script type="text/template" id="department-t">  
+                        <option value="">全部</option>
+                        <%data.forEach&&data.forEach(function(item,i){%>
+                            <option <%=item.id==protocol.custom.departmentId?"selected":""%> value="<%=item.id%>">
+                            <%=item.title%>
+                            </option>
+                        <%})%>
+                    </script> 
                 </select>   
 
                 <span class="space"></span>
                 <span>活动时间：</span>
                 <span class="date-group">
-                    <input type="date" data-role="start" name="start" placeholder="YYYY-MM-DD"/>
+                    <input type="date" data-role="start" name="startTime" placeholder="YYYY-MM-DD"/>
                     到
-                    <input type="date" data-role="end" name="end" placeholder="YYYY-MM-DD"/>
+                    <input type="date" data-role="end" name="endTime" placeholder="YYYY-MM-DD"/>
                 </span>
                 <button class="btn" type="submit">查询</button>
             </form>
@@ -71,7 +70,7 @@
                 </button>
             </form>
                           
-           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="platform/list?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -90,32 +89,48 @@
                         </tr>
                     </thead>
                 <tbody>
-                <%var status=["","正常","停用","注销"]%>
-                <%var data=data.data%>
-                <%for(var i=0;i<data.length;i++){%>
+               <% var statusText = {'1':'进行中', '2': '下线', '3':'已关闭', '4': '已结束'}%>
+               <%data.data && data.data.forEach(function(item,index){%>
                  <tr>
-                  <td><%=i+1%></td>
-                  <td><%=data[i].name%></td>
-                  <td><%=data[i].username%></td>
-                  <td><%=status[data[i].status]%></td>
-                  <td><%=data[i].city?data[i].city.title:""%></td>  
-                  <td><%=data[i].department?data[i].department.title:""%></td>
-                  <td><%=data[i].position?data[i].position.title:""%></td>         
-                  <td><%=data[i].position?data[i].position.title:""%></td>         
-                  <td><%for(var j=0;j<data[i].roles.length;j++){%>
-                      <%=data[i].roles[j].name%>
-                      <%}%>                  
-                   </td>                  
-                  <td><%=data[i].created_at%></td>
+                  <td><%=index+1%></td>
+                  <td><%=item.vcTitle%></td>
+                  <td><%=item.vcSn%></td>
+                  <td><%=item.totalNum%></td>
+                  <td><%=item.allNum%></td>  
+                  <td><%=item.useNum%></td>
+                  <td><%=item.addTime%></td>         
+                  <td><%=item.actTime%></td>         
+                  <td><%=item.department%></td>                  
+                  <td><%=statusText[item.status]%></td>
                   <td>
-                    <a class="link" target="_blank" href="detail.html">查看&gt;</a>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="link">下线</a>
-                    &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="link">关闭</a>
+                    <a class="link" href="detail.html?id=<%=item.vcId%>">查看&gt;</a>
+                    <%if(item.status=="1"){%>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <form action="platform/offlineConf/<%=item.vcId%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <button class="link">下线</button>
+                        </form>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <form action="platform/closeConf/<%=item.vcId%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <button class="link">关闭</button>
+                        </form>                        
+                    <%}%>
+
+                    <%if(item.status=="2"){%>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <form action="" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <button class="link">上线</button>
+                        </form>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <form action="platform/closeConf/<%=item.vcId%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <button class="link">关闭</button>
+                        </form> 
+                    <%}%>
+
                   </td>
                   </tr>
-                  <%}%>
+                  <%})%>
                 </tbody>
             </table>        
              <div class="pager"> </div>
