@@ -13,6 +13,7 @@ use App\Exceptions\ERROR;
 
 class PlatformController extends Controller{
     private static $downloadUrl = "http://t.cn/RZXyLPg";
+    private static  $DES_KEY = "authorlsptime20141225\0\0\0";
 	
     /***
 	 * @api {get} /platform/getItemType 1.获取项目分类名称
@@ -958,44 +959,62 @@ class PlatformController extends Controller{
             return $this->error('关闭失败，请重新关闭');
         return $this->success();
     }
-    public function upConf(){
-        $vcId = $_POST['vcId'];
-        $voucherConfModel = M('voucher_conf');
-        $where = 'vcId = %d';
-        $condition = array($vcId);
-        $data = array( 'status'=>1 );
-        $voucherConfModel->where($where,$condition)->save($data);
-
+    /***
+	 * @api {get} /platform/upConf/{:id} 13.上线操作
+	 * @apiName upConf
+	 * @apiGroup Platform
+	 *
+	 *@apiParam {Number} id                   必填        活动配置id
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+	 *		    "result": 1,
+	 *		    "data": "",
+	 *		}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "关闭失败，请重新下线"
+	 *		}
+	 ***/
+    public function upConf($vcId){
+        // 修改配置表中为已上线状态
+        \App\Model\VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
         // 修改voucher表中手机是否已经注册
-        $voucherModel = M('voucher');
-        $field = array('vMobilephone');
-        $where = 'vStatus=10 and vcId=%d';
-        $phoneList = $voucherModel->field( $field )->where($where,array($vcId))->select();
-
+        $phoneList = \App\Voucher::select(['vMobilephone'])->where(['vStatus'=>10,'vcId'=>$vcId])->get()->toArray();
         //判断当前活动是否勾选了消费类项目
-        $voucherConf=M("voucher_conf")->field(array('getItemTypes,getNeedMoney,getStart,getEnd'))->where(array('vcId'=>$vcId))->find();
+        $voucherConf = \App\Model\VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd'])->where(['vcId'=>$vcId])->first()->toArray();
+        
         $getItemTypes=$voucherConf['getItemTypes'];
         $getNeedMoney=$voucherConf['getNeedMoney'];
-
+        
         foreach( $phoneList as $val ){
             $voucherData = array();
             $where1 = 'vStatus=10 AND vMobilephone ="'.$val['vMobilephone'].'"';
             $voucherStatus = $this->verifyUserPhoneExists($val['vMobilephone']);
             // 统一处理 不管有无注册过
             $nowTime=  time();
-        if(!empty($getItemTypes)||!empty($getNeedMoney)||(!empty($voucherConf['getStart']) && $nowTime< $voucherConf['getStart'])){  //其中一个不为空则有消费类型  将状态改为3 待激活   
+            // 其中一个不为空则有消费类型  将状态改为3 待激活   
+            if(!empty($getItemTypes)||!empty($getNeedMoney)||(!empty($voucherConf['getStart']) && $nowTime< $voucherConf['getStart'])){  
                 $voucherData['vStatus']=3;
             }else{ 
                $voucherData['vStatus'] = empty( $voucherStatus ) ? 3 : 1;
             }
-
-//                $voucherData['vStatus'] = 3;
             $voucherData['vUserId'] = empty( $voucherStatus ) ? 0 : $voucherStatus['user_id'];
-            $voucherModel->where($where1)->save($voucherData);
+            \App\Voucher::whereRaw( $where1 )->update( $voucherData );
         }
         $this->verifyPhone( $vcId );
-        $this->upActCoupon( $vcId );
-        exit(json_encode(array('result'=>1)) );
+        return $this->success();
     }
     // 校验集团码
     private function getGroupExists( $code ){
@@ -1066,5 +1085,101 @@ class PlatformController extends Controller{
     private function verifyUserPhoneExists( $phone ){
         $exists = \App\User::select(['user_id','os_type'])->where(['mobilephone'=>$phone])->first();
         return $exists;
+    }
+    // 校验是否为手机号码添加 且为未激活状态的 如果是 那么发送短信提醒
+    private function verifyPhone( $vcId ){
+        // 找到用户获取的类型
+        $getTypes = \App\Model\VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd','useEnd','SMS_ON_GAINED','useMoney'])
+                ->where(['vcId'=>$vcId,'getTypes'=>3,'status'=>1])
+                ->first()->toArray();
+
+        if( empty($getTypes) )
+            return false;
+        $nowTime = time();
+        // 存在开始时间  且 现在的时间小于劵获取开始时间
+        $nowItStart = (!empty($getTypes['getStart']) && $nowTime< $getTypes['getStart']);
+        // 存在接在结束时间 且 现在的时间大于劵获取的结束时间
+        $nowGtEnd = (!empty($getTypes['getEnd']) && $nowTime> $getTypes['getEnd']);
+        $getNeedMoney = $getTypes['getNeedMoney'];
+        $getItemType = $getTypes['getItemTypes'];
+        $sms = $getTypes['SMS_ON_GAINED'];
+
+        $useEnd = date('Y-m-d', $getTypes['useEnd']);
+
+        if( !empty($getItemType) || !empty($getNeedMoney)  || $nowItStart || $nowGtEnd )
+            return false;
+
+        // 找到活动对应的手机号码
+        $phoneList = \App\Voucher::select(['vMobilephone'])->whereRaw('vcId='.$vcId.' and ( vStatus=3 or vStatus=1)')->get()->toArray();
+
+        $userMoney = $getTypes['useMoney'];
+        $osType = array( '','ANDROID','IOS' );
+        
+        foreach($phoneList as $val){
+            $successMsg = date('Y-m-d H:i:s') . " 代金劵发送短信的手机号码成功的有 " . $val['vMobilephone'];
+            $errMsg = date('Y-m-d H:i:s') .  "代金劵发送短信的手机号码失败的有" . $val['vMobilephone'];
+            if( !empty($sms) ){
+                $res = $this->sendphonemsg($val['vMobilephone'],$sms);
+                $logPath = '../vouchConf_sendMsg.log';
+                $successMsg .= ' - ' .$res;
+                $errMsg .= ' - '.$res;
+                // 发送短息成功
+                if( stripos($res,'ok') !== false ){
+                    file_put_contents( $logPath, $successMsg ,FILE_APPEND );
+                }else{
+                    file_put_contents( $logPath, $errMsg ,FILE_APPEND );
+                }
+            }
+            // 写入到推送表
+            $userId = $this->verifyUserPhoneExists( $val['vMobilephone'] );
+            if( !empty($userId) ){
+                $dataPush = array();
+                $dataPush['RECEIVER_USER_ID'] = $userId['user_id'];
+                $dataPush['TYPE'] = 'USR';
+                if( !empty( $osType[ $userId['os_type'] ] ) )
+                    $dataPush['OS_TYPE'] = $osType[ $userId['os_type'] ];
+                $dataPush['TITLE'] = '您获得了一张代金券';
+                $dataPush['MESSAGE'] = '您获得了一张价值￥'. $userMoney .'的代金券，'. $useEnd .'前使用有效，赶快去消费吧(点击查看详情)。';
+                $dataPush['PRIORITY'] = 1;
+                $dataPush['EVENT'] = '{"event":"voucherList","userId":"'.$userId['user_id'].'","msgType":"6"}';
+                $dataPush['STATUS'] = 'NEW';
+                $dataPush['CREATE_TIME'] = date('Y-m-d H:i:s');
+
+                \App\Push::insertGetId( $dataPush );
+            }
+        }
+    }
+    //发送短信
+    private function sendphonemsg($mobilephone, $smstxt) {
+
+        $url = env('SMS_URL_CONF');
+
+        $data = array('phone' => $mobilephone, 'smstxt' => $smstxt);
+        $codeVal = http_build_query($data);
+        $DesObj = new \Service\NetDesCrypt;
+        $DesObj->setKey( self::$DES_KEY );
+        //加密参数
+        $desStr = $DesObj->encrypt($codeVal);
+
+        $param['code'] = $desStr;
+        $result = $this->curlGet($url, $param);
+        return $result;
+    }
+    // curl get
+    private function curlGet($url, $data) {
+
+        $url = $url . http_build_query($data);
+        // 1. 初始化
+        $ch = curl_init();
+        // 2. 设置选项，包括URL
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0); //设置header
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // 3. 执行并获取HTML文档内容
+        $output = curl_exec($ch);
+        // 4. 释放curl句柄
+        curl_close($ch);
+        return $output;
     }
 }

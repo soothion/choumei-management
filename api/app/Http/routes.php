@@ -817,6 +817,10 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'platform.closeConf',
 		'uses'=>'Promotion\PlatformController@closeConf'
     ));
+    Route::any('platform/upConf/{id}',array(  
+		'as'=>'platform.upConf',
+		'uses'=>'Promotion\PlatformController@upConf'
+    ));
 
 
     //红包活动管理
@@ -874,5 +878,3 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
     
     
 });
-
-
