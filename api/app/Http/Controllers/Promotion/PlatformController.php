@@ -65,7 +65,7 @@ class PlatformController extends Controller{
      *@apiParam {String} phoneList              可选        制定手机号时，手机号码列格式如 "13210553366,18566554455"
      *@apiParam {Number} enoughMoeny            可选        满额可用
      *@apiParam {Number} totalNumber            可选        劵总数
-     *@apiParam {Number} singleEnoughMoney      可选        单个项目满额可用
+     *@apiParam {Number} singleEnoughMoney      可选        项目满额获取
      *@apiParam {String} getTimeStart           可选        劵获取开始时间如 2015-10-16 00:00:00
      *@apiParam {String} getTimeEnd             可选        卷获取结束时间   2015-10-16 23:59:59
 	 *@apiParam {String} addActLimitStartTime   可选        代金劵可使用开始时间 2015-10-16 00:00:00
@@ -719,8 +719,8 @@ class PlatformController extends Controller{
         
     }
     /***
-	 * @api {post} /platform/actInfo/:id 9.读取平台活动
-	 * @apiName actInfo
+	 * @api {post} /platform/getInfo/:id 9.读取平台活动
+	 * @apiName getInfo
 	 * @apiGroup Platform
 	 *
 	 * @apiParam {Number} id 平台活动id
@@ -729,29 +729,28 @@ class PlatformController extends Controller{
      * 
 	 * @apiSuccess {Number} selectItem 用户选择栏 1. 新用户 2. 指定用户 3.全平台用户 4.H5用户
 	 * @apiSuccess {Number} vcId 活动配置
-	 * @apiSuccess {String} vcTitle 活动名称
-	 * @apiSuccess {String} vcSn 活动编号
-	 * @apiSuccess {Number} vcRemark 活动简介.
-	 * @apiSuccess {Number} DEPARTMENT_ID 部门.
-	 * @apiSuccess {Number} MANAGER_ID 负责人.
-	 * @apiSuccess {Number} useMoney 代金劵金额
-	 * @apiSuccess {Number} useTotalNum 代金券可领总数
-	 * @apiSuccess {Number} useItemTypes 限制可使用项目类别格式为（,1,2,）
+	 * @apiSuccess {String} actName 活动名称
+	 * @apiSuccess {String} actNo 活动编号
+	 * @apiSuccess {Number} actIntro 活动简介.
+	 * @apiSuccess {Number} departmentId 部门.
+	 * @apiSuccess {Number} managerId 负责人.
+	 * @apiSuccess {Number} money 代金劵金额
+	 * @apiSuccess {Number} totalNumber 代金券可领总数
+	 * @apiSuccess {Number} limitItemTypes 限制可使用项目类别格式为（,1,2,）
 	 * @apiSuccess {Number} useLimitTypes 使用限制类型 2 为限制首单
-	 * @apiSuccess {Number} useNeedMoney 限制项目需满足金额才可使用
-	 * @apiSuccess {String} useStart    可使用时间.起始(0 表示不限制)
-	 * @apiSuccess {String} useEnd      可使用时间.结束(0 表示不限制)
+	 * @apiSuccess {Number} enoughMoeny 限制项目需满足金额才可使用
+	 * @apiSuccess {String} addActLimitStartTime    可使用时间.起始(0 表示不限制)
+	 * @apiSuccess {String} addActLimitEndTime      可使用时间.结束(0 表示不限制)
 	 * @apiSuccess {Number} getTypes 用户获取条件(为空时表示不限制)1.用户注册，2.首次消费，3.手机号码 4.全平台用户 5.H5用户
 	 * @apiSuccess {String} getItemTypes 可获取项目类别(多个用逗号隔开 为空时表示不限制)
 	 * @apiSuccess {Number} getCodeType     可获取码类型 (1 店铺码 2集团码 3.活动码)(0 表示不限制)
-	 * @apiSuccess {String} getCode         码
-	 * @apiSuccess {Number} getNumMax       个人可获取最大券数
-	 * @apiSuccess {String} activityCode 指定活动获取
-	 * @apiSuccess {String} getStart 可获取时间 起始(0 表示不限制)
-	 * @apiSuccess {String} getEnd   可获取时间 结束(0 表示不限制)
-	 * @apiSuccess {String} getNeedMoney 获取需满足金额(0表示不限制)
-	 * @apiSuccess {String} SMS_ON_GAINED 获取代金券时下发的短信内容
-	 * @apiSuccess {String} FEW_DAY 获取代金劵后多少天内可用
+	 * @apiSuccess {String} code         码
+	 * @apiSuccess {Number} getSingleLimit       个人可获取最大券数
+	 * @apiSuccess {String} getTimeStart 可获取时间 起始(0 表示不限制)
+	 * @apiSuccess {String} getTimeEnd   可获取时间 结束(0 表示不限制)
+	 * @apiSuccess {String} singleEnoughMoney 获取需满足金额(0表示不限制)
+	 * @apiSuccess {String} sendSms 获取代金券时下发的短信内容
+	 * @apiSuccess {String} fewDay 获取代金劵后多少天内可用
 	 * 
      * 
 	 * @apiSuccessExample Success-Response:
@@ -759,28 +758,28 @@ class PlatformController extends Controller{
      *           "result": 1,
      *           "token": "",
      *           "data": {
-     *                       "selectItem": 2
-     *                       "vcId": 10,
-     *                       "vcTitle": "指定项目7可以获取",
-     *                       "vcSn": "cm718745",
-     *                       "vcRemark": "顶顶顶顶",
-     *                       "useMoney": 10,
-     *                       "useTotalNum": 0,
-     *                       "useItemTypes": "",
-     *                       "useLimitTypes": "",
-     *                       "useNeedMoney": 100,
-     *                       "useStart": 1437580800,
-     *                       "useEnd": 1437753599,
-     *                       "getTypes": "0",
+     *                       "getSingleLimit": 1,
+     *                       "actName": "试哈哈哈",
+     *                       "actNo": "cm718745",
+     *                       "actIntro": "这是一个简单的介绍",
+     *                       "departmentId": 5,
+     *                       "managerId": 3,
+     *                       "money": 10,
+     *                       "code": "",
      *                       "getItemTypes": ",7,",
-     *                       "getCodeType": 0,
-     *                       "getCode": "",
-     *                       "getNumMax": 1,
-     *                       "getStart": 1436284800,
-     *                       "getEnd": 1438271999,
-     *                       "getNeedMoney": 0,
-     *                       "SMS_ON_GAINED": "",
-     *                       "FEW_DAY": 0
+     *                       "useLimitTypes": "",
+     *                       "enoughMoeny": 100,
+     *                       "totalNumber": 0,
+     *                       "singleEnoughMoney": 0,
+     *                       "getTimeStart": 1436284800,
+     *                       "getTimeEnd": 1438271999,
+     *                       "addActLimitStartTime": 1437580800,
+     *                       "addActLimitEndTime": 1437753599,
+     *                       "fewDay": 12,
+     *                       "getTypes": "0",
+     *                       "sendSms": "",
+     *                        "getCodeType": 0,
+     *                       "selectItem": 2
      *           }
      *       }
 	 *
@@ -794,7 +793,11 @@ class PlatformController extends Controller{
     public function getInfo($id){
         if( empty($id) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $voucherConfInfo = \App\Model\VoucherConf::where(['vcId'=>$id])
+        $voucherConfInfo = \App\Model\VoucherConf::select(['getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
+            ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','getItemTypes','useLimitTypes'
+            ,'useNeedMoney as enoughMoeny','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
+            ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType'])
+                ->where(['vcId'=>$id])
                 ->where(['vType'=>1])
                 ->first()
                 ->toArray();
@@ -809,22 +812,13 @@ class PlatformController extends Controller{
             }
             $voucherConfInfo['phoneList'] = $temp;
         }
-        if( empty($voucherConfInfo['getTypes']) && ( in_array($voucherConfInfo['getCodeType'],[1,2,3]) || $voucherConfInfo['getItemTypes']) ){
+        if( empty($voucherConfInfo['getTypes']) && ( in_array($voucherConfInfo['code'],[1,2,3]) || $voucherConfInfo['getItemTypes']) ){
             $voucherConfInfo['selectItem'] = 2;
         }
         if( $voucherConfInfo['getTypes'] == 4 )
             $voucherConfInfo['selectItem'] = 3;
         if( $voucherConfInfo['getTypes'] == 5 )
             $voucherConfInfo['selectItem'] = 4;
-        
-        unset( $voucherConfInfo['vcStart'] );
-        unset( $voucherConfInfo['vcEnd'] );
-        unset( $voucherConfInfo['status'] );
-        unset( $voucherConfInfo['vType'] );
-        unset( $voucherConfInfo['IS_REDEEM_CODE'] );
-        unset( $voucherConfInfo['ADD_TIME'] );
-        unset( $voucherConfInfo['DEPARTMENT_ID'] );
-        unset( $voucherConfInfo['MANAGER_ID'] );
         
         return $this->success( $voucherConfInfo );
     }
