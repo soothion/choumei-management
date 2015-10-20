@@ -52,7 +52,7 @@ class SalonItem extends Model {
 	 * 添加修改项目
 	 * @param  $priceType 1 无规格 2有规格
 	 * */
-	public static function upsertItem($datas,$priceType,$itemid=null)
+	public static function upsertItem($datas,$priceType,$salonid,$itemid=null)
 	{
 	    $salon_buylimit_id = null;
 	    $salon_norms_cat_id = null;

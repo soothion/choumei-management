@@ -400,7 +400,7 @@ class ItemInfoController extends Controller{
 		}
 		
 		$data = self::compositeData($param);
-		$res = SalonItem::upsertItem($data,$param['priceStyle'],$itemid);
+		$res = SalonItem::upsertItem($data,$param['priceStyle'],$param['salonid'],$itemid);
 		if($res)
 		{
 			return $this->success();
@@ -735,16 +735,16 @@ class ItemInfoController extends Controller{
 		{
 			foreach ($value as $kt=>$vt)
 			{
-				//if(!in_array($vt, $clearVal))
-				//{
-					//$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$key]]['salon_item_formats_id']])->first();
-					//if($st)
-					//	$norId = $st->salon_item_format_id;
-					//else
+				if(!in_array($vt, $clearVal))
+				{
+					$st = SalonItemFormat::where(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$key]]['salon_item_formats_id']])->first();
+					if($st)
+						$norId = $st->salon_item_format_id;
+					else
 						$norId = SalonItemFormat::insertGetId(['salonid'=>0,'format_name'=>$vt,'salon_item_formats_id'=>$formatsIdArr[self::$_typeArr[$key]]['salon_item_formats_id']]);
 					$attribute[$vt] = $norId;//属性数组
 					$clearVal[] = $vt;
-				//}
+				}
 			}
 		}
 		return $attribute;

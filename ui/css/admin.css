@@ -834,6 +834,7 @@ form[data-role="hash"],form[data-role="export"],form[data-role="remove"],form[da
 form[data-role="remove"] .link,
 form[data-role="normal"] .link{
 	padding:0;
+	font-size:12px;;
 }
 form[data-role="hash"] button,
 form[data-role="hash"] select,

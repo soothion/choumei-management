@@ -304,7 +304,7 @@ class WarehouseController extends Controller
 	    foreach ($items as $item)
 	    {
 	        $data = ItemInfoController::compositeData($item);
-	        SalonItem::upsertItem($data,$item['priceStyle']);
+	        SalonItem::upsertItem($data,$item['priceStyle'],$salon_id);
 	    }
 	    Event::fire('warehouse.import');
 	    return $this->success([]);
