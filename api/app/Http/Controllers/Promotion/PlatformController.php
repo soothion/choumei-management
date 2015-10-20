@@ -960,7 +960,7 @@ class PlatformController extends Controller{
         return $this->success();
     }
     /***
-	 * @api {get} /platform/upConf/{:id} 13.上线操作
+	 * @api {get} /platform/upConf/{:id} 13.配置平台活动上线操作
 	 * @apiName upConf
 	 * @apiGroup Platform
 	 *
