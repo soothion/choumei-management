@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-20 19:07:26
+* @Last Modified time: 2015-10-20 22:14:57
 */
 
 (function(){
@@ -64,6 +64,21 @@
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
         sessionStorage.setItem('add-base-data',JSON.stringify(baseData));
         window.location.href = "addMobile.html?type="+type+'&selectItemType='+selectItemType;
+    });
+
+    $("#form").on('blur','input[data-check]',function(){
+        var self = this;
+        lib.ajax({
+            type: "post",
+            url : 'platform/checkSerial',
+            data: {type:$(this).data('check'),code:$(this).val()}    
+        }).done(function(data, status, xhr){
+            if(data.result == "1"){
+                if(data.data.exists == "0"){
+                    $(self).next().show();
+                }
+            }
+        })        
     })
 
     /**
@@ -122,7 +137,31 @@
         } else {
             return false;
         }
-    });            
+    });
+
+    $("#form").on('click','a.tab-menus',function(){
+        var data = "";
+        if(type == 'add'){    
+            data = JSON.parse(sessionStorage.getItem('add-base-data'));        
+        }
+        if(type == 'edit'){
+            data = JSON.parse(sessionStorage.getItem('edit-base-data'));    
+        }
+        data.phoneList = [];
+        data.code = "";
+        data.getItemTypes = "";
+        data.enoughMoeny  =  "";
+        if(type == 'add'){    
+            sessionStorage.setItem('add-base-data',JSON.stringify(data));             
+        }
+        if(type == 'edit'){
+            sessionStorage.setItem('edit-base-data',JSON.stringify(data));     
+        }        
+    })
+
+    $("#form").on('click','#preview-btn',function(){
+        location.href = "preview.html?type="+type;
+    })            
 
     lib.Form.prototype.save = function(data){
 

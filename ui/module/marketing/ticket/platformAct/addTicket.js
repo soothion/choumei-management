@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-20 19:06:39
+* @Last Modified time: 2015-10-20 22:15:06
 */
 
 (function(){
@@ -25,6 +25,12 @@
         }else{
            $("#ticketNumInput").attr('disabled');
            $(".ticketNumHidden").removeAttr('disabled');
+        }
+    })
+
+    $("#form").on('blur','#ticketNumInput',function(){
+        if($(this).val() == "0"){
+          $(this).val("");
         }
     })
 
@@ -68,6 +74,10 @@
            $("#avaDateEnd").attr('disabled','disabled');
            $("#avaDay").removeAttr('disabled');
         }
+    })
+
+    $("#form").on('click','#preview-btn',function(){
+        location.href = "preview.html?type="+type;
     })
 
     lib.Form.prototype.save = function(data){

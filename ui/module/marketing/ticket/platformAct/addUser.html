@@ -82,19 +82,19 @@
 
                 <div class="control-group">
                   <label class="control-label" style="width:100px"></label>
-                      <a class="tab-menus <%=(!query.selectItemType || query.selectItemType=='1') ? 'act' : '' %>" href="?type=<%=query.type%>&menus=1#selectItemType=1">
+                      <a data-value="1" class="tab-menus <%=(!query.selectItemType || query.selectItemType=='1') ? 'act' : '' %>" href="?type=<%=query.type%>&menus=1#selectItemType=1">
                           新用户
                       </a>
 
-                      <a class="tab-menus <%=query.selectItemType=='2'? 'act' : '' %>" href="?type=<%=query.type%>&menus=2#selectItemType=2">
+                      <a data-value="2" class="tab-menus <%=query.selectItemType=='2'? 'act' : '' %>" href="?type=<%=query.type%>&menus=2#selectItemType=2">
                           指定用户
                       </a>
 
-                      <a class="tab-menus <%=query.selectItemType=='3'? 'act' : '' %>" href="?type=<%=query.type%>&menus=3#selectItemType=3">
+                      <a data-value="3" class="tab-menus <%=query.selectItemType=='3'? 'act' : '' %>" href="?type=<%=query.type%>&menus=3#selectItemType=3">
                           全平台用户
                       </a>
 
-                      <a class="tab-menus <%=query.selectItemType=='4'? 'act' : '' %>" href="?type=<%=query.type%>&menus=4#selectItemType=4">
+                      <a data-value="4" class="tab-menus <%=query.selectItemType=='4'? 'act' : '' %>" href="?type=<%=query.type%>&menus=4#selectItemType=4">
                           H5用户
                       </a>
                       <input type="hidden" name="selectItemType" value="<%=query.selectItemType || 1 %>">
@@ -164,10 +164,11 @@
                         <span>指定集团码用户&nbsp;<span style="color: #ddd;">(活动时间内填写集团码)</span></span>
                     </label>
                     <%if(!data.selectUseType || data.selectUseType == '4'){%>
-                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' required
-                        value="<%=data.code%>" />
+                    <input type="text" data-check="2" class="cascade" name="code" placeholder="输入集团码" 
+                        pattern='number' required value="<%=data.code%>" />
+                        <span class="control-help" style="display:none;">集团码不存在</span>
                     <%}else{%>
-                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
+                    <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
                     <%}%>
                     </div>
                 </div>
@@ -176,15 +177,16 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="selectUseType" value="5" <%=data.selectUseType == '5' ? 'checked' : '' %>
-                        required>
+                        <input type="radio" name="selectUseType" value="5" 
+                        <%=data.selectUseType == '5' ? 'checked' : '' %> required>
                         <span>指定活动码用户&nbsp;<span style="color: #ddd;">(活动时间内填写活动码)</span></span>
                     </label>
                     <%if(data.selectUseType == '5'){%>
-                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' required
-                        value="<%=data.code%>"/>
+                    <input type="text" data-check="3" class="cascade" name="code" placeholder="输入活动码" 
+                        pattern='number' required value="<%=data.code%>"/>
+                        <span class="control-help" style="display:none;">活动码不存在</span>
                     <%}else{%>
-                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
+                    <input type="text" class="cascade" name="code" placeholder="输入活动码" pattern='number' disabled/>
                     <%}%>
                     </div>
                 </div>
@@ -198,10 +200,10 @@
                         <span>指定店铺码用户&nbsp;<span style="color: #ddd;">(活动时间内填写店铺码)</span></span>
                     </label>
                     <%if(data.selectUseType == '6'){%>
-                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' required
-                        value="<%=data.code%>"/>
+                    <input type="text" data-check="1" class="cascade" name="code" placeholder="输入店铺码" pattern='number' required value="<%=data.code%>" />
+                        <span class="control-help" style="display:none;">店铺码不存在</span>
                     <%}else{%>
-                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
+                    <input type="text" class="cascade" name="code" placeholder="输入店铺码" pattern='number' disabled/>
                     <%}%>                    
                     </div>
                 </div>

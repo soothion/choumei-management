@@ -19,6 +19,10 @@
         location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
     });
 
+    $("#form").on('click','#preview-btn',function(){
+        location.href = "preview.html?type="+type;
+    })
+
     lib.Form.prototype.save = function(data){
         if(type == 'add'){    
             var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
