@@ -46,7 +46,7 @@ class PlatformController extends Controller{
         return $this->success( $this->_getItemType() );
     }
     /***
-	 * @api {get} /platform/add 2.添加平台代金劵活动
+	 * @api {post} /platform/add 2.添加平台代金劵活动
 	 * @apiName add
 	 * @apiGroup Platform
 	 *
@@ -265,7 +265,7 @@ class PlatformController extends Controller{
         return $this->success( $departmant );
     }
     /***
-	 * @api {post} /platform/getDepartmentManager/:id 4.获取部门分类的负责人
+	 * @api {get} /platform/getDepartmentManager/:id 4.获取部门分类的负责人
 	 * @apiName getDepartmentManager
 	 * @apiGroup Platform
 	 *
@@ -305,7 +305,7 @@ class PlatformController extends Controller{
         return $this->success( $manager );
     }
     /***
-	 * @api {post} /platform/getActNum 5.获取活动编码
+	 * @api {get} /platform/getActNum 5.获取活动编码
 	 * @apiName getActNum
 	 * @apiGroup Platform
 	 *
@@ -344,7 +344,7 @@ class PlatformController extends Controller{
         return $this->success($code);
    }
     /***
-	 * @api {post} /platform/checkSerial 6.获取 集团码|活动码|推荐码 是否存在
+	 * @api {get} /platform/checkSerial 6.获取 集团码|活动码|推荐码 是否存在
 	 * @apiName checkSerial
 	 * @apiGroup Platform
 	 *
@@ -386,7 +386,7 @@ class PlatformController extends Controller{
         return $this->success( $return );
     }
     /***
-	 * @api {post} /platform/list 7.平台活动配置列表
+	 * @api {get} /platform/list 7.平台活动配置列表
 	 * @apiName list
 	 * @apiGroup Platform
 	 *
@@ -557,7 +557,7 @@ class PlatformController extends Controller{
         return $this->success( $res );
     }
     /***
-	 * @api {post} /platform/actView/:id 8.平台活动概览
+	 * @api {get} /platform/actView/:id 8.平台活动概览
 	 * @apiName actView
 	 * @apiGroup Platform
 	 *
@@ -717,7 +717,7 @@ class PlatformController extends Controller{
         
     }
     /***
-	 * @api {post} /platform/getInfo/:id 9.读取平台活动
+	 * @api {get} /platform/getInfo/:id 9.读取平台活动
 	 * @apiName getInfo
 	 * @apiGroup Platform
 	 *
@@ -820,7 +820,7 @@ class PlatformController extends Controller{
         return $this->success( $voucherConfInfo );
     }
     /***
-	 * @api {get} /platform/editConf 10.编辑平台代金劵活动
+	 * @api {post} /platform/editConf 10.编辑平台代金劵活动
 	 * @apiName editConf
 	 * @apiGroup Platform
 	 *
@@ -1015,7 +1015,7 @@ class PlatformController extends Controller{
         return $this->success();
     }
     /***
-	 * @api {post} /platform/exportList 14.导出平台活动配置列表
+	 * @api {get} /platform/exportList 14.导出平台活动配置列表
 	 * @apiName exportList
 	 * @apiGroup Platform
 	 *

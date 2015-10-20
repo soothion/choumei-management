@@ -15,7 +15,7 @@ class CouponController extends Controller{
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
 	
     /***
-	 * @api {get} /coupon/add 1.添加兑换劵活动
+	 * @api {post} /coupon/add 1.添加兑换劵活动
 	 * @apiName add
 	 * @apiGroup Coupon
 	 *
@@ -109,7 +109,7 @@ class CouponController extends Controller{
     }
     
     /***
-	 * @api {post} /coupon/list 2.代金劵配置列表
+	 * @api {get} /coupon/list 2.代金劵配置列表
 	 * @apiName list
 	 * @apiGroup Coupon
 	 *
@@ -280,7 +280,7 @@ class CouponController extends Controller{
         return $this->success( $res );
     }
     /***
-	 * @api {post} /coupon/actView/:id 3.代金劵活动概览
+	 * @api {get} /coupon/actView/:id 3.代金劵活动概览
 	 * @apiName actView
 	 * @apiGroup Coupon
 	 *
@@ -829,7 +829,7 @@ class CouponController extends Controller{
 		})->export('xls');
     }
     /***
-	 * @api {post} /coupon/exportList 11.导出代金劵配置列表
+	 * @api {get} /coupon/exportList 11.导出代金劵配置列表
 	 * @apiName exportList
 	 * @apiGroup Coupon
 	 *
