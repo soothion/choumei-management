@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-20 14:02:04
+* @Last Modified time: 2015-10-20 16:02:39
 */
 
 (function(){
@@ -123,9 +123,16 @@
         if(data.getItemTypes && data.getItemTypes.length>0){
             data.getItemTypes = data.getItemTypes.join(",");
         }
-        var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
-        baseData = $.extend({},baseData,data);
-        sessionStorage.setItem('add-base-data',JSON.stringify(baseData));
+        if(type == 'add'){    
+            var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
+            addData = $.extend({},addData,data);
+            sessionStorage.setItem('add-base-data',JSON.stringify(addData));             
+        }
+        if(type == 'edit'){
+            var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+            editData = $.extend({},editData,data);
+            sessionStorage.setItem('edit-base-data',JSON.stringify(editData));     
+        }
         location.href = "addTicket.html?type="+type+"&selectItemType="+selectItemType;
     }        
 })();

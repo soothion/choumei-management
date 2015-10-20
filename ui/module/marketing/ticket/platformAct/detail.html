@@ -4,7 +4,11 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="/js/include.js"></script>
-      <link rel="stylesheet" href="income.css" />
+      <style>
+        td:first-of-type{
+            width:15%;
+        }
+      </style>
     </head>
     <body>
         <div class="breadcrumb">
@@ -20,9 +24,8 @@
             <div class="table" style="margin:0" id="table-wrapper" ajat="platform/actView/<%=query.id%>#domid=table-wrapper&tempid=table-t">
             <script type="text/template" id="table-t">
                 <div class="detail-operation">
-                        <a href='addBase.html?type=edit&id=<%=query.id%>'>
-                            <button class="btn">编辑</button>
-                        </a>
+                    <button class="btn edit-button">编辑</button>
+                    &nbsp;&nbsp;
                     <button class="btn" type="button" onclick="window.close()">关闭</button>  
                 </div>              
                 <table>
@@ -129,5 +132,19 @@
             </script>
             </div>
         </div>
+
+        <script>
+            $("#table-wrapper").on('click',".edit-button",function(){
+                lib.ajax({
+                    type: "post",
+                    url : 'platform/getInfo/'+lib.query.id
+                }).done(function(data, status, xhr){
+                    if(data.result == 1){
+                        sessionStorage.setItem('edit-base-data',JSON.stringify(data.data));  
+                        location.href = "addBase.html?type=edit&id="+lib.query.id;                        
+                    }
+                });
+            })
+        </script>    
     </body>
 </html>

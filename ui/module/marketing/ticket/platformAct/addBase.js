@@ -8,16 +8,8 @@
     }
 
     if(type == 'edit'){
-        var editDataStr = sessionStorage.getItem('edit-base-data');
-        if(editDataStr){
-            var editData = JSON.parse(eidtDataStr);
-            lib.ajat('#domid=form&tempid=form-t').template(JSON.parse(eidtDataStr));   
-        }else{
-            var promise = lib.ajat('platform/getInfo/'+lib.query.id+'#domid=form&tempid=form-t').render();
-            promise.done(function(data){
-                sessionStorage.setItem('edit-base-data',JSON.stringify(data.data));  
-            });
-        }
+        var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+        lib.ajat('#domid=form&tempid=form-t').template(editData);
     }
 
     $("#form").on('click',".flex-item a",function(e){
@@ -26,7 +18,16 @@
     });
 
     lib.Form.prototype.save = function(data){
-        sessionStorage.setItem('add-base-data',JSON.stringify(data));
+        if(type == 'add'){    
+            var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
+            addData = $.extend({},addData,data);
+            sessionStorage.setItem('add-base-data',JSON.stringify(addData));             
+        }
+        if(type == 'edit'){
+            var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+            editData = $.extend({},editData,data);
+            sessionStorage.setItem('edit-base-data',JSON.stringify(editData));     
+        }
         location.href = "addUser.html?type="+type+"&selectItemType="+selectItemType;
     }    
 
