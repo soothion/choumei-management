@@ -7,7 +7,12 @@
   </head>
   <body>
 		<div class="breadcrumb">
-			<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><a href="index.html#p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>">项目列表</a><span>&gt;</span>查看<%=query.p=="special"?"闲时特价":"项目"%>详情
+			<a>店铺管理 </a><span>&gt;</span>
+			<a href="../index.html">店铺资料</a><span>&gt;</span>
+			<a href="index.html#p=<%=query.p%>&salonid=<%=query.salonid%>&salonname=<%=query.salonname%>">
+				<%if(query.p=="special"){%>闲时特价<%}else if(query.p=="warehouse"){%>项目仓库<%}else{%>项目列表<%}%>
+			</a>
+			<span>&gt;</span>查看<%=query.p=="special"?"闲时特价":"项目"%>详情
 			<div class="flex-box">
 				<div class="flex-item">
 					<h4>查看<%=query.p=="special"?"闲时特价":"项目"%>详情</h4>
