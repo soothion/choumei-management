@@ -777,7 +777,37 @@ class CouponController extends Controller{
         $coupon = \App\Voucher::select(['vSn','REDEEM_CODE','vUseMoney'])->where(['vcId'=>$vcId])->get();
         return $this->success( $coupon );
     }
-    
+    /***
+	 * @api {get} /coupon/exportCoupon/{:id} 10.导出查看实体券编码和密码
+	 * @apiName exportCoupon
+	 * @apiGroup Coupon
+	 *
+	 *@apiParam {Number} id                   必填     代金劵配置id
+     * 
+	 ***/
+    public function exportCoupon($vcId){
+        if( empty($vcId) )
+            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
+        $result = \App\Voucher::select(['vSn','REDEEM_CODE','vUseMoney','vcTitle'])->where(['vcId'=>$vcId])->get()->toArray();
+        $desModel = new \Service\NetDesCrypt;
+        $desModel->setKey( self::$DES_KEY );
+		$title = '代金劵-'. $result[0]['vcTitle'] .date('Ymd');
+        foreach( $result as $key => $val ){
+            array_unshift($result[$key], $key+1);
+            if( strlen( $val['REDEEM_CODE'] ) !=8 )
+                $result[$key]['REDEEM_CODE'] = $desModel->decrypt( $val['REDEEM_CODE'] );
+            unset( $result[$key]['vcTitle'] );
+        }
+        //导出excel	   
+		$header = ['序号','兑换券编码','兑换券密码','兑换券金额'];
+		Excel::create($title, function($excel) use($result,$header){
+		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
+			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+	        		$sheet->prependRow(1, $header);//添加表头
+
+			    });
+		})->export('xls');
+    }
     // 获取分类
     private function _getItemType(){
         // 这里用于 代金劵和配置中会和前端约定 增加一个项目特价类型为typeid为101
