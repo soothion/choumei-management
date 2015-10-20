@@ -171,7 +171,7 @@ class LaiseeController extends Controller {
     /**
      * @api {post} /laisee/create 3.新增红包活动
      * @apiName create
-     * @apiGroup Laisee
+     * @apiGroup laisee
      *
      * @apiParam {String} laisee_name 红包名称.
      * @apiParam {String} lc_remark 活动简介.
@@ -217,8 +217,8 @@ class LaiseeController extends Controller {
 
     /**
      * @api {post} /laisee/update 4.修改红包活动
-     * @apiName create
-     * @apiGroup Laisee
+     * @apiName update
+     * @apiGroup laisee
      *
      * @apiParam {String} laisee_name 红包名称.
      * @apiParam {String} lc_remark 活动简介.

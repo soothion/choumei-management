@@ -818,8 +818,8 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'uses'=>'Promotion\PlatformController@closeConf'
     ));
 
-      
-        //红包活动管理
+
+    //红包活动管理
     Route::any('laisee/create', array(//新增红包活动
         'as' => 'laisee.create',
         'uses' => 'Laisee\LaiseeController@create'
@@ -829,7 +829,6 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
         'as' => 'laisee.update',
         'uses' => 'Laisee\LaiseeController@update'
     ));
-
     Route::any('laisee/index', array(// 红包活动列表
         'as' => 'laisee.index',
         'uses' => 'Laisee\LaiseeController@index'
@@ -842,6 +841,7 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
         'as' => 'laisee.export',
         'uses' => 'Laisee\LaiseeController@export'
     ));
+     
     Route::any('laisee/online/{id}', array(// 活动上线
         'as' => 'laisee.online',
         'uses' => 'Laisee\LaiseeController@online'
