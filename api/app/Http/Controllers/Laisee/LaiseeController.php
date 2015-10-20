@@ -54,33 +54,21 @@ class LaiseeController extends Controller {
      * 
      * 	{
      * 	    "result": 1,
-     * 	    "data": {
-     * 	        "data": [
-     * 	            {
-     *           "id": 2,
-     *           "laisee_name": "范德萨的范德萨",
-     *           "start_time": "2012-10-19",
-     *           "end_time": "2019-10-15",
-     *           "status": "Y",
-     *           "vcsns": "cm299012,cm310470",
-     *           "gift_vcsn": "cm833715",
-     *           "over_time": 172800,
-     *           "total_money": "1000",
-     *           "used_total_money": "0",
-     *           "amount_warning": 0,
-     *           "warning_phone": "",
-     *           "share_icon": "",
-     *           "share_title": "",
-     *           "share_desc": "",
-     *           "bonus_bg_img": "",
-     *           "lc_remark": "",
-     *           "sms_on_gained": "",
-     *           "create_time": "2015-10-19 12:12:48",
-     *           "voucherNum": "6",
-     *           "receiveNum": 6,
-     *           "usedNum": 1,
-     *           "giftNum": 0
-     *       }
+     * 	    "data": [
+     *      {
+     *          "id": 2,
+     *          "laisee_name": "范德萨的范德萨",
+     *          "create_time": "2015-10-19 12:12:48",
+     *          "start_time": "2012-10-19",
+     *          "status": "Y",
+     *          "vcsns": "cm299012,cm310470",
+     *          "gift_vcsn": "",
+     *          "over_time": 172800,
+     *          "voucherNum": "6",
+     *          "receiveNum": 3,
+     *          "usedNum": 0,
+     *          "giftNum": 0
+     *      }
      * 	        ]
      * 	    }
      * 	}
@@ -220,6 +208,7 @@ class LaiseeController extends Controller {
      * @apiName update
      * @apiGroup laisee
      *
+     * @apiParam {Number} id 活动id（必须）.
      * @apiParam {String} laisee_name 红包名称.
      * @apiParam {String} lc_remark 活动简介.
      * @apiParam {Number} effective  有效天数.
@@ -228,14 +217,14 @@ class LaiseeController extends Controller {
      * @apiParam {String} warning_phone 可选，预警提醒的手机号码用,号隔开.
      * @apiParam {String} sms_on_agined 获取代金券时下发的短信内容（模板）.
      * 
-     * @apiParam {String} vVcId 现金券配置信息id，多个以逗号隔开.
+     * @apiParam {String} vVcId 现金券配置信息id，多个以逗号隔开(必须).
      * @apiParam {Number} vUseItemTypes 现金券类型[].
      * @apiParam {Number} vUseMoney 现金券金额.
      * @apiParam {Number} vNumber 现金券数量.
      * @apiParam {Number} vDay 有效时间.
      * @apiParam {Number} vUseNeedMoney 满多少可用.
      * 
-     * @apiParam {String} gVcId 礼包配置信息id，多个以逗号隔开.
+     * @apiParam {String} gVcId 礼包配置信息id，多个以逗号隔开（必须）.
      * @apiParam {Number} gUseItemTypes 礼包 现金券类型[].
      * @apiParam {Number} gUseMoney 礼包 现金券金额.
      * @apiParam {Number} gNumber 礼包 现金券数量.
@@ -317,6 +306,14 @@ class LaiseeController extends Controller {
                 throw new ApiException("请填写预警手机号" . $retMissing, ERROR::PARAMS_LOST);
             }
         }
+        // 修改时 必传id
+        if (!$data['id']) {
+            throw new ApiException("缺失参数  id", ERROR::PARAMS_LOST);
+        }
+        if (!isset($data['vVcId']) || !isset($data['gVcId'])) {
+            throw new ApiException("缺失参数  或 vVcId 或 gVcId", ERROR::PARAMS_LOST);
+        }
+
         if ($data['id']) {
             $where["id"] = $data["id"];
         } else {
@@ -424,9 +421,9 @@ class LaiseeController extends Controller {
             $laisee->usedNum = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->where('vStatus', 2)->count();
             $laisee->usedAmount = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->where('vStatus', 2)->sum('vUseMoney');
             $laisee->failure = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->where('vStatus', 5)->sum('vUseMoney');  //已失效
-
-            $laisee->consumeNum = 0; //TODO  已消费数
-            $laisee->consumeAmount = 0; //TODO  已消费数金额 
+            $voucherConsume = VoucherConf::getVoucherConfConsume($laisee);
+            $laisee->consumeNum = $voucherConsume['consumeNum']; //TODO  已消费数
+            $laisee->consumeAmount = $voucherConsume['consumeAmount']; //TODO  已消费数金额
             //返回现金券活动相关
             $laisee->voucherConf = VoucherConf::getVoucherConfByVcSns($laisee->vcsns);  // 现金券
             $laisee->voucherGiftConf = VoucherConf::getVoucherConfByVcSns($laisee->gift_vcsn); //礼包

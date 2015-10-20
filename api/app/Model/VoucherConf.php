@@ -3,6 +3,8 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Voucher;
+use Illuminate\Support\Facades\DB;
 
 class VoucherConf extends Model {
 
@@ -63,11 +65,34 @@ class VoucherConf extends Model {
                 $res[$key]['useItemTypes'] = $conf['useItemTypes'];
                 $res[$key]['useTotalNum'] = $conf['useTotalNum'];
                 $res[$key]['useMoney'] = $conf['useMoney'];
-                $res[$key]['useEnd'] = $conf['useEnd'];  //TODO  活动有效时间
+                $res[$key]['useEnd'] = $conf['useEnd']/86400;  //TODO  活动有效时间
                 $res[$key]['useNeedMoney'] = $conf['useNeedMoney'];  //TODO  满足金额可用
             }
         }
         return $res;
+    }
+
+    /*
+     * 已消费 代金券
+     */
+
+    public static function getVoucherConfConsume($laisee) {
+//        DB::enableQueryLog();
+        $query = Voucher::whereIn('vcSn', explode(",", $laisee->vcsns));
+        if ($laisee->gift_vcsn) {
+            $query = $query->orWhereIn('vcSn', explode(",", $laisee->gift_vcsn));
+        }
+        $voucher = $query->where('vStatus', 2)->get();
+        $consumeVsns = [];
+        foreach ($voucher as $v) {
+            $consume = DB::table('order')->where('ordersn', $v->vOrderSn)->where('status', 4);
+            if ($consume) {
+                $consumeVsns[] = $v->vSn;
+            }
+        }
+        $consumeNum = $consumeVsns ? Voucher::whereIn('vSn', $consumeVsns)->count() : 0;
+        $consumeAmount = $consumeVsns ? Voucher::whereIn('vSn', $consumeVsns)->sum('vUseMoney') : 0;
+        return ['consumeNum' => $consumeNum, 'consumeAmount' => $consumeAmount];
     }
 
 }

@@ -106,7 +106,7 @@ class LaiseeConfig extends Model {
             $vcData = [
                 'vcTitle' => $data['laisee_name'],
                 'vcSn' => $vcSn,
-                'useEnd' =>  ($vDayArr[$i] * 24 * 60 * 60),  //TODO  有效时间需要再次确认
+                'useEnd' => ($vDayArr[$i] * 24 * 60 * 60), //TODO  有效时间需要再次确认
                 'useMoney' => $vUseMoneyArr[$i],
                 'useTotalNum' => $vNumberArr[$i],
                 'useItemTypes' => $vUseItemTypesArr[$i],
@@ -117,10 +117,12 @@ class LaiseeConfig extends Model {
             ];
             $vcId = VoucherConf::addVoucherConf($vcData);
             if ($vcId) {
-                $vcsns[] = $vcData['vcSn'];
+                for ($j = 0; $j < $vNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                    $vcsns[] = $vcData['vcSn'];
+                }
             }
         }
-        return $vcsns ? implode(",", $vcsns) : [];
+        return $vcsns ? implode(",", $vcsns) : '';
     }
 
     /*
@@ -134,7 +136,7 @@ class LaiseeConfig extends Model {
         $res['vDayArr'] = explode(",", $data['vDay']);
         $res['vUseNeedMoneyArr'] = explode(",", $data['vUseNeedMoney']);
         $res['vVcId'] = explode(",", $data['vVcId']);
-        $res['delVcId'] = explode(",", $data['delVcId']);
+        $res['delVcId'] = isset($data['delVcId']) ? explode(",", $data['delVcId']) : 0;
         $res['vVoucherCount'] = count($res['vUseItemTypesArr']);
         return $res;
     }
@@ -150,7 +152,7 @@ class LaiseeConfig extends Model {
         $res['gDayArr'] = explode(",", $data['gDay']);
         $res['gUseNeedMoneyArr'] = explode(",", $data['gUseNeedMoney']);
         $res['gVcId'] = explode(",", $data['gVcId']);
-        $res['delGiftVcId'] = explode(",", $data['delGiftVcId']);
+        $res['delGiftVcId'] = isset($data['delGiftVcId']) ? explode(",", $data['delGiftVcId']) : 0;
         $res['gVoucherCount'] = count($res['gUseItemTypesArr']);
         return $res;
     }
@@ -170,7 +172,7 @@ class LaiseeConfig extends Model {
                 $vcData = [
                     'vcTitle' => $data['laisee_name'],
                     'vcSn' => $vcSn,
-                    'useEnd' => time() + ($gDayArr[$i] * 24 * 60 * 60),
+                    'useEnd' => ($gDayArr[$i] * 24 * 60 * 60),
                     'useMoney' => $gUseMoneyArr[$i],
                     'useTotalNum' => $gNumberArr[$i],
                     'useItemTypes' => $gUseItemTypesArr[$i],
@@ -181,7 +183,9 @@ class LaiseeConfig extends Model {
                 ];
                 $vcId = VoucherConf::addVoucherConf($vcData);
                 if ($vcId) {
-                    $gift_vcsn[] = $vcData['vcSn'];
+                    for ($j = 0; $j < $gNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                        $gift_vcsn[] = $vcData['vcSn'];
+                    }
                 }
             }
         }
@@ -189,7 +193,7 @@ class LaiseeConfig extends Model {
     }
 
     public static function getLaiseeList($laiseeName, $startTime, $endTime, $page, $size) {
-        $field=['id','laisee_name','create_time','start_time','status','vcsns','gift_vcsn','over_time'];  //TODO
+        $field = ['id', 'laisee_name', 'create_time', 'start_time', 'status', 'vcsns', 'gift_vcsn', 'over_time'];  //TODO
 //        $query = Self::select("*");
         $query = Self::select($field);
         if (!empty($laiseeName)) {
@@ -232,7 +236,11 @@ class LaiseeConfig extends Model {
                         'SMS_ON_GAINED' => $data['sms_on_gained'],
                     ];
                     $vcId = VoucherConf::where('vcId', $vVcId[$i])->update($vcData);
-                    $vcsns[] = VoucherConf::find($vVcId[$i])->vcSn();
+                    $voucherConfSn = VoucherConf::find($vVcId[$i])->vcSn;
+
+                    for ($j = 0; $j < $vNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                        $vcsns[] = $voucherConfSn;
+                    }
                 } else {
                     //添加
                     $vcSn = VoucherConf::getVcSn();
@@ -250,7 +258,9 @@ class LaiseeConfig extends Model {
                     ];
                     $vcId = VoucherConf::addVoucherConf($vcData);
                     if ($vcId) {
-                        $vcsns[] = $vcData['vcSn'];
+                        for ($j = 0; $j < $vNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                            $vcsns[] = $vcData['vcSn'];
+                        }
                     }
                 }
             }
@@ -285,7 +295,10 @@ class LaiseeConfig extends Model {
                         'SMS_ON_GAINED' => $data['sms_on_gained'],
                     ];
                     $vcId = VoucherConf::where('vcId', $gVcId[$i])->update($vcData);
-                    $vcsns[] = VoucherConf::find($gVcId[$i])->vcSn();
+                    $voucherConfSn = VoucherConf::find($gVcId[$i])->vcSn;
+                    for ($j = 0; $j < $gNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                        $vcsns[] = $voucherConfSn;
+                    }
                 } else {
                     //添加
                     $vcSn = VoucherConf::getVcSn();
@@ -303,15 +316,17 @@ class LaiseeConfig extends Model {
                     ];
                     $vcId = VoucherConf::addVoucherConf($vcData);
                     if ($vcId) {
-                        $vcsns[] = $vcData['vcSn'];
+                        for ($j = 0; $j < $gNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                            $vcsns[] = $vcData['vcSn'];
+                        }
                     }
                 }
             }
         }
 
         //删除
-        if ($delVcId) {
-            VoucherConf::whereIn("vcId", $delVcId)->delete();
+        if ($delGiftVcId) {
+            VoucherConf::whereIn("vcId", $delGiftVcId)->delete();
         }
         return $vcsns ? implode(",", $vcsns) : '';
     }
