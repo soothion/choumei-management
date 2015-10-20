@@ -123,7 +123,8 @@ class Item extends Model {
                 'sort_in_type',
                 'salon_item.status',
                 'salon_item.userId',
-                'salon_item.useLimit'
+                'salon_item.useLimit',
+                'salon_item.repertory'
                 )
             ->find($id);
         if(!$item)
