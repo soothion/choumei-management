@@ -115,7 +115,7 @@
 							<tbody>
 								<tr>
 									<td>定价方式：</td>
-									<td><%=data.norms_cat_id==1?"有规格，区间价":"无规格，统一价"%></td>
+									<td><%=data.norms_cat_id==1&&data.userId!=0?"有规格，区间价":"无规格，统一价"%></td>
 								</tr>
 								<%if(data.norms_cat_id==0||data.userId==0){%>
 								<tr>
