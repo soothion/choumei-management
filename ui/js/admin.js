@@ -580,9 +580,11 @@ $(function(){
 		if(maxlength&&value){
 			$this.parent().append('<span class="keypress-help">还可以输入<em>'+(parseInt(maxlength)-$.trim(value.length))+'</em>个字</span>');
 		}
+		document.oncontextmenu=function(e){return false;}
 	});
 	$body.on('blur','.keypress textarea',function(){
 		$(this).siblings('.keypress-help').remove();
+		document.oncontextmenu=function(e){return true;}
 	});
 	$body.on('keyup','.keypress textarea',function(){
 		var $this=$(this);
@@ -595,8 +597,6 @@ $(function(){
 		if(maxlength){
 			$this.siblings('.keypress-help').children('em').text(parseInt(maxlength)-$.trim(value).length);
 		}
-	}).on('click',function(e){
-		console.log(e);
 	});
 	/**实例化封装表单**/
 	$('form[data-role="form"]').each(function(){
