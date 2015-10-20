@@ -59,7 +59,7 @@
 
                 <ul class="nav-step flex-box">
                     <li class="flex-item">
-                        <a href="addBase.html?type=add">
+                        <a href="addBase.html">
                             <i class="fa fa-check-circle"></i><span>1.活动基本信息</span>
                         </a>
                     </li>
@@ -82,7 +82,7 @@
 
                 <div class="control-group">
                   <label class="control-label" style="width:100px"></label>
-                      <% query.selectItemType;debugger;%>
+
                       <a class="tab-menus <%=(!query.selectItemType || query.selectItemType=='1') ? 'act' : '' %>" href="?type=<%=query.type%>&menus=1#selectItemType=1">
                           新用户
                       </a>
