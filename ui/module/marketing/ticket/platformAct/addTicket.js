@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-20 09:44:50
+* @Last Modified time: 2015-10-20 12:50:19
 */
 
 (function(){
@@ -81,7 +81,7 @@
 
       lib.ajax({
           type: "post",
-          url : (type=="add"?"paltfrom/add":"paltfrom/update"),
+          url : (type=="add"?"platform/add":"platform/editConf"),
           data: basaData    
       }).done(function(data, status, xhr){
          if(data.result == 1){
@@ -89,8 +89,12 @@
                 text:"店铺信息提交成功",
                 time:2000,
                 define:function(){
-                    sessionStorage.removeItem('add-base-data');  
+                    sessionStorage.removeItem('add-base-data'); 
+                    sessionStorage.removeItem('edit-base-data');
+                    sessionStorage.removeItem('add-user-moblie');
                     document.body.onbeforeunload=function(){}
+                    if(type=='add')  location.href="/module/marketing/ticket/platformAct/index.html";
+                    if(type=='edit') location.href="/module/marketing/ticket/platformAct/detail.html?id="+data.vcId;
                 }
             });          
          }

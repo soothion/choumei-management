@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-20 09:44:54
+* @Last Modified time: 2015-10-20 14:02:04
 */
 
 (function(){
@@ -15,13 +15,19 @@
     }
 
     if(type == 'edit'){
-
+        var editData = JSON.parse(sessionStorage.getItem('edit-base-data')) || {};
+        lib.ajat('#domid=form&tempid=form-t').template(editData); 
     }
 
+    /**
+     * selectItemType=='2' 指定用户事件单选按钮事件控制
+     * @return {[type]} [description]
+     */
     $("#form").on('change','#consumeItems',function(){            
         if($(this).attr('checked')){
             $(this).removeAttr('checked');
             $("#consumeItemsDiv").hide();
+            $("#consumeItemsDiv").find('span.control-help').hide();
             $("#consumeItemsDiv").find('input[type=checkbox]').attr("disabled","disabled")
         }else{
             $(this).attr('checked','checked');
@@ -30,36 +36,75 @@
         }
     });
 
-    $("#form").on('click','.mobile-button',function(){
-        window.location.href = "addMobile.html";
-    })
-
-    $("#form").on('click',".flex-item a",function(e){
-        e.preventDefault();
-        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
-    });    
-
+    /**
+     * selectItemType=='2' 指定用户事件单选按钮事件控制
+     * @return {[type]} [description]
+     */
     $("#form").on('click','input[type=radio]',function(){
-        $("#selectTip").remove();
         $('input.cascade').attr('disabled','disabled');
         $('input.cascade').removeAttr('required');
-
+        if($(this).val()=="3"){
+            $('input.mobile-button').removeAttr('disabled');           
+        }
         $(this).parent().next().removeAttr('disabled');
         $(this).parent().next().attr('required','required');
     });
+    
+    /**
+     * selectItemType=='2' 添加手机号码
+     * @return {[type]} [description]
+     */
+    $("#form").on('click','.mobile-button',function(){
+        var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
+        baseData.selectUseType = "3";
+        sessionStorage.setItem('add-base-data',JSON.stringify(baseData));
+        window.location.href = "addMobile.html";
+    })
 
-    $("#form").on('change','#vcodeCheckbox',function(){
+    /**
+     * selectItemType=='3' 全平台用户事件控制
+     * @return {[type]} [description]
+     */ 
+    $("#form").on('change','#consumeItemsAll',function(){
         if($(this).attr('checked')){
             $(this).removeAttr('checked');
+            $("#consumeItemsAllDiv").find('span.control-help').hide();
+            $("#consumeItemsAllDiv").find('input[type=checkbox]').attr("disabled","disabled");
         }else{
             $(this).attr('checked','checked');
-        }
-    });  
-
-    $("#form").on('change','input[type=radio]',function(){
-        $("#form").find("span.control-help").hide();
+            $("#consumeItemsAllDiv").find('input[type=checkbox]').removeAttr("disabled");
+        }        
     });
 
+    /**
+     * selectItemType=='4' H5用户事件控制
+     * @return {[type]} [description]
+     */
+    $("#form").on('change','#H5UsercheckBox',function(){
+        if($(this).attr('checked')){
+            $(this).removeAttr('checked');
+            $(this).parent().next().attr("disabled","disabled");
+        }else{
+            $(this).attr('checked','checked');
+            $(this).parent().next().removeAttr("disabled");
+        }        
+    })
+
+    /**
+     * 顶部tab导航
+     * @param  {[type]} e [description]
+     * @return {[type]}   [description]
+     */
+    $("#form").on('click',".flex-item a",function(e){
+        e.preventDefault();
+        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
+    }); 
+
+    /**
+     * 仅允许输入int类型数据
+     * @param  {[type]} e [description]
+     * @return {[type]}   [description]
+     */
     $("#form").on('keydown',"input[pattern='number']",function(e){
         var key = e.which;
         //alert(key)

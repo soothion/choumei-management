@@ -134,8 +134,16 @@
                     <label class="radio">
                         <input type="radio" name="selectUseType" value="3" <%=data.selectUseType == '3' ? 'checked' : '' %>
                         required >
-                        <span>指定手机号&nbsp;<span style="color: #ddd;">(活动时间内，无指定项目时活动上线则马上下发)</span></span>
-                        <input  type="button" class="link mobile-button cascade" value="+添加手机号码" disabled/>
+                        <span>
+                            指定手机号&nbsp;
+                            <span style="color: #ddd;">(活动时间内，无指定项目时活动上线则马上下发)</span>
+                        </span>
+
+                        <%if(data.selectUseType == '3'){%>
+                            <input  type="button" class="link mobile-button cascade" value="+添加手机号码"/>
+                        <%}else{%>
+                            <input  type="button" class="link mobile-button cascade" value="+添加手机号码" disabled/>
+                        <%}%>
                     </label>
                     <%if(data.selectUseType == '3'){%>
                         <input  type="hidden" class="cascade" msg="请添加手机号码" name="phoneList"
@@ -152,12 +160,12 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="selectUseType" value="4" <%=data.selectUseType == '4' ? 'checked' : '' %> 
-                        required>
+                        <input type="radio" name="selectUseType" value="4" required
+                        <%=(!data.selectUseType || data.selectUseType == '4') ? 'checked' : '' %> >
                         <span>指定集团码用户&nbsp;<span style="color: #ddd;">(活动时间内填写集团码)</span></span>
                     </label>
-                    <%if(data.selectUseType == '4'){%>
-                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' 
+                    <%if(!data.selectUseType || data.selectUseType == '4'){%>
+                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' required
                         value="<%=data.code%>"/>
                     <%}else{%>
                         <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
@@ -174,7 +182,7 @@
                         <span>指定活动码用户&nbsp;<span style="color: #ddd;">(活动时间内填写活动码)</span></span>
                     </label>
                     <%if(data.selectUseType == '5'){%>
-                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' 
+                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' required
                         value="<%=data.code%>"/>
                     <%}else{%>
                         <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
@@ -191,7 +199,7 @@
                         <span>指定店铺码用户&nbsp;<span style="color: #ddd;">(活动时间内填写店铺码)</span></span>
                     </label>
                     <%if(data.selectUseType == '6'){%>
-                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' 
+                        <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' required
                         value="<%=data.code%>"/>
                     <%}else{%>
                         <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
@@ -223,13 +231,13 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="checkbox">
-                        <input type="checkbox" id="consumeItems">
+                        <input type="checkbox" id="consumeItemsAll">
                         <span>指定消费项目：(全平台用)</span>
                     </label>
                     </div>
                 </div> 
 
-                <div id="consumeItemsDiv" class="control-group">
+                <div id="consumeItemsAllDiv" class="control-group">
                     <label class="control-label" style="width:120px"></label>
                     <div class="control" id="control" ajat-one="true" 
                     ajat="platform/getItemType#domid=control&tempid=control-t&getItemTypes=<%=data.getItemTypes%>">
@@ -255,13 +263,14 @@
                 <div class="control-group">
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
-                        <label class="checkbox" required>
-                            <input type="checkbox" checked required>
+                        <label class="checkbox">
+                            <input type="checkbox" id="H5UsercheckBox" checked>
                             <span>绑定活动码</span>
                         </label>
 
-                        <input type="text" name="code" required value="000"/>
+                        <input type="text" name="code" value="000" required/>
                         <span style="color: #ddd;">（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
+                        <span class="control-help" style="display:none;"></span>
                     </div>
                 </div>
                 <%}%>  
@@ -278,7 +287,7 @@
         <script type="text/template" id="control-t">
         <%data.forEach&&data.forEach(function(item,i){%>
             <label class="checkbox">
-                <input type="checkbox" <%=item.typeid == protocol.custom.getItemTypes ? "checked":""%> name="getItemTypes" value="<%=item.typeid%>" disabled>
+                <input type="checkbox" <%=item.typeid == protocol.custom.getItemTypes ? "checked":""%> name="getItemTypes" value="<%=item.typeid%>" disabled required>
                 <span><%=item.typename%></span>
             </label> 
         <%})%>
