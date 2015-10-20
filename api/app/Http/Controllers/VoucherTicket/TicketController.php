@@ -92,7 +92,7 @@ class TicketController extends Controller {
         $page = isset($param['page'])?$param['page']:1;
 		$pageSize = isset($param['pageSize'])?$param['pageSize']:20;
         $keywordType = isset($post['keywordType']) ? $post['keywordType'] : '';
-        $obj = Voucher::select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE'])->where('vStatus','<>',10);
+        $obj = Voucher::select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE']);
         if($keyword && !empty($keywordType)){
             $selectType = array('','vcSn','vcTitle','vSn','vMobilephone','vSalonName','','REDEEM_CODE'); // 目前缺少分享手机号
 //            分享手机号查询
@@ -102,8 +102,7 @@ class TicketController extends Controller {
                         ->leftjoin('voucher','laisee.vsn','=','voucher.vSn')
                         ->leftjoin('salon_itemcomment','laisee.item_comment_id','=','salon_itemcomment.itemcommentid')
                         ->leftjoin('user','salon_itemcomment.user_id','=','user.user_id')
-                        ->where('user.mobilephone','like',"%$keyword%")
-                        ->where('vStatus','<>',10);
+                        ->where('user.mobilephone','like',"%$keyword%");
                 
             }elseif( in_array($keywordType,[1,2,3,4,5]) )
                 $obj->where( $selectType[ $keywordType ] , 'like' , "%$keyword%" );
@@ -123,7 +122,7 @@ class TicketController extends Controller {
 			elseif ($status == 3)
                 $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
 			elseif( $status == 4)
-                $obj->where('vStatus','=',1)->where('len(REDEEM_CODE)','<>',12);
+                $obj->whereRaw(' vStatus=10 and REDEEM_CODE!=""');
         }
 
         if($startTime && empty($endTime))
