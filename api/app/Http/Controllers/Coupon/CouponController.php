@@ -136,7 +136,7 @@ class CouponController extends Controller{
 	 * @apiSuccess {String} department 申请部门
 	 * @apiSuccess {String} status 1. 进行中 2. 暂停 3.已关闭 4. 已结束
 	 * @apiSuccess {String} allNum 发放数
-	 * @apiSuccess {String} useNum 使用数
+	 * @apiSuccess {String} useNum 兑换数
 	 * @apiSuccess {String} totalNum 代金劵可领总数
 	 * @apiSuccess {String} actTime 活动时间
 	 * 
@@ -828,6 +828,160 @@ class CouponController extends Controller{
 			    });
 		})->export('xls');
     }
+    /***
+	 * @api {post} /coupon/exportList 11.导出代金劵配置列表
+	 * @apiName exportList
+	 * @apiGroup Coupon
+	 *
+	 * @apiParam {Number} selectItem 可选 选择的项 1: 活动编号 2.活动名称
+	 * @apiParam {String} number 可选 对应项查询的字符.
+	 * @apiParam {Number} status 可选 活动状态. 1. 进行中 2. 暂停 3.已关闭 4. 已结束
+	 * @apiParam {String} department 部门id
+	 * @apiParam {String} startTime 活动开始时间
+	 * @apiParam {String} endTime 活动结束时间
+     * 
+     * 
+     * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+     *           "result": 1,
+     *           "token": "",
+     *           "data": ""
+     *          }
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 ***/
+    public function exportList(){
+        $post = $this->param;
+        $actSelect = isset($post['selectItem']) ? $post['selectItem'] : '';
+        $actNumber = isset($post['number']) ? urldecode($post['number']) : '';
+        $actStatus = isset($post['status']) ? $post['status'] : '';
+        $actDepartment = isset($post['department']) ? $post['department'] : '';
+        $actStartTime = isset($post['startTime']) ? $post['startTime'] : '';
+        $actEndTime = isset($post['endTime']) ? $post['endTime'] : '';
+        $page = isset( $post['page'] ) ? $post['page'] : 1;
+        $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 12;
+        
+        $i = 0;
+        if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
+            
+            $res = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
+                    ->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y'])
+                    ->orderBy('vcId','desc')
+                    ->get()
+                    ->toArray();
+            if( empty($res) ) return $this->success();
+            $tempData = [];
+            $department = '';
+            foreach( $res as $key=>$val ){
+                $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+                $actTime = '';
+                if( empty( $val['getStart'] ) && empty($val['getEnd']) )
+                    $actTime = '无限期活动';
+                if( !empty($val['getStart']) && empty($val['getEnd']) )
+                    $actTime = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
+                if( !empty($val['getEnd']) && empty($val['getStart']) )
+                    $actTime = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
+                if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
+                    $actTime = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
+                $res['data'][$key]['department'] = '';
+                if( !empty($val['DEPARTMENT_ID']) ){
+                    $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
+                    $department = $department['title'];
+                }
+                $tempData[$key][] = $i++;
+                $tempData[$key][] = $val['vcTitle'];
+                $tempData[$key][] = $val['vcSn'];
+                $tempData[$key][] = $val['totalNum'];
+                $tempData[$key][] = $statistics[1] + $statistics[3];
+                $tempData[$key][] = $statistics[1];
+                $tempData[$key][] = $val['addTime'];
+                $tempData[$key][] = $actTime;
+                $tempData[$key][] = $department;
+            }
+            unset( $res );
+            $title = '代金劵查询列表' .date('Ymd');
+            //导出excel	   
+            $header = ['序号','活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门'];
+            Excel::create($title, function($excel) use($tempData,$header){
+                $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
+                        $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+                        $sheet->prependRow(1, $header);//添加表头
+
+                    });
+            })->export('xls');
+        }
+        $where = '1';
+        $actType = array('','vcSn','vcTitle');
+        $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
+        $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y']);
+        if( !empty($actSelect) && !empty($actNumber) )
+            $obj->where( $actType[ $actSelect ] , 'like' , "'%".$actNumber."%'" );
+        
+        if( !empty($actStatus) ){
+            if( $actStatus != 4 )
+                $obj->where('status','=',$actStatus);
+            else
+                $obj->where('getEnd','<',time());
+        }
+        if( !empty($actStartTime) && !empty($actEndTime))
+            $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
+        if( !empty( $actDepartment ) )
+            $obj->where('DEPARTMENT_ID','=',$actDepartment);
+        //手动设置页数
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
+        $res = $obj->orderBy('vcId','desc')
+                    ->paginate($pageSize)
+                    ->toArray();
+        if( empty($res) ) return $this->success();
+            
+        $tempData = [];
+        $department = '';
+        foreach( $res as $key=>$val ){
+            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+            $actTime = '';
+            if( empty( $val['getStart'] ) && empty($val['getEnd']) )
+                $actTime = '无限期活动';
+            if( !empty($val['getStart']) && empty($val['getEnd']) )
+                $actTime = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
+            if( !empty($val['getEnd']) && empty($val['getStart']) )
+                $actTime = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
+            if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
+                $actTime = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
+            $res['data'][$key]['department'] = '';
+            if( !empty($val['DEPARTMENT_ID']) ){
+                $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
+                $department = $department['title'];
+            }
+            $tempData[$key][] = $i++;
+            $tempData[$key][] = $val['vcTitle'];
+            $tempData[$key][] = $val['vcSn'];
+            $tempData[$key][] = $val['totalNum'];
+            $tempData[$key][] = $statistics[1] + $statistics[3];
+            $tempData[$key][] = $statistics[1];
+            $tempData[$key][] = $val['addTime'];
+            $tempData[$key][] = $actTime;
+            $tempData[$key][] = $department;
+        }
+            unset( $res );
+            $title = '代金劵查询列表' .date('Ymd');
+            //导出excel	   
+            $header = ['序号','活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门'];
+            Excel::create($title, function($excel) use($tempData,$header){
+                $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
+                        $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+                        $sheet->prependRow(1, $header);//添加表头
+
+                    });
+            })->export('xls');
+    }
     // 获取分类
     private function _getItemType(){
         // 这里用于 代金劵和配置中会和前端约定 增加一个项目特价类型为typeid为101
@@ -859,16 +1013,19 @@ class CouponController extends Controller{
         $allNum = \App\Voucher::where( ['vcSn'=>$vcSn])->where('vStatus','<>',10)->count();
         // 已发放数
         $useNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>2] )->count();
+        // 未使用数
+        $noUseNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>1] )->count();
+        
         $invalidNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>5] )->count();
         if( !empty($invalidNum) )
-            return array( $allNum , $useNum , $invalidNum );
+            return array( $allNum , $useNum , $invalidNum ,$noUseNum  );
         // 已失效数
         if( empty($useEnd) ||  time()<$useEnd ){
             $invalidNum = 0;
         }else{
             $invalidNum = $allNum - $useNum;
         }
-        return array( $allNum , $useNum , $invalidNum );
+        return array( $allNum , $useNum , $invalidNum ,$noUseNum);
     }
    
     // 点击上线操作生成兑换码劵插入到代金劵表中

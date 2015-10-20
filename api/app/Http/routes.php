@@ -862,6 +862,10 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'coupon.exportCoupon',
 		'uses'=>'Coupon\CouponController@exportCoupon'
     ));
+    Route::any('coupon/exportList',array(  
+		'as'=>'coupon.exportList',
+		'uses'=>'Coupon\CouponController@exportList'
+    ));
 
 
     //红包活动管理
@@ -918,4 +922,14 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
     ));
     
     
+});
+
+/****
+ *   sql语句记录
+ ****/
+Event::listen("illuminate.query", function($sql, $bindings){
+ $sql = str_replace(array('%','?'), array('%%',"'%s'"), $sql);
+ $full_sql = vsprintf($sql, $bindings);
+//	echo $full_sql;
+ file_put_contents('../sql.log',$full_sql.";\r\n",FILE_APPEND);
 });
