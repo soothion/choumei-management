@@ -67,8 +67,6 @@ class Laisee extends Model {
 
         //分页
         $result = $query->select($fields)->paginate($size)->toArray();
-        print_r(DB::getQueryLog());
-        exit;
         unset($result['next_page_url']);
         unset($result['prev_page_url']);
         return $result;
