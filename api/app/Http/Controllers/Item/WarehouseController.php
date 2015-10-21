@@ -492,15 +492,8 @@ class WarehouseController extends Controller
 	            $normMenu = array_keys($normarr[0]['type']);
 	            $tmp['normarr'] = json_encode($normarr,JSON_UNESCAPED_UNICODE);
 	            $tmp['normMenu'] = json_encode($normMenu,JSON_UNESCAPED_UNICODE);
-	        }
-	        
-	        $err_msg = [];
-	        $ret = ItemInfoController::parametersFilter($tmp, $err_msg);
-	  
-	        if(!$ret)
-	        {
-	            throw new ApiException($err_msg['msg'],$err_msg['no']);
-	        }
+	        }	        
+	        $err_msg = [];	      
 	        $res[] = $tmp;
 	    }
 	    return $res;
