@@ -887,6 +887,9 @@ class PlatformController extends Controller{
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
         if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
+        if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
+        if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
+        if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         
         $addRes = \App\Model\VoucherConf::where(['vcId'=>$id])->update( $data );
         
