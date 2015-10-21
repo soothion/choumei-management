@@ -455,6 +455,8 @@ class WarehouseController extends Controller
 	        $tmp['expTimeInput'] = $data['exp_time'];
 	        $tmp['totalRepInput'] = $data['total_rep'];
 	        $tmp['priceGroup'] = 0;
+	        $tmp['price'] = 0;
+	        $tmp['priceDis'] = 0;
 	        if(!empty($data['addserviceStr']))
 	        {
 	           $tmp['addedService'] = explode(',', $data['addserviceStr']);
