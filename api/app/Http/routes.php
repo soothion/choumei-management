@@ -827,9 +827,9 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
     'uses'=>'ItemController@show'
         ));
     
-    Route::any('warehouse/detail/{id}',array(  //项目仓库详情
+    Route::any('warehouse/detail/{id}',array(  //项目仓库详情(闲时特价)
         'as'=>'warehouse.detail',
-        'uses'=>'Item\OnSaleController@show'
+        'uses'=>'OnSaleController@show'
      ));
     
     Route::any('warehouse/destroy',array(  //删除项目
