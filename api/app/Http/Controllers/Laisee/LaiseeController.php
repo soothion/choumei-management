@@ -643,8 +643,20 @@ class LaiseeController extends Controller {
      * 		}
      */
     public function itemTypes() {
-        $itemTypes = \App\SalonItemtype::select(['typeid', 'typename'])->get();
-        return $this->success($itemTypes);
+        $itemTypes = \App\SalonItemtype::select(['typeid', 'typename'])->where('status', 1)->where('typename', '!=', '其他')->get();
+        $res = [];
+        foreach ($itemTypes as $val) {
+            $typeidStr[] = $val->typeid;
+            $res[] = [
+                'typeid' => (string) $val->typeid,
+                'typename' => $val->typename,
+            ];
+        }
+        $res[] = [
+            'typeid' => implode(",", $typeidStr),
+            'typename' => "无限制券",
+        ];
+        return $this->success($res);
     }
 
 }
