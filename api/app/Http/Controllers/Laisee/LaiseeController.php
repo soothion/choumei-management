@@ -47,7 +47,7 @@ class LaiseeController extends Controller {
      * @apiSuccess {Number} giftNum 礼包领取数.
      * @apiSuccess {String} create_time 创建时间.
      * @apiSuccess {String} start_time 上线时间.
-     * @apiSuccess {String} status 活动状态 (N已结束 Y进行中).
+     * @apiSuccess {String} status 活动状态 (N已结束 Y进行中 S已关闭).
      * 
      * 
      * @apiSuccessExample Success-Response:
