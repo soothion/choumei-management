@@ -31,14 +31,15 @@
             <hr />
         </div>
         <div class="wrapper">
-			<div id="form" ajat="#domid=form&tempid=form-t">
+			<div id="form" ajat="<%if(query._){%>laisee/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
-				<form action="" class="form-vertical" data-role="form" >
+				<form action="<%if(query._){%>laisee/update<%}else{%>laisee/create<%}%>" class="form-vertical" data-role="form" >
 					<div class="detail-operation ">
 						<button type="button" class="btn btn-cancel">取消</button>
 						<span class="space"></span>
 						<button class="btn-primary">提交</button>
 					</div>
+					<input type="hidden" value="<%=query.id%>" name="id" />
 					<div class="control-group">
 						<legend>
 						微信/朋友圈分享icon
@@ -51,11 +52,11 @@
 						<div class="control">
 							<div class="control-image">
 								<div class="control-single-image">
-									<img _src="<%=data.bonus_bg_img%>" alt="" />
+									<img src="<%=data.share_icon%>" alt="" />
 									<div class="control-image-ud">
 										<div id="imageUpload1"><i class="fa fa-cloud-upload"></i>上传图分享图</div>
 									</div>
-									<input type="hidden" name="bonus_bg_img" class="original" value="<%=data.img%>" required requiredmsg="请上传分享图" data-helpid="image-help1" />
+									<input type="hidden" name="share_icon" class="original" value="<%=data.share_icon%>" required requiredmsg="请上传分享图" data-helpid="image-help1" />
 								</div>
 							</div>   
 							<div class="weak">分享图360*360px</div>
@@ -67,7 +68,7 @@
 							<span class="red">*</span>分享标题
 						</label>
 						<div class="control">
-							<input type="text" placeholder="填写分享标题" style="width:300px" name="share_title" required maxlength="24"/>
+							<input type="text" value="<%=data.share_title%>" placeholder="填写分享标题" style="width:300px" name="share_title" required maxlength="24"/>
 						</div>                        
 					</div> 
 					<div class="control-group">
@@ -75,7 +76,7 @@
 							<span class="red">*</span>分享摘要
 						</label>
 						<div class="control">
-							<textarea type="text" placeholder="填写分享摘要" style="width:300px" name="share_desc" required  maxlength="28"></textarea>
+							<textarea type="text" value="<%=data.share_desc%>" placeholder="填写分享摘要" style="width:300px" name="share_desc" required  maxlength="28"></textarea>
 						</div>                        
 					</div> 
 					<div class="control-group">
@@ -90,11 +91,11 @@
 						<div class="control">
 							<div class="control-image">
 								<div class="control-single-image">
-									<img _src="<%=data.bonus_bg_img%>" alt="" style="width:320px" />
+									<img src="<%=data.bonus_bg_img%>" alt="" style="width:320px" />
 									<div class="control-image-ud">
 										<div id="imageUpload2"><i class="fa fa-cloud-upload"></i>上传背景图</div>
 									</div>
-									<input type="hidden" name="bonus_bg_img" class="original" value="<%=data.img%>" required requiredmsg="请上传背景图" data-helpid="image-help2" />
+									<input type="hidden" name="bonus_bg_img" class="original" value="<%=data.bonus_bg_img%>" required requiredmsg="请上传背景图" data-helpid="image-help2" />
 								</div>
 							</div>
 							<div class="weak">H5页面宽度为640px；背景高度根据实际效果图截取</div>
@@ -115,32 +116,43 @@
 		</div>
 		</div>
         <script>
-			$(function(){
-			//	$('#form').on("_ready",function(){
-					lib.puploader.image({
-						browse_button: 'imageUpload1',
-						auto_start:true,
-						filters: {
-							mime_types : [
-								{ title : "Image files", extensions : "jpg,png,jpeg" }
-							]
-						},
-						max_file_size:'2mb',
-						imageLimitSize:"360x360"
-					});
-					lib.puploader.image({
-						browse_button: 'imageUpload2',
-						auto_start:true,
-						filters: {
-							mime_types : [
-								{ title : "Image files", extensions : "jpg,png,jpeg" }
-							]
-						},
-						max_file_size:'2mb',
-						imageLimitSize:"640"
-					});
-				//});
-			})
+			$('#form').on("_ready",function(){
+				$('#form form')[0]._getFormData = function(){
+					var data=lib.tools.getFormData($(this));
+					var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
+					data=$.extend(formData,data);
+					return data;
+				 }
+				lib.puploader.image({
+					browse_button: 'imageUpload1',
+					auto_start:true,
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" }
+						]
+					},
+					max_file_size:'2mb',
+					//imageLimitSize:"360x360"
+				});
+				lib.puploader.image({
+					browse_button: 'imageUpload2',
+					auto_start:true,
+					filters: {
+						mime_types : [
+							{ title : "Image files", extensions : "jpg,png,jpeg" }
+						]
+					},
+					max_file_size:'2mb',
+					//imageLimitSize:"640"
+				});
+				$('#preview_btn').on('click',function{}{
+					var data=lib.tools.getFormData($("form"));
+					var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
+					data=$.extend(formData,data);
+					sessionStorage.setItem("preview",JSON.stringify(data));
+					window.open("preview.html","_blank");
+				})
+			});
         </script>      
     </body>
 </html>

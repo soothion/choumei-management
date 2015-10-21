@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>交易管理 </a>
+            <span>&gt;</span><a href="index.html">约发型师查询</a><span>&gt;</span>记录详情
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>记录详情</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table-detail" ajat="laisee/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
+				<script type="text/template" id="table-t">
+                <div class="detail-operation">
+                    <button class="btn" type="button" onclick="window.close()">关闭</button>  
+                </div>  
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>用户臭美号</td>
+                            <td><%=data.laisee_name%></td>
+                        </tr>
+
+                        <tr>
+                            <td>用户手机号</td>
+                            <td><%=data.lc_remark%></td>
+                        </tr>
+
+                        <tr>
+                            <td>美发项目</td>
+                            <td><%=data.start_time%>至<%=data.end_time%></td>
+                        </tr>
+
+                        <tr>
+                            <td>到店时间</td>
+							<%var statusMap={"Y":"进行中","N":"已结束","S":"已关闭"}%>
+                            <td><%=statusMap[data.status]%></td>
+                        </tr>
+
+                        <tr>
+                            <td>联系客户</td>
+                            <td><%=data.budget_amount%></td>                            
+                        </tr>
+
+                        <tr>
+                            <td>店铺名称</td>
+                            <td><%=data.over_time%></td>
+                        </tr>   
+
+                        <tr>
+                            <td>店铺地址</td>
+                            <td><%=data.receiveNum%></td>
+                        </tr>
+
+                        <tr>
+                            <td>造型师等级</td>
+                            <td><%=data.receiveAmount%></td>
+                        </tr>  
+
+                        <tr>
+                            <td>造型师名称</td>
+                            <td><%=data.usedNum%></td>
+                        </tr>  
+
+                        <tr>
+                            <td>造型师手机号</td>
+                            <td><%=data.usedAmount%></td>
+                        </tr> 
+
+                        <tr>
+                            <td>提交时间</td>
+                            <td><%=data.consumeNum%></td>
+                        </tr>                                                                   
+                    </tbody>                     
+                </table>
+				</script>
+            </div>
+        </div>
+    </body>
+</html>
