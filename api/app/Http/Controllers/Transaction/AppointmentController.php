@@ -116,10 +116,10 @@ class AppointmentController extends Controller {
      * @apiSuccess {String} userMobile 用户手机号
      * @apiSuccess {String} service_item 美发项目
      * @apiSuccess {String} appoint_date 到店时间
-     * @apiSuccess {Number} contacted 联系客户
+     * @apiSuccess {Number} contacted 联系客户 0 未联系 1已联系
      * @apiSuccess {String} salonName 店铺名称
      * @apiSuccess {String} addr 店铺地址
-     * @apiSuccess {String} stylistGrade 造型师等级
+     * @apiSuccess {String} stylistGrade 造型师等级 1美发师 2高级美发师 3造型师 4艺术总监
      * @apiSuccess {String} stylistName 造型师名称
      * @apiSuccess {String} stylistMobile 造型师手机号
      * @apiSuccess {String} add_time 提交时间
