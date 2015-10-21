@@ -32,7 +32,10 @@
         if(type == 'edit'){
             var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
             editData = $.extend({},editData,data);
-            sessionStorage.setItem('edit-base-data',JSON.stringify(editData));     
+            var saveData = data;
+            saveData.vcId = editData.vcId;
+            sessionStorage.setItem('edit-base-data',JSON.stringify(editData));
+            sessionStorage.setItem('edit-save-data',JSON.stringify(saveData));
         }
         location.href = "addUser.html?type="+type+"&selectItemType="+selectItemType;
     }    

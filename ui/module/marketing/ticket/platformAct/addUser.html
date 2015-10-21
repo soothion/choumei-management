@@ -165,7 +165,7 @@
                     </label>
                     <%if(!data.selectUseType || data.selectUseType == '4'){%>
                     <input type="text" data-check="2" class="cascade" name="code" placeholder="输入集团码" 
-                        pattern='number' required value="<%=data.code%>" />
+                        pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
                         <span class="control-help" style="display:none;">集团码不存在</span>
                     <%}else{%>
                     <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
@@ -183,7 +183,7 @@
                     </label>
                     <%if(data.selectUseType == '5'){%>
                     <input type="text" data-check="3" class="cascade" name="code" placeholder="输入活动码" 
-                        pattern='number' required value="<%=data.code%>"/>
+                        pattern='number' required requiredmsg="未填写" value="<%=data.code%>"/>
                         <span class="control-help" style="display:none;">活动码不存在</span>
                     <%}else{%>
                     <input type="text" class="cascade" name="code" placeholder="输入活动码" pattern='number' disabled/>
@@ -200,7 +200,7 @@
                         <span>指定店铺码用户&nbsp;<span style="color: #ddd;">(活动时间内填写店铺码)</span></span>
                     </label>
                     <%if(data.selectUseType == '6'){%>
-                    <input type="text" data-check="1" class="cascade" name="code" placeholder="输入店铺码" pattern='number' required value="<%=data.code%>" />
+                    <input type="text" data-check="1" class="cascade" name="code" placeholder="输入店铺码" pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
                         <span class="control-help" style="display:none;">店铺码不存在</span>
                     <%}else{%>
                     <input type="text" class="cascade" name="code" placeholder="输入店铺码" pattern='number' disabled/>
