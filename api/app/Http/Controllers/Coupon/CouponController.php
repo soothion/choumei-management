@@ -425,7 +425,7 @@ class CouponController extends Controller{
             $voucherConfInfo['consumeNum'] = 0;
             $voucherConfInfo['consumeMoney'] = 0;
         }
-        if( time() > $voucherConfInfo['getEnd'] )
+        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
             $voucherConfInfo['status'] = 4;
         // 查看代金劵是否已经生成过
         $voucherCount = \App\Voucher::where(['vcId'=>$id])->count();

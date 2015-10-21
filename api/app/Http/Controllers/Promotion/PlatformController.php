@@ -703,7 +703,7 @@ class PlatformController extends Controller{
             $voucherConfInfo['consumeNum'] = 0;
             $voucherConfInfo['consumeMoney'] = 0;
         }
-        if( time() > $voucherConfInfo['getEnd'] )
+        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
             $voucherConfInfo['status'] = 4;
         unset( $voucherConfInfo['getStart'] );
         unset( $voucherConfInfo['getEnd'] );
