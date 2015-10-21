@@ -125,7 +125,8 @@ class PlatformController extends Controller{
             $phoneList = explode(',',$post['phoneList']);
             $data['getTypes'] = 3;
         }elseif( $post['selectItemType'] == 2 && in_array($post['selectUseType'],[4,5,6]) && !empty($post['code']) ){
-            $tt = $data['getTypes'] = $post['selectUseType'];
+            $tt =  $post['selectUseType'];
+            $data['getTypes'] = 0;
             // 检验验证码是否存在
             if( in_array( $tt , array(4,5,6) ) ){
                 $tempArr = [4=>'getGroupExists',5=>'getActivityExists',6=>'getDividendExists'];
