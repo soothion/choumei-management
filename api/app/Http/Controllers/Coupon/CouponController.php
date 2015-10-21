@@ -334,7 +334,8 @@ class CouponController extends Controller{
      *               "useMoneyed": 340,
      *               "consumeNum": 0,
      *               "consumeMoney": 0,
-     *               "invalidNum": 3
+     *               "invalidNum": 3,
+     *               "export": 3
      *           }
      *       }
 	 *
