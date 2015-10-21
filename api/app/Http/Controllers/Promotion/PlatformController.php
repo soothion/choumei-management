@@ -862,9 +862,9 @@ class PlatformController extends Controller{
 	 ***/
     public function editConf(){
         $post = $this->param;
-        if( empty( $post['id'] ) )
+        if( empty( $post['vcId'] ) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $id = $post['id'];
+        $id = $post['vcId'];
         
         $data = array();
         if( isset( $post['actName'] ) )  $data['vcTitle'] = $post['actName'];
