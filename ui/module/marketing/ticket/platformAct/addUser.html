@@ -82,19 +82,22 @@
 
                 <div class="control-group">
                   <label class="control-label" style="width:100px"></label>
-                      <a data-value="1" class="tab-menus <%=(!query.selectItemType || query.selectItemType=='1') ? 'act' : '' %>" href="?type=<%=query.type%>&menus=1#selectItemType=1">
+                      <a data-value="1" class="tab-menus <%=(!query.selectItemType || query.selectItemType=='1') ? 'act' : '' %>" <%=query.type=='add' ? "href=?type=add&menus=1#selectItemType=1" : '' %>>
                           新用户
                       </a>
 
-                      <a data-value="2" class="tab-menus <%=query.selectItemType=='2'? 'act' : '' %>" href="?type=<%=query.type%>&menus=2#selectItemType=2">
+                      <a data-value="2" class="tab-menus <%=query.selectItemType=='2'? 'act' : '' %>" 
+                      <%=query.type=='add' ? "href=?type=add&menus=2#selectItemType=2" : '' %>>
                           指定用户
                       </a>
 
-                      <a data-value="3" class="tab-menus <%=query.selectItemType=='3'? 'act' : '' %>" href="?type=<%=query.type%>&menus=3#selectItemType=3">
+                      <a data-value="3" class="tab-menus <%=query.selectItemType=='3'? 'act' : '' %>" 
+                      <%= query.type =='add' ? "href=?type=add&menus=3#selectItemType=3" : '' %>>
                           全平台用户
                       </a>
 
-                      <a data-value="4" class="tab-menus <%=query.selectItemType=='4'? 'act' : '' %>" href="?type=<%=query.type%>&menus=4#selectItemType=4">
+                      <a data-value="4" class="tab-menus <%=query.selectItemType=='4'? 'act' : '' %>" 
+                      <%=query.type=='add' ? "href=?type=add&menus=4#selectItemType=4" : '' %>>
                           H5用户
                       </a>
                       <input type="hidden" name="selectItemType" value="<%=query.selectItemType || 1 %>">
@@ -106,7 +109,8 @@
                     <div class="control">
                         <label class="radio">
                             <input type="radio" checked="checked" name="selectUseType" value="1" 
-                            <%=!data.selectUseType || data.selectUseType == '1' ? 'checked' : '' %>>
+                            <%=!data.selectUseType || data.selectUseType == '1' ? 'checked' : '' %>
+                            <%= (query.type =='edit' && data.selectUseType=='2') ? 'disabled' : '' %>>
                             <span>新注册&nbsp;<span style="color: #ddd;">(活动时间内注册的用户)</span></span>
                         </label>
                     </div>
@@ -116,7 +120,8 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                         <label class="radio">
-                            <input type="radio" name="selectUseType" value="2" <%=data.selectUseType=='2' ? 'checked':'' %>>
+                        <input type="radio" name="selectUseType" value="2" <%=data.selectUseType=='2' ? 'checked':'' %>
+                        <%= (query.type =='edit' && (!data.selectUseType || data.selectUseType == '1')) ? 'disabled' : '' %>>
                             <span>
                                 首次消费&nbsp;
                                 <span style="color: #ddd;">(活动时间内首次消费后获取)</span>
@@ -131,8 +136,9 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="selectUseType" value="3" <%=data.selectUseType == '3' ? 'checked' : '' %>
-                        required >
+                        <input type="radio" name="selectUseType" value="3" required 
+                        <%= data.selectUseType == '3' ? 'checked' : '' %>
+                        <%= (query.type =='edit' && data.selectUseType !='3') ? 'disabled' : '' %>>
                         <span>
                             指定手机号&nbsp;
                             <span style="color: #ddd;">(活动时间内，无指定项目时活动上线则马上下发)</span>
@@ -160,7 +166,8 @@
                     <div class="control">
                     <label class="radio">
                         <input type="radio" name="selectUseType" value="4" required
-                        <%=(!data.selectUseType || data.selectUseType == '4') ? 'checked' : '' %> >
+                        <%=(!data.selectUseType || data.selectUseType == '4') ? 'checked' : '' %> 
+                        <%= (query.type =='edit' &&!data.selectUseType &&data.selectUseType !='4') ? 'disabled' : '' %>>
                         <span>指定集团码用户&nbsp;<span style="color: #ddd;">(活动时间内填写集团码)</span></span>
                     </label>
                     <%if(!data.selectUseType || data.selectUseType == '4'){%>
@@ -177,12 +184,13 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="selectUseType" value="5" 
-                        <%=data.selectUseType == '5' ? 'checked' : '' %> required>
+                        <input type="radio" name="selectUseType" value="5" required
+                        <%=data.selectUseType == '5' ? 'checked' : '' %>
+                        <%= (query.type =='edit' && data.selectUseType !='5') ? 'disabled' : '' %> >
                         <span>指定活动码用户&nbsp;<span style="color: #ddd;">(活动时间内填写活动码)</span></span>
                     </label>
                     <%if(data.selectUseType == '5'){%>
-                    <input type="text" data-check="3" class="cascade" name="code" placeholder="输入活动码" 
+                    <input type="text" data-check="5" class="cascade" name="code" placeholder="输入活动码" 
                         pattern='number' required requiredmsg="未填写" value="<%=data.code%>"/>
                         <span class="control-help" style="display:none;">活动码不存在</span>
                     <%}else{%>
@@ -196,11 +204,13 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
-                        <input type="radio" name="selectUseType" value="6" required>
+                        <input type="radio" name="selectUseType" value="6" required
+                        <%=data.selectUseType == '6' ? 'checked' : '' %> 
+                        <%= (query.type =='edit' && data.selectUseType !='6') ? 'disabled' : '' %> >
                         <span>指定店铺码用户&nbsp;<span style="color: #ddd;">(活动时间内填写店铺码)</span></span>
                     </label>
                     <%if(data.selectUseType == '6'){%>
-                    <input type="text" data-check="1" class="cascade" name="code" placeholder="输入店铺码" pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
+                    <input type="text" data-check="6" class="cascade" name="code" placeholder="输入店铺码" pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
                         <span class="control-help" style="display:none;">店铺码不存在</span>
                     <%}else{%>
                     <input type="text" class="cascade" name="code" placeholder="输入店铺码" pattern='number' disabled/>
@@ -218,7 +228,7 @@
                     </div>
                 </div>
 
-                <div id="consumeItemsDiv" class="control-group" style="display:none">
+                <div id="consumeItemsDiv" class="control-group consumeItems" style="display:none">
                     <label class="control-label" style="width:120px"></label>
                     <div class="control" id="control" ajat-one="true" 
                     ajat="platform/getItemType#domid=control&tempid=control-t&getItemTypes=<%=data.getItemTypes%>">
@@ -238,7 +248,7 @@
                     </div>
                 </div> 
 
-                <div id="consumeItemsAllDiv" class="control-group">
+                <div id="consumeItemsAllDiv" class="control-group consumeItems">
                     <label class="control-label" style="width:120px"></label>
                     <div class="control" id="control" ajat-one="true" 
                     ajat="platform/getItemType#domid=control&tempid=control-t&getItemTypes=<%=data.getItemTypes%>">
@@ -269,7 +279,7 @@
                             <span>绑定活动码</span>
                         </label>
 
-                        <input type="text" name="code" value="000" required <%= data.code=="" ? 'disabled' : '' %>/>
+                        <input type="text" name="code" value="00000" required <%= data.code=="" ? 'disabled' : '' %>/>
                         <span style="color: #ddd;">（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
                         <span class="control-help" style="display:none;"></span>
                     </div>

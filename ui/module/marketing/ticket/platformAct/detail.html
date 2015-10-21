@@ -140,7 +140,28 @@
                     url : 'platform/getInfo/'+lib.query.id
                 }).done(function(data, status, xhr){
                     if(data.result == 1){
-                        sessionStorage.setItem('edit-base-data',JSON.stringify(data.data));  
+                        data = data.data;
+                        if(data.selectItemType=="1"){
+                            selectUseType = data.getTypes;
+                        }
+                        if(data.selectItemType=="2"){
+                            if(data.getTypes == "3"){
+                                data.selectUseType = 3;
+                            }
+
+                            if(data.getCodeType == "1"){
+                                data.selectUseType = 6;
+                            }
+
+                            if(data.getCodeType == "2"){
+                                data.selectUseType = 4;
+                            }
+
+                            if(data.getCodeType == "3"){
+                               data.selectUseType = 5;
+                            }
+                        }
+                        sessionStorage.setItem('edit-base-data',JSON.stringify(data));  
                         location.href = "addBase.html?type=edit&id="+lib.query.id;                        
                     }
                 });

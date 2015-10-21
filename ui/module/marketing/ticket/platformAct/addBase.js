@@ -20,7 +20,13 @@
     });
 
     $("#form").on('click','#preview-btn',function(){
-        location.href = "preview.html?type="+type;
+        var data = lib.getFormData($("#form"));     
+        data.manager = $("input[value="+data.managerId+"]").next().text();
+        if(type === 'add')  var previewData = JSON.parse(sessionStorage.getItem('add-base-data'));
+        if(type === 'edit') var previewData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+        previewData = $.extend({},previewData,data);
+        sessionStorage.setItem('preview-base-data',JSON.stringify(previewData));
+        window.open("preview.html?type="+type);       
     })
 
     lib.Form.prototype.save = function(data){
