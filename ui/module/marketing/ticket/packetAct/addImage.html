@@ -30,89 +30,117 @@
             </div>
             <hr />
         </div>
-
         <div class="wrapper">
-            <div class="detail-operation form-vertical">
-                <button type="button" class="btn btn-cancel">取消</button>
-                <span class="space"></span>
-                <button class="btn-primary submit">提交</button>
-            </div>
-
-            <table>
-                <tbody>
-                    <tr>
-                        <td style="width:180px">
-                            <span class="title">微信/朋友圈分享icon</span>
-                        </td>
-
-                        <td>
-                            <div class="control-image">
-                                <div class="control-thumbnails" id="control-thumbnails1" data-max="10">
-                                    <div class="control-image-upload">
-                                        <div id="imageUpload1">
-                                            <i class="fa fa-image"></i>
-                                            <em>上传合同图片</em>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                      
-                        </td>
-
-                        <td>
-                            <div style="margin:10px">
-                                <input type="text" placeholder="填写分享标题" style="width:300px"/>
-                                <span style="color:#ddd">（必填，最多24个汉字)</span>
-                            </div>
-                            <div style="margin:10px">
-                                <textarea name=""placeholder="填写分享摘要" style="width:300px"></textarea>
-                                <span style="color:#ddd">（必填，最多28个汉字)</span>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <table>
-                <tbody>
-                    <tr>
-                        <td style="width:180px">
-                            <span class="title">H5红包页面背景图</span>
-                        </td>
-
-                        <td>
-                            <div class="control-image">
-                                <div class="control-thumbnails" id="control-thumbnails1" data-max="10">
-                                    <div class="control-image-upload">
-                                        <div id="imageUpload1">
-                                            <i class="fa fa-image"></i>
-                                            <em>上传合同图片</em>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                      
-                        </td>
-
-                        <td>
-                          <div style="width:250px;height:300px;border:1px dashed #ddd;margin:30px">
-                              <div style="width:200px;height:200px;border:1px dashed #ddd;margin:80px 0 0 25px">
-                                  
-                              </div>
-                          </div>  
-                        </td>
-                    </tr>
-                </tbody>
-            </table> 
-
-            <div style="margin:50px 160px;" class="form-vertical">
-                <button class="btn" type="button" id="preview_btn" style="margin-right:20px">预览</button>
-                <button class="btn-primary submit" >下一步</button>              
-            </div>           
-        </div> 
-
+			<div id="form" ajat="#domid=form&tempid=form-t">
+				<script type="text/template" id="form-t">
+				<form action="" class="form-vertical" data-role="form" >
+					<div class="detail-operation ">
+						<button type="button" class="btn btn-cancel">取消</button>
+						<span class="space"></span>
+						<button class="btn-primary">提交</button>
+					</div>
+					<div class="control-group">
+						<legend>
+						微信/朋友圈分享icon
+						</legend>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="">
+							<span class="red">*</span>分享图
+						</label>
+						<div class="control">
+							<div class="control-image">
+								<div class="control-single-image">
+									<img _src="<%=data.bonus_bg_img%>" alt="" />
+									<div class="control-image-ud">
+										<div id="imageUpload1"><i class="fa fa-cloud-upload"></i>上传图分享图</div>
+									</div>
+									<input type="hidden" name="bonus_bg_img" class="original" value="<%=data.img%>" required requiredmsg="请上传分享图" data-helpid="image-help1" />
+								</div>
+							</div>   
+							<div class="weak">分享图360*360px</div>
+							<div id="image-help1" class="control-help" style="display:none"></div>
+						</div>                        
+					</div> 
+					<div class="control-group">
+						<label class="control-label" for="">
+							<span class="red">*</span>分享标题
+						</label>
+						<div class="control">
+							<input type="text" placeholder="填写分享标题" style="width:300px" name="share_title" required maxlength="24"/>
+						</div>                        
+					</div> 
+					<div class="control-group">
+						<label class="control-label" for="">
+							<span class="red">*</span>分享摘要
+						</label>
+						<div class="control">
+							<textarea type="text" placeholder="填写分享摘要" style="width:300px" name="share_desc" required  maxlength="28"></textarea>
+						</div>                        
+					</div> 
+					<div class="control-group">
+						<legend>
+							H5红包页面背景图
+						</legend>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="">
+							<span class="red">*</span>背景图
+						</label>
+						<div class="control">
+							<div class="control-image">
+								<div class="control-single-image">
+									<img _src="<%=data.bonus_bg_img%>" alt="" style="width:320px" />
+									<div class="control-image-ud">
+										<div id="imageUpload2"><i class="fa fa-cloud-upload"></i>上传背景图</div>
+									</div>
+									<input type="hidden" name="bonus_bg_img" class="original" value="<%=data.img%>" required requiredmsg="请上传背景图" data-helpid="image-help2" />
+								</div>
+							</div>
+							<div class="weak">H5页面宽度为640px；背景高度根据实际效果图截取</div>
+							<div id="image-help2"  class="control-help"  style="display:none"></div>					
+						</div>				
+					</div>
+					<div class="control-group">
+						<label class="control-label" for=""></label>
+						<div class="control">
+							 <button class="btn" type="button" id="preview_btn">预览</button>
+							 <span class="space"></span>
+							<button class="btn-primary" >提交</button>  
+						</div>                        
+					</div>
+				</div> 
+			</form>
+			</script>
+		</div>
+		</div>
         <script>
-            lib.Form.prototype.save = function(data){
-                location.href = "addImage.html"
-            }
+			$(function(){
+			//	$('#form').on("_ready",function(){
+					lib.puploader.image({
+						browse_button: 'imageUpload1',
+						auto_start:true,
+						filters: {
+							mime_types : [
+								{ title : "Image files", extensions : "jpg,png,jpeg" }
+							]
+						},
+						max_file_size:'2mb',
+						imageLimitSize:"360x360"
+					});
+					lib.puploader.image({
+						browse_button: 'imageUpload2',
+						auto_start:true,
+						filters: {
+							mime_types : [
+								{ title : "Image files", extensions : "jpg,png,jpeg" }
+							]
+						},
+						max_file_size:'2mb',
+						imageLimitSize:"640"
+					});
+				//});
+			})
         </script>      
     </body>
 </html>
