@@ -290,7 +290,7 @@ class CouponController extends Controller{
 	 * @apiSuccess {String} vcTitle 活动名称
 	 * @apiSuccess {String} vcSn 活动编号
 	 * @apiSuccess {Number} vcRemark 活动简介.
-	 * @apiSuccess {String} status 1. 进行中 2. 暂停 3.已关闭 4. 已结束
+	 * @apiSuccess {String} status 1. 进行中 2. 下线 3.已关闭 4. 已结束
 	 * @apiSuccess {Number} actTime 活动时间.
 	 * @apiSuccess {Number} department 部门.
 	 * @apiSuccess {Number} manager 负责人.
@@ -308,7 +308,7 @@ class CouponController extends Controller{
 	 * @apiSuccess {String} useMoneyed 已使用总金额
 	 * @apiSuccess {String} consumeNum 已消费数
 	 * @apiSuccess {String} consumeMoney 已消费数金额
-	 * @apiSuccess {String} invalidNum 已失效数
+	 * @apiSuccess {String} export 0 不能导出 1 可以导出
 	 * 
      * 
 	 * @apiSuccessExample Success-Response:
@@ -426,6 +426,12 @@ class CouponController extends Controller{
         }
         if( time() > $voucherConfInfo['getEnd'] )
             $voucherConfInfo['status'] = 4;
+        // 查看代金劵是否已经生成过
+        $voucherCount = \App\Voucher::where(['vcId'=>$id])->count();
+        $voucherConfInfo['export'] = 0;
+        if( !empty($voucherCount) )
+            $voucherConfInfo['export'] = 1;
+        
         unset( $voucherConfInfo['getStart'] );
         unset( $voucherConfInfo['getEnd'] );
         unset( $voucherConfInfo['DEPARTMENT_ID'] );
