@@ -102,15 +102,15 @@ class TicketController extends Controller {
                         ->leftjoin('voucher','laisee.vsn','=','voucher.vSn')
                         ->leftjoin('salon_itemcomment','laisee.item_comment_id','=','salon_itemcomment.itemcommentid')
                         ->leftjoin('user','salon_itemcomment.user_id','=','user.user_id')
-                        ->where('user.mobilephone','like',"%$keyword%");
+                        ->where('user.mobilephone','=',$keyword);
                 
             }elseif( in_array($keywordType,[1,2,3,4,5]) )
-                $obj->where( $selectType[ $keywordType ] , 'like' , "%$keyword%" );
+                $obj->where( $selectType[ $keywordType ] , '=' , $keyword );
             elseif( $keywordType == 7 ){
                 $des = new \Service\NetDesCrypt;
                 $des->setKey( self::$DES_KEY );
                 $encrypt = $des->encrypt( $keyword );
-                $obj->whereRaw('REDEEM_CODE like "%'.$keyword.'%" or REDEEM_CODE like "%'.$encrypt.'%"');
+                $obj->whereRaw('REDEEM_CODE="'.$keyword.'" or REDEEM_CODE="'.$encrypt.'"');
             }
         }
 
