@@ -26,7 +26,7 @@ class Laisee extends Model {
                 ->leftJoin('user', 'user.user_id', '=', 'salon_itemcomment.user_id');
         //商户名筛选
         if (!empty($data['bonusSn'])) {
-            $bonusSn = substr($bonusSn, 1);
+            $bonusSn = (int) substr($data['bonusSn'], 2);
             $query = $query->where('laisee.order_ticket_id', $bonusSn);
         }
         if ($data['mobilephone']) {
@@ -36,7 +36,11 @@ class Laisee extends Model {
             $query = $query->where('laisee_config.laisee_name', "like", "%" . $data['laisee_name'] . "%");
         }
         if ($data['bonusStatus']) {
-            $query = $query->where('laisee_config.status', $data['bonusStatus']);
+            if ($data['bonusStatus'] == 'Y') {
+                $query = $query->where('laisee_config.status', $data['bonusStatus']);
+            } else {
+                $query = $query->where('laisee_config.status', 'N')->orWhere('laisee_config.status', 'S');
+            }
         }
         if ($data['start_time']) {
             $start_time = strtotime($data['start_time']);
@@ -52,7 +56,6 @@ class Laisee extends Model {
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });
-
         $fields = array(
             'laisee_config.laisee_name',
             'laisee_config.id',
@@ -64,6 +67,8 @@ class Laisee extends Model {
 
         //分页
         $result = $query->select($fields)->paginate($size)->toArray();
+        print_r(DB::getQueryLog());
+        exit;
         unset($result['next_page_url']);
         unset($result['prev_page_url']);
         return $result;

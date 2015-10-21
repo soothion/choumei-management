@@ -193,6 +193,7 @@ class LaiseeConfig extends Model {
     }
 
     public static function getLaiseeList($laiseeName, $startTime, $endTime, $page, $size) {
+        DB::enableQueryLog();
         $field = ['id', 'laisee_name', 'create_time', 'start_time', 'status', 'vcsns', 'gift_vcsn', 'over_time'];  //TODO
 //        $query = Self::select("*");
         $query = Self::select($field);
@@ -205,6 +206,8 @@ class LaiseeConfig extends Model {
         if ($endTime) {
             $query->where('create_time', '<=', $endTime);
         }
+        $query->orderBy('status', 'asc')->orderBy('create_time', 'desc');
+
         AbstractPaginator::currentPageResolver(function () use($page) {
             return $page;
         });
@@ -329,6 +332,23 @@ class LaiseeConfig extends Model {
             VoucherConf::whereIn("vcId", $delGiftVcId)->delete();
         }
         return $vcsns ? implode(",", $vcsns) : '';
+    }
+
+    /*
+     *  判断在线的活动是否过期
+     */
+
+    public static function laiseeConfigAble() {
+        //判断在线的活动是否有效
+        $laiseeConfig = LaiseeConfig::where('status', 'Y')->first();
+        if ($laiseeConfig) {
+            $ableTime = $laiseeConfig->start_time + $laiseeConfig->over_time;
+            $ableTime = date("Y-m-d", $ableTime) . " 23:59:59";
+            $ableTimeStr = strtotime($ableTime);
+            if (time() > $ableTimeStr) {
+                LaiseeConfig::where('id', $laiseeConfig->id)->update(['status' => 'N', 'end_time' => date('Y-m-d H:i:s')]);
+            }
+        }
     }
 
 }
