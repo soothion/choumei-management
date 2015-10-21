@@ -618,8 +618,6 @@ class CouponController extends Controller{
         
         $addRes = \App\Model\VoucherConf::where(['vcId'=>$id])->update( $data );
         
-        if( empty($addRes) )
-            return $this->error('插入数据失败，请稍后再试');
         return $this->success();
     }
     /***
