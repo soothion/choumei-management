@@ -4,7 +4,11 @@
         <meta charset="utf-8">       
         <title>臭美管理后台</title>
         <script type="text/javascript" src="/js/include.js"></script>
-
+        <style type="text/css">
+            .tc{
+                text-align: center !important;
+            }
+        </style>
     </head>
     <body>
         <div class="breadcrumb">
@@ -19,41 +23,38 @@
                     </a>
                 </div>                
             </div>      
-        </div> 
-
+        </div>
         <div class="wrapper">
-            <form data-role="hash">                       
+            <form data-role="hash">
                <div class="input-group input-switch">
-                    <select>
-                        <option value="0">活动编号</option>
-                        <option value="1">活动名称</option>
+                    <select name="selectItem">
+                        <option value="0">请选择</option>
+                        <option value="1">活动编号</option>
+                        <option value="2">活动名称</option>
                     </select>
-                    <input type="text" class="input-search" name="username" placeholder="活动编号">
-                    <input type="text" class="input-search hide" name="role" class="hide" placeholder="活动名称">
+                    <input type="text" class="input-search" name="number" placeholder="活动编号">
                 </div>
 
                 <span class="space"></span>
                 <label>活动状态：</label>
-                <select name="department_id">
+                <select name="status">
                     <option value="">全部</option>
                     <option value="1">进行中</option>
-                    <option value="2">暂停</option>
+                    <option value="2">下线</option>
                     <option value="3">已关闭</option>
-                    <option value="3">已结束</option>
+                    <option value="4">已结束</option>
                 </select>
 
                 <span class="space"></span>
                 <label>申请部门</label>
-                <select name="department_id">
-                    <option value="">全部</option>
-                    <option value="1">客服部</option>
-                    <option value="2">产品部</option>
-                    <option value="3">运营部</option>
-                    <option value="3">商务部</option>
-                    <option value="3">企划部</option>
-                    <option value="3">市场部</option>
-                    <option value="3">其他部门</option>
-                </select>   
+                <select name="department" ajat-one="true" id="department" ajat="list/department#domid=department&amp;tempid=department-t">
+                    <script type="text/template" id="department-t">
+                        <option value="">全部</option>
+                        <%for(var i=0;i<data.length;i++){%>
+                            <option value="<%=data[i].id%>"><%=data[i].title%></option>
+                        <%}%>
+                    </script>
+                </select>
 
                 <span class="space"></span>
                 <span>活动时间：</span>
@@ -65,13 +66,12 @@
                 <button class="btn" type="submit">查询</button>
             </form>
 
-            <form action="manager/export" data-role="export">
+            <form action="coupon/exportList" data-role="export">
                 <button class="btn" data-slug="manager.export">
                 <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form>
-                          
-           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="coupon/list?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -90,37 +90,94 @@
                         </tr>
                     </thead>
                 <tbody>
-                <%var status=["","正常","停用","注销"]%>
+                <%var status=["","进行中","下线","已关闭","已结束"]%>
                 <%var data=data.data%>
-                <%for(var i=0;i<data.length;i++){%>
+                <%data.forEach(function(item,index){%>
+                
                  <tr>
-                  <td><%=i+1%></td>
-                  <td><%=data[i].name%></td>
-                  <td><%=data[i].username%></td>
-                  <td><%=data[i].city?data[i].city.title:""%></td>  
-                  <td><%=data[i].department?data[i].department.title:""%></td>
-                  <td><%=data[i].position?data[i].position.title:""%></td>         
-                  <td><%=data[i].position?data[i].position.title:""%></td>         
-                  <td><%=data[i].position?data[i].position.title:""%></td>         
-                  <td><%for(var j=0;j<data[i].roles.length;j++){%>
-                      <%=data[i].roles[j].name%>
-                      <%}%>                  
-                   </td>                  
-                  <td><%=data[i].created_at%></td>
-                  <td>
-                    <a class="link" href="detail.html">查看&gt;</a>
+                  <td><%=index+1%></td>
+                  <td><%=item.vcTitle%></td>
+                  <td><%=item.vcSn%></td>
+                  <td><%=item.totalNum%></td>  
+                  <td><%=item.useNum%></td>
+                  <td><%=item.allNum%></td>         
+                  <td><%=item.addTime%></td>         
+                  <td><%=item.actTime%></td>         
+                  <td><%=item.department%></td>         
+                  <td><%=status[item.status]%></td>                   
+                  <td class="tc">
+                    <a class="link" href="detail.html#id=<%=item.vcId%>">查看</a>
+                    <%if (item.status != 3 && item.status != 4) {%>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="link">下线</a>
+                    <%if (item.status == 1) {%>
+                    <a class="link" id='offline' data-id='<%=item.vcId%>'>下线</a>
+                    <%}else{%>
+                    <a class="link" id='online' data-id='<%=item.vcId%>'>上线</a>
+                    <%}%>
                     &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="link">关闭</a>
+                    <a class="link" id='close' data-id='<%=item.vcId%>'>关闭</a>
+                    <%}%>
                   </td>
                   </tr>
-                  <%}%>
+                  <%})%>
                 </tbody>
             </table>        
              <div class="pager"> </div>
             </script>
+            <script type="text/javascript">
+               var confirmBox = function(options){
+                    lib.popup.confirm({
+                        text:options.text,
+                        define: function(){
+                            lib.ajax({
+                                url : options.url+options.id
+                            }).done(function(data, status, xhr){
+                                if(data.result == 1){
+                                    parent.lib.popup.result({
+                                        text:options.resultText,
+                                        define:function(){
+                                            location.reload();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+               }
+               var confirmBoxConfig = {
+                    'offline':{
+                        text:'确定将该活动下线吗？',
+                        url:'coupon/offlineConf/',
+                        resultText:'活动下线成功'
+                    },
+                    'online':{
+                        text:'确定将该活动上线吗？',
+                        url:'coupon/upConf/',
+                        resultText:'活动上线成功'
+                    },
+                    'close':{
+                        text:'确定将该活动关闭吗？',
+                        url:'coupon/closeConf/',
+                        resultText:'活动关闭成功'
+                    }
+               }
+               $('body').on('click','#offline',function(){
+                    var id = $(this).attr('data-id');
+                    confirmBoxConfig['offline'].id = id;
+                    confirmBox(confirmBoxConfig['offline']);
+
+               }).on('click','#online',function(){
+                    var id = $(this).attr('data-id');
+                    confirmBoxConfig['online'].id = id;
+                    confirmBox(confirmBoxConfig['online']);
+
+               }).on('click','#close',function(){
+                    var id = $(this).attr('data-id');
+                    confirmBoxConfig['close'].id = id;
+                    confirmBox(confirmBoxConfig['close']);
+               })
+            </script>
         </div>
-            </div>            
+            </div>
     </body>
 </html>
