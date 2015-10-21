@@ -89,6 +89,8 @@ class LaiseeController extends Controller {
         $size = isset($options['page_size']) ? max(intval($options['page_size']), 1) : 20;
         $laiseeList = LaiseeConfig::getLaiseeList($laiseeName, $startTime, $endTime, $page, $size);
         $data = [];
+        //判断在线的活动是否过期
+        LaiseeConfig::laiseeConfigAble();
         foreach ($laiseeList['data'] as &$val) {
 //            \Illuminate\Support\Facades\DB::enableQueryLog();
             $vcsnWhere = $val['vcsns'] . "," . $val['gift_vcsn'];
@@ -143,7 +145,7 @@ class LaiseeController extends Controller {
             $data[$key]['giftNum'] = !empty($val['gift_vcsn']) ? Laisee::where('id', $val['id'])->whereIn('vcsn', explode(",", $val['gift_vcsn']))->whereNotNull('mobilephone')->count() : 0;  //礼包领取数
             $data[$key]['create_time'] = $val['create_time'];
             $data[$key]['start_time'] = $val['start_time'];
-            $data[$key]['status'] = $val['status'] == 'Y' ? "进行中" : "已结束";
+            $data[$key]['status'] = $val['status'] == 'Y' ? "进行中" : $val['status'] == 'N' ? "已结束" : "已关闭";
         }
         //导出excel	   
         $title = '红包活动列表' . date('Ymd');
@@ -310,12 +312,16 @@ class LaiseeController extends Controller {
         if (!$data['id']) {
             throw new ApiException("缺失参数  id", ERROR::PARAMS_LOST);
         }
-        if (!isset($data['vVcId']) || !isset($data['gVcId'])) {
+        if (!isset($data['vVcId'])) {
             throw new ApiException("缺失参数  或 vVcId 或 gVcId", ERROR::PARAMS_LOST);
         }
 
         if ($data['id']) {
             $where["id"] = $data["id"];
+            $laiseeConfig = LaiseeConfig::find($data['id']);
+            if ($laiseeConfig->status != 'Y' && $laiseConfig->end_time != "0000-00-00 00:00:00") {
+                throw new ApiException("已关闭或已结束的活动无法再编辑", ERROR::PARAMS_LOST);
+            }
         } else {
             $where = '';
         }
@@ -462,6 +468,10 @@ class LaiseeController extends Controller {
         if (!empty($rec)) {
             throw new ApiException("已经有在线的红包活动", ERROR::UNKNOWN_ERROR);
         }
+        $laiseConfig = LaiseeConfig::find($id);
+        if ($laiseConfig->end_time != "0000-00-00 00:00:00") {
+            throw new ApiException("已结束的活动无法再上线", ERROR::UNKNOWN_ERROR);
+        }
         $res = LaiseeConfig::where('id', $id)->update(['status' => 'Y', 'start_time' => date("Y-m-d H:i:s", time())]);
         if ($res !== false) {
             return $this->success();
@@ -494,7 +504,7 @@ class LaiseeController extends Controller {
      * 		}
      */
     public function offline($id) {
-        $res = LaiseeConfig::where('id', $id)->update(['status' => 'N']);
+        $res = LaiseeConfig::where('id', $id)->update(['status' => 'N', 'end_time' => date("Y-m-d H:i:s")]);
         if ($res !== false) {
             return $this->success();
         } else {
@@ -526,11 +536,22 @@ class LaiseeController extends Controller {
      * 		}
      */
     public function close($id) {
-        $res = LaiseeConfig::where('id', $id)->update(['status' => 'N']);
-        if ($res !== false) {
-            return $this->success();
+        $laiseeConfig = LaiseeConfig::where('id', $id)->first();
+        if ($res) {
+            $res = LaiseeConfig::where('id', $id)->update(['status' => 'S', 'end_time' => date("Y-m-d H:i:s")]);
+            if ($res !== false) {
+                //活动关闭  则所有 已经下发的代金券也失效
+                $vcsns = $laiseeConfig->vcsns;
+                if ($laiseeConfig->gift_vcsn) {
+                    $vcsns.="," . $laiseeConfig->gift_vcsn;
+                }
+                Voucher::whereIn("vcSn", explode(",", $vcsns))->update(['vStatus' => 4]);
+                return $this->success();
+            } else {
+                throw new ApiException("活动关闭失败", ERROR::UNKNOWN_ERROR);
+            }
         } else {
-            throw new ApiException("活动关闭失败", ERROR::UNKNOWN_ERROR);
+            throw new ApiException("未找到活动信息", ERROR::UNKNOWN_ERROR);
         }
     }
 

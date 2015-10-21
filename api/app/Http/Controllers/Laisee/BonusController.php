@@ -90,7 +90,7 @@ class BonusController extends Controller {
         $size = isset($options['page_size']) ? max(intval($options['page_size']), 1) : 20;
         $laiseeList = Laisee::getLaiseeList($data, $page, $size);
         foreach ($laiseeList['data'] as &$val) {
-            $val['bonusSn'] = "dh" . $val['order_ticket_id'];
+            $val['bonusSn'] = "hb" . str_pad($val['order_ticket_id'], 6, '0', STR_PAD_LEFT);
             $val['bonusAmount'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
             $val['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
             $val['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
@@ -144,7 +144,7 @@ class BonusController extends Controller {
         $num = 1;
         foreach ($laiseeList['data'] as $key => $val) {
             $result[$key]['num'] = $num;
-            $result[$key]['bonusSn'] = "dh" . $val['order_ticket_id'];
+            $result[$key]['bonusSn'] = "hb" . str_pad($val['order_ticket_id'], 6, '0', STR_PAD_LEFT);
             $result[$key]['laisee_name'] = $val['laisee_name'];
             $result[$key]['bonusAmount'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
             $result[$key]['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
@@ -238,7 +238,7 @@ class BonusController extends Controller {
         if (!$salonItemComment) {
             throw new ApiException('未找到相关评论信息', ERROR::UNKNOWN_ERROR);
         }
-        $result['bonusSn'] = "hb" . $id;
+        $result['bonusSn'] = "hb" . str_pad($id, 6, '0', STR_PAD_LEFT);
         $result['add_time'] = date("Y-m-d H:i:s", $salonItemComment->add_time);
         if ($laisee) {
             $laiseeConfig = LaiseeConfig::where('id', $laisee->laisee_config_id)->first();
