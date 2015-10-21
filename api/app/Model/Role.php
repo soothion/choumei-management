@@ -19,9 +19,9 @@ class Role extends Model {
 		return $this->belongsToMany('App\Manager');
 	}
 
-	public function city(){
-		return $this->belongsTo('App\City');
-	}
+    public function city(){
+        return $this->belongsTo('App\City','city_id','iid');
+    }
 
 	public function department(){
 		return $this->belongsTo('App\Department');
@@ -36,9 +36,9 @@ class Role extends Model {
 			$q->lists('id','title');
 		}]);
 
-		$query = $query->with(['city'=>function($q){
-			$q->lists('id','title');
-		}]);	
+        $query = $query->with(['city'=>function($q){
+            $q->lists('iid','iname');
+        }]);     
 
 		//所属部门筛选
 		if(isset($param['department_id'])&&$param['department_id']){
