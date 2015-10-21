@@ -89,8 +89,8 @@ class CouponController extends Controller{
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart']);
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']);
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
-        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = $post['addActLimitStartTime'];
-        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = $post['addActLimitEndTime'];
+        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
+        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
         if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
@@ -599,8 +599,8 @@ class CouponController extends Controller{
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart']);
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']);
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
-        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = $post['addActLimitStartTime'];
-        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = $post['addActLimitEndTime'];
+        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
+        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
         if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
