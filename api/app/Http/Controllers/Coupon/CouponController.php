@@ -536,13 +536,13 @@ class CouponController extends Controller{
         if( $voucherConfInfo['getTypes'] == 5 )
             $voucherConfInfo['selectItem'] = 4;
         
-        if( empty($voucherConfInfo['getTimeStart']) )
+        if( !empty($voucherConfInfo['getTimeStart']) )
             $voucherConfInfo['getTimeStart'] = date('Y-m-d',$voucherConfInfo['getTimeStart']);
-        if( empty($voucherConfInfo['getTimeEnd']) )
+        if( !empty($voucherConfInfo['getTimeEnd']) )
             $voucherConfInfo['getTimeEnd'] = date('Y-m-d',$voucherConfInfo['getTimeEnd']);
-        if( empty($voucherConfInfo['addActLimitStartTime']))
+        if( !empty($voucherConfInfo['addActLimitStartTime']))
             $voucherConfInfo['addActLimitStartTime'] = date('Y-m-d',$voucherConfInfo['addActLimitStartTime']);
-        if( empty($voucherConfInfo['addActLimitEndTime']))
+        if( !empty($voucherConfInfo['addActLimitEndTime']))
             $voucherConfInfo['addActLimitEndTime'] = date('Y-m-d',$voucherConfInfo['addActLimitEndTime']);
         return $this->success( $voucherConfInfo );
     }
