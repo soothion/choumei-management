@@ -306,6 +306,8 @@ class WarehouseController extends Controller
 	    foreach ($items as $item)
 	    {
 	        $data = ItemInfoController::compositeData($item);
+	        //标记为下架状态
+	        $data['salon_item']['status'] = SalonItem::STATUS_OF_DOWN;
 	        SalonItem::upsertItem($data,$item['priceStyle'],$salon_id);
 	    }
 	   // Event::fire('warehouse.import');
