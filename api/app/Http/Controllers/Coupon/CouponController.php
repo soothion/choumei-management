@@ -227,7 +227,6 @@ class CouponController extends Controller{
             }
             return $this->success( $res );
         }
-        $where = '1';
         $actType = array('','vcSn','vcTitle');
         $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
         $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y']);
@@ -238,7 +237,7 @@ class CouponController extends Controller{
             if( $actStatus != 4 )
                 $obj->where('status','=',$actStatus);
             else
-                $obj->where('getEnd','<',time());
+                $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
         }
         if( !empty($actStartTime) && !empty($actEndTime))
             $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
@@ -537,13 +536,13 @@ class CouponController extends Controller{
             $voucherConfInfo['selectItem'] = 4;
         
         if( !empty($voucherConfInfo['getTimeStart']) )
-            $voucherConfInfo['getTimeStart'] = date('Y-m-d',$voucherConfInfo['getTimeStart']);
+            $voucherConfInfo['getTimeStart'] = date('Y-m-d H:i:s',$voucherConfInfo['getTimeStart']);
         if( !empty($voucherConfInfo['getTimeEnd']) )
-            $voucherConfInfo['getTimeEnd'] = date('Y-m-d',$voucherConfInfo['getTimeEnd']);
+            $voucherConfInfo['getTimeEnd'] = date('Y-m-d H:i:s',$voucherConfInfo['getTimeEnd']);
         if( !empty($voucherConfInfo['addActLimitStartTime']))
-            $voucherConfInfo['addActLimitStartTime'] = date('Y-m-d',$voucherConfInfo['addActLimitStartTime']);
+            $voucherConfInfo['addActLimitStartTime'] = date('Y-m-d H:i:s',$voucherConfInfo['addActLimitStartTime']);
         if( !empty($voucherConfInfo['addActLimitEndTime']))
-            $voucherConfInfo['addActLimitEndTime'] = date('Y-m-d',$voucherConfInfo['addActLimitEndTime']);
+            $voucherConfInfo['addActLimitEndTime'] = date('Y-m-d H:i:s',$voucherConfInfo['addActLimitEndTime']);
         return $this->success( $voucherConfInfo );
     }
     /***
@@ -925,7 +924,6 @@ class CouponController extends Controller{
                     });
             })->export('xls');
         }
-        $where = '1';
         $actType = array('','vcSn','vcTitle');
         $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
         $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y']);
@@ -936,7 +934,7 @@ class CouponController extends Controller{
             if( $actStatus != 4 )
                 $obj->where('status','=',$actStatus);
             else
-                $obj->where('getEnd','<',time());
+                $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
         }
         if( !empty($actStartTime) && !empty($actEndTime))
             $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');

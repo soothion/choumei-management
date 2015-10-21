@@ -515,7 +515,7 @@ class PlatformController extends Controller{
             if( $actStatus != 4 )
                 $obj->where('status','=',$actStatus);
             else
-                $obj->where('getEnd','<',time());
+                $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
         }
         if( !empty($actStartTime) && !empty($actEndTime))
             $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
@@ -819,13 +819,13 @@ class PlatformController extends Controller{
         if( $voucherConfInfo['getTypes'] == 5 )
             $voucherConfInfo['selectItemType'] = 4;
         if( !empty($voucherConfInfo['getTimeStart']) )
-            $voucherConfInfo['getTimeStart'] = date('Y-m-d',$voucherConfInfo['getTimeStart']);
+            $voucherConfInfo['getTimeStart'] = date('Y-m-d H:i:s',$voucherConfInfo['getTimeStart']);
         if( !empty($voucherConfInfo['getTimeEnd']) )
-            $voucherConfInfo['getTimeEnd'] = date('Y-m-d',$voucherConfInfo['getTimeEnd']);
+            $voucherConfInfo['getTimeEnd'] = date('Y-m-d H:i:s',$voucherConfInfo['getTimeEnd']);
         if( !empty($voucherConfInfo['addActLimitStartTime']))
-            $voucherConfInfo['addActLimitStartTime'] = date('Y-m-d',$voucherConfInfo['addActLimitStartTime']);
+            $voucherConfInfo['addActLimitStartTime'] = date('Y-m-d H:i:s',$voucherConfInfo['addActLimitStartTime']);
         if( !empty($voucherConfInfo['addActLimitEndTime']))
-            $voucherConfInfo['addActLimitEndTime'] = date('Y-m-d',$voucherConfInfo['addActLimitEndTime']);
+            $voucherConfInfo['addActLimitEndTime'] = date('Y-m-d H:i:s',$voucherConfInfo['addActLimitEndTime']);
         return $this->success( $voucherConfInfo );
     }
     /***
@@ -1121,7 +1121,7 @@ class PlatformController extends Controller{
             if( $actStatus != 4 )
                 $obj->where('status','=',$actStatus);
             else
-                $obj->where('getEnd','<',time());
+                $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
         }
         if( !empty($actStartTime) && !empty($actEndTime))
             $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
