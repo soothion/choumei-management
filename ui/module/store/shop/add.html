@@ -273,7 +273,7 @@
                         }
                         %>                                       
                         <input type="date" name="contractEndTime" placeholder="YYYY-MM-DD" value="<%=data.contractEndTime%>" 
-                        required  max="2030-01-01">
+                        required  max="2030-01-01" min="<%=data.contractTime%>" dateminmsg="合同截止日期不能小于合同起始日期">
                     </div>
                 </div>   
 

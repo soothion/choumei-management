@@ -282,8 +282,8 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>个性签名：</label>
                 <div class="control">
-                    <div class="keypress" maxlength="40>
-                        <textarea" data-helpid="textarea-help" name="signature" required><%=data.signature%></textarea>
+                    <div class="keypress">
+                        <textarea maxlength="40" data-helpid="textarea-help" name="signature" required><%=data.signature%></textarea>
                     </div>
                     <div class="control-help" style="display:none;" id="textarea-help"></div>
                 </div>
@@ -292,8 +292,8 @@
             <div class="control-group">
                 <label class="control-label" for="">自我描述：</label>
                 <div class="control">
-                    <div class="keypress" maxlength="50">
-                        <textarea  data-helpid="textarea-help2" name="description"><%=data.description%></textarea>
+                    <div class="keypress">
+                        <textarea maxlength="50" data-helpid="textarea-help2" name="description"><%=data.description%></textarea>
                     </div>
                     <div class="control-help" style="display:none;" id="textarea-help2"></div>
                 </div>
@@ -316,9 +316,9 @@
                             %>
                             <%for(var i = 1 ; i < 6 ; i++){%>
                                 <tr>
-                                    <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> start" name="<%='sTime'+i%>" 
+                                    <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> start min" name="<%='sTime'+i%>" 
                                     value="<%=educateExp['sTime'+i]%>"></td>
-                                    <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> start" name="<%='eTime'+i%>"
+                                    <td><input type="date" class="<%= educateExp['sTime'+i] ? 'show':'' %> start max" name="<%='eTime'+i%>"
                                     value="<%=educateExp['eTime'+i]%>"></td>
                                     <td><input type="text" name="<%='name'+i%>" class="start"
                                     value="<%=educateExp['name'+i]%>" maxLength="16"></td>
@@ -330,10 +330,10 @@
                             <%for(var j = 1 ; j < 6 ; j++){%>
                                 <tr>
                                     <td>
-                                        <input type="date" class="start" name="<%='sTime'+j%>">
+                                        <input type="date" class="start min" name="<%='sTime'+j%>">
                                     </td>
                                     <td>
-                                        <input type="date" class="start" name="<%='eTime'+j%>">
+                                        <input type="date" class="start max" name="<%='eTime'+j%>">
                                     </td>
                                     <td>
                                         <input type="text" class="start" name="<%='name'+j%>" maxLength="16">
@@ -366,12 +366,12 @@
                             <%for(var k = 1 ; k < 6 ; k++){%>
                                 <tr>
                                     <td>
-                                        <input type="date" class="<%= workExp['wsTime'+k] ? 'show':'' %> start" placeholder="yyyy-MM-dd" name="<%='wsTime'+k%>" 
+                                        <input type="date" class="<%= workExp['wsTime'+k] ? 'show':'' %> start min" placeholder="yyyy-MM-dd" name="<%='wsTime'+k%>" 
                                         value="<%=workExp['wsTime'+k]%>">
                                     </td>
 
                                     <td>
-                                        <input type="date" class="<%= workExp['weTime'+k] ? 'show':'' %> start" placeholder="yyyy-MM-dd" name="<%='weTime'+k%>" 
+                                        <input type="date" class="<%= workExp['weTime'+k] ? 'show':'' %> start max" placeholder="yyyy-MM-dd" name="<%='weTime'+k%>" 
                                         value="<%=workExp['weTime'+k]%>"></td>
                                     <td>
                                         <input type="text" name="<%='wname'+k%>" class="start" value="<%=workExp['wname'+k]%>"
@@ -395,10 +395,10 @@
                             <%for(var t = 1 ; t < 6 ; t++){%>
                                 <tr>
                                     <td>
-                                        <input type="date" placeholder="yyyy-MM-dd" class="start" name="<%='wsTime'+t%>">
+                                        <input type="date" placeholder="yyyy-MM-dd" class="start min" name="<%='wsTime'+t%>">
                                     </td>
                                     <td>
-                                        <input type="date" placeholder="yyyy-MM-dd" class="start" name="<%='weTime'+t%>">
+                                        <input type="date" placeholder="yyyy-MM-dd" class="start max" name="<%='weTime'+t%>">
                                     </td>
                                     <td>
                                         <input type="text" class="start" name="<%='wname'+t%>"  maxLength="16">

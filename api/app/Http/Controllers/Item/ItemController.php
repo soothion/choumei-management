@@ -102,7 +102,8 @@ class ItemController extends Controller{
 			'minPriceGroup',
 			'maxPriceGroup',
 			'norms_cat_id',
-			'sort_in_type'
+			'sort_in_type',
+			'userId'
 		);
 
 		//分页

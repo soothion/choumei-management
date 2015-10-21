@@ -100,7 +100,9 @@ class OnSaleController extends Controller{
 			'maxPriceOri',
 			'minPriceGroup',
 			'maxPriceGroup',
-			'norms_cat_id'
+			'norms_cat_id',
+			'sort_in_type',
+			'userId'
 		);
 
 		//分页

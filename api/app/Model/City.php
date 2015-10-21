@@ -4,6 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model {
 
-	protected $table = 'management_city';
-
+	protected $table = 'city';
+	protected $primaryKey = 'iid';
 }
