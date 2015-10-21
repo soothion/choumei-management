@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-21 18:18:42
+* @Last Modified time: 2015-10-21 20:03:55
 */
 
 (function(){
@@ -78,15 +78,6 @@
 
     $("#form").on('click','#preview-btn',function(){
         var data = lib.getFormData($("#form"));  
-        if($.isArray(data.limitItemTypes)){
-            var limitItemArr = [];
-            data.limitItemTypes.forEach(function(item,index){
-                var input = $("#itemType").find("input[value="+item+"]");
-                var obj = {value:input.val(),name:input.next().text()};
-                limitItemArr.push(obj);
-            })
-            data.limitItemArr = limitItemArr;
-        }
         if(type === 'add')  var previewData = JSON.parse(sessionStorage.getItem('add-base-data'));
         if(type === 'edit') var previewData = JSON.parse(sessionStorage.getItem('edit-base-data'));
         previewData = $.extend({},previewData,data);

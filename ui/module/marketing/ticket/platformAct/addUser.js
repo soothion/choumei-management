@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-21 19:38:13
+* @Last Modified time: 2015-10-21 20:34:02
 */
 
 (function(){
@@ -162,17 +162,7 @@
             data.selectItem = 7;
         }else{
             data.selectItem = 8;
-        }
-        
-        if($.isArray(data.getItemTypes)){
-            var checkboxArr = [];
-            data.getItemTypes.forEach(function(item,index){
-                var input = $(".consumeItems").find("input[value="+item+"]");
-                var obj = {value:input.val(),name:input.next().text()};
-                checkboxArr.push(obj);
-            })
-            data.checkboxArr = checkboxArr;            
-        }
+        }      
         if(type === 'add')  var previewData = JSON.parse(sessionStorage.getItem('add-base-data'));
         if(type === 'edit') var previewData = JSON.parse(sessionStorage.getItem('edit-base-data'));
         previewData = $.extend({},previewData,data);
@@ -200,7 +190,7 @@
             saveData = $.extend({},saveData,data);
             sessionStorage.setItem('edit-save-data',JSON.stringify(saveData));                 
         }
-        
+
         location.href = "addTicket.html?type="+type+"&selectItemType="+selectItemType;
     }        
 })();
