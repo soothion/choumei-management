@@ -353,7 +353,7 @@ class CouponController extends Controller{
                 ->where(['vcId'=>$id,'vType'=>1,'IS_REDEEM_CODE'=>'Y'])
                 ->first()
                 ->toArray();
-        
+//        print_r( $voucherConfInfo );exit;
         $voucherConfInfo['actTime'] = '';
         if( empty( $voucherConfInfo['getStart'] ) && empty($voucherConfInfo['getEnd']) )
             $voucherConfInfo['actTime'] = '无限期活动';
@@ -536,6 +536,14 @@ class CouponController extends Controller{
         if( $voucherConfInfo['getTypes'] == 5 )
             $voucherConfInfo['selectItem'] = 4;
         
+        if( empty($voucherConfInfo['getTimeStart']) )
+            $voucherConfInfo['getTimeStart'] = date('Y-m-d',$voucherConfInfo['getTimeStart']);
+        if( empty($voucherConfInfo['getTimeEnd']) )
+            $voucherConfInfo['getTimeEnd'] = date('Y-m-d',$voucherConfInfo['getTimeEnd']);
+        if( empty($voucherConfInfo['addActLimitStartTime']))
+            $voucherConfInfo['addActLimitStartTime'] = date('Y-m-d',$voucherConfInfo['addActLimitStartTime']);
+        if( empty($voucherConfInfo['addActLimitEndTime']))
+            $voucherConfInfo['addActLimitEndTime'] = date('Y-m-d',$voucherConfInfo['addActLimitEndTime']);
         return $this->success( $voucherConfInfo );
     }
     /***

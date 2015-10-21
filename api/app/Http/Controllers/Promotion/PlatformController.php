@@ -119,13 +119,13 @@ class PlatformController extends Controller{
         $data['vcSn'] = $post['actNo'];
         $data['vcRemark'] = $post['actIntro'];
         
-        if( $post['selectItemType'] == 1 && in_array($post['selectItemType'],[1,2]) )
-            $data['getTypes'] = $post['selectItemType'];
+        if( $post['selectItemType'] == 1 && in_array($post['selectUseType'],[1,2]) )
+            $data['getTypes'] = $post['selectUseType'];
         elseif( $post['selectItemType'] == 2 && $post['selectUseType'] == 3 && !empty($post['phoneList']) ){
             $phoneList = explode(',',$post['phoneList']);
             $data['getTypes'] = 3;
         }elseif( $post['selectItemType'] == 2 && in_array($post['selectUseType'],[4,5,6]) && !empty($post['code']) ){
-            $tt = $data['getTypes'] = $post['selectItemType'];
+            $tt = $data['getTypes'] = $post['selectUseType'];
             // 检验验证码是否存在
             if( in_array( $tt , array(4,5,6) ) ){
                 $tempArr = [4=>'getGroupExists',5=>'getActivityExists',6=>'getDividendExists'];
@@ -818,7 +818,14 @@ class PlatformController extends Controller{
             $voucherConfInfo['selectItemType'] = 3;
         if( $voucherConfInfo['getTypes'] == 5 )
             $voucherConfInfo['selectItemType'] = 4;
-        
+        if( empty($voucherConfInfo['getTimeStart']) )
+            $voucherConfInfo['getTimeStart'] = date('Y-m-d',$voucherConfInfo['getTimeStart']);
+        if( empty($voucherConfInfo['getTimeEnd']) )
+            $voucherConfInfo['getTimeEnd'] = date('Y-m-d',$voucherConfInfo['getTimeEnd']);
+        if( empty($voucherConfInfo['addActLimitStartTime']))
+            $voucherConfInfo['addActLimitStartTime'] = date('Y-m-d',$voucherConfInfo['addActLimitStartTime']);
+        if( empty($voucherConfInfo['addActLimitEndTime']))
+            $voucherConfInfo['addActLimitEndTime'] = date('Y-m-d',$voucherConfInfo['addActLimitEndTime']);
         return $this->success( $voucherConfInfo );
     }
     /***
