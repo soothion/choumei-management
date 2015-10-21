@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-20 22:14:57
+* @Last Modified time: 2015-10-21 09:59:14
 */
 
 (function(){
@@ -66,20 +66,21 @@
         window.location.href = "addMobile.html?type="+type+'&selectItemType='+selectItemType;
     });
 
-    $("#form").on('blur','input[data-check]',function(){
-        var self = this;
-        lib.ajax({
-            type: "post",
-            url : 'platform/checkSerial',
-            data: {type:$(this).data('check'),code:$(this).val()}    
-        }).done(function(data, status, xhr){
-            if(data.result == "1"){
-                if(data.data.exists == "0"){
-                    $(self).next().show();
-                }
-            }
-        })        
-    })
+    // $("#form").on('pass','input[data-check]',function(){
+    //     var self = this;
+    //     lib.ajax({
+    //         type: "post",
+    //         url : 'platform/checkSerial',
+    //         asyn:false,
+    //         data: {type:$(self).data('check'),code:$(self).val()}    
+    //     }).done(function(data, status, xhr){
+    //         if(data.result == "1"){
+    //             if(data.data.exists == "0"){
+    //                 $(self).next().show();
+    //             }
+    //         }
+    //     })     
+    // })
 
     /**
      * selectItemType=='3' 全平台用户事件控制
@@ -176,7 +177,11 @@
         if(type == 'edit'){
             var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
             editData = $.extend({},editData,data);
-            sessionStorage.setItem('edit-base-data',JSON.stringify(editData));     
+            sessionStorage.setItem('edit-base-data',JSON.stringify(editData)); 
+           
+            var saveData = JSON.parse(sessionStorage.getItem('edit-save-data'));
+            saveData = $.extend({},saveData,data);
+            sessionStorage.setItem('edit-submit-data',JSON.stringify(saveData));                 
         }
         location.href = "addTicket.html?type="+type+"&selectItemType="+selectItemType;
     }        
