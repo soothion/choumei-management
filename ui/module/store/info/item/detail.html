@@ -102,7 +102,7 @@
 								</tr>	
 								<tr>
 									<td>库存数量：</td>
-									<td colspan="3"><%=data.total_rep%></td>
+									<td colspan="3"><%=data.total_rep?data.total_rep:"无限制"%></td>
 								</tr>
 								<tr>
 									<td>限制资格：</td>
@@ -163,9 +163,9 @@
 													})%>
 													<%=arr.join("、")%>
 													</td>
-													<td style="width:auto;min-width:0"><%=item.price?"￥"+item.price:""%></td>
-													<td style="width:auto;min-width:0"><%=item.price_dis?"￥"+item.price_dis:""%></td>
-													<td style="width:auto;min-width:0"><%=item.price_group?"￥"+item.price_group:""%></td>
+													<td style="width:auto;min-width:0"><%=parseInt(item.price)?"￥"+item.price:""%></td>
+													<td style="width:auto;min-width:0"><%=parseInt(item.price_dis)?"￥"+item.price_dis:""%></td>
+													<td style="width:auto;min-width:0"><%=parseInt(item.price_group)?"￥"+item.price_group:""%></td>
 												</tr>
 												<%})%>
 											</tbody>

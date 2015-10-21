@@ -174,7 +174,8 @@
 			});
 			var $format=$('#format-form');
 			//生成价格表
-			$('#btn-price').on('click',function(){
+			var generate=function(){
+				$('input[name="normarr"]').val('');
 				var itemCheckbox=$('.item-checkbox:checked');
 				if(itemCheckbox.length==0){
 					parent.lib.popup.alert({text:'至少要选择一个规格项'})
@@ -245,6 +246,18 @@
 						$('input[name="normMenu"]').val(JSON.stringify(normMenu));
 						$('#format-table').html(lib.ejs.render({text:$('#format-table-t').html()},{data:data,normMenu:normMenu}));
 					}
+				}
+			}
+			$('#btn-price').on('click',function(){
+				if($('#format-table table').length>0){
+					lib.popup.confirm({
+						text:"您正在重新生成价格表，当前数据将失效，是否继续",
+						define:function(){
+							generate();
+						}
+					})
+				}else{
+					generate();
 				}
 			});
 			//校验性别，发长字段
