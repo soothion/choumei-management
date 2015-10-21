@@ -371,7 +371,7 @@ class PayManage extends Model
         }
         if(isset($attr['remark']))
         {
-            $record['remark'] =floatval($attr['remark']);
+            $record['remark'] =$attr['remark'];
         }
         $record['updated_at'] =date("Y-m-d H:i:s");
         $item = self::where('id',$id)->first(['state','code']);     
