@@ -369,6 +369,10 @@ class PayManage extends Model
         {
             $record['cycle_money'] =floatval($attr['cycle_money']);
         }
+        if(isset($attr['remark']))
+        {
+            $record['remark'] =floatval($attr['remark']);
+        }
         $record['updated_at'] =date("Y-m-d H:i:s");
         $item = self::where('id',$id)->first(['state','code']);     
         if($item->state  != self::STATE_OF_TO_SUBMIT && $item->state  != self::STATE_OF_TO_CHECK && $item->from != self::FROM_LOCAL)

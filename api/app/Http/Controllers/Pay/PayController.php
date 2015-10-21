@@ -45,6 +45,7 @@ class PayController extends Controller
      * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
      * @apiSuccess {String} require_day 要求付款日期 
      * @apiSuccess {String} pay_day 实际付款日期 
+     * @apiSuccess {String} remark 备注 
      * @apiSuccess {String} cycle 回款周期
      * @apiSuccess {String} cycle_day 回款日期 
      * @apiSuccess {String} cycle_money 周期回款金额 
@@ -90,6 +91,7 @@ class PayController extends Controller
      *                   "confirm_uid": 0,
      *                   "confirm_at": "0000-00-00",
      *                   "updated_at": "2015-08-14 19:01:45",
+     *                   "remark":"备注",
      *                   "make_user": {
      *                       "id": 1,
      *                       "name": "这是用户名Admin"
@@ -267,6 +269,7 @@ class PayController extends Controller
      * @apiSuccess {String} data.from 来源 1 本系统 2 商家后台
      * @apiSuccess {String} require_day 要求付款日期 
      * @apiSuccess {String} pay_day 实际付款日期 
+     * @apiSuccess {String} remark 备注
      * @apiSuccess {String} cycle 回款周期
      * @apiSuccess {String} cycle_day 回款日期 
      * @apiSuccess {String} cycle_money 周期回款金额 
@@ -294,6 +297,7 @@ class PayController extends Controller
      *                "pay_type": 1,
      *                "require_day": "2015-08-14",
      *                "pay_day": "0000-00-00",
+     *                "remark": "备注",
      *                "cycle": 30,
      *                "cycle_day": 1,
      *                "cycle_money": "100.00",
@@ -380,6 +384,7 @@ class PayController extends Controller
      * @apiParam {Number} money 付款金额
      * @apiParam {Number} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
      * @apiParam {String} require_day 要求付款日期 格式  YYYY-MM-DD
+     * @apiParam {String} remark 备注
      * @apiParam {Number} cycle 回款周期
      * @apiParam {Number} cycle_day 回款日期
      * @apiParam {Number} cycle_money 周期回款金额 
@@ -414,6 +419,7 @@ class PayController extends Controller
             'cycle' => self::T_INT,
             'cycle_day' => self::T_INT,
             'cycle_money' => self::T_FLOAT,
+            'remark'=>self::T_STRING,
         ]);
         //#@todo for debug
         //$params['make_uid'] = 1;
