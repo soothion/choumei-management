@@ -509,7 +509,7 @@ class PlatformController extends Controller{
         $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
         $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'N']);
         if( !empty($actSelect) && !empty($actNumber) )
-            $obj->where( $actType[ $actSelect ] , 'like' , "'%".$actNumber."%'" );
+            $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
         
         if( !empty($actStatus) ){
             if( $actStatus != 4 )
@@ -1115,7 +1115,7 @@ class PlatformController extends Controller{
         $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
         $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'N']);
         if( !empty($actSelect) && !empty($actNumber) )
-            $obj->where( $actType[ $actSelect ] , 'like' , "'%".$actNumber."%'" );
+            $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
         
         if( !empty($actStatus) ){
             if( $actStatus != 4 )
