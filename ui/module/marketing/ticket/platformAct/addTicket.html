@@ -67,7 +67,7 @@
                             <td>
                                 <div style="margin:15px">
                                     <span style="display: inline-block;width:130px">券金额:</span>
-                                    <input type="text" class="nonzero" name="money" required maxlength="3" value="<%=data.money||1%>" <%=query.type=='add' ? '' : 'readOnly'%>/>
+                                    <input type="text" class="nonzero" name="money" required maxlength="3" value="<%=data.money||1%>" <%= query.type =='edit' ? 'disabled' : '' %>/>
                                     <strong>元&nbsp;&nbsp;&nbsp;</strong>
                                     <span style="color: #ddd;">（不可修改，可填写1~999)</span>
                                     <span class="control-help" style="display:none;"></span>
@@ -100,7 +100,7 @@
                                         <span>自定义</span>
                                     </label>
 
-                                    <input type="text" class="nonzero" id="ticketNumInput" name="totalNumber" value="1" required disabled="disabled" pattern='number' <%=query.type=='add' ? '' : 'readOnly'%>/>
+                                    <input type="text" class="nonzero" id="ticketNumInput" name="totalNumber" value="1" required disabled="disabled" pattern='number' <%= query.type =='edit' ? 'disabled' : '' %>/>
                                     <strong>张&nbsp;&nbsp;&nbsp;</strong>
                                     <span style="color: #ddd;">(不可修改，可填写1~999）</span>
                                     <span class="control-help" style="display:none;"></span>

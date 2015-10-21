@@ -110,7 +110,7 @@
                         <label class="radio">
                             <input type="radio" checked="checked" name="selectUseType" value="1" 
                             <%=!data.selectUseType || data.selectUseType == '1' ? 'checked' : '' %>
-                            <%= (query.type =='edit' && data.selectUseType=='2') ? 'disabled' : '' %>>
+                            <%= query.type =='edit' ? 'disabled' : '' %>>
                             <span>新注册&nbsp;<span style="color: #ddd;">(活动时间内注册的用户)</span></span>
                         </label>
                     </div>
@@ -121,7 +121,7 @@
                     <div class="control">
                         <label class="radio">
                         <input type="radio" name="selectUseType" value="2" <%=data.selectUseType=='2' ? 'checked':'' %>
-                        <%= (query.type =='edit' && (!data.selectUseType || data.selectUseType == '1')) ? 'disabled' : '' %>>
+                        <%= query.type =='edit' ? 'disabled' : '' %>>
                             <span>
                                 首次消费&nbsp;
                                 <span style="color: #ddd;">(活动时间内首次消费后获取)</span>
@@ -132,30 +132,36 @@
                 <%}%>
 
                 <%if(query.selectItemType=='2'){%>
+                <% var typeCheck = {"3" : true,"4":true,"5":true,"6":true}%>    
                 <div class="control-group">
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="radio">
                         <input type="radio" name="selectUseType" value="3" required 
                         <%= data.selectUseType == '3' ? 'checked' : '' %>
-                        <%= (query.type =='edit' && data.selectUseType !='3') ? 'disabled' : '' %>>
+                        <%= query.type =='edit' ? 'disabled' : '' %>>
                         <span>
                             指定手机号&nbsp;
                             <span style="color: #ddd;">(活动时间内，无指定项目时活动上线则马上下发)</span>
                         </span>
 
                         <%if(data.selectUseType == '3'){%>
-                            <input  type="button" class="link mobile-button cascade" value="+添加手机号码"/>
+                            <input  type="button" class="link mobile-button cascade" value="+添加手机号码" <%= query.type =='edit' ? 'disabled' : '' %>/>
                         <%}else{%>
                             <input  type="button" class="link mobile-button cascade" value="+添加手机号码" disabled/>
                         <%}%>
                     </label>
                     <%if(data.selectUseType == '3'){%>
+                        <%
+                        if(data.phoneList instanceof Array){
+                            data.phoneList = data.phoneList.join(',');
+                        }
+                        %>
                         <input  type="hidden" class="cascade" msg="请添加手机号码" name="phoneList"
-                         value="<%=data.phoneList && data.phoneList.join(',')%>" required/>
+                         value="<%= data.phoneList %>" required/>
                     <%}else{%>
                         <input  type="hidden" class="cascade" msg="请添加手机号码" name="phoneList"
-                         value="<%=data.phoneList && data.phoneList.join(',')%>" required disabled/>
+                         value="<%= data.phoneList %>" required disabled/>
                     <%}%>                    
 
                     </div>
@@ -166,11 +172,11 @@
                     <div class="control">
                     <label class="radio">
                         <input type="radio" name="selectUseType" value="4" required
-                        <%=(!data.selectUseType || data.selectUseType == '4') ? 'checked' : '' %> 
-                        <%= (query.type =='edit' &&!data.selectUseType &&data.selectUseType !='4') ? 'disabled' : '' %>>
+                        <%=(!typeCheck[data.selectUseType] || data.selectUseType == '4') ? 'checked' : '' %> 
+                        <%= query.type =='edit' ? 'disabled' : '' %>>
                         <span>指定集团码用户&nbsp;<span style="color: #ddd;">(活动时间内填写集团码)</span></span>
                     </label>
-                    <%if(!data.selectUseType || data.selectUseType == '4'){%>
+                    <%if(!typeCheck[data.selectUseType] || data.selectUseType == '4'){%>
                     <input type="text" data-check="2" class="cascade" name="code" placeholder="输入集团码" 
                         pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
                         <span class="control-help" style="display:none;">集团码不存在</span>
@@ -186,11 +192,11 @@
                     <label class="radio">
                         <input type="radio" name="selectUseType" value="5" required
                         <%=data.selectUseType == '5' ? 'checked' : '' %>
-                        <%= (query.type =='edit' && data.selectUseType !='5') ? 'disabled' : '' %> >
+                        <%= query.type =='edit' ? 'disabled' : '' %> >
                         <span>指定活动码用户&nbsp;<span style="color: #ddd;">(活动时间内填写活动码)</span></span>
                     </label>
                     <%if(data.selectUseType == '5'){%>
-                    <input type="text" data-check="5" class="cascade" name="code" placeholder="输入活动码" 
+                    <input type="text" data-check="3" class="cascade" name="code" placeholder="输入活动码" 
                         pattern='number' required requiredmsg="未填写" value="<%=data.code%>"/>
                         <span class="control-help" style="display:none;">活动码不存在</span>
                     <%}else{%>
@@ -206,11 +212,11 @@
                     <label class="radio">
                         <input type="radio" name="selectUseType" value="6" required
                         <%=data.selectUseType == '6' ? 'checked' : '' %> 
-                        <%= (query.type =='edit' && data.selectUseType !='6') ? 'disabled' : '' %> >
+                        <%= query.type =='edit' ? 'disabled' : '' %> >
                         <span>指定店铺码用户&nbsp;<span style="color: #ddd;">(活动时间内填写店铺码)</span></span>
                     </label>
                     <%if(data.selectUseType == '6'){%>
-                    <input type="text" data-check="6" class="cascade" name="code" placeholder="输入店铺码" pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
+                    <input type="text" data-check="1" class="cascade" name="code" placeholder="输入店铺码" pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
                         <span class="control-help" style="display:none;">店铺码不存在</span>
                     <%}else{%>
                     <input type="text" class="cascade" name="code" placeholder="输入店铺码" pattern='number' disabled/>
@@ -222,16 +228,17 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="checkbox">
-                        <input id="consumeItems" type="checkbox" >
+                        <input id="consumeItems" type="checkbox" <%=data.getItemTypes ? 'checked' : ''%>
+                         <%= query.type =='edit' ? 'disabled' : '' %>>
                         <span>指定消费项目：</span>
                     </label>
                     </div>
                 </div>
 
-                <div id="consumeItemsDiv" class="control-group consumeItems" style="display:none">
+                <div id="consumeItemsDiv" class="control-group consumeItems" style="display:<%=data.getItemTypes ? 'block' : 'none'%>">
                     <label class="control-label" style="width:120px"></label>
                     <div class="control" id="control" ajat-one="true" 
-                    ajat="platform/getItemType#domid=control&tempid=control-t&getItemTypes=<%=data.getItemTypes%>">
+                    ajat="platform/getItemType#domid=control&tempid=control-t&getItemTypes=<%=data.getItemTypes%>&isEdit=<%=query.type%>">
                            
                     </div>
                 </div>
@@ -242,7 +249,8 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                     <label class="checkbox">
-                        <input type="checkbox" id="consumeItemsAll">
+                        <input type="checkbox" id="consumeItemsAll" <%= query.type =='edit' ? 'disabled' : '' %>
+                        <%=data.getItemTypes ? 'checked' : ''%>>
                         <span>指定消费项目：(全平台用)</span>
                     </label>
                     </div>
@@ -251,7 +259,7 @@
                 <div id="consumeItemsAllDiv" class="control-group consumeItems">
                     <label class="control-label" style="width:120px"></label>
                     <div class="control" id="control" ajat-one="true" 
-                    ajat="platform/getItemType#domid=control&tempid=control-t&getItemTypes=<%=data.getItemTypes%>">
+                    ajat="platform/getItemType#domid=control&tempid=control-t&getItemTypes=<%=data.getItemTypes%>&isEdit=<%=query.type%>">
                            
                     </div>
                 </div>
@@ -261,7 +269,7 @@
                     <div class="control">
                         <span>满额获取：</span>
                         <label class="checkbox">
-                            <input type="text" name="enoughMoeny" required value="<%=data.enoughMoeny || 0%>">
+                            <input type="text" name="enoughMoeny" required value="<%=data.enoughMoeny || 0%>" <%= query.type =='edit' ? 'disabled' : '' %>>
                             <strong>元&nbsp;&nbsp;&nbsp;&nbsp;可获取</strong>
                             <span style="color: #ddd;">（大于或等于该数值可获取，0为不限制，可填写0~999）</span>
                             <span class="control-help" style="display:none;"></span>
@@ -275,11 +283,11 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                         <label class="checkbox">
-                            <input type="checkbox" id="H5UsercheckBox" <%= data.code=="" ? '' : 'checked' %>>
+                            <input type="checkbox" id="H5UsercheckBox" <%= data.code=="" ? '' : 'checked' %> <%= query.type =='edit' ? 'disabled' : '' %>>
                             <span>绑定活动码</span>
                         </label>
 
-                        <input type="text" name="code" value="00000" required <%= data.code=="" ? 'disabled' : '' %>/>
+                        <input type="text" name="code" value="<%= data.code || '00000'%>" required <%= data.code=="" ? 'disabled' : '' %> <%= query.type =='edit' ? 'disabled' : '' %>/>
                         <span style="color: #ddd;">（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
                         <span class="control-help" style="display:none;"></span>
                     </div>
@@ -306,10 +314,17 @@
         }
         %>
         <%data.forEach&&data.forEach(function(item,i){%>
+            <% if(protocol.custom.isEdit == 'add'){%>
             <label class="checkbox">
                 <input type="checkbox" <%=itemsObj[item.typeid] ? "checked":""%> name="getItemTypes" value="<%=item.typeid%>" required <%=protocol.custom.getItemTypes ? "":"disabled"%>>
                 <span><%=item.typename%></span>
             </label> 
+            <%}else{%>
+            <label class="checkbox">
+                <input type="checkbox" <%=itemsObj[item.typeid] ? "checked":""%> name="getItemTypes" value="<%=item.typeid%>"  disabled>
+                <span><%=item.typename%></span>
+            </label> 
+            <%}%>
         <%})%>
         </script>   
                

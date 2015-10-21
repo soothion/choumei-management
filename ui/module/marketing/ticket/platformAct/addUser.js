@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-21 17:30:55
+* @Last Modified time: 2015-10-21 19:38:13
 */
 
 (function(){
@@ -72,7 +72,7 @@
         lib.ajax({
             type: "post",
             url : 'platform/checkSerial',
-            asyn:false,
+            async:false,
             data: {type:$(self).data('check'),code:$(self).val()}    
         }).done(function(data, status, xhr){
             if(data.result == "1"){
@@ -121,6 +121,18 @@
         e.preventDefault();
         location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
     }); 
+
+    $("#form").on('click',"a.tab-menus",function(e){
+        if(type == 'add'){
+            var data = JSON.parse(sessionStorage.getItem('add-base-data'));  
+            data.getItemTypes = "";
+            data.enoughMoeny  = "";
+            data.phoneList    = [];
+            data.code = "";
+            data.selectUseType = 1;
+            sessionStorage.setItem('add-base-data',JSON.stringify(data));           
+        }
+    })
 
     /**
      * 仅允许输入int类型数据
@@ -188,6 +200,7 @@
             saveData = $.extend({},saveData,data);
             sessionStorage.setItem('edit-save-data',JSON.stringify(saveData));                 
         }
+        
         location.href = "addTicket.html?type="+type+"&selectItemType="+selectItemType;
     }        
 })();
