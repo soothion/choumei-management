@@ -94,11 +94,6 @@ class LaiseeConfig extends Model {
 
 //先插入到voucher_conf中  非礼包
     private static function addVoucherConfLaisee($data) {
-//        $vUseItemTypesArr = explode(",", $data['vUseItemTypes']);
-//        $vUseMoneyArr = explode(",", $data['vUseMoney']);
-//        $vNumberArr = explode(",", $data['vNumber']);
-//        $vDayArr = explode(",", $data['vDay']);
-//        $vUseNeedMoneyArr = explode(",", $data['vUseNeedMoney']);
         $voucher = $data['voucher'];
         $vcsns = [];
         foreach ($voucher as $val) {
@@ -131,14 +126,6 @@ class LaiseeConfig extends Model {
 
     private static function getVoucherConfField($data) {
         $voucher = json_decode($data['voucher'], true);
-//        $res['vUseItemTypesArr'] = explode(",", $data['vUseItemTypes']);
-//        $res['vUseMoneyArr'] = explode(",", $data['vUseMoney']);
-//        $res['vNumberArr'] = explode(",", $data['vNumber']);
-//        $res['vDayArr'] = explode(",", $data['vDay']);
-//        $res['vUseNeedMoneyArr'] = explode(",", $data['vUseNeedMoney']);
-//        $res['vVcId'] = explode(",", $data['vVcId']);
-//        $res['delVcId'] = isset($data['delVcId']) ? explode(",", $data['delVcId']) : 0;
-//        $res['vVoucherCount'] = count($res['vUseItemTypesArr']);
         return $voucher;
     }
 
@@ -148,25 +135,11 @@ class LaiseeConfig extends Model {
 
     private static function getGiftConfField($data) {
         $gift = json_decode($data['gift'], true);
-//        $res['gUseItemTypesArr'] = explode(",", $data['gUseItemTypes']);
-//        $res['gUseMoneyArr'] = explode(",", $data['gUseMoney']);
-//        $res['gNumberArr'] = explode(",", $data['gNumber']);
-//        $res['gDayArr'] = explode(",", $data['gDay']);
-//        $res['gUseNeedMoneyArr'] = explode(",", $data['gUseNeedMoney']);
-//        $res['gVcId'] = explode(",", $data['gVcId']);
-//        $res['delGiftVcId'] = isset($data['delGiftVcId']) ? explode(",", $data['delGiftVcId']) : 0;
-//        $res['gVoucherCount'] = count($res['gUseItemTypesArr']);
         return $gift;
     }
 
     //插入voucher_conf 中 礼包
     private static function addVoucherConfGift($data) {
-//        $gUseItemTypesArr = explode(",", $data['gUseItemTypes']);
-//        $gUseMoneyArr = explode(",", $data['gUseMoney']);
-//        $gNumberArr = explode(",", $data['gNumber']);
-//        $gDayArr = explode(",", $data['gDay']);
-//        $gUseNeedMoneyArr = explode(",", $data['gUseNeedMoney']);
-//        $gVoucherCount = count($gUseItemTypesArr);
         $gift = $data['gift'];
         $gVoucherCount = count($gift);
         $gift_vcsn = [];

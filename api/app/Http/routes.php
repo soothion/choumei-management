@@ -911,6 +911,10 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
         'as' => 'laisee.close',
         'uses' => 'Laisee\LaiseeController@close'
     ));
+    Route::any('laisee/itemTypes', array(// 活动关闭
+        'as' => 'laisee.itemTypes',
+        'uses' => 'Laisee\LaiseeController@itemTypes'
+    ));
     
     Route::any('bonus/index', array(// 红包列表
         'as' => 'laisee.index',
@@ -928,6 +932,7 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
         'as' => 'bonus.close',
         'uses' => 'Laisee\BonusController@close'
     ));
+    
     
     
 });
