@@ -8,7 +8,12 @@
   </head>
   <body>
 	<div class="breadcrumb">
-		<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span><%=query.id?"编辑":"新增"%><%=query.p=="special"?"闲时特价":"项目"%>
+		<a>店铺管理 </a><span>&gt;</span><a href="../index.html">店铺资料</a><span>&gt;</span>
+		<%if(query.p=="warehouse"){%>
+		<a href="index.html#<%=query._%>">项目仓库</a>
+		<span>&gt;</span>
+		<%}%>
+		<%=query.id?"编辑":"新增"%><%=query.p=="special"?"闲时特价":"项目"%>
 		<div class="flex-box">
 			<div class="flex-item">
 				<h4><%=query.id?"编辑":"新增"%><%=query.p=="special"?"闲时特价":"项目"%>-<%=query.salonname%></h4>
