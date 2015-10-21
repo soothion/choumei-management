@@ -556,21 +556,15 @@ class ItemInfoController extends Controller{
 	    $timingAdded  = isset($param['timingAdded'])?trim($param['timingAdded']):0;//定时上架
 	    $timingShelves  = isset($param['timingShelves'])?trim($param['timingShelves']):0;//定时下架
 	    
+	    $salon_item['timingAdded'] = 0;
 	    if($timingAdded)
 	    {
 	        $salon_item['timingAdded'] = strtotime($timingAdded);
 	    }
-	    else 
-	    {
-	    	$salon_item['timingAdded'] = 0;
-	    }
+	    $salon_item['timingShelves'] = 0;
 	    if($timingShelves)
 	    {
 	        $salon_item['timingShelves'] = strtotime($timingShelves);
-	    }
-	    else 
-	    {
-	    	$salon_item['timingShelves'] = 0;
 	    }
 	    
 	    $salon_item['repertory']  = 0;
