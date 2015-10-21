@@ -579,8 +579,8 @@ class LaiseeController extends Controller {
      * @apiSuccess {Number} typeid 类型Id.
      * @apiSuccess {String} typename 类型名称.
      *
-     * @apiSuccessExample Success-Response:
      * 
+     * @apiSuccessExample Success-Response:
      *    {
      *   "result": 1,
      *   "token": "",
@@ -635,9 +635,7 @@ class LaiseeController extends Controller {
      *        }
      *    ]
      * }
-     *
      * 
-     * @apiSuccessExample Success-Response:
      * @apiErrorExample Error-Response:
      * 		{
      * 		    "result": 0,
