@@ -17,19 +17,71 @@ class ItemShelvesSeeder extends Seeder
     public function run()
     {
     	$time = time();
-    	$added = SalonItem::where(['status'=>2])->where('timingAdded','<=',$time)->where('timingAdded','!=',0)->whereRaw("(timingShelves > '{$time}' or timingShelves =0 )")->select(['itemid'])->get()->toArray();
-
+	   	$added = SalonItem::where(['status'=>2])
+	   			->where('timingAdded','<=',$time)
+	   			->where('timingAdded','!=',0)
+	   			->select(['itemid','itemname','exp_time','total_rep','sold','minPrice','minPriceOri','timingShelves'])
+	   			->get()->toArray();  	 
     	if($added)
     	{
-    		SalonItem::where(['status'=>2])->where('timingAdded','<=',$time)->where('timingAdded','!=',0)->whereRaw("(timingShelves > '{$time}' or timingShelves =0 )")->update(['status'=>1,'up_time'=>$time]);
-    		Log::info('定时上架: '.json_encode($added));
-    	}
+    		$idsadded = [];
+    		$ids = [];
+    		foreach($added as $item)
+    		{
+    			$id = $item['itemid'];
+    			$ids[] = $id;
+    			$name = $item['itemname'];
+    			$exp_time = intval($item['exp_time']);
+    			$total_rep = intval($item['total_rep']);
+    			$sold = intval($item['sold']);
+    			$min_price = floatval($item['minPrice']);
+    			$min_price_ori = floatval($item['minPriceOri']);
+    			if($min_price<=0 || $min_price_ori<=0)
+    			{
+    				$idsadded[] = $id;// 价格小于 0
+    			}
+    			if($exp_time >0 && $exp_time < $time)
+    			{
+    				$idsadded[] = $id;//有效期
+    			}
+    			if($total_rep >0 && $total_rep < $sold)
+    			{
+    				$idsadded[] = $id;//库存
+    			}
+    			if($item['timingShelves'] <= $time)
+    			{
+    				$idsadded[] = $id;//下架时间
+    			}
+    		}
+    		if($idsadded)
+    		{
+    			$idsArr = array_diff($ids,$idsadded);
+    		}
+    		else
+    		{
+    			$idsArr = $ids;
+    		}
+    		if($idsArr)
+    		{
+    			if(SalonItem::whereIn('itemid',$idsArr)->update(['status'=>1,'up_time'=>$time]))
+    				Log::info('定时上架: '.json_encode($idsArr));
+    		}
     		
-    	$shelves = SalonItem::where(['status'=>1])->where('timingShelves','<=',$time)->where('timingShelves','!=',0)->select(['itemid'])->get()->toArray();
+    	}
+    	
+    		
+    	$shelves = SalonItem::whereRaw("status =1 AND ((timingShelves <= '{$time}' AND timingShelves != 0) OR (exp_time < '{$time}' AND exp_time != 0))")
+    				->select(['itemid','itemname','exp_time','total_rep','sold','minPrice','minPriceOri'])
+    				->get()->toArray();
     	if($shelves)
     	{
-    		SalonItem::where(['status'=>1])->where('timingShelves','<=',$time)->where('timingShelves','!=',0)->update(['status'=>2]);
-    		Log::info('定时下架: '.json_encode($shelves));
+    		$idshArr = [];
+    		foreach($shelves as $idsh)
+    		{
+    			$idshArr[] = $idsh['itemid'];
+    		}
+    		if(SalonItem::whereIn('itemid',$idshArr)->update(['status'=>2]))
+    			Log::info('定时下架: '.json_encode($idshArr));
     	}
     	Log::info('定时上下架执行记录 ');
     	echo 'ok';
