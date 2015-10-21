@@ -42,7 +42,7 @@ class ListController extends Controller{
 	 *
 	 */
 	public function city(){
-		$result = DB::table('city')->select(['iid as id','iname as title'])->get();
+		$result = City::select(['iid as id','iname as title'])->get();
 		return $this->success($result);
 	}
 
