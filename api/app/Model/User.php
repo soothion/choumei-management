@@ -100,12 +100,8 @@ class User extends  Model
     }
 
     public static function getUserById($uid) {
-        $user = Self::getQuery()->where("user_id", "=", $uid)->get();
-        if (empty($user)) {
-            return [];
-        } else {
-            return $user[0];
-        }
+        $user = Self::getQuery()->where("user_id", "=", $uid)->first();
+        return $user;
     }
 
     //获取最近15天每天的用户注册数

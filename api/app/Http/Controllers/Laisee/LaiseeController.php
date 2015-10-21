@@ -307,8 +307,12 @@ class LaiseeController extends Controller {
             }
             $where["id"] = $data["id"];
             $laiseeConfig = LaiseeConfig::find($data['id']);
-            if ($laiseeConfig->status != 'Y' && $laiseeConfig->end_time != "0000-00-00 00:00:00") {
-                throw new ApiException("已关闭或已结束的活动无法再编辑", ERROR::PARAMS_LOST);
+            if ($laiseeConfig) {
+                if ($laiseeConfig->status != 'Y' && $laiseeConfig->end_time != "0000-00-00 00:00:00") {
+                    throw new ApiException("已关闭或已结束的活动无法再编辑", ERROR::PARAMS_LOST);
+                }
+            } else {
+                throw new ApiException("活动不存在", ERROR::PARAMS_LOST);
             }
         } else {
             $where = '';
@@ -565,6 +569,82 @@ class LaiseeController extends Controller {
         } else {
             throw new ApiException("未找到活动信息", ERROR::UNKNOWN_ERROR);
         }
+    }
+
+    /**
+     * @api {post} /laisee/itemTypes 7.现金券项目类型
+     * @apiName itemTypes
+     * @apiGroup laisee
+     * 
+     * @apiSuccess {Number} typeid 类型Id.
+     * @apiSuccess {String} typename 类型名称.
+     *
+     * 
+     * @apiSuccessExample Success-Response:
+     *    {
+     *   "result": 1,
+     *   "token": "",
+     *   "data": [
+     *       {
+     *           "typeid": 1,
+     *           "typename": "洗剪吹"
+     *       },
+     *       {
+     *           "typeid": 2,
+     *            "typename": "烫发"
+     *       },
+     *        {
+     *            "typeid": 3,
+     *           "typename": "染发"
+     *        },
+     *        {
+     *            "typeid": 4,
+     *            "typename": "护发"
+     *        },
+     *        {
+     *            "typeid": 5,
+     *            "typename": "套餐"
+     *        },
+     *        {
+     *            "typeid": 6,
+     *            "typename": "兑换专用"
+     *        },
+     *        {
+     *            "typeid": 7,
+     *            "typename": "洗吹"
+     *        },
+     *        {
+     *            "typeid": 8,
+     *            "typename": "男士快剪"
+     *        },
+     *        {
+     *            "typeid": 10,
+     *            "typename": "其他"
+     *        },
+     *        {
+     *            "typeid": 11,
+     *            "typename": "养发"
+     *        },
+     *        {
+     *            "typeid": 12,
+     *            "typename": "特价套餐"
+     *        },
+     *        {
+     *            "typeid": 13,
+     *            "typename": "发水"
+     *        }
+     *    ]
+     * }
+     * 
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "未授权访问"
+     * 		}
+     */
+    public function itemTypes() {
+        $itemTypes = \App\SalonItemtype::select(['typeid', 'typename'])->get();
+        return $this->success($itemTypes);
     }
 
 }

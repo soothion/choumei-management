@@ -568,14 +568,8 @@ class Salon extends Model {
     
     public static function getSalonById($salon_id)
     {
-        $salon = self::where('salonid','=',$salon_id)->get();
-        if(empty($salon))
-        {
-            return null;
-        }
-        else {
-          return $salon[0];
-        }
+        $salon = self::where('salonid','=',$salon_id)->first();
+        return $salon;
     }
 	
 	/**

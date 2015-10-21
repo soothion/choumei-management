@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
@@ -15,14 +16,9 @@ class Hairstylist extends Model {
     }
 
     public static function getHairstylistById($id) {
-        $hairstylist = Self::getQuery()->where("stylistId", "=", $id)->get();
+        $hairstylist = Self::getQuery()->where("stylistId", "=", $id)->first();
 
-        if (empty($hairstylist)) {
-            return [];
-        } else {
-            return $hairstylist[0];
-        }
+        return $hairstylist;
     }
 
 }
-

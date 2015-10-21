@@ -615,6 +615,21 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'as'=>'refund.reject',
 		'uses'=>'Transaction\OrderRefundController@reject'
     ));
+    
+    Route::any('appointment/index',array(  //预约造型师列表
+		'as'=>'appointment.index',
+		'uses'=>'Transaction\AppointmentController@index'
+    ));
+    
+    Route::any('appointment/show/{id}',array(  //查看预约造型师
+		'as'=>'appointment.show',
+		'uses'=>'Transaction\AppointmentController@show'
+    ));
+    
+    Route::any('appointment/export',array(  //导出预约造型师列表
+		'as'=>'appointment.export',
+		'uses'=>'Transaction\AppointmentController@export'
+    ));
 	
 	//消息管理
 	Route::any('message/create',array(  //添加消息
@@ -911,6 +926,10 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
         'as' => 'laisee.close',
         'uses' => 'Laisee\LaiseeController@close'
     ));
+    Route::any('laisee/itemTypes', array(// 活动关闭
+        'as' => 'laisee.itemTypes',
+        'uses' => 'Laisee\LaiseeController@itemTypes'
+    ));
     
     Route::any('bonus/index', array(// 红包列表
         'as' => 'laisee.index',
@@ -928,6 +947,7 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
         'as' => 'bonus.close',
         'uses' => 'Laisee\BonusController@close'
     ));
+    
     
     
 });
