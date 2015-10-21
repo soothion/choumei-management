@@ -25,37 +25,37 @@
                         <option value="2">生成时间</option>
                         <option value="3">红包名称</option>
                     </select>
-                    <input type="text" class="input-search" name="username" placeholder="红包编号">
-                    <input type="text" class="input-search hide" name="role" class="hide" placeholder="分享手机号">
-                    <input type="date" class="input-search hide" name="role" class="hide" placeholder="生成时间">
-                    <input type="text" class="input-search hide" name="name" class="hide" placeholder="红包名称">
+                    <input type="text" class="input-search" name="bonusSn" placeholder="红包编号">
+                    <input type="text" class="input-search hide" name="mobilephone" class="hide" placeholder="分享手机号">
+                    <input type="date" class="input-search hide" name="start_time" class="hide" placeholder="生成时间">
+                    <input type="text" class="input-search hide" name="laisee_name" class="hide" placeholder="红包名称">
                 </div>
 
                 <span class="space"></span>
                 <label>红包状态：</label>
-                <select name="department_id">
+                <select name="bonusStatus">
                     <option value="">全部</option>
-                    <option value="1">已过期</option>
-                    <option value="2">进行中</option>
+                    <option value="N">已过期</option>
+                    <option value="Y">进行中</option>
                 </select>  
 
                 <span class="space"></span>
                 <span>生成时间：</span>
                 <span class="date-group">
-                    <input type="date" data-role="start" name="start" placeholder="yyyy-MM-dd"/>
+                    <input type="date" data-role="start" name="start_time" placeholder="yyyy-MM-dd"/>
                     到
-                    <input type="date" data-role="end" name="end" placeholder="yyyy-MM-dd"/>
+                    <input type="date" data-role="end" name="end_time" placeholder="yyyy-MM-dd"/>
                 </span>
-                <button class="btn" type="submit">查询</button>
+                <button class="btn" type="submit">搜索</button>
             </form>
 
-            <form action="manager/export" data-role="export">
+            <form action="bonus/export" data-role="export">
                 <button class="btn" data-slug="manager.export">
                 <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form>
                           
-           <div class="table" ajat="laisee/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="bonus/index?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -66,33 +66,34 @@
                             <th>红包总金额</th>
                             <th>已领现金券数</th>
                             <th>生成时间</th>
-                            <th>有效天数</th>
+                            <th>到期时间</th>
                             <th>红包状态</th>
                             <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
                       <%var data=data.data%>
-                      <%for(var i=0;i<data.length;i++){%>
+                      <%data.forEach(function(item,i){%>
                        <tr>
                         <td><%=i+1%></td>
-                        <td><%=data[i].name%></td>
-                        <td><%=data[i].laisee_name%></td>
-                        <td><%=status[data[i].status]%></td>
-                        <td><%=data.receiveNum%></td>  
-                        <td><%=data[i].department?data[i].department.title:""%></td>        
-                        <td><%for(var j=0;j<data[i].roles.length;j++){%>
-                            <%=data[i].roles[j].name%>
-                            <%}%>                  
-                         </td>                  
-                        <td><%=data[i].created_at%></td>
+                        <td><%=item.bonusSn%></td>
+                        <td><%=item.laisee_name%></td>
+                        <td><%=item.bonusAmount%></td>
+                        <td><%=item.receiveNum%></td>  
+                        <td><%=item.add_time%></td>        
+                        <td><%=item.over_time%></td>                  
+                        <td><%=item.status=="Y"?"进行中":"已过期"%></td>
                         <td>
-                        <a class="link" target="_blank" href="detail.html">查看&gt;</a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a class="link">失效</a>
+							<a class="link" target="_blank" href="detail.html?id=<%=item.order_ticket_id%>">查看&gt;</a>
+							<%if(item.status=="Y"){%>
+							<span class="space"></span>
+							<form action="bonus/close/<%=item.order_ticket_id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+								<button class="link">失效</button>
+							</form>
+							<%}%>
                         </td>
                         </tr>
-                        <%}%>                    
+                        <%})%>                    
                     </tbody>
             </table>        
              <div class="pager"> </div>

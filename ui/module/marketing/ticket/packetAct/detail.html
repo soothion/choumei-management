@@ -4,7 +4,6 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="/js/include.js"></script>
-      <link rel="stylesheet" href="income.css" />
     </head>
     <body>
         <div class="breadcrumb">
@@ -17,82 +16,83 @@
             </div>
         </div>
         <div class="wrapper">
-            <div class="table" style="margin:0" id="table-wrapper">
+            <div class="table" ajat="laisee/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
+				<script type="text/template" id="table-t">
                 <div class="detail-operation">
-                        <a href='addBase.html'>
-                            <button class="btn">编辑</button>
-                        </a>
+                    <a href='addBase.html?id=<%=query.id%>' class="btn">编辑</a>
+					<span class="space"></span>
                     <button class="btn" type="button" onclick="window.close()">关闭</button>  
                 </div>  
-                            
                 <table>
                     <tbody>
                         <tr>
-                            <td class="td">红包活动名称</td>
-                            <td><%=data.sn%></td>
+                            <td>红包活动名称</td>
+                            <td><%=data.laisee_name%></td>
                         </tr>
 
                         <tr>
-                            <td class="td">活动简介</td>
-                            <td><%=data.start_at && new Date(data.start_at).format("yyyy-MM-dd")%></td>
+                            <td>活动简介</td>
+                            <td><%=data.lc_remark%></td>
                         </tr>
 
                         <tr>
-                            <td class="td">活动时间</td>
-                            <td><%=data.end_at && new Date(data.end_at).format("yyyy-MM-dd")%></td>
+                            <td>活动时间</td>
+                            <td><%=data.start_time%>至<%=data.end_time%></td>
                         </tr>
 
                         <tr>
-                            <td class="td">活动状态</td>
-                            <td><%=data.amount%></td>
+                            <td>活动状态</td>
+							<%var statusMap={"Y":"进行中","N":"已结束","S":"已关闭"}%>
+                            <td><%=statusMap[data.status]%></td>
                         </tr>
 
                         <tr>
-                            <td class="td">券预算总金额</td>
-                            <td><%=data.created_by%></td>                            
+                            <td>券预算总金额</td>
+                            <td><%=data.budget_amount%></td>                            
                         </tr>
 
                         <tr>
-                            <td class="td">红包有效期</td>
-                            <td><%=data.created_at && new Date(data.created_at).format("yyyy-MM-dd")%></td>
+                            <td>红包有效期</td>
+                            <td><%=data.over_time%></td>
                         </tr>   
 
                         <tr>
-                            <td class="td">已领取数</td>
-                            <td><%=data.confirm_by%></td>
+                            <td>已领取数</td>
+                            <td><%=data.receiveNum%></td>
                         </tr>
 
                         <tr>
-                            <td class="td">已领取的金额</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td>已领取的金额</td>
+                            <td><%=data.receiveAmount%></td>
                         </tr>  
 
                         <tr>
-                            <td class="td">已使用数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td>已使用数</td>
+                            <td><%=data.usedNum%></td>
                         </tr>  
 
                         <tr>
-                            <td class="td">已使用总金额</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td>已使用总金额</td>
+                            <td><%=data.usedAmount%></td>
                         </tr> 
 
                         <tr>
-                            <td class="td">已消费数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td>已消费数</td>
+                            <td><%=data.consumeNum%></td>
                         </tr> 
 
                         <tr>
-                            <td class="td">已消费数金额</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td>已消费数金额</td>
+                            <td><%=data.consumeAmount%></td>
                         </tr>  
 
                         <tr>
-                            <td class="td">已失效数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td>已失效数</td>
+                            <td><%=data.failure%></td>
                         </tr>                                                                                  
                     </tbody>                     
                 </table>
+				</script>
             </div>
         </div>
     </body>
