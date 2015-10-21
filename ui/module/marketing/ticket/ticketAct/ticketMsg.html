@@ -16,15 +16,14 @@
             </div>      
         </div> 
 
-        <div class="wrapper">
-            <form action="manager/export" data-role="export">
+        <div class="wrapper" id="table" ajat="coupon/getCoupon/<%=query.id%>#domid=table&tempid=table-t">
+           <script type="text/template" id="table-t">
+            <form action="coupon/exportCoupon/<%=query.id%>" data-role="export">
                 <button class="btn" data-slug="manager.export">
                 <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form>
-                          
-           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
-            <script type="text/template" id="table-t">
+           <div class="table" >
                 <table>
                     <thead>
                         <tr>
@@ -35,19 +34,18 @@
                         </tr>
                     </thead>
                 <tbody>
-                <%var status=["","正常","停用","注销"]%>
-                <%var data=data.data%>
-                <%for(var i=0;i<data.length;i++){%>
+                <%data && data.forEach(function(item,index){%>
                  <tr>
-                  <td><%=i+1%></td>
-                  <td><%=data[i].name%></td>
-                  <td><%=data[i].username%></td>
-                  <td><%=status[data[i].status]%></td>
-                  <%}%>
+                  <td><%=index+1%></td>
+                  <td><%=item.vSn%></td>
+                  <td><%=item.REDEEM_CODE%></td>
+                  <td><%=item.vUseMoney%></td>
+                  </tr>
+                  <%})%>
                 </tbody>
-            </table>        
-            </script>
+            </table>
         </div>
-            </div>            
+        </script>
+            </div>
     </body>
 </html>

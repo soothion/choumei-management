@@ -23,85 +23,95 @@
                             <button class="btn">编辑</button>
                         </a>
                     <button class="btn" type="button" onclick="window.close()">关闭</button>  
-                </div>  
-                        
-                <table>
+                </div>
+                <table  ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
+                <script type="text/template" id='table-t'>
+                <%var status=["","进行中","暂停","已关闭","已结束"]%>
                     <tbody>
                         <tr>
                             <td class="td">活动名称</td>
-                            <td><%=data.sn%></td>
+                            <td><%=data.vcTitle%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">活动编号</td>
+                            <td><%=data.vcSn%></td>
                         </tr>
 
                         <tr>
                             <td class="td">活动简介</td>
-                            <td><%=data.start_at && new Date(data.start_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.vcRemark%></td>
                         </tr>
 
                         <tr>
                             <td class="td">活动时间</td>
-                            <td><%=data.end_at && new Date(data.end_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.actTime%></td>
                         </tr>
 
                         <tr>
                             <td class="td">活动状态</td>
-                            <td><%=data.amount%></td>
+                            <td><%=status[data.status]%></td>
                         </tr>
 
                         <tr>
                             <td class="td">券总数</td>
-                            <td><%=data.created_by%></td>                            
+                            <td><%=data.totalNum%></td>
                         </tr>
 
                         <tr>
                             <td class="td">券预算总金额</td>
-                            <td><%=data.created_at && new Date(data.created_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.budget%></td>
                         </tr>   
 
                         <tr>
                             <td class="td">申请部门</td>
-                            <td><%=data.confirm_by%></td>
+                            <td><%=data.department%></td>
                         </tr>
 
                         <tr>
                             <td class="td">负责人</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.manager%></td>
                         </tr>  
 
                         <tr>
                             <td class="td">已兑换数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.allNum%></td>
                         </tr>  
 
                         <tr>
                             <td class="td">已兑换金额</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.allMoney%></td>
                         </tr> 
 
                         <tr>
                             <td class="td">已使用数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.useNumed%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">已使用总金额</td>
+                            <td><%=data.useMoneyed%></td>
                         </tr> 
 
                         <tr>
                             <td class="td">已消费数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.consumeNum%></td>
                         </tr>  
 
                         <tr>
                             <td class="td">已消费数金额</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.consumeMoney%></td>
                         </tr> 
 
                         <tr>
                             <td class="td">已失效数</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            <td><%=data.invalidNum%></td>
                         </tr>
 
                         <tr>
                             <td class="td">实体券编号和密码</td>
-                            <td><a class="link">查看实体券编码和密码</a></td>
-                        </tr>                                                                                                          
-                    </tbody>                     
+                            <td><a class="link" href='ticketMsg.html#id=<%=query.id%>'>查看实体券编码和密码</a></td>
+                        </tr>
+                    </tbody>
+                    </script>
                 </table>
             </div>
         </div>
