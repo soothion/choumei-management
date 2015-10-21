@@ -756,6 +756,7 @@ class PlatformController extends Controller{
      *           "result": 1,
      *           "token": "",
      *           "data": {
+     *                       "vcId": 1,
      *                       "getSingleLimit": 1,
      *                       "actName": "试哈哈哈",
      *                       "actNo": "cm718745",
@@ -791,7 +792,7 @@ class PlatformController extends Controller{
     public function getInfo($id){
         if( empty($id) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $voucherConfInfo = \App\Model\VoucherConf::select(['getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
+        $voucherConfInfo = \App\Model\VoucherConf::select(['vcId','getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
             ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','getItemTypes','useLimitTypes'
             ,'useNeedMoney as enoughMoeny','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
             ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType'])
