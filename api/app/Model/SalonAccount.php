@@ -57,13 +57,18 @@ class SalonAccount extends Model {
 	}
 	
 	/***
-	 * 店铺账号修改
+	 * 店铺账号修改 删除
 	 * */
 	public static function doUpdate($salon_user_id,$data)
 	{
-		 $query = SalonUser::getQuery();
-		 return $query->where("salon_user_id","=",$salon_user_id)->update($data);
-		 
+		 if($data['status'] != 3)
+		 {
+		 	return SalonUser::where("salon_user_id","=",$salon_user_id)->update($data);
+		 }
+		 else
+		 {
+		 	return SalonUser::where("salon_user_id","=",$salon_user_id)->delete();
+		 } 
 	}
 	
 	/***
