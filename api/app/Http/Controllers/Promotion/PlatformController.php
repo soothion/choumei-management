@@ -27,8 +27,9 @@ class PlatformController extends Controller{
 	 * @apiSuccessExample Success-Response:
 	 *		{
 	 *		    "result": 1,
-	 *		    "data": [
-     *                  {
+	 *		    "data": 
+     *          [
+     *              {
      *                  "typeid": 1,
      *                  "typename": "洗剪吹"
      *              },
