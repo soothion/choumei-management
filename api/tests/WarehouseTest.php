@@ -51,4 +51,17 @@ class WarehouseTest extends TestCase
                 'result'=>1
              ]);
     }
+    
+    public function  testShow(){
+         $this->post("warehouse/show/778")            
+             ->seeJson([
+                'result'=>1
+             ]);
+         
+         //id不存在测试
+          $this->post("warehouse/show/999999")            
+             ->seeJson([
+                'result'=>0
+             ]);   
+    }       
 }
