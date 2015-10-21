@@ -300,7 +300,8 @@ class WarehouseController extends Controller
 	        throw new ApiException('json文件格式不正确或者内容为空',ERROR::UPLOAD_FILE_ERR_FORMAT);
 	    }
 	    $salon_id = $params['salon_id'];
-	    $items = self::formatDatas($datas,$salon_id);
+	    $user_id  = $this->user->id;
+	    $items = self::formatDatas($datas,$salon_id,$user_id);
 	    
 	    foreach ($items as $item)
 	    {
@@ -414,7 +415,7 @@ class WarehouseController extends Controller
 	    return $base->orderBy($order, $order_by);
 	}
 	
-	public static function formatDatas($datas,$salon_id)
+	public static function formatDatas($datas,$salon_id,$user_id)
 	{
 	    $res = [];
 	    foreach($datas as $data)
@@ -454,6 +455,7 @@ class WarehouseController extends Controller
 	        $tmp['repertory'] = $data['repertory'];
 	        $tmp['expTimeInput'] = $data['exp_time'];
 	        $tmp['totalRepInput'] = $data['total_rep'];
+	        $tmp['userId'] = $user_id;
 	        $tmp['priceGroup'] = 0;
 	        $tmp['price'] = 0;
 	        $tmp['priceDis'] = 0;
