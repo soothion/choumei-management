@@ -28,13 +28,13 @@ class PlatformController extends Controller{
 	 *		{
 	 *		    "result": 1,
 	 *		    "data": 
-     *          [
-     *              {
-     *                  "typeid": 1,
-     *                  "typename": "洗剪吹"
-     *              },
-     *              ...
-     *          ]
+     *              [
+     *                  {
+     *                      "typeid": 1,
+     *                      "typename": "洗剪吹"
+     *                  },
+     *                  ...
+     *              ]
 	 *		}
 	 *
 	 *
