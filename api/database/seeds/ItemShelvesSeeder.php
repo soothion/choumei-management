@@ -48,7 +48,7 @@ class ItemShelvesSeeder extends Seeder
     			{
     				$idsadded[] = $id;//库存
     			}
-    			if($item['timingShelves'] <= $time)
+    			if($item['timingShelves'] <= $time && $item['timingShelves'] > 0)
     			{
     				$idsadded[] = $id;//下架时间
     			}
@@ -63,8 +63,8 @@ class ItemShelvesSeeder extends Seeder
     		}
     		if($idsArr)
     		{
-    			if(SalonItem::whereIn('itemid',$idsArr)->update(['status'=>1,'up_time'=>$time]))
-    				Log::info('定时上架: '.json_encode($idsArr));
+    			if(SalonItem::whereIn('itemid',array_values($idsArr))->update(['status'=>1,'up_time'=>$time]))
+    				Log::info('定时上架: '.json_encode(array_values($idsArr)));
     		}
     		
     	}

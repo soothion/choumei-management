@@ -425,6 +425,15 @@ class ItemInfoController extends Controller{
 	    }
 	    $timingAdded  = isset($param['timingAdded'])?trim($param['timingAdded']):0;//定时上架
 	    $timingShelves  = isset($param['timingShelves'])?trim($param['timingShelves']):0;//定时下架
+
+	    if(!$timingShelves)
+	    {
+	    	$data['timingShelves'] = 0;
+	    }
+	    if(!$timingAdded)
+	    {
+	    	$data['timingAdded'] = 0;
+	    }
 	    if($timingAdded && $timingShelves)
 	    {
 	    	$data['timingAdded'] = strtotime($timingAdded);
