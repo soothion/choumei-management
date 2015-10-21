@@ -248,10 +248,8 @@ class SalonAccountController extends Controller {
 	 * **/
 	private function getAccountByUserid($userId)
 	{
-		$query = SalonUser::getQuery();
-		$query = $query->where('salon_user_id','=',$userId);
-		$list = $query->first();
-		return $list->username;
+		$list = SalonUser::where('salon_user_id','=',$userId)->first();
+		return $list?$list->username:'';
 	}
 	
 	/**
