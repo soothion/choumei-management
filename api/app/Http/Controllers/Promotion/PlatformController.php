@@ -848,6 +848,8 @@ class PlatformController extends Controller{
 	 *@apiParam {String} addActLimitStartTime   可选        代金劵可使用开始时间 2015-10-16 00:00:00
 	 *@apiParam {String} addActLimitEndTime     可选        代金劵可使用结束时间 2015-10-16 23:59:59
      *@apiParam {Number} fewDay                 可选        劵获取多少天内可用 （和上面劵可使用时间必须达到传其一）
+     *@apiParam {String} sendSms                可选        发送的短信内容
+     *@apiParam {Number} singleEnoughMoney      可选        项目满额获取
      * 
      * 
      * 
@@ -892,6 +894,7 @@ class PlatformController extends Controller{
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
+        if( isset($post['singleEnoughMoney']) ) $data['getNeedMoney'] = $post['singleEnoughMoney'];
         
         $addRes = \App\Model\VoucherConf::where(['vcId'=>$id])->update( $data );
         
