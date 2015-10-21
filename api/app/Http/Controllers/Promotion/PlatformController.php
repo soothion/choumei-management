@@ -736,6 +736,7 @@ class PlatformController extends Controller{
 	 * @apiSuccess {Number} totalNumber 代金券可领总数
 	 * @apiSuccess {Number} limitItemTypes 限制可使用项目类别格式为（,1,2,）
 	 * @apiSuccess {Number} useLimitTypes 使用限制类型 2 为限制首单
+	 * @apiSuccess {Number} limitItemTypes 可使用的项目如 ,1,2,
 	 * @apiSuccess {Number} enoughMoeny 限制项目需满足金额才可使用
 	 * @apiSuccess {String} addActLimitStartTime    可使用时间.起始(0 表示不限制)
 	 * @apiSuccess {String} addActLimitEndTime      可使用时间.结束(0 表示不限制)
@@ -793,7 +794,7 @@ class PlatformController extends Controller{
         if( empty($id) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
         $voucherConfInfo = \App\Model\VoucherConf::select(['vcId','getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
-            ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','getItemTypes','useLimitTypes'
+            ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','getItemTypes','useLimitTypes','useItemTypes as limitItemTypes'
             ,'useNeedMoney as enoughMoeny','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
             ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType'])
                 ->where(['vcId'=>$id,'IS_REDEEM_CODE'=>'N','vType'=>1])
@@ -862,9 +863,9 @@ class PlatformController extends Controller{
 	 ***/
     public function editConf(){
         $post = $this->param;
-        if( empty( $post['id'] ) )
+        if( empty( $post['vcId'] ) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $id = $post['id'];
+        $id = $post['vcId'];
         
         $data = array();
         if( isset( $post['actName'] ) )  $data['vcTitle'] = $post['actName'];

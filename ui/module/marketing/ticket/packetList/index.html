@@ -55,7 +55,7 @@
                 </button>
             </form>
                           
-           <div class="table" ajat="manager/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="laisee/index?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -71,17 +71,15 @@
                             <th>操作</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                      <%var status=["","正常","停用","注销"]%>
                       <%var data=data.data%>
                       <%for(var i=0;i<data.length;i++){%>
                        <tr>
                         <td><%=i+1%></td>
                         <td><%=data[i].name%></td>
-                        <td><%=data[i].username%></td>
+                        <td><%=data[i].laisee_name%></td>
                         <td><%=status[data[i].status]%></td>
-                        <td><%=data[i].city?data[i].city.title:""%></td>  
+                        <td><%=data.receiveNum%></td>  
                         <td><%=data[i].department?data[i].department.title:""%></td>        
                         <td><%for(var j=0;j<data[i].roles.length;j++){%>
                             <%=data[i].roles[j].name%>

@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-20 22:15:06
+* @Last Modified time: 2015-10-21 09:53:02
 */
 
 (function(){
@@ -28,7 +28,7 @@
         }
     })
 
-    $("#form").on('blur','#ticketNumInput',function(){
+    $("#form").on('input','#ticketNumInput',function(){
         if($(this).val() == "0"){
           $(this).val("");
         }
@@ -93,8 +93,10 @@
           submitData = $.extend({},addData,data);           
       }
       if(type == 'edit'){
-          var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
-          submitData = $.extend({},editData,data);   
+          // var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+          // submitData = $.extend({},editData,data);
+          var saveData = JSON.parse(sessionStorage.getItem('edit-save-data'));
+          submitData = $.extend({},saveData,data);               
       }
 
       lib.ajax({
