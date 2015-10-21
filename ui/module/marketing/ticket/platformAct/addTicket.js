@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-21 09:53:02
+* @Last Modified time: 2015-10-21 17:30:00
 */
 
 (function(){
@@ -28,7 +28,7 @@
         }
     })
 
-    $("#form").on('input','#ticketNumInput',function(){
+    $("#form").on('input','.nonzero',function(){
         if($(this).val() == "0"){
           $(this).val("");
         }
@@ -77,26 +77,62 @@
     })
 
     $("#form").on('click','#preview-btn',function(){
-        location.href = "preview.html?type="+type;
+        var data = lib.getFormData($("#form"));  
+        if($.isArray(data.limitItemTypes)){
+            var limitItemArr = [];
+            data.limitItemTypes.forEach(function(item,index){
+                var input = $("#itemType").find("input[value="+item+"]");
+                var obj = {value:input.val(),name:input.next().text()};
+                limitItemArr.push(obj);
+            })
+            data.limitItemArr = limitItemArr;
+        }
+        if(type === 'add')  var previewData = JSON.parse(sessionStorage.getItem('add-base-data'));
+        if(type === 'edit') var previewData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+        previewData = $.extend({},previewData,data);
+        sessionStorage.setItem('preview-base-data',JSON.stringify(previewData));
+        window.open("preview.html?type="+type);       
     })
 
     lib.Form.prototype.save = function(data){
+      data.checkTotalNumber = undefined;
+      data.avaDate = undefined;
+
+      if(data.getTimeStart){
+        data.getTimeStart = data.getTimeStart + " 00:00:00";
+      }
+
+      if(data.getTimeEnd){
+         data.getTimeEnd = data.getTimeEnd + " 23:59:59";
+      }
+
+      if(data.addActLimitStartTime){
+         data.addActLimitStartTime = data.addActLimitStartTime  + " 00:00:00";
+      }
+
+      if(data.addActLimitEndTime){
+         data.addActLimitEndTime = data.addActLimitEndTime  + " 23:59:59";
+      }
+
       var submitData = {};
       if(data.limitItemTypes){
          data.limitItemTypes = data.limitItemTypes.join(",");
       }
+
       if(data.useLimitTypes){
         data.useLimitTypes = data.useLimitTypes[0];
       }
+
       if(type == 'add'){    
           var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
           submitData = $.extend({},addData,data);           
       }
       if(type == 'edit'){
-          // var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
-          // submitData = $.extend({},editData,data);
           var saveData = JSON.parse(sessionStorage.getItem('edit-save-data'));
           submitData = $.extend({},saveData,data);               
+      }
+      if(submitData.phoneList && $.isArray(submitData.phoneList )){
+         submitData.phoneList = submitData.phoneList.join(",");
       }
 
       lib.ajax({
@@ -111,9 +147,10 @@
                 define:function(){
                     sessionStorage.removeItem('add-base-data'); 
                     sessionStorage.removeItem('edit-base-data');
+                    sessionStorage.removeItem('edit-save-data');
                     document.body.onbeforeunload=function(){}
                     if(type=='add')  location.href="/module/marketing/ticket/platformAct/index.html";
-                    if(type=='edit') location.href="/module/marketing/ticket/platformAct/detail.html?id="+data.vcId;
+                    if(type=='edit') location.href="/module/marketing/ticket/platformAct/detail.html?id="+submitData.vcId;
                 }
             });          
          }

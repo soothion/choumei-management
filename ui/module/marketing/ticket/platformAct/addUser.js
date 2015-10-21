@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-21 09:59:14
+* @Last Modified time: 2015-10-21 17:30:55
 */
 
 (function(){
@@ -50,7 +50,7 @@
         $('input.cascade').attr('disabled','disabled');
         $('input.cascade').removeAttr('required');
         if($(this).val()=="3"){
-            $('input.mobile-button').removeAttr('disabled');           
+            $('input.mobile-button').removeAttr('disabled');         
         }
         $(this).parent().next().removeAttr('disabled');
         $(this).parent().next().attr('required','required');
@@ -62,25 +62,26 @@
      */
     $("#form").on('click','.mobile-button',function(){
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
+        baseData.selectUseType = "3";
         sessionStorage.setItem('add-base-data',JSON.stringify(baseData));
         window.location.href = "addMobile.html?type="+type+'&selectItemType='+selectItemType;
     });
 
-    // $("#form").on('pass','input[data-check]',function(){
-    //     var self = this;
-    //     lib.ajax({
-    //         type: "post",
-    //         url : 'platform/checkSerial',
-    //         asyn:false,
-    //         data: {type:$(self).data('check'),code:$(self).val()}    
-    //     }).done(function(data, status, xhr){
-    //         if(data.result == "1"){
-    //             if(data.data.exists == "0"){
-    //                 $(self).next().show();
-    //             }
-    //         }
-    //     })     
-    // })
+    $("#form").on('pass','input[data-check]',function(){
+        var self = this;
+        lib.ajax({
+            type: "post",
+            url : 'platform/checkSerial',
+            asyn:false,
+            data: {type:$(self).data('check'),code:$(self).val()}    
+        }).done(function(data, status, xhr){
+            if(data.result == "1"){
+                if(data.data.exists == "0"){
+                    $(self).next().show();
+                }
+            }
+        })     
+    })
 
     /**
      * selectItemType=='3' 全平台用户事件控制
@@ -140,29 +141,33 @@
         }
     });
 
-    $("#form").on('click','a.tab-menus',function(){
-        var data = "";
-        if(type == 'add'){    
-            data = JSON.parse(sessionStorage.getItem('add-base-data'));        
-        }
-        if(type == 'edit'){
-            data = JSON.parse(sessionStorage.getItem('edit-base-data'));    
-        }
-        data.phoneList = [];
-        data.code = "";
-        data.getItemTypes = "";
-        data.enoughMoeny  =  "";
-        if(type == 'add'){    
-            sessionStorage.setItem('add-base-data',JSON.stringify(data));             
-        }
-        if(type == 'edit'){
-            sessionStorage.setItem('edit-base-data',JSON.stringify(data));     
-        }        
-    })
-
     $("#form").on('click','#preview-btn',function(){
-        location.href = "preview.html?type="+type;
-    })            
+        var data = lib.getFormData($("#form"));
+        var obj = {};
+        if(data.selectItemType == 1 || data.selectItemType == 2){
+            data.selectItem = data.selectUseType;
+        }else if(data.selectItemType = 3){
+            data.selectItem = 7;
+        }else{
+            data.selectItem = 8;
+        }
+        
+        if($.isArray(data.getItemTypes)){
+            var checkboxArr = [];
+            data.getItemTypes.forEach(function(item,index){
+                var input = $(".consumeItems").find("input[value="+item+"]");
+                var obj = {value:input.val(),name:input.next().text()};
+                checkboxArr.push(obj);
+            })
+            data.checkboxArr = checkboxArr;            
+        }
+        if(type === 'add')  var previewData = JSON.parse(sessionStorage.getItem('add-base-data'));
+        if(type === 'edit') var previewData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+        previewData = $.extend({},previewData,data);
+        sessionStorage.setItem('preview-base-data',JSON.stringify(previewData));
+        window.open("preview.html?type="+type);       
+    })
+           
 
     lib.Form.prototype.save = function(data){
 
@@ -181,7 +186,7 @@
            
             var saveData = JSON.parse(sessionStorage.getItem('edit-save-data'));
             saveData = $.extend({},saveData,data);
-            sessionStorage.setItem('edit-submit-data',JSON.stringify(saveData));                 
+            sessionStorage.setItem('edit-save-data',JSON.stringify(saveData));                 
         }
         location.href = "addTicket.html?type="+type+"&selectItemType="+selectItemType;
     }        

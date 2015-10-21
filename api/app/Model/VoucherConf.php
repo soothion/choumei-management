@@ -65,7 +65,7 @@ class VoucherConf extends Model {
                 $res[$key]['useItemTypes'] = $conf['useItemTypes'];
                 $res[$key]['useTotalNum'] = $conf['useTotalNum'];
                 $res[$key]['useMoney'] = $conf['useMoney'];
-                $res[$key]['useEnd'] = $conf['useEnd']/86400;  //TODO  活动有效时间
+                $res[$key]['few_day'] = $conf['FEW_DAY'];  //TODO  活动有效时间
                 $res[$key]['useNeedMoney'] = $conf['useNeedMoney'];  //TODO  满足金额可用
             }
         }

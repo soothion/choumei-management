@@ -20,15 +20,13 @@ class LaiseeController extends Controller {
         "effective",
         "total_money",
 //        "amount_warning",
-        "vUseItemTypes",
-        "vUseMoney",
-        "vNumber",
-        "vDay",
+        "voucher",
         "share_icon",
         "share_title",
         "share_desc",
         "bonus_bg_img",
     );
+    protected $voucherFields = ["vUseItemTypes", "vUseMoney", "vNumber", "vDay", "vUseNeedMoney"];
 
     /**
      * @api {post} /laisee/index 1.红包活动列表
@@ -90,7 +88,7 @@ class LaiseeController extends Controller {
         $laiseeList = LaiseeConfig::getLaiseeList($laiseeName, $startTime, $endTime, $page, $size);
         $data = [];
         //判断在线的活动是否过期
-        LaiseeConfig::laiseeConfigAble();
+//        LaiseeConfig::laiseeConfigAble();
         foreach ($laiseeList['data'] as &$val) {
 //            \Illuminate\Support\Facades\DB::enableQueryLog();
             $vcsnWhere = $val['vcsns'] . "," . $val['gift_vcsn'];
@@ -171,18 +169,8 @@ class LaiseeController extends Controller {
      * @apiParam {String} warning_phone 可选，预警提醒的手机号码用,号隔开.
      * @apiParam {String} sms_on_agined 可选，获取代金券时下发的短信内容（模板）.
      * 
-     * @apiParam {Number} vUseItemTypes 现金券类型，多个以逗号隔开.
-     * @apiParam {Number} vUseMoney 现金券金额,多个以逗号隔开.
-     * @apiParam {Number} vNumber 现金券数量,多个以逗号隔开.
-     * @apiParam {Number} vDay 有效时间,多个以逗号隔开.
-     * @apiParam {Number} vGetNeedMoney 满多少可用,多个以逗号隔开.
-     * 
-     * @apiParam {Number} gUseItemTypes 礼包 现金券类型,多个以逗号隔开.
-     * @apiParam {Number} gUseMoney 礼包 现金券金额,多个以逗号隔开.
-     * @apiParam {Number} gNumber 礼包 现金券数量,多个以逗号隔开.
-     * @apiParam {Number} gDay 礼包 有效时间,多个以逗号隔开.
-     * @apiParam {Number} gGetNeedMoney 礼包 满多少可用,多个以逗号隔开.
-     * @apiParam {Number} gGetNeedMoney 礼包 满多少可用,多个以逗号隔开.
+     * @apiParam {String} voucher   json数组串{vUseItemTypes:现金券类型;  vUseMoney:现金券金额; vNumber:现金券数量;  few_day:有效时间; vUseNeedMoney:满多少可用 }
+     * @apiParam {String} gift  json数组串{vUseItemTypes:礼包现金券类型;  vUseMoney:礼包现金券金额; vNumber:礼包现金券数量;  few_day:礼包有效时间; vUseNeedMoney:礼包满多少可用 }
      * 
      * @apiParam {String} share_icon 分享ICON.
      * @apiParam {String} share_title 分享标题.
@@ -219,19 +207,8 @@ class LaiseeController extends Controller {
      * @apiParam {String} warning_phone 可选，预警提醒的手机号码用,号隔开.
      * @apiParam {String} sms_on_agined 获取代金券时下发的短信内容（模板）.
      * 
-     * @apiParam {String} vVcId 现金券配置信息id，多个以逗号隔开(必须).
-     * @apiParam {Number} vUseItemTypes 现金券类型[].
-     * @apiParam {Number} vUseMoney 现金券金额.
-     * @apiParam {Number} vNumber 现金券数量.
-     * @apiParam {Number} vDay 有效时间.
-     * @apiParam {Number} vUseNeedMoney 满多少可用.
-     * 
-     * @apiParam {String} gVcId 礼包配置信息id，多个以逗号隔开（必须）.
-     * @apiParam {Number} gUseItemTypes 礼包 现金券类型[].
-     * @apiParam {Number} gUseMoney 礼包 现金券金额.
-     * @apiParam {Number} gNumber 礼包 现金券数量.
-     * @apiParam {Number} gDay 礼包 有效时间.
-     * @apiParam {Number} gUseNeedMoney 礼包 满多少可用.
+     * @apiParam {String} voucher   json数组串{ vVcId: 现金券配置信息id; vUseItemTypes:现金券类型;  vUseMoney:现金券金额; vNumber:现金券数量;  few_day:有效时间; vUseNeedMoney:满多少可用 }
+     * @apiParam {String} gift  json数组串{ vVcId: 礼包信息id; vUseItemTypes:礼包现金券类型;  vUseMoney:礼包现金券金额; vNumber:礼包现金券数量;  few_day:礼包有效时间; vUseNeedMoney:礼包满多少可用 }
      * 
      * @apiParam {String} delVcId 删除的现金券配置信息id，多个以逗号隔开.
      * @apiParam {String} delGiftVcId 删除的礼包配置信息id，多个以逗号隔开.
@@ -268,17 +245,19 @@ class LaiseeController extends Controller {
         $data['warning_phone'] = isset($param['warning_phone']) ? $param['warning_phone'] : '';
         $data['sms_on_gained'] = isset($param['sms_on_gained']) ? $param['sms_on_gained'] : '';
         //红包现金券配置
-        $data['vUseItemTypes'] = isset($param['vUseItemTypes']) ? $param['vUseItemTypes'] : 1;
-        $data['vUseMoney'] = isset($param['vUseMoney']) ? $param['vUseMoney'] : 0;
-        $data['vNumber'] = isset($param['vNumber']) ? $param['vNumber'] : 0;
-        $data['vDay'] = isset($param['vDay']) ? $param['vDay'] : 0;
-        $data['vUseNeedMoney'] = isset($param['vUseNeedMoney']) ? $param['vUseNeedMoney'] : 0;
+        $data['voucher'] = isset($param['voucher']) ? $param['voucher'] : '';
+//        $data['vUseItemTypes'] = isset($param['vUseItemTypes']) ? $param['vUseItemTypes'] : 1;
+//        $data['vUseMoney'] = isset($param['vUseMoney']) ? $param['vUseMoney'] : 0;
+//        $data['vNumber'] = isset($param['vNumber']) ? $param['vNumber'] : 0;
+//        $data['vDay'] = isset($param['vDay']) ? $param['vDay'] : 0;
+//        $data['vUseNeedMoney'] = isset($param['vUseNeedMoney']) ? $param['vUseNeedMoney'] : 0;
         //礼包配置
-        $data['gUseItemTypes'] = isset($param['gUseItemTypes']) ? $param['gUseItemTypes'] : 1;
-        $data['gUseMoney'] = isset($param['gUseMoney']) ? $param['gUseMoney'] : 0;
-        $data['gNumber'] = isset($param['gNumber']) ? $param['gNumber'] : 0;
-        $data['gDay'] = isset($param['gDay']) ? $param['gDay'] : 0;
-        $data['gUseNeedMoney'] = isset($param['gUseNeedMoney']) ? $param['gUseNeedMoney'] : 0;
+        $data['gift'] = isset($param['gift']) ? $param['gift'] : '';
+//        $data['gUseItemTypes'] = isset($param['gUseItemTypes']) ? $param['gUseItemTypes'] : 1;
+//        $data['gUseMoney'] = isset($param['gUseMoney']) ? $param['gUseMoney'] : 0;
+//        $data['gNumber'] = isset($param['gNumber']) ? $param['gNumber'] : 0;
+//        $data['gDay'] = isset($param['gDay']) ? $param['gDay'] : 0;
+//        $data['gUseNeedMoney'] = isset($param['gUseNeedMoney']) ? $param['gUseNeedMoney'] : 0;
         //H5页面配置
         $data['share_icon'] = isset($param['share_icon']) ? $param['share_icon'] : '';
         $data['share_title'] = isset($param['share_title']) ? $param['share_title'] : '';
@@ -286,40 +265,49 @@ class LaiseeController extends Controller {
         $data['bonus_bg_img'] = isset($param['bonus_bg_img']) ? $param['bonus_bg_img'] : '';
         $data['id'] = isset($param['id']) ? $param['id'] : 0;
         //修改时需传递  现金券和礼包配置信息id
-        $data['vVcId'] = isset($param['vVcId']) ? $param['vVcId'] : 0;
-        $data['gVcId'] = isset($param['gVcId']) ? $param['gVcId'] : 0;
+//        $data['vVcId'] = isset($param['vVcId']) ? $param['vVcId'] : 0;
+//        $data['gVcId'] = isset($param['gVcId']) ? $param['gVcId'] : 0;
         // 需要删除的 现金券和礼包配置信息id
         $data['delVcId'] = isset($param['delVcId']) ? $param['delVcId'] : 0;
         $data['delGiftVcId'] = isset($param['delGiftVcId']) ? $param['delGiftVcId'] : 0;
 
 
         $retMissing = "";
+
         foreach ($this->addFields as $val) {
             if (!$data[$val]) {
                 $retMissing .= $val . "-";
             }
         }
+        if ($data['voucher']) {
+            $data['voucher'] = json_decode($data['voucher'], true);
+        }
+
         if ($retMissing) {
             throw new ApiException("缺失参数" . $retMissing, ERROR::PARAMS_LOST);
         }
+
         //检测参数
         if ($data['amount_warning']) {
             if (empty($data['warning_phone'])) {
                 throw new ApiException("请填写预警手机号" . $retMissing, ERROR::PARAMS_LOST);
             }
         }
-        // 修改时 必传id
-        if (!$data['id']) {
-            throw new ApiException("缺失参数  id", ERROR::PARAMS_LOST);
-        }
-        if (!isset($data['vVcId'])) {
-            throw new ApiException("缺失参数  或 vVcId 或 gVcId", ERROR::PARAMS_LOST);
-        }
 
+        if ($data['gift']) {
+            $data['gift'] = json_decode($data['gift'], true);
+        } else {
+            $data['gift'] = [];
+        }
         if ($data['id']) {
+            foreach ($data['voucher'] as $vc) {
+                if (!isset($vc['vVcId'])) {
+                    throw new ApiException("缺失参数  vVcId", ERROR::PARAMS_LOST);
+                }
+            }
             $where["id"] = $data["id"];
             $laiseeConfig = LaiseeConfig::find($data['id']);
-            if ($laiseeConfig->status != 'Y' && $laiseConfig->end_time != "0000-00-00 00:00:00") {
+            if ($laiseeConfig->status != 'Y' && $laiseeConfig->end_time != "0000-00-00 00:00:00") {
                 throw new ApiException("已关闭或已结束的活动无法再编辑", ERROR::PARAMS_LOST);
             }
         } else {
@@ -359,37 +347,59 @@ class LaiseeController extends Controller {
      * 
      * @apiSuccessExample Success-Response:
      * {
-     *  "result": 1,
-     *  "token": "",
-     *  "data": {
-     *      "id": 2,
-     *      "laisee_name": "范德萨的范德萨",
-     *      "start_time": "2012-10-19",
-     *      "end_time": "2019-10-15",
-     *      "status": "Y",
-     *      "vcsns": "cm299012,cm310470",
-     *      "gift_vcsn": "cm833715",
-     *      "over_time": 2,
-     *       "total_money": "1000",
-     *       "used_total_money": "0",
-     *       "amount_warning": 0,
-     *       "warning_phone": "",
-     *       "share_icon": "",
-     *       "share_title": "",
-     *       "share_desc": "",
-     *       "bonus_bg_img": "",
-     *       "lc_remark": "",
-     *       "sms_on_gained": "",
-     *       "create_time": "2015-10-19 12:12:48",
-     *       "budget_amount": 237,
-     *       "receiveNum": 1,
-     *       "receiveAmount": "10",
-     *       "usedNum": 1,
-     *       "usedAmount": "10",
-     *       "failure": 0,
-     *       "consumeNum": 0,
-     *       "consumeAmount": 0
-     *   }
+     * "result": 1,
+     * "token": "",
+     * "data": {
+     * "id": 13,
+     * "laisee_name": "测试添加活动啊啊一",
+     * "start_time": "0000-00-00 00:00:00",
+     * "end_time": "0000-00-00 00:00:00",
+     * "status": "N",
+     *  "vcsns": "cm870649",
+     * "gift_vcsn": "cm870373",
+     *  "over_time": 2,
+     *  "total_money": "600",
+     *  "used_total_money": "0",
+     *  "amount_warning": 0,
+     *  "warning_phone": "",
+     *  "share_icon": "dddd",
+     *  "share_title": "分享",
+     *  "share_desc": "收拾收拾",
+     *  "bonus_bg_img": "sdffdss",
+     *  "lc_remark": "测试添加活动啊啊订单",
+     *  "sms_on_gained": "是的发生范德萨发 ",
+     *  "create_time": "2015-10-21 17:14:30",
+     *  "budget_amount": 2,
+     *  "receiveNum": 0,
+     *  "receiveAmount": 0,
+     *  "usedNum": 0,
+     *  "usedAmount": 0,
+     *  "failure": 0,
+     *  "consumeNum": 0,
+     *   "consumeAmount": 0,
+     *   "voucherConf": [
+     *       {
+     *           "vcSn": "cm870649",
+     *           "vcId": 156,
+     *           "useItemTypes": "1",
+     *           "useTotalNum": 1,
+     *           "useMoney": 1,
+     *           "few_day": 1,
+     *           "useNeedMoney": 1
+     *         }
+     *     ],
+     *     "voucherGiftConf": [
+     *          {
+     *              "vcSn": "cm870373",
+     *              "vcId": 157,
+     *              "useItemTypes": "1",
+     *              "useTotalNum": 1,
+     *              "useMoney": 1,
+     *              "few_day": 1,
+     *              "useNeedMoney": 1
+     *          }
+     *      ]
+     *  }
      * }
      *
      * @apiErrorExample Error-Response:
@@ -506,6 +516,7 @@ class LaiseeController extends Controller {
     public function offline($id) {
         $res = LaiseeConfig::where('id', $id)->update(['status' => 'N', 'end_time' => date("Y-m-d H:i:s")]);
         if ($res !== false) {
+            Laisee::where('laisee_config_id', $id)->update(['status' => 'N']);  // 活动下线将红包失效
             return $this->success();
         } else {
             throw new ApiException("活动下线失败", ERROR::UNKNOWN_ERROR);
@@ -540,6 +551,7 @@ class LaiseeController extends Controller {
         if ($res) {
             $res = LaiseeConfig::where('id', $id)->update(['status' => 'S', 'end_time' => date("Y-m-d H:i:s")]);
             if ($res !== false) {
+                Laisee::where('laisee_config_id', $id)->update(['status' => 'N']);  // 活动关闭将红包失效
                 //活动关闭  则所有 已经下发的代金券也失效
                 $vcsns = $laiseeConfig->vcsns;
                 if ($laiseeConfig->gift_vcsn) {

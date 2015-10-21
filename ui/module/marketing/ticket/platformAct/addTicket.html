@@ -8,6 +8,9 @@
         .table tbody tr:hover{
             background:none;
         }
+        input[type=date]{
+            width:150px;
+        }
       </style> 
     </head>
     <body>
@@ -64,7 +67,7 @@
                             <td>
                                 <div style="margin:15px">
                                     <span style="display: inline-block;width:130px">券金额:</span>
-                                    <input type="text" name="money" required maxlength="3" value="<%=data.money||1%>" />
+                                    <input type="text" class="nonzero" name="money" required maxlength="3" value="<%=data.money||1%>" <%=query.type=='add' ? '' : 'readOnly'%>/>
                                     <strong>元&nbsp;&nbsp;&nbsp;</strong>
                                     <span style="color: #ddd;">（不可修改，可填写1~999)</span>
                                     <span class="control-help" style="display:none;"></span>
@@ -72,7 +75,7 @@
 
                                 <div style="margin:15px">
                                     <span style="display: inline-block;width:130px">满额使用(单个项目)</span>
-                                    <input type="text" name="singleEnoughMoney" required value="<%=data.singleEnoughMoney ||0%>"/>
+                                    <input type="text" name="singleEnoughMoney" value="<%=data.singleEnoughMoney ||0%>"/>
                                     <strong>元&nbsp;&nbsp;&nbsp;以上可用</strong>
                                     <span style="color: #ddd;">(大于或等于该数值可使用，0为不限制，可填写0~999) </span>
                                     <span class="control-help" style="display:none;"></span>
@@ -97,8 +100,7 @@
                                         <span>自定义</span>
                                     </label>
 
-                                    <input type="text" id="ticketNumInput" name="totalNumber" value="1" required
-                                    disabled="disabled" pattern='number'/>
+                                    <input type="text" class="nonzero" id="ticketNumInput" name="totalNumber" value="1" required disabled="disabled" pattern='number' <%=query.type=='add' ? '' : 'readOnly'%>/>
                                     <strong>张&nbsp;&nbsp;&nbsp;</strong>
                                     <span style="color: #ddd;">(不可修改，可填写1~999）</span>
                                     <span class="control-help" style="display:none;"></span>
@@ -130,6 +132,15 @@
                             <tr>
                                 <td>活动（获取）时间</td>
                                 <td>
+                                    <%
+                                    if(data.getTimeStart){
+                                        data.getTimeStart = new Date(data.getTimeStart).format('yyyy-MM-dd');
+                                    }
+
+                                    if(data.getTimeEnd){
+                                        data.getTimeEnd = new Date(data.getTimeEnd).format('yyyy-MM-dd');
+                                    }
+                                    %>
                                     <input type="date" name="getTimeStart" value="<%=data.getTimeStart%>" required/>
                                     <span>至</span>
                                     <input type="date" name="getTimeEnd" value="<%=data.getTimeEnd%>" required/>
@@ -143,15 +154,23 @@
                                     <div style="margin:15px">
                                         <label class="radio">
                                             <input type="radio" class="avaDateRadio" name="avaDate" value="1" 
-                                            <%=data.addActLimitStartTime ? 'checked' :'' %>>
+                                            <%=(!data.addActLimitStartTime && !data.fewDay) || data.addActLimitStartTime ? 'checked' :'' %>>
                                             <span>指定有效期</span>
                                         </label> 
+                                        <%
+                                            if(data.addActLimitStartTime){
+                                                data.addActLimitStartTime = new Date(data.addActLimitStartTime).format('yyyy-MM-dd');
+                                            }
 
+                                            if(data.addActLimitEndTime){
+                                                data.addActLimitEndTime = new Date(data.addActLimitEndTime).format('yyyy-MM-dd');
+                                            }
+                                        %>
                                         <input type="date" id="avaDateStart" name="addActLimitStartTime" 
-                                        value="<%=data.addActLimitStartTime%>" <%=data.addActLimitStartTime ? '' :'disabled' %> required/>
+                                        value="<%=data.addActLimitStartTime%>" <%=(!data.addActLimitStartTime && !data.fewDay) || data.addActLimitStartTime ? 'checked' :'disabled' %> required/>
                                         <span>至</span>
                                         <input type="date" id="avaDateEnd" name="addActLimitEndTime" 
-                                        value="<%=data.addActLimitEndTime%>" <%=data.addActLimitStartTime ? '' :'disabled' %> required/>
+                                        value="<%=data.addActLimitEndTime%>" <%=(!data.addActLimitStartTime && !data.fewDay) || data.addActLimitStartTime ? 'checked' :'disabled' %> required/>
                                         <span class="control-help" style="display:none;"></span>        
                                     </div>
 

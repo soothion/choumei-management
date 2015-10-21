@@ -94,30 +94,30 @@ class LaiseeConfig extends Model {
 
 //先插入到voucher_conf中  非礼包
     private static function addVoucherConfLaisee($data) {
-        $vUseItemTypesArr = explode(",", $data['vUseItemTypes']);
-        $vUseMoneyArr = explode(",", $data['vUseMoney']);
-        $vNumberArr = explode(",", $data['vNumber']);
-        $vDayArr = explode(",", $data['vDay']);
-        $vUseNeedMoneyArr = explode(",", $data['vUseNeedMoney']);
-        $vVoucherCount = count($vUseItemTypesArr);
+//        $vUseItemTypesArr = explode(",", $data['vUseItemTypes']);
+//        $vUseMoneyArr = explode(",", $data['vUseMoney']);
+//        $vNumberArr = explode(",", $data['vNumber']);
+//        $vDayArr = explode(",", $data['vDay']);
+//        $vUseNeedMoneyArr = explode(",", $data['vUseNeedMoney']);
+        $voucher = $data['voucher'];
         $vcsns = [];
-        for ($i = 0; $i < $vVoucherCount; $i++) {
+        foreach ($voucher as $val) {
             $vcSn = VoucherConf::getVcSn();
             $vcData = [
                 'vcTitle' => $data['laisee_name'],
                 'vcSn' => $vcSn,
-                'useEnd' => ($vDayArr[$i] * 24 * 60 * 60), //TODO  有效时间需要再次确认
-                'useMoney' => $vUseMoneyArr[$i],
-                'useTotalNum' => $vNumberArr[$i],
-                'useItemTypes' => $vUseItemTypesArr[$i],
-                'useNeedMoney' => $vUseNeedMoneyArr[$i],
+                'FEW_DAY' => ($val['few_day']), //TODO  有效时间需要再次确认
+                'useMoney' => $val['vUseMoney'],
+                'useTotalNum' => $val['vNumber'],
+                'useItemTypes' => $val['vUseItemTypes'],
+                'useNeedMoney' => $val['vUseNeedMoney'],
                 'status' => 2,
                 'SMS_ON_GAINED' => $data['sms_on_gained'],
                 'vType' => 2,
             ];
             $vcId = VoucherConf::addVoucherConf($vcData);
             if ($vcId) {
-                for ($j = 0; $j < $vNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                for ($j = 0; $j < $val['vNumber']; $j++) {  //如果数量大于1 则重复
                     $vcsns[] = $vcData['vcSn'];
                 }
             }
@@ -130,15 +130,16 @@ class LaiseeConfig extends Model {
      */
 
     private static function getVoucherConfField($data) {
-        $res['vUseItemTypesArr'] = explode(",", $data['vUseItemTypes']);
-        $res['vUseMoneyArr'] = explode(",", $data['vUseMoney']);
-        $res['vNumberArr'] = explode(",", $data['vNumber']);
-        $res['vDayArr'] = explode(",", $data['vDay']);
-        $res['vUseNeedMoneyArr'] = explode(",", $data['vUseNeedMoney']);
-        $res['vVcId'] = explode(",", $data['vVcId']);
-        $res['delVcId'] = isset($data['delVcId']) ? explode(",", $data['delVcId']) : 0;
-        $res['vVoucherCount'] = count($res['vUseItemTypesArr']);
-        return $res;
+        $voucher = json_decode($data['voucher'], true);
+//        $res['vUseItemTypesArr'] = explode(",", $data['vUseItemTypes']);
+//        $res['vUseMoneyArr'] = explode(",", $data['vUseMoney']);
+//        $res['vNumberArr'] = explode(",", $data['vNumber']);
+//        $res['vDayArr'] = explode(",", $data['vDay']);
+//        $res['vUseNeedMoneyArr'] = explode(",", $data['vUseNeedMoney']);
+//        $res['vVcId'] = explode(",", $data['vVcId']);
+//        $res['delVcId'] = isset($data['delVcId']) ? explode(",", $data['delVcId']) : 0;
+//        $res['vVoucherCount'] = count($res['vUseItemTypesArr']);
+        return $voucher;
     }
 
     /*
@@ -146,44 +147,47 @@ class LaiseeConfig extends Model {
      */
 
     private static function getGiftConfField($data) {
-        $res['gUseItemTypesArr'] = explode(",", $data['gUseItemTypes']);
-        $res['gUseMoneyArr'] = explode(",", $data['gUseMoney']);
-        $res['gNumberArr'] = explode(",", $data['gNumber']);
-        $res['gDayArr'] = explode(",", $data['gDay']);
-        $res['gUseNeedMoneyArr'] = explode(",", $data['gUseNeedMoney']);
-        $res['gVcId'] = explode(",", $data['gVcId']);
-        $res['delGiftVcId'] = isset($data['delGiftVcId']) ? explode(",", $data['delGiftVcId']) : 0;
-        $res['gVoucherCount'] = count($res['gUseItemTypesArr']);
-        return $res;
+        $gift = json_decode($data['gift'], true);
+//        $res['gUseItemTypesArr'] = explode(",", $data['gUseItemTypes']);
+//        $res['gUseMoneyArr'] = explode(",", $data['gUseMoney']);
+//        $res['gNumberArr'] = explode(",", $data['gNumber']);
+//        $res['gDayArr'] = explode(",", $data['gDay']);
+//        $res['gUseNeedMoneyArr'] = explode(",", $data['gUseNeedMoney']);
+//        $res['gVcId'] = explode(",", $data['gVcId']);
+//        $res['delGiftVcId'] = isset($data['delGiftVcId']) ? explode(",", $data['delGiftVcId']) : 0;
+//        $res['gVoucherCount'] = count($res['gUseItemTypesArr']);
+        return $gift;
     }
 
     //插入voucher_conf 中 礼包
     private static function addVoucherConfGift($data) {
-        $gUseItemTypesArr = explode(",", $data['gUseItemTypes']);
-        $gUseMoneyArr = explode(",", $data['gUseMoney']);
-        $gNumberArr = explode(",", $data['gNumber']);
-        $gDayArr = explode(",", $data['gDay']);
-        $gUseNeedMoneyArr = explode(",", $data['gUseNeedMoney']);
-        $gVoucherCount = count($gUseItemTypesArr);
+//        $gUseItemTypesArr = explode(",", $data['gUseItemTypes']);
+//        $gUseMoneyArr = explode(",", $data['gUseMoney']);
+//        $gNumberArr = explode(",", $data['gNumber']);
+//        $gDayArr = explode(",", $data['gDay']);
+//        $gUseNeedMoneyArr = explode(",", $data['gUseNeedMoney']);
+//        $gVoucherCount = count($gUseItemTypesArr);
+        $gift = $data['gift'];
+        $gVoucherCount = count($gift);
         $gift_vcsn = [];
         if ($gVoucherCount) {
-            for ($i = 0; $i < $gVoucherCount; $i++) {
+            foreach ($gift as $val) {
                 $vcSn = VoucherConf::getVcSn();
                 $vcData = [
                     'vcTitle' => $data['laisee_name'],
                     'vcSn' => $vcSn,
-                    'useEnd' => ($gDayArr[$i] * 24 * 60 * 60),
-                    'useMoney' => $gUseMoneyArr[$i],
-                    'useTotalNum' => $gNumberArr[$i],
-                    'useItemTypes' => $gUseItemTypesArr[$i],
-                    'useNeedMoney' => $gUseNeedMoneyArr[$i],
+                    'FEW_DAY' => ($val['few_day']), //TODO  有效时间需要再次确认
+                    'useMoney' => $val['vUseMoney'],
+                    'useTotalNum' => $val['vNumber'],
+                    'useItemTypes' => $val['vUseItemTypes'],
+                    'useNeedMoney' => $val['vUseNeedMoney'],
                     'status' => 2,
                     'SMS_ON_GAINED' => $data['sms_on_gained'],
                     'vType' => 2,
                 ];
                 $vcId = VoucherConf::addVoucherConf($vcData);
                 if ($vcId) {
-                    for ($j = 0; $j < $gNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                    for ($j = 0; $j < $val['vNumber']; $j++) {  //如果数量大于1 则重复
                         $gift_vcsn[] = $vcData['vcSn'];
                     }
                 }
@@ -222,26 +226,25 @@ class LaiseeConfig extends Model {
      */
 
     private static function updateVoucherConfLaisee($data) {
-        $conf = self::getVoucherConfField($data);
-        extract($conf);
+        $conf = $data['voucher'];
+        $vVoucherCount = count($conf);
         $vcsns = [];
         //先修改 
         if ($vVoucherCount) {
-            for ($i = 0; $i < $vVoucherCount; $i++) {
-                if ($vVcId[$i]) {  //修改
+            foreach ($conf as $val) {
+                if ($val['vVcId']) {  //修改
                     $vcData = [
                         'vcTitle' => $data['laisee_name'],
-                        'useEnd' => ($vDayArr[$i] * 24 * 60 * 60),
-                        'useMoney' => $vUseMoneyArr[$i],
-                        'useTotalNum' => $vNumberArr[$i],
-                        'useItemTypes' => $vUseItemTypesArr[$i],
-                        'useNeedMoney' => $vUseNeedMoneyArr[$i],
+                        'FEW_DAY' => ($val['few_day']),
+                        'useMoney' => $val['vUseMoney'],
+                        'useTotalNum' => $val['vNumber'],
+                        'useItemTypes' => $val['vUseItemTypes'],
+                        'useNeedMoney' => $val['vUseNeedMoney'],
                         'SMS_ON_GAINED' => $data['sms_on_gained'],
                     ];
-                    $vcId = VoucherConf::where('vcId', $vVcId[$i])->update($vcData);
-                    $voucherConfSn = VoucherConf::find($vVcId[$i])->vcSn;
-
-                    for ($j = 0; $j < $vNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                    $vcId = VoucherConf::where('vcId', $val['vVcId'])->update($vcData);
+                    $voucherConfSn = VoucherConf::find($val['vVcId'])->vcSn;
+                    for ($j = 0; $j < $val['vNumber']; $j++) {  //如果数量大于1 则重复
                         $vcsns[] = $voucherConfSn;
                     }
                 } else {
@@ -250,18 +253,18 @@ class LaiseeConfig extends Model {
                     $vcData = [
                         'vcTitle' => $data['laisee_name'],
                         'vcSn' => $vcSn,
-                        'useEnd' => ($vDayArr[$i] * 24 * 60 * 60),
-                        'useMoney' => $vUseMoneyArr[$i],
-                        'useTotalNum' => $vNumberArr[$i],
-                        'useItemTypes' => $vUseItemTypesArr[$i],
-                        'useNeedMoney' => $vUseNeedMoneyArr[$i],
+                        'FEW_DAY' => ($val['few_day']),
+                        'useMoney' => $val['vUseMoney'],
+                        'useTotalNum' => $val['vNumber'],
+                        'useItemTypes' => $val['vUseItemTypes'],
+                        'useNeedMoney' => $val['vUseNeedMoney'],
                         'status' => 2,
                         'SMS_ON_GAINED' => $data['sms_on_gained'],
                         'vType' => 2,
                     ];
                     $vcId = VoucherConf::addVoucherConf($vcData);
                     if ($vcId) {
-                        for ($j = 0; $j < $vNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                        for ($j = 0; $j < $val['vNumber']; $j++) {  //如果数量大于1 则重复
                             $vcsns[] = $vcData['vcSn'];
                         }
                     }
@@ -270,7 +273,8 @@ class LaiseeConfig extends Model {
         }
 
         //删除
-        if ($delVcId) {
+        $delVcId = isset($data['delVcId']) ? explode(",", $data['delVcId']) : [];
+        if (!empty($delVcId)) {
             VoucherConf::whereIn("vcId", $delVcId)->delete();
         }
         return $vcsns ? implode(",", $vcsns) : '';
@@ -281,25 +285,25 @@ class LaiseeConfig extends Model {
      */
 
     private static function updateVoucherConfGift($data) {
-        $conf = self::getGiftConfField($data);
-        extract($conf);
+        $conf = $data['gift'];
+        $gVoucherCount = count($conf);
         $vcsns = [];
         //先修改 
         if ($gVoucherCount) {
-            for ($i = 0; $i < $gVoucherCount; $i++) {
-                if ($gVcId[$i]) {  //修改
+            foreach ($conf as $val) {
+                if ($val['vVcId']) {  //修改
                     $vcData = [
                         'vcTitle' => $data['laisee_name'],
-                        'useEnd' => ($gDayArr[$i] * 24 * 60 * 60),
-                        'useMoney' => $gUseMoneyArr[$i],
-                        'useTotalNum' => $gNumberArr[$i],
-                        'useItemTypes' => $gUseItemTypesArr[$i],
-                        'useNeedMoney' => $gUseNeedMoneyArr[$i],
+                        'FEW_DAY' => ($val['few_day']),
+                        'useMoney' => $val['vUseMoney'],
+                        'useTotalNum' => $val['vNumber'],
+                        'useItemTypes' => $val['vUseItemTypes'],
+                        'useNeedMoney' => $val['vUseNeedMoney'],
                         'SMS_ON_GAINED' => $data['sms_on_gained'],
                     ];
-                    $vcId = VoucherConf::where('vcId', $gVcId[$i])->update($vcData);
-                    $voucherConfSn = VoucherConf::find($gVcId[$i])->vcSn;
-                    for ($j = 0; $j < $gNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                    $vcId = VoucherConf::where('vcId', $val['vVcId'])->update($vcData);
+                    $voucherConfSn = VoucherConf::find($val['vVcId'])->vcSn;
+                    for ($j = 0; $j < $val['vNumber']; $j++) {  //如果数量大于1 则重复
                         $vcsns[] = $voucherConfSn;
                     }
                 } else {
@@ -308,25 +312,25 @@ class LaiseeConfig extends Model {
                     $vcData = [
                         'vcTitle' => $data['laisee_name'],
                         'vcSn' => $vcSn,
-                        'useEnd' => ($gDayArr[$i] * 24 * 60 * 60),
-                        'useMoney' => $gUseMoneyArr[$i],
-                        'useTotalNum' => $gNumberArr[$i],
-                        'useItemTypes' => $gUseItemTypesArr[$i],
-                        'useNeedMoney' => $gUseNeedMoneyArr[$i],
-                        'status' => 2,
+                        'FEW_DAY' => ($val['few_day']),
+                        'useMoney' => $val['vUseMoney'],
+                        'useTotalNum' => $val['vNumber'],
+                        'useItemTypes' => $val['vUseItemTypes'],
+                        'useNeedMoney' => $val['vUseNeedMoney'],
                         'SMS_ON_GAINED' => $data['sms_on_gained'],
+                        'status' => 2,
                         'vType' => 2,
                     ];
                     $vcId = VoucherConf::addVoucherConf($vcData);
                     if ($vcId) {
-                        for ($j = 0; $j < $gNumberArr[$i]; $j++) {  //如果数量大于1 则重复
+                        for ($j = 0; $j < $val['vNumber']; $j++) {  //如果数量大于1 则重复
                             $vcsns[] = $vcData['vcSn'];
                         }
                     }
                 }
             }
         }
-
+        $delGiftVcId = isset($data['delGiftVcId']) ? explode(",", $data['delGiftVcId']) : [];
         //删除
         if ($delGiftVcId) {
             VoucherConf::whereIn("vcId", $delGiftVcId)->delete();
@@ -346,7 +350,8 @@ class LaiseeConfig extends Model {
             $ableTime = date("Y-m-d", $ableTime) . " 23:59:59";
             $ableTimeStr = strtotime($ableTime);
             if (time() > $ableTimeStr) {
-                LaiseeConfig::where('id', $laiseeConfig->id)->update(['status' => 'N', 'end_time' => date('Y-m-d H:i:s')]);
+                LaiseeConfig::where('id', $laiseeConfig->id)->update(['status' => 'N', 'end_time' => date('Y-m-d H:i:s')]); //将活动设置为结束
+                Laisee::where('laisee_config_id', $laiseeConfig->id)->update(['status' => 'N']); //将活动相关的红包设置为过期
             }
         }
     }

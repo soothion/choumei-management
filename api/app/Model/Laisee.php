@@ -37,9 +37,9 @@ class Laisee extends Model {
         }
         if ($data['bonusStatus']) {
             if ($data['bonusStatus'] == 'Y') {
-                $query = $query->where('laisee_config.status', $data['bonusStatus']);
+                $query = $query->where('laisee.status', 'Y')->where('end_time', '>=', date("Y-m-d H:i:s"));
             } else {
-                $query = $query->where('laisee_config.status', 'N')->orWhere('laisee_config.status', 'S');
+                $query = $query->where('laisee.status', 'N');
             }
         }
         if ($data['start_time']) {
@@ -61,8 +61,8 @@ class Laisee extends Model {
             'laisee_config.id',
             'laisee.order_ticket_id',
             'salon_itemcomment.add_time',
-            'laisee_config.over_time',
-            'laisee_config.status',
+            'laisee.end_time',
+            'laisee.status',
         );
 
         //分页

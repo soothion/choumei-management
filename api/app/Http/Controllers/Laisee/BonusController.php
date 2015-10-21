@@ -94,8 +94,12 @@ class BonusController extends Controller {
             $val['bonusAmount'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
             $val['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
             $val['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
-            $over_time = $val['over_time'] + $val['add_time'];
-            $val['over_time'] = date("Y-m-d", $over_time) . " 23:59:59";
+            if ($val['status'] == 'Y') {
+                if (strtotime($val['end_time']) < time()) {
+                    $val['status'] == 'N';
+                }
+            }
+            $val['over_time'] = $val['end_time'];
             $val['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
         }
         return $this->success($laiseeList);
@@ -150,8 +154,12 @@ class BonusController extends Controller {
             $result[$key]['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
             $result[$key]['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
             $result[$key]['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
-            $over_time = $val['over_time'] + $val['add_time'];
-            $val['over_time'] = date("Y-m-d", $over_time) . " 23:59:59";
+            if ($val['status'] == 'Y') {
+                if (strtotime($val['end_time']) < time()) {
+                    $val['status'] == 'N';
+                }
+            }
+            $val['over_time'] = $val['end_time'];
             $result[$key]['status'] = $val['status'] == "Y" ? "进行中" : "已过期";
             $num++;
         }
@@ -289,7 +297,7 @@ class BonusController extends Controller {
     public function close($id) {
         $laisee = Laisee::where('order_ticket_id', $id)->first();
         if ($laisee) {
-            $res = Laisee::where('order_ticket_id', $id)->update(['end_time' => date("Y-m-d H:i:s")]);
+            $res = Laisee::where('order_ticket_id', $id)->update(['status' => 'N']);
             if ($res !== false) {
                 return $this->success();
             } else {
