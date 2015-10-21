@@ -714,7 +714,7 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function upConf($vcId){
-        if( empty($id) )
+        if( empty($vcId) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
         // 修改配置表中为已上线状态
         \App\Model\VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
