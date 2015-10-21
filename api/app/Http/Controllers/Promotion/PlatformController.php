@@ -25,17 +25,16 @@ class PlatformController extends Controller{
 	 * @apiSuccess {String} typename 分类名称
 	 * 
 	 * @apiSuccessExample Success-Response:
-	 *		{
-	 *		    "result": 1,
-	 *		    "data": 
-     *              [
-     *                  {
-     *                      "typeid": 1,
-     *                      "typename": "洗剪吹"
-     *                  },
-     *                  ...
-     *              ]
-	 *		}
+	 *	{
+	 *		"result": 1,
+	 *		"data": [
+     *          {
+     *              "typeid": 1,
+     *              "typename": "洗剪吹"
+     *          },
+     *          ...
+     *      ]
+	 *	}
 	 *
 	 *
 	 * @apiErrorExample Error-Response:
