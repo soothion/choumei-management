@@ -129,7 +129,9 @@
 				<label class="control-label" for=""><span class="red">*</span>项目有效期：</label>
 				<div class="control">
 					<input type="date" required name="expTimeInput" <%if(!query.id){%>min="<%=new Date(new Date().getTime()+1000*60*60*24).format("yyyy-MM-dd")%>"<%}%> <%if(data.exp_time){%>value="<%=new Date(data.exp_time*1000).format("yyyy-MM-dd")%>"<%}else{%>disabled<%}%>>
+					<span>
 					<label><input type="checkbox" <%=!data.exp_time?"checked":""%> class="limit"/><span>无限制</span></label>
+					</span>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
@@ -137,7 +139,9 @@
 				<label class="control-label" for=""><span class="red">*</span>定时上架：</label>
 				<div class="control">
 					<input type="_datetime" format="YYYY-MM-DD hh:mm" required name="timingAdded" <%if(data.timingAdded){%>value="<%=new Date(data.timingAdded*1000).format("yyyy-MM-dd hh:mm")%>" <%=data.status==1?"disabled":""%><%}else{%>disabled min="<%=new Date().format("yyyy-MM-dd hh:mm")%>"<%}%>>
+					<span>
 					<label><input type="checkbox" <%=!data.timingAdded?"checked":""%> class="limit"/><span>无限制</span></label>
+					</span>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
@@ -145,7 +149,9 @@
 				<label class="control-label" for=""><span class="red">*</span>定时下架：</label>
 				<div class="control">
 					<input type="_datetime" format="YYYY-MM-DD hh:mm" required name="timingShelves" <%if(data.timingShelves){%>value="<%=new Date(data.timingShelves*1000).format("yyyy-MM-dd hh:mm")%>"<%}else{%>disabled min="<%=new Date().format("yyyy-MM-dd hh:mm")%>"<%}%>>
+					<span>
 					<label><input type="checkbox" <%=!data.timingShelves?"checked":""%> class="limit"/><span>无限制</span></label>
+					</span>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
@@ -153,7 +159,9 @@
 				<label class="control-label" for=""><span class="red">*</span>限制购买：</label>
 				<div class="control">
 					<input type="text" required pattern="number" max="99999999"  name="timeLimitInput" placeholder="单人限制购买数"  <%if(data.limit_time){%>value="<%=data.limit_time%>"<%}else{%>disabled<%}%>>
+					<span>	
 					<label><input type="checkbox" <%=!data.limit_time?"checked":""%> class="limit"/><span>无限制</span></label>
+					</span>
 					<span class="control-help" style="display:none;"></span>
 				</div>
 			</div>
@@ -162,7 +170,9 @@
 				<label class="control-label" for=""><span class="red">*</span>库存数量：</label>
 				<div class="control">
 					<input type="text" required pattern="number" max="99999999" min="1" name="totalRepInput"  placeholder="限制销售数量" <%if(data.total_rep){%>value="<%=data.total_rep%>"<%}else{%>disabled<%}%>>
+					<span>
 					<label><input type="checkbox" <%=!data.total_rep?"checked":""%> class="limit" /><span>无限制</span></label>
+					</span>
 					<span class="control-help" style="display:none;"></span>
 					<%if(query.id){%>
 					<p class="weak">已售<%=data.sold%>份</p>
