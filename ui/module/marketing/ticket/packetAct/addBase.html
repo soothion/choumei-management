@@ -90,13 +90,13 @@
                     <div class="control-group">
                         <label class="control-label" for="">                            
                             <label>
-                                <input type="checkbox" id="switch" value="3" <%=!query.id||data.sms_on_agined?"checked":""%> >
+                                <input type="checkbox" id="switch" value="3" <%=!query.id||data.sms_on_gained?"checked":""%> >
                                 <span>手机短信内容</span>
                             </label>
                         </label>
                         <div class="control">
-                            <textarea name="sms_on_agined" placeholder="限制500个汉字的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" 
-                            style="height:150px;width:400px;" required><%=data.sms_on_agined%></textarea>
+                            <textarea name="sms_on_gained" placeholder="限制500个汉字的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" 
+                            style="height:150px;width:400px;" required><%=data.sms_on_gained%></textarea>
                         </div>                        
 
                     </div>

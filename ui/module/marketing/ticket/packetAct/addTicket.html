@@ -124,7 +124,7 @@
 									<span>选择类型：</span>
 									<select>
 										<%types.forEach(function(item2){%>
-										<option <%=item.vUseItemTypes==item2.typeid?"checked":""%> value="<%=item2.typeid%>"><%=item2.typename%></option>
+										<option <%=item.useItemTypes==item2.typeid?"checked":""%> value="<%=item2.typeid%>"><%=item2.typename%></option>
 										<%})%>
 									</select>
 									<span class="remove">X</span>
@@ -132,13 +132,13 @@
 								<hr />
 								<div>
 									<span>金额数量：</span>
-									<input type="text" required pattern="number" min="1" value="<%=item.vUseMoney%>"  max="999999"/>
+									<input type="text" required pattern="number" min="1" value="<%=item.useMoney%>"  max="999999"/>
 									<span class="space"></span>
 									<span>元</span>
 									<span class="space"></span>
 									<span>X</span>
 									<span class="space"></span>
-									<input type="text" required  pattern="number" min="1" value="<%=item.vNumber%>"  max="999999"/>
+									<input type="text" required  pattern="number" min="1" value="<%=item.useTotalNum%>"  max="999999"/>
 									<span class="space"></span>
 									<span>张</span>
 									<p class="control-help" style="display:none;"></p>
@@ -151,12 +151,12 @@
 									<span class="space"></span>
 									<span>满</span>
 									<span class="space"></span>
-									<input type="text" required  pattern="number" value="<%=item.vUseNeedMoney%>"  max="999999"/>
+									<input type="text" required  pattern="number" value="<%=item.useNeedMoney%>"  max="999999"/>
 									<span class="space"></span>
 									<span>元</span>                          
 									<span>可用</span>  
 									<p class="control-help" style="display:none;"></p>
-									<input type="hidden" name="vVcId" value="<%=item.vVcId%>" />
+									<input type="hidden" name="vVcId" value="<%=item.vcId%>" />
 								</div> 
 								</div> 
 							<%})%>
@@ -206,7 +206,7 @@
             }
 			$(document).on('click','.add-box',function(){
 				var clone=$(this).prev().clone();
-				clone.find("input").val("0").eq(2).val(1);
+				clone.find("input").val("1").eq(3).val(0);
 				clone.find("select").val("");
 				$(this).before(clone);
 			})
