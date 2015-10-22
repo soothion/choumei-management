@@ -107,8 +107,7 @@ class PlatformController extends Controller{
         // 返回前端数组
         $result = array();
         foreach( $mustKey as $val ){
-            if( empty($post[ $val ]) )
-                return $this->error('必填写项未填写' );
+            if( empty($post[ $val ]) ) return $this->error('必填写项未填写' );
         }
         
         if( $post['selectItemType'] == 2 && $post['selectUseType'] == 3 && empty($post['phoneList']) )
@@ -133,8 +132,7 @@ class PlatformController extends Controller{
             if( in_array( $tt , array(4,5,6) ) ){
                 $tempArr = [4=>'getGroupExists',5=>'getActivityExists',6=>'getDividendExists'];
                 $code = $post['code'];
-                if( $this->{$tempArr[ $tt ]}( $code ) == 0 )
-                    return $this->error('码不存在！');
+                if( $this->{$tempArr[ $tt ]}( $code ) == 0 ) return $this->error('码不存在！');
                 $tempArr1 = [4=>2,5=>3,6=>1];
                 $data['getCodeType'] = $tempArr1[ $tt ];
                 $data['getCode'] = $code;
@@ -147,8 +145,7 @@ class PlatformController extends Controller{
             $code = $post['code'];
             $data['getTypes'] = 5;
             if(!empty($code)) $data['getCode'] = $code;
-        }else
-            return $this->error('选择用户获取错误');
+        }else return $this->error('选择用户获取错误');
         // 定义代金劵
         $data['useMoney'] = $post['money'];
         $data['getNumMax'] = $post['getSingleLimit'];
@@ -164,19 +161,14 @@ class PlatformController extends Controller{
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
         if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
-        if( isset($post['sendSms']) )
-            $data['SMS_ON_GAINED'] = $post['sendSms'];
+        if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         
         $data['status'] = 2;
         $data['ADD_TIME'] = date('Y-m-d H:i:s');
         
-//        $addRes = M('voucher_conf')->add($data);
-        $addRes = \App\Model\VoucherConf::insertGetId( $data );
-//        print_r( $data );
+        $addRes = \App\VoucherConf::insertGetId( $data );
         if( $data['getTypes'] == '3' ){
-//            $voucherModel = M('voucher');
             $phoneArr = $phoneList;
-//            var_dump( $phoneArr );
             $voucherData = array(
                 'vcId' =>   $addRes,
                 'vSn'=> $this->getVoucherSn(),
@@ -202,16 +194,14 @@ class PlatformController extends Controller{
                 if( empty( $limitNum ) ){ // 未设置可领的张数即无限制
                     for( $i=0;$i<$signerNum;$i++ ){
                         $addVoucher = \App\Voucher::insertGetId( $voucherData );
-                        if(empty($addVoucher))
-                            Log::info( "添加代金劵失败" .print_r($voucherData,true) );
+                        if(empty($addVoucher)) Log::info( "添加代金劵失败" .print_r($voucherData,true) );
                     }
                 }
                 // 如果 劵可领总数小于或等于个人可领数的情况
                 if( !empty($limitNum) && $limitNum<=$signerNum){
                     for( $i=0;$i<$limitNum;$i++ ){
                         $addVoucher = \App\Voucher::insertGetId( $voucherData );
-                        if(empty($addVoucher))
-                            Log::info( "添加代金劵失败" .print_r($voucherData,true) );
+                        if(empty($addVoucher)) Log::info( "添加代金劵失败" .print_r($voucherData,true) );
                     }
                 }
 
@@ -221,8 +211,7 @@ class PlatformController extends Controller{
                         if( ($sendNum+1)<= $limitNum ){
                             $addVoucher = \App\Voucher::insertGetId( $voucherData );
                             $sendNum++;
-                            if(empty($addVoucher))
-                                Log::info( "添加代金劵失败" .print_r($voucherData,true) );
+                            if(empty($addVoucher)) Log::info( "添加代金劵失败" .print_r($voucherData,true) );
                         }
                     }
                 }
@@ -294,8 +283,6 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function getDepartmentManager($id){
-        if( !isset($id) )
-            throw new ApiException('获取信息失败', ERROR::RECEIVABLES_ERROR);
         if($id == 0)
             $manager = \App\Manager::select(['id','name','department_id'])->get();
         else
@@ -335,9 +322,8 @@ class PlatformController extends Controller{
             $end .= rand(0, 9);
         }
         $code = "cm" . $pre  . $end;
-        $count = \App\Model\VoucherConf::where( 'vcSn' , '=' , $code )->count();
-        if($count) 
-            return $this->getActNum();
+        $count = \App\VoucherConf::where( 'vcSn' , '=' , $code )->count();
+        if($count)  return $this->getActNum();
         $code = ['actNo'=>$code];
         return $this->success($code);
    }
@@ -469,7 +455,7 @@ class PlatformController extends Controller{
             AbstractPaginator::currentPageResolver(function() use ($page) {
                 return $page;
             });
-            $res = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
+            $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
                     ->where(['vType'=>1,'IS_REDEEM_CODE'=>'N'])
                     ->orderBy('vcId','desc')
                     ->paginate($pageSize)
@@ -504,7 +490,7 @@ class PlatformController extends Controller{
         }
         $where = '1';
         $actType = array('','vcSn','vcTitle');
-        $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
+        $obj = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
         $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'N']);
         if( !empty($actSelect) && !empty($actNumber) )
             $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
@@ -622,9 +608,7 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function actView($id){
-        if( empty($id) )
-            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $voucherConfInfo = \App\Model\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney'])
+        $voucherConfInfo = \App\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney'])
                 ->where(['vcId'=>$id,'IS_REDEEM_CODE'=>'N','vType'=>1])
                 ->first()
                 ->toArray();
@@ -677,8 +661,7 @@ class PlatformController extends Controller{
         $voucherConfInfo['allNum'] = $totalNum;
         $voucherConfInfo['allMoney'] = $totalNum * $voucherConfInfo['useMoney'];
         
-        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>2] )
-                ->count();
+        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>2] )->count();
         $voucherConfInfo['useNumed'] = $useNumed;
         $voucherConfInfo['useMoneyed'] = $useNumed * $voucherConfInfo['useMoney'];
         
@@ -784,9 +767,7 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function getInfo($id){
-        if( empty($id) )
-            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $voucherConfInfo = \App\Model\VoucherConf::select(['vcId','getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
+        $voucherConfInfo = \App\VoucherConf::select(['vcId','getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
             ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','getItemTypes','useLimitTypes','useItemTypes as limitItemTypes'
             ,'useNeedMoney as enoughMoeny','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
             ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType'])
@@ -887,7 +868,7 @@ class PlatformController extends Controller{
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         if( isset($post['singleEnoughMoney']) ) $data['getNeedMoney'] = $post['singleEnoughMoney'];
         
-        $addRes = \App\Model\VoucherConf::where(['vcId'=>$id])->update( $data );
+        $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
         
         return $this->success();
     }
@@ -920,11 +901,7 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function offlineConf( $id ){
-        if( empty($id) )
-            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $update = \App\Model\VoucherConf::where(['vcId'=>$id])->update(['status'=>2]);
-        if( empty( $update ) )
-            return $this->error('下线失败，请重新下线');
+        $update = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>2]);
         return $this->success();
     }
     /***
@@ -956,11 +933,9 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function closeConf( $id ){
-        $conf = \App\Model\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
+        $conf = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
         if( $conf )
             \App\Voucher::where(['vcId'=>$id])->whereIn('vStatus',[1,3])->update(['vStatus'=>5]);
-        else
-            return $this->error('关闭失败，请重新关闭');
         return $this->success();
     }
     /***
@@ -993,11 +968,11 @@ class PlatformController extends Controller{
 	 ***/
     public function upConf($vcId){
         // 修改配置表中为已上线状态
-        \App\Model\VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
+        \App\VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
         // 修改voucher表中手机是否已经注册
         $phoneList = \App\Voucher::select(['vMobilephone'])->where(['vStatus'=>10,'vcId'=>$vcId])->get()->toArray();
         //判断当前活动是否勾选了消费类项目
-        $voucherConf = \App\Model\VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd'])->where(['vcId'=>$vcId])->first()->toArray();
+        $voucherConf = \App\VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd'])->where(['vcId'=>$vcId])->first()->toArray();
         
         $getItemTypes=$voucherConf['getItemTypes'];
         $getNeedMoney=$voucherConf['getNeedMoney'];
@@ -1063,52 +1038,27 @@ class PlatformController extends Controller{
         $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 12;
         $i = 0;
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
-            $res = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
+            $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
                     ->where(['vType'=>1,'IS_REDEEM_CODE'=>'N'])
                     ->orderBy('vcId','desc')
                     ->get()
                     ->toArray();
             if( empty($res) ) return $this->success();
-            $tempData = [];
-            $department = '';
-            foreach( $res as $key=>$val ){
-                $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
-                if( empty( $val['getStart'] ) && empty($val['getEnd']) )
-                    $actTime = '无限期活动';
-                if( !empty($val['getStart']) && empty($val['getEnd']) )
-                    $actTime = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
-                if( !empty($val['getEnd']) && empty($val['getStart']) )
-                    $actTime = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
-                if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
-                    $actTime = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
-                $res['data'][$key]['department'] = '';
-                if( !empty($val['DEPARTMENT_ID']) ){
-                    $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
-                    $department = $department['title'];
-                }
-                $tempData[$key][] = $i++;
-                $tempData[$key][] = $val['vcTitle'];
-                $tempData[$key][] = $val['vcSn'];
-                $tempData[$key][] = $val['totalNum'];
-                $tempData[$key][] = $statistics[0];
-                $tempData[$key][] = $statistics[1];
-                $tempData[$key][] = $val['addTime'];
-                $tempData[$key][] = $actTime;
-                $tempData[$key][] = $department;
-            }
+            $tempData = $this->handleList( $res );
             unset( $res );
             $title = '现金劵活动查询列表' .date('Ymd');
             //导出excel	   
             $header = ['序号','活动名称','活动编码','总数上限','已发放数','已使用数','创建时间','活动时间','申请部门'];
             Excel::create($title, function($excel) use($tempData,$header){
                 $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
-                        $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
-                        $sheet->prependRow(1, $header);//添加表头
-                    });
+                    $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+                    $sheet->prependRow(1, $header);//添加表头
+                });
             })->export('xls');
+            exit;
         }
         $actType = array('','vcSn','vcTitle');
-        $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
+        $obj = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
         $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'N']);
         if( !empty($actSelect) && !empty($actNumber) )
             $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
@@ -1124,48 +1074,19 @@ class PlatformController extends Controller{
         if( !empty( $actDepartment ) )
             $obj->where('DEPARTMENT_ID','=',$actDepartment);
         
-        $res = $obj->orderBy('vcId','desc')
-                    ->get()
-                    ->toArray();
+        $res = $obj->orderBy('vcId','desc')->get()->toArray();
         if( empty($res) ) return $this->success();
             
-        $tempData = [];
-        $department = '';
-        foreach( $res as $key=>$val ){
-            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
-            if( empty( $val['getStart'] ) && empty($val['getEnd']) )
-                $actTime = '无限期活动';
-            if( !empty($val['getStart']) && empty($val['getEnd']) )
-                $actTime = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
-            if( !empty($val['getEnd']) && empty($val['getStart']) )
-                $actTime = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
-            if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
-                $actTime = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
-            $res['data'][$key]['department'] = '';
-            if( !empty($val['DEPARTMENT_ID']) ){
-                $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
-                $department = $department['title'];
-            }
-            $tempData[$key][] = $i++;
-            $tempData[$key][] = $val['vcTitle'];
-            $tempData[$key][] = $val['vcSn'];
-            $tempData[$key][] = $val['totalNum'];
-            $tempData[$key][] = $statistics[0];
-            $tempData[$key][] = $statistics[1];
-            $tempData[$key][] = $val['addTime'];
-            $tempData[$key][] = $actTime;
-            $tempData[$key][] = $department;
-        }
+        $tempData = $this->handleList( $res );
         unset( $res );
         $title = '代金劵查询列表' .date('Ymd');
         //导出excel	   
         $header = ['序号','活动名称','活动编码','总数上限','已发放数','已使用数','创建时间','活动时间','申请部门'];
         Excel::create($title, function($excel) use($tempData,$header){
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
-                    $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
-                    $sheet->prependRow(1, $header);//添加表头
-
-                });
+                $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+                $sheet->prependRow(1, $header);//添加表头
+            });
         })->export('xls');
     }
     // 校验集团码
@@ -1241,7 +1162,7 @@ class PlatformController extends Controller{
     // 校验是否为手机号码添加 且为未激活状态的 如果是 那么发送短信提醒
     private function verifyPhone( $vcId ){
         // 找到用户获取的类型
-        $getTypes = \App\Model\VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd','useEnd','SMS_ON_GAINED','useMoney'])
+        $getTypes = \App\VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd','useEnd','SMS_ON_GAINED','useMoney'])
                 ->where(['vcId'=>$vcId,'getTypes'=>3,'status'=>1])
                 ->first()->toArray();
 
@@ -1298,5 +1219,35 @@ class PlatformController extends Controller{
             }
         }
     }
-    
+    // 出来列表数据
+    private function handleList( $res ){
+        $tempData = [];
+        $department = '';
+        foreach( $res as $key=>$val ){
+            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+            if( empty( $val['getStart'] ) && empty($val['getEnd']) )
+                $actTime = '无限期活动';
+            if( !empty($val['getStart']) && empty($val['getEnd']) )
+                $actTime = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
+            if( !empty($val['getEnd']) && empty($val['getStart']) )
+                $actTime = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
+            if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
+                $actTime = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
+            $res['data'][$key]['department'] = '';
+            if( !empty($val['DEPARTMENT_ID']) ){
+                $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
+                $department = $department['title'];
+            }
+            $tempData[$key][] = $i++;
+            $tempData[$key][] = $val['vcTitle'];
+            $tempData[$key][] = $val['vcSn'];
+            $tempData[$key][] = $val['totalNum'];
+            $tempData[$key][] = $statistics[0];
+            $tempData[$key][] = $statistics[1];
+            $tempData[$key][] = $val['addTime'];
+            $tempData[$key][] = $actTime;
+            $tempData[$key][] = $department;
+        }
+        return $tempData;
+    }
 }

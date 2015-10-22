@@ -368,8 +368,6 @@ class TicketController extends Controller {
      *     }
 	 ***/
     public function info( $id ){
-		if( !isset( $id ) )
-            throw new ApiException('更新失败', ERROR::RECEIVABLES_ERROR);
         $allItemType = $this->_getItemType();
         $voucherInfo = Voucher::select(['vcId','vcSn','vSn','vAddTime','vMobilephone','vUseMoney','vUseTime','vUseStart','vUseEnd','vOrderSn','vSalonName','vItemName','vcTitle','REDEEM_CODE','vStatus'])
                 ->where('vId','=',$id)

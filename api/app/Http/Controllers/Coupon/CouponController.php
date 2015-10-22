@@ -435,7 +435,6 @@ class CouponController extends Controller{
         unset( $voucherConfInfo['getCode'] );
             
         return $this->success( $voucherConfInfo );
-        
     }
     /***
 	 * @api {post} /coupon/getInfo/:id 4.读取代金劵配置
