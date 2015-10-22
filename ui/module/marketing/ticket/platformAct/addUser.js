@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-22 11:49:33
+* @Last Modified time: 2015-10-22 13:42:35
 */
 
 (function(){
@@ -14,7 +14,10 @@
         lib.ajat('#domid=form&tempid=form-t').template(baseData);    
         if(baseData.selectItemType == "3" && baseData.getItemTypes){
             $("#consumeItemsAll").attr('checked','checked');
-        }      
+        }
+        document.body.onbeforeunload=function(){
+            return "确定离开当前页面吗？";
+        }        
     }
 
     if(type == 'edit'){
