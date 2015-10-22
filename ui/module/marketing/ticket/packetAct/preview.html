@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理 </a>
+            <span>&gt;</span><a href="index.html">兑换活动</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>活动概况</h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table-detail" ajat="#domid=table&tempid=table-t" id="table">
+				<script type="text/template" id="table-t">
+                <div class="detail-operation">
+                    <button class="btn" type="button" onclick="window.close()">关闭</button>  
+                </div> 
+				<legend>活动基本信息</legend>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>红包活动名称</td>
+                            <td><%=data.laisee_name%></td>
+                        </tr>
+
+                        <tr>
+                            <td>活动简介</td>
+                            <td><%=data.lc_remark%></td>
+                        </tr>
+
+                        <tr>
+                            <td>红包有效天数</td>
+                            <td><%=data.over_time%></td>
+                        </tr>   
+
+                        <tr>
+                            <td>红包领取金额上限</td>
+                            <td><%=data.receiveNum%></td>
+                        </tr>
+                    </tbody>                     
+                </table>
+				<legend>红包规格</legend>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>红包规格详情(6张)</td>
+                            <td><%=data.laisee_name%></td>
+                        </tr>
+
+                        <tr>
+                            <td>新手礼包</td>
+                            <td><%=data.lc_remark%></td>
+                        </tr>
+                    </tbody>                     
+                </table>
+				</script>
+            </div>
+        </div>
+    </body>
+</html>

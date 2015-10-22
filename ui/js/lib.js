@@ -1148,8 +1148,8 @@
 			}).on('error',this.selector,function(e,data){
 				self[data.type]&&self[data.type](e,data);
 			}).on('submit',function(e){
-				self.validate();
 				e.preventDefault();
+				self.validate();
 			}).on('save',function(e,data){
 				self.save(data);
 			}).on('response',function(e,data){

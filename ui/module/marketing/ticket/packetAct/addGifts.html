@@ -53,7 +53,9 @@
         </div>
 
         <div class="wrapper">
-            <form class="form-vertical" data-role="form" id="form">
+			<div id="form" id="form">
+				<script type="text/template" id="form-t">
+					<form class="form-vertical" data-role="form">
                     <div class="detail-operation">
                         <button type="button" class="btn btn-cancel">取消</button>
                         <span class="space"></span>
@@ -69,67 +71,100 @@
                         <li class="flex-item">
                             <a href="add.html">
                                 <i class="fa fa-check-circle"></i>
-                                <span2.红包现金券配置</span>
+                                <span>2红包现金券配置</span>
                             </a>
                         </li>                        
-                        <li class="flex-item"><span class="arrow">3.礼包配置</span></li>
+                        <li class="flex-item active"><span class="arrow">3.礼包配置</span></li>
                         <li class="flex-item"><span>4.H5页面配置</span></li>
                     </ul>
 
                     <div class="box-continer">
                         <div class="box">
+                            <%if(!query._){%>
                             <div>
+								<%var types=JSON.parse(sessionStorage.getItem("types"))%>
                                 <span>选择类型：</span>
-                                <select name="department_id" required>
-                                    <option value="1">洗剪吹卷</option>
-                                    <option value="2">洗吹券</option>
-                                    <option value="3">烫发券</option>
-                                    <option value="4">染发券</option>
-                                    <option value="5">护发发券</option>
-                                    <option value="6">套餐券</option>
-                                    <option value="7">限时特价券</option>
-                                    <option value="8">快剪券</option>
-                                    <option value="9">无限制券</option>
-                                    <option value="10">赏金券</option>
+                                <select>
+									<%types.forEach(function(item2){%>
+                                    <option value="<%=item2.typeid%>"><%=item2.typename%></option>
+									<%})%>
                                 </select>
                                 <span class="remove">X</span>
                             </div>
-
                             <hr />
-
+							
                             <div>
                                 <span>金额数量：</span>
-                                <input type="text" required/>
-                                &nbsp;&nbsp;
+                                <input type="text" required pattern="number" value="0"/>
+                                <span class="space"></span>
                                 <span>元</span>
-                                &nbsp;&nbsp;
+                                <span class="space"></span>
                                 <span>X</span>
-                                &nbsp;&nbsp;
-                                <input type="text" required/>
-                                &nbsp;&nbsp;
+                                <span class="space"></span>
+                                <input type="text" required  pattern="number" value="0"/>
+                                <span class="space"></span>
                                 <span>张</span>
                                 <p class="control-help" style="display:none;"></p>
                             </div>
-
                             <div>
                                 <span>有效时间：</span>
-                                <input type="text" required/>
-                                &nbsp;&nbsp;
+                                <input type="text" required  pattern="number" value="1" min="1"/>
+                                <span class="space"></span>
                                 <span>天</span>
-                                &nbsp;
+                                <span class="space"></span>
                                 <span>满</span>
-                                &nbsp;&nbsp;
-                                <input type="text" required/>
-                                &nbsp;&nbsp;
+                                <span class="space"></span>
+                                <input type="text" required  pattern="number" value="0"/>
+                                <span class="space"></span>
                                 <span>元</span>                          
                                 <span>可用</span>  
                                 <p class="control-help" style="display:none;"></p>                          
-                            </div>  
-                                                                    
+                            </div> 
+						<%}else{%>
+							<%data.gift.forEach(function(item){%>
+								 <div>
+									<%var types=JSON.parse(sessionStorage.getItem("types"))%>
+									<span>选择类型：</span>
+									<select>
+										<%types.forEach(function(item2){%>
+										<option <%=item.vUseItemTypes==item2.typeid?"checked":""%> value="<%=item2.typeid%>"><%=item2.typename%></option>
+										<%})%>
+									</select>
+									<span class="remove">X</span>
+								</div>
+								<hr />
+								<div>
+									<span>金额数量：</span>
+									<input type="text" required pattern="number" value="0" value="<%=item.vUseMoney%>"/>
+									<span class="space"></span>
+									<span>元</span>
+									<span class="space"></span>
+									<span>X</span>
+									<span class="space"></span>
+									<input type="text" required  pattern="number" value="0" value="<%=item.vNumber%>"/>
+									<span class="space"></span>
+									<span>张</span>
+									<p class="control-help" style="display:none;"></p>
+								</div>
+								<div>
+									<span>有效时间：</span>
+									<input type="text" required  pattern="number" value="1" min="1" value="<%=item.few_day%>"/>
+									<span class="space"></span>
+									<span>天</span>
+									<span class="space"></span>
+									<span>满</span>
+									<span class="space"></span>
+									<input type="text" required  pattern="number" value="0" value="<%=item.vUseNeedMoney%>"/>
+									<span class="space"></span>
+									<span>元</span>                          
+									<span>可用</span>  
+									<p class="control-help" style="display:none;"></p>
+									<input type="hidden" name="vVcId" value="<%=item.vVcId%>" />
+								</div> 
+							<%})%>
+						<%}%>
                         </div>
-
-
-                        <div class="box">
+                        <div class="box add-box">
                             <div style="text-align:center;margin-top:40px;">
                                 <button type="button">
                                     <span style="font-size: 4rem;color:#ddd;">+</span><br>
@@ -144,10 +179,39 @@
                         <button class="btn-primary">下一步</button>
                     </div>                                                                                     
             </form>
+			</script>
+			</div>
         </div> 
         <script>
+			lib.ajat("#domid=form&tempid=form-t").render();
+			$(document).on('click','.add-box',function(){
+				var clone=$(this).prev().clone();
+				clone.find("input").val("0").eq(2).val(1);
+				clone.find("select").val("");
+				$(this).before(clone);
+			})
             lib.Form.prototype.save = function(data){
-                location.href = "addImage.html"
+				var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
+				formData.gift=[];
+				$('.box').each(function(){
+					var $this=$(this);
+					var input=$this.find("input");
+					var select=$this.find('select');
+					if(select.length>0){
+						formData.gift.push({
+							vUseItemTypes:select.val(),
+							vUseMoney:input.eq(0).val(),
+							vNumber:input.eq(1).val(),
+							few_day:input.eq(2).val(),
+							vUseNeedMoney:input.eq(3).val(),
+							vVcId:input.eq(4).val()
+						});
+					}
+				});
+				formData.gift=JSON.stringify(formData.gift);
+				data=$.extend(formData,data);
+				sessionStorage.setItem("formData",JSON.stringify(data));
+                location.href = "addImage.html"+(lib.query._?"?"+lib.query._:"")
             }
         </script>      
     </body>
