@@ -46,16 +46,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					<%data=data.data
-					if(query.sort_type=="DESC"){
-						data.reverse&&data.reverse();
-					}
-					%>
-					
+					<%data=data.data%>
 					<%data.forEach(function(item,i){%>
 					<%
 						var index=i+1;
-						if(query.sort_type=="DESC"){
+						if(query.sort_type=="DESC"||query.sort_type===undefined){
 							index=data.length-i;
 						}
 					%>
