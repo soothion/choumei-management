@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -46,13 +46,14 @@ class SalonStarConf extends Model {
     private static function checkScore($conf) {
         $id = $conf['id'];
         $maxLevelId = self::query()->max('id');
+        $minLevelId = self::query()->min('id');
         if ($id == $maxLevelId) {
             $nextLevelScore = 9999999;
         }
-        if ($id == 1) {
+        if ($id == $minLevelId) {
             $prevLevelScore = -1;
         }
-        $id != 1 && $prevLevelScore = self::find(($id - 1))->score;
+        $id != $minLevelId && $prevLevelScore = self::find(($id - 1))->score;
         $id != $maxLevelId && $nextLevelScore = self::find(($id + 1))->score;
         if ($conf['score'] > $prevLevelScore && $conf['score'] < $nextLevelScore) {
             return true;

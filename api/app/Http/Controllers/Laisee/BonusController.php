@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Laisee;
 use App\Http\Controllers\Controller;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
-use App\Model\LaiseeConfig;
-use App\Model\Laisee;
+use App\LaiseeConfig;
+use App\Laisee;
 use Illuminate\Support\Facades\DB;
 
 class BonusController extends Controller {

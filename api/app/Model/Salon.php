@@ -7,7 +7,7 @@ use DB;
 use App\SalonUser;
 use App\Merchant;
 use App\SalonRatingsRecord;
-use App\Model\SalonScoreLog;
+use App\SalonScoreLog;
 class Salon extends Model {
 
 	protected $table = 'salon';

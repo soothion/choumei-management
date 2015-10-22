@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Model;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Model\VoucherConf;
+use App\VoucherConf;
 use App\Voucher;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\AbstractPaginator;
@@ -45,6 +45,7 @@ class LaiseeConfig extends Model {
                     'share_desc' => $data['share_desc'],
                     'bonus_bg_img' => $data['bonus_bg_img'],
                     'sms_on_gained' => $data['sms_on_gained'],
+                    'send_warning_sms' => $data['send_warning_sms'],
                 ];
                 $res = self::where('id', $data['id'])->update($lcData);
                 if ($res !== false) {
@@ -76,6 +77,7 @@ class LaiseeConfig extends Model {
                     'bonus_bg_img' => $data['bonus_bg_img'],
                     'sms_on_gained' => $data['sms_on_gained'],
                     'create_time' => date("Y-m-d H:i:s"),
+                    'send_warning_sms' => (isset($data['amount_warning']) && $data['amount_warning'] > 0) ? 'Y' : 'N',
                 ];
                 $id = self::insertGetId($lcData);
                 if ($id) {
