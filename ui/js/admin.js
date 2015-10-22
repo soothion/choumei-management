@@ -457,8 +457,7 @@ $(function(){
 			zIndex:1000,
 			istime: true,
 			choose:function(){
-				e.target.focus();
-				$(e.target).removeClass('placeholder').trigger("choose");
+				$(e.target).blur().focus().removeClass('placeholder').trigger("choose");
 			}
 		};
 		laydate(options);			
