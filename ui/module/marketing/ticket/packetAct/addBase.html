@@ -64,12 +64,12 @@
                         <div class="control">
                             <select name="amount_warning" required >
                                 <option <%=data.amount_warning==0?"selected":""%> value="0">无预警</option>
-                                <option <%=data.amount_warning==1?"selected":""%> value="1">上限20%</option>
-                                <option <%=data.amount_warning==2?"selected":""%> value="2">上限30%</option>
-                                <option <%=data.amount_warning==3?"selected":""%> value="3">上限50%</option>
-                                <option <%=data.amount_warning==4?"selected":""%> value="4">上限80%</option>
-                                <option <%=data.amount_warning==5?"selected":""%> value="5">上限90%</option>
-                                <option <%=data.amount_warning==6?"selected":""%> value="6">上限100%</option>
+                                <option <%=data.amount_warning==20?"selected":""%> value="20">上限20%</option>
+                                <option <%=data.amount_warning==30?"selected":""%> value="30">上限30%</option>
+                                <option <%=data.amount_warning==50?"selected":""%> value="50">上限50%</option>
+                                <option <%=data.amount_warning==50?"selected":""%> value="80">上限80%</option>
+                                <option <%=data.amount_warning==90?"selected":""%> value="90">上限90%</option>
+                                <option <%=data.amount_warning==100?"selected":""%> value="100">上限100%</option>
                             </select>
                         </div>
                     </div>
@@ -77,7 +77,7 @@
                     <div class="control-group">
                         <label class="control-label" for=""></label>
                         <div class="control">
-                            <input type="text" name="warning_phone" nospace placeholder="预警通知11位手机号，最多可填8个，用“，”区分" disabled required value="<%=data.warning_phone%>"/>
+                            <input type="text" name="warning_phone" required pattern="^[0-9,]+$" nospace placeholder="预警通知11位手机号，最多可填8个，用“，”区分" <%=!data.warning_phone?"disabled":""%>  value="<%=data.warning_phone%>"/>
                         </div>                        
                     </div>                    
 
@@ -114,6 +114,17 @@
 				$(this).closest('.control-label').next().find("textarea").attr('disabled',!this.checked)
 			}).on('change',"select[name='amount_warning']",function(){
 				$(this).closest('.control-group').next().find("input").attr("disabled",this.value=="0"?true:false);
+			}).on("pass","input[name='warning_phone']",function(){
+				var $this=$(this);
+				var arr=this.value.split(',');
+				if(arr.length>8){
+					$this.trigger("error",{type:"error",errormsg:"最多可填8个手机号"});
+				}
+				arr.forEach(function(item){
+					if(item.length!=11){
+						$this.trigger("error",{type:"error",errormsg:"请检查手机号码是否是11位数字"});
+					}
+				})
 			});
             lib.Form.prototype.save = function(data){
 				var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};

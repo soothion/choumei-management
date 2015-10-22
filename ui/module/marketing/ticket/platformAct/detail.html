@@ -26,7 +26,7 @@
                 <div class="detail-operation">
                     <button class="btn edit-button">编辑</button>
                     &nbsp;&nbsp;
-                    <button class="btn" type="button" onclick="window.close()">关闭</button>  
+                    <button class="btn" type="button" onclick="history.back()">返回</button>  
                 </div>              
                 <table>
                     <tbody>
@@ -162,7 +162,7 @@
                             }
                         }
                         sessionStorage.setItem('edit-base-data',JSON.stringify(data));  
-                        location.href = "addBase.html?type=edit&id="+lib.query.id;                        
+                        location.href = "addBase.html?type=edit&id="+lib.query.id+"&selectItemType="+data.selectItemType;                        
                     }
                 });
             })

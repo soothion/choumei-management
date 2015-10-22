@@ -3,20 +3,12 @@
     var selectItemType = lib.query.selectItemType || 1; 
 
     if(type == 'add'){
-        //selectItemType = lib.query.selectItemType || 1; 
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data')) || {};
-        if(baseData.selectItemType){
-            selectItemType = baseData.selectItemType;
-        }
         lib.ajat('#domid=form&tempid=form-t').template(baseData);    
     }
 
     if(type == 'edit'){
-        //selectItemType = editData.selectItemType || 1; 
         var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
-        if(editData.selectItemType){
-            selectItemType = editData.selectItemType;
-        }
         lib.ajat('#domid=form&tempid=form-t').template(editData);
     }
 

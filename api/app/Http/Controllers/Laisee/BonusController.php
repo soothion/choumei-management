@@ -198,41 +198,55 @@ class BonusController extends Controller {
      * 
      * @apiSuccessExample Success-Response:
      * {
-     *   "result": 1,
-     *   "token": "",
-     *   "data": {
-     *       "bonusSn": "hb1111",
-     *      "add_time": "2015-08-26 21:12:34",
-     *       "over_time": "2015-08-28 23:59:59",
-     *      "mobilephone": "18617163658",
-     *      "voucherNum": 8,
-     *     "receiveNum": 0,
-     *       "receiveGiftNum": 3,
-     *     "bonusAmount": 0,
-     *     "voucher": [
-     *         {
-     *             "useMoney": 10,
-     *            "useItemTypes": "洗剪吹",
-     *            "useTotalNum": 3
-     *        },
-     *       {
-     *         "useMoney": 69,
-     *         "useItemTypes": "烫发",
-     *          "useTotalNum": 3
+     *       "result": 1,
+     *     "token": "",
+     *     "data": {
+     *         "bonusSn": "hb000085",
+     *         "add_time": "2015-01-02 15:15:27",
+     *         "over_time": "2017-09-28 23:59:59",
+     *         "mobilephone": "15079190498",
+     *         "voucherNum": 30,
+     *         "receiveNum": 1,
+     *         "receiveGiftNum": 1,
+     *         "bonusAmount": 0,
+     *          "voucher": [
+     *             {
+     *                 "useMoney": 1,
+     *                 "useItemTypes": "洗剪吹",
+     *                 "useTotalNum": 1
+     *             },
+     *          {
+     *               "useMoney": 50,
+     *              "useItemTypes": "洗剪吹",
+     *             "useTotalNum": 50
      *        }
-     *    ],
-     *    "receive_voucher": [],
-     *    "voucherGift": [
-     *       {
-     *           "useMoney": 10,
-     *              "useItemTypes": "",
-     *              "useTotalNum": 0
-     *          }
-     *       ],
-     *        "giftUser": [],
-     *        "status": "Y"
-     *       }
-     *   }
+     *   ],
+     *   "receive_voucher": [
+     *      {
+     *          "vsn": "CM45265861046",
+     *         "mobilephone": "13800138709"
+     *    }
+     *  ],
+     *  "voucherGift": [
+     *      {
+     *         "useMoney": 1,
+     *        "useItemTypes": "洗剪吹",
+     *         "useTotalNum": 1
+     *    },
+     *   {
+     *      "useMoney": 100,
+     *     "useItemTypes": "洗剪吹",
+     *      "useTotalNum": 100
+     * }
+     *  ] ,
+     *   "giftUser": [
+     *        {
+     *           "vsn": "CM45265877252",
+     *         "mobilephone": "13800138000"
+     *     }
+     * ],
+     *  "status": "Y"
+     *  }
      *
      * @apiErrorExample Error-Response:
      * 		{
