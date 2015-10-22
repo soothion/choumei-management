@@ -112,6 +112,10 @@ Route::any('platform/getActNum',array(
     'as'=>'platform.getActNum',
     'uses'=>'Promotion\PlatformController@getActNum'
 ));
+Route::any('coupon/getActNum',array(  
+    'as'=>'coupon.getActNum',
+    'uses'=>'Coupon\CouponController@getActNum'
+));
 Route::any('platform/checkSerial',array(  
     'as'=>'platform.checkSerial',
     'uses'=>'Promotion\PlatformController@checkSerial'
