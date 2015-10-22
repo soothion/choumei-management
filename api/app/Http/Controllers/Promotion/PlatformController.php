@@ -1119,7 +1119,7 @@ class PlatformController extends Controller{
                 ->orderBy('sortIt','DESC')
                 ->get()
                 ->toArray();
-        array_unshift( $itemType , array('typeid'=>101,'typename'=>'限时特价 ') );
+//        array_unshift( $itemType , array('typeid'=>101,'typename'=>'限时特价 ') );
         return $itemType;
     }
     // 获取代金劵编号
