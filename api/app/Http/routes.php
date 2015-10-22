@@ -99,7 +99,27 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 	'as'=>'AlipayRefundNotify.callback_alipay',
 	'uses'=>'Alipay\AlipayRefundNotifyController@callback_alipay'
 ));
-
+// 营销平台活动用到的
+Route::any('platform/getRequestDepartment',array(  
+    'as'=>'platform.getRequestDepartment',
+    'uses'=>'Promotion\PlatformController@getRequestDepartment'
+));
+Route::any('platform/getDepartmentManager/{id}',array(  
+    'as'=>'platform.getDepartmentManager',
+    'uses'=>'Promotion\PlatformController@getDepartmentManager'
+));
+Route::any('platform/getActNum',array(  
+    'as'=>'platform.getActNum',
+    'uses'=>'Promotion\PlatformController@getActNum'
+));
+Route::any('platform/checkSerial',array(  
+    'as'=>'platform.checkSerial',
+    'uses'=>'Promotion\PlatformController@checkSerial'
+));
+Route::any('platform/getItemType',array(  
+    'as'=>'platform.getItemType',
+    'uses'=>'Promotion\PlatformController@getItemType'
+));
 //权限管理后台接口
 // Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
  Route::group(['middleware' => ['before']], function(){
@@ -772,34 +792,11 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 		'uses'=>'VoucherTicket\TicketController@exportTicketList'
     ));
     // 平台活动配置
-    Route::any('platform/getItemType',array(  
-		'as'=>'platform.getItemType',
-		'uses'=>'Promotion\PlatformController@getItemType'
-    ));
     Route::any('platform/add',array(  
 		'as'=>'platform.add',
 		'uses'=>'Promotion\PlatformController@addVoucherConf'
     ));
-    Route::any('platform/getRequestDepartment',array(  
-		'as'=>'platform.getRequestDepartment',
-		'uses'=>'Promotion\PlatformController@getRequestDepartment'
-    ));
-    Route::any('platform/getDepartmentManager/{id}',array(  
-		'as'=>'platform.getDepartmentManager',
-		'uses'=>'Promotion\PlatformController@getDepartmentManager'
-    ));
-    Route::any('platform/getActNum',array(  
-		'as'=>'platform.getActNum',
-		'uses'=>'Promotion\PlatformController@getActNum'
-    ));
-    Route::any('platform/getActNum',array(  
-		'as'=>'platform.getActNum',
-		'uses'=>'Promotion\PlatformController@getActNum'
-    ));
-    Route::any('platform/checkSerial',array(  
-		'as'=>'platform.checkSerial',
-		'uses'=>'Promotion\PlatformController@checkSerial'
-    ));
+    
     Route::any('platform/list',array(  
 		'as'=>'platform.list',
 		'uses'=>'Promotion\PlatformController@confList'
