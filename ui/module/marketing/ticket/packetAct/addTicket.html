@@ -74,8 +74,8 @@
                     </ul>
 
                     <div class="box-continer">
-                        <div class="box">
-							<%if(!query._){%>
+						<%if(!query._){%>
+							<div class="box">
                             <div>
 								<%var types=JSON.parse(sessionStorage.getItem("types"))%>
                                 <span>选择类型：</span>
@@ -90,26 +90,26 @@
 							
                             <div>
                                 <span>金额数量：</span>
-                                <input type="text" required pattern="number" value="0"/>
+                                <input type="text" required pattern="number" min="1" value="1" max="999999"/>
                                 <span class="space"></span>
                                 <span>元</span>
                                 <span class="space"></span>
                                 <span>X</span>
                                 <span class="space"></span>
-                                <input type="text" required  pattern="number" value="0"/>
+                                <input type="text" required  pattern="number" min="1" value="1"  max="999999"/>
                                 <span class="space"></span>
                                 <span>张</span>
                                 <p class="control-help" style="display:none;"></p>
                             </div>
                             <div>
                                 <span>有效时间：</span>
-                                <input type="text" required  pattern="number" value="1" min="1"/>
+                                <input type="text" required  pattern="number" min="1" value="1"  max="999999"/>
                                 <span class="space"></span>
                                 <span>天</span>
                                 <span class="space"></span>
                                 <span>满</span>
                                 <span class="space"></span>
-                                <input type="text" required  pattern="number" value="0"/>
+                                <input type="text" required  pattern="number" value="0"  max="999999"/>
                                 <span class="space"></span>
                                 <span>元</span>                          
                                 <span>可用</span>  
@@ -117,7 +117,8 @@
                             </div> 
                         </div>
 						<%}else{%>
-							<%data.voucher.forEach(function(item){%>
+							<%data.voucherConf.forEach&&data.voucherConf.forEach(function(item){%>
+								<div class="box">
 								 <div>
 									<%var types=JSON.parse(sessionStorage.getItem("types"))%>
 									<span>选择类型：</span>
@@ -131,31 +132,32 @@
 								<hr />
 								<div>
 									<span>金额数量：</span>
-									<input type="text" required pattern="number" value="0" value="<%=item.vUseMoney%>"/>
+									<input type="text" required pattern="number" min="1" value="<%=item.vUseMoney%>"  max="999999"/>
 									<span class="space"></span>
 									<span>元</span>
 									<span class="space"></span>
 									<span>X</span>
 									<span class="space"></span>
-									<input type="text" required  pattern="number" value="0" value="<%=item.vNumber%>"/>
+									<input type="text" required  pattern="number" min="1" value="<%=item.vNumber%>"  max="999999"/>
 									<span class="space"></span>
 									<span>张</span>
 									<p class="control-help" style="display:none;"></p>
 								</div>
 								<div>
 									<span>有效时间：</span>
-									<input type="text" required  pattern="number" value="1" min="1" value="<%=item.few_day%>"/>
+									<input type="text" required  pattern="number" min="1"  value="<%=item.few_day%>"  max="999999"/>
 									<span class="space"></span>
 									<span>天</span>
 									<span class="space"></span>
 									<span>满</span>
 									<span class="space"></span>
-									<input type="text" required  pattern="number" value="0" value="<%=item.vUseNeedMoney%>"/>
+									<input type="text" required  pattern="number" value="<%=item.vUseNeedMoney%>"  max="999999"/>
 									<span class="space"></span>
 									<span>元</span>                          
 									<span>可用</span>  
 									<p class="control-help" style="display:none;"></p>
 									<input type="hidden" name="vVcId" value="<%=item.vVcId%>" />
+								</div> 
 								</div> 
 							<%})%>
 						<%}%>
@@ -178,12 +180,7 @@
 			</div>
         </div> 
         <script>
-			lib.ajax({url:"laisee/itemTypes"}).done(function(data){
-				if(data.result==1){
-					sessionStorage.setItem("types",JSON.stringify(data.data));
-					lib.ajat("#domid=form&tempid=form-t").render();
-				}
-			})
+			
             lib.Form.prototype.save = function(data){
 				var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
 				formData.voucher=[];

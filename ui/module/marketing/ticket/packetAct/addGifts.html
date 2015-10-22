@@ -53,7 +53,7 @@
         </div>
 
         <div class="wrapper">
-			<div id="form" id="form">
+			<div id="form" ajat="<%if(query._){%>laisee/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
 					<form class="form-vertical" data-role="form">
                     <div class="detail-operation">
@@ -79,8 +79,8 @@
                     </ul>
 
                     <div class="box-continer">
-                        <div class="box">
-                            <%if(!query._){%>
+						 <%if(!query._){%>
+							<div class="box">
                             <div>
 								<%var types=JSON.parse(sessionStorage.getItem("types"))%>
                                 <span>选择类型：</span>
@@ -95,20 +95,20 @@
 							
                             <div>
                                 <span>金额数量：</span>
-                                <input type="text" required pattern="number" value="0"/>
+                                <input type="text" required pattern="number" min="1"/>
                                 <span class="space"></span>
                                 <span>元</span>
                                 <span class="space"></span>
                                 <span>X</span>
                                 <span class="space"></span>
-                                <input type="text" required  pattern="number" value="0"/>
+                                <input type="text" required  pattern="number" min="1"/>
                                 <span class="space"></span>
                                 <span>张</span>
                                 <p class="control-help" style="display:none;"></p>
                             </div>
                             <div>
                                 <span>有效时间：</span>
-                                <input type="text" required  pattern="number" value="1" min="1"/>
+                                <input type="text" required  pattern="number" min="1"/>
                                 <span class="space"></span>
                                 <span>天</span>
                                 <span class="space"></span>
@@ -119,51 +119,53 @@
                                 <span>元</span>                          
                                 <span>可用</span>  
                                 <p class="control-help" style="display:none;"></p>                          
-                            </div> 
+                            </div>
+						</div>							
 						<%}else{%>
-							<%data.gift.forEach(function(item){%>
-								 <div>
-									<%var types=JSON.parse(sessionStorage.getItem("types"))%>
-									<span>选择类型：</span>
-									<select>
-										<%types.forEach(function(item2){%>
-										<option <%=item.vUseItemTypes==item2.typeid?"checked":""%> value="<%=item2.typeid%>"><%=item2.typename%></option>
-										<%})%>
-									</select>
-									<span class="remove">X</span>
-								</div>
-								<hr />
-								<div>
-									<span>金额数量：</span>
-									<input type="text" required pattern="number" value="0" value="<%=item.vUseMoney%>"/>
-									<span class="space"></span>
-									<span>元</span>
-									<span class="space"></span>
-									<span>X</span>
-									<span class="space"></span>
-									<input type="text" required  pattern="number" value="0" value="<%=item.vNumber%>"/>
-									<span class="space"></span>
-									<span>张</span>
-									<p class="control-help" style="display:none;"></p>
-								</div>
-								<div>
-									<span>有效时间：</span>
-									<input type="text" required  pattern="number" value="1" min="1" value="<%=item.few_day%>"/>
-									<span class="space"></span>
-									<span>天</span>
-									<span class="space"></span>
-									<span>满</span>
-									<span class="space"></span>
-									<input type="text" required  pattern="number" value="0" value="<%=item.vUseNeedMoney%>"/>
-									<span class="space"></span>
-									<span>元</span>                          
-									<span>可用</span>  
-									<p class="control-help" style="display:none;"></p>
-									<input type="hidden" name="vVcId" value="<%=item.vVcId%>" />
+							<%data.voucherGiftConf.forEach(function(item){%>
+								<div class="box">
+									 <div>
+										<%var types=JSON.parse(sessionStorage.getItem("types"))%>
+										<span>选择类型：</span>
+										<select>
+											<%types.forEach(function(item2){%>
+											<option <%=item.vUseItemTypes==item2.typeid?"checked":""%> value="<%=item2.typeid%>"><%=item2.typename%></option>
+											<%})%>
+										</select>
+										<span class="remove">X</span>
+									</div>
+									<hr />
+									<div>
+										<span>金额数量：</span>
+										<input type="text" required pattern="number" min="1" value="<%=item.vUseMoney%>"/>
+										<span class="space"></span>
+										<span>元</span>
+										<span class="space"></span>
+										<span>X</span>
+										<span class="space"></span>
+										<input type="text" required  pattern="number" min="1" value="<%=item.vNumber%>"/>
+										<span class="space"></span>
+										<span>张</span>
+										<p class="control-help" style="display:none;"></p>
+									</div>
+									<div>
+										<span>有效时间：</span>
+										<input type="text" required  pattern="number" min="1" value="<%=item.few_day%>"/>
+										<span class="space"></span>
+										<span>天</span>
+										<span class="space"></span>
+										<span>满</span>
+										<span class="space"></span>
+										<input type="text" required  pattern="number" value="<%=item.vUseNeedMoney%>"/>
+										<span class="space"></span>
+										<span>元</span>                          
+										<span>可用</span>  
+										<p class="control-help" style="display:none;"></p>
+										<input type="hidden" name="vVcId" value="<%=item.vVcId%>" />
+									</div> 
 								</div> 
 							<%})%>
 						<%}%>
-                        </div>
                         <div class="box add-box">
                             <div style="text-align:center;margin-top:40px;">
                                 <button type="button">
@@ -183,7 +185,6 @@
 			</div>
         </div> 
         <script>
-			lib.ajat("#domid=form&tempid=form-t").render();
 			$(document).on('click','.add-box',function(){
 				var clone=$(this).prev().clone();
 				clone.find("input").val("0").eq(2).val(1);

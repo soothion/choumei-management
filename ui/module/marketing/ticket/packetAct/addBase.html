@@ -22,6 +22,7 @@
         <div class="wrapper">
 				<div id="form" ajat="<%if(query._){%>laisee/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
+				<%if(query.id){sessionStorage.setItem("formData",JSON.stringify(data))}%>
 				<form class="form-vertical" data-role="form">
                     <div class="detail-operation">
                         <button type="button" class="btn btn-cancel">取消</button>
@@ -53,7 +54,7 @@
                     <div class="control-group">
                         <label class="control-label" for=""><span class="red">*</span>红包的有效天数：</label>
                         <div class="control">
-                            <input type="text" placeholder="从1开始的整数" name="effective" maxlength="6" pattern="number" min="1" required value="<%=data.effective%>">
+                            <input type="text" placeholder="从1开始的整数" name="effective" maxlength="6" pattern="number" min="1" required value="<%=data.over_time%>">
                         </div>
                     </div> 
 
@@ -89,7 +90,7 @@
                     <div class="control-group">
                         <label class="control-label" for="">                            
                             <label>
-                                <input type="checkbox" id="switch" value="3" checked >
+                                <input type="checkbox" id="switch" value="3" <%=!query.id||data.sms_on_agined?"checked":""%> >
                                 <span>手机短信内容</span>
                             </label>
                         </label>
@@ -110,6 +111,11 @@
 			</div>
         </div> 
         <script>
+			lib.ajax({url:"laisee/itemTypes"}).done(function(data){
+				if(data.result==1){
+					sessionStorage.setItem("types",JSON.stringify(data.data));
+				}
+			})
 			$(document.body).on('click',"#switch",function(){
 				$(this).closest('.control-label').next().find("textarea").attr('disabled',!this.checked)
 			}).on('change',"select[name='amount_warning']",function(){
