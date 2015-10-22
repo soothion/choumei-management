@@ -16,17 +16,21 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper">        
-            <div class="table" style="margin:0" id="table-wrapper">
+        <div class="wrapper">
+            <div class="table" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
+                <script type="text/template" id='table-t'>
                 <div class="detail-operation">
-                        <a href='addBase.html'>
+                        <a href='index.html'>
+                            <button class="btn"> 返回</button>
+                        </a>
+                        <%if (data.status !=3 && data.status !=4){%>
+                        <a href='addBase.html#id=<%=query.id%>'>
                             <button class="btn">编辑</button>
                         </a>
-                    <button class="btn" type="button" onclick="window.close()">关闭</button>  
+                        <%}%>
                 </div>
-                <table  ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
-                <script type="text/template" id='table-t'>
-                <%var status=["","进行中","暂停","已关闭","已结束"]%>
+                <table >
+                <%var status=["","进行中","下线","已关闭","已结束"]%>
                     <tbody>
                         <tr>
                             <td class="td">活动名称</td>
@@ -108,7 +112,7 @@
 
                         <tr>
                             <td class="td">实体券编号和密码</td>
-                            <td><a class="link" href='ticketMsg.html#id=<%=query.id%>'>查看实体券编码和密码</a></td>
+                            <td><a class="<%= data.export == 0 ? 'disabled': 'link'%>" <%if (data.export != 0){%> href='ticketMsg.html#id=<%=query.id%>'<%}%>>查看实体券编码和密码</a></td>
                         </tr>
                     </tbody>
                     </script>

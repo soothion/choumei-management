@@ -19,6 +19,8 @@
         <div class="wrapper" id="table" ajat="coupon/getCoupon/<%=query.id%>#domid=table&tempid=table-t">
            <script type="text/template" id="table-t">
             <form action="coupon/exportCoupon/<%=query.id%>" data-role="export">
+                <a href="detail.html#id=<%=query.id%>"><button type='button' class='btn'>返回</button></a>
+                <span class="space"></span>
                 <button class="btn" data-slug="manager.export">
                 <i class="fa fa-file-excel-o"></i> 导出
                 </button>

@@ -21,75 +21,123 @@
 
         <div class="wrapper">
             <form class="form-vertical" data-role="form" id="form">
-                    <div class="detail-operation">
-                        <button type="button" class="btn btn-cancel">取消</button>
-                        <span class="space"></span>
-                        <button class="btn-primary">提交</button>
-                    </div>
                     <ul class="nav-step flex-box">
                         <li class="flex-item active"><span class="arrow">1.活动基本信息</span></li>
-                        <li class="flex-item"><span>2.选择用户</span></li>
-                        <li class="flex-item"><span>3.定义现金券</span></li>
+                        <li class="flex-item"><span>2.定义兑换券</span></li>
                     </ul>
-
-                    <div class="control-group">
-                        <label class="control-label" for=""><span class="red">*</span>活动名称：</label>
-                        <div class="control">
-                            <input type="text" name="bankName" value="" placeholder="活动名称" 
-                            maxlength="12" required >
-                        </div>
-                    </div> 
-
-                    <div class="control-group">
-                        <label class="control-label" for=""><span class="red">*</span>活动编号：</label>
-                        <div class="control">
-                            <input type="text" name="beneficiary" value="" >
-                        </div>
-                    </div> 
-
-                    <div class="control-group">
-                        <label class="control-label" for=""><span class="red">*</span>活动简介：</label>
-                        <div class="control">
-                        <textarea maxlength="5000" placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符" required style="height:150px;width:500px"></textarea>
-                        </div>
+                    <div id="pageContent">
                     </div>
-
-                    <div class="control-group">
-                        <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
-                        <div class="control">
-                            <select name="department_id" required>
-                                <option value="">全部</option>
-                                <option value="1">客服部</option>
-                                <option value="2">产品部</option>
-                                <option value="3">运营部</option>
-                                <option value="3">商务部</option>
-                                <option value="3">企划部</option>
-                                <option value="3">市场部</option>
-                                <option value="3">其他部门</option>
-                            </select>  
-                        </div>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label" for=""><span class="red">*</span>负责人：</label>
-                        <label class="label">
-                            <input type="radio" class="label" checked="checked" name="businessId" value="1" required>
-                            <span>李楠</span>
-                        </label>
-                        <span class="control-help" style="display:none;"></span>
-                    </div>
-
-                    <div class="control-group">
-                        <label class="control-label" for=""></label>
-                        <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
-                        <button class="btn-primary">下一步</button>
-                    </div>                                                                  
             </form>
-        </div> 
+        </div>
+        <script type="text/template" id='addBase_1'>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>活动名称：</label>
+                <div class="control">
+                    <input type="text" name="actName" value="<%=data.actName%>" placeholder="活动名称"
+                    maxlength="12" required >
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>活动编号：</label>
+                <div class="control" id="actNo" <%if (!data.actNo){%> ajat-one="true" ajat="platform/getActNum#domid=actNo&amp;tempid=actNo-t" <%}%>>
+                   <%if (data.actNo){%>
+                    <input type="text"  disabled value="<%=data.actNo%>">
+                    <input type="hidden" name="actNo" value="<%=data.actNo%>" required>
+                    <%}%>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>活动简介：</label>
+                <div class="control">
+                    <textarea maxlength="5000" name="actIntro" placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符" required style="height:150px;width:500px"><%=data.actIntro%></textarea>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
+                <div class="control">
+                    <select name="departmentId" ajat-one="true" id="department" ajat="platform/getRequestDepartment#domid=department&amp;tempid=department-t&sid=<%=data.departmentId%>" manager-id="<%=data.managerId%>" ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&sid=<%=data.managerId%>" required >
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>负责人：</label>
+                <div id="manager">
+                </div>
+                <span class="control-help" style="display:none;"></span>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for=""></label>
+                <a href="index.html">
+                    <button class="btn" type="button" id="preview-btn" style="margin-right:20px">取消</button>
+                </a>
+                <button class="btn-primary">下一步</button>
+            </div>
+        </script>
+        <script type="text/template" id='actNo-t'>
+            <input type="text"  disabled value="<%=data.actNo%>">
+            <input type="hidden" name="actNo" value="<%=data.actNo%>" required>
+        </script>
+        <script type="text/template" id="department-t">
+            <option value="">全部</option>
+            <%data.forEach(function(item){%>
+            <option <%if (protocol.custom.sid == item.id){%> selected <%}%>value="<%=item.id%>"><%=item.title%></option>
+            <%})%>
+        </script>
+        <script type="text/template" id='manager_t'>
+        <%data.forEach(function(item){%>
+        <label class="label">
+            <input type="radio" <%if (protocol.custom.sid == item.id){%> checked='checked' <%}%> class="label" name="managerId" value="<%=item.id%>" required>
+            <span><%=item.name%></span>
+        </label>
+        <%})%>
+        </script>
         <script>
-            lib.Form.prototype.save = function(data){
-                location.href = "addTicket.html"
+            $('body').on('_ready','#department',function(e,data){
+                var value = $(this).val();
+                var managerId = $(this).attr('manager-id');
+                lib.ajat('platform/getDepartmentManager/'+value+'#domid=manager&tempid=manager_t&sid='+managerId).render();
+            })
+            var getTemplateData = function(){
+                var id = lib.tools.parseQuery(window.location).id;
+                if (id){
+                    lib.ajax({
+                        url:"coupon/getInfo/"+id
+                    }).done(function(data, status, xhr){
+                        if (data.result == 1){
+                            templateRender(data.data);
+                            setTmpData(data.data);
+                        }
+                    });
+                }else if (getTmpData()){
+                    templateRender(getTmpData());
+                }else {
+                    templateRender({});
+                }
+            };
+
+            var templateRender = function(data){
+                lib.ajat('#domid=pageContent&tempid=addBase_1').template(data);
+            };
+
+            var getTmpData = function(){
+               var tmp = JSON.parse(window.localStorage.getItem('couponTmpData'));
+               return tmp;
+            };
+
+            var setTmpData = function(data){
+                window.localStorage.setItem('couponTmpData',JSON.stringify(data));
             }
-        </script>      
+
+            getTemplateData();
+            lib.Form.prototype.save = function(data){
+                var tmpData = $.extend(getTmpData(),data);
+                setTmpData(tmpData);
+                location.href="addTicket.html"
+            }
+
+            var clearTmpData  = function(){
+                window.localStorage.removeItem('couponTmpData');
+            }
+        </script>
     </body>
 </html>

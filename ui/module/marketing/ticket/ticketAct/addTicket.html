@@ -8,7 +8,7 @@
         .table tbody tr:hover{
             background:none;
         }
-      </style> 
+      </style>
     </head>
     <body>
         <div class="breadcrumb">
@@ -29,214 +29,225 @@
                         <button type="button" class="btn btn-cancel">取消</button>
                         <span class="space"></span>
                         <button class="btn-primary">提交</button>
-                    </div>        
+                    </div>
 
                     <ul class="nav-step flex-box">
                         <li class="flex-item">
-                            <a href="add.html">
+                            <a >
                                 <i class="fa fa-check-circle"></i>
                                 <span>1.活动基本信息</span>
                             </a>
                         </li>
-
-                        <li class="flex-item"> 
-                            <a href="add.html">
-                                <i class="fa fa-check-circle"></i>
-                                <span>2.选择用户</span>
-                            </a>
-                        </li>
-                        <li class="flex-item active"><span class="arrow">3.定义现金券</span></li>
+                        <li class="flex-item active"><span class="arrow">2.定义现金券</span></li>
                     </ul>
 
-                   <form class="form-vertical" data-role="form" id="form">
+                   <form class="form-vertical"  data-role="form" id="form">
+                       <script type="text/template" id="form-t">
+                           <table class="table" width="100%">
+                               <thead>
+                                   <tr>
+                                       <th>现金券设定</th>
+                                   </tr>
+                               </thead>
 
-                    <table class="table" width="100%">
-                        <thead>
-                            <tr>
-                                <th>现金券设定</th>
-                            </tr>                              
-                        </thead>
+                               <tbody>
+                                   <tr>
+                                       <td>
+                                           <div style="margin:15px">
+                                               <span style="display: inline-block;width:130px">券金额:</span>
+                                               <input type="text" name="money" pattern='number' min='1' value="<%=data.money%>" max='999' id='money' required/>
+                                               <strong>元&nbsp;&nbsp;&nbsp;</strong>
+                                               <span>（不可修改，可填写1~999)</span>
+                                           </div>
 
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div style="margin:15px">
-                                        <span style="display: inline-block;width:130px">券金额:</span>
-                                        <input type="text" />
-                                        <strong>元&nbsp;&nbsp;&nbsp;</strong>
-                                        <span>（不可修改，可填写1~999)</span>
-                                    </div>
+                                           <div style="margin:15px">
+                                               <span style="display: inline-block;width:130px">满额使用(单个项目)</span>
+                                               <input type="text" pattern='number' min='0' max='999' value="<%=data.enoughMoeny%>" name="enoughMoeny"/>
+                                               <strong>元&nbsp;&nbsp;&nbsp;以上可用</strong>
+                                               <span>(大于或等于该数值可使用，0为不限制，可填写0~999) </span>
+                                           </div>
+                                           <hr />
+                                           <div style="margin:15px">
+                                               <span style="display: inline-block;width:130px">券总数:</span>
 
-                                    <div style="margin:15px">
-                                        <span style="display: inline-block;width:130px">满额使用(单个项目)</span>
-                                        <input type="text" />
-                                        <strong>元&nbsp;&nbsp;&nbsp;以上可用</strong>
-                                        <span>(大于或等于该数值可使用，0为不限制，可填写0~999) </span>
-                                    </div>
-                                    <hr />
-                                    <div style="margin:15px">
-                                        <span style="display: inline-block;width:130px">券总数:</span>
-
-                                        <label class="radio">
-                                            <input type="radio" class="ticketNum" name="num" checked value="1" >
-                                            <span>不限</span>
-                                        </label>
-                                        <span style="margin-right: 15px;border-left:1px solid #ddd"></span>
-                                        <label class="radio">
-                                            <input type="radio" class="ticketNum" name="num" value="2" maxlength="6">
-                                            <span>自定义</span>
-                                        </label>
-                                        <input type="text" id="ticketNumInput" value="1" disabled="disabled" />
-                                        <strong>张&nbsp;&nbsp;&nbsp;</strong>
-                                        <span>(不可修改，可填写1~999）</span>
-                                    </div> 
-                                    <hr />  
-                                    <div style="margin:15px">
-                                        <span style="display: inline-block;width:130px">领券上限：</span>
-                                        <input type="text" value="1" maxlength="6"/>
-                                        <strong>张&nbsp;&nbsp;&nbsp;</strong>
-                                        <span>(每人本活动领券总上限，每次活动只可获取一张)</span>
-                                    </div>                                                                 
-                                </td>
-                            </tr>                                 
-                        </tbody>
-                    </table>
+                                               <label class="radio">
+                                                   <input type="radio" class="ticketNum" name="num" <%if (!data.totalNumber){%>checked="checked"<%}%> value="1" >
+                                                   <span>不限</span>
+                                               </label>
+                                               <span style="margin-right: 15px;border-left:1px solid #ddd"></span>
+                                               <label class="radio">
+                                                   <input type="radio" class="ticketNum" <%if (data.totalNumber){%>checked="checked"<%}%> name="num" value="2" maxlength="6">
+                                                   <span>自定义</span>
+                                               </label>
+                                               <input type="text" name="totalNumber" id="ticketNumInput" value="<%=data.totalNumber || 1%>" pattern='number' min='1' max='99999' <%if (!data.totalNumber){%>disabled="disabled"<%}%> />
+                                               <strong>张&nbsp;&nbsp;&nbsp;</strong>
+                                               <span>(不可修改，可填写1~99999）</span>
+                                           </div>
+                                           <hr />
+                                           <div style="margin:15px">
+                                               <span style="display: inline-block;width:130px">领券上限：</span>
+                                               <input type="text" name="getSingleLimit" value="<%=data.getSingleLimit || 1%>" pattern='number' min='1' max='20' required/>
+                                               <strong>张&nbsp;&nbsp;&nbsp;</strong>
+                                               <span>(每人本活动参与次数，每次参与只可获取一张，填写1~20)</span>
+                                           </div>
+                                       </td>
+                                   </tr>
+                               </tbody>
+                           </table>
 
 
-                    <table class="table" width="100%">
-                        <thead>
-                            <tr>
-                                <th colspan="2">时间限制</th>
-                            </tr>                              
-                        </thead>
+                           <table class="table" width="100%">
+                               <thead>
+                                   <tr>
+                                       <th colspan="2">时间限制</th>
+                                   </tr>
+                               </thead>
 
-                        <tbody>
-                            <tr>
-                                <td>活动（获取）时间</td>
-                                <td>
-                                    <input type="date" />
-                                    <span>至</span>
-                                    <input type="date" />
-                                    <span class="control-help" style="display:none;"></span>
-                                </td>
-                            </tr>    
+                               <tbody>
+                                   <tr>
+                                       <td>活动（获取）时间</td>
+                                       <td>
+                                           <input type="date" name="getTimeStart" id="getTimeStart" value="<%=data.getTimeStart || ''%>" />
+                                           <span>至</span>
+                                           <input type="date" name="getTimeEnd" value="<%=data.getTimeEnd || ''%>" id="getTimeEnd"/>
+                                           <span class="control-help" style="display:none;"></span>
+                                       </td>
+                                   </tr>
 
-                            <tr>
-                                <td>券有效时间</td>
-                                <td>
-                                    <div style="margin:15px">
-                                        <label class="radio">
-                                            <input type="radio" class="avaDateRadio" name="avaDate" value="1" 
-                                            checked="checked">
-                                            <span>指定有效期</span>
-                                        </label> 
-                                        <input type="date" id="avaDateStart"/>
-                                        <span>至</span>
-                                        <input type="date" id="avaDateEnd"/>
-                                        <span class="control-help" style="display:none;"></span>        
-                                    </div>
-                                    <hr />
-                                    <div style="margin:15px">
-                                        <label class="radio">
-                                            <input type="radio" class="avaDateRadio" name="avaDate" value="2" >
-                                            <span>自定义有效期区间</span>
-                                        </label>
-                                        <input type="text" id="avaDay" disabled="disabled" />
-                                        <span>天内有效（获取现金券后）</span>                                        
-                                    </div>
-                                </td>
-                            </tr>                               
-                        </tbody>
-                    </table>
+                                   <tr>
+                                       <td>券有效时间</td>
+                                       <td>
+                                           <div style="margin:15px">
+                                               <label class="radio">
+                                                   <input type="radio" class="avaDateRadio" name="avaDate" value="1"
+                                                   checked="checked">
+                                                   <span>指定有效期</span>
+                                               </label>
+                                               <input type="date" value="<%=data.avaDateStart|| ''%>" id="avaDateStart" name="addActLimitStartTime"/>
+                                               <span>至</span>
+                                               <input type="date" id="avaDateEnd" value="<%=data.avaDateEnd|| ''%>" name="addActLimitEndTime"/>
+                                               <span class="control-help" style="display:none;"></span>
+                                           </div>
+                                           <hr />
+                                           <div style="margin:15px">
+                                               <label class="radio">
+                                                   <input type="radio" class="avaDateRadio" <%if (data.fewDay){%>checked="checked" <%}%> name="avaDate" value="2" >
+                                                   <span>自定义有效期区间</span>
+                                               </label>
+                                               <input type="text" id="avaDay" <%if (!data.fewDay){%>disabled="disabled"<%}%> name="fewDay" value="<%=data.fewDay || 1%>" pattern="number" min="1"/>
+                                               <span>天内有效（获取现金券后）</span>
+                                           </div>
+                                       </td>
+                                   </tr>
+                               </tbody>
+                           </table>
 
-                    <table class="table" width="100%">
-                        <thead>
-                            <tr>
-                                <th>使用限制</th>
-                            </tr>                              
-                        </thead>
+                           <table class="table" width="100%">
+                               <thead>
+                                   <tr>
+                                       <th>使用限制</th>
+                                   </tr>
+                               </thead>
 
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div style="margin:10px"><strong>指定项目类别支付可用</strong></div>
-                                    <div>
-                                        <label class="checkbox">
-                                            <input type="checkbox" name="salonType" value="3">
-                                            <span>洗吹</span>
-                                        </label>                        <label class="checkbox">
-                                            <input type="checkbox" name="salonType" value="3">
-                                            <span>洗剪吹</span>
-                                        </label>                        <label class="checkbox">
-                                            <input type="checkbox" name="salonType" value="3">
-                                            <span>烫发</span>
-                                        </label>                        <label class="checkbox">
-                                            <input type="checkbox" name="salonType" value="3">
-                                            <span>染发</span>
-                                        </label>                        <label class="checkbox">
-                                            <input type="checkbox" name="salonType" value="3">
-                                            <span>护发</span>
-                                        </label>                        <label class="checkbox">
-                                            <input type="checkbox" name="salonType" value="3">
-                                            <span>套餐</span>
-                                        </label>                        
-                                        <label class="checkbox">
-                                            <input type="checkbox" name="salonType" value="3">
-                                            <span>快剪</span>
-                                        </label>                                        
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label class="checkbox">
-                                        <input type="checkbox" name="salonType" value="3">
-                                        <span>限制首单使用</span>
-                                    </label>                                      
-                                </td>                                
-                            </tr>                                   
-                        </tbody>
-                    </table>
+                               <tbody>
+                                   <tr>
+                                       <td>
+                                           <div style="margin:10px"><strong>指定项目类别支付可用</strong></div>
+                                           <div  ajat-one="true" id="limitItemTypes" ajat="platform/getItemType#domid=limitItemTypes&amp;tempid=limitItemTypes-t&sid=<%=data.limitItemTypes%>">
+                                           </div>
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td>
+                                           <label class="checkbox">
+                                               <input type="checkbox" name="useLimitTypes" value="2">
+                                               <span>限制首单使用</span>
+                                           </label>
+                                       </td>
+                                   </tr>
+                               </tbody>
+                           </table>
 
-                    <table class="table" width="100%">
-                        <thead>
-                            <tr>
-                                <th colspan="2">
-                                    <label class="checkbox">
-                                        <input type="checkbox" name="salonType" value="3">
-                                        <span>发送手机短信</span>
-                                    </label> 
-                                </th>
-                            </tr>                              
-                        </thead>
+                           <table class="table" width="100%">
+                               <thead>
+                                   <tr>
+                                       <th colspan="2">
+                                           <label class="checkbox">
+                                               <input type="checkbox" <%if (data.sendSms){%>checked<%}%>name="" value="3">
+                                               <span>发送手机短信</span>
+                                           </label>
+                                       </th>
+                                   </tr>
+                               </thead>
 
-                        <tbody>
-                            <tr>
-                                <td>手机短信内容</td>
-                                <td><textarea name="" maxlength="500" 
-                                placeholder="限制500个汉字的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" style="width: 500px;"></textarea></td>
-                            </tr>                                 
-                        </tbody>
-                    </table>                                                                                                                                               
-                    <div class="control-group">
-                        <label class="control-label" for=""></label>
-                        <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
-                        <button class="btn-primary">下一步</button>
-                    </div> 
-                    </form>                                                                 
+                               <tbody>
+                                   <tr>
+                                       <td>手机短信内容</td>
+                                       <td><textarea name="sendSms" maxlength="500"
+                                       placeholder="限制500个汉字的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" style="width: 500px;"><%=data.sendSms%></textarea></td>
+                                   </tr>
+                               </tbody>
+                           </table>
+                           <div class="control-group">
+                               <label class="control-label" for=""></label>
+                               <button class="btn" type="button" id="preview-btn" style="margin-right:20px">取消</button>
+                               <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
+                               <button class="btn-primary">提交</button>
+                           </div>
+                       </script>
+                    </form>
         </div>
 
-        <script>
 
+        <script type="text/template" id='limitItemTypes-t'>
+            <%console.log(protocol.custom.sid)%>
+            <%data.forEach(function(item){%>
+            <label class="checkbox">
+                <input type="checkbox" name="limitItemTypes" value="<%=item.typeid%>">
+                <span><%=item.typename%></span>
+            </label>
+            <%})%>
+        </script>
+
+        <script>
+            var getTemplateData = function(){
+                if (getTmpData()){
+                    templateRender(getTmpData());
+                }else {
+                    templateRender({});
+                }
+            };
+
+            var templateRender = function(data){
+                lib.ajat('#domid=form&tempid=form-t').template(data);
+            };
+
+            var getSubmitData = function(){
+                var thisFormData = lib.tools.getFormData($('#form'));
+                var tmpData = getTmpData();
+                var formData = $.extend(tmpData,thisFormData);
+                return formData;
+            }
+
+            var getTmpData = function(){
+               var tmp = JSON.parse(window.localStorage.getItem('couponTmpData'));
+               return tmp;
+            };
+
+            var setTmpData = function(data){
+                window.localStorage.setItem('couponTmpData',JSON.stringify(data));
+            }
+
+            getTemplateData();
+
+            // 表单验证部分
             $("#form").on('click','.ticketNum',function(){
                 if($(this).val()=="1"){
                    $("#ticketNumInput").attr('disabled','disabled');
                 }else{
                    $("#ticketNumInput").removeAttr('disabled');
                 }
-            })
-
-            $("#form").on('click','.avaDateRadio',function(){
+            }).on('click','.avaDateRadio',function(){
                 if($(this).val()=="1"){
                    $("#avaDateStart").removeAttr('disabled');
                    $("#avaDateEnd").removeAttr('disabled');
@@ -246,11 +257,76 @@
                    $("#avaDateEnd").attr('disabled','disabled');
                    $("#avaDay").removeAttr('disabled');
                 }
+            }).on('click', '#preview-btn', function(event) {
+
+                var formData = getFormData();
+
+            }).on('focus', '#getTimeStart', function(event) {
+
+                changeDateMin();
+
+            }).on('change', '#getTimeStart', function(event) {
+
+                changeDateMin(formattedDate($(this).val()));
+
+            }).on('change', '#getTimeEnd', function(event) {
+
+                $('#getTimeStart').attr('max',formattedDate($(this).val()));
+
+            }).on('change', '#avaDateEnd', function(event) {
+
+                $('#avaDateStart').attr('max',formattedDate($(this).val()));
+
+            }).on('change', '#avaDateStart', function(event) {
+
+                $('#avaDateEnd').attr('min',formattedDate($(this).val()));
+
             })
 
-            lib.Form.prototype.save = function(data){
-                location.href = "addTicket.html"
+            var formattedDate = function(val){
+                var newDate = val ? new Date(val) : new Date();
+                return newDate.format("yyyy-MM-dd");
             }
-        </script>                
+
+            var changeDateMin = function(val){
+                var date = val ? val : new Date().format("yyyy-MM-dd");
+                $('#avaDateStart,#avaDateEnd').val('');
+                $('#avaDateStart,#avaDateEnd,#getTimeStart,#getTimeEnd').attr('min',date);
+            };
+
+            changeDateMin();
+
+            lib.Form.prototype.save = function(data){
+                var formData = getSubmitData();
+                var  ajaxUrl = formData.vcId ? 'coupon/editConf' : 'coupon/add';
+                var resultText = formData.vcId ? '编辑活动成功':'新增活动成功';
+                confirmBox({
+                    url:ajaxUrl,
+                    text:'确定保存本活动吗？',
+                    resultText:resultText
+                });
+            }
+
+
+            var confirmBox = function(options){
+                 lib.popup.confirm({
+                     text:options.text,
+                     define: function(){
+                         lib.ajax({
+                             url : options.url+options.id
+                         }).done(function(data, status, xhr){
+                             if(data.result == 1){
+                                 parent.lib.popup.result({
+                                     text:options.resultText,
+                                     define:function(){
+                                         location.reload();
+                                     }
+                                 });
+                             }
+                         });
+                     }
+                 });
+            }
+        </script>
     </body>
 </html>
