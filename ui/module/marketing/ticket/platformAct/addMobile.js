@@ -1,0 +1,109 @@
+/* 
+* @Author: anchen
+* @Date:   2015-10-20 14:51:19
+* @Last Modified by:   anchen
+* @Last Modified time: 2015-10-22 16:23:52
+*/
+
+(function(){
+    var type = lib.query.type;
+    if(type == 'add'){
+        var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
+        if(baseData.phoneList){
+            if($.isArray(baseData.phoneList)){
+                $('textarea.add').val(baseData.phoneList.join('\n'));          
+            }else{
+                var arr = baseData.phoneList.split(',');
+                $('textarea.add').val(arr.join('\n'));     
+            }     
+        }
+    }
+
+    if(type == 'edit'){
+        var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+        if(editData.phoneList){
+            if($.isArray(editData.phoneList)){
+                $('textarea.add').val(editData.phoneList.join('\n'));          
+            }else{
+                var arr = editData.phoneList.split(',');
+                $('textarea.add').val(arr.join('\n'));     
+            }     
+        }
+    }
+
+    if(type == 'preview'){
+        var previewData = JSON.parse(sessionStorage.getItem('preview-base-data')); 
+        if(previewData.phoneList){
+            if($.isArray(previewData.phoneList)){
+                $('textarea.add').val(previewData.phoneList.join('\n'));          
+            }else{
+                var arr = previewData.phoneList.split(',');
+                $('textarea.add').val(arr.join('\n'));     
+            }     
+        }
+        $('textarea.add').attr('disabled','disabled');     
+        $("button.btn-primary").attr('disabled','disabled');
+    }
+
+    $(".btn-primary").on('click',function(){
+        if(!$('textarea').val()) return;
+        var arr = $('textarea').val().split('\n');
+        var obj = {} , tempArr = [] ,lastArr = [],errArr = [];
+
+        arr.forEach(function(item,i){
+            if(!obj[item]){
+                obj[item] = true;
+            }
+        });
+
+        for(var s in obj){
+           tempArr.push(s);
+        }
+
+        tempArr.forEach(function(item,i){
+            if(/^1[0-9]{10}$/.test(item,i)){
+                lastArr.push(item);
+            }else{
+                errArr.push(item);
+            }
+        });
+
+        if(lastArr.length>0){
+            if(type == 'add'){
+                var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
+                baseData.phoneList = lastArr;
+                sessionStorage.setItem('add-base-data',JSON.stringify(baseData));  
+            }
+
+            if(type == 'edit'){
+                var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+                editData.phoneList = lastArr; 
+                sessionStorage.setItem('edit-base-data',JSON.stringify(editData));
+            }
+        }else{
+            if(type == 'add'){
+                var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
+                baseData.phoneList = [];
+                sessionStorage.setItem('add-base-data',JSON.stringify(baseData));    
+            }
+
+            if(type == 'edit'){
+                var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+                editData.phoneList = [];
+                sessionStorage.setItem('edit-base-data',JSON.stringify(editData));  
+            }              
+        }
+
+        if(errArr.length > 0){
+            $("#errorTip").text("您的数据有"+errArr.length+"条添加失败，添加失败的手机号码如下：");
+            var html = ""
+            errArr.forEach(function(item,i){
+                html += "<p>"+item+"</p>";
+            });
+            $("#errorMobile").html(html);                    
+        }else{
+            $("#errorTip").text(""); 
+            $("#errorMobile").html("");
+        }                 
+    })    
+})()
