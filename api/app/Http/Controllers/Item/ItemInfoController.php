@@ -444,7 +444,7 @@ class ItemInfoController extends Controller{
 	    		return false;
 	    	}
 	    }
-	    if($timingAdded && $timingShelves && !$itemid)
+	    if($timingAdded && $timingShelve)
 	    {
 	    	$data['timingAdded'] = strtotime($timingAdded);
 	    	$data['timingShelves'] = strtotime($timingShelves);
@@ -462,19 +462,6 @@ class ItemInfoController extends Controller{
 	    	{
 	    		$err_msg = ['msg'=>'数据错误,项目id不存在！','no'=>ERROR::ITEM_DATA_ERROR];
 	    		return false;
-	    	}
-	    	if($itemInfo->status == SalonItem::STATUS_OF_DOWN)
-	    	{
-	    		if($timingAdded && $timingShelves)
-	    		{
-	    			$data['timingAdded'] = strtotime($timingAdded);
-	    			$data['timingShelves'] = strtotime($timingShelves);
-	    			if($data['timingAdded'] >= $data['timingShelves'])
-	    			{
-	    				$err_msg = ['msg'=>'下架时间必须大于上架时间','no'=>ERROR::ITEM_ERROR];
-	    				return false;
-	    			}
-	    		}
 	    	}
 	    	if($itemInfo->status == SalonItem::STATUS_OF_UP)
 	    	{
