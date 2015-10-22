@@ -39,7 +39,7 @@
             </div>
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>活动编号：</label>
-                <div class="control" id="actNo" <%if (!data.actNo){%> ajat-one="true" ajat="platform/getActNum#domid=actNo&amp;tempid=actNo-t" <%}%>>
+                <div class="control" id="actNo" <%if (!data.actNo){%> ajat-one="true" ajat="coupon/getActNum#domid=actNo&amp;tempid=actNo-t" <%}%>>
                    <%if (data.actNo){%>
                     <input type="text"  disabled value="<%=data.actNo%>">
                     <input type="hidden" name="actNo" value="<%=data.actNo%>" required>
