@@ -173,7 +173,7 @@ class LaiseeConfig extends Model {
 
     public static function getLaiseeList($laiseeName, $startTime, $endTime, $page, $size) {
         DB::enableQueryLog();
-        $field = ['id', 'laisee_name', 'create_time', 'start_time', 'status', 'vcsns', 'gift_vcsn', 'over_time'];  //TODO
+        $field = ['id', 'laisee_name', 'create_time', 'start_time', 'end_time', 'status', 'vcsns', 'gift_vcsn', 'over_time'];  //TODO
 //        $query = Self::select("*");
         $query = Self::select($field);
         if (!empty($laiseeName)) {

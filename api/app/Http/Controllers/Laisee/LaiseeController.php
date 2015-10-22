@@ -45,7 +45,7 @@ class LaiseeController extends Controller {
      * @apiSuccess {Number} giftNum 礼包领取数.
      * @apiSuccess {String} create_time 创建时间.
      * @apiSuccess {String} start_time 上线时间.
-     * @apiSuccess {String} status 活动状态 (N已结束 Y进行中 S已关闭).
+     * @apiSuccess {String} status 活动状态 (N已结束 Y进行中 S已关闭 F下线).
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -96,6 +96,9 @@ class LaiseeController extends Controller {
             $val['receiveNum'] = Laisee::where('laisee_config_id', $val['id'])->whereNotNull('mobilephone')->count(); //已领取数  TODO Laisee::where('id', $val['id']) ID需要改
             $val['usedNum'] = Voucher::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->where('vStatus', 2)->count();  //已使用数
             $val['giftNum'] = !empty($val['gift_vcsn']) ? Laisee::where('id', $val['id'])->whereIn('vcsn', explode(",", $val['gift_vcsn']))->whereNotNull('mobilephone')->count() : 0;  //礼包领取数
+            if ($val['end_time'] == "0000-00-00 00:00:00") {  // 此时活动为下线状态   可以上线
+                $val['status'] = 'F';
+            }
         }
         return $this->success($laiseeList);
     }
@@ -144,6 +147,9 @@ class LaiseeController extends Controller {
             $data[$key]['create_time'] = $val['create_time'];
             $data[$key]['start_time'] = $val['start_time'];
             $data[$key]['status'] = $val['status'] == 'Y' ? "进行中" : $val['status'] == 'N' ? "已结束" : "已关闭";
+            if ($val['end_time'] == "0000-00-00 00:00:00") {  // 此时活动为下线状态   可以上线
+                $data[$key]['status'] = "下线";
+            }
         }
         //导出excel	   
         $title = '红包活动列表' . date('Ymd');
@@ -313,7 +319,7 @@ class LaiseeController extends Controller {
                 // 检测预警值 是否有修改
                 if ($laiseeConfig->amount_warning != $data['amount_warning'] && $data['amount_warning'] > 0) {
                     $data['send_warning_sms'] = 'Y';
-                }else{
+                } else {
                     $data['send_warning_sms'] = 'N';
                 }
             } else {

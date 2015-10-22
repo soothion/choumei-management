@@ -33,9 +33,9 @@
         <div class="wrapper">
 			<div id="form" ajat="<%if(query._){%>laisee/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
-				<form action="<%if(query._){%>laisee/update<%}else{%>laisee/create<%}%>" class="form-vertical" data-role="form" >
+				<form action="" class="form-vertical" data-role="form" >
 					<div class="detail-operation ">
-						<button type="button" class="btn btn-cancel">取消</button>
+						<a class="btn" href="index.html">取消</a>
 						<span class="space"></span>
 						<button class="btn-primary">提交</button>
 					</div>
@@ -105,9 +105,9 @@
 					<div class="control-group">
 						<label class="control-label" for=""></label>
 						<div class="control">
-							 <button class="btn" type="button" id="preview_btn">预览</button>
+							 <a class="btn" href="index.html">取消</a>
 							 <span class="space"></span>
-							<button class="btn-primary" >提交</button>  
+							<button class="btn-primary" >下一步</button>  
 						</div>                        
 					</div>
 				</div> 
@@ -117,12 +117,15 @@
 		</div>
         <script>
 			$('#form').on("_ready",function(){
-				$('#form form')[0]._getFormData = function(){
-					var data=lib.tools.getFormData($(this));
+				var form=$('#form form')[0]
+
+				 lib.Form.prototype.save = function(data){
 					var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
 					data=$.extend(formData,data);
-					return data;
-				 }
+					sessionStorage.setItem("formData",JSON.stringify(data));
+					location.href = "preview.html"+(lib.query._?"?"+lib.query._:"")
+				}
+				 
 				lib.puploader.image({
 					browse_button: 'imageUpload1',
 					auto_start:true,
@@ -145,13 +148,6 @@
 					max_file_size:'2mb',
 					//imageLimitSize:"640"
 				});
-				$('#preview_btn').on('click',function(){
-					var data=lib.tools.getFormData($("form"));
-					var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
-					data=$.extend(formData,data);
-					sessionStorage.setItem("preview",JSON.stringify(data));
-					window.open("preview.html","_blank");
-				})
 			});
         </script>      
     </body>
