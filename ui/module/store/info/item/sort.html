@@ -24,7 +24,7 @@
 					<select name="typeid" ajat-one="true" ajat="item/type#domid=type&tempid=type-t" style="min-width:300px" id="type">
 						<script type="text/template" id="type-t">
 							<%data.forEach(function(item){%>
-								<option value="<%=item.typeid%>"><%=item.typename%></option>
+								<option <%=query.typeid==item.typeid?"selected":""%> value="<%=item.typeid%>"><%=item.typename%></option>
 							<%})%>
 						</script>
 					</select>
@@ -64,13 +64,13 @@
 						<td><%=item.minPriceGroup%></td>
 						<td>
 							<%if(i!=0){%>
-							<form action="item/sort" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+							<form action="item/sort" data-role="normal" _onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 								<button class="link" type="button" data-slug="salon.save" type="button" data-goto="up" >上移</button>
 							</form>
 							<span class="space"></span>
 							<%}%>
 							<%if(i!=data.length-1){%>
-							<form action="item/sort" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+							<form action="item/sort" data-role="normal" _onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 								<button class="link"  type="button" data-slug="salon.save" type="button" data-goto="down">下移</button>
 							</form>
 							<%}%>
@@ -97,8 +97,13 @@
 			var form=$this.parent();
 			form[0]._getFormData=function(){
 				var sort=[];
-				$('input[name="itemid"]').each(function(){
-					sort.push({itemid:this.value,sort_in_type:$(this).closest('tr').index()+1});
+				var input=$('input[name="itemid"]');
+				input.each(function(i){
+					var no=i+1;
+					if(lib.query.sort_type!="ASC"){
+						no=input.length-i;
+					}
+					sort.push({itemid:this.value,sort_in_type:no});
 				});
 				return {sort:sort};
 			}
