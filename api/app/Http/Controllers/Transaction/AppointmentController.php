@@ -108,7 +108,7 @@ class AppointmentController extends Controller {
     }
 
     /**
-     * @api {get} /appointment/show/{id} 2.记录详情
+     * @api {get} /appointment/show/{id} 2.查看约造型师详情
      * @apiName show
      * @apiGroup appointment
      *
@@ -180,7 +180,7 @@ class AppointmentController extends Controller {
     }
 
     /**
-     * @api {get} /appointment/export 3.订单导出
+     * @api {get} /appointment/export 3.约造型师列表导出
      * @apiName export
      * @apiGroup appointment
      *
@@ -237,7 +237,7 @@ class AppointmentController extends Controller {
             Event::fire("appointment.export");
         }
         @ini_set('memory_limit', '256M');
-        $this->export_xls("约发型师" . date("Ymd"), $header, $res);
+        $this->export_xls("约发型师表" . date("Ymd"), $header, $res);
     }
 
 }
