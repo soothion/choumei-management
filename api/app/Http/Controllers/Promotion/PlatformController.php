@@ -1259,13 +1259,12 @@ class PlatformController extends Controller{
             return false;
         $nowTime = time();
         // 存在开始时间  且 现在的时间小于劵获取开始时间
-        $nowItStart = (!empty($getTypes['getStart']) && $nowTime< $getTypes['getStart']);
+        $nowItStart = (!empty($getTypes['getStart']) && $nowTime < $getTypes['getStart']);
         // 存在接在结束时间 且 现在的时间大于劵获取的结束时间
-        $nowGtEnd = (!empty($getTypes['getEnd']) && $nowTime> $getTypes['getEnd']);
+        $nowGtEnd = (!empty($getTypes['getEnd']) && $nowTime > $getTypes['getEnd']);
         $getNeedMoney = $getTypes['getNeedMoney'];
         $getItemType = $getTypes['getItemTypes'];
         $sms = $getTypes['SMS_ON_GAINED'];
-
         $useEnd = date('Y-m-d', $getTypes['useEnd']);
 
         if( !empty($getItemType) || !empty($getNeedMoney)  || $nowItStart || $nowGtEnd )
@@ -1281,7 +1280,7 @@ class PlatformController extends Controller{
             $successMsg = date('Y-m-d H:i:s') . " 代金劵发送短信的手机号码成功的有 " . $val['vMobilephone'];
             $errMsg = date('Y-m-d H:i:s') .  "代金劵发送短信的手机号码失败的有" . $val['vMobilephone'];
             if( !empty($sms) ){
-                $res = $this->sendphonemsg($val['vMobilephone'],$sms);
+                $res = \App\Utils::sendphonemsg($val['vMobilephone'],$sms);
                 $logPath = '../vouchConf_sendMsg.log';
                 $successMsg .= ' - ' .$res;
                 $errMsg .= ' - '.$res;
@@ -1311,37 +1310,5 @@ class PlatformController extends Controller{
             }
         }
     }
-    //发送短信
-    private function sendphonemsg($mobilephone, $smstxt) {
-
-        $url = env('SMS_URL_CONF');
-
-        $data = array('phone' => $mobilephone, 'smstxt' => $smstxt);
-        $codeVal = http_build_query($data);
-        $DesObj = new \Service\NetDesCrypt;
-        $DesObj->setKey( self::$DES_KEY );
-        //加密参数
-        $desStr = $DesObj->encrypt($codeVal);
-
-        $param['code'] = $desStr;
-        $result = $this->curlGet($url, $param);
-        return $result;
-    }
-    // curl get
-    private function curlGet($url, $data) {
-
-        $url = $url . http_build_query($data);
-        // 1. 初始化
-        $ch = curl_init();
-        // 2. 设置选项，包括URL
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HEADER, 0); //设置header
-
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        // 3. 执行并获取HTML文档内容
-        $output = curl_exec($ch);
-        // 4. 释放curl句柄
-        curl_close($ch);
-        return $output;
-    }
+    
 }
