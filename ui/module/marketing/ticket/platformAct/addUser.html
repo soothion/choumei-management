@@ -102,14 +102,14 @@
                       </a>
                       <input type="hidden" name="selectItemType" value="<%=query.selectItemType || 1 %>">
                 </div> 
-                <%query.selectItemType;debugger;%>
-                <%if(!query.selectItemType || query.selectItemType=='1'){%> 
+
+                <%if(query.selectItemType=='1'){%> 
                 <div class="control-group">
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                         <label class="radio">
-                            <input type="radio" checked="checked" name="selectUseType" value="1" 
-                            <%=!data.selectUseType || data.selectUseType == '1' ? 'checked' : '' %>
+                            <input type="radio" name="selectUseType" value="1" 
+                            <%= data.selectUseType == '1' ? 'checked' : '' %>
                             <%= query.type =='edit' ? 'disabled' : '' %>>
                             <span>新注册&nbsp;<span style="color: #ddd;">(活动时间内注册的用户)</span></span>
                         </label>
@@ -120,13 +120,14 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                         <label class="radio">
-                        <input type="radio" name="selectUseType" value="2" <%=data.selectUseType=='2' ? 'checked':'' %>
-                        <%= query.type =='edit' ? 'disabled' : '' %>>
-                            <span>
-                                首次消费&nbsp;
-                                <span style="color: #ddd;">(活动时间内首次消费后获取)</span>
-                            </span>
-                        </label>
+                            <input type="radio" name="selectUseType" value="2" 
+                            <%=data.selectUseType=='2' ? 'checked':'' %>
+                            <%= query.type =='edit' ? 'disabled' : '' %>>
+                                <span>
+                                    首次消费&nbsp;
+                                    <span style="color: #ddd;">(活动时间内首次消费后获取)</span>
+                                </span>
+                            </label>
                     </div>
                 </div>
                 <%}%>
