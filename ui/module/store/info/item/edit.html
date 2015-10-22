@@ -136,7 +136,7 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>定时上架：</label>
 				<div class="control">
-					<input type="_datetime" format="YYYY-MM-DD hh:mm" required name="timingAdded" <%if(data.timingAdded){%>value="<%=new Date(data.timingAdded*1000).format("yyyy-MM-dd hh:mm")%>"<%}else{%>disabled min="<%=new Date().format("yyyy-MM-dd hh:mm")%>"<%}%>>
+					<input type="_datetime" format="YYYY-MM-DD hh:mm" required name="timingAdded" <%if(data.timingAdded){%>value="<%=new Date(data.timingAdded*1000).format("yyyy-MM-dd hh:mm")%>" <%=data.status==1?"disabled":""%><%}else{%>disabled min="<%=new Date().format("yyyy-MM-dd hh:mm")%>"<%}%>>
 					<label><input type="checkbox" <%=!data.timingAdded?"checked":""%> class="limit"/><span>无限制</span></label>
 					<span class="control-help" style="display:none;"></span>
 				</div>
