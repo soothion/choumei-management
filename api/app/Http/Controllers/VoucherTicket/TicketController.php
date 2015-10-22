@@ -103,7 +103,6 @@ class TicketController extends Controller {
                         ->leftjoin('salon_itemcomment','laisee.item_comment_id','=','salon_itemcomment.itemcommentid')
                         ->leftjoin('user','salon_itemcomment.user_id','=','user.user_id')
                         ->where('user.mobilephone','=',$keyword);
-                
             }elseif( in_array($keywordType,[1,2,3,4,5]) )
                 $obj->where( $selectType[ $keywordType ] , '=' , $keyword );
             elseif( $keywordType == 7 ){
@@ -115,25 +114,15 @@ class TicketController extends Controller {
         }
 
         if($status){
-			if ($status == 1)
-                $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
-			elseif ($status == 2)
-                $obj->where( 'vStatus','=',2 );
-			elseif ($status == 3)
-                $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
-			elseif( $status == 4)
-                $obj->whereRaw(' vStatus=10 and REDEEM_CODE!=""');
-        }else
-            $obj->where('vStatus','<>',10);
+			if ($status == 1) $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
+			elseif ($status == 2) $obj->where( 'vStatus','=',2 );
+			elseif ($status == 3) $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
+			elseif( $status == 4) $obj->whereRaw(' vStatus=10 and REDEEM_CODE!=""');
+        }else $obj->where('vStatus','<>',10);
 
-        if($startTime && empty($endTime))
-            $obj->where('vUseTime','>=',$startTime);
-        
-        if($endTime && empty($startTime))
-            $obj->where('vUseTime','<=',$endTime);
-        
-        if($startTime && $endTime)
-            $obj->whereBetween('vUseTime',[$startTime,$endTime]);
+        if($startTime && empty($endTime)) $obj->where('vUseTime','>=',$startTime);
+        if($endTime && empty($startTime)) $obj->where('vUseTime','<=',$endTime);
+        if($startTime && $endTime) $obj->whereBetween('vUseTime',[$startTime,$endTime]);
         $count =  $obj->count();
         //手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
@@ -185,7 +174,7 @@ class TicketController extends Controller {
         $keywordType = isset($post['keywordType']) ? $post['keywordType'] : '';
         $obj = Voucher::select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE','vUseEnd']);
         if($keyword && !empty($keywordType)){
-            $selectType = array('','vcSn','vcTitle','vSn','vMobilephone','vSalonName','','REDEEM_CODE'); // 目前缺少分享手机号
+            $selectType = array('','vcSn','vcTitle','vSn','vMobilephone','vSalonName','','REDEEM_CODE');
 //            分享手机号查询
             if( $keywordType == 6 ){
                 $obj = DB::table('laisee')->select(['voucher.vId','voucher.vSn','voucher.vcSn','voucher.vcTitle'
@@ -194,7 +183,6 @@ class TicketController extends Controller {
                         ->leftjoin('salon_itemcomment','laisee.item_comment_id','=','salon_itemcomment.itemcommentid')
                         ->leftjoin('user','salon_itemcomment.user_id','=','user.user_id')
                         ->where('user.mobilephone','like',"%$keyword%");
-                
             }elseif( in_array($keywordType,[1,2,3,4,5]) )
                 $obj->where( $selectType[ $keywordType ] , 'like' , "%$keyword%" );
             elseif( $keywordType == 7 ){
@@ -206,25 +194,15 @@ class TicketController extends Controller {
         }
 
         if($status){
-			if ($status == 1)
-                $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
-			elseif ($status == 2)
-                $obj->where( 'vStatus','=',2 );
-			elseif ($status == 3)
-                $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
-			elseif( $status == 4)
-                $obj->whereRaw('vStatus=10 and REDEEM_CODE!=""');
-        }else
-            $obj->where('vStatus','<>',10);
+			if ($status == 1) $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
+			elseif ($status == 2) $obj->where( 'vStatus','=',2 );
+			elseif ($status == 3) $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
+			elseif( $status == 4) $obj->whereRaw('vStatus=10 and REDEEM_CODE!=""');
+        }else $obj->where('vStatus','<>',10);
 
-        if($startTime && empty($endTime))
-            $obj->where('vUseTime','>=',$startTime);
-        
-        if($endTime && empty($startTime))
-            $obj->where('vUseTime','<=',$endTime);
-        
-        if($startTime && $endTime)
-            $obj->whereBetween('vUseTime',[$startTime,$endTime]);
+        if($startTime && empty($endTime)) $obj->where('vUseTime','>=',$startTime);
+        if($endTime && empty($startTime)) $obj->where('vUseTime','<=',$endTime);
+        if($startTime && $endTime) $obj->whereBetween('vUseTime',[$startTime,$endTime]);
         $count =  $obj->count();
         if( $count > 5000 ){
             //手动设置页数
@@ -233,9 +211,7 @@ class TicketController extends Controller {
             });
             $list = $obj->orderBy('vId','DESC')->paginate($pageSize)->toArray();
             $list = $list['data'];
-        }else{
-            $list = $obj->orderBy('vId','DESC')->get()->toArray();
-        }
+        }else $list = $obj->orderBy('vId','DESC')->get()->toArray();
 //        echo "<pre>";
 //        print_r( $list );exit;
         $tempData = [];
@@ -268,9 +244,9 @@ class TicketController extends Controller {
         $header = ['序号','券编号','兑换密码','活动编号','活动名称','订单号','券金额','使用时间','用户手机号','使用店铺','现金券状态'];
         Excel::create($title, function($excel) use($tempData,$header){
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
-                    $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
-                    $sheet->prependRow(1, $header);//添加表头
-                });
+                $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+                $sheet->prependRow(1, $header);//添加表头
+            });
         })->export('xls');
     }
     /***
@@ -378,11 +354,9 @@ class TicketController extends Controller {
             throw new ApiException('获取信息失败', ERROR::RECEIVABLES_ERROR);
         if( !empty( $voucherInfo['vOrderSn'] ) ){
             $isPay = \App\Order::select(['ispay'])->where('ordersn','=',$voucherInfo['vOrderSn'])->first();
-            if( empty( $isPay ) )
-                throw new ApiException('获取信息失败', ERROR::RECEIVABLES_ERROR);
+            if( empty( $isPay ) ) throw new ApiException('获取信息失败', ERROR::RECEIVABLES_ERROR);
             $voucherInfo['isPay'] = $isPay == 1 ?  '未支付' :  '已支付';
-        }else
-            $voucherInfo['isPay'] = '';
+        }else $voucherInfo['isPay'] = '';
         $voucherConfInfo = \App\VoucherConf::select(['useItemTypes','useLimitTypes','useNeedMoney','getTypes','getItemTypes','getCodeType','getCode','getNeedMoney'])
                 ->where('vcId','=',$voucherInfo['vcId'])
                 ->first()
@@ -395,8 +369,7 @@ class TicketController extends Controller {
         elseif( $voucherConfInfo['getTypes'] == 3 )
             $voucherInfo['getText'] = $getText[  3  ]; 
         elseif( $voucherConfInfo['getTypes'] == 4 ){
-            if( !empty($voucherConfInfo['getNeedMoney']) )
-                $voucherInfo['getText'].= "项目消费满". $voucherConfInfo['getNeedMoney'] ."元获取;";
+            if( !empty($voucherConfInfo['getNeedMoney']) ) $voucherInfo['getText'].= "项目消费满". $voucherConfInfo['getNeedMoney'] ."元获取;";
             $voucherInfo['getText'] .= '全平台用户('; 
             $codeText = ['','店铺码用户;','集团码用户;','活动码用户;'];
             if( !empty($voucherConfInfo['getCodeType']) )   $voucherInfo['getText'] .= $codeText[ $voucherConfInfo['getCodeType'] ];
@@ -411,13 +384,11 @@ class TicketController extends Controller {
                 }
             }
             $voucherInfo['getText'] .= ")";
-        }elseif( $voucherConfInfo['getTypes'] == 5 )
-            $voucherInfo['getText'] = 'H5用户;'; 
+        }elseif( $voucherConfInfo['getTypes'] == 5 ) $voucherInfo['getText'] = 'H5用户;'; 
         
         $voucherInfo['useLimitText'] = '';
         // 查找限制条件
-        if( !empty( $voucherConfInfo['useLimitTypes'] ) && $voucherConfInfo['useLimitTypes'] == 2 )
-            $voucherInfo['useLimitText'] .= '限制首单;';
+        if( !empty( $voucherConfInfo['useLimitTypes'] ) && $voucherConfInfo['useLimitTypes'] == 2 ) $voucherInfo['useLimitText'] .= '限制首单;';
         if( !empty( $voucherConfInfo['useItemTypes'] ) ){
             $getTypes = explode(',',$voucherConfInfo['useItemTypes']);
             $tempItemArr = [];
@@ -430,8 +401,7 @@ class TicketController extends Controller {
                 $voucherInfo['useLimitText'] .= $tempItemArr[ $val ]['typename'] . ";";
             }
         }
-        if( !empty( $voucherConfInfo['useNeedMoney'] ) )
-            $voucherInfo['useLimitText'] .= "项目消费满". $voucherConfInfo['useNeedMoney'] ."元使用;";
+        if( !empty( $voucherConfInfo['useNeedMoney'] ) ) $voucherInfo['useLimitText'] .= "项目消费满". $voucherConfInfo['useNeedMoney'] ."元使用;";
             
         return $this->success( $voucherInfo );
 	}
