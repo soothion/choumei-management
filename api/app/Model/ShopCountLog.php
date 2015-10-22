@@ -77,7 +77,9 @@ class ShopCountLog extends Model
         //之前的信息
         
        // DB::beginTransaction();
-        $model = self::where('salon_id',$salon_id)->where("count_at","<",$time)->select("balance_money")->orderBy('count_at','DESC')->orderBy('id','ASC')->first();
+        $query = self::where('salon_id',$salon_id);
+        $query->useWritePdo();
+        $model = $query->where("count_at","<",$time)->select("balance_money")->orderBy('count_at','DESC')->orderBy('id','ASC')->first();
         $balance_money = 0;
         if(!empty($model))
         {
@@ -104,7 +106,9 @@ class ShopCountLog extends Model
     
     public static function count_after($salon_id,$count_at,$last_balance)
     {
-        $items = ShopCountLog::select(['id','type','money'])->where('salon_id',$salon_id)->where('count_at',">=",$count_at)->orderBy('count_at','ASC')->orderBy('id','DESC')->get()->toArray();
+        $query = self::select(['id','type','money']);
+        $query->useWritePdo();
+        $items = $query->where('salon_id',$salon_id)->where('count_at',">=",$count_at)->orderBy('count_at','ASC')->orderBy('id','DESC')->get()->toArray();
         foreach ($items as $item)
         {
             $id = $item['id'];
