@@ -430,6 +430,11 @@ class ItemInfoController extends Controller{
 	    {
 	    	$data['timingAdded'] = strtotime($timingAdded);
 	    	$data['timingShelves'] = strtotime($timingShelves);
+	    	if($data['timingAdded'] >= $data['timingShelves'])
+	    	{
+	    		$err_msg = ['msg'=>'下架时间必须大于上架时间','no'=>ERROR::ITEM_ERROR];
+	    		return false;
+	    	}
 	    	if($data['timingAdded'] < time() || $data['timingShelves'] < time())
 	    	{
 	    		$err_msg = ['msg'=>'日期或时间设置错误，必须大于当前时间','no'=>ERROR::ITEM_ERROR];
