@@ -4,6 +4,7 @@
       <meta charset="utf-8">
       <title>臭美管理后台</title>
       <script type="text/javascript" src="/js/include.js"></script>
+      <script type="text/javascript" src="/js/validator.js"></script>
       <style>
       .border-dash{
           width: 100%;
@@ -109,7 +110,7 @@
                     <div class="control">
                         <label class="radio">
                             <input type="radio" name="selectUseType" value="1" 
-                            <%= data.selectUseType == '1' ? 'checked' : '' %>
+                            <%= (!data.selectUseType || data.selectUseType == '1') ? 'checked' : '' %>
                             <%= query.type =='edit' ? 'disabled' : '' %>>
                             <span>新注册&nbsp;<span style="color: #ddd;">(活动时间内注册的用户)</span></span>
                         </label>
@@ -182,7 +183,9 @@
                         pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
                         <span class="control-help" style="display:none;">集团码不存在</span>
                     <%}else{%>
-                    <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled/>
+                    <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled
+                    required requiredmsg="未填写"/>
+                    <span class="control-help" style="display:none;">集团码不存在</span>
                     <%}%>
                     </div>
                 </div>
@@ -201,7 +204,9 @@
                         pattern='number' required requiredmsg="未填写" value="<%=data.code%>"/>
                         <span class="control-help" style="display:none;">活动码不存在</span>
                     <%}else{%>
-                    <input type="text" class="cascade" name="code" placeholder="输入活动码" pattern='number' disabled/>
+                    <input type="text" class="cascade" name="code" placeholder="输入活动码" pattern='number' disabled
+                    required requiredmsg="未填写"/>
+                    <span class="control-help" style="display:none;">集团码不存在</span>
                     <%}%>
                     </div>
                 </div>
@@ -220,7 +225,9 @@
                     <input type="text" data-check="1" class="cascade" name="code" placeholder="输入店铺码" pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
                         <span class="control-help" style="display:none;">店铺码不存在</span>
                     <%}else{%>
-                    <input type="text" class="cascade" name="code" placeholder="输入店铺码" pattern='number' disabled/>
+                    <input type="text" class="cascade" name="code" placeholder="输入店铺码" pattern='number' disabled
+                    required requiredmsg="未填写"/>
+                    <span class="control-help" style="display:none;">集团码不存在</span>
                     <%}%>                    
                     </div>
                 </div>
@@ -270,7 +277,7 @@
                     <div class="control">
                         <span>满额获取：</span>
                         <label class="checkbox">
-                            <input type="text" name="enoughMoeny" required value="<%=data.enoughMoeny || 0%>" <%= query.type =='edit' ? 'disabled' : '' %>>
+                            <input type="text" name="enoughMoeny" required value="<%=data.enoughMoeny || 0%>" <%= query.type =='edit' ? 'disabled' : '' %> pattern='float'>
                             <strong>元&nbsp;&nbsp;&nbsp;&nbsp;可获取</strong>
                             <span style="color: #ddd;">（大于或等于该数值可获取，0为不限制，可填写0~999）</span>
                             <span class="control-help" style="display:none;"></span>
@@ -284,11 +291,11 @@
                     <label class="control-label" style="width:100px"></label>
                     <div class="control">
                         <label class="checkbox">
-                            <input type="checkbox" id="H5UsercheckBox" <%= data.code=="" ? '' : 'checked' %> <%= query.type =='edit' ? 'disabled' : '' %>>
+                            <input type="checkbox" id="H5UsercheckBox" checked <%= query.type =='edit' ? 'disabled' : '' %>>
                             <span>绑定活动码</span>
                         </label>
 
-                        <input type="text" name="code" value="<%= data.code || '00000'%>" required <%= data.code=="" ? 'disabled' : '' %> <%= query.type =='edit' ? 'disabled' : '' %>/>
+                        <input type="text" name="code" value="<%= data.code || '00000'%>" required  <%= query.type =='edit' ? 'disabled' : '' %> pattern='number'/>
                         <span style="color: #ddd;">（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
                         <span class="control-help" style="display:none;"></span>
                     </div>
