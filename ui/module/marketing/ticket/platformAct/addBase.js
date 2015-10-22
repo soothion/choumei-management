@@ -3,20 +3,26 @@
     var selectItemType = ""; 
 
     if(type == 'add'){
-        selectItemType = lib.query.selectItemType || 1; 
+        //selectItemType = lib.query.selectItemType || 1; 
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data')) || {};
+        if(baseData.selectItemType){
+            lib.query.selectItemType = baseData.selectItemType;
+        }
         lib.ajat('#domid=form&tempid=form-t').template(baseData);    
     }
 
     if(type == 'edit'){
+        //selectItemType = editData.selectItemType || 1; 
         var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
-        selectItemType = editData.selectItemType || 1; 
+        if(editData.selectItemType){
+            lib.query.selectItemType = editData.selectItemType;
+        }
         lib.ajat('#domid=form&tempid=form-t').template(editData);
     }
 
     $("#form").on('click',".flex-item a",function(e){
         e.preventDefault();
-        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
+        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+lib.query.selectItemType || 1;        
     });
 
     $("#form").on('click','#preview-btn',function(){
@@ -30,6 +36,7 @@
     })
 
     lib.Form.prototype.save = function(data){
+        data.manager = $("input[value="+data.managerId+"]").next().text();
         if(type == 'add'){    
             var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
             addData = $.extend({},addData,data);
@@ -43,7 +50,7 @@
             sessionStorage.setItem('edit-base-data',JSON.stringify(editData));
             sessionStorage.setItem('edit-save-data',JSON.stringify(saveData));
         }
-        location.href = "addUser.html?type="+type+"&selectItemType="+selectItemType;
+        location.href = "addUser.html?type="+type+"&selectItemType="+lib.query.selectItemType || 1;
     }    
 
 })();

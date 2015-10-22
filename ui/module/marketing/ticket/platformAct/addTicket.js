@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-21 20:03:55
+* @Last Modified time: 2015-10-22 11:36:14
 */
 
 (function(){
@@ -149,6 +149,8 @@
                     if(type=='edit') location.href="/module/marketing/ticket/platformAct/detail.html?id="+submitData.vcId;
                 }
             });          
+         }else{
+          
          }
       })
     }      

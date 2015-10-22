@@ -85,7 +85,7 @@
 						if(data.code==-40000||data.code==-40001){
 							data.msg="登录超时，请重新登录";
 						}else if(data.code==0){
-							data.msg="系统错误！";
+							data.msg=data.msg || "系统错误！";
 						}else{
 							data.msg="出现异常："+data.msg;
 						}

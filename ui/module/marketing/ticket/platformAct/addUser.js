@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-21 20:34:02
+* @Last Modified time: 2015-10-22 11:49:33
 */
 
 (function(){
@@ -11,10 +11,10 @@
 
     if(type == 'add'){
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
+        lib.ajat('#domid=form&tempid=form-t').template(baseData);    
         if(baseData.selectItemType == "3" && baseData.getItemTypes){
             $("#consumeItemsAll").attr('checked','checked');
-        }        
-        lib.ajat('#domid=form&tempid=form-t').template(baseData);    
+        }      
     }
 
     if(type == 'edit'){
@@ -155,14 +155,7 @@
 
     $("#form").on('click','#preview-btn',function(){
         var data = lib.getFormData($("#form"));
-        var obj = {};
-        if(data.selectItemType == 1 || data.selectItemType == 2){
-            data.selectItem = data.selectUseType;
-        }else if(data.selectItemType = 3){
-            data.selectItem = 7;
-        }else{
-            data.selectItem = 8;
-        }      
+        var obj = {};     
         if(type === 'add')  var previewData = JSON.parse(sessionStorage.getItem('add-base-data'));
         if(type === 'edit') var previewData = JSON.parse(sessionStorage.getItem('edit-base-data'));
         previewData = $.extend({},previewData,data);
