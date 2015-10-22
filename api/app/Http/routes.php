@@ -923,13 +923,13 @@ Route::any('platform/getItemType',array(
         'as' => 'laisee.close',
         'uses' => 'Laisee\LaiseeController@close'
     ));
-    Route::any('laisee/itemTypes', array(// 活动关闭
+    Route::any('laisee/itemTypes', array(// 现金券可使用项目类型列表
         'as' => 'laisee.itemTypes',
         'uses' => 'Laisee\LaiseeController@itemTypes'
     ));
     
     Route::any('bonus/index', array(// 红包列表
-        'as' => 'laisee.index',
+        'as' => 'bonus.index',
         'uses' => 'Laisee\BonusController@index'
     ));
     Route::any('bonus/export', array(// 红包列表导出
