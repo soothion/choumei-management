@@ -9,7 +9,7 @@ use App\Voucher;
 use App\Exceptions\ApiException;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ERROR;
-
+use Log;
 
 class CouponController extends Controller{
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
@@ -101,7 +101,7 @@ class CouponController extends Controller{
         $data['ADD_TIME'] = date('Y-m-d H:i:s');
         $data['IS_REDEEM_CODE'] = 'Y';
         
-        $addRes = \App\Model\VoucherConf::insertGetId( $data );
+        $addRes = \App\VoucherConf::insertGetId( $data );
 
         if( empty($addRes) )
             return $this->error('插入数据失败，请稍后再试');
@@ -194,7 +194,7 @@ class CouponController extends Controller{
             AbstractPaginator::currentPageResolver(function() use ($page) {
                 return $page;
             });
-            $res = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
+            $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
                     ->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y'])
                     ->orderBy('vcId','desc')
                     ->paginate($pageSize)
@@ -228,7 +228,7 @@ class CouponController extends Controller{
             return $this->success( $res );
         }
         $actType = array('','vcSn','vcTitle');
-        $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
+        $obj = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
         $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y']);
         if( !empty($actSelect) && !empty($actNumber) )
             $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
@@ -347,9 +347,7 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function actView($id){
-        if( empty($id) )
-            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $voucherConfInfo = \App\Model\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney'])
+        $voucherConfInfo = \App\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney'])
                 ->where(['vcId'=>$id,'vType'=>1,'IS_REDEEM_CODE'=>'Y'])
                 ->first()
                 ->toArray();
@@ -396,21 +394,17 @@ class CouponController extends Controller{
         $voucherConfInfo['consumeMoney'] = 0;
         $voucherConfInfo['invalidNum'] = 0;
         
-        $totalNum = \App\Voucher::whereRaw( 'vcId='.$id.' and vStatus<>10 and vStatus<>3 ' )
-                ->count();
-        if( empty($totalNum) ){
-            return $this->success( $voucherConfInfo );
-        }
+        $totalNum = \App\Voucher::whereRaw( 'vcId='.$id.' and vStatus<>10 and vStatus<>3 ' )->count();
+        if( empty($totalNum) ) return $this->success( $voucherConfInfo );
+        
         $voucherConfInfo['allNum'] = $totalNum;
         $voucherConfInfo['allMoney'] = $totalNum * $voucherConfInfo['useMoney'];
         
-        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>2] )
-                ->count();
+        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>2] )->count();
         $voucherConfInfo['useNumed'] = $useNumed;
         $voucherConfInfo['useMoneyed'] = $useNumed * $voucherConfInfo['useMoney'];
         
-        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>5] )
-                ->count();
+        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>5] )->count();
         $voucherConfInfo['invalidNum'] = $useNumed;
         
         // 查找已消费数
@@ -419,8 +413,7 @@ class CouponController extends Controller{
             $consumeNum = 0;
             foreach( $order as $val ){
                 $t = \App\Order::where(['ordersn'=>$val['vOrderSn'],'status'=>4])->count();
-                if( $t )
-                    $consumeNum++;
+                if( $t ) $consumeNum++;
             }
             $voucherConfInfo['consumeNum'] = 0;
             $voucherConfInfo['consumeMoney'] = 0;
@@ -430,8 +423,7 @@ class CouponController extends Controller{
         // 查看代金劵是否已经生成过
         $voucherCount = \App\Voucher::where(['vcId'=>$id])->count();
         $voucherConfInfo['export'] = 0;
-        if( !empty($voucherCount) )
-            $voucherConfInfo['export'] = 1;
+        if( !empty($voucherCount) ) $voucherConfInfo['export'] = 1;
         
         unset( $voucherConfInfo['getStart'] );
         unset( $voucherConfInfo['getEnd'] );
@@ -454,25 +446,26 @@ class CouponController extends Controller{
      * 
      * 
      * 
-	 * @apiSuccess {Number} vcId 活动配置
-	 * @apiSuccess {String} actName 活动名称
-	 * @apiSuccess {String} actNo 活动编号
-	 * @apiSuccess {Number} actIntro 活动简介.
-	 * @apiSuccess {Number} departmentId 部门.
-	 * @apiSuccess {Number} managerId 负责人.
-	 * @apiSuccess {Number} money 代金劵金额
-	 * @apiSuccess {Number} totalNumber 代金券可领总数
-	 * @apiSuccess {Number} limitItemTypes 限制可使用项目类别格式为（,1,2,）
-	 * @apiSuccess {Number} useLimitTypes 使用限制类型 2 为限制首单
-	 * @apiSuccess {Number} enoughMoeny 限制项目需满足金额才可使用
+	 * @apiSuccess {Number} vcId                活动配置
+	 * @apiSuccess {String} actName             活动名称
+	 * @apiSuccess {String} actNo               活动编号
+	 * @apiSuccess {String} actIntro            活动简介.
+	 * @apiSuccess {Number} departmentId        部门.
+	 * @apiSuccess {Number} managerId           负责人.
+	 * @apiSuccess {Number} money               代金劵金额
+	 * @apiSuccess {Number} totalNumber         代金券可领总数
+	 * @apiSuccess {String} limitItemTypes      限制可使用项目类别格式为（,1,2,）
+	 * @apiSuccess {Number} useLimitTypes       使用限制类型 2 为限制首单
+	 * @apiSuccess {Number} enoughMoeny         限制项目需满足金额才可使用
 	 * @apiSuccess {String} addActLimitStartTime    可使用时间.起始(0 表示不限制)
 	 * @apiSuccess {String} addActLimitEndTime      可使用时间.结束(0 表示不限制)
 	 * @apiSuccess {Number} getSingleLimit       个人可获取最大券数
-	 * @apiSuccess {String} getTimeStart 可获取时间 起始(0 表示不限制)
-	 * @apiSuccess {String} getTimeEnd   可获取时间 结束(0 表示不限制)
-	 * @apiSuccess {String} singleEnoughMoney 获取需满足金额(0表示不限制)
-	 * @apiSuccess {String} sendSms 获取代金券时下发的短信内容
-	 * @apiSuccess {String} fewDay 获取代金劵后多少天内可用
+	 * @apiSuccess {String} getTimeStart        可获取时间 起始(0 表示不限制)
+	 * @apiSuccess {String} getTimeEnd          可获取时间 结束(0 表示不限制)
+	 * @apiSuccess {Number} singleEnoughMoney   获取需满足金额(0表示不限制)
+	 * @apiSuccess {String} sendSms             获取代金券时下发的短信内容
+	 * @apiSuccess {Number} fewDay              获取代金劵后多少天内可用
+	 * @apiSuccess {String} limitItemTypes      可使用的项目格式如 ",2,3,"
 	 * 
      * 
 	 * @apiSuccessExample Success-Response:
@@ -489,7 +482,6 @@ class CouponController extends Controller{
      *                       "managerId": 3,
      *                       "money": 10,
      *                       "code": "",
-     *                       "getItemTypes": ",7,",
      *                       "useLimitTypes": "",
      *                       "enoughMoeny": 100,
      *                       "totalNumber": 0,
@@ -514,33 +506,13 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function getInfo($id){
-        if( empty($id) )
-            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $voucherConfInfo = \App\Model\VoucherConf::select(['vcId','getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
-            ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','getItemTypes','useLimitTypes'
+        $voucherConfInfo = \App\VoucherConf::select(['vcId','getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
+            ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','useLimitTypes'
             ,'useNeedMoney as enoughMoeny','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
-            ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType'])
+            ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType','useItemTypes as limitItemTypes'])
                 ->where(['vcId'=>$id,'vType'=>1,'IS_REDEEM_CODE'=>'Y'])
                 ->first()
                 ->toArray();
-        if( in_array($voucherConfInfo['getTypes'],[1,2]) )
-            $voucherConfInfo['selectItem'] = 1;
-        if( $voucherConfInfo['getTypes'] == 3 ){
-            $voucherConfInfo['selectItem'] = 2;
-            $phoneList = \App\Voucher::select(['vMobilephone'])->where(['vcId'=>$id])->get();
-            $temp = [];
-            foreach( $phoneList as $val ){
-                $temp[] = $val['vMobilephone'];
-            }
-            $voucherConfInfo['phoneList'] = $temp;
-        }
-        if( empty($voucherConfInfo['getTypes']) && ( in_array($voucherConfInfo['code'],[1,2,3]) || $voucherConfInfo['getItemTypes']) ){
-            $voucherConfInfo['selectItem'] = 2;
-        }
-        if( $voucherConfInfo['getTypes'] == 4 )
-            $voucherConfInfo['selectItem'] = 3;
-        if( $voucherConfInfo['getTypes'] == 5 )
-            $voucherConfInfo['selectItem'] = 4;
         
         if( !empty($voucherConfInfo['getTimeStart']) )
             $voucherConfInfo['getTimeStart'] = date('Y-m-d H:i:s',$voucherConfInfo['getTimeStart']);
@@ -616,7 +588,7 @@ class CouponController extends Controller{
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         if( isset($post['singleEnoughMoney']) ) $data['getNeedMoney'] = $post['singleEnoughMoney'];
         
-        $addRes = \App\Model\VoucherConf::where(['vcId'=>$id])->update( $data );
+        $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
         
         return $this->success();
     }
@@ -649,11 +621,7 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function offlineConf( $id ){
-        if( empty($id) )
-            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $update = \App\Model\VoucherConf::where(['vcId'=>$id])->update(['status'=>2]);
-        if( empty( $update ) )
-            return $this->error('下线失败，请重新下线');
+        $update = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>2]);
         return $this->success();
     }
     /***
@@ -685,13 +653,9 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function closeConf( $id ){
-        if( empty($id) )
-            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        $conf = \App\Model\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
+        $conf = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
         if( $conf )
             \App\Voucher::where(['vcId'=>$id])->whereIn('vStatus',[1,3])->update(['vStatus'=>5]);
-        else
-            return $this->error('关闭失败，请重新关闭');
         return $this->success();
     }
     /***
@@ -726,11 +690,11 @@ class CouponController extends Controller{
         if( empty($vcId) )
             throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
         // 修改配置表中为已上线状态
-        \App\Model\VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
+        \App\VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
         // 修改voucher表中手机是否已经注册
         $phoneList = \App\Voucher::select(['vMobilephone'])->where(['vStatus'=>10,'vcId'=>$vcId])->get()->toArray();
         //判断当前活动是否勾选了消费类项目
-        $voucherConf = \App\Model\VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd'])->where(['vcId'=>$vcId])->first()->toArray();
+        $voucherConf = \App\VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd'])->where(['vcId'=>$vcId])->first()->toArray();
         
         $getItemTypes=$voucherConf['getItemTypes'];
         $getNeedMoney=$voucherConf['getNeedMoney'];
@@ -823,8 +787,6 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function exportCoupon($vcId){
-        if( empty($vcId) )
-            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
         $result = \App\Voucher::select(['vSn','REDEEM_CODE','vUseMoney','vcTitle'])->where(['vcId'=>$vcId])->get()->toArray();
         $desModel = new \Service\NetDesCrypt;
         $desModel->setKey( self::$DES_KEY );
@@ -841,7 +803,6 @@ class CouponController extends Controller{
 		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
 			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
 	        		$sheet->prependRow(1, $header);//添加表头
-
 			    });
 		})->export('xls');
     }
@@ -887,57 +848,29 @@ class CouponController extends Controller{
         $i = 0;
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
             
-            $res = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
+            $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
                     ->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y'])
                     ->orderBy('vcId','desc')
                     ->get()
                     ->toArray();
             if( empty($res) ) return $this->success();
-            $tempData = [];
-            $department = '';
-            foreach( $res as $key=>$val ){
-                $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
-                $actTime = '';
-                if( empty( $val['getStart'] ) && empty($val['getEnd']) )
-                    $actTime = '无限期活动';
-                if( !empty($val['getStart']) && empty($val['getEnd']) )
-                    $actTime = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
-                if( !empty($val['getEnd']) && empty($val['getStart']) )
-                    $actTime = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
-                if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
-                    $actTime = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
-                $res['data'][$key]['department'] = '';
-                if( !empty($val['DEPARTMENT_ID']) ){
-                    $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
-                    $department = $department['title'];
-                }
-                $tempData[$key][] = $i++;
-                $tempData[$key][] = $val['vcTitle'];
-                $tempData[$key][] = $val['vcSn'];
-                $tempData[$key][] = $val['totalNum'];
-                $tempData[$key][] = $statistics[1] + $statistics[3];
-                $tempData[$key][] = $statistics[1];
-                $tempData[$key][] = $val['addTime'];
-                $tempData[$key][] = $actTime;
-                $tempData[$key][] = $department;
-            }
+            $tempData = $this->handleList($res);
             unset( $res );
             $title = '代金劵活动查询列表' .date('Ymd');
             //导出excel	   
             $header = ['序号','活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门'];
             Excel::create($title, function($excel) use($tempData,$header){
                 $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
-                        $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
-                        $sheet->prependRow(1, $header);//添加表头
-
-                    });
+                    $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+                    $sheet->prependRow(1, $header);//添加表头
+                });
             })->export('xls');
+            exit;
         }
         $actType = array('','vcSn','vcTitle');
-        $obj = \App\Model\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
+        $obj = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
         $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y']);
-        if( !empty($actSelect) && !empty($actNumber) )
-            $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
+        if( !empty($actSelect) && !empty($actNumber) ) $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
         
         if( !empty($actStatus) ){
             if( $actStatus != 4 )
@@ -949,15 +882,128 @@ class CouponController extends Controller{
             $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
         if( !empty( $actDepartment ) )
             $obj->where('DEPARTMENT_ID','=',$actDepartment);
-        //手动设置页数
-        AbstractPaginator::currentPageResolver(function() use ($page) {
-            return $page;
-        });
-        $res = $obj->orderBy('vcId','desc')
-                    ->paginate($pageSize)
-                    ->toArray();
+        
+        $res = $obj->orderBy('vcId','desc')->paginate($pageSize)->toArray();
         if( empty($res) ) return $this->success();
             
+        $tempData = $this->handleList($res);
+        unset( $res );
+        $title = '代金劵查询列表' .date('Ymd');
+        //导出excel	   
+        $header = ['序号','活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门'];
+        Excel::create($title, function($excel) use($tempData,$header){
+            $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
+                $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+                $sheet->prependRow(1, $header);//添加表头
+            });
+        })->export('xls');
+    }
+    // 获取分类
+    private function _getItemType(){
+        // 这里用于 代金劵和配置中会和前端约定 增加一个项目特价类型为typeid为101
+        $itemType = \App\SalonItemtype::select(['typeid','typename'])
+                ->where('status','=',1)
+                ->orderBy('sortIt','DESC')
+                ->get()
+                ->toArray();
+        array_unshift( $itemType , array('typeid'=>101,'typename'=>'限时特价 ') );
+        return $itemType;
+    }
+    // 获取代金劵编号
+    private function getVoucherSn( $p = 'CM' ) {
+        $pre = substr(time(), 2);
+        $end = '';
+        for ($i = 0; $i <3; $i++) {
+            $end .= rand(0, 9);
+        }
+        $code = $p . $pre  . $end;
+        $count = Voucher::where('vSn','=',$code)->count();
+        if ($count) return $this->getVoucherSn();
+        return $code;
+   }
+   // 获取代金劵状态
+   private function getVoucherStatusByActId( $vcSn , $useEnd ){
+        // 总的发放数
+        $allNum = \App\Voucher::where( ['vcSn'=>$vcSn])->where('vStatus','<>',10)->count();
+        // 已发放数
+        $useNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>2] )->count();
+        // 未使用数
+        $noUseNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>1] )->count();
+        
+        $invalidNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>5] )->count();
+        if( !empty($invalidNum) ) return array( $allNum , $useNum , $invalidNum ,$noUseNum  );
+        // 已失效数
+        if( empty($useEnd) ||  time()<$useEnd )
+            $invalidNum = 0;
+        else
+            $invalidNum = $allNum - $useNum;
+        return array( $allNum , $useNum , $invalidNum ,$noUseNum);
+    }
+   
+    // 点击上线操作生成兑换码劵插入到代金劵表中
+    private function upActCoupon( $vcId ){
+        $voucherConf = \App\VoucherConf::where(['vcId'=>$vcId])->first()->toArray();
+        // 未找到项目配置信息 或 项目配置信息不是兑换活动配置
+        if( empty($voucherConf) || $voucherConf['IS_REDEEM_CODE']== 'N') return false;
+        
+        $count = \App\Voucher::where(['vcId'=>$vcId])->count();
+        if( !empty($count) ) return false;
+        $data['vcId'] = $voucherConf['vcId'];
+        $data['vcSn'] = $voucherConf['vcSn'];
+        $data['vcTitle'] = $voucherConf['vcTitle'];
+        $data['vUseMoney'] = $voucherConf['useMoney'];
+        $data['vUseItemTypes'] = $voucherConf['useItemTypes'];
+        $data['vUseLimitTypes'] = $voucherConf['useLimitTypes'];
+        $data['vUseNeedMoney'] = $voucherConf['useNeedMoney'];
+        $data['vUseStart'] = $voucherConf['useStart'];
+        $data['vUseEnd'] = $voucherConf['useEnd'];
+        $data['vStatus'] = 3;
+        for($i=0,$len=$voucherConf['useTotalNum'];$i<$len;$i++){
+            $data['REDEEM_CODE'] = $this->encodeCouponCode();
+            $data['vSn'] = $this->getVoucherSn('DH');
+            $addVoucher = \App\Voucher::insertGetId($data);
+            if(empty($addVoucher)) Log::info("插入到代金劵失败:". print_r($data,true));
+        }
+    }
+    // 加密生成的兑换码
+    private function encodeCouponCode(){
+        $desModel = new \Service\NetDesCrypt;
+        $desModel->setKey( self::$DES_KEY );
+        $code = $this->createCouponCode();
+        $encodeCode = $desModel->encrypt( $code );
+        // 判断当前是否存在
+        $exists = \App\Voucher::where( ['REDEEM_CODE'=>$encodeCode] )->count();
+        if( !empty($exists) ) $this->encodeCouponCode();
+        return $encodeCode;
+    }
+    // 生成原生的兑换码 $zS true : 生成以数字为先 false ： 生成以字母为先
+    private function createCouponCode(){
+        $code = '';
+        $randRange = array(97,122);
+        $otherRanger = array( 0,9 );
+
+        while( strlen($code) < 8 ){
+            $rand = rand(0,9);
+            $zS = array(1,2,3,5,7);
+            if( in_array($rand, $zS)  ){
+                $randNum = rand( $randRange[0] , $randRange[1] );
+                while( $randNum == 108 || $randNum == 111 ){
+                    $randNum = rand( $randRange[0] , $randRange[1] );
+                }
+                $code .= chr($randNum);
+            }else{
+                $randNum = rand( $otherRanger[0] , $otherRanger[1] );
+                $code .= $randNum;
+            }
+        }
+
+        // 检查不能全部为数字或字符
+        if( preg_match('#^[0-9]{8}$#',$code) || preg_match('#^[a-z]{8}$#',$code) || strlen($code) != 8 )
+           return $this->createCouponCode();
+        return $code;
+    }
+    // 处理配置列表返回的数据
+   private function handleList( $res ){
         $tempData = [];
         $department = '';
         foreach( $res as $key=>$val ){
@@ -986,132 +1032,6 @@ class CouponController extends Controller{
             $tempData[$key][] = $actTime;
             $tempData[$key][] = $department;
         }
-            unset( $res );
-            $title = '代金劵查询列表' .date('Ymd');
-            //导出excel	   
-            $header = ['序号','活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门'];
-            Excel::create($title, function($excel) use($tempData,$header){
-                $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
-                        $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
-                        $sheet->prependRow(1, $header);//添加表头
-
-                    });
-            })->export('xls');
-    }
-    // 获取分类
-    private function _getItemType(){
-        // 这里用于 代金劵和配置中会和前端约定 增加一个项目特价类型为typeid为101
-        $itemType = \App\SalonItemtype::select(['typeid','typename'])
-                ->where('status','=',1)
-                ->orderBy('sortIt','DESC')
-                ->get()
-                ->toArray();
-        array_unshift( $itemType , array('typeid'=>101,'typename'=>'限时特价 ') );
-        return $itemType;
-    }
-    // 获取代金劵编号
-    private function getVoucherSn( $p = 'CM' ) {
-        $pre = substr(time(), 2);
-        $end = '';
-        for ($i = 0; $i <3; $i++) {
-            $end .= rand(0, 9);
-        }
-        $code = $p . $pre  . $end;
-        $count = Voucher::where('vSn','=',$code)->count();
-        if ($count) 
-            return $this->getVoucherSn();
-        return $code;
-          
+        return $tempData;
    }
-   // 获取代金劵状态
-   private function getVoucherStatusByActId( $vcSn , $useEnd ){
-        // 总的发放数
-        $allNum = \App\Voucher::where( ['vcSn'=>$vcSn])->where('vStatus','<>',10)->count();
-        // 已发放数
-        $useNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>2] )->count();
-        // 未使用数
-        $noUseNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>1] )->count();
-        
-        $invalidNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>5] )->count();
-        if( !empty($invalidNum) )
-            return array( $allNum , $useNum , $invalidNum ,$noUseNum  );
-        // 已失效数
-        if( empty($useEnd) ||  time()<$useEnd ){
-            $invalidNum = 0;
-        }else{
-            $invalidNum = $allNum - $useNum;
-        }
-        return array( $allNum , $useNum , $invalidNum ,$noUseNum);
-    }
-   
-    // 点击上线操作生成兑换码劵插入到代金劵表中
-    private function upActCoupon( $vcId ){
-        $voucherConf = \App\Model\VoucherConf::where(['vcId'=>$vcId])->first()->toArray();
-        // 未找到项目配置信息 或 项目配置信息不是兑换活动配置
-        if( empty($voucherConf) || $voucherConf['IS_REDEEM_CODE']== 'N'){
-            return false;
-        }
-        $count = \App\Voucher::where(['vcId'=>$vcId])->count();
-        if( !empty($count) )
-            return false;
-        $data['vcId'] = $voucherConf['vcId'];
-        $data['vcSn'] = $voucherConf['vcSn'];
-        $data['vcTitle'] = $voucherConf['vcTitle'];
-        $data['vUseMoney'] = $voucherConf['useMoney'];
-        $data['vUseItemTypes'] = $voucherConf['useItemTypes'];
-        $data['vUseLimitTypes'] = $voucherConf['useLimitTypes'];
-        $data['vUseNeedMoney'] = $voucherConf['useNeedMoney'];
-        $data['vUseStart'] = $voucherConf['useStart'];
-        $data['vUseEnd'] = $voucherConf['useEnd'];
-        $data['vStatus'] = 3;
-        for($i=0,$len=$voucherConf['useTotalNum'];$i<$len;$i++){
-            $data['REDEEM_CODE'] = $this->encodeCouponCode();
-            $data['vSn'] = $this->getVoucherSn('DH');
-            $addVoucher = \App\Voucher::insertGetId($data);
-//            $addVoucher = $voucherModel->add( $data );
-            if(empty($addVoucher)){
-                file_put_contents('Application/Runtime/Logs/voucher.log', print_r($data,true),FILE_APPEND);
-            }
-        }
-    }
-    // 加密生成的兑换码
-    private function encodeCouponCode(){
-        $desModel = new \Service\NetDesCrypt;
-        $desModel->setKey( self::$DES_KEY );
-        $code = $this->createCouponCode();
-        $encodeCode = $desModel->encrypt( $code );
-        // 判断当前是否存在
-        $exists = \App\Voucher::where( ['REDEEM_CODE'=>$encodeCode] )->count();
-        if( !empty($exists) ){
-            $this->encodeCouponCode();
-        }
-        return $encodeCode;
-    }
-    // 生成原生的兑换码 $zS true : 生成以数字为先 false ： 生成以字母为先
-    private function createCouponCode(){
-        $code = '';
-        $randRange = array(97,122);
-        $otherRanger = array( 0,9 );
-
-        while( strlen($code) < 8 ){
-            $rand = rand(0,9);
-            $zS = array(1,2,3,5,7);
-            if( in_array($rand, $zS)  ){
-                $randNum = rand( $randRange[0] , $randRange[1] );
-                while( $randNum == 108 || $randNum == 111 ){
-                    $randNum = rand( $randRange[0] , $randRange[1] );
-                }
-                $code .= chr($randNum);
-            }else{
-                $randNum = rand( $otherRanger[0] , $otherRanger[1] );
-                $code .= $randNum;
-            }
-        }
-
-        // 检查不能全部为数字或字符
-        if( preg_match('#^[0-9]{8}$#',$code) || preg_match('#^[a-z]{8}$#',$code) || strlen($code) != 8 ){
-           return $this->createCouponCode();
-        }
-        return $code;
-    }
 }

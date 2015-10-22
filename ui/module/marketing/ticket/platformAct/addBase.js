@@ -1,12 +1,12 @@
 (function(){
     var type = lib.query.type;
-    var selectItemType = ""; 
+    var selectItemType = lib.query.selectItemType || 1; 
 
     if(type == 'add'){
         //selectItemType = lib.query.selectItemType || 1; 
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data')) || {};
         if(baseData.selectItemType){
-            lib.query.selectItemType = baseData.selectItemType;
+            selectItemType = baseData.selectItemType;
         }
         lib.ajat('#domid=form&tempid=form-t').template(baseData);    
     }
@@ -15,14 +15,14 @@
         //selectItemType = editData.selectItemType || 1; 
         var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
         if(editData.selectItemType){
-            lib.query.selectItemType = editData.selectItemType;
+            selectItemType = editData.selectItemType;
         }
         lib.ajat('#domid=form&tempid=form-t').template(editData);
     }
 
     $("#form").on('click',".flex-item a",function(e){
         e.preventDefault();
-        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+lib.query.selectItemType || 1;        
+        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
     });
 
     $("#form").on('click','#preview-btn',function(){
@@ -50,7 +50,7 @@
             sessionStorage.setItem('edit-base-data',JSON.stringify(editData));
             sessionStorage.setItem('edit-save-data',JSON.stringify(saveData));
         }
-        location.href = "addUser.html?type="+type+"&selectItemType="+lib.query.selectItemType || 1;
+        location.href = "addUser.html?type="+type+"&selectItemType="+selectItemType;
     }    
 
 })();

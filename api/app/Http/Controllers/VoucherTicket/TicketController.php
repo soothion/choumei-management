@@ -139,9 +139,7 @@ class TicketController extends Controller {
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
 		});
-        $list = $obj->orderBy('vId','DESC')
-                ->paginate($pageSize)
-                ->toArray();
+        $list = $obj->orderBy('vId','DESC')->paginate($pageSize)->toArray();
         foreach($list['data'] as $key => $val ){
             $list['data'][$key]['vUseTime'] = empty($list['data'][$key]['vUseTime']) ? '' : date('Y-m-d H:i:s',$val['vUseTime']);
         }
@@ -233,14 +231,10 @@ class TicketController extends Controller {
             AbstractPaginator::currentPageResolver(function() use ($page) {
                 return $page;
             });
-            $list = $obj->orderBy('vId','DESC')
-                ->paginate($pageSize)
-                ->toArray();
+            $list = $obj->orderBy('vId','DESC')->paginate($pageSize)->toArray();
             $list = $list['data'];
         }else{
-            $list = $obj->orderBy('vId','DESC')
-                ->get()
-                ->toArray();
+            $list = $obj->orderBy('vId','DESC')->get()->toArray();
         }
 //        echo "<pre>";
 //        print_r( $list );exit;
@@ -276,7 +270,6 @@ class TicketController extends Controller {
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
                     $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
                     $sheet->prependRow(1, $header);//添加表头
-
                 });
         })->export('xls');
     }
@@ -304,13 +297,8 @@ class TicketController extends Controller {
 	 *		}
 	 ***/
     public function invalidStatus($id){
-		if( !isset( $id ) )
-            throw new ApiException('更新失败', ERROR::RECEIVABLES_ERROR);
-        $res = Voucher::where( ["vId"=>$id,'vStatus'=>1] )
-                ->update(['vStatus'=>5]);
-        if( !empty( $res ) )
-            return $this->success();
-        throw new ApiException('更新失败', ERROR::RECEIVABLES_ERROR);
+        $res = Voucher::where( ["vId"=>$id,'vStatus'=>1] )->update(['vStatus'=>5]);
+        return $this->success();
     }
      /***
 	 * @api {get} /voucher/info/:id 3.获取卷详情

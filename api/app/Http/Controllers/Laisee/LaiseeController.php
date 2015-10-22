@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Laisee;
 use App\Http\Controllers\Controller;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
-use App\Model\LaiseeConfig;
-use App\Model\VoucherConf;
+use App\LaiseeConfig;
+use App\VoucherConf;
 use App\Voucher;
 use Illuminate\Support\Facades\DB;
-use App\Model\Laisee;
+use App\Laisee;
 use Excel;
 
 class LaiseeController extends Controller {
@@ -241,7 +241,7 @@ class LaiseeController extends Controller {
         $data['lc_remark'] = isset($param['lc_remark']) ? $param['lc_remark'] : '';
         $data['effective'] = isset($param['effective']) ? $param['effective'] : '';
         $data['total_money'] = isset($param['total_money']) ? $param['total_money'] : '';
-        $data['amount_warning'] = isset($param['amount_warning']) ? $param['amount_warning'] : '';
+        $data['amount_warning'] = isset($param['amount_warning']) ? $param['amount_warning'] : 0;
         $data['warning_phone'] = isset($param['warning_phone']) ? $param['warning_phone'] : '';
         $data['sms_on_gained'] = isset($param['sms_on_gained']) ? $param['sms_on_gained'] : '';
         //红包现金券配置
@@ -309,6 +309,12 @@ class LaiseeController extends Controller {
             if ($laiseeConfig) {
                 if ($laiseeConfig->status != 'Y' && $laiseeConfig->end_time != "0000-00-00 00:00:00") {
                     throw new ApiException("已关闭或已结束的活动无法再编辑", ERROR::PARAMS_LOST);
+                }
+                // 检测预警值 是否有修改
+                if ($laiseeConfig->amount_warning != $data['amount_warning'] && $data['amount_warning'] > 0) {
+                    $data['send_warning_sms'] = 'Y';
+                }else{
+                    $data['send_warning_sms'] = 'N';
                 }
             } else {
                 throw new ApiException("活动不存在", ERROR::PARAMS_LOST);

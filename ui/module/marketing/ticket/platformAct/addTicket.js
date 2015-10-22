@@ -2,15 +2,17 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-22 12:30:38
+* @Last Modified time: 2015-10-22 14:04:02
 */
 
 (function(){
     var type = lib.query.type;
-    var selectItemType = lib.query.selectItemType || 1; 
+
+    var selectItemType = lib.query.selectItemType; 
+
     if(type == 'add'){
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
-        lib.ajat('#domid=form&tempid=form-t').template(baseData);    
+        lib.ajat('#domid=form&tempid=form-t').template(baseData);     
     }
 
     if(type == 'edit'){
@@ -18,13 +20,17 @@
         lib.ajat('#domid=form&tempid=form-t').template(editData);
     }
 
-    $("#form").on('click','.ticketNum',function(){
+    /**
+     * 券总数操作事件
+     * @return {[type]} [description]
+     */
+    $("#form").on('click','input[name=checkTotalNumber]',function(){
         if($(this).val()=="1"){
            $("#ticketNumInput").removeAttr('disabled','disabled');
-           $(".ticketNumHidden").attr('disabled','disabled');
+           $("#ticketNumHidden").attr('disabled','disabled');
         }else{
-           $("#ticketNumInput").attr('disabled');
-           $(".ticketNumHidden").removeAttr('disabled');
+           $("#ticketNumInput").attr('disabled','disabled');
+           $("#ticketNumHidden").removeAttr('disabled');
         }
     })
 
@@ -58,26 +64,6 @@
         }
     })
 
-    $("#form").on('click',".flex-item a",function(e){
-        e.preventDefault();
-        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
-    });
-
-    $("#form").on('keydown',"input[pattern='number']",function(e){
-        var key = e.which;
-        //alert(key)
-        if ((key > 95 && key < 106) || //小键盘上的0到9  
-            (key > 47 && key < 58) || //大键盘上的0到9  
-            key == 8 || key == 116 || key == 9 || key == 46 || key == 37 || key == 39
-            //不影响正常编辑键的使用(116:f5;8:BackSpace;9:Tab;46:Delete;37:Left;39:Right;)  
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }); 
-
-  
     $("#form").on('click','.avaDateRadio',function(){
         if($(this).val()=="1"){
            $("#avaDateStart").removeAttr('disabled');
@@ -89,6 +75,11 @@
            $("#avaDay").removeAttr('disabled');
         }
     })
+
+    $("#form").on('click',".flex-item a",function(e){
+        e.preventDefault();
+        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
+    });    
 
     $("#form").on('click','#preview-btn',function(){
         var data = lib.getFormData($("#form"));  

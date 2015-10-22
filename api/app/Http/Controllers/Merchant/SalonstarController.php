@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Merchant;
 
 use App\Http\Controllers\Controller;
-use App\Model\SalonStarConf;
+use App\SalonStarConf;
 use App\Salon;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\ApiException;
@@ -223,7 +223,7 @@ class SalonstarController extends Controller {
         $endTime = isset($options['end_time']) ? $options['end_time'] : 0;
         $page = isset($options['page']) ? max(intval($options['page']), 1) : 1;
         $size = isset($options['page_size']) ? max(intval($options['page_size']), 1) : 20;
-        $logList = \App\Model\SalonScoreLog::getLogList($options, $startTime, $endTime, $page, $size);
+        $logList = \App\SalonScoreLog::getLogList($options, $startTime, $endTime, $page, $size);
         return $this->success($logList);
     }
 

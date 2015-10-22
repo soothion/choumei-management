@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Merchant;
 use App\Http\Controllers\Controller;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
-use App\Model\ScoreConf;
+use App\ScoreConf;
 
 class ScoreconfController extends Controller {
 
@@ -17,9 +17,9 @@ class ScoreconfController extends Controller {
      * 
      * @apiSuccess {Number} id id标示.
      * @apiSuccess {String} description 合法情况描述.
-     * @apiSuccess {Number} verySatisfy 很满意分数.
-     * @apiSuccess {Number} satisfy 满意分数.
-     * @apiSuccess {Number} unsatisfy 不满意分数.
+     * @apiSuccess {Number} very_satisfied 很满意分数.
+     * @apiSuccess {Number} satisfied 满意分数.
+     * @apiSuccess {Number} unsatisfied 不满意分数.
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -87,9 +87,9 @@ class ScoreconfController extends Controller {
         $scoreConf = ScoreConf::find($options['id']);
         if ($scoreConf) {
             $upStatus = ScoreConf::where(['id' => $options['id']])->update([
-                'verySatisfy' => $options['verySatisfy'],
-                'satisfy' => $options['satisfy'],
-                'unsatisfy' => '-' . $options['unsatisfy'],
+                'very_satisfied' => $options['verySatisfy'],
+                'satisfied' => $options['satisfy'],
+                'unsatisfied' => '-' . $options['unsatisfy'],
             ]);
             if ($upStatus !== false) {
                 return $this->success();

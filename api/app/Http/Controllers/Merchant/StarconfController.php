@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Merchant;
 
 use App\Http\Controllers\Controller;
-use App\Model\SalonStarConf;
+use App\SalonStarConf;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 

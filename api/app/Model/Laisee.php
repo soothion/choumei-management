@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Model;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Model\VoucherConf;
+use App\VoucherConf;
 use App\Voucher;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\AbstractPaginator;

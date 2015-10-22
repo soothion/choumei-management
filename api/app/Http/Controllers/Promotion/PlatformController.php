@@ -9,6 +9,7 @@ use App\Voucher;
 use App\Exceptions\ApiException;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ERROR;
+use Log;
 
 
 class PlatformController extends Controller{
@@ -201,18 +202,16 @@ class PlatformController extends Controller{
                 if( empty( $limitNum ) ){ // 未设置可领的张数即无限制
                     for( $i=0;$i<$signerNum;$i++ ){
                         $addVoucher = \App\Voucher::insertGetId( $voucherData );
-                        if(empty($addVoucher)){
-                            file_put_contents('../voucher.log', print_r($voucherData,true),FILE_APPEND);
-                        }
+                        if(empty($addVoucher))
+                            Log::info( "添加代金劵失败" .print_r($voucherData,true) );
                     }
                 }
                 // 如果 劵可领总数小于或等于个人可领数的情况
                 if( !empty($limitNum) && $limitNum<=$signerNum){
                     for( $i=0;$i<$limitNum;$i++ ){
                         $addVoucher = \App\Voucher::insertGetId( $voucherData );
-                        if(empty($addVoucher)){
-                            file_put_contents('../voucher.log', print_r($voucherData,true),FILE_APPEND);
-                        }
+                        if(empty($addVoucher))
+                            Log::info( "添加代金劵失败" .print_r($voucherData,true) );
                     }
                 }
 
@@ -222,16 +221,13 @@ class PlatformController extends Controller{
                         if( ($sendNum+1)<= $limitNum ){
                             $addVoucher = \App\Voucher::insertGetId( $voucherData );
                             $sendNum++;
-                            if(empty($addVoucher)){
-                                file_put_contents('../voucher.log', print_r($voucherData,true),FILE_APPEND);
-                            }
+                            if(empty($addVoucher))
+                                Log::info( "添加代金劵失败" .print_r($voucherData,true) );
                         }
                     }
                 }
             }
         }
-        if( empty($addRes) )
-            return $this->error('插入数据失败，请稍后再试');
         return $this->success();
     }
     /***
@@ -675,11 +671,9 @@ class PlatformController extends Controller{
         $voucherConfInfo['consumeMoney'] = 0;
         $voucherConfInfo['invalidNum'] = 0;
         
-        $totalNum = \App\Voucher::whereRaw( 'vcId='.$id.' and vStatus<>10 and vStatus<>3 ' )
-                ->count();
-        if( empty($totalNum) ){
-            return $this->success( $voucherConfInfo );
-        }
+        $totalNum = \App\Voucher::whereRaw( 'vcId='.$id.' and vStatus<>10 and vStatus<>3 ' )->count();
+        if( empty($totalNum) )  return $this->success( $voucherConfInfo );
+        
         $voucherConfInfo['allNum'] = $totalNum;
         $voucherConfInfo['allMoney'] = $totalNum * $voucherConfInfo['useMoney'];
         
@@ -688,8 +682,7 @@ class PlatformController extends Controller{
         $voucherConfInfo['useNumed'] = $useNumed;
         $voucherConfInfo['useMoneyed'] = $useNumed * $voucherConfInfo['useMoney'];
         
-        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>5] )
-                ->count();
+        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>5] )->count();
         $voucherConfInfo['invalidNum'] = $useNumed;
         
         // 查找已消费数
@@ -698,14 +691,12 @@ class PlatformController extends Controller{
             $consumeNum = 0;
             foreach( $order as $val ){
                 $t = \App\Order::where(['ordersn'=>$val['vOrderSn'],'status'=>4])->count();
-                if( $t )
-                    $consumeNum++;
+                if( $t ) $consumeNum++;
             }
             $voucherConfInfo['consumeNum'] = 0;
             $voucherConfInfo['consumeMoney'] = 0;
         }
-        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
-            $voucherConfInfo['status'] = 4;
+        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] ) $voucherConfInfo['status'] = 4;
         unset( $voucherConfInfo['getStart'] );
         unset( $voucherConfInfo['getEnd'] );
         unset( $voucherConfInfo['DEPARTMENT_ID'] );
@@ -1113,7 +1104,6 @@ class PlatformController extends Controller{
                 $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
                         $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
                         $sheet->prependRow(1, $header);//添加表头
-
                     });
             })->export('xls');
         }
@@ -1281,15 +1271,13 @@ class PlatformController extends Controller{
             $errMsg = date('Y-m-d H:i:s') .  "代金劵发送短信的手机号码失败的有" . $val['vMobilephone'];
             if( !empty($sms) ){
                 $res = \App\Utils::sendphonemsg($val['vMobilephone'],$sms);
-                $logPath = '../vouchConf_sendMsg.log';
                 $successMsg .= ' - ' .$res;
                 $errMsg .= ' - '.$res;
                 // 发送短息成功
-                if( stripos($res,'ok') !== false ){
-                    file_put_contents( $logPath, $successMsg ,FILE_APPEND );
-                }else{
-                    file_put_contents( $logPath, $errMsg ,FILE_APPEND );
-                }
+                if( stripos($res,'ok') !== false )
+                    Log::info( $successMsg );
+                else
+                    Log::info( $errMsg );
             }
             // 写入到推送表
             $userId = $this->verifyUserPhoneExists( $val['vMobilephone'] );
