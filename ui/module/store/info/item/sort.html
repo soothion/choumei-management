@@ -110,6 +110,7 @@
 			}
 			form.submit();
 		}).on("success","form",function(){
+			parent.lib.popup.result();
 			var $trs=$('#table tbody tr');
 			$trs.each(function(i){
 				var no=i+1;
