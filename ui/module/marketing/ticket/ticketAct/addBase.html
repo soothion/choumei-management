@@ -67,9 +67,7 @@
             </div>
             <div class="control-group">
                 <label class="control-label" for=""></label>
-                <a href="index.html">
-                    <button class="btn" type="button" id="preview-btn" style="margin-right:20px">取消</button>
-                </a>
+                <button class="btn" type="button" id="clear-btn" style="margin-right:20px">取消</button>
                 <button class="btn-primary">下一步</button>
             </div>
         </script>
@@ -78,12 +76,14 @@
             <input type="hidden" name="actNo" value="<%=data.actNo%>" required>
         </script>
         <script type="text/template" id="department-t">
+        <%departmentList = data%>
             <option value="">全部</option>
             <%data.forEach(function(item){%>
             <option <%if (protocol.custom.sid == item.id){%> selected <%}%>value="<%=item.id%>"><%=item.title%></option>
             <%})%>
         </script>
         <script type="text/template" id='manager_t'>
+        <%managerList = data%>
         <%data.forEach(function(item){%>
         <label class="label">
             <input type="radio" <%if (protocol.custom.sid == item.id){%> checked='checked' <%}%> class="label" name="managerId" value="<%=item.id%>" required>
@@ -96,10 +96,19 @@
                 var value = $(this).val();
                 var managerId = $(this).attr('manager-id');
                 lib.ajat('platform/getDepartmentManager/'+value+'#domid=manager&tempid=manager_t&sid='+managerId).render();
-            })
+            }).on('click', '#clear-btn', function(event) {
+                lib.popup.confirm({
+                    text:"确定取消本次编辑吗？",
+                    define: function(){
+                        clearTmpData();
+                        window.location.href="index.html";
+                }});
+            });
             var getTemplateData = function(){
                 var id = lib.tools.parseQuery(window.location).id;
-                if (id){
+                if ( getTmpData() && getTmpData().vcId == id){
+                    templateRender(getTmpData());
+                }else if (id){
                     lib.ajax({
                         url:"coupon/getInfo/"+id
                     }).done(function(data, status, xhr){
@@ -108,8 +117,6 @@
                             setTmpData(data.data);
                         }
                     });
-                }else if (getTmpData()){
-                    templateRender(getTmpData());
                 }else {
                     templateRender({});
                 }
@@ -131,6 +138,16 @@
             getTemplateData();
             lib.Form.prototype.save = function(data){
                 var tmpData = $.extend(getTmpData(),data);
+                for (var i = managerList.length - 1; i >= 0; i--) {
+                    if (managerList[i].id == tmpData.managerId){
+                        tmpData.manager_name = managerList[i].name;
+                    }
+                }
+                for (var i = departmentList.length - 1; i >= 0; i--) {
+                    if (departmentList[i].id == tmpData.departmentId){
+                        tmpData.department_title = departmentList[i].title;
+                    }
+                };
                 setTmpData(tmpData);
                 location.href="addTicket.html"
             }

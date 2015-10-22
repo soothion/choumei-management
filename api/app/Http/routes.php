@@ -862,18 +862,6 @@ Route::any('platform/getItemType',array(
 		'as'=>'coupon.upConf',
 		'uses'=>'Coupon\CouponController@upConf'
     ));
-    Route::any('coupon/upConf/add',array(  
-		'as'=>'coupon.add',
-		'uses'=>'Coupon\CouponController@addConf'
-    ));
-    Route::any('coupon/upConf/add',array(  
-		'as'=>'coupon.add',
-		'uses'=>'Coupon\CouponController@addConf'
-    ));
-    Route::any('coupon/upConf/add',array(  
-		'as'=>'coupon.add',
-		'uses'=>'Coupon\CouponController@addConf'
-    ));
     Route::any('coupon/getCoupon/{id}',array(  
 		'as'=>'coupon.getCoupon',
 		'uses'=>'Coupon\CouponController@getCoupon'
