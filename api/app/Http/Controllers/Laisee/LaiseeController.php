@@ -167,7 +167,7 @@ class LaiseeController extends Controller {
      * @apiParam {Number} total_money 活动领取金额上限.
      * @apiParam {Number} amount_warning 红包领取金额预警(只需要数字).
      * @apiParam {String} warning_phone 可选，预警提醒的手机号码用,号隔开.
-     * @apiParam {String} sms_on_agined 可选，获取代金券时下发的短信内容（模板）.
+     * @apiParam {String} sms_on_gained 可选，获取代金券时下发的短信内容（模板）.
      * 
      * @apiParam {String} voucher   json数组串{vUseItemTypes:现金券类型;  vUseMoney:现金券金额; vNumber:现金券数量;  few_day:有效时间; vUseNeedMoney:满多少可用 }
      * @apiParam {String} gift  json数组串{vUseItemTypes:礼包现金券类型;  vUseMoney:礼包现金券金额; vNumber:礼包现金券数量;  few_day:礼包有效时间; vUseNeedMoney:礼包满多少可用 }
@@ -205,7 +205,7 @@ class LaiseeController extends Controller {
      * @apiParam {Number} total_money 活动领取金额上限.
      * @apiParam {Number} amount_warning 红包领取金额预警(只需要数字).
      * @apiParam {String} warning_phone 可选，预警提醒的手机号码用,号隔开.
-     * @apiParam {String} sms_on_agined 获取代金券时下发的短信内容（模板）.
+     * @apiParam {String} sms_on_gained 获取代金券时下发的短信内容（模板）.
      * 
      * @apiParam {String} voucher   json数组串{ vVcId: 现金券配置信息id; vUseItemTypes:现金券类型;  vUseMoney:现金券金额; vNumber:现金券数量;  few_day:有效时间; vUseNeedMoney:满多少可用 }
      * @apiParam {String} gift  json数组串{ vVcId: 礼包信息id; vUseItemTypes:礼包现金券类型;  vUseMoney:礼包现金券金额; vNumber:礼包现金券数量;  few_day:礼包有效时间; vUseNeedMoney:礼包满多少可用 }
@@ -282,7 +282,6 @@ class LaiseeController extends Controller {
         if ($data['voucher']) {
             $data['voucher'] = json_decode($data['voucher'], true);
         }
-
         if ($retMissing) {
             throw new ApiException("缺失参数" . $retMissing, ERROR::PARAMS_LOST);
         }
