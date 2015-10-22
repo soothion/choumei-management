@@ -27,12 +27,12 @@ class ImageStyleTest extends TestCase
         $imageStyle = ImageStyle::first();
         //测试条件筛选
         $this->post('ImageStyle/index',[
-                'length'=>$imageStyle->length
+                'length'=>$imageStyle->length,
+                'curl'=>$imageStyle->curl,
+                'color'=>$imageStyle->color,
+                'style'=>$imageStyle->style
                 ])            
-             ->seeJson([
-              'result'=>1,
-              'current_page'=>1,
-             ]);
+             ->seeJson(json_decode($imageStyle['data'],true));
 
         //筛选，搜索不存在的发长,返回空数据
         $this->post('ImageStyle/index',['length'=>str_random(20)])            
@@ -54,14 +54,26 @@ class ImageStyleTest extends TestCase
              $query['original']=  $image['original'];
              $query['thumb']=  $image['thumb'];
          }
-         
+
           $this->post("ImageStyle/create",$query)
              ->seeJson( ['result'=>1]);
-              
+                    
     }
     
     public function testUpdate(){
-        
+         $stylist = ImageStyle::first();
+         if($stylist){
+             $image =  json_decode($stylist['img'],true);
+             $stylist->original= str_random(20);
+             $stylist->thumb=  $image['thumb'];  
+         }
+            $this->post("ImageStyle/update/$stylist->id",  json_decode($stylist,true))
+             ->seeJson( ['result'=>1]);
+            
+            //是否修改成功
+             $this->get("ImageStyle/show/$stylist->id")
+             ->seeJson(json_decode($stylist['data']['original'],true));
+         
     }
     
     public function  testDestroy(){

@@ -48,7 +48,7 @@ class StylistTest extends TestCase
         $id = $stylist->stylistId;
         $this->get("stylist/show/$id")
              ->seeJson($stylist->toArray());
-
+        //破坏测试
         $id = 999999;
         $this->get("stylist/show/$id") 
              ->seeJson([
@@ -63,7 +63,7 @@ class StylistTest extends TestCase
         $this->get("stylist/destroy/$id")         
              ->seeJson([ 'result'=>1]);
         
-        //stylistId不存在
+        //stylistId不存在，破坏测试
         $id=999999;
         $this->get("stylist/destroy/$id")            
              ->seeJson([ 'result'=>0]);
@@ -75,7 +75,7 @@ class StylistTest extends TestCase
         $this->get("stylist/disabled/$id")         
              ->seeJson([ 'result'=>1]);
         
-        //以禁用就不能被禁用
+        //以禁用就不能被禁用，同时也是上面禁用成功的验证
         $this->get("stylist/disabled/$id")            
              ->seeJson([ 'result'=>0]);
     }
@@ -85,7 +85,7 @@ class StylistTest extends TestCase
         $this->get("stylist/enable/$id")         
              ->seeJson([ 'result'=>1]);
         
-        //以禁用就不能被禁用
+        //以启用就不能被启用，同时也是上面启用成功的验证
         $this->get("stylist/enable/$id")            
              ->seeJson([ 'result'=>0]);
     }
@@ -94,9 +94,8 @@ class StylistTest extends TestCase
     public function testCreate(){
         $this->withoutEvents();
         //创建用户
-      //  $salon=DB::table("salon")->first();
-     //   $id=$salon->salonid;
-        
+        $salon=DB::table("salon")->first();
+        $id=$salon->salonid; 
         $stylist = [
             'salonname'=>'嘉美专业烫染',
             'stylistName'=>"ww",
@@ -111,7 +110,7 @@ class StylistTest extends TestCase
             'job'=>"wrqwer",
             'workYears'=>8,
            ];
-        $this->post('stylist/create/680',$stylist)            
+        $this->post("stylist/create/$id",$stylist)            
              ->seeJson([
                 'result'=>1
              ]);
@@ -127,7 +126,8 @@ class StylistTest extends TestCase
        public function testUpdate(){
         $this->withoutEvents();
         //创建用户
-        
+        $Stylist=Stylist::where('status','=',1)->orderBy("stylistId", "DESC")->first();
+        $id=$Stylist->stylistId;
         $stylist = [
             'salonname'=>'嘉美专业烫染',
             'stylistName'=>"ww",
@@ -142,7 +142,7 @@ class StylistTest extends TestCase
             'job'=>"wrqwer",
             'workYears'=>8,
            ];
-        $this->post('stylist/update/868',$stylist)            
+        $this->post("stylist/update/$id",$stylist)            
              ->seeJson([
                 'result'=>1
              ]);

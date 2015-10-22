@@ -66,32 +66,32 @@ class WorksTest extends TestCase
              ->seeJson([ 'result'=>0]);
     }
     
-    public function testDel(){
-        $Stylist=Works::orderBy("recId", "DESC")->first();
-        $id=$Stylist->recId;
-        $works = [
-            'img'=>str_random(200)
-            ];
-        $this->get("works/del/$id",$works)            
-             ->seeJson([ 'result'=>1]); 
-    }
+//    public function testDel(){
+//        $Stylist=Works::orderBy("recId", "DESC")->first();
+//        $id=$Stylist->recId;
+//        $works = [
+//            'img'=>str_random(200)
+//            ];
+//        $this->get("works/del/$id",$works)            
+//             ->seeJson([ 'result'=>1]); 
+//    }
     
-     public function testUpdate(){
-        $this->withoutEvents();
-        $Stylist=Works::orderBy("recId", "DESC")->first();
-        $id=$Stylist->recId;
-        $data = [
-             'img'=>str_random(200)
-        ];
-        $this->post("works/update/$id",$data)
-             ->seeJson([
-                    'result'=>1
-                ]);
-        
-        //判断数据库是否存在此记录
-        $this->seeInDatabase('hairstylist_works', ['recId' => $id]); 
-
-    }
+//     public function testUpdate(){
+//        $this->withoutEvents();
+//        $Stylist=Works::orderBy("recId", "DESC")->first();
+//        $id=$Stylist->recId;
+//        $data = [
+//             'img'=>str_random(200)
+//        ];
+//        $this->post("works/update/$id",$data)
+//             ->seeJson([
+//                    'result'=>1
+//                ]);
+//        
+//        //判断数据库是否存在此记录
+//        $this->seeInDatabase('hairstylist_works', ['recId' => $id]); 
+//
+//    }
     
     
 }
