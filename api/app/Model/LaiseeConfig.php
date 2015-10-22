@@ -186,7 +186,6 @@ class LaiseeConfig extends Model {
             $query->where('create_time', '<=', $endTime);
         }
         $query->orderBy('status', 'asc')->orderBy('create_time', 'desc');
-
         AbstractPaginator::currentPageResolver(function () use($page) {
             return $page;
         });

@@ -86,8 +86,8 @@ class BonusController extends Controller {
         $data['laisee_name'] = isset($param['laisee_name']) ? $param['laisee_name'] : 0;
         $data['start_time'] = isset($param['start_time']) ? $param['start_time'] : 0;
         $data['end_time'] = isset($param['end_time']) ? $param['end_time'] : 0;
-        $page = isset($options['page']) ? max(intval($options['page']), 1) : 1;
-        $size = isset($options['page_size']) ? max(intval($options['page_size']), 1) : 20;
+        $page = isset($param['page']) ? max(intval($param['page']), 1) : 1;
+        $size = isset($param['page_size']) ? max(intval($param['page_size']), 1) : 20;
         $laiseeList = Laisee::getLaiseeList($data, $page, $size);
         foreach ($laiseeList['data'] as &$val) {
             $val['bonusSn'] = "hb" . str_pad($val['order_ticket_id'], 6, '0', STR_PAD_LEFT);
@@ -297,7 +297,7 @@ class BonusController extends Controller {
     public function close($id) {
         $laisee = Laisee::where('order_ticket_id', $id)->first();
         if ($laisee) {
-            $res = Laisee::where('order_ticket_id', $id)->update(['status' => 'N']);
+            $res = Laisee::where('order_ticket_id', $id)->whereNull('vsn')->update(['status' => 'N']);
             if ($res !== false) {
                 return $this->success();
             } else {
