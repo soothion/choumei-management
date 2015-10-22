@@ -141,9 +141,9 @@
                                         data.getTimeEnd = new Date(data.getTimeEnd).format('yyyy-MM-dd');
                                     }
                                     %>
-                                    <input type="date" name="getTimeStart" value="<%=data.getTimeStart%>" required/>
+                                    <input type="date" class="start" min="<%=new Date().format('yyyy-MM-dd')%>" name="getTimeStart" value="<%=data.getTimeStart%>" required/>
                                     <span>至</span>
-                                    <input type="date" name="getTimeEnd" value="<%=data.getTimeEnd%>" required/>
+                                    <input type="date" class="end" min="<%=new Date().format('yyyy-MM-dd')%>" name="getTimeEnd" value="<%=data.getTimeEnd%>" required/>
                                     <span class="control-help" style="display:none;"></span>
                                 </td>
                             </tr>    
@@ -166,10 +166,10 @@
                                                 data.addActLimitEndTime = new Date(data.addActLimitEndTime).format('yyyy-MM-dd');
                                             }
                                         %>
-                                        <input type="date" id="avaDateStart" name="addActLimitStartTime" 
+                                        <input type="date" class="start" min="<%=new Date().format('yyyy-MM-dd')%>" id="avaDateStart" name="addActLimitStartTime" 
                                         value="<%=data.addActLimitStartTime%>" <%=(!data.addActLimitStartTime && !data.fewDay) || data.addActLimitStartTime ? 'checked' :'disabled' %> required/>
                                         <span>至</span>
-                                        <input type="date" id="avaDateEnd" name="addActLimitEndTime" 
+                                        <input type="date" class="end" min="<%=new Date().format('yyyy-MM-dd')%>" id="avaDateEnd" name="addActLimitEndTime" 
                                         value="<%=data.addActLimitEndTime%>" <%=(!data.addActLimitStartTime && !data.fewDay) || data.addActLimitStartTime ? 'checked' :'disabled' %> required/>
                                         <span class="control-help" style="display:none;"></span>        
                                     </div>

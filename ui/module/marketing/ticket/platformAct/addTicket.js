@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-22 11:36:14
+* @Last Modified time: 2015-10-22 12:30:38
 */
 
 (function(){
@@ -41,6 +41,20 @@
         }else{
            $(this).attr('checked','checked');
            $("#smsTextArea").removeAttr('disabled');
+        }
+    })
+
+    $("#form").on('change','input.start',function(){
+        var td = $(this).parent();
+        if($(this).val()){
+            td.find('input.end').attr('min',$(this).val());          
+        }
+    })
+
+    $("#form").on('change','input.end',function(){
+        var td = $(this).parent();
+        if($(this).val()){
+            td.find('input.start').attr('max',$(this).val());          
         }
     })
 
@@ -136,7 +150,7 @@
           url : (type=="add"?"platform/add":"platform/editConf"),
           data: submitData    
       }).done(function(data, status, xhr){
-         if(data.result == 1){
+          if(data.result == 1){
             parent.lib.popup.result({
                 text:"店铺信息提交成功",
                 time:2000,
@@ -149,9 +163,7 @@
                     if(type=='edit') location.href="/module/marketing/ticket/platformAct/detail.html?id="+submitData.vcId;
                 }
             });          
-         }else{
-          
-         }
+          }
       })
     }      
 })()
