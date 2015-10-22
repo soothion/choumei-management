@@ -95,7 +95,9 @@
             $('body').on('_ready','#department',function(e,data){
                 var value = $(this).val();
                 var managerId = $(this).attr('manager-id');
+                if (managerId){
                 lib.ajat('platform/getDepartmentManager/'+value+'#domid=manager&tempid=manager_t&sid='+managerId).render();
+                }
             }).on('click', '#clear-btn', function(event) {
                 lib.popup.confirm({
                     text:"确定取消本次编辑吗？",

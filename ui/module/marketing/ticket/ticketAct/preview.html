@@ -158,8 +158,6 @@
 
             lib.Form.prototype.save = function(data){
                 var formData = getTmpData();
-                formData.limitItemTypes = formData.limitItemTypes ? formData.limitItemTypes.join(',') : '';
-                console.log(formData);
                 var  ajaxUrl = formData.vcId ? 'coupon/editConf' : 'coupon/add';
                 var resultText = formData.vcId ? '编辑活动成功':'新增活动成功';
                 confirmBox({
@@ -168,6 +166,28 @@
                     resultText:resultText,
                     data:formData
                 });
+            }
+
+            var confirmBox = function(options){
+                 lib.popup.confirm({
+                     text:options.text,
+                     define: function(){
+                         lib.ajax({
+                             url : options.url,
+                             data: options.data
+                         }).done(function(data, status, xhr){
+                             if(data.result == 1){
+                                 parent.lib.popup.result({
+                                     text:options.resultText,
+                                     define:function(){
+                                         clearTmpData();
+                                         window.location.href="index.html";
+                                     }
+                                 });
+                             }
+                         });
+                     }
+                 });
             }
 		</script>
     </body>
