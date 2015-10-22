@@ -33,7 +33,6 @@ class LaiseeConfig extends Model {
                 $lcData = [
                     'laisee_name' => $data['laisee_name'],
                     'lc_remark' => $data['lc_remark'],
-                    'status' => 'N',
                     'vcsns' => $vcsns,
                     'gift_vcsn' => !empty($gift_vcsn) ? $gift_vcsn : '',
                     'over_time' => $data['effective'] * 24 * 60 * 60, //秒数
@@ -64,7 +63,7 @@ class LaiseeConfig extends Model {
                 $lcData = [
                     'laisee_name' => $data['laisee_name'],
                     'lc_remark' => $data['lc_remark'],
-                    'status' => 'N',
+                    'status' => 'F',
                     'vcsns' => $vcsns,
                     'gift_vcsn' => !empty($gift_vcsn) ? $gift_vcsn : '',
                     'over_time' => $data['effective'] * 24 * 60 * 60, //秒数
@@ -186,7 +185,6 @@ class LaiseeConfig extends Model {
             $query->where('create_time', '<=', $endTime);
         }
         $query->orderBy('status', 'asc')->orderBy('create_time', 'desc');
-
         AbstractPaginator::currentPageResolver(function () use($page) {
             return $page;
         });

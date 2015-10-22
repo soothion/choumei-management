@@ -19,32 +19,32 @@
 
         <div class="wrapper">
             <form data-role="hash">                       
-               <div class="input-group input-switch">
-                    <select>
-                        <option value="用户臭美号">用户臭美号</option>
-						<option selected="" value="用户手机号">用户手机号</option>
-						<option value="店铺名称">店铺名称</option>
-						<option value="造型师手机号">造型师手机号</option>
+               <div class="input-group placeholder-switch">
+                    <select name="keywordType">
+                        <option value="0" data-placeholder="请输入用户臭美号">用户臭美号</option>
+						<option value="1" data-placeholder="请输入用户手机号">用户手机号</option>
+						<option value="2" data-placeholder="请输入店铺名称">店铺名称</option>
+						<option value="3" data-placeholder="请输入造型师手机号">造型师手机号</option>
                     </select>
-                    <input type="text" class="input-search" name="laisee_name" placeholder="红包名称">
+                    <input type="text" class="input-search" name="keyword" placeholder="请输入用户臭美号">
                 </div>
                 <span class="space"></span>
                 <span>提交时间</span>
                 <span class="date-group">
-                    <input type="date" data-role="start" name="start_time" placeholder="YYYY-MM-DD"/>
+                    <input type="date" data-role="start" name="minTime" placeholder="YYYY-MM-DD"/>
                     到
-                    <input type="date" data-role="end" name="end_time" placeholder="YYYY-MM-DD"/>
+                    <input type="date" data-role="end" name="maxTime" placeholder="YYYY-MM-DD"/>
                 </span>
                 <button class="btn">搜索</button>
             </form>
 
-            <form action="laisee/export" data-role="export">
+            <form action="appointment/export" data-role="export">
                 <button class="btn" data-slug="manager.export">
                 <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form>
                           
-           <div class="table" ajat="laisee/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="appointment/index?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -64,14 +64,14 @@
                 <%data.forEach&&data.forEach(function(item,i){%>
                  <tr>
                   <td><%=i+1%></td>
-                  <td><%=item.laisee_name%></td>
-                  <td><%=item.voucherNum%></td>
-                  <td><%=item.receiveNum%></td>
-                  <td><%=item.usedNum%></td>
-                  <td><%=item.giftNum%></td>         
-                  <td><%=item.create_time%></td>         
+                  <td><%=item.userMobile%></td>
+                  <td><%=item.service_item%></td>
+                  <td><%=item.contacted%></td>
+                  <td><%=item.add_time%></td>
+                  <td><%=item.stylistMobile%></td>         
+                  <td><%=item.salonName%></td>         
                   <td>
-                    <a class="link" href="detail.html?id=<%=item.id%>">查看&gt;</a>
+                    <a class="link" target="_blank" href="detail.html?id=<%=item.id%>">查看&gt;</a>
                   </td>
                   </tr>
                   <%})%>

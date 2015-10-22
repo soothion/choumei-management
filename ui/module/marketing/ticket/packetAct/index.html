@@ -75,10 +75,10 @@
                   <td><%=item.giftNum%></td>         
                   <td><%=item.create_time%></td>         
                   <td><%=item.start_time%></td>
-				  <%var statusMap={"Y":"进行中","N":"已结束","S":"已关闭"}%>
+				  <%var statusMap={"Y":"进行中","N":"已结束","S":"已关闭","F":"下线"}%>
                   <td><%=statusMap[item.status]%></td>
                   <td>
-                    <a class="link" href="detail.html?id=<%=item.id%>">查看&gt;</a>
+                    <a class="link" target="_blank" href="detail.html?id=<%=item.id%>">查看&gt;</a>
 					<%if(item.status=="Y"){%>
 					<form action="laisee/offline/<%=item.id%>" data-role="normal">
 						<span class="space"></span>
@@ -89,8 +89,8 @@
 						<button class="link">关闭</button>
 					</form>
 					<%}%>
-					<%if(item.status=="N"&&!item.end_time){%>
-					<form action="laisee/offline/<%=item.id%>" data-role="normal">
+					<%if(item.status=="F"){%>
+					<form action="laisee/online/<%=item.id%>" data-role="normal">
 						<span class="space"></span>
 						<button class="link">上线</button>
 					</form>

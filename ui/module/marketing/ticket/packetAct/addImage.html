@@ -33,12 +33,8 @@
         <div class="wrapper">
 			<div id="form" ajat="<%if(query._){%>laisee/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
+				<%data=$.extend(data,JSON.parse(sessionStorage.getItem("formData")))%>
 				<form action="" class="form-vertical" data-role="form" >
-					<div class="detail-operation ">
-						<a class="btn" href="index.html">取消</a>
-						<span class="space"></span>
-						<button class="btn-primary">提交</button>
-					</div>
 					<input type="hidden" value="<%=query.id%>" name="id" />
 					<div class="control-group">
 						<legend>

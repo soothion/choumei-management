@@ -112,6 +112,7 @@
 					var data=lib.tools.getFormData($(this));
 					var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
 					data=$.extend(formData,data);
+					sessionStorage.removeItem("formData");
 					return data;
 				}
 			})

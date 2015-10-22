@@ -36,6 +36,8 @@ class LaiseeController extends Controller {
      * @apiParam {String} laisee_name 可选，活动名称.
      * @apiParam {Number} start_time 可选,创建时间YYYY-MM-DD
      * @apiParam {Number} end_time 可选，结束时间YYYY-MM-DD
+     *  @apiParam {Number} page 可选,页数.
+     * @apiParam {Number} page_size 可选,分页大小.
      *
      * 
      * @apiSuccess {String} laisee_name 红包名称.
@@ -83,8 +85,8 @@ class LaiseeController extends Controller {
         $laiseeName = isset($param['laisee_name']) ? $param['laisee_name'] : '';
         $startTime = isset($param['start_time']) ? $param['start_time'] : '';
         $endTime = isset($param['end_time']) ? $param['end_time'] : '';
-        $page = isset($options['page']) ? max(intval($options['page']), 1) : 1;
-        $size = isset($options['page_size']) ? max(intval($options['page_size']), 1) : 20;
+        $page = isset($param['page']) ? max(intval($param['page']), 1) : 1;
+        $size = isset($param['page_size']) ? max(intval($param['page_size']), 1) : 20;
         $laiseeList = LaiseeConfig::getLaiseeList($laiseeName, $startTime, $endTime, $page, $size);
         $data = [];
         //判断在线的活动是否过期
@@ -96,9 +98,6 @@ class LaiseeController extends Controller {
             $val['receiveNum'] = Laisee::where('laisee_config_id', $val['id'])->whereNotNull('mobilephone')->count(); //已领取数  TODO Laisee::where('id', $val['id']) ID需要改
             $val['usedNum'] = Voucher::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->where('vStatus', 2)->count();  //已使用数
             $val['giftNum'] = !empty($val['gift_vcsn']) ? Laisee::where('id', $val['id'])->whereIn('vcsn', explode(",", $val['gift_vcsn']))->whereNotNull('mobilephone')->count() : 0;  //礼包领取数
-            if ($val['end_time'] == "0000-00-00 00:00:00") {  // 此时活动为下线状态   可以上线
-                $val['status'] = 'F';
-            }
         }
         return $this->success($laiseeList);
     }
@@ -146,10 +145,7 @@ class LaiseeController extends Controller {
             $data[$key]['giftNum'] = !empty($val['gift_vcsn']) ? Laisee::where('id', $val['id'])->whereIn('vcsn', explode(",", $val['gift_vcsn']))->whereNotNull('mobilephone')->count() : 0;  //礼包领取数
             $data[$key]['create_time'] = $val['create_time'];
             $data[$key]['start_time'] = $val['start_time'];
-            $data[$key]['status'] = $val['status'] == 'Y' ? "进行中" : $val['status'] == 'N' ? "已结束" : "已关闭";
-            if ($val['end_time'] == "0000-00-00 00:00:00") {  // 此时活动为下线状态   可以上线
-                $data[$key]['status'] = "下线";
-            }
+            $data[$key]['status'] = $val['status'] == 'Y' ? "进行中" : $val['status'] == 'N' ? "已结束" : $val['status'] == 'S' ? "已关闭" : "下线";
         }
         //导出excel	   
         $title = '红包活动列表' . date('Ymd');
@@ -531,7 +527,7 @@ class LaiseeController extends Controller {
     public function offline($id) {
         $res = LaiseeConfig::where('id', $id)->update(['status' => 'N', 'end_time' => date("Y-m-d H:i:s")]);
         if ($res !== false) {
-            Laisee::where('laisee_config_id', $id)->update(['status' => 'N']);  // 活动下线将红包失效
+            Laisee::where('laisee_config_id', $id)->whereNull('vsn')->update(['status' => 'N']);  // 活动下线将未领取红包失效
             return $this->success();
         } else {
             throw new ApiException("活动下线失败", ERROR::UNKNOWN_ERROR);
