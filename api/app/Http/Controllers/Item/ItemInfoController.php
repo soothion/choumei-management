@@ -444,7 +444,7 @@ class ItemInfoController extends Controller{
 	    		return false;
 	    	}
 	    }
-	    if($timingAdded && $timingShelve)
+	    if($timingAdded && $timingShelves)
 	    {
 	    	$data['timingAdded'] = strtotime($timingAdded);
 	    	$data['timingShelves'] = strtotime($timingShelves);
