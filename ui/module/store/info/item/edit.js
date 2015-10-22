@@ -6,11 +6,29 @@
 		$(this).before('<input type="text" class="input-small" maxlength="10" nospace name="'+name+'"/>');
 		$(this).prev().focus();
 	}).on('click','.price-choose',function(){//定价类型的切换
-		if(this.checked&&this.value==1){
-			$('.price-group').show().next('.format-group').hide();
+		var priceGroup=$('.price-group');
+		var formatGroup=$('.format-group');
+		if(this.checked&&this.value==1&&!priceGroup.is(":visible")){
+			priceGroup.show();
+			formatGroup.hide();
+			priceGroup.find('input').val("");
+			priceGroup.find('.control-help').hide();
 		}
-		if(this.checked&&this.value==2){
-			$('.price-group').hide().next('.format-group').show();
+		if(this.checked&&this.value==2&&!formatGroup.is(":visible")){
+			priceGroup.hide();
+			formatGroup.show();
+			formatGroup.find("input[type='text']").val("");
+			formatGroup.find('.control-help').hide();
+			formatGroup.find("input[name='hairstylist'],input[name='solution']").each(function(){
+				this.disabled=true;
+			})
+			formatGroup.find("input[type='checkbox']").each(function(){
+				this.checked=false;
+				if(this.name=="sex"||this.name=="longhair"){
+					this.disabled=true;
+				}
+			});
+			$("#format-table").html("");
 		}
 	}).on('change','#type',function(){
 		//是否显示快剪等级
@@ -24,15 +42,15 @@
 			$('textarea[name="desc"]').val($(this).data('value'));
 		})
 	}).on('click','.limit',function(){//有无限制状态的切换
-		$(this).parent().siblings('input').attr('disabled',this.checked);
-		$(this).parent().siblings('label').children('input').attr('disabled',this.checked);
+		$(this).closest("span").siblings('input').attr('disabled',this.checked);
+		//$(this).parent().siblings('label').children('input').attr('disabled',this.checked);
 	}).on('change','#project',function(){//选择项目后渲染出对应的项目详情
 		init(this.value);
-	}).on('choose','input[name="timingAdded"]',function(){
-		var timingShelves=$('input[name="timingShelves"]')
-		timingShelves.attr('min',this.value);
-		if(timingShelves.val()&&new Date(this.value).getTime()>new Date(timingShelves.val()).getTime()){
-			timingShelves.val("");
+	}).on('pass','input[name="timingShelves"]',function(){
+		var timingAdded=$('input[name="timingAdded"]');
+		var $this=$(this);
+		if(timingAdded.val()&&$this.val()&&new Date(timingAdded.val()).getTime()>new Date($this.val()).getTime()){
+			$this.trigger("error",{type:"error",errormsg:"下架时间不能小于上架时间"})
 		}
 	});
 	$('#type1').on('change',function(){
@@ -59,6 +77,17 @@
 		lib.ajat(ajat+"#domid=form&tempid=form-t").render();
 	
 		$('#form').one('_ready',function(e,data){
+			if(!lib.query.id){
+				$('#_form')[0].goback=function(){
+					var ln=location;
+					parent.lib.popup.confirm({
+						text:"添加项目成功",
+						define:function(){
+							ln.reload();
+						}
+					})
+				}
+			}
 			//图片上传
 			lib.puploader.image({
 				browse_button: 'imageUpload',

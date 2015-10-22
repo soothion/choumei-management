@@ -1011,7 +1011,7 @@
 			//有disabled的不做校验
 			if($target.is(':disabled')){
 				var error=this.getErrorDom($target);
-				error.remove();
+				error.hide();
 				return;
 			}
 			//复选框单选框校验的非空校验
