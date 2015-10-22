@@ -106,7 +106,7 @@ class StylistController  extends Controller {
        if(!$stylist){
 		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
        }   
-       $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
+       $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId))->whereIn('btStatus',[2,3])->count();
        if($task==true){
             throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
        } 
@@ -292,7 +292,7 @@ class StylistController  extends Controller {
         }
 //        $stylist->workExp=json_decode($stylist['workExp'],true);
 //        $stylist->educateExp=json_decode($stylist['educateExp'],true);
-        $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId,'btStatus'=>array('in',array(2,3))))->count();
+          $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId))->whereIn('btStatus',[2,3])->count();
         if($task==true){
                 $stylist->reward=1;
         } else{
