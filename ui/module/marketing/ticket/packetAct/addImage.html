@@ -145,7 +145,7 @@
 					max_file_size:'2mb',
 					//imageLimitSize:"640"
 				});
-				$('#preview_btn').on('click',function{}{
+				$('#preview_btn').on('click',function(){
 					var data=lib.tools.getFormData($("form"));
 					var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
 					data=$.extend(formData,data);
