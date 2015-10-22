@@ -50,7 +50,7 @@
 		var timingAdded=$('input[name="timingAdded"]');
 		var $this=$(this);
 		if(timingAdded.val()&&$this.val()&&new Date(timingAdded.val()).getTime()>new Date($this.val()).getTime()){
-			$this.trigger("error",{type:"error",errormsg:"下架时间不能小于上架时间"})
+			$this.trigger("error",{type:"error",errormsg:"下架时间必须大于上架时间"})
 		}
 	});
 	$('#type1').on('change',function(){
