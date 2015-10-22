@@ -81,9 +81,12 @@
 				$('#_form')[0].goback=function(){
 					var ln=location;
 					parent.lib.popup.confirm({
-						text:"添加项目成功",
+						text:"添加项目成功!是否继续添加?",
 						define:function(){
 							ln.reload();
+						},
+						cancel:function(){
+							history.back();
 						}
 					})
 				}
