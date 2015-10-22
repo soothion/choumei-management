@@ -426,27 +426,31 @@ class ItemInfoController extends Controller{
 	    $timingAdded  = isset($param['timingAdded'])?trim($param['timingAdded']):0;//定时上架
 	    $timingShelves  = isset($param['timingShelves'])?trim($param['timingShelves']):0;//定时下架
 
-	    if($timingAdded && $timingShelves)
+	    if(!$itemid && $timingAdded)
+	    {
+	    	$data['timingAdded'] = strtotime($timingAdded);
+	    	if($data['timingAdded'] < time())
+	    	{
+	    		$err_msg = ['msg'=>'日期或时间设置错误，必须大于当前时间','no'=>ERROR::ITEM_ERROR];
+	    		return false;
+	    	}
+	    }
+	    if(!$itemid && $timingShelves)
+	    {
+	    	$data['timingShelves'] = strtotime($timingShelves);
+	    	if($data['timingShelves'] < time())
+	    	{
+	    		$err_msg = ['msg'=>'日期或时间设置错误，必须大于当前时间','no'=>ERROR::ITEM_ERROR];
+	    		return false;
+	    	}
+	    }
+	    if($timingAdded && $timingShelves && !$itemid)
 	    {
 	    	$data['timingAdded'] = strtotime($timingAdded);
 	    	$data['timingShelves'] = strtotime($timingShelves);
 	    	if($data['timingAdded'] >= $data['timingShelves'])
 	    	{
 	    		$err_msg = ['msg'=>'下架时间必须大于上架时间','no'=>ERROR::ITEM_ERROR];
-	    		return false;
-	    	}
-	    	if($data['timingAdded'] < time() || $data['timingShelves'] < time())
-	    	{
-	    		$err_msg = ['msg'=>'日期或时间设置错误，必须大于当前时间','no'=>ERROR::ITEM_ERROR];
-	    		return false;
-	    	}
-	    }
-	    elseif($itemid && $timingShelves)
-	    {
-	    	$data['timingShelves'] = strtotime($timingShelves);
-	    	if($data['timingShelves'] < time())
-	    	{
-	    		$err_msg = ['msg'=>'日期或时间设置错误，必须大于当前时间','no'=>ERROR::ITEM_ERROR];
 	    		return false;
 	    	}
 	    }
@@ -459,6 +463,29 @@ class ItemInfoController extends Controller{
 	    		$err_msg = ['msg'=>'数据错误,项目id不存在！','no'=>ERROR::ITEM_DATA_ERROR];
 	    		return false;
 	    	}
+	    	if($itemInfo->status == SalonItem::STATUS_OF_DOWN)
+	    	{
+	    		if($timingAdded && $timingShelves)
+	    		{
+	    			$data['timingAdded'] = strtotime($timingAdded);
+	    			$data['timingShelves'] = strtotime($timingShelves);
+	    			if($data['timingAdded'] >= $data['timingShelves'])
+	    			{
+	    				$err_msg = ['msg'=>'下架时间必须大于上架时间','no'=>ERROR::ITEM_ERROR];
+	    				return false;
+	    			}
+	    		}
+	    	}
+	    	if($itemInfo->status == SalonItem::STATUS_OF_UP)
+	    	{
+	    		$data['timingShelves'] = strtotime($timingShelves);
+		    	if($data['timingShelves'] < time() && $timingShelves)
+		    	{
+		    		$err_msg = ['msg'=>'日期或时间设置错误，必须大于当前时间','no'=>ERROR::ITEM_ERROR];
+		    		return false;
+		    	}
+	    	}
+	    	
 	    	//判断库存设置
 	    	$total_rep  = isset($param['total_rep'])?trim($param['total_rep']):0;
 	    	if($total_rep > 0 && intval($itemInfo->sold) >= $total_rep)
