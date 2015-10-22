@@ -18,11 +18,21 @@
         <div class="wrapper">
             <div class="table-detail" ajat="#domid=table&tempid=table-t" id="table">
 				<script type="text/template" id="table-t">
+				<%var data=JSON.parse(sessionStorage.getItem("formData"))%>
+				<%var types=JSON.parse(sessionStorage.getItem("types"))%>
+				<%var voucher=JSON.parse(data.voucher)%>
+				<%var gift=JSON.parse(data.gift)%>
                 <div class="detail-operation">
                     <button class="btn" type="button" onclick="window.close()">关闭</button>  
                 </div> 
-				<legend>活动基本信息</legend>
                 <table>
+					<thead>
+					<tr>
+						<td colspan="2">
+						 活动基本信息
+						</td>
+					</tr>
+				</thead>
                     <tbody>
                         <tr>
                             <td>红包活动名称</td>
@@ -41,26 +51,70 @@
 
                         <tr>
                             <td>红包领取金额上限</td>
-                            <td><%=data.receiveNum%></td>
+                            <td><%=data.effective%></td>
                         </tr>
                     </tbody>                     
-                </table>
-				<legend>红包规格</legend>
-                <table>
+					<thead>
+						<tr>
+							<td colspan="2">
+							红包规格
+							</td>
+						</tr>
+					</thead>
                     <tbody>
                         <tr>
                             <td>红包规格详情(6张)</td>
-                            <td><%=data.laisee_name%></td>
+                            <td>
+								<%voucher.forEach&&voucher.forEach(function(item){%>
+									<%types.forEach(function(item2){%>
+										<%if(item.vUseItemTypes==item2.typeid){%>
+											<%=item2.typename%>
+										<%}%>
+									<%})%> 
+									<%=item.vUseMoney%>元<%=item.vNumber%>张，满<%=item.vUseNeedMoney%>元可用，领取后<%=item.few_day%>天内有效 <br />
+								<%})%>
+							</td>
                         </tr>
 
                         <tr>
                             <td>新手礼包</td>
-                            <td><%=data.lc_remark%></td>
+                            <td>
+								<%gift.forEach&&gift.forEach(function(item){%>
+									<%types.forEach(function(item2){%>
+										<%if(item.vUseItemTypes==item2.typeid){%>
+											<%=item2.typename%>
+										<%}%>
+									<%})%> 
+									<%=item.vUseMoney%>元<%=item.vNumber%>张，满<%=item.vUseNeedMoney%>元可用，领取后<%=item.few_day%>天内有效 <br />
+								<%})%>
+							</td>
                         </tr>
                     </tbody>                     
                 </table>
+				<br />
+				<form style="text-align:right;" action="<%if(query._){%>laisee/update<%}else{%>laisee/create<%}%>" data-role="form">
+					<button class="btn" type="button">返回</button>
+					<span class="space"></span>
+					<a class="btn" href="index.html">取消</a>
+					<span class="space"></span>
+					<button class="btn-primary">提交</button>
+				</form>
 				</script>
             </div>
         </div>
+		<script type="text/javascript">
+			$('#table').on("_ready",function(){
+				var form=$('form')[0];
+				form.goback=function(){
+					location.href="index.html";
+				}
+				form._getFormData = function(){
+					var data=lib.tools.getFormData($(this));
+					var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
+					data=$.extend(formData,data);
+					return data;
+				}
+			})
+		</script>
     </body>
 </html>

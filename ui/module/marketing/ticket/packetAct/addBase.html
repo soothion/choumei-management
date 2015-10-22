@@ -25,7 +25,7 @@
 				<%if(query.id){sessionStorage.setItem("formData",JSON.stringify(data))}%>
 				<form class="form-vertical" data-role="form">
                     <div class="detail-operation">
-                        <button type="button" class="btn btn-cancel">取消</button>
+                        <a class="btn" href="index.html">取消</a>
                         <span class="space"></span>
                         <button class="btn-primary">提交</button>
                     </div>
@@ -40,7 +40,7 @@
                     <div class="control-group">
                         <label class="control-label" for=""><span class="red">*</span>红包名称：</label>
                         <div class="control">
-                            <input type="text" name="laisee_name" maxlength="12" required value="<%=data.laisee_name%>">
+                            <input type="text" name="laisee_name" maxlength="12" required value="<%=data.laisee_name%>" <%=query.id?"readonly":""%>>
                         </div>
                     </div> 
 
@@ -90,12 +90,12 @@
                     <div class="control-group">
                         <label class="control-label" for="">                            
                             <label>
-                                <input type="checkbox" id="switch" value="3" <%=!query.id||data.sms_on_gained?"checked":""%> >
+                                <input type="checkbox" id="switch" value="3" <%=data.sms_on_gained?"checked":""%> >
                                 <span>手机短信内容</span>
                             </label>
                         </label>
                         <div class="control">
-                            <textarea name="sms_on_gained" placeholder="限制500个汉字的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" 
+                            <textarea name="sms_on_gained"  <%=!data.sms_on_gained?"disabled":""%> placeholder="限制500个汉字的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" 
                             style="height:150px;width:400px;" required><%=data.sms_on_gained%></textarea>
                         </div>                        
 
@@ -103,7 +103,7 @@
 
                     <div class="control-group">
                         <label class="control-label" for=""></label>
-                        <button class="btn btn-cancel" type="button">取消</button>
+                        <a class="btn" href="index.html">取消</a>
                         <button class="btn-primary">下一步</button>
                     </div>                                                                  
             </form>

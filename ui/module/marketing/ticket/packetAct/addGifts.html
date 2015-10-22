@@ -15,7 +15,7 @@
       .box{
         position: relative;
         width:410px;
-        height:190px;
+        height:208px;
         border:1px solid #ddd;
         margin:10px;
         float:left;        
@@ -36,6 +36,9 @@
       span.label{
         width:60px ;display:inline-block;       
       }
+	   .box:first-child .remove{
+		display:none;
+	  }
       </style>
     </head>
     <body>
@@ -63,13 +66,13 @@
                     </div>
                     <ul class="nav-step flex-box">
                         <li class="flex-item">
-                            <a href="add.html">
+                            <a>
                                 <i class="fa fa-check-circle"></i>
                                 <span>1.活动基本信息</span>
                             </a>
                         </li>
                         <li class="flex-item">
-                            <a href="add.html">
+                            <a>
                                 <i class="fa fa-check-circle"></i>
                                 <span>2红包现金券配置</span>
                             </a>
@@ -176,8 +179,9 @@
                         </div>                                                 
                     </div>
 
-                    <div class="control-group" style="margin-left:15px">
-                        <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
+                    <div class="control-group">
+                        <a class="btn" href="index.html">取消</a>
+						<span class="space"></span>
                         <button class="btn-primary">下一步</button>
                     </div>                                                                                     
             </form>
@@ -190,7 +194,9 @@
 				clone.find("input").val("1").eq(3).val(0);
 				clone.find("select").val("");
 				$(this).before(clone);
-			})
+			}).on("click",".remove",function(){
+				$(this).closest('.box').remove();
+			});
             lib.Form.prototype.save = function(data){
 				var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
 				formData.gift=[];

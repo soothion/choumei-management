@@ -89,6 +89,12 @@
 						<button class="link">关闭</button>
 					</form>
 					<%}%>
+					<%if(item.status=="N"&&!item.end_time){%>
+					<form action="laisee/offline/<%=item.id%>" data-role="normal">
+						<span class="space"></span>
+						<button class="link">上线</button>
+					</form>
+					<%}%>
                   </td>
                   </tr>
                   <%})%>
