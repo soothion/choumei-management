@@ -844,7 +844,6 @@ class CouponController extends Controller{
         $page = isset( $post['page'] ) ? $post['page'] : 1;
         $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 12;
         
-        $i = 0;
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
             
             $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
@@ -1005,6 +1004,7 @@ class CouponController extends Controller{
    private function handleList( $res ){
         $tempData = [];
         $department = '';
+        $i = 0;
         foreach( $res as $key=>$val ){
             $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
             $actTime = '';
