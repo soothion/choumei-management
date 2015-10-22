@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-20 20:38:45
+* @Last Modified time: 2015-10-22 15:51:50
 */
 
 (function(){       
@@ -239,12 +239,23 @@
             data: data    
         }).done(function(data, status, xhr){
             if(data.result == 1){
-                parent.lib.popup.result({
-                    text:"操作成功！",
-                    define:function(){
-                        history.back();
-                    }
-                });                
+                if(lib.query.salonid){
+                    lib.popup.confirm({
+                        text : "温馨提示",
+                        content : "造型师添加成功，是否继续添加？",
+                        cancelText : "返回列表",
+                        defineText : "继续添加",
+                        cancel     :function(){history.back();},
+                        define     :function(){location.reload()}
+                    })
+                }else{
+                    parent.lib.popup.result({
+                        text:"操作成功！",
+                        define:function(){
+                            history.back();
+                        }
+                    });                    
+                }                
             }
            
         });
