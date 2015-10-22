@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-22 14:52:05
+* @Last Modified time: 2015-10-22 17:55:29
 */
 
 (function(){
@@ -49,11 +49,17 @@
     $("#form").on('click','input[type=radio]',function(){
         $('input.cascade').attr('disabled','disabled');
         $('input.cascade').removeAttr('required');
+        $('input[name=code]').val("");
         if($(this).val()=="3"){
             $('input.mobile-button').removeAttr('disabled');         
         }
         $(this).parent().next().removeAttr('disabled');
         $(this).parent().next().attr('required','required');
+        $('span.control-help').hide();
+        var data = JSON.parse(sessionStorage.getItem('add-base-data'));  
+        data.phoneList = [];
+        data.code = "";
+        sessionStorage.setItem('add-base-data',JSON.stringify(data));   
     });
     
     /**
@@ -77,7 +83,7 @@
         }).done(function(data, status, xhr){
             if(data.result == "1"){
                 if(data.data.exists == "0"){
-                    $(self).next().show();
+                    $(self).next().text($(self).attr('placeholder')+'不存在').show();
                 }
             }
         })     
@@ -119,39 +125,40 @@
      */
     $("#form").on('click',".flex-item a",function(e){
         e.preventDefault();
+        var selectItemType = 1;
+        if(type == 'add'){
+            var data = JSON.parse(sessionStorage.getItem('add-base-data'));
+            if(data.selectItemType){
+                selectItemType = data.selectItemType;
+            }  
+        }
+        
+        if(type == 'edit'){
+            var data = JSON.parse(sessionStorage.getItem('edit-base-data'));
+            if(data.selectItemType){
+                selectItemType = data.selectItemType;
+            } 
+        }
         location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
     }); 
 
-    $("#form").on('click',"a.tab-menus",function(e){
-        if(type == 'add'){
-            var data = JSON.parse(sessionStorage.getItem('add-base-data'));  
-            data.getItemTypes = "";
-            data.enoughMoeny  = "";
-            data.phoneList    = [];
-            data.code = "";
-            data.selectUseType = 1;
-            sessionStorage.setItem('add-base-data',JSON.stringify(data));           
-        }
-    })
-
     /**
-     * 仅允许输入int类型数据
+     * 用户类型tab切换
      * @param  {[type]} e [description]
      * @return {[type]}   [description]
      */
-    $("#form").on('keydown',"input[pattern='number']",function(e){
-        var key = e.which;
-        //alert(key)
-        if ((key > 95 && key < 106) || //小键盘上的0到9  
-            (key > 47 && key < 58) || //大键盘上的0到9  
-            key == 8 || key == 116 || key == 9 || key == 46 || key == 37 || key == 39
-            //不影响正常编辑键的使用(116:f5;8:BackSpace;9:Tab;46:Delete;37:Left;39:Right;)  
-        ) {
-            return true;
-        } else {
-            return false;
+    $("#form").on('click',"a.tab-menus",function(e){
+        if(type == 'add'){
+            var data = JSON.parse(sessionStorage.getItem('add-base-data'));  
+            data.getItemTypes   = "";
+            data.enoughMoeny    = "";
+            data.phoneList      = [];
+            data.code           = "";
+            data.selectUseType  = 1;
+            data.selectItemType = 1;
+            sessionStorage.setItem('add-base-data',JSON.stringify(data));           
         }
-    });
+    })
 
     $("#form").on('click','#preview-btn',function(){
         var data = lib.getFormData($("#form"));
@@ -165,7 +172,6 @@
            
 
     lib.Form.prototype.save = function(data){
-
         if(data.getItemTypes && data.getItemTypes.length>0){
             data.getItemTypes = data.getItemTypes.join(",");
         }

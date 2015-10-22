@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-22 14:04:02
+* @Last Modified time: 2015-10-22 16:30:01
 */
 
 (function(){
@@ -93,32 +93,25 @@
     lib.Form.prototype.save = function(data){
       data.checkTotalNumber = undefined;
       data.avaDate = undefined;
-
+      var submitData = {};
       if(data.getTimeStart){
         data.getTimeStart = data.getTimeStart + " 00:00:00";
       }
-
       if(data.getTimeEnd){
          data.getTimeEnd = data.getTimeEnd + " 23:59:59";
       }
-
       if(data.addActLimitStartTime){
          data.addActLimitStartTime = data.addActLimitStartTime  + " 00:00:00";
       }
-
       if(data.addActLimitEndTime){
          data.addActLimitEndTime = data.addActLimitEndTime  + " 23:59:59";
       }
-
-      var submitData = {};
       if(data.limitItemTypes){
          data.limitItemTypes = ","+data.limitItemTypes.join(",")+",";
       }
-
       if(data.useLimitTypes){
         data.useLimitTypes = data.useLimitTypes[0];
       }
-
       if(type == 'add'){    
           var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
           submitData = $.extend({},addData,data);           
@@ -127,15 +120,12 @@
           var saveData = JSON.parse(sessionStorage.getItem('edit-save-data'));
           submitData = $.extend({},saveData,data);               
       }
-
-      if(submitData.phoneList && $.isArray(submitData.phoneList )){
+      if(submitData.phoneList && $.isArray(submitData.phoneList)){
          submitData.phoneList = submitData.phoneList.join(",");
       }
-
       if(submitData.getItemTypes){
          submitData.getItemTypes = ","+submitData.getItemTypes+",";
       }      
-
       lib.ajax({
           type: "post",
           url : (type=="add"?"platform/add":"platform/editConf"),

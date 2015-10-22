@@ -896,6 +896,44 @@ class CouponController extends Controller{
             });
         })->export('xls');
     }
+    /***
+	 * @api {get} /coupon/getActNum 12.获取活动编码
+	 * @apiName getActNum
+	 * @apiGroup Coupon
+	 *
+     * 
+     * 
+	 * 
+	 * @apiSuccess {String} actNo 活动码编号.
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *		{
+	 *		    "result": 1,
+	 *		    "data":  {
+     *               "actNo": "cm475526"
+     *           }
+	 *		}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "未授权访问"
+	 *		}
+	 ***/
+    public function getActNum(){
+        //11位  减小重复的几率
+        $pre = substr(time(), 7);
+        $end = '';
+        for ($i = 0; $i <3; $i++) {
+            $end .= rand(0, 9);
+        }
+        $code = "dh" . $pre  . $end;
+        $count = \App\VoucherConf::where( 'vcSn' , '=' , $code )->count();
+        if($count)  return $this->getActNum();
+        $code = ['actNo'=>$code];
+        return $this->success($code);
+   }
     // 获取分类
     private function _getItemType(){
         // 这里用于 代金劵和配置中会和前端约定 增加一个项目特价类型为typeid为101
