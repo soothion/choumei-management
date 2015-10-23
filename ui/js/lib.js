@@ -524,6 +524,7 @@
 							}
 							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
 								var item=$(this).closest('.control-thumbnails-item');
+								var $parent=item.parent();
 								if(item.attr('id')){
 									uploader.removeFile(item.attr('id'));
 								}
@@ -531,7 +532,7 @@
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').show();
 								}
-								item.parent().trigger("itemchange");
+								$parent.trigger("itemchange");
 							});
 							uploader.thumbnails.on('click','.control-thumbnails-before',function(){
 							 	var $this=$(this);
