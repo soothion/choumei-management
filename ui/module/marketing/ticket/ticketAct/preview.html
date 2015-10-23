@@ -29,13 +29,13 @@
 				</thead>
                     <tbody>
                         <tr>
-                            <td>红包活动名称</td>
+                            <td>活动名称</td>
                             <td><%=data.actName%></td>
                         </tr>
 
                         <tr>
-                            <td>活动简介</td>
-                            <td><%=data.actIntro%></td>
+                            <td>活动编号</td>
+                            <td><%=data.actNo%></td>
                         </tr>
 
                         <tr>
@@ -55,7 +55,7 @@
 
                         <tr>
                             <td>活动时间</td>
-                            <td><%=data.getTimeStart%>&nbsp;至&nbsp;<%=data.getTimeEnd%></td>
+                            <td><%=data.getTimeStart ? data.getTimeStart : '【无限制】'%><%= data.getTimeStart && data.getTimeEnd ? '&nbsp;至&nbsp;'+data.getTimeEnd :'' %></td>
                         </tr>
                     </tbody>
 					<thead>
@@ -76,14 +76,14 @@
                         <tr>
                             <td>卷总数</td>
                             <td>
-								<%=data.totalNumber ? data.totalNumber : '无限'%>张
+								<%=data.totalNumber ? data.totalNumber : '【无限制】'%>张
 							</td>
                         </tr>
 
                         <tr>
                             <td>卷预算合计</td>
                             <td>
-								<%=data.money * data.totalNumber ? data.money * data.totalNumber : '无限'%>元
+								<%=data.money * data.totalNumber ? data.money * data.totalNumber +'元': '【无限制】'%>
 							</td>
                         </tr>
                         <tr>
@@ -106,7 +106,7 @@
                         <tr>
                             <td>单个项目满额可用</td>
                             <td>
-								<%=data.enoughMoney !='0' ? data.enoughMoney+'元' : '无限制'%>
+								<%=data.enoughMoney && data.enoughMoney !='0' ? data.enoughMoney+'元' : '【无限制】'%>
 							</td>
                         </tr>
                         <tr>
