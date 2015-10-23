@@ -104,9 +104,9 @@
         </div>
 		<script type="text/javascript">
 			$('#table').on("_ready",function(){
-				var form=$('form')[0];
+				var form=$('#table form')[0];
 				form.goback=function(){
-					location.href="index.html";
+					location.href="/module/marketing/ticket/packetAct/index.html";
 				}
 				form._getFormData = function(){
 					var data=lib.tools.getFormData($(this));
