@@ -202,13 +202,8 @@
                                             %>
                                             <%data.salonLogo&&data.salonLogo.forEach(function(item){%>
                                                <div class="control-thumbnails-item" id="<%=item.id%>">
-                                                <%if(!item.ratio || item.ratio == 1){%>
-                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"/>       
-                                                <%}else if(item.ratio > 1){%>
-                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" />
-                                                <%}else{%>
-                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" />      
-                                                <%}%>
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                    data-type="<%=item.type%>"/>       
                                                 </div> 
                                             <%
                                                 });
@@ -226,7 +221,8 @@
                                             %>
                                             <%data.salonImg&&data.salonImg.forEach(function(item){%>
                                                <div class="control-thumbnails-item" id="<%=item.id%>">
-													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"/>       
+													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                    data-type="<%=item.type%>"/>       
                                                 </div> 
                                             <%
                                                 });
@@ -244,7 +240,8 @@
                                             %>
                                             <%data.workImg&&data.workImg.forEach(function(item){%>
                                                <div class="control-thumbnails-item" id="<%=item.id%>">
-												 <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"/>
+												 <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                 data-type="<%=item.type%>"/>
                                                 </div> 
                                             <%
                                                 });
@@ -406,7 +403,7 @@
                                             }%>
 											<%data.contractPicUrl&&data.contractPicUrl.forEach(function(item){%>
 												<div class="control-thumbnails-item" id="<%=item.id%>">
-													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  />
+													<img src="<%=item.thumbimg?item.thumbimg.replace('w/100/h/100','w/160/h/160'):item.img%>" data-original="<%=item.img%>"  />
 												</div>
                                             <%
                                                });
@@ -423,7 +420,7 @@
                                             %>
 											<%data.licensePicUrl&&data.licensePicUrl.forEach(function(item){%>
                                                <div class="control-thumbnails-item" id="<%=item.id%>">
-													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  />
+													<img src="<%=item.thumbimg?item.thumbimg.replace('w/100/h/100','w/160/h/160'):item.img%>" data-original="<%=item.img%>"  />
 												</div> 
                                             <%
                                                 });
@@ -440,7 +437,7 @@
                                             %>
 											<%data.corporatePicUrl&&data.corporatePicUrl.forEach(function(item){%>
                                                 <div class="control-thumbnails-item" id="<%=item.id%>">
-													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  />
+													<img src="<%=item.thumbimg?item.thumbimg.replace('w/100/h/100','w/160/h/160'):item.img%>" data-original="<%=item.img%>"  />
 												</div>
                                             <%
                                                 });

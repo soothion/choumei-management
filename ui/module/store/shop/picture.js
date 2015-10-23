@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-09-28 11:17:09
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-23 14:46:40
+* @Last Modified time: 2015-10-23 15:20:28
 */
 
 (function(){
@@ -121,7 +121,6 @@
                     up.createThumbnails({
                         thumbimg:data[name],
                         img:response.img,
-                        ratio:ratio,
                         type : 1
                     },function(){
                         saveImagesUrl();                               
@@ -141,7 +140,6 @@
             currentData.salonLogo.push({
                 thumbimg:$this.find('input[name="thumb"]').val(),
                 img:$this.find('input[name="original"]').val(),
-                ratio : $this.find('input[name="ratio"]').val(),
                 type  : 1
             });
         });
@@ -151,7 +149,6 @@
             currentData.salonImg.push({
                 thumbimg:$this.find('input[name="thumb"]').val(),
                 img:$this.find('input[name="original"]').val(),
-                ratio : $this.find('input[name="ratio"]').val(),
                 type  : 1                
             });
         });
@@ -161,7 +158,6 @@
             currentData.workImg.push({
                 thumbimg:$this.find('input[name="thumb"]').val(),
                 img:$this.find('input[name="original"]').val(),
-                ratio : $this.find('input[name="ratio"]').val(),
                 type  : 1                
             });
         });
@@ -170,41 +166,6 @@
     }
 
     var initEvent = function(){
-        // $(".control-thumbnails").on('click','.control-thumbnails-edit',function(){
-        //     var item  = $(this).closest('.control-thumbnails-item');
-        //     var ratio = item.find('img').data('ratio'); 
-        //     lib.cropper.create({
-        //         src:item.find('img').data('original'),
-        //         aspectRatio : item.find('img').data('ratio'),
-        //         thumbnails  : ratio == "1" ? ['300x300'] : ['1125x405'], 
-        //         define:function(data){
-        //             item.find('img').attr('src',data[ratio == "1" ? '300x300':'1125x405']);
-        //             item.find('input.thumb').val(data[ratio == "1" ? '300x300':'1125x405']);
-        //             saveImagesUrl();  
-        //         }                     
-        //     });
-        // });
-
-        // $(".control-thumbnails").on('click','.control-thumbnails-before',function(){
-        //     var $this=$(this);
-        //     var thumbnail=$this.closest('.control-thumbnails-item');
-        //     var prev=thumbnail.prev('.control-thumbnails-item')
-        //     if(prev.length==1){
-        //         thumbnail.after(prev);
-        //         saveImagesUrl();  
-        //     }
-        // });
-
-        // $(".control-thumbnails").on('click','.control-thumbnails-after',function(){
-        //     var $this=$(this);
-        //     var thumbnail=$this.closest('.control-thumbnails-item');
-        //     var next=thumbnail.next('.control-thumbnails-item')
-        //     if(next.length==1){
-        //         thumbnail.before(next);
-        //         saveImagesUrl();  
-        //     }
-        // });
-
         $(".flex-item a").on('click',function(e){
             e.preventDefault();
             location.href = $(this).attr('href') + "?type="+type;
