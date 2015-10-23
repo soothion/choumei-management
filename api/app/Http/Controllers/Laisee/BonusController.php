@@ -96,10 +96,10 @@ class BonusController extends Controller {
             $val['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
             $failLaisee = Laisee::where('order_ticket_id', $val['order_ticket_id'])->where('status', 'N')->count();
             if ($failLaisee) {
-                $val['status'] == 'N';  //已失效
+                $val['status'] = 'N';  //已失效
             }
             if (strtotime($val['end_time']) < time()) {
-                $val['status'] == 'E';  //已过期
+                $val['status'] = 'E';  //已过期
             }
             $val['over_time'] = $val['end_time'];
             $val['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
@@ -158,10 +158,10 @@ class BonusController extends Controller {
             $result[$key]['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
             $failLaisee = Laisee::where('order_ticket_id', $val['order_ticket_id'])->where('status', 'N')->count();
             if ($failLaisee) {
-                $val['status'] == 'N';  //已失效
+                $val['status'] = 'N';  //已失效
             }
             if (strtotime($val['end_time']) < time()) {
-                $val['status'] == 'E';  //已过期
+                $val['status'] = 'E';  //已过期
             }
             $val['over_time'] = $val['end_time'];
             if ($val['status'] == "Y") {
