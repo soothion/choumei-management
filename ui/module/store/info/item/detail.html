@@ -130,15 +130,15 @@
 								<%if(data.norms_cat_id==0||data.userId==0){%>
 								<tr>
 									<td>原价：</td>
-									<td><%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price)?"￥"+parseInt(data.prices[0].price):""%></td>
+									<td>￥<%=parseInt(data.prices[0].price)%></td>
 								</tr>
 								<tr>
 									<td>臭美价：</td>
-									<td><%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price_dis)?"￥"+parseInt(data.prices[0].price_dis):""%></td>
+									<td>￥<%=parseInt(data.prices[0].price_dis)%></td>
 								</tr>	
 								<tr>
 									<td>集团价：</td>
-									<td><%=data.prices&&data.prices[0]&&parseInt(data.prices[0].price_group)?"￥"+parseInt(data.prices[0].price_group):""%></td>
+									<td>￥<%=parseInt(data.prices[0].price_group)%></td>
 								</tr>
 								<%}else{%>
 								<%if(data.userId!=0){%>
