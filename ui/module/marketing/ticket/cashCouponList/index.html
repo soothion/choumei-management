@@ -51,7 +51,7 @@
             </form>
 
             <form action="manager/export" data-role="export">
-                <button class="btn" data-slug="manager.export">
+                <button class="btn" data-slug="voucher.exportTicketList">
                 <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form>
@@ -91,11 +91,11 @@
                     <td><%=item.vSalonName%></td>
                     <td><%=statusText[item.vStatus]%></td>
                     <td>
-                    <a class="link" target="_blank" href="detail.html#id=<%=item.vId%>">查看&gt;</a>
+                    <a class="link" target="_blank" href="detail.html#id=<%=item.vId%>" data-slug="voucher.info">查看&gt;</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <%if(item.vStatus == "1"){%>
                     <form action="voucher/invalidStatus/<%=item.vId%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
-                      <button class="link">失效</button>
+                      <button class="link" data-slug="voucher.invalidStatus">失效</button>
                     </form>
                     <%}%>
                     </td>
