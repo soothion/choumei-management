@@ -73,6 +73,7 @@
                     </thead>
                     <tbody>
                       <%var data=data.data%>
+					  <%var map={"Y":"进行中","N":"已失效","E":"已过期"}%>
                       <%data.forEach(function(item,i){%>
                        <tr>
                         <td><%=i+1%></td>
@@ -82,7 +83,7 @@
                         <td><%=item.receiveNum%></td>  
                         <td><%=item.add_time%></td>        
                         <td><%=item.over_time%></td>                  
-                        <td><%=item.status=="Y"?"进行中":"已过期"%></td>
+                        <td><%=map[item.status]%></td>
                         <td>
 							<a class="link" target="_blank" href="detail.html?id=<%=item.order_ticket_id%>">查看&gt;</a>
 							<%if(item.status=="Y"){%>
