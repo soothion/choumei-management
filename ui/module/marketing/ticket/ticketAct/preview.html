@@ -76,14 +76,14 @@
                         <tr>
                             <td>卷总数</td>
                             <td>
-								<%=data.totalNumber%>张
+								<%=data.totalNumber ? data.totalNumber : '无限'%>张
 							</td>
                         </tr>
 
                         <tr>
                             <td>卷预算合计</td>
                             <td>
-								<%=data.money * data.totalNumber%>元
+								<%=data.money * data.totalNumber ? data.money * data.totalNumber : '无限'%>元
 							</td>
                         </tr>
                         <tr>
@@ -106,7 +106,7 @@
                         <tr>
                             <td>单个项目满额可用</td>
                             <td>
-								<%=data.enoughMoeny%>元
+								<%=data.enoughMoeny !='0' ? data.enoughMoeny+'元' : '无限制'%>
 							</td>
                         </tr>
                         <tr>
