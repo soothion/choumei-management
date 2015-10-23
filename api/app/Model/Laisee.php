@@ -37,9 +37,9 @@ class Laisee extends Model {
         }
         if ($data['bonusStatus']) {
             if ($data['bonusStatus'] == 'Y') {
-                $query = $query->where('laisee.status', 'Y')->where('end_time', '>=', date("Y-m-d H:i:s"));
+                $query = $query->where('laisee.status', 'Y')->where('laisee.end_time', '>=', date("Y-m-d H:i:s"));
             } else {
-                $query = $query->where('laisee.status', 'N');
+                $query = $query->where('laisee.end_time', '<=', date("Y-m-d H:i:s"));
             }
         }
         if ($data['start_time']) {
@@ -47,7 +47,7 @@ class Laisee extends Model {
             $query = $query->where('salon_itemcomment.add_time', ">=", $start_time);
         }
         if ($data['start_time']) {
-            $end_time = strtotime($data['end_time']);
+            $end_time = strtotime($data['end_time']) + (24 * 3600 - 1);
             $query = $query->where('salon_itemcomment.add_time', "<=", $end_time);
         }
         $query->orderBy('salon_itemcomment.add_time', 'desc')->groupBy('laisee.order_ticket_id');

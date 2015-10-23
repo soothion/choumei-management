@@ -182,6 +182,7 @@ class LaiseeConfig extends Model {
             $query->where('create_time', '>=', $startTime);
         }
         if ($endTime) {
+            $endTime = date("Y-m-d", $endTime) . " 23:59:59";
             $query->where('create_time', '<=', $endTime);
         }
         $query->orderBy('status', 'asc')->orderBy('create_time', 'desc');
