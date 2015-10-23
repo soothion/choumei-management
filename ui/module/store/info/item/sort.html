@@ -53,14 +53,8 @@
 				<tbody>
 					<%data=data.data%>
 					<%data.forEach(function(item,i){%>
-					<%
-						var index=i+1;
-						if(query.sort_type=="DESC"||query.sort_type===undefined){
-							index=data.length-i;
-						}
-					%>
 					 <tr>
-						<td><%=index%></td>
+						<td><%=item.sort_in_type%></td>
 						<td><%=item.itemname%><input type="hidden" name="itemid" value="<%=item.itemid%>" /></td>
 						<td><%=item.typename%></td>
 						<td><%=item.norms_cat_id==1?"有规格":"无规格"%></td>
