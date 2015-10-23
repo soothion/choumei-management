@@ -10,10 +10,10 @@
             <a>券活动管理</a>
             <span>&gt;</span>
             <a href="index.html">平台活动</a>
-            <span>&gt;</span>新增活动
+            <span>&gt;</span><%=query.id?"编辑":"新增"%>活动
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>新增活动</h4>
+                    <h4><%=query.id?"编辑":"新增"%>活动</h4>
                 </div>
             </div>
             <hr />
@@ -22,7 +22,12 @@
         <div class="wrapper">
 				<div id="form" ajat="<%if(query._){%>laisee/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
-				<%if(query.id){sessionStorage.setItem("formData",JSON.stringify(data))}%>
+				<%
+					if(query.id){
+						sessionStorage.setItem("formData",JSON.stringify(data));
+					}else{
+						data=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{}
+				}%>
 				<form class="form-vertical" data-role="form">
                     <ul class="nav-step flex-box">
                         <li class="flex-item active"><span class="arrow">1.活动基本信息</span></li>
@@ -48,7 +53,7 @@
                     <div class="control-group">
                         <label class="control-label" for=""><span class="red">*</span>红包的有效天数：</label>
                         <div class="control">
-                            <input type="text" placeholder="从1开始的整数" name="effective" maxlength="6" pattern="number" min="1" required value="<%=data.over_time%>">
+                            <input type="text" placeholder="从1开始的整数" name="effective" maxlength="6" pattern="number" min="1" required value="<%=data.effective||data.over_time%>">
                         </div>
                     </div> 
 
