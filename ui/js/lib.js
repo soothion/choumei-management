@@ -475,7 +475,8 @@
 					successText:'图片上传成功',
 					failText:'图片上传失败',
 					loaderText:'图片上传中..',
-					sizeErrorText:'图片的尺寸大小不正确'
+					sizeErrorText:'图片的尺寸大小不正确',
+					thumb:"w/160/h/150"
 				},options);
 				if(options.imageLimitSize){
 					if(options.auto_start===true){
@@ -493,7 +494,7 @@
 								if(!options.crop){
 									if(up.createThumbnails){
 										if(options.thumb&&data.response.thumbimg){
-											data.response.thumbimg=data.response.thumbimg.replace('w/100/h/100',thumb);
+											data.response.thumbimg=data.response.thumbimg.replace('w/100/h/100',options.thumb);
 										}
 										up.createThumbnails(data.response)
 									}else{
