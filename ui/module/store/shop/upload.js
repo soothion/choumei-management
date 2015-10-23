@@ -48,7 +48,7 @@
             multi_selection:true,
             files_number:10
         },function(obj){
-            obj.bind('updateImageData',function(){
+            obj.thumbnails.bind('itemchange',function(){
                 setURLData();
             });
         });
@@ -67,7 +67,7 @@
             files_number:3,
             imageArray:currentData.licensePicUrl
         },function(obj){
-            obj.bind('updateImageData',function(){
+            obj.thumbnails.bind('itemchange',function(){
                 setURLData();
             });            
         });
@@ -86,7 +86,7 @@
             files_number:3,
             imageArray:currentData.corporatePicUrl
         },function(obj){
-            obj.bind('updateImageData',function(){
+           obj.thumbnails.bind('itemchange',function(){
                 setURLData();
             });            
         });
@@ -121,27 +121,7 @@
         if(type === 'edit') sessionStorage.setItem('edit-shop-data',JSON.stringify(currentData));   
     }    
 
-    var initEvent = function(){
-        $(".control-thumbnails").on('click','.control-thumbnails-before',function(){
-            var $this=$(this);
-            var thumbnail=$this.closest('.control-thumbnails-item');
-            var prev=thumbnail.prev('.control-thumbnails-item')
-            if(prev.length==1){
-                thumbnail.after(prev);
-                setURLData();  
-            }
-        });
-
-        $(".control-thumbnails").on('click','.control-thumbnails-after',function(){
-            var $this=$(this);
-            var thumbnail=$this.closest('.control-thumbnails-item');
-            var next=thumbnail.next('.control-thumbnails-item')
-            if(next.length==1){
-                thumbnail.before(next);
-                setURLData();  
-            }
-        });
-        
+    var initEvent = function(){     
         $(".flex-item a").on('click',function(e){
             e.preventDefault();           
             location.href = $(this).attr('href') + "?type="+type;

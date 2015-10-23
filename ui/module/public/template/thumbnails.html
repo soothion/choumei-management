@@ -1,15 +1,7 @@
 ﻿<%data&&data.forEach&&data.forEach(function(item){%>
 	<div class="control-thumbnails-item">
-	    <%if(!item.ratio || item.ratio == 1){%>
-			<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
-			data-ratio="<%=item.ratio%>" data-type="<%=item.type%>"/>	    
-	    <%}else if(item.ratio > 1){%>
-			<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" 
-			data-ratio="<%=item.ratio%>" data-type="<%=item.type%>" style="height:74px;padding-top:37px"/>
-	    <%}else{%>
-			<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" 
-			data-ratio="<%=item.ratio%>" data-type="<%=item.type%>"  style="width:74px;padding-left:37px"/>	    
-	    <%}%>
+		<%if(item.thumbimg){item.thumbimg=item.thumbimg.replace("w/100/h/100","w/160/h/160")}%>
+		<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>" data-type="<%=item.type%>"/>	    
 		<a class="fa fa-times-circle control-thumbnails-remove"></a>
 		<input type="checkbox" name="thumb" class="thumb" value="<%=item.thumbimg%>">
 		<input type="checkbox" name="original" class="original" value="<%=item.img%>">
