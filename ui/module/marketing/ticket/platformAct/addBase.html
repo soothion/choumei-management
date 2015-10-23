@@ -16,10 +16,10 @@
             <a>券活动管理</a>
             <span>&gt;</span>
             <a href="index.html">平台活动</a>
-            <span>&gt;</span>新增活动
+            <span>&gt;</span><%= query.type=='add' ? '新增活动' : '编辑活动'%>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>新增活动</h4>
+                    <h4><%= query.type=='add' ? '新增活动' : '编辑活动'%></h4>
                 </div>
             </div>
             <hr />

@@ -47,7 +47,11 @@
 
                         <tr>
                             <td>红包分享用户</td>
-                            <td><%=data.giftUser%></td>                            
+                            <td>
+								<%data.giftUser.forEach(function(item){%>
+									<%=item.vsn%> <span class="space"></span><%=item.mobilephone%>
+								<%})%>
+							</td>                            
                         </tr>
 
                         <tr>
@@ -88,7 +92,11 @@
                         </tr> 
                         <tr>
                             <td>被领取现金券详情</td>
-                            <td><%=data.receive_voucher%></td>
+                            <td>
+								<%data.receive_voucher.forEach(function(item){%>
+									<%=item.vsn%> <span class="space"></span><%=item.mobilephone%>
+								<%})%>
+							</td>
                         </tr> 
 
                         <tr>

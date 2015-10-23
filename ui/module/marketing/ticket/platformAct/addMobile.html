@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+      <style>
+        textarea{
+            height:300px!important;
+            width:500px!important;            
+        }
+      </style> 
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>券活动管理</a>
+            <span>&gt;</span>
+            <a href="index.html">平台活动</a>
+            <span>&gt;</span><%= query.type=='add' ? '新增活动' : '编辑活动'%>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>添加手机号码</h4>
+                </div>
+            </div>
+            <hr />            
+        </div>
+
+        <div class="wrapper">
+            <div>
+                <textarea class="add"></textarea>
+            </div>
+
+            <div style="margin-top:20px">
+                <button type="button" class="btn btn-back" onclick="history.back()">返回</button>
+                <span class="space"></span>
+                <button class="btn-primary">提交</button>             
+            </div>
+
+            <div style="margin-top:30px">
+                <div id="errorTip" style="font-size:18px;color:#b94a48"></div>
+                <div id="errorMobile" style="font-size:15px;color:#b94a48;margin-top:15px">
+                    
+                </div>
+            </div>
+        </div>
+        <script src="addMobile.js"></script>       
+    </body>
+</html>
