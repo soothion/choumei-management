@@ -46,7 +46,7 @@ class Laisee extends Model {
             $start_time = strtotime($data['start_time']);
             $query = $query->where('salon_itemcomment.add_time', ">=", $start_time);
         }
-        if ($data['start_time']) {
+        if ($data['end_time']) {
             $end_time = strtotime($data['end_time']) + (24 * 3600 - 1);
             $query = $query->where('salon_itemcomment.add_time', "<=", $end_time);
         }
