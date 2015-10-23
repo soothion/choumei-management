@@ -14,7 +14,7 @@
                     <h4>平台活动</h4>
                 </div>
                 <div class="flex-item">
-                    <button class="btn-primary fr"  data-slug="rebate.create">
+                    <button class="btn-primary fr"  data-slug="platform.add">
                         <i class="fa fa-plus"></i> 新增平台活动
                     </button>
                 </div>
@@ -65,7 +65,7 @@
             </form>
 
             <form action="platform/exportList" data-role="export">
-                <button class="btn" data-slug="manager.export">
+                <button class="btn" data-slug="platform.exportList">
                 <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form>
@@ -107,28 +107,28 @@
                   <td><%=item.department%></td>                  
                   <td><%=statusText[item.status]%></td>
                   <td>
-                    <a class="link" href="detail.html?id=<%=item.vcId%>">查看&gt;</a>
+                    <a class="link" href="detail.html?id=<%=item.vcId%>" data-slug="platform.getInfo">查看&gt;</a>
                     <%if(item.status=="1"){%>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <form action="platform/offlineConf/<%=item.vcId%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
-                          <button class="link">下线</button>
+                          <button class="link" data-slug="platform.offlineConf">下线</button>
                         </form>
 
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <form action="platform/closeConf/<%=item.vcId%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
-                          <button class="link">关闭</button>
+                          <button class="link" data-slug="platform.closeConf">关闭</button>
                         </form>                        
                     <%}%>
 
                     <%if(item.status=="2"){%>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <form action="platform/upConf/<%=item.vcId%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
-                          <button class="link">上线</button>
+                          <button class="link" data-slug="platform.upConf">上线</button>
                         </form>
 
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <form action="platform/closeConf/<%=item.vcId%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
-                          <button class="link">关闭</button>
+                          <button class="link" data-slug="platform.closeConf">关闭</button>
                         </form> 
                     <%}%>
 
