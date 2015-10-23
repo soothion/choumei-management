@@ -79,8 +79,13 @@ class ImageStyleTest extends TestCase
     public function  testDestroy(){
            $stylist = ImageStyle::orderBy("id", "DESC")->first();
            $id = $stylist->id;
-           $this->get("ImageStyle/destroy/$id")
+           $this->post("ImageStyle/destroy/$id")
              ->seeJson( ['result'=>1]);
+           
+           //判断是否删除成功，删除成功status=2
+            $this->get("ImageStyle/show/$id")
+             ->seeJson(json_decode($stylist['data']['status'],true));
+            
            //尝试破坏
            $id = 999999;
            $this->get("ImageStyle/destroy/$id")
@@ -92,7 +97,7 @@ class ImageStyleTest extends TestCase
         $stylist = ImageStyle::first();
         $id = $stylist->id;
         $this->get("ImageStyle/show/$id")
-             ->seeJson( ['result'=>1]);
+             ->seeJson(json_decode($stylist['data'],true));
          //尝试破坏
         $id = 999999;
         $this->get("ImageStyle/show/$id") 

@@ -25,13 +25,6 @@ class WorksTest extends TestCase
              //基本正确性验证
         $this->get("works/index/$id")            
              ->seeJson([ 'result'=>1]);
-               $this->withoutEvents();
-        $id1 = 9999999;
-        $this->get("works/index/$id1")    
-             ->seeJson([
-//                    'result'=>0,
-//                    'code'=>ERROR::USER_NOT_FOUND
-                ]); 
 
     }
     
@@ -54,44 +47,63 @@ class WorksTest extends TestCase
   
      }
      
-    public function testDel_list(){
+    public function testUpdate(){
+        $this->withoutEvents();
         $Stylist=Works::orderBy("recId", "DESC")->first();
         $id=$Stylist->recId;
-        $this->get("works/del_list/$id")            
+        $data = [
+             'img'=>str_random(100)
+        ];
+        $this->post("works/update/$id",$data)
+             ->seeJson([
+                    'result'=>1
+                ]);
+        
+        //判断是否修改成功
+         $this->post("works/show/$id")
+             ->seeJson(json_decode($Stylist['data'],true));
+
+    }
+      
+    public function testDel(){
+        $Stylist=Works::orderBy("recId", "DESC")->first();
+        $id=$Stylist->recId;
+        $works['img']=str_random(100);
+        $this->get("works/del/$id",$works)            
+             ->seeJson([ 'result'=>1]); 
+    }
+    
+     public function testDel_list(){
+         //添加一条数据，给于删除
+        $Stylist=Stylist::first();
+        $id=$Stylist->stylistId;
+        $works = [
+            'stylistId'=>$id,
+            'description'=>str_random(20),
+            'img'=>str_random(200)
+            ];
+        $this->post('works/create',$works)            
+           ->seeJson([
+              'result'=>1
+           ]);
+         //判断数据库是否存在此记录
+        $this->seeInDatabase('hairstylist_works', ['description' => $works['description']]);    
+        
+        
+        $works2=Works::orderBy("recId", "DESC")->first();
+        $id2=$works2->recId;
+        $this->get("works/del_list/$id2")            
              ->seeJson([ 'result'=>1]);
         
+        //判断是否成功删除
+          $this->get("works/show/$id2") 
+                    ->seeJson([ 'result'=>0]);
+          
         //recId不存在
         $id=999999;
         $this->get("works/del_list/$id")            
              ->seeJson([ 'result'=>0]);
     }
-    
-//    public function testDel(){
-//        $Stylist=Works::orderBy("recId", "DESC")->first();
-//        $id=$Stylist->recId;
-//        $works = [
-//            'img'=>str_random(200)
-//            ];
-//        $this->get("works/del/$id",$works)            
-//             ->seeJson([ 'result'=>1]); 
-//    }
-    
-//     public function testUpdate(){
-//        $this->withoutEvents();
-//        $Stylist=Works::orderBy("recId", "DESC")->first();
-//        $id=$Stylist->recId;
-//        $data = [
-//             'img'=>str_random(200)
-//        ];
-//        $this->post("works/update/$id",$data)
-//             ->seeJson([
-//                    'result'=>1
-//                ]);
-//        
-//        //判断数据库是否存在此记录
-//        $this->seeInDatabase('hairstylist_works', ['recId' => $id]); 
-//
-//    }
     
     
 }
