@@ -1037,13 +1037,16 @@ class PlatformController extends Controller{
         $page = isset( $post['page'] ) ? $post['page'] : 1;
         $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
+            AbstractPaginator::currentPageResolver(function() use ($page) {
+                return $page;
+            });
             $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
                     ->where(['vType'=>1,'IS_REDEEM_CODE'=>'N'])
                     ->orderBy('vcId','desc')
-                    ->get()
+                    ->paginate($pageSize)
                     ->toArray();
             if( empty($res) ) return $this->success();
-            $tempData = $this->handleList( $res );
+            $tempData = $this->handleList( $res['data'] );
             unset( $res );
             $title = '现金劵活动查询列表' .date('Ymd');
             //导出excel	   
@@ -1072,11 +1075,13 @@ class PlatformController extends Controller{
             $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
         if( !empty( $actDepartment ) )
             $obj->where('DEPARTMENT_ID','=',$actDepartment);
-        
-        $res = $obj->orderBy('vcId','desc')->get()->toArray();
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
+        $res = $obj->orderBy('vcId','desc')->paginate($pageSize)->toArray();
         if( empty($res) ) return $this->success();
             
-        $tempData = $this->handleList( $res );
+        $tempData = $this->handleList( $res['data'] );
         unset( $res );
         $title = '代金劵查询列表' .date('Ymd');
         //导出excel	   

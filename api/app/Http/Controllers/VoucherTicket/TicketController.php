@@ -203,17 +203,12 @@ class TicketController extends Controller {
         if($startTime && empty($endTime)) $obj->where('vUseTime','>=',$startTime);
         if($endTime && empty($startTime)) $obj->where('vUseTime','<=',$endTime);
         if($startTime && $endTime) $obj->whereBetween('vUseTime',[$startTime,$endTime]);
-        $count =  $obj->count();
-        if( $count > 5000 ){
-            //手动设置页数
-            AbstractPaginator::currentPageResolver(function() use ($page) {
-                return $page;
-            });
-            $list = $obj->orderBy('vId','DESC')->paginate($pageSize)->toArray();
-            $list = $list['data'];
-        }else $list = $obj->orderBy('vId','DESC')->get()->toArray();
-//        echo "<pre>";
-//        print_r( $list );exit;
+        
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
+        $list = $obj->orderBy('vId','DESC')->paginate($pageSize)->toArray();
+        $list = $list['data'];
         $tempData = [];
         $i = 0;
         $t = ['','未使用','已使用','待激活','活动关闭','已失效'];

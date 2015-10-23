@@ -845,14 +845,17 @@ class CouponController extends Controller{
         $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
         
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
-            
+            //手动设置页数
+            AbstractPaginator::currentPageResolver(function() use ($page) {
+                return $page;
+            });
             $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
                     ->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y'])
                     ->orderBy('vcId','desc')
-                    ->get()
+                    ->paginate($pageSize)
                     ->toArray();
             if( empty($res) ) return $this->success();
-            $tempData = $this->handleList($res);
+            $tempData = $this->handleList($res['data']);
             unset( $res );
             $title = '代金劵活动查询列表' .date('Ymd');
             //导出excel	   
@@ -880,11 +883,14 @@ class CouponController extends Controller{
             $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
         if( !empty( $actDepartment ) )
             $obj->where('DEPARTMENT_ID','=',$actDepartment);
-        
+        //手动设置页数
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
         $res = $obj->orderBy('vcId','desc')->paginate($pageSize)->toArray();
         if( empty($res) ) return $this->success();
             
-        $tempData = $this->handleList($res);
+        $tempData = $this->handleList($res['data']);
         unset( $res );
         $title = '代金劵查询列表' .date('Ymd');
         //导出excel	   
