@@ -345,6 +345,9 @@ $(function(){
 		if(data&&data.total==0){
 			$pager.html('<div class="data-empty"><i class="fa fa-frown-o"></i>'+($target.attr('data-empty-alert')||"没有查找到相关数据")+'</div>');
 		}
+		if(data.current_page&&data.total===undefined){
+			$pager.append(lib.ejs.render({url:'/module/public/template/pager'},{data:data}));
+		}
 	});
 	
 	/**权限控制**/
