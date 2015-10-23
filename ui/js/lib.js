@@ -476,7 +476,7 @@
 					failText:'图片上传失败',
 					loaderText:'图片上传中..',
 					sizeErrorText:'图片的尺寸大小不正确',
-					thumb:"w/160/h/150"
+					thumb:"w/160/h/160"
 				},options);
 				if(options.imageLimitSize){
 					if(options.auto_start===true){
