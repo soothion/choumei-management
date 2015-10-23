@@ -89,7 +89,7 @@ class TicketController extends Controller {
         $status = isset($post['status']) ? $post['status'] : '';
         $startTime = isset( $post['startTime'] ) ? strtotime($post['startTime']) : '';
         $endTime = isset( $post['endTime'] ) ? strtotime($post['endTime']) : '';
-        $page = isset($param['page'])?$param['page']:1;
+        $page = isset($post['page'])?$post['page']:1;
 		$pageSize = isset($param['pageSize'])?$param['pageSize']:20;
         $keywordType = isset($post['keywordType']) ? $post['keywordType'] : '';
         $obj = Voucher::select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE']);
@@ -169,7 +169,7 @@ class TicketController extends Controller {
         $status = isset($post['status']) ? $post['status'] : '';
         $startTime = isset( $post['startTime'] ) ? strtotime($post['startTime']) : '';
         $endTime = isset( $post['endTime'] ) ? strtotime($post['endTime']) : '';
-        $page = isset($param['page'])?$param['page']:1;
+        $page = isset($post['page'])?$post['page']:1;
 		$pageSize = isset($param['pageSize'])?$param['pageSize']:20;
         $keywordType = isset($post['keywordType']) ? $post['keywordType'] : '';
         $obj = Voucher::select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE','vUseEnd']);

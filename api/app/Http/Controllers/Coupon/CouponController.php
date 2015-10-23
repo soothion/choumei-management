@@ -187,7 +187,7 @@ class CouponController extends Controller{
         $actStartTime = isset($post['startTime']) ? $post['startTime'] : '';
         $actEndTime = isset($post['endTime']) ? $post['endTime'] : '';
         $page = isset( $post['page'] ) ? $post['page'] : 1;
-        $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 12;
+        $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
         
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
             //手动设置页数
@@ -842,7 +842,7 @@ class CouponController extends Controller{
         $actStartTime = isset($post['startTime']) ? $post['startTime'] : '';
         $actEndTime = isset($post['endTime']) ? $post['endTime'] : '';
         $page = isset( $post['page'] ) ? $post['page'] : 1;
-        $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 12;
+        $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
         
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
             

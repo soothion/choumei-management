@@ -448,7 +448,7 @@ class PlatformController extends Controller{
         $actStartTime = isset($post['startTime']) ? $post['startTime'] : '';
         $actEndTime = isset($post['endTime']) ? $post['endTime'] : '';
         $page = isset( $post['page'] ) ? $post['page'] : 1;
-        $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 12;
+        $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
         
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
             //手动设置页数
@@ -1035,7 +1035,7 @@ class PlatformController extends Controller{
         $actStartTime = isset($post['startTime']) ? $post['startTime'] : '';
         $actEndTime = isset($post['endTime']) ? $post['endTime'] : '';
         $page = isset( $post['page'] ) ? $post['page'] : 1;
-        $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 12;
+        $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
             $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
                     ->where(['vType'=>1,'IS_REDEEM_CODE'=>'N'])
