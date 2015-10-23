@@ -559,6 +559,7 @@
 							 });
 							if(options.imageArray){
 								uploader.thumbnails.prepend(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:options.imageArray}));
+								uploader.thumbnails.trigger("itemchange");
 								if(uploader.thumbnails.children('.control-thumbnails-item').length>=uploader.thumbnails.data('max')){
 									uploader.thumbnails.children('.control-image-upload').hide();
 								}
