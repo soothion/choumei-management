@@ -216,21 +216,25 @@
 					if($format.find('.control-help:visible').length==0){
 						var sexArr=[];
 						$('input[name="sex"]:checked').each(function(){
-							sexArr.push({sex:this.value});
+							if(!this.disabled){
+								sexArr.push({sex:this.value});
+							}
 						});
 						var longhairArr=[];
 						$('input[name="longhair"]:checked').each(function(){
-							longhairArr.push({longhair:this.value});
+							if(!this.disabled){
+								longhairArr.push({longhair:this.value});
+							}
 						});
 						var hairstyArr=[];
 						$('input[name="hairstylist"]').each(function(){
-							if(this.value){
+							if(this.value&&!this.disabled){
 								hairstyArr.push({hairstylist:this.value});
 							}
 						});
 						var solutionArr=[];
 						$('input[name="solution"]').each(function(){
-							if(this.value){
+							if(this.value&&!this.disabled){
 								solutionArr.push({solution:this.value});
 							}
 						});
@@ -282,7 +286,7 @@
 			}
 			$('#btn-price').on('click',function(){
 				if($('#format-table table').length>0){
-					lib.popup.confirm({
+					parent.lib.popup.confirm({
 						text:"您正在重新生成价格表，当前数据将失效，是否继续",
 						define:function(){
 							generate();
