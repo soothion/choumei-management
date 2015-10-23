@@ -783,7 +783,7 @@ Route::any('platform/getItemType',array(
 		'as'=>'voucher.list',
 		'uses'=>'VoucherTicket\TicketController@ticketList'
     ));
-    Route::any('voucher/invalidStatus',array( 
+    Route::any('voucher/invalidStatus/{id}',array( 
 		'as'=>'voucher.invalidStatus',
 		'uses'=>'VoucherTicket\TicketController@invalidStatus'
     ));
