@@ -526,7 +526,7 @@ class ShopCountApi
             //'cost_money',
             'day',
             'pay_day',
-            'state',
+            'state'
         ];
         $order_by_fields = [
             'id',

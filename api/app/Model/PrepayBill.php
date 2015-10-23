@@ -83,13 +83,17 @@ class PrepayBill extends Model
             ! isset($params['uid']) || // 制单人
             ! isset($params['pay_money']) || //  金额
             ! isset($params['pay_type']) || // 支付方式
-            ! isset($params['pay_day']) || // 实际付款日期
-            ! isset($params['remark']) // 备注
+            ! isset($params['day']) || // 要求付款日期
+            ! isset($params['pay_day']) // 实际付款日期
          )
         {
             return false;
         }
-
+        $remark = "预付款返还";
+        if($params['type'] != self::TYPE_OF_RETURN)
+        {
+            $remark = "预付保证金";
+        }
         $code = self::getNewCode($params['type']);
         $now_date = date("Y-m-d H:i:s");
         $record = [
@@ -103,20 +107,20 @@ class PrepayBill extends Model
             'pay_money'  => $params['pay_money'],
             'pay_type'  => $params['pay_type'],
             'state'  => self::STATE_OF_COMPLETED,
+            'day'  => $params['day'],
             'pay_day'  => $params['pay_day'],
-            'remark'  => $params['remark'],
             'created_at' => $now_date,
             'updated_at' => $now_date,
         ];
         $id = self::insertGetId($record);
         
         //结算
-//         $count_at = $now_date;
-//         if(isset($params['count_at']))
-//         {
-//             $count_at = $params['count_at'];
-//         }
-//         ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['pay_money'],$remark,$count_at);
+        $count_at = $now_date;
+        if(isset($params['count_at']))
+        {
+            $count_at = $params['count_at'];
+        }
+        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['pay_money'],$remark,$count_at);
         
         return ['id'=>$id,'code'=>$code]; 
     }
@@ -133,11 +137,11 @@ class PrepayBill extends Model
             !isset($params['type']) ||
             !isset($params['money']) ||//金额
             !isset($params['receive_type']) ||//支付方式
+            !isset($params['require_day']) ||//要求付款日期
             !isset($params['receive_day']) ||//实际付款日期
             !isset($params['cash_uid'])    ||//确认人
             !isset($params['make_uid']) ||//制单人
-            !isset($params['make_at']) ||//创建日期
-            !isset($params['remark']) // 备注
+            !isset($params['make_at'])//创建日期
         )
         {
             return false;
@@ -151,17 +155,10 @@ class PrepayBill extends Model
             'uid'  => $params['make_uid'],
             'pay_money'  => $params['money'],
             'pay_type'  => $params['receive_type'],
+            'day'  => $params['require_day'],
             'pay_day'  => $params['receive_day'],
-            'remark'  => $params['remark'],
        ];        
        $res = self::makeCompleted($record);
-       $remark = "预付款返还";
-       if($params['type'] != self::TYPE_OF_RETURN)
-       {
-           $remark = "预付保证金";
-       }
-       $count_at = date("Y-m-d H:i:s");
-       ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['money'],$remark,$count_at);
        return $res;     
     }
     

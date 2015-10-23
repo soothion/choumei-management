@@ -45,7 +45,7 @@ class BusinessStaff extends Model {
 	 * */
 	public  static function getBusinessNameById($id)
 	{
-		if(!$id) return false;
+		if(!$id) return '';
 		$key = self::REDIS_KEY;
 		$result = Redis::hget($key,$id);
 		if(!$result)

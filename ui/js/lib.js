@@ -532,14 +532,43 @@
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').show();
 								}
-								uploader.trigger('updateImageData');
+								thumbnail.parent().trigger("itemchange");
 							});
+							uploader.thumbnails.on('click','.control-thumbnails-before',function(){
+							 	var $this=$(this);
+							 	var thumbnail=$this.closest('.control-thumbnails-item');
+							 	var prev=thumbnail.prev('.control-thumbnails-item')
+								if(prev.length==1){
+							 		thumbnail.after(prev);
+							 	}
+								thumbnail.parent().trigger("itemchange");
+							 });
+							 uploader.thumbnails.on('click','.control-thumbnails-after',function(){
+							 	var $this=$(this);
+							 	var thumbnail=$this.closest('.control-thumbnails-item');
+							 	var next=thumbnail.next('.control-thumbnails-item')
+							 	if(next.length==1){
+							 		thumbnail.before(next);
+							 	}
+								thumbnail.parent().trigger("itemchange");
+							 });
 							if(options.imageArray){
 								uploader.thumbnails.prepend(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:options.imageArray}));
 								if(uploader.thumbnails.children('.control-thumbnails-item').length>=uploader.thumbnails.data('max')){
 									uploader.thumbnails.children('.control-image-upload').hide();
 								}
 							}
+							uploader.bind('FilesAdded',function(up,files){
+								var files_number=up.getOption().files_number;
+								if(files_number){
+									plupload.each(files, function(file,i) {
+										var exist=up.thumbnails.children().length-1;
+										if(i+exist>=files_number){
+											up.removeFile(file);	
+										}
+									});
+								}
+							});
 						}else if($target.closest('.control-single-image').length==1){
 							uploader.area=$target.closest('.control-single-image');
 							uploader.preview=function(data){
@@ -552,17 +581,6 @@
 								var $img=$this.find('img');
 								var original=$img.data('original')?$img.data('original'):$img.attr('src')
 								uploader.trigger('ImageUploaded',{img:original,_this:$this[0]});
-							});
-							uploader.bind('FilesAdded',function(up,files){
-								var files_number=up.getOption().files_number;
-								var exist=up.thumbnails.children().length-1;
-								if(files_number){
-									plupload.each(files, function(file,i) {
-										if(i+exist>=files_number){
-											up.removeFile(file);	
-										}
-									});
-								}
 							});
 						}
 						uploader.area=$target.closest('.control-single-image');
