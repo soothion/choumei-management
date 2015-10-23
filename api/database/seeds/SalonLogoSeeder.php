@@ -18,9 +18,11 @@ class SalonLogoSeeder extends Seeder
     public function run()
     {
     	$logoList = Salon::select(['logo','salonid'])->where('salonLogo','=','')->where('logo','!=','')->get()->toArray();
+
     	foreach($logoList as $val)
     	{
-    		$logoImg = [
+    		$logoImg = [];
+    		$logoImg[] = [
     				'img'		=> $val['logo'],
     				'thumbimg'	=> $val['logo'],
     		];
