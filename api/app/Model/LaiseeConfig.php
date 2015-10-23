@@ -182,9 +182,10 @@ class LaiseeConfig extends Model {
             $query->where('create_time', '>=', $startTime);
         }
         if ($endTime) {
+            $endTime = $endTime . " 23:59:59";
             $query->where('create_time', '<=', $endTime);
         }
-        $query->orderBy('status', 'asc')->orderBy('create_time', 'desc');
+        $query->orderBy('create_time', 'desc');
         AbstractPaginator::currentPageResolver(function () use($page) {
             return $page;
         });

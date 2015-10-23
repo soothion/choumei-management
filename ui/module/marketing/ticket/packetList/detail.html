@@ -48,9 +48,7 @@
                         <tr>
                             <td>红包分享用户</td>
                             <td>
-								<%data.giftUser.forEach(function(item){%>
-									<%=item.vsn%> <span class="space"></span><%=item.mobilephone%>
-								<%})%>
+								<%=data.mobilephone%>
 							</td>                            
                         </tr>
 
@@ -98,7 +96,14 @@
 								<%})%>
 							</td>
                         </tr> 
-
+						<tr>
+                            <td>领取礼包用户</td>
+                            <td>
+								<%data.giftUser.forEach(function(item){%>
+									<%=item.vsn%> <span class="space"></span><%=item.mobilephone%>
+								<%})%>
+							</td>
+                        </tr> 
                         <tr>
                             <td>红包状态</td>
                             <td><%=data.status=="Y"?"进行中":"已过期"%></td>

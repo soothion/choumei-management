@@ -22,10 +22,10 @@
             <a>券活动管理</a>
             <span>&gt;</span>
             <a href="index.html">平台活动</a>
-            <span>&gt;</span>新增活动
+            <span>&gt;</span><%=query.id?"编辑":"新增"%>活动
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>新增活动</h4>
+                    <h4><%=query.id?"编辑":"新增"%>活动</h4>
                 </div>
             </div>
             <hr />
@@ -131,7 +131,7 @@
 						]
 					},
 					max_file_size:'2mb',
-					imageLimitSize:"360x360"
+					imageLimitSize:"360*360"
 				});
 				lib.puploader.image({
 					browse_button: 'imageUpload2',
@@ -143,10 +143,7 @@
 					},
 					max_file_size:'2mb',
 					imageLimitSize:function(width,height){
-						if(width!=640){
-							return false;
-						}
-						return true;
+						return width==640;
 					}
 				});
 			});

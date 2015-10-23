@@ -43,10 +43,7 @@
         <div class="wrapper">        
             <div>
                 <span>开启/暂停店铺星级</span>
-                <label class="switch">
-                    <input type="checkbox" name="checkbox" checked/>
-                    <span></span>
-                </label>                
+                <label class="switch"><input type="checkbox" name="checkbox" checked/><span></span></label>                
             </div>
                 <div class="table" ajat="starconf/index#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id="table-t">
@@ -71,7 +68,7 @@
                                    <span class="control-help" style="display:none">未填写</span>
                                </td>
                                <td>
-                                   <button class="link edit">编辑</button>
+                                   <button class="link edit" data-slug="starconf.update">编辑</button>
                                    <button class="link save" data-score="<%=item.id%>">保存</button>
                                    <span class="line"></span>
                                    <a class="link cancel">取消</a>

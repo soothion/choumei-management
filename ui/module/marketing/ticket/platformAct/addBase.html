@@ -123,7 +123,13 @@
                 <input type="radio" name="managerId" value="<%=item.id%>" required <%=item.id == protocol.custom.managerId ? "checked":""%>>
                 <span><%=item.name%></span>
             </label>            
-        <%})%>     
+        <%})%> 
+
+        <%if(data.length>0){%>
+            <div class="control-help" style="display:none;"></div>
+        <%}else{%>
+            <input type="hidden" name="managerId" required requiredmsg="请选择有负责人的部门"/>
+        <%}%>            
         </script>        
 
         <script src="addBase.js"></script>     

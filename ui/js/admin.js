@@ -87,7 +87,7 @@ $(function(){
 					//同步组合框input-switch/placeholder-switch
 					var parent=$this.parent('.input-switch');
 					if(parent.length==1){
-						parent.children('select').val($this.index()-1);
+						parent.children('select option').eq($this.index()-1).attr('selected',true);
 						$this.show().siblings('input').hide();
 					}
 					var parent=$this.parent('.placeholder-switch');
@@ -211,7 +211,7 @@ $(function(){
 	/**input-switch/placeholder-switch切换**/
 	$body.on('change','.input-switch select',function(){//input-switch切换输入框
 		var $this=$(this);
-		$this.parent().find('input').eq($this.val()).show().siblings('input').hide().val('');
+		$this.parent().find('input').eq($this.children("option:selected").index()).show().siblings('input').hide().val('');
 		if($.placeholder){
 			$.placeholder($this.parent().find('input'));
 		}
@@ -344,6 +344,9 @@ $(function(){
 		}
 		if(data&&data.total==0){
 			$pager.html('<div class="data-empty"><i class="fa fa-frown-o"></i>'+($target.attr('data-empty-alert')||"没有查找到相关数据")+'</div>');
+		}
+		if(data.current_page&&data.total===undefined){
+			$pager.append(lib.ejs.render({url:'/module/public/template/pager'},{data:data}));
 		}
 	});
 	

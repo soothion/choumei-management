@@ -926,15 +926,7 @@
 			this.cfg.requiredmsg=this.el.requiredmsg||"未填写";
 			this.cfg.patternmsg=this.el.patternmsg||"不正确";
 			this.bindEvent();
-			if(!this.el.goback){
-				this.el.goback=function(){
-					if(parent!=window){
-						history.back();
-					}else{
-						window.close();
-					}
-				}
-			}
+			
 			if(!this.el._getFormData){
 				this.el._getFormData=function(){
 					return lib.tools.getFormData($(this))
@@ -1130,6 +1122,15 @@
 			parent.lib.popup.result({
 				text:(data.msg||"数据更新成功"),
 				define:function(){
+					if(!self.el.goback){
+						self.el.goback=function(){
+							if(parent!=window){
+								history.back();
+							}else{
+								window.close();
+							}
+						}
+					}
 					self.el.goback();
 				}
 			});

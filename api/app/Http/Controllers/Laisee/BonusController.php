@@ -8,6 +8,7 @@ use App\Exceptions\ERROR;
 use App\LaiseeConfig;
 use App\Laisee;
 use Illuminate\Support\Facades\DB;
+use Excel;
 
 class BonusController extends Controller {
 
@@ -36,7 +37,7 @@ class BonusController extends Controller {
      * @apiSuccess {Number} order_ticket_id 评论唯一标示Id.
      * @apiSuccess {String} add_time 生成时间.
      * @apiSuccess {String} over_time 结束时间.
-     * @apiSuccess {String} status 红包状态(N已过期 Y进行中).
+     * @apiSuccess {String} status 红包状态(N已失效 Y进行中 E已过期).
      * @apiSuccess {String} bonusSn 红包编号.
      * @apiSuccess {Number} bonusAmount 红包总金额.
      * @apiSuccess {Number} voucherNum 现金券总数.
@@ -94,10 +95,12 @@ class BonusController extends Controller {
             $val['bonusAmount'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
             $val['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
             $val['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
-            if ($val['status'] == 'Y') {
-                if (strtotime($val['end_time']) < time()) {
-                    $val['status'] == 'N';
-                }
+            $failLaisee = Laisee::where('order_ticket_id', $val['order_ticket_id'])->where('status', 'N')->count();
+            if ($failLaisee) {
+                $val['status'] = 'N';  //已失效
+            }
+            if (strtotime($val['end_time']) < time()) {
+                $val['status'] = 'E';  //已过期
             }
             $val['over_time'] = $val['end_time'];
             $val['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
@@ -154,21 +157,29 @@ class BonusController extends Controller {
             $result[$key]['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
             $result[$key]['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
             $result[$key]['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
-            if ($val['status'] == 'Y') {
-                if (strtotime($val['end_time']) < time()) {
-                    $val['status'] == 'N';
-                }
+            $failLaisee = Laisee::where('order_ticket_id', $val['order_ticket_id'])->where('status', 'N')->count();
+            if ($failLaisee) {
+                $val['status'] = 'N';  //已失效
+            }
+            if (strtotime($val['end_time']) < time()) {
+                $val['status'] = 'E';  //已过期
             }
             $val['over_time'] = $val['end_time'];
-            $result[$key]['status'] = $val['status'] == "Y" ? "进行中" : "已过期";
+            if ($val['status'] == "Y") {
+                $result[$key]['status'] = "进行中";
+            } elseif ($val['status'] == "N") {
+                $result[$key]['status'] = "已失效";
+            } else {
+                $result[$key]['status'] = "已过期";
+            }
             $num++;
         }
         //导出excel	   
         $title = '红包列表' . date('Ymd');
         $header = ['序号', '红包编号', '红包名称', '红包总金额', '现金券总数', '已领现金券数', '生成时间', '有效天数', '红包状态'];
-        Excel::create($title, function($excel) use($data, $header) {
-            $excel->sheet('Sheet1', function($sheet) use($data, $header) {
-                $sheet->fromArray($data, null, 'A1', false, false); //第五个参数为是否自动生成header,这里设置为false
+        Excel::create($title, function($excel) use($result, $header) {
+            $excel->sheet('Sheet1', function($sheet) use($result, $header) {
+                $sheet->fromArray($result, null, 'A1', false, false); //第五个参数为是否自动生成header,这里设置为false
                 $sheet->prependRow(1, $header); //添加表头
             });
         })->export('xls');

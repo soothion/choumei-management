@@ -20,7 +20,7 @@
 				<script type="text/template" id="table-t">
                 <div class="detail-operation">
 					<%if(data.status=="Y"||data.status=="F"){%>
-                    <a href='addBase.html?id=<%=query.id%>' class="btn">编辑</a>
+                    <a data-slug="laisee.update" href='addBase.html?id=<%=query.id%>' class="btn">编辑</a>
 					<%}%>
 					<span class="space"></span>
                     <button class="btn" type="button" onclick="window.close()">关闭</button>  
