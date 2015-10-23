@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\SalonUser;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
+use App\Salon;
 
 class SalonAccount extends Model {
 	
@@ -67,6 +68,7 @@ class SalonAccount extends Model {
 		 }
 		 else
 		 {
+			Salon::where("puserid","=",$salon_user_id)->update(['puserid'=>0]);
 		 	return SalonUser::where("salon_user_id","=",$salon_user_id)->delete();
 		 } 
 	}
