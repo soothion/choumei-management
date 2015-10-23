@@ -104,7 +104,7 @@ class StylistController  extends Controller {
     public function destroy($stylistId){
        $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
        if(!$stylist){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
+		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
        }   
        $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId))->whereIn('btStatus',[2,3])->count();
        if($task==true){
@@ -145,7 +145,7 @@ class StylistController  extends Controller {
     public function  enable($stylistId){
         $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$stylist){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
+		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
          }
          $data['status']=1;       
          $query=  Stylist::where(array('stylistId'=>$stylistId))->update($data);    
@@ -184,7 +184,7 @@ class StylistController  extends Controller {
      public function  disabled($stylistId){
          $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
          if(!$stylist){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
+		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
           }
          $data['status']=2;       
          $query=  Stylist::where(array('stylistId'=>$stylistId))->update($data);    
@@ -288,7 +288,7 @@ class StylistController  extends Controller {
     public function show($stylistId){
         $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$stylist){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR); 
+		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR); 
         }
 //        $stylist->workExp=json_decode($stylist['workExp'],true);
 //        $stylist->educateExp=json_decode($stylist['educateExp'],true);
@@ -364,7 +364,7 @@ class StylistController  extends Controller {
         $field=['salonid','merchantId'];    
         $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
         if(!$stylist){
-		throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);
+		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
         }     
         if(!isset($param['stylistImg'])||!isset($param['stylistName'])||empty($param['sex'])||!isset($param['mobilephone'])||!isset($param['job'])||empty($param['birthday'])||empty($param['sNumber'])||empty($param['workYears'])||empty($param['signature'])){
                 throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
@@ -442,7 +442,7 @@ class StylistController  extends Controller {
         $param=$this->param;
         $salon=DB::table('salon')->where(array('salonid'=>$salonid))->first();
         if(!$salon){
-		throw new ApiException('店铺ID出错', ERROR::MERCHANT_ID_IS_ERROR);
+		throw new ApiException('找不到该店铺', ERROR::MERCHANT_ID_IS_ERROR);
         } 
         if(!isset($param['stylistImg'])||empty($param['img'])||!isset($param['stylistName'])||empty($param['sex'])||!isset($param['mobilephone'])||!isset($param['job'])||empty($param['birthday'])||empty($param['sNumber'])||empty($param['workYears'])||empty($param['signature'])){
                 throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);     
