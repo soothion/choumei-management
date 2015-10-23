@@ -91,15 +91,28 @@ class LaiseeController extends Controller {
         $data = [];
         //判断在线的活动是否过期
 //        LaiseeConfig::laiseeConfigAble();
-        foreach ($laiseeList['data'] as &$val) {
-//            \Illuminate\Support\Facades\DB::enableQueryLog();
+        foreach ($laiseeList['data'] as $key => &$val) {
             $vcsnWhere = $val['vcsns'] . "," . $val['gift_vcsn'];
+//            $val['voucherNum']
             $val['voucherNum'] = VoucherConf::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->sum('useTotalNum'); //现金券总数
+//            $val['receiveNum']
             $val['receiveNum'] = Laisee::where('laisee_config_id', $val['id'])->whereNotNull('mobilephone')->count(); //已领取数  TODO Laisee::where('id', $val['id']) ID需要改
+//            $val['usedNum'] 
             $val['usedNum'] = Voucher::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->where('vStatus', 2)->count();  //已使用数
+//            $val['giftNum'] 
             $val['giftNum'] = !empty($val['gift_vcsn']) ? Laisee::where('id', $val['id'])->whereIn('vcsn', explode(",", $val['gift_vcsn']))->whereNotNull('mobilephone')->count() : 0;  //礼包领取数
+
+            if ($val['status'] == 'Y') {
+                $data = $val;
+                array_splice($laiseeList['data'], $key, 1);
+            }
         }
+        !empty($data) && array_unshift($laiseeList['data'], $data);
         return $this->success($laiseeList);
+    }
+
+    private function format($val) {
+        
     }
 
     /**
