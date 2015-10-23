@@ -341,14 +341,14 @@ class TransactionSearchApi
             'mobilephone',
         ];
         $base_fields = [
-            'orderid',
-            'ordersn',
-            'priceall',
-            'salonid',
-            'add_time',
-            'pay_time',
-            'user_id',
-            'ispay',
+            'order.orderid',
+            'order.ordersn',
+            'order.priceall',
+            'order.salonid',
+            'order.add_time',
+            'order.pay_time',
+            'order.user_id',
+            'order.ispay',
         ];
         
         $order_by_fields = [
@@ -626,10 +626,10 @@ class TransactionSearchApi
     {
         // 按时间搜索
         if (isset($params['pay_time_min']) && !empty($params['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['pay_time_min']))) {
-            $orderBase->where('add_time', ">=", strtotime(trim($params['pay_time_min'])));
+            $orderBase->where('order.add_time', ">=", strtotime(trim($params['pay_time_min'])));
         }
         if (isset($params['pay_time_max']) && !empty($params['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['pay_time_max']))) {
-            $orderBase->where('add_time', "<=", strtotime(trim($params['pay_time_max'])) + 86399 );
+            $orderBase->where('order.add_time', "<=", strtotime(trim($params['pay_time_max'])) + 86399 );
         }
         
         //支付方式
@@ -644,7 +644,9 @@ class TransactionSearchApi
                 if($pay_types[0] !== 0)
                 {
                     $pay_type = $pay_types[0];
-                    $orderBase->whereRaw("`ordersn` IN (select `record_no` from `cm_fundflow` where `code_type` = 2 and `pay_type`  = {$pay_type} )");
+                    $orderBase->join('fundflow',function($join) use ($pay_type){
+                        $join->on('order.ordersn','=','fundflow.record_no')->where('fundflow.code_type','=',2)->where('fundflow.pay_type','=',$pay_type);
+                    });
                 }
             }
             if(count($pay_types) > 1)//多种支付方式都需要存在时
@@ -663,7 +665,7 @@ class TransactionSearchApi
                 }
                 if(!empty($fundflow_str))
                 {
-                     $orderBase->whereRaw("`ordersn` IN ($fundflow_str)");
+                     $orderBase->whereRaw("cm_order.ordersn IN ($fundflow_str)");
                 }               
             }
         }
@@ -671,34 +673,42 @@ class TransactionSearchApi
         // 付款状态
         if(isset($params['pay_state']) && !empty($params['pay_state']))
         {
-            $orderBase->where('ispay', $params['pay_state']);
+            $orderBase->where('order.ispay', $params['pay_state']);
         }
         
         // 关键字搜索
         if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty(trim($params['keyword']))) {
             $key = intval($params['key']);
+            $word = trim($params['keyword']);
             $keyword = '%' . str_replace([
                 "%",
                 "_"
             ], [
                 "\\%",
                 "\\_"
-            ], trim($params['keyword'])) . "%";
+            ],$word ) . "%";
+            
             if ($key == 1) //订单号
-            {
-                $orderBase->where("ordersn",'like',$keyword);
+            {                
+                $orderBase->where("order.ordersn",'like',$keyword);
             }
             elseif ($key == 2) //用户臭美号
             {
-                $orderBase->whereRaw("`user_id` IN (SELECT `user_id` FROM `cm_user` WHERE `username` LIKE '{$keyword}')");
+                $orderBase->join('user',function($join) use($word){
+                    $join->on('order.user_id','=','user.user_id')->where('user.username','=',$word);
+                });
             }
             elseif ($key == 3) //用户手机号
             {
-                $orderBase->whereRaw("user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
+                $orderBase->join('user',function($join) use($word){
+                    $join->on('order.user_id','=','user.user_id')->where('user.mobilephone','=',$word);
+                });
             }
             elseif ($key == 4) //店铺名
             {
-                $orderBase->whereRaw("`salonid` IN (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
+                $orderBase->join('salon',function($join) use($keyword){
+                    $join->on('order.salonid','=','salon.salonid')->where('salon.salonname','like',$keyword);
+                });
             }
         }        
     }
@@ -734,20 +744,23 @@ class TransactionSearchApi
         // 关键字搜索
         if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty(trim($params['keyword']))) {
             $key = intval($params['key']);
+            $word = trim($params['keyword']);
             $keyword = '%' . str_replace([
                 "%",
                 "_"
             ], [
                 "\\%",
                 "\\_"
-            ], trim($params['keyword'])) . "%";
+            ], $word) . "%";
             if ($key == 1) //臭美券密码
             {
                 $base->where("order_ticket.ticketno",'like',$keyword);
             }
             elseif ($key == 2) //用户手机号
             {                
-                 $base->whereRaw("cm_order_ticket.user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");
+                $base->join('user',function($join) use($word){
+                    $join->on('order_ticket.user_id','=','user.user_id')->where('user.mobilephone','=',$word);
+                });
             }
             elseif ($key == 3) //店铺名
             {
@@ -813,28 +826,36 @@ class TransactionSearchApi
         // 关键字搜索
         if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty(trim($params['keyword']))) {
             $key = intval($params['key']);
+            $word = trim($params['keyword']);
             $keyword = '%' . str_replace([
                 "%",
                 "_"
             ], [
                 "\\%",
                 "\\_"
-            ], trim($params['keyword'])) . "%";
+            ], $word) . "%";
             if ($key == 1) //订单号
             {
                 $base->where("order_refund.ordersn",'like',$keyword);
             }
-            elseif ($key == 2) //用户臭美号
+            elseif ($key == 2) //用户手机号
             {
-                $base->whereRaw("cm_order_refund.user_id in (SELECT `user_id` FROM `cm_user` WHERE `mobilephone` LIKE '{$keyword}')");               
+                
+                $base->join('user',function($join) use($word){
+                    $join->on('order_refund.user_id','=','user.user_id')->where('user.mobilephone','=',$word);
+                });              
             }
-            elseif ($key == 3) //用户手机号
+            elseif ($key == 3) //用户臭美号
             {
-                $base->whereRaw("cm_order_refund.user_id in (SELECT `user_id` FROM `cm_user` WHERE `username` LIKE '{$keyword}')");
+                $base->join('user',function($join) use($word){
+                    $join->on('order_refund.user_id','=','user.user_id')->where('user.username','=',$word);
+                });
             }
             elseif ($key == 4) //店铺名
             {
-                $base->whereRaw("cm_order_refund.salonid IN (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");    
+                $base->join('salon',function($join) use($keyword){
+                    $join->on('order_refund.salonid','=','salon.salonid')->where('salon.salonname','like',$keyword);
+                });
             }
         }
     }

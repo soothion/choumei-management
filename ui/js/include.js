@@ -1,5 +1,5 @@
 ﻿var cfg={
-	version:'1.4.5.0',
+	version:'1.4.5.1',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
 	dev:{
@@ -37,10 +37,10 @@ if(location.href.indexOf("http://test-")>-1){
 }else if(cfg.url&&cfg.url.indexOf('<#')==-1){
 	cfg.env="product";
 }
-cfg.url=cfg[cfg.env];
 if(location.href=="http://manager.choumei.cn/"&&cfg.url.indexOf('<#')!=-1){
 	alert('<#MANAGER_BACK_URL#>占位符没有被替换');
 }
+cfg.url=cfg[cfg.env];
 document.writeln('<meta name="renderer" content="webkit|ie-stand">');
 document.writeln('<meta http-equiv=”X-UA-Compatible” content=”IE=edge” > ');
 document.writeln('<meta charset="utf-8">');
