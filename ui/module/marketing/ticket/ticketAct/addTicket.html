@@ -206,7 +206,6 @@
                            <div class="control-group">
                                <label class="control-label" for=""></label>
                                <button class="btn" type="button" id="clear-btn" style="margin-right:20px">取消</button>
-                               <button class="btn" type="button" id="preview-btn" style="margin-right:20px">预览</button>
                                <button class="btn-primary" data-slug="coupon.editConf,coupon.add">提交</button>
                            </div>
                        </script>
@@ -261,16 +260,19 @@
 
             // var newForm = new lib.Form();
             lib.Form.prototype.save = function(data){
+                // var formData = getSubmitData();
+                // formData.limitItemTypes = formData.limitItemTypes ? formData.limitItemTypes.join(',') : '';
+                // var  ajaxUrl = formData.vcId ? 'coupon/editConf' : 'coupon/add';
+                // var resultText = formData.vcId ? '编辑活动成功':'新增活动成功';
+                // confirmBox({
+                //     url:ajaxUrl,
+                //     text:'确定保存本活动吗？',
+                //     resultText:resultText,
+                //     data:formData
+                // });
                 var formData = getSubmitData();
-                formData.limitItemTypes = formData.limitItemTypes ? formData.limitItemTypes.join(',') : '';
-                var  ajaxUrl = formData.vcId ? 'coupon/editConf' : 'coupon/add';
-                var resultText = formData.vcId ? '编辑活动成功':'新增活动成功';
-                confirmBox({
-                    url:ajaxUrl,
-                    text:'确定保存本活动吗？',
-                    resultText:resultText,
-                    data:formData
-                });
+                setTmpData(formData);
+                window.location.href="preview.html";
             }
 
 
