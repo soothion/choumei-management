@@ -84,9 +84,14 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		$('#type').on('change',function(){
-			$(this).closest('form').submit();
-		});
+		$('#type').on("_ready",function(){
+			setTimeout(function(){
+				$('#type').on('change',function(){
+					$(this).closest('form').submit();
+				});
+			},1000)
+		})
+		
 		$('#table').on('click','.link',function(){
 			var $this=$(this);
 			if($this.data('goto')=='up'){
