@@ -65,7 +65,7 @@ class PlatformController extends Controller{
      *@apiParam {String} getItemTypes           可选        制定消费的项目获取格式如 ",1,3,"
      *@apiParam {String} useLimitTypes          可选        限制首单使用值为2
      *@apiParam {String} phoneList              可选        制定手机号时，手机号码列格式如 "13210553366,18566554455"
-     *@apiParam {Number} enoughMoeny            可选        满额可用
+     *@apiParam {Number} enoughMoney            可选        满额可用
      *@apiParam {Number} totalNumber            可选        劵总数
      *@apiParam {Number} singleEnoughMoney      可选        项目满额获取
      *@apiParam {String} getTimeStart           可选        劵获取开始时间如 2015-10-16 00:00:00
@@ -160,7 +160,7 @@ class PlatformController extends Controller{
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
-        if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
+        if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         
         $data['status'] = 2;
@@ -375,7 +375,7 @@ class PlatformController extends Controller{
 	 * @apiGroup Platform
 	 *
 	 * @apiParam {Number} selectItem 可选 选择的项 1: 活动编号 2.活动名称
-	 * @apiParam {String} number 可选 对应项查询的字符.
+	 * @apiParam {String} keyword 可选 对应项查询的字符.
 	 * @apiParam {Number} status 可选 活动状态. 1. 进行中 2. 暂停 3.已关闭 4. 已结束
 	 * @apiParam {String} department 部门id
 	 * @apiParam {String} startTime 活动开始时间
@@ -442,7 +442,7 @@ class PlatformController extends Controller{
     public function confList(){
         $post = $this->param;
         $actSelect = isset($post['selectItem']) ? $post['selectItem'] : '';
-        $actNumber = isset($post['number']) ? urldecode($post['number']) : '';
+        $actNumber = isset($post['keyword']) ? urldecode($post['keyword']) : '';
         $actStatus = isset($post['status']) ? $post['status'] : '';
         $actDepartment = isset($post['department']) ? $post['department'] : '';
         $actStartTime = isset($post['startTime']) ? $post['startTime'] : '';
@@ -713,7 +713,7 @@ class PlatformController extends Controller{
 	 * @apiSuccess {Number} limitItemTypes 限制可使用项目类别格式为（,1,2,）
 	 * @apiSuccess {Number} useLimitTypes 使用限制类型 2 为限制首单
 	 * @apiSuccess {Number} limitItemTypes 可使用的项目如 ,1,2,
-	 * @apiSuccess {Number} enoughMoeny 限制项目需满足金额才可使用
+	 * @apiSuccess {Number} enoughMoney 限制项目需满足金额才可使用
 	 * @apiSuccess {String} addActLimitStartTime    可使用时间.起始(0 表示不限制)
 	 * @apiSuccess {String} addActLimitEndTime      可使用时间.结束(0 表示不限制)
 	 * @apiSuccess {Number} getTypes 用户获取条件(为空时表示不限制)1.用户注册，2.首次消费，3.手机号码 4.全平台用户 5.H5用户
@@ -744,7 +744,7 @@ class PlatformController extends Controller{
      *                       "code": "",
      *                       "getItemTypes": ",7,",
      *                       "useLimitTypes": "",
-     *                       "enoughMoeny": 100,
+     *                       "enoughMoney": 100,
      *                       "totalNumber": 0,
      *                       "singleEnoughMoney": 0,
      *                       "getTimeStart": 1436284800,
@@ -769,7 +769,7 @@ class PlatformController extends Controller{
     public function getInfo($id){
         $voucherConfInfo = \App\VoucherConf::select(['vcId','getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
             ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','getItemTypes','useLimitTypes','useItemTypes as limitItemTypes'
-            ,'useNeedMoney as enoughMoeny','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
+            ,'useNeedMoney as enoughMoney','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
             ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType'])
                 ->where(['vcId'=>$id,'IS_REDEEM_CODE'=>'N','vType'=>1])
                 ->first()
@@ -814,7 +814,7 @@ class PlatformController extends Controller{
 	 *@apiParam {Number} managerId              可选        部门负责人id
      *@apiParam {String} useLimitTypes          可选        限制首单使用值为2
      *@apiParam {String} limitItemTypes         可选        可使用的项目格式如 ",2,3,"
-     *@apiParam {Number} enoughMoeny            可选        满额可用
+     *@apiParam {Number} enoughMoney            可选        满额可用
      *@apiParam {String} getTimeStart           可选        劵获取开始时间如 2015-10-16 00:00:00
      *@apiParam {String} getTimeEnd             可选        卷获取结束时间   2015-10-16 23:59:59
 	 *@apiParam {String} addActLimitStartTime   可选        代金劵可使用开始时间 2015-10-16 00:00:00
@@ -862,7 +862,7 @@ class PlatformController extends Controller{
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
-        if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
+        if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
@@ -1001,7 +1001,7 @@ class PlatformController extends Controller{
 	 * @apiGroup Platform
 	 *
 	 * @apiParam {Number} selectItem 可选 选择的项 1: 活动编号 2.活动名称
-	 * @apiParam {String} number 可选 对应项查询的字符.
+	 * @apiParam {String} keyword 可选 对应项查询的字符.
 	 * @apiParam {Number} status 可选 活动状态. 1. 进行中 2. 暂停 3.已关闭 4. 已结束
 	 * @apiParam {String} department 部门id
 	 * @apiParam {String} startTime 活动开始时间
@@ -1029,7 +1029,7 @@ class PlatformController extends Controller{
     public function exportList(){
         $post = $this->param;
         $actSelect = isset($post['selectItem']) ? $post['selectItem'] : '';
-        $actNumber = isset($post['number']) ? urldecode($post['number']) : '';
+        $actNumber = isset($post['keyword']) ? urldecode($post['keyword']) : '';
         $actStatus = isset($post['status']) ? $post['status'] : '';
         $actDepartment = isset($post['department']) ? $post['department'] : '';
         $actStartTime = isset($post['startTime']) ? $post['startTime'] : '';
