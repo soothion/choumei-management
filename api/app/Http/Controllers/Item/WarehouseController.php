@@ -455,7 +455,7 @@ class WarehouseController extends Controller
 	        $tmp['itemname'] = $data['itemname'];
 	        $tmp['fastGrade'] = $data['fastGrade'];
 	        $tmp['repertory'] = $data['repertory'];
-	        $tmp['expTimeInput'] = $data['exp_time'];
+	        $tmp['expTimeInput'] = 0;
 	        $tmp['totalRepInput'] = $data['total_rep'];
 	        $tmp['userId'] = $user_id;
 	        $tmp['priceGroup'] = 0;
@@ -465,8 +465,19 @@ class WarehouseController extends Controller
 	        {
 	           $tmp['addedService'] = explode(',', $data['addserviceStr']);
 	        }
-	        $tmp['timingAdded'] = $data['timingAdded'];
-	        $tmp['timingShelves'] = $data['timingShelves'];
+	        
+	        if(!empty($data['timingAdded']))
+	        {
+	           $tmp['timingAdded'] = date("Y-m-d H:i:s",$data['timingAdded']);
+	        }
+	        if(!empty($data['timingShelves']))
+	        {
+	           $tmp['timingShelves'] =date("Y-m-d H:i:s",$data['timingShelves']);
+	        }
+	        if(!empty($data['exp_time']))
+	        {
+	            $tmp['expTimeInput'] =date("Y-m-d",$data['exp_time']);
+	        }
 	        
 	        if(isset($data['limit_time']) && !empty($data['limit_time']))
 	        {
