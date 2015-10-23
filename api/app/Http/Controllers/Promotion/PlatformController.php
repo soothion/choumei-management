@@ -1168,10 +1168,10 @@ class PlatformController extends Controller{
         // 找到用户获取的类型
         $getTypes = \App\VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd','useEnd','SMS_ON_GAINED','useMoney'])
                 ->where(['vcId'=>$vcId,'getTypes'=>3,'status'=>1])
-                ->first()->toArray();
-
+                ->first();
         if( empty($getTypes) )
             return false;
+        $getTypes = $getTypes->toArray();
         $nowTime = time();
         // 存在开始时间  且 现在的时间小于劵获取开始时间
         $nowItStart = (!empty($getTypes['getStart']) && $nowTime < $getTypes['getStart']);

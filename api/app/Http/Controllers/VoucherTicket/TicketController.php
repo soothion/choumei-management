@@ -123,7 +123,6 @@ class TicketController extends Controller {
         if($startTime && empty($endTime)) $obj->where('vUseTime','>=',$startTime);
         if($endTime && empty($startTime)) $obj->where('vUseTime','<=',$endTime);
         if($startTime && $endTime) $obj->whereBetween('vUseTime',[$startTime,$endTime]);
-        $count =  $obj->count();
         //手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
