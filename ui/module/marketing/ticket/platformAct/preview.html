@@ -14,10 +14,10 @@
         <div class="breadcrumb">
             <a>券活动管理 </a>
             <span>&gt;</span><a href="index.html">平台活动</a>
-            <span>&gt;</span><a href="index.html">新增活动预览</a>
+            <span>&gt;</span><a href="perview.html"><%= query.type=='add' ? '新增活动预览' : '编辑活动预览'%></a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>新增活动预览</h4>
+                    <h4><%= query.type=='add' ? '新增活动预览' : '编辑活动预览'%></h4>
                 </div>
             </div>
         </div>
