@@ -93,7 +93,11 @@
                <%data.data && data.data.forEach(function(item,index){%>
                  <tr>
                   <td><%=index+1%></td>
-                  <td><%=item.vcTitle%></td>
+                  <td>
+                      <a class="link" href="../cashCouponList/index.html?keywordType=1&keyword=<%=item.vcSn%>">
+                          <%=item.vcTitle%>
+                      </a>
+                  </td>
                   <td><%=item.vcSn%></td>
                   <td><%=item.totalNum%></td>
                   <td><%=item.allNum%></td>  
