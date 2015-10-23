@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-22 17:55:29
+* @Last Modified time: 2015-10-23 17:51:21
 */
 
 (function(){
@@ -159,18 +159,7 @@
             sessionStorage.setItem('add-base-data',JSON.stringify(data));           
         }
     })
-
-    $("#form").on('click','#preview-btn',function(){
-        var data = lib.getFormData($("#form"));
-        var obj = {};     
-        if(type === 'add')  var previewData = JSON.parse(sessionStorage.getItem('add-base-data'));
-        if(type === 'edit') var previewData = JSON.parse(sessionStorage.getItem('edit-base-data'));
-        previewData = $.extend({},previewData,data);
-        sessionStorage.setItem('preview-base-data',JSON.stringify(previewData));
-        window.open("preview.html?type="+type);       
-    })
-           
-
+    
     lib.Form.prototype.save = function(data){
         if(data.getItemTypes && data.getItemTypes.length>0){
             data.getItemTypes = data.getItemTypes.join(",");
@@ -185,9 +174,9 @@
             editData = $.extend({},editData,data);
             sessionStorage.setItem('edit-base-data',JSON.stringify(editData)); 
            
-            var saveData = JSON.parse(sessionStorage.getItem('edit-save-data'));
-            saveData = $.extend({},saveData,data);
-            sessionStorage.setItem('edit-save-data',JSON.stringify(saveData));                 
+            // var saveData = JSON.parse(sessionStorage.getItem('edit-save-data'));
+            // saveData = $.extend({},saveData,data);
+            // sessionStorage.setItem('edit-save-data',JSON.stringify(saveData));                 
         }
 
         location.href = "addTicket.html?type="+type+"&selectItemType="+selectItemType;

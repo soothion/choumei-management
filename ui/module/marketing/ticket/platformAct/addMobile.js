@@ -2,12 +2,14 @@
 * @Author: anchen
 * @Date:   2015-10-20 14:51:19
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-22 16:23:52
+* @Last Modified time: 2015-10-23 18:53:12
 */
 
 (function(){
     var type = lib.query.type;
-    if(type == 'add'){
+    var flag = lib.query.itemType;
+
+    if(!flag && type == 'add'){
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
         if(baseData.phoneList){
             if($.isArray(baseData.phoneList)){
@@ -19,7 +21,7 @@
         }
     }
 
-    if(type == 'edit'){
+    if(!flag && type == 'edit'){
         var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
         if(editData.phoneList){
             if($.isArray(editData.phoneList)){
@@ -31,8 +33,10 @@
         }
     }
 
-    if(type == 'preview'){
-        var previewData = JSON.parse(sessionStorage.getItem('preview-base-data')); 
+    if(flag){
+        var previewData = "";
+        if(type == 'add') previewData = JSON.parse(sessionStorage.getItem('add-base-data')); 
+        if(type == 'edit') previewData = JSON.parse(sessionStorage.getItem('edit-base-data')); 
         if(previewData.phoneList){
             if($.isArray(previewData.phoneList)){
                 $('textarea.add').val(previewData.phoneList.join('\n'));          
@@ -80,6 +84,11 @@
                 editData.phoneList = lastArr; 
                 sessionStorage.setItem('edit-base-data',JSON.stringify(editData));
             }
+
+            parent.lib.popup.result({
+                text:"手机号码添加成功",
+                time:2000
+            }); 
         }else{
             if(type == 'add'){
                 var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
