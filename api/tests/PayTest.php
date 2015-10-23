@@ -37,6 +37,20 @@ class PayTest extends TestCase
                  'result'=>1,
                 'current_page'=>1,
              ]);   
+        
+        
+        $this->post('pay_manage/index',[
+                'state'=>99999999,
+                'keyword'=>  str_random(20),
+                'pay_time_min'=>date('Y-m-d'),
+                'pay_time_max'=>date('Y-m-d')
+                ])            
+             ->seeJson([
+                 'result'=>1,
+                'current_page'=>1,
+             ]);   
+        
+        
     }
     
     

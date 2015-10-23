@@ -118,7 +118,7 @@ class StylistTest extends TestCase
         $this->seeInDatabase('hairstylist', ['mobilephone' => $stylist['mobilephone']]); 
 
         //判断电话重复
-        $this->post('stylist/create/680',$stylist)            
+        $this->post("stylist/create/$id",$stylist)            
              ->seeJson([
                 'result'=>0
              ]);
@@ -149,11 +149,6 @@ class StylistTest extends TestCase
         //判断数据库是否存在此记录
         $this->seeInDatabase('hairstylist', ['mobilephone' => $stylist['mobilephone']]); 
 
-        //判断电话重复
-        $this->post('stylist/create/868',$stylist)            
-             ->seeJson([
-                'result'=>0
-             ]);
        }
     
 }

@@ -39,7 +39,8 @@ class ItemTest extends TestCase
             $id = $item->itemid;
             $this->get("item/show/$id")
                  ->seeJson(['result'=>1]);
-
+            
+            //测试
             $id = 999999;
             $this->get("item/show/$id") 
                  ->seeJson([

@@ -33,6 +33,13 @@ class OnsaleTest extends TestCase
              ->seeJson([
                 'result'=>1
              ]);
+        
+        //尝试破坏测试
+        $id =9999999;
+        $this->post("onsale/show/$id")            
+             ->seeJson([
+                'result'=>0
+             ]);
     }
-
+    
 }

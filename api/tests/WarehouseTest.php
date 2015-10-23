@@ -44,16 +44,22 @@ class WarehouseTest extends TestCase
              ]);
     }
   
-    public function testDel(){
-           $token=['ids'=>'192'];
+    public function testDestroy(){
+         $salonItem=SalonItem::first();
+         $token['ids']=$salonItem['itemid'];
            $this->post("warehouse/destroy",$token)            
              ->seeJson([
-                'result'=>1
+                'result'=>0      //因为成功返回为空
              ]);
+           
+          //判断数据库是否存在此记录
+        $this->seeInDatabase('salon_item', ['status' =>3]); 
     }
     
     public function  testShow(){
-         $this->post("warehouse/show/778")            
+         $salonItem=SalonItem::first();
+         $id=$salonItem->itemid;
+         $this->post("warehouse/show/$id")            
              ->seeJson([
                 'result'=>1
              ]);
