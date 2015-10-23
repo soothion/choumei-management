@@ -131,7 +131,7 @@
 						]
 					},
 					max_file_size:'2mb',
-					imageLimitSize:"360x360"
+					imageLimitSize:"360*360"
 				});
 				lib.puploader.image({
 					browse_button: 'imageUpload2',
@@ -143,10 +143,7 @@
 					},
 					max_file_size:'2mb',
 					imageLimitSize:function(width,height){
-						if(width!=640){
-							return false;
-						}
-						return true;
+						return width==640;
 					}
 				});
 			});

@@ -22,12 +22,10 @@
                     <select>
                         <option value="0">红包编号</option>
                         <option value="1">分享手机号</option>
-                        <option value="2">生成时间</option>
                         <option value="3">红包名称</option>
                     </select>
                     <input type="text" class="input-search" name="bonusSn" placeholder="红包编号">
                     <input type="text" class="input-search hide" name="mobilephone" class="hide" placeholder="分享手机号">
-                    <input type="date" class="input-search hide" name="start_time" class="hide" placeholder="生成时间">
                     <input type="text" class="input-search hide" name="laisee_name" class="hide" placeholder="红包名称">
                 </div>
 
@@ -50,7 +48,7 @@
             </form>
 
             <form action="bonus/export" data-role="export">
-                <button class="btn" data-slug="manager.export">
+                <button class="btn" data-slug="bonus.export">
                 <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form>
@@ -85,10 +83,10 @@
                         <td><%=item.over_time%></td>                  
                         <td><%=map[item.status]%></td>
                         <td>
-							<a class="link" target="_blank" href="detail.html?id=<%=item.order_ticket_id%>">查看&gt;</a>
+							<a class="link" data-slug="bonus.show" target="_blank" href="detail.html?id=<%=item.order_ticket_id%>">查看&gt;</a>
 							<%if(item.status=="Y"){%>
 							<span class="space"></span>
-							<form action="bonus/close/<%=item.order_ticket_id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+							<form data-slug="bonus.close" action="bonus/close/<%=item.order_ticket_id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
 								<button class="link">失效</button>
 							</form>
 							<%}%>

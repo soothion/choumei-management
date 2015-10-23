@@ -15,7 +15,7 @@
                     <h4>红包活动</h4>
                 </div>
                 <div class="flex-item">
-                    <a class="btn-primary fr" href="addBase.html" data-slug="rebate.create">
+                    <a class="btn-primary fr" href="addBase.html" data-slug="laisee.create">
                         <i class="fa fa-plus"></i> 新增红包活动
                     </a>
                 </div>
@@ -41,7 +41,7 @@
             </form>
 
             <form action="laisee/export" data-role="export">
-                <button class="btn" data-slug="manager.export">
+                <button class="btn" data-slug="plaisee.export">
                 <i class="fa fa-file-excel-o"></i> 导出
                 </button>
             </form>
@@ -78,19 +78,19 @@
 				  <%var statusMap={"Y":"进行中","N":"已结束","S":"已关闭","F":"下线"}%>
                   <td><%=statusMap[item.status]%></td>
                   <td>
-                    <a class="link" target="_blank" href="detail.html?id=<%=item.id%>">查看&gt;</a>
+                    <a class="link" data-slug="laisee.show,laisee.update" target="_blank" href="detail.html?id=<%=item.id%>">查看&gt;</a>
 					<%if(item.status=="Y"){%>
-					<form action="laisee/offline/<%=item.id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+					<form data-slug="laisee.offline" action="laisee/offline/<%=item.id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
 						<span class="space"></span>
 						<button class="link">下线</button>
 					</form>
-					<form action="laisee/close/<%=item.id%>" data-role="normal"  onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+					<form data-slug="laisee.close" action="laisee/close/<%=item.id%>" data-role="normal"  onreset="parent.lib.popup.result({define:function(){location.reload()}})">
 						<span class="space"></span>
 						<button class="link">关闭</button>
 					</form>
 					<%}%>
 					<%if(item.status=="F"){%>
-					<form action="laisee/online/<%=item.id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+					<form data-slug="laisee.online" action="laisee/online/<%=item.id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
 						<span class="space"></span>
 						<button class="link">上线</button>
 					</form>
