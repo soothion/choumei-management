@@ -553,7 +553,7 @@
 							 uploader.thumbnails.on('click','.control-thumbnails-edit',function(){
 								var item=$(this).closest('.control-thumbnails-item');
 								var src=item.find('img').attr('src');
-								uploader.trigger('ImageUploaded',{img:src});
+								uploader.trigger('ImageUploaded',{img:src,_this:item[0]});
 							 });
 							if(options.imageArray){
 								uploader.thumbnails.prepend(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:options.imageArray}));

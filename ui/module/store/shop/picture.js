@@ -57,7 +57,6 @@
             uploader.bind('ImageUploaded',function(up,response){
                 createThumbnails(up,response,1,'300x300');                
             });
-
             uploader.thumbnails.bind('itemchange',function(){
                 saveImagesUrl();
             });
@@ -118,7 +117,7 @@
             aspectRatio : ratio,
             thumbnails  : [name],
             define:function(data){
-                if(up.createThumbnails&&!response.edit){
+                if(up.createThumbnails&&!response.edit&&!response._this){
                     up.createThumbnails({
                         thumbimg:data[name],
                         img:response.img,
@@ -127,7 +126,10 @@
                     },function(){
                         saveImagesUrl();                               
                     });
-                }
+                }else{
+					up.preview($(response._this),{thumbimg:data[name]});
+					$(response._this).parent().trigger('itemchange');
+				}
             }
         });        
     }

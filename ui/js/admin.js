@@ -493,24 +493,6 @@ $(function(){
 		parent.lib.popup.swiper({list:list,index:item.index()});
 	});
 	
-	
-
-	// $body.on('click','.control-thumbnails-edit',function(){
-	// 	var item=$(this).closest('.control-thumbnails-item');
-	// 	var src=item.find('img').attr('src');
-	// 	if(src){
-	// 		var options={
-	// 			src:src,
-	// 			define:function(src){
-	// 				parent.lib.fullpage(false);
-	// 				item.find('input.thumb,input.original').val(src);
-	// 				item.find('img').attr('src',src).data('original',src);
-	// 				$('.popup-cropper').remove();
-	// 			}
-	// 		}
-	// 		lib.cropper.create(options);
-	// 	}
-	// });
 
 	$body.on('click','.control-single-image img,.image-preview',function(){
 		var $this=$(this);
