@@ -493,22 +493,7 @@ $(function(){
 		parent.lib.popup.swiper({list:list,index:item.index()});
 	});
 	
-	// $body.on('click','.control-thumbnails-before',function(){
-	// 	var $this=$(this);
-	// 	var thumbnail=$this.closest('.control-thumbnails-item');
-	// 	var prev=thumbnail.prev('.control-thumbnails-item')
-	// 	if(prev.length==1){
-	// 		thumbnail.after(prev);
-	// 	}
-	// });
-	// $body.on('click','.control-thumbnails-after',function(){
-	// 	var $this=$(this);
-	// 	var thumbnail=$this.closest('.control-thumbnails-item');
-	// 	var next=thumbnail.next('.control-thumbnails-item')
-	// 	if(next.length==1){
-	// 		thumbnail.before(next);
-	// 	}
-	// });
+	
 
 	// $body.on('click','.control-thumbnails-edit',function(){
 	// 	var item=$(this).closest('.control-thumbnails-item');

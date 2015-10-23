@@ -532,8 +532,26 @@
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').show();
 								}
-								uploader.trigger('updateImageData');
+								thumbnail.parent().trigger("itemchange");
 							});
+							uploader.thumbnails.on('click','.control-thumbnails-before',function(){
+							 	var $this=$(this);
+							 	var thumbnail=$this.closest('.control-thumbnails-item');
+							 	var prev=thumbnail.prev('.control-thumbnails-item')
+								if(prev.length==1){
+							 		thumbnail.after(prev);
+							 	}
+								thumbnail.parent().trigger("itemchange");
+							 });
+							 uploader.thumbnails.on('click','.control-thumbnails-after',function(){
+							 	var $this=$(this);
+							 	var thumbnail=$this.closest('.control-thumbnails-item');
+							 	var next=thumbnail.next('.control-thumbnails-item')
+							 	if(next.length==1){
+							 		thumbnail.before(next);
+							 	}
+								thumbnail.parent().trigger("itemchange");
+							 });
 							if(options.imageArray){
 								uploader.thumbnails.prepend(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:options.imageArray}));
 								if(uploader.thumbnails.children('.control-thumbnails-item').length>=uploader.thumbnails.data('max')){
