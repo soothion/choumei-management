@@ -43,7 +43,7 @@
 		})
 	}).on('click','.limit',function(){//有无限制状态的切换
 		$(this).closest("span").siblings('input').attr('disabled',this.checked);
-		//$(this).parent().siblings('label').children('input').attr('disabled',this.checked);
+		$(this).closest("span").siblings('label').children('input').attr('disabled',this.checked);
 	}).on('change','#project',function(){//选择项目后渲染出对应的项目详情
 		init(this.value);
 	}).on('pass','input[name="timingShelves"]',function(){

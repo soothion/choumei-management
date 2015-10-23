@@ -200,7 +200,9 @@
 				<div class="control">
 					<label><input type="checkbox" name="inviteLimit" value="1" <%=!data.limit_invite?"disabled":""%>/><span>限推荐用户购买</span></label>
 					<label><input type="checkbox" name="firstLimit" value="1" <%=!data.limit_first?"disabled":""%>/><span>限首次下单可购买</span></label>
+					<span>
 					<label><input type="checkbox" <%=!data.limit_invite&&!data.limit_first?"checked":""%> class="limit"/><span>无限制</span></label>
+					</span>
 				</div>
 			</div>
 			<hr />
