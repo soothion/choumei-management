@@ -23,7 +23,7 @@ class SalonController extends Controller {
     private $addFields = array(
 			    		"merchantId",
 			            "salonname",
-    					"logo",
+    					//"logo",
 						"addr",
 						"addrlati",
 						"addrlong",
