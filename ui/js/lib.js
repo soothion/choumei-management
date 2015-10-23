@@ -495,9 +495,7 @@
 										if(options.thumb&&data.response.thumbimg){
 											data.response.thumbimg=data.response.thumbimg.replace('w/100/h/100',thumb);
 										}
-										up.createThumbnails(data.response,function(){
-											up.trigger('updateImageData');
-										})
+										up.createThumbnails(data.response)
 									}else{
 										up.preview(up.area,data.response);
 									}
@@ -514,14 +512,14 @@
 							uploader.thumbnails.addClass('control-thumbnails-unedit');
 						}
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
-							uploader.createThumbnails=function(data,callback){//创建缩略图
+							uploader.createThumbnails=function(data){//创建缩略图
 								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render(
 									{url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},
 									{data:[data]}));
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').hide();
 								}
-								callback && callback();
+								uploader.thumbnails.trigger("itemchange");
 							}
 							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
 								var item=$(this).closest('.control-thumbnails-item');
@@ -532,7 +530,7 @@
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').show();
 								}
-								thumbnail.parent().trigger("itemchange");
+								item.parent().trigger("itemchange");
 							});
 							uploader.thumbnails.on('click','.control-thumbnails-before',function(){
 							 	var $this=$(this);
@@ -551,6 +549,11 @@
 							 		thumbnail.before(next);
 							 	}
 								thumbnail.parent().trigger("itemchange");
+							 });
+							 uploader.thumbnails.on('click','.control-thumbnails-edit',function(){
+								var item=$(this).closest('.control-thumbnails-item');
+								var src=item.find('img').attr('src');
+								uploader.trigger('ImageUploaded',{img:src});
 							 });
 							if(options.imageArray){
 								uploader.thumbnails.prepend(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:options.imageArray}));
