@@ -120,6 +120,7 @@
                         }
                     });
                 }else {
+                    clearTmpData();
                     templateRender({});
                 }
             };
@@ -137,7 +138,7 @@
                 window.localStorage.setItem('couponTmpData',JSON.stringify(data));
             }
 
-            getTemplateData();
+            
             lib.Form.prototype.save = function(data){
                 var tmpData = $.extend(getTmpData(),data);
                 for (var i = managerList.length - 1; i >= 0; i--) {
@@ -157,6 +158,9 @@
             var clearTmpData  = function(){
                 window.localStorage.removeItem('couponTmpData');
             }
+
+
+            getTemplateData();
         </script>
     </body>
 </html>

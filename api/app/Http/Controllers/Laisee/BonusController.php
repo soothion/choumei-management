@@ -8,6 +8,7 @@ use App\Exceptions\ERROR;
 use App\LaiseeConfig;
 use App\Laisee;
 use Illuminate\Support\Facades\DB;
+use Excel;
 
 class BonusController extends Controller {
 
@@ -96,10 +97,10 @@ class BonusController extends Controller {
             $val['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
             $failLaisee = Laisee::where('order_ticket_id', $val['order_ticket_id'])->where('status', 'N')->count();
             if ($failLaisee) {
-                $val['status'] == 'N';  //已失效
+                $val['status'] = 'N';  //已失效
             }
             if (strtotime($val['end_time']) < time()) {
-                $val['status'] == 'E';  //已过期
+                $val['status'] = 'E';  //已过期
             }
             $val['over_time'] = $val['end_time'];
             $val['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
@@ -158,10 +159,10 @@ class BonusController extends Controller {
             $result[$key]['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
             $failLaisee = Laisee::where('order_ticket_id', $val['order_ticket_id'])->where('status', 'N')->count();
             if ($failLaisee) {
-                $val['status'] == 'N';  //已失效
+                $val['status'] = 'N';  //已失效
             }
             if (strtotime($val['end_time']) < time()) {
-                $val['status'] == 'E';  //已过期
+                $val['status'] = 'E';  //已过期
             }
             $val['over_time'] = $val['end_time'];
             if ($val['status'] == "Y") {
@@ -176,9 +177,9 @@ class BonusController extends Controller {
         //导出excel	   
         $title = '红包列表' . date('Ymd');
         $header = ['序号', '红包编号', '红包名称', '红包总金额', '现金券总数', '已领现金券数', '生成时间', '有效天数', '红包状态'];
-        Excel::create($title, function($excel) use($data, $header) {
-            $excel->sheet('Sheet1', function($sheet) use($data, $header) {
-                $sheet->fromArray($data, null, 'A1', false, false); //第五个参数为是否自动生成header,这里设置为false
+        Excel::create($title, function($excel) use($result, $header) {
+            $excel->sheet('Sheet1', function($sheet) use($result, $header) {
+                $sheet->fromArray($result, null, 'A1', false, false); //第五个参数为是否自动生成header,这里设置为false
                 $sheet->prependRow(1, $header); //添加表头
             });
         })->export('xls');
