@@ -348,9 +348,9 @@ class TicketController extends Controller {
         if( empty($voucherInfo) )
             throw new ApiException('获取信息失败', ERROR::RECEIVABLES_ERROR);
         if( !empty( $voucherInfo['vOrderSn'] ) ){
-            $isPay = \App\Order::select(['ispay'])->where('ordersn','=',$voucherInfo['vOrderSn'])->first();
+            $isPay = \App\Order::select(['ispay'])->where('ordersn','=',$voucherInfo['vOrderSn'])->first()->toArray();
             if( empty( $isPay ) ) throw new ApiException('获取信息失败', ERROR::RECEIVABLES_ERROR);
-            $voucherInfo['isPay'] = $isPay == 1 ?  '未支付' :  '已支付';
+            $voucherInfo['isPay'] = $isPay['ispay'] == 1 ?  '未支付' :  '已支付';
         }else $voucherInfo['isPay'] = '';
         $voucherConfInfo = \App\VoucherConf::select(['useItemTypes','useLimitTypes','useNeedMoney','getTypes','getItemTypes','getCodeType','getCode','getNeedMoney'])
                 ->where('vcId','=',$voucherInfo['vcId'])
