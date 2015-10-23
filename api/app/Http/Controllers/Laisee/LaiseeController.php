@@ -145,7 +145,15 @@ class LaiseeController extends Controller {
             $data[$key]['giftNum'] = !empty($val['gift_vcsn']) ? Laisee::where('id', $val['id'])->whereIn('vcsn', explode(",", $val['gift_vcsn']))->whereNotNull('mobilephone')->count() : 0;  //礼包领取数
             $data[$key]['create_time'] = $val['create_time'];
             $data[$key]['start_time'] = $val['start_time'];
-            $data[$key]['status'] = $val['status'] == 'Y' ? "进行中" : $val['status'] == 'N' ? "已结束" : $val['status'] == 'S' ? "已关闭" : "下线";
+            if ($val['status'] == 'Y') {
+                $data[$key]['status'] = "进行中";
+            } elseif ($val['status'] == 'N') {
+                $data[$key]['status'] = "已结束";
+            } elseif ($val['status'] == 'S') {
+                $data[$key]['status'] = "已关闭";
+            } else {
+                $data[$key]['status'] = "下线";
+            }
         }
         //导出excel	   
         $title = '红包活动列表' . date('Ymd');
