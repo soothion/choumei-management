@@ -468,7 +468,7 @@ class LaiseeController extends Controller {
             $usedWhere = $laisee->vcsns . "," . $laisee->gift_vcsn;
             $laisee->usedNum = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->where('vStatus', 2)->count();
             $laisee->usedAmount = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->where('vStatus', 2)->sum('vUseMoney');
-            $laisee->failure = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->where('vStatus', 5)->sum('vUseMoney');  //已失效
+            $laisee->failure = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->whereIn('vStatus', [4,5])->count();  //已失效
             $voucherConsume = VoucherConf::getVoucherConfConsume($laisee);
             $laisee->consumeNum = $voucherConsume['consumeNum']; //TODO  已消费数
             $laisee->consumeAmount = $voucherConsume['consumeAmount']; //TODO  已消费数金额
