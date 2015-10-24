@@ -1049,7 +1049,7 @@ class PlatformController extends Controller{
             unset( $res );
             $title = '现金劵活动查询列表' .date('Ymd');
             //导出excel	   
-            $header = ['序号','活动名称','活动编码','总数上限','已发放数','已使用数','创建时间','活动时间','申请部门'];
+            $header = ['活动名称','活动编码','总数上限','已发放数','已使用数','创建时间','活动时间','申请部门','活动状态'];
             Excel::create($title, function($excel) use($tempData,$header){
                 $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
                     $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
@@ -1158,7 +1158,7 @@ class PlatformController extends Controller{
                 $invalidNum++;
         }
         if( !empty($invalidNum) )
-            return array( $allNum , $useNum , $invalidNum );
+            return array( $totalNum , $useNum , $invalidNum );
         // 已失效数
         if( empty($useEnd) ||  time()<$useEnd ){
             $invalidNum = 0;
@@ -1236,7 +1236,8 @@ class PlatformController extends Controller{
     private function handleList( $res ){
         $tempData = [];
         $department = '';
-        $i=0;
+//        $i=0;
+        $statusArr = ['','进行中','下线','已关闭'];
         foreach( $res as $key=>$val ){
             $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
             if( empty( $val['getStart'] ) && empty($val['getEnd']) )
@@ -1252,7 +1253,7 @@ class PlatformController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $department = $department['title'];
             }
-            $tempData[$key][] = ++$i;
+//            $tempData[$key][] = ++$i;
             $tempData[$key][] = $val['vcTitle'];
             $tempData[$key][] = $val['vcSn'];
             $tempData[$key][] = $val['totalNum'];
@@ -1261,6 +1262,7 @@ class PlatformController extends Controller{
             $tempData[$key][] = $val['addTime'];
             $tempData[$key][] = $actTime;
             $tempData[$key][] = $department;
+            $tempData[$key][] = $statusArr[ $val['status'] ];
         }
         return $tempData;
     }

@@ -964,21 +964,33 @@ class CouponController extends Controller{
    }
    // 获取代金劵状态
    private function getVoucherStatusByActId( $vcSn , $useEnd ){
-        // 总的发放数
-        $allNum = \App\Voucher::where( ['vcSn'=>$vcSn])->where('vStatus','<>',10)->count();
-        // 已发放数
-        $useNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>2] )->count();
-        // 未使用数
-        $noUseNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>1] )->count();
-        
-        $invalidNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>5] )->count();
-        if( !empty($invalidNum) ) return array( $allNum , $useNum , $invalidNum ,$noUseNum  );
+        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>"'$vcSn'"])->get();
+        if( empty( $result ) )
+            return array(0,0,0);
+        $result = $result->toArray();
+        $totalNum = 0;
+        $useNum = 0;
+        $invalidNum = 0;
+        $duihuanNum = 0;
+        foreach( $result as $val ){
+            if( $val['vStatus'] != 10 )
+                $totalNum++;
+            if( $val['vStatus'] == 2 )
+                $useNum++;
+            if( $val['vStatus'] == 5 )
+                $invalidNum++;
+            if( $val['vStatus'] != 10 && $val['vStatus'] != 3 )
+                $duihuanNum++;
+        }
+        if( !empty($invalidNum) )
+            return array( $totalNum , $useNum , $invalidNum , $duihuanNum );
         // 已失效数
-        if( empty($useEnd) ||  time()<$useEnd )
+        if( empty($useEnd) ||  time()<$useEnd ){
             $invalidNum = 0;
-        else
-            $invalidNum = $allNum - $useNum;
-        return array( $allNum , $useNum , $invalidNum ,$noUseNum);
+        }else{
+            $invalidNum = $totalNum - $useNum;
+        }
+        return array( $totalNum , $useNum , $invalidNum );
     }
    
     // 点击上线操作生成兑换码劵插入到代金劵表中
