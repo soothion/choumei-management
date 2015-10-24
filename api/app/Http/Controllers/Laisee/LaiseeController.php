@@ -149,7 +149,7 @@ class LaiseeController extends Controller {
         $data = [];
         foreach ($laiseeList['data'] as $key => $val) {
 //            \Illuminate\Support\Facades\DB::enableQueryLog();
-            $data[$key]['id'] = $val['id'];
+//            $data[$key]['id'] = $val['id'];
             $data[$key]['laisee_name'] = $val['laisee_name'];
             $vcsnWhere = $val['vcsns'] . "," . $val['gift_vcsn'];
             $data[$key]['voucherNum'] = VoucherConf::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->sum('useTotalNum'); //现金券总数
@@ -170,7 +170,7 @@ class LaiseeController extends Controller {
         }
         //导出excel	   
         $title = '红包活动列表' . date('Ymd');
-        $header = ['序号', '红包名称', '现金券数', '已领取数', '已使用数', '礼包领取数', '创建时间', '上线时间', '活动状态'];
+        $header = ['红包名称', '现金券数', '已领取数', '已使用数', '礼包领取数', '创建时间', '上线时间', '活动状态'];
         Excel::create($title, function($excel) use($data, $header) {
             $excel->sheet('Sheet1', function($sheet) use($data, $header) {
                 $sheet->fromArray($data, null, 'A1', false, false); //第五个参数为是否自动生成header,这里设置为false
