@@ -507,11 +507,11 @@ class LaiseeController extends Controller {
      */
     public function online($id) {
         $rec = LaiseeConfig::where('status', 'Y')->first();
-        if (!empty($rec)) {
-            throw new ApiException("已经有在线的红包活动", ERROR::UNKNOWN_ERROR);
-        }
+//        if (!empty($rec)) {
+//            throw new ApiException("已经有在线的红包活动", ERROR::UNKNOWN_ERROR);
+//        }
         $laiseConfig = LaiseeConfig::find($id);
-        if ($laiseConfig->end_time != "0000-00-00 00:00:00" || !empty($laiseConfig->end_time)) {
+        if (!($laiseConfig->end_time == "0000-00-00 00:00:00" || is_null($laiseConfig->end_time))) {
             throw new ApiException("已结束的活动无法再上线", ERROR::UNKNOWN_ERROR);
         }
         $res = LaiseeConfig::where('id', $id)->update(['status' => 'Y', 'start_time' => date("Y-m-d H:i:s", time())]);

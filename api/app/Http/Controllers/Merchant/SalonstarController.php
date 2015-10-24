@@ -150,8 +150,12 @@ class SalonstarController extends Controller {
             $score = $salonInfo->score - $options['score'];
         }
         //更新店铺score
-//        $userName=$this->user->name;
-        $userName = "liyu";
+        if (!empty($this->user->name)) {
+            $userName = $this->user->name;
+        } else {
+            $userName = '';
+        }
+//        $userName = "liyu";
         $upStatus = Salon::updateScore($salonInfo, $score, $options, $userName);
         if ($upStatus) {
             return $this->success();
