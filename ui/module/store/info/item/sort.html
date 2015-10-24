@@ -58,7 +58,7 @@
 							data.sort(function(x,y){
 								return x.minPrice>y.minPrice?1:-1;
 							});
-						}else{
+						}else if(query.sort_type=="DESC"){
 							data.sort(function(x,y){
 								return x.minPrice<y.minPrice?1:-1;
 							});
@@ -66,7 +66,7 @@
 					%>
 					<%data.forEach(function(item,i){%>
 					 <tr>
-						<td><%=item.sort_in_type%></td>
+						<td><%=i+1%></td>
 						<td><%=item.itemname%><input type="hidden" name="itemid" value="<%=item.itemid%>" /></td>
 						<td><%=item.typename%></td>
 						<td><%=item.norms_cat_id==1?"有规格":"无规格"%></td>
