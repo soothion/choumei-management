@@ -5,7 +5,7 @@
 	  <title>臭美管理后台</title>
 	  <script type="text/javascript" src="/js/include.js"></script>
 	  <style type="text/css">
-		#table tbody tr:first-child form:first-child,#table tbody tr:last-child form:last-child{
+		#table tbody tr:first-child button:first-child,#table tbody tr:last-child button:last-child{
 			display:none;
 		}
 	  </style>
@@ -18,8 +18,8 @@
 					<h4>项目排序</h4>
 				</div>
 				<div>
-					<a href="#sort_key=sort_in_type&sort_type=DESC" data-role="hash" class="btn">降序 <i class="fa fa-caret-down"></i></a>
-					<a href="#sort_key=sort_in_type&sort_type=ASC" data-role="hash" class="btn">升序 <i class="fa fa-caret-up"></i></a>
+					<a href="#sort_key=sort_in_type&sort_type=DESC" data-role="hash" class="btn btn-sort">降序 <i class="fa fa-caret-down"></i></a>
+					<a href="#sort_key=sort_in_type&sort_type=ASC" data-role="hash" class="btn btn-sort">升序 <i class="fa fa-caret-up"></i></a>
 				</div>
 			</div>
 		</div>
@@ -35,6 +35,7 @@
 					</select>
 				</form>
 			 </div>
+			 <form action="item/sort" data-role="normal" id="sortform"></form>
 			<div class="table" ajat="item/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 			<table>
@@ -52,6 +53,17 @@
 				</thead>
 				<tbody>
 					<%data=data.data%>
+					<%
+						if(query.sort_type=="ASC"){
+							data.sort(function(x,y){
+								return x.minPrice>y.minPrice?1:-1;
+							});
+						}else{
+							data.sort(function(x,y){
+								return x.minPrice<y.minPrice?1:-1;
+							});
+						}
+					%>
 					<%data.forEach(function(item,i){%>
 					 <tr>
 						<td><%=item.sort_in_type%></td>
@@ -60,15 +72,11 @@
 						<td><%=item.norms_cat_id==1?"有规格":"无规格"%></td>
 						<td><%=item.minPriceOri%></td>
 						<td><%=item.minPrice%></td>
-						<td><%=item.minPriceGroup%></td>
+						<td><%=parseInt(item.minPriceGroup)%></td>
 						<td>
-							<form action="item/sort" data-role="normal" _onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-								<button class="link" type="button" data-slug="salon.save" type="button" data-goto="up" >上移</button>
-								<span class="space"></span>
-							</form>
-							<form action="item/sort" data-role="normal" _onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-								<button class="link"  type="button" data-slug="salon.save" type="button" data-goto="down">下移</button>
-							</form>
+							<button class="link" form="sortform" type="button" data-slug="salon.save" type="button" data-goto="up" >上移<span class="space"></span></button>
+							
+							<button class="link" form="sortform" type="button" data-slug="salon.save" type="button" data-goto="down">下移</button>
 						</td>
 					</tr> 
 					<%})%>
@@ -85,7 +93,19 @@
 				});
 			},1000)
 		})
-		
+		var $form=$('#sortform');
+		$form[0]._getFormData=function(){
+			var sort=[];
+			var input=$('input[name="itemid"]');
+			input.each(function(i){
+				var no=i+1;
+				if(lib.query.sort_type!="ASC"){
+					no=input.length-i;
+				}
+				sort.push({itemid:this.value,sort_in_type:no});
+			});
+			return {sort:sort};
+		}
 		$('#table').on('click','.link',function(){
 			var $this=$(this);
 			if($this.data('goto')=='up'){
@@ -94,21 +114,9 @@
 			if($this.data('goto')=='down'){
 				$this.closest('tr').before($this.closest('tr').next());
 			}
-			var form=$this.parent();
-			form[0]._getFormData=function(){
-				var sort=[];
-				var input=$('input[name="itemid"]');
-				input.each(function(i){
-					var no=i+1;
-					if(lib.query.sort_type!="ASC"){
-						no=input.length-i;
-					}
-					sort.push({itemid:this.value,sort_in_type:no});
-				});
-				return {sort:sort};
-			}
-			form.submit();
-		}).on("success","form",function(){
+			$form.submit();
+		});
+		$form.on("success",function(){
 			parent.lib.popup.result();
 			var $trs=$('#table tbody tr');
 			$trs.each(function(i){
@@ -117,8 +125,13 @@
 					no=$trs.length-i;
 				}
 				$(this).children('td:first').text(no);
+			});
+		});
+		$(document.body).on('click',".btn-sort",function(){
+			$('#table').one("_ready",function(){
+				$form.submit();
 			})
-		})
+		});
 	</script>
   </body>
 </html>
