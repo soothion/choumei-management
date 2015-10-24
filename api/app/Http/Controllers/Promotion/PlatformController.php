@@ -1142,7 +1142,7 @@ class PlatformController extends Controller{
    }
    // 获取代金劵状态
    private function getVoucherStatusByActId( $vcSn , $useEnd ){
-        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>"'$vcSn'"])->get();
+        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>"$vcSn"])->get();
         if( empty( $result ) )
             return array(0,0,0);
         $result = $result->toArray();

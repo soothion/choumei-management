@@ -204,8 +204,7 @@ class CouponController extends Controller{
             foreach( $res['data'] as $key=>$val ){
                 $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
                 $res['data'][$key]['allNum'] = $statistics[0];
-                $res['data'][$key]['useNum'] = $statistics[1];
-                $res['data'][$key]['invalidNum'] = $statistics[2];
+                $res['data'][$key]['useNum'] = $statistics[3];
                 $res['data'][$key]['actTime'] = '';
                 if( empty( $val['getStart'] ) && empty($val['getEnd']) )
                     $res['data'][$key]['actTime'] = '无限期活动';
@@ -256,7 +255,6 @@ class CouponController extends Controller{
             $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
             $res['data'][$key]['allNum'] = $statistics[0];
             $res['data'][$key]['useNum'] = $statistics[1];
-//            $res['data'][$key]['invalidNum'] = $statistics[2];
             $res['data'][$key]['actTime'] = '';
             if( empty( $val['getStart'] ) && empty($val['getEnd']) )
                 $res['data'][$key]['actTime'] = '无限期活动';
@@ -964,9 +962,10 @@ class CouponController extends Controller{
    }
    // 获取代金劵状态
    private function getVoucherStatusByActId( $vcSn , $useEnd ){
-        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>"'$vcSn'"])->get();
+        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>"$vcSn"])->get();
+        
         if( empty( $result ) )
-            return array(0,0,0);
+            return array(0,0,0,0);
         $result = $result->toArray();
         $totalNum = 0;
         $useNum = 0;
@@ -990,7 +989,7 @@ class CouponController extends Controller{
         }else{
             $invalidNum = $totalNum - $useNum;
         }
-        return array( $totalNum , $useNum , $invalidNum );
+        return array( $totalNum , $useNum , $invalidNum,$duihuanNum );
     }
    
     // 点击上线操作生成兑换码劵插入到代金劵表中
