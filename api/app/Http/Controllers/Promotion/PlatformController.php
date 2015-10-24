@@ -633,7 +633,7 @@ class PlatformController extends Controller{
         }
         $voucherConfInfo['totalNum'] = '无上限';
         $voucherConfInfo['budget'] = ' - ';
-        if( empty( $voucherConfInfo['useTotalNum'] )){
+        if( !empty( $voucherConfInfo['useTotalNum'] )){
             $voucherConfInfo['totalNum'] = $voucherConfInfo['useTotalNum'];
             $voucherConfInfo['budget'] = $voucherConfInfo['useTotalNum'] * $voucherConfInfo['useMoney'];
         }
