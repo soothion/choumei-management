@@ -17,16 +17,6 @@
         location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
     });
 
-    $("#form").on('click','#preview-btn',function(){
-        var data = lib.getFormData($("#form"));     
-        data.manager = $("input[value="+data.managerId+"]").next().text();
-        if(type === 'add')  var previewData = JSON.parse(sessionStorage.getItem('add-base-data'));
-        if(type === 'edit') var previewData = JSON.parse(sessionStorage.getItem('edit-base-data'));
-        previewData = $.extend({},previewData,data);
-        sessionStorage.setItem('preview-base-data',JSON.stringify(previewData));
-        window.open("preview.html?type="+type);       
-    })
-
     lib.Form.prototype.save = function(data){
         data.manager = $("input[value="+data.managerId+"]").next().text();
         if(type == 'add'){    
@@ -37,10 +27,10 @@
         if(type == 'edit'){
             var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
             editData = $.extend({},editData,data);
-            var saveData = data;
-            saveData.vcId = editData.vcId;
+            // var saveData = data;
+            // saveData.vcId = editData.vcId;
+            // sessionStorage.setItem('edit-save-data',JSON.stringify(saveData));
             sessionStorage.setItem('edit-base-data',JSON.stringify(editData));
-            sessionStorage.setItem('edit-save-data',JSON.stringify(saveData));
         }
         location.href = "addUser.html?type="+type+"&selectItemType="+selectItemType;
     }    

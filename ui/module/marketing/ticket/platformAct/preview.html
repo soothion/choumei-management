@@ -24,10 +24,6 @@
         <div class="wrapper">
             <div class="table" style="margin:0" id="table-wrapper">
                 <script type="text/template" id="table-t">
-                <div class="detail-operation">
-                    <button class="btn" type="button" onclick="window.close()">关闭</button>  
-                </div> 
-
                 <table>
                     <thead>
                         <th colspan="2">活动基本信息</th>
@@ -76,7 +72,7 @@
 
                                     <%if(data.selectItem == 3){%>
                                         &nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a class="link" href="addMobile.html?type=preview" >查看已添加手机号</a>
+                                        <a class="link" href="addMobile.html?itemType=1&type=<%=query.type%>" >查看已添加手机号</a>
                                     <%}%>
 
                                     <%if(data.selectItem == 4){%>
@@ -112,7 +108,7 @@
 
                         <tr>
                             <td class="td">消费满获取</td>
-                            <td><%=data.enoughMoeny%></td>
+                            <td><%=data.enoughMoney%></td>
                         </tr>  
 
                         <tr>
@@ -191,103 +187,18 @@
                         </tr>                                                                   
                     </tbody>                     
                 </table>
+
+                <div class="control-group">
+                    <a class="btn" style="margin-right:20px"
+                    href="addTicket.html?type=<%=query.type%>&selectItemType=<%=query.selectItemType%>" >
+                    返回
+                    </a>
+                    <a class="btn" href="index.html" style="margin-right:20px">取消</a>
+                    <button class="btn-primary">提交</button>
+                </div>                
                 </script>                                 
             </div>
         </div>
-
-        <script>
-            lib.ajax({
-                type: "post",
-                url : 'platform/getItemType'  
-            }).done(function(data, status, xhr){
-                if(data.result == "1"){
-                    var previewData = JSON.parse(sessionStorage.getItem('preview-base-data')); 
-                    var itemTypeArr = [] , limitItemArr = [];
-                    if(previewData.getItemTypes && typeof previewData.getItemTypes=='string'){
-                       var arr = previewData.getItemTypes.split(',');
-                       arr.forEach(function(item,i){
-                            data.data.forEach(function(obj,i){
-                                if(item == obj.typeid){
-                                    itemTypeArr.push(obj);
-                                }
-                            });
-                       });
-                    }
-                    if(previewData.getItemTypes && previewData.getItemTypes instanceof Array){
-                       previewData.getItemTypes.forEach(function(item,i){
-                            data.data.forEach(function(obj,i){
-                                if(item == obj.typeid){
-                                    itemTypeArr.push(obj);
-                                }
-                            });
-                       });                        
-                    }
-
-                    if(previewData.limitItemTypes && typeof previewData.limitItemTypes == 'string'){
-                       var arr = previewData.getItemTypes.split(',');
-                       arr.forEach(function(item,i){
-                            data.data.forEach(function(obj,i){
-                                if(item == obj.typeid){
-                                    limitItemArr.push(obj);
-                                }
-                            });
-                       });
-                    }
-                    if(previewData.limitItemTypes && previewData.limitItemTypes instanceof Array){
-                       previewData.limitItemTypes.forEach(function(item,i){
-                            data.data.forEach(function(obj,i){
-                                if(item == obj.typeid){
-                                    limitItemArr.push(obj);
-                                }
-                            });
-                       });                        
-                    }
-
-                    previewData.itemTypeArr = itemTypeArr;
-
-                    previewData.limitItemArr= limitItemArr;
-
-                    if(previewData.selectItemType == 1){
-                        previewData.selectItem = previewData.getTypes || previewData.selectUseType;
-                    }
-
-                    if(previewData.selectItemType=="2"){
-                        if(!previewData.selectUseType && data.getTypes == "3"){
-                            previewData.selectItem = 3;
-                        }else{
-                            previewData.selectItem = previewData.selectUseType; 
-                        }
-
-                        if(!previewData.selectUseType && data.getCodeType == "1"){
-                            previewData.selectItem = 6;
-                        }else{
-                            previewData.selectItem = previewData.selectUseType; 
-                        }
-
-                        if(!previewData.selectUseType && data.getCodeType == "2"){
-                            previewData.selectItem = 4;
-                        }else{
-                            previewData.selectItem = previewData.selectUseType; 
-                        }
-
-                        if(!previewData.selectUseType && data.getCodeType == "3"){
-                            previewData.selectItem = 5;
-                        }else{
-                            previewData.selectItem = previewData.selectUseType;
-                        }
-                    }
-
-                    if(previewData.selectItemType=="3"){
-                        previewData.selectItem = 7;
-                    }
-
-                    if(previewData.selectItemType=="4"){
-                        previewData.selectItem = 8;
-                    }                                          
-                    
-                    lib.ajat('#domid=table-wrapper&tempid=table-t').template(previewData);                     
-                }
-            }) 
-        </script>    
+        <script src="preview.js"></script>    
     </body>
 </html>

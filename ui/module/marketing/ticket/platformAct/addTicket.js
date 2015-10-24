@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-22 16:30:01
+* @Last Modified time: 2015-10-23 18:36:29
 */
 
 (function(){
@@ -91,60 +91,16 @@
     })
 
     lib.Form.prototype.save = function(data){
-      data.checkTotalNumber = undefined;
-      data.avaDate = undefined;
-      var submitData = {};
-      if(data.getTimeStart){
-        data.getTimeStart = data.getTimeStart + " 00:00:00";
-      }
-      if(data.getTimeEnd){
-         data.getTimeEnd = data.getTimeEnd + " 23:59:59";
-      }
-      if(data.addActLimitStartTime){
-         data.addActLimitStartTime = data.addActLimitStartTime  + " 00:00:00";
-      }
-      if(data.addActLimitEndTime){
-         data.addActLimitEndTime = data.addActLimitEndTime  + " 23:59:59";
-      }
-      if(data.limitItemTypes){
-         data.limitItemTypes = ","+data.limitItemTypes.join(",")+",";
-      }
-      if(data.useLimitTypes){
-        data.useLimitTypes = data.useLimitTypes[0];
-      }
-      if(type == 'add'){    
-          var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
-          submitData = $.extend({},addData,data);           
-      }
-      if(type == 'edit'){
-          var saveData = JSON.parse(sessionStorage.getItem('edit-save-data'));
-          submitData = $.extend({},saveData,data);               
-      }
-      if(submitData.phoneList && $.isArray(submitData.phoneList)){
-         submitData.phoneList = submitData.phoneList.join(",");
-      }
-      if(submitData.getItemTypes){
-         submitData.getItemTypes = ","+submitData.getItemTypes+",";
-      }      
-      lib.ajax({
-          type: "post",
-          url : (type=="add"?"platform/add":"platform/editConf"),
-          data: submitData    
-      }).done(function(data, status, xhr){
-          if(data.result == 1){
-            parent.lib.popup.result({
-                text:"店铺信息提交成功",
-                time:2000,
-                define:function(){
-                    sessionStorage.removeItem('add-base-data'); 
-                    sessionStorage.removeItem('edit-base-data');
-                    sessionStorage.removeItem('edit-save-data');
-                    document.body.onbeforeunload=function(){}
-                    if(type=='add')  location.href="/module/marketing/ticket/platformAct/index.html";
-                    if(type=='edit') location.href="/module/marketing/ticket/platformAct/detail.html?id="+submitData.vcId;
-                }
-            });          
-          }
-      })
+        if(type == 'add'){    
+            var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
+            addData = $.extend({},addData,data);
+            sessionStorage.setItem('add-base-data',JSON.stringify(addData));             
+        }
+        if(type == 'edit'){
+            var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
+            editData = $.extend({},editData,data);
+            sessionStorage.setItem('edit-base-data',JSON.stringify(editData));                          
+        }   
+        location.href = "preview.html?type="+type+"&selectItemType="+selectItemType;
     }      
 })()
