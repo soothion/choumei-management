@@ -98,11 +98,7 @@
 			var sort=[];
 			var input=$('input[name="itemid"]');
 			input.each(function(i){
-				var no=i+1;
-				if(lib.query.sort_type!="ASC"){
-					no=input.length-i;
-				}
-				sort.push({itemid:this.value,sort_in_type:no});
+				sort.push({itemid:this.value,sort_in_type:input.length-i});
 			});
 			return {sort:sort};
 		}
