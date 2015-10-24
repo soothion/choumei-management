@@ -68,33 +68,7 @@
                                            <hr />
                                            <div style="margin:15px">
                                                <span style="display: inline-block;width:130px">券总数:</span>
-
-                                               <label class="radio">
-                                                   <%if (!data.vcId){%>
-                                                   <input type="radio" class="ticketNum"  required name="num" <%if (!data.totalNumber){%>checked="checked"<%}%> value="1" >
-                                                   <%}else{%>
-                                                    <input type="radio" class="ticketNum" disabled ="disabled" required <%if (!data.totalNumber){%>checked="checked"<%}%> value="1" >
-                                                    <input type="radio" class="ticketNum" required name="num" <%if (!data.totalNumber){%>checked="checked"<%}%> value="1" >
-                                                    <%}%>
-                                                   <span>不限</span>
-
-                                               </label>
-                                               <span style="margin-right: 15px;border-left:1px solid #ddd"></span>
-                                               <label class="radio" disabled>
-                                                   <%if (!data.vcId){%>
-                                                   <input type="radio" class="ticketNum" <%if (data.totalNumber){%>checked="checked"<%}%> name="num" value="2" maxlength="6">
-                                                   <%}else{%>
-                                                    <input type="radio" class="ticketNum" disabled="disabled" <%if (data.totalNumber){%>checked="checked"<%}%>  value="2" maxlength="6">
-                                                    <input type="radio" class="ticketNum" <%if (data.totalNumber){%>checked="checked"<%}%> name="num" value="2" maxlength="6">
-                                                    <%}%>
-                                                   <span>自定义</span>
-                                               </label>
-                                               <%if (!data.vcId){%>
-                                               <input type="text" name="totalNumber" id="ticketNumInput" value="<%=data.totalNumber || 1%>" pattern='number' min='1' max='99999' <%if (!data.totalNumber){%>disabled="disabled"<%}%> />
-                                               <%}else{%>
-                                                <input type="text" id="ticketNumInput" disabled="disabled" value="<%=data.totalNumber || 1%>" pattern='number' min='1' max='99999' <%if (!data.totalNumber){%>disabled="disabled"<%}%> />
-                                                <input type="hidden" name="totalNumber" id="ticketNumInput" value="<%=data.totalNumber || 1%>" pattern='number' min='1' max='99999' <%if (!data.totalNumber){%>disabled="disabled"<%}%> />
-                                                <%}%>
+                                               <input type="text" name="totalNumber" id="ticketNumInput" required value="<%=data.totalNumber || 1%>" pattern='number' min='1' max='99999'  />
                                                <strong>张&nbsp;&nbsp;&nbsp;</strong>
                                                <span>(不可修改，可填写1~99999）</span>
                                            </div>
