@@ -55,7 +55,10 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
                 <div class="control">
-                    <select name="departmentId" ajat-one="true" id="department" ajat="platform/getRequestDepartment#domid=department&amp;tempid=department-t&sid=<%=data.departmentId%>" manager-id="<%=data.managerId%>" ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&sid=<%=data.managerId%>" required >
+                    <select name="departmentId" ajat-one="true" id="department" 
+						ajat="platform/getRequestDepartment#domid=department&amp;tempid=department-t&sid=<%=data.departmentId%>" manager-id="" ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&sid=<%=data.managerId%>" required 
+						ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&sid=<%=data.managerId%>"	
+						>
                     </select>
                 </div>
             </div>
@@ -84,21 +87,19 @@
         </script>
         <script type="text/template" id='manager_t'>
         <%sessionStorage.setItem("managerList",JSON.stringify(data))%>
+		<%if(data.length>0){%>
         <%data.forEach(function(item){%>
         <label class="label">
             <input type="radio" <%if (protocol.custom.sid == item.id){%> checked='checked' <%}%> class="label" name="managerId" value="<%=item.id%>" required>
             <span><%=item.name%></span>
         </label>
         <%})%>
+		<%}else{%>
+			<input type="hidden" required requiredmsg="请选择负责人" />
+		<%}%>
         </script>
         <script>
-            $('body').on('_ready','#department',function(e,data){
-                var value = $(this).val();
-                var managerId = $(this).attr('manager-id');
-                if (managerId){
-                lib.ajat('platform/getDepartmentManager/'+value+'#domid=manager&tempid=manager_t&sid='+managerId).render();
-                }
-            }).on('click', '#clear-btn', function(event) {
+            $('body').on('click', '#clear-btn', function(event) {
                 lib.popup.confirm({
                     text:"确定取消本次编辑吗？",
                     define: function(){
