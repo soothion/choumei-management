@@ -137,11 +137,11 @@ class PlatformController extends Controller{
                 $tempArr1 = [4=>2,5=>3,6=>1];
                 $data['getCodeType'] = $tempArr1[ $tt ];
                 $data['getCode'] = $code;
-                $data['getItemTypes'] = $post['getItemTypes'];
+                $data['getItemTypes'] = ',' . join(',', $post['getItemTypes']) . ',';
             }
         }elseif( $post['selectItemType'] == 3 ){
             $data['getTypes'] = 4;
-            $data['getItemTypes'] = $post['getItemTypes'];
+            $data['getItemTypes'] = ',' . join(',', $post['getItemTypes']) . ',';
         }elseif( $post['selectItemType'] == 4 ){
             $code = $post['code'];
             $data['getTypes'] = 5;
@@ -159,8 +159,8 @@ class PlatformController extends Controller{
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
-        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
-        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
+        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = ',' . join(',',$post['limitItemTypes']) . ',';
+        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         
@@ -861,8 +861,8 @@ class PlatformController extends Controller{
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
-        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
-        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
+        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = ',' . join(',',$post['limitItemTypes']) . ',';
+        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
