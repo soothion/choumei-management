@@ -108,10 +108,8 @@
                 }});
             });
             var getTemplateData = function(){
-                var id = lib.tools.parseQuery(window.location).id;
-                if ( getTmpData() && getTmpData().vcId == id){
-                    templateRender(getTmpData());
-                }else if (id){
+                var id = lib.query.id;
+				if (id){
                     lib.ajax({
                         url:"coupon/getInfo/"+id
                     }).done(function(data, status, xhr){
@@ -120,7 +118,9 @@
                             setTmpData(data.data);
                         }
                     });
-                }else {
+                }else if ( getTmpData() && getTmpData().vcId == id){
+                    templateRender(getTmpData());
+                } else {
                     clearTmpData();
                     templateRender({});
                 }

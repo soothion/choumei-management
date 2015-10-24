@@ -11,7 +11,7 @@ define(function(require,exports,module){
             });
             this.overlay();
             this.append(popup);
-			options.complete && options.complete();
+			options.complete && options.complete.call(popup[0],options);
         },
         confirm: function (options) {
             var self=this;
@@ -27,7 +27,7 @@ define(function(require,exports,module){
             });
             this.overlay();
             this.append(popup);
-			options.complete && options.complete();
+			options.complete && options.complete.call(popup[0],options);
         },
         prompt: function (options) {
             options.inputType = options.inputType || 'text';
@@ -48,7 +48,7 @@ define(function(require,exports,module){
             });
             this.overlay();
             this.append(popup);
-			options.complete && options.complete();
+			options.complete && options.complete.call(popup[0],options);
         },
         menu: function (options) {
             options.type = 'menu';
@@ -67,7 +67,7 @@ define(function(require,exports,module){
                 self.close();
             });
             this.append(popup);
-			options.complete && options.complete();
+			options.complete && options.complete.call(popup[0],options);
         },
 		swiper:function(options){
 			var self=this;
@@ -102,7 +102,7 @@ define(function(require,exports,module){
 					paginationClickable: true,
 					spaceBetween: 0
 				});
-				options.complete && options.complete();
+				options.complete && options.complete.call(popup[0],options);
 			});
 		},
 		box:function(options){
@@ -132,7 +132,7 @@ define(function(require,exports,module){
 			popup.find('.popup-box-body').css({height:minHeight});
             this.overlay();
             $('body').append(popup);
-			options.complete && options.complete();
+			options.complete && options.complete.call(popup[0],options);
 		},
         overlay: function () {
             var $dom=$('<div class="popup-overlay"></div>');

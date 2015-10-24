@@ -96,9 +96,9 @@
                                    <tr>
                                        <td>活动（获取）时间</td>
                                        <td>
-                                           <input type="date" name="getTimeStart" id="getTimeStart" required value="<%=data.getTimeStart? data.getTimeStart: new Date().format('yyyy-MM-dd')%>" required/>
+                                           <input type="date" name="getTimeStart" id="getTimeStart" required value="<%=data.getTimeStart? data.getTimeStart.split(" ")[0]: new Date().format('yyyy-MM-dd')%>" required/>
                                            <span>至</span>
-                                           <input type="date" name="getTimeEnd" match="getTimeStart" matchmsg="截止时间不能小于起始时间" value="<%=data.getTimeEnd?data.getTimeEnd:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" id="getTimeEnd" required/>
+                                           <input type="date" name="getTimeEnd" match="getTimeStart" matchmsg="截止时间不能小于起始时间" value="<%=data.getTimeEnd?data.getTimeEnd.split(" ")[0]:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" id="getTimeEnd" required/>
                                            <span class="control-help" style="display:none;"></span>
                                        </td>
                                    </tr>

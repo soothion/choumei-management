@@ -39,18 +39,19 @@
         if(submitData.addActLimitEndTime){
             submitData.addActLimitEndTime = submitData.addActLimitEndTime  + " 23:59:59";
         }
+		/*
         if(submitData.limitItemTypes){
             submitData.limitItemTypes = ","+submitData.limitItemTypes.join(",")+",";
-        }
+        }*/
         if(submitData.useLimitTypes){
             submitData.useLimitTypes = submitData.useLimitTypes[0];
         }
         if(submitData.phoneList && $.isArray(submitData.phoneList)){
             submitData.phoneList = submitData.phoneList.join(",");
         }
-        if(submitData.getItemTypes){
-            submitData.getItemTypes = ","+submitData.getItemTypes+",";
-        } 
+		if(submitData.getItemTypes!==undefined){
+			submitData.getItemTypes=submitData.getItemTypes.split(",")
+		}
         lib.ajax({
           type: "post",
           url : (type=="add"?"platform/add":"platform/editConf"),
@@ -59,16 +60,15 @@
           if(data.result == 1){
             parent.lib.popup.result({
                 text:"活动信息提交成功",
-                time:2000,
                 define:function(){
                     sessionStorage.removeItem('add-base-data'); 
                     sessionStorage.removeItem('edit-base-data');
                     sessionStorage.removeItem('platformItemTypes');
                     document.body.onbeforeunload=function(){}
+					if(type=='add')  location.href="/module/marketing/ticket/platformAct/index.html";
+					if(type=='edit') location.href="/module/marketing/ticket/platformAct/detail.html?id="+submitData.vcId;			
                 }
             }); 
-			if(type=='add')  location.href="index.html";
-            if(type=='edit') location.href="detail.html?id="+submitData.vcId;			
           }
         })        
     });

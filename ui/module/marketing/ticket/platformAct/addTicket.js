@@ -89,7 +89,6 @@
         sessionStorage.setItem('preview-base-data',JSON.stringify(previewData));
         window.open("preview.html?type="+type);       
     })
-
     lib.Form.prototype.save = function(data){
         if(type == 'add'){    
             var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
