@@ -19,7 +19,7 @@ class SalonStarConf extends Model {
             $prevScore = $val['score'];
             if ($key != $maxKey) {
                 if (isset($levelList[$key + 1])) {
-                    $nextScore = $levelList[$key + 1]['score'];
+                    $nextScore = $levelList[$key + 1]['score'] - 1;
                 } else {
                     $nextScore = 999999;
                 }

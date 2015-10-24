@@ -600,7 +600,7 @@ class Salon extends Model {
         DB::beginTransaction();
         $updateRes = Salon::where(['salonid' => $options['salonid']])->update(['score' => $score]);
         $saveStatus = false;
-        if ($updateRes) {
+        if ($updateRes!==false) {
             $saveStatus = SalonScoreLog::Create([
                         'salon_id' => $salonInfo->salonid,
                         'score' => $options['type'] == 1 ? "+" . $options['score'] : "-" . $options['score'],
