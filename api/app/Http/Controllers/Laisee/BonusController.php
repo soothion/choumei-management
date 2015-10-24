@@ -90,11 +90,7 @@ class BonusController extends Controller {
         $page = isset($param['page']) ? max(intval($param['page']), 1) : 1;
         $size = isset($param['page_size']) ? max(intval($param['page_size']), 1) : 20;
         $laiseeList = Laisee::getLaiseeList($data, $page, $size);
-        foreach ($laiseeList['data'] as &$val) {
-            $val['bonusSn'] = "hb" . str_pad($val['order_ticket_id'], 6, '0', STR_PAD_LEFT);
-            $val['bonusAmount'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
-            $val['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
-            $val['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
+        foreach ($laiseeList['data'] as $key => &$val) {
             $failLaisee = Laisee::where('order_ticket_id', $val['order_ticket_id'])->where('status', 'N')->count();
             if ($failLaisee) {
                 $val['status'] = 'N';  //已失效
@@ -102,6 +98,20 @@ class BonusController extends Controller {
             if (strtotime($val['end_time']) < time()) {
                 $val['status'] = 'E';  //已过期
             }
+
+            if ($data['bonusStatus']) {
+                if ($data['bonusStatus'] == 'Y') {
+                    if ($failLaisee) {  //去掉已失效的
+                        array_splice($laiseeList['data'], $key, 1);
+                    }
+                }
+            }
+
+            $val['bonusSn'] = "hb" . str_pad($val['order_ticket_id'], 6, '0', STR_PAD_LEFT);
+            $val['bonusAmount'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
+            $val['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
+            $val['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
+
             $val['over_time'] = $val['end_time'];
             $val['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
         }
@@ -150,13 +160,6 @@ class BonusController extends Controller {
         $result = [];
         $num = 1;
         foreach ($laiseeList['data'] as $key => $val) {
-            $result[$key]['num'] = $num;
-            $result[$key]['bonusSn'] = "hb" . str_pad($val['order_ticket_id'], 6, '0', STR_PAD_LEFT);
-            $result[$key]['laisee_name'] = $val['laisee_name'];
-            $result[$key]['bonusAmount'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
-            $result[$key]['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
-            $result[$key]['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
-            $result[$key]['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
             $failLaisee = Laisee::where('order_ticket_id', $val['order_ticket_id'])->where('status', 'N')->count();
             if ($failLaisee) {
                 $val['status'] = 'N';  //已失效
@@ -164,6 +167,21 @@ class BonusController extends Controller {
             if (strtotime($val['end_time']) < time()) {
                 $val['status'] = 'E';  //已过期
             }
+
+            if ($data['bonusStatus']) {
+                if ($data['bonusStatus'] == 'Y') {
+                    if ($failLaisee) {  //去掉已失效的
+                        array_splice($laiseeList['data'], $key, 1);
+                    }
+                }
+            }
+            $result[$key]['num'] = $num;
+            $result[$key]['bonusSn'] = "hb" . str_pad($val['order_ticket_id'], 6, '0', STR_PAD_LEFT);
+            $result[$key]['laisee_name'] = $val['laisee_name'];
+            $result[$key]['bonusAmount'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
+            $result[$key]['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
+            $result[$key]['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
+            $result[$key]['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
             $val['over_time'] = $val['end_time'];
             if ($val['status'] == "Y") {
                 $result[$key]['status'] = "进行中";

@@ -27,7 +27,7 @@ class CouponController extends Controller{
 	 *@apiParam {Number} money                  必填        代金券金额
 	 *@apiParam {String} getSingleLimit         必填        每个用户获取的劵上限
      *@apiParam {String} useLimitTypes          可选        限制首单使用值为2
-     *@apiParam {Number} enoughMoeny            可选        满额可用
+     *@apiParam {Number} enoughMoney            可选        满额可用
      *@apiParam {Number} totalNumber            可选        劵总数
      *@apiParam {String} getTimeStart           可选        劵获取开始时间如 2015-10-16 00:00:00
      *@apiParam {String} getTimeEnd             可选        卷获取结束时间   2015-10-16 23:59:59
@@ -93,7 +93,7 @@ class CouponController extends Controller{
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
-        if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
+        if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) )
             $data['SMS_ON_GAINED'] = $post['sendSms'];
         
@@ -114,7 +114,7 @@ class CouponController extends Controller{
 	 * @apiGroup Coupon
 	 *
 	 * @apiParam {Number} selectItem 可选 选择的项 1: 活动编号 2.活动名称
-	 * @apiParam {String} number 可选 对应项查询的字符.
+	 * @apiParam {String} keyword 可选 对应项查询的字符.
 	 * @apiParam {Number} status 可选 活动状态. 1. 进行中 2. 暂停 3.已关闭 4. 已结束
 	 * @apiParam {String} department 部门id
 	 * @apiParam {String} startTime 活动开始时间
@@ -181,7 +181,7 @@ class CouponController extends Controller{
     public function confList(){
         $post = $this->param;
         $actSelect = isset($post['selectItem']) ? $post['selectItem'] : '';
-        $actNumber = isset($post['number']) ? urldecode($post['number']) : '';
+        $actNumber = isset($post['keyword']) ? urldecode($post['keyword']) : '';
         $actStatus = isset($post['status']) ? $post['status'] : '';
         $actDepartment = isset($post['department']) ? $post['department'] : '';
         $actStartTime = isset($post['startTime']) ? $post['startTime'] : '';
@@ -373,7 +373,7 @@ class CouponController extends Controller{
         }
         $voucherConfInfo['totalNum'] = '无上限';
         $voucherConfInfo['budget'] = ' - ';
-        if( empty( $voucherConfInfo['useTotalNum'] )){
+        if( !empty( $voucherConfInfo['useTotalNum'] )){
             $voucherConfInfo['totalNum'] = $voucherConfInfo['useTotalNum'];
             $voucherConfInfo['budget'] = $voucherConfInfo['useTotalNum'] * $voucherConfInfo['useMoney'];
         }
@@ -455,7 +455,7 @@ class CouponController extends Controller{
 	 * @apiSuccess {Number} totalNumber         代金券可领总数
 	 * @apiSuccess {String} limitItemTypes      限制可使用项目类别格式为（,1,2,）
 	 * @apiSuccess {Number} useLimitTypes       使用限制类型 2 为限制首单
-	 * @apiSuccess {Number} enoughMoeny         限制项目需满足金额才可使用
+	 * @apiSuccess {Number} enoughMoney         限制项目需满足金额才可使用
 	 * @apiSuccess {String} addActLimitStartTime    可使用时间.起始(0 表示不限制)
 	 * @apiSuccess {String} addActLimitEndTime      可使用时间.结束(0 表示不限制)
 	 * @apiSuccess {Number} getSingleLimit       个人可获取最大券数
@@ -482,7 +482,7 @@ class CouponController extends Controller{
      *                       "money": 10,
      *                       "code": "",
      *                       "useLimitTypes": "",
-     *                       "enoughMoeny": 100,
+     *                       "enoughMoney": 100,
      *                       "totalNumber": 0,
      *                       "singleEnoughMoney": 0,
      *                       "getTimeStart": 1436284800,
@@ -507,7 +507,7 @@ class CouponController extends Controller{
     public function getInfo($id){
         $voucherConfInfo = \App\VoucherConf::select(['vcId','getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
             ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','useLimitTypes'
-            ,'useNeedMoney as enoughMoeny','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
+            ,'useNeedMoney as enoughMoney','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
             ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType','useItemTypes as limitItemTypes'])
                 ->where(['vcId'=>$id,'vType'=>1,'IS_REDEEM_CODE'=>'Y'])
                 ->first()
@@ -535,7 +535,7 @@ class CouponController extends Controller{
 	 *@apiParam {Number} managerId              可选        部门负责人id
      *@apiParam {String} useLimitTypes          可选        限制首单使用值为2
      *@apiParam {String} limitItemTypes         可选        可使用的项目格式如 ",2,3,"
-     *@apiParam {Number} enoughMoeny            可选        满额可用
+     *@apiParam {Number} enoughMoney            可选        满额可用
      *@apiParam {String} getTimeStart           可选        劵获取开始时间如 2015-10-16 00:00:00
      *@apiParam {String} getTimeEnd             可选        卷获取结束时间   2015-10-16 23:59:59
 	 *@apiParam {String} addActLimitStartTime   可选        代金劵可使用开始时间 2015-10-16 00:00:00
@@ -582,7 +582,7 @@ class CouponController extends Controller{
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
-        if( isset($post['enoughMoeny']) ) $data['useNeedMoney'] = $post['enoughMoeny'];
+        if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         if( isset($post['singleEnoughMoney']) ) $data['getNeedMoney'] = $post['singleEnoughMoney'];
@@ -791,13 +791,12 @@ class CouponController extends Controller{
         $desModel->setKey( self::$DES_KEY );
 		$title = '代金劵-'. $result[0]['vcTitle'] .date('Ymd');
         foreach( $result as $key => $val ){
-            array_unshift($result[$key], $key+1);
             if( strlen( $val['REDEEM_CODE'] ) !=8 )
                 $result[$key]['REDEEM_CODE'] = $desModel->decrypt( $val['REDEEM_CODE'] );
             unset( $result[$key]['vcTitle'] );
         }
         //导出excel	   
-		$header = ['序号','兑换券编码','兑换券密码','兑换券金额'];
+		$header = ['兑换券编码','兑换券密码','兑换券金额'];
 		Excel::create($title, function($excel) use($result,$header){
 		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
 			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
@@ -811,7 +810,7 @@ class CouponController extends Controller{
 	 * @apiGroup Coupon
 	 *
 	 * @apiParam {Number} selectItem 可选 选择的项 1: 活动编号 2.活动名称
-	 * @apiParam {String} number 可选 对应项查询的字符.
+	 * @apiParam {String} keyword 可选 对应项查询的字符.
 	 * @apiParam {Number} status 可选 活动状态. 1. 进行中 2. 暂停 3.已关闭 4. 已结束
 	 * @apiParam {String} department 部门id
 	 * @apiParam {String} startTime 活动开始时间
@@ -836,7 +835,7 @@ class CouponController extends Controller{
     public function exportList(){
         $post = $this->param;
         $actSelect = isset($post['selectItem']) ? $post['selectItem'] : '';
-        $actNumber = isset($post['number']) ? urldecode($post['number']) : '';
+        $actNumber = isset($post['keyword']) ? urldecode($post['keyword']) : '';
         $actStatus = isset($post['status']) ? $post['status'] : '';
         $actDepartment = isset($post['department']) ? $post['department'] : '';
         $actStartTime = isset($post['startTime']) ? $post['startTime'] : '';
@@ -845,14 +844,17 @@ class CouponController extends Controller{
         $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
         
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
-            
+            //手动设置页数
+            AbstractPaginator::currentPageResolver(function() use ($page) {
+                return $page;
+            });
             $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
                     ->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y'])
                     ->orderBy('vcId','desc')
-                    ->get()
+                    ->paginate($pageSize)
                     ->toArray();
             if( empty($res) ) return $this->success();
-            $tempData = $this->handleList($res);
+            $tempData = $this->handleList($res['data']);
             unset( $res );
             $title = '代金劵活动查询列表' .date('Ymd');
             //导出excel	   
@@ -880,11 +882,14 @@ class CouponController extends Controller{
             $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
         if( !empty( $actDepartment ) )
             $obj->where('DEPARTMENT_ID','=',$actDepartment);
-        
+        //手动设置页数
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
         $res = $obj->orderBy('vcId','desc')->paginate($pageSize)->toArray();
         if( empty($res) ) return $this->success();
             
-        $tempData = $this->handleList($res);
+        $tempData = $this->handleList($res['data']);
         unset( $res );
         $title = '代金劵查询列表' .date('Ymd');
         //导出excel	   
@@ -1059,7 +1064,7 @@ class CouponController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $department = $department['title'];
             }
-            $tempData[$key][] = $i++;
+            $tempData[$key][] = ++$i;
             $tempData[$key][] = $val['vcTitle'];
             $tempData[$key][] = $val['vcSn'];
             $tempData[$key][] = $val['totalNum'];

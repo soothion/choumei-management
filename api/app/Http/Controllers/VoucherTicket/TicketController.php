@@ -123,7 +123,6 @@ class TicketController extends Controller {
         if($startTime && empty($endTime)) $obj->where('vUseTime','>=',$startTime);
         if($endTime && empty($startTime)) $obj->where('vUseTime','<=',$endTime);
         if($startTime && $endTime) $obj->whereBetween('vUseTime',[$startTime,$endTime]);
-        $count =  $obj->count();
         //手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
@@ -203,17 +202,12 @@ class TicketController extends Controller {
         if($startTime && empty($endTime)) $obj->where('vUseTime','>=',$startTime);
         if($endTime && empty($startTime)) $obj->where('vUseTime','<=',$endTime);
         if($startTime && $endTime) $obj->whereBetween('vUseTime',[$startTime,$endTime]);
-        $count =  $obj->count();
-        if( $count > 5000 ){
-            //手动设置页数
-            AbstractPaginator::currentPageResolver(function() use ($page) {
-                return $page;
-            });
-            $list = $obj->orderBy('vId','DESC')->paginate($pageSize)->toArray();
-            $list = $list['data'];
-        }else $list = $obj->orderBy('vId','DESC')->get()->toArray();
-//        echo "<pre>";
-//        print_r( $list );exit;
+        
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+            return $page;
+        });
+        $list = $obj->orderBy('vId','DESC')->paginate($pageSize)->toArray();
+        $list = $list['data'];
         $tempData = [];
         $i = 0;
         $t = ['','未使用','已使用','待激活','活动关闭','已失效'];
@@ -353,9 +347,9 @@ class TicketController extends Controller {
         if( empty($voucherInfo) )
             throw new ApiException('获取信息失败', ERROR::RECEIVABLES_ERROR);
         if( !empty( $voucherInfo['vOrderSn'] ) ){
-            $isPay = \App\Order::select(['ispay'])->where('ordersn','=',$voucherInfo['vOrderSn'])->first();
+            $isPay = \App\Order::select(['ispay'])->where('ordersn','=',$voucherInfo['vOrderSn'])->first()->toArray();
             if( empty( $isPay ) ) throw new ApiException('获取信息失败', ERROR::RECEIVABLES_ERROR);
-            $voucherInfo['isPay'] = $isPay == 1 ?  '未支付' :  '已支付';
+            $voucherInfo['isPay'] = $isPay['ispay'] == 1 ?  '未支付' :  '已支付';
         }else $voucherInfo['isPay'] = '';
         $voucherConfInfo = \App\VoucherConf::select(['useItemTypes','useLimitTypes','useNeedMoney','getTypes','getItemTypes','getCodeType','getCode','getNeedMoney'])
                 ->where('vcId','=',$voucherInfo['vcId'])
@@ -374,7 +368,7 @@ class TicketController extends Controller {
             $codeText = ['','店铺码用户;','集团码用户;','活动码用户;'];
             if( !empty($voucherConfInfo['getCodeType']) )   $voucherInfo['getText'] .= $codeText[ $voucherConfInfo['getCodeType'] ];
             if( !empty( $voucherConfInfo['getItemTypes'] ) ){
-                $getTypes = explode(',',$voucherConfInfo['getItemTypes']);
+                $getTypes = explode(',',rtrim(ltrim($voucherConfInfo['getItemTypes'],','),','));
                 $tempItemArr = [];
                 foreach($allItemType as $val){
                     $tempItemArr[ $val['typeid'] ] = $val;
@@ -390,7 +384,7 @@ class TicketController extends Controller {
         // 查找限制条件
         if( !empty( $voucherConfInfo['useLimitTypes'] ) && $voucherConfInfo['useLimitTypes'] == 2 ) $voucherInfo['useLimitText'] .= '限制首单;';
         if( !empty( $voucherConfInfo['useItemTypes'] ) ){
-            $getTypes = explode(',',$voucherConfInfo['useItemTypes']);
+            $getTypes = explode(',',rtrim(ltrim($voucherConfInfo['useItemTypes'],','),','));
             $tempItemArr = [];
             foreach($allItemType as $val){
                 $tempItemArr[ $val['typeid'] ] = $val;

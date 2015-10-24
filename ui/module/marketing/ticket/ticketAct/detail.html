@@ -19,16 +19,6 @@
         <div class="wrapper">
             <div class="table" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id='table-t'>
-                <div class="detail-operation">
-                        <a href='index.html'>
-                            <button class="btn"> 返回</button>
-                        </a>
-                        <%if (data.status !=3 && data.status !=4){%>
-                        <a href='addBase.html?id=<%=query.id%>' data-slug="coupon.getInfo">
-                            <button class="btn">编辑</button>
-                        </a>
-                        <%}%>
-                </div>
                 <table >
                 <%var status=["","进行中","下线","已关闭","已结束"]%>
                     <tbody>
@@ -115,8 +105,18 @@
                             <td><a class="<%= data.export == 0 ? 'disabled': 'link'%>" <%if (data.export != 0){%> href='ticketMsg.html#id=<%=query.id%>'<%}%> data-slug="coupon.getCoupon" >查看实体券编码和密码</a></td>
                         </tr>
                     </tbody>
-                    </script>
                 </table>
+                <div class="control-group">
+                        <a href='index.html'>
+                            <button class="btn"> 返回</button>
+                        </a>
+                        <%if (data.status !=3 && data.status !=4){%>
+                        <a href='addBase.html?id=<%=query.id%>' data-slug="coupon.getInfo">
+                            <button class="btn btn-primary">编辑</button>
+                        </a>
+                        <%}%>
+                </div>
+                 </script>
             </div>
         </div>
     </body>

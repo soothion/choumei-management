@@ -33,7 +33,7 @@
                     <tbody>
                         <tr>
                             <td class="td">现金券编号</td>
-                            <td><%=data.vcSn%></td>
+                            <td><%=data.vSn%></td>
                         </tr>
 
                         <tr>
@@ -52,8 +52,9 @@
                         </tr>
 
                         <tr>
+                            <%var statusText = {'1':'未使用', '2':'已使用', '3':'待激活 ', '4':'活动关闭','5':'已失效'}%>
                             <td class="td">现金券状态</td>
-                            <td><%=%></td>                            
+                            <td><%=statusText[data.vStatus]%></td>                            
                         </tr>
 
                         <tr>
@@ -76,7 +77,7 @@
 
                         <tr>
                             <td class="td">关联订单状态</td>
-                            <td><%=%></td>
+                            <td><%=data.isPay%></td>
                         </tr>  
 
                         <tr>
@@ -91,7 +92,7 @@
 
                         <tr>
                             <td class="td">活动（红包）编号</td>
-                            <td><%=%></td>
+                            <td><%=data.vcSn%></td>
                         </tr>  
 
                         <tr>
@@ -101,7 +102,7 @@
 
                         <tr>
                             <td class="td">红包分享人</td>
-                            <td><%=%></td>
+                            <td><%=data.vMobilephone%></td>
                         </tr>
 
                         <tr>

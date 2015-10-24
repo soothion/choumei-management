@@ -20,6 +20,7 @@ class SalonScoreLog extends Model {
             $query->where('create_time', '>=', $startTime);
         }
         if (!empty($endTime)) {
+            $endTime=date("Y-m-d",  strtotime($endTime))." 23:59:59";
             $query->where('create_time', '<=', $endTime);
         }
         $query->orderBy('create_time', 'desc');

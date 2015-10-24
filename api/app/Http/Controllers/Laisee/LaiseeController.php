@@ -330,7 +330,7 @@ class LaiseeController extends Controller {
             $where["id"] = $data["id"];
             $laiseeConfig = LaiseeConfig::find($data['id']);
             if ($laiseeConfig) {
-                if ($laiseeConfig->status != 'Y' && $laiseeConfig->end_time != "0000-00-00 00:00:00") {
+                if ($laiseeConfig->status != 'Y') {
                     throw new ApiException("已关闭或已结束的活动无法再编辑", ERROR::PARAMS_LOST);
                 }
                 // 检测预警值 是否有修改
@@ -511,7 +511,7 @@ class LaiseeController extends Controller {
             throw new ApiException("已经有在线的红包活动", ERROR::UNKNOWN_ERROR);
         }
         $laiseConfig = LaiseeConfig::find($id);
-        if ($laiseConfig->end_time != "0000-00-00 00:00:00") {
+        if (!($laiseConfig->end_time == "0000-00-00 00:00:00" || is_null($laiseConfig->end_time))) {
             throw new ApiException("已结束的活动无法再上线", ERROR::UNKNOWN_ERROR);
         }
         $res = LaiseeConfig::where('id', $id)->update(['status' => 'Y', 'start_time' => date("Y-m-d H:i:s", time())]);
