@@ -368,7 +368,7 @@ class TicketController extends Controller {
             $codeText = ['','店铺码用户;','集团码用户;','活动码用户;'];
             if( !empty($voucherConfInfo['getCodeType']) )   $voucherInfo['getText'] .= $codeText[ $voucherConfInfo['getCodeType'] ];
             if( !empty( $voucherConfInfo['getItemTypes'] ) ){
-                $getTypes = explode(',',$voucherConfInfo['getItemTypes']);
+                $getTypes = explode(',',rtrim(ltrim($voucherConfInfo['getItemTypes'],','),','));
                 $tempItemArr = [];
                 foreach($allItemType as $val){
                     $tempItemArr[ $val['typeid'] ] = $val;
@@ -384,7 +384,7 @@ class TicketController extends Controller {
         // 查找限制条件
         if( !empty( $voucherConfInfo['useLimitTypes'] ) && $voucherConfInfo['useLimitTypes'] == 2 ) $voucherInfo['useLimitText'] .= '限制首单;';
         if( !empty( $voucherConfInfo['useItemTypes'] ) ){
-            $getTypes = explode(',',$voucherConfInfo['useItemTypes']);
+            $getTypes = explode(',',rtrim(ltrim($voucherConfInfo['useItemTypes'],','),','));
             $tempItemArr = [];
             foreach($allItemType as $val){
                 $tempItemArr[ $val['typeid'] ] = $val;

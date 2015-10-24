@@ -488,7 +488,6 @@ class PlatformController extends Controller{
             }
             return $this->success( $res );
         }
-        $where = '1';
         $actType = array('','vcSn','vcTitle');
         $obj = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
         $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'N']);
@@ -1143,20 +1142,30 @@ class PlatformController extends Controller{
    }
    // 获取代金劵状态
    private function getVoucherStatusByActId( $vcSn , $useEnd ){
-        // 总的发放数
-        $allNum = \App\Voucher::where( ['vcSn'=>$vcSn])->where('vStatus','<>',10)->count();
-        // 已使用数
-        $useNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>2] )->count();
-        $invalidNum = \App\Voucher::where( ['vcSn'=>$vcSn,'vStatus'=>5] )->count();
+        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>"'$vcSn'"])->get();
+        if( empty( $result ) )
+            return array(0,0,0);
+        $result = $result->toArray();
+        $totalNum = 0;
+        $useNum = 0;
+        $invalidNum = 0;
+        foreach( $result as $val ){
+            if( $val['vStatus'] != 10 )
+                $totalNum++;
+            if( $val['vStatus'] == 2 )
+                $useNum++;
+            if( $val['vStatus'] == 5 )
+                $invalidNum++;
+        }
         if( !empty($invalidNum) )
             return array( $allNum , $useNum , $invalidNum );
         // 已失效数
         if( empty($useEnd) ||  time()<$useEnd ){
             $invalidNum = 0;
         }else{
-            $invalidNum = $allNum - $useNum;
+            $invalidNum = $totalNum - $useNum;
         }
-        return array( $allNum , $useNum , $invalidNum );
+        return array( $totalNum , $useNum , $invalidNum );
     }
     // 验证手机号码是否存在
     private function verifyUserPhoneExists( $phone ){
@@ -1243,7 +1252,7 @@ class PlatformController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $department = $department['title'];
             }
-            $tempData[$key][] = $i++;
+            $tempData[$key][] = ++$i;
             $tempData[$key][] = $val['vcTitle'];
             $tempData[$key][] = $val['vcSn'];
             $tempData[$key][] = $val['totalNum'];

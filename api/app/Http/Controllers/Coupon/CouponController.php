@@ -791,13 +791,12 @@ class CouponController extends Controller{
         $desModel->setKey( self::$DES_KEY );
 		$title = '代金劵-'. $result[0]['vcTitle'] .date('Ymd');
         foreach( $result as $key => $val ){
-            array_unshift($result[$key], $key+1);
             if( strlen( $val['REDEEM_CODE'] ) !=8 )
                 $result[$key]['REDEEM_CODE'] = $desModel->decrypt( $val['REDEEM_CODE'] );
             unset( $result[$key]['vcTitle'] );
         }
         //导出excel	   
-		$header = ['序号','兑换券编码','兑换券密码','兑换券金额'];
+		$header = ['兑换券编码','兑换券密码','兑换券金额'];
 		Excel::create($title, function($excel) use($result,$header){
 		    $excel->sheet('Sheet1', function($sheet) use($result,$header){
 			        $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
@@ -1065,7 +1064,7 @@ class CouponController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $department = $department['title'];
             }
-            $tempData[$key][] = $i++;
+            $tempData[$key][] = ++$i;
             $tempData[$key][] = $val['vcTitle'];
             $tempData[$key][] = $val['vcSn'];
             $tempData[$key][] = $val['totalNum'];
