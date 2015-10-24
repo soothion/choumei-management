@@ -95,15 +95,16 @@
         }
 
         if(errArr.length > 0){
-            $("#errorTip").text("您的数据有"+errArr.length+"条添加失败，添加失败的手机号码如下：");
-            var html = ""
+			var html = [];
             errArr.forEach(function(item,i){
-                html += "<p>"+item+"</p>";
+                html.push(item);
             });
-            $("#errorMobile").html(html);                    
+            $(".control-help").show().html("您的数据有"+errArr.length+"条添加失败，添加失败的手机号码如下：<br/>"+html.join("<br/>"));
+			$(".control-success").hide();
         }else{
-            $("#errorTip").text(""); 
-            $("#errorMobile").html("");
+            $(".control-success").show();
+			$(".control-help").hide();
+			parent.lib.popup.result({text:"手机号码提交成功",define:function(){history.back()}});
         }                 
     })    
 })()

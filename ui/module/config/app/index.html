@@ -68,10 +68,12 @@
                                    <span class="control-help" style="display:none">未填写</span>
                                </td>
                                <td>
+									<%if(i!=0){%>
                                    <button class="link edit" data-slug="starconf.update">编辑</button>
                                    <button class="link save" data-score="<%=item.id%>">保存</button>
-                                   <span class="line"></span>
+                                   <span class="space">|</span>
                                    <a class="link cancel">取消</a>
+								   <%}%>
                                </td>
                            </tr>
                          <%})%>  

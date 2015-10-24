@@ -112,7 +112,7 @@
                             <input type="radio" name="selectUseType" value="1" 
                             <%= (!data.selectUseType || data.selectUseType == '1') ? 'checked' : '' %>
                             <%= query.type =='edit' ? 'disabled' : '' %>>
-                            <span>新注册&nbsp;<span style="color: #ddd;">(活动时间内注册的用户)</span></span>
+                            <span>新注册&nbsp;<span class="weak">(活动时间内注册的用户)</span></span>
                         </label>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                             <%= query.type =='edit' ? 'disabled' : '' %>>
                                 <span>
                                     首次消费&nbsp;
-                                    <span style="color: #ddd;">(活动时间内首次消费后获取)</span>
+                                    <span class="weak">(活动时间内首次消费后获取)</span>
                                 </span>
                             </label>
                     </div>
@@ -144,7 +144,7 @@
                         <%= query.type =='edit' ? 'disabled' : '' %>>
                         <span>
                             指定手机号&nbsp;
-                            <span style="color: #ddd;">(活动时间内，无指定项目时活动上线则马上下发)</span>
+                            <span class="weak">(活动时间内，无指定项目时活动上线则马上下发)</span>
                         </span>
 
                         <%if(data.selectUseType == '3'){%>
@@ -176,7 +176,7 @@
                         <input type="radio" name="selectUseType" value="4" required
                         <%=(!typeCheck[data.selectUseType] || data.selectUseType == '4') ? 'checked' : '' %> 
                         <%= query.type =='edit' ? 'disabled' : '' %>>
-                        <span>指定集团码用户&nbsp;<span style="color: #ddd;">(活动时间内填写集团码)</span></span>
+                        <span>指定集团码用户&nbsp;<span class="weak">(活动时间内填写集团码)</span></span>
                     </label>
                     <%if(!typeCheck[data.selectUseType] || data.selectUseType == '4'){%>
                     <input type="text" data-check="2" class="cascade" name="code" placeholder="输入集团码" 
@@ -197,7 +197,7 @@
                         <input type="radio" name="selectUseType" value="5" required
                         <%=data.selectUseType == '5' ? 'checked' : '' %>
                         <%= query.type =='edit' ? 'disabled' : '' %> >
-                        <span>指定活动码用户&nbsp;<span style="color: #ddd;">(活动时间内填写活动码)</span></span>
+                        <span>指定活动码用户&nbsp;<span class="weak">(活动时间内填写活动码)</span></span>
                     </label>
                     <%if(data.selectUseType == '5'){%>
                     <input type="text" data-check="3" class="cascade" name="code" placeholder="输入活动码" 
@@ -219,7 +219,7 @@
                         <input type="radio" name="selectUseType" value="6" required
                         <%=data.selectUseType == '6' ? 'checked' : '' %> 
                         <%= query.type =='edit' ? 'disabled' : '' %> >
-                        <span>指定店铺码用户&nbsp;<span style="color: #ddd;">(活动时间内填写店铺码)</span></span>
+                        <span>指定店铺码用户&nbsp;<span class="weak">(活动时间内填写店铺码)</span></span>
                     </label>
                     <%if(data.selectUseType == '6'){%>
                     <input type="text" data-check="1" class="cascade" name="code" placeholder="输入店铺码" pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
@@ -279,7 +279,7 @@
                         <label class="checkbox">
                             <input type="text" name="enoughMoeny" required value="<%=data.enoughMoeny || 0%>" <%= query.type =='edit' ? 'disabled' : '' %> pattern='float'>
                             <strong>元&nbsp;&nbsp;&nbsp;&nbsp;可获取</strong>
-                            <span style="color: #ddd;">（大于或等于该数值可获取，0为不限制，可填写0~999）</span>
+                            <span class="weak">（大于或等于该数值可获取，0为不限制，可填写0~999）</span>
                             <span class="control-help" style="display:none;"></span>
                         </label>
                     </div>
@@ -296,7 +296,7 @@
                         </label>
 
                         <input type="text" name="code" value="<%= data.code || '00000'%>" required  <%= query.type =='edit' ? 'disabled' : '' %> pattern='number'/>
-                        <span style="color: #ddd;">（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
+                        <span class="weak">（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
                         <span class="control-help" style="display:none;"></span>
                     </div>
                 </div>
