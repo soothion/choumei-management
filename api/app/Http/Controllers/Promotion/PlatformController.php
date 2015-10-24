@@ -160,7 +160,7 @@ class PlatformController extends Controller{
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = ',' . join(',',$post['limitItemTypes']) . ',';
-        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
+        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         
@@ -862,7 +862,7 @@ class PlatformController extends Controller{
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = ',' . join(',',$post['limitItemTypes']) . ',';
-        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
+        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
