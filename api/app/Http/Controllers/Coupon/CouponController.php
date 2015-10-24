@@ -80,6 +80,8 @@ class CouponController extends Controller{
         $data['vcRemark'] = $post['actIntro'];
         $exists = \App\VoucherConf::where(['vcSn'=>$data['vcSn']])->count();
         if( $exists ) return $this->error('存在活动编号，请勿重复提交');
+        if( !isset($post['totalNumber']) || empty($post['totalNumber']))
+            return $this->error('兑换劵上限未填写');
         // 定义代金劵
         $data['useMoney'] = $post['money'];
         $data['getNumMax'] = $post['getSingleLimit'];
@@ -94,8 +96,7 @@ class CouponController extends Controller{
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
-        if( isset($post['sendSms']) )
-            $data['SMS_ON_GAINED'] = $post['sendSms'];
+        if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         
         $data['status'] = 2;
         $data['ADD_TIME'] = date('Y-m-d H:i:s');
@@ -268,6 +269,7 @@ class CouponController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $res['data'][$key]['department'] = $department['title'];
             }
+            if( $actStatus == 4  )  $res['data'][$key]['vStatus'] = 4;
             unset( $res['data'][$key]['useEnd'] );
             unset( $res['data'][$key]['getStart'] );
             unset( $res['data'][$key]['getEnd'] );
