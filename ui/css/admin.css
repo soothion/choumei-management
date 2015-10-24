@@ -448,8 +448,9 @@ aside h2{
 }
 .control-help{
 	color:#b94a48;
+	line-height:1.5;
 }
-.control-help:before{
+.control-help:before,.control-success:before{
 	position:relative;
 	line-height:12px;
 	top:1px;
@@ -458,6 +459,20 @@ aside h2{
 	margin-right:4px;
 	content:"\f06a";
 	font-family:FontAwesome;
+}
+.control-success{
+	color:#58A2EC;
+	line-height:1.5;
+}
+.control-success:before{
+	content:"\f058";
+	color:#58A2EC
+}
+.control-help.large,.control-success.large{
+	font-size:16px;
+}
+.control-help.large:before,.control-success.large:before{
+	font-size:20px;
 }
 .red{
 	color:red;
