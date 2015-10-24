@@ -58,7 +58,7 @@
         }).done(function(data, status, xhr){
           if(data.result == 1){
             parent.lib.popup.result({
-                text:"店铺信息提交成功",
+                text:"活动信息提交成功",
                 time:2000,
                 define:function(){
                     sessionStorage.removeItem('add-base-data'); 
