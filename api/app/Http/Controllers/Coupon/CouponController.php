@@ -68,8 +68,7 @@ class CouponController extends Controller{
         // 返回前端数组
         $result = array();
         foreach( $mustKey as $val ){
-            if( empty($post[ $val ]) )
-                return $this->error('必填写项未填写' );
+            if( empty($post[ $val ]) ) return $this->error('必填写项未填写' );
         }
         
         if( (empty($post['addActLimitStartTime']) && empty($post['addActLimitStartTime'])) && empty($post['fewDay']) )
@@ -79,18 +78,19 @@ class CouponController extends Controller{
         $data['vcTitle'] = $post['actName'];
         $data['vcSn'] = $post['actNo'];
         $data['vcRemark'] = $post['actIntro'];
-        
+        $exists = \App\VoucherConf::where(['vcSn'=>$data['vcSn']])->count();
+        if( $exists ) return $this->error('存在活动编号，请勿重复提交');
         // 定义代金劵
         $data['useMoney'] = $post['money'];
         $data['getNumMax'] = $post['getSingleLimit'];
         $data['DEPARTMENT_ID'] = $post['departmentId'];
         $data['MANAGER_ID'] = $post['managerId'];
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
-        if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart']);
-        if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']);
+        if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart'] . " 00:00:00");
+        if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd'] . " 23:59:59");
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
-        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
-        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
+        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime'] . " 00:00:00");
+        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime'] . " 23:59:59");
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
@@ -103,8 +103,7 @@ class CouponController extends Controller{
         
         $addRes = \App\VoucherConf::insertGetId( $data );
 
-        if( empty($addRes) )
-            return $this->error('插入数据失败，请稍后再试');
+        if( empty($addRes) ) return $this->error('插入数据失败，请稍后再试');
         return $this->success();
     }
     
@@ -573,11 +572,11 @@ class CouponController extends Controller{
         if( isset( $post['actIntro'] ) ) $data['vcRemark'] = $post['actIntro'];
         if( isset( $post['departmentId'] ) ) $data['DEPARTMENT_ID'] = $post['departmentId'];
         if( isset( $post['managerId'] ) ) $data['MANAGER_ID'] = $post['managerId'];
-        if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart']);
-        if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']);
+        if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart'] . " 00:00:00");
+        if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']. " 23:59:59");
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
-        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
-        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
+        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime'] . " 00:00:00");
+        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime'] . " 23:59:59");
         if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = $post['limitItemTypes'];
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];

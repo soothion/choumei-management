@@ -119,7 +119,8 @@ class PlatformController extends Controller{
         $data['vcTitle'] = $post['actName'];
         $data['vcSn'] = $post['actNo'];
         $data['vcRemark'] = $post['actIntro'];
-        
+        $exists = \App\VoucherConf::where(['vcSn'=>$data['vcSn']])->count();
+        if( $exists ) return $this->error('存在活动编号，请勿重复提交');
         if( $post['selectItemType'] == 1 && in_array($post['selectUseType'],[1,2]) )
             $data['getTypes'] = $post['selectUseType'];
         elseif( $post['selectItemType'] == 2 && $post['selectUseType'] == 3 && !empty($post['phoneList']) ){
@@ -679,6 +680,7 @@ class PlatformController extends Controller{
             $voucherConfInfo['consumeMoney'] = 0;
         }
         if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] ) $voucherConfInfo['status'] = 4;
+        
         unset( $voucherConfInfo['getStart'] );
         unset( $voucherConfInfo['getEnd'] );
         unset( $voucherConfInfo['DEPARTMENT_ID'] );
