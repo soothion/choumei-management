@@ -396,7 +396,7 @@ class TicketController extends Controller {
             }
         }
         if( !empty( $voucherConfInfo['useNeedMoney'] ) ) $voucherInfo['useLimitText'] .= "项目消费满". $voucherConfInfo['useNeedMoney'] ."元使用;";
-            
+        if( empty($voucherInfo['vUseTime']) )  $voucherInfo['vUseTime'] = '';  
         return $this->success( $voucherInfo );
 	}
     // 获取分类
