@@ -10,7 +10,7 @@
 		tools:{
 			getDate:function(time){
 				var date= time ? new Date(time*1000) : new Date();
-				return date.getFullYear()+"-"+(date.getMonth()<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
+				return date.getFullYear()+"-"+(date.getMonth()+1<10?"0"+(date.getMonth()+1):date.getMonth()+1)+"-"+(date.getDate()<10?"0"+date.getDate():date.getDate());
 			},
 			parseQuery: function (str) {//解析字符串的参数
 				var ret = {},reg = /([^?=&]+)=([^&]+)/ig,match;
@@ -85,7 +85,7 @@
 						if(data.code==-40000||data.code==-40001){
 							data.msg="登录超时，请重新登录";
 						}else if(data.code==0){
-							data.msg=data.msg || "系统错误！";
+							data.msg=data.msg ||"系统错误！";
 						}else{
 							data.msg="出现异常："+data.msg;
 						}
@@ -216,6 +216,10 @@
 				if(options.time===undefined){
 					options.time=1000;
 				}
+				if(!options.bool){
+					options.time=2000;
+				}
+
 				options.text='<i class="fa fa-'+(options.bool?"check":"times")+'-circle"></i>'+options.text;
 				this.tips(options)
 			},
@@ -266,7 +270,6 @@
 			},
 			getToken:function(cb){
 				var self=this;
-				var _arguments=arguments;
 				var query={
 					'bundle':"FQA5WK2BN43YRM8Z",
 					'version':"5.3",
@@ -297,7 +300,10 @@
 						}
 						clearTimeout(self.timer);
 						self.timer=setTimeout(function(){
-							lib.puploader.getToken.apply(lib.puploader,_arguments);
+							lib.puploader.getToken(function(data){
+								Qiniu.token=data.uptoken;
+								Qiniu._fileName=data.fileName;
+							});
 						},1000*60);
 					}
 				});
@@ -365,8 +371,14 @@
 								var data=JSON.parse(res.response);
 								if(data.result==1){
 									parent.lib.popup.result({text:options.successText||'文件上传成功'});
+									up.trigger('FileUploadedSuccess',up,file,res);
 								}else{
-									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
+									var msg=options.failText||'文件上传失败';
+									if(data.msg){
+										msg+=",异常信息："+data.msg;
+									}
+									parent.lib.popup.result({bool:false,text:msg});
+									up.trigger('FileUploadedFail',up,file,res);
 								}
 								if(data.token){
 									localStorage.setItem('token',data.token);
@@ -394,7 +406,6 @@
 							options.max_file_size=data.maxFileSize+'mb';
 						}
 						var uploader=self.create(options);
-						
 						uploader.bind('BeforeUpload',function(up,file){//上传前获取下一个token
 							clearTimeout(self.timer)
 							self.getToken(function(data){
@@ -419,8 +430,14 @@
 								var data=JSON.parse(res.response);
 								if(data.code==0){
 									parent.lib.popup.result({text:options.successText||'文件上传成功'});
+									up.trigger('FileUploadedSuccess',up,file,res);
 								}else{
-									parent.lib.popup.result({bool:false,text:options.failText||'文件上传失败'});
+									var msg=options.failText||'文件上传失败';
+									if(data.msg){
+										msg+=",异常信息："+data.msg;
+									}
+									parent.lib.popup.result({bool:false,text:msg});
+									up.trigger('FileUploadedFail',up,file,res);
 								}
 							}
 						});
@@ -458,7 +475,8 @@
 					successText:'图片上传成功',
 					failText:'图片上传失败',
 					loaderText:'图片上传中..',
-					sizeErrorText:'图片的尺寸大小不正确'
+					sizeErrorText:'图片的尺寸大小不正确',
+					thumb:"w/160/h/160"
 				},options);
 				if(options.imageLimitSize){
 					if(options.auto_start===true){
@@ -475,6 +493,9 @@
 							if(data.code==0){
 								if(!options.crop){
 									if(up.createThumbnails){
+										if(options.thumb&&data.response.thumbimg){
+											data.response.thumbimg=data.response.thumbimg.replace('w/100/h/100',options.thumb);
+										}
 										up.createThumbnails(data.response)
 									}else{
 										up.preview(up.area,data.response);
@@ -493,13 +514,17 @@
 						}
 						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
 							uploader.createThumbnails=function(data){//创建缩略图
-								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render({url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},{data:[data]}));
+								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render(
+									{url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},
+									{data:[data]}));
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))==uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').hide();
 								}
+								uploader.thumbnails.trigger("itemchange");
 							}
 							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
 								var item=$(this).closest('.control-thumbnails-item');
+								var $parent=item.parent();
 								if(item.attr('id')){
 									uploader.removeFile(item.attr('id'));
 								}
@@ -507,12 +532,55 @@
 								if(uploader.thumbnails.data('max')&&parseInt(uploader.thumbnails.data('max'))>uploader.thumbnails.children('.control-thumbnails-item').length){
 									uploader.thumbnails.children('.control-image-upload').show();
 								}
+								$parent.trigger("itemchange");
 							});
+							uploader.thumbnails.on('click','.control-thumbnails-before',function(){
+							 	var $this=$(this);
+							 	var thumbnail=$this.closest('.control-thumbnails-item');
+							 	var prev=thumbnail.prev('.control-thumbnails-item')
+								if(prev.length==1){
+							 		thumbnail.after(prev);
+							 	}
+								thumbnail.parent().trigger("itemchange");
+							 });
+							 uploader.thumbnails.on('click','.control-thumbnails-after',function(){
+							 	var $this=$(this);
+							 	var thumbnail=$this.closest('.control-thumbnails-item');
+							 	var next=thumbnail.next('.control-thumbnails-item')
+							 	if(next.length==1){
+							 		thumbnail.before(next);
+							 	}
+								thumbnail.parent().trigger("itemchange");
+							 });
+							 uploader.thumbnails.on('click','.control-thumbnails-edit',function(){
+								var item=$(this).closest('.control-thumbnails-item');
+								var src=item.find('img').attr('src');
+								uploader.trigger('ImageUploaded',{img:src,_this:item[0]});
+							 });
 							if(options.imageArray){
 								uploader.thumbnails.prepend(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:options.imageArray}));
+								uploader.thumbnails.trigger("itemchange");
 								if(uploader.thumbnails.children('.control-thumbnails-item').length>=uploader.thumbnails.data('max')){
 									uploader.thumbnails.children('.control-image-upload').hide();
 								}
+							}
+							uploader.bind('FilesAdded',function(up,files){
+								var files_number=up.getOption().files_number;
+								if(files_number){
+									plupload.each(files, function(file,i) {
+										var exist=up.thumbnails.children().length-1;
+										if(i+exist>=files_number){
+											up.removeFile(file);	
+										}
+									});
+								}
+							});
+						}else if($target.closest('.control-single-image').length==1){
+							uploader.area=$target.closest('.control-single-image');
+							uploader.preview=function(data){
+								this.area.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
+								this.area.find('input.original').val(data.img).blur();
+								this.area.find('input.thumb').val(data.thumbimg).blur();
 							}
 							uploader.thumbnails.on('click','.control-thumbnails-edit',function(){
 								var $this=$(this).closest('.control-thumbnails-item');
@@ -520,24 +588,13 @@
 								var original=$img.data('original')?$img.data('original'):$img.attr('src')
 								uploader.trigger('ImageUploaded',{img:original,_this:$this[0]});
 							});
-							uploader.bind('FilesAdded',function(up,files){
-								var files_number=up.getOption().files_number;
-								var exist=up.thumbnails.children().length-1;
-								if(files_number){
-									plupload.each(files, function(file,i) {
-										if(i+exist>=files_number){
-											console.log('ddddddddd')
-											up.removeFile(file);	
-										}
-									});
-								}
-							});
 						}
 						uploader.area=$target.closest('.control-single-image');
 						uploader.preview=function($dom,data){
 							$dom.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
 							$dom.find('input.original').val(data.img).blur();
 							$dom.find('input.thumb').val(data.thumbimg).blur();
+							$dom.find('.control-image-single-remove').show();
 						}
 					}
 					if(options.imageLimitSize){
@@ -587,12 +644,19 @@
 				});
 			},
 			create:function(options){
-				options=$.extend({thumbnails:['300x300'],aspectRatio: 1/1,autoCropArea: 0.5},options);
+				options=$.extend({
+					thumbnails:['300x300'],
+					aspectRatio:1/1,
+					checkImageOrigin:false,
+					minCropBoxWidth:250,
+					minCropBoxHeight:250,
+					autoCropArea: 0.0001
+				},options);
 				options.src=options.src.split('?')[0];
 				this.use(function(){
 					var cropper=$(lib.ejs.render({url:"/module/public/template/cropper"},{data:options.src}));
-					$(document.body).append(cropper);
-					parent.lib.fullpage(true);
+					cropper.css({opacity:0});
+					var $image=cropper.find('img');
 					cropper[0].thumbnails={};
 					for(var i=0;i<options.thumbnails.length;i++){
 						cropper[0].thumbnails[options.thumbnails[i]]="";
@@ -611,9 +675,31 @@
 							cropper[0].thumbnails[name]=this.src+"?imageMogr2"+"/crop/!"+Math.round(e.width)+"x"+Math.round(e.height)+"a"+Math.round(e.x)+"a"+Math.round(e.y)+"/thumbnail/"+name;
 						}
 					}
-					cropper.find('img').on('load',function(){
-						$(this).cropper(options);
+					$image.on('load',function(){
+						var width=$image.width();
+						var height=$image.height();
+						var $win=$(window);
+						var canvasData={
+							width:$image.width(),
+							height:$image.height(),
+							left:($win.width()-width)/2,
+							top:($win.height()-height)/2
+						}
+						options.built=function(){
+							parent.lib.fullpage(true);
+							$image.cropper('setCanvasData',canvasData);
+							var $box=$('.cropper-crop-box');
+							$image.cropper('setCropBoxData',{
+								width:$box.width(),
+								height:$box.height(),
+								left:$box.position().left,
+								top:$box.position().top
+							})
+							cropper.css({opacity:1});
+						}
+						$image.cropper(options);
 					});
+					$(document.body).append(cropper);
 				});
 			}
 		}
@@ -863,7 +949,9 @@
 			//加载对应的资源
 			var resources=$target.attr('ajat-resources');
 			resources && Ajat.seajs(resources.split(','));
-        });
+        }).on('_ready','select',function(){
+			$(this).trigger('change');
+		});
     }
     Ajat.event();
 	Ajat.seajs=function(arr){
@@ -909,11 +997,11 @@
 						return {msg:'输入值不能含小数点'};
 					}
 				}
-				if(reg.test(val)){
-					if(val.length>12){
-						return {msg:'输入值整数不能大于12位且不能有小数点'};
-					}
-				}
+				// if(reg.test(val)){
+				// 	if(val.length>12){
+				// 		return {msg:'输入值整数不能大于12位且不能有小数点'};
+				// 	}
+				// }
 				return reg.test(val);
 			},
 			percent:function(val){
@@ -926,7 +1014,6 @@
 			this.cfg.requiredmsg=this.el.requiredmsg||"未填写";
 			this.cfg.patternmsg=this.el.patternmsg||"不正确";
 			this.bindEvent();
-			
 			if(!this.el._getFormData){
 				this.el._getFormData=function(){
 					return lib.tools.getFormData($(this))
@@ -939,7 +1026,7 @@
 			//有disabled的不做校验
 			if($target.is(':disabled')){
 				var error=this.getErrorDom($target);
-				error.remove();
+				error.hide();
 				return;
 			}
 			//复选框单选框校验的非空校验
@@ -1151,6 +1238,7 @@
 			}).on('submit',function(e){
 				e.preventDefault();
 				self.validate();
+				
 			}).on('save',function(e,data){
 				self.save(data);
 			}).on('response',function(e,data){

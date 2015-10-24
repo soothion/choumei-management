@@ -76,14 +76,14 @@
             <input type="hidden" name="actNo" value="<%=data.actNo%>" required>
         </script>
         <script type="text/template" id="department-t">
-        <%departmentList = data%>
+        <% sessionStorage.setItem("departmentList",JSON.stringify(data))%>
             <option value="">全部</option>
             <%data.forEach(function(item){%>
             <option <%if (protocol.custom.sid == item.id){%> selected <%}%>value="<%=item.id%>"><%=item.title%></option>
             <%})%>
         </script>
         <script type="text/template" id='manager_t'>
-        <%managerList = data%>
+        <%sessionStorage.setItem("managerList",JSON.stringify(data))%>
         <%data.forEach(function(item){%>
         <label class="label">
             <input type="radio" <%if (protocol.custom.sid == item.id){%> checked='checked' <%}%> class="label" name="managerId" value="<%=item.id%>" required>
@@ -141,16 +141,22 @@
             
             lib.Form.prototype.save = function(data){
                 var tmpData = $.extend(getTmpData(),data);
-                for (var i = managerList.length - 1; i >= 0; i--) {
-                    if (managerList[i].id == tmpData.managerId){
-                        tmpData.manager_name = managerList[i].name;
-                    }
-                }
-                for (var i = departmentList.length - 1; i >= 0; i--) {
-                    if (departmentList[i].id == tmpData.departmentId){
-                        tmpData.department_title = departmentList[i].title;
-                    }
-                };
+				var managerList=JSON.parse(sessionStorage.getItem('managerList'));
+				if(managerList){
+					for (var i = managerList.length - 1; i >= 0; i--) {
+						if (managerList[i].id == tmpData.managerId){
+							tmpData.manager_name = managerList[i].name;
+						}
+					}
+				}
+				var departmentList=JSON.parse(sessionStorage.getItem('departmentList'));
+				if(departmentList){
+					for (var i = departmentList.length - 1; i >= 0; i--) {
+						if (departmentList[i].id == tmpData.departmentId){
+							tmpData.department_title = departmentList[i].title;
+						}
+					}
+				}
                 setTmpData(tmpData);
                 location.href="addTicket.html"
             }

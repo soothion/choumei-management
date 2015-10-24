@@ -167,9 +167,9 @@
                     data:formData
                 });
             }
-
+			var ln=location;
             var confirmBox = function(options){
-                 lib.popup.confirm({
+                 parent.lib.popup.confirm({
                      text:options.text,
                      define: function(){
                          lib.ajax({
@@ -181,7 +181,7 @@
                                      text:options.resultText,
                                      define:function(){
                                          clearTmpData();
-                                         window.location.href="index.html";
+										 ln.href="index.html";
                                      }
                                  });
                              }

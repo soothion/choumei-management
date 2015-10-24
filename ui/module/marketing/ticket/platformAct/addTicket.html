@@ -144,10 +144,10 @@
                 if(data.getTimeEnd){data.getTimeEnd = new Date(data.getTimeEnd).format('yyyy-MM-dd');}
                 %>
                 <input type="date" class="start" min="<%=new Date().format('yyyy-MM-dd')%>" name="getTimeStart" 
-                value="<%=data.getTimeStart%>" required/>
+                value="<%=data.getTimeStart?data.getTimeStart:new Date().format("yyyy-MM-dd")%>" required/>
                 <span>至</span>
                 <input type="date" class="end" min="<%=new Date().format('yyyy-MM-dd')%>" name="getTimeEnd" 
-                value="<%=data.getTimeEnd%>" required/>
+                value="<%=data.getTimeEnd?data.getTimeEnd:new Date(new Date().getTime()+60*60*24*1000*7).format("yyyy-MM-dd")%>" required/>
                 <span class="control-help" style="display:none;"></span>
                 </td>
             </tr>    

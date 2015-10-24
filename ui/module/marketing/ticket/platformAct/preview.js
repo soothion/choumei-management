@@ -65,10 +65,10 @@
                     sessionStorage.removeItem('edit-base-data');
                     sessionStorage.removeItem('platformItemTypes');
                     document.body.onbeforeunload=function(){}
-                    if(type=='add')  location.href="/module/marketing/ticket/platformAct/index.html";
-                    if(type=='edit') location.href="/module/marketing/ticket/platformAct/detail.html?id="+submitData.vcId;
                 }
-            });          
+            }); 
+			if(type=='add')  location.href="index.html";
+            if(type=='edit') location.href="detail.html?id="+submitData.vcId;			
           }
         })        
     });
