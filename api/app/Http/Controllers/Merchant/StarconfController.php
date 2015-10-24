@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\SalonStarConf;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use Illuminate\Support\Facades\DB;
 
 class StarconfController extends Controller {
 
@@ -21,6 +22,7 @@ class StarconfController extends Controller {
      * @apiSuccess {Number} add_time 添加时间.
      * @apiSuccess {Number} update_time 更新时间.
      * @apiSuccess {Number} salonCount 店铺数量.
+     * @apiSuccess {Number} status 星级店铺开启（Y）/关闭（N）.
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -101,6 +103,44 @@ class StarconfController extends Controller {
             }
         } else {
             throw new ApiException("未找到相应的星级积分等级", ERROR::STAR_CONF_LEVEL_IS_ERROR);
+        }
+    }
+
+    /**
+     * @api {post} /starconf/online 3.开始/暂停  店铺星级
+     * @apiName online
+     * @apiGroup starconf
+     *
+     * @apiParam {String} status 开启（Y）/暂停(N).
+     *
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     * 	    "result": 1,
+     * 	    "msg": "",
+     * 	    "data": {
+     * 	    }
+     * 	}
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "操作失败"
+     * 		}
+     */
+    public function online() {
+        $options = $this->parameters([
+            'status' => self::T_STRING,
+        ]);
+        if (!in_array($options['status'],['Y', 'N'])) {
+            throw new ApiException("操作失败", ERROR::STAR_CONF_SCORE_IS_ERROR);
+        }
+        $res = DB::table('business_switch')->where(['business_name' => 'salon_star'])->update(['status' => $options['status'], 'update_time' => date('Y-m-d H:i:s')]);
+        if ($res !== false) {
+            return $this->success();
+        } else {
+            throw new ApiException("操作失败", ERROR::STAR_CONF_SCORE_IS_ERROR);
         }
     }
 
