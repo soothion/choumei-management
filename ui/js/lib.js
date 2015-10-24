@@ -1083,9 +1083,16 @@
 			//匹配校验
 			var match=$target.attr('match');
 			if(val&&match){
-				if(val!=$.trim($('#'+match).val())){
-					$target.trigger('error',{type:'match'});
-					return;
+				if($target.attr("type")=="date"){
+					if($('#'+match).val()&&new Date(val).getTime()<new Date($('#'+match).val()).getTime()){
+						$target.trigger('error',{type:'match'});
+						return;
+					}
+				}else{
+					if(val!=$.trim($('#'+match).val())){
+						$target.trigger('error',{type:'match'});
+						return;
+					}
 				}
 			}
 			//唯一校验
@@ -1269,30 +1276,35 @@
 				$form.trigger('save',data);
 			}else{
 				$('html,body').animate({scrollTop:help.eq(0).offset().top-50},200);
-				help.eq(0).siblings('input:visible').focus();
+				help.eq(0).parent().find('input:visible:first').focus();
 			}
 		},
 		save:function(data){
 			var $el=$(this.el);
 			if($el.attr('disabled')) return;
 			$el.attr('disabled',true);
-			parent.lib.popup.loading({text:'数据正在提交...'});
-			var self=this;
-			lib.ajax({
-				url:$el.attr('action'),
-				data:data,
-				type:this.el.method,
-				success:function(data){
-					$(self.el).trigger('response',data);
-					setTimeout(function(){
+			var action=$el.attr('action');
+			if(action.indexOf(".html")>-1){
+				location.href=action;
+			}else{
+				parent.lib.popup.loading({text:'数据正在提交...'});
+				var self=this;
+				lib.ajax({
+					url:action,
+					data:data,
+					type:this.el.method,
+					success:function(data){
+						$(self.el).trigger('response',data);
+						setTimeout(function(){
+							$(self.el).attr('disabled',false);
+						},1500);
+					},
+					error:function(xhr,code){
 						$(self.el).attr('disabled',false);
-					},1500);
-				},
-				error:function(xhr,code){
-					$(self.el).attr('disabled',false);
-					self.fail(null,{})
-				}
-			});
+						self.fail(null,{})
+					}
+				});
+			}
 		}
 	}
 	lib.Form=Form;

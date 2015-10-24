@@ -15,7 +15,7 @@ class SalonStarConf extends Model {
         $levelList = self::all()->toArray();
         $res = array();
         $maxKey = count($levelList);
-        $business_salon_star = DB::table('business control')->where(['business_name' => 'salon_star'])->first()->status;
+        $business_salon_star = DB::table('business_switch')->where(['business_name' => 'salon_star'])->first()->status;
         foreach ($levelList as $key => $val) {
             $prevScore = $val['score'];
             if ($key != $maxKey) {

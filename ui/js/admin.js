@@ -179,7 +179,7 @@ $(function(){
 						$this.attr('disabled',false);
 					},1100);
 					if(data.result==1){
-						var successEvent=$this.attr('onsuccess');
+						var successEvent=$this.attr('onsuccess')||$this.attr('onreset');
 						if(successEvent=="remove"){
 							parent.lib.popup.result({
 								text:"删除成功",
@@ -192,7 +192,7 @@ $(function(){
 								var fn=eval("(function(){"+successEvent+"})");
 								fn.call($this[0]);
 							}
-							$this.trigger('success',data);//成功后会触发reset事件
+							$this.trigger('success',data).trigger("reset");//成功后会触发reset事件
 						}
 					}else{
 						var failEvent=$this.attr('onfail');

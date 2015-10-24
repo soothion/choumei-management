@@ -96,9 +96,9 @@
                                    <tr>
                                        <td>活动（获取）时间</td>
                                        <td>
-                                           <input type="date" name="getTimeStart" id="getTimeStart" value="<%=data.getTimeStart? data.getTimeStart: new Date().format('yyyy-MM-dd')%>" required/>
+                                           <input type="date" name="getTimeStart" id="getTimeStart" required value="<%=data.getTimeStart? data.getTimeStart: new Date().format('yyyy-MM-dd')%>" required/>
                                            <span>至</span>
-                                           <input type="date" name="getTimeEnd" value="<%=data.getTimeEnd?data.getTimeEnd:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" id="getTimeEnd" required/>
+                                           <input type="date" name="getTimeEnd" match="getTimeStart" matchmsg="截止时间不能小于起始时间" value="<%=data.getTimeEnd?data.getTimeEnd:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" id="getTimeEnd" required/>
                                            <span class="control-help" style="display:none;"></span>
                                        </td>
                                    </tr>
@@ -112,9 +112,9 @@
                                                    checked="checked">
                                                    <span>指定有效期</span>
                                                </label>
-                                               <input type="date" value="<%=data.avaDateStart?data.avaDateStar: new Date().format('yyyy-MM-dd')%>" id="avaDateStart" name="addActLimitStartTime"/>
+                                               <input type="date" required value="<%=data.avaDateStart?data.avaDateStar: new Date().format('yyyy-MM-dd')%>" id="avaDateStart" name="addActLimitStartTime"/>
                                                <span>至</span>
-                                               <input type="date" id="avaDateEnd" value="<%=data.avaDateEnd?data.avaDateEnd:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" name="addActLimitEndTime"/>
+                                               <input type="date" required id="avaDateEnd" match="avaDateStart" matchmsg="截止时间不能小于起始时间" value="<%=data.avaDateEnd?data.avaDateEnd:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" name="addActLimitEndTime"/>
                                                <span class="control-help" style="display:none;"></span>
                                            </div>
                                            <hr />
@@ -246,7 +246,7 @@
                 // });
                 var formData = getSubmitData();
                 setTmpData(formData);
-                window.location.href="preview.html";
+                window.location.href="preview.html"+(lib.query._?"?"+lib.query._:"");
             }
 
 
@@ -282,13 +282,13 @@
 
             }).on('change', '#getTimeEnd', function(event) {
 
-                $('#getTimeStart').attr('max',formattedDate($(this).val()));
+               // $('#getTimeStart').attr('max',formattedDate($(this).val()));
                 $('#avaDateEnd').attr('min',formattedDate($(this).val()));
                 $('#avaDateStart,#avaDateEnd').val('');
 
             }).on('change', '#avaDateEnd', function(event) {
 
-                $('#avaDateStart').attr('max',formattedDate($(this).val()));
+                //$('#avaDateStart').attr('max',formattedDate($(this).val()));
 
             }).on('change', '#avaDateStart', function(event) {
                 var getTimeEndValue = new Date($('#getTimeEnd').val()).getTime();

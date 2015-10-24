@@ -136,7 +136,7 @@ class StarconfController extends Controller {
         if (!in_array($options['status'],['Y', 'N'])) {
             throw new ApiException("操作失败", ERROR::STAR_CONF_SCORE_IS_ERROR);
         }
-        $res = DB::table('business control')->where(['business_name' => 'salon_star'])->update(['status' => $options['status'], 'update_time' => date('Y-m-d H:i:s')]);
+        $res = DB::table('business_switch')->where(['business_name' => 'salon_star'])->update(['status' => $options['status'], 'update_time' => date('Y-m-d H:i:s')]);
         if ($res !== false) {
             return $this->success();
         } else {
