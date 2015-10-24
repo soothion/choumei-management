@@ -40,7 +40,7 @@
 
                         <tr>
                             <td>活动简介</td>
-                            <td><%=data.actIntro%></td>
+                            <td><%=data.actIntro.replace(/\n/g,"</br>")%></td>
                         </tr>
 
                         <tr>
@@ -116,7 +116,7 @@
                     </tbody>
                 </table>
 				<br />
-				 <form class="form-vertical"  data-role="form" id="form">
+				 <form class="form-vertical" action="<%=query.id?"coupon/editConf":"coupon/add"%>"  data-role="normal" id="form" data-confirm="确定保存本活动吗？">
 					<a class="btn" href="addBase.html<%if (data.vcId){%>?id=<%=data.vcId%><%}%>" >返回</a>
 					<span class="space"></span>
 					<a class="btn" id='clear-btn'>取消</a>
@@ -146,49 +146,21 @@
                         window.location.href="index.html";
                 }});
             })
-
-            var getTmpData = function(){
-               var tmp = JSON.parse(window.localStorage.getItem('couponTmpData'));
-               return tmp;
-            };
-
-            var clearTmpData  = function(){
-                window.localStorage.removeItem('couponTmpData');
-            }
-
-            lib.Form.prototype.save = function(data){
-                var formData = getTmpData();
-                var  ajaxUrl = formData.vcId ? 'coupon/editConf' : 'coupon/add';
-                var resultText = formData.vcId ? '编辑活动成功':'新增活动成功';
-                confirmBox({
-                    url:ajaxUrl,
-                    text:'确定保存本活动吗？',
-                    resultText:resultText,
-                    data:formData
-                });
-            }
-			var ln=location;
-            var confirmBox = function(options){
-                 parent.lib.popup.confirm({
-                     text:options.text,
-                     define: function(){
-                         lib.ajax({
-                             url : options.url,
-                             data: options.data
-                         }).done(function(data, status, xhr){
-                             if(data.result == 1){
-                                 parent.lib.popup.result({
-                                     text:options.resultText,
-                                     define:function(){
-                                         clearTmpData();
-										 ln.href="index.html";
-                                     }
-                                 });
-                             }
-                         });
-                     }
-                 });
-            }
+			$('#table').on("_ready",function(){
+				var $form=$('#form');
+				$form[0]._getFormData=function(){
+					return JSON.parse(window.localStorage.getItem('couponTmpData')); 
+				}
+				$form.on("success",function(){
+					localStorage.removeItem('couponTmpData');
+					parent.lib.popup.result({
+						text:lib.query.id?"编辑活动成功":"新增活动成功",
+						define:function(){
+							location.href="/module/marketing/ticket/ticketAct/index.html"
+						}
+					});
+				});
+			});
 		</script>
     </body>
 </html>

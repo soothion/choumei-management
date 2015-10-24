@@ -33,10 +33,13 @@
                             <td class="td">活动名称</td>
                             <td><%=data.actName%></td>
                         </tr>
-
+						<tr>
+                            <td class="td">活动编号</td>
+                            <td><%=data.actNo%></td>
+                        </tr>
                         <tr>
                             <td class="td">活动简介</td>
-                            <td><%=data.actIntro%></td>
+                            <td><%=data.actIntro.replace(/\n/g,"</br>")%></td>
                         </tr>  
 
                         <tr>

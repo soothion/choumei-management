@@ -143,11 +143,14 @@
                 if(data.getTimeStart){data.getTimeStart = new Date(data.getTimeStart).format('yyyy-MM-dd');}
                 if(data.getTimeEnd){data.getTimeEnd = new Date(data.getTimeEnd).format('yyyy-MM-dd');}
                 %>
-                <input type="date" class="start" min="<%=new Date().format('yyyy-MM-dd')%>" name="getTimeStart" 
-                value="<%=data.getTimeStart?data.getTimeStart:new Date().format("yyyy-MM-dd")%>" required/>
+                <input type="date" id="date0001" class="start" min="<%=new Date().format('yyyy-MM-dd')%>" name="getTimeStart" 
+                value="<%=data.getTimeStart?data.getTimeStart:new Date().format("yyyy-MM-dd")%>" required
+				/>
                 <span>至</span>
                 <input type="date" class="end" min="<%=new Date().format('yyyy-MM-dd')%>" name="getTimeEnd" 
-                value="<%=data.getTimeEnd?data.getTimeEnd:new Date(new Date().getTime()+60*60*24*1000*7).format("yyyy-MM-dd")%>" required/>
+                value="<%=data.getTimeEnd?data.getTimeEnd:new Date(new Date().getTime()+60*60*24*1000*7).format("yyyy-MM-dd")%>" required
+					match="date0001" matchmsg="截止时间不能小于起始时间"
+				/>
                 <span class="control-help" style="display:none;"></span>
                 </td>
             </tr>    
@@ -186,7 +189,9 @@
 
                 <input type="date" class="end"  id="avaDateEnd" name="addActLimitEndTime" required
                 min="<%=new Date().format('yyyy-MM-dd')%>"  <%= avaDateChecked ? '' :'disabled' %>
-                value="<%=data.addActLimitEndTime?data.addActLimitEndTime:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>"/>
+                value="<%=data.addActLimitEndTime?data.addActLimitEndTime:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>"
+					match="avaDateStart" matchmsg="截止时间不能小于起始时间"
+				/>
                 <span class="control-help" style="display:none;"></span>        
             </div>
 
@@ -198,7 +203,7 @@
                     <span>自定义有效期区间</span>
                 </label>
 
-                <input type="text" id="avaDay" name="fewDay" value="<%=data.fewDay%>" pattern='number' required
+                <input type="text" id="avaDay" name="fewDay" value="<%=data.fewDay||15%>" pattern='number' required
                 <%=data.fewDay ? '' :'disabled' %>  />
                 <span class="weak">天内有效（获取现金券后）</span>
                 <span class="control-help" style="display:none;"></span> 

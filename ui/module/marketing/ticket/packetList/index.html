@@ -86,7 +86,7 @@
 							<a class="link" data-slug="bonus.show" target="_blank" href="detail.html?id=<%=item.order_ticket_id%>">查看&gt;</a>
 							<%if(item.status=="Y"){%>
 							<span class="space"></span>
-							<form data-slug="bonus.close" action="bonus/close/<%=item.order_ticket_id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+							<form data-slug="bonus.close" action="bonus/close/<%=item.order_ticket_id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 								<button class="link">失效</button>
 							</form>
 							<%}%>

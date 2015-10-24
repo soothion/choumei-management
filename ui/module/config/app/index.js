@@ -7,6 +7,7 @@
 
 (function(){
     $(".wrapper").on('change','.switch>input',function(e){
+		$(this).siblings('input[type="hidden"]').val(this.checked?"Y":"N");
         if($(this).attr('checked')){
             $(this).removeAttr('checked')
             $("td button.edit").attr("disabled","disabled");                  
@@ -14,6 +15,7 @@
             $(this).attr('checked','checked');
             $("td button.edit").removeAttr("disabled");   
         }
+		$(this).closest("form").submit();
     });
 
     $(".wrapper").on('click','.edit',function(e){

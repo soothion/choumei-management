@@ -80,17 +80,17 @@
                   <td>
                     <a class="link" data-slug="laisee.show,laisee.update" target="_blank" href="detail.html?id=<%=item.id%>">查看&gt;</a>
 					<%if(item.status=="Y"){%>
-					<form data-slug="laisee.offline" action="laisee/offline/<%=item.id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+					<form data-slug="laisee.offline" action="laisee/offline/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 						<span class="space"></span>
 						<button class="link">下线</button>
 					</form>
-					<form data-slug="laisee.close" action="laisee/close/<%=item.id%>" data-role="normal"  onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+					<form data-slug="laisee.close" action="laisee/close/<%=item.id%>" data-role="normal"  onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 						<span class="space"></span>
 						<button class="link">关闭</button>
 					</form>
 					<%}%>
 					<%if(item.status=="F"){%>
-					<form data-slug="laisee.online" action="laisee/online/<%=item.id%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+					<form data-slug="laisee.online" action="laisee/online/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 						<span class="space"></span>
 						<button class="link">上线</button>
 					</form>
