@@ -79,11 +79,11 @@
                             <td><%=data[i].score%></td>
                             <td>
                             <a class="link add" data-salonid="<%=data[i].salonid%>" data-slug="salonstar.update">增加积分</a>
-                            <span class="line"></span>
+                            <span class="space">|</span>
                             <a class="link minus" data-score="<%=data[i].score%>" data-salonid="<%=data[i].salonid%>" data-slug="salonstar.update">减少积分
                             </a>
-                            <span class="line"></span>
-                            <a class="link" href="detail.html?salonid=<%=data[i].salonid%>&salonname=<%=data[i].salonname%>" data-slug="salonstar.show">积分详情</a>
+                            <span class="space">|</span>
+                            <a class="link" href="detail.html#salonid=<%=data[i].salonid%>&salonname=<%=data[i].salonname%>" data-slug="salonstar.show">积分详情</a>
                             </td>      
                         </tr>
                         <%}%>                    

@@ -180,13 +180,13 @@
                 %>
                 <input type="date" class="start" id="avaDateStart" name="addActLimitStartTime" required
                 min="<%=new Date().format('yyyy-MM-dd')%>" <%= avaDateChecked ? '' :'disabled' %>
-                value="<%=data.addActLimitStartTime%>" />
+                value="<%=data.addActLimitStartTime?data.addActLimitStartTime:new Date().format('yyyy-MM-dd')%>" />
 
                 <span>至</span>
 
                 <input type="date" class="end"  id="avaDateEnd" name="addActLimitEndTime" required
                 min="<%=new Date().format('yyyy-MM-dd')%>"  <%= avaDateChecked ? '' :'disabled' %>
-                value="<%=data.addActLimitEndTime%>"/>
+                value="<%=data.addActLimitEndTime?data.addActLimitEndTime:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>"/>
                 <span class="control-help" style="display:none;"></span>        
             </div>
 
