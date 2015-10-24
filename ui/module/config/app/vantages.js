@@ -9,7 +9,7 @@
 
     $(".wrapper").on('click','a.add',function(){
         var self = this;
-        lib.popup.box({
+        parent.lib.popup.box({
             title:'增加积分',
             height:350,
             width:600,
@@ -28,7 +28,7 @@
         $("#box").find("#labelText").text("减少积分");
         $("#box").find('input').attr("score",$(this).data('score'));
         var self = this;
-        lib.popup.box({
+        parent.lib.popup.box({
             title:'减少积分',
             height:350,
             width:600,

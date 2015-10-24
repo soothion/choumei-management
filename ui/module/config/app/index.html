@@ -61,7 +61,7 @@
                         <% data && data.forEach(function(item,i){ %>
                            <tr>
                                <td><%=item.level%></td>
-                               <td><a class="link"><%=item.salonCount%></a></td>
+                               <td><a href="vantages.html#level=<%=item.level%>" class="link"><%=item.salonCount%></a></td>
                                <td>
                                    <span class="score"><%=item.score%></span>
                                    <input type="text" name="score" value="<%=item.score%>" pattern="number" maxlength="9"/>
