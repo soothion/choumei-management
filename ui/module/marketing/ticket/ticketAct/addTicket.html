@@ -96,9 +96,9 @@
                                    <tr>
                                        <td>活动（获取）时间</td>
                                        <td>
-                                           <input type="date" name="getTimeStart" id="getTimeStart" value="<%=data.getTimeStart || new Date().format('yyyy-MM-dd')%>" required/>
+                                           <input type="date" name="getTimeStart" id="getTimeStart" value="<%=data.getTimeStart? data.getTimeStart: new Date().format('yyyy-MM-dd')%>" required/>
                                            <span>至</span>
-                                           <input type="date" name="getTimeEnd" value="<%=data.getTimeEnd || ''%>" id="getTimeEnd" required/>
+                                           <input type="date" name="getTimeEnd" value="<%=data.getTimeEnd?data.getTimeEnd:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" id="getTimeEnd" required/>
                                            <span class="control-help" style="display:none;"></span>
                                        </td>
                                    </tr>
@@ -112,9 +112,9 @@
                                                    checked="checked">
                                                    <span>指定有效期</span>
                                                </label>
-                                               <input type="date" value="<%=data.avaDateStart|| ''%>" id="avaDateStart" name="addActLimitStartTime"/>
+                                               <input type="date" value="<%=data.avaDateStart?data.avaDateStar: new Date().format('yyyy-MM-dd')%>" id="avaDateStart" name="addActLimitStartTime"/>
                                                <span>至</span>
-                                               <input type="date" id="avaDateEnd" value="<%=data.avaDateEnd|| ''%>" name="addActLimitEndTime"/>
+                                               <input type="date" id="avaDateEnd" value="<%=data.avaDateEnd?data.avaDateEnd:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" name="addActLimitEndTime"/>
                                                <span class="control-help" style="display:none;"></span>
                                            </div>
                                            <hr />
@@ -148,8 +148,8 @@
                                    </tr>
                                    <tr>
                                        <td>
-                                           <label class="checkbox">
-                                               <input type="radio" name="useLimitTypes" <%if (data.useLimitTypes){%>checked="checked"<%}%> value="2">
+                                           <label>
+                                               <input type="checkbox" name="useLimitTypes" <%if (data.useLimitTypes){%>checked="checked"<%}%> value="2">
                                                <span>限制首单使用</span>
                                            </label>
                                        </td>
@@ -316,7 +316,7 @@
                 $('#avaDateStart,#avaDateEnd,#getTimeStart,#getTimeEnd').attr('min',date);
             };
 
-            changeDateMin();
+            //changeDateMin();
 
             var confirmBox = function(options){
                  lib.popup.confirm({

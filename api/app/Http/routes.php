@@ -452,6 +452,10 @@ Route::any('platform/getItemType',array(
         'as' => 'starconf.update',
         'uses' => 'Merchant\StarconfController@update'
     ));
+    Route::any('/starconf/online', array(// 开启/暂停  店铺星级积分
+        'as' => 'starconf.online',
+        'uses' => 'Merchant\StarconfController@online'
+    ));
 
     //店铺星级积分管理
     Route::any('salonstar/index', array(//星级积分列表
@@ -936,6 +940,8 @@ Route::any('platform/getItemType',array(
         'as' => 'bonus.close',
         'uses' => 'Laisee\BonusController@close'
     ));
+    
+    
     
     
     
