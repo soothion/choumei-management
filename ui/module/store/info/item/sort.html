@@ -116,11 +116,7 @@
 			parent.lib.popup.result();
 			var $trs=$('#table tbody tr');
 			$trs.each(function(i){
-				var no=i+1;
-				if(lib.query.sort_type!="ASC"){
-					no=$trs.length-i;
-				}
-				$(this).children('td:first').text(no);
+				$(this).children('td:first').text(i+1);
 			});
 		});
 		$(document.body).on('click',".btn-sort",function(){
