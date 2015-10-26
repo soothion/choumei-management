@@ -94,7 +94,7 @@ class CouponController extends Controller{
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime'] . " 00:00:00");
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime'] . " 23:59:59");
-        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']) ;
+        if( isset($post['limitItemTypes'])  && !empty($post['limitItemTypes'])) $data['useItemTypes'] = join(',',$post['limitItemTypes']) ;
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
@@ -584,7 +584,7 @@ class CouponController extends Controller{
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime'] . " 00:00:00");
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime'] . " 23:59:59");
-        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']);
+        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes'])) $data['useItemTypes'] = join(',',$post['limitItemTypes']);
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
@@ -998,6 +998,32 @@ class CouponController extends Controller{
         Queue::push( new Coupon( $voucherConf )  );
     }
     
+    // 生成原生的兑换码 $zS true : 生成以数字为先 false ： 生成以字母为先
+    private function createCouponCode(){
+        $code = '';
+        $randRange = array(97,122);
+        $otherRanger = array( 0,9 );
+
+        while( strlen($code) < 8 ){
+            $rand = rand(0,9);
+            $zS = array(1,2,3,5,7);
+            if( in_array($rand, $zS)  ){
+                $randNum = rand( $randRange[0] , $randRange[1] );
+                while( $randNum == 108 || $randNum == 111 ){
+                    $randNum = rand( $randRange[0] , $randRange[1] );
+                }
+                $code .= chr($randNum);
+            }else{
+                $randNum = rand( $otherRanger[0] , $otherRanger[1] );
+                $code .= $randNum;
+            }
+        }
+
+        // 检查不能全部为数字或字符
+        if( preg_match('#^[0-9]{8}$#',$code) || preg_match('#^[a-z]{8}$#',$code) || strlen($code) != 8 )
+           return $this->createCouponCode();
+        return $code;
+    }
     // 处理配置列表返回的数据
    private function handleList( $res ){
         $tempData = [];
