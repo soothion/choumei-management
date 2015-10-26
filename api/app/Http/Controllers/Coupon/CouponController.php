@@ -63,7 +63,7 @@ class CouponController extends Controller{
         // 必须填写的参数
         $mustKey = array(
             'actName','actIntro','departmentId','managerId',
-            'money','getSingleLimit','actNo'
+            'money','getSingleLimit','actNo','totalNumber'
         );
         // 返回前端数组
         $result = array();
@@ -80,8 +80,7 @@ class CouponController extends Controller{
         $data['vcRemark'] = $post['actIntro'];
         $exists = \App\VoucherConf::where(['vcSn'=>$data['vcSn']])->count();
         if( $exists ) return $this->error('存在活动编号，请勿重复提交');
-        if( !isset($post['totalNumber']) || empty($post['totalNumber']))
-            return $this->error('兑换劵上限未填写');
+        if( !isset($post['totalNumber']) || empty($post['totalNumber'])) return $this->error('兑换劵上限未填写');
         // 定义代金劵
         $data['useMoney'] = $post['money'];
         $data['getNumMax'] = $post['getSingleLimit'];
@@ -93,11 +92,12 @@ class CouponController extends Controller{
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime'] . " 00:00:00");
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime'] . " 23:59:59");
-        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = ',' . join(',',$post['limitItemTypes']) . ',';
+        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']) ;
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         
+        if( $post['totalNumber'] > 3000) return $this->error( '设置的兑换劵总数量不能大于3000' );
         $data['status'] = 2;
         $data['ADD_TIME'] = date('Y-m-d H:i:s');
         $data['IS_REDEEM_CODE'] = 'Y';
@@ -378,7 +378,8 @@ class CouponController extends Controller{
             $voucherConfInfo['totalNum'] = $voucherConfInfo['useTotalNum'];
             $voucherConfInfo['budget'] = $voucherConfInfo['useTotalNum'] * $voucherConfInfo['useMoney'];
         }
-        
+        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
+            $voucherConfInfo['status'] = 4;
         $voucherConfInfo['companyCode'] = '-';
         $voucherConfInfo['activityCode'] = '-';
         $voucherConfInfo['dividendCode'] = '-';
@@ -581,7 +582,7 @@ class CouponController extends Controller{
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime'] . " 00:00:00");
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime'] . " 23:59:59");
-        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = ',' . join(',',$post['limitItemTypes']) . ',';
+        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']);
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
@@ -997,6 +998,7 @@ class CouponController extends Controller{
    
     // 点击上线操作生成兑换码劵插入到代金劵表中
     private function upActCoupon( $vcId ){
+        set_time_limit(360);
         $voucherConf = \App\VoucherConf::where(['vcId'=>$vcId])->first()->toArray();
         // 未找到项目配置信息 或 项目配置信息不是兑换活动配置
         if( empty($voucherConf) || $voucherConf['IS_REDEEM_CODE']== 'N') return false;
@@ -1013,12 +1015,28 @@ class CouponController extends Controller{
         $data['vUseStart'] = $voucherConf['useStart'];
         $data['vUseEnd'] = $voucherConf['useEnd'];
         $data['vStatus'] = 3;
-        for($i=0,$len=$voucherConf['useTotalNum'];$i<$len;$i++){
+        // 现阶段将兑换劵总数设定为3000
+//        Queue::push(  );
+        $insert = ' INSERT cm_voucher (`vcId`,`vcSn`,`vcTitle`,`vUseMoney`,`vUseItemTypes`,`vUseLimitTypes`,`vUseNeedMoney`,`vUseStart`,`vUseEnd`,`vStatus`,`REDEEM_CODE`,`vSn`) VALUES ';
+        $len = $voucherConf['useTotalNum'];
+        
+        for($i=0,$len;$i<$len;$i++){
             $data['REDEEM_CODE'] = $this->encodeCouponCode();
             $data['vSn'] = $this->getVoucherSn('DH');
-            $addVoucher = \App\Voucher::insertGetId($data);
-            if(empty($addVoucher)) Log::info("插入到代金劵失败:". print_r($data,true));
+            // 测试
+            $code = $this->encodeCouponCode();
+            $vSn = $this->getVoucherSn('DH');
+            if( $i==0 )
+                $insert .= " ( {$voucherConf['vcId']} , '{$voucherConf['vcId']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn')";
+            elseif( $i == $len-1 )
+                $insert .= ",( {$voucherConf['vcId']} , '{$voucherConf['vcId']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn');";
+            else    
+                $insert .= ",( {$voucherConf['vcId']} , '{$voucherConf['vcId']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn')";
+//            $addVoucher = \App\Voucher::insertGetId($data);
+//            if(empty($addVoucher)) Log::info("插入到代金劵失败:". print_r($data,true));
         }
+        DB::insert( $insert );
+        Log::info( $insert );
     }
     // 加密生成的兑换码
     private function encodeCouponCode(){

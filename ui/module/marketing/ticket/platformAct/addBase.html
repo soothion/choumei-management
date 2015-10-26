@@ -52,16 +52,15 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>活动编号：</label>
-                    <%if(data.actNo){%>
-                    <div class="control" id="control">
-                        <input type="text" name="actNo" value="<%=data.actNo%>" readOnly required>
+                    <%if(query.type=='edit'){%>
+                    <div class="control">
+                        <input type="text" name="actNo" value="<%=data.actNo%>" readOnly> 
                     </div>
-                    <%}else{%>
-                    <div class="control" id="control" ajat="<%if(!data.actNo){%>platform/getActNum<%}%>#domid=control&tempid=input-t" ajat-one="true">
- 
-                    </div>
-                    <%}%>
-
+                    <%}else{%>                        
+                        <div class="control" id="control" ajat="platform/getActNum#domid=control&tempid=input-t" ajat-one="true">
+     
+                        </div>
+                    <%}%>    
                 </div> 
 
                 <div class="control-group">

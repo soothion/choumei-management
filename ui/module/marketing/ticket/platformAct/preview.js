@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-23 17:36:01
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-23 18:54:23
+* @Last Modified time: 2015-10-26 15:06:05
 */
 
 (function(){
@@ -38,20 +38,17 @@
         }
         if(submitData.addActLimitEndTime){
             submitData.addActLimitEndTime = submitData.addActLimitEndTime  + " 23:59:59";
-        }
-		/*
-        if(submitData.limitItemTypes){
-            submitData.limitItemTypes = ","+submitData.limitItemTypes.join(",")+",";
-        }*/
-        if(submitData.useLimitTypes){
-            submitData.useLimitTypes = submitData.useLimitTypes[0];
-        }
+        }		
         if(submitData.phoneList && $.isArray(submitData.phoneList)){
             submitData.phoneList = submitData.phoneList.join(",");
         }
-		if(submitData.getItemTypes!==undefined){
-			submitData.getItemTypes=submitData.getItemTypes.split(",")
+		if(submitData.getItemTypes && typeof submitData.getItemTypes=='string'){
+			submitData.getItemTypes=submitData.getItemTypes.split(",");
 		}
+        delete submitData.manager;
+        delete submitData.checkTotalNumber;
+        delete submitData.avaDate;
+
         lib.ajax({
           type: "post",
           url : (type=="add"?"platform/add":"platform/editConf"),
@@ -74,7 +71,7 @@
     });
 
     function setData (data){
-        var items = JSON.parse(sessionStorage.getItem('platformItemTypes'));
+
         if(data.selectItemType == "1" || data.selectItemType=="2"){
             data.selectItem = data.selectUseType;
         }
@@ -83,32 +80,37 @@
         }
         if(data.selectItemType == "4"){
             data.selectItem = 8;
-        }
-        var items = JSON.parse(sessionStorage.getItem("platformItemTypes"));         
+        }       
         var itemTypeArr = [] , limitItemArr = [];
         if(data.getItemTypes && typeof data.getItemTypes=='string'){
-            var arr = data.getItemTypes.split(',');
-            arr.forEach(function(item,i){
-               items.forEach(function(obj,i){
-                if(item == obj.typeid){
-                    itemTypeArr.push(obj);
-                }
-                });
-            });
+            itemTypeArr = getLastArr(data.getItemTypes.split(','));
         }
-
+        if(data.getItemTypes && data.getItemTypes instanceof Array){
+            itemTypeArr =  getLastArr(data.getItemTypes);
+        }        
         if(data.limitItemTypes && typeof data.limitItemTypes == 'string'){
-            var arr = data.getItemTypes.split(',');
-            arr.forEach(function(item,i){
-                items.forEach(function(obj,i){
-                    if(item == obj.typeid){
-                        limitItemArr.push(obj);
-                    }
-                });
-            });
+            limitItemArr =  getLastArr(data.getItemTypes.split(','));
+        }
+        if(data.limitItemTypes && data.limitItemTypes instanceof Array){
+            limitItemArr =  getLastArr(data.limitItemTypes);
         }
         data.itemTypeArr = itemTypeArr;
         data.limitItemArr= limitItemArr;  
         return data;     
+    }
+
+    function getLastArr(arr){
+        var items = JSON.parse(sessionStorage.getItem('platformItemTypes'));        
+        var lastArr = [];
+        if(items){
+            arr.forEach(function(item,i){
+                items.forEach(function(obj,i){
+                    if(item == obj.typeid){
+                        lastArr.push(obj);
+                    }
+                });
+            });            
+        }
+        return lastArr;        
     }
 })()

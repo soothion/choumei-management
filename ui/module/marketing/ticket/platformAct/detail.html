@@ -162,7 +162,7 @@
                             }
                         }
                         sessionStorage.setItem('edit-base-data',JSON.stringify(data));  
-                        location.href = "addBase.html?type=edit&id="+lib.query.id+"&selectItemType="+data.selectItemType;                        
+                        location.href = "addBase.html?type=edit&id="+lib.query.id+"&selectItemType="+(data.selectItemType||1);                        
                     }
                 });
             })

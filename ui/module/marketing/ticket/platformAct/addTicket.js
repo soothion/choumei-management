@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-23 18:36:29
+* @Last Modified time: 2015-10-26 14:41:10
 */
 
 (function(){
@@ -76,10 +76,10 @@
         }
     })
 
-    $("#form").on('click',".flex-item a",function(e){
-        e.preventDefault();
-        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
-    });    
+    // $("#form").on('click',".flex-item a",function(e){
+    //     e.preventDefault();
+    //     location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
+    // });    
 
     $("#form").on('click','#preview-btn',function(){
         var data = lib.getFormData($("#form"));  
@@ -89,7 +89,14 @@
         sessionStorage.setItem('preview-base-data',JSON.stringify(previewData));
         window.open("preview.html?type="+type);       
     })
-    lib.Form.prototype.save = function(data){
+
+    lib.Form.prototype.save = function(data){   
+        if(!data.limitItemTypes){
+           data.limitItemTypes = [""];            
+        }
+        if(!data.useLimitTypes){
+           data.useLimitTypes = [""];            
+        }
         if(type == 'add'){    
             var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
             addData = $.extend({},addData,data);
@@ -98,7 +105,7 @@
         if(type == 'edit'){
             var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
             editData = $.extend({},editData,data);
-            sessionStorage.setItem('edit-base-data',JSON.stringify(editData));                          
+            sessionStorage.setItem('edit-base-data',JSON.stringify(editData));
         }   
         location.href = "preview.html?type="+type+"&selectItemType="+selectItemType;
     }      
