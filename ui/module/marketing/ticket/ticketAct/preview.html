@@ -182,7 +182,9 @@
 			$('#table').on("_ready",function(){
 				var $form=$('#form');
 				$form[0]._getFormData=function(){
-					return JSON.parse(window.localStorage.getItem('couponTmpData')); 
+                    var formData = JSON.parse(window.localStorage.getItem('couponTmpData'));
+                    formData.sendSms = formData.sendSms.replace(/\[useMoney\]/g,formData.money).replace(/\[name\]/g,formData.actName);
+					return formData;
 				}
 				$form.on("success",function(){
 					clearTmpData();
