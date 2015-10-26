@@ -546,7 +546,7 @@ $(function(){
 		var $this=$(this);
 		var maxlength=$this.parent().attr('maxlength');
 		var value=$this.val();
-		if(maxlength&&value){
+		if(maxlength){
 			$this.parent().append('<span class="keypress-help">还可以输入<em>'+(parseInt(maxlength)-$.trim(value.length))+'</em>个字</span>');
 		}
 		document.oncontextmenu=function(e){return false;}
