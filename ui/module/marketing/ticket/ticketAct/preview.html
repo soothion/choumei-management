@@ -158,6 +158,11 @@
             }
             return tmp.join('');
         }
+
+        var clearTmpData  = function(){
+            window.localStorage.removeItem('couponTmpData');
+        }
+
 			$('body').on('click','#clear-btn',function(){
                 lib.popup.confirm({
                     text:"确定取消本次编辑吗？",
@@ -172,7 +177,7 @@
 					return JSON.parse(window.localStorage.getItem('couponTmpData')); 
 				}
 				$form.on("success",function(){
-					localStorage.removeItem('couponTmpData');
+					clearTmpData();
 					parent.lib.popup.result({
 						text:lib.query.id?"编辑活动成功":"新增活动成功",
 						define:function(){
