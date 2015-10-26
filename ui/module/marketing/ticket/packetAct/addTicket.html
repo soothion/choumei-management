@@ -15,7 +15,7 @@
       .box{
         position: relative;
         width:410px;
-        height:208px;
+        height:192px;
         border:1px solid #ddd;
         margin:10px;
         float:left;        
@@ -38,6 +38,18 @@
       }
 	  .box:first-child .remove{
 		display:none;
+	  }
+	  .input-span{
+		display:inline-block;
+		position:relative;
+	  }
+	  .input-span .control-help{
+		position:absolute;
+		left:0;
+		top:100%;
+		background:#fff;
+		padding: 2px 4px;
+		  white-space: nowrap;
 	  }
       </style>
     </head>
@@ -91,34 +103,38 @@
                                 <span class="remove">X</span>
                             </div>
                             <hr />
-							
-                            <div>
-                                <span>金额数量：</span>
-                                <input type="text" required pattern="number" min="1" value="1" max="999999"/>
+							<div>
+                                金额数量：
+								<span class="input-span">
+                                <input type="text" class="money" required pattern="number" min="1" value="1" max="999999"/>
+								</span>
                                 <span class="space"></span>
-                                <span>元</span>
+                                元
                                 <span class="space"></span>
-                                <span>X</span>
+                                X
                                 <span class="space"></span>
+								<span class="input-span">
                                 <input type="text" required  pattern="number" min="1" value="1"  max="999999"/>
+								</span>
                                 <span class="space"></span>
-                                <span>张</span>
-                                <p class="control-help" style="display:none;"></p>
-                            </div>
-                            <div>
-                                <span>有效时间：</span>
+                                张
+								<br />
+								<br />
+                                有效时间：
+								<span class="input-span">
                                 <input type="text" required  pattern="number" min="1" value="1"  max="999999"/>
+								</span>
                                 <span class="space"></span>
-                                <span>天</span>
+                                天
                                 <span class="space"></span>
-                                <span>满</span>
+                                满
                                 <span class="space"></span>
+								<span class="input-span">
                                 <input type="text" required  pattern="number" value="0"  max="999999"/>
+								</span>
                                 <span class="space"></span>
-                                <span>元</span>                          
-                                <span>可用</span>  
-                                <p class="control-help" style="display:none;"></p>                          
-                            </div> 
+                                元可用
+								</div>
                         </div>
 						<%}else{%>
 							<%if(data.voucher&&data.voucher.forEach){
@@ -138,31 +154,36 @@
 								</div>
 								<hr />
 								<div>
-									<span>金额数量：</span>
-									<input type="text" required pattern="number" min="1" value="<%=item.vUseMoney||item.useMoney%>"  max="999999"/>
+									金额数量：
+									<span class="input-span">
+									<input type="text" class="money" required pattern="number" min="1" value="<%=item.vUseMoney||item.useMoney%>" max="999999"/>
+									</span>
 									<span class="space"></span>
-									<span>元</span>
+									元
 									<span class="space"></span>
-									<span>X</span>
+									X
 									<span class="space"></span>
+									<span class="input-span">
 									<input type="text" required  pattern="number" min="1" value="<%=item.vNumber||item.useTotalNum%>"  max="999999"/>
+									</span>
 									<span class="space"></span>
-									<span>张</span>
-									<p class="control-help" style="display:none;"></p>
-								</div>
-								<div>
-									<span>有效时间：</span>
+									张
+									<br />
+									<br />
+									有效时间：
+									<span class="input-span">
 									<input type="text" required  pattern="number" min="1"  value="<%=item.few_day%>"  max="999999"/>
+									</span>
 									<span class="space"></span>
-									<span>天</span>
+									天
 									<span class="space"></span>
-									<span>满</span>
+									满
 									<span class="space"></span>
+									<span class="input-span">
 									<input type="text" required  pattern="number" value="<%=item.vUseNeedMoney||item.useNeedMoney%>"  max="999999"/>
+									</span>
 									<span class="space"></span>
-									<span>元</span>                          
-									<span>可用</span>  
-									<p class="control-help" style="display:none;"></p>
+									元可用
 									<input type="hidden" name="vVcId" value="<%=item.vcId%>" />
 								</div> 
 								</div> 
@@ -218,6 +239,11 @@
 				$(this).before(clone);
 			}).on("click",".remove",function(){
 				$(this).closest('.box').remove();
+			}).on("pass",".money",function(){
+				var data=JSON.parse(sessionStorage.getItem("formData"));
+				if(parseInt(this.value)>data.total_money){
+					$(this).trigger("error",{type:"error",errormsg:"金额数量不能大于活动领取金额上限"});
+				}
 			})
         </script>      
     </body>
