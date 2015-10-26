@@ -257,7 +257,7 @@ class OnSaleController extends Controller{
 
 	    foreach ($result as &$item) {
 	    	if($item['userId']==0)
-	    		return "项目：$item['itemname']为旧数据，无法导出";
+	    		return '项目：['.$item['itemname'].']为旧数据，无法导出';
 	    	$item['prices'] = Item::getPrice($item['itemid']);
 	    }
 
