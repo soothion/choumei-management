@@ -190,11 +190,12 @@
         <script type="text/template" id='limitItemTypes-t'>
             <%var checkedIds = protocol.custom.sid && protocol.custom.sid.split(',')%>
             <%data.forEach(function(item){%>
+              <%if (item.typename != '其他'){%>
             <label class="checkbox">
                 <input type="checkbox" <%if ( checkedIds && checkedIds.indexOf(item.typeid.toString()) !=-1 ){%>checked="checked"<%}%> name="limitItemTypes" value="<%=item.typeid%>">
                 <span><%=item.typename%></span>
             </label>
-            <%})%>
+            <%}})%>
         </script>
 
         <script>
