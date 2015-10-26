@@ -137,11 +137,13 @@ class PlatformController extends Controller{
                 $tempArr1 = [4=>2,5=>3,6=>1];
                 $data['getCodeType'] = $tempArr1[ $tt ];
                 $data['getCode'] = $code;
-                $data['getItemTypes'] = ',' . join(',', $post['getItemTypes']) . ',';
+                if( isset( $post['getItemTypes'] ) && !empty($post['getItemTypes']))
+                    $data['getItemTypes'] = ',' . join(',', $post['getItemTypes']) . ',';
             }
         }elseif( $post['selectItemType'] == 3 ){
             $data['getTypes'] = 4;
-            $data['getItemTypes'] = ',' . join(',', $post['getItemTypes']) . ',';
+            if( isset( $post['getItemTypes'] ) && !empty($post['getItemTypes']))
+                $data['getItemTypes'] = ',' . join(',', $post['getItemTypes']) . ',';
         }elseif( $post['selectItemType'] == 4 ){
             $code = $post['code'];
             $data['getTypes'] = 5;
