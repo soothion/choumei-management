@@ -145,18 +145,26 @@
         };
 
         var splitStr = function(str,index){
-            var len = str.length,tmp=[],i,j = 0;
+            var len = str.length,tmp=[],i,j = 0,k=0;
             for ( i=0 ; i<len ; i = i+1){
               tmp.push(str[i]);
-              j = j+1;
               if (checkChinese(str[i])){
-                j = j+1;
+                j = j + 2;
+                k = k + 2;
+              }else{
+                j = j + 1;
+                k = k + 1;
               }
-              if (j % index === 0) {
+              if ( str[i] == "\n" ){
+                k = 0;
+
+              }
+              if (  k - index <= 1 && k - index >= 0 ) {
+                  k = 0;
                   tmp.push("<br/>");
               }
             }
-            return tmp.join('');
+            return tmp.join('').replace(/\n/g,"<br/>");
         }
 
         var clearTmpData  = function(){

@@ -129,7 +129,8 @@
                         text:options.text,
                         define: function(){
                             lib.ajax({
-                                url : options.url+options.id
+                                url : options.url+options.id,
+                                timeout: 600000
                             }).done(function(data, status, xhr){
                                 if(data.result == 1){
                                     parent.lib.popup.result({
