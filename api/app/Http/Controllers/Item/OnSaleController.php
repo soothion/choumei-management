@@ -257,15 +257,17 @@ class OnSaleController extends Controller{
 
 	    $error = [];
 	    foreach ($result as &$item) {
-	    	if($item['userId']==0&&$item['norms_cat_id']!=0)
+	    	if($item['userId']==0&&$item['norms_cat_id']!=0){
 	    		$error[] = $item;
+	    		continue;
+	    	}	
 	    	$item['prices'] = Item::getPrice($item['itemid']);
 	    }
 
 	    if(!empty($error)){
 	    	$msg = '';
 	    	foreach ($error as $key => $value) {
-	    		$msg .= '项目：【'.$item['itemname'].'】</br>';
+	    		$msg .= '项目：【'.$value['itemname'].'】</br>';
 	    	}
 	    	$count = count($msg);
 	    	$msg .= '以上'.$count.'个项目为有规格老数据，无法导出！';
