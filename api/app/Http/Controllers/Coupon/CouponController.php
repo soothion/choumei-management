@@ -378,7 +378,8 @@ class CouponController extends Controller{
             $voucherConfInfo['totalNum'] = $voucherConfInfo['useTotalNum'];
             $voucherConfInfo['budget'] = $voucherConfInfo['useTotalNum'] * $voucherConfInfo['useMoney'];
         }
-        
+        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
+            $voucherConfInfo['status'] = 4;
         $voucherConfInfo['companyCode'] = '-';
         $voucherConfInfo['activityCode'] = '-';
         $voucherConfInfo['dividendCode'] = '-';
