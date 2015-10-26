@@ -256,6 +256,8 @@ class OnSaleController extends Controller{
 	    $result = $query->take(100)->get();
 
 	    foreach ($result as &$item) {
+	    	if($item['userId']==0)
+	    		return "项目：$item['itemname']为旧数据，无法导出";
 	    	$item['prices'] = Item::getPrice($item['itemid']);
 	    }
 
