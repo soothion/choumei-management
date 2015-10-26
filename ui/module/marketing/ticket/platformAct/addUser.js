@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-26 11:16:10
+* @Last Modified time: 2015-10-26 15:10:36
 */
 
 (function(){
@@ -123,24 +123,24 @@
      * @param  {[type]} e [description]
      * @return {[type]}   [description]
      */
-    $("#form").on('click',".flex-item a",function(e){
-        e.preventDefault();
-        var selectItemType = 1;
-        if(type == 'add'){
-            var data = JSON.parse(sessionStorage.getItem('add-base-data'));
-            if(data.selectItemType){
-                selectItemType = data.selectItemType;
-            }  
-        }
+    // $("#form").on('click',".flex-item a",function(e){
+    //     e.preventDefault();
+    //     var selectItemType = 1;
+    //     if(type == 'add'){
+    //         var data = JSON.parse(sessionStorage.getItem('add-base-data'));
+    //         if(data.selectItemType){
+    //             selectItemType = data.selectItemType;
+    //         }  
+    //     }
         
-        if(type == 'edit'){
-            var data = JSON.parse(sessionStorage.getItem('edit-base-data'));
-            if(data.selectItemType){
-                selectItemType = data.selectItemType;
-            } 
-        }
-        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
-    }); 
+    //     if(type == 'edit'){
+    //         var data = JSON.parse(sessionStorage.getItem('edit-base-data'));
+    //         if(data.selectItemType){
+    //             selectItemType = data.selectItemType;
+    //         } 
+    //     }
+    //     location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
+    // }); 
 
     /**
      * 用户类型tab切换
@@ -154,7 +154,7 @@
             data.enoughMoeny    = "";
             data.phoneList      = [];
             data.code           = "";
-            data.selectUseType  = 1;
+            data.selectUseType  = "";
             data.selectItemType = 1;
             sessionStorage.setItem('add-base-data',JSON.stringify(data));           
         }

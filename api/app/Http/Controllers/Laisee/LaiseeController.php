@@ -580,7 +580,7 @@ class LaiseeController extends Controller {
      */
     public function close($id) {
         $laiseeConfig = LaiseeConfig::where('id', $id)->first();
-        if ($res) {
+        if ($laiseeConfig) {
             $res = LaiseeConfig::where('id', $id)->update(['status' => 'S', 'end_time' => date("Y-m-d H:i:s")]);
             if ($res !== false) {
                 Laisee::where('laisee_config_id', $id)->update(['status' => 'N']);  // 活动关闭将红包失效

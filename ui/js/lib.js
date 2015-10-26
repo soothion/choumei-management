@@ -1068,12 +1068,12 @@
 						if(pattern=="number"||pattern=="float"){
 							var min=$target.attr('min')
 							if(min&&parseFloat(val)<parseFloat(min)){
-								$target.trigger('error',{type:'pattern'});
+								$target.trigger('error',{type:'error',errormsg:'输入值不能小于'+min});
 								return;
 							}
 							var max=$target.attr('max')
 							if(max&&parseFloat(val)>parseFloat(max)){
-								$target.trigger('error',{type:'pattern'});
+								$target.trigger('error',{type:'error',errormsg:'输入值不能大于'+max});
 								return;
 							}
 						}

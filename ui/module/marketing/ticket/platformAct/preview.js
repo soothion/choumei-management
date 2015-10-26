@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-23 17:36:01
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-26 13:50:36
+* @Last Modified time: 2015-10-26 15:06:05
 */
 
 (function(){
@@ -45,6 +45,10 @@
 		if(submitData.getItemTypes && typeof submitData.getItemTypes=='string'){
 			submitData.getItemTypes=submitData.getItemTypes.split(",");
 		}
+        delete submitData.manager;
+        delete submitData.checkTotalNumber;
+        delete submitData.avaDate;
+
         lib.ajax({
           type: "post",
           url : (type=="add"?"platform/add":"platform/editConf"),

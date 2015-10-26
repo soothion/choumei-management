@@ -111,7 +111,7 @@
 							<div>
                                 金额数量：
 								<span class="input-span">
-                                <input type="text" required pattern="number" min="1" value="1"/>
+                                <input type="text" required pattern="number" min="1" value="1" max="999999"/>
 								</span>
                                 <span class="space"></span>
                                 元
@@ -119,7 +119,7 @@
                                 X
                                 <span class="space"></span>
 								<span class="input-span">
-                                <input type="text" required  pattern="number" min="1" value="1"/>
+                                <input type="text" required  pattern="number" min="1" value="1" max="999999"/>
 								</span>
                                 <span class="space"></span>
                                 张
@@ -127,7 +127,7 @@
 								<br />
                                 有效时间：
 								<span class="input-span">
-                                <input type="text" required  pattern="number" min="1" value="1"/>
+                                <input type="text" required  pattern="number" min="1" value="1" max="999999"/>
 								</span>
                                 <span class="space"></span>
                                 天
@@ -135,7 +135,7 @@
                                 满
                                 <span class="space"></span>
 								<span class="input-span">
-                                <input type="text" required  pattern="number" value="0"/>
+                                <input type="text" required  pattern="number" value="0" max="999999"/>
 								</span>
                                 <span class="space"></span>
                                 元可用
@@ -161,7 +161,7 @@
 									<div>
 										金额数量：
 										<span class="input-span">
-										<input type="text" required pattern="number" min="1" value="<%=item.vUseMoney||item.useMoney%>"/>
+										<input type="text" required pattern="number" min="1" value="<%=item.vUseMoney||item.useMoney%>" max="999999"/>
 										</span>
 										<span class="space"></span>
 										元
@@ -169,7 +169,7 @@
 										X
 										<span class="space"></span>
 										<span class="input-span">
-										<input type="text" required  pattern="number" min="1" value="<%=item.vNumber||item.useTotalNum%>"/>
+										<input type="text" required  pattern="number" min="1" value="<%=item.vNumber||item.useTotalNum%>" max="999999"/>
 										</span>
 										<span class="space"></span>
 										张
@@ -177,7 +177,7 @@
 										<br />
 										有效时间：
 										<span class="input-span">
-										<input type="text" required  pattern="number" min="1" value="<%=item.few_day%>"/>
+										<input type="text" required  pattern="number" min="1" value="<%=item.few_day%>" max="999999"/>
 										</span>
 										<span class="space"></span>
 										天
@@ -185,7 +185,7 @@
 										满
 										<span class="space"></span>
 										<span class="input-span">
-										<input type="text" required  pattern="number" value="<%=item.vUseNeedMoney||item.useNeedMoney%>"/>
+										<input type="text" required  pattern="number" value="<%=item.vUseNeedMoney||item.useNeedMoney%>" max="999999"/>
 										</span>
 										<span class="space"></span>
 										元可用                
