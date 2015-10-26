@@ -138,12 +138,12 @@ class PlatformController extends Controller{
                 $data['getCodeType'] = $tempArr1[ $tt ];
                 $data['getCode'] = $code;
                 if( isset( $post['getItemTypes'] ) && !empty($post['getItemTypes']))
-                    $data['getItemTypes'] = ',' . join(',', $post['getItemTypes']) . ',';
+                    $data['getItemTypes'] =join(',', $post['getItemTypes']);
             }
         }elseif( $post['selectItemType'] == 3 ){
             $data['getTypes'] = 4;
             if( isset( $post['getItemTypes'] ) && !empty($post['getItemTypes']))
-                $data['getItemTypes'] = ',' . join(',', $post['getItemTypes']) . ',';
+                $data['getItemTypes'] =  join(',', $post['getItemTypes']);
         }elseif( $post['selectItemType'] == 4 ){
             $code = $post['code'];
             $data['getTypes'] = 5;
@@ -161,7 +161,7 @@ class PlatformController extends Controller{
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
-        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = ',' . join(',',$post['limitItemTypes']) . ',';
+        if( isset($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']);
         if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
