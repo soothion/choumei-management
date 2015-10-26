@@ -1003,7 +1003,7 @@ class CouponController extends Controller{
         if( empty($voucherConf) || $voucherConf['IS_REDEEM_CODE']== 'N') return false;
         
         $count = \App\Voucher::where(['vcId'=>$vcId])->count();
-//        if( !empty($count) ) return false;
+        if( !empty($count) ) return false;
         $data['vcId'] = $voucherConf['vcId'];
         $data['vcSn'] = $voucherConf['vcSn'];
         $data['vcTitle'] = $voucherConf['vcTitle'];
