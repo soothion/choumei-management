@@ -232,9 +232,13 @@
 
                 <tr>
                     <td>
+                        <%
+                          var useLimitTypes = data.useLimitTypes ? data.useLimitTypes.toString() : "";
+                        %>
+
                         <label class="checkbox">
-                        <input type="checkbox" name="useLimitTypes" value="2" <%=data.useLimitTypes ? 'checked':''%>>
-                        <span>限制首单使用</span>
+                            <input type="checkbox" name="useLimitTypes" value="2" <%= useLimitTypes=="2" ? 'checked':''%>>
+                            <span>限制首单使用</span>
                         </label>                                      
                     </td>                                
                 </tr>                                   
@@ -277,12 +281,12 @@
     if(protocol.custom.limitItemTypes){
         var items = protocol.custom.limitItemTypes.split(",");
         items.forEach(function(item,i){
-        itemsObj[item] = true;
+            itemsObj[item] = true;
         });
     }
     %>        
     <%data.forEach&&data.forEach(function(item,i){%>
-        <label class="checkbox">
+        <label class="checkbox" style="display:<%=item.typename=='其他'?'none':''%>">
         <input type="checkbox" name="limitItemTypes" value="<%=item.typeid%>" <%=itemsObj[item.typeid] ? "checked":""%>>
         <span><%=item.typename%></span>
         </label> 
