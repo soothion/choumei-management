@@ -255,10 +255,21 @@ class OnSaleController extends Controller{
 		];
 	    $result = $query->take(100)->get();
 
+	    $error = [];
 	    foreach ($result as &$item) {
 	    	if($item['userId']==0&&$item['norms_cat_id']!=0)
-	    		return '项目：【'.$item['itemname'].'】为旧数据，无法导出';
+	    		$error[] = $item;
 	    	$item['prices'] = Item::getPrice($item['itemid']);
+	    }
+
+	    if(!empty($error)){
+	    	$msg = '';
+	    	foreach ($error as $key => $value) {
+	    		$msg .= '项目：【'.$item['itemname'].'】</br>';
+	    	}
+	    	$count = count($msg);
+	    	$msg .= '以上'.$count.'个项目为有规格老数据，无法导出！';
+	    	return $msg;
 	    }
 
 	    $result = json_encode($result);
