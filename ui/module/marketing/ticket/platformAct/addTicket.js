@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-26 13:24:29
+* @Last Modified time: 2015-10-26 14:41:10
 */
 
 (function(){
@@ -76,10 +76,10 @@
         }
     })
 
-    $("#form").on('click',".flex-item a",function(e){
-        e.preventDefault();
-        location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
-    });    
+    // $("#form").on('click',".flex-item a",function(e){
+    //     e.preventDefault();
+    //     location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
+    // });    
 
     $("#form").on('click','#preview-btn',function(){
         var data = lib.getFormData($("#form"));  
