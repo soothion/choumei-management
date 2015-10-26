@@ -227,7 +227,7 @@ class SalonItem extends Model {
 	        $min_price_ori = floatval($item['minPriceOri']);
 	        if($timingShelves>0 && $timingShelves<$now_time)
 	        {
-	            throw new ApiException("项目 [{$id} : $name] 已满足定时下架时间设置，请修改定时下架时间  定时下架时间 [".date("Y-m-d H:i:s",$timingShelves)."] ",ERROR::ITEM_WRONG_EXP_TIME);
+	            throw new ApiException("项目 [{$id} : $name] 已满足定时下架时间设置,请修改定时下架时间  定时下架时间 [".date("Y-m-d H:i:s",$timingShelves)."] ",ERROR::ITEM_WRONG_EXP_TIME);
 	        }
 	        if($min_price<=0 || $min_price_ori<=0)
 	        {
