@@ -318,12 +318,12 @@
 
         <%data.forEach&&data.forEach(function(item,i){%>
             <% if(protocol.custom.isEdit == 'add'){%>
-            <label class="checkbox">
+            <label class="checkbox" style="display:<%=item.typename=='其他'?'none':''%>">
                 <input type="checkbox" <%=itemsObj[item.typeid] ? "checked":""%> name="getItemTypes" value="<%=item.typeid%>" required <%=protocol.custom.getItemTypes ? "":"disabled"%>>
                 <span><%=item.typename%></span>
             </label> 
             <%}else{%>
-            <label class="checkbox">
+            <label class="checkbox" style="display:<%=item.typename=='其他'?'none':''%>">
                 <input type="checkbox" <%=itemsObj[item.typeid] ? "checked":""%> name="getItemTypes" value="<%=item.typeid%>"  disabled>
                 <span><%=item.typename%></span>
             </label> 
