@@ -41,7 +41,7 @@
 
                         <tr>
                             <td>活动简介</td>
-                            <td><%=data.lc_remark.replace(/\n/g,"</br>")%></td>
+                            <td><%=splitStr(data.lc_remark).replace(/\n/g,"</br>")%></td>
                         </tr>
 
                         <tr>
@@ -103,6 +103,24 @@
             </div>
         </div>
 		<script type="text/javascript">
+			var splitStr = function(str,index){
+				var array=[];
+				str.split("\n").forEach(function(item,i){
+					if(item.length>20){
+						var tmp="";
+						for(var i=0;i<item.length;i++){
+							tmp=tmp+item.charAt(i);
+							if(tmp.length==20){
+								array.push(tmp);
+								tmp="";
+							}
+						}
+					}else{
+						array.push(item);
+					}
+				});
+				return array.join("\n");
+			}
 			$('#table').on("_ready",function(){
 				var form=$('#table form')[0];
 				form.goback=function(){
