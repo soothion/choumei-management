@@ -63,7 +63,7 @@ class CouponController extends Controller{
         // 必须填写的参数
         $mustKey = array(
             'actName','actIntro','departmentId','managerId',
-            'money','getSingleLimit','actNo'
+            'money','getSingleLimit','actNo','totalNumber'
         );
         // 返回前端数组
         $result = array();
@@ -80,8 +80,7 @@ class CouponController extends Controller{
         $data['vcRemark'] = $post['actIntro'];
         $exists = \App\VoucherConf::where(['vcSn'=>$data['vcSn']])->count();
         if( $exists ) return $this->error('存在活动编号，请勿重复提交');
-        if( !isset($post['totalNumber']) || empty($post['totalNumber']))
-            return $this->error('兑换劵上限未填写');
+        if( !isset($post['totalNumber']) || empty($post['totalNumber'])) return $this->error('兑换劵上限未填写');
         // 定义代金劵
         $data['useMoney'] = $post['money'];
         $data['getNumMax'] = $post['getSingleLimit'];
@@ -98,6 +97,7 @@ class CouponController extends Controller{
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         
+        if( $post['totalNumber'] > 3000) return $this->error( '设置的兑换劵总数量不能大于3000' );
         $data['status'] = 2;
         $data['ADD_TIME'] = date('Y-m-d H:i:s');
         $data['IS_REDEEM_CODE'] = 'Y';
@@ -997,7 +997,7 @@ class CouponController extends Controller{
    
     // 点击上线操作生成兑换码劵插入到代金劵表中
     private function upActCoupon( $vcId ){
-        set_time_limit(3600);
+        set_time_limit(360);
         $voucherConf = \App\VoucherConf::where(['vcId'=>$vcId])->first()->toArray();
         // 未找到项目配置信息 或 项目配置信息不是兑换活动配置
         if( empty($voucherConf) || $voucherConf['IS_REDEEM_CODE']== 'N') return false;
@@ -1018,7 +1018,7 @@ class CouponController extends Controller{
 //        Queue::push(  );
         $insert = ' INSERT cm_voucher (`vcId`,`vcSn`,`vcTitle`,`vUseMoney`,`vUseItemTypes`,`vUseLimitTypes`,`vUseNeedMoney`,`vUseStart`,`vUseEnd`,`vStatus`,`REDEEM_CODE`,`vSn`) VALUES ';
         $len = $voucherConf['useTotalNum'];
-        if( $len > 3000 ) return $this->error( '设置的兑换劵总数量不能大于3000' );
+        
         for($i=0,$len;$i<$len;$i++){
             $data['REDEEM_CODE'] = $this->encodeCouponCode();
             $data['vSn'] = $this->getVoucherSn('DH');
