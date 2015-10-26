@@ -46,7 +46,11 @@
                        <tr>
                         <td><%=data[i].create_time%></td>
                         <td><%=data[i].description%></td>
-                        <td><%=data[i].score%></td>
+                        <%if(data[i].score.toString().indexOf("-") > -1){%>
+                            <td><%=data[i].score.toString().replace('-','减分 ')%></td>
+                        <%}else{%>
+                            <td><%="加分 "+data[i].score%></td>
+                        <%}%>    
                         <td><%=data[i].totalScore%></td>
                         </tr>
                         <%}%>                    
