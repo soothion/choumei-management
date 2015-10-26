@@ -152,7 +152,7 @@
 										<span>选择类型：</span>
 										<select>
 											<%types.forEach(function(item2){%>
-											<option <%=item.useItemTypes==item2.typeid||item.vUseItemTypes==item2.typeid?"checked":""%> value="<%=item2.typeid%>"><%=item2.typename%></option>
+											<option <%=item.useItemTypes==item2.typeid||item.vUseItemTypes==item2.typeid?"selected":""%> value="<%=item2.typeid%>"><%=item2.typename%></option>
 											<%})%>
 										</select>
 										<span class="remove">X</span>
