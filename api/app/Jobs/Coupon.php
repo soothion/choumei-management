@@ -14,8 +14,8 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 //    use InteractsWithQueue;
-    private static  $DES_KEY = "authorlsptime20141225\0\0\0";
-    private $voucherConf = [];
+    public $DES_KEY = "authorlsptime20141225\0\0\0";
+    public $voucherConf = [];
     
     public function __construct( $voucherConf ) {
         $this->voucherConf = $voucherConf;
@@ -67,7 +67,7 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
    // 加密生成的兑换码
     private function encodeCouponCode(){
         $desModel = new NetDesCrypt;
-        $desModel->setKey( self::$DES_KEY );
+        $desModel->setKey( $this->DES_KEY );
         $code = $this->createCouponCode();
         $encodeCode = $desModel->encrypt( $code );
         // 判断当前是否存在
