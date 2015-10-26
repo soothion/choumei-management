@@ -247,7 +247,6 @@ class BountyTask extends Model {
             $offset = 0;
         }
         //赏金单
-        DB::enableQueryLog();
         DB::connection()->setFetchMode(PDO::FETCH_ASSOC);
         //导出查询
         if ($size < 0) {
@@ -257,9 +256,6 @@ class BountyTask extends Model {
         else {
             $bountys = $query->orderBy($sortKey, $sortType)->skip($offset)->take($size)->get();
         }
-        $queries = DB::getQueryLog();
-        $last_query = end($queries);
-        Log::info('Bounty getList getQueryLog is: ', $last_query);
         //相关的用户信息
         $uids = Utils::get_column_array("userId", $bountys);
         $uids = array_unique($uids);
@@ -267,9 +263,7 @@ class BountyTask extends Model {
         if (count($uids) > 0) {
             $users = User::getUsersByIds($uids);
         }
-        $queries = DB::getQueryLog();
-        $last_query = end($queries);
-        Log::info('Bounty getList getQueryLog is: ', $last_query);
+
         //造型师信息
         $hairstylistIds = Utils::get_column_array("hairstylistId", $bountys);
         $hairstylistIds = array_map("intval", $hairstylistIds);
@@ -278,9 +272,7 @@ class BountyTask extends Model {
         if (count($hairstylistIds) > 0) {
             $hairstylists = Hairstylist::getHairstylistsByIds($hairstylistIds);
         }
-        $queries = DB::getQueryLog();
-        $last_query = end($queries);
-        Log::info('Bounty getList getQueryLog is: ', $last_query);
+
         //店铺信息
         $salon_ids = Utils::get_column_array("salonId", $bountys);
         $salon_ids = array_map("intval", $salon_ids);
@@ -289,9 +281,7 @@ class BountyTask extends Model {
         if (count($salon_ids) > 0) {
             $salons = Salon::getsalonsByIds($salon_ids);
         }
-        $queries = DB::getQueryLog();
-        $last_query = end($queries);
-        Log::info('Bounty getList getQueryLog is: ', $last_query);
+
         //支付流水
         $bountySn = Utils::get_column_array("btSn", $bountys);
         $bountySn = array_unique($bountySn);
@@ -299,9 +289,7 @@ class BountyTask extends Model {
         if (count($bountySn) > 0) {
             $flows = PaymentLog::getPaymentLogsBySns($bountySn);
         }
-        $queries = DB::getQueryLog();
-        $last_query = end($queries);
-        Log::info('Bounty getList getQueryLog is: ', $last_query);
+
         $items = self::compositeAll($bountys, $users, $salons, $flows, $hairstylists);
         return $items;
     }
@@ -878,7 +866,6 @@ class BountyTask extends Model {
             $wx_url = env("WXREFUND_URL");
             foreach ($wechat_items as $item) {
                 $res_str = self::curlRefund($item['bountySn'], $item['userId'], $item['money'], $item['tn'], $wx_url);
-//                simple_log(date("Y-m-d H:i:s") . "\t" . $res_str . "\n", "wx_refund_return");
                 Utils::log('pay', date("Y-m-d H:i:s") . "\t" . $res_str . "\n", "wx_refund_return");
                 if (strpos($res_str, "OK") !== false) {
                     $output['info'] .= $item['bountySn'] . " 退款成功\n";
@@ -961,7 +948,6 @@ class BountyTask extends Model {
     public static function httpPost($data, $url) {
         $curl = curl_init();
         //请求前的信息记录
-//        simple_log(date("Y-m-d H:i:s") . "\t" . json_encode(['url' => $url, 'data' => $data]) . "\n", "REFUND_POST_FLOW");
         Utils::log('pay', date("Y-m-d H:i:s") . "\t" . json_encode(['url' => $url, 'data' => $data]) . "\n", "REFUND_POST_FLOW");
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_TIMEOUT, self::TIME_OUT);
@@ -983,7 +969,6 @@ class BountyTask extends Model {
         $url = env("ALIPAY_REFUND_CALLBACK_URL");
         if (empty($url)) {
             Utils::log('pay', "please set the config of `ALIPAY_REFUND_CALLBACK_URL` \n", "refund_error");
-//            throw new ApiException("`ALIPAY_REFUND_CALLBACK_URL` can not be empty!");
         }
         return $url;
     }

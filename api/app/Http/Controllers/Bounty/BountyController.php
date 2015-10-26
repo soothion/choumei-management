@@ -8,7 +8,6 @@ use App\User;
 use App\Salon;
 use App\Hairstylist;
 use App\PaymentLog;
-use Log;
 use Event;
 use Excel;
 use App\Exceptions\ERROR;
@@ -98,7 +97,6 @@ class BountyController extends Controller {
      */
     function index() {
         $param = $this->param;
-        Log::info('Bounty getList param is: ', $param);
         if (isset($param['page']) && !empty($param['page'])) {
             $page = $param['page'];
         } else {
@@ -210,7 +208,6 @@ class BountyController extends Controller {
      */
     function show() {
         $param = $this->param;
-        Log::info('Bounty detail param is: ', $param);
         if (empty($param['no'])) {
             throw new ApiException('没有id传递！', ERROR::BOUNTY_ID_NOT_PASS);
         }
@@ -269,7 +266,6 @@ class BountyController extends Controller {
      */
     function refundShow() {
         $param = $this->param;
-        Log::info('Bounty refundDetail param is: ', $param);
         if (empty($param['no'])) {
             throw new ApiException('赏金单详情没有id传值！', ERROR::BOUNTY_ID_NOT_PASS);
         }
@@ -321,7 +317,6 @@ class BountyController extends Controller {
      */
     function accept() {
         $param = $this->param;
-        Log::info('Bounty accept param is: ', $param);
         if (empty($param['ids'])) {
             throw new ApiException('赏金单没有id传值！', ERROR::BOUNTY_ID_NOT_PASS);
         }
@@ -370,7 +365,6 @@ class BountyController extends Controller {
      */
     function reject() {
         $param = $this->param;
-        Log::info('Bounty accept param is: ', $param);
         if (empty($param['ids'])) {
             throw new ApiException('赏金单没有id传值！', ERROR::BOUNTY_ID_NOT_PASS);
         }
@@ -419,7 +413,6 @@ class BountyController extends Controller {
      */
     public function exportBounty() {
         $param = $this->param;
-        Log::info('Bounty getList param is: ', $param);
         $param['isRefund'] = 1;
         if (isset($param['page']) && !empty($param['page'])) {
             $page = $param['page'];
@@ -474,7 +467,6 @@ class BountyController extends Controller {
      */
     public function exportRefund() {
         $param = $this->param;
-        Log::info('Bounty getList param is: ', $param);
         $param['isRefund'] = 2;
         if (isset($param['page']) && !empty($param['page'])) {
             $page = $param['page'];
