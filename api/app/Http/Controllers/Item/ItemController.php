@@ -346,8 +346,7 @@ class ItemController extends Controller{
 	    	foreach ($error as $key => $value) {
 	    		$msg .= '项目：【'.$value['itemname'].'】</br>';
 	    	}
-	    	$count = count($msg);
-	    	$msg .= '以上'.$count.'个项目为有规格老数据，无法导出！';
+	    	$msg .= '存在未修改过的多规格项目，请按现项目格式修改过后再导出';
 	    	return $msg;
 	    }
 
