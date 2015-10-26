@@ -93,7 +93,7 @@ class CouponController extends Controller{
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime'] . " 00:00:00");
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime'] . " 23:59:59");
         if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']) ;
-        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
+        if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         
@@ -582,7 +582,7 @@ class CouponController extends Controller{
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime'] . " 00:00:00");
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime'] . " 23:59:59");
         if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']);
-        if( isset($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
+        if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
