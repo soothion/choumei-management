@@ -1,11 +1,13 @@
 <?php  namespace  App\Http\Controllers\Stylist;
 
 use App\Stylist;
-use App\Works;
+use App\StylistWorks;
+use App\FileImage;
 use App\Http\Controllers\Controller;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use DB;
+use PDO;
 class WorksController extends Controller {
     /**
      * @api {post} /works/index/:id 1.造型师的作品列表和所在店的其他
@@ -37,21 +39,25 @@ class WorksController extends Controller {
      *    {
      *           "works":
      *           [
-     *               {
-     *                   "recId":2378,
-     *                   "stylistId":26,
-     *                   "commoditiesImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/143332415715992.jpg",
-     *                   "description":"","thumbImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/s_143332415715992.jpg",
-     *                   "img":null,
-     *                   "addTime":"0000-00-00"
-     *               },
-     *               {
-     *                   "recId":2377,
-     *                   "stylistId":26,
-     *                   "commoditiesImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/14333241599000.jpg",
-     *                   "description":"","thumbImg":"http:\/\/sm.choumei.cn\/Uploads\/salonshop\/2015-06-03\/s_14333241599000.jpg",
-     *                   "img":null
-     *                   "addTime":"0000-00-00"
+     *              {
+     *                   "id":1,
+     *                   "stylist_id":38,
+     *                   "image_ids":"1,2,3,4",
+     *                   "status":"ON",
+     *                   "add_time":1444820916,
+     *                   "description":"\u8fd9\u662f\u4e00\u4e2a\u63cf\u8ff01",
+     *                   "img":
+     *                   [
+     *                           {
+     *                               "worksId":1,
+     *                               "originImg":"http:\/\/img01.choumei.cn\/1\/785973\/201510081147144427607355578597387596.jpg"
+     *                           },
+     *                          ......
+     *                           {
+     *                               "worksId":4,
+     *                               "originImg":"http:\/\/img01.choumei.cn\/1\/785973\/201509281548144342652083878597311884.jpg"
+     *                           }
+     *                   ]
      *               }
      *            ],
      *           "salonSelf":
@@ -108,47 +114,56 @@ class WorksController extends Controller {
         }
         
         $salonStylist=Stylist::select($field)->where('salonId','=',$stylist['salonId'])->where('stylistId','<>',$stylistId )->get();
-        $field2=['salonname'];      
+        $field2=['salonname']; 
+        DB::connection()->setFetchMode(PDO::FETCH_ASSOC);
         $salon=DB::table('salon')->select($field2)->where(array('salonId'=>$stylist['salonId']))->first();
-        $works=Works::where(array('stylistId'=>$stylistId))->orderBy('addTime', 'desc')->get();
+          
+        $works=StylistWorks::getQuery()->where('stylist_id',$stylistId)->orderBy('add_time', 'desc')->get();
         $query=array();
-        foreach ($works as $key2 =>$value) {
-             if(!empty($works['img'])){
-                  $works->img= json_decode($works['img'], true);
-             }
-        }
-        
+         foreach ($works as $key2 =>$value) {
+              if(!empty($value["image_ids"])){
+                  $imageArr = explode(',', $value["image_ids"]);
+                  
+                  $works[$key2]['img']=[];
+                  $imagecount=count($imageArr);
+                  for ($i = 0; $i <$imagecount; $i++) {
+                     $image =FileImage::getQuery()->where('id',$imageArr[$i])->first();
+                     $img['worksId']=$image["id"];
+                     $img['originImg']=$image["url"];
+                     $works[$key2]['img'][]=$img;
+   
+                  }
+                  
+              }
+         }
+    
+
         foreach ($salonStylist as $key =>$value) {
             $num=0; 
-            $works1= Works::where('stylistId','=',$value->stylistId)->get();
+            $works1= StylistWorks::where('stylist_id','=',$value->stylistId)->get();
             foreach ($works1 as $key1 =>$value) {
-                if(!empty($value['img'])){
-                    $image=  json_decode($value['img'],true);
-                    $num=$num+(count($image));
-                }  else {   
-                    $num=$num+1;
-                }
-                
-             }
+                if(!empty($value['image_ids'])){
+                    $imageArr = explode(',', $value['image_ids']);
+                    $num=$num+(count($imageArr));
+                }  
+             }  
            $salonStylist[$key]->num=$num;
-           $salonStylist[$key]->uploadNum=DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->count();
+           $salonStylist[$key]->uploadNum=  count(json_decode($works1,true));
          }
+         
          
         if ($stylist) {
             $num=0; 
-            $works3= Works::where('stylistId','=',$stylistId)->get();
+            $works3= StylistWorks::where('stylist_id','=',$stylistId)->get();
             foreach ($works3 as $key7 =>$value) {
-                if(!empty($value['img'])){
-                    $image=  json_decode($value['img'],true);
-                    $num=$num+(count($image));
-                }  else {   
-                    $num=$num+1;
-                }
-                
+              if(!empty($value['image_ids'])){
+                    $imageArr = explode(',', $value['image_ids']);
+                    $num=$num+(count($imageArr));
+                }  
              }
            $stylist->num=$num;
-           $stylist->uploadNum=DB::table('hairstylist_works')->where('stylistId','=',$stylistId)->count();
-           $stylist->salonname=$salon->salonname;
+           $stylist->uploadNum=StylistWorks::where('stylist_id','=',$stylistId)->count();
+           $stylist->salonname=$salon["salonname"];
          }
          
         $query['works']=$works;
@@ -182,24 +197,34 @@ class WorksController extends Controller {
      *		}
      */
     public function  del_list($recId){
-        $works=  Works::where(array('recId'=>$recId))->count();
+        $works=StylistWorks::where('id',$recId)->first();
         if($works==FALSE){
              throw new ApiException('作品ID出错', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
-        $query=  Works::where(array('recId'=>$recId))->delete();
+        //清理cm_file_image表中数据
+        self::del_list2($works->image_ids);
+        $query=  StylistWorks::where(array('id'=>$recId))->delete();
         if($query){
             return $this->success();
         }else{
             throw new ApiException('删除作品失败', ERROR::MERCHANT_WORKS_DELETE_ERROR);
         }
     }
+    
+    public function  del_list2($image_ids){
+        $imageArr = explode(',',$image_ids);
+        for ($i = 0; $i < count($imageArr); $i++) {
+            FileImage::where('id',$imageArr[$i])->delete();
+        }
+    }
+    
     /**
      * @api {post} /works/del/:id  3.删除单个作品
      * @apiName del
      * @apiGroup  Works
      *
      * @apiParam {Number} recId 必填,作品id.
-     * @apiParam {String} img 必填,作品集合  以（作品集和作品集缩略图）为一个单元，（没值就传空）.
+     * @apiParam {String} img  必填,[woeksId]作品集合.eg:  "1,2,3"  作品ID集合，以逗号隔开
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -219,16 +244,16 @@ class WorksController extends Controller {
      */
     public function  del($recId){
         $param=$this->param;
-        $works=  Works::where(array('recId'=>$recId))->count();
+        $works=  StylistWorks::where(array('id'=>$recId))->count();
         if($works==FALSE){
              throw new ApiException('作品ID出错', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
         $data=array();
         if(!empty($param['img'])){
-            $data['img']=$param['img'];
-            $query=  Works::where(array('recId'=>$recId))->update($data);
+            $data['image_ids']=$param['img'];
+            $query=  StylistWorks::where(array('id'=>$recId))->update($data);
         }else{
-            $query=  Works::where(array('recId'=>$recId))->delete();
+            $query=  StylistWorks::where(array('id'=>$recId))->delete();
         }
         if($query){
                 return $this->success();
@@ -243,7 +268,7 @@ class WorksController extends Controller {
      * @apiGroup  Works
      *
      * @apiParam {Number} recId 必填,作品id.
-     * @apiParam {String} img 必填,作品集合.
+     * @apiParam {String} img 必填,[woekId]作品集合.eg:  "1,2,3"  作品ID集合，以逗号隔开
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -263,7 +288,7 @@ class WorksController extends Controller {
      */
     public function  update($recId){
         $param=$this->param;
-        $works=  Works::where(array('recId'=>$recId))->count();
+        $works=  StylistWorks::where(array('id'=>$recId))->count();
         if($works==FALSE){
              throw new ApiException('作品ID出错', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
@@ -271,8 +296,8 @@ class WorksController extends Controller {
         if(empty($param['img'])){
              throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
         }
-        $data['img']=$param['img'];
-        $query=  Works::where(array('recId'=>$recId))->update($data);
+        $data['image_ids']=$param['img'];
+        $query=  StylistWorks::where(array('id'=>$recId))->update($data);
         if($query){
                 return $this->success();
         }else{
@@ -287,7 +312,7 @@ class WorksController extends Controller {
      *
      * @apiParam {Number} stylistId 必填,造型师ID.
      * @apiParam {String} description 必填,作品描述.
-     * @apiParam {String} img 必填,作品集合.
+     * @apiParam {String} img  必填,[originImg]作品集合. eg:"www,ee,qq,bb"    作品原图路径集合，以逗号隔开
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -310,44 +335,28 @@ class WorksController extends Controller {
         if(empty($param['img'])||empty($param['stylistId'])){
              throw new ApiException('创建作品的参数不齐', ERROR::MERCHANT_ERROR);
         }
-        $data['img']=$param['img'];
-        $data['stylistId']=$param['stylistId'];
-        $data['addTime']=  date("Y-m-d H:i:s", time());
+      
+         $imageArr = explode(',', $param["img"]);
+         $fileIds = array();
+         $imagecount=count($imageArr);
+         for ($i = 0; $i < $imagecount; $i++) {
+             $data2['url']=$imageArr[$i]; 
+             $fileImage=FileImage::create($data2);
+             $fileIds[] = $fileImage->id;
+
+         }
+        $data['image_ids']= implode(',', $fileIds);
+        $data['stylist_id']=$param['stylistId'];
+        $data['add_time']= time();
+        
         if(isset($param['description'])||$param['description']){
              $data['description']=$param['description'];
         }
-        $query=  Works::create($data);
+        $query=  StylistWorks::create($data);
         if($query){
              return $this->success();
         }else{
              throw new ApiException('创建作品失败', ERROR::MERCHANT_WORKS_CREATE_ERROR);
         }
     }  
-
-//    public function uploadfile() {
-//        $upload = new \Think\Upload();            // 实例化上传类
-//        $upload->maxSize = 3145728 ;              // 设置附件上传大小
-//        $upload->allowExts = array('jpg', 'png'); // 设置附件上传类型
-//        $upload->savePath = 'menlist/';		  // 设置附件上传目录
-//        $return = array('res'=>0,'data'=>'上传失败');
-//        $file_info = @current($upload->upload()); //上传成功 获取上传文件信息
-//        if(!$file_info){
-//               exit(json_encode($return));
-//        }else{
-//            $pre  = C('IMG_PATH');
-//            $file = ltrim(C('UPLOAD_PATH'),'./').$file_info['savepath'].$file_info['savename'];
-//            $temp = getimagesize($file);
-//            $endName = strtolower(end(explode(".",$file_info['savename'])));
-//            if(!in_array($endName, array('jpg', 'png'))){
-//            	exit(json_encode(array('res'=>0,'data'=>'图片格式错误！')));
-//            }
-//            //if(!$temp){exit(json_encode(array('res'=>0,'data'=>'图片格式错误！')));}
-//            if($temp[0] != 420 || $temp[1] != 492) exit(json_encode(array('res'=>0,'data'=>'图片尺寸错误')));
-//            //if(filesize($file) > 800*1024) exit(json_encode(array('res'=>0,'data'=>'图片大小错误')));  5.0没有大小限制
-//            $img = $pre.$file;
-//            $return = array('res'=>1,'data'=>$img);
-//            exit(json_encode($return));
-//        }
-//    }
-    
 }

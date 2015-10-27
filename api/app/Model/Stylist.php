@@ -3,6 +3,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
+use App\StylistWorks;
 use Log;
 
 class Stylist  extends Model {
@@ -45,15 +46,12 @@ class Stylist  extends Model {
          unset($results['prev_page_url']);
          foreach ($results['data'] as $key =>$value) {
             $num=0; 
-            $works= DB::table('hairstylist_works')->where('stylistId','=',$value->stylistId)->get();
+            $works=StylistWorks::where('stylist_id','=',$value->stylistId)->get();
             foreach ($works as $key1 =>$value) {
-                if(!empty($value->img)){
-                    $image= json_decode($value->img,true);
-                    $num=$num+(count($image));
-                }  else {   
-                    $num=$num+1;
-                }
-                
+                if(!empty($value->image_ids)){
+                     $imageArr = explode(',', $value->image_ids);
+                    $num=$num+(count($imageArr));
+                } 
              }
            $results['data'][$key]->num=$num;
          }
