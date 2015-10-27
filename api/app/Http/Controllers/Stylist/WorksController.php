@@ -119,39 +119,43 @@ class WorksController extends Controller {
         $salon=DB::table('salon')->select($field2)->where(array('salonId'=>$stylist['salonId']))->first();
           
         $works=StylistWorks::getQuery()->where('stylist_id',$stylistId)->orderBy('add_time', 'desc')->get();
+        $stylist->uploadnum = count($works);
+        $stylist->num = 0;
+        $stylist->salonname = $salon['salonname'];
         $query=array();
-         foreach ($works as $key2 =>$value) {
-              if(!empty($value["image_ids"])){
-                  $imageArr = explode(',', $value["image_ids"]);
+        foreach ($works as $key2 =>$value) {
+            if($value['status'] == 'OFF') 
+                continue;
+            $stylist->num++;
+            if(!empty($value["image_ids"])){
+                $imageArr = explode(',', $value["image_ids"]);
                   
-                  $works[$key2]['img']=[];
-                  $imagecount=count($imageArr);
-                  for ($i = 0; $i <$imagecount; $i++) {
-                     $image =FileImage::getQuery()->where('id',$imageArr[$i])->first();
-                     $img['worksId']=$image["id"];
-                     $img['originImg']=$image["url"];
-                     $works[$key2]['img'][]=$img;
+                $works[$key2]['img']=[];
+                $imagecount=count($imageArr);
+                for ($i = 0; $i <$imagecount; $i++) {
+                    $image =FileImage::getQuery()->where('id',$imageArr[$i])->first();
+                    $img['worksId']=$image["id"];
+                    $img['originImg']=$image["url"];
+                    $works[$key2]['img'][]=$img;
    
-                  }
+                }
                   
-              }
-         }
+            }
+        }
     
 
         foreach ($salonStylist as $key =>$value) {
-            $num=0; 
+            $salonStylist[$key]->num = 0;
             $works1= StylistWorks::where('stylist_id','=',$value->stylistId)->get();
             foreach ($works1 as $key1 =>$value) {
-                if(!empty($value['image_ids'])){
-                    $imageArr = explode(',', $value['image_ids']);
-                    $num=$num+(count($imageArr));
-                }  
-             }  
-           $salonStylist[$key]->num=$num;
-           $salonStylist[$key]->uploadNum=  count(json_decode($works1,true));
-         }
+                if($value['status'] == 'ON')
+                    $salonStylist[$key]->num++;
+            }  
+            $salonStylist[$key]->uploadNum= count($works1);
+        }
          
          
+         /*
         if ($stylist) {
             $num=0; 
             $works3= StylistWorks::where('stylist_id','=',$stylistId)->get();
@@ -165,6 +169,7 @@ class WorksController extends Controller {
            $stylist->uploadNum=StylistWorks::where('stylist_id','=',$stylistId)->count();
            $stylist->salonname=$salon["salonname"];
          }
+          */
          
         $query['works']=$works;
         $query['salonSelf']=$stylist;
