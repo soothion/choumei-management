@@ -322,12 +322,6 @@
                 return newDate.format("yyyy-MM-dd");
             }
 
-
-            var initStartDate = function(val){
-              $('#avaDateStart').val(formattedDate(val));
-              $('#avaDateStart').val(formattedDate(val));
-            }
-
             var changeDateMin = function(val){
                 var date = val ? val : new Date().format("yyyy-MM-dd");
                 $('#avaDateStart,#avaDateEnd').val('');
