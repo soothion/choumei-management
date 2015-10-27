@@ -55,7 +55,7 @@
                var next    = current.next();
                if(prev.length>0){
                    var prevValue = prev.find('input').val(); 
-                   if(prevValue*1 > $(this).val()*1){
+                   if(parseInt(prevValue) >= parseInt($(this).val())){
                         current.find(".control-help").text("积分必须大于前一个积分，小于后一个积分");
                         current.find(".control-help").addClass('show');
                         return;
@@ -63,7 +63,7 @@
                }
                if(next.length>0){
                    var nextValue = next.find('input').val(); 
-                   if(nextValue*1 < $(this).val()*1){
+                   if(parseInt(nextValue) <= parseInt($(this).val())){
                         current.find(".control-help").text("积分必须大于前一个积分，小于后一个积分");
                         current.find(".control-help").addClass('show');
                         return;

@@ -36,7 +36,7 @@
 	'bonus.index':'/module/marketing/ticket/packetList/index.html',
 	'starconf.index':'/module/config/app/index.html',
 	'salonstar.index':'/module/config/app/vantages.html',
-	'scoreconf.index':'/module/config/app/score.html'
+	'scoreconf.index':'/module/config/app/score.html',
 	'info.index':'/module/store/info/index.html'
 }
 var access={
