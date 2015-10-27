@@ -2,12 +2,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\SalonItemtype;
+use App\SalonItemType;
 
 class AddedserviceSalon extends  Model
 {
     protected $table = 'addedservice_salon';
-    
+
     public $timestamps = false;
     
     /**
@@ -17,7 +17,7 @@ class AddedserviceSalon extends  Model
     {
     	if(!$salonid) return false;
     	
-    	$itemType = SalonItemtype::all();
+    	$itemType = SalonItemType::all();
     	$result = self::where('salonId',$salonid)->get()->toArray();
 		if(!$result)//如果存在就不开通所有服务--
 		{
@@ -27,5 +27,4 @@ class AddedserviceSalon extends  Model
 			}
 		}
     }
-
 }

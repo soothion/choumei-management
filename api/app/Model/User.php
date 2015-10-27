@@ -109,7 +109,7 @@ class User extends  Model
         $redis = Redis::connection();
         $result = [];
         for ($i=14; $i >= 0; $i--){ 
-            //当在的数据实时统计
+            //当天的数据实时统计
             if($i==0){
                 $day = date('Y-m-d',strtotime('today'));
                 $count = Self::getRegisterByDay($day);
@@ -138,7 +138,7 @@ class User extends  Model
         $redis = Redis::connection();
         $result = [];
         for ($i=14; $i >= 0; $i--){ 
-            //当在的数据实时统计
+            //当天的数据实时统计
             if($i==0){
                 $day = date('Y-m-d',strtotime('today'));
                 $count = Self::getFirstByDay($day);
@@ -166,7 +166,7 @@ class User extends  Model
             $next = $current+3600*24;
             $users = Order::whereBetween('use_time',[$current,$next])->lists('user_id');
             $orders = Order::whereIn('user_id',$users)->where('use_time','!=',0)->orderBy('use_time','desc')->groupBy('user_id')->lists('orderid');
-            $count = Order::whereIn('orderid',$orders)->count();
+            $count = count($orders);
             return $count;
     }
 

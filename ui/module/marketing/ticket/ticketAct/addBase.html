@@ -33,8 +33,13 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>活动名称：</label>
                 <div class="control">
-                    <input type="text" name="actName" value="<%=data.actName%>" placeholder="活动名称"
+                    <%if (data.actNo){%>
+                    <input type="text" disabled="disabled" value="<%=data.actName%>" placeholder="活动名称"
                     maxlength="12" required >
+                    <%}else{%>
+                        <input type="text" name="actName" value="<%=data.actName%>" placeholder="活动名称"
+                        maxlength="12" required >
+                    <%}%>
                 </div>
             </div>
             <div class="control-group">
@@ -49,7 +54,7 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>活动简介：</label>
                 <div class="control">
-                    <textarea maxlength="5000" name="actIntro" placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符" required style="height:150px;width:500px"><%=data.actIntro%></textarea>
+                    <textarea maxlength="5000"  name="actIntro" placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符" required style="height:150px;width:500px"><%=data.actIntro%></textarea>
                 </div>
             </div>
             <div class="control-group">

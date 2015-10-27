@@ -36,15 +36,21 @@
 								<span>1.店铺基本信息</span>
 							</a>
 						</li>
+                        <li class="flex-item">
+                            <a href="picture.html">
+                                <i class="fa fa-check-circle"></i>
+                                <span>2.店铺图片信息</span>
+                            </a>
+                        </li>                        
 						<li class="flex-item">
 							<a href="bank.html">
 								<i class="fa fa-check-circle"></i>
-								<span>2.银行账号信息</span>
+								<span>3.银行账号信息</span>
 							</a>
 						</li>
-						<li class="flex-item active"><span class="arrow">3.准入评估信息</span></li>
-						<li class="flex-item"><i></i><span>4.附件上传</span></li>
-                        <li class="flex-item"><span>5.财务结算</span></li>
+						<li class="flex-item active"><span class="arrow">4.准入评估信息</span></li>
+						<li class="flex-item"><i></i><span>5.附件上传</span></li>
+                        <li class="flex-item"><span>6.财务结算</span></li>
 					</ul>
                    <div>
                        <p><strong>店铺信息</strong></p>
@@ -126,9 +132,9 @@
                     <div class="control-group">
                         <label class="control-label" for="">销售最多的充值卡金额：</label>
                         <div class="control">
-                            <input type="text" name="payMoney" class="component-width" placeholder="销售最多的充值卡金额" value="<%=data.payMoney%>" pattern="float" patternmsg="销售最多的充值卡金额有误">
+                            <input type="text" name="payMoney" placeholder="销售最多的充值卡金额" value="<%=data.payMoney%>" pattern="float" patternmsg="销售最多的充值卡金额有误">
                             <span class="unit">元</span>
-                            <input type="text" name="payMoneyScale" class="component-width" pattern="float" len="2" decimal="2" placeholder="销售最多的充值卡金额折扣" value="<%=data.payMoneyScale%>" patternmsg="销售最多的充值卡金额折扣有误">
+                            <input type="text" name="payMoneyScale" pattern="float" len="2" decimal="2" placeholder="销售最多的充值卡金额折扣" value="<%=data.payMoneyScale%>" patternmsg="销售最多的充值卡金额折扣有误">
                             <span class="unit">折</span>
                         </div>
                     </div>

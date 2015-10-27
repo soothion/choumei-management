@@ -117,19 +117,21 @@
                                                    checked="checked">
                                                    <span>指定有效期</span>
                                                </label>
-                                               <input type="date" required value="<%=data.avaDateStart?data.avaDateStar: new Date().format('yyyy-MM-dd')%>" id="avaDateStart" name="addActLimitStartTime"/>
+                                               <input type="date" <%= data.fewDay ? "disabled='disabled'" : ""%> required value="<%
+                                               if (data.addActLimitStartTime)
+                                               =data.addActLimitStartTime?formattedDate(data.addActLimitStartTime): new Date().format('yyyy-MM-dd')%>" id="avaDateStart" name="addActLimitStartTime"/>
                                                <span>至</span>
-                                               <input type="date" required id="avaDateEnd" match="avaDateStart" matchmsg="截止时间不能小于起始时间" value="<%=data.avaDateEnd?data.avaDateEnd:new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" name="addActLimitEndTime"/>
+                                               <input type="date" required <%= data.fewDay ? "disabled='disabled'" : ""%>  id="avaDateEnd" match="avaDateStart" matchmsg="截止时间不能小于起始时间" value="<%=data.addActLimitEndTime?formattedDate(data.addActLimitEndTime):new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" name="addActLimitEndTime"/>
                                                <span class="control-help" style="display:none;"></span>
                                            </div>
                                            <hr />
                                            <div style="margin:15px">
                                                <label class="radio">
-                                                   <input type="radio" class="avaDateRadio" <%if (data.fewDay){%>checked="checked" <%}%> name="avaDate" value="2" >
+                                                   <input type="radio" id="fewDayRadio" class="avaDateRadio" <%if (data.fewDay){%>checked="checked" <%}%> name="avaDate" value="2" >
                                                    <span>自定义有效期区间</span>
                                                </label>
-                                               <input type="text" id="avaDay" <%if (!data.fewDay){%>disabled="disabled"<%}%> name="fewDay" value="<%=data.fewDay || 1%>" pattern="number" min="1"/>
-                                               <span>天内有效（获取现金券后）</span>
+                                               <input type="text" id="avaDay" <%if (!data.fewDay){%>disabled="disabled"<%}%> name="fewDay" value="<%=data.fewDay || 1%>" pattern="number" min="1" max="999"/>
+                                               <span>天内有效（获取现金券后,可填写1~999）</span>
                                            </div>
                                        </td>
                                    </tr>
@@ -219,6 +221,11 @@
             var getSubmitData = function(){
                 var thisFormData = lib.tools.getFormData($('#form'));
                 var tmpData = getTmpData();
+                if (thisFormData.addActLimitStartTime){
+                  tmpData.fewDay = '';
+                }else{
+                  tmpData.addActLimitStartTime = tmpData.addActLimitEndTime = '';
+                }
                 var formData = $.extend(tmpData,thisFormData);
                 return formData;
             }
@@ -236,7 +243,6 @@
                 window.localStorage.removeItem('couponTmpData');
             }
 
-            getTemplateData();
 
             // var newForm = new lib.Form();
             lib.Form.prototype.save = function(data){
@@ -343,7 +349,9 @@
                          });
                      }
                  });
-            }
+            };
+
+            getTemplateData();
         </script>
     </body>
 </html>

@@ -1138,7 +1138,7 @@ class PlatformController extends Controller{
     // 获取分类
     private function _getItemType(){
         // 这里用于 代金劵和配置中会和前端约定 增加一个项目特价类型为typeid为101
-        $itemType = \App\SalonItemtype::select(['typeid','typename'])
+        $itemType = \App\SalonItemType::select(['typeid','typename'])
                 ->where('status','=',1)
                 ->orderBy('sortIt','DESC')
                 ->get()

@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-07-07 10:22:30
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-07-08 18:22:46
+* @Last Modified time: 2015-09-29 11:39:23
 */
 
 (function(){
@@ -23,7 +23,7 @@
 
     $(".flex-item a").on('click',function(e){
         e.preventDefault();
-        location.href = "add.html?type="+type;
+        location.href = $(this).attr('href') + "?type="+type;
     });
 
     $("#preview-btn").on('click',function(){

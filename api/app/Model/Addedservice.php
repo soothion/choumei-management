@@ -3,12 +3,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SalonItemtype extends  Model
+class Addedservice extends  Model
 {
-    protected $table = 'salon_itemtype';
-    
+    protected $table = 'addedservice';
+
     public $timestamps = false;
-    
-    
-    
 }

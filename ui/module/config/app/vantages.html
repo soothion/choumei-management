@@ -78,7 +78,7 @@
                             <td><%=data[i].level%></td>
                             <td><%=data[i].score%></td>
                             <td>
-                            <a class="link add" data-salonid="<%=data[i].salonid%>" data-slug="salonstar.update">增加积分</a>
+                            <a class="link add" data-salonid="<%=data[i].salonid%>" data-score="<%=data[i].score%>" data-slug="salonstar.update">增加积分</a>
                             <span class="space">|</span>
                             <a class="link minus" data-score="<%=data[i].score%>" data-salonid="<%=data[i].salonid%>" data-slug="salonstar.update">减少积分
                             </a>
@@ -100,10 +100,10 @@
                     <div class="control-group">
                         <label class="control-label" for="">
                             <span class="red">*</span>
-                            <span id="labelText">增加积分：</span>
+                            <span id="labelText"><%=data.type==1?"增加":"减少"%>积分：</span>
                         </label>
                         <div class="control">
-                            <input type="text" name="score" required pattern="number" maxlength="9">
+                            <input type="text" name="score" required pattern="number" maxlength="9" max="<%=data.score%>">
                             <span class="unit">分</span>
                         </div>
                     </div> 

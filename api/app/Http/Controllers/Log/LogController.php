@@ -119,7 +119,7 @@ class LogController extends Controller{
 		$param = $this->param;
 		$query = Log::getQueryByParam($param);
 
-		$array = $query->get();
+		$array = $query->take(10000)->get();
 	    foreach ($array as $key => $value) {
 	    	$result[$key]['username'] = $value->username;
 	    	$result[$key]['roles'] = $value->roles;

@@ -8,14 +8,16 @@ use App\SalonUser;
 use App\Merchant;
 use App\SalonRatingsRecord;
 use App\SalonScoreLog;
+use App\SalonWorks;
+use Event;
 class Salon extends Model {
 
 	protected $table = 'salon';
+	
 	protected $primaryKey = 'salonid';
+	
 	public $timestamps = false;
 	
-	//protected $fillable = ['id', 'sn','name','contact','mobile','phone','email','addr','foundingDate','salonNum','addTime' ];
-
     public function rebate(){
         return $this->hasMany('App\Rebate');
     }    
@@ -347,40 +349,41 @@ class Salon extends Model {
 	 * */
 	public static function dodel($salonid)
 	{
-		$result = DB::table('salon')->select(['salestatus','merchantId'])->where('salonid', $salonid)->first();
-		$rs = (array)$result;	
-		
-		
-		if(!$rs)
+		$result = Salon::where(['salonid'=>$salonid])->select(['salestatus','merchantId'])->first();
+		if(!$result)
 		{
 			return -2;
 		}
-		elseif($rs['salestatus'] == 1 )
+		elseif($result->salestatus == 1 )
 		{
 			return -1;//未停止合作
 		}
-
-		$affectid =  DB::table('salon')
-            ->where('salonid', $salonid)
-            ->update(array('salestatus'=>2,'status'=>3));
+		DB::beginTransaction();
+		$affectid =  Salon::where(['salonid'=>$salonid])->update(array('salestatus'=>2,'status'=>3));
 		
 		SalonUser::where(['salonid'=>$salonid])->update(['status'=>3]);//删除普通用户账号
 		
-		$merchantId = $rs['merchantId'];
+		$merchantId = $result->merchantId;
 		$usersCount = DB::table('salon_user')
-		->where('merchantId','=' ,$merchantId)
-		->where('salonid','!=' ,0)
-		->where('status','=' ,1)
-		->count();
+							->where('merchantId','=' ,$merchantId)
+							->where('salonid','!=' ,0)
+							->where('status','=' ,1)
+							->count();
 		if(!$usersCount)
 		{
 			DB::table('salon_user')//删除账号  超级管理员
-			->where('salonid','=' ,0)
-			->where('merchantId','=' ,$merchantId)
-			->update(['status'=>3]);
+				->where('salonid','=' ,0)
+				->where('merchantId','=' ,$merchantId)
+				->update(['status'=>3]);
 		}
-		
-		
+		if($affectid)
+		{
+			DB::commit();
+		}
+		else
+		{
+			DB::rollBack();
+		}
 		return $affectid;
 	}
 	
@@ -399,7 +402,7 @@ class Salon extends Model {
 	   			    's.district',
 					's.shopType',
 					's.contractTime',
-					//'s.contractPeriod',
+					's.logo',
 					's.bargainno',
 					's.bcontacts',
 					's.tel',
@@ -414,6 +417,7 @@ class Salon extends Model {
 					's.salonChangeGrade',
 					's.changeInTime',
 					's.salonCategory',
+					's.salonLogo',
 					'i.bankName',
 					'i.beneficiary',
 					'i.bankCard',
@@ -457,7 +461,6 @@ class Salon extends Model {
 					'i.ssEndTime',
 					'i.strongClaim',
 					'i.subsidyPolicy',
-				
 					'm.name',
 					'm.id as merchantId',
 					'b.businessName',
@@ -466,13 +469,13 @@ class Salon extends Model {
 					
 				);
 			$salonList =  DB::table('salon as s')
-	            ->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
-	            ->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-	            ->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
-	            ->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
-	            ->select($fields)
-	            ->where(array('s.salonid'=>$salonid))
-	            ->first();
+            				->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
+           					->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
+            				->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
+            				->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
+            				->select($fields)
+          					->where(['s.salonid'=>$salonid])
+            				->first();
 
 			$salonList = (array)$salonList;
 			
@@ -491,10 +494,10 @@ class Salon extends Model {
 					}
 					
 				}
-			}
-	
-			if($salonList)
-			{
+				
+				$salonList['salonImg'] = SalonWorks::getSalonWorks($salonid,3);//店铺图集
+				$salonList['workImg'] = SalonWorks::getSalonWorks($salonid,4);//团队图集
+				
 				$areaArr = self::getAreaMes(array('zone'=>$salonList['zone'],'district'=>$salonList['district'])) ;
 				if($areaArr)
 				{
@@ -616,6 +619,72 @@ class Salon extends Model {
             return false;
         }
     }
+
+	/**
+	 * 添加修改操作
+	 *
+	 * */
+	public static  function doadd($data,$dataInfo,$img,$where='',$whereInfo='',$joinDividend=0)
+	{	
+		DB::beginTransaction();
+		if($where)//修改
+		{
+			$salonId = $whereInfo['salonid'];
+			self::setSalonGrade($salonId,$data,$dataInfo,2);//店铺等级调整
+			self::where($where)->update($data);
+			$salonTmpInfo = SalonInfo::where($whereInfo)->first();
+			if(!$salonTmpInfo)
+			{
+				SalonInfo::insertGetId(array('salonid'=>$whereInfo['salonid']));
+			}
+			$affectid = SalonInfo::where($where)->update($dataInfo);
+				
+			if($affectid)
+			{
+				//触发事件，写入日志
+				Event::fire('salon.update','店铺Id:'.$salonId.' 店铺名称：'.$data['salonname']);
+			}
+			Dividend::addSalonCode($data,$salonId,2,$joinDividend);//店铺邀请码
+	
+		}
+		else //添加
+		{
+				
+			$data['sn'] = self::getSn($data['merchantId']);//店铺编号
+			$salonId = self::insertGetId($data);
+				
+			if($salonId)
+			{
+				$dataInfo['salonid'] = $salonId;
+				$affectid = SalonInfo::insertGetId($dataInfo);
+				if($affectid)
+				{
+					DB::table('merchant')->where('id','=',$data['merchantId'])->increment('salonNum',1);//店铺数量加1
+					//触发事件，写入日志
+					Event::fire('salon.save','店铺Id:'.$salonId.' 店铺名称：'.$data['salonname']);
+				}
+			}
+
+			Dividend::addSalonCode($data,$salonId,1,$joinDividend);//添加店铺邀请码
+			self::setSalonGrade($salonId,$data,$dataInfo,1);//店铺等级调整
+		}
+		//店铺图集  团队图集
+		SalonWorks::saveImgs($salonId,3,$img['salonImg']);
+		SalonWorks::saveImgs($salonId,4,$img['workImg']);
+		
+		//超级管理员设置
+		self::where(array('salonid'=>$salonId))->update(array('puserid'=>SalonUser::setAdminAccount($data['merchantId'])));
+		if($affectid)
+		{
+			DB::commit();
+		}
+		else
+		{
+			DB::rollBack();
+		}
+		return $affectid;
+	
+	}
 
 }
 

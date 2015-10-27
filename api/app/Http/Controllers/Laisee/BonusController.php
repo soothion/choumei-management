@@ -158,7 +158,6 @@ class BonusController extends Controller {
         $size = isset($options['page_size']) ? max(intval($options['page_size']), 1) : 20;
         $laiseeList = Laisee::getLaiseeList($data, $page, $size);
         $result = [];
-        $num = 1;
         foreach ($laiseeList['data'] as $key => $val) {
             $failLaisee = Laisee::where('order_ticket_id', $val['order_ticket_id'])->where('status', 'N')->count();
             if ($failLaisee) {
@@ -175,14 +174,14 @@ class BonusController extends Controller {
                     }
                 }
             }
-            $result[$key]['num'] = $num;
+//            $result[$key]['num'] = $num;
             $result[$key]['bonusSn'] = "hb" . str_pad($val['order_ticket_id'], 6, '0', STR_PAD_LEFT);
             $result[$key]['laisee_name'] = $val['laisee_name'];
             $result[$key]['bonusAmount'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
             $result[$key]['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
             $result[$key]['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
             $result[$key]['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
-            $val['over_time'] = $val['end_time'];
+            $result[$key]['over_time'] = $val['end_time'];
             if ($val['status'] == "Y") {
                 $result[$key]['status'] = "进行中";
             } elseif ($val['status'] == "N") {
@@ -190,11 +189,10 @@ class BonusController extends Controller {
             } else {
                 $result[$key]['status'] = "已过期";
             }
-            $num++;
         }
         //导出excel	   
         $title = '红包列表' . date('Ymd');
-        $header = ['序号', '红包编号', '红包名称', '红包总金额', '现金券总数', '已领现金券数', '生成时间', '有效天数', '红包状态'];
+        $header = ['红包编号', '红包名称', '红包总金额', '现金券总数', '已领现金券数', '生成时间', '到期时间', '红包状态'];
         Excel::create($title, function($excel) use($result, $header) {
             $excel->sheet('Sheet1', function($sheet) use($result, $header) {
                 $sheet->fromArray($result, null, 'A1', false, false); //第五个参数为是否自动生成header,这里设置为false

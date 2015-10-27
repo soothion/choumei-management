@@ -14,6 +14,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use App\SalonItemType;
 
 class ListController extends Controller {
 
@@ -166,7 +167,7 @@ class ListController extends Controller {
     	$rs = BusinessStaff::getBusinessStaff();
 		return $this->success($rs);
     }
-
+     
 }
 
 ?>
