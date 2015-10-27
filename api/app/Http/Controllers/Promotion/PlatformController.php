@@ -510,7 +510,8 @@ class PlatformController extends Controller{
                 }
                 if( !empty($val['getEnd']) && time() > $val['getEnd'] )
                     $res['data'][$key]['status'] = 4;
-                
+                if( !empty($val['totalNum']) )
+                    $res['data'][$key]['totalNum'] = '无限';
                 unset( $res['data'][$key]['useEnd'] );
                 unset( $res['data'][$key]['getStart'] );
                 unset( $res['data'][$key]['getEnd'] );
