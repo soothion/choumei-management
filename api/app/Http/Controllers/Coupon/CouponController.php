@@ -10,6 +10,7 @@ use App\Exceptions\ApiException;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ERROR;
 use Log;
+use App\VoucherConf;
 
 class CouponController extends Controller{
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
@@ -703,34 +704,7 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function upConf($vcId){
-        if( empty($vcId) )
-            throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
-        // 修改配置表中为已上线状态
-        \App\VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
-        // 修改voucher表中手机是否已经注册
-        $phoneList = \App\Voucher::select(['vMobilephone'])->where(['vStatus'=>10,'vcId'=>$vcId])->get()->toArray();
-        //判断当前活动是否勾选了消费类项目
-        $voucherConf = \App\VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd'])->where(['vcId'=>$vcId])->first()->toArray();
-        
-        $getItemTypes=$voucherConf['getItemTypes'];
-        $getNeedMoney=$voucherConf['getNeedMoney'];
-        
-        foreach( $phoneList as $val ){
-            $voucherData = array();
-            $where1 = 'vStatus=10 AND vMobilephone ="'.$val['vMobilephone'].'"';
-            $voucherStatus = $this->verifyUserPhoneExists($val['vMobilephone']);
-            // 统一处理 不管有无注册过
-            $nowTime=  time();
-            // 其中一个不为空则有消费类型  将状态改为3 待激活   
-            if(!empty($getItemTypes)||!empty($getNeedMoney)||(!empty($voucherConf['getStart']) && $nowTime< $voucherConf['getStart'])){  
-                $voucherData['vStatus']=3;
-            }else{ 
-               $voucherData['vStatus'] = empty( $voucherStatus ) ? 3 : 1;
-            }
-            $voucherData['vUserId'] = empty( $voucherStatus ) ? 0 : $voucherStatus['user_id'];
-            \App\Voucher::whereRaw( $where1 )->update( $voucherData );
-        }
-        $this->upActCoupon( $vcId );
+        $this->dispach(new Coupon($vcId));
         return $this->success();
     }
     /***
@@ -1011,55 +985,6 @@ class CouponController extends Controller{
         return array( $totalNum , $useNum , $invalidNum,$duihuanNum );
     }
    
-    // 点击上线操作生成兑换码劵插入到代金劵表中
-    private function upActCoupon( $vcId ){
-        set_time_limit(360);
-        $voucherConf = \App\VoucherConf::where(['vcId'=>$vcId])->first()->toArray();
-        // 未找到项目配置信息 或 项目配置信息不是兑换活动配置
-        if( empty($voucherConf) || $voucherConf['IS_REDEEM_CODE']== 'N') return false;
-        
-        $count = \App\Voucher::where(['vcId'=>$vcId])->count();
-        if( !empty($count) ) return false;
-        $data['vcId'] = $voucherConf['vcId'];
-        $data['vcSn'] = $voucherConf['vcSn'];
-        $data['vcTitle'] = $voucherConf['vcTitle'];
-        $data['vUseMoney'] = $voucherConf['useMoney'];
-        $data['vUseItemTypes'] = $voucherConf['useItemTypes'];
-        $data['vUseLimitTypes'] = $voucherConf['useLimitTypes'];
-        $data['vUseNeedMoney'] = $voucherConf['useNeedMoney'];
-        $data['vUseStart'] = $voucherConf['useStart'];
-        $data['vUseEnd'] = $voucherConf['useEnd'];
-        $data['vStatus'] = 3;
-        $len = $voucherConf['useTotalNum'];
-//        
-        for($i=0,$len;$i<$len;$i++){
-            $data['REDEEM_CODE'] = $this->encodeCouponCode();
-            $data['vSn'] = $this->getVoucherSn('DH');
-            \App\Voucher::insertGetId($data);
-        }
-        // 现阶段将兑换劵总数设定为3000
-////        Queue::push(  );
-//        $insert = ' INSERT cm_voucher (`vcId`,`vcSn`,`vcTitle`,`vUseMoney`,`vUseItemTypes`,`vUseLimitTypes`,`vUseNeedMoney`,`vUseStart`,`vUseEnd`,`vStatus`,`REDEEM_CODE`,`vSn`) VALUES ';
-//        $len = $voucherConf['useTotalNum'];
-//        
-//        for($i=0,$len;$i<$len;$i++){
-//            $data['REDEEM_CODE'] = $this->encodeCouponCode();
-//            $data['vSn'] = $this->getVoucherSn('DH');
-//            // 测试
-//            $code = $this->encodeCouponCode();
-//            $vSn = $this->getVoucherSn('DH');
-//            if( $i==0 )
-//                $insert .= " ( {$voucherConf['vcId']} , '{$voucherConf['vcSn']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn')";
-//            elseif( $i == $len-1 )
-//                $insert .= ",( {$voucherConf['vcId']} , '{$voucherConf['vcSn']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn');";
-//            else    
-//                $insert .= ",( {$voucherConf['vcId']} , '{$voucherConf['vcSn']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn')";
-////            $addVoucher = \App\Voucher::insertGetId($data);
-////            if(empty($addVoucher)) Log::info("插入到代金劵失败:". print_r($data,true));
-//        }
-//        DB::insert( $insert );
-//        Log::info( $insert );
-    }
     // 加密生成的兑换码
     private function encodeCouponCode(){
         $desModel = new \Service\NetDesCrypt;

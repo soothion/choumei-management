@@ -177,6 +177,11 @@ class User extends  Model
         return $count;
     }
 
+    // 验证手机号码是否存在
+    public static function verifyUserPhoneExists( $phone ){
+        $exists = Self::select(['user_id','os_type'])->where(['mobilephone'=>$phone])->first();
+        return $exists;
+    }
 
 
 }
