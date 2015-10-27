@@ -270,7 +270,7 @@
                     <div class="control">
                         <span>满额获取：</span>
                         <label class="checkbox">
-                            <input type="text" name="enoughMoney" required value="<%=data.enoughMoney || 0%>" <%= query.type =='edit' ? 'disabled' : '' %> pattern='float'>
+                            <input type="text" name="singleEnoughMoney" required value="<%=data.singleEnoughMoney || 0%>" <%= query.type =='edit' ? 'disabled' : '' %> pattern='float'>
                             <strong>元&nbsp;&nbsp;&nbsp;&nbsp;可获取</strong>
                             <span class="weak">（大于或等于该数值可获取，0为不限制，可填写0~999）</span>
                             <span class="control-help" style="display:none;"></span>
