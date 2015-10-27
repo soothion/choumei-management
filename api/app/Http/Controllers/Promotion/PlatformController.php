@@ -454,6 +454,7 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function confList(){
+//        set_time_limit(20);
         $post = $this->param;
         $actSelect = isset($post['selectItem']) ? $post['selectItem'] : '';
         $actNumber = isset($post['keyword']) ? urldecode($post['keyword']) : '';
@@ -463,7 +464,10 @@ class PlatformController extends Controller{
         $actEndTime = isset($post['endTime']) ? $post['endTime'] : '';
         $page = isset( $post['page'] ) ? $post['page'] : 1;
         $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
-        
+        if( !empty($actEndTime))
+            $actEndTime .= ' 23:59:59';
+        if( isset($post['page_size']) && !empty($post['page_size']))
+            $pageSize = $post['page_size'];
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
             //手动设置页数
             AbstractPaginator::currentPageResolver(function() use ($page) {
@@ -475,7 +479,6 @@ class PlatformController extends Controller{
                     ->paginate($pageSize)
                     ->toArray();
             if( empty($res) ) return $this->success();
-            
             foreach( $res['data'] as $key=>$val ){
                 $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
                 $res['data'][$key]['allNum'] = $statistics[0];
@@ -484,11 +487,12 @@ class PlatformController extends Controller{
                 $res['data'][$key]['actTime'] = '';
                 if( empty( $val['getStart'] ) && empty($val['getEnd']) )
                     $res['data'][$key]['actTime'] = '无限期活动';
-                if( !empty($val['getStart']) && empty($val['getEnd']) )
+                if( !empty($val['getStart']) && empty($val['getEnd'])  && strlen($val['getStart'])>8)
                     $res['data'][$key]['actTime'] = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
-                if( !empty($val['getEnd']) && empty($val['getStart']) )
+                
+                if( !empty($val['getEnd']) && empty($val['getStart']) && strlen($val['getEnd'])>8)
                     $res['data'][$key]['actTime'] = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
-                if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
+                if( !empty( $val['getStart'] ) && !empty($val['getEnd'])  && strlen($val['getEnd'])>8 && strlen($val['getStart'])>8)
                     $res['data'][$key]['actTime'] = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
                 $res['data'][$key]['department'] = '';
                 if( !empty($val['DEPARTMENT_ID']) ){
@@ -497,6 +501,7 @@ class PlatformController extends Controller{
                 }
                 if( !empty($val['getEnd']) && time() > $val['getEnd'] )
                     $res['data'][$key]['status'] = 4;
+                
                 unset( $res['data'][$key]['useEnd'] );
                 unset( $res['data'][$key]['getStart'] );
                 unset( $res['data'][$key]['getEnd'] );
@@ -506,20 +511,20 @@ class PlatformController extends Controller{
         }
         $actType = array('','vcSn','vcTitle');
         $obj = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
-        $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'N']);
+        $obj = $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'N']);
         if( !empty($actSelect) && !empty($actNumber) )
-            $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
+            $obj = $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
         
         if( !empty($actStatus) ){
             if( $actStatus != 4 )
-                $obj->where('status','=',$actStatus);
+                $obj = $obj->where('status','=',$actStatus);
             else
-                $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
+                $obj = $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
         }
         if( !empty($actStartTime) && !empty($actEndTime))
-            $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
+            $obj = $obj->whereRaw(' ((getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" ))');
         if( !empty( $actDepartment ) )
-            $obj->where('DEPARTMENT_ID','=',$actDepartment);
+            $obj = $obj->where('DEPARTMENT_ID','=',$actDepartment);
         //手动设置页数
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
@@ -1055,6 +1060,10 @@ class PlatformController extends Controller{
         $actEndTime = isset($post['endTime']) ? $post['endTime'] : '';
         $page = isset( $post['page'] ) ? $post['page'] : 1;
         $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
+        if( !empty($actEndTime))
+            $actEndTime .= ' 23:59:59';
+        if( isset($post['page_size']) && !empty($post['page_size']))
+            $pageSize = $post['page_size'];
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
             AbstractPaginator::currentPageResolver(function() use ($page) {
                 return $page;
@@ -1080,20 +1089,20 @@ class PlatformController extends Controller{
         }
         $actType = array('','vcSn','vcTitle');
         $obj = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
-        $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'N']);
+        $obj = $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'N']);
         if( !empty($actSelect) && !empty($actNumber) )
-            $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
+            $obj = $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
         
         if( !empty($actStatus) ){
             if( $actStatus != 4 )
-                $obj->where('status','=',$actStatus);
+                $obj = $obj->where('status','=',$actStatus);
             else
-                $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
+                $obj = $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
         }
         if( !empty($actStartTime) && !empty($actEndTime))
-            $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
+            $obj = $obj->whereRaw(' （(getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" ))');
         if( !empty( $actDepartment ) )
-            $obj->where('DEPARTMENT_ID','=',$actDepartment);
+            $obj = $obj->where('DEPARTMENT_ID','=',$actDepartment);
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });
@@ -1162,9 +1171,14 @@ class PlatformController extends Controller{
    }
    // 获取代金劵状态
    private function getVoucherStatusByActId( $vcSn , $useEnd ){
-        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>"$vcSn"])->get();
-        if( empty( $result ) )
-            return array(0,0,0);
+        $count = \App\Voucher::select(['vStatus'])->where(['vcSn'=>$vcSn])->count();
+        if( $count<1000 ) return $this->getSelectVoucherStatus($vcSn,$useEnd);
+        else return $this->getCountVoucherStatus($vcSn,$useEnd);
+            
+        
+    }
+    private function getSelectVoucherStatus($vcSn,$useEnd){
+        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>$vcSn])->get();
         $result = $result->toArray();
         $totalNum = 0;
         $useNum = 0;
@@ -1177,6 +1191,23 @@ class PlatformController extends Controller{
             if( $val['vStatus'] == 5 )
                 $invalidNum++;
         }
+        if( !empty($invalidNum) )
+            return array( $totalNum , $useNum , $invalidNum );
+        // 已失效数
+        if( empty($useEnd) ||  time()<$useEnd ){
+            $invalidNum = 0;
+        }else{
+            $invalidNum = $totalNum - $useNum;
+        }
+        return array( $totalNum , $useNum , $invalidNum );
+    }
+    private function getCountVoucherStatus($vcSn,$useEnd){
+        $totalNum = 0;
+        $useNum = 0;
+        $invalidNum = 0;
+        $totalNum = \App\Voucher::where( 'vStatus','<>',10 )->count();
+        $useNum = \App\Voucher::where( 'vStatus','=',2 )->count();
+        $invalidNum = \App\Voucher::where( 'vStatus','=',5 )->count();
         if( !empty($invalidNum) )
             return array( $totalNum , $useNum , $invalidNum );
         // 已失效数

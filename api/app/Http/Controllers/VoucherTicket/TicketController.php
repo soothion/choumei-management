@@ -91,6 +91,8 @@ class TicketController extends Controller {
         $endTime = isset( $post['endTime'] ) ? strtotime($post['endTime']) : '';
         $page = isset($post['page'])?$post['page']:1;
 		$pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+        if( isset($post['page_size']) && !empty($post['page_size']))
+            $pageSize = $post['page_size'];
         $keywordType = isset($post['keywordType']) ? $post['keywordType'] : '';
         $obj = Voucher::select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE']);
         if($keyword && !empty($keywordType)){
@@ -104,25 +106,25 @@ class TicketController extends Controller {
                         ->leftjoin('user','salon_itemcomment.user_id','=','user.user_id')
                         ->where('user.mobilephone','=',$keyword);
             }elseif( in_array($keywordType,[1,2,3,4,5]) )
-                $obj->where( $selectType[ $keywordType ] , '=' , $keyword );
+                $obj = $obj->where( $selectType[ $keywordType ] , '=' , $keyword );
             elseif( $keywordType == 7 ){
                 $des = new \Service\NetDesCrypt;
                 $des->setKey( self::$DES_KEY );
                 $encrypt = $des->encrypt( $keyword );
-                $obj->whereRaw('REDEEM_CODE="'.$keyword.'" or REDEEM_CODE="'.$encrypt.'"');
+                $obj = $obj->whereRaw('REDEEM_CODE="'.$keyword.'" or REDEEM_CODE="'.$encrypt.'"');
             }
         }
 
         if($status){
-			if ($status == 1) $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
-			elseif ($status == 2) $obj->where( 'vStatus','=',2 );
-			elseif ($status == 3) $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
-			elseif( $status == 4) $obj->whereRaw(' vStatus=10 and REDEEM_CODE!=""');
+			if ($status == 1) $obj = $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
+			elseif ($status == 2) $obj = $obj->where( 'vStatus','=',2 );
+			elseif ($status == 3) $obj = $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
+			elseif( $status == 4) $obj = $obj->whereRaw(' vStatus=10 and REDEEM_CODE!=""');
         }else $obj->where('vStatus','<>',10);
 
-        if($startTime && empty($endTime)) $obj->where('vUseTime','>=',$startTime);
-        if($endTime && empty($startTime)) $obj->where('vUseTime','<=',$endTime);
-        if($startTime && $endTime) $obj->whereBetween('vUseTime',[$startTime,$endTime]);
+        if($startTime && empty($endTime)) $obj = $obj->where('vUseTime','>=',$startTime);
+        if($endTime && empty($startTime)) $obj = $obj->where('vUseTime','<=',$endTime);
+        if($startTime && $endTime) $obj = $obj->whereBetween('vUseTime',[$startTime,$endTime]);
         //手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
@@ -169,7 +171,9 @@ class TicketController extends Controller {
         $startTime = isset( $post['startTime'] ) ? strtotime($post['startTime']) : '';
         $endTime = isset( $post['endTime'] ) ? strtotime($post['endTime']) : '';
         $page = isset($post['page'])?$post['page']:1;
-		$pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+		$pageSize = isset($post['pageSize'])?$post['pageSize']:20;
+        if( isset($post['page_size']) && !empty($post['page_size']))
+            $pageSize = $post['page_size'];
         $keywordType = isset($post['keywordType']) ? $post['keywordType'] : '';
         $obj = Voucher::select(['vId','vSn','vcSn','vcTitle','vOrderSn','vUseMoney','vUseTime','vMobilephone','vSalonName','vStatus','REDEEM_CODE','vUseEnd']);
         if($keyword && !empty($keywordType)){
@@ -183,25 +187,25 @@ class TicketController extends Controller {
                         ->leftjoin('user','salon_itemcomment.user_id','=','user.user_id')
                         ->where('user.mobilephone','like',"%$keyword%");
             }elseif( in_array($keywordType,[1,2,3,4,5]) )
-                $obj->where( $selectType[ $keywordType ] , 'like' , "%$keyword%" );
+                $obj = $obj->where( $selectType[ $keywordType ] , 'like' , "%$keyword%" );
             elseif( $keywordType == 7 ){
                 $des = new \Service\NetDesCrypt;
                 $des->setKey( self::$DES_KEY );
                 $encrypt = $des->encrypt( $keyword );
-                $obj->whereRaw('REDEEM_CODE like "%'.$keyword.'%" or REDEEM_CODE like "%'.$encrypt.'%"');
+                $obj = $obj->whereRaw('REDEEM_CODE like "%'.$keyword.'%" or REDEEM_CODE like "%'.$encrypt.'%"');
             }
         }
 
         if($status){
-			if ($status == 1) $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
-			elseif ($status == 2) $obj->where( 'vStatus','=',2 );
-			elseif ($status == 3) $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
-			elseif( $status == 4) $obj->whereRaw('vStatus=10 and REDEEM_CODE!=""');
+			if ($status == 1) $obj = $obj->where( 'vStatus','=',1 )->where('vUseEnd','>',time());
+			elseif ($status == 2) $obj = $obj->where( 'vStatus','=',2 );
+			elseif ($status == 3) $obj = $obj->whereRaw('vStatus=5 or ('.time().' > vUseEnd and vStatus not in (2,4))');
+			elseif( $status == 4) $obj = $obj->whereRaw('vStatus=10 and REDEEM_CODE!=""');
         }else $obj->where('vStatus','<>',10);
 
-        if($startTime && empty($endTime)) $obj->where('vUseTime','>=',$startTime);
-        if($endTime && empty($startTime)) $obj->where('vUseTime','<=',$endTime);
-        if($startTime && $endTime) $obj->whereBetween('vUseTime',[$startTime,$endTime]);
+        if($startTime && empty($endTime)) $obj = $obj->where('vUseTime','>=',$startTime);
+        if($endTime && empty($startTime)) $obj = $obj->where('vUseTime','<=',$endTime);
+        if($startTime && $endTime) $obj = $obj->whereBetween('vUseTime',[$startTime,$endTime]);
         
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
@@ -212,7 +216,6 @@ class TicketController extends Controller {
         $i = 0;
         $t = ['','未使用','已使用','待激活','活动关闭','已失效'];
         foreach($list as $key => $val ){
-            $tempData[$key][] = $i++;
             $tempData[$key][] = $val['vSn'];
             $tempData[$key][] = $val['REDEEM_CODE'];
             $tempData[$key][] = $val['vcSn'];
@@ -223,7 +226,7 @@ class TicketController extends Controller {
             $tempData[$key][] = $val['vMobilephone'];
             $tempData[$key][] = $val['vSalonName'];
             
-            if( $val['vUseEnd'] < time() ){
+            if( $val['vStatus'] != 2 && !empty($val['vUseEnd']) && $val['vUseEnd'] < time() ){
                 $tempData[$key][] = $t[ 5 ];
             }else{
                 if( !empty( $val['REDEEM_CODE'] ) && $val['vStatus'] == 10 )
@@ -235,7 +238,7 @@ class TicketController extends Controller {
 //        unset( $list );
         $title = '现金卷查询列表' .date('Ymd');
         //导出excel	   
-        $header = ['序号','券编号','兑换密码','活动编号','活动名称','订单号','券金额','使用时间','用户手机号','使用店铺','现金券状态'];
+        $header = ['券编号','兑换密码','活动编号','活动名称','订单号','券金额','使用时间','用户手机号','使用店铺','现金券状态'];
         Excel::create($title, function($excel) use($tempData,$header){
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
                 $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false

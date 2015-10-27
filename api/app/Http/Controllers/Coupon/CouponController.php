@@ -195,7 +195,10 @@ class CouponController extends Controller{
         $actEndTime = isset($post['endTime']) ? $post['endTime'] : '';
         $page = isset( $post['page'] ) ? $post['page'] : 1;
         $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
-        
+        if( isset($post['page_size']) && !empty($post['page_size']))
+            $pageSize = $post['page_size'];
+        if( !empty($actEndTime))
+            $actEndTime .= ' 23:59:59';
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
             //手动设置页数
             AbstractPaginator::currentPageResolver(function() use ($page) {
@@ -237,20 +240,20 @@ class CouponController extends Controller{
         }
         $actType = array('','vcSn','vcTitle');
         $obj = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum']);
-        $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y']);
+        $obj = $obj->where(['vType'=>1,'IS_REDEEM_CODE'=>'Y']);
         if( !empty($actSelect) && !empty($actNumber) )
-            $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
+            $obj = $obj->where( $actType[ $actSelect ] , 'like' , "%".$actNumber."%" );
         
         if( !empty($actStatus) ){
             if( $actStatus != 4 )
-                $obj->where('status','=',$actStatus);
+                $obj = $obj->where('status','=',$actStatus);
             else
-                $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
+                $obj = $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
         }
         if( !empty($actStartTime) && !empty($actEndTime))
-            $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
+            $obj = $obj->whereRaw(' ((getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" ))');
         if( !empty( $actDepartment ) )
-            $obj->where('DEPARTMENT_ID','=',$actDepartment);
+            $obj = $obj->where('DEPARTMENT_ID','=',$actDepartment);
         //手动设置页数
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
@@ -859,7 +862,10 @@ class CouponController extends Controller{
         $actEndTime = isset($post['endTime']) ? $post['endTime'] : '';
         $page = isset( $post['page'] ) ? $post['page'] : 1;
         $pageSize = isset( $post['pageSize'] ) ? $post['pageSize'] : 20;
-        
+        if( !empty($actEndTime))
+            $actEndTime .= ' 23:59:59';
+        if( isset($post['page_size']) && !empty($post['page_size']))
+            $pageSize = $post['page_size'];
         if( empty($actSelect) && empty($actNumber) && empty($actStatus) && empty($actDepartment) && empty($actStartTime) && empty($actEndTime) ){
             //手动设置页数
             AbstractPaginator::currentPageResolver(function() use ($page) {
@@ -896,7 +902,7 @@ class CouponController extends Controller{
                 $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
         }
         if( !empty($actStartTime) && !empty($actEndTime))
-            $obj->whereRaw(' (getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" )');
+            $obj->whereRaw(' ((getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" ))');
         if( !empty( $actDepartment ) )
             $obj->where('DEPARTMENT_ID','=',$actDepartment);
         //手动设置页数
