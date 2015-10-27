@@ -43,9 +43,35 @@
     }
 
     var submit = function(shopData){
-		shopData.contractPicUrl=JSON.stringify(shopData.contractPicUrl);
-		shopData.licensePicUrl=JSON.stringify(shopData.licensePicUrl);
-		shopData.corporatePicUrl=JSON.stringify(shopData.corporatePicUrl);
+        if($.isArray(shopData.contractPicUrl)) 
+            shopData.contractPicUrl = JSON.stringify(shopData.contractPicUrl);
+        if($.isArray(shopData.licensePicUrl)) 
+            shopData.licensePicUrl = JSON.stringify(shopData.licensePicUrl);
+        if($.isArray(shopData.corporatePicUrl)) 
+            shopData.corporatePicUrl = JSON.stringify(shopData.corporatePicUrl);
+        if($.isArray(shopData.salonLogo)){
+            if(shopData.salonLogo.length > 0){
+                shopData.logo = shopData.salonLogo[0].thumbimg; 
+                shopData.salonLogo = JSON.stringify(shopData.salonLogo);                           
+            }else{
+                shopData.logo = ""; 
+                shopData.salonLogo = "";                  
+            }
+        }
+        if($.isArray(shopData.salonImg)){
+            if(shopData.salonImg.length > 0){
+                shopData.salonImg = JSON.stringify(shopData.salonImg);               
+            }else{
+                shopData.salonImg = "";
+            }
+        } 
+        if($.isArray(shopData.workImg)){
+            if(shopData.workImg.length > 0){
+                shopData.workImg = JSON.stringify(shopData.workImg);                  
+            }else{
+                shopData.workImg = "";
+            }
+        } 
         lib.ajax({
             type: "post",
             url : (type=="add"?"salon/save":"salon/update"),

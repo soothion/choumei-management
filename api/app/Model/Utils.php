@@ -69,9 +69,106 @@ class Utils
             case 3:
                 $res = "金字塔店";
                 break;
+            case 4:
+                $res = "高端店";
+                break;
+            case 5:
+                $res = "写字楼店";
+                break;
         }
         return $res;
     }  
+    
+    /**
+     * 获取店铺等级
+     * @param int $grade
+     * @return string
+     */
+    public static function getSalonGradeName($grade)
+    {
+    	$res = "";
+    	switch (intval($grade)) {
+    		case 1:
+    			$res = "S";
+    			break;
+    		case 2:
+    			$res = "A";
+    			break;
+    		case 3:
+    			$res = "B";
+    			break;
+    		case 4:
+    			$res = "C";
+    			break;
+    		case 5:
+    			$res = "新落地";
+    			break;
+    		case 6:
+    			$res = "淘汰区";
+    			break;
+    	}
+    	return $res;
+    }
+    
+    /**
+     * 获取店铺状态   对应salon表  salestatus 字段
+     * @param int $salestatus
+     * @return string
+     */
+    public static function getSalonStatusName($salestatus)
+    {
+    	$res = "";
+    	switch (intval($salestatus)) {
+    		case 0:
+    			$res = "终止合作";
+    			break;
+    		case 1:
+    			$res = "正常合作";
+    			break;
+    		case 2:
+    			$res = "删除";
+    			break;
+    	}
+    	return $res;
+    }
+    
+    /**
+     * 获取店铺分类
+     * @param int $type
+     * @return string
+     */
+    public static function getSalonCategoryName($type)
+    {
+    	$res = "";
+    	switch (intval($type)) {
+    		case 1:
+    			$res = "工作室";
+    			break;
+    		case 2:
+    			$res = "店铺";
+    			break;
+    	}
+    	return $res;
+    }
+    
+    /**
+     * 获取店铺银行账户
+     * @param int $type
+     * @return string
+     */
+    public static function getSalonAccountTypeName($type)
+    {
+    	$res = "";
+    	switch (intval($type)) {
+    		case 1:
+    			$res = "对公帐户";
+    			break;
+    		case 2:
+    			$res = "对私帐户";
+    			break;
+    	}
+    	return $res;
+    }
 
     public static function getPayManageStateName($state)
     {

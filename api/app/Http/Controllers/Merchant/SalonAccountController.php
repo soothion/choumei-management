@@ -229,8 +229,7 @@ class SalonAccountController extends Controller {
 		{
 			throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);	
 		}
-		$status = SalonAccount::doUpdate($param['salonUserId'], array("password"=>md5($this->pwd),"upTime"=>time(),"admin_password"=>md5($this->cmPwd)));
-		if($status)
+		if(SalonUser::where("salon_user_id","=",$param['salonUserId'])->update(array("password"=>md5($this->pwd),"upTime"=>time(),"admin_password"=>md5($this->cmPwd))))
 		{
 			//触发事件，写入日志
 			Event::fire('salonAccount.resetPwd',$this->getAccountByUserid($param['salonUserId']));
@@ -248,10 +247,8 @@ class SalonAccountController extends Controller {
 	 * **/
 	private function getAccountByUserid($userId)
 	{
-		$query = SalonUser::getQuery();
-		$query = $query->where('salon_user_id','=',$userId);
-		$list = $query->first();
-		return $list->username;
+		$list = SalonUser::where('salon_user_id','=',$userId)->first();
+		return $list?$list->username:'';
 	}
 	
 	/**

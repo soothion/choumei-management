@@ -31,7 +31,7 @@ class Log extends Model {
 			$query = $query->where('username','like',$keyword);
 		}
 
-		$query = $query->orderBy('created_at','desc');
+		$query = $query->orderBy('id','desc');
 		return $query;
     }
 

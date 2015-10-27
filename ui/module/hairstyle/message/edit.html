@@ -10,7 +10,7 @@
 		<a>消息管理</a><span>&gt;</span><a href="index.html">申请消息</a> 
 			<div class="flex-box">
 			 <div class="flex-item">
-				<h4>消息列表</h4>
+				<h4>申请消息</h4>
 			</div>
 		 </div>		
 		<hr />
@@ -107,21 +107,6 @@
 				 <div class="control-group">
                     <label class="control-label" for="">列表展示图片：</label>
 					<div class="control">
-						<!--
-						 <div class="control-image">
-								<div class="control-thumbnails" data-max="2"></div>
-								<div class="control-image-upload">
-									<div id="imageUpload">
-										<i class="fa fa-image"></i>
-										<em>上传列表图片</em>
-									</div>
-								</div>
-							</div>
-						 <span class="space"></span>
-						 <span class="weak">图片规格：2M以内，支持jpg、png格式</span>
-						 <br />
-						 <input type="checkbox" class="hide" name="images"  requiredmsg="请上传图片" />
-						 -->
 						  <div class="control-image">
 								<div class="control-single-image">
 									<img src="<%=data.img%>" alt="" />
@@ -129,6 +114,7 @@
 										<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 									</div>
 									<input type="hidden" name="img" class="original" value="<%=data.img%>" data-helpid="image-help">
+									<a class="fa fa-times-circle control-image-single-remove"></a>
 								</div>
 							</div>
 						 <div class="weak">图片规格：2M以内，支持jpg、png格式建议630*210px</div>

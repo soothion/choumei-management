@@ -291,9 +291,9 @@ class RoleController extends Controller{
 			$q->lists('id','title');
 		}]);
 
-		$query = $query->with(['city'=>function($q){
-			$q->lists('id','title');
-		}]);	
+        $query = $query->with(['city'=>function($q){
+            $q->lists('iid','iname');
+        }]);     	
 
 		$query = $query->with(['permissions'=>function($q){
 			$q->lists('permission_id as id','title');

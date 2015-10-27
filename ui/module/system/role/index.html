@@ -34,13 +34,7 @@
 				</select>
 				<span class="space"></span>
 				所属城市 
-				<select name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=city-t" id="city">
-					<script type="text/template" id="city-t">
-						<option value="">全部</option>
-						<%data.forEach(function(item){%>
-							<option value="<%=item.id%>"><%=item.title%></option>
-						<%})%>
-					</script>
+				<select name="city_id" ajat-one="true" ajat="list/city#domid=city&tempid=/module/public/template/city" id="city">
 				</select>
 				<span class="space"></span>
 				添加时间 
@@ -74,7 +68,7 @@
                   <td><%=item.name%></td>
                   <td><%=status[item.status-1]%></td>
                   <td><%=item.department?item.department.title:""%></td>
-				  <td><%=item.city?item.city.title:""%></td>
+				  <td><%=item.city?item.city.iname:""%></td>
 				  <td><%=item.created_at%></td>
 				  <td><%=item.description%></td>
 				  <td>

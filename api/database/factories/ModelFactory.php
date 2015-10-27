@@ -15,7 +15,14 @@ $factory->define(App\Manager::class, function ($faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->email,
+        'username' => str_random(10),
         'password' => str_random(10),
+        'status' => 1,
         'remember_token' => str_random(10),
+    ];
+});
+
+$factory->define(App\Role::class, function ($faker) {
+    return [
     ];
 });

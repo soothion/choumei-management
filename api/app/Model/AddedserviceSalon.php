@@ -7,7 +7,7 @@ use App\SalonItemtype;
 class AddedserviceSalon extends  Model
 {
     protected $table = 'addedservice_salon';
-    
+
     public $timestamps = false;
     
     /**
@@ -27,5 +27,4 @@ class AddedserviceSalon extends  Model
 			}
 		}
     }
-
 }

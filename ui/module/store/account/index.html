@@ -69,12 +69,12 @@
 							<td><%=item.addTime%></td>
 							<td><%=status[item.status-1]%></td>
 							<td>
-								<form data-role="normal" action="salonAccount/resetPwd" data-confirm="确认重置密码？" onreset="parent.lib.popup.result()" data-slug="salonAccount.resetPwd">
+								<form data-role="normal" action="salonAccount/resetPwd" data-confirm="确认重置密码？" onsuccess="parent.lib.popup.result()" data-slug="salonAccount.resetPwd">
 									<input type="hidden" value="<%=item.salonUserId%>" name="salonUserId" />
 									<button class="link">重置密码</button>
 								</form>
 								<span class="space"></span>
-								<form action="salonAccount/delAct" data-role="normal" data-slug="salonAccount.del" data-confirm="确认删除此数据吗？" onreset="remove" >
+								<form action="salonAccount/delAct" data-role="normal" data-slug="salonAccount.del" data-confirm="确认删除此数据吗？" onsuccess="remove" >
 									<input type="hidden" name="salonUserId" value="<%=item.salonUserId%>" />
 									<input type="hidden" name="type" value="2" />
 									<button class="link">删除</button>
