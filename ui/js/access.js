@@ -27,8 +27,8 @@
 	'bounty.index':'/module/transaction/reward/index.html', 
 	'bounty.refundIndex':'/module/transaction/reward/refundment.html',
 	'requestLog.index':'/module/transaction/other/device.html',
-	'ticket.index':'/module/transaction/other/ticket.html'
-
+	'ticket.index':'/module/transaction/other/ticket.html',
+	'info.index':'/module/store/info/index.html'
 }
 var access={
 	data:[],
@@ -67,6 +67,7 @@ var access={
 				}
 			}
 		});
+		$(document.body).trigger('access');
 	}
 }
 $(function(){

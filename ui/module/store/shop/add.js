@@ -36,7 +36,7 @@ $(function(){
         shopData = $.extend({},shopData,{
             "merchantId" : lib.query.merchantId,
             "name"       : lib.query.name,
-            addr         : lib.query.addr
+            "addr"       : lib.query.addr
         });      
         lib.ajat('#domid=form&tempid=form-t').template(shopData);
         document.body.onbeforeunload=function(){
@@ -117,7 +117,7 @@ $(function(){
             sessionStorage.setItem('add-shop-data',JSON.stringify(shopData));            
         }
 		document.body.onbeforeunload=function(){}
-        location.href = "bank.html?type="+type;
+        location.href = "picture.html?type="+type;
     } 
 
     var dataFormat = function(data){      
@@ -126,7 +126,9 @@ $(function(){
         data.addrlong = arr[1];
         delete data.lngLat;
     } 
-
+	$(document.body).on('blur',"input[name='contractTime']",function(){
+		$('input[name="contractEndTime"]').attr('min',this.value);
+	})
 
 });
 

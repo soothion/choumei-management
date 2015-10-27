@@ -9,7 +9,10 @@ use App\Merchant;
 use App\SalonRatingsRecord;
 use App\SalonWorks;
 use Event;
+<<<<<<< HEAD
 use App\Manager;
+=======
+>>>>>>> management_20151024_v1.5
 class Salon extends Model {
 
 	protected $table = 'salon';
@@ -351,13 +354,32 @@ class Salon extends Model {
 		}
 		DB::beginTransaction();
 		$affectid =  Salon::where(['salonid'=>$salonid])->update(array('salestatus'=>2,'status'=>3));
+<<<<<<< HEAD
+=======
+		
+>>>>>>> management_20151024_v1.5
 		SalonUser::where(['salonid'=>$salonid])->update(['status'=>3]);//删除普通用户账号
 		$merchantId = $result->merchantId;
 		$usersCount = SalonUser::where(['status'=>1,'merchantId'=>$merchantId])->where('salonid','!=',0)->count();
 		
+<<<<<<< HEAD
 		if(!$usersCount)
 		{
 				SalonUser::where(['salonid'=>0,'merchantId'=>$merchantId])->update(['status'=>3]);	
+=======
+		$merchantId = $result->merchantId;
+		$usersCount = DB::table('salon_user')
+							->where('merchantId','=' ,$merchantId)
+							->where('salonid','!=' ,0)
+							->where('status','=' ,1)
+							->count();
+		if(!$usersCount)
+		{
+			DB::table('salon_user')//删除账号  超级管理员
+				->where('salonid','=' ,0)
+				->where('merchantId','=' ,$merchantId)
+				->update(['status'=>3]);
+>>>>>>> management_20151024_v1.5
 		}
 		if($affectid)
 		{
@@ -454,7 +476,11 @@ class Salon extends Model {
 			$salonList =  DB::table('salon as s')
             				->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
            					->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
+<<<<<<< HEAD
             				->leftjoin('managers as b', 'b.id', '=', 's.businessId')
+=======
+            				->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
+>>>>>>> management_20151024_v1.5
             				->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
             				->select($fields)
           					->where(['s.salonid'=>$salonid])
@@ -476,6 +502,10 @@ class Salon extends Model {
 						$salonList[$key] = '';
 					}
 				}
+<<<<<<< HEAD
+=======
+				
+>>>>>>> management_20151024_v1.5
 				$salonList['salonImg'] = SalonWorks::getSalonWorks($salonid,3);//店铺图集
 				$salonList['workImg'] = SalonWorks::getSalonWorks($salonid,4);//团队图集
 				
@@ -628,7 +658,11 @@ class Salon extends Model {
 				$affectid = SalonInfo::insertGetId($dataInfo);
 				if($affectid)
 				{
+<<<<<<< HEAD
 					Merchant::where(['id'=>$data['merchantId']])->increment('salonNum',1);//店铺数量加1
+=======
+					DB::table('merchant')->where('id','=',$data['merchantId'])->increment('salonNum',1);//店铺数量加1
+>>>>>>> management_20151024_v1.5
 					//触发事件，写入日志
 					Event::fire('salon.save','店铺Id:'.$salonId.' 店铺名称：'.$data['salonname']);
 				}
@@ -654,6 +688,7 @@ class Salon extends Model {
 		return $affectid;
 	
 	}
+<<<<<<< HEAD
 	
 
 	/**
@@ -682,6 +717,8 @@ class Salon extends Model {
 	    
 	    return 0;
 	}
+=======
+>>>>>>> management_20151024_v1.5
 
 }
 

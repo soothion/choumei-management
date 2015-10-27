@@ -23,7 +23,7 @@ class SalonController extends Controller {
     private $addFields = array(
 			    		"merchantId",
 			            "salonname",
-    					"logo",
+    					// "logo",
 						"addr",
 						"addrlati",
 						"addrlong",
@@ -584,7 +584,6 @@ class SalonController extends Controller {
 	* @apiGroup salon
 	*
 	* @apiParam {Number} salonid 必填,店铺id.
-
 	* @apiSuccess {Number} sn 店铺编号.
 	* @apiSuccess {Number} salestatus 状态 0终止合作 1正常合作.
 	* @apiSuccess {String} salonname 店铺名.
@@ -937,6 +936,22 @@ class SalonController extends Controller {
 			return $this->success();
 		}
 
+	}
+	
+	
+	/**
+	 * 检测店铺编号是否存在
+	 * 
+	 * */
+	public function getCheckSn($sn,$id=0)
+	{
+		$query = Salon::getQuery();
+		$query->where('sn',$sn);
+		if($id)
+		{
+			$query->where('id',$id);
+		}
+		return  $query->count();
 	}
 
 	

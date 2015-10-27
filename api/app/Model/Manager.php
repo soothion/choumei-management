@@ -46,7 +46,7 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
     }    
 
     public function city(){
-        return $this->belongsTo('App\City');
+        return $this->belongsTo('App\City','city_id','iid');
     }
 
     public function position(){
@@ -123,7 +123,7 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
         }]);
 
         $query = $query->with(['city'=>function($q){
-            $q->lists('id','title');
+            $q->lists('iid','iname');
         }]);        
 
         $query = $query->with(['position'=>function($q){

@@ -35,11 +35,26 @@ class ERROR
      CONST UNKNOWN_ERROR =  -40005;
      
      /**
+      * @param 上传的文件丢失
+      */
+     CONST UPLOAD_FILE_LOST = -40006;
+     
+     /**
+      * @param 上传的文件后缀名不正确
+      */
+     CONST UPLOAD_FILE_ERR_EXTENSION = -40007;
+
+     /*
       *@param 获取不到配置信息
       */
-     CONST CONFIG_LOST =  -40006;
+     CONST CONFIG_LOST =  -40009;
 
 
+
+     /**
+      * @param 上传的文件格式不正确
+      */
+     CONST UPLOAD_FILE_ERR_FORMAT = -40008;
      
     ////////////用户模块//////////////
      /**
@@ -432,8 +447,99 @@ class ERROR
       *@param 店铺状态错误
       */
      CONST MERCHANT_SALON_STATUS_IS_ERROR  =  -51020;
+     /**
+      *@param 删除造型师错误
+      */
+     CONST MERCHANT_STYLIST_DELETE_ERROR  =  -51021;
+      /**
+      *@param 启用造型师错误
+      */
+     CONST MERCHANT_STYLIST_ENABLE_ERROR  =  -51022; 
+      /**
+      *@param 禁用造型师错误
+      */
+     CONST MERCHANT_STYLIST_DESABLED_ERROR  =  -51023; 
+      /**
+      *@param 未选择修改所属店铺
+      */
+     CONST MERCHANT_STYLIST_SELECT_ERROR  =  -51024; 
+      /**
+      *@param 你有已接单未完成打赏的悬赏单
+      */
+     CONST MERCHANT_STYLIST_NOREWARD_ERROR  =  -51025; 
+      /**
+      *@param 修改造型师错误
+      */
+     CONST MERCHANT_STYLIST_UPDATE_ERROR  =  -51026; 
+      /**
+      *@param 店铺名称不存在
+      */
+     CONST MERCHANT_NOTNAME_ERROR  =  -51027; 
+      /**
+      *@param 没有所属商户
+      */
+     CONST MERCHANT_NOT_MERCHANT_ERROR  =  -51028; 
+      /**
+      *@param 店铺ID出错
+      */
+     CONST MERCHANT_STYLIST_ID_ERROR  =  -51029; 
+      /**
+      *@param 创建造型师错误
+      */
+     CONST MERCHANT_STYLIST_CREATE_ERROR  =  -51030; 
+      /**
+      *@param 手机号码重复
+      */
+     CONST MERCHANT_MOBILEPHONE_ERROR  =  -51031; 
+           /**
+      *@param 作品ID出错
+      */
+     CONST MERCHANT_WORKS_ID_ERROR  =  -51032; 
+      /**
+      *@param 删除作品失败
+      */
+     CONST MERCHANT_WORKS_DELETE_ERROR  =  -51033; 
+      /**
+      *@param 修改作品失败
+      */
+     CONST MERCHANT_WORKS_SAVE_ERROR  =  -51034; 
+      /**
+      *@param 创建作品失败
+      */
+     CONST MERCHANT_WORKS_CREATE_ERROR  =  -51035; 
+          
+       
+     ////////////项目模块//////////////
+     /**
+      *@param 参数错误
+      */
+     CONST ITEM_ERROR =  -51100;
+     /**
+      *@param 当前快剪等级下面无对应等级的造型师，请修改造型师界面中的快剪等级后再添加快剪项目
+      */
+     CONST ITEM_GRADE_ERROR =  -51101;
+     /**
+      *@param 项目有效期时间不正确
+      */
+     CONST ITEM_EXPTIME_ERROR =  -51102;
+     /**
+      *@param 限制次数不正确
+      */
+     CONST ITEM_RESTRICT_ERROR =  -51103;
+     /**
+      *@param 项目id不存在
+      */
+     CONST ITEM_DATA_ERROR =  -51104;
+     /**
+      *@param 项目总库存不正确
+      */
+     CONST ITEM_TOTALREP_ERROR =  -51105;
+
+
+
      
      
+
      /////////////付款单相关//////////////////
      /**
       * @param 提现单原数据不存在
@@ -444,5 +550,33 @@ class ERROR
       * @param 提现单原状态不正确
       */
      CONST PAY_WITHDRAW_WRONG_STATE = -51301;
+
+     ////////////项目仓库//////////////
+     /**
+      *@param 项目不存在或者状态有误
+      */
+     CONST ITEM_LOST_OR_WRONG_STATE =  -51200;
+     
+     /**
+      *@param 项目有效期有误
+      */
+     CONST ITEM_WRONG_EXP_TIME =  -51201;
+     
+
+     /**
+      *@param 项目库存有误
+      */
+     CONST ITEM_WRONG_TOTAL_REQ =  -51202;
+     
+     /**
+      *@param 项目价格有误
+      */
+     CONST ITEM_WRONG_PRICE =  -51207;
+
+     /**
+      *@param 项目不存在
+      */
+     CONST ITEM_NOT_FOUND =  -51106;
+
 
 }

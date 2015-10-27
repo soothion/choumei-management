@@ -92,7 +92,7 @@ define(function(require,exports,module){
 				popup.find('.swiper-container').height($(window).height());
 				self.overlay().css('background','rgba(0,0,0,0.85)');
 				var swiper = new Swiper(popup.find('.swiper-container')[0], {
-					loop: true,
+					loop: false,
 					initialSlide : options.index,
 					lazyLoading : true,            
 					pagination: '.swiper-pagination',
@@ -100,6 +100,7 @@ define(function(require,exports,module){
 					prevButton: '.swiper-button-prev',
 					slidesPerView: 1,
 					paginationClickable: true,
+					preloadImages:true,
 					spaceBetween: 0
 				});
 				options.complete && options.complete();
@@ -130,6 +131,7 @@ define(function(require,exports,module){
 			});
 			var minHeight=options.height-popup.children('.popup-box-title').outerHeight()-popup.children('.popup-footer').outerHeight();
 			popup.find('.popup-box-body').css({height:minHeight});
+
             this.overlay();
             $('body').append(popup);
 			options.complete && options.complete();

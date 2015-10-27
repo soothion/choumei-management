@@ -171,7 +171,7 @@ class ManagerController extends Controller{
 	    	$result[$key]['name'] = $value->name;
 	    	$result[$key]['username'] = $value->username;
 	    	$result[$key]['status'] = $this->status($value->status);
-	    	$result[$key]['city'] = $value->city->title;
+	    	$result[$key]['city'] = $value->city->iname;
 	    	$result[$key]['department'] = $value->department->title;
 	    	$result[$key]['position'] = $value->position->title;
 	    	$roles = '';
@@ -183,7 +183,7 @@ class ManagerController extends Controller{
 	    	$result[$key]['created_at'] = $value->created_at;
 	    }
 		// 触发事件，写入日志
-	    Event::fire('manager.export');
+	    // Event::fire('manager.export');
 		
 		//导出excel	   
 		$title = '用户列表'.date('Ymd');
@@ -228,11 +228,11 @@ class ManagerController extends Controller{
 	public function create()
 	{
 		$param = $this->param;
-		DB::beginTransaction();
 		if(Manager::where('username','=',$param['username'])->first())
 			throw new ApiException('用户名已存在', ERROR::USER_EXIST);
 		$param['password'] = bcrypt($param['password']);
 		$user = Manager::create($param);
+		DB::beginTransaction();
 		$role = 1;
 		if(isset($param['roles'])){
 			$roles = $param['roles'];
@@ -315,6 +315,8 @@ class ManagerController extends Controller{
 	public function show($id)
 	{
 		$user = Manager::with('roles')->find($id);
+		if(!$user)
+			throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
 		return $this->success($user);
 	}
 

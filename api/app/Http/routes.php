@@ -38,6 +38,7 @@ Route::group(['middleware' => ['jwt.auth']], function(){
 
 });
 
+
 //用户等级列表
 Route::any('level/index',array(
 	'as'=>'level.index',
@@ -84,7 +85,25 @@ Route::any('salon/checkSalonSn',array(  //检测店铺编号
 Route::any('salonAccount/getSalonName',array(  //模糊查找店铺
 	'as'=>'salonAccount.getSalonName',
 	'uses'=>'Merchant\SalonAccountController@getSalonName'
-));		
+));
+Route::any('salonList/getItemType',array(  //获取项目分类
+		'as'=>'salonList.getItemType',
+		'uses'=>'Merchant\ListController@getItemType'
+));
+Route::any('itemInfo/getItems',array(  //获取分类下项目名称
+		'as'=>'itemInfo.getItemByTypeid',
+		'uses'=>'Item\ItemInfoController@getItemByTypeid'
+));
+Route::any('itemInfo/getAddedService',array(  //获取增值服务
+		'as'=>'itemInfo.getAddedService',
+		'uses'=>'Item\ItemInfoController@getAddedService'
+));
+
+//项目分类列表
+Route::any('item/type',array(
+	'as'=>'item.type',
+	'uses'=>'ItemController@type'
+));
 
 // 店铺消费验证  结算
 Route::any('shop_count/count_order','ShopCount\ShopCountController@countOrder');
@@ -105,7 +124,7 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
 //权限管理后台接口
  Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
-// Route::group(['middleware' => ['before']], function(){
+ // Route::group(['middleware'], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -232,7 +251,42 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 		'uses'=>'LogController@export'
 	));
 
+	//项目模块
+	Route::any('item/index',array(
+		'as'=>'item.index',
+		'uses'=>'ItemController@index'
+	));	
+	Route::any('item/show/{id}',array(
+		'as'=>'item.show',
+		'uses'=>'ItemController@show'
+	));	
+	Route::any('item/sort',array(
+		'as'=>'item.sort',
+		'uses'=>'ItemController@sort'
+	));
+	Route::any('item/export',array(
+		'as'=>'item.export',
+		'uses'=>'ItemController@export'
+	));
+	Route::any('item/down/{id}',array(
+		'as'=>'item.down',
+		'uses'=>'ItemController@down'
+	));
 
+	//闲时特价
+	Route::any('onsale/index',array(
+		'as'=>'onsale.index',
+		'uses'=>'OnSaleController@index'
+	));	
+	Route::any('onsale/show/{id}',array(
+		'as'=>'onsale.show',
+		'uses'=>'OnSaleController@show'
+	));	
+	Route::any('onsale/export',array(
+		'as'=>'onsale.export',
+		'uses'=>'OnSaleController@export'
+	));
+	
 	//佣金单
 	Route::any('commission/index',array(
 		'as'=>'commission.index',
@@ -700,10 +754,127 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 		'as'=>'requestLog.index',
 		'uses'=>'LoginQuery\LoginQueryController@index'
     ));
-      Route::any('requestLog/export',array(  //导出日志列表
+
+    
+    Route::any('itemInfo/index',array(  //获取项目列表
+    		'as'=>'info.index',
+    		'uses'=>'Item\ItemInfoController@index'
+    ));
+	
+	
+    Route::any('itemInfo/create',array(  //创建项目
+    		'as'=>'itemInfo.create',
+    		'uses'=>'Item\ItemInfoController@store'
+    ));
+	
+	Route::any('itemInfo/update',array(  //修改项目
+    		'as'=>'itemInfo.update',
+    		'uses'=>'Item\ItemInfoController@update'
+    ));
+	
+	Route::any('itemInfo/createSpecialItem',array(  //创建特价项目
+    		'as'=>'itemInfo.createSpecialItem',
+    		'uses'=>'Item\ItemInfoController@createSpecialItem'
+    ));
+	
+	Route::any('itemInfo/updateSpecialItem',array(  //修改特价项目
+    		'as'=>'itemInfo.updateSpecialItem',
+    		'uses'=>'Item\ItemInfoController@updateSpecialItem'
+    ));
+    
+    Route::any('stylist/index',array(  //请求造型师列表
+        'as'=>'stylist.index',
+        'uses'=>'Stylist\StylistController@index'
+    ));
+     
+    Route::any('stylist/show/{id}',array(  //查看造型师
+        'as'=>'stylist.show',
+        'uses'=>'Stylist\StylistController@show'
+    ));
+         
+    Route::any('stylist/enable/{id}',array(  //启用造型师
+        'as'=>'stylist.enable',
+        'uses'=>'Stylist\StylistController@enable'
+    ));
+         
+    Route::any('stylist/disabled/{id}',array(  //禁用造型师
+         'as'=>'stylist.disabled',
+         'uses'=>'Stylist\StylistController@disabled'
+    ));
+           
+           
+    Route::any('stylist/destroy/{id}',array(  //删除造型师
+        'as'=>'stylist.destroy',
+        'uses'=>'Stylist\StylistController@destroy'
+    ));
+    
+    Route::any('stylist/update/{id}',array(  //修改造型师
+        'as'=>'stylist.update',
+        'uses'=>'Stylist\StylistController@update'
+
+    ));
+    Route::any('stylist/create/{id}',array(  //创建造型师
+        'as'=>'stylist.create',
+        'uses'=>'Stylist\StylistController@create'
+
+    ));
+
+	    
+    Route::any('warehouse/index',array(  //项目仓库列表
+    'as'=>'warehouse.index',
+    'uses'=>'Item\WarehouseController@index'
+        ));
+    
+    Route::any('warehouse/show/{id}',array(  //项目仓库详情
+    'as'=>'warehouse.show',
+    'uses'=>'ItemController@show'
+        ));
+    
+    Route::any('warehouse/detail/{id}',array(  //项目仓库详情(闲时特价)
+        'as'=>'warehouse.detail',
+        'uses'=>'OnSaleController@show'
+     ));
+    
+    Route::any('warehouse/destroy',array(  //删除项目
+    'as'=>'warehouse.destroy',
+    'uses'=>'Item\WarehouseController@destroy'
+        ));
+    
+    Route::any('warehouse/puton',array(  //项目仓库上架
+    'as'=>'warehouse.puton',
+    'uses'=>'Item\WarehouseController@puton'
+        ));
+    
+    Route::any('warehouse/import',array(  //项目仓库导入
+    'as'=>'warehouse.import',
+    'uses'=>'Item\WarehouseController@import'
+        ));
+    Route::any('works/index/{id}',array(  //造型师的作品列表和所在店的其他
+    'as'=>'works.index',
+    'uses'=>'Stylist\WorksController@index'
+        ));
+    Route::any('works/del_list/{id}',array(  //删除作品集合
+    'as'=>'works.del_list',
+    'uses'=>'Stylist\WorksController@del_list'
+        ));
+    Route::any('works/del/{id}',array(  //删除单个作品
+    'as'=>'works.del',
+    'uses'=>'Stylist\WorksController@del'
+        ));
+    Route::any('works/update/{id}',array(  //修改作品集合
+    'as'=>'works.update',
+    'uses'=>'Stylist\WorksController@update'
+        ));
+    Route::any('works/create',array(  //新增作品集合
+    'as'=>'works.create',
+    'uses'=>'Stylist\WorksController@create'
+        ));
+
+    Route::any('requestLog/export',array(  //导出日志列表
 		'as'=>'requestLog.export',
 		'uses'=>'LoginQuery\LoginQueryController@export'
     ));
+
 
 });
 

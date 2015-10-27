@@ -36,10 +36,11 @@
 				</div>
 				<ul class="nav-step flex-box">
 					<li class="flex-item active"><span class="arrow">1.店铺基本信息</span></li>
-					<li class="flex-item"><span>2.银行账号信息</span></li>
-					<li class="flex-item"><span>3.准入评估信息</span></li>
-					<li class="flex-item"><span>4.附件上传</span></li>
-                    <li class="flex-item"><span>5.财务结算</span></li>
+                    <li class="flex-item"><span>2.店铺图片信息</span></li>
+					<li class="flex-item"><span>3.银行账号信息</span></li>
+					<li class="flex-item"><span>4.准入评估信息</span></li>
+					<li class="flex-item"><span>5.附件上传</span></li>
+                    <li class="flex-item"><span>6.财务结算</span></li>
 				</ul>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
@@ -75,9 +76,9 @@
                         
 						<select id="area" name="district" class="select min-width" style="margin-right:10px" 
                         required ajat-one="true"
-						ajat="<%if(data.citiesId){%>salonList/getProvinces?type=3&areaId=<%=data.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=data.district%>"
 						ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=zone&tempid=zone_t&zone=<%=data.zone%>"
 						>
+						<option value="">地区</option>
 						</select>
 						<span class="control-help" style="display:none;"></span>
 						
@@ -154,6 +155,18 @@
                     <span>金字塔店</span>
                     </label>
 
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="4"
+                    <%=data.shopType==4 ? "checked" : "" %>>
+                    <span>高端店</span>
+                    </label>
+
+                    <label>
+                    <input type="radio" class="radio" name="shopType" value="5"
+                    <%=data.shopType==5 ? "checked" : "" %>>
+                    <span>写字楼店</span>
+                    </label>
+
                     <span class="control-help" style="display:none;"></span>
                 </div>
 
@@ -228,7 +241,7 @@
                         if(data.changeInTime==0){
                             data.changeInTime = "";
                         }else if(!isNaN(data.changeInTime)){
-                            data.changeInTime = lib.tools.getDate(data.changeInTime);
+                            data.changeInTime = new Date(data.changeInTime*1000).format("yyyy-MM-dd")
                         }
                         %>   
                         <input type="date" name="changeInTime" value="<%=data.changeInTime%>" max="2030-01-01" placeholder="YYYY-MM-DD" required>
@@ -261,7 +274,7 @@
                         }
                         %>                                       
                         <input type="date" name="contractEndTime" placeholder="YYYY-MM-DD" value="<%=data.contractEndTime%>" 
-                        required  max="2030-01-01">
+                        required  max="2030-01-01" min="<%=data.contractTime%>" dateminmsg="合同截止日期不能小于合同起始日期">
                     </div>
                 </div>   
 

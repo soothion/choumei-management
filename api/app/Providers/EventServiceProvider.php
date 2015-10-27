@@ -181,6 +181,26 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\PayManageEventListener@onConfirm',
         ],
         
+
+        //项目仓库
+        'warehouse.puton' => [
+            'App\Listeners\WarehouseEventListener@onPuton',
+        ],
+        'warehouse.import' => [
+            'App\Listeners\WarehouseEventListener@onImport',
+        ],
+        'warehouse.destroy' => [
+            'App\Listeners\WarehouseEventListener@onDestroy',
+        ],
+    		
+    	//添加修改项目
+		'ItemInfo.save' => [
+    		'App\Listeners\ItemInfoEventListener@onSave',
+    	],
+		'ItemInfo.update' => [
+    		'App\Listeners\ItemInfoEventListener@onUpdate',
+    	],
+
         //交易管理
         'order.export' => [
             'App\Listeners\TransactionEventListener@onOrderExport',
@@ -197,7 +217,7 @@ class EventServiceProvider extends ServiceProvider
         'refund.reject' => [
             'App\Listeners\TransactionEventListener@onReject',
         ],
-        
+
     ];
 
     /**

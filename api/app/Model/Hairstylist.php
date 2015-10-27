@@ -23,6 +23,21 @@ class Hairstylist extends Model {
             return $hairstylist[0];
         }
     }
+    /**
+     * 检测造型师是否有对应快剪等级
+     * */
+    public static function checkHairerGrade($fastGrade,$salonid)
+    {
+    	if(!$salonid || !$fastGrade) return false;
+    	$where['fastGrade'] = $fastGrade;
+    	$where['status'] = 1;
+    	$where['salonId'] = $salonid;
+    	$rs = self::where($where)->select(['stylistName','stylistId'])->first();
+    	if($rs)
+    		return true;
+    	else
+    		return false;
+    }
 
 }
 

@@ -14,6 +14,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use App\SalonItemType;
 
 class ListController extends Controller {
 
@@ -176,7 +177,7 @@ class ListController extends Controller {
     	$result = DB::select($sql);
 		return $this->success($result);
     }
-
+     
 }
 
 ?>

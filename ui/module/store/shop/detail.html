@@ -88,6 +88,8 @@
                                         if(data.shopType == 1) typeName = "预付款店";
                                         if(data.shopType == 2) typeName = "投资店";
                                         if(data.shopType == 3) typeName = "金字塔店";
+                                        if(data.shopType == 4) typeName = "高端店";
+                                        if(data.shopType == 5) typeName = "写字楼店";                                        
                                         %>
                                         <td><%=typeName%></td>
                                     </tr>
@@ -182,6 +184,72 @@
                                     <tr><td class="content">业务代表：</td><td><%=data.businessName%></td></tr>
                                 </tbody>
                             </table>
+
+                            <table>
+                                  <thead>
+                                    <tr>
+                                      <th colspan="4" class="content">店铺图片信息</th>
+                                    </tr>
+                                  </thead>                    
+                                <tbody>
+                                    <tr>
+                                        <td colspan="1" class="content">店铺LOGO：</td>
+                                        <td colspan="3" id="con_wrapper">
+                                            <%
+                                            if(data.salonLogo && typeof data.salonLogo === "string"){
+                                                data.salonLogo = JSON.parse(data.salonLogo);
+                                            }
+                                            %>
+                                            <%data.salonLogo&&data.salonLogo.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+                                                    <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                    data-type="<%=item.type%>"/>       
+                                                </div> 
+                                            <%
+                                                });
+                                            %>                                         
+                                        </td>
+                                    </tr>  
+
+                                    <tr>
+                                        <td colspan="1" class="content">店铺图片集：</td>
+                                        <td colspan="3" id="con_wrapper"> 
+                                            <%
+                                            if(data.salonImg && typeof data.salonImg === "string"){
+                                                data.salonImg = JSON.parse(data.salonImg);
+                                            }
+                                            %>
+                                            <%data.salonImg&&data.salonImg.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                    data-type="<%=item.type%>"/>       
+                                                </div> 
+                                            <%
+                                                });
+                                            %> 
+                                        </td>
+                                    </tr> 
+
+                                    <tr>
+                                        <td colspan="1" class="content">团队照片：</td>
+                                        <td colspan="3" id="con_wrapper"> 
+                                            <%
+                                            if(data.workImg && typeof data.workImg === "string"){
+                                                data.workImg = JSON.parse(data.workImg);
+                                            }
+                                            %>
+                                            <%data.workImg&&data.workImg.forEach(function(item){%>
+                                               <div class="control-thumbnails-item" id="<%=item.id%>">
+												 <img src="<%=item.thumbimg?item.thumbimg:item.img%>" alt="" data-original="<%=item.img%>"
+                                                 data-type="<%=item.type%>"/>
+                                                </div> 
+                                            <%
+                                                });
+                                            %> 
+                                        </td>
+                                    </tr>                               
+                                </tbody>
+                            </table>                             
 
                             <table>
                                   <thead>
@@ -335,7 +403,7 @@
                                             }%>
 											<%data.contractPicUrl&&data.contractPicUrl.forEach(function(item){%>
 												<div class="control-thumbnails-item" id="<%=item.id%>">
-													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  />
+													<img src="<%=item.thumbimg?item.thumbimg.replace('w/100/h/100','w/160/h/160'):item.img%>" data-original="<%=item.img%>"  />
 												</div>
                                             <%
                                                });
@@ -352,7 +420,7 @@
                                             %>
 											<%data.licensePicUrl&&data.licensePicUrl.forEach(function(item){%>
                                                <div class="control-thumbnails-item" id="<%=item.id%>">
-													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  />
+													<img src="<%=item.thumbimg?item.thumbimg.replace('w/100/h/100','w/160/h/160'):item.img%>" data-original="<%=item.img%>"  />
 												</div> 
                                             <%
                                                 });
@@ -369,7 +437,7 @@
                                             %>
 											<%data.corporatePicUrl&&data.corporatePicUrl.forEach(function(item){%>
                                                 <div class="control-thumbnails-item" id="<%=item.id%>">
-													<img src="<%=item.thumbimg?item.thumbimg:item.img%>" data-original="<%=item.img%>"  />
+													<img src="<%=item.thumbimg?item.thumbimg.replace('w/100/h/100','w/160/h/160'):item.img%>" data-original="<%=item.img%>"  />
 												</div>
                                             <%
                                                 });

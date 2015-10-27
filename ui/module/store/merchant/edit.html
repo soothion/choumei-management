@@ -26,32 +26,32 @@
 			<input type="hidden" name="id" value="<%=data.id||""%>">
 			<%if(query._){%>
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>商户编号</label>
+				<label class="control-label" for=""><span class="red">*</span>商户编号：</label>
 				<div class="control">
 					<input type="text" name="sn" maxlength="16" value="<%=data.sn||""%>" required data-value="<%=data.sn||""%>" unique="merchant/checkMerchantSn?sn=${value}" uniquemsg="商户编号重复">
 				</div>
 			</div>
 			<%}%>
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>商户名称</label>
+				<label class="control-label" for=""><span class="red">*</span>商户名称：</label>
 				<div class="control">
 					<input type="text" required name="name" maxlength="16" value="<%=data.name||""%>">
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>联系人</label>
+				<label class="control-label" for=""><span class="red">*</span>联系人：</label>
 				<div class="control">
 					<input type="text" required name="contact" value="<%=data.contact||""%>">
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for=""><span class="red">*</span>联系手机</label>
+				<label class="control-label" for=""><span class="red">*</span>联系手机：</label>
 				<div class="control">
 					<input type="text"  required pattern="mobile" name="mobile" value="<%=data.mobile||""%>">
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="">联系座机</label>
+				<label class="control-label" for="">联系座机：</label>
 				<div class="control">
 					<%if(data.phone){data.phoneFirst=data.phone.substring(0,4);data.phoneLast=data.phone.substring(4);}%>
 					<input type="text" value="<%=data.phoneFirst||"0755"%>" pattern="number" maxlength="4" style="width:55px;min-width:0" class="phone-first">
@@ -61,19 +61,19 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="">邮箱地址</label>
+				<label class="control-label" for="">邮箱地址：</label>
 				<div class="control">
 					<input type="text"  name="email" value="<%=data.email||""%>" pattern="email">
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="">详细地址</label>
+				<label class="control-label" for="">详细地址：</label>
 				<div class="control">
 					<textarea name="addr" placeholder="详细街道信息"><%=data.addr||""%></textarea>
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="">成立日期</label>
+				<label class="control-label" for="">成立日期：</label>
 				<div class="control">
 				<%if(data.foundingDate){
 					var date=new Date(data.foundingDate*1000);
