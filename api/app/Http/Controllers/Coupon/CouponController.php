@@ -11,6 +11,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ERROR;
 use Log;
 use App\VoucherConf;
+use App\Jobs\Coupon;
 
 class CouponController extends Controller{
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
@@ -707,7 +708,7 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function upConf($vcId){
-        $this->dispach(new Coupon($vcId));
+        $this->dispatch(new Coupon($vcId));
         return $this->success();
     }
     /***
