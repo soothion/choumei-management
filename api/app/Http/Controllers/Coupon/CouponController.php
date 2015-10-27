@@ -91,7 +91,7 @@ class CouponController extends Controller{
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart'] . " 00:00:00");
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd'] . " 23:59:59");
-        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
+        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes'][0]) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
@@ -602,7 +602,7 @@ class CouponController extends Controller{
         if( isset( $post['managerId'] ) ) $data['MANAGER_ID'] = $post['managerId'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart'] . " 00:00:00");
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']. " 23:59:59");
-        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
+        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes'][0]) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];

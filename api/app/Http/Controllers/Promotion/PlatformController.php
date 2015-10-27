@@ -137,12 +137,12 @@ class PlatformController extends Controller{
                 $tempArr1 = [4=>2,5=>3,6=>1];
                 $data['getCodeType'] = $tempArr1[ $tt ];
                 $data['getCode'] = $code;
-                if( isset( $post['getItemTypes'] ) && !empty($post['getItemTypes']))
+                if( isset( $post['getItemTypes'] ) && !empty($post['getItemTypes'][0]))
                     $data['getItemTypes'] =','.join(',', $post['getItemTypes']).',';
             }
         }elseif( $post['selectItemType'] == 3 ){
             $data['getTypes'] = 4;
-            if( isset( $post['getItemTypes'] ) && !empty($post['getItemTypes']))
+            if( isset( $post['getItemTypes'] ) && !empty($post['getItemTypes'][0]))
                 $data['getItemTypes'] =  ','.join(',', $post['getItemTypes']).',';
         }elseif( $post['selectItemType'] == 4 ){
             $code = $post['code'];
@@ -159,7 +159,7 @@ class PlatformController extends Controller{
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart']);
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']);
-        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
+        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes'][0]) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
@@ -181,8 +181,8 @@ class PlatformController extends Controller{
             $data['useEnd'] = '0';
         }
         if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
-            $data['useStart'] = strtotime($post['addActLimitStartTime']. " 00:00:00");
-            $data['useEnd'] = strtotime($post['addActLimitEndTime']. " 23:59:59");
+            $data['useStart'] = strtotime($post['addActLimitStartTime']);
+            $data['useEnd'] = strtotime($post['addActLimitEndTime']);
             $data['FEW_DAY'] = '';
         }
         
@@ -482,7 +482,7 @@ class PlatformController extends Controller{
             AbstractPaginator::currentPageResolver(function() use ($page) {
                 return $page;
             });
-            $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum'])
+            $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum','getTypes'])
                     ->where(['vType'=>1,'IS_REDEEM_CODE'=>'N'])
                     ->orderBy('vcId','desc')
                     ->paginate($pageSize)
@@ -510,12 +510,16 @@ class PlatformController extends Controller{
                 }
                 if( !empty($val['getEnd']) && time() > $val['getEnd'] )
                     $res['data'][$key]['status'] = 4;
-                if( !empty($val['totalNum']) )
+                if( empty($val['totalNum']) && !empty($val['getTypes']) && $val['getTypes']!=3 )
                     $res['data'][$key]['totalNum'] = '无限';
+                if(!empty($val['getTypes']) && $val['getTypes']==3 )
+                    $res['data'][$key]['totalNum'] = \App\Voucher::where(['vcSn'=>$val['vcSn']])->count();
+                
                 unset( $res['data'][$key]['useEnd'] );
                 unset( $res['data'][$key]['getStart'] );
                 unset( $res['data'][$key]['getEnd'] );
                 unset( $res['data'][$key]['DEPARTMENT_ID'] );
+                unset( $res['data'][$key]['getTypes'] );
             }
             return $this->success( $res );
         }
@@ -897,7 +901,7 @@ class PlatformController extends Controller{
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
-        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] =  ','.join(',',$post['limitItemTypes']).',' ;
+        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes'][0]) ) $data['useItemTypes'] =  ','.join(',',$post['limitItemTypes']).',' ;
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
@@ -921,8 +925,8 @@ class PlatformController extends Controller{
             $data['useEnd'] = '0';
         }
         if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
-            $data['useStart'] = strtotime($post['addActLimitStartTime']. " 00:00:00");
-            $data['useEnd'] = strtotime($post['addActLimitEndTime']. " 23:59:59");
+            $data['useStart'] = strtotime($post['addActLimitStartTime']);
+            $data['useEnd'] = strtotime($post['addActLimitEndTime']);
             $data['FEW_DAY'] = '';
         }
         $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );

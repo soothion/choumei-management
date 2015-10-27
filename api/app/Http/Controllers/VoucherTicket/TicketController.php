@@ -403,20 +403,23 @@ class TicketController extends Controller {
         if( !empty( $voucherConfInfo['useNeedMoney'] ) ) $voucherInfo['useLimitText'] .= "项目消费满". $voucherConfInfo['useNeedMoney'] ."元使用;";
         if( empty($voucherInfo['vUseTime']) )  $voucherInfo['vUseTime'] = '';  
         $voucherInfo['sharePhone'] = '';
-        $vType = \App\VoucherConf::select(['vType'])->where(['vcSn'=>$voucherInfo['vcSn']])->first()->toArray();
-        $vType = $vType['vType'];
-        if( $vType == 2 ){
-            $commentId = \App\Laisee::select(['item_comment_id'])->where(['vsn'=>$voucherInfo['vSn']])->first();
-            if( !empty($commentId) )
-            {
-               $commentId = $commentId->toArray();
-               $commentId = $commentId['item_comment_id'];
-               $userId = \App\SalonItemComment::select(['user_id'])->where(['itemcommentid'=>$commentId])->first()->toArray();
-               $userId = $userId['user_id'];
-               $phone = \App\User::select(['mobilephone'])->where(['user_id'=>$userId])->first()->toArray();
-               $voucherInfo['sharePhone'] = $phone['mobilephone'];
+        $vType = \App\VoucherConf::select(['vType'])->where(['vcSn'=>$voucherInfo['vcSn']])->first();
+        if( !empty($vType) ){
+            $vType = $vType->toArray();
+            $vType = $vType['vType'];
+            if( $vType == 2 ){
+                $commentId = \App\Laisee::select(['item_comment_id'])->where(['vsn'=>$voucherInfo['vSn']])->first();
+                if( !empty($commentId) ){
+                   $commentId = $commentId->toArray();
+                   $commentId = $commentId['item_comment_id'];
+                   $userId = \App\SalonItemComment::select(['user_id'])->where(['itemcommentid'=>$commentId])->first()->toArray();
+                   $userId = $userId['user_id'];
+                   $phone = \App\User::select(['mobilephone'])->where(['user_id'=>$userId])->first()->toArray();
+                   $voucherInfo['sharePhone'] = $phone['mobilephone'];
+                }
             }
         }
+        
         return $this->success( $voucherInfo );
 	}
     // 获取分类
