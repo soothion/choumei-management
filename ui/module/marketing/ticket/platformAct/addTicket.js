@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-26 14:41:10
+* @Last Modified time: 2015-10-27 18:06:17
 */
 
 (function(){
@@ -96,6 +96,9 @@
         }
         if(!data.useLimitTypes){
            data.useLimitTypes = [""];            
+        }
+        if(!data.sendSms){
+            data.sendSms = "";
         }
         if(type == 'add'){    
             var addData = JSON.parse(sessionStorage.getItem('add-base-data'));
