@@ -138,12 +138,12 @@ class PlatformController extends Controller{
                 $data['getCodeType'] = $tempArr1[ $tt ];
                 $data['getCode'] = $code;
                 if( isset( $post['getItemTypes'] ) && !empty($post['getItemTypes']))
-                    $data['getItemTypes'] =join(',', $post['getItemTypes']);
+                    $data['getItemTypes'] =','.join(',', $post['getItemTypes']).',';
             }
         }elseif( $post['selectItemType'] == 3 ){
             $data['getTypes'] = 4;
             if( isset( $post['getItemTypes'] ) && !empty($post['getItemTypes']))
-                $data['getItemTypes'] =  join(',', $post['getItemTypes']);
+                $data['getItemTypes'] =  ','.join(',', $post['getItemTypes']).',';
         }elseif( $post['selectItemType'] == 4 ){
             $code = $post['code'];
             $data['getTypes'] = 5;
@@ -159,7 +159,7 @@ class PlatformController extends Controller{
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart']);
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']);
-        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']);
+        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
@@ -832,6 +832,10 @@ class PlatformController extends Controller{
             $voucherConfInfo['addActLimitStartTime'] = date('Y-m-d H:i:s',$voucherConfInfo['addActLimitStartTime']);
         if( !empty($voucherConfInfo['addActLimitEndTime']))
             $voucherConfInfo['addActLimitEndTime'] = date('Y-m-d H:i:s',$voucherConfInfo['addActLimitEndTime']);
+        if( !empty($voucherConfInfo['getItemTypes']) )
+            $voucherConfInfo['getItemTypes'] = rtrim(ltrim($voucherConfInfo['getItemTypes'],','),',');
+        if( !empty($voucherConfInfo['limitItemTypes']) )
+            $voucherConfInfo['limitItemTypes'] = rtrim(ltrim($voucherConfInfo['limitItemTypes'],','),',');
         return $this->success( $voucherConfInfo );
     }
     /***
@@ -892,7 +896,7 @@ class PlatformController extends Controller{
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
-        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] =  join(',',$post['limitItemTypes']) ;
+        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] =  ','.join(',',$post['limitItemTypes']).',' ;
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
