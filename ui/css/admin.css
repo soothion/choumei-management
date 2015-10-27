@@ -391,38 +391,38 @@ aside h2{
 .control-separation legend{
 	padding-left:10px;
 }
-.form-vertical .control-group{
+.control-group{
 	display:table;
 	width:100%;
 }
-.form-vertical .control-label{
+.control-label{
 	display:table-cell;
 	width:170px;
 	text-align:right;
 	padding-right:10px;
 }
-.form-vertical .control{
+.control{
 	display:table-cell;
 }
-.form-vertical .control:after {
+.control:after {
     clear: both;
     content: ".";
     display: block;
     height: 0;
     visibility: hidden;
 }
-.form-vertical .control input,
-.form-vertical .control textarea,
-.form-vertical .control select{
+.control input,
+.control textarea,
+.control select{
 	width:20%;
 	min-width:250px;
 	margin-right:10px;
 }
-.form-vertical .control .normal{
+.control .normal{
 	width:auto!important;
 	min-width:80px!important;
 }
-.form-vertical .control textarea{
+.control textarea{
 	height:80px;
 	padding:5px 10px;
 	line-height:20px;
