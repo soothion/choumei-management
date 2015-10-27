@@ -125,8 +125,8 @@ Route::any('platform/getItemType',array(
     'uses'=>'Promotion\PlatformController@getItemType'
 ));
 //权限管理后台接口
-// Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
- Route::group(['middleware' => ['before']], function(){
+Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+ // Route::group(['middleware' => ['before']], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
