@@ -18,14 +18,14 @@
             <div class="flex-box">
                 <div class="flex-item">
                     <h4>现金券详情</h4>
-                </div>                
+                </div>
             </div>
         </div>
-        
+
         <div class="wrapper">
             <div class="detail-operation">
-                <button class="btn" type="button" onclick="window.close()">关闭</button>  
-            </div>   
+                <button class="btn" type="button" onclick="window.close()">关闭</button>
+            </div>
 
             <div class="table" style="margin:0" id="table-wrapper" ajat="voucher/info/<%=query.id%>#domid=table-wrapper&tempid=table-t">
             <script type="text/template" id="table-t">
@@ -54,55 +54,60 @@
                         <tr>
                             <%var statusText = {'1':'未使用', '2':'已使用', '3':'待激活 ', '4':'活动关闭','5':'已失效'}%>
                             <td class="td">现金券状态</td>
-                            <td><%=statusText[data.vStatus]%></td>                            
+                            <td><%=statusText[data.vStatus]%></td>
                         </tr>
 
                         <tr>
                             <td class="td">使用时间</td>
                             <td><%=data.vUseTime%></td>
-                        </tr>   
+                        </tr>
 
                         <tr>
                             <td class="td">有效时间</td>
                             <td>
-                            <%=data.vUseStart=="0" ? "不限制":  new Date(data.vUseStart*1000).format("yyyy-MM-dd")%> 
-                            到 
-                            <%=data.vUseEnd=="0" ? "不限制":  new Date(data.vUseEnd*1000).format("yyyy-MM-dd")%></td>
+                            <%if ( data.vUseStart == '0' || data.vUseEnd == '0'){%>
+                                无限制
+                            <%}else{%>
+                                <%=new Date(data.vUseStart*1000).format("yyyy-MM-dd")%>
+                                到
+                                <%=new Date(data.vUseEnd*1000).format("yyyy-MM-dd")%>
+                            <%}%>
+                            </td>
                         </tr>
 
                         <tr>
                             <td class="td">关联订单号</td>
                             <td><%=data.vOrderSn%></td>
-                        </tr>  
+                        </tr>
 
                         <tr>
                             <td class="td">关联订单状态</td>
                             <td><%=data.isPay%></td>
-                        </tr>  
+                        </tr>
 
                         <tr>
                             <td class="td">使用店铺</td>
                             <td><%=data.vSalonName%></td>
-                        </tr> 
+                        </tr>
 
                         <tr>
                             <td class="td">使用项目</td>
                             <td><%=data.vItemName%></td>
-                        </tr> 
+                        </tr>
 
                         <tr>
                             <td class="td">活动（红包）编号</td>
                             <td><%=data.vcSn%></td>
-                        </tr>  
+                        </tr>
 
                         <tr>
                             <td class="td">活动名称</td>
                             <td><%=data.vcTitle%></td>
-                        </tr> 
+                        </tr>
 
                         <tr>
                             <td class="td">红包分享人</td>
-                            <td><%=data.vMobilephone%></td>
+                            <td><%=data.sharePhone%></td>
                         </tr>
 
                         <tr>
@@ -113,13 +118,13 @@
                         <tr>
                             <td class="td">获取条件</td>
                             <td><%=data.getText%></td>
-                        </tr>                        
+                        </tr>
                         <tr>
                             <td class="td">使用限制</td>
                             <td><%=data.useLimitText%></td>
                         </tr>
-                                                                                                  
-                    </tbody>                     
+
+                    </tbody>
                 </table>
             </script>
             </div>
