@@ -16,29 +16,14 @@ use App\Role;
 use Excel;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use App\Jobs\SendEmail;
 
 class IndexController extends Controller{
 
 
 	public function test(){
-		throw new ApiException("Error Processing Request", 200);
-		
-		return Choumei::success();
-		header('Access-Control-Allow-Origin: *');
-		$password = bcrypt('cmceshi');
-		echo $password;die;
-		echo '<pre>';
-		Excel::load('public/Uploads/20150729/position.xls', function($reader) {
-            $results = $reader->get()->toArray();
-            $header = array_shift($results);
-            foreach ($results as $key => $value) {
-            	foreach ($header as $k => $v) {
-            		if(!empty($value[$k]))
-            			$array[$v][] = $value[$k];
-            	}
-            }
-            print_r($array);
-        });
+		$this->dispatch(new SendEmail());
+		return $this->success();
 	}
 
 
