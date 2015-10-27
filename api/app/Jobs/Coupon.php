@@ -30,51 +30,32 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
     public function handle(){
         Log::info('开始处理');
         $vcId = $this->vcId;
-         // 修改voucher表中手机是否已经注册
-        $phoneList = Voucher::select(['vMobilephone'])->where(['vStatus'=>10,'vcId'=>$vcId])->get()->toArray();
-        //判断当前活动是否勾选了消费类项目
-        $voucherConf = VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd'])->where(['vcId'=>$vcId])->first()->toArray();
-        
-        $getItemTypes=$voucherConf['getItemTypes'];
-        $getNeedMoney=$voucherConf['getNeedMoney'];
-
         DB::beginTransaction();
         // 修改配置表中为已上线状态
         $statusResult = VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
         
-
-        $vcId = $this->voucherConf['vcId'];
-        $vcSn = $this->voucherConf['vcSn'];
-        $vcTitle = $this->voucherConf['vcTitle'];
-        $useMoney = $this->voucherConf['useMoney'];
-        $useItemTypes = $this->voucherConf['useItemTypes'];
-        $useLimitTypes = $this->voucherConf['useLimitTypes'];
-        $useNeedMoney = $this->voucherConf['useNeedMoney'];
-        $useStart = $this->voucherConf['useStart'];
-        $useEnd = $this->voucherConf['useEnd'];
-
+        $data['vcId'] = $this->voucherConf['vcId'];
+        $data['vcSn'] = $this->voucherConf['vcSn'];
+        $data['vcTitle'] = $this->voucherConf['vcTitle'];
+        $data['vUseMoney'] = $this->voucherConf['useMoney'];
+        $data['vUseItemTypes'] = $this->voucherConf['useItemTypes'];
+        $data['vUseLimitTypes'] = $this->voucherConf['useLimitTypes'];
+        $data['vUseNeedMoney'] = $this->voucherConf['useNeedMoney'];
+        $data['vUseStart'] = $this->voucherConf['useStart'];
+        $data['vUseEnd'] = $this->voucherConf['useEnd'];
+        $data['vStatus'] = 3;
+        
         // 现阶段将兑换劵总数设定为3000
-        $insert = ' INSERT cm_voucher (`vcId`,`vcSn`,`vcTitle`,`vUseMoney`,`vUseItemTypes`,`vUseLimitTypes`,`vUseNeedMoney`,`vUseStart`,`vUseEnd`,`vStatus`,`REDEEM_CODE`,`vSn`) VALUES ';
         $len = $this->voucherConf['useTotalNum'];
-
-        if( $len >1 ){
-            for($i=0,$len;$i<$len;$i++){
-                $code = $this->encodeCouponCode();
-                $vSn = $this->getVoucherSn('DH');
-                if( $i==0 )
-                    $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
-                else
-                    $insert .= ",( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
-            }
-            $insert .= ';';
-        }else{
-            $code = $this->encodeCouponCode();
-            $vSn = $this->getVoucherSn('DH');
-            $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn');";
+        $count = 0;
+        for($i=0;$i<$len;$i++){
+            $data['REDEEM_CODE'] = $this->encodeCouponCode();
+            $data['vSn'] = $this->getVoucherSn('DH');
+            $res = Voucher::insertGetId($data);
+            if( $res ) $count++;
         }
-        $result = DB::insert( $insert );
-
-        if($statusResult&&$result)
+        $flag = ( $count != $len ) ? true : false;
+        if($statusResult&&$flag)
         {
             DB::commit();
             Log::info('生成兑换劵成功:'.$vcId);
