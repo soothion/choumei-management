@@ -727,7 +727,6 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function upConf($vcId){
-        set_time_limit(360);
         $statusResult = VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
         $voucherConf = \App\VoucherConf::where(['vcId'=>$vcId])->first()->toArray();
         // 未找到项目配置信息 或 项目配置信息不是兑换活动配置
