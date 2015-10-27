@@ -203,8 +203,7 @@
                     <span>自定义有效期区间</span>
                 </label>
 
-                <input type="text" id="avaDay" name="fewDay" value="<%=data.fewDay||15%>" pattern='number' required
-                <%=data.fewDay ? '' :'disabled' %>  />
+                <input type="text" id="avaDay" name="fewDay" value="<%=data.fewDay||15%>" pattern='number'required maxLength="3" <%=data.fewDay ? '' :'disabled' %>  />
                 <span class="weak">天内有效（获取现金券后）</span>
                 <span class="control-help" style="display:none;"></span> 
             </div>    

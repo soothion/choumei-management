@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-23 17:36:01
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-26 18:55:00
+* @Last Modified time: 2015-10-27 10:18:03
 */
 
 (function(){
@@ -45,24 +45,6 @@
 		if(submitData.getItemTypes && typeof submitData.getItemTypes=='string'){
 			submitData.getItemTypes=submitData.getItemTypes.split(",");
 		}
-        if(submitData.sendSms){
-            if(submitData.sendSms.indexOf('[useMoney]') > -1){
-              submitData.sendSms = submitData.sendSms.replace('[useMoney]',submitData.money);  
-            }
-            if(submitData.sendSms.indexOf('[name]') > -1){
-              submitData.sendSms = submitData.sendSms.replace('[name]',submitData.actName);  
-            }
-            if(submitData.avaDate == "1"){
-                if(submitData.sendSms.indexOf('[overtime]') > -1){
-                    submitData.sendSms = submitData.sendSms.replace('[overtime]',submitData.addActLimitStartTime+' 至 '+submitData.addActLimitEndTime);  
-                }
-            }
-            if(submitData.avaDate == "2"){
-                if(submitData.sendSms.indexOf('[overtime]') > -1){
-                     submitData.sendSms = submitData.sendSms.replace('[overtime]',submitData.fewDay)
-                }
-            }
-        }
         delete submitData.manager;
         delete submitData.checkTotalNumber;
         delete submitData.avaDate;
