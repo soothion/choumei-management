@@ -46,7 +46,7 @@
                 <script type="text/template" id="table-t">
 					<form action="starconf/online" data-role="normal" onsuccess="parent.lib.popup.result()">
 						<span>开启/暂停店铺星级</span>
-						<label class="switch"><input type="checkbox" <%=data[0].status=="Y"?"checked":""%>/><span></span><input type="hidden" name="status" /></label>
+						<label data-slug="starconf.online" class="switch"><input type="checkbox" <%=data[0].status=="Y"?"checked":""%>/><span></span><input type="hidden" name="status" /></label>
 					</form>
 					<br />
 					<br />
