@@ -93,18 +93,27 @@ class CouponController extends Controller{
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
-         if( isset($post['fewDay']) ){
+        if( isset($post['money'])&&!empty($post['money']) && ($post['money']>999 ||$post['getSingleLimit']<1))
+            return $this->error('券金额只能在1~999');
+        if( isset($post['useNeedMoney'])&&!empty($post['useNeedMoney']) && $post['useNeedMoney']>999 )
+            return $this->error('券总数只能在0~999');
+        if( isset($post['totalNumber'])&&!empty($post['totalNumber']) && ($post['totalNumber']>3000 ||$post['totalNumber']<1))
+            return $this->error('券总数只能在1~3000');
+        if( isset($post['getSingleLimit'])&&!empty($post['getSingleLimit']) && ($post['getSingleLimit']>20 ||$post['getSingleLimit']<1))
+            return $this->error('单个用户设置只能在1~20');
+        if( isset($post['fewDay'])&&!empty($post['fewDay']) && ($post['fewDay']>999 ||$post['fewDay']<1))
+            return $this->error('自定义有效期区间只能在1~999');
+        if( isset($post['fewDay']) ){
             $data['FEW_DAY'] = $post['fewDay'];
             $data['useStart'] = '0';
             $data['useEnd'] = '0';
         }
-        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime'])  ){
+        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
             $data['useStart'] = strtotime($post['addActLimitStartTime']. " 00:00:00");
             $data['useEnd'] = strtotime($post['addActLimitEndTime']. " 23:59:59");
             $data['FEW_DAY'] = '';
         }
         
-        if( $post['totalNumber'] > 3000) return $this->error( '兑换劵总共上限不能大于3000' );
         $data['status'] = 2;
         $data['ADD_TIME'] = date('Y-m-d H:i:s');
         $data['IS_REDEEM_CODE'] = 'Y';
@@ -416,8 +425,8 @@ class CouponController extends Controller{
         $voucherConfInfo['useNumed'] = $useNumed;
         $voucherConfInfo['useMoneyed'] = $useNumed * $voucherConfInfo['useMoney'];
         
-        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>5] )->count();
-        $voucherConfInfo['invalidNum'] = $useNumed;
+        $invalidNum = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>5] )->count();
+        $voucherConfInfo['invalidNum'] = $invalidNum;
         
         // 查找已消费数
         if( !empty($useNumed) ){
@@ -427,8 +436,8 @@ class CouponController extends Controller{
                 $t = \App\Order::where(['ordersn'=>$val['vOrderSn'],'status'=>4])->count();
                 if( $t ) $consumeNum++;
             }
-            $voucherConfInfo['consumeNum'] = 0;
-            $voucherConfInfo['consumeMoney'] = 0;
+            $voucherConfInfo['consumeNum'] = $consumeNum;
+            $voucherConfInfo['consumeMoney'] = $consumeNum * $voucherConfInfo['useMoney'];
         }
         if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
             $voucherConfInfo['status'] = 4;
@@ -595,12 +604,22 @@ class CouponController extends Controller{
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         if( isset($post['singleEnoughMoney']) ) $data['getNeedMoney'] = $post['singleEnoughMoney'];
+        
+        if( isset($post['money'])&&!empty($post['money']) && ($post['money']>999 ||$post['getSingleLimit']<1))
+            return $this->error('券金额只能在1~999');
+        if( isset($post['useNeedMoney'])&&!empty($post['useNeedMoney']) && $post['useNeedMoney']>999 )
+            return $this->error('券总数只能在0~999');
+        if( isset($post['getSingleLimit'])&&!empty($post['getSingleLimit']) && ($post['getSingleLimit']>20 ||$post['getSingleLimit']<1))
+            return $this->error('单个用户设置只能在1~20');
+        if( isset($post['fewDay'])&&!empty($post['fewDay']) && ($post['fewDay']>999 ||$post['fewDay']<1))
+            return $this->error('自定义有效期区间只能在1~999');
+        
         if( isset($post['fewDay']) ){
             $data['FEW_DAY'] = $post['fewDay'];
             $data['useStart'] = '0';
             $data['useEnd'] = '0';
         }
-        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime'])  ){
+        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
             $data['useStart'] = strtotime($post['addActLimitStartTime']. " 00:00:00");
             $data['useEnd'] = strtotime($post['addActLimitEndTime']. " 23:59:59");
             $data['FEW_DAY'] = '';
