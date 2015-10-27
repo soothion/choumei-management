@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-26 15:10:36
+* @Last Modified time: 2015-10-27 16:24:15
 */
 
 (function(){
@@ -150,12 +150,12 @@
     $("#form").on('click',"a.tab-menus",function(e){
         if(type == 'add'){
             var data = JSON.parse(sessionStorage.getItem('add-base-data'));  
-            data.getItemTypes   = "";
-            data.enoughMoeny    = "";
-            data.phoneList      = [];
-            data.code           = "";
-            data.selectUseType  = "";
-            data.selectItemType = 1;
+            data.getItemTypes      = "";
+            data.singleEnoughMoney = "";
+            data.phoneList         = [];
+            data.code              = "";
+            data.selectUseType     = "";
+            data.selectItemType    = 1;
             sessionStorage.setItem('add-base-data',JSON.stringify(data));           
         }
     })
