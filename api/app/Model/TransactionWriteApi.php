@@ -596,9 +596,9 @@ class TransactionWriteApi
                     if (empty($tn)) {
                         throw  new ApiException("ordersn '{$ordersn}' can not find tn",ERROR::REFUND_CANT_FIND_TN);
                     }
-//                     if (! empty($batch_no) && (time() - $alipay_updated) < 7200) {
-//                         throw  new ApiException("ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁",ERROR::UNKNOWN_ERROR);
-//                     }                    
+                    if (! empty($batch_no) && (time() - $alipay_updated) < 7200) {
+                        throw  new ApiException("ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁",ERROR::UNKNOWN_ERROR);
+                    }                
                     $res['alipay'][]= [
                         'tn' => $tn,
                         "money" => $money,
@@ -885,8 +885,7 @@ class TransactionWriteApi
         self::modiSoldNumMinus($all_ordersns);
         $ret['info'] = nl2br($ret['info']);
         return $ret;
-    }    
-    
+    }
     
     /**
      * 为远程调用数据生成token

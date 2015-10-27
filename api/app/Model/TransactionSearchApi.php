@@ -381,7 +381,7 @@ class TransactionSearchApi
         $orderBase->with([
             'fundflow' => function ($q) use($fundflow_fields)
             {
-                $q->get($fundflow_fields);
+                $q->where("code_type",TransactionWriteApi::REFUND_CODE_TYPE_OF_CUSTOM)->get($fundflow_fields);
             }
         ]);
         
@@ -549,7 +549,7 @@ class TransactionSearchApi
        $base->with([
            'fundflow' => function ($q) use($fundflow_fields)
            {
-               $q->get($fundflow_fields);
+               $q->where("code_type",TransactionWriteApi::REFUND_CODE_TYPE_OF_CUSTOM)->get($fundflow_fields);
            }
        ]);
        
