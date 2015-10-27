@@ -119,7 +119,7 @@ class AppointmentController extends Controller {
      * @apiSuccess {Number} contacted 联系客户 0 未联系 1已联系
      * @apiSuccess {String} salonName 店铺名称
      * @apiSuccess {String} addr 店铺地址
-     * @apiSuccess {String} stylistGrade 造型师等级 1美发师 2高级美发师 3造型师 4艺术总监
+     * @apiSuccess {String} stylistGrade 造型师等级 1/2资深发型师、3设计总监、4美发大师
      * @apiSuccess {String} stylistName 造型师名称
      * @apiSuccess {String} stylistMobile 造型师手机号
      * @apiSuccess {String} add_time 提交时间
