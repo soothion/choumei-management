@@ -727,33 +727,11 @@ class CouponController extends Controller{
 	 *		}
 	 ***/
     public function upConf($vcId){
-        $statusResult = VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
-        $voucherConf = \App\VoucherConf::where(['vcId'=>$vcId])->first()->toArray();
-        // 未找到项目配置信息 或 项目配置信息不是兑换活动配置
-        if( empty($voucherConf) || $voucherConf['IS_REDEEM_CODE']== 'N') return false;
-        
-        $count = \App\Voucher::where(['vcId'=>$vcId])->count();
-        if( !empty($count) ) return false;
-        $data['vcId'] = $voucherConf['vcId'];
-        $data['vcSn'] = $voucherConf['vcSn'];
-        $data['vcTitle'] = $voucherConf['vcTitle'];
-        $data['vUseMoney'] = $voucherConf['useMoney'];
-        $data['vUseItemTypes'] = $voucherConf['useItemTypes'];
-        $data['vUseLimitTypes'] = $voucherConf['useLimitTypes'];
-        $data['vUseNeedMoney'] = $voucherConf['useNeedMoney'];
-        $data['vUseStart'] = $voucherConf['useStart'];
-        $data['vUseEnd'] = $voucherConf['useEnd'];
-        $data['vStatus'] = 3;
-        $len = $voucherConf['useTotalNum'];
-//        
-        for($i=0,$len;$i<$len;$i++){
-            $data['REDEEM_CODE'] = $this->encodeCouponCode();
-            $data['vSn'] = $this->getVoucherSn('DH');
-            \App\Voucher::insertGetId($data);
-        }
-//        $this->dispatch(new Coupon($vcId));
-//        return $this->success();
+        $this->dispatch(new Coupon($vcId));
+        return $this->success();
     }
+
+    
     /***
 	 * @api {get} /coupon/getCoupon/{:id} 9.查看实体券编码和密码
 	 * @apiName getCoupon
