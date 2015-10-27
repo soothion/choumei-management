@@ -47,14 +47,18 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
         
         // 现阶段将兑换劵总数设定为3000
         $len = $this->voucherConf['useTotalNum'];
-        $count = 0;
+        $flag=1;
         for($i=0;$i<$len;$i++){
             $data['REDEEM_CODE'] = $this->encodeCouponCode();
             $data['vSn'] = $this->getVoucherSn('DH');
             $res = Voucher::insertGetId($data);
-            if( $res ) $count++;
+            if( !$res ) 
+            {
+                Log::info($data.' 插入失败');
+                $flag=0;
+            }
         }
-        $flag = ( $count != $len ) ? true : false;
+
         if($statusResult&&$flag)
         {
             DB::commit();
