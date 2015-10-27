@@ -117,9 +117,7 @@
                                                    checked="checked">
                                                    <span>指定有效期</span>
                                                </label>
-                                               <input type="date" <%= data.fewDay ? "disabled='disabled'" : ""%> required value="<%
-                                               if (data.addActLimitStartTime)
-                                               =data.addActLimitStartTime?formattedDate(data.addActLimitStartTime): new Date().format('yyyy-MM-dd')%>" id="avaDateStart" name="addActLimitStartTime"/>
+                                               <input type="date" <%= data.fewDay ? "disabled='disabled'" : ""%> required value="<%=data.addActLimitStartTime?formattedDate(data.addActLimitStartTime): new Date().format('yyyy-MM-dd')%>" id="avaDateStart" name="addActLimitStartTime"/>
                                                <span>至</span>
                                                <input type="date" required <%= data.fewDay ? "disabled='disabled'" : ""%>  id="avaDateEnd" match="avaDateStart" matchmsg="截止时间不能小于起始时间" value="<%=data.addActLimitEndTime?formattedDate(data.addActLimitEndTime):new Date(new Date().getTime()+60*60*24*1000*7).format('yyyy-MM-dd')%>" name="addActLimitEndTime"/>
                                                <span class="control-help" style="display:none;"></span>

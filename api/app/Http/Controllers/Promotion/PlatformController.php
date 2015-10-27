@@ -149,6 +149,9 @@ class PlatformController extends Controller{
             $data['getTypes'] = 5;
             if(!empty($code)) $data['getCode'] = $code;
         }else return $this->error('选择用户获取错误');
+        if( !empty($post['getSingleLimit']) && ($post['getSingleLimit']>999 ||$post['getSingleLimit']<1))
+            return $this->error('单个用户设置只能在1~999');
+            
         // 定义代金劵
         $data['useMoney'] = $post['money'];
         $data['getNumMax'] = $post['getSingleLimit'];
@@ -158,13 +161,21 @@ class PlatformController extends Controller{
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart']);
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']);
-        if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
-        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
-        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
         if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']);
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
+        
+        if( isset($post['fewDay']) ){
+            $data['FEW_DAY'] = $post['fewDay'];
+            $data['useStart'] = '0';
+            $data['useEnd'] = '0';
+        }
+        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime'])  ){
+            $data['useStart'] = strtotime($post['addActLimitStartTime']);
+            $data['useEnd'] = strtotime($post['addActLimitEndTime']);
+            $data['FEW_DAY'] = '';
+        }
         
         $data['status'] = 2;
         $data['ADD_TIME'] = date('Y-m-d H:i:s');
@@ -484,6 +495,8 @@ class PlatformController extends Controller{
                     $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                     $res['data'][$key]['department'] = $department['title'];
                 }
+                if( !empty($val['getEnd']) && time() > $val['getEnd'] )
+                    $res['data'][$key]['status'] = 4;
                 unset( $res['data'][$key]['useEnd'] );
                 unset( $res['data'][$key]['getStart'] );
                 unset( $res['data'][$key]['getEnd'] );
@@ -535,6 +548,8 @@ class PlatformController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $res['data'][$key]['department'] = $department['title'];
             }
+            if( !empty($val['getEnd']) && time() > $val['getEnd'] )
+                $res['data'][$key]['status'] = 4;
             unset( $res['data'][$key]['useEnd'] );
             unset( $res['data'][$key]['getStart'] );
             unset( $res['data'][$key]['getEnd'] );
@@ -870,7 +885,8 @@ class PlatformController extends Controller{
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         if( isset($post['singleEnoughMoney']) ) $data['getNeedMoney'] = $post['singleEnoughMoney'];
-        
+        if( !empty($post['getSingleLimit']) && ($post['getSingleLimit']>999 ||$post['getSingleLimit']<1))
+            return $this->error('单个用户设置只能在1~999');
         $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
         
         return $this->success();
@@ -1088,7 +1104,7 @@ class PlatformController extends Controller{
         unset( $res );
         $title = '代金劵查询列表' .date('Ymd');
         //导出excel	   
-        $header = ['序号','活动名称','活动编码','总数上限','已发放数','已使用数','创建时间','活动时间','申请部门'];
+        $header = ['活动名称','活动编码','总数上限','已发放数','已使用数','创建时间','活动时间','申请部门','活动状态'];
         Excel::create($title, function($excel) use($tempData,$header){
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
                 $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
@@ -1258,11 +1274,12 @@ class PlatformController extends Controller{
                 $department = $department['title'];
             }
 //            $tempData[$key][] = ++$i;
+            
             $tempData[$key][] = $val['vcTitle'];
             $tempData[$key][] = $val['vcSn'];
-            $tempData[$key][] = $val['totalNum'];
-            $tempData[$key][] = $statistics[0];
-            $tempData[$key][] = $statistics[1];
+            $tempData[$key][] = empty($val['totalNum']) ? '无限制' : $val['totalNum'];
+            $tempData[$key][] = empty($statistics[0]) ? '0' : $statistics[0];
+            $tempData[$key][] = empty($statistics[1]) ? '0' : $statistics[1];
             $tempData[$key][] = $val['addTime'];
             $tempData[$key][] = $actTime;
             $tempData[$key][] = $department;

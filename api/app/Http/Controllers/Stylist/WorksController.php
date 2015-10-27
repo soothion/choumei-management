@@ -336,7 +336,7 @@ class WorksController extends Controller {
              throw new ApiException('创建作品的参数不齐', ERROR::MERCHANT_ERROR);
         }
       
-         $imageArr = explode(',', $param["img"]);
+         $imageArr = $param["img"];
          $fileIds = array();
          $imagecount=count($imageArr);
          for ($i = 0; $i < $imagecount; $i++) {
