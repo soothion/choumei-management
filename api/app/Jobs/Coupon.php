@@ -20,12 +20,14 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
 //    use InteractsWithQueue;
     public $DES_KEY = "authorlsptime20141225\0\0\0";
     public $voucherConf = [];
+    public $vcId;
     
     public function __construct( $vcId ) {
+        $this->vcId = $vcId;
         $this->voucherConf = VoucherConf::where(['vcId'=>$vcId])->first()->toArray();
     }
     public function handle(){
-        
+        $vcId = $this->vcId;
          // 修改voucher表中手机是否已经注册
         $phoneList = Voucher::select(['vMobilephone'])->where(['vStatus'=>10,'vcId'=>$vcId])->get()->toArray();
         //判断当前活动是否勾选了消费类项目
