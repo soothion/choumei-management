@@ -293,7 +293,7 @@ class CouponController extends Controller{
                 $res['data'][$key]['department'] = $department['title'];
             }
             if( !empty($val['getEnd']) && time() > $val['getEnd'] ){
-                if( $status != 4 )
+                if( $status == 4 )
                     $res['data'][$key]['status'] = 4;
                 else 
                     unset( $res['data'][$key] );
