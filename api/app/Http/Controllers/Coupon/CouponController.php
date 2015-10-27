@@ -89,13 +89,20 @@ class CouponController extends Controller{
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart'] . " 00:00:00");
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd'] . " 23:59:59");
-        if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
-        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime'] . " 00:00:00");
-        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime'] . " 23:59:59");
         if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']) ;
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
+         if( isset($post['fewDay']) ){
+            $data['FEW_DAY'] = $post['fewDay'];
+            $data['useStart'] = '0';
+            $data['useEnd'] = '0';
+        }
+        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime'])  ){
+            $data['useStart'] = strtotime($post['addActLimitStartTime']. " 00:00:00");
+            $data['useEnd'] = strtotime($post['addActLimitEndTime']. " 23:59:59");
+            $data['FEW_DAY'] = '';
+        }
         
         if( $post['totalNumber'] > 3000) return $this->error( '兑换劵总共上限不能大于3000' );
         $data['status'] = 2;
@@ -271,7 +278,8 @@ class CouponController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $res['data'][$key]['department'] = $department['title'];
             }
-            
+            if( !empty($val['getEnd']) && time() > $val['getEnd'] )
+                    $res['data'][$key]['status'] = 4;
             unset( $res['data'][$key]['useEnd'] );
             unset( $res['data'][$key]['getStart'] );
             unset( $res['data'][$key]['getEnd'] );
@@ -578,16 +586,24 @@ class CouponController extends Controller{
         if( isset( $post['managerId'] ) ) $data['MANAGER_ID'] = $post['managerId'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart'] . " 00:00:00");
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']. " 23:59:59");
-        if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
-        if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime'] . " 00:00:00");
-        if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime'] . " 23:59:59");
         if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = join(',',$post['limitItemTypes']);
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         if( isset($post['singleEnoughMoney']) ) $data['getNeedMoney'] = $post['singleEnoughMoney'];
-        
+        if( isset($post['fewDay']) ){
+            $data['FEW_DAY'] = $post['fewDay'];
+            $data['useStart'] = '0';
+            $data['useEnd'] = '0';
+        }
+        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime'])  ){
+            $data['useStart'] = strtotime($post['addActLimitStartTime']. " 00:00:00");
+            $data['useEnd'] = strtotime($post['addActLimitEndTime']. " 23:59:59");
+            $data['FEW_DAY'] = '';
+        }
+        if( !empty($post['getSingleLimit']) && ($post['getSingleLimit']>999 ||$post['getSingleLimit']<1))
+            return $this->error('单个用户设置只能在1~999');
         $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
         
         return $this->success();
@@ -859,7 +875,7 @@ class CouponController extends Controller{
             unset( $res );
             $title = '代金劵活动查询列表' .date('Ymd');
             //导出excel	   
-            $header = ['序号','活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门'];
+            $header = ['活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门','活动状态'];
             Excel::create($title, function($excel) use($tempData,$header){
                 $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
                     $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
@@ -894,7 +910,7 @@ class CouponController extends Controller{
         unset( $res );
         $title = '代金劵查询列表' .date('Ymd');
         //导出excel	   
-        $header = ['序号','活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门'];
+        $header = ['活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门','活动状态'];
         Excel::create($title, function($excel) use($tempData,$header){
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
                 $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
@@ -1014,28 +1030,35 @@ class CouponController extends Controller{
         $data['vUseStart'] = $voucherConf['useStart'];
         $data['vUseEnd'] = $voucherConf['useEnd'];
         $data['vStatus'] = 3;
-        // 现阶段将兑换劵总数设定为3000
-//        Queue::push(  );
-        $insert = ' INSERT cm_voucher (`vcId`,`vcSn`,`vcTitle`,`vUseMoney`,`vUseItemTypes`,`vUseLimitTypes`,`vUseNeedMoney`,`vUseStart`,`vUseEnd`,`vStatus`,`REDEEM_CODE`,`vSn`) VALUES ';
         $len = $voucherConf['useTotalNum'];
-        
+//        
         for($i=0,$len;$i<$len;$i++){
             $data['REDEEM_CODE'] = $this->encodeCouponCode();
             $data['vSn'] = $this->getVoucherSn('DH');
-            // 测试
-            $code = $this->encodeCouponCode();
-            $vSn = $this->getVoucherSn('DH');
-            if( $i==0 )
-                $insert .= " ( {$voucherConf['vcId']} , '{$voucherConf['vcId']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn')";
-            elseif( $i == $len-1 )
-                $insert .= ",( {$voucherConf['vcId']} , '{$voucherConf['vcId']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn');";
-            else    
-                $insert .= ",( {$voucherConf['vcId']} , '{$voucherConf['vcId']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn')";
-//            $addVoucher = \App\Voucher::insertGetId($data);
-//            if(empty($addVoucher)) Log::info("插入到代金劵失败:". print_r($data,true));
+            \App\Voucher::insertGetId($data);
         }
-        DB::insert( $insert );
-        Log::info( $insert );
+        // 现阶段将兑换劵总数设定为3000
+////        Queue::push(  );
+//        $insert = ' INSERT cm_voucher (`vcId`,`vcSn`,`vcTitle`,`vUseMoney`,`vUseItemTypes`,`vUseLimitTypes`,`vUseNeedMoney`,`vUseStart`,`vUseEnd`,`vStatus`,`REDEEM_CODE`,`vSn`) VALUES ';
+//        $len = $voucherConf['useTotalNum'];
+//        
+//        for($i=0,$len;$i<$len;$i++){
+//            $data['REDEEM_CODE'] = $this->encodeCouponCode();
+//            $data['vSn'] = $this->getVoucherSn('DH');
+//            // 测试
+//            $code = $this->encodeCouponCode();
+//            $vSn = $this->getVoucherSn('DH');
+//            if( $i==0 )
+//                $insert .= " ( {$voucherConf['vcId']} , '{$voucherConf['vcSn']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn')";
+//            elseif( $i == $len-1 )
+//                $insert .= ",( {$voucherConf['vcId']} , '{$voucherConf['vcSn']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn');";
+//            else    
+//                $insert .= ",( {$voucherConf['vcId']} , '{$voucherConf['vcSn']}', '{$voucherConf['vcTitle']}',{$voucherConf['useMoney']}, '{$voucherConf['useItemTypes']}', '{$voucherConf['useLimitTypes']}', {$voucherConf['useNeedMoney']}, '{$voucherConf['useStart']}', '{$voucherConf['useEnd']}', 3, '$code', '$vSn')";
+////            $addVoucher = \App\Voucher::insertGetId($data);
+////            if(empty($addVoucher)) Log::info("插入到代金劵失败:". print_r($data,true));
+//        }
+//        DB::insert( $insert );
+//        Log::info( $insert );
     }
     // 加密生成的兑换码
     private function encodeCouponCode(){
@@ -1079,6 +1102,7 @@ class CouponController extends Controller{
         $tempData = [];
         $department = '';
         $i = 0;
+        $statusArr = ['','进行中','下线','已关闭'];
         foreach( $res as $key=>$val ){
             $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
             $actTime = '';
@@ -1095,15 +1119,17 @@ class CouponController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $department = $department['title'];
             }
-            $tempData[$key][] = ++$i;
+            $temp1 = $statistics[1] + $statistics[3];
+            $temp2 = $statistics[1];
             $tempData[$key][] = $val['vcTitle'];
             $tempData[$key][] = $val['vcSn'];
-            $tempData[$key][] = $val['totalNum'];
-            $tempData[$key][] = $statistics[1] + $statistics[3];
-            $tempData[$key][] = $statistics[1];
+            $tempData[$key][] = empty($val['totalNum']) ? '无限制' : $val['totalNum'];
+            $tempData[$key][] = empty($temp1) ? '0' : $temp1;
+            $tempData[$key][] = empty($temp2) ? '0' : $temp2;
             $tempData[$key][] = $val['addTime'];
             $tempData[$key][] = $actTime;
             $tempData[$key][] = $department;
+            $tempData[$key][] = $statusArr[ $val['status'] ];
         }
         return $tempData;
    }
