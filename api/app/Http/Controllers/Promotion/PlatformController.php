@@ -164,6 +164,9 @@ class PlatformController extends Controller{
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         
+        if( isset($post['getTimeStart']) && isset($post['getTimeEnd']) && ( strtotime($post['getTimeStart']) > strtotime($post['getTimeEnd'])) )
+            return $this->error('获取开始时间需小于获取结束时间');
+       
         if( isset($post['money'])&&!empty($post['money']) && ($post['money']>999 ||$post['getSingleLimit']<1))
             return $this->error('券金额只能在1~999');
         if( isset($post['useNeedMoney'])&&!empty($post['useNeedMoney']) && $post['useNeedMoney']>999 )
@@ -175,12 +178,11 @@ class PlatformController extends Controller{
         if( isset($post['fewDay'])&&!empty($post['fewDay']) && ($post['fewDay']>999 ||$post['fewDay']<1))
             return $this->error('自定义有效期区间只能在1~999');
         
-        if( isset($post['fewDay']) ){
+        if( isset($post['fewDay'])  && !empty($post['fewDay'])){
             $data['FEW_DAY'] = $post['fewDay'];
             $data['useStart'] = '0';
             $data['useEnd'] = '0';
-        }
-        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
+        }elseif( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
             $data['useStart'] = strtotime($post['addActLimitStartTime']);
             $data['useEnd'] = strtotime($post['addActLimitEndTime']);
             $data['FEW_DAY'] = '';
@@ -924,12 +926,11 @@ class PlatformController extends Controller{
             return $this->error('单个用户设置只能在1~20');
         if( isset($post['fewDay'])&&!empty($post['fewDay']) && ($post['fewDay']>999 ||$post['fewDay']<1))
             return $this->error('自定义有效期区间只能在1~999');
-        if( isset($post['fewDay']) ){
+        if( isset($post['fewDay'])  && !empty($post['fewDay'])){
             $data['FEW_DAY'] = $post['fewDay'];
             $data['useStart'] = '0';
             $data['useEnd'] = '0';
-        }
-        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
+        }elseif( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
             $data['useStart'] = strtotime($post['addActLimitStartTime']);
             $data['useEnd'] = strtotime($post['addActLimitEndTime']);
             $data['FEW_DAY'] = '';
