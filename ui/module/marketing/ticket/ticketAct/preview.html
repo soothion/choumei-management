@@ -183,7 +183,7 @@
 				var $form=$('#form');
 				$form[0]._getFormData=function(){
                     var formData = JSON.parse(window.localStorage.getItem('couponTmpData'));
-                    formData.sendSms = formData.sendSms.replace(/\[useMoney\]/g,formData.money).replace(/\[name\]/g,formData.actName);
+                    // formData.sendSms = formData.sendSms.replace(/\[useMoney\]/g,formData.money).replace(/\[name\]/g,formData.actName);
 					return formData;
 				}
 				$form.on("success",function(){
