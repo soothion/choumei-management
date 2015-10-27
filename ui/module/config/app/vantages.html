@@ -103,7 +103,7 @@
                             <span id="labelText"><%=data.type==1?"增加":"减少"%>积分：</span>
                         </label>
                         <div class="control">
-                            <input type="text" name="score" required pattern="number" maxlength="9" max="<%=data.score%>">
+                            <input type="text" name="score" required pattern="number" maxlength="9" <%if(data.type==2){%> max="<%=data.score%>"<%}%>>
                             <span class="unit">分</span>
                         </div>
                     </div> 
