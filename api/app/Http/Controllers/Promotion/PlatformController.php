@@ -10,7 +10,7 @@ use App\Exceptions\ApiException;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ERROR;
 use Log;
-
+use App\User;
 
 class PlatformController extends Controller{
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
@@ -1032,7 +1032,7 @@ class PlatformController extends Controller{
         foreach( $phoneList as $val ){
             $voucherData = array();
             $where1 = 'vStatus=10 AND vMobilephone ="'.$val['vMobilephone'].'"';
-            $voucherStatus = $this->verifyUserPhoneExists($val['vMobilephone']);
+            $voucherStatus = User::verifyUserPhoneExists($val['vMobilephone']);
             // 统一处理 不管有无注册过
             $nowTime=  time();
             // 其中一个不为空则有消费类型  将状态改为3 待激活   
@@ -1229,6 +1229,7 @@ class PlatformController extends Controller{
         }
         return array( $totalNum , $useNum , $invalidNum );
     }
+
     private function getCountVoucherStatus($vcSn,$useEnd){
         $totalNum = 0;
         $useNum = 0;
@@ -1246,11 +1247,8 @@ class PlatformController extends Controller{
         }
         return array( $totalNum , $useNum , $invalidNum );
     }
-    // 验证手机号码是否存在
-    private function verifyUserPhoneExists( $phone ){
-        $exists = \App\User::select(['user_id','os_type'])->where(['mobilephone'=>$phone])->first();
-        return $exists;
-    }
+
+
     // 校验是否为手机号码添加 且为未激活状态的 如果是 那么发送短信提醒
     private function verifyPhone( $vcId ){
         // 找到用户获取的类型
@@ -1293,7 +1291,7 @@ class PlatformController extends Controller{
                     Log::info( $errMsg );
             }
             // 写入到推送表
-            $userId = $this->verifyUserPhoneExists( $val['vMobilephone'] );
+            $userId = User::verifyUserPhoneExists( $val['vMobilephone'] );
             if( !empty($userId) ){
                 $dataPush = array();
                 $dataPush['RECEIVER_USER_ID'] = $userId['user_id'];

@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-12 13:59:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-13 13:59:19
+* @Last Modified time: 2015-10-27 14:53:26
 */
 
 (function(){
@@ -16,19 +16,12 @@
                 var str = "";
                 var arr = []; 
                 sib.each(function(i,item){
-                    var obj = {
-                        "thumbimg" : $(item).find("img").attr("src"),
-                        "img"      : $(item).find("img").data("original")
-                    };
-                    arr.push(obj);                        
-                })
-                if(arr.length > 0){
-                    str = JSON.stringify(arr);
-                }          
+                    arr.push($(item).find("img").attr("worksId"));                        
+                })         
                 lib.ajax({
                     type: "post",
                     url : "works/del/"+id,
-                    data: {img : str}    
+                    data: {img : arr.toString()}    
                 }).done(function(data, status, xhr){
                     if(data.result == 1){
                         parent.lib.popup.result({
@@ -91,21 +84,13 @@
        var thumbnail=self.closest('.control-thumbnails');
        var arr = [];
        thumbnail.find("img").each(function(i,item){
-            var obj = {
-                "thumbimg" : $(item).attr("src"),
-                "img"      : $(item).data("original")
-            };
-            arr.push(obj);                        
+            arr.push($(item).attr("worksId"));                        
         })
         lib.ajax({
             type: "post",
             url : "works/update/"+thumbnail.data("id"),
-            data:{img:JSON.stringify(arr)}
-        }).done(function(data, status, xhr){
-                  
-        }); 
-
-          
+            data:{img:arr.toString()}
+        });         
     }
 
     $("#add_works_btn").on('click',function(){
@@ -172,11 +157,7 @@
         if(thumbnailsArr.length == 0 || !des) return;
         var arr = [];
         thumbnailsArr.each(function(i,item){
-            var obj = {
-                "thumbimg" : $(item).find("img").attr("src"),
-                "img"      : $(item).find("img").data("original")
-            };
-            arr.push(obj);  
+            arr.push($(item).find("img").data("original"));  
         });
         lib.ajax({
             type: "post",

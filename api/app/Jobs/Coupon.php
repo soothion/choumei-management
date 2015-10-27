@@ -9,6 +9,10 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Log;
 use Service\NetDesCrypt;
+use App\VoucherConf;
+use App\Voucher;
+use App\User;
+use DB;
 
 class Coupon extends Job implements SelfHandling, ShouldQueue
 {
@@ -16,11 +20,27 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
 //    use InteractsWithQueue;
     public $DES_KEY = "authorlsptime20141225\0\0\0";
     public $voucherConf = [];
+    public $vcId;
     
-    public function __construct( $voucherConf ) {
-        $this->voucherConf = $voucherConf;
+    public function __construct( $vcId ) {
+        $this->vcId = $vcId;
+        $this->voucherConf = VoucherConf::where(['vcId'=>$vcId])->first()->toArray();
     }
     public function handle(){
+        $vcId = $this->vcId;
+         // 修改voucher表中手机是否已经注册
+        $phoneList = Voucher::select(['vMobilephone'])->where(['vStatus'=>10,'vcId'=>$vcId])->get()->toArray();
+        //判断当前活动是否勾选了消费类项目
+        $voucherConf = VoucherConf::select(['getItemTypes','getNeedMoney','getStart','getEnd'])->where(['vcId'=>$vcId])->first()->toArray();
+        
+        $getItemTypes=$voucherConf['getItemTypes'];
+        $getNeedMoney=$voucherConf['getNeedMoney'];
+
+        DB::beginTransaction();
+        // 修改配置表中为已上线状态
+        $statusResult = VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
+        
+
         $vcId = $this->voucherConf['vcId'];
         $vcSn = $this->voucherConf['vcSn'];
         $vcTitle = $this->voucherConf['vcTitle'];
@@ -50,8 +70,21 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
             $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn');";
         }
        $result = DB::insert( $insert );
-       if( empty($result) ) Log::info( "生成兑换劵失败" . $insert );
+
+       if($statusResult&&$result)
+       {
+            DB::commit();
+            return true;
+       }
+       else
+       {
+            DB::rollBack();
+            Log::info('生成兑换劵失败'.$insert);
+            return false;
+       }
 	}
+
+
     // 获取代金劵编号
     private function getVoucherSn( $p = 'CM' ) {
         $pre = substr(time(), 2);
