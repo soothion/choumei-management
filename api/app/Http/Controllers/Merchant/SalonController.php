@@ -844,7 +844,7 @@ class SalonController extends Controller {
 		{
 			throw new ApiException("参数错误", ERROR::MERCHANT_ERROR);
 		}
-		$result = Salon::where(['salonid'=>$salonid])->select(["status","salestatus","merchantId"])->first();
+		$result = Salon::where(['salonid'=>$salonid])->where('status','!=','3')->select(["status","salestatus","merchantId"])->first();
 		if(!$result)
 		{
 			throw new ApiException("操作店铺不存在", ERROR::MERCHANT_ID_IS_ERROR);
