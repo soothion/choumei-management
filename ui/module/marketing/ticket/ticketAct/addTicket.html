@@ -167,7 +167,7 @@
                                    <tr>
                                        <th colspan="2">
                                            <label class="checkbox">
-                                               <input type="checkbox" <%if (data.sendSms){%>checked="checked"<%}%>name="" value="3">
+                                               <input id="sendSmsChecked" name="checkSendSms" type="checkbox" <%if (data.sendSms){%>checked="checked"<%}%>name="" value="3">
                                                <span>发送手机短信</span>
                                            </label>
                                        </th>
@@ -223,6 +223,10 @@
                   tmpData.fewDay = '';
                 }else{
                   tmpData.addActLimitStartTime = tmpData.addActLimitEndTime = '';
+                }
+
+                if (!thisFormData.checkSendSms){
+                  thisFormData.sendSms =  '';
                 }
                 var formData = $.extend(tmpData,thisFormData);
                 return formData;
