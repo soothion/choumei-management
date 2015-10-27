@@ -33,8 +33,10 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>活动名称：</label>
                 <div class="control">
-                    <%if (data.actNo){%>
+                    <%if (data.vcId){%>
                     <input type="text" disabled="disabled" value="<%=data.actName%>" placeholder="活动名称"
+                    maxlength="12" required >
+                    <input type="hidden" name="actName" value="<%=data.actName%>" placeholder="活动名称"
                     maxlength="12" required >
                     <%}else{%>
                         <input type="text" name="actName" value="<%=data.actName%>" placeholder="活动名称"
