@@ -240,7 +240,7 @@ class CouponController extends Controller{
                     $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                     $res['data'][$key]['department'] = $department['title'];
                 }
-                if( !empty($val['getEnd']) && time() > $val['getEnd'] )
+                if( !empty($val['getEnd']) && time() > $val['getEnd']  )
                     $res['data'][$key]['status'] = 4;
                 unset( $res['data'][$key]['useEnd'] );
                 unset( $res['data'][$key]['getStart'] );
@@ -292,8 +292,13 @@ class CouponController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $res['data'][$key]['department'] = $department['title'];
             }
-            if( !empty($val['getEnd']) && time() > $val['getEnd'] )
+            if( !empty($val['getEnd']) && time() > $val['getEnd'] ){
+                if( $status != 4 )
                     $res['data'][$key]['status'] = 4;
+                else 
+                    unset( $res['data'][$key] );
+            }
+                   
             unset( $res['data'][$key]['useEnd'] );
             unset( $res['data'][$key]['getStart'] );
             unset( $res['data'][$key]['getEnd'] );
