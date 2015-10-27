@@ -2,7 +2,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\SalonItemtype;
+use App\SalonItemType;
 
 class AddedserviceSalon extends  Model
 {
@@ -17,7 +17,7 @@ class AddedserviceSalon extends  Model
     {
     	if(!$salonid) return false;
     	
-    	$itemType = SalonItemtype::all();
+    	$itemType = SalonItemType::all();
     	$result = self::where('salonId',$salonid)->get()->toArray();
 		if(!$result)//如果存在就不开通所有服务--
 		{

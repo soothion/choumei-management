@@ -671,7 +671,7 @@ class LaiseeController extends Controller {
      * 		}
      */
     public function itemTypes() {
-        $itemTypes = \App\SalonItemtype::select(['typeid', 'typename'])->where('status', 1)->where('typename', '!=', '其他')->get();
+        $itemTypes = \App\SalonItemType::select(['typeid', 'typename'])->where('status', 1)->where('typename', '!=', '其他')->get();
         $res = [];
         foreach ($itemTypes as $val) {
             $typeidStr[] = $val->typeid;
