@@ -1044,6 +1044,18 @@
 				$target.trigger('error',{type:'required'});
 				return;
 			}
+			//minLength字符控制扩展
+			var minLength=$target.attr('minlength');
+			if (val&&minLength){
+				if(val.length<parseInt(minLength)){
+					$target.trigger('error',{
+						type:'error',
+						errormsg:'请输入不小于'+minLength+'个字符'
+					});
+					  return false;
+				}
+			}
+
 			//正则校验
 			var pattern=$target.attr('pattern');
 			if(val&&pattern){
