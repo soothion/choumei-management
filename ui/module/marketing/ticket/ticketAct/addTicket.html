@@ -319,9 +319,9 @@
                 }});
             }).on('change', '#sendSmsChecked', function(event) {
               if($(this).is(':checked')){
-                $('#sendSms').removeProp('disabled');
+                $('#sendSms').removeAttr('disabled').attr('required');
               }else{
-                $('#sendSms').attr('disabled','disabled');
+                $('#sendSms').attr('disabled','disabled').removeAttr('required');
               }
               /* Act on the event */
             });
