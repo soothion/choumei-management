@@ -119,9 +119,9 @@
             <div style="margin:15px">
                 <span style="display: inline-block;width:130px">领券上限：</span>
                 <input type="text" class="nonzero" name="getSingleLimit" value="<%=data.getSingleLimit || 1%>" 
-                maxlength="6" required pattern='number'/>
+                maxlength="6" required pattern='number' max="20" min="1" />
                 <strong>&nbsp;&nbsp;张&nbsp;&nbsp;</strong>
-                <span class="weak">(每人本活动领券总上限，每次活动只可获取一张)</span>
+                <span class="weak">(每人本活动领券总上限，每次活动只可获取一张,填写1~20)</span>
                 <span class="control-help" style="display:none;"></span>
             </div>                                                                 
             </td>

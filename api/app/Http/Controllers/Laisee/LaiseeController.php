@@ -152,10 +152,11 @@ class LaiseeController extends Controller {
 //            $data[$key]['id'] = $val['id'];
             $data[$key]['laisee_name'] = $val['laisee_name'];
             $vcsnWhere = $val['vcsns'] . "," . $val['gift_vcsn'];
-            $data[$key]['voucherNum'] = VoucherConf::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->sum('useTotalNum'); //现金券总数
-            $data[$key]['receiveNum'] = Laisee::where('laisee_config_id', $val['id'])->whereNotNull('mobilephone')->count(); //已领取数  TODO Laisee::where('id', $val['id']) ID需要改
-            $data[$key]['usedNum'] = Voucher::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->where('vStatus', 2)->count();  //已使用数
-            $data[$key]['giftNum'] = !empty($val['gift_vcsn']) ? Laisee::where('id', $val['id'])->whereIn('vcsn', explode(",", $val['gift_vcsn']))->whereNotNull('mobilephone')->count() : 0;  //礼包领取数
+            $data[$key]['voucherNum'] = (string) VoucherConf::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->sum('useTotalNum'); //现金券总数
+            $data[$key]['receiveNum'] = (string) Laisee::where('laisee_config_id', $val['id'])->whereNotNull('mobilephone')->count(); //已领取数  TODO Laisee::where('id', $val['id']) ID需要改
+            $data[$key]['usedNum'] = (string) Voucher::whereIn('vcSn', array_filter(explode(",", $vcsnWhere)))->where('vStatus', 2)->count();  //已使用数
+            $giftNum = !empty($val['gift_vcsn']) ? Laisee::where('id', $val['id'])->whereIn('vcsn', explode(",", $val['gift_vcsn']))->whereNotNull('mobilephone')->count() : 0;  //礼包领取数
+            $data[$key]['giftNum'] = (string) $giftNum;
             $data[$key]['create_time'] = $val['create_time'];
             $data[$key]['start_time'] = $val['start_time'];
             if ($val['status'] == 'Y') {
@@ -468,7 +469,7 @@ class LaiseeController extends Controller {
             $usedWhere = $laisee->vcsns . "," . $laisee->gift_vcsn;
             $laisee->usedNum = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->where('vStatus', 2)->count();
             $laisee->usedAmount = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->where('vStatus', 2)->sum('vUseMoney');
-            $laisee->failure = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->whereIn('vStatus', [4,5])->count();  //已失效
+            $laisee->failure = Voucher::whereIn('vcSn', array_filter(explode(",", $usedWhere)))->whereIn('vStatus', [4, 5])->count();  //已失效
             $voucherConsume = VoucherConf::getVoucherConfConsume($laisee);
             $laisee->consumeNum = $voucherConsume['consumeNum']; //TODO  已消费数
             $laisee->consumeAmount = $voucherConsume['consumeAmount']; //TODO  已消费数金额
