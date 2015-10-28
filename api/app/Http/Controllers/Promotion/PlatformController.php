@@ -483,7 +483,7 @@ class PlatformController extends Controller{
             AbstractPaginator::currentPageResolver(function() use ($page) {
                 return $page;
             });
-            $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum','getTypes'])
+            $res = \App\VoucherConf::select(['vcId','vcTitle','vcSn','ADD_TIME as addTime','getStart','getEnd','DEPARTMENT_ID','status','useEnd','useTotalNum as totalNum','getTypes','getNumMax'])
                     ->where(['vType'=>1,'IS_REDEEM_CODE'=>'N'])
                     ->orderBy('vcId','desc')
                     ->paginate($pageSize)
@@ -1330,14 +1330,17 @@ class PlatformController extends Controller{
             }
             if( empty($val['totalNum']) )
                 $res['data'][$key]['totalNum'] = '无限';
-            if(!empty($val['getTypes']) && !empty($val['getTypes']) && $val['getTypes']==3 )
-                $res['data'][$key]['totalNum'] = \App\Voucher::where(['vcSn'=>$val['vcSn']])->count();
-
+            if(!empty($val['totalNum']) && !empty($val['getTypes']) && $val['getTypes']==3 ){
+                $tmp = \App\Voucher::where(['vcSn'=>$val['vcSn']])->count();
+                $total = $temp * $val['getNumMax'];
+                $res['data'][$key]['totalNum'] = $total;
+            }
             unset( $res['data'][$key]['useEnd'] );
             unset( $res['data'][$key]['getStart'] );
             unset( $res['data'][$key]['getEnd'] );
             unset( $res['data'][$key]['DEPARTMENT_ID'] );
             unset( $res['data'][$key]['getTypes'] );
+            unset( $res['data'][$key]['getNumMax'] );
         }
         if( $searchFlag ){
             $i = 0;
