@@ -581,8 +581,13 @@ class CouponController extends Controller{
             $data['useEnd'] = strtotime($post['addActLimitEndTime']. " 23:59:59");
             $data['FEW_DAY'] = '';
         }
-        if( !empty($post['getSingleLimit']) && ($post['getSingleLimit']>999 ||$post['getSingleLimit']<1))
-            return $this->error('单个用户设置只能在1~999');
+        
+        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && isset($post['fewDay']) && empty($post['addActLimitStartTime']) && empty($post['addActLimitEndTime']) && empty($post['fewDay'])){
+            return $this->error('限制时间设置错误');
+        }
+        if(!isset($post['addActLimitStartTime']) && !isset($post['addActLimitEndTime']) && isset($post['fewDay']) && empty($post['fewDay'])){
+            return $this->error('限制时间设置错误');
+        }
         $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
         
         return $this->success();

@@ -874,6 +874,12 @@ class PlatformController extends Controller{
             $data['useEnd'] = strtotime($post['addActLimitEndTime']);
             $data['FEW_DAY'] = '';
         }
+        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && isset($post['fewDay']) && empty($post['addActLimitStartTime']) && empty($post['addActLimitEndTime']) && empty($post['fewDay'])){
+            return $this->error('限制时间设置错误');
+        }
+        if(!isset($post['addActLimitStartTime']) && !isset($post['addActLimitEndTime']) && isset($post['fewDay']) && empty($post['fewDay'])){
+            return $this->error('限制时间设置错误');
+        }
         $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
         
         return $this->success();
