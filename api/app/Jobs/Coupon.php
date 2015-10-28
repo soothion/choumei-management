@@ -48,38 +48,40 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
         $data['vStatus'] = 3;
         
         // 现阶段将兑换劵总数设定为3000
-        $len = $this->voucherConf['useTotalNum'];
-
-        if($len>0)
+        $count = $this->voucherConf['useTotalNum'];
+        if($count>0)
         {
-            for($i=0;$i<$len;$i++){
-                $code = $this->encodeCouponCode();
-                $vSn = $this->getVoucherSn('DH');
-                if( $i==0 )
-                    $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
-                else
-                    $insert .= ",( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
+            $pageSize = 100;
+            $totalPage = ceil($count/$pageSize);
+            for($page=0; $page < $totalPage; $page++){
+                Log::info("正在处理第$page页数据");
+                $offset = $page*$pageSize;
+                $limit = min($count,$offset+$pageSize);
+                $insert = ' INSERT cm_voucher (`vcId`,`vcSn`,`vcTitle`,`vUseMoney`,`vUseItemTypes`,`vUseLimitTypes`,`vUseNeedMoney`,`vUseStart`,`vUseEnd`,`vStatus`,`REDEEM_CODE`,`vSn`) VALUES ';
+                $i=$offset;
+                while($i<$limit) { 
+                    $code = $this->encodeCouponCode();
+                    $vSn = $this->getVoucherSn('DH');
+                    if( $i==0 )
+                        $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
+                    else
+                        $insert .= ",( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
+                }
+                $insert .= ';';
+                $result = DB::insert( $insert );
+                Log::info("第$page页数据处理完成");
+                if($result)
+                     $i++
             }
-            $insert .= ';';
         }
         else
         {
             $code = $this->encodeCouponCode();
             $vSn = $this->getVoucherSn('DH');
             $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn');";
+            $result = DB::insert( $insert );
         }
-
-        $result = DB::insert( $insert );
-        if($statusResult&&$flag)
-        {
-            Log::info('生成兑换劵成功:'.$vcId);
-            return true;
-        }
-        else
-        {
-            Log::info('生成兑换劵失败:'.$vcId);
-            return false;
-        }
+        return true;
 	}
 
 
@@ -101,10 +103,6 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
         $desModel->setKey( $this->DES_KEY );
         $code = $this->createCouponCode();
         $encodeCode = $desModel->encrypt( $code );
-        // 判断当前是否存在
-        $exists = Voucher::where( ['REDEEM_CODE'=>$encodeCode] )->first();
-        if($exists) 
-            return $this->encodeCouponCode();
         return $encodeCode;
     }
 
