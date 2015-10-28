@@ -9,6 +9,7 @@ class Voucher extends Model {
     protected $table = 'voucher';
     protected $primaryKey = 'vId';
     public $timestamps = false;
+    public static $getVoucherSn = 10000;
 
     /*
      * 获取代金券sn
@@ -47,5 +48,13 @@ class Voucher extends Model {
     public static function addVoucher($data) {
         return self::insertGetId($data);
     }
+
+    // 获取代金劵编号
+    public static function getNewVoucherSn( $p = 'DH' ) {
+        $pre = date('ymd');
+        $end = Self::$getVoucherSn++;
+        $code = $p . $pre  . $end;
+        return $code;
+   }
 
 }

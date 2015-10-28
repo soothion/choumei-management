@@ -14,6 +14,7 @@ use App\Voucher;
 use App\User;
 use DB;
 
+
 class Coupon extends Job implements SelfHandling, ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
@@ -25,7 +26,7 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
     public function __construct( $vcId ) {
         Log::info('初始化');
         $this->vcId = $vcId;
-        $this->voucherConf = VoucherConf::where(['vcId'=>$vcId])->first()->toArray();
+        $this->voucherConf = VoucherConf::where(['vcId'=>$vcId])->first();
     }
     public function handle(){
         Log::info('开始处理');
@@ -38,7 +39,9 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
             return true;
         }
             
-        
+        if(!$this->voucherConf)
+            return true;
+        $this->voucherConf = $this->voucherConf->toArray();
         $data['vcId'] = $this->voucherConf['vcId'];
         $data['vcSn'] = $this->voucherConf['vcSn'];
         $data['vcTitle'] = $this->voucherConf['vcTitle'];
@@ -65,7 +68,7 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
                 $i=$offset;
                 while($i<$limit) { 
                     $code = $this->encodeCouponCode();
-                    $vSn = $this->getVoucherSn('DH');
+                    $vSn = Voucher::getNewVoucherSn('DH');
                     if( $i==$offset )
                         $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
                     else
@@ -79,7 +82,7 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
                     Log::info("第{$page}页数据处理完成");
                      
                 } 
-                catch(Exception $e) {
+                catch(\Exception $e) {
                     $message = $e->getMessage();
                     Log::info("第{$page}页数据处理失败,正在重试:$message");
                     $page--;
