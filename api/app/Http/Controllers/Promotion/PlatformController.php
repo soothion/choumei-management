@@ -766,7 +766,8 @@ class PlatformController extends Controller{
             }
             $voucherConfInfo['phoneList'] = $temp;
         }
-        if( empty($voucherConfInfo['getTypes']) && ( in_array($voucherConfInfo['code'],[1,2,3]) || $voucherConfInfo['getItemTypes']) ){
+        
+        if( empty($voucherConfInfo['getTypes']) && ( in_array($voucherConfInfo['getCodeType'],[1,2,3]) || $voucherConfInfo['getItemTypes']) ){
             $voucherConfInfo['selectItemType'] = 2;
         }
         if( $voucherConfInfo['getTypes'] == 4 )
@@ -785,6 +786,7 @@ class PlatformController extends Controller{
             $voucherConfInfo['getItemTypes'] = rtrim(ltrim($voucherConfInfo['getItemTypes'],','),',');
         if( !empty($voucherConfInfo['limitItemTypes']) )
             $voucherConfInfo['limitItemTypes'] = rtrim(ltrim($voucherConfInfo['limitItemTypes'],','),',');
+        
         return $this->success( $voucherConfInfo );
     }
     /***
