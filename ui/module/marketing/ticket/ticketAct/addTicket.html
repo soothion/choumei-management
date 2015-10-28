@@ -311,6 +311,7 @@
               }else{
                 $('#sendSms').attr('disabled','disabled').removeAttr('required');
               }
+              $('#sendSms').trigger('blur');
             });
 
             var formattedDate = function(val){
