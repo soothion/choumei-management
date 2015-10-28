@@ -1043,7 +1043,7 @@ class CouponController extends Controller{
        foreach( $res['data'] as $key=>$val ){
             $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
             $res['data'][$key]['allNum'] = $statistics[1];
-            $res['data'][$key]['useNum'] = $statistics[3];
+            $res['data'][$key]['useNum'] = $statistics[1];
             $res['data'][$key]['actTime'] = '';
             if( empty( $val['getStart'] ) && empty($val['getEnd']) )
                 $res['data'][$key]['actTime'] = '无限期活动';
