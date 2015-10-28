@@ -182,7 +182,7 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
         }
 
         //隐藏超级管理员
-        $query = $q->where('id','>',1);
+        $query = $query->where('id','>',1);
 
         //排序
         if(isset($param['sort_key'])&&$param['sort_key']){
