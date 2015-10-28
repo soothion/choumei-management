@@ -588,7 +588,7 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function actView($id){
-        $voucherConfInfo = \App\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney'])
+        $voucherConfInfo = \App\VoucherConf::select(['vcTitle','vcSn','vcRemark','getStart','getEnd','status','DEPARTMENT_ID','MANAGER_ID','useTotalNum','getCodeType','getCode','useMoney','getTypes'])
                 ->where(['vcId'=>$id,'IS_REDEEM_CODE'=>'N','vType'=>1])
                 ->first()
                 ->toArray();
@@ -626,6 +626,9 @@ class PlatformController extends Controller{
             $temp = ['','dividendCode','companyCode','activityCode'];
             $voucherConfInfo[ $temp[$voucherConfInfo['getCodeType']] ] = $voucherConfInfo['getCode'];
         }
+        if( !empty($voucherConfInfo['getTypes']) && $voucherConfInfo['getTypes'] == 5 && !empty($voucherConfInfo['getCode']))
+            $voucherConfInfo['activityCode'] = $voucherConfInfo['getCode'];
+            
         // 劵情况统计情况
         $voucherConfInfo['allNum'] = 0;
         $voucherConfInfo['allMoney'] = 0;
@@ -669,6 +672,7 @@ class PlatformController extends Controller{
         unset( $voucherConfInfo['useTotalNum'] );
         unset( $voucherConfInfo['getCodeType'] );
         unset( $voucherConfInfo['getCode'] );
+        unset( $voucherConfInfo['getTypes'] );
             
         return $this->success( $voucherConfInfo );
         
