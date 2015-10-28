@@ -330,9 +330,9 @@ class LaiseeController extends Controller {
             $where["id"] = $data["id"];
             $laiseeConfig = LaiseeConfig::find($data['id']);
             if ($laiseeConfig) {
-                if ($laiseeConfig->status != 'Y') {
-                    throw new ApiException("已关闭或已结束的活动无法再编辑", ERROR::PARAMS_LOST);
-                }
+//                if ($laiseeConfig->status != 'Y') {
+//                    throw new ApiException("已关闭或已结束的活动无法再编辑", ERROR::PARAMS_LOST);
+//                }
                 // 检测预警值 是否有修改
                 if ($laiseeConfig->amount_warning != $data['amount_warning'] && $data['amount_warning'] > 0) {
                     $data['send_warning_sms'] = 'Y';
@@ -453,7 +453,7 @@ class LaiseeController extends Controller {
             if (!empty($laisee->gift_vcsn)) {
                 $gift_vcsn = '';
                 foreach (explode(",", $laisee->gift_vcsn) as $gift) {
-                    $gift_vcsn = '"' . $gift . '"' . ",";
+                    $gift_vcsn .= '"' . $gift . '"' . ",";
                 }
                 $giftAmountRes = DB::select(DB::raw(" SELECT SUM(useTotalNum*useMoney) AS AGGREGATE FROM `cm_voucher_conf` WHERE `vcSn` IN (" . rtrim($gift_vcsn, ',') . ")"));
                 $giftAmount = $giftAmountRes[0]->AGGREGATE;
