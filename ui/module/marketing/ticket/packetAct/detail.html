@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="wrapper">
-            <div class="table" ajat="laisee/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
+            <div class="table-detail" ajat="laisee/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
 				<script type="text/template" id="table-t">
                 <div class="detail-operation">
 					<%if(data.status=="Y"||data.status=="F"){%>
@@ -44,7 +44,7 @@
 
                         <tr>
                             <td>活动状态</td>
-							<%var statusMap={"Y":"进行中","N":"已结束","S":"已关闭"}%>
+							<%var statusMap={"Y":"进行中","N":"已结束","S":"已关闭","F":"下线"}%>
                             <td><%=statusMap[data.status]%></td>
                         </tr>
 
