@@ -17,13 +17,13 @@ class VoucherConf extends Model {
      * 
      */
 
-    public static function getVcSn() {
+    public static function getVcSn($type = 'cm') {
         $i = 0;
         for ($i; $i <= 10; $i++) {
             $pre = substr(time(), 7);
             $end = rand(0, 999);
             $end = str_pad($end, 3, '0', STR_PAD_LEFT);
-            $code = "cm" . $pre . $end;
+            $code = $type . $pre . $end;
             /*
               $where = array('vcSn' => $code);
               $count = M("voucher_conf")->where($where)->count();

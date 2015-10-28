@@ -98,7 +98,7 @@ class LaiseeConfig extends Model {
         $voucher = $data['voucher'];
         $vcsns = [];
         foreach ($voucher as $val) {
-            $vcSn = VoucherConf::getVcSn();
+            $vcSn = VoucherConf::getVcSn('hb');
             $vcData = [
                 'vcTitle' => $data['laisee_name'],
                 'vcSn' => $vcSn,
@@ -146,7 +146,7 @@ class LaiseeConfig extends Model {
         $gift_vcsn = [];
         if ($gVoucherCount) {
             foreach ($gift as $val) {
-                $vcSn = VoucherConf::getVcSn();
+                $vcSn = VoucherConf::getVcSn('hb');
                 $vcData = [
                     'vcTitle' => $data['laisee_name'],
                     'vcSn' => $vcSn,
@@ -223,7 +223,7 @@ class LaiseeConfig extends Model {
                     }
                 } else {
                     //添加
-                    $vcSn = VoucherConf::getVcSn();
+                    $vcSn = VoucherConf::getVcSn('hb');
                     $vcData = [
                         'vcTitle' => $data['laisee_name'],
                         'vcSn' => $vcSn,
@@ -282,7 +282,7 @@ class LaiseeConfig extends Model {
                     }
                 } else {
                     //添加
-                    $vcSn = VoucherConf::getVcSn();
+                    $vcSn = VoucherConf::getVcSn('hb');
                     $vcData = [
                         'vcTitle' => $data['laisee_name'],
                         'vcSn' => $vcSn,
