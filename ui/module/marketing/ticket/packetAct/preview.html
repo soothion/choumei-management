@@ -124,6 +124,7 @@
 			$('#table').on("_ready",function(){
 				var form=$('#table form')[0];
 				form.goback=function(){
+					sessionStorage.removeItem("formData");
 					if(parent!=window){
 						location.href="/module/marketing/ticket/packetAct/index.html";
 					}else{
@@ -134,7 +135,6 @@
 					var data=lib.tools.getFormData($(this));
 					var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
 					data=$.extend(formData,data);
-					sessionStorage.removeItem("formData");
 					return data;
 				}
 			})
