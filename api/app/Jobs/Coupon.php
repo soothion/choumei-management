@@ -54,7 +54,7 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
             $pageSize = 100;
             $totalPage = ceil($count/$pageSize);
             for($page=0; $page < $totalPage; $page++){
-                Log::info("正在处理第$page页数据");
+                Log::info("正在处理第{$page}页数据");
                 $offset = $page*$pageSize;
                 $limit = min($count,$offset+$pageSize);
                 $insert = ' INSERT cm_voucher (`vcId`,`vcSn`,`vcTitle`,`vUseMoney`,`vUseItemTypes`,`vUseLimitTypes`,`vUseNeedMoney`,`vUseStart`,`vUseEnd`,`vStatus`,`REDEEM_CODE`,`vSn`) VALUES ';
@@ -69,7 +69,7 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
                 }
                 $insert .= ';';
                 $result = DB::insert( $insert );
-                Log::info("第$page页数据处理完成");
+                Log::info("第{$page}页数据处理完成");
                 if($result)
                      $i++;
             }
