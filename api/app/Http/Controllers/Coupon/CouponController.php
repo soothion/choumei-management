@@ -435,7 +435,7 @@ class CouponController extends Controller{
         $voucherConfInfo['useNumed'] = $useNumed;
         $voucherConfInfo['useMoneyed'] = $useNumed * $voucherConfInfo['useMoney'];
         
-        $invalidNum = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>5] )->count();
+        $invalidNum = \App\Voucher::whereRaw( 'vcId = '.$id.' AND vStatus!=2 AND ( vStatus=5 OR vUseEnd<'.time().')' )->count();
         $voucherConfInfo['invalidNum'] = $invalidNum;
         
         // 查找已消费数
