@@ -10,26 +10,26 @@ use DB;
 use PDO;
 class WorksController extends Controller {
     /**
-     * @api {post} /works/index/:id 1.‘Ï–Õ ¶µƒ◊˜∆∑¡–±Ì∫ÕÀ˘‘⁄µÍµƒ∆‰À˚
+     * @api {post} /works/index/:id 1.ÈÄ†ÂûãÂ∏àÁöÑ‰ΩúÂìÅÂàóË°®ÂíåÊâÄÂú®Â∫óÁöÑÂÖ∂‰ªñ
      * @apiName list
      * @apiGroup Works
      *
-     * @apiParam {String} stylistId ±ÿÃÓ,‘Ï–Õ ¶ID.
+     * @apiParam {String} stylistId ÂøÖÂ°´,ÈÄ†ÂûãÂ∏àID.
      *
-     * @apiSuccess {String} stylistId ‘Ï–Õ ¶ID.
-     * @apiSuccess {String} stylistName ‘Ï–Õ ¶√˚≥∆.
-     * @apiSuccess {Number} mobilephone  ÷ª˙∫≈.
-     * @apiSuccess {Numder} grade –¸…Õµ»º∂ 0√ª”–µ»º∂ 1√¿∑¢ ¶ 2∏ﬂº∂√¿∑¢ ¶ 3‘Ï–Õ ¶ 4“’ ı◊‹º‡.
-     * @apiSuccess {Number} fastGrade øÏºÙµ»º∂ 0√ª”–µ»º∂ 1∆’Õ®øÏºÙ 2◊‹º‡øÏºÙ.
-     * @apiSuccess {Number} uploadNum …œ¥´¥Œ ˝.
-     * @apiSuccess {Number} num ◊˜∆∑ ˝.
-     * @apiSuccess {Number} recId ◊˜∆∑ID.
-     * @apiSuccess {Number} stylistId ‘Ï–Õ ¶ID.
-     * @apiSuccess {String} commoditiesImg ◊˜∆∑ºØ.
-     * @apiSuccess {String} description ◊˜∆∑√Ë ˆ.
-     * @apiSuccess {String} thumbImg ¿œ∞Ê±æ◊˜∆∑ºØÀı¬‘Õº.
-     * @apiSuccess {String} works['img'] –¬∞Ê±æ◊˜∆∑ºØ∫œ  “‘£®◊˜∆∑ºØ∫Õ◊˜∆∑ºØÀı¬‘Õº£©Œ™“ª∏ˆµ•‘™.
-     * @apiSuccess {String} salon['img'] ‘Ï–Õ ¶Õ∑œÒÀı¬‘Õº
+     * @apiSuccess {String} stylistId ÈÄ†ÂûãÂ∏àID.
+     * @apiSuccess {String} stylistName ÈÄ†ÂûãÂ∏àÂêçÁß∞.
+     * @apiSuccess {Number} mobilephone ÊâãÊú∫Âè∑.
+     * @apiSuccess {Numder} grade ÊÇ¨ËµèÁ≠âÁ∫ß 0Ê≤°ÊúâÁ≠âÁ∫ß 1ÁæéÂèëÂ∏à 2È´òÁ∫ßÁæéÂèëÂ∏à 3ÈÄ†ÂûãÂ∏à 4Ëâ∫ÊúØÊÄªÁõë.
+     * @apiSuccess {Number} fastGrade Âø´Ââ™Á≠âÁ∫ß 0Ê≤°ÊúâÁ≠âÁ∫ß 1ÊôÆÈÄöÂø´Ââ™ 2ÊÄªÁõëÂø´Ââ™.
+     * @apiSuccess {Number} uploadNum ‰∏ä‰º†Ê¨°Êï∞.
+     * @apiSuccess {Number} num ‰ΩúÂìÅÊï∞.
+     * @apiSuccess {Number} recId ‰ΩúÂìÅID.
+     * @apiSuccess {Number} stylistId ÈÄ†ÂûãÂ∏àID.
+     * @apiSuccess {String} commoditiesImg ‰ΩúÂìÅÈõÜ.
+     * @apiSuccess {String} description ‰ΩúÂìÅÊèèËø∞.
+     * @apiSuccess {String} thumbImg ËÄÅÁâàÊú¨‰ΩúÂìÅÈõÜÁº©Áï•Âõæ.
+     * @apiSuccess {String} works['img'] Êñ∞ÁâàÊú¨‰ΩúÂìÅÈõÜÂêà  ‰ª•Ôºà‰ΩúÂìÅÈõÜÂíå‰ΩúÂìÅÈõÜÁº©Áï•ÂõæÔºâ‰∏∫‰∏Ä‰∏™ÂçïÂÖÉ.
+     * @apiSuccess {String} salon['img'] ÈÄ†ÂûãÂ∏àÂ§¥ÂÉèÁº©Áï•Âõæ
      * 
      * @apiSuccessExample Success-Response:
      * {
@@ -68,7 +68,7 @@ class WorksController extends Controller {
      *                   "grade":4,
      *                   "fastGrade":2,
      *                   "num":0,
-     *                   "stylistImg":"www.douyuTV.com"£¨
+     *                   "stylistImg":"www.douyuTV.com"Ôºå
      *                   "img":null,
      *                   "uploadNum":0,
      *                   "salonname":"choumeitest_salon"
@@ -82,7 +82,7 @@ class WorksController extends Controller {
      *                   "grade":4,
      *                   "fastGrade":2,
      *                   "num":0,
-     *                   "stylistImg":"www.douyuTV.com"£¨
+     *                   "stylistImg":"www.douyuTV.com"Ôºå
      *                   "img":null,
      *                   "uploadNum":0,
      *                },
@@ -103,14 +103,14 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "Œ¥ ⁄»®∑√Œ "
+     *		    "msg": "Êú™ÊéàÊùÉËÆøÈóÆ"
      *		}
      */
     public function index($stylistId){
         $field=['stylistId','stylistName','stylistImg','mobilephone','grade','fastGrade','salonId','img'];
         $stylist=Stylist::select($field)->where(array('stylistId'=>$stylistId))->first();
         if($stylist===false){
-            throw new ApiException('‘Ï–Õ ¶ID≥ˆ¥Ì', ERROR::MERCHANT_STYLIST_ID_ERROR);  
+            throw new ApiException('ÈÄ†ÂûãÂ∏àIDÂá∫Èîô', ERROR::MERCHANT_STYLIST_ID_ERROR);  
         }
         
         $salonStylist=Stylist::select($field)->where('salonId','=',$stylist['salonId'])->where('stylistId','<>',$stylistId )->get();
@@ -118,47 +118,43 @@ class WorksController extends Controller {
         DB::connection()->setFetchMode(PDO::FETCH_ASSOC);
         $salon=DB::table('salon')->select($field2)->where(array('salonId'=>$stylist['salonId']))->first();
           
-        $works=StylistWorks::getQuery()->where('stylist_id',$stylistId)->orderBy('add_time', 'desc')->get();
-        $stylist->uploadnum = count($works);
-        $stylist->num = 0;
-        $stylist->salonname = $salon['salonname'];
+        $works=StylistWorks::getQuery()->where('stylist_id',$stylistId)->where('status','ON')->orderBy('add_time', 'desc')->get();
         $query=array();
-        foreach ($works as $key2 =>$value) {
-            if($value['status'] == 'OFF') 
-                continue;
-            $stylist->num++;
-            if(!empty($value["image_ids"])){
-                $imageArr = explode(',', $value["image_ids"]);
+         foreach ($works as $key2 =>$value) {
+              if(!empty($value["image_ids"])){
+                  $imageArr = explode(',', $value["image_ids"]);
                   
-                $works[$key2]['img']=[];
-                $imagecount=count($imageArr);
-                for ($i = 0; $i <$imagecount; $i++) {
-                    $image =FileImage::getQuery()->where('id',$imageArr[$i])->first();
-                    $img['worksId']=$image["id"];
-                    $img['originImg']=$image["url"];
-                    $works[$key2]['img'][]=$img;
+                  $works[$key2]['img']=[];
+                  $imagecount=count($imageArr);
+                  for ($i = 0; $i <$imagecount; $i++) {
+                     $image =FileImage::getQuery()->where('id',$imageArr[$i])->first();
+                     $img['worksId']=$image["id"];
+                     $img['originImg']=$image["url"];
+                     $works[$key2]['img'][]=$img;
    
-                }
+                  }
                   
-            }
-        }
+              }
+         }
     
 
         foreach ($salonStylist as $key =>$value) {
-            $salonStylist[$key]->num = 0;
-            $works1= StylistWorks::where('stylist_id','=',$value->stylistId)->get();
+            $num=0; 
+            $works1= StylistWorks::where('stylist_id','=',$value->stylistId)->where('status','ON')->get();
             foreach ($works1 as $key1 =>$value) {
-                if($value['status'] == 'ON')
-                    $salonStylist[$key]->num++;
-            }  
-            $salonStylist[$key]->uploadNum= count($works1);
-        }
+                if(!empty($value['image_ids'])){
+                    $imageArr = explode(',', $value['image_ids']);
+                    $num=$num+(count($imageArr));
+                }  
+             }  
+           $salonStylist[$key]->num=$num;
+           $salonStylist[$key]->uploadNum=  count(json_decode($works1,true));
+         }
          
          
-         /*
         if ($stylist) {
             $num=0; 
-            $works3= StylistWorks::where('stylist_id','=',$stylistId)->get();
+            $works3= StylistWorks::where('stylist_id','=',$stylistId)->where('status','ON')->get();
             foreach ($works3 as $key7 =>$value) {
               if(!empty($value['image_ids'])){
                     $imageArr = explode(',', $value['image_ids']);
@@ -166,10 +162,9 @@ class WorksController extends Controller {
                 }  
              }
            $stylist->num=$num;
-           $stylist->uploadNum=StylistWorks::where('stylist_id','=',$stylistId)->count();
+           $stylist->uploadNum=StylistWorks::where('stylist_id','=',$stylistId)->where('status','ON')->count();
            $stylist->salonname=$salon["salonname"];
          }
-          */
          
         $query['works']=$works;
         $query['salonSelf']=$stylist;
@@ -179,11 +174,11 @@ class WorksController extends Controller {
     }
     
     /**
-     * @api {post} /works/del_list/:id  2.…æ≥˝◊˜∆∑ºØ∫œ
+     * @api {post} /works/del_list/:id  2.Âà†Èô§‰ΩúÂìÅÈõÜÂêà
      * @apiName del_list
      * @apiGroup  Works
      *
-     * @apiParam {Number} recId ±ÿÃÓ,◊˜∆∑id.
+     * @apiParam {Number} recId ÂøÖÂ°´,‰ΩúÂìÅid.
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -198,38 +193,31 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "…æ≥˝◊˜∆∑ºØ∫œ ß∞‹"
+     *		    "msg": "Âà†Èô§‰ΩúÂìÅÈõÜÂêàÂ§±Ë¥•"
      *		}
      */
     public function  del_list($recId){
-        $works=StylistWorks::where('id',$recId)->first();
+        $works=StylistWorks::where('id',$recId)->where('status','ON')->count();
         if($works==FALSE){
-             throw new ApiException('◊˜∆∑ID≥ˆ¥Ì', ERROR::MERCHANT_WORKS_ID_ERROR);
+             throw new ApiException('‰ΩúÂìÅIDÂá∫Èîô', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
-        //«Â¿Ìcm_file_image±Ì÷– ˝æ›
-        self::del_list2($works->image_ids);
-        $query=  StylistWorks::where(array('id'=>$recId))->delete();
+        $data['status']="OFF";
+        $query=  StylistWorks::where(array('id'=>$recId))->update($data);
         if($query){
             return $this->success();
         }else{
-            throw new ApiException('…æ≥˝◊˜∆∑ ß∞‹', ERROR::MERCHANT_WORKS_DELETE_ERROR);
+            throw new ApiException('Âà†Èô§‰ΩúÂìÅÂ§±Ë¥•', ERROR::MERCHANT_WORKS_DELETE_ERROR);
         }
     }
     
-    public function  del_list2($image_ids){
-        $imageArr = explode(',',$image_ids);
-        for ($i = 0; $i < count($imageArr); $i++) {
-            FileImage::where('id',$imageArr[$i])->delete();
-        }
-    }
     
     /**
-     * @api {post} /works/del/:id  3.…æ≥˝µ•∏ˆ◊˜∆∑
+     * @api {post} /works/del/:id  3.Âà†Èô§Âçï‰∏™‰ΩúÂìÅ
      * @apiName del
      * @apiGroup  Works
      *
-     * @apiParam {Number} recId ±ÿÃÓ,◊˜∆∑id.
-     * @apiParam {String} img  ±ÿÃÓ,[woeksId]◊˜∆∑ºØ∫œ.eg:  "1,2,3"  ◊˜∆∑IDºØ∫œ£¨“‘∂∫∫≈∏Ùø™
+     * @apiParam {Number} recId ÂøÖÂ°´,‰ΩúÂìÅid.
+     * @apiParam {String} img  ÂøÖÂ°´,[woeksId]‰ΩúÂìÅÈõÜÂêà.eg:  "1,2,3"  ‰ΩúÂìÅIDÈõÜÂêàÔºå‰ª•ÈÄóÂè∑ÈöîÂºÄ
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -244,36 +232,37 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "…æ≥˝◊˜∆∑ ß∞‹"
+     *		    "msg": "Âà†Èô§‰ΩúÂìÅÂ§±Ë¥•"
      *		}
      */
     public function  del($recId){
         $param=$this->param;
-        $works=  StylistWorks::where(array('id'=>$recId))->count();
+        $works=  StylistWorks::where(array('id'=>$recId))->where('status','ON')->count();
         if($works==FALSE){
-             throw new ApiException('◊˜∆∑ID≥ˆ¥Ì', ERROR::MERCHANT_WORKS_ID_ERROR);
+             throw new ApiException('‰ΩúÂìÅIDÂá∫Èîô', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
         $data=array();
         if(!empty($param['img'])){
             $data['image_ids']=$param['img'];
             $query=  StylistWorks::where(array('id'=>$recId))->update($data);
         }else{
-            $query=  StylistWorks::where(array('id'=>$recId))->delete();
+            $data2['status']="OFF";
+            $query=  StylistWorks::where(array('id'=>$recId))->update($data2);
         }
         if($query){
                 return $this->success();
         }else{
-                 throw new ApiException('…æ≥˝µ•∏ˆ◊˜∆∑ ß∞‹', ERROR::MERCHANT_WORKS_DELETE_ERROR);
+                 throw new ApiException('Âà†Èô§Âçï‰∏™‰ΩúÂìÅÂ§±Ë¥•', ERROR::MERCHANT_WORKS_DELETE_ERROR);
         }
     }
     
     /**
-     * @api {post} /works/update/:id  4.–ﬁ∏ƒ◊˜∆∑ºØ∫œ
+     * @api {post} /works/update/:id  4.‰øÆÊîπ‰ΩúÂìÅÈõÜÂêà
      * @apiName update
      * @apiGroup  Works
      *
-     * @apiParam {Number} recId ±ÿÃÓ,◊˜∆∑id.
-     * @apiParam {String} img ±ÿÃÓ,[woekId]◊˜∆∑ºØ∫œ.eg:  "1,2,3"  ◊˜∆∑IDºØ∫œ£¨“‘∂∫∫≈∏Ùø™
+     * @apiParam {Number} recId ÂøÖÂ°´,‰ΩúÂìÅid.
+     * @apiParam {String} img ÂøÖÂ°´,[woekId]‰ΩúÂìÅÈõÜÂêà.eg:  "1,2,3"  ‰ΩúÂìÅIDÈõÜÂêàÔºå‰ª•ÈÄóÂè∑ÈöîÂºÄ
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -288,36 +277,36 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "–ﬁ∏ƒ◊˜∆∑ ß∞‹"
+     *		    "msg": "‰øÆÊîπ‰ΩúÂìÅÂ§±Ë¥•"
      *		}
      */
     public function  update($recId){
         $param=$this->param;
-        $works=  StylistWorks::where(array('id'=>$recId))->count();
+        $works=  StylistWorks::where(array('id'=>$recId))->where('status','ON')->count();
         if($works==FALSE){
-             throw new ApiException('◊˜∆∑ID≥ˆ¥Ì', ERROR::MERCHANT_WORKS_ID_ERROR);
+             throw new ApiException('‰ΩúÂìÅIDÂá∫Èîô', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
         $data=array();
         if(empty($param['img'])){
-             throw new ApiException('≤Œ ˝¥ÌŒÛ', ERROR::MERCHANT_ERROR);
+             throw new ApiException('ÂèÇÊï∞ÈîôËØØ', ERROR::MERCHANT_ERROR);
         }
         $data['image_ids']=$param['img'];
         $query=  StylistWorks::where(array('id'=>$recId))->update($data);
         if($query){
                 return $this->success();
         }else{
-                 throw new ApiException('–ﬁ∏ƒµ•∏ˆ◊˜∆∑ ß∞‹', ERROR::MERCHANT_WORKS_SAVE_ERROR);
+                 throw new ApiException('‰øÆÊîπ‰ΩúÂìÅÂ§±Ë¥•', ERROR::MERCHANT_WORKS_SAVE_ERROR);
         }
     }
     
     /**
-     * @api {post} /works/create 5.–¬‘ˆ◊˜∆∑ºØ∫œ
+     * @api {post} /works/create 5.Êñ∞Â¢û‰ΩúÂìÅÈõÜÂêà
      * @apiName create
      * @apiGroup  Works
      *
-     * @apiParam {Number} stylistId ±ÿÃÓ,‘Ï–Õ ¶ID.
-     * @apiParam {String} description ±ÿÃÓ,◊˜∆∑√Ë ˆ.
-     * @apiParam {String} img  ±ÿÃÓ,[originImg]◊˜∆∑ºØ∫œ. eg:"www,ee,qq,bb"    ◊˜∆∑‘≠Õº¬∑æ∂ºØ∫œ£¨“‘∂∫∫≈∏Ùø™
+     * @apiParam {Number} stylistId ÂøÖÂ°´,ÈÄ†ÂûãÂ∏àID.
+     * @apiParam {String} description ÂøÖÂ°´,‰ΩúÂìÅÊèèËø∞.
+     * @apiParam {String} img  ÂøÖÂ°´,[originImg]‰ΩúÂìÅÈõÜÂêà. eg:"www,ee,qq,bb"    ‰ΩúÂìÅÂéüÂõæË∑ØÂæÑÈõÜÂêàÔºå‰ª•ÈÄóÂè∑ÈöîÂºÄ
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -332,13 +321,13 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "¥¥Ω®◊˜∆∑ ß∞‹"
+     *		    "msg": "ÂàõÂª∫‰ΩúÂìÅÂ§±Ë¥•"
      *		}
      */
     public function  create(){
         $param=$this->param;
         if(empty($param['img'])||empty($param['stylistId'])){
-             throw new ApiException('¥¥Ω®◊˜∆∑µƒ≤Œ ˝≤ª∆Î', ERROR::MERCHANT_ERROR);
+             throw new ApiException('ÂàõÂª∫‰ΩúÂìÅÁöÑÂèÇÊï∞‰∏çÈΩê', ERROR::MERCHANT_ERROR);
         }
       
          $imageArr =json_decode($param['img'],true);
@@ -361,7 +350,7 @@ class WorksController extends Controller {
         if($query){
              return $this->success();
         }else{
-             throw new ApiException('¥¥Ω®◊˜∆∑ ß∞‹', ERROR::MERCHANT_WORKS_CREATE_ERROR);
+             throw new ApiException('ÂàõÂª∫‰ΩúÂìÅÂ§±Ë¥•', ERROR::MERCHANT_WORKS_CREATE_ERROR);
         }
     }  
 }

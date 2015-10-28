@@ -46,7 +46,7 @@ class Stylist  extends Model {
          unset($results['prev_page_url']);
          foreach ($results['data'] as $key =>$value) {
             $num=0; 
-            $works=StylistWorks::where('stylist_id','=',$value->stylistId)->get();
+            $works=StylistWorks::where('stylist_id','=',$value->stylistId)->where('status','ON')->get();
             foreach ($works as $key1 =>$value) {
                 if(!empty($value->image_ids)){
                      $imageArr = explode(',', $value->image_ids);

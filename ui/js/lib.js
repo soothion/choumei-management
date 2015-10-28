@@ -66,9 +66,7 @@
 				}
 			}
 			options.timeout=options.timeout||9999;
-			if(options.timeout&&options.timeout>=10000){
-				parent.lib.popup.loading({text:'请求可能会比较慢，请耐心等候！',time:options.timeout});
-			}
+			
 			/*
 			options.headers={
 				token:localStorage.getItem('token')
@@ -118,13 +116,7 @@
 					localStorage.setItem('token',data.token);
 				}
 			});
-			if(options.timeout&&options.timeout>=10000){
-				promise.done(function(data){
-					if(data.result==1){
-						parent.lib.popup.close();
-					}
-				});
-			}
+			
             return promise;
         },
 		getSession:function(){
@@ -794,7 +786,16 @@
                 }
             };
 			options=$.extend(options,pro.custom);
-            return lib.ajax(options);
+			var promise=lib.ajax(options)
+			if(options.timeout&&options.timeout>=10000){
+				parent.lib.popup.loading({text:'请求可能会比较慢，请耐心等候！',time:options.timeout});
+				promise.done(function(data){
+					if(data.result==1){
+						parent.lib.popup.close();
+					}
+				});
+			}
+            return promise;
         },
         setExternal:function(data){//引入外部数据，以便模板引擎渲染时能获取；
             this.external=data;

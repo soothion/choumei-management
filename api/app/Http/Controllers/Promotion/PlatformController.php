@@ -708,8 +708,8 @@ class PlatformController extends Controller{
         $voucherConfInfo['useNumed'] = $useNumed;
         $voucherConfInfo['useMoneyed'] = $useNumed * $voucherConfInfo['useMoney'];
         
-        $useNumed = \App\Voucher::where( ['vcId'=>$id,'vStatus'=>5] )->count();
-        $voucherConfInfo['invalidNum'] = $useNumed;
+        $invalidNum = \App\Voucher::whereRaw( 'vcId = '.$id.' AND vStatus!=2 AND ( vStatus=5 OR vUseEnd<'.time().')' )->count();
+        $voucherConfInfo['invalidNum'] = $invalidNum;
         
         // 查找已消费数
         if( !empty($useNumed) ){
@@ -719,8 +719,8 @@ class PlatformController extends Controller{
                 $t = \App\Order::where(['ordersn'=>$val['vOrderSn'],'status'=>4])->count();
                 if( $t ) $consumeNum++;
             }
-            $voucherConfInfo['consumeNum'] = 0;
-            $voucherConfInfo['consumeMoney'] = 0;
+            $voucherConfInfo['consumeNum'] = $consumeNum;
+            $voucherConfInfo['consumeMoney'] = $consumeNum * $voucherConfInfo['useMoney'];
         }
         if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] ) $voucherConfInfo['status'] = 4;
         
