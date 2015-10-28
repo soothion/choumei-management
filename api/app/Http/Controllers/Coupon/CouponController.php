@@ -91,7 +91,7 @@ class CouponController extends Controller{
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart'] . " 00:00:00");
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd'] . " 23:59:59");
-        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
+        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes'][0]) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
@@ -105,12 +105,15 @@ class CouponController extends Controller{
             return $this->error('单个用户设置只能在1~20');
         if( isset($post['fewDay'])&&!empty($post['fewDay']) && ($post['fewDay']>999 ||$post['fewDay']<1))
             return $this->error('自定义有效期区间只能在1~999');
-        if( isset($post['fewDay']) ){
+        if( isset($post['getTimeStart']) && isset($post['getTimeEnd']) && ( strtotime($post['getTimeStart']) > strtotime($post['getTimeEnd'])) )
+            return $this->error('获取开始时间需小于获取结束时间');
+        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && ( strtotime($post['addActLimitStartTime']) > strtotime($post['addActLimitEndTime'])) )
+            return $this->error('限制开始时间需小于限制结束时间');
+        if( isset($post['fewDay'])  && !empty($post['fewDay'])){
             $data['FEW_DAY'] = $post['fewDay'];
             $data['useStart'] = '0';
             $data['useEnd'] = '0';
-        }
-        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
+        }elseif( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
             $data['useStart'] = strtotime($post['addActLimitStartTime']. " 00:00:00");
             $data['useEnd'] = strtotime($post['addActLimitEndTime']. " 23:59:59");
             $data['FEW_DAY'] = '';
@@ -240,7 +243,7 @@ class CouponController extends Controller{
                     $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                     $res['data'][$key]['department'] = $department['title'];
                 }
-                if( !empty($val['getEnd']) && time() > $val['getEnd'] )
+                if( !empty($val['getEnd']) && time() > $val['getEnd']  )
                     $res['data'][$key]['status'] = 4;
                 unset( $res['data'][$key]['useEnd'] );
                 unset( $res['data'][$key]['getStart'] );
@@ -292,8 +295,13 @@ class CouponController extends Controller{
                 $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
                 $res['data'][$key]['department'] = $department['title'];
             }
-            if( !empty($val['getEnd']) && time() > $val['getEnd'] )
+            if( !empty($val['getEnd']) && time() > $val['getEnd'] ){
+                if( $actStatus == 4 )
                     $res['data'][$key]['status'] = 4;
+                else 
+                    unset( $res['data'][$key] );
+            }
+                   
             unset( $res['data'][$key]['useEnd'] );
             unset( $res['data'][$key]['getStart'] );
             unset( $res['data'][$key]['getEnd'] );
@@ -602,7 +610,7 @@ class CouponController extends Controller{
         if( isset( $post['managerId'] ) ) $data['MANAGER_ID'] = $post['managerId'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart'] . " 00:00:00");
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']. " 23:59:59");
-        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes']) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
+        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes'][0]) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
@@ -618,12 +626,11 @@ class CouponController extends Controller{
         if( isset($post['fewDay'])&&!empty($post['fewDay']) && ($post['fewDay']>999 ||$post['fewDay']<1))
             return $this->error('自定义有效期区间只能在1~999');
         
-        if( isset($post['fewDay']) ){
+        if( isset($post['fewDay'])  && !empty($post['fewDay'])){
             $data['FEW_DAY'] = $post['fewDay'];
             $data['useStart'] = '0';
             $data['useEnd'] = '0';
-        }
-        if( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
+        }elseif( isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime']) ){
             $data['useStart'] = strtotime($post['addActLimitStartTime']. " 00:00:00");
             $data['useEnd'] = strtotime($post['addActLimitEndTime']. " 23:59:59");
             $data['FEW_DAY'] = '';
