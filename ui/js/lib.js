@@ -1044,6 +1044,18 @@
 				$target.trigger('error',{type:'required'});
 				return;
 			}
+
+			if ($target.attr('required')){
+				var len = $target.val().length,maxL = $target.attr('maxlength'),minL = $target.attr('minlength');
+				if (len < minL || len > maxL){
+				  $target.trigger('error',{
+				    type:'error',
+				    errormsg:'请输入长度'+minL+'~'+maxL+'之间的字符'
+				  });
+				  return false;
+				}
+			}
+
 			//正则校验
 			var pattern=$target.attr('pattern');
 			if(val&&pattern){

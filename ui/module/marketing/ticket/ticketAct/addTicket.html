@@ -245,27 +245,8 @@
                 window.localStorage.removeItem('couponTmpData');
             }
 
-
-            var checkLength = function(dom){
-              if ( dom.attr('disabled')){
-                return true;
-              }
-              var len = dom.val().length,maxL = dom.attr('maxlength'),minL = dom.attr('minlength');
-              if (len < minL || len > maxL){
-                dom.trigger('error',{
-                  type:'error',
-                  errormsg:'请输入长度'+minL+'~'+maxL+'之间的字符'
-                });
-                return false;
-              }
-              return true;
-            }
-
             // var newForm = new lib.Form();
             lib.Form.prototype.save = function(data){
-                if (!checkLength($("#sendSms"))){
-                  return false;
-                } 
                 var formData = getSubmitData();
                 setTmpData(formData);
                 window.location.href="preview.html"+(lib.query._?"?"+lib.query._:"");
