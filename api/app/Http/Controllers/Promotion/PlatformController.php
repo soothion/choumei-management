@@ -624,7 +624,7 @@ class PlatformController extends Controller{
         $voucherConfInfo['dividendCode'] = '-';
         if( !empty($voucherConfInfo['getCodeType']) ){
             $temp = ['','dividendCode','companyCode','activityCode'];
-            $voucherConfInfo[ $voucherConfInfo['getCodeType'] ] = $voucherConfInfo['getCode'];
+            $voucherConfInfo[ $temp[$voucherConfInfo['getCodeType']] ] = $voucherConfInfo['getCode'];
         }
         // 劵情况统计情况
         $voucherConfInfo['allNum'] = 0;
