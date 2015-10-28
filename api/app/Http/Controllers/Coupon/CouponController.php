@@ -952,7 +952,7 @@ class CouponController extends Controller{
                 $useNum++;
             if( $val['vStatus'] == 5 )
                 $invalidNum++;
-            if( $val['vStatus'] != 10 && $val['vStatus'] != 3 )
+            if( $val['vStatus'] != 10 && $val['vStatus'] != 3 && $val['vStatus'] != 5)
                 $duihuanNum++;
         }
         if( !empty($invalidNum) )
