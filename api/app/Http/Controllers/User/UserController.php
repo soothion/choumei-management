@@ -84,12 +84,9 @@ class UserController extends Controller{
 	public function survey()
 	{
 		$day = strtotime('today');
-		$week = date('w');
-		$week = 1-$week;
-		if($week==0)
-			$week = $day;
-		else 
-			$week = strtotime('+'.$week.' days');
+		$timestamp = time();  
+		$week = date('Y-m-d', $timestamp-86400*date('w',$timestamp)+(date('w',$timestamp)>0?86400:-/*6*86400*/518400));  
+
 		$month = strtotime(date('Y-m'));
 
 		$data['total'] = User::count();
