@@ -32,6 +32,9 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
         $vcId = $this->vcId;
         // 修改配置表中为已上线状态
         $statusResult = VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
+
+        if(!$statusResult)
+            return true;
         
         $data['vcId'] = $this->voucherConf['vcId'];
         $data['vcSn'] = $this->voucherConf['vcSn'];
@@ -46,18 +49,27 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
         
         // 现阶段将兑换劵总数设定为3000
         $len = $this->voucherConf['useTotalNum'];
-        $flag=1;
-        for($i=0;$i<$len;$i++){
-            $data['REDEEM_CODE'] = $this->encodeCouponCode();
-            $data['vSn'] = $this->getVoucherSn('DH');
-            $res = Voucher::insertGetId($data);
-            if( !$res ) 
-            {
-                Log::info($data.' 插入失败');
-                $flag=0;
+
+        if($len>0)
+        {
+            for($i=0;$i<$len;$i++){
+                $code = $this->encodeCouponCode();
+                $vSn = $this->getVoucherSn('DH');
+                if( $i==0 )
+                    $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
+                else
+                    $insert .= ",( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
             }
+            $insert .= ';';
+        }
+        else
+        {
+            $code = $this->encodeCouponCode();
+            $vSn = $this->getVoucherSn('DH');
+            $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn');";
         }
 
+        $result = DB::insert( $insert );
         if($statusResult&&$flag)
         {
             Log::info('生成兑换劵成功:'.$vcId);
@@ -91,7 +103,8 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
         $encodeCode = $desModel->encrypt( $code );
         // 判断当前是否存在
         $exists = Voucher::where( ['REDEEM_CODE'=>$encodeCode] )->first();
-        if( !empty($exists) ) $this->encodeCouponCode();
+        if($exists) 
+            return $this->encodeCouponCode();
         return $encodeCode;
     }
 
