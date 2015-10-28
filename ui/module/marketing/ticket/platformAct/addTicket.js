@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-28 10:07:51
+* @Last Modified time: 2015-10-28 10:34:54
 */
 
 (function(){
@@ -61,13 +61,35 @@
         }        
     });
 
+    $("#form").on('change','#avaDateStart',function(){
+        if($(this).val()){
+            $("input[name=getTimeStart]").attr('max',$(this).val());
+            var d1 = new Date($(this).val());
+            var d2 = new Date($("input[name=getTimeStart]").val());
+            if(d2 > d1){
+                $("input[name=getTimeStart]").val($(this).val());
+            }        
+        }        
+    });
+
     $("#form").on('change','input[name=getTimeEnd]',function(){
         if($(this).val()){
-            $("#avaDateEnd").attr('max',$(this).val()); 
+            $("#avaDateEnd").attr('min',$(this).val()); 
             var d1 = new Date($(this).val());
             var d2 = new Date($("#avaDateEnd").val());
-            if(d2 > d1){
+            if(d2 < d1){
                 $("#avaDateEnd").val($(this).val());
+            }                      
+        }         
+    });
+
+    $("#form").on('change','#avaDateEnd',function(){
+        if($(this).val()){
+            $("input[name=getTimeEnd]").attr('max',$(this).val()); 
+            var d1 = new Date($(this).val());
+            var d2 = new Date($("input[name=getTimeEnd]").val());
+            if(d2 > d1){
+                $("input[name=getTimeEnd]").val($(this).val());
             }                      
         }         
     });
