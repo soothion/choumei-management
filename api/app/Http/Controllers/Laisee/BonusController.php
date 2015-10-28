@@ -177,9 +177,9 @@ class BonusController extends Controller {
 //            $result[$key]['num'] = $num;
             $result[$key]['bonusSn'] = "hb" . str_pad($val['order_ticket_id'], 6, '0', STR_PAD_LEFT);
             $result[$key]['laisee_name'] = $val['laisee_name'];
-            $result[$key]['bonusAmount'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
-            $result[$key]['voucherNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
-            $result[$key]['receiveNum'] = Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
+            $result[$key]['bonusAmount'] = (string)Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
+            $result[$key]['voucherNum'] = (string)Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
+            $result[$key]['receiveNum'] = (string)Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
             $result[$key]['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
             $result[$key]['over_time'] = $val['end_time'];
             if ($val['status'] == "Y") {
