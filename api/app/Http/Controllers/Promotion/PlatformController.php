@@ -1297,7 +1297,7 @@ class PlatformController extends Controller{
         return $tempData;
     }
     // 处理列表返回的搜索条件数据
-    private function handlerSearchDataList( $res , $searchFlag = false, $actStatus ){
+    private function handlerSearchDataList( $res , $searchFlag = false, $actStatus='' ){
         foreach( $res['data'] as $key=>$val ){
             $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
             $res['data'][$key]['allNum'] = $statistics[0];
