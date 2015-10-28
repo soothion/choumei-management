@@ -33,45 +33,50 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
         // 修改配置表中为已上线状态
         $statusResult = VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
 
-        if(!$statusResult)
+        if(!$statusResult){
+            Log::info("兑换活动状态错误:$vcId");
             return true;
+        }
+            
         
         $data['vcId'] = $this->voucherConf['vcId'];
         $data['vcSn'] = $this->voucherConf['vcSn'];
         $data['vcTitle'] = $this->voucherConf['vcTitle'];
-        $data['vUseMoney'] = $this->voucherConf['useMoney'];
-        $data['vUseItemTypes'] = $this->voucherConf['useItemTypes'];
-        $data['vUseLimitTypes'] = $this->voucherConf['useLimitTypes'];
-        $data['vUseNeedMoney'] = $this->voucherConf['useNeedMoney'];
-        $data['vUseStart'] = $this->voucherConf['useStart'];
-        $data['vUseEnd'] = $this->voucherConf['useEnd'];
+        $data['useMoney'] = $this->voucherConf['useMoney'];
+        $data['useItemTypes'] = $this->voucherConf['useItemTypes'];
+        $data['useLimitTypes'] = $this->voucherConf['useLimitTypes'];
+        $data['useNeedMoney'] = $this->voucherConf['useNeedMoney'];
+        $data['useStart'] = $this->voucherConf['useStart'];
+        $data['useEnd'] = $this->voucherConf['useEnd'];
         $data['vStatus'] = 3;
+        extract($data);
         
         // 现阶段将兑换劵总数设定为3000
         $count = $this->voucherConf['useTotalNum'];
         if($count>0)
         {
-            $pageSize = 100;
+            $pageSize = 3000;
             $totalPage = ceil($count/$pageSize);
-            for($page=0; $page < $totalPage; $page++){
+            for($page=1; $page <= $totalPage; $page++){
                 Log::info("正在处理第{$page}页数据");
-                $offset = $page*$pageSize;
+                $offset = ($page-1)*$pageSize;
                 $limit = min($count,$offset+$pageSize);
                 $insert = ' INSERT cm_voucher (`vcId`,`vcSn`,`vcTitle`,`vUseMoney`,`vUseItemTypes`,`vUseLimitTypes`,`vUseNeedMoney`,`vUseStart`,`vUseEnd`,`vStatus`,`REDEEM_CODE`,`vSn`) VALUES ';
                 $i=$offset;
                 while($i<$limit) { 
                     $code = $this->encodeCouponCode();
                     $vSn = $this->getVoucherSn('DH');
-                    if( $i==0 )
+                    if( $i==$offset )
                         $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
                     else
                         $insert .= ",( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn')";
+                    $i++;
                 }
                 $insert .= ';';
                 $result = DB::insert( $insert );
                 Log::info("第{$page}页数据处理完成");
-                if($result)
-                     $i++;
+                if(!$result)
+                     $page--;
             }
         }
         else
@@ -81,6 +86,7 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
             $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn');";
             $result = DB::insert( $insert );
         }
+        Log::info('全部数据处理完成');
         return true;
 	}
 
@@ -93,10 +99,9 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
             $end .= rand(0, 9);
         }
         $code = $p . $pre  . $end;
-        $count = \App\Voucher::where('vSn','=',$code)->count();
-        if ($count) return $this->getVoucherSn();
         return $code;
    }
+   
    // 加密生成的兑换码
     private function encodeCouponCode(){
         $desModel = new NetDesCrypt;
