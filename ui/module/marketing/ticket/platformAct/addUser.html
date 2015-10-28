@@ -289,9 +289,10 @@
                             <span>绑定活动码</span>
                         </label>
 
-                        <input type="text" name="code" value="<%= data.code || '00000'%>" required  <%= query.type =='edit' ? 'disabled' : '' %> pattern='number'/>
+                        <input type="text" name="code" data-check="3" placeholder="活动码" value="<%= data.code || '00000'%>" required  <%= query.type =='edit' ? 'disabled' : '' %> pattern='number'/>
+						 <span class="control-help" style="display:none;"></span>
                         <span class="weak">（无活动（店铺）码的用户成功领取现金券后将被填写邀请码）</span>
-                        <span class="control-help" style="display:none;"></span>
+                       
                     </div>
                 </div>
                 <%}%>  
