@@ -246,23 +246,30 @@
             }
 
 
+            var checkLength = function(dom){
+              if ( dom.attr('disabled')){
+                return true;
+              }
+              var len = dom.val().length,maxL = dom.attr('maxlength'),minL = dom.attr('minlength');
+              if (len < minL || len > maxL){
+                dom.trigger('error',{
+                  type:'error',
+                  errormsg:'请输入长度'+minL+'~'+maxL+'之间的字符'
+                });
+                return false;
+              }
+              return true;
+            }
+
             // var newForm = new lib.Form();
             lib.Form.prototype.save = function(data){
-                // var formData = getSubmitData();
-                // formData.limitItemTypes = formData.limitItemTypes ? formData.limitItemTypes.join(',') : '';
-                // var  ajaxUrl = formData.vcId ? 'coupon/editConf' : 'coupon/add';
-                // var resultText = formData.vcId ? '编辑活动成功':'新增活动成功';
-                // confirmBox({
-                //     url:ajaxUrl,
-                //     text:'确定保存本活动吗？',
-                //     resultText:resultText,
-                //     data:formData
-                // });
+                if (!checkLength($("#sendSms"))){
+                  return false;
+                } 
                 var formData = getSubmitData();
                 setTmpData(formData);
                 window.location.href="preview.html"+(lib.query._?"?"+lib.query._:"");
             }
-
 
             // 表单验证部分
             $("#form").on('click','.ticketNum',function(){
@@ -319,11 +326,10 @@
                 }});
             }).on('change', '#sendSmsChecked', function(event) {
               if($(this).is(':checked')){
-                $('#sendSms').removeProp('disabled');
+                $('#sendSms').removeAttr('disabled').attr('required','required');
               }else{
-                $('#sendSms').attr('disabled','disabled');
+                $('#sendSms').attr('disabled','disabled').removeAttr('required');
               }
-              /* Act on the event */
             });
 
             var formattedDate = function(val){
