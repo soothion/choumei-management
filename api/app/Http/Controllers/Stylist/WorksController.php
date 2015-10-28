@@ -21,7 +21,7 @@ class WorksController extends Controller {
      * @apiSuccess {Number} mobilephone 手机号.
      * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
      * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪.
-     * @apiSuccess {Number} uploadNum 上传次数.
+     * @apiSuccess {Number} uploadNum 上传次数总数.
      * @apiSuccess {Number} num 作品数.
      * @apiSuccess {Number} recId 作品ID.
      * @apiSuccess {Number} stylistId 造型师ID.
