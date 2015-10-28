@@ -465,7 +465,6 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function confList(){
-//        set_time_limit(20);
         $post = $this->param;
         $actSelect = isset($post['selectItem']) ? $post['selectItem'] : '';
         $actNumber = isset($post['keyword']) ? urldecode($post['keyword']) : '';
@@ -490,39 +489,7 @@ class PlatformController extends Controller{
                     ->paginate($pageSize)
                     ->toArray();
             if( empty($res) ) return $this->success();
-            foreach( $res['data'] as $key=>$val ){
-                $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
-                $res['data'][$key]['allNum'] = $statistics[0];
-                $res['data'][$key]['useNum'] = $statistics[1];
-                $res['data'][$key]['invalidNum'] = $statistics[2];
-                $res['data'][$key]['actTime'] = '';
-                if( empty( $val['getStart'] ) && empty($val['getEnd']) )
-                    $res['data'][$key]['actTime'] = '无限期活动';
-                if( !empty($val['getStart']) && empty($val['getEnd'])  && strlen($val['getStart'])>8)
-                    $res['data'][$key]['actTime'] = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
-                
-                if( !empty($val['getEnd']) && empty($val['getStart']) && strlen($val['getEnd'])>8)
-                    $res['data'][$key]['actTime'] = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
-                if( !empty( $val['getStart'] ) && !empty($val['getEnd'])  && strlen($val['getEnd'])>8 && strlen($val['getStart'])>8)
-                    $res['data'][$key]['actTime'] = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
-                $res['data'][$key]['department'] = '';
-                if( !empty($val['DEPARTMENT_ID']) ){
-                    $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
-                    $res['data'][$key]['department'] = $department['title'];
-                }
-                if( !empty($val['getEnd']) && time() > $val['getEnd'] )
-                    $res['data'][$key]['status'] = 4;
-                if( empty($val['totalNum']) && !empty($val['getTypes']) && $val['getTypes']!=3 )
-                    $res['data'][$key]['totalNum'] = '无限';
-                if(!empty($val['getTypes']) && $val['getTypes']==3 )
-                    $res['data'][$key]['totalNum'] = \App\Voucher::where(['vcSn'=>$val['vcSn']])->count();
-                
-                unset( $res['data'][$key]['useEnd'] );
-                unset( $res['data'][$key]['getStart'] );
-                unset( $res['data'][$key]['getEnd'] );
-                unset( $res['data'][$key]['DEPARTMENT_ID'] );
-                unset( $res['data'][$key]['getTypes'] );
-            }
+            $res = $this->handlerSearchDataList( $res );
             return $this->success( $res );
         }
         $actType = array('','vcSn','vcTitle');
@@ -550,37 +517,7 @@ class PlatformController extends Controller{
                     ->toArray();
         if( empty($res) ) return $this->success();
             
-        foreach( $res['data'] as $key=>$val ){
-            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
-            $res['data'][$key]['allNum'] = $statistics[0];
-            $res['data'][$key]['useNum'] = $statistics[1];
-//            $res['data'][$key]['invalidNum'] = $statistics[2];
-            $res['data'][$key]['actTime'] = '';
-            if( empty( $val['getStart'] ) && empty($val['getEnd']) )
-                $res['data'][$key]['actTime'] = '无限期活动';
-            if( !empty($val['getStart']) && empty($val['getEnd']) )
-                $res['data'][$key]['actTime'] = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
-            if( !empty($val['getEnd']) && empty($val['getStart']) )
-                $res['data'][$key]['actTime'] = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
-            if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
-                $res['data'][$key]['actTime'] = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
-            $res['data'][$key]['department'] = '';
-            if( !empty($val['DEPARTMENT_ID']) ){
-                $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
-                $res['data'][$key]['department'] = $department['title'];
-            }
-            if( !empty($val['getEnd']) && time() > $val['getEnd']  ){
-                if( $actStatus == 4 )
-                    $res['data'][$key]['status'] = 4;
-                else 
-                    unset( $res['data'][$key] );
-            }
-                
-            unset( $res['data'][$key]['useEnd'] );
-            unset( $res['data'][$key]['getStart'] );
-            unset( $res['data'][$key]['getEnd'] );
-            unset( $res['data'][$key]['DEPARTMENT_ID'] );
-        }
+        $res = $this->handlerSearchDataList( $res ,true, $actStatus );
         return $this->success( $res );
     }
     /***
@@ -1358,5 +1295,57 @@ class PlatformController extends Controller{
             $tempData[$key][] = $statusArr[ $val['status'] ];
         }
         return $tempData;
+    }
+    // 处理列表返回的搜索条件数据
+    private function handlerSearchDataList( $res , $searchFlag = false, $actStatus ){
+        foreach( $res['data'] as $key=>$val ){
+            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+            $res['data'][$key]['allNum'] = $statistics[0];
+            $res['data'][$key]['useNum'] = $statistics[1];
+            $res['data'][$key]['invalidNum'] = $statistics[2];
+            $res['data'][$key]['actTime'] = '';
+            if( empty( $val['getStart'] ) && empty($val['getEnd']) )
+                $res['data'][$key]['actTime'] = '无限期活动';
+            if( !empty($val['getStart']) && empty($val['getEnd'])  && strlen($val['getStart'])>8)
+                $res['data'][$key]['actTime'] = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
+
+            if( !empty($val['getEnd']) && empty($val['getStart']) && strlen($val['getEnd'])>8)
+                $res['data'][$key]['actTime'] = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
+            if( !empty( $val['getStart'] ) && !empty($val['getEnd'])  && strlen($val['getEnd'])>8 && strlen($val['getStart'])>8)
+                $res['data'][$key]['actTime'] = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
+            $res['data'][$key]['department'] = '';
+            if( !empty($val['DEPARTMENT_ID']) ){
+                $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
+                $res['data'][$key]['department'] = $department['title'];
+            }
+            if( !empty($val['getEnd']) && time() > $val['getEnd'] && !$searchFlag )
+                $res['data'][$key]['status'] = 4;
+            if( !empty($val['getEnd']) && time() > $val['getEnd'] && $searchFlag ){
+                if( $actStatus == 4 )
+                    $res['data'][$key]['status'] = 4;
+                else 
+                    unset( $res['data'][$key] );
+            }
+            if( empty($val['totalNum']) && !empty($val['getTypes']) && $val['getTypes']!=3 )
+                $res['data'][$key]['totalNum'] = '无限';
+            if(!empty($val['getTypes']) && $val['getTypes']==3 )
+                $res['data'][$key]['totalNum'] = \App\Voucher::where(['vcSn'=>$val['vcSn']])->count();
+
+            unset( $res['data'][$key]['useEnd'] );
+            unset( $res['data'][$key]['getStart'] );
+            unset( $res['data'][$key]['getEnd'] );
+            unset( $res['data'][$key]['DEPARTMENT_ID'] );
+            unset( $res['data'][$key]['getTypes'] );
+        }
+        if( $searchFlag ){
+            $i = 0;
+            $temp = [];
+            foreach( $res['data'] as $val ){
+                $temp[$i] = $val;
+                $i++;
+            }
+            $res['data'] = $temp;
+        }
+        return $res;
     }
 }

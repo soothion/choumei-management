@@ -225,31 +225,7 @@ class CouponController extends Controller{
                     ->toArray();
             if( empty($res) ) return $this->success();
             
-            foreach( $res['data'] as $key=>$val ){
-                $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
-                $res['data'][$key]['allNum'] = $statistics[1];
-                $res['data'][$key]['useNum'] = $statistics[3];
-                $res['data'][$key]['actTime'] = '';
-                if( empty( $val['getStart'] ) && empty($val['getEnd']) )
-                    $res['data'][$key]['actTime'] = '无限期活动';
-                if( !empty($val['getStart']) && empty($val['getEnd']) )
-                    $res['data'][$key]['actTime'] = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
-                if( !empty($val['getEnd']) && empty($val['getStart']) )
-                    $res['data'][$key]['actTime'] = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
-                if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
-                    $res['data'][$key]['actTime'] = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
-                $res['data'][$key]['department'] = '';
-                if( !empty($val['DEPARTMENT_ID']) ){
-                    $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
-                    $res['data'][$key]['department'] = $department['title'];
-                }
-                if( !empty($val['getEnd']) && time() > $val['getEnd']  )
-                    $res['data'][$key]['status'] = 4;
-                unset( $res['data'][$key]['useEnd'] );
-                unset( $res['data'][$key]['getStart'] );
-                unset( $res['data'][$key]['getEnd'] );
-                unset( $res['data'][$key]['DEPARTMENT_ID'] );
-            }
+            $res = $this->handlerSearchDataList( $res );
             return $this->success( $res );
         }
         $actType = array('','vcSn','vcTitle');
@@ -276,37 +252,7 @@ class CouponController extends Controller{
                     ->paginate($pageSize)
                     ->toArray();
         if( empty($res) ) return $this->success();
-            
-        foreach( $res['data'] as $key=>$val ){
-            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
-            $res['data'][$key]['allNum'] = $statistics[0];
-            $res['data'][$key]['useNum'] = $statistics[1];
-            $res['data'][$key]['actTime'] = '';
-            if( empty( $val['getStart'] ) && empty($val['getEnd']) )
-                $res['data'][$key]['actTime'] = '无限期活动';
-            if( !empty($val['getStart']) && empty($val['getEnd']) )
-                $res['data'][$key]['actTime'] = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
-            if( !empty($val['getEnd']) && empty($val['getStart']) )
-                $res['data'][$key]['actTime'] = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
-            if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
-                $res['data'][$key]['actTime'] = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
-            $res['data'][$key]['department'] = '';
-            if( !empty($val['DEPARTMENT_ID']) ){
-                $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
-                $res['data'][$key]['department'] = $department['title'];
-            }
-            if( !empty($val['getEnd']) && time() > $val['getEnd'] ){
-                if( $actStatus == 4 )
-                    $res['data'][$key]['status'] = 4;
-                else 
-                    unset( $res['data'][$key] );
-            }
-                   
-            unset( $res['data'][$key]['useEnd'] );
-            unset( $res['data'][$key]['getStart'] );
-            unset( $res['data'][$key]['getEnd'] );
-            unset( $res['data'][$key]['DEPARTMENT_ID'] );
-        }
+        $res = $this->handlerSearchDataList( $res , true ,$actStatus );
         return $this->success( $res );
     }
     /***
@@ -1092,5 +1038,48 @@ class CouponController extends Controller{
             $tempData[$key][] = $statusArr[ $val['status'] ];
         }
         return $tempData;
+   }
+   private function handlerSearchDataList( $res , $searchFlag = false , $actStatus = ''){
+       foreach( $res['data'] as $key=>$val ){
+            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+            $res['data'][$key]['allNum'] = $statistics[1];
+            $res['data'][$key]['useNum'] = $statistics[3];
+            $res['data'][$key]['actTime'] = '';
+            if( empty( $val['getStart'] ) && empty($val['getEnd']) )
+                $res['data'][$key]['actTime'] = '无限期活动';
+            if( !empty($val['getStart']) && empty($val['getEnd']) )
+                $res['data'][$key]['actTime'] = '开始时间：' . date('Y-m-d H:i:s', $val['getStart']);
+            if( !empty($val['getEnd']) && empty($val['getStart']) )
+                $res['data'][$key]['actTime'] = '结束时间：' . date('Y-m-d H:i:s', $val['getEnd']);
+            if( !empty( $val['getStart'] ) && !empty($val['getEnd']) )
+                $res['data'][$key]['actTime'] = date('Y-m-d H:i:s', $val['getStart']) . ' - ' . date('Y-m-d H:i:s', $val['getEnd']);
+            $res['data'][$key]['department'] = '';
+            if( !empty($val['DEPARTMENT_ID']) ){
+                $department = \App\Department::select(['title'])->where(['id'=>$val['DEPARTMENT_ID']])->first();
+                $res['data'][$key]['department'] = $department['title'];
+            }
+            if( !empty($val['getEnd']) && time() > $val['getEnd'] && !$searchFlag)
+                $res['data'][$key]['status'] = 4;
+            if( !empty($val['getEnd']) && time() > $val['getEnd'] && $searchFlag ){
+                if( $actStatus == 4 )
+                    $res['data'][$key]['status'] = 4;
+                else 
+                    unset( $res['data'][$key] );
+            }
+            unset( $res['data'][$key]['useEnd'] );
+            unset( $res['data'][$key]['getStart'] );
+            unset( $res['data'][$key]['getEnd'] );
+            unset( $res['data'][$key]['DEPARTMENT_ID'] );
+        }
+        if( $searchFlag ){
+            $i = 0;
+            $temp = [];
+            foreach( $res['data'] as $val ){
+                $temp[$i] = $val;
+                $i++;
+            }
+            $res['data'] = $temp;
+        }
+        return $res;
    }
 }
