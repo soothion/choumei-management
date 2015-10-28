@@ -79,13 +79,6 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
                      $page--;
             }
         }
-        else
-        {
-            $code = $this->encodeCouponCode();
-            $vSn = $this->getVoucherSn('DH');
-            $insert .= " ( $vcId , '$vcSn', '$vcTitle',$useMoney, '$useItemTypes', '$useLimitTypes', $useNeedMoney, '$useStart', '$useEnd', 3, '$code', '$vSn');";
-            $result = DB::insert( $insert );
-        }
         Log::info('全部数据处理完成');
         return true;
 	}

@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-12 13:59:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-28 15:09:12
+* @Last Modified time: 2015-10-28 17:05:42
 */
 
 (function(){
@@ -142,6 +142,14 @@
             uploader.bind('FileUploaded',function(up,response){
                 $('.popup #imagesUploadTip').hide();            
             });
+            uploader.bind('BeforeUpload',function(){
+                $('.popup input[type=file]').attr('disabled','disabled');
+                $('.popup #submitBtn').attr('disabled','disabled');
+            });             
+            uploader.bind('UploadComplete',function(){
+                $('.popup input[type=file]').removeAttr('disabled');
+                $('.popup #submitBtn').removeAttr('disabled');
+            });                                    
         });                    
     }
 
@@ -160,9 +168,11 @@
             arr.push($(item).find("img").data("original"));  
         });
         $('.popup #submitBtn').attr('disabled','disabled');
+        parent.lib.popup.loading({text:'请求可能会比较慢，请耐心等候！',time:15000});
         lib.ajax({
             type: "post",
             url : "works/create",
+            timeout : 15000,
             data:{stylistId:lib.query.id,img:JSON.stringify(arr),description:des}
         }).done(function(data, status, xhr){
             if(data.result == 1){
@@ -175,8 +185,10 @@
                     }
                 });                
             }else{
-                $('.popup #submitBtn').removeAttr('disabled');                
-            }                   
+                $('.popup #submitBtn').removeAttr('disabled');
+            }                  
+        }).fail(function(xhr, status){
+            $('.popup #submitBtn').removeAttr('disabled');
         }); 
 
     }
