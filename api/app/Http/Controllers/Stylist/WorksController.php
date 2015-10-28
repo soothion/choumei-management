@@ -10,26 +10,26 @@ use DB;
 use PDO;
 class WorksController extends Controller {
     /**
-     * @api {post} /works/index/:id 1.造型师的作品列表和所在店的其他
+     * @api {post} /works/index/:id 1.����ʦ����Ʒ�б������ڵ������
      * @apiName list
      * @apiGroup Works
      *
-     * @apiParam {String} stylistId 必填,造型师ID.
+     * @apiParam {String} stylistId ����,����ʦID.
      *
-     * @apiSuccess {String} stylistId 造型师ID.
-     * @apiSuccess {String} stylistName 造型师名称.
-     * @apiSuccess {Number} mobilephone 手机号.
-     * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
-     * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪.
-     * @apiSuccess {Number} uploadNum 上传次数.
-     * @apiSuccess {Number} num 作品数.
-     * @apiSuccess {Number} recId 作品ID.
-     * @apiSuccess {Number} stylistId 造型师ID.
-     * @apiSuccess {String} commoditiesImg 作品集.
-     * @apiSuccess {String} description 作品描述.
-     * @apiSuccess {String} thumbImg 老版本作品集缩略图.
-     * @apiSuccess {String} works['img'] 新版本作品集合  以（作品集和作品集缩略图）为一个单元.
-     * @apiSuccess {String} salon['img'] 造型师头像缩略图
+     * @apiSuccess {String} stylistId ����ʦID.
+     * @apiSuccess {String} stylistName ����ʦ����.
+     * @apiSuccess {Number} mobilephone �ֻ���.
+     * @apiSuccess {Numder} grade ���͵ȼ� 0û�еȼ� 1����ʦ 2�߼�����ʦ 3����ʦ 4�����ܼ�.
+     * @apiSuccess {Number} fastGrade ����ȼ� 0û�еȼ� 1��ͨ��� 2�ܼ���.
+     * @apiSuccess {Number} uploadNum �ϴ�����.
+     * @apiSuccess {Number} num ��Ʒ��.
+     * @apiSuccess {Number} recId ��ƷID.
+     * @apiSuccess {Number} stylistId ����ʦID.
+     * @apiSuccess {String} commoditiesImg ��Ʒ��.
+     * @apiSuccess {String} description ��Ʒ����.
+     * @apiSuccess {String} thumbImg �ϰ汾��Ʒ������ͼ.
+     * @apiSuccess {String} works['img'] �°汾��Ʒ����  �ԣ���Ʒ������Ʒ������ͼ��Ϊһ����Ԫ.
+     * @apiSuccess {String} salon['img'] ����ʦͷ������ͼ
      * 
      * @apiSuccessExample Success-Response:
      * {
@@ -68,7 +68,7 @@ class WorksController extends Controller {
      *                   "grade":4,
      *                   "fastGrade":2,
      *                   "num":0,
-     *                   "stylistImg":"www.douyuTV.com"，
+     *                   "stylistImg":"www.douyuTV.com"��
      *                   "img":null,
      *                   "uploadNum":0,
      *                   "salonname":"choumeitest_salon"
@@ -82,7 +82,7 @@ class WorksController extends Controller {
      *                   "grade":4,
      *                   "fastGrade":2,
      *                   "num":0,
-     *                   "stylistImg":"www.douyuTV.com"，
+     *                   "stylistImg":"www.douyuTV.com"��
      *                   "img":null,
      *                   "uploadNum":0,
      *                },
@@ -103,14 +103,14 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "未授权访问"
+     *		    "msg": "δ��Ȩ����"
      *		}
      */
     public function index($stylistId){
         $field=['stylistId','stylistName','stylistImg','mobilephone','grade','fastGrade','salonId','img'];
         $stylist=Stylist::select($field)->where(array('stylistId'=>$stylistId))->first();
         if($stylist===false){
-            throw new ApiException('造型师ID出错', ERROR::MERCHANT_STYLIST_ID_ERROR);  
+            throw new ApiException('����ʦID����', ERROR::MERCHANT_STYLIST_ID_ERROR);  
         }
         
         $salonStylist=Stylist::select($field)->where('salonId','=',$stylist['salonId'])->where('stylistId','<>',$stylistId )->get();
@@ -179,11 +179,11 @@ class WorksController extends Controller {
     }
     
     /**
-     * @api {post} /works/del_list/:id  2.删除作品集合
+     * @api {post} /works/del_list/:id  2.ɾ����Ʒ����
      * @apiName del_list
      * @apiGroup  Works
      *
-     * @apiParam {Number} recId 必填,作品id.
+     * @apiParam {Number} recId ����,��Ʒid.
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -198,21 +198,21 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "删除作品集合失败"
+     *		    "msg": "ɾ����Ʒ����ʧ��"
      *		}
      */
     public function  del_list($recId){
         $works=StylistWorks::where('id',$recId)->first();
         if($works==FALSE){
-             throw new ApiException('作品ID出错', ERROR::MERCHANT_WORKS_ID_ERROR);
+             throw new ApiException('��ƷID����', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
-        //清理cm_file_image表中数据
+        //����cm_file_image��������
         self::del_list2($works->image_ids);
         $query=  StylistWorks::where(array('id'=>$recId))->delete();
         if($query){
             return $this->success();
         }else{
-            throw new ApiException('删除作品失败', ERROR::MERCHANT_WORKS_DELETE_ERROR);
+            throw new ApiException('ɾ����Ʒʧ��', ERROR::MERCHANT_WORKS_DELETE_ERROR);
         }
     }
     
@@ -224,12 +224,12 @@ class WorksController extends Controller {
     }
     
     /**
-     * @api {post} /works/del/:id  3.删除单个作品
+     * @api {post} /works/del/:id  3.ɾ��������Ʒ
      * @apiName del
      * @apiGroup  Works
      *
-     * @apiParam {Number} recId 必填,作品id.
-     * @apiParam {String} img  必填,[woeksId]作品集合.eg:  "1,2,3"  作品ID集合，以逗号隔开
+     * @apiParam {Number} recId ����,��Ʒid.
+     * @apiParam {String} img  ����,[woeksId]��Ʒ����.eg:  "1,2,3"  ��ƷID���ϣ��Զ��Ÿ���
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -244,14 +244,14 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "删除作品失败"
+     *		    "msg": "ɾ����Ʒʧ��"
      *		}
      */
     public function  del($recId){
         $param=$this->param;
         $works=  StylistWorks::where(array('id'=>$recId))->count();
         if($works==FALSE){
-             throw new ApiException('作品ID出错', ERROR::MERCHANT_WORKS_ID_ERROR);
+             throw new ApiException('��ƷID����', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
         $data=array();
         if(!empty($param['img'])){
@@ -263,17 +263,17 @@ class WorksController extends Controller {
         if($query){
                 return $this->success();
         }else{
-                 throw new ApiException('删除单个作品失败', ERROR::MERCHANT_WORKS_DELETE_ERROR);
+                 throw new ApiException('ɾ��������Ʒʧ��', ERROR::MERCHANT_WORKS_DELETE_ERROR);
         }
     }
     
     /**
-     * @api {post} /works/update/:id  4.修改作品集合
+     * @api {post} /works/update/:id  4.�޸���Ʒ����
      * @apiName update
      * @apiGroup  Works
      *
-     * @apiParam {Number} recId 必填,作品id.
-     * @apiParam {String} img 必填,[woekId]作品集合.eg:  "1,2,3"  作品ID集合，以逗号隔开
+     * @apiParam {Number} recId ����,��Ʒid.
+     * @apiParam {String} img ����,[woekId]��Ʒ����.eg:  "1,2,3"  ��ƷID���ϣ��Զ��Ÿ���
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -288,36 +288,36 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "修改作品失败"
+     *		    "msg": "�޸���Ʒʧ��"
      *		}
      */
     public function  update($recId){
         $param=$this->param;
         $works=  StylistWorks::where(array('id'=>$recId))->count();
         if($works==FALSE){
-             throw new ApiException('作品ID出错', ERROR::MERCHANT_WORKS_ID_ERROR);
+             throw new ApiException('��ƷID����', ERROR::MERCHANT_WORKS_ID_ERROR);
         }
         $data=array();
         if(empty($param['img'])){
-             throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
+             throw new ApiException('��������', ERROR::MERCHANT_ERROR);
         }
         $data['image_ids']=$param['img'];
         $query=  StylistWorks::where(array('id'=>$recId))->update($data);
         if($query){
                 return $this->success();
         }else{
-                 throw new ApiException('修改单个作品失败', ERROR::MERCHANT_WORKS_SAVE_ERROR);
+                 throw new ApiException('�޸ĵ�����Ʒʧ��', ERROR::MERCHANT_WORKS_SAVE_ERROR);
         }
     }
     
     /**
-     * @api {post} /works/create 5.新增作品集合
+     * @api {post} /works/create 5.������Ʒ����
      * @apiName create
      * @apiGroup  Works
      *
-     * @apiParam {Number} stylistId 必填,造型师ID.
-     * @apiParam {String} description 必填,作品描述.
-     * @apiParam {String} img  必填,[originImg]作品集合. eg:"www,ee,qq,bb"    作品原图路径集合，以逗号隔开
+     * @apiParam {Number} stylistId ����,����ʦID.
+     * @apiParam {String} description ����,��Ʒ����.
+     * @apiParam {String} img  ����,[originImg]��Ʒ����. eg:"www,ee,qq,bb"    ��Ʒԭͼ·�����ϣ��Զ��Ÿ���
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -332,13 +332,13 @@ class WorksController extends Controller {
      * @apiErrorExample Error-Response:
      *		{
      *		    "result": 0,
-     *		    "msg": "创建作品失败"
+     *		    "msg": "������Ʒʧ��"
      *		}
      */
     public function  create(){
         $param=$this->param;
         if(empty($param['img'])||empty($param['stylistId'])){
-             throw new ApiException('创建作品的参数不齐', ERROR::MERCHANT_ERROR);
+             throw new ApiException('������Ʒ�Ĳ�������', ERROR::MERCHANT_ERROR);
         }
       
          $imageArr =json_decode($param['img'],true);
@@ -361,7 +361,7 @@ class WorksController extends Controller {
         if($query){
              return $this->success();
         }else{
-             throw new ApiException('创建作品失败', ERROR::MERCHANT_WORKS_CREATE_ERROR);
+             throw new ApiException('������Ʒʧ��', ERROR::MERCHANT_WORKS_CREATE_ERROR);
         }
     }  
 }
