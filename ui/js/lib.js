@@ -1044,15 +1044,15 @@
 				$target.trigger('error',{type:'required'});
 				return;
 			}
-
-			if ($target.attr('required')){
-				var len = $target.val().length,maxL = $target.attr('maxlength'),minL = $target.attr('minlength');
-				if (len < minL || len > maxL){
-				  $target.trigger('error',{
-				    type:'error',
-				    errormsg:'请输入长度'+minL+'~'+maxL+'之间的字符'
-				  });
-				  return false;
+			//minLength字符控制扩展
+			var minLength=$target.attr('minlength');
+			if (val&&minLength){
+				if(val.length<parseInt(minLength)){
+					$target.trigger('error',{
+						type:'error',
+						errormsg:'请输入不小于'+minLength+'个字符'
+					});
+					  return false;
 				}
 			}
 
