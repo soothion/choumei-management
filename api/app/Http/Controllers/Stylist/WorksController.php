@@ -334,7 +334,17 @@ class WorksController extends Controller {
          $fileIds = array();
          $imagecount=count($imageArr);
          for ($i = 0; $i < $imagecount; $i++) {
-             $data2['url']=$imageArr[$i]; 
+             $data2=array();
+             $imageUrl = $imageArr[$i]; 
+             $urlParsed = parse_url($imageArr[$i]);
+             $imageUrl = $urlParsed['scheme'].'://'.$urlParsed['host'].$urlParsed['path'];
+             if ($urlParsed['path']){
+                $data2['file_name']=$urlParsed['path'];
+             }
+             $aa=getimagesize($imageUrl);
+             $data2['width']=$aa["0"];////获取图片的宽 
+             $data2['height']=$aa["1"];///获取图片的高
+             $data2['url']=$imageUrl; 
              $fileImage=FileImage::create($data2);
              $fileIds[] = $fileImage->id;
 
