@@ -73,10 +73,18 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
                     $i++;
                 }
                 $insert .= ';';
-                $result = DB::insert( $insert );
-                Log::info("第{$page}页数据处理完成");
-                if(!$result)
-                     $page--;
+                try 
+                {
+                    $result = DB::insert( $insert );
+                    Log::info("第{$page}页数据处理完成");
+                     
+                } 
+                catch(Exception $e) {
+                    $message = $e->getMessage();
+                    Log::info("第{$page}页数据处理失败,正在重试:$message");
+                    $page--;
+                }
+               
             }
         }
         Log::info('全部数据处理完成');
