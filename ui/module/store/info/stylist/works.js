@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-12 13:59:43
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-27 14:53:26
+* @Last Modified time: 2015-10-28 15:09:12
 */
 
 (function(){
@@ -159,6 +159,7 @@
         thumbnailsArr.each(function(i,item){
             arr.push($(item).find("img").data("original"));  
         });
+        $('.popup #submitBtn').attr('disabled','disabled');
         lib.ajax({
             type: "post",
             url : "works/create",
@@ -168,10 +169,13 @@
                 parent.lib.popup.result({
                     text:"操作成功！",
                     define:function(){
+                        $('.popup #submitBtn').removeAttr('disabled');
                         $('.popup #cancelBtn').trigger('click');
                         $(window).trigger('hashchange');    
                     }
                 });                
+            }else{
+                $('.popup #submitBtn').removeAttr('disabled');                
             }                   
         }); 
 
