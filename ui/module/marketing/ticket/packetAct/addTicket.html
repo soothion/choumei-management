@@ -184,7 +184,7 @@
 									</span>
 									<span class="space"></span>
 									元可用
-									<input type="hidden" name="vVcId" value="<%=item.vcId%>" />
+									<input type="hidden" name="vVcId" value="<%=item.vcId||item.vVcId%>" />
 								</div> 
 								</div> 
 							<%})%>
@@ -236,6 +236,7 @@
 				var clone=$(this).prev().clone();
 				clone.find("input").val("1").eq(3).val(0);
 				clone.find("select").val("");
+				clone.find("input[type='hidden']").val("0");
 				clone.find('.control-help').hide();
 				$(this).before(clone);
 			}).on("click",".remove",function(){

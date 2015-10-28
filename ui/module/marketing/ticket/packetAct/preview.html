@@ -124,7 +124,11 @@
 			$('#table').on("_ready",function(){
 				var form=$('#table form')[0];
 				form.goback=function(){
-					location.href="/module/marketing/ticket/packetAct/index.html";
+					if(parent!=window){
+						location.href="/module/marketing/ticket/packetAct/index.html";
+					}else{
+						window.close();
+					}
 				}
 				form._getFormData = function(){
 					var data=lib.tools.getFormData($(this));
