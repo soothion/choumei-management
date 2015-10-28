@@ -486,21 +486,33 @@ class OrderRefundController extends Controller
             "POST" => $_POST
         ];
         Utils::log('pay',date("Y-m-d H:i:s") . "\t order " . json_encode($input,JSON_UNESCAPED_UNICODE)."\t\n", "alipay_callback");
-         
+        
+        $is_debug = false;
+        if(isset($_GET['is_debug']) && $_GET['is_debug'] == 1)
+        {
+            $is_debug = true;
+        }
+        if(isset($_POST['is_debug']) && $_POST['is_debug'] == 1)
+        {
+            $is_debug = true;
+        }
+            
         //以下为debug的写法
         //$ret = AlipaySimple::callback(array(D("Refund"),"alipayRefundCallback"),[],false);
          
         //以下为正式的写法
         $ret = AlipaySimple::callback(function($args){
             return TransactionWriteApi::callBackOfAlipay($args);
-        },[]);
+        },[],$is_debug);
          
         if($ret)
         {
+            Utils::log('pay',date("Y-m-d H:i:s") . "\t callback success \t " . json_encode($input,JSON_UNESCAPED_UNICODE)."\t\n", "alipay_callback");
             echo "success";
         }
         else
         {
+            Utils::log('pay',date("Y-m-d H:i:s") . "\t callback fail \t " . json_encode($input,JSON_UNESCAPED_UNICODE)."\t\n", "alipay_callback");
             echo "fail";
         }
         die();
