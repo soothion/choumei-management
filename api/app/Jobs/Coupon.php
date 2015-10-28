@@ -90,13 +90,12 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
         $code = $this->createCouponCode();
         $encodeCode = $desModel->encrypt( $code );
         // 判断当前是否存在
-        $exists = Voucher::where( ['REDEEM_CODE'=>$encodeCode] )->count();
+        $exists = Voucher::where( ['REDEEM_CODE'=>$encodeCode] )->first();
         if( !empty($exists) ) $this->encodeCouponCode();
         return $encodeCode;
     }
 
    // 生成原生的兑换码 $zS true : 生成以数字为先 false ： 生成以字母为先
-   // T+1234567
     private function createCouponCode(){
         $code = '';
         $randRange = array(97,122);
