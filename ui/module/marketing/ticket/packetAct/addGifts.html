@@ -217,7 +217,7 @@
 			$(document).on('click','.add-box',function(){
 				var clone=$(this).prev().clone();
 				clone.find("input").val("1").eq(3).val(0);
-				clone.find("select").val("");
+				clone.find("select option:first").attr("checked",true);
 				clone.find("input[type='hidden']").val("0");
 				clone.find('.control-help').hide();
 				$(this).before(clone);
