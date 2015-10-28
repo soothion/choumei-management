@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-27 18:06:17
+* @Last Modified time: 2015-10-28 10:07:51
 */
 
 (function(){
@@ -49,6 +49,28 @@
            $("#smsTextArea").removeAttr('disabled');
         }
     })
+
+    $("#form").on('change','input[name=getTimeStart]',function(){
+        if($(this).val()){
+            $("#avaDateStart").attr('min',$(this).val());
+            var d1 = new Date($(this).val());
+            var d2 = new Date($("#avaDateStart").val());
+            if(d2 < d1){
+                $("#avaDateStart").val($(this).val());
+            }        
+        }        
+    });
+
+    $("#form").on('change','input[name=getTimeEnd]',function(){
+        if($(this).val()){
+            $("#avaDateEnd").attr('max',$(this).val()); 
+            var d1 = new Date($(this).val());
+            var d2 = new Date($("#avaDateEnd").val());
+            if(d2 > d1){
+                $("#avaDateEnd").val($(this).val());
+            }                      
+        }         
+    });
 
     $("#form").on('change','input.start',function(){
         var td = $(this).parent();
