@@ -30,7 +30,6 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
     public function handle(){
         Log::info('开始处理');
         $vcId = $this->vcId;
-        DB::beginTransaction();
         // 修改配置表中为已上线状态
         $statusResult = VoucherConf::where(['vcId'=>$vcId])->update(['status'=>1]);
         
@@ -61,13 +60,11 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
 
         if($statusResult&&$flag)
         {
-            DB::commit();
             Log::info('生成兑换劵成功:'.$vcId);
             return true;
         }
         else
         {
-            DB::rollBack();
             Log::info('生成兑换劵失败:'.$vcId);
             return false;
         }
@@ -97,7 +94,9 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
         if( !empty($exists) ) $this->encodeCouponCode();
         return $encodeCode;
     }
+
    // 生成原生的兑换码 $zS true : 生成以数字为先 false ： 生成以字母为先
+   // T+1234567
     private function createCouponCode(){
         $code = '';
         $randRange = array(97,122);
