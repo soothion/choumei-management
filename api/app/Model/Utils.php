@@ -298,7 +298,7 @@ class Utils
 	 */
 	public static function log($dirname,$content,$filename = '')
 	{
-	    $dir = realpath(dirname(__FILE__).DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."storage").DIRECTORY_SEPARATOR.$dirname.DIRECTORY_SEPARATOR;
+	    $dir = storage_path().DIRECTORY_SEPARATOR.$dirname.DIRECTORY_SEPARATOR;
 	    
 	    $old_mask = umask(0);
 	    //check & make dir
