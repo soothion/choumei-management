@@ -351,9 +351,15 @@ class CouponController extends Controller{
         }
         $voucherConfInfo['totalNum'] = '无上限';
         $voucherConfInfo['budget'] = ' - ';
-        if( !empty( $voucherConfInfo['useTotalNum'] )){
-            $voucherConfInfo['totalNum'] = $voucherConfInfo['useTotalNum'];
-            $voucherConfInfo['budget'] = $voucherConfInfo['useTotalNum'] * $voucherConfInfo['useMoney'];
+        $voucherNum = \App\Voucher::where( ['vcId'=>$id] )->count();
+        if( !empty( $voucherConfInfo['useTotalNum'] ) || !empty($voucherNum) ){
+            if( !empty($voucherNum) ){
+                $voucherConfInfo['totalNum'] = $voucherNum;
+                $voucherConfInfo['budget'] = $voucherNum * $voucherConfInfo['useMoney'];
+            }else{
+                $voucherConfInfo['totalNum'] = $voucherConfInfo['useTotalNum'];
+                $voucherConfInfo['budget'] = $voucherConfInfo['useTotalNum'] * $voucherConfInfo['useMoney'];
+            }
         }
         
         if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
