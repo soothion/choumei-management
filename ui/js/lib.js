@@ -940,8 +940,17 @@
             }
         }).on('change','select[ajat-change]',function(){
 			if(this.value){
-				var ajat=this.getAttribute('ajat-change').replace('${value}',this.value);
-				lib.ajat(ajat).render();
+				//var ajat=this.getAttribute('ajat-change').replace('${value}',this.value);
+				//lib.ajat(ajat).render();
+				var self = this;
+				var attr = this.getAttribute('ajat-change');
+				var arr = attr.split(",");
+				arr.forEach(function(item,i){
+                   if(item){
+	                   var ajat = item.replace('${value}',self.value);
+	                   lib.ajat(ajat).render();
+                   }
+				});
 			}
 		}).on('_ready',function(e){
 			var $target=$(e.target);

@@ -93,18 +93,6 @@ class Coupon extends Job implements SelfHandling, ShouldQueue
         Log::info('全部数据处理完成');
         return true;
 	}
-
-
-    // 获取代金劵编号
-    private function getVoucherSn( $p = 'CM' ) {
-        $pre = substr(time(), 2);
-        $end = '';
-        for ($i = 0; $i <3; $i++) {
-            $end .= rand(0, 9);
-        }
-        $code = $p . $pre  . $end;
-        return $code;
-   }
    
    // 加密生成的兑换码
     private function encodeCouponCode(){

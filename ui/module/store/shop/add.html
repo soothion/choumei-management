@@ -62,25 +62,23 @@
                         <input type="hidden" name="name" value="<%=data.name%>">
                     </div>
                 </div>
-
                 <div class="control-group" style="margin-bottom:0">
                     <label class="control-label" for=""><span class="red">*</span>店铺地址：</label>
-						<select id="province" name="provinceId" class="select min-width" required ajat-one="true" 
-						ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&provinceId=<%=data.provinceId%>" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>">
-						</select>
-						<select id="city" name="citiesId" class="select min-width" required ajat-one="true" 
-						ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=data.district%>">
-						<option value="">城市</option>
-						</select>
+                        <select id="province" name="provinceId" class="select min-width" required ajat-one="true" 
+                        ajat="salonList/getProvinces?type=1#domid=province&tempid=province_t&provinceId=<%=data.provinceId%>" ajat-change="salonList/getProvinces?type=2&areaId=${value}#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>">
+                        </select>
+                        <select id="city" name="citiesId" class="select min-width" required ajat-one="true" 
+                        ajat="<%if(data.provinceId){%>salonList/getProvinces?type=2&areaId=<%=data.provinceId%><%}%>#domid=city&tempid=city_t&citiesId=<%=data.citiesId%>"
+                        ajat-change="salonList/getProvinces?type=3&areaId=${value}#domid=area&tempid=area_t&district=<%=data.district%>,salonList/getBussesName?cityid=${value}#domid=business&tempid=business_t&businessId=<%=data.businessId%>">
+                        </select>
                         
-						<select id="area" name="district" class="select min-width" style="margin-right:10px" 
+                        <select id="area" name="district" class="select min-width" style="margin-right:10px" 
                         required ajat-one="true"
-						ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=zone&tempid=zone_t&zone=<%=data.zone%>"
-						>
-						<option value="">地区</option>
-						</select>
-						<span class="control-help" style="display:none;"></span>
-						
+                        ajat="<%if(data.citiesId){%>salonList/getProvinces?type=3&areaId=<%=data.citiesId%><%}%>#domid=area&tempid=area_t&district=<%=data.district%>"
+                        ajat-change="salonList/getProvinces?type=4&areaId=${value}#domid=zone&tempid=zone_t&zone=<%=data.zone%>"
+                        >
+                        </select>
+                        <span class="control-help" style="display:none;"></span>                      
                 </div>
 
                 <div class="control-group" style="margin:0">
@@ -318,11 +316,10 @@
 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>业务代表：</label>
-                    <div class="control control-circle"  id="business" required 
-                    ajat="salonList/getBussesName#domid=business&tempid=business_t&businessId=<%=data.businessId%>">
+                    <div class="control control-circle"  id="business" ajat="<%if(data.citiesId){%>salonList/getBussesName?cityid=<%=data.citiesId%><%}%>#domid=business&tempid=business_t&businessId=<%=data.businessId%>">
 
                     </div>
-                </div>
+                </div>                
 
                 <div class="control-group">
                     <label class="control-label" for=""></label>
@@ -404,7 +401,11 @@
                     <span><%=item.businessName%></span>
                 </label>
             <%})%>
-            <span class="control-help" style="display:none;"></span>
+            <%if(data.length>0){%>
+                <div class="control-help" style="display:none;"></div>
+            <%}else{%>
+                <input type="hidden" name="businessId" required requiredmsg="请选择有业务代表的城市"/>
+            <%}%>
         </script>
 
 		<script type="text/template" id="zone_t">
