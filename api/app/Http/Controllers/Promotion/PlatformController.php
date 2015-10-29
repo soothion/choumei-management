@@ -857,7 +857,12 @@ class PlatformController extends Controller{
         if( isset($post['fewDay']) ) $data['FEW_DAY'] = $post['fewDay'];
         if( isset($post['addActLimitStartTime']) ) $data['useStart'] = strtotime($post['addActLimitStartTime']);
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
-        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes'][0]) ) $data['useItemTypes'] =  ','.join(',',$post['limitItemTypes']).',' ;
+        if( isset($post['limitItemTypes']) ){
+            if( !empty($post['limitItemTypes'][0]) )
+                $data['useItemTypes'] =  ','.  ltrim(rtirm(join(',',$post['limitItemTypes']),','),',').',' ;
+            else
+                $data['useItemTypes'] = '';
+        } 
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];

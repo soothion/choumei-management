@@ -569,7 +569,12 @@ class CouponController extends Controller{
         if( isset( $post['managerId'] ) ) $data['MANAGER_ID'] = $post['managerId'];
         if( isset($post['getTimeStart']) ) $data['getStart'] = strtotime($post['getTimeStart'] . " 00:00:00");
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']. " 23:59:59");
-        if( isset($post['limitItemTypes']) && !empty($post['limitItemTypes'][0]) ) $data['useItemTypes'] = ','.join(',',$post['limitItemTypes']).',';
+        if( isset($post['limitItemTypes']) ){
+            if( !empty($post['limitItemTypes'][0]) )
+                $data['useItemTypes'] =  ','.  ltrim(rtirm(join(',',$post['limitItemTypes']),','),',').',' ;
+            else
+                $data['useItemTypes'] = '';
+        } 
         if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
