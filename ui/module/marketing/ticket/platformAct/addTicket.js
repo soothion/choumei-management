@@ -2,13 +2,15 @@
 * @Author: anchen
 * @Date:   2015-10-19 17:28:25
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-28 10:34:54
+* @Last Modified time: 2015-10-29 15:18:24
 */
 
 (function(){
     var type = lib.query.type;
 
     var selectItemType = lib.query.selectItemType; 
+
+    var status = lib.query.status; 
 
     if(type == 'add'){
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
@@ -19,6 +21,11 @@
         var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
         lib.ajat('#domid=form&tempid=form-t').template(editData);
     }
+
+    if(status == '3' || status == '4'){
+        $("#form input,textarea,select,radio").attr("disabled",'disabled');
+        $("button.btn-primary").hide();
+    }    
 
     /**
      * 券总数操作事件
@@ -119,11 +126,6 @@
            $("#avaDay").removeAttr('disabled');
         }
     })
-
-    // $("#form").on('click',".flex-item a",function(e){
-    //     e.preventDefault();
-    //     location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
-    // });    
 
     $("#form").on('click','#preview-btn',function(){
         var data = lib.getFormData($("#form"));  
