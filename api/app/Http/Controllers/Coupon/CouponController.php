@@ -571,7 +571,7 @@ class CouponController extends Controller{
         if( isset($post['getTimeEnd']) ) $data['getEnd'] = strtotime($post['getTimeEnd']. " 23:59:59");
         if( isset($post['limitItemTypes']) ){
             if( !empty($post['limitItemTypes'][0]) )
-                $data['useItemTypes'] =  ','.  ltrim(rtirm(join(',',$post['limitItemTypes']),','),',').',' ;
+                $data['useItemTypes'] =  ','.  ltrim(rtrim(join(',',$post['limitItemTypes']),','),',').',' ;
             else
                 $data['useItemTypes'] = '';
         } 

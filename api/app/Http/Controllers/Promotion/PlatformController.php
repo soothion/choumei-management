@@ -859,7 +859,7 @@ class PlatformController extends Controller{
         if( isset($post['addActLimitEndTime']) ) $data['useEnd'] = strtotime($post['addActLimitEndTime']);
         if( isset($post['limitItemTypes']) ){
             if( !empty($post['limitItemTypes'][0]) )
-                $data['useItemTypes'] =  ','.  ltrim(rtirm(join(',',$post['limitItemTypes']),','),',').',' ;
+                $data['useItemTypes'] =  ','.  ltrim(rtrim(join(',',$post['limitItemTypes']),','),',').',' ;
             else
                 $data['useItemTypes'] = '';
         } 
