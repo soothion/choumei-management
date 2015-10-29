@@ -77,15 +77,12 @@ class VoucherConf extends Model {
      */
 
     public static function getVoucherConfConsume($laisee) {
-//        DB::enableQueryLog();
-        $query = Voucher::whereIn('vcSn', explode(",", $laisee->vcsns));
-        if ($laisee->gift_vcsn) {
-            $query = $query->orWhereIn('vcSn', explode(",", $laisee->gift_vcsn));
-        }
+        $usedWhere = $laisee->vcsns . "," . $laisee->gift_vcsn;
+        $query = Voucher::whereIn('vcSn', array_filter(array_unique(explode(",", $usedWhere))));
         $voucher = $query->where('vStatus', 2)->get();
         $consumeVsns = [];
         foreach ($voucher as $v) {
-            $consume = DB::table('order')->where('ordersn', $v->vOrderSn)->where('status', 4);
+            $consume = DB::table('order')->where('ordersn', $v->vOrderSn)->where('status', 4)->first();
             if ($consume) {
                 $consumeVsns[] = $v->vSn;
             }
