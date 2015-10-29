@@ -244,6 +244,7 @@ class CouponController extends Controller{
             $obj = $obj->whereRaw(' ((getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" ))');
         if( !empty( $actDepartment ) )
             $obj = $obj->where('DEPARTMENT_ID','=',$actDepartment);
+        
         //手动设置页数
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
@@ -355,6 +356,8 @@ class CouponController extends Controller{
             $voucherConfInfo['budget'] = $voucherConfInfo['useTotalNum'] * $voucherConfInfo['useMoney'];
         }
         
+        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
+            $voucherConfInfo['status'] = 4;
         $voucherConfInfo['companyCode'] = '-';
         $voucherConfInfo['activityCode'] = '-';
         $voucherConfInfo['dividendCode'] = '-';
@@ -395,8 +398,6 @@ class CouponController extends Controller{
             $voucherConfInfo['consumeNum'] = $consumeNum;
             $voucherConfInfo['consumeMoney'] = $consumeNum * $voucherConfInfo['useMoney'];
         }
-        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
-            $voucherConfInfo['status'] = 4;
         // 查看代金劵是否已经生成过
         $voucherCount = \App\Voucher::where(['vcId'=>$id])->count();
         $voucherConfInfo['export'] = 0;
@@ -1070,7 +1071,7 @@ class CouponController extends Controller{
             if( !empty($val['getEnd']) && time() > $val['getEnd'] && !$searchFlag)
                 $res['data'][$key]['status'] = 4;
             if( !empty($val['getEnd']) && time() > $val['getEnd'] && $searchFlag ){
-                if( $actStatus == 4 )
+                if( $actStatus == 4 || empty($actStatus))
                     $res['data'][$key]['status'] = 4;
                 else 
                     unset( $res['data'][$key] );

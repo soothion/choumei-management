@@ -56,14 +56,14 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>活动简介：</label>
                 <div class="control">
-                    <textarea maxlength="5000"  name="actIntro" placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符" required style="height:150px;width:500px"><%=data.actIntro%></textarea>
+                    <textarea maxlength="5000" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> name="actIntro" placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符" required style="height:150px;width:500px"><%=data.actIntro%></textarea>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
                 <div class="control">
-                    <select name="departmentId" ajat-one="true" id="department" 
-						ajat="platform/getRequestDepartment#domid=department&amp;tempid=department-t&sid=<%=data.departmentId%>" manager-id="" ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&sid=<%=data.managerId%>" required 
+                    <select name="departmentId" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> ajat-one="true" id="department" 
+						ajat="platform/getRequestDepartment#domid=department&amp;tempid=department-t&sid=<%=data.departmentId%>&status=<%data.status%>"  required 
 						ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&sid=<%=data.managerId%>"	
 						>
                     </select>
@@ -97,7 +97,7 @@
 		<%if(data.length>0){%>
         <%data.forEach(function(item){%>
         <label class="label">
-            <input type="radio" <%if (protocol.custom.sid == item.id){%> checked='checked' <%}%> class="label" name="managerId" value="<%=item.id%>" required>
+            <input type="radio" <%= protocol.custom.status==3 || protocol.custom.status==4 ? "disabled='disabled'" : ""%> <%if (protocol.custom.sid == item.id){%> checked='checked' <%}%> class="label" name="managerId" value="<%=item.id%>" required>
             <span><%=item.name%></span>
         </label>
         <%})%>

@@ -109,11 +109,9 @@
                         <a href='index.html'>
                             <button class="btn"> 返回</button>
                         </a>
-                        <%if (data.status !=3 && data.status !=4){%>
                         <a href='addBase.html?id=<%=query.id%>' data-slug="coupon.getInfo">
-                            <button class="btn btn-primary">编辑</button>
+                            <button class="btn btn-primary"><%if (data.status ==3 || data.status == 4){%>查看配置<%}else{%>编辑<%}%></button>
                         </a>
-                        <%}%>
                 </div>
                  </script>
             </div>

@@ -619,6 +619,7 @@ class PlatformController extends Controller{
             $voucherConfInfo['budget'] = $voucherConfInfo['useTotalNum'] * $voucherConfInfo['useMoney'];
         }
         
+        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] ) $voucherConfInfo['status'] = 4;
         $voucherConfInfo['companyCode'] = '-';
         $voucherConfInfo['activityCode'] = '-';
         $voucherConfInfo['dividendCode'] = '-';
@@ -662,7 +663,6 @@ class PlatformController extends Controller{
             $voucherConfInfo['consumeNum'] = $consumeNum;
             $voucherConfInfo['consumeMoney'] = $consumeNum * $voucherConfInfo['useMoney'];
         }
-        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] ) $voucherConfInfo['status'] = 4;
         
         unset( $voucherConfInfo['getStart'] );
         unset( $voucherConfInfo['getEnd'] );
@@ -1336,7 +1336,7 @@ class PlatformController extends Controller{
             if( !empty($val['getEnd']) && time() > $val['getEnd'] && !$searchFlag )
                 $res['data'][$key]['status'] = 4;
             if( !empty($val['getEnd']) && time() > $val['getEnd'] && $searchFlag ){
-                if( $actStatus == 4 )
+                if( $actStatus == 4 || empty($actStatus) )
                     $res['data'][$key]['status'] = 4;
                 else 
                     unset( $res['data'][$key] );
