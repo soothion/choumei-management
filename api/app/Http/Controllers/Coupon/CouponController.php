@@ -1045,7 +1045,10 @@ class CouponController extends Controller{
             $tempData[$key][] = $val['addTime'];
             $tempData[$key][] = $actTime;
             $tempData[$key][] = $department;
-            $tempData[$key][] = $statusArr[ $val['status'] ];
+            if( $val['status'] != 2 && !empty($val['getEnd']) && $val['getEnd']<time() )
+                $tempData[$key][] = '已结束';
+            else
+                $tempData[$key][] = $statusArr[ $val['status'] ];
         }
         return $tempData;
    }

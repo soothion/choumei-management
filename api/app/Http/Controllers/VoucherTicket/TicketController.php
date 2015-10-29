@@ -360,6 +360,9 @@ class TicketController extends Controller {
                 ->where('vcId','=',$voucherInfo['vcId'])
                 ->first()
                 ->toArray();
+        // 加上失效判断
+        if( $voucherInfo['vStatus'] != 2 && !empty($voucherInfo['vUseEnd']) && $voucherInfo['vUseEnd']<time() )
+            $voucherInfo['vStatus'] = 5;
         // 查找获取条件
         $getText = ['','新注册;','首次消费;','指定手机号;','指定集团码用户;','指定活动码用户;','指定店铺码用户;','指定消费项目;','全平台用户;','H5用户;'];
         $voucherInfo['getText'] = '';
