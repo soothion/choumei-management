@@ -1,6 +1,7 @@
 (function(){
     var type = lib.query.type;
     var selectItemType = lib.query.selectItemType || 1; 
+    var status = lib.query.status;
 
     if(type == 'add'){
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data')) || {};
@@ -10,6 +11,10 @@
     if(type == 'edit'){
         var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
         lib.ajat('#domid=form&tempid=form-t').template(editData);
+    }
+
+    if(status == '3' || status == '4'){
+        $("#form input,textarea,select").attr("disabled",'disabled');
     }
 
     $("#form").on('click',".flex-item a",function(e){
@@ -29,7 +34,7 @@
             editData = $.extend({},editData,data);
             sessionStorage.setItem('edit-base-data',JSON.stringify(editData));
         }
-        location.href = "addUser.html?type="+type+"&selectItemType="+selectItemType;
+        location.href = "addUser.html?type="+type+"&selectItemType="+selectItemType+"&status="+status;
     }    
 
 })();

@@ -113,7 +113,7 @@
         <script type="text/template" id="manager-t">  
         <%data.forEach&&data.forEach(function(item,i){%>
             <label class="label">
-                <input type="radio" name="managerId" value="<%=item.id%>" required <%=item.id == protocol.custom.managerId ? "checked":""%>>
+                <input type="radio" name="managerId" value="<%=item.id%>" required <%=item.id == protocol.custom.managerId ? "checked":""%> <%=(query.status=='3'||query.status=='4') ? 'disabled':''%>>
                 <span><%=item.name%></span>
             </label>            
         <%})%> 

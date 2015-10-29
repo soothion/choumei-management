@@ -2,27 +2,22 @@
 * @Author: anchen
 * @Date:   2015-10-19 15:33:23
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-27 16:24:15
+* @Last Modified time: 2015-10-29 15:11:39
 */
 
 (function(){
     var type = lib.query.type;
-    var selectItemType = lib.query.selectItemType || 1; 
+    var selectItemType = lib.query.selectItemType || 1;
+    var status = lib.query.status; 
 
     if(type == 'add'){
         var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
-        lib.ajat('#domid=form&tempid=form-t').template(baseData);    
-        if(baseData.selectItemType == "3" && baseData.getItemTypes){
-            $("#consumeItemsAll").attr('checked','checked');
-        }       
+        lib.ajat('#domid=form&tempid=form-t').template(baseData);        
     }
 
     if(type == 'edit'){
         var editData = JSON.parse(sessionStorage.getItem('edit-base-data'));
         lib.ajat('#domid=form&tempid=form-t').template(editData);
-        if(editData.selectItemType == "3" && editData.getItemTypes){
-            $("#consumeItemsAll").attr('checked','checked');
-        }
     }
 
     /**
@@ -119,30 +114,6 @@
     })
 
     /**
-     * 顶部tab导航
-     * @param  {[type]} e [description]
-     * @return {[type]}   [description]
-     */
-    // $("#form").on('click',".flex-item a",function(e){
-    //     e.preventDefault();
-    //     var selectItemType = 1;
-    //     if(type == 'add'){
-    //         var data = JSON.parse(sessionStorage.getItem('add-base-data'));
-    //         if(data.selectItemType){
-    //             selectItemType = data.selectItemType;
-    //         }  
-    //     }
-        
-    //     if(type == 'edit'){
-    //         var data = JSON.parse(sessionStorage.getItem('edit-base-data'));
-    //         if(data.selectItemType){
-    //             selectItemType = data.selectItemType;
-    //         } 
-    //     }
-    //     location.href = $(this).attr('href')+"?type="+type+"&selectItemType="+selectItemType;        
-    // }); 
-
-    /**
      * 用户类型tab切换
      * @param  {[type]} e [description]
      * @return {[type]}   [description]
@@ -172,6 +143,6 @@
             sessionStorage.setItem('edit-base-data',JSON.stringify(editData));                  
         }
 
-        location.href = "addTicket.html?type="+type+"&selectItemType="+selectItemType;
+        location.href = "addTicket.html?type="+type+"&selectItemType="+selectItemType+"&status="+status;
     }        
 })();
