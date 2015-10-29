@@ -500,7 +500,7 @@ class PlatformController extends Controller{
         
         if( !empty($actStatus) ){
             if( $actStatus != 4 )
-                $obj = $obj->where('status','=',$actStatus);
+                $obj = $obj->whereRaw(' ( status='.$actStatus.' AND ( getEnd=0 OR getEnd>'.time().'))');
             else
                 $obj = $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
         }
@@ -1090,7 +1090,7 @@ class PlatformController extends Controller{
         
         if( !empty($actStatus) ){
             if( $actStatus != 4 )
-                $obj = $obj->where('status','=',$actStatus);
+                $obj = $obj->whereRaw('( status='.$actStatus.' AND ( getEnd=0 OR getEnd>'.time().'))');
             else
                 $obj = $obj->whereRaw('getEnd !=0 AND getEnd < '.time());
         }
