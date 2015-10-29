@@ -401,7 +401,11 @@
                     <span><%=item.businessName%></span>
                 </label>
             <%})%>
-            <span class="control-help" style="display:none;"></span>
+            <%if(data.length>0){%>
+                <div class="control-help" style="display:none;"></div>
+            <%}else{%>
+                <input type="hidden" name="businessId" required requiredmsg="请选择有业务代表的城市"/>
+            <%}%>
         </script>
 
 		<script type="text/template" id="zone_t">
