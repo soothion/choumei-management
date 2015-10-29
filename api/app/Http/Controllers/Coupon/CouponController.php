@@ -383,7 +383,7 @@ class CouponController extends Controller{
         $totalNum = \App\Voucher::whereRaw( 'vcId='.$id.' and vStatus<>10 and vStatus<>3 ' )->count();
         if( empty($totalNum) ) return $this->success( $voucherConfInfo );
         
-        $allNum = \App\Voucher::whereRaw( 'vcId='.$id.' and vStatus!=3 ' )->count();
+        $allNum = \App\Voucher::whereRaw( 'vcId='.$id.' and vStatus!=3 AND vStatus !=5 ' )->count();
         $voucherConfInfo['allNum'] = $allNum;
         $voucherConfInfo['allMoney'] = $allNum * $voucherConfInfo['useMoney'];
         
