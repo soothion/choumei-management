@@ -231,6 +231,9 @@
                 if (!thisFormData.checkSendSms){
                   thisFormData.sendSms =  '';
                 }
+                if (!thisFormData.useLimitTypes){
+                  tmpData.useLimitTypes = '';
+                }
                 var formData = $.extend(tmpData,thisFormData);
                 return formData;
             }
