@@ -288,7 +288,7 @@
     %>        
     <%data.forEach&&data.forEach(function(item,i){%>
         <label class="checkbox" style="display:<%=item.typename=='其他'?'none':''%>">
-        <input type="checkbox" name="limitItemTypes" value="<%=item.typeid%>" <%=itemsObj[item.typeid] ? "checked":""%>>
+        <input type="checkbox" name="limitItemTypes" value="<%=item.typeid%>" <%=itemsObj[item.typeid] ? "checked":""%> <%=(query.status=='3'||query.status=='4') ? 'disabled':''%>>
         <span><%=item.typename%></span>
         </label> 
     <%})%>

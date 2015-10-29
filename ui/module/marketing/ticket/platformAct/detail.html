@@ -22,12 +22,7 @@
         </div>
         <div class="wrapper">
             <div class="table" style="margin:0" id="table-wrapper" ajat="platform/actView/<%=query.id%>#domid=table-wrapper&tempid=table-t">
-            <script type="text/template" id="table-t">
-                <div class="detail-operation">
-                    <button class="btn edit-button" data-slug="platform.getInfo">编辑</button>
-                    &nbsp;&nbsp;
-                    <a class="btn" type="button" href="index.html">返回</a>  
-                </div>              
+            <script type="text/template" id="table-t">           
                 <table>
                     <tbody>
                         <tr>
@@ -131,6 +126,14 @@
                                                                                 
                     </tbody>                     
                 </table>
+
+                <div class="control-group">
+                    <a class="btn" href="index.html">取消</a>
+                    &nbsp;&nbsp;
+                    <button class="btn-primary edit-button" data-slug="platform.getInfo">
+                    <%=(query.status=='3' || query.status=='4') ? '查看配置' : '编辑' %>
+                    </button>
+                </div>                               
             </script>
             </div>
         </div>
@@ -164,7 +167,7 @@
                             }
                         }
                         sessionStorage.setItem('edit-base-data',JSON.stringify(data));  
-                        location.href = "addBase.html?type=edit&id="+lib.query.id+"&selectItemType="+(data.selectItemType||1);                        
+                        location.href = "addBase.html?type=edit&id="+lib.query.id+"&selectItemType="+(data.selectItemType||1)+"&status="+lib.query.status;                        
                     }
                 });
             })

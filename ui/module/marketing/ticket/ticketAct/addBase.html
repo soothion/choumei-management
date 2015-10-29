@@ -77,7 +77,8 @@
             </div>
             <div class="control-group">
                 <label class="control-label" for=""></label>
-                <button class="btn" type="button" id="clear-btn" style="margin-right:20px">取消</button>
+                <a href="index.html">
+                <button class="btn" type="button" style="margin-right:20px">取消</button></a>
                 <button class="btn-primary">下一步</button>
             </div>
         </script>
@@ -106,17 +107,9 @@
 		<%}%>
         </script>
         <script>
-            $('body').on('click', '#clear-btn', function(event) {
-                lib.popup.confirm({
-                    text:"确定取消本次编辑吗？",
-                    define: function(){
-                        clearTmpData();
-                        window.location.href="index.html";
-                }});
-            });
             var getTemplateData = function(){
                 var id = lib.query.id;
-				if (id){
+				if (id && !getTmpData() ){
                     lib.ajax({
                         url:"coupon/getInfo/"+id
                     }).done(function(data, status, xhr){

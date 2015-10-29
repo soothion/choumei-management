@@ -108,7 +108,7 @@
                   <td><%=item.department%></td>                  
                   <td><%=statusText[item.status]%></td>
                   <td>
-                    <a class="link" href="detail.html?id=<%=item.vcId%>" data-slug="platform.getInfo">查看&gt;</a>
+                    <a class="link" href="detail.html?id=<%=item.vcId%>&status=<%=item.status%>" data-slug="platform.getInfo">查看&gt;</a>
                     <%if(item.status=="1"){%>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <form action="platform/offlineConf/<%=item.vcId%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
@@ -146,12 +146,10 @@
         <script>
             $(".breadcrumb").on('click','button.btn-primary',function(e){
                 e.preventDefault();
-                var data = JSON.parse(sessionStorage.getItem('add-base-data'));
-                if(data && data.selectItemType){
-                    location.href ="addBase.html?type=add&selectItemType="+data.selectItemType;
-                }else{
-                    location.href ="addBase.html?type=add";
-                }
+                sessionStorage.removeItem('add-base-data'); 
+                sessionStorage.removeItem('edit-base-data');
+                sessionStorage.removeItem('platformItemTypes');
+                location.href ="addBase.html?type=add&selectItemType=1";
             })
         </script>         
     </body>

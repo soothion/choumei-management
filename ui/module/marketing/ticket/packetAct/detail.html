@@ -11,7 +11,7 @@
             <span>&gt;</span><a href="index.html">兑换活动</a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>活动概况</h4>
+                    <h4>活动详情</h4>
                 </div>
             </div>
         </div>
@@ -19,7 +19,7 @@
             <div class="table-detail" ajat="laisee/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
 				<script type="text/template" id="table-t">
                 <div class="detail-operation">
-                    <a data-slug="laisee.update" href='addBase.html?id=<%=query.id%>' class="btn"><%=data.status=="Y"||data.status=="F"?"编辑":"查看配置"%></a>
+                    <a data-slug="laisee.update" onclick="sessionStorage.removeItem('formData')" href='addBase.html?id=<%=query.id%>' class="btn"><%=data.status=="Y"||data.status=="F"?"编辑":"查看配置"%></a>
 					<span class="space"></span>
                     <button class="btn" type="button" onclick="window.close()">关闭</button>  
                 </div>  
