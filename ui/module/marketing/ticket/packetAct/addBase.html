@@ -137,6 +137,14 @@
 				sessionStorage.setItem("formData",JSON.stringify(data));
                 location.href = "addTicket.html"+(lib.query._?"?"+lib.query._:"")
             }
+			var $form=$('#form')
+			$form.on("_ready",function(e,data){
+				if(data&&data.response){
+					if(data.response.status=="N"||data.response.status=="S"){
+						$form.find("input,select,textarea").attr("disabled",true);
+					}
+				}
+			});
         </script>      
     </body>
 </html>
