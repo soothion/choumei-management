@@ -1071,7 +1071,7 @@ class CouponController extends Controller{
             if( !empty($val['getEnd']) && time() > $val['getEnd'] && !$searchFlag)
                 $res['data'][$key]['status'] = 4;
             if( !empty($val['getEnd']) && time() > $val['getEnd'] && $searchFlag ){
-                if( $actStatus == 4 )
+                if( $actStatus == 4 || empty($actStatus))
                     $res['data'][$key]['status'] = 4;
                 else 
                     unset( $res['data'][$key] );
