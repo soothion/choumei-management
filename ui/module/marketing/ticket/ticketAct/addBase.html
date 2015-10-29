@@ -63,8 +63,8 @@
                 <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
                 <div class="control">
                     <select name="departmentId" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> ajat-one="true" id="department" 
-						ajat="platform/getRequestDepartment#domid=department&amp;tempid=department-t&sid=<%=data.departmentId%>&status=<%data.status%>"  required 
-						ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&sid=<%=data.managerId%>"	
+						ajat="platform/getRequestDepartment#domid=department&amp;tempid=department-t&sid=<%=data.departmentId%>&status=<%=data.status%>"  required 
+						ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&sid=<%=data.managerId%>&status=<%=data.status%>"	
 						>
                     </select>
                 </div>
@@ -98,7 +98,7 @@
 		<%if(data.length>0){%>
         <%data.forEach(function(item){%>
         <label class="label">
-            <input type="radio" <%= protocol.custom.status==3 || protocol.custom.status==4 ? "disabled='disabled'" : ""%> <%if (protocol.custom.sid == item.id){%> checked='checked' <%}%> class="label" name="managerId" value="<%=item.id%>" required>
+            <input type="radio"  <%if (protocol.custom.sid == item.id){%> checked='checked' <%}%> <%= protocol.custom.status==3 || protocol.custom.status==4 ? "disabled='disabled'" : ""%> class="label" name="managerId" value="<%=item.id%>" required>
             <span><%=item.name%></span>
         </label>
         <%})%>
