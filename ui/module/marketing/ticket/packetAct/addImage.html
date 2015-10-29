@@ -112,7 +112,8 @@
 		</div>
 		</div>
         <script>
-			$('#form').on("_ready",function(){
+			var $form=$('#form');
+			$form.on("_ready",function(e,data){
 				var form=$('#form form')[0]
 
 				 lib.Form.prototype.save = function(data){
@@ -146,6 +147,15 @@
 						return width==640;
 					}
 				});
+				if(data&&data.response){
+					if(data.response.status=="N"||data.response.status=="S"){
+						$form.find("input,select,textarea").attr("disabled",true);
+						$(".btn-primary").hide();
+						setTimeout(function(){
+							$form.find("input,select,textarea").attr("disabled",true);
+						},600)
+					}
+				}
 			});
         </script>      
     </body>

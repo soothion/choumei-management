@@ -246,7 +246,16 @@
 				if(parseInt(this.value)>data.total_money){
 					$(this).trigger("error",{type:"error",errormsg:"金额数量不能大于活动领取金额上限"});
 				}
-			})
+			});
+			var $form=$('#form')
+			$form.on("_ready",function(e,data){
+				if(data&&data.response){
+					if(data.response.status=="N"||data.response.status=="S"){
+						$form.find("input,select,textarea").attr("disabled",true);
+						$('.add-box').remove();
+					}
+				}
+			});
         </script>      
     </body>
 </html>
