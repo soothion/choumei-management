@@ -196,7 +196,6 @@ class PlatformController extends Controller{
             $phoneArr = $phoneList;
             $voucherData = array(
                 'vcId' =>   $addRes,
-                'vSn'=> Voucher::getNewVoucherSn('CM'),
                 'vcSn' =>   $data['vcSn'],
                 'vcTitle' => $data['vcTitle'],
                 'vcTitle' => $data['vcTitle'],
@@ -213,11 +212,13 @@ class PlatformController extends Controller{
             foreach( $phoneArr as $key => $val ){
                 $voucherData['vMobilephone'] = $val;
                 $voucherData['vStatus'] = 10;
+                $voucherData['vSn']=> Voucher::getNewVoucherSn('CM'),
                 // 获取的劵的数量如果是多张需要插入多次
                 $signerNum = $data['getNumMax']; // 每个用户最多领取的张数
                 $limitNum = isset($data['useTotalNum']) ? $data['useTotalNum'] : 0; // 劵的可领的张数
                 if( empty( $limitNum ) ){ // 未设置可领的张数即无限制
                     for( $i=0;$i<$signerNum;$i++ ){
+                        $voucherData['vSn']=> Voucher::getNewVoucherSn('CM'),
                         $addVoucher = \App\Voucher::insertGetId( $voucherData );
                         if(empty($addVoucher)) Log::info( "添加代金劵失败" .print_r($voucherData,true) );
                     }
@@ -225,6 +226,7 @@ class PlatformController extends Controller{
                 // 如果 劵可领总数小于或等于个人可领数的情况
                 if( !empty($limitNum) && $limitNum<=$signerNum){
                     for( $i=0;$i<$limitNum;$i++ ){
+                        $voucherData['vSn']=> Voucher::getNewVoucherSn('CM'),
                         $addVoucher = \App\Voucher::insertGetId( $voucherData );
                         if(empty($addVoucher)) Log::info( "添加代金劵失败" .print_r($voucherData,true) );
                     }
@@ -234,6 +236,7 @@ class PlatformController extends Controller{
                 if( !empty($limitNum) && $limitNum>$signerNum){
                     for( $i=0;$i<$signerNum;$i++ ){
                         if( ($sendNum+1)<= $limitNum ){
+                            $voucherData['vSn']=> Voucher::getNewVoucherSn('CM'),
                             $addVoucher = \App\Voucher::insertGetId( $voucherData );
                             $sendNum++;
                             if(empty($addVoucher)) Log::info( "添加代金劵失败" .print_r($voucherData,true) );
