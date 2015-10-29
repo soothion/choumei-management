@@ -244,6 +244,7 @@ class CouponController extends Controller{
             $obj = $obj->whereRaw(' ((getStart <= "'.strtotime($actStartTime) .'" and getEnd >= "'.strtotime($actStartTime) .'") or (getStart <= "'.strtotime($actEndTime) .'" and getEnd >= "'.strtotime($actEndTime) .'" ))');
         if( !empty( $actDepartment ) )
             $obj = $obj->where('DEPARTMENT_ID','=',$actDepartment);
+        
         //手动设置页数
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
@@ -251,6 +252,7 @@ class CouponController extends Controller{
         $res = $obj->orderBy('vcId','desc')
                     ->paginate($pageSize)
                     ->toArray();
+        print_r($res);
         if( empty($res) ) return $this->success();
         $res = $this->handlerSearchDataList( $res , true ,$actStatus );
         return $this->success( $res );
@@ -355,6 +357,8 @@ class CouponController extends Controller{
             $voucherConfInfo['budget'] = $voucherConfInfo['useTotalNum'] * $voucherConfInfo['useMoney'];
         }
         
+        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
+            $voucherConfInfo['status'] = 4;
         $voucherConfInfo['companyCode'] = '-';
         $voucherConfInfo['activityCode'] = '-';
         $voucherConfInfo['dividendCode'] = '-';
@@ -395,8 +399,6 @@ class CouponController extends Controller{
             $voucherConfInfo['consumeNum'] = $consumeNum;
             $voucherConfInfo['consumeMoney'] = $consumeNum * $voucherConfInfo['useMoney'];
         }
-        if( !empty($voucherConfInfo['getEnd']) && time() > $voucherConfInfo['getEnd'] )
-            $voucherConfInfo['status'] = 4;
         // 查看代金劵是否已经生成过
         $voucherCount = \App\Voucher::where(['vcId'=>$id])->count();
         $voucherConfInfo['export'] = 0;
