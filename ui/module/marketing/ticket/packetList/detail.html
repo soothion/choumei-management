@@ -92,7 +92,7 @@
                             <td>被领取现金券详情</td>
                             <td>
 								<%data.receive_voucher.forEach(function(item){%>
-									<%=item.vsn%> <span class="space"></span><%=item.mobilephone%>
+									<%=item.vsn%> <span class="space"></span><%=item.mobilephone%> <br />
 								<%})%>
 							</td>
                         </tr> 
@@ -100,7 +100,7 @@
                             <td>领取礼包用户</td>
                             <td>
 								<%data.giftUser.forEach(function(item){%>
-									<%=item.vsn%> <span class="space"></span><%=item.mobilephone%>
+									<%=item.mobilephone%> <br />
 								<%})%>
 							</td>
                         </tr> 

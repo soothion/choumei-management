@@ -62,27 +62,27 @@
 					<thead>
 						<tr>
 							<td colspan="2">
-							现金卷使用限制
+							现金券使用限制
 							</td>
 						</tr>
 					</thead>
                     <tbody>
                         <tr>
-                            <td>卷面额</td>
+                            <td>券面额</td>
                             <td>
 								<%=data.money%>元
 							</td>
                         </tr>
 
                         <tr>
-                            <td>卷总数</td>
+                            <td>券总数</td>
                             <td>
 								<%=data.totalNumber ? data.totalNumber : '【无限制】'%>张
 							</td>
                         </tr>
 
                         <tr>
-                            <td>卷预算合计</td>
+                            <td>券预算合计</td>
                             <td>
 								<%=data.money * data.totalNumber ? data.money * data.totalNumber +'元': '【无限制】'%>
 							</td>
