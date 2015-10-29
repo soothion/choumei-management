@@ -182,13 +182,14 @@
                                    </tr>
                                </tbody>
                            </table>
-                           <%if (data.status !=3 && data.status != 4){%>
                            <div class="control-group">
                                <label class="control-label" for=""></label>
-                               <button class="btn" type="button" id="clear-btn" style="margin-right:20px">取消</button>
+                               <a href="index.html" >
+                               <button class="btn" type="button" style="margin-right:20px">取消</button></a>
+                               <%if (data.status !=3 && data.status != 4){%>
                                <button class="btn-primary" data-slug="coupon.editConf,coupon.add">提交</button>
+                               <%}%>
                            </div>
-                           <%}%>
                        </script>
                     </form>
         </div>
