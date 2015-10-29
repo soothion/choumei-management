@@ -252,7 +252,6 @@ class CouponController extends Controller{
         $res = $obj->orderBy('vcId','desc')
                     ->paginate($pageSize)
                     ->toArray();
-        print_r($res);
         if( empty($res) ) return $this->success();
         $res = $this->handlerSearchDataList( $res , true ,$actStatus );
         return $this->success( $res );
