@@ -174,7 +174,7 @@
                     </label>
                     <%if(!typeCheck[data.selectUseType] || data.selectUseType == '4'){%>
                     <input type="text" data-check="2" class="cascade" name="code" placeholder="输入集团码" 
-                        pattern='number' required requiredmsg="未填写" value="<%=data.code%>" />
+                        pattern='number' required requiredmsg="未填写" value="<%=data.code%>" <%= query.type =='edit' ? 'disabled' : '' %>/>
                         <span class="control-help" style="display:none;">集团码不存在</span>
                     <%}else{%>
                     <input type="text" class="cascade" name="code" placeholder="输入集团码" pattern='number' disabled

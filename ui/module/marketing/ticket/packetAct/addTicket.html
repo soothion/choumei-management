@@ -88,7 +88,7 @@
                         <li class="flex-item"><span>3.礼包配置</span></li>
                         <li class="flex-item"><span>4.H5页面配置</span></li>
                     </ul>
-
+					
                     <div class="box-continer">
 						<%if(!query._&&!data.voucher){%>
 							<div class="box">
@@ -198,7 +198,7 @@
                             </div>            
                         </div>                                                 
                     </div>
-
+					<div class="control-help" id="control-help" style="margin:0px 10px;display:none">现金券张数不能超过20张</div>
                     <div class="control-group" style="margin-left:15px">
                         <a class="btn" href="index.html">取消</a>
 						<span class="space"></span>
@@ -213,6 +213,7 @@
             lib.Form.prototype.save = function(data){
 				var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
 				formData.voucher=[];
+				var num=0;
 				$('.box').each(function(){
 					var $this=$(this);
 					var input=$this.find("input");
@@ -226,8 +227,16 @@
 							vUseNeedMoney:input.eq(3).val(),
 							vVcId:input.eq(4).val()
 						});
+						num+=parseInt(input.eq(1).val());
 					}
+					
 				});
+				if(num>20){
+					$('#control-help').show();
+					return;
+				}else{
+					$('#control-help').hide();
+				}
 				formData.voucher=JSON.stringify(formData.voucher);
 				data=$.extend(formData,data);
 				sessionStorage.setItem("formData",JSON.stringify(data));
@@ -247,6 +256,8 @@
 				if(parseInt(this.value)>data.total_money){
 					$(this).trigger("error",{type:"error",errormsg:"金额数量不能大于活动领取金额上限"});
 				}
+			}).on("click",".btn-primary",function(){
+				$('#control-help').hide();
 			});
 			var $form=$('#form')
 			$form.on("_ready",function(e,data){

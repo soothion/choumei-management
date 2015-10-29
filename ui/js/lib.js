@@ -1314,7 +1314,7 @@
 				lib.ajax({
 					url:action,
 					data:data,
-					type:this.el.method,
+					type:"POST",
 					success:function(data){
 						$(self.el).trigger('response',data);
 						setTimeout(function(){

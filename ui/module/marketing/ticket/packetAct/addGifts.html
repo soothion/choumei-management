@@ -203,7 +203,7 @@
                             </div>            
                         </div>                                                 
                     </div>
-
+					<div class="control-help" id="control-help" style="margin:0px 10px;display:none">现金券张数不能超过20张</div>
                     <div class="control-group">
                         <a class="btn" href="index.html">取消</a>
 						<span class="space"></span>
@@ -224,10 +224,13 @@
 				
 			}).on("click",".remove",function(){
 				$(this).closest('.box').remove();
+			}).on("click",".btn-primary",function(){
+				$('#control-help').hide();
 			});
             lib.Form.prototype.save = function(data){
 				var formData=sessionStorage.getItem("formData")?JSON.parse(sessionStorage.getItem("formData")):{};
 				formData.gift=[];
+				var num=0;
 				$('.box').each(function(){
 					var $this=$(this);
 					var input=$this.find("input");
@@ -241,8 +244,13 @@
 							vUseNeedMoney:input.eq(3).val(),
 							vVcId:input.eq(4).val()
 						});
+						num+=parseInt(input.eq(1).val());
 					}
 				});
+				if(num>20){
+					$('#control-help').show();
+					return;
+				}
 				formData.gift=JSON.stringify(formData.gift);
 				data=$.extend(formData,data);
 				sessionStorage.setItem("formData",JSON.stringify(data));
