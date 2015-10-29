@@ -710,6 +710,7 @@ class PlatformController extends Controller{
 	 * @apiSuccess {String} getTimeEnd   可获取时间 结束(0 表示不限制)
 	 * @apiSuccess {String} singleEnoughMoney 获取需满足金额(0表示不限制)
 	 * @apiSuccess {String} sendSms 获取代金券时下发的短信内容
+	 * @apiSuccess {Number} status              活动状态: 1正常 2暂停 3 关闭 4.已结束
 	 * @apiSuccess {String} fewDay 获取代金劵后多少天内可用
 	 * 
      * 
@@ -739,6 +740,7 @@ class PlatformController extends Controller{
      *                       "fewDay": 12,
      *                       "getTypes": "0",
      *                       "sendSms": "",
+     *                        "status": 1,
      *                        "getCodeType": 0,
      *                       "selectItemType": 2
      *           }
@@ -755,7 +757,7 @@ class PlatformController extends Controller{
         $voucherConfInfo = \App\VoucherConf::select(['vcId','getNumMax as getSingleLimit','vcTitle as actName','vcSn as actNo','vcRemark as actIntro'
             ,'DEPARTMENT_ID as departmentId','MANAGER_ID as managerId','useMoney as money','getCode as code','getItemTypes','useLimitTypes','useItemTypes as limitItemTypes'
             ,'useNeedMoney as enoughMoney','useTotalNum as totalNumber' ,'getNeedMoney as singleEnoughMoney','getStart as getTimeStart','getEnd as getTimeEnd'
-            ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType'])
+            ,'useStart as addActLimitStartTime','useEnd as addActLimitEndTime','FEW_DAY as fewDay','getTypes','SMS_ON_GAINED as sendSms','getCodeType','status'])
                 ->where(['vcId'=>$id,'IS_REDEEM_CODE'=>'N','vType'=>1])
                 ->first()
                 ->toArray();
@@ -778,6 +780,8 @@ class PlatformController extends Controller{
             $voucherConfInfo['selectItemType'] = 3;
         if( $voucherConfInfo['getTypes'] == 5 )
             $voucherConfInfo['selectItemType'] = 4;
+        if( !empty($voucherConfInfo['getTimeEnd']) && ($voucherConfInfo['getTimeEnd'] < time()) )
+            $voucherConfInfo['status'] = 4;
         if( !empty($voucherConfInfo['getTimeStart']) )
             $voucherConfInfo['getTimeStart'] = date('Y-m-d H:i:s',$voucherConfInfo['getTimeStart']);
         if( !empty($voucherConfInfo['getTimeEnd']) )
@@ -790,7 +794,6 @@ class PlatformController extends Controller{
             $voucherConfInfo['getItemTypes'] = rtrim(ltrim($voucherConfInfo['getItemTypes'],','),',');
         if( !empty($voucherConfInfo['limitItemTypes']) )
             $voucherConfInfo['limitItemTypes'] = rtrim(ltrim($voucherConfInfo['limitItemTypes'],','),',');
-        
         return $this->success( $voucherConfInfo );
     }
     /***
