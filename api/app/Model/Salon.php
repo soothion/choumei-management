@@ -10,6 +10,8 @@ use App\SalonRatingsRecord;
 use App\SalonScoreLog;
 use App\SalonWorks;
 use Event;
+use App\Manager;
+
 class Salon extends Model {
 
 	protected $table = 'salon';
@@ -88,7 +90,7 @@ class Salon extends Model {
 			{
 				$rs[$key] = '';
 			}
-			$rs[$key]['businessName'] = BusinessStaff::getBusinessNameById($val['businessId']);//获取业务代表
+			$rs[$key]['businessName'] = Manager::where(['id'=>$val['businessId']])->lists('name')->first()?:'';//获取业务代表	
 		}
 		$list['data'] = $rs;
            
@@ -136,7 +138,7 @@ class Salon extends Model {
 		if(isset($where['businessName']))
 		{
 			$keyword = '%'.$where['businessName'].'%';
-			$query = $query->whereRaw("businessId in (SELECT `id` FROM `cm_business_staff` WHERE `businessName` LIKE '{$keyword}')");
+			$query = $query->whereRaw("businessId in (SELECT `id` FROM `cm_managers` WHERE `name` LIKE '{$keyword}')");
 		}
 		if(isset($where['salonname'])&&$where['salonname'])
 		{
@@ -273,7 +275,8 @@ class Salon extends Model {
 				{
 					$rs[$key] = '';
 				}
-				$rs[$key]['businessName'] = BusinessStaff::getBusinessNameById($val['businessId']);//获取业务代表
+				$rs[$key]['businessName'] = Manager::where(['id'=>$val['businessId']])->lists('name')->first()?:'';//获取业务代表
+				
 			}	
 		}
 		return $rs;
@@ -463,7 +466,7 @@ class Salon extends Model {
 					'i.subsidyPolicy',
 					'm.name',
 					'm.id as merchantId',
-					'b.businessName',
+					'b.name as businessName',
 					'd.status as dividendStatus',
 					'd.recommend_code',
 					
@@ -471,7 +474,7 @@ class Salon extends Model {
 			$salonList =  DB::table('salon as s')
             				->leftjoin('salon_info as i', 'i.salonid', '=', 's.salonid')
            					->leftjoin('merchant as m', 'm.id', '=', 's.merchantId')
-            				->leftjoin('business_staff as b', 'b.id', '=', 's.businessId')
+            				->leftjoin('managers as b', 'b.id', '=', 's.businessId')
             				->leftjoin('dividend as d', 'd.salon_id', '=', 's.salonid')
             				->select($fields)
           					->where(['s.salonid'=>$salonid])
