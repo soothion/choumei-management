@@ -196,7 +196,7 @@ class PlatformController extends Controller{
             $phoneArr = $phoneList;
             $voucherData = array(
                 'vcId' =>   $addRes,
-                'vSn'=> $this->getVoucherSn(),
+                'vSn'=> Voucher::getNewVoucherSn('CM'),
                 'vcSn' =>   $data['vcSn'],
                 'vcTitle' => $data['vcTitle'],
                 'vcTitle' => $data['vcTitle'],
@@ -1159,8 +1159,7 @@ class PlatformController extends Controller{
         }
         $code = $p . $pre  . $end;
         $count = Voucher::where('vSn','=',$code)->count();
-        if ($count) 
-            return $this->getVoucherSn();
+        if ($count) return $this->getVoucherSn();
         return $code;
           
    }
@@ -1307,7 +1306,7 @@ class PlatformController extends Controller{
             $tempData[$key][] = $val['addTime'];
             $tempData[$key][] = $actTime;
             $tempData[$key][] = $department;
-            if( $val['status'] != 2 && !empty($val['getEnd']) && $val['getEnd']<time() )
+            if( $val['status'] != 2 &&  !empty($val['getEnd']) && $val['getEnd']<time() )
                 $tempData[$key][] = '已结束';
             else
                 $tempData[$key][] = $statusArr[ $val['status'] ];
