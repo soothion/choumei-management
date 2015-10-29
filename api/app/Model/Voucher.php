@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redis as Redis;
 
 class Voucher extends Model {
 
@@ -49,12 +50,29 @@ class Voucher extends Model {
         return self::insertGetId($data);
     }
 
+
+   //  // 获取代金劵编号
+   //  public static function getNewVoucherSn( $p = 'DH' ) {
+   //      $pre = date('ymd');
+   //      $end = Self::$getVoucherSn++;
+   //      $code = $p . $pre  . $end;
+   //      return $code;
+   // }
+
+   
     // 获取代金劵编号
-    public static function getNewVoucherSn( $p = 'DH' ) {
+    public static function getNewVoucherSn($p = 'DH'){
         $pre = date('ymd');
-        $end = Self::$getVoucherSn++;
-        $code = $p . $pre  . $end;
-        return $code;
-   }
+        $redis = Redis::connection();
+        $key = 'XJJ-'.date('ymd');
+        if($redis->get($key)==FALSE)
+            $redis->setex($key,3600*24,0);
+        $sn = $redis->incr($key);
+        $sn = str_pad($sn, 5,'0',STR_PAD_LEFT);
+        $sn = $pre.$sn;
+        return $sn;
+    }
+
+
 
 }
