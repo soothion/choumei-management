@@ -18,7 +18,7 @@
                     <h4> 兑换活动 </h4>
                 </div>
                 <div class="flex-item">
-                    <a class="btn-primary fr" href="addBase.html" data-slug="coupon.add">
+                    <a class="btn-primary fr" id="add_new" data-slug="coupon.add">
                         <i class="fa fa-plus"></i> 新增兑换活动
                     </a>
                 </div>
@@ -124,6 +124,11 @@
              <div class="pager"> </div>
             </script>
             <script type="text/javascript">
+
+               var clearTmpData  = function(){
+                   window.localStorage.removeItem('couponTmpData');
+               }
+
                var confirmBox = function(options){
                     lib.popup.confirm({
                         text:options.text,
@@ -174,7 +179,10 @@
                     var id = $(this).attr('data-id');
                     confirmBoxConfig['close'].id = id;
                     confirmBox(confirmBoxConfig['close']);
-               })
+               }).on('click','#add_new',function(){
+                    clearTmpData();
+                    window.location.href="addBase.html";
+               });
             </script>
         </div>
             </div>
