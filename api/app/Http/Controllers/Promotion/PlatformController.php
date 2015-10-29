@@ -863,7 +863,13 @@ class PlatformController extends Controller{
             else
                 $data['useItemTypes'] = '';
         } 
-        if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
+        if( isset($post['useLimitTypes']) ){ 
+            if( !empty($post['useLimitTypes'][0])){
+                $data['useLimitTypes'] = $post['useLimitTypes'][0];
+            }else{
+                $data['useLimitTypes'] = '';
+            }
+        }
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
         if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
@@ -1158,19 +1164,6 @@ class PlatformController extends Controller{
 //        array_unshift( $itemType , array('typeid'=>101,'typename'=>'限时特价 ') );
         return $itemType;
     }
-    // 获取代金劵编号
-    private function getVoucherSn( $p = 'CM' ) {
-        $pre = substr(time(), 2);
-        $end = '';
-        for ($i = 0; $i <3; $i++) {
-            $end .= rand(0, 9);
-        }
-        $code = $p . $pre  . $end;
-        $count = Voucher::where('vSn','=',$code)->count();
-        if ($count) return $this->getVoucherSn();
-        return $code;
-          
-   }
    // 获取代金劵状态
    private function getVoucherStatusByActId( $vcSn , $useEnd ){
         $count = \App\Voucher::select(['vStatus'])->where(['vcSn'=>$vcSn])->count();

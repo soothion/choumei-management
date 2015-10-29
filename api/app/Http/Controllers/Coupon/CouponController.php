@@ -575,7 +575,13 @@ class CouponController extends Controller{
             else
                 $data['useItemTypes'] = '';
         } 
-        if( isset($post['useLimitTypes']) && !empty($post['useLimitTypes']) ) $data['useLimitTypes'] = $post['useLimitTypes'][0];
+        if( isset($post['useLimitTypes']) ){ 
+            if( !empty($post['useLimitTypes'][0])){
+                $data['useLimitTypes'] = $post['useLimitTypes'][0];
+            }else{
+                $data['useLimitTypes'] = '';
+            }
+        }
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
