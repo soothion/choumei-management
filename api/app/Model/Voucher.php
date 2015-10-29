@@ -62,7 +62,7 @@ class Voucher extends Model {
    
     // 获取代金劵编号
     public static function getNewVoucherSn($p = 'DH'){
-        $pre = date('ymd');
+        $pre = $p.date('ymd');
         $redis = Redis::connection();
         $key = 'XJJ-'.date('ymd');
         if($redis->get($key)==FALSE)
