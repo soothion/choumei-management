@@ -177,9 +177,9 @@ class BonusController extends Controller {
 //            $result[$key]['num'] = $num;
             $result[$key]['bonusSn'] = "hb" . str_pad($val['order_ticket_id'], 6, '0', STR_PAD_LEFT);
             $result[$key]['laisee_name'] = $val['laisee_name'];
-            $result[$key]['bonusAmount'] = (string)Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
-            $result[$key]['voucherNum'] = (string)Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
-            $result[$key]['receiveNum'] = (string)Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
+            $result[$key]['bonusAmount'] = (string) Laisee::where('order_ticket_id', $val['order_ticket_id'])->sum('value');
+            $result[$key]['voucherNum'] = (string) Laisee::where('order_ticket_id', $val['order_ticket_id'])->count('value');
+            $result[$key]['receiveNum'] = (string) Laisee::where('order_ticket_id', $val['order_ticket_id'])->whereNotNull('mobilephone')->count();
             $result[$key]['add_time'] = date("Y-m-d H:i:s", $val['add_time']);
             $result[$key]['over_time'] = $val['end_time'];
             if ($val['status'] == "Y") {
@@ -303,7 +303,14 @@ class BonusController extends Controller {
                 $result['receive_voucher'] = Laisee::getReceiveVoucher($id, $laiseeConfig);  //被领取 现金券详情
                 $result['voucherGift'] = Laisee::getGiftVoucher($laiseeConfig);  //礼包详情
                 $result['giftUser'] = Laisee::getGiftUser($id, $laiseeConfig);  //领取礼包用户
-                $result['status'] = $laiseeConfig->status;
+                $result['status'] = 'Y';
+                $failLaisee = Laisee::where('order_ticket_id', $id)->where('status', 'N')->count();
+                if ($failLaisee) {
+                    $result['status'] = 'N';  //已失效
+                }
+                if (strtotime($laisee->end_time) < time()) {
+                    $result['status'] = 'E';  //已过期
+                }
                 return $this->success($result);
             } else {
                 throw new ApiException('未找到红包活动', ERROR::UNKNOWN_ERROR);
