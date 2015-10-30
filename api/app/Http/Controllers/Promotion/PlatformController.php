@@ -194,6 +194,13 @@ class PlatformController extends Controller{
         $addRes = \App\VoucherConf::insertGetId( $data );
         if( $data['getTypes'] == '3' ){
             $phoneArr = $phoneList;
+            if( isset($data['FEW_DAY']) && !empty( $data['FEW_DAY']) ){
+                $useStart = strtotime(date('Y-m-d') . ' 00:00:00');
+                $useEnd = (intval( $data['FEW_DAY'] ) * 3600 * 24) + strtotime(date('Y-m-d') . ' 23:59:59');
+            }elseif(isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime'])){
+                $useStart = strtotime($post['addActLimitStartTime']);
+                $useEnd = strtotime($post['addActLimitEndTime']);
+            }
             $voucherData = array(
                 'vcId' =>   $addRes,
                 'vcSn' =>   $data['vcSn'],
@@ -203,8 +210,8 @@ class PlatformController extends Controller{
                 'vUseItemTypes' => isset($data['useItemTypes'])? $data['useItemTypes'] : '',
                 'vUseLimitTypes' => isset($data['useLimitTypes']) ? $data['useLimitTypes'] : '',
                 'vUseNeedMoney' => isset($data['useNeedMoney']) ? $data['useNeedMoney'] : '',
-                'vUseStart' => isset($data['useStart'])? $data['useStart'] :'',
-                'vUseEnd' => isset($data['useEnd']) ? $data['useEnd'] : '',
+                'vUseStart' => isset($useStart)? $useStart :'',
+                'vUseEnd' => isset($useEnd) ? $useEnd : '',
                 'vAddTime' => time(),
             );
             // 记录已经发放的劵的数量
@@ -1201,9 +1208,9 @@ class PlatformController extends Controller{
         $totalNum = 0;
         $useNum = 0;
         $invalidNum = 0;
-        $totalNum = \App\Voucher::where( 'vStatus','<>',10 )->count();
-        $useNum = \App\Voucher::where( 'vStatus','=',2 )->count();
-        $invalidNum = \App\Voucher::where( 'vStatus','=',5 )->count();
+        $totalNum = \App\Voucher::where( 'vStatus','<>',10 )->where(['vcSn'=>$vcSn])->count();
+        $useNum = \App\Voucher::where( 'vStatus','=',2 )->where(['vcSn'=>$vcSn])->count();
+        $invalidNum = \App\Voucher::where( 'vStatus','=',5 )->where(['vcSn'=>$vcSn])->count();
         if( !empty($invalidNum) )
             return array( $totalNum , $useNum , $invalidNum );
         // 已失效数
