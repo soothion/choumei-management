@@ -56,14 +56,14 @@
                                                 <input type="hidden" name="money" pattern='number' min='1' value="<%=data.money%>" max='999' id='money' required/>
                                                 <%}%>
                                                <strong>元&nbsp;&nbsp;&nbsp;</strong>
-                                               <span>（不可修改，可填写1~999)</span>
+                                               <span class="weak">（不可修改，可填写1~999)</span>
                                            </div>
 
                                            <div style="margin:15px">
                                                <span style="display: inline-block;width:130px">满额使用(单个项目)</span>
                                                <input type="text" pattern='number' min='0' required max='999' <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> value="<%=data.enoughMoney || 0%>" name="enoughMoney"/>
                                                <strong>元&nbsp;&nbsp;&nbsp;以上可用</strong>
-                                               <span>(大于或等于该数值可使用，0为不限制，可填写0~999) </span>
+                                               <span class="weak">(大于或等于该数值可使用，0为不限制，可填写0~999) </span>
                                            </div>
                                            <hr />
                                            <div style="margin:15px">
@@ -75,14 +75,14 @@
                                                 <input type="hidden" name="totalNumber" id="ticketNumInput" required value="<%=data.totalNumber || 1%>" pattern='number' min='1' max='3000'  />
                                                 <%}%>
                                                <strong>张&nbsp;&nbsp;&nbsp;</strong>
-                                               <span>(不可修改，可填写1~3000）</span>
+                                               <span class="weak">(不可修改，可填写1~3000）</span>
                                            </div>
                                            <hr />
                                            <div style="margin:15px">
                                                <span style="display: inline-block;width:130px">领券上限：</span>
                                                <input <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> type="text" name="getSingleLimit" value="<%=data.getSingleLimit || 1%>" pattern='number' min='1' max='20' required/>
                                                <strong>张&nbsp;&nbsp;&nbsp;</strong>
-                                               <span>(每人本活动参与次数，每次参与只可获取一张，填写1~20)</span>
+                                               <span class="weak">(每人本活动参与次数，每次参与只可获取一张，填写1~20)</span>
                                            </div>
                                        </td>
                                    </tr>
@@ -129,7 +129,7 @@
                                                    <span>自定义有效期区间</span>
                                                </label>
                                                <input type="text" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> id="avaDay" <%if (!data.fewDay){%>disabled="disabled"<%}%> name="fewDay" value="<%=data.fewDay || 1%>" pattern="number" min="1" max="999"/>
-                                               <span>天内有效（获取现金券后,可填写1~999）</span>
+                                               <span >天内有效<span class="weak">（获取现金券后,可填写1~999）</span></span>
                                            </div>
                                        </td>
                                    </tr>
@@ -179,6 +179,13 @@
                                        <td>手机短信内容</td>
                                        <td><textarea name="sendSms" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> <%if (!data.sendSms){%>disabled="disabled"<%}%> required id="sendSms" minlength="10" maxlength="500"
                                        placeholder="限制10~500个字符的长度,[useMoney]:接收短信用户获取的现金券金额,[name]:活动名称,[overtime]:接收短信用户获取的现金券有效结束时间" style="width: 500px;"><%=data.sendSms || '【臭美美发】亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD'%></textarea></td>
+                                       <td>
+                                       <p class="weak">【说明】勾选之后必填，建议使用默认短信模板<br/>
+                                       10~500个汉字的长度<br/>
+                                       [useMoney]:接收短信用户获取的现金券金额<br/>
+                                       [name]:活动名称<br/>
+                                       [overtime:接收短信用户获取的现金券有效结束时间</p>
+                                       </td>
                                    </tr>
                                </tbody>
                            </table>
