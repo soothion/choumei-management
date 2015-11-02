@@ -312,6 +312,7 @@ class ItemController extends Controller{
 	public function export(){
 		$param = $this->param;
 		$query = Item::getQueryByParam($param);
+		$query = $query->where('userId','!=',0);
 
 		$fields = [
 			'salon_item.*',
