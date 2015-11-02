@@ -95,7 +95,7 @@
                     <a class="link" target="_blank" href="detail.html#id=<%=item.vId%>" data-slug="voucher.info">查看&gt;</a>
                     &nbsp;&nbsp;&nbsp;&nbsp;
                     <%if(item.vStatus == "1"){%>
-                    <form action="voucher/invalidStatus/<%=item.vId%>" data-role="normal" onreset="parent.lib.popup.result({define:function(){location.reload()}})">
+                    <form action="voucher/invalidStatus/<%=item.vId%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
                       <button class="link" data-slug="voucher.invalidStatus">失效</button>
                     </form>
                     <%}%>
