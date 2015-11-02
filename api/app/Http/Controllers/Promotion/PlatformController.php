@@ -649,7 +649,7 @@ class PlatformController extends Controller{
         $voucherConfInfo['consumeMoney'] = 0;
         $voucherConfInfo['invalidNum'] = 0;
         
-        $totalNum = \App\Voucher::whereRaw( 'vcId='.$id.' and vStatus<>10 and vStatus<>3 ' )->count();
+        $totalNum = \App\Voucher::whereRaw( 'vcId='.$id )->count();
         if( empty($totalNum) )  return $this->success( $voucherConfInfo );
         
         $voucherConfInfo['allNum'] = $totalNum;
