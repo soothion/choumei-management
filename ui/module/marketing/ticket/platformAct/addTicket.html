@@ -273,9 +273,9 @@
                     <td>手机短信内容</td>
                     <td style="width:30%">
                         <%if(lib.query.type=='add'){%>
-                            <textarea name="sendSms" id="smsTextArea" minlength="10" maxlength="500" required placeholder="亲爱的，[uesMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD">亲爱的，[uesMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD</textarea>
+                            <textarea name="sendSms" id="smsTextArea" minlength="10" maxlength="500" required placeholder="亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD">亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD</textarea>
                         <%}else{%>
-                            <textarea name="sendSms" id="smsTextArea" minlength="10" maxlength="500" required <%=data.sendSms ? '' : 'disabled'%> placeholder="亲爱的，[uesMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD"><%=data.sendSms || '亲爱的，[uesMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD'%></textarea>
+                            <textarea name="sendSms" id="smsTextArea" minlength="10" maxlength="500" required <%=data.sendSms ? '' : 'disabled'%> placeholder="亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD"><%=data.sendSms || '亲爱的，[useMoney]元现金券已存入你的账户，登录臭美美发APP在个人中心查看，APP下载地址http://t.cn/RZXyLPg，退订回复TD'%></textarea>
                         <%}%>
                     </td>
                     <td>
