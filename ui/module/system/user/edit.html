@@ -75,14 +75,14 @@
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门：</label>
 				<div class="control">
-					<select required name="department_id"  ajat="list/department#domid=department&tempid=/module/public/template/department&sid=<%=data.department_id%>" id="department" <%=data.status==3?"disabled":""%> ajat-change="list/position?id=${value}#domid=position&tempid=position_t">
+					<select required name="department_id"  ajat="list/department#domid=department&tempid=/module/public/template/department&sid=<%=data.department_id%>" id="department" <%=data.status==3?"disabled":""%> ajat-change="list/position?id=${value}#domid=position&tempid=position_t&sid=<%=data.position_id%>">
 					</select>
 				</div>
 			</div>
 		<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>职位：</label>
 				<div class="control">
-					<select required name="position_id"  ajat="<%if(data.department_id){%>list/position?id=<%=data.department_id%><%}%>#domid=position&tempid=position_t&sid=<%=data.position_id%>" id="position" <%=data.status==3?"disabled":""%>>
+					<select required name="position_id"  _ajat="<%if(data.department_id){%>list/position?id=<%=data.department_id%><%}%>#domid=position&tempid=position_t&sid=<%=data.position_id%>" id="position" <%=data.status==3?"disabled":""%>>
 					</select>
 				</div>
 			</div>
