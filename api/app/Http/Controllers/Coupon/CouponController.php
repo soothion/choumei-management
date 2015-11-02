@@ -964,12 +964,15 @@ class CouponController extends Controller{
         return $code;
    }
    // 获取代金劵状态
-   private function getVoucherStatusByActId( $vcSn , $useEnd ){
-        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>"$vcSn"])->get();
+   private function getVoucherStatusByActId( $vcId ){
+        $result = \App\Voucher::select(['vStatus','vUseEnd'])->where(['vcId'=>$vcId])->get();
         
         if( empty( $result ) )
-            return array(0,0,0,0);
+            return [0,0,0,0];
         $result = $result->toArray();
+        if( empty($result) )
+            return [0,0,0,0];
+        $useEnd = $result[0]['vUseEnd'];
         $totalNum = 0;
         $useNum = 0;
         $invalidNum = 0;
@@ -985,14 +988,14 @@ class CouponController extends Controller{
                 $duihuanNum++;
         }
         if( !empty($invalidNum) )
-            return array( $totalNum , $useNum , $invalidNum , $duihuanNum );
+            return [ $totalNum , $useNum , $invalidNum , $duihuanNum ];
         // 已失效数
         if( empty($useEnd) ||  time()<$useEnd ){
             $invalidNum = 0;
         }else{
             $invalidNum = $totalNum - $useNum;
         }
-        return array( $totalNum , $useNum , $invalidNum,$duihuanNum );
+        return [ $totalNum , $useNum , $invalidNum,$duihuanNum ];
     }
    
     // 加密生成的兑换码
@@ -1039,7 +1042,7 @@ class CouponController extends Controller{
         $i = 0;
         $statusArr = ['','进行中','下线','已关闭'];
         foreach( $res as $key=>$val ){
-            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+            $statistics = $this->getVoucherStatusByActId($val['vcId']);
             $actTime = '';
             if( empty( $val['getStart'] ) && empty($val['getEnd']) )
                 $actTime = '无限期活动';
@@ -1073,7 +1076,7 @@ class CouponController extends Controller{
    }
    private function handlerSearchDataList( $res , $searchFlag = false , $actStatus = ''){
        foreach( $res['data'] as $key=>$val ){
-            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+            $statistics = $this->getVoucherStatusByActId($val['vcId']);
             $res['data'][$key]['allNum'] = $statistics[1];
             $res['data'][$key]['useNum'] = $statistics[3];
             $res['data'][$key]['actTime'] = '';

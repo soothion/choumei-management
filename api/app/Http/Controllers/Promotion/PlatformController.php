@@ -1172,15 +1172,24 @@ class PlatformController extends Controller{
         return $itemType;
     }
    // 获取代金劵状态
-   private function getVoucherStatusByActId( $vcSn , $useEnd ){
-        $count = \App\Voucher::select(['vStatus'])->where(['vcSn'=>$vcSn])->count();
-        if( $count<1000 ) return $this->getSelectVoucherStatus($vcSn,$useEnd);
-        else return $this->getCountVoucherStatus($vcSn,$useEnd);
+   private function getVoucherStatusByActId( $vcId ){
+        $count = \App\Voucher::where(['vcId'=>$vcId])->count();
+        if( !$count )
+            return [0,0,0];
+        $useEnd = \App\Voucher::select(['vUseEnd'])->where(['vcId'=>$vcId])->first();
+        if( empty( $useEnd ) )
+            return [0,0,0];
+        $useEnd = $useEnd->toArray();
+        if( empty( $useEnd ) )
+            return [0,0,0];
+        $useEnd = $useEnd['vUseEnd'];
+        if( $count<1000 ) return $this->getSelectVoucherStatus($vcId,$useEnd);
+        else return $this->getCountVoucherStatus($vcId,$useEnd);
             
         
     }
-    private function getSelectVoucherStatus($vcSn,$useEnd){
-        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>$vcSn])->get();
+    private function getSelectVoucherStatus($vcId,$useEnd){
+        $result = \App\Voucher::select(['vStatus'])->where(['vcId'=>$vcId])->get();
         $result = $result->toArray();
         $totalNum = 0;
         $useNum = 0;
@@ -1208,9 +1217,9 @@ class PlatformController extends Controller{
         $totalNum = 0;
         $useNum = 0;
         $invalidNum = 0;
-        $totalNum = \App\Voucher::where( 'vStatus','<>',10 )->where(['vcSn'=>$vcSn])->count();
-        $useNum = \App\Voucher::where( 'vStatus','=',2 )->where(['vcSn'=>$vcSn])->count();
-        $invalidNum = \App\Voucher::where( 'vStatus','=',5 )->where(['vcSn'=>$vcSn])->count();
+        $totalNum = \App\Voucher::where( 'vStatus','<>',10 )->where(['vcId'=>$vcSn])->count();
+        $useNum = \App\Voucher::where( 'vStatus','=',2 )->where(['vcId'=>$vcSn])->count();
+        $invalidNum = \App\Voucher::where( 'vStatus','=',5 )->where(['vcId'=>$vcSn])->count();
         if( !empty($invalidNum) )
             return array( $totalNum , $useNum , $invalidNum );
         // 已失效数
@@ -1327,7 +1336,7 @@ class PlatformController extends Controller{
     // 处理列表返回的搜索条件数据
     private function handlerSearchDataList( $res , $searchFlag = false, $actStatus='' ){
         foreach( $res['data'] as $key=>$val ){
-            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+            $statistics = $this->getVoucherStatusByActId($val['vcId']);
             $res['data'][$key]['allNum'] = $statistics[0];
             $res['data'][$key]['useNum'] = $statistics[1];
             $res['data'][$key]['invalidNum'] = $statistics[2];
