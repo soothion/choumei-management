@@ -93,8 +93,9 @@
 						<select required name="status"  <%=data.status==3?"disabled":""%>>
 						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
 						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
-						<!--
-						<option value="3" <%=data.status==3?"selected":""%>>注销</option>-->
+						<%if(query.id){%>
+						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
+						<%}%>
 					</select>
 					</select>
 				</div>
