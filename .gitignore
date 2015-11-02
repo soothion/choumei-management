@@ -12,3 +12,5 @@ update.sh
 *.sql
 api/.tags
 api/.tags_sorted_by_file
+/nbproject/*
+*.htaccess

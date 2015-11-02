@@ -7,6 +7,7 @@ use DB;
 use App\SalonUser;
 use App\Merchant;
 use App\SalonRatingsRecord;
+use App\SalonScoreLog;
 use App\SalonWorks;
 use Event;
 use App\Manager;
@@ -558,14 +559,8 @@ class Salon extends Model {
     
     public static function getSalonById($salon_id)
     {
-        $salon = self::where('salonid','=',$salon_id)->get();
-        if(empty($salon))
-        {
-            return null;
-        }
-        else {
-          return $salon[0];
-        }
+        $salon = self::where('salonid','=',$salon_id)->first();
+        return $salon;
     }
 	
 	/**
@@ -586,7 +581,31 @@ class Salon extends Model {
 			
 		}
 	}
-	
+        
+        /*
+         * 更新店铺积分
+         */
+
+    public static function updateScore($salonInfo, $score,$options,$userName) {
+        DB::beginTransaction();
+        $updateRes = Salon::where(['salonid' => $options['salonid']])->update(['score' => $score]);
+        $saveStatus = false;
+        if ($updateRes!==false) {
+            $saveStatus = SalonScoreLog::Create([
+                        'salon_id' => $salonInfo->salonid,
+                        'score' => $options['type'] == 1 ? "+" . $options['score'] : "-" . $options['score'],
+                        'description' => $userName .' '. $options['msg'],
+                        'create_time' => date("Y-m-d H:i:s",time()),
+            ]);
+        }
+        if ($saveStatus) {
+            DB::commit();
+            return true;
+        } else {
+            DB::rollback();
+            return false;
+        }
+    }
 
 	/**
 	 * 添加修改操作

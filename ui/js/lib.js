@@ -66,9 +66,7 @@
 				}
 			}
 			options.timeout=options.timeout||9999;
-			if(options.timeout&&options.timeout>=10000){
-				parent.lib.popup.loading({text:'请求可能会比较慢，请耐心等候！',time:options.timeout});
-			}
+			
 			/*
 			options.headers={
 				token:localStorage.getItem('token')
@@ -85,7 +83,7 @@
 						if(data.code==-40000||data.code==-40001){
 							data.msg="登录超时，请重新登录";
 						}else if(data.code==0){
-							data.msg="系统错误！";
+							data.msg=data.msg ||"系统错误！";
 						}else{
 							data.msg="出现异常："+data.msg;
 						}
@@ -118,13 +116,7 @@
 					localStorage.setItem('token',data.token);
 				}
 			});
-			if(options.timeout&&options.timeout>=10000){
-				promise.done(function(data){
-					if(data.result==1){
-						parent.lib.popup.close();
-					}
-				});
-			}
+			
             return promise;
         },
 		getSession:function(){
@@ -794,7 +786,16 @@
                 }
             };
 			options=$.extend(options,pro.custom);
-            return lib.ajax(options);
+			var promise=lib.ajax(options)
+			if(options.timeout&&options.timeout>=10000){
+				parent.lib.popup.loading({text:'请求可能会比较慢，请耐心等候！',time:options.timeout});
+				promise.done(function(data){
+					if(data.result==1){
+						parent.lib.popup.close();
+					}
+				});
+			}
+            return promise;
         },
         setExternal:function(data){//引入外部数据，以便模板引擎渲染时能获取；
             this.external=data;
@@ -950,7 +951,6 @@
 	                   lib.ajat(ajat).render();
                    }
 				});
-
 			}
 		}).on('_ready',function(e){
 			var $target=$(e.target);
@@ -1024,15 +1024,6 @@
 			this.cfg.requiredmsg=this.el.requiredmsg||"未填写";
 			this.cfg.patternmsg=this.el.patternmsg||"不正确";
 			this.bindEvent();
-			if(!this.el.goback){
-				this.el.goback=function(){
-					if(parent!=window){
-						history.back();
-					}else{
-						window.close();
-					}
-				}
-			}
 			if(!this.el._getFormData){
 				this.el._getFormData=function(){
 					return lib.tools.getFormData($(this))
@@ -1062,6 +1053,18 @@
 				$target.trigger('error',{type:'required'});
 				return;
 			}
+			//minLength字符控制扩展
+			var minLength=$target.attr('minlength');
+			if (val&&minLength){
+				if(val.length<parseInt(minLength)){
+					$target.trigger('error',{
+						type:'error',
+						errormsg:'请输入不小于'+minLength+'个字符'
+					});
+					  return false;
+				}
+			}
+
 			//正则校验
 			var pattern=$target.attr('pattern');
 			if(val&&pattern){
@@ -1087,12 +1090,12 @@
 						if(pattern=="number"||pattern=="float"){
 							var min=$target.attr('min')
 							if(min&&parseFloat(val)<parseFloat(min)){
-								$target.trigger('error',{type:'pattern'});
+								$target.trigger('error',{type:'error',errormsg:'输入值不能小于'+min});
 								return;
 							}
 							var max=$target.attr('max')
 							if(max&&parseFloat(val)>parseFloat(max)){
-								$target.trigger('error',{type:'pattern'});
+								$target.trigger('error',{type:'error',errormsg:'输入值不能大于'+max});
 								return;
 							}
 						}
@@ -1102,9 +1105,16 @@
 			//匹配校验
 			var match=$target.attr('match');
 			if(val&&match){
-				if(val!=$.trim($('#'+match).val())){
-					$target.trigger('error',{type:'match'});
-					return;
+				if($target.attr("type")=="date"){
+					if($('#'+match).val()&&new Date(val).getTime()<new Date($('#'+match).val()).getTime()){
+						$target.trigger('error',{type:'match'});
+						return;
+					}
+				}else{
+					if(val!=$.trim($('#'+match).val())){
+						$target.trigger('error',{type:'match'});
+						return;
+					}
 				}
 			}
 			//唯一校验
@@ -1228,6 +1238,15 @@
 			parent.lib.popup.result({
 				text:(data.msg||"数据更新成功"),
 				define:function(){
+					if(!self.el.goback){
+						self.el.goback=function(){
+							if(parent!=window){
+								history.back();
+							}else{
+								window.close();
+							}
+						}
+					}
 					self.el.goback();
 				}
 			});
@@ -1246,8 +1265,9 @@
 			}).on('error',this.selector,function(e,data){
 				self[data.type]&&self[data.type](e,data);
 			}).on('submit',function(e){
-				self.validate();
 				e.preventDefault();
+				self.validate();
+				
 			}).on('save',function(e,data){
 				self.save(data);
 			}).on('response',function(e,data){
@@ -1278,30 +1298,35 @@
 				$form.trigger('save',data);
 			}else{
 				$('html,body').animate({scrollTop:help.eq(0).offset().top-50},200);
-				help.eq(0).siblings('input:visible').focus();
+				help.eq(0).parent().find('input:visible:first').focus();
 			}
 		},
 		save:function(data){
 			var $el=$(this.el);
 			if($el.attr('disabled')) return;
 			$el.attr('disabled',true);
-			parent.lib.popup.loading({text:'数据正在提交...'});
-			var self=this;
-			lib.ajax({
-				url:$el.attr('action'),
-				data:data,
-				type:this.el.method,
-				success:function(data){
-					$(self.el).trigger('response',data);
-					setTimeout(function(){
+			var action=$el.attr('action');
+			if(action.indexOf(".html")>-1){
+				location.href=action;
+			}else{
+				parent.lib.popup.loading({text:'数据正在提交...'});
+				var self=this;
+				lib.ajax({
+					url:action,
+					data:data,
+					type:"POST",
+					success:function(data){
+						$(self.el).trigger('response',data);
+						setTimeout(function(){
+							$(self.el).attr('disabled',false);
+						},1500);
+					},
+					error:function(xhr,code){
 						$(self.el).attr('disabled',false);
-					},1500);
-				},
-				error:function(xhr,code){
-					$(self.el).attr('disabled',false);
-					self.fail(null,{})
-				}
-			});
+						self.fail(null,{})
+					}
+				});
+			}
 		}
 	}
 	lib.Form=Form;

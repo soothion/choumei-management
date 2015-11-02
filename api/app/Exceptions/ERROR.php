@@ -537,7 +537,37 @@ class ERROR
 
 
 
+     ////////////APP店铺配置模块//////////////
+     /**
+      *@param 请输入有效积分数值
+      */
+     CONST STAR_CONF_SCORE_IS_ERROR=-51100;
+     /**
+      *@param 更新星级积分失败
+      */
+     CONST STAR_CONF_UPDATE_IS_ERROR=-51101;
+     /**
+      *@param 未找到相应的星级积分等级
+      */
+     CONST STAR_CONF_LEVEL_IS_ERROR=-51102;
+     /**
+      *@param 未找到该店铺信息
+      */
+      CONST STAR_CONF_SALON_INFO_IS_ERROR=-51103;
+      /**
+      *@param 修改店铺积分失败
+      */
+      CONST STAR_CONF_UPDATE_SALON_SCORE_FAILED=-51104;
+      /**
+      *@param 未找到该评分类型
+      */
+      CONST SCORE_CONF_FAILED=-51105;
+      /**
+      *@param 更新评分分值配置失败
+      */
+      CONST SCORE_CONF_UPDATE_FAILED=-51106;
      
+
      
 
      /////////////付款单相关//////////////////
@@ -550,6 +580,25 @@ class ERROR
       * @param 提现单原状态不正确
       */
      CONST PAY_WITHDRAW_WRONG_STATE = -51301;
+
+
+
+     ////////////活动管理模块//////////////
+     /**
+      *@param 活动不存在
+      */
+     CONST PROMOTION_NOT_FOUND=-51200;
+
+     /**
+      *@param 活动下线失败
+      */
+     CONST PROMOTION_OFFLINE_FAILED=-51201;
+
+     /**
+      *@param 活动关闭失败
+      */
+     CONST PROMOTION_CLOSED_FAILED=-51202;
+
 
      ////////////项目仓库//////////////
      /**
@@ -577,6 +626,5 @@ class ERROR
       *@param 项目不存在
       */
      CONST ITEM_NOT_FOUND =  -51106;
-
 
 }

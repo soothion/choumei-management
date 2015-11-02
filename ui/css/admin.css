@@ -126,7 +126,9 @@ label>input[type="checkbox"]:checked+span:before{
 	color:#498ae5;
 	border-color:#498ae5;
 }
-
+label.switch > input[type="checkbox"]:checked + span {
+  background: #58A2EC;
+ }
 .tab{
 	border:1px solid #E6EAF2;
 }
@@ -352,7 +354,7 @@ aside h2{
 /**侧边栏 end**/
 
 .wrapper{
-	margin:10px 17px;//设计图是17px
+	margin:10px 17px;
 }
 /**面包屑 start**/
 .breadcrumb{
@@ -389,38 +391,38 @@ aside h2{
 .control-separation legend{
 	padding-left:10px;
 }
-.form-vertical .control-group{
+.control-group{
 	display:table;
 	width:100%;
 }
-.form-vertical .control-label{
+.control-label{
 	display:table-cell;
 	width:170px;
 	text-align:right;
 	padding-right:10px;
 }
-.form-vertical .control{
+.control{
 	display:table-cell;
 }
-.form-vertical .control:after {
+.control:after {
     clear: both;
     content: ".";
     display: block;
     height: 0;
     visibility: hidden;
 }
-.form-vertical .control input,
-.form-vertical .control textarea,
-.form-vertical .control select{
+.control input,
+.control textarea,
+.control select{
 	width:20%;
 	min-width:250px;
 	margin-right:10px;
 }
-.form-vertical .control .normal{
+.control .normal{
 	width:auto!important;
 	min-width:80px!important;
 }
-.form-vertical .control textarea{
+.control textarea{
 	height:80px;
 	padding:5px 10px;
 	line-height:20px;
@@ -444,8 +446,9 @@ aside h2{
 }
 .control-help{
 	color:#b94a48;
+	line-height:1.5;
 }
-.control-help:before{
+.control-help:before,.control-success:before{
 	position:relative;
 	line-height:12px;
 	top:1px;
@@ -454,6 +457,20 @@ aside h2{
 	margin-right:4px;
 	content:"\f06a";
 	font-family:FontAwesome;
+}
+.control-success{
+	color:#58A2EC;
+	line-height:1.5;
+}
+.control-success:before{
+	content:"\f058";
+	color:#58A2EC
+}
+.control-help.large,.control-success.large{
+	font-size:16px;
+}
+.control-help.large:before,.control-success.large:before{
+	font-size:20px;
 }
 .red{
 	color:red;
@@ -1091,10 +1108,6 @@ form[data-role="hash"] input[type="date"]{
 .popup-cropper{
 	z-index:10000;
 	background:rgba(0,0,0,0.4);
-<<<<<<< HEAD
-=======
-	
->>>>>>> management_20151010_v1.4.6
 }
 .popup-cropper-image{
 	text-align:center;

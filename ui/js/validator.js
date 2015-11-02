@@ -2,11 +2,11 @@
 * @Author: anchen
 * @Date:   2015-07-03 11:12:48
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-10-10 11:35:25
+* @Last Modified time: 2015-10-22 13:46:34
 */
 
 $(document).ready(function(){
-    $("input[pattern='float']").on('keydown',function(e){
+    $("body").on("keydown","input[pattern='float']",function(e){
         var key = e.which;
         if ((key > 95 && key < 106) || //小键盘上的0到9  
             (key > 47 && key < 58) || //大键盘上的0到9  
@@ -16,7 +16,7 @@ $(document).ready(function(){
             return true;
         } else {
             return false;
-        }     
+        }   
     }).on('keypress',function(e){
         var len = $(this).attr('len') || 12;
         var decimal = $(this).attr('decimal') || 2;
@@ -51,7 +51,7 @@ $(document).ready(function(){
         }
     });
 
-    $("input[pattern='number']").on('keydown',function(e){
+    $("body").on("keydown","input[pattern='number']",function(e){
         var key = e.which;
         //alert(key)
         if ((key > 95 && key < 106) || //小键盘上的0到9  

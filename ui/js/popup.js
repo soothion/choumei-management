@@ -6,28 +6,29 @@ define(function(require,exports,module){
             options.type = 'alert';
             var popup = $(new EJS({url: path}).render({options: options}));
             popup.on('click', '.popup-alert-define', function () {
+				self.close();
                 options.define && options.define.call(this);
-                self.close();
             });
             this.overlay();
             this.append(popup);
-			options.complete && options.complete();
+			options.complete && options.complete.call(popup[0],options);
         },
         confirm: function (options) {
             var self=this;
             options.type = 'confirm';
             var popup = $(new EJS({url: path}).render({options: options}));
             popup.on('click', '.popup-alert-define', function () {
+				self.close();
                 options.define && options.define.call(this,popup.find('.popup-prompt-input').val());
-                self.close();
+                
             });
             popup.on('click', '.popup-alert-cancel', function () {
+				self.close();
 				options.cancel && options.cancel();
-                self.close();
             });
             this.overlay();
             this.append(popup);
-			options.complete && options.complete();
+			options.complete && options.complete.call(popup[0],options);
         },
         prompt: function (options) {
             options.inputType = options.inputType || 'text';
@@ -40,15 +41,15 @@ define(function(require,exports,module){
             var popup = $(new EJS({url: path}).render({options: options}));
             popup.on('click', '.popup-sheet-item', function () {
                 var $this = $(this);
+				self.close();
                 options.define && options.define.call(this,{id: $this.data('id'), name: $this.text()});
-                self.close();
             });
             popup.on('click', '.popup-sheet-cancel', function () {
                 self.close();
             });
             this.overlay();
             this.append(popup);
-			options.complete && options.complete();
+			options.complete && options.complete.call(popup[0],options);
         },
         menu: function (options) {
             options.type = 'menu';
@@ -67,7 +68,7 @@ define(function(require,exports,module){
                 self.close();
             });
             this.append(popup);
-			options.complete && options.complete();
+			options.complete && options.complete.call(popup[0],options);
         },
 		swiper:function(options){
 			var self=this;
@@ -103,7 +104,7 @@ define(function(require,exports,module){
 					preloadImages:true,
 					spaceBetween: 0
 				});
-				options.complete && options.complete();
+				options.complete && options.complete.call(popup[0],options);
 			});
 		},
 		box:function(options){
@@ -134,7 +135,7 @@ define(function(require,exports,module){
 
             this.overlay();
             $('body').append(popup);
-			options.complete && options.complete();
+			options.complete && options.complete.call(popup[0],options);
 		},
         overlay: function () {
             var $dom=$('<div class="popup-overlay"></div>');

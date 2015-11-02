@@ -118,13 +118,38 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 	'as'=>'AlipayRefundNotify.callback_alipay',
 	'uses'=>'Alipay\AlipayRefundNotifyController@callback_alipay'
 ));
+// 营销平台活动用到的
+Route::any('platform/getRequestDepartment',array(  
+    'as'=>'platform.getRequestDepartment',
+    'uses'=>'Promotion\PlatformController@getRequestDepartment'
+));
+Route::any('platform/getDepartmentManager/{id}',array(  
+    'as'=>'platform.getDepartmentManager',
+    'uses'=>'Promotion\PlatformController@getDepartmentManager'
+));
+Route::any('platform/getActNum',array(  
+    'as'=>'platform.getActNum',
+    'uses'=>'Promotion\PlatformController@getActNum'
+));
+Route::any('coupon/getActNum',array(  
+    'as'=>'coupon.getActNum',
+    'uses'=>'Coupon\CouponController@getActNum'
+));
+Route::any('platform/checkSerial',array(  
+    'as'=>'platform.checkSerial',
+    'uses'=>'Promotion\PlatformController@checkSerial'
+));
+Route::any('platform/getItemType',array(  
+    'as'=>'platform.getItemType',
+    'uses'=>'Promotion\PlatformController@getItemType'
+));
 
 //商家后台提现
 Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
 //权限管理后台接口
- Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
- // Route::group(['middleware'], function(){
+Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+ // Route::group(['middleware' => ['before']], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -476,8 +501,47 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 		'uses'=>'Merchant\SalonController@del'
 	));		
 	
+    //店铺星级配置管理
+    Route::any('starconf/index', array(//星级积分列表
+        'as' => 'starconf.index',
+        'uses' => 'Merchant\StarconfController@index'
+    ));
+    Route::any('starconf/update', array(//星级积分更新
+        'as' => 'starconf.update',
+        'uses' => 'Merchant\StarconfController@update'
+    ));
+    Route::any('/starconf/online', array(// 开启/暂停  店铺星级积分
+        'as' => 'starconf.online',
+        'uses' => 'Merchant\StarconfController@online'
+    ));
 
-	Route::any('salonAccount/index',array(  //店铺账号列表
+    //店铺星级积分管理
+    Route::any('salonstar/index', array(//星级积分列表
+        'as' => 'salonstar.index',
+        'uses' => 'Merchant\SalonstarController@index'
+    ));
+    Route::any('salonstar/update', array(//增加/减少 积分
+        'as' => 'salonstar.update',
+        'uses' => 'Merchant\SalonstarController@update'
+    ));
+    Route::any('salonstar/show', array(//积分详情
+        'as' => 'salonstar.show',
+        'uses' => 'Merchant\SalonstarController@show'
+    ));
+    
+    //评分对应分值配置
+     Route::any('scoreconf/index', array(//评分配置列表
+        'as' => 'scoreconf.index',
+        'uses' => 'Merchant\ScoreconfController@index'
+    ));
+      Route::any('scoreconf/update', array(//评分配置跟新
+        'as' => 'scoreconf.update',
+        'uses' => 'Merchant\ScoreconfController@update'
+    ));
+
+
+
+    Route::any('salonAccount/index',array(  //店铺账号列表
 		'as'=>'salonAccount.index',
 		'uses'=>'Merchant\SalonAccountController@index'
 	));	
@@ -636,6 +700,21 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 	Route::any('refund/reject',array(  //退款拒绝
 		'as'=>'refund.reject',
 		'uses'=>'Transaction\OrderRefundController@reject'
+    ));
+    
+    Route::any('appointment/index',array(  //预约造型师列表
+		'as'=>'appointment.index',
+		'uses'=>'Transaction\AppointmentController@index'
+    ));
+    
+    Route::any('appointment/show/{id}',array(  //查看预约造型师
+		'as'=>'appointment.show',
+		'uses'=>'Transaction\AppointmentController@show'
+    ));
+    
+    Route::any('appointment/export',array(  //导出预约造型师列表
+		'as'=>'appointment.export',
+		'uses'=>'Transaction\AppointmentController@export'
     ));
 	
 	//消息管理
@@ -875,6 +954,168 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 		'uses'=>'LoginQuery\LoginQueryController@export'
     ));
 
+    
+    // 劵
+    Route::any('voucher/list',array(  
+		'as'=>'voucher.list',
+		'uses'=>'VoucherTicket\TicketController@ticketList'
+    ));
+    Route::any('voucher/invalidStatus/{id}',array( 
+		'as'=>'voucher.invalidStatus',
+		'uses'=>'VoucherTicket\TicketController@invalidStatus'
+    ));
+    Route::any('voucher/info/{id}',array( 
+		'as'=>'voucher.info',
+		'uses'=>'VoucherTicket\TicketController@info'
+    ));
+    Route::any('voucher/exportTicketList',array( 
+		'as'=>'voucher.exportTicketList',
+		'uses'=>'VoucherTicket\TicketController@exportTicketList'
+    ));
+    // 平台活动配置
+    Route::any('platform/add',array(  
+		'as'=>'platform.add',
+		'uses'=>'Promotion\PlatformController@addVoucherConf'
+    ));
+    
+    Route::any('platform/list',array(  
+		'as'=>'platform.list',
+		'uses'=>'Promotion\PlatformController@confList'
+    ));
+    Route::any('platform/actView/{id}',array(  
+		'as'=>'platform.actView',
+		'uses'=>'Promotion\PlatformController@actView'
+    ));
+    Route::any('platform/getInfo/{id}',array(  
+		'as'=>'platform.getInfo',
+		'uses'=>'Promotion\PlatformController@getInfo'
+    ));
+    Route::any('platform/editConf',array(  
+		'as'=>'platform.editConf',
+		'uses'=>'Promotion\PlatformController@editConf'
+    ));
+    Route::any('platform/offlineConf/{id}',array(  
+		'as'=>'platform.offlineConf',
+		'uses'=>'Promotion\PlatformController@offlineConf'
+    ));
+    Route::any('platform/closeConf/{id}',array(  
+		'as'=>'platform.closeConf',
+		'uses'=>'Promotion\PlatformController@closeConf'
+    ));
+    Route::any('platform/upConf/{id}',array(  
+		'as'=>'platform.upConf',
+		'uses'=>'Promotion\PlatformController@upConf'
+    ));
+    Route::any('platform/exportList',array(  
+		'as'=>'platform.exportList',
+		'uses'=>'Promotion\PlatformController@exportList'
+    ));
+    // 代金劵配置
+    Route::any('coupon/add',array(  
+		'as'=>'coupon.add',
+		'uses'=>'Coupon\CouponController@addConf'
+    ));
+    Route::any('coupon/list',array(  
+		'as'=>'coupon.list',
+		'uses'=>'Coupon\CouponController@confList'
+    ));
+    Route::any('coupon/actView/{id}',array(  
+		'as'=>'coupon.actView',
+		'uses'=>'Coupon\CouponController@actView'
+    ));
+    Route::any('coupon/getInfo/{id}',array(  
+		'as'=>'coupon.getInfo',
+		'uses'=>'Coupon\CouponController@getInfo'
+    ));
+    Route::any('coupon/editConf',array(  
+		'as'=>'coupon.editConf',
+		'uses'=>'Coupon\CouponController@editConf'
+    ));
+    Route::any('coupon/offlineConf/{id}',array(  
+		'as'=>'coupon.offlineConf',
+		'uses'=>'Coupon\CouponController@offlineConf'
+    ));
+    Route::any('coupon/closeConf/{id}',array(  
+		'as'=>'coupon.closeConf',
+		'uses'=>'Coupon\CouponController@closeConf'
+    ));
+    Route::any('coupon/upConf/{id}',array(  
+		'as'=>'coupon.upConf',
+		'uses'=>'Coupon\CouponController@upConf'
+    ));
+    Route::any('coupon/getCoupon/{id}',array(  
+		'as'=>'coupon.getCoupon',
+		'uses'=>'Coupon\CouponController@getCoupon'
+    ));
+    Route::any('coupon/exportCoupon/{id}',array(  
+		'as'=>'coupon.exportCoupon',
+		'uses'=>'Coupon\CouponController@exportCoupon'
+    ));
+    Route::any('coupon/exportList',array(  
+		'as'=>'coupon.exportList',
+		'uses'=>'Coupon\CouponController@exportList'
+    ));
 
+
+    //红包活动管理
+    Route::any('laisee/create', array(//新增红包活动
+        'as' => 'laisee.create',
+        'uses' => 'Laisee\LaiseeController@create'
+    ));
+
+    Route::any('laisee/update', array(//修改红包活动
+        'as' => 'laisee.update',
+        'uses' => 'Laisee\LaiseeController@update'
+    ));
+    Route::any('laisee/index', array(// 红包活动列表
+        'as' => 'laisee.index',
+        'uses' => 'Laisee\LaiseeController@index'
+    ));
+    Route::any('laisee/show/{id}', array(// 活动概况
+        'as' => 'laisee.show',
+        'uses' => 'Laisee\LaiseeController@show'
+    ));
+     Route::any('laisee/export', array(// 活动列表导出
+        'as' => 'laisee.export',
+        'uses' => 'Laisee\LaiseeController@export'
+    ));
+     
+    Route::any('laisee/online/{id}', array(// 活动上线
+        'as' => 'laisee.online',
+        'uses' => 'Laisee\LaiseeController@online'
+    ));
+    Route::any('laisee/offline/{id}', array(// 活动下线
+        'as' => 'laisee.offline',
+        'uses' => 'Laisee\LaiseeController@offline'
+    ));
+    Route::any('laisee/close/{id}', array(// 活动关闭
+        'as' => 'laisee.close',
+        'uses' => 'Laisee\LaiseeController@close'
+    ));
+    Route::any('laisee/itemTypes', array(// 现金券可使用项目类型列表
+        'as' => 'laisee.itemTypes',
+        'uses' => 'Laisee\LaiseeController@itemTypes'
+    ));
+    
+    Route::any('bonus/index', array(// 红包列表
+        'as' => 'bonus.index',
+        'uses' => 'Laisee\BonusController@index'
+    ));
+    Route::any('bonus/export', array(// 红包列表导出
+        'as' => 'bonus.export',
+        'uses' => 'Laisee\BonusController@export'
+    ));
+    Route::any('bonus/show/{id}', array(// 红包详情
+        'as' => 'bonus.show',
+        'uses' => 'Laisee\BonusController@show'
+    ));
+    Route::any('/bonus/close/{id}', array(// 红包失效 
+        'as' => 'bonus.close',
+        'uses' => 'Laisee\BonusController@close'
+    ));
+    
+    
+    
+    
+    
 });
-

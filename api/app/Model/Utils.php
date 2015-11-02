@@ -7,6 +7,7 @@ namespace App;
  */
 class Utils
 {
+    private static  $DES_KEY = "authorlsptime20141225\0\0\0";
     /**
      * 外部调用统一加密密钥
      * @var unknown
@@ -333,7 +334,7 @@ class Utils
 	 */
 	public static function log($dirname,$content,$filename = '')
 	{
-	    $dir = realpath(dirname(__FILE__).DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."storage").DIRECTORY_SEPARATOR.$dirname.DIRECTORY_SEPARATOR;
+	    $dir = storage_path().DIRECTORY_SEPARATOR.$dirname.DIRECTORY_SEPARATOR;
 	    
 	    $old_mask = umask(0);
 	    //check & make dir
@@ -395,4 +396,36 @@ class Utils
 	    }
 	    return $res;
 	}	
+    //发送短信
+    public static function sendphonemsg($mobilephone, $smstxt) {
+        $url = env('SMS_URL_CONF');
+
+        $data = array('phone' => $mobilephone, 'smstxt' => $smstxt);
+        $codeVal = http_build_query($data);
+        $DesObj = new \Service\NetDesCrypt;
+        $DesObj->setKey( self::$DES_KEY );
+        //加密参数
+        $desStr = $DesObj->encrypt($codeVal);
+
+        $param['code'] = $desStr;
+        $result = self::curlGet($url, $param);
+        return $result;
+    }
+    // curl get
+    private static function curlGet($url, $data) {
+
+        $url = $url . http_build_query($data);
+        // 1. 初始化
+        $ch = curl_init();
+        // 2. 设置选项，包括URL
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0); //设置header
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        // 3. 执行并获取HTML文档内容
+        $output = curl_exec($ch);
+        // 4. 释放curl句柄
+        curl_close($ch);
+        return $output;
+    }
 }

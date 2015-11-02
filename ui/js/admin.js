@@ -87,7 +87,7 @@ $(function(){
 					//同步组合框input-switch/placeholder-switch
 					var parent=$this.parent('.input-switch');
 					if(parent.length==1){
-						parent.children('select').val($this.index()-1);
+						parent.children('select option').eq($this.index()-1).attr('selected',true);
 						$this.show().siblings('input').hide();
 					}
 					var parent=$this.parent('.placeholder-switch');
@@ -135,10 +135,11 @@ $(function(){
 			$(this).closest('form[data-role="hash"]').submit();
 		}
 	}).on('submit','form[data-role="export"]',function(e){//导出功能
+		var params=lib.tools.getFormData($(this));
 		console.log(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
 		e.preventDefault();
 		var total=$('#pager-total').val();
-		if(total&&parseInt(total)>5000){
+		if(total&&parseInt(total)>5000&&!params.currentpage){
 			parent.lib.popup.result({bool:false,text:"数据大于5000条不能导出"});
 		}else{
 			window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
@@ -179,7 +180,7 @@ $(function(){
 						$this.attr('disabled',false);
 					},1100);
 					if(data.result==1){
-						var successEvent=$this.attr('onsuccess');
+						var successEvent=$this.attr('onsuccess')||$this.attr('onreset');
 						if(successEvent=="remove"){
 							parent.lib.popup.result({
 								text:"删除成功",
@@ -192,7 +193,7 @@ $(function(){
 								var fn=eval("(function(){"+successEvent+"})");
 								fn.call($this[0]);
 							}
-							$this.trigger('success',data);//成功后会触发reset事件
+							$this.trigger('success',data).trigger("reset");//成功后会触发reset事件
 						}
 					}else{
 						var failEvent=$this.attr('onfail');
@@ -226,7 +227,7 @@ $(function(){
 	/**input-switch/placeholder-switch切换**/
 	$body.on('change','.input-switch select',function(){//input-switch切换输入框
 		var $this=$(this);
-		$this.parent().find('input').eq($this.val()).show().siblings('input').hide().val('');
+		$this.parent().find('input').eq($this.children("option:selected").index()).show().siblings('input').hide().val('');
 		if($.placeholder){
 			$.placeholder($this.parent().find('input'));
 		}
@@ -546,7 +547,7 @@ $(function(){
 		var $this=$(this);
 		var maxlength=$this.parent().attr('maxlength');
 		var value=$this.val();
-		if(maxlength&&value){
+		if(maxlength){
 			$this.parent().append('<span class="keypress-help">还可以输入<em>'+(parseInt(maxlength)-$.trim(value.length))+'</em>个字</span>');
 		}
 		document.oncontextmenu=function(e){return false;}

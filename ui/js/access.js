@@ -28,6 +28,15 @@
 	'bounty.refundIndex':'/module/transaction/reward/refundment.html',
 	'requestLog.index':'/module/transaction/other/device.html',
 	'ticket.index':'/module/transaction/other/ticket.html',
+	'appointment.index':'/module/transaction/hairstyle/index.html',
+	'voucher.list':'/module/marketing/ticket/cashCouponList/index.html',
+	'platform.list':'/module/marketing/ticket/platformAct/index.html',
+	'coupon.list':'/module/marketing/ticket/ticketAct/index.html',
+	'laisee.index':'/module/marketing/ticket/packetAct/index.html',
+	'bonus.index':'/module/marketing/ticket/packetList/index.html',
+	'starconf.index':'/module/config/app/index.html',
+	'salonstar.index':'/module/config/app/vantages.html',
+	'scoreconf.index':'/module/config/app/score.html',
 	'info.index':'/module/store/info/index.html'
 }
 var access={

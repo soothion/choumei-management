@@ -100,12 +100,8 @@ class User extends  Model
     }
 
     public static function getUserById($uid) {
-        $user = Self::getQuery()->where("user_id", "=", $uid)->get();
-        if (empty($user)) {
-            return [];
-        } else {
-            return $user[0];
-        }
+        $user = Self::getQuery()->where("user_id", "=", $uid)->first();
+        return $user;
     }
 
     //获取最近15天每天的用户注册数
@@ -181,6 +177,11 @@ class User extends  Model
         return $count;
     }
 
+    // 验证手机号码是否存在
+    public static function verifyUserPhoneExists( $phone ){
+        $exists = Self::select(['user_id','os_type'])->where(['mobilephone'=>$phone])->first();
+        return $exists;
+    }
 
 
 }
