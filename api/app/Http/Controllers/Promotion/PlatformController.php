@@ -1240,21 +1240,24 @@ class PlatformController extends Controller{
         $getNeedMoney = $getTypes['getNeedMoney'];
         $getItemType = $getTypes['getItemTypes'];
         $sms = $getTypes['SMS_ON_GAINED'];
-        $useEnd = date('Y-m-d', $getTypes['useEnd']);
 
         if( !empty($getItemType) || !empty($getNeedMoney)  || $nowItStart || $nowGtEnd )
             return false;
 
         // 找到活动对应的手机号码
-        $phoneList = \App\Voucher::select(['vMobilephone'])->whereRaw('vcId='.$vcId.' and ( vStatus=3 or vStatus=1)')->get()->toArray();
+        $phoneList = \App\Voucher::select(['vMobilephone','vcTitle','vUseMoney','vUseEnd'])->whereRaw('vcId='.$vcId.' and ( vStatus=3 or vStatus=1)')->get()->toArray();
 
-        $userMoney = $getTypes['useMoney'];
+        $userMoney = $phoneList[0]['vUseMoney'];
+        $vcTitle = $phoneList[0]['vcTitle'];
+        $useEnd = date('Y-m-d H:i:s',$phoneList[0]['vUseEnd']);
+        $pushUseEnd = date('Y-m-d',$phoneList[0]['vUseEnd']);
         $osType = array( '','ANDROID','IOS' );
         
         foreach($phoneList as $val){
             $successMsg = date('Y-m-d H:i:s') . " 代金劵发送短信的手机号码成功的有 " . $val['vMobilephone'];
             $errMsg = date('Y-m-d H:i:s') .  "代金劵发送短信的手机号码失败的有" . $val['vMobilephone'];
             if( !empty($sms) ){
+                $sms = str_replace(['[useMoney]','[name]','[overtime]'], [$userMoney,$vcTitle,$useEnd], $sms);
                 $res = \App\Utils::sendphonemsg($val['vMobilephone'],$sms);
                 $successMsg .= ' - ' .$res;
                 $errMsg .= ' - '.$res;
@@ -1273,7 +1276,7 @@ class PlatformController extends Controller{
                 if( !empty( $osType[ $userId['os_type'] ] ) )
                     $dataPush['OS_TYPE'] = $osType[ $userId['os_type'] ];
                 $dataPush['TITLE'] = '您获得了一张代金券';
-                $dataPush['MESSAGE'] = '您获得了一张价值￥'. $userMoney .'的代金券，'. $useEnd .'前使用有效，赶快去消费吧(点击查看详情)。';
+                $dataPush['MESSAGE'] = '您获得了一张价值￥'. $userMoney .'的代金券，'. $pushUseEnd .'前使用有效，赶快去消费吧(点击查看详情)。';
                 $dataPush['PRIORITY'] = 1;
                 $dataPush['EVENT'] = '{"event":"voucherList","userId":"'.$userId['user_id'].'","msgType":"6"}';
                 $dataPush['STATUS'] = 'NEW';
