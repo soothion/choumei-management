@@ -47,7 +47,7 @@ class AlipayNotify {
 			//获取支付宝远程服务器ATN结果（验证是否是支付宝发来的消息）
 			$responseTxt = 'true';
 			if (! empty($_POST["notify_id"])) {$responseTxt = $this->getResponse($_POST["notify_id"]);}
-			simple_log(date("Y-m-d H:i:s") . "\t  sign is [".strval($isSign)."] http response is ['{$responseTxt}']\t\n", "alipay_callback");
+			//simple_log(date("Y-m-d H:i:s") . "\t  sign is [".strval($isSign)."] http response is ['{$responseTxt}']\t\n", "alipay_callback");
 			//写日志记录
 			//if ($isSign) {
 			//	$isSignStr = 'true';

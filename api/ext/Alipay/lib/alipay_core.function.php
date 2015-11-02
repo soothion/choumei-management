@@ -130,7 +130,7 @@ function getHttpResponseGET($url,$cacert_url) {
 	curl_setopt($curl, CURLOPT_CAINFO,$cacert_url);//证书地址
 	$responseText = curl_exec($curl);
 	$curl_error = curl_error($curl);
-	simple_log(date("Y-m-d H:i:s") . "\t  curl error is {$curl_error}\t\n", "alipay_callback");
+	//simple_log(date("Y-m-d H:i:s") . "\t  curl error is {$curl_error}\t\n", "alipay_callback");
 	//var_dump( curl_error($curl) );//如果执行curl过程中出现异常，可打开此开关，以便查看异常内容
 	curl_close($curl);
 	
