@@ -380,6 +380,7 @@ $(function(){
 		var _this=this;
 		$(this).closest('.table').find('tbody input[type="checkbox"]').each(function(){
 			if(!this.disabled){
+				console.log(this.checked);
 				this.checked=bool;
 				$(this).trigger('change');
 			}

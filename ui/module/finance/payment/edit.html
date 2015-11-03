@@ -30,6 +30,9 @@
 							<option <%=data.type==1?"selected":""%> value="1">付交易代收款</option>
 							<option <%=data.type==2?"selected":""%> value="2">付业务投资款</option>
                         </select>
+						<%if(query.id){%>
+							<input type="hidden" name="type" value="<%=data.type%>" />
+						<%}%>
                     </div>
                 </div>
                 <div class="control-separation">
