@@ -72,6 +72,7 @@
                 shopData.workImg = "";
             }
         } 
+        $('form').attr('disabled',true);
         lib.ajax({
             type: "post",
             url : (type=="add"?"salon/save":"salon/update"),
@@ -80,7 +81,6 @@
             parent.lib.popup.result({
                 bool:data.result == 1,
                 text:(data.result == 1?"店铺信息提交成功":data.msg),
-                time:2000,
                 define:function(){
                     if(data.result == 1){
                         sessionStorage.removeItem('add-shop-data');
@@ -94,7 +94,9 @@
                     }
                 }
             });
-           
+           setTimeout(function(){
+            $('form').attr('disabled',false);
+           }, 2000);
         });
     } 
     

@@ -685,7 +685,7 @@ class LaiseeController extends Controller {
             ];
         }
         $res[] = [
-            'typeid' => implode(",", $typeidStr),
+            'typeid' => 0,
             'typename' => "无限制券",
         ];
         return $this->success($res);

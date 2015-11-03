@@ -132,7 +132,7 @@
             <%data.forEach(function(item){%>
             <%if ( checkedIds && checkedIds.indexOf(item.typeid.toString()) !=-1 ){%>
             <label class="checkbox">
-                <input type="checkbox" checked="checked" name="limitItemTypes" value="<%=item.typeid%>">
+                <input type="checkbox" disabled='disabled' checked="checked" name="limitItemTypes" value="<%=item.typeid%>">
                 <span><%=item.typename%></span>
             </label>
             <%}%>
