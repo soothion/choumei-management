@@ -100,7 +100,7 @@
                              data.itemTypeArr && data.itemTypeArr.forEach(function(item,i){
                             %>
                                 <label class="checkbox">
-                                    <input type="checkbox"  name="getItemTypes" checked value="<%=item.typeid%>" >
+                                    <input type="checkbox"  name="getItemTypes" checked value="<%=item.typeid%>" disabled>
                                     <span><%=item.typename%></span>
                                 </label> 
                             <%
@@ -156,7 +156,7 @@
                              data.limitItemArr && data.limitItemArr.forEach(function(item,i){
                             %>
                                 <label class="checkbox">
-                                    <input type="checkbox"  name="getItemTypes" checked value="<%=item.typeid%>" >
+                                    <input type="checkbox"  name="getItemTypes" checked value="<%=item.typeid%>" disabled>
                                     <span><%=item.typename%></span>
                                 </label> 
                             <%

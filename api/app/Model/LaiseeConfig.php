@@ -105,7 +105,7 @@ class LaiseeConfig extends Model {
                 'FEW_DAY' => ($val['few_day']), //TODO  有效时间需要再次确认
                 'useMoney' => $val['vUseMoney'],
                 'useTotalNum' => $val['vNumber'],
-                'useItemTypes' => $val['vUseItemTypes'],
+                'useItemTypes' => empty($val['vUseItemTypes'])?'':$val['vUseItemTypes'],
                 'useNeedMoney' => $val['vUseNeedMoney'],
                 'status' => 2,
                 'SMS_ON_GAINED' => $data['sms_on_gained'],
@@ -153,7 +153,7 @@ class LaiseeConfig extends Model {
                     'FEW_DAY' => ($val['few_day']), //TODO  有效时间需要再次确认
                     'useMoney' => $val['vUseMoney'],
                     'useTotalNum' => $val['vNumber'],
-                    'useItemTypes' => $val['vUseItemTypes'],
+                    'useItemTypes' => empty($val['vUseItemTypes'])?'':$val['vUseItemTypes'],
                     'useNeedMoney' => $val['vUseNeedMoney'],
                     'status' => 2,
                     'SMS_ON_GAINED' => $data['sms_on_gained'],
@@ -201,6 +201,7 @@ class LaiseeConfig extends Model {
 
     private static function updateVoucherConfLaisee($data) {
         $conf = $data['voucher'];
+//        print_r($conf);exit;
         $vVoucherCount = count($conf);
         $vcsns = [];
         //先修改 
@@ -212,7 +213,7 @@ class LaiseeConfig extends Model {
                         'FEW_DAY' => ($val['few_day']),
                         'useMoney' => $val['vUseMoney'],
                         'useTotalNum' => $val['vNumber'],
-                        'useItemTypes' => $val['vUseItemTypes'],
+                        'useItemTypes' => empty($val['vUseItemTypes'])?'':$val['vUseItemTypes'],
                         'useNeedMoney' => $val['vUseNeedMoney'],
                         'SMS_ON_GAINED' => $data['sms_on_gained'],
                     ];
@@ -230,7 +231,7 @@ class LaiseeConfig extends Model {
                         'FEW_DAY' => ($val['few_day']),
                         'useMoney' => $val['vUseMoney'],
                         'useTotalNum' => $val['vNumber'],
-                        'useItemTypes' => $val['vUseItemTypes'],
+                        'useItemTypes' => empty($val['vUseItemTypes'])?'':$val['vUseItemTypes'],
                         'useNeedMoney' => $val['vUseNeedMoney'],
                         'status' => 2,
                         'SMS_ON_GAINED' => $data['sms_on_gained'],
@@ -271,7 +272,7 @@ class LaiseeConfig extends Model {
                         'FEW_DAY' => ($val['few_day']),
                         'useMoney' => $val['vUseMoney'],
                         'useTotalNum' => $val['vNumber'],
-                        'useItemTypes' => $val['vUseItemTypes'],
+                        'useItemTypes' => empty($val['vUseItemTypes'])?'':$val['vUseItemTypes'],
                         'useNeedMoney' => $val['vUseNeedMoney'],
                         'SMS_ON_GAINED' => $data['sms_on_gained'],
                     ];
@@ -289,7 +290,7 @@ class LaiseeConfig extends Model {
                         'FEW_DAY' => ($val['few_day']),
                         'useMoney' => $val['vUseMoney'],
                         'useTotalNum' => $val['vNumber'],
-                        'useItemTypes' => $val['vUseItemTypes'],
+                        'useItemTypes' => empty($val['vUseItemTypes'])?'':$val['vUseItemTypes'],
                         'useNeedMoney' => $val['vUseNeedMoney'],
                         'SMS_ON_GAINED' => $data['sms_on_gained'],
                         'status' => 2,

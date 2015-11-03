@@ -194,6 +194,13 @@ class PlatformController extends Controller{
         $addRes = \App\VoucherConf::insertGetId( $data );
         if( $data['getTypes'] == '3' ){
             $phoneArr = $phoneList;
+            if( isset($data['FEW_DAY']) && !empty( $data['FEW_DAY']) ){
+                $useStart = strtotime(date('Y-m-d') . ' 00:00:00');
+                $useEnd = (intval( $data['FEW_DAY'] ) * 3600 * 24) + strtotime(date('Y-m-d') . ' 23:59:59');
+            }elseif(isset($post['addActLimitStartTime']) && isset($post['addActLimitEndTime']) && !empty($post['addActLimitStartTime'])  && !empty($post['addActLimitEndTime'])){
+                $useStart = strtotime($post['addActLimitStartTime']);
+                $useEnd = strtotime($post['addActLimitEndTime']);
+            }
             $voucherData = array(
                 'vcId' =>   $addRes,
                 'vcSn' =>   $data['vcSn'],
@@ -203,8 +210,8 @@ class PlatformController extends Controller{
                 'vUseItemTypes' => isset($data['useItemTypes'])? $data['useItemTypes'] : '',
                 'vUseLimitTypes' => isset($data['useLimitTypes']) ? $data['useLimitTypes'] : '',
                 'vUseNeedMoney' => isset($data['useNeedMoney']) ? $data['useNeedMoney'] : '',
-                'vUseStart' => isset($data['useStart'])? $data['useStart'] :'',
-                'vUseEnd' => isset($data['useEnd']) ? $data['useEnd'] : '',
+                'vUseStart' => isset($useStart)? $useStart :'',
+                'vUseEnd' => isset($useEnd) ? $useEnd : '',
                 'vAddTime' => time(),
             );
             // 记录已经发放的劵的数量
@@ -642,7 +649,7 @@ class PlatformController extends Controller{
         $voucherConfInfo['consumeMoney'] = 0;
         $voucherConfInfo['invalidNum'] = 0;
         
-        $totalNum = \App\Voucher::whereRaw( 'vcId='.$id.' and vStatus<>10 and vStatus<>3 ' )->count();
+        $totalNum = \App\Voucher::whereRaw( 'vcId='.$id )->count();
         if( empty($totalNum) )  return $this->success( $voucherConfInfo );
         
         $voucherConfInfo['allNum'] = $totalNum;
@@ -1165,15 +1172,24 @@ class PlatformController extends Controller{
         return $itemType;
     }
    // 获取代金劵状态
-   private function getVoucherStatusByActId( $vcSn , $useEnd ){
-        $count = \App\Voucher::select(['vStatus'])->where(['vcSn'=>$vcSn])->count();
-        if( $count<1000 ) return $this->getSelectVoucherStatus($vcSn,$useEnd);
-        else return $this->getCountVoucherStatus($vcSn,$useEnd);
+   private function getVoucherStatusByActId( $vcId ){
+        $count = \App\Voucher::where(['vcId'=>$vcId])->count();
+        if( !$count )
+            return [0,0,0];
+        $useEnd = \App\Voucher::select(['vUseEnd'])->where(['vcId'=>$vcId])->first();
+        if( empty( $useEnd ) )
+            return [0,0,0];
+        $useEnd = $useEnd->toArray();
+        if( empty( $useEnd ) )
+            return [0,0,0];
+        $useEnd = $useEnd['vUseEnd'];
+        if( $count<1000 ) return $this->getSelectVoucherStatus($vcId,$useEnd);
+        else return $this->getCountVoucherStatus($vcId,$useEnd);
             
         
     }
-    private function getSelectVoucherStatus($vcSn,$useEnd){
-        $result = \App\Voucher::select(['vStatus'])->where(['vcSn'=>$vcSn])->get();
+    private function getSelectVoucherStatus($vcId,$useEnd){
+        $result = \App\Voucher::select(['vStatus'])->where(['vcId'=>$vcId])->get();
         $result = $result->toArray();
         $totalNum = 0;
         $useNum = 0;
@@ -1201,9 +1217,9 @@ class PlatformController extends Controller{
         $totalNum = 0;
         $useNum = 0;
         $invalidNum = 0;
-        $totalNum = \App\Voucher::where( 'vStatus','<>',10 )->count();
-        $useNum = \App\Voucher::where( 'vStatus','=',2 )->count();
-        $invalidNum = \App\Voucher::where( 'vStatus','=',5 )->count();
+        $totalNum = \App\Voucher::where( 'vStatus','<>',10 )->where(['vcId'=>$vcSn])->count();
+        $useNum = \App\Voucher::where( 'vStatus','=',2 )->where(['vcId'=>$vcSn])->count();
+        $invalidNum = \App\Voucher::where( 'vStatus','=',5 )->where(['vcId'=>$vcSn])->count();
         if( !empty($invalidNum) )
             return array( $totalNum , $useNum , $invalidNum );
         // 已失效数
@@ -1233,21 +1249,24 @@ class PlatformController extends Controller{
         $getNeedMoney = $getTypes['getNeedMoney'];
         $getItemType = $getTypes['getItemTypes'];
         $sms = $getTypes['SMS_ON_GAINED'];
-        $useEnd = date('Y-m-d', $getTypes['useEnd']);
 
         if( !empty($getItemType) || !empty($getNeedMoney)  || $nowItStart || $nowGtEnd )
             return false;
 
         // 找到活动对应的手机号码
-        $phoneList = \App\Voucher::select(['vMobilephone'])->whereRaw('vcId='.$vcId.' and ( vStatus=3 or vStatus=1)')->get()->toArray();
+        $phoneList = \App\Voucher::select(['vMobilephone','vcTitle','vUseMoney','vUseEnd'])->whereRaw('vcId='.$vcId.' and ( vStatus=3 or vStatus=1)')->get()->toArray();
 
-        $userMoney = $getTypes['useMoney'];
+        $userMoney = $phoneList[0]['vUseMoney'];
+        $vcTitle = $phoneList[0]['vcTitle'];
+        $useEnd = date('Y-m-d H:i:s',$phoneList[0]['vUseEnd']);
+        $pushUseEnd = date('Y-m-d',$phoneList[0]['vUseEnd']);
         $osType = array( '','ANDROID','IOS' );
         
         foreach($phoneList as $val){
             $successMsg = date('Y-m-d H:i:s') . " 代金劵发送短信的手机号码成功的有 " . $val['vMobilephone'];
             $errMsg = date('Y-m-d H:i:s') .  "代金劵发送短信的手机号码失败的有" . $val['vMobilephone'];
             if( !empty($sms) ){
+                $sms = str_replace(['[useMoney]','[name]','[overtime]'], [$userMoney,$vcTitle,$useEnd], $sms);
                 $res = \App\Utils::sendphonemsg($val['vMobilephone'],$sms);
                 $successMsg .= ' - ' .$res;
                 $errMsg .= ' - '.$res;
@@ -1266,7 +1285,7 @@ class PlatformController extends Controller{
                 if( !empty( $osType[ $userId['os_type'] ] ) )
                     $dataPush['OS_TYPE'] = $osType[ $userId['os_type'] ];
                 $dataPush['TITLE'] = '您获得了一张代金券';
-                $dataPush['MESSAGE'] = '您获得了一张价值￥'. $userMoney .'的代金券，'. $useEnd .'前使用有效，赶快去消费吧(点击查看详情)。';
+                $dataPush['MESSAGE'] = '您获得了一张价值￥'. $userMoney .'的代金券，'. $pushUseEnd .'前使用有效，赶快去消费吧(点击查看详情)。';
                 $dataPush['PRIORITY'] = 1;
                 $dataPush['EVENT'] = '{"event":"voucherList","userId":"'.$userId['user_id'].'","msgType":"6"}';
                 $dataPush['STATUS'] = 'NEW';
@@ -1317,7 +1336,7 @@ class PlatformController extends Controller{
     // 处理列表返回的搜索条件数据
     private function handlerSearchDataList( $res , $searchFlag = false, $actStatus='' ){
         foreach( $res['data'] as $key=>$val ){
-            $statistics = $this->getVoucherStatusByActId($val['vcSn'], $val['useEnd']);
+            $statistics = $this->getVoucherStatusByActId($val['vcId']);
             $res['data'][$key]['allNum'] = $statistics[0];
             $res['data'][$key]['useNum'] = $statistics[1];
             $res['data'][$key]['invalidNum'] = $statistics[2];

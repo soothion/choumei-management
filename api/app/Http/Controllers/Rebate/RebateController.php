@@ -515,7 +515,7 @@ class RebateController extends Controller{
 	{
 		$rebate = Rebate::find($id);
 		if(!$rebate)
-			throw new ApiException('未知返佣单', ERROR::REBATE_NOT_FOUND);
+			throw new ApiException('返佣单不存在', ERROR::REBATE_NOT_FOUND);
 		$result = $rebate->delete();
 		if($result)
 			return $this->success();
