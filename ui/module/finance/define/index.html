@@ -33,7 +33,6 @@
 				</span>
 				<button class="btn">搜索</button>
 			</form>
-			<form action="pay_manage/export" data-role="export" ><button class="btn" ><i class="fa fa-file-excel-o"></i> 导出</button></form>
            <div class="table" ajat="pay_manage/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
@@ -50,6 +49,7 @@
 							<th><a data-role="hash" href="#page=1&sort_key=require_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求付款日期 <i class="fa fa-sort"></i></a></th>			       
                             <th><a data-role="hash" href="#page=1&sort_key=confirm_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">审批日期 <i class="fa fa-sort"></i></a></th>
                             <th>制单人</th>
+							<th>备注</th>
                             <th>状态</th>
                             <th>操作</th>
                         </tr>
@@ -71,7 +71,14 @@
 					<td><%=pay_type[item.pay_type]%></td>
 					<td class="format"><%=item.require_day%></td>				 
 					<td class="format"><%=item.confirm_at%></td>
-					<td><%=item.make_user?item.make_user.name:""%></td>					 
+					<td>
+						<%if(item.from==1){%>
+							<%=item.make_user?item.make_user.name:""%>
+						<%}else{%>
+							<%=item.salon_user?item.salon_user.username:""%>
+						<%}%>
+					</td>
+					<td><%=item.remark.length>7?item.remark.substring(0,7)+"...":""%></td>	
 					<td><%=state[item.state]%></td>
 					<%
 						var page="invest";

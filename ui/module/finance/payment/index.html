@@ -34,7 +34,7 @@
 				<button class="btn">搜索</button>
 				<button type="button" class="btn" id="filter-toggle-btn">
 					筛选条件 <i class="fa fa-angle-down"></i>
-				</button>
+				</button>				
 				<button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
 				<div class="filter-box" style="display:none">
 					<div class="flex-box">
@@ -115,7 +115,7 @@
 							<%=item.salon_user?item.salon_user.username:""%>
 						<%}%>
 					</td>
-					<td><%=item.remark%></td>				 
+					<td><%=item.remark.length>7?item.remark.substring(0,7)+"...":""%></td>
 					<td><%=state[item.state]%></td>
 					<%
 						var page="invest";

@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="breadcrumb">
-        <a>收款管理 </a><span>&gt;</span><a href="store/single/index.html">收款列表</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>收款单</span>
+        <a>收款管理 </a><span>&gt;</span><a href="index.html">收款列表</a><span>&gt;</span><span id="breadcrumb-current"> <%=query.preview?"预览":"查看"%>收款单</span>
 		<div class="flex-box">
 			<div class="flex-item">
 				<h4> <%=query.preview?"预览":"查看"%>收款单</h4>
@@ -31,7 +31,7 @@
 				</form>
 		 		
 			<span class="space"></span>
-			<form action="/receivables/del?id=<%=query.id%>" data-role="normal" data-confirm="你正在删除此收款单，是否执行删除？" onsuccess="parent.lib.popup.result({define:function(){history.back()}});">
+			<form action="/receivables/del?id=<%=query.id%>" data-role="normal" data-confirm="你正在删除此收款单，是否执行删除？" onsuccess="parent.lib.popup.result({define:function(){window.close()}});">
 				<button class="btn" <%=data.status==2?"disabled":""%> data-slug="receivables.del" >删除</button>
 			</form>
              <span class="space"></span>
