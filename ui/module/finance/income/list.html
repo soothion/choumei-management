@@ -72,7 +72,7 @@
                             <th>店铺名称</th>
                             <th>返佣单号</th>  
                             <th>结算起始日</th>
-                            <th>结算截止日</th>                     
+                            <th>结算截止日</th>                                       
                             <th>金额</th>
                             <th>
                                 <a data-role="hash" href="#page=1&sort_key=created_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">                            
@@ -82,6 +82,7 @@
                             </th>
                             <th>确认日期</th>
                             <th>制单人</th>
+                            <th>备注</th>                               
                             <th>状态</th>
                             <th>操作</th>                                
                         </thead>
@@ -106,6 +107,7 @@
                                 <td><%=item.created_at && new Date(item.created_at).format("yyyy-MM-dd")%></td>
                                 <td><%=item.confirm_at && new Date(item.confirm_at).format("yyyy-MM-dd")%></td>
                                 <td><%=item.created_by%></td>                        
+                                <td><%=item.note%></td>                        
                                 <td><%=item.status=="1" ? "已确认" : "待确认"%></td>                       
                                 <td><a class="link" href="detail.html?type=detail&id=<%=item.id%>"
                                 data-slug="rebate.show,rebate.update" target="_blank">查看&gt</a></td> 
