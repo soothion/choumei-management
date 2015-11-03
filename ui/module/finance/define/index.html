@@ -78,7 +78,7 @@
 							<%=item.salon_user?item.salon_user.username:""%>
 						<%}%>
 					</td>
-					<td><%=item.remark.length>7?item.remark.substring(0,7)+"...":""%></td>	
+					<td title="<%=item.remark%>"><%=item.remark.length>7?item.remark.substring(0,7)+"...":""%></td>	
 					<td><%=state[item.state]%></td>
 					<%
 						var page="invest";

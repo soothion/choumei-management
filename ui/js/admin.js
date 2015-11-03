@@ -323,6 +323,11 @@ $(function(){
 		var complete=$this.closest('.complete');
 		complete.find('input[ajat-complete]').val($this.text()).trigger('autoinput',$this.data());
 		complete.find('.complete-position').hide();
+	}).on('focus','input[ajat-complete]',function(){
+		var res=$(this).attr('ajat-resources');
+		if(res){
+			seajs.use([res]);
+		}
 	});
 	if(document.createElement('input').oninput===undefined){
 		$body.on('keyup','input[ajat-complete]',function(e){
