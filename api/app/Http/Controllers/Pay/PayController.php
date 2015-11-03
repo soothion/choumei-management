@@ -591,7 +591,7 @@ class PayController extends Controller
             'sort_key' => self::T_STRING,
             'sort_type' => self::T_STRING,
         ]);    
-        $header = ['店铺编号','店铺名称','付款单号','关联收款单号','关联转付单号','付款类型','付款金额','要求付款日期','实际付款日期','回款周期','回款日期','周期回款金额','创建日期','审批日期','制单人','审批人','出纳','付款方式','状态','备注'];
+        $header = ['店铺编号','店铺名称','付款单号','关联收款单号','关联转付单号','付款类型','付款金额','备注','要求付款日期','实际付款日期','回款周期','回款日期','周期回款金额','创建日期','审批日期','制单人','审批人','出纳','付款方式','状态'];
         $items = PayManage::search($options)->with([
             'cash_user' => function ($q)
             {
@@ -683,6 +683,7 @@ class PayController extends Controller
                 $data['p_code'],//关联转付单号
                 $pay_manage_type_name,//付款类型
                 $data['money'],//付款金额
+                $data['remark'],
                 $data['require_day'],//要求付款日期
                 $data['pay_day'],//实际付款日期
                 $cycle,//回款周期
@@ -694,8 +695,8 @@ class PayController extends Controller
                 $check_user_name,//审批人
                 $cash_user_name,//出纳
                 $pay_type_name,//付款方式
-                $state_name,//状态
-                $data['remark']
+                $state_name//状态
+                
             ];
         }
         return $res;
