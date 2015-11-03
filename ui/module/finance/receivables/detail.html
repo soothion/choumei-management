@@ -37,7 +37,7 @@
              <span class="space"></span>
 			<button class="btn" onclick="location='edit.html?id=<%=data.id%>'" <%=data.status==2?"disabled":""%> data-slug="receivables.update">编辑</a></button>
 			<span class="space"></span>
-			<button class="btn" type="button" onclick="history.back()">返回</button>
+			<button class="btn btn-cancel" type="button">返回</button>
 			<%}else{%>
 				<button class="btn" type="button" onclick="window.close()">关闭预览</button>
 			<%}%>
