@@ -491,6 +491,34 @@ class MerchantController extends Controller {
 	
 	}
 	
+	/**
+	 * @api {post} /merchant/getMerchantList 8.获取新的商户编号
+	 * @apiName getSn
+	 * @apiGroup merchant
+	 *
+	 * 
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "data": {
+	 *	        "sn": SB09090
+	 *	    }
+	 *	}
+	 *
+	 *
+	 * @apiErrorExample Error-Response:
+	 *		{
+	 *		    "result": 0,
+	 *		    "msg": "参数错误"
+	 *		}
+	 */		
+	public function  getSn()
+	{
+		$sn = Merchant::getSn();
+		return $this->success(['sn'=>$sn]);
+	}
+
 }
 
 ?>

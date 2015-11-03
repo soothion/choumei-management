@@ -67,5 +67,12 @@ class Merchant extends Model {
 		return $tmpSn;
 	}
 
+	public static function getSn(){
+		$count = Self::count();
+		$count++;
+		return str_pad($count, 5, 0);
+	}
+
+
 
 }
