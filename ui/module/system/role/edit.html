@@ -161,6 +161,7 @@
 	</script>
 	<script type="text/javascript">
 		var sids=JSON.parse(sessionStorage.getItem("permissions"))||[];
+		sessionStorage.removeItem("permissions");
 		var each=function($dom,data){
 			data.forEach(function(item){
 				var $item=$(lib.ejs.render({text:$('#p-t').html()},{data:item,sids:sids}));
