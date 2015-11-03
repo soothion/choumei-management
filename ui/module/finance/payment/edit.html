@@ -27,8 +27,8 @@
                     <label class="control-label" for=""><span class="red">*</span>付款类型：</label>
                     <div class="control">
                        <select id="type" required name="type"   style="width:20%;" <%=query.id?"disabled":""%>>
-							<option value="edit2.html">付交易代收款</option>
-							<option selected value="2">付业务投资款</option>
+							<option <%=data.type==1?"selected":""%> value="1">付交易代收款</option>
+							<option <%=data.type==2?"selected":""%> value="2">付业务投资款</option>
                         </select>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
 			    <div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>收款方式：</label>
+                    <label class="control-label" for=""><span class="red">*</span>付款方式：</label>
                     <div class="control">
                         <select  name="pay_type">
 						  <option value="1" <%=data.pay_type==1?"selected":""%>>银行存款</option>
@@ -70,6 +70,7 @@
 						</select>
                     </div>
                 </div>
+				<div id="dom" style="<%=data.type!=2?"display:none":""%>">
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>要求付款日期：</label>
                     <div class="control">			 
@@ -94,6 +95,7 @@
                         <input type="text" name="cycle_money" value="<%=data.cycle_money||""%>" required pattern="float"/> <span class="weak">尾差金额在最后一个回款周期补回</span>                             							  
                     </div>
                 </div>
+				</div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>备注：</label>
                     <div class="control">
@@ -114,6 +116,16 @@
        </div>
 		<script type="text/javascript">
 		$('#form').on('_ready',function(){
+			$('form')[0]._getFormData=function(){
+				var data=lib.tools.getFormData($(this));
+				if(data.type==1){
+					delete data.require_day;
+					delete data.cycle;
+					delete data.cycle_day;
+					delete data.cycle_money;
+				}
+				return data;
+			}
 			$(document).on('blur','input[name="cycle_money"]',function(){
 				var $this=$(this);
 				var cycle_money=$this.val();
@@ -123,14 +135,16 @@
 				}
 			});
 			$('#type').on('change',function(){
-				if(this.value.indexOf(".html")>-1){
-					location.href=this.value
+				if(this.value==2){
+					$('#dom').show();
+				}else{
+					$('#dom').hide();
 				}
 			});
 			$(document).on('click','.preview',function(){
 				var data=lib.tools.getFormData($(this).closest('form'));
 				data=$.extend(JSON.parse(localStorage.getItem("preview")),data);
-				data.salon=$.extend(data.salon,{salonname:$('#search').val()});
+				data.salon=$.extend(data.salon,{salonname:$('#search').val(),sn:$('#sn').text()});
 				data.merchant=$.extend(data.merchant,{name:$('#merchantname').val()});
 				localStorage.setItem('preview',JSON.stringify(data));
 				window.open("preview.html?preview=preview");
