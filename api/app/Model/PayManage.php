@@ -162,7 +162,6 @@ class PayManage extends Model
             !isset($params['merchant_id']) ||
             !isset($params['pay_money']) ||//金额
             !isset($params['pay_type']) ||//支付方式
-            !isset($params['day']) ||//要求付款日期
             !isset($params['pay_day']) ||//实际付款日期
             !isset($params['uid']) //确认人
         )
@@ -184,7 +183,6 @@ class PayManage extends Model
             'merchant_id'=>$params['merchant_id'],
             'money'=>$params['pay_money'],
             'pay_type'=>$params['pay_type'],
-            'require_day'=>$params['day'],
             'pay_day'=>$params['pay_day'],
             'make_uid'=>$params['uid'],
             'confirm_uid'=>$params['uid'],
@@ -211,7 +209,6 @@ class PayManage extends Model
             !isset($params['merchant_id']) ||
             !isset($params['money']) ||//金额
             !isset($params['receive_type']) ||//支付方式
-            !isset($params['require_day']) ||//要求付款日期
             !isset($params['receive_day']) ||//实际付款日期
             !isset($params['cash_uid'])    ||//确认人
             !isset($params['make_uid']) ||//制单人
@@ -237,7 +234,6 @@ class PayManage extends Model
             'merchant_id'=>$params['merchant_id'],
             'money'=>$params['money'],
             'pay_type'=>$params['receive_type'],
-            'require_day'=>$params['require_day'],
             'pay_day'=>$params['receive_day'],
             'make_uid'=>$params['make_uid'],
             'confirm_uid'=>$params['cash_uid'],
@@ -302,7 +298,7 @@ class PayManage extends Model
         ];
         if($attr['type'] == self::TYPE_OF_FTZ )
         {
-            if(!isset($attr['require_day']) ||
+            if(
             !isset($attr['cycle']) ||
             !isset($attr['cycle_day']) ||
             !isset($attr['cycle_money']))
@@ -310,7 +306,6 @@ class PayManage extends Model
                 return false;
             }
             $record_plus = [
-                'require_day'=>$attr['require_day'],
                 'cycle'=>intval($attr['cycle']),
                 'cycle_day'=>intval($attr['pay_type']),
                 'cycle_money'=>floatval($attr['cycle_money']),];
@@ -352,11 +347,7 @@ class PayManage extends Model
         if(isset($attr['pay_type']))
         {
             $record['pay_type'] =intval($attr['pay_type']);
-        }
-        if(isset($attr['require_day']))
-        {
-            $record['require_day'] =$attr['require_day'];
-        }
+        } 
         if(isset($attr['cycle']))
         {
             $record['cycle'] =intval($attr['cycle']);
@@ -575,7 +566,6 @@ class PayManage extends Model
             'cash_uid',
             'money',
             'pay_type',
-            'require_day',
             'pay_day',
             'created_at',
             'confirm_at',
@@ -587,7 +577,6 @@ class PayManage extends Model
             'type',
             'money',
             'pay_type',
-            'require_day',
             'pay_day',
             'created_at',
             'state',
