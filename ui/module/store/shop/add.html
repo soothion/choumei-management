@@ -42,10 +42,10 @@
 					<li class="flex-item"><span>5.附件上传</span></li>
                     <li class="flex-item"><span>6.财务结算</span></li>
 				</ul>
-                <div class="control-group">
+                <div class="control-group" id="salonSn" style="display:none">
                     <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
                     <div class="control">
-                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10" disabled
+                        <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10"
                         data-value="<%=data.sn||""%>" unique="salon/checkSalonSn?sn=${value}" uniquemsg="店铺编号重复">
                     </div>
                 </div> 
