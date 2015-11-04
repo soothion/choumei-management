@@ -149,7 +149,7 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);  
-        $header = ['店铺名称','付款单号','付款类型','支付方式','付款金额','实际付款日期','备注','创建日期','制单人','状态','店铺编码','店铺id'];      
+        $header = ['店铺名称','付款单号','付款类型','支付方式','付款金额','实际付款日期','备注','创建日期','制单人','状态'];      
         $items = ShopCountApi::getPrepayCondition($param)->addSelect('updated_at')->get()->toArray(); 
         Event::fire('shopcount.export');
         $this->export_xls("转付单".date("Ymd"),$header,self::format_prepay_data($items));
@@ -471,9 +471,7 @@ class ShopCountController extends Controller
     {
         $res = [];
         foreach ($datas as $data) {
-            $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
-            $salon_id = isset($data['salon']['salonid']) ? $data['salon']['salonid'] : '';
-            $salon_sn = isset($data['salon']['sn']) ? $data['salon']['sn'] : '';
+            $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';      
             $username = isset($data['user']['name'])?$data['user']['name']:'';
             $typename = $data['type'] == 3 ? "交易代收款返还" : "付交易代收款";
             $pay_type_name = Mapping::getPayTypeName($data['pay_type']);
@@ -490,8 +488,6 @@ class ShopCountController extends Controller
                 date("Y-m-d",strtotime($data['updated_at'])),
                 $username,
                 $statename,
-                $salon_sn,
-                $data['salon_id'],
             ];
         }
         return $res;
