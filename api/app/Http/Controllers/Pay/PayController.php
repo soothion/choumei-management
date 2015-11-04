@@ -199,7 +199,6 @@ class PayController extends Controller
      * @apiParam {Number} merchant_id  商户id
      * @apiParam {Number} money 付款金额
      * @apiParam {Number} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiParam {String} require_day 要求付款日期 格式  YYYY-MM-DD
      * @apiParam {Number} cycle 回款周期 
      * @apiParam {Number} cycle_day 回款日期 
      * @apiParam {Number} cycle_money 周期回款金额 
@@ -236,7 +235,6 @@ class PayController extends Controller
             'remark'=>self::T_STRING,            
         ],true);
         $param_plus = $this->parameters([
-            'require_day' => self::T_STRING,
             'cycle' => self::T_INT,
             'cycle_day' => self::T_INT,
             'cycle_money' => self::T_FLOAT,
@@ -267,7 +265,6 @@ class PayController extends Controller
      * @apiSuccess {String} money 付款金额
      * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
      * @apiSuccess {String} data.from 来源 1 本系统 2 商家后台
-     * @apiSuccess {String} require_day 要求付款日期 
      * @apiSuccess {String} pay_day 实际付款日期 
      * @apiSuccess {String} remark 备注
      * @apiSuccess {String} cycle 回款周期
@@ -295,7 +292,6 @@ class PayController extends Controller
      *                "from":1,
      *                "money": "333.66",
      *                "pay_type": 1,
-     *                "require_day": "2015-08-14",
      *                "pay_day": "0000-00-00",
      *                "remark": "备注",
      *                "cycle": 30,
@@ -383,7 +379,6 @@ class PayController extends Controller
      * @apiParam {Number} merchant_id  商户id
      * @apiParam {Number} money 付款金额
      * @apiParam {Number} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiParam {String} require_day 要求付款日期 格式  YYYY-MM-DD
      * @apiParam {String} remark 备注
      * @apiParam {Number} cycle 回款周期
      * @apiParam {Number} cycle_day 回款日期
@@ -415,7 +410,6 @@ class PayController extends Controller
             'merchant_id' => self::T_INT,
             'money' => self::T_FLOAT,
             'pay_type' => self::T_INT,
-            'require_day' => self::T_STRING,
             'cycle' => self::T_INT,
             'cycle_day' => self::T_INT,
             'cycle_money' => self::T_FLOAT,
@@ -591,7 +585,7 @@ class PayController extends Controller
             'sort_key' => self::T_STRING,
             'sort_type' => self::T_STRING,
         ]);    
-        $header = ['店铺编号','店铺名称','付款单号','关联收款单号','关联转付单号','付款类型','付款金额','备注','要求付款日期','实际付款日期','回款周期','回款日期','周期回款金额','创建日期','审批日期','制单人','审批人','出纳','付款方式','状态'];
+        $header = ['店铺编号','店铺名称','付款单号','关联收款单号','关联转付单号','付款类型','付款金额','备注','实际付款日期','回款周期','回款日期','周期回款金额','创建日期','审批日期','制单人','审批人','出纳','付款方式','状态'];
         $items = PayManage::search($options)->with([
             'cash_user' => function ($q)
             {
@@ -684,7 +678,6 @@ class PayController extends Controller
                 $pay_manage_type_name,//付款类型
                 $data['money'],//付款金额
                 $data['remark'],
-                $data['require_day'],//要求付款日期
                 $data['pay_day'],//实际付款日期
                 $cycle,//回款周期
                 $cycle_day,//回款日期
