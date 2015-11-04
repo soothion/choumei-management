@@ -21,7 +21,7 @@
 			<%if(data.from==1){%>
 			<%if(data.state==1||data.state==2){%>
 			<form data-slug="pay_manage.destroy" action="pay_manage/destroy/<%=query.id%>" data-role="normal" data-confirm="你正在删除此付款单，是否执行删除？" 
-			onsuccess="parent.lib.popup.result({define:function(){history.back()}})">
+			onsuccess="parent.lib.popup.result({define:function(){window.close()}})">
 				<button class="btn">删除</button>
 			</form>
 			<%}%>
@@ -32,7 +32,7 @@
 			<%if(data.state==1){%>
 			<span class="space"></span>
 			<form data-slug="pay_manage.update" action="pay_manage/update/<%=query.id%>" data-role="normal" 
-			onsuccess="parent.lib.popup.result({define:function(){history.back()}})">
+			onsuccess="parent.lib.popup.result({define:function(){window.close()}})">
 				<button class="btn">提交</button>
 			</form>
 			<%}%>
