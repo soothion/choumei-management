@@ -170,10 +170,9 @@ class ListController extends Controller {
     	{
     		throw new ApiException('参数错误', ERROR::MERCHANT_ERROR);
     	}
-
-    	//department_id 13 商务合作部   position_id78商务助理 79 信息采集专员
-    	$where = 'department_id = 13 AND position_id NOT IN (78, 79) AND city_id = '.$cityid;
-    	$sql = "SELECT id,name as businessName from cm_managers where {$where} ORDER BY CONVERT( businessName USING gbk ) COLLATE gbk_chinese_ci ASC";
+    	//department_id 13 商务合作部   position_id77商务总监助理 78商务助理 79 信息采集专员
+    	$where = 'status = 1 AND department_id = 13 AND position_id NOT IN (77,78, 79) AND city_id = '.$cityid;
+    	$sql = "SELECT id,name as businessName from cm_managers where {$where} ORDER BY CONVERT( name USING gbk ) COLLATE gbk_chinese_ci ASC";
 
 
     	$result = DB::select($sql);
