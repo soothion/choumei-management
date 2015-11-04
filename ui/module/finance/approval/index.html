@@ -80,7 +80,7 @@
 						<%}%>
 					</td>			
 					<td title="<%=item.remark%>"><%=item.remark.length>7?item.remark.substring(0,7)+"...":""%></td>
-					<td><%=state[item.state]%></td>
+					<td><%=item.state==1&&item.from==2?"审批不通过":state[item.state]%></td>
 					<%
 						var page="invest";
 						if(item.type==1){
