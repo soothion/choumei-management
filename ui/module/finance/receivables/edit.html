@@ -57,7 +57,7 @@
                     <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                     <div class="control">
                         <input type="text" id="merchantname" value="<%=data.name||""%>" disabled >
-						<input type="hidden" name="merchant_id" required requiredmsg="没有找到店铺名称对应的商户" />
+						<input type="hidden" id="merchantId" name="merchant_id" value="<%=data.name||""%>" required requiredmsg="没有找到店铺名称对应的商户" />
                     </div>
                 </div>
 				
