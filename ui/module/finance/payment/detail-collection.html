@@ -110,7 +110,7 @@
                </tr>
                 <tr>
                   <td>状态：</td>
-                  <td><%=state[data.state]%></td>
+                  <td><%=data.state==1&&data.from==2?"审批不通过":state[data.state]%></td>
                 </tr>
               </tbody>
         </table>
