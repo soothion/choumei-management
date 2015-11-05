@@ -362,7 +362,41 @@ class MessageBoxController extends Controller{
            return  $this->success();
         }
     }
-	
+    
+    /**
+     * @api {post} /messageBox/addPushConf 5.新增消息
+     * 
+     * @apiName addPushConf
+     * @apiGroup MessageBox
+     *
+     * @apiParam {String} receiveType 必填，接收消息类型  REG-所有注册用户 APP-app安装用户  CODE-指定特征用户 APPNOTREG安装app未注册用户'
+     * @apiParam {String} newsTitle 必填，消息标题
+     * @apiParam {String} newsContent 必填, 消息内容
+     * @apiParam {String} newsTime 必填, 发送时间
+     * @apiParam {String} newsPush 必填, 是否推送 Y / N
+     * @apiParam {String} newsLink 可选, 链接
+     * @apiParam {String} newsDetail 可选, 富文本信息内容
+     * 
+     * @apiSuccess {Array} data 空值.
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": [],
+     *        
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *             "msg" :"必传参数不能为空",
+     *           }
+     */
     /**
      * 新增消息
      */
@@ -407,7 +441,47 @@ class MessageBoxController extends Controller{
     }
     
     /**
-     *添加店铺
+     * @api {post} /messageBox/addSalon 6.添加查找店铺
+     * 
+     * @apiName addSalon
+     * @apiGroup MessageBox
+     *
+     * @apiParam {Number} district 选填，区域号
+     * @apiParam {String} salonName 选填，店铺名
+     * @apiParam {Number} recommendCode 选填，推荐码
+     * 
+     * @apiSuccess {Number} salonId 店铺id.
+     * @apiSuccess {String} salonName 店铺名.
+     * @apiSuccess {Number} recommendCode 店铺推荐码.
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": [
+     *           {
+     *               "salonId": 1,
+     *               "salonName": "嘉美专业烫染",
+     *               "recommendCode": "8280"
+     *           },
+     *           {
+     *               "salonId": 2,
+     *               "salonName": "名流造型SPA（皇岗店）",
+     *               "recommendCode": "9132"
+     *           }
+     *  }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *           }
+     */
+    /**
+     *添加查找店铺
      */
     public function addSalon(){
         $param = $this->param;
@@ -426,7 +500,7 @@ class MessageBoxController extends Controller{
         $where['dividend.activity'] = 2;
         $where['dividend.status'] = 0;
         
-        $field = array('salon.salonid','salon.salonname','dividend.recommend_code');
+        $field = array('salon.salonid as salonId','salon.salonname as salonName','dividend.recommend_code as recommendCode');
         //DB::enableQueryLog();
         $query = Dividend::select($field)
         ->join('salon', function ($join) {
@@ -441,26 +515,142 @@ class MessageBoxController extends Controller{
         return $this->success($recommendSalonInfo);           
         
     }
+     /**
+     * @api {post} /messageBox/getAllTown 7.获取所有区域
+     * 
+     * @apiName getAllTown
+     * @apiGroup MessageBox
+     * 
+     * @apiSuccess {Number} townId 区id.
+     * @apiSuccess {String} townName 区名.
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": [
+     *           {
+     *               "townId": 1,
+     *               "townName": "福田区"
+     *           },
+     *           {
+     *               "townId": 2,
+     *               "townName": "罗湖区"
+     *           },
+     *           {
+     *               "townId": 3,
+     *               "townName": "南山区"
+     *           },
+     *           {
+     *               "townId": 4,
+     *               "townName": "宝安区"
+     *           },
+     *           {
+     *               "townId": 5,
+     *               "townName": "龙岗区"
+     *           },
+     *           {
+     *               "townId": 6,
+     *               "townName": "盐田区"
+     *           }
+     *       ]
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *           }
+     */
     //获取所有区域
     public function getAllTown(){
-        $field = array('tid','tname');
+        $field = array('tid as townId','tname as townName');
         $townInfo = Town::where('iid','=',1)->select($field)->get()->toArray();
         return $this->success($townInfo);
     }
-    
-    
+     /**
+     * @api {post} /messageBox/getCompanyCode 8.获取所有集团码
+     * 
+     * @apiName getCompanyCode
+     * @apiGroup MessageBox
+     * 
+     * @apiSuccess {Number} code 集团码.
+     * @apiSuccess {String} companyAcronym 集团名.
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": [
+     *           {
+     *               "code": "0202",
+     *               "companyAcronym": "臭美美发"
+     *           },
+     *           {
+     *               "code": "4848",
+     *               "companyAcronym": "臭臭"
+     *           },
+     *           {
+     *               "code": "6990",
+     *               "companyAcronym": "南航"
+     *           },
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *           }
+     */
     //获取集团码
     public function getCompanyCode(){
         
         $field = array('code','companyAcronym');
         $companyCodeInfo = CompanyCode::getCompanyCodeInfo($field);     
-        return $this->success($companyCodeInfo);      
-        
+        return $this->success($companyCodeInfo);             
     }
-    
+     /**
+     * @api {post} /messageBox/getCompanyCode 8.获取所有集团码
+     * 
+     * @apiName getCompanyCode
+     * @apiGroup MessageBox
+     * 
+     * @apiSuccess {Number} recommendCode 推荐码.
+     * @apiSuccess {Number} eventConfId 活动配置id.
+     * @apiSuccess {String} confTitle 活动名.
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": [
+     *           {
+     *               "recommendCode": "0626",
+     *               "eventConfId": 5,
+     *               "confTitle": "送西瓜活动"
+     *           },
+     *           {
+     *               "recommendCode": "5917",
+     *               "eventConfId": 29,
+     *               "confTitle": "快餐厅活动"
+     *           }
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *           }
+     */
     // 获取活动码
     public function getActivityCode(){
-        $field = array('dividend.recommend_code','dividend.event_conf_id','event_conf.conf_title');
+        $field = array('dividend.recommend_code as recommendCode','dividend.event_conf_id as eventConfId','event_conf.conf_title as confTitle');
         $where = array('dividend.status' => 0,'dividend.activity' => 1);
         
         $dividendInfo = Dividend::select($field)
