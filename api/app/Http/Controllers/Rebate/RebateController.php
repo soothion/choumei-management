@@ -471,7 +471,7 @@ class RebateController extends Controller{
 		    	$data[$key]['end_at'] = $value[4];
 		    	$data[$key]['amount'] = $value[5];
 	    		$data[$key]['created_by'] = $this->user->name;
-				$data[$key]['status'] = trim($value[9])=='确认'?1:2;
+				$data[$key]['note'] = $value[9];
 				$data[$key]['created_at'] = $date;
 				$data[$key]['updated_at'] = $date;
 				$data[$key]['status'] = 2;
