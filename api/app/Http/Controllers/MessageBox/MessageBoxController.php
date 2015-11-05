@@ -19,7 +19,7 @@ class MessageBoxController extends Controller{
     private static $IS_PUSH_NAME = array('Y' => '已发送','N' => '未发送');
     
    /**
-     * @api {post} /messageBox/messssageList 1.全量消息列表
+     * @api {post} /messageBox/messageList 1.全量消息列表
      * 
      * @apiName messssageList
      * @apiGroup MessageBox
@@ -37,22 +37,22 @@ class MessageBoxController extends Controller{
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
     * 
-     * @apiSuccess {Number} ID 消息id.
-     * @apiSuccess {String} RECEIVE_TYPE 消息类型.
-     * @apiSuccess {String} COMPANY_CODE 集团码.
-     * @apiSuccess {String} ACTIVITY_CODE 活动码.
-     * @apiSuccess {String} SHOP_CODE 店铺邀请码.
-     * @apiSuccess {String} TITLE 消息标题.
-     * @apiSuccess {String} CONTENT 消息内容.
-     * @apiSuccess {String} LINK 链接.
-     * @apiSuccess {String} DETAIL 富文本信息内容.
-     * @apiSuccess {String} IS_PUSH 推送状态.
-     * @apiSuccess {Number} READ_NUM 阅读数.
-     * @apiSuccess {String} STATUS 消息配置状态.
-     * @apiSuccess {String} CREATE_TIME 创建时间.
-     * @apiSuccess {String} UPDATE_TIME 更新时间.
-     * @apiSuccess {String} RECEIVE_TYPE_NAME 接收类型名称.
-     * @apiSuccess {String} IS_PUSH_NAME 推送状态名称.
+     * @apiSuccess {Number} id 消息id.
+     * @apiSuccess {String} receiveType 消息类型.
+     * @apiSuccess {String} companyCode 集团码.
+     * @apiSuccess {String} activityCode 活动码.
+     * @apiSuccess {String} shopCode 店铺邀请码.
+     * @apiSuccess {String} title 消息标题.
+     * @apiSuccess {String} comment 消息内容.
+     * @apiSuccess {String} link 链接.
+     * @apiSuccess {String} detail 富文本信息内容.
+     * @apiSuccess {String} isPush 推送状态.
+     * @apiSuccess {Number} readNum 阅读数.
+     * @apiSuccess {String} status 消息配置状态.
+     * @apiSuccess {String} creatTime 创建时间.
+     * @apiSuccess {String} updateTIme 更新时间.
+     * @apiSuccess {String} receiveTypeName 接收类型名称.
+     * @apiSuccess {String} isPushName 推送状态名称.
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -68,42 +68,23 @@ class MessageBoxController extends Controller{
      *           "to": 20,
      *           "data": [
      *               {
-     *                   "ID": 27,
-     *                   "RECEIVE_TYPE": "CODE",
-     *                   "COMPANY_CODE": "1867",
-     *                   "ACTIVITY_CODE": "3333",
-     *                   "SHOP_CODE": "",
-     *                   "TITLE": "1111",
-     *                   "CONTENT": "11111",
-     *                   "SEND_TIME": "2015-08-29 04:07:45",
-     *                   "LINK": "http://www.baidu.com",
-     *                   "DETAIL": "",
-     *                   "IS_PUSH": "Y",
-     *                   "READ_NUM": 0,
-     *                   "STATUS": "DONE",
-     *                   "CREATE_TIME": "2015-08-29 02:10:26",
-     *                   "UPDATE_TIME": "2015-08-29 04:07:24",
-     *                   "RECEIVE_TYPE_NAME": "指定特征用户",
-     *                   "IS_PUSH_NAME": "已发送"
-     *               },
-     *               {
-     *                   "ID": 26,
-     *                   "RECEIVE_TYPE": "CODE",
-     *                   "COMPANY_CODE": "0202",
-     *                   "ACTIVITY_CODE": "",
-     *                   "SHOP_CODE": "",
-     *                   "TITLE": "ceshiceshi",
-     *                   "CONTENT": "ceshiceshi",
-     *                   "SEND_TIME": "2015-08-29 04:04:25",
-     *                   "LINK": "http://newyingxiao.choumei.cn/sysNews/redirectUrl/id/26",
-     *                   "DETAIL": "<p>12222222222222233333333333333333333</p>",
-     *                   "IS_PUSH": "Y",
-     *                   "READ_NUM": 0,
-     *                   "STATUS": "DONE",
-     *                   "CREATE_TIME": "2015-08-29 02:05:14",
-     *                   "UPDATE_TIME": "2015-08-29 04:04:02",
-     *                   "RECEIVE_TYPE_NAME": "指定特征用户",
-     *                   "IS_PUSH_NAME": "已发送"
+     *                   "id": 28,
+     *                   "receiveType": "APP",
+     *                   "companyCode": "",
+     *                   "activityCode": "",
+     *                   "shopCode": "",
+     *                   "title": "test-1111",
+     *                   "comment": "test-1111",
+     *                   "sendTime": "2016-06-04 16:32:15",
+     *                   "link": "http://newyingxiao.choumei.cn/sysNewsRedirectUrl/redirectUrl/id/28",
+     *                   "detail": "<p>sdfasfdasdfasfasfdasf</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sdfsdfsfs</p><p>&nbsp; &nbsp;的收费的方式对方</p>",
+     *                   "isPush": "Y",
+     *                   "readNum": 0,
+     *                   "status": "NOM",
+     *                   "createTime": "2015-08-31 14:34:05",
+     *                   "updateTime": "2015-09-06 10:34:58",
+     *                   "receiveTypeName": "app安装用户",
+     *                   "isPushName": "已发送"
      *               }
      *           ]
      *        }
@@ -131,8 +112,8 @@ class MessageBoxController extends Controller{
         $status = 'DEL';
         $res = PushConf::getMessageBoxInfo($title,$status,$startTime,$endTime, $page, $pageSize);
         foreach ($res['data'] as $key => &$val) {
-            $val['RECEIVE_TYPE_NAME'] = self::$RECEIVE_TYPE_NAME[$val['RECEIVE_TYPE']];
-            $val['IS_PUSH_NAME'] = self::$IS_PUSH_NAME[$val['IS_PUSH']];
+            $val['receiveTypeName'] = self::$RECEIVE_TYPE_NAME[$val['receiveType']];
+            $val['isPushName'] = self::$IS_PUSH_NAME[$val['isPush']];
         }
         return $this->success($res);
     }
@@ -206,102 +187,102 @@ class MessageBoxController extends Controller{
      *
      * @apiParam {Number} pushId 必填,消息ID
     * 
-     * @apiSuccess {Number} ID 消息id.
-     * @apiSuccess {String} RECEIVE_TYPE 消息类型.
-     * @apiSuccess {String} COMPANY_CODE 集团码.
-     * @apiSuccess {String} ACTIVITY_CODE 活动码.
-     * @apiSuccess {String} SHOP_CODE 店铺邀请码.
-     * @apiSuccess {String} TITLE 消息标题.
-     * @apiSuccess {String} CONTENT 消息内容.
-     * @apiSuccess {String} LINK 链接.
-     * @apiSuccess {String} DETAIL 富文本信息内容.
-     * @apiSuccess {String} IS_PUSH 推送状态.
-     * @apiSuccess {Number} READ_NUM 阅读数.
-     * @apiSuccess {String} STATUS 消息配置状态.
-     * @apiSuccess {String} CREATE_TIME 创建时间.
-     * @apiSuccess {String} UPDATE_TIME 更新时间.
-     * @apiSuccess {Array} COMPANY_CODE_ARR 集团码的值.
-     * @apiSuccess {Array} ACTIVITY_CODE_ARR 活动码的值.
-     * @apiSuccess {Array} SHOP_CODE_ARR 店铺码的值.
+     * @apiSuccess {Number} id 消息id.
+     * @apiSuccess {String} receiveType 消息类型.
+     * @apiSuccess {String} companyCode 集团码.
+     * @apiSuccess {String} activityCode 活动码.
+     * @apiSuccess {String} shopCode 店铺邀请码.
+     * @apiSuccess {String} title 消息标题.
+     * @apiSuccess {String} comment 消息内容.
+     * @apiSuccess {String} link 链接.
+     * @apiSuccess {String} detail 富文本信息内容.
+     * @apiSuccess {String} isPush 推送状态.
+     * @apiSuccess {Number} readNum 阅读数.
+     * @apiSuccess {String} status 消息配置状态.
+     * @apiSuccess {String} createTime 创建时间.
+     * @apiSuccess {String} updateTime 更新时间.
+     * @apiSuccess {Array} companyCodeArr 集团码的值.
+     * @apiSuccess {Array} activityCodeArr 活动码的值.
+     * @apiSuccess {Array} shopCodeArr 店铺码的值.
      * @apiSuccess {Array} salonInfo 店铺信息.
-     * @apiSuccess {String} recommend_code 店铺推荐码.
-     * @apiSuccess {String} salonname 店铺名.
+     * @apiSuccess {String} recommendCode 店铺推荐码.
+     * @apiSuccess {String} salonName 店铺名.
      * 
      * 
      * @apiSuccessExample Success-Response:
      * 	{
-            "result": 1,
-            "token": "",
-            "data": {
-                "ID": 10,
-                "RECEIVE_TYPE": "CODE",
-                "COMPANY_CODE": "0202,1867",
-                "ACTIVITY_CODE": "0626,3333",
-                "SHOP_CODE": "9132,5539,0368,8380,1829,2156,9211,9895",
-                "TITLE": "test-0003",
-                "CONTENT": "test-0003",
-                "SEND_TIME": "2015-08-25 16:57:10",
-                "LINK": "http://newyingxiao.choumei.lu/sysNews/redirectUrl/id/10",
-                "DETAIL": "",
-                "IS_PUSH": "Y",
-                "READ_NUM": 14,
-                "STATUS": "DONE",
-                "CREATE_TIME": "2015-08-22 13:08:18",
-                "UPDATE_TIME": "2015-08-27 22:30:46",
-                "COMPANY_CODE_ARR": [
-                    "0202",
-                    "1867"
-                ],
-                "ACTIVITY_CODE_ARR": [
-                    "0626",
-                    "3333"
-                ],
-                "SHOP_CODE_ARR": [
-                    "9132",
-                    "5539",
-                    "0368",
-                    "8380",
-                    "1829",
-                    "2156",
-                    "9211",
-                    "9895"
-                ],
-                "salonInfo": [
-                    {
-                        "recommend_code": "0368",
-                        "salonname": "自作主张"
-                    },
-                    {
-                        "recommend_code": "1829",
-                        "salonname": "名人汇"
-                    },
-                    {
-                        "recommend_code": "2156",
-                        "salonname": "魅力美发沙龙"
-                    },
-                    {
-                        "recommend_code": "5539",
-                        "salonname": "千尚（沙浦头）"
-                    },
-                    {
-                        "recommend_code": "8380",
-                        "salonname": "波尔发艺名店"
-                    },
-                    {
-                        "recommend_code": "9132",
-                        "salonname": "名流造型SPA（皇岗店）"
-                    },
-                    {
-                        "recommend_code": "9211",
-                        "salonname": "雅锜护肤造型SPA会所（福田店）"
-                    },
-                    {
-                        "recommend_code": "9895",
-                        "salonname": "名流造型SPA（合正店）"
-                    }
-                ]
-            }
-        }
+     *       "result": 1,
+     *       "token": "",
+     *       "data": {
+     *           "id": 10,
+     *           "receiveType": "CODE",
+     *           "companyCode": "0202,1867",
+     *           "activityCode": "0626,3333",
+     *           "shopCode": "9132,5539,0368,8380,1829,2156,9211,9895",
+     *           "title": "test-0003",
+     *           "comment": "test-0003",
+     *           "sendTime": "2015-08-25 16:57:10",
+     *           "link": "http://newyingxiao.choumei.lu/sysNews/redirectUrl/id/10",
+     *           "detail": "",
+     *           "isPush": "Y",
+     *           "readNum": 14,
+     *           "status": "DONE",
+     *           "createTime": "2015-08-22 13:08:18",
+     *           "updateTime": "2015-08-27 22:30:46",
+     *           "companyCodeArr": [
+     *               "0202",
+     *               "1867"
+     *           ],
+     *           "activityCodeArr": [
+     *               "0626",
+     *               "3333"
+     *           ],
+     *           "shopCodeArr": [
+     *               "9132",
+     *               "5539",
+     *               "0368",
+     *               "8380",
+     *               "1829",
+     *               "2156",
+     *               "9211",
+     *               "9895"
+     *           ],
+     *           "salonInfo": [
+     *               {
+     *                   "recommendCode": "0368",
+     *                   "salonName": "自作主张"
+     *               },
+     *               {
+     *                   "recommendCode": "1829",
+     *                   "salonName": "名人汇"
+     *               },
+     *               {
+     *                   "recommendCode": "2156",
+     *                   "salonName": "魅力美发沙龙"
+     *               },
+     *               {
+     *                   "recommendCode": "5539",
+     *                   "salonName": "千尚（沙浦头）"
+     *               },
+     *               {
+     *                   "recommendCode": "8380",
+     *                   "salonName": "波尔发艺名店"
+     *               },
+     *               {
+     *                   "recommendCode": "9132",
+     *                   "salonName": "名流造型SPA（皇岗店）"
+     *               },
+     *               {
+     *                   "recommendCode": "9211",
+     *                   "salonName": "雅锜护肤造型SPA会所（福田店）"
+     *               },
+     *               {
+     *                   "recommendCode": "9895",
+     *                   "salonName": "名流造型SPA（合正店）"
+     *               }
+     *           ]
+     *       }
+     *   }
      *
      *
      * @apiErrorExample Error-Response:
