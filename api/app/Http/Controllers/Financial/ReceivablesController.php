@@ -456,6 +456,10 @@ class ReceivablesController extends Controller{
 		{
 			throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
 		}
+		if(!Receivables::getCheckRecRsStatus($id))
+		{
+			throw new ApiException('未知收款单', ERROR::RECEIVABLES_ID_IS_ERROR);
+		}
 		$du =  Receivables::getOneById($id);
 		return  $this->success($du);
 	}
@@ -497,7 +501,7 @@ class ReceivablesController extends Controller{
 		}
 		if(!Receivables::getCheckRecRsStatus($id))
 		{
-			throw new ApiException('表单未知表单错误', ERROR::RECEIVABLES_ID_IS_ERROR);
+			throw new ApiException('未知收款单', ERROR::RECEIVABLES_ID_IS_ERROR);
 		}
 	
 		$status = Receivables::dodel($id);
