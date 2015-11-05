@@ -125,12 +125,12 @@ class MessageBoxController extends Controller{
      * @apiGroup MessageBox
      *
      * @apiParam {Number} pushId 必填,消息ID
-     * @apiParam {String} newsTitle 必填，消息标题
-     * @apiParam {String} newsContent 必填, 消息内容
-     * @apiParam {String} newsTime 必填, 发送时间
-     * @apiParam {String} newsPush 必填, 是否推送 Y / N
-     * @apiParam {String} newsLink 可选, 链接
-     * @apiParam {String} newsDetail 可选, 富文本信息内容
+     * @apiParam {String} title 必填，消息标题
+     * @apiParam {String} content 必填, 消息内容
+     * @apiParam {String} sendTime 必填, 发送时间
+     * @apiParam {String} isPush 必填, 是否推送 Y / N
+     * @apiParam {String} link 可选, 链接
+     * @apiParam {String} detail 可选, 富文本信息内容
      * 
      * @apiSuccess {Array} data 空值.
      * 
@@ -158,18 +158,18 @@ class MessageBoxController extends Controller{
     public function editMessage(){
         
         $param = $this->param;
-        if(empty($param['pushId']) || empty($param['newsTitle']) || empty($param['newsContent']) || empty($param['newsTime'] || empty($param['newsPush']))){
+        if(empty($param['pushId']) || empty($param['title']) || empty($param['content']) || empty($param['sendTime'] || empty($param['isPush']))){
             throw new ApiException('必传参数不能为空');
         }
-        if(!($param['newsLink'] || $param['newsDetail'])){
+        if(!($param['link'] || $param['detail'])){
             throw new ApiException('链接必传参数不能为空');
         }
-        $data['TITLE'] = $param['newsTitle'];
-        $data['CONTENT'] = $param['newsContent'];
-        $data['SEND_TIME'] = $param['newsTime'];
-        $data['LINK'] = empty($param['newsLink']) ? '' : $param['newsLink'];
-        $data['DETAIL'] = urldecode($param['newsDetail']);
-        $data['IS_PUSH'] = $param['newsPush'];
+        $data['TITLE'] = $param['title'];
+        $data['CONTENT'] = $param['content'];
+        $data['SEND_TIME'] = $param['sendTime'];
+        $data['LINK'] = empty($param['link']) ? '' : $param['link'];
+        $data['DETAIL'] = urldecode($param['detail']);
+        $data['IS_PUSH'] = $param['isPush'];
         $data['CREATE_TIME'] =  date('Y-m-d H:i:s');
         $res = PushConf::where('Id','=',$param['pushId'])->update($data);
         if($res === false){
@@ -370,12 +370,12 @@ class MessageBoxController extends Controller{
      * @apiGroup MessageBox
      *
      * @apiParam {String} receiveType 必填，接收消息类型  REG-所有注册用户 APP-app安装用户  CODE-指定特征用户 APPNOTREG安装app未注册用户'
-     * @apiParam {String} newsTitle 必填，消息标题
-     * @apiParam {String} newsContent 必填, 消息内容
-     * @apiParam {String} newsTime 必填, 发送时间
-     * @apiParam {String} newsPush 必填, 是否推送 Y / N
-     * @apiParam {String} newsLink 可选, 链接
-     * @apiParam {String} newsDetail 可选, 富文本信息内容
+     * @apiParam {String} title 必填，消息标题
+     * @apiParam {String} content 必填, 消息内容
+     * @apiParam {String} sendTime 必填, 发送时间
+     * @apiParam {String} isPush 必填, 是否推送 Y / N
+     * @apiParam {String} link 可选, 链接
+     * @apiParam {String} detail 可选, 富文本信息内容
      * 
      * @apiSuccess {Array} data 空值.
      * 
@@ -403,17 +403,17 @@ class MessageBoxController extends Controller{
 	
     public function addPushConf(){
         $param = $this->param;
-        if(empty($param['receiveType']) || empty($param['newsTitle']) || empty($param['newsContent']) || empty($param['newsTime'])){
+        if(empty($param['receiveType']) || empty($param['title']) || empty($param['content']) || empty($param['sendTime'])){
             throw new ApiException('必传参数不能为空');
         }
-        if(!($param['newsLink'] || $param['newsDetail'])){
+        if(!($param['link'] || $param['detail'])){
             throw new ApiException('链接必传参数不能为空');
         }
         $receiveTypeArray = array('REG','APP','CODE','APPNOTREG');
         if(!in_array(trim($param['receiveType']),$receiveTypeArray)){
             throw new ApiException('参数错误--receiveType',ERROR::MessageBox_PARAMETER_ERROR);
         }
-        if(strtotime($param['newsTime']) - time() < 30* 60){
+        if(strtotime($param['sendTime']) - time() < 30* 60){
             throw new ApiException('发送时间必须晚于提交时间30分钟之后',ERROR::MessageBox_PARAMETER_ERROR);
         }        
         $data['RECEIVE_TYPE'] = trim($param['receiveType']);
@@ -421,12 +421,12 @@ class MessageBoxController extends Controller{
         $data['COMPANY_CODE'] = empty($param['companyCode']) ? '' : $param['companyCode'];
         $data['ACTIVITY_CODE'] = empty($param['activityCode']) ? '' : $param['activityCode'];
         $data['SHOP_CODE'] = empty($param['recommendCode']) ? '' : $param['recommendCode'];
-        $data['TITLE'] = $param['newsTitle'];
-        $data['CONTENT'] = $param['newsContent'];
-        $data['SEND_TIME'] = $param['newsTime'];
-        $data['LINK'] = empty($param['newsLink']) ? '' : $param['newsLink'];
-        $data['DETAIL'] = urldecode($param['newsDetail']);
-        $data['IS_PUSH'] = $param['newsPush'];
+        $data['TITLE'] = $param['title'];
+        $data['CONTENT'] = $param['content'];
+        $data['SEND_TIME'] = $param['sendTime'];
+        $data['LINK'] = empty($param['link']) ? '' : $param['link'];
+        $data['DETAIL'] = urldecode($param['detail']);
+        $data['IS_PUSH'] = $param['isPush'];
         $data['STATUS'] = 'NOM';
         $data['CREATE_TIME'] =  date('Y-m-d H:i:s');
         //DB::enableQueryLog();
@@ -614,7 +614,7 @@ class MessageBoxController extends Controller{
         return $this->success($companyCodeInfo);             
     }
      /**
-     * @api {post} /messageBox/getCompanyCode 8.获取所有集团码
+     * @api {post} /messageBox/getCompanyCode 9.获取所有集团码
      * 
      * @apiName getCompanyCode
      * @apiGroup MessageBox
@@ -660,5 +660,95 @@ class MessageBoxController extends Controller{
         
         return $this->success($dividendInfo);
     }
+     /**
+     * @api {post} /messageBox/dailyMessagePush 10.日增长推送添加/编辑
+     * 
+     * @apiName dailyMessagePush
+     * @apiGroup MessageBox
+     *
+     * @apiParam {String} action 选填，如果是进入查看，请填写'show'
+     * @apiParam {String} title 必填，消息标题
+     * @apiParam {String} content 必填, 消息内容
+     * @apiParam {String} isPush 必填, 是否推送 Y / N
+     * @apiParam {String} link 可选, 链接
+     * @apiParam {String} detail 可选, 富文本信息内容
+     * 
+     * @apiSuccess {Array} data 空值.
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": [],
+     *        
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *               "msg" :"必传参数不能为空",
+     *           }
+     */
+    /**
+     * 新增消息
+     */
+	
+    public function dailyMessagePush(){
+        $param = $this->param;
+        //先查询日增长推送消息
+        $where = array('RECEIVE_TYPE' => 'DAILYAPPNOTREG','STATUS' => 'NOM');
+        if(isset($param['action']) && $param['action'] == 'show'){           
+            $orderBy = 'CREATE_TIME';
+            $OrderByVal = 'desc';
+            $MessageBoxInfo = PushConf::getMessageBoxInfoOnWhere($where,$orderBy,$OrderByVal);
+            if($MessageBoxInfo){
+                return $this->success($MessageBoxInfo);
+            }    
+        }           
+        if(empty($param['title']) || empty($param['content'] || empty($param['isPush']))){
+            throw new ApiException('必传参数不能为空');
+        }
+        if(!($param['link'] || $param['detail'])){
+            throw new ApiException('链接必传参数不能为空');
+        }
+        $data['RECEIVE_TYPE'] = 'DAILYAPPNOTREG'; //日增长推送
+        $data['TITLE'] = $param['title'];
+        $data['CONTENT'] = $param['content'];
+        $data['LINK'] = empty($param['link']) ? '' : $param['link'];
+        $data['DETAIL'] =  empty($param['detail']) ? '' : urldecode($param['detail']);
+        $data['IS_PUSH'] = $param['isPush'];
+        $data['STATUS'] = 'NOM';
+        $data['CREATE_TIME'] =  date('Y-m-d H:i:s');
+        $MessageBoxInfo = PushConf::getMessageBoxInfoOnWhere($where);  
+        if($MessageBoxInfo){
+            DB::beginTransaction();
+            $res1 = PushConf::where($where)->update(['STATUS' => 'DONE']);
+            if(!$res1){
+                DB::rollBack();
+                throw new ApiException('保存失败,当前消息状态不正确');
+            }else{
+                $res2 = PushConf::insert($data);
+                if(!$res2){
+                    DB::rollBack();
+                    throw new ApiException('保存失败');
+                }else{
+                    DB::commit();
+                    return $this->success();
+                }
+            }
+        }else{
+            $res = PushConf::insert($data);
+            if($res){
+                return $this->success();
+            }else{
+                throw new ApiException('消息添加失败',ERROR::MessageBox_ADD_FAILED);
+            }
+        }
+    }
+    
 }
 ?>

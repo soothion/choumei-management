@@ -110,5 +110,5 @@ class Dividend extends Model {
 	
 		return $key;
 	}
-	
+
 }

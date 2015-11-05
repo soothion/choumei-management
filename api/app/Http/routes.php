@@ -1111,8 +1111,46 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
         'uses' => 'Laisee\BonusController@close'
     ));
     
-    
-    
-    
+    //消息盒子
+    Route::any('messageBox/getCompanyCode',array(  
+        'as'=>'messageBox.getCompanyCode',
+        'uses'=>'MessageBox\MessageBoxController@getCompanyCode'
+    ));
+    Route::any('messageBox/getActivityCode',array(  
+        'as'=>'messageBox.getActivityCode',
+        'uses'=>'MessageBox\MessageBoxController@getActivityCode'
+    ));
+    Route::any('messageBox/getAllTown',array(  
+        'as'=>'messageBox.getAllTown',
+        'uses'=>'MessageBox\MessageBoxController@getAllTown'
+    ));
+    Route::any('messageBox/addSalon',array(  
+        'as'=>'messageBox.addSalon',
+        'uses'=>'MessageBox\MessageBoxController@addSalon'
+    ));
+    Route::any('messageBox/addPushConf',array(  
+        'as'=>'messageBox.addPushConf',
+        'uses'=>'MessageBox\MessageBoxController@addPushConf'
+    ));
+    Route::any('messageBox/messssageList',array(  
+        'as'=>'messageBox.messssageList',
+        'uses'=>'MessageBox\MessageBoxController@messssageList'
+    ));
+    Route::any('messageBox/delMesssage',array(  
+        'as'=>'messageBox.delMesssage',
+        'uses'=>'MessageBox\MessageBoxController@delMesssage'
+    ));
+    Route::any('messageBox/showMessage',array(  
+        'as'=>'messageBox.showMessage',
+        'uses'=>'MessageBox\MessageBoxController@showMessage'
+    ));
+    Route::any('messageBox/editMessage',array(  
+        'as'=>'messageBox.editMessage',
+        'uses'=>'MessageBox\MessageBoxController@editMessage'
+    ));
+    Route::any('messageBox/dailyMessagePush',array(  
+        'as'=>'messageBox.dailyMessagePush',
+        'uses'=>'MessageBox\MessageBoxController@dailyMessagePush'
+    ));  
     
 });

@@ -339,7 +339,21 @@ class ERROR
      *@param 消息ID不正确
      */
      CONST MESSAGE_ID_IS_ERROR  =  -50902;
-
+     
+     
+     	 ////////////消息盒子模块//////////////
+     /**
+     *@param 参数错误
+     */
+     CONST MessageBox_PARAMETER_ERROR =  -52000;
+	 /**
+     *@param 更新失败
+     */
+     CONST MessageBox_UPDATE_FAILED =  -52001;
+      /**
+     *@param 添加失败
+     */
+     CONST MessageBox_ADD_FAILED =  -52002;
      
      
 

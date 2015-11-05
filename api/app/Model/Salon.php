@@ -687,7 +687,14 @@ class Salon extends Model {
 		}
 		return $affectid;
 	
-	}
-
+	}         
+        
+        public static function getSalonInfoByCodeArr($field,$where,$codeArr){        
+            $salonInfo = self::select($field)
+                         ->rightjoin('dividend', function ($join) {
+                             $join->on('salon.salonid', '=', 'dividend.salon_id');
+                         })->where($where)->whereIn('dividend.recommend_code',$codeArr)->get()->toArray(); 
+            return $salonInfo;
+        }
 }
 
