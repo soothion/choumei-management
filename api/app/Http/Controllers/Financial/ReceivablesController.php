@@ -456,7 +456,7 @@ class ReceivablesController extends Controller{
 		{
 			throw new ApiException('参数错误', ERROR::RECEIVABLES_ERROR);
 		}
-		if(!Receivables::getCheckRecRsStatus($id))
+		if(!Receivables::select(['status'])->where("id","=",$id)->where('status','!=','3')->first())
 		{
 			throw new ApiException('未知收款单', ERROR::RECEIVABLES_ID_IS_ERROR);
 		}
