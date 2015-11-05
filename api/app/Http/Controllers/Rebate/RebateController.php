@@ -188,6 +188,7 @@ class RebateController extends Controller{
 	    	$result[$key]['confirm_at'] = substr($value->confirm_at, 0,10);
 	    	$result[$key]['confirm_by'] = $value->confirm_by;
 	    	$result[$key]['created_by'] = $value->created_by;
+	    	$result[$key]['note'] = $value->note;
 	    	$result[$key]['status'] = $value->status==1?'已确认':'待确认';
 	    }
 		// 触发事件，写入日志
@@ -195,7 +196,7 @@ class RebateController extends Controller{
 		
 		//导出excel	   
 		$title = '返佣单列表'.date('Ymd');
-		$header = ['店铺编号','店铺名称','返佣编号','结算起始日','结算截止日','金额','创建日期','确认日期','确认人','制单人','状态'];
+		$header = ['店铺编号','店铺名称','返佣编号','结算起始日','结算截止日','金额','创建日期','确认日期','确认人','制单人','备注','状态'];
 		Excel::create($title, function($excel) use($result,$header){
 					$excel->setTitle('rebate');
 		    		$excel->sheet('Sheet1', function($sheet) use($result,$header){
