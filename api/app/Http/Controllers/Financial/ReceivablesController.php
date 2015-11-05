@@ -497,7 +497,7 @@ class ReceivablesController extends Controller{
 		}
 		if(!Receivables::getCheckRecRsStatus($id))
 		{
-			throw new ApiException('数据错误', ERROR::RECEIVABLES_ID_IS_ERROR);
+			throw new ApiException('表单未知表单错误', ERROR::RECEIVABLES_ID_IS_ERROR);
 		}
 	
 		$status = Receivables::dodel($id);
