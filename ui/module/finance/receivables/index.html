@@ -117,7 +117,7 @@
 					<td><%=new Date(item.addTime*1000).format("yyyy-MM-dd")%>
 					</td>
 					<td><%=item.preparedByName%></td>
-					<td title="<%=item.remark%>"><%=item.remark.length>7?item.remark.substring(0,7)+"...":""%></td>		
+					<td title="<%=item.remark%>"><%=item.remark.length>7?item.remark.substring(0,7)+"...":item.remark%></td>		
 					<td><%=status[item.status]%></td>
 					  
 					<td><a class="link" target="_blank" href="detail.html?id=<%=item.id%>" data-slug="receivables.getone">查看</a></td>
