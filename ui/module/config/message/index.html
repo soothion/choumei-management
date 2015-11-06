@@ -15,7 +15,7 @@
 				<h4>全量消息列表</h4>
 			</div>
 			<div>
-				<a class="btn-primary" href="edit.html" data-slug="message.create" ><i class="fa fa-plus"></i>新增</a>
+				<a class="btn-primary" href="edit.html" data-slug="messageBox.addPushConf" ><i class="fa fa-plus"></i>新增</a>
 			</div>
 		 </div>		 
         </div>		
@@ -65,11 +65,11 @@
 							<td><%=item.isPushName%></td>
 							<td>
 							<%if(item.isPushName=="已发送"){%>
-							<a class="link" href="edit.html?id=<%=item.id%>&disabled=true">查看</a>	
+							<a class="link" data-slug="messageBox.showMessage" href="edit.html?id=<%=item.id%>&disabled=true">查看</a>	
 							<%}else{%>
-							<a class="link" data-slug="message.update" href="edit.html?id=<%=item.id%>">编辑</a>	
+							<a class="link" data-slug="messageBox.showMessage,messageBox.editMessage" href="edit.html?id=<%=item.id%>">编辑</a>	
 							<span class="space"></span>
-							<form data-slug="message.destroy" action="messageBox/delMessage" data-role="normal" data-confirm="确认删除？" onsuccess="remove">
+							<form data-slug="messageBox.delMessage" action="messageBox/delMessage" data-role="normal" data-confirm="确认删除？" onsuccess="remove">
 								<button class="link">删除</button>
 								<input type="hidden" value="<%=item.id%>" name="pushId" />
 							</form>	

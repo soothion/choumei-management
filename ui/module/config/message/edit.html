@@ -23,7 +23,7 @@
 				<div class="detail-operation">
 					<button class="btn btn-cancel" type="button" >取消</button>
 					<span class="space"></span>
-					<button class="btn-primary" data-slug="<%if(query.id){%>message.update<%}else{%>message.create<%}%>">提交</button>			
+					<button class="btn-primary" data-slug="<%if(query.id){%>messageBox.editMessage<%}else{%>messageBox.addPushConf<%}%>">提交</button>			
 				</div>
 				<%if(query.id){%>
 				<input type="hidden" name="pushId" value="<%=query.id%>" />
@@ -150,7 +150,7 @@
 					<div class="control">
 						<button type="button" class="btn btn-cancel">取消</button>
 						<span class="space"></span>
-						<button class="btn-primary" data-slug="<%if(query.id){%>message.update<%}else{%>message.create<%}%>">提交</button>
+						<button class="btn-primary" data-slug="<%if(query.id){%>messageBox.editMessage<%}else{%>messageBox.addPushConf<%}%>">提交</button>
 					</div>
 				</div>
 		  </form>
@@ -387,10 +387,10 @@
 			$(document).on('change','.radio-editor',function(){
 				var editor=$('#editor-wrap');
 				if($(this).val()==1){
-					editor.hide().prev().show().attr('disabled',false);
+					editor.hide().siblings("input[name='link']").show().attr('disabled',false);
 					editor.find('textarea').attr("disabled",true);
 				}else{
-					editor.show().prev().hide().attr('disabled',true);
+					editor.show().siblings("input[name='link']").hide().attr('disabled',true).blur();
 					editor.find('textarea').attr("disabled",false);
 				}
 			}).on("click",'input[name="receiveType"]',function(){
