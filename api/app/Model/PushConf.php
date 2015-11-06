@@ -75,9 +75,9 @@ class PushConf extends Model
         if(empty($messageInfo)){
             throw new ApiException('pushId不存在');
         }
-        $messageInfo['companyCodeArr'] = explode(',',$messageInfo['companyCode']);
-        $messageInfo['activityCodeArr'] = explode(',',$messageInfo['activityCode']);
-        $messageInfo['shopCodeArr'] = explode(',',$messageInfo['shopCode']);
+        $messageInfo['companyCodeArr'] = empty($messageInfo['companyCode']) ? array() : explode(',',$messageInfo['companyCode']);
+        $messageInfo['activityCodeArr'] = empty($messageInfo['activityCode']) ? array() : explode(',',$messageInfo['activityCode']);
+        $messageInfo['shopCodeArr'] = empty($messageInfo['shopCode']) ? array() : explode(',',$messageInfo['shopCode']);
         
         //根据店铺码获取店铺名
         if($messageInfo['shopCodeArr']){
