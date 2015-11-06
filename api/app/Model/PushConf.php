@@ -20,7 +20,7 @@ class PushConf extends Model
             'ACTIVITY_CODE as activityCode',
             'SHOP_CODE as shopCode',
             'TITLE as title',
-            'CONTENT as comment',
+            'CONTENT as content',
             'SEND_TIME as sendTime',
             'LINK as link',
             'DETAIL as detail',

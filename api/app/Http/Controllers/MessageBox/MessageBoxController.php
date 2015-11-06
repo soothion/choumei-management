@@ -43,7 +43,7 @@ class MessageBoxController extends Controller{
      * @apiSuccess {String} activityCode 活动码.
      * @apiSuccess {String} shopCode 店铺邀请码.
      * @apiSuccess {String} title 消息标题.
-     * @apiSuccess {String} comment 消息内容.
+     * @apiSuccess {String} content 消息内容.
      * @apiSuccess {String} link 链接.
      * @apiSuccess {String} detail 富文本信息内容.
      * @apiSuccess {String} isPush 推送状态.
@@ -74,7 +74,7 @@ class MessageBoxController extends Controller{
      *                   "activityCode": "",
      *                   "shopCode": "",
      *                   "title": "test-1111",
-     *                   "comment": "test-1111",
+     *                   "content": "test-1111",
      *                   "sendTime": "2016-06-04 16:32:15",
      *                   "link": "http://newyingxiao.choumei.cn/sysNewsRedirectUrl/redirectUrl/id/28",
      *                   "detail": "<p>sdfasfdasdfasfasfdasf</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sdfsdfsfs</p><p>&nbsp; &nbsp;的收费的方式对方</p>",
@@ -193,7 +193,7 @@ class MessageBoxController extends Controller{
      * @apiSuccess {String} activityCode 活动码.
      * @apiSuccess {String} shopCode 店铺邀请码.
      * @apiSuccess {String} title 消息标题.
-     * @apiSuccess {String} comment 消息内容.
+     * @apiSuccess {String} content 消息内容.
      * @apiSuccess {String} link 链接.
      * @apiSuccess {String} detail 富文本信息内容.
      * @apiSuccess {String} isPush 推送状态.
@@ -220,7 +220,7 @@ class MessageBoxController extends Controller{
      *           "activityCode": "0626,3333",
      *           "shopCode": "9132,5539,0368,8380,1829,2156,9211,9895",
      *           "title": "test-0003",
-     *           "comment": "test-0003",
+     *           "content": "test-0003",
      *           "sendTime": "2015-08-25 16:57:10",
      *           "link": "http://newyingxiao.choumei.lu/sysNews/redirectUrl/id/10",
      *           "detail": "",
