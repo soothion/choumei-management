@@ -1132,13 +1132,13 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
         'as'=>'messageBox.addPushConf',
         'uses'=>'MessageBox\MessageBoxController@addPushConf'
     ));
-    Route::any('messageBox/messssageList',array(  
-        'as'=>'messageBox.messssageList',
-        'uses'=>'MessageBox\MessageBoxController@messssageList'
+    Route::any('messageBox/messageList',array(  
+        'as'=>'messageBox.messageList',
+        'uses'=>'MessageBox\MessageBoxController@messageList'
     ));
-    Route::any('messageBox/delMesssage',array(  
-        'as'=>'messageBox.delMesssage',
-        'uses'=>'MessageBox\MessageBoxController@delMesssage'
+    Route::any('messageBox/delMessage',array(  
+        'as'=>'messageBox.delMessage',
+        'uses'=>'MessageBox\MessageBoxController@delMessage'
     ));
     Route::any('messageBox/showMessage',array(  
         'as'=>'messageBox.showMessage',

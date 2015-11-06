@@ -101,7 +101,7 @@ class MessageBoxController extends Controller{
     /***
      * 全量消息列表
      */
-    public function messssageList() {
+    public function messageList() {
         $param = $this->param;
         $title = isset($param['messageTitle']) ? trim($param['messageTitle']) :'';
         $startTime = isset($param['startTime'])? $param['startTime']:'';
@@ -344,7 +344,7 @@ class MessageBoxController extends Controller{
     /**
      * 删除消息
      */
-    public function delMesssage() {
+    public function delMessage() {
         $param = $this->param;
         if(empty($param['pushId'])){
             throw new ApiException('必传参数pushId不能为空');
