@@ -370,6 +370,9 @@ class MessageBoxController extends Controller{
      * @apiGroup MessageBox
      *
      * @apiParam {String} receiveType 必填，接收消息类型  REG-所有注册用户 APP-app安装用户  CODE-指定特征用户 APPNOTREG安装app未注册用户 DAILYAPPNOTREG 日增长的安装app未注册用户'
+     * @apiParam {Array} companyCodeArr 选填,集团码 exp:[996,997,998]
+     * @apiParam {Array} activityCodeArr 选填,活动码 exp:[996,997,998]
+     * @apiParam {Array} recommendCodeArr 选填,推荐码 exp:[996,997,998]
      * @apiParam {String} title 必填，消息标题
      * @apiParam {String} content 必填, 消息内容
      * @apiParam {String} sendTime 必填, 发送时间
@@ -421,9 +424,9 @@ class MessageBoxController extends Controller{
         }        
         $data['RECEIVE_TYPE'] = trim($param['receiveType']);
         
-        $data['COMPANY_CODE'] = empty($param['companyCode']) ? '' : $param['companyCode'];
-        $data['ACTIVITY_CODE'] = empty($param['activityCode']) ? '' : $param['activityCode'];
-        $data['SHOP_CODE'] = empty($param['recommendCode']) ? '' : $param['recommendCode'];
+        $data['COMPANY_CODE'] = empty($param['companyCodeArr']) ? '' : implode(',',$param['companyCodeArr']);
+        $data['ACTIVITY_CODE'] = empty($param['activityCodeArr']) ? '' : implode(',',$param['activityCodeArr']);
+        $data['SHOP_CODE'] = empty($param['recommendCodeArr']) ? '' : implode(',',$param['recommendCodeArr']);
         $data['TITLE'] = $param['title'];
         $data['CONTENT'] = $param['content'];
         $data['SEND_TIME'] = $param['sendTime'];
