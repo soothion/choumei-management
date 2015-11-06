@@ -616,7 +616,7 @@ class MessageBoxController extends Controller{
      /**
      * @api {post} /messageBox/getActivityCode 9.获取活动码
      * 
-     * @apiName getCompanyCode
+     * @apiName getActivityCode
      * @apiGroup MessageBox
      * 
      * @apiSuccess {Number} recommendCode 推荐码.
