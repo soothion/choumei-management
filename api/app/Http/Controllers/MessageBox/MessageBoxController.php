@@ -614,7 +614,7 @@ class MessageBoxController extends Controller{
         return $this->success($companyCodeInfo);             
     }
      /**
-     * @api {post} /messageBox/getCompanyCode 9.获取所有集团码
+     * @api {post} /messageBox/getActivityCode 9.获取活动码
      * 
      * @apiName getCompanyCode
      * @apiGroup MessageBox
