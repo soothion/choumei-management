@@ -352,7 +352,7 @@ class MessageBoxController extends Controller{
         $getMessageBoxInfo = PushConf::getMessageBoxInfoByID($param['pushId']);
         if(empty($getMessageBoxInfo)){
             throw new ApiException('pushId不存在');
-        }else if($getMessageBoxInfo['STATUS'] == 'DEL'){
+        }else if($getMessageBoxInfo['status'] == 'DEL'){
             throw new ApiException('消息状态为已删除，无需再次删除');
         }
         $updateRes = PushConf::where('ID','=',$param['pushId'])->update(array('STATUS' => 'DEL'));
