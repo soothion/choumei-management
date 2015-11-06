@@ -65,9 +65,10 @@
 			<%}%>
         </div>
 		 <%if(options.confirm){%>
-		 <div class="flex-box popup-footer">
-            <div class="flex-item"><a class="popup-alert-cancel touch-link"><%=options.cancelText||"取消"%></a></div>
-            <div class="flex-item"><a class="popup-alert-define touch-link"><%=options.defineText||"确定"%></a></div>
+		 <div class="tc popup-footer" style="padding:5px 0;">
+            <a class="popup-alert-cancel btn"><%=options.cancelText||"取消"%></a>
+			<span class="space"></span>
+            <a class="popup-alert-define btn-primary"><%=options.defineText||"确定"%></a>
         </div>
 		<%}%>
     </div>

@@ -1,0 +1,10 @@
+﻿<%data.forEach(function(item){%>
+<label>
+<input type="checkbox" <%=protocol.custom.disabled?"disabled":""%> value="<%=item.code%>" <%=protocol.custom.sid&&protocol.custom.sid.indexOf(item.code)>-1?"checked":""%> /><span><%=item.companyAcronym%></span>
+</label>
+<%})%>
+<style type="text/css">
+	.popup-box{
+		line-height:28px;
+	}
+</style>

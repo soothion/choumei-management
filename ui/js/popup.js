@@ -20,7 +20,6 @@ define(function(require,exports,module){
             popup.on('click', '.popup-alert-define', function () {
 				self.close();
                 options.define && options.define.call(this,popup.find('.popup-prompt-input').val());
-                
             });
             popup.on('click', '.popup-alert-cancel', function () {
 				self.close();
@@ -122,6 +121,14 @@ define(function(require,exports,module){
 			popup.on('click', '.popup-box-close', function () {
 				self.close();
 			});
+			popup.on('click', '.popup-alert-define', function () {
+				self.close();
+                options.define && options.define.call(this,popup.find('.popup-prompt-input').val());
+            });
+            popup.on('click', '.popup-alert-cancel', function () {
+				self.close();
+				options.cancel && options.cancel();
+            });
 			popup.css({
 				left:"50%",
 				top:"50%",
@@ -130,11 +137,10 @@ define(function(require,exports,module){
 				marginTop:-options.height/2,
 				marginLeft:-options.width/2
 			});
-			var minHeight=options.height-popup.children('.popup-box-title').outerHeight()-popup.children('.popup-footer').outerHeight();
+			$('body').append(popup);
+			var minHeight=options.height-popup.find('.popup-box-title').outerHeight()-popup.find('.popup-footer').outerHeight();
 			popup.find('.popup-box-body').css({height:minHeight});
-
             this.overlay();
-            $('body').append(popup);
 			options.complete && options.complete.call(popup[0],options);
 		},
         overlay: function () {
@@ -145,7 +151,7 @@ define(function(require,exports,module){
         close: function () {
             var popup = $('.popup,.popup-overlay');
             popup.fadeOut(200, function () {
-                popup.remove();
+				popup.remove();
             });
         },
         append:function(popup){
