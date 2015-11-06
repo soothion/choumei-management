@@ -110,7 +110,8 @@ class MessageBoxController extends Controller{
         $page = isset($param['page'])?max($param['page'],1):1;
         $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
         $status = 'DEL';
-        $res = PushConf::getMessageBoxInfo($title,$status,$startTime,$endTime, $page, $pageSize);
+        $receiveType = 'DAILYAPPNOTREG';
+        $res = PushConf::getMessageBoxInfo($title,$status,$receiveType,$startTime,$endTime, $page, $pageSize);
         foreach ($res['data'] as $key => &$val) {
             $val['receiveTypeName'] = self::$RECEIVE_TYPE_NAME[$val['receiveType']];
             $val['isPushName'] = self::$IS_PUSH_NAME[$val['isPush']];

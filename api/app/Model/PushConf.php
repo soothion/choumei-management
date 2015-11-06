@@ -31,9 +31,9 @@ class PushConf extends Model
            'UPDATE_TIME as updateTime',
        );
     
-    public static function getMessageBoxInfo($title,$status,$startTime,$endTime, $page, $pageSize){
+    public static function getMessageBoxInfo($title,$status,$receiveType,$startTime,$endTime, $page, $pageSize){
        $field = self::$pushConfField;
-       $query =  self::where('STATUS','<>',$status);     //
+       $query =  self::where('STATUS','<>',$status)->where('RECEIVE_TYPE','<>',$receiveType);     //
        if($title){
            $query = $query->where('TITLE','like','%'.$title.'%');
        }
