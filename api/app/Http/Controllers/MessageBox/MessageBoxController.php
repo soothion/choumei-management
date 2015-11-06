@@ -672,7 +672,6 @@ class MessageBoxController extends Controller{
      * @apiName dailyMessagePush
      * @apiGroup MessageBox
      *
-     * @apiParam {String} action 选填，如果是进入查看，请填写'show'
      * @apiParam {String} title 必填，消息标题
      * @apiParam {String} content 必填, 消息内容
      * @apiParam {String} isPush 必填, 是否推送 Y / N
@@ -706,15 +705,7 @@ class MessageBoxController extends Controller{
     public function dailyMessagePush(){
         $param = $this->param;
         //先查询日增长推送消息
-        $where = array('RECEIVE_TYPE' => 'DAILYAPPNOTREG','STATUS' => 'NOM');
-        if(isset($param['action']) && $param['action'] == 'show'){           
-            $orderBy = 'CREATE_TIME';
-            $OrderByVal = 'desc';
-            $MessageBoxInfo = PushConf::getMessageBoxInfoOnWhere($where,$orderBy,$OrderByVal);
-            if($MessageBoxInfo){
-                return $this->success($MessageBoxInfo);
-            }    
-        }           
+        $where = array('RECEIVE_TYPE' => 'DAILYAPPNOTREG','STATUS' => 'NOM');    
         if(empty($param['title']) || empty($param['content'] || empty($param['isPush']))){
             throw new ApiException('必传参数不能为空');
         }
@@ -755,6 +746,72 @@ class MessageBoxController extends Controller{
             }
         }
     }
+    
+     /**
+     * @api {post} /messageBox/showDailyMessage 10.日增长推送添加/编辑
+     * 
+     * @apiName showDailyMessage
+     * @apiGroup MessageBox
+     * 
+     * @apiSuccess {Number} id 消息id.
+     * @apiSuccess {String} receiveType 消息类型.
+     * @apiSuccess {String} companyCode 集团码.
+     * @apiSuccess {String} activityCode 活动码.
+     * @apiSuccess {String} shopCode 店铺邀请码.
+     * @apiSuccess {String} title 消息标题.
+     * @apiSuccess {String} content 消息内容.
+     * @apiSuccess {String} link 链接.
+     * @apiSuccess {String} detail 富文本信息内容.
+     * @apiSuccess {String} isPush 推送状态.
+     * @apiSuccess {Number} readNum 阅读数.
+     * @apiSuccess {String} status 消息配置状态.
+     * @apiSuccess {String} createTime 创建时间.
+     * @apiSuccess {String} updateTime 更新时间.
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": {
+     *           "id": 48,
+     *           "receiveType": "DAILYAPPNOTREG",
+     *           "companyCode": "",
+     *           "activityCode": "",
+     *           "shopCode": "",
+     *           "title": "test-00003",
+     *           "content": "test-00003",
+     *           "sendTime": null,
+     *           "link": "http://newyingxiao.choumei.lu/sysNews/redirectUrl/id/9",
+     *          "detail": "",
+     *           "isPush": "Y",
+     *           "readNum": 0,
+     *           "status": "NOM",
+     *           "createTime": "2015-11-06 16:36:46",
+     *           "updateTime": null
+     *       }
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *           }
+     */
+    /**
+     * 新增消息
+     */
+    public function showDailyMessage(){
+        //先查询日增长推送消息
+        $where = array('RECEIVE_TYPE' => 'DAILYAPPNOTREG','STATUS' => 'NOM');      
+        $orderBy = 'CREATE_TIME';
+        $OrderByVal = 'desc';
+        $MessageBoxInfo = PushConf::getMessageBoxInfoOnWhere($where,$orderBy,$OrderByVal);
+        return $this->success($MessageBoxInfo);        
+            
+    }       
     
 }
 ?>

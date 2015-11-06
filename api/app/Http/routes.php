@@ -1152,5 +1152,9 @@ Route::any('platform/getItemType',array(
         'as'=>'messageBox.dailyMessagePush',
         'uses'=>'MessageBox\MessageBoxController@dailyMessagePush'
     ));  
+    Route::any('messageBox/showDailyMessage',array(  
+        'as'=>'messageBox.showDailyMessage',
+        'uses'=>'MessageBox\MessageBoxController@showDailyMessage'
+    )); 
     
 //});
