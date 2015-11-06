@@ -161,14 +161,14 @@ class MessageBoxController extends Controller{
         if(empty($param['pushId']) || empty($param['title']) || empty($param['content']) || empty($param['sendTime'] || empty($param['isPush']))){
             throw new ApiException('必传参数不能为空');
         }
-        if(!($param['link'] || $param['detail'])){
+        if(empty($param['link']) && empty($param['detail'])){
             throw new ApiException('链接必传参数不能为空');
         }
         $data['TITLE'] = $param['title'];
         $data['CONTENT'] = $param['content'];
         $data['SEND_TIME'] = $param['sendTime'];
         $data['LINK'] = empty($param['link']) ? '' : $param['link'];
-        $data['DETAIL'] = urldecode($param['detail']);
+        $data['DETAIL'] = empty($param['detail']) ? '' : urldecode($param['detail']);
         $data['IS_PUSH'] = $param['isPush'];
         $data['CREATE_TIME'] =  date('Y-m-d H:i:s');
         $res = PushConf::where('Id','=',$param['pushId'])->update($data);
@@ -403,15 +403,18 @@ class MessageBoxController extends Controller{
 	
     public function addPushConf(){
         $param = $this->param;
-        if(empty($param['receiveType']) || empty($param['title']) || empty($param['content']) || empty($param['sendTime'])){
+        if(empty($param['receiveType']) || empty($param['title']) || empty($param['content']) || empty($param['sendTime'] || empty($param['isPush']))){
             throw new ApiException('必传参数不能为空');
         }
-        if(!($param['link'] || $param['detail'])){
+        if(empty($param['link']) && empty($param['detail'])){
             throw new ApiException('链接必传参数不能为空');
         }
         $receiveTypeArray = array('REG','APP','CODE','APPNOTREG');
         if(!in_array(trim($param['receiveType']),$receiveTypeArray)){
             throw new ApiException('参数错误--receiveType',ERROR::MessageBox_PARAMETER_ERROR);
+        }
+        if(!in_array(trim($param['isPush']),array('Y','N'))){
+            throw new ApiException('参数错误--isPush',ERROR::MessageBox_PARAMETER_ERROR);
         }
         if(strtotime($param['sendTime']) - time() < 30* 60){
             throw new ApiException('发送时间必须晚于提交时间30分钟之后',ERROR::MessageBox_PARAMETER_ERROR);
@@ -425,7 +428,7 @@ class MessageBoxController extends Controller{
         $data['CONTENT'] = $param['content'];
         $data['SEND_TIME'] = $param['sendTime'];
         $data['LINK'] = empty($param['link']) ? '' : $param['link'];
-        $data['DETAIL'] = urldecode($param['detail']);
+        $data['DETAIL'] = empty($param['detail']) ? '' : urldecode($param['detail']);
         $data['IS_PUSH'] = $param['isPush'];
         $data['STATUS'] = 'NOM';
         $data['CREATE_TIME'] =  date('Y-m-d H:i:s');
@@ -437,7 +440,6 @@ class MessageBoxController extends Controller{
         }else{
             throw new ApiException('消息添加失败',ERROR::MessageBox_ADD_FAILED);
         }
-        //   receiveType=TTT&newsTitle=TTT&newsContent=TTT&newsDetail=TTT
     }
     
     /**
