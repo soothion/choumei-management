@@ -369,7 +369,7 @@ class MessageBoxController extends Controller{
      * @apiName addPushConf
      * @apiGroup MessageBox
      *
-     * @apiParam {String} receiveType 必填，接收消息类型  REG-所有注册用户 APP-app安装用户  CODE-指定特征用户 APPNOTREG安装app未注册用户'
+     * @apiParam {String} receiveType 必填，接收消息类型  REG-所有注册用户 APP-app安装用户  CODE-指定特征用户 APPNOTREG安装app未注册用户 DAILYAPPNOTREG 日增长的安装app未注册用户'
      * @apiParam {String} title 必填，消息标题
      * @apiParam {String} content 必填, 消息内容
      * @apiParam {String} sendTime 必填, 发送时间
