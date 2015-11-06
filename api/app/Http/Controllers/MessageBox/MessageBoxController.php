@@ -748,7 +748,7 @@ class MessageBoxController extends Controller{
     }
     
      /**
-     * @api {post} /messageBox/showDailyMessage 10.日增长推送添加/编辑
+     * @api {post} /messageBox/showDailyMessage 11.日增长推送查看
      * 
      * @apiName showDailyMessage
      * @apiGroup MessageBox
