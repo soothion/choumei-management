@@ -43,7 +43,7 @@ class ShopCountController extends Controller
      * @apiSuccess {String} pay_type 付款方式:1银行存款 2账扣返还 3现金 4支付宝 5财付通
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} created_at 创建时间.
-     * @apiSuccess {String} day  要求付款日期.
+     * @apiSuccess {String} remark  备注
      * @apiSuccess {String} pay_day  实际付款日期.
      * @apiSuccess {Object} user  制表人信息.
      * @apiSuccess {Object} salon 店铺信息.
@@ -71,7 +71,7 @@ class ShopCountController extends Controller
      *                     "pay_money": "2000.00",
      *                     "pay_type": 1,
      *                     "cost_money": "2500.00",
-     *                     "day": "2015-07-02",
+     *                     "remark": "备注",
      *                     "pay_day": "2015-09-02",
      *                     "user": {
      *                         "id": 1,
@@ -149,7 +149,7 @@ class ShopCountController extends Controller
             'sort_key'=>self::T_STRING,
             'sort_type'=>self::T_STRING,
         ]);  
-        $header = ['店铺编码','店铺名称','付款单号','付款类型','支付方式','付款金额','要求付款日期','实际付款日期','创建日期','制单人','状态'];      
+        $header = ['店铺名称','付款单号','付款类型','支付方式','付款金额','实际付款日期','备注','创建日期','制单人','状态'];      
         $items = ShopCountApi::getPrepayCondition($param)->addSelect('updated_at')->get()->toArray(); 
         Event::fire('shopcount.export');
         $this->export_xls("转付单".date("Ymd"),$header,self::format_prepay_data($items));
@@ -181,7 +181,7 @@ class ShopCountController extends Controller
     }
 
      /**
-     * @api {post} /shop_count/create 3.新建转付单
+     * @api {post} /shop_count/create 3.新建转付单  接口已废弃
      * @apiName create
      * @apiGroup ShopCount
      *
@@ -210,18 +210,19 @@ class ShopCountController extends Controller
      */
     public function store()
     {
-        $param = $this->parameters([
-            'type'=>self::T_INT,
-            'merchant_id'=>self::T_INT,
-            'salon_id'=>self::T_INT,
-            'pay_money'=>self::T_FLOAT,
-            'pay_type'=>self::T_INT,
-            'day'=>self::T_STRING,
-        ]);
-        $param['uid'] = $this->user->id;        
-        $ret = ShopCountApi::makePrepay($param);    
-        Event::fire('shopcount.store',$ret['code']);
-        return $this->success(['id'=>$ret['id']]);
+        //废弃
+//         $param = $this->parameters([
+//             'type'=>self::T_INT,
+//             'merchant_id'=>self::T_INT,
+//             'salon_id'=>self::T_INT,
+//             'pay_money'=>self::T_FLOAT,
+//             'pay_type'=>self::T_INT,
+//             'day'=>self::T_STRING,
+//         ]);
+//         $param['uid'] = $this->user->id;        
+//         $ret = ShopCountApi::makePrepay($param);    
+//         Event::fire('shopcount.store',$ret['code']);
+//         return $this->success(['id'=>$ret['id']]);
     }
 
    /**
@@ -237,7 +238,7 @@ class ShopCountController extends Controller
      * @apiSuccess {Number} pay_type 付款方式 1银行存款 2账扣返还 3现金 4支付宝 5财付通
      * @apiSuccess {String} pay_money 付款金额.
      * @apiSuccess {String} created_at 创建时间.
-     * @apiSuccess {String} day  要求付款日期.
+     * @apiSuccess {String} remark  备注.
      * @apiSuccess {String} pay_day  实际付款日期.
      * @apiSuccess {Object} user  制表人信息.
      * @apiSuccess {Object} salon 店铺信息.
@@ -256,7 +257,8 @@ class ShopCountController extends Controller
      *               "uid": 1,
      *               "pay_money": "2000.00",
      *               "pay_type": "1",
-     *               "day": "2015-07-02",
+     *               "pay_day":"2015-10-10",
+     *               "remark": "备注",
      *               "user": {
      *                   "id": 1,
      *                   "name": ""
@@ -298,7 +300,7 @@ class ShopCountController extends Controller
     }
 
      /**
-     * @api {post} /shop_count/update/{id} 5.转付单 修改
+     * @api {post} /shop_count/update/{id} 5.转付单 修改  (废弃)
      * @apiName update
      * @apiGroup ShopCount
      *
@@ -326,28 +328,29 @@ class ShopCountController extends Controller
      *		}
      */
     public function update($id)
-    {        
-        $param = $this->parameters([
-            'merchant_id'=>self::T_INT,
-            'salon_id'=>self::T_INT,
-            'pay_money'=>self::T_INT,
-            'pay_type'=>self::T_INT,
-            'day'=>self::T_STRING,
-        ]);
-        $param['uid'] = $this->user->id;
-        $ret = ShopCountApi::updatePrepay($id, $param);
-        if(! $ret)
-        {
-            throw new \Exception("参数有误,更新失败");
-        }
+    { 
+        //废弃       
+//         $param = $this->parameters([
+//             'merchant_id'=>self::T_INT,
+//             'salon_id'=>self::T_INT,
+//             'pay_money'=>self::T_INT,
+//             'pay_type'=>self::T_INT,
+//             'day'=>self::T_STRING,
+//         ]);
+//         $param['uid'] = $this->user->id;
+//         $ret = ShopCountApi::updatePrepay($id, $param);
+//         if(! $ret)
+//         {
+//             throw new \Exception("参数有误,更新失败");
+//         }
         
-        $prepays = PrepayBill::where('id',$id)->get()->toArray();
-        Event::fire('shopcount.update',$prepays[0]['code']);
-        return $this->success(['id'=>$id]);
+//         $prepays = PrepayBill::where('id',$id)->get()->toArray();
+//         Event::fire('shopcount.update',$prepays[0]['code']);
+//         return $this->success(['id'=>$id]);
     }
 
      /**
-     * @api {post} /shop_count/destroy/{id} 6.转付单 删除
+     * @api {post} /shop_count/destroy/{id} 6.转付单 删除  (废弃)
      * @apiName destroy
      * @apiGroup ShopCount
      * 
@@ -370,18 +373,18 @@ class ShopCountController extends Controller
      */
     public function destroy($id)
     {        
-        //是 ShopCount 不是 ShopCountApi  不要改回去了
+//         //是 ShopCount 不是 ShopCountApi  不要改回去了
   
-        $ret = ShopCountApi::deletePrepay($id);
-        if($ret)
-        {
-            Event::fire('shopcount.destroy',$ret['code']);
-            return $this->success(['ret'=>1]);
-        }
-        else
-        {
-            throw new ApiException("删除出错!",ERROR::UNKNOWN_ERROR);
-        }
+//         $ret = ShopCountApi::deletePrepay($id);
+//         if($ret)
+//         {
+//             Event::fire('shopcount.destroy',$ret['code']);
+//             return $this->success(['ret'=>1]);
+//         }
+//         else
+//         {
+//             throw new ApiException("删除出错!",ERROR::UNKNOWN_ERROR);
+//         }
     }
     
     /**
@@ -468,26 +471,23 @@ class ShopCountController extends Controller
     {
         $res = [];
         foreach ($datas as $data) {
-            $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
-            $salon_id = isset($data['salon']['salonid']) ? $data['salon']['salonid'] : '';
-            $salon_sn = isset($data['salon']['sn']) ? $data['salon']['sn'] : '';
+            $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';      
             $username = isset($data['user']['name'])?$data['user']['name']:'';
             $typename = $data['type'] == 3 ? "交易代收款返还" : "付交易代收款";
             $pay_type_name = Mapping::getPayTypeName($data['pay_type']);
             $username = $data['user']['name'];
             $statename = Mapping::getPrepayStateName($data['state']);
-            $res[] = [
-                $salon_sn,
+            $res[] = [               
                 $salon_name,
                 $data['code'],
                 $typename,
                 $pay_type_name,
                 $data['pay_money'],
-                $data['day'],
                 $data['pay_day'],
+                $data['remark'],
                 date("Y-m-d",strtotime($data['updated_at'])),
                 $username,
-                $statename
+                $statename,
             ];
         }
         return $res;

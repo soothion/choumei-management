@@ -582,6 +582,20 @@ class ERROR
       CONST SCORE_CONF_UPDATE_FAILED=-51106;
      
 
+     
+
+     /////////////付款单相关//////////////////
+     /**
+      * @param 提现单原数据不存在
+      */
+     CONST PAY_WITHDRAW_NOT_EXIST = -51300;
+     
+     /**
+      * @param 提现单原状态不正确
+      */
+     CONST PAY_WITHDRAW_WRONG_STATE = -51301;
+
+
 
      ////////////活动管理模块//////////////
      /**
@@ -598,6 +612,7 @@ class ERROR
       *@param 活动关闭失败
       */
      CONST PROMOTION_CLOSED_FAILED=-51202;
+
 
      ////////////项目仓库//////////////
      /**
@@ -625,8 +640,5 @@ class ERROR
       *@param 项目不存在
       */
      CONST ITEM_NOT_FOUND =  -51106;
-
-
-
 
 }

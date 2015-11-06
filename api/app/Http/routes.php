@@ -78,6 +78,10 @@ Route::any('merchant/checkMerchantSn',array( //检测商户编号
 	'as'=>'merchant.checkMerchantSn',
 	'uses'=>'Merchant\MerchantController@checkMerchantSn'
 ));
+Route::any('merchant/getSn',array( //获取商户编号
+				'as'=>'merchant.getSn',
+				'uses'=>'Merchant\MerchantController@getSn'
+));
 Route::any('salon/checkSalonSn',array(  //检测店铺编号
 	'as'=>'salon.checkSalonSn',
 	'uses'=>'Merchant\SalonController@checkSalonSn'
@@ -143,6 +147,9 @@ Route::any('platform/getItemType',array(
     'as'=>'platform.getItemType',
     'uses'=>'Promotion\PlatformController@getItemType'
 ));
+
+//商家后台提现
+Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
 //权限管理后台接口
 //Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){

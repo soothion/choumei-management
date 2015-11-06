@@ -12,7 +12,7 @@
 				<h4>付款列表</h4>
 			</div>
 			<div>
-				<a class="btn-primary" href="edit.html"><i class="fa fa-plus" ></i>新增</a>
+				<a class="btn-primary" data-slug="pay_manage.create" href="edit.html"><i class="fa fa-plus" ></i>新增</a>
 			</div>
 		</div>
         </div>
@@ -34,7 +34,7 @@
 				<button class="btn">搜索</button>
 				<button type="button" class="btn" id="filter-toggle-btn">
 					筛选条件 <i class="fa fa-angle-down"></i>
-				</button>
+				</button>				
 				<button class="btn" form="export"><i class="fa fa-file-excel-o"></i> 导出</button>
 				<div class="filter-box" style="display:none">
 					<div class="flex-box">
@@ -81,10 +81,13 @@
                             <th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款类型 <i class="fa fa-sort"></i></a></th>                          
                             <th>付款金额</th>
 							<th><a data-role="hash" href="#page=1&sort_key=pay_type&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">付款方式 <i class="fa fa-sort"></i></a></th>							
+							<!--
 							<th><a data-role="hash" href="#page=1&sort_key=require_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求付款日期 <i class="fa fa-sort"></i></a></th>			       
+							-->
                             <th><a data-role="hash" href="#page=1&sort_key=pay_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">实际付款日期 <i class="fa fa-sort"></i></a></th>
 							<th>创建日期</th>
                             <th>制单人</th>
+							<th>备注</th>
                             <th>状态</th>
                             <th>操作</th>
                         </tr>
@@ -104,11 +107,20 @@
 					<td><%=type[item.type]%></td>
 					<td><%=item.money%></td>
 					<td><%=pay_type[item.pay_type]%></td>
+					<!--
 					<td><%=item.require_day%></td>
+					-->
 					<td><%=item.pay_day%></td>				 
 					<td><%=new Date(item.created_at).format("yyyy-MM-dd")%></td>
-					<td><%=item.make_user?item.make_user.name:""%></td>				 
-					<td><%=state[item.state]%></td>
+					<td>
+						<%if(item.from==1){%>
+							<%=item.make_user?item.make_user.name:""%>
+						<%}else{%>
+							<%=item.salon_user?item.salon_user.username:""%>
+						<%}%>
+					</td>
+					<td title="<%=item.remark%>"><%=item.remark.length>7?item.remark.substring(0,7)+"...":item.remark%></td>
+					<td><%=item.state==1&&item.from==2?"审批不通过":state[item.state]%></td>
 					<%
 						var page="invest";
 						if(item.type==1){
@@ -119,7 +131,7 @@
 							}
 						}
 					%>
-					<td><a class="link" target="_blank" href="detail-<%=page%>.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a></td>
+					<td><a class="link" target="_blank" href="detail-<%=page%>.html?id=<%=item.id%>" data-slug="pay_manage.show,pay_manage.update">查看</a></td>
                   </tr>
 				  <%})%>
 				  <%}%>

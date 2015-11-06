@@ -198,8 +198,6 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
     width:90%;
     left:5%;
     z-index: 1000;
-    -webkit-user-select:none;
-    user-select:none;
 	line-height: 38px;
     line-height: 2.9rem;
 	/*

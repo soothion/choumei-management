@@ -302,36 +302,26 @@ class Salon extends Model {
 		$affectid = self::where(['salonid'=>$salonid])->update($save);
 		if($affectid && $type == 1)
 		{
-			SalonUser::where(['salonid'=>$salonid])->update(['status'=>2]);//停用普通用户账号
-			$usersCount = DB::table('salon_user')
-						->where('merchantId','=' ,$merchantId)
-						->where('salonid','!=' ,0)
-						->where('status','=' ,1)
-						->count();
+			SalonUser::where(['salonid'=>$salonid])->update(['status'=>SalonUser::STATUS_STOP]);//停用普通用户账号
+			$usersCount = SalonUser::where(['merchantId'=>$merchantId,'status'=>SalonUser::STATUS_UP])->where('salonid','!=',0)->count();
 			if(!$usersCount)
 			{
-				DB::table('salon_user')//停用账号  超级管理员
-		            ->where('salonid','=' ,0)
+				SalonUser::where(['salonid'=>0])//停用账号  超级管理员
 		            ->where('merchantId','=' ,$merchantId)
-		            ->update(['status'=>2]);
+		            ->update(['status'=>SalonUser::STATUS_STOP]);
 			}			
 			$flag = Merchant::where(['id'=>$merchantId])->decrement('salonNum',1);//店铺数量减1
 			
 		}
 		elseif($affectid && $type == 2)
 		{
-			SalonUser::where(['salonid'=>$salonid])->update(['status'=>1]);//恢复普通用户账号
-			$usersCount = DB::table('salon_user')
-						->where('merchantId','=' ,$merchantId)
+			SalonUser::where(['salonid'=>$salonid])->update(['status'=>SalonUser::STATUS_UP]);//恢复普通用户账号
+			$usersCount = SalonUser::where(['merchantId'=>$merchantId,'status'=>1])
 						->where('salonid','!=' ,0)
-						->where('status','=' ,1)
 						->count();
 			if($usersCount)
 			{
-				DB::table('salon_user')//恢复账号  超级管理员
-		            ->where('salonid','=' ,0)
-		            ->where('merchantId','=' ,$merchantId)
-		            ->update(['status'=>1]);
+		         SalonUser::where(['merchantId'=>$merchantId,'status'=>0])->update(['status'=>SalonUser::STATUS_UP]);//恢复账号  超级管理员  
 			}
 			
 			$flag = Merchant::where(['id'=>$merchantId])->increment('salonNum',1);//店铺数量加1
@@ -363,30 +353,20 @@ class Salon extends Model {
 		}
 		DB::beginTransaction();
 		$affectid =  Salon::where(['salonid'=>$salonid])->update(array('salestatus'=>2,'status'=>3));
-		
-		SalonUser::where(['salonid'=>$salonid])->update(['status'=>3]);//删除普通用户账号
-		
-		$merchantId = $result->merchantId;
-		$usersCount = DB::table('salon_user')
-							->where('merchantId','=' ,$merchantId)
-							->where('salonid','!=' ,0)
-							->where('status','=' ,1)
-							->count();
-		if(!$usersCount)
-		{
-			DB::table('salon_user')//删除账号  超级管理员
-				->where('salonid','=' ,0)
-				->where('merchantId','=' ,$merchantId)
-				->update(['status'=>3]);
-		}
-		if($affectid)
-		{
-			DB::commit();
-		}
-		else
+		if(!$affectid)
 		{
 			DB::rollBack();
+			return $affectid;
 		}
+		SalonUser::where(['salonid'=>$salonid])->delete();//删除普通用户账号
+		$merchantId = $result->merchantId;
+		$usersCount = SalonUser::where(['status'=>1,'merchantId'=>$merchantId])->where('salonid','!=',0)->count();
+		if(!$usersCount)
+		{
+			//删除账号  超级管理员
+			SalonUser::where(['salonid'=>0,'merchantId'=>$merchantId])->delete();
+		}
+		DB::commit();
 		return $affectid;
 	}
 	
@@ -495,9 +475,7 @@ class Salon extends Model {
 					{
 						$salonList[$key] = '';
 					}
-					
 				}
-				
 				$salonList['salonImg'] = SalonWorks::getSalonWorks($salonid,3);//店铺图集
 				$salonList['workImg'] = SalonWorks::getSalonWorks($salonid,4);//团队图集
 				
@@ -553,17 +531,24 @@ class Salon extends Model {
 	/**
 	 * 自动生成店铺编号
 	 * */
-	public static function getSn($merchantId)
+	public static function getSn($merchantId,$addNums = 1)
 	{
 		$merchantSn = Merchant::where(array('id'=>$merchantId))->select(array('sn'))->first();
 		$sCount = Salon::where(array('merchantId'=>$merchantId))->count();
-		$sn = intval($sCount)+1; //店铺编号，根据商户编号+01，自增长3位
+		$sn = intval($sCount)+$addNums; //店铺编号，根据商户编号+01，自增长3位
 	    $tps = '';	 
 		for($i=3;$i>strlen($sn);$i--)
 		{
 			$tps .= 0; 
 		}
-		return $merchantSn->sn.$tps.$sn;	
+		$tmpSn = $merchantSn->sn.$tps.$sn;	
+		$num = self::getCheckSn($tmpSn);
+		if($num)
+		{
+			$twoNums = $addNums+1;
+			$tmpSn = self:: getSn($merchantId,$twoNums);
+		}
+		return $tmpSn;
 	}
     
     public static function getSalonsByIds($salon_ids)
@@ -586,8 +571,7 @@ class Salon extends Model {
 		$salonResult = self::where(array('salonid'=>$salonid))->first();
 		if($data['changeInTime'] != $salonResult->changeInTime || $data['salonChangeGrade'] != $salonResult->salonChangeGrade || $addAct == 1)//1 代表添加
 		{
-			DB::table('salon_ratings_record')->where('salonid','=',$salonid)->where('changeTime','>',time())->delete();
-			
+			SalonRatingsRecord::where(['salonid'=>$salonid])->where('changeTime','>',time())->delete();
 			$logRs = SalonRatingsRecord::where(['salonid'=>$salonid])->orderBy('id','desc')->first();
 			if($logRs)
 			{
@@ -662,7 +646,7 @@ class Salon extends Model {
 				$affectid = SalonInfo::insertGetId($dataInfo);
 				if($affectid)
 				{
-					DB::table('merchant')->where('id','=',$data['merchantId'])->increment('salonNum',1);//店铺数量加1
+					Merchant::where(['id'=>$data['merchantId']])->increment('salonNum',1);//店铺数量加1
 					//触发事件，写入日志
 					Event::fire('salon.save','店铺Id:'.$salonId.' 店铺名称：'.$data['salonname']);
 				}
@@ -686,15 +670,43 @@ class Salon extends Model {
 			DB::rollBack();
 		}
 		return $affectid;
-	
 	}         
         
-        public static function getSalonInfoByCodeArr($field,$where,$codeArr){        
-            $salonInfo = self::select($field)
-                         ->rightjoin('dividend', function ($join) {
-                             $join->on('salon.salonid', '=', 'dividend.salon_id');
-                         })->where($where)->whereIn('dividend.recommend_code',$codeArr)->get()->toArray(); 
-            return $salonInfo;
-        }
+    public static function getSalonInfoByCodeArr($field,$where,$codeArr){        
+        $salonInfo = self::select($field)
+                     ->rightjoin('dividend', function ($join) {
+                         $join->on('salon.salonid', '=', 'dividend.salon_id');
+                     })->where($where)->whereIn('dividend.recommend_code',$codeArr)->get()->toArray(); 
+        return $salonInfo;
+    }
+
+
+	/**
+	 * 检测店铺编号是否存在
+	 *
+	 * */
+	public static function getCheckSn($sn,$id=0)
+	{
+		$query = self::getQuery();
+		$query->where('sn',$sn);
+		if($id)
+		{
+			$query->where('id',$id);
+		}
+		return  $query->count();
+	}
+	
+	
+	public static function getMercharId($salonid)
+	{
+	    $base = self::where('salonid',$salonid)->select('merchantId')->first();
+	    if(!empty($base))
+	    {
+	        return $base->merchantId;
+	    }
+	    
+	    return 0;
+	}
+
 }
 

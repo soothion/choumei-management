@@ -174,6 +174,7 @@ class ListController extends Controller {
     	$where = 'status = 1 AND department_id = 13 AND position_id NOT IN (77,78, 79) AND city_id = '.$cityid;
     	$sql = "SELECT id,name as businessName from cm_managers where {$where} ORDER BY CONVERT( name USING gbk ) COLLATE gbk_chinese_ci ASC";
 
+
     	$result = DB::select($sql);
 		return $this->success($result);
     }

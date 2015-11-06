@@ -9,6 +9,12 @@ class Utils
 {
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
     /**
+     * 外部调用统一加密密钥
+     * @var unknown
+     */
+    CONST TOKEN_KEY = "CHOUmei";
+    
+    /**
      * 组合数据时的一对一
      * @var unknown
      */
@@ -267,6 +273,36 @@ class Utils
 	        }
 	    }
 	    return $result;
+	}
+	
+    /**
+     * 外部调用统一加密方法
+     * @param array $params
+     * @return array
+     */
+	public static function makeToken(&$params)
+	{
+	    asort($params);
+	    $url = http_build_query($params);
+	    $params['token'] =  md5(md5($url).self::TOKEN_KEY);
+	}
+	
+
+	/**
+	 * 外部调用统一加密验证
+	 * @param array $params
+	 * @return array
+	 */
+	public static function checkToken($params)
+	{
+	    if(isset($params['token']))
+	    {
+	        $token = $params['token'];
+	        unset($params['token']);
+	        self::makeToken($params);
+	        return $params['token'] === $token;
+	    }
+	    return false;
 	}
 	
 	/**

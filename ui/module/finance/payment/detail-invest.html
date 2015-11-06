@@ -18,24 +18,27 @@
    <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
+			<%if(data.from==1){%>
 			<%if(data.state==1||data.state==2){%>
-			<form action="pay_manage/destroy/<%=query.id%>" data-role="normal" data-confirm="你正在删除此付款单，是否执行删除？" 
-			onsuccess="parent.lib.popup.result({define:function(){history.back()}})">
+			<form data-slug="pay_manage.destroy" action="pay_manage/destroy/<%=query.id%>" data-role="normal" data-confirm="你正在删除此付款单，是否执行删除？" 
+			onsuccess="parent.lib.popup.result({define:function(){window.close()}})">
 				<button class="btn">删除</button>
 			</form>
 			<%}%>
 			<%if(data.state==1||data.state==2){%>
 			<span class="space"></span>
-			<a class="btn" href="edit.html?id=<%=query.id%>">编辑</a>
+			<a data-slug="pay_manage.update" class="btn" href="edit.html?id=<%=query.id%>">编辑</a>
 			<%}%>
 			<%if(data.state==1){%>
 			<span class="space"></span>
-			<form action="pay_manage/update/<%=query.id%>" data-role="normal" 
-			onsuccess="parent.lib.popup.result({define:function(){history.back()}})">
+			<form data-slug="pay_manage.update" action="pay_manage/update/<%=query.id%>" data-role="normal" 
+			onsuccess="parent.lib.popup.result({define:function(){window.close()}})">
 				<button class="btn">提交</button>
 			</form>
 			<%}%>
+			<%}%>
 			&nbsp;
+			<button class="btn btn-cancel" type="button">返回</button>
 		</div>
         <div class="table-detail">
         <table>
@@ -63,10 +66,6 @@
                   <td>付款金额：</td>
                   <td><%=data.money%></td>
                 </tr>
-                <tr>
-                  <td>要求付款日期：</td>
-                  <td class="format"><%=data.require_day%></td>
-                </tr>
 				<tr>
                   <td>回款周期：</td>
                   <td><%=data.cycle%>个月</td>
@@ -80,12 +79,22 @@
                   <td><%=data.cycle_money%><span class="weak"> <span class="space"></span>尾差金额在最后一个回款周期补回</span></td>
                 </tr>
 				<tr>
+                  <td>备注：</td>
+                  <td><%=data.remark%></td>
+                </tr>
+				<tr>
                   <td>创建日期：</td>
                   <td class="format"><%=new Date(data.created_at).format("yyyy-MM-dd")%> </td>
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.make_user?data.make_user.name:""%></td>
+                  <td>
+					<%if(data.from==1){%>
+						<%=data.make_user?data.make_user.name:""%>
+					<%}else{%>
+						<%=data.salon_user?data.salon_user.username:""%>
+					<%}%>
+				  </td>
                </tr>
 			   <tr>
                  <td>出纳：</td>
@@ -97,7 +106,7 @@
                </tr>
                 <tr>
                   <td>状态：</td>
-                  <td><%=state[data.state]%></td>
+                  <td><%=data.state==1&&data.from==2?"审批不通过":state[data.state]%></td>
                 </tr>
               </tbody>
         </table>

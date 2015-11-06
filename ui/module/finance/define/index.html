@@ -33,7 +33,6 @@
 				</span>
 				<button class="btn">搜索</button>
 			</form>
-			<form action="pay_manage/export" data-role="export" ><button class="btn" ><i class="fa fa-file-excel-o"></i> 导出</button></form>
            <div class="table" ajat="pay_manage/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
@@ -50,6 +49,7 @@
 							<th><a data-role="hash" href="#page=1&sort_key=require_day&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">要求付款日期 <i class="fa fa-sort"></i></a></th>			       
                             <th><a data-role="hash" href="#page=1&sort_key=confirm_at&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">审批日期 <i class="fa fa-sort"></i></a></th>
                             <th>制单人</th>
+							<th>备注</th>
                             <th>状态</th>
                             <th>操作</th>
                         </tr>
@@ -71,8 +71,15 @@
 					<td><%=pay_type[item.pay_type]%></td>
 					<td class="format"><%=item.require_day%></td>				 
 					<td class="format"><%=item.confirm_at%></td>
-					<td><%=item.make_user?item.make_user.name:""%></td>					 
-					<td><%=state[item.state]%></td>
+					<td>
+						<%if(item.from==1){%>
+							<%=item.make_user?item.make_user.name:""%>
+						<%}else{%>
+							<%=item.salon_user?item.salon_user.username:""%>
+						<%}%>
+					</td>
+					<td title="<%=item.remark%>"><%=item.remark.length>7?item.remark.substring(0,7)+"...":item.remark%></td>	
+					<td><%=item.state==1&&item.from==2?"审批不通过":state[item.state]%></td>
 					<%
 						var page="invest";
 						if(item.type==1){
@@ -92,15 +99,15 @@
 			<%if(data.data&&data.data.length>0){%>
 			<div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form disabled action="pay_manage/confirm" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+				<form  data-slug="pay_manage.confirm" disabled action="pay_manage/confirm" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 					<button class="btn">确认付款</button>
 					<input type="hidden" name="do" value="1" />
 					<input type="hidden" name="ids" />
 				</form>
 				<span class="space"></span>
-				<form disabled action="pay_manage/confirm" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+				<form data-slug="pay_manage.confirm" disabled action="pay_manage/confirm" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 					<button class="btn" >拒绝付款</button>
-					<input type="hidden" name="do" value="2" />
+					<input type="hidden" name="do" value="0" />
 					<input type="hidden" name="ids" />
 				</form>
 			</div>
@@ -112,10 +119,11 @@
 	<script type="text/javascript">
 		$(function(){
 			$('#table').on('change','tbody label input',function(){
+				var forms=$('.table-bottom form');
 				if($('tbody label input:checked').length>0){
-					$('.table-bottom form').attr('disabled',false);
+					forms.attr('disabled',false);
 				}else{
-					$('.table-bottom form').attr('disabled',true);
+					forms.attr('disabled',true);
 				}
 				var checked=$('tbody label input:checked');
 				var ids=[];

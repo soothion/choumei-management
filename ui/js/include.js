@@ -1,9 +1,9 @@
 ﻿var cfg={
-	version:'1.6.6.2',
+	version:'1.6.7.2',
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
 	dev:{
-		host:'http://192.168.13.46:8160/',
+		host:'http://192.168.13.46:8155/',
 		token:'http://dev-cmweb.choumei.me/v1/file/qiniu/get-token.html',
 		upload:'http://qiniu-plupload.qiniudn.com/',
 		previewMessage:'http://dev-user.choumei.me/'

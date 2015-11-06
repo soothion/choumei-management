@@ -23,7 +23,7 @@ class SalonController extends Controller {
     private $addFields = array(
 			    		"merchantId",
 			            "salonname",
-    					//"logo",
+    					// "logo",
 						"addr",
 						"addrlati",
 						"addrlong",
@@ -303,7 +303,7 @@ class SalonController extends Controller {
 	*
 	* @apiParam {Number} merchantId 必填,商户Id
 	* @apiParam {Number} salonid 必填,店铺id .
-	* @apiParam {Number} sn 必填,店铺编号.
+	* @apiParam {String} sn 必填,店铺编号.
 	* @apiParam {String} salonname 必填,店名.
 	* @apiParam {Number} district 必填,行政地区 . 
 	* @apiParam {String} addr 必填,详细街道信息.
@@ -422,7 +422,7 @@ class SalonController extends Controller {
 		$data["salonid"] = isset($param["salonid"])?intval($param["salonid"]):0;//店铺id
 		
 		//商铺基本信息
-		//$data["sn"] = isset($param["sn"])?trim($param["sn"]):"";//店铺编号  1.3自动生成
+		$data["sn"] = isset($param["sn"])?trim($param["sn"]):"";//店铺编号  1.5.5新增自动生成    但可以修改
 		$data["salonname"] = isset($param["salonname"])?trim($param["salonname"]):"";//店铺名称
 		$data["district"] = isset($param["district"])?trim($param["district"]):"";//行政地区  
 		$data["addr"] = isset($param["addr"])?trim($param["addr"]):"";//详细街道信息
@@ -523,7 +523,7 @@ class SalonController extends Controller {
 		
 		$merchantQuery = Merchant::getQuery();
 		$salonQuery = Salon::getQuery();
-		$merchantData = $merchantQuery->where(array("id"=>$data["merchantId"],"status"=>1))->get();//商户id 检测
+		$merchantData = $merchantQuery->where(array("id"=>$data["merchantId"],"status"=>1))->first();//商户id 检测
 		if(!$merchantData)
 		{
 			throw new ApiException("商户id有误", ERROR::MERCHANT_ID_IS_ERROR);
@@ -532,16 +532,27 @@ class SalonController extends Controller {
 		$joinDividend = isset($param['dividendStatus'])?intval($param['dividendStatus']):'';
 		if($data["salonid"])
 		{
+			if(!$data['sn'])
+			{
+				throw new ApiException("参数错误", ERROR::MERCHANT_ERROR);
+			}
 			$whereInfo["salonid"] = $data["salonid"];
 			$where["salonid"] = $data["salonid"];
 			$dataInfo["upTime"] = time();
 			
-			$ordRs = $salonQuery->where($whereInfo)->select(array("sn"))->get();
+			$ordRs = $salonQuery->where($whereInfo)->select(array("sn"))->first();
 			if(!$ordRs)
 			{
 				throw new ApiException("店铺数据不存在，id错误", ERROR::MERCHANT_ID_IS_ERROR);
 			}
-			
+			if($ordRs->sn != $data['sn'])
+			{
+				$snNo = Salon::getCheckSn($data["sn"]);
+				if($snNo)
+				{
+					throw new ApiException("店铺编号重复已经存在", ERROR::MERCHANT_SN_IS_ERROR);
+				}
+			}
 		}
 		else 
 		{
@@ -549,6 +560,7 @@ class SalonController extends Controller {
 			$whereInfo = '';
 			$data["add_time"] = time();
 			$data["bountyType"] = 3;//店铺等级C
+			unset($data['sn']);
 			$dataInfo["addTime"] = time();
 		}
 		
@@ -572,7 +584,6 @@ class SalonController extends Controller {
 	* @apiGroup salon
 	*
 	* @apiParam {Number} salonid 必填,店铺id.
-
 	* @apiSuccess {Number} sn 店铺编号.
 	* @apiSuccess {Number} salestatus 状态 0终止合作 1正常合作.
 	* @apiSuccess {String} salonname 店铺名.
@@ -787,7 +798,7 @@ class SalonController extends Controller {
 			throw new ApiException("参数错误", ERROR::MERCHANT_ERROR);
 		}
 
-		$snNo = $this->getCheckSn($sn);//检测商铺编号
+		$snNo = Salon::getCheckSn($sn);//检测商铺编号
 		if($snNo)
 		{
 			throw new ApiException("店铺编号重复已经存在", ERROR::MERCHANT_SN_IS_ERROR);
@@ -833,22 +844,18 @@ class SalonController extends Controller {
 		{
 			throw new ApiException("参数错误", ERROR::MERCHANT_ERROR);
 		}
-		$result = DB::table('salon')
-				->where('salonid',"=", $salonid)
-				->where('salestatus',"!=", '3')
-				->select(["salestatus","merchantId"])
-				->first();
-		$rs = (array)$result;
-		if(!$rs)
+		$result = Salon::where(['salonid'=>$salonid])->where('status','!=','3')->select(["status","salestatus","merchantId"])->first();
+		if(!$result)
 		{
 			throw new ApiException("操作店铺不存在", ERROR::MERCHANT_ID_IS_ERROR);
 		}
-		if($rs["salestatus"] == 1 && $type == 2)
+		$rs = $result->toArray();
+		if($rs["status"] == 1 && $type == 2)
 		{
 			throw new ApiException("该店铺不是终止合作的店铺", ERROR::MERCHANT_SALON_STATUS_IS_ERROR);
 			
 		}
-		elseif($rs["salestatus"] == 0 && $type == 1)
+		elseif($rs["status"] == 2 && $type == 1)
 		{
 			throw new ApiException("该店铺已经终止合作", ERROR::MERCHANT_SALON_STATUS_IS_ERROR);
 		}
@@ -946,6 +953,7 @@ class SalonController extends Controller {
 		}
 		return  $query->count();
 	}
+
 	
 	/**
 	 * @api {post} /salon/export 8.店铺列表导出
@@ -1096,7 +1104,6 @@ class SalonController extends Controller {
 			});
 		})->export('xls');
 	}
-	
 	
 }
 

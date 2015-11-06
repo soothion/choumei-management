@@ -51,10 +51,7 @@
                   <td>付款金额：</td>
                   <td><%=data.money%></td>
                 </tr>
-                <tr>
-                  <td>要求付款日期：</td>
-                  <td><%=data.require_day%></td>
-                </tr>
+				<%if(data.type==2){%>
 				<tr>
                   <td>回款周期：</td>
                   <td><%=data.cycle||0%>个月</td>
@@ -66,6 +63,11 @@
 				 <tr>
                   <td>周期回款金额：</td>
                   <td><%=data.cycle_money||0%> <span class="space"></span><span class="weak">尾差金额在最后一个回款周期补回</span></td>
+                </tr>
+				<%}%>
+				<tr>
+                  <td>备注：</td>
+                  <td><%=data.remark%></td>
                 </tr>
               </tbody>
         </table>

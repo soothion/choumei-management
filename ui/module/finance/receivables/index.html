@@ -89,6 +89,7 @@
 							<th><a data-role="hash" href="#page=1&sort_key=receiptDate&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">收款日期 <i class="fa fa-sort"></i></a></th>			       
 							<th><a data-role="hash" href="#page=1&sort_key=addTime&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">创建日期<i class="fa fa-sort"></i></a></th>
                             <th>制单人</th>
+							<th>备注</th>
                             <th><a data-role="hash" href="#page=1&sort_key=status&sort_type=<%=query.sort_type=="desc"?"asc":"desc"%>">状态<i class="fa fa-sort"></i></a></th>
                             <th>操作</th>
                         </tr>
@@ -115,7 +116,8 @@
 					</td>				 
 					<td><%=new Date(item.addTime*1000).format("yyyy-MM-dd")%>
 					</td>
-					<td><%=item.preparedByName%></td>				 
+					<td><%=item.preparedByName%></td>
+					<td title="<%=item.remark%>"><%=item.remark.length>7?item.remark.substring(0,7)+"...":item.remark%></td>		
 					<td><%=status[item.status]%></td>
 					  
 					<td><a class="link" target="_blank" href="detail.html?id=<%=item.id%>" data-slug="receivables.getone">查看</a></td>

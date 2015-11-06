@@ -69,8 +69,11 @@
                 <div class="control complete">
                     <input type="hidden" name="salon_id" id="salonid" value="<%=data.salonId%>"/>
                     <input type="hidden" name="salonname" id="salonname" value="<%=data.salonname%>"/>
-                    <input id="search" type="text" value="<%=data.salonname%>" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" autocomplete="off" disabled required>
-                    <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ajat-resources="/module/public/widget/autocomplete/index.js"></div>
+                    <input id="search" type="text" value="<%=data.salonname%>" 
+						ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" 
+						ajat-resources="/module/public/widget/autocomplete/index.js" 
+						autocomplete="off" disabled required>
+                    <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
                     <label>
                         <input type="checkbox" value="<%=data.reward%>"/>
                         <span>修改所属店铺</span>
@@ -81,7 +84,7 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>所属商户：</label>
                 <div class="control">
-                    <input type="text"  id="merchantname" value="<%=data.name%>" disabled >
+                    <input type="text"  id="merchantname" value="<%=data.name%>" disabled required requiredmsg="没有找到店铺名称对应的商户">
                 </div>
             </div>                           
             <%}%>
@@ -282,20 +285,20 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>个性签名：</label>
                 <div class="control">
-                    <div class="keypress">
+                    <div class="keypress" maxlength="40">
                         <textarea maxlength="40" data-helpid="textarea-help" name="signature" required><%=data.signature%></textarea>
                     </div>
-                    <div class="control-help" style="display:none;" id="textarea-help"></div>
+                    <div class="keypress-help" style="display:none;" id="textarea-help"></div>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="">自我描述：</label>
                 <div class="control">
-                    <div class="keypress">
+                    <div class="keypress" maxlength="50">
                         <textarea maxlength="50" data-helpid="textarea-help2" name="description"><%=data.description%></textarea>
                     </div>
-                    <div class="control-help" style="display:none;" id="textarea-help2"></div>
+                    <div class="keypress-help" style="display:none;" id="textarea-help2"></div>
                 </div>
             </div> 
 

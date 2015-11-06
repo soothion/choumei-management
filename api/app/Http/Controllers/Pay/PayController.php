@@ -40,10 +40,12 @@ class PayController extends Controller
      * @apiSuccess {Number} to 结束数据.
      * @apiSuccess {String} code 单号
      * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
+     * @apiSuccess {String} data.from 来源 1 本系统 2 商家后台
      * @apiSuccess {String} money 付款金额
      * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
      * @apiSuccess {String} require_day 要求付款日期 
      * @apiSuccess {String} pay_day 实际付款日期 
+     * @apiSuccess {String} remark 备注 
      * @apiSuccess {String} cycle 回款周期
      * @apiSuccess {String} cycle_day 回款日期 
      * @apiSuccess {String} cycle_money 周期回款金额 
@@ -53,6 +55,7 @@ class PayController extends Controller
      * @apiSuccess {String} salon 店铺信息
      * @apiSuccess {String} state 订单状态  1待提交 2待审批 3:待付款 4:已付款
      * @apiSuccess {String} confirm_at 审批日期
+     * @apiSuccess {String} salon_user 制单人信息(为商家后台时)
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -72,7 +75,48 @@ class PayController extends Controller
      *                   "salon_id": 1,
      *                   "merchant_id": 2,
      *                   "money": "333.66",
+     *                   "from":1,
      *                   "pay_type": 1,
+     *                   "require_day": "2015-08-14",
+     *                   "pay_day": "0000-00-00",
+     *                   "cycle": 30,
+     *                   "cycle_day": 1,
+     *                   "cycle_money": "100.00",
+     *                   "make_uid": 1,
+     *                   "cash_uid": 0,
+     *                   "prepay_bill_code": "",
+     *                   "receive_bill_code": "",
+     *                   "state": 2,
+     *                   "created_at": "2015-08-14 19:01:45",
+     *                   "confirm_uid": 0,
+     *                   "confirm_at": "0000-00-00",
+     *                   "updated_at": "2015-08-14 19:01:45",
+     *                   "remark":"备注",
+     *                   "make_user": {
+     *                       "id": 1,
+     *                       "name": "这是用户名Admin"
+     *                   },
+     *                   "salon_user": {
+     *                       "salon_user_id": 1,
+     *                       "username": "商家后台用户名"
+     *                   },
+     *                   "confirm_user": null,
+     *                   "cash_user": null,
+     *                   "salon": {
+     *                       "salonid": 1,
+     *                       "salonname": "嘉美专业烫染",
+     *                       "sn": "SZ0320001"
+     *                   }
+     *               },
+     *               {
+     *                   "id": 2,
+     *                   "code": "FTZ-150814190145001",
+     *                   "type": 2,
+     *                   "salon_id": 1,
+     *                   "merchant_id": 2,
+     *                   "money": "333.66",
+     *                   "pay_type": 1,
+     *                   "from":1,
      *                   "require_day": "2015-08-14",
      *                   "pay_day": "0000-00-00",
      *                   "cycle": 30,
@@ -91,39 +135,9 @@ class PayController extends Controller
      *                       "id": 1,
      *                       "name": "这是用户名Admin"
      *                   },
-     *                   "confirm_user": null,
-     *                   "cash_user": null,
-     *                   "salon": {
-     *                       "salonid": 1,
-     *                       "salonname": "嘉美专业烫染",
-     *                       "sn": "SZ0320001"
-     *                   }
-     *               },
-     *               {
-     *                   "id": 2,
-     *                   "code": "FTZ-150814190145001",
-     *                   "type": 2,
-     *                   "salon_id": 1,
-     *                   "merchant_id": 2,
-     *                   "money": "333.66",
-     *                   "pay_type": 1,
-     *                   "require_day": "2015-08-14",
-     *                   "pay_day": "0000-00-00",
-     *                   "cycle": 30,
-     *                   "cycle_day": 1,
-     *                   "cycle_money": "100.00",
-     *                   "make_uid": 1,
-     *                   "cash_uid": 0,
-     *                   "prepay_bill_code": "",
-     *                   "receive_bill_code": "",
-     *                   "state": 2,
-     *                   "created_at": "2015-08-14 19:01:45",
-     *                   "confirm_uid": 0,
-     *                   "confirm_at": "0000-00-00",
-     *                   "updated_at": "2015-08-14 19:01:45",
-     *                   "make_user": {
-     *                       "id": 1,
-     *                       "name": "这是用户名Admin"
+     *                   "salon_user": {
+     *                       "salon_user_id": 1,
+     *                       "username": "商家后台用户名"
      *                   },
      *                   "confirm_user": null,
      *                   "cash_user": null,
@@ -185,10 +199,10 @@ class PayController extends Controller
      * @apiParam {Number} merchant_id  商户id
      * @apiParam {Number} money 付款金额
      * @apiParam {Number} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiParam {String} require_day 要求付款日期 格式  YYYY-MM-DD
      * @apiParam {Number} cycle 回款周期 
      * @apiParam {Number} cycle_day 回款日期 
      * @apiParam {Number} cycle_money 周期回款金额 
+     * @apiParam {String} remark 备注
      * 
      * 
      * @apiSuccess {Number} id 成功的id.
@@ -216,14 +230,17 @@ class PayController extends Controller
             'type' => self::T_INT,
             'salon_id' => self::T_INT,
             'merchant_id' => self::T_INT,
-            'money' => self::T_FLOAT,
+            'money' => self::T_FLOAT,            
             'pay_type' => self::T_INT,
-            'require_day' => self::T_STRING,
+            'remark'=>self::T_STRING,            
+        ],true);
+        $param_plus = $this->parameters([
             'cycle' => self::T_INT,
             'cycle_day' => self::T_INT,
             'cycle_money' => self::T_FLOAT,
-        ],true);
-        $params['make_uid'] = $this->user->id;      
+        ]);
+        $params['make_uid'] = $this->user->id;  
+        $params = array_merge($params,$param_plus);    
         $res = PayManage::make($params);
         if($res)
         {
@@ -247,8 +264,9 @@ class PayController extends Controller
      * @apiSuccess {String} type 付款类型 1 付交易代收款 2 付业务投资款
      * @apiSuccess {String} money 付款金额
      * @apiSuccess {String} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiSuccess {String} require_day 要求付款日期 
+     * @apiSuccess {String} data.from 来源 1 本系统 2 商家后台
      * @apiSuccess {String} pay_day 实际付款日期 
+     * @apiSuccess {String} remark 备注
      * @apiSuccess {String} cycle 回款周期
      * @apiSuccess {String} cycle_day 回款日期 
      * @apiSuccess {String} cycle_money 周期回款金额 
@@ -258,6 +276,7 @@ class PayController extends Controller
      * @apiSuccess {String} salon 店铺信息
      * @apiSuccess {String} state 订单状态  1待提交 2待审批 3待付款 4已付款
      * @apiSuccess {String} confirm_at 审批日期
+     * @apiSuccess {String} salon_user 制单人信息(为商家后台时)
      * 
      * @apiSuccessExample Success-Response:
      *        {
@@ -270,10 +289,11 @@ class PayController extends Controller
      *                "type": 2,
      *                "salon_id": 1,
      *                "merchant_id": 2,
+     *                "from":1,
      *                "money": "333.66",
      *                "pay_type": 1,
-     *                "require_day": "2015-08-14",
      *                "pay_day": "0000-00-00",
+     *                "remark": "备注",
      *                "cycle": 30,
      *                "cycle_day": 1,
      *                "cycle_money": "100.00",
@@ -289,6 +309,10 @@ class PayController extends Controller
      *                "make_user": {
      *                    "id": 1,
      *                    "name": "这是用户名Admin"
+     *                },
+     *                 "salon_user": {
+     *                     "salon_user_id": 1,
+     *                     "username": "商家后台用户名"
      *                },
      *                "confirm_user": null,
      *                "cash_user": null,
@@ -313,17 +337,22 @@ class PayController extends Controller
         $query->with([
             'make_user' => function ($q)
             {
-                $q->lists('id','name');
+                 $q->get(['id','name']);
             }
         ])->with([
             'confirm_user' => function ($q)
             {
-                $q->lists('id','name');
+                 $q->get(['id','name']);
             }
         ])->with([
             'cash_user' => function ($q)
             {
-                $q->lists('id','name');
+                $q->get(['id','name']);
+            }
+        ])->with([
+            'salon_user' => function ($q)
+            {
+                 $q->get(['salon_user_id','username']);
             }
         ])->with([
             'salon' => function ($q)
@@ -350,7 +379,7 @@ class PayController extends Controller
      * @apiParam {Number} merchant_id  商户id
      * @apiParam {Number} money 付款金额
      * @apiParam {Number} pay_type 付款方式   1 银行存款 2账扣支付 3现金  4支付宝 5财付通
-     * @apiParam {String} require_day 要求付款日期 格式  YYYY-MM-DD
+     * @apiParam {String} remark 备注
      * @apiParam {Number} cycle 回款周期
      * @apiParam {Number} cycle_day 回款日期
      * @apiParam {Number} cycle_money 周期回款金额 
@@ -381,10 +410,10 @@ class PayController extends Controller
             'merchant_id' => self::T_INT,
             'money' => self::T_FLOAT,
             'pay_type' => self::T_INT,
-            'require_day' => self::T_STRING,
             'cycle' => self::T_INT,
             'cycle_day' => self::T_INT,
             'cycle_money' => self::T_FLOAT,
+            'remark'=>self::T_STRING,
         ]);
         //#@todo for debug
         //$params['make_uid'] = 1;
@@ -556,7 +585,7 @@ class PayController extends Controller
             'sort_key' => self::T_STRING,
             'sort_type' => self::T_STRING,
         ]);    
-        $header = ['店铺编号','店铺名称','付款单号','关联收款单号','关联转付单号','付款类型','付款金额','要求付款日期','实际付款日期','回款周期','回款日期','周期回款金额','创建日期','审批日期','制单人','审批人','出纳','付款方式','状态'];
+        $header = ['店铺编号','店铺名称','付款单号','关联收款单号','关联转付单号','付款类型','付款金额','备注','实际付款日期','回款周期','回款日期','周期回款金额','创建日期','审批日期','制单人','审批人','出纳','付款方式','状态'];
         $items = PayManage::search($options)->with([
             'cash_user' => function ($q)
             {
@@ -572,6 +601,50 @@ class PayController extends Controller
         $this->export_xls("付款列表".date("Ymd"),$header,self::format_pay_data($items));
     }
     
+    /**
+     * @api {get} /pay_manage/withdraw 8.付款单导出
+     * @apiName withdraw
+     * @apiGroup PayManage
+     *
+     * @apiParam {Number} id  提款的id
+     * @apiParam {String} token  加密的token
+     * 
+     *      
+     * @apiSuccess {String} ret 1 执行成功
+     *
+     * @apiSuccessExample Success-Response:
+     *       {
+     *           "result": 1,
+     *           "data": {
+     *               "ret": 1
+     *           }
+     *       }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "参数有误,执行失败"
+     *		}
+     *
+     */
+    public function withdraw()
+    {
+        $params = $this->parameters(
+            [
+                'id'=>self::T_INT,
+                'token'=>self::T_STRING,
+            ],true);
+        $passed = Utils::checkToken($params);
+        if(!$passed)
+        {
+            throw new ApiException("Unauthorized",ERROR::ACCOUNT_INVALID);
+        }
+        $id = $params['id'];
+        $res = PayManage::makeByWithdraw($id);
+        return $this->success($res);
+    }
+    
     
     public static function  format_pay_data($datas)
     {
@@ -581,7 +654,15 @@ class PayController extends Controller
             $salon_name = isset($data['salon']['salonname']) ? $data['salon']['salonname'] : '';
             $salon_sn = isset($data['salon']['sn']) ? $data['salon']['sn'] : '';
             $pay_manage_type_name = $data['type'] == 1?"付交易代收款 ":"付业务投资款";
-            $make_user_name = isset($data['make_user']['name'])?$data['make_user']['name']:"";
+            $make_user_name = '';
+            if($data['from'] == PayManage::FROM_LOCAL)
+            {
+                $make_user_name = isset($data['make_user']['name'])?$data['make_user']['name']:"";
+            }
+            else 
+            {
+                $make_user_name = isset($data['salon_user']['username'])?$data['salon_user']['username']:"";
+            }
             $check_user_name = isset($data['confirm_user']['name'])?$data['confirm_user']['name']:"";
             $cash_user_name = isset($data['cash_user']['name'])?$data['cash_user']['name']:"";
             $pay_type_name = Mapping::getPayTypeName($data['pay_type']);
@@ -596,7 +677,7 @@ class PayController extends Controller
                 $data['p_code'],//关联转付单号
                 $pay_manage_type_name,//付款类型
                 $data['money'],//付款金额
-                $data['require_day'],//要求付款日期
+                $data['remark'],
                 $data['pay_day'],//实际付款日期
                 $cycle,//回款周期
                 $cycle_day,//回款日期
@@ -607,10 +688,12 @@ class PayController extends Controller
                 $check_user_name,//审批人
                 $cash_user_name,//出纳
                 $pay_type_name,//付款方式
-                $state_name,//状态
+                $state_name//状态
+                
             ];
         }
         return $res;
     }
     
+
 }

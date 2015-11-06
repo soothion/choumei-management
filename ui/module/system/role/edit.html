@@ -160,17 +160,18 @@
 		<%}%>
 	</script>
 	<script type="text/javascript">
-		var sids=JSON.parse(sessionStorage.getItem("permissions"))||[];
-		var each=function($dom,data){
-			data.forEach(function(item){
-				var $item=$(lib.ejs.render({text:$('#p-t').html()},{data:item,sids:sids}));
-				$dom.append($item);
-				if(item.child&&item.child.length>0){
-					each($item.children("ul"),item.child);
-				}
-			})
-		}
 		$('#form').one("_ready",function(){
+			var sids=JSON.parse(sessionStorage.getItem("permissions"))||[];
+			sessionStorage.removeItem("permissions");
+			var each=function($dom,data){
+				data.forEach(function(item){
+					var $item=$(lib.ejs.render({text:$('#p-t').html()},{data:item,sids:sids}));
+					$dom.append($item);
+					if(item.child&&item.child.length>0){
+						each($item.children("ul"),item.child);
+					}
+				})
+			}
 			lib.ajax({url:"list/permission"}).done(function(data){
 				if(data.result==1){
 					data=data.data;

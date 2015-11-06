@@ -1,9 +1,9 @@
 {
   "name": "臭美管理后台",
-  "version": "1.3",
+  "version": "1.5.5",
   "description": "臭美管理后台API文档",
   "title": "臭美管理后台API文档",
-  "url" : "http://192.168.13.46:8090",
+  "url" : "http://192.168.13.46:8155",
   "order":[
   	"Login",
     "List",

@@ -18,13 +18,13 @@
    <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
-			<form action="pay_manage/check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){history.back()}});">
+			<form data-slug="pay_manage.check" action="pay_manage/check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){window.close()}});">
 				<button class="btn">审批</button>
 				<input type="hidden" name="ids" value="<%=query.id%>"/>
 				<input type="hidden" name="do" value="1" />
 			</form>
 			<span class="space"></span>
-			<form action="pay_manage/check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){history.back()}});">
+			<form data-slug="pay_manage.check" action="pay_manage/check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){window.close()}});">
 				<button class="btn">审批不通过</button>
 				<input type="hidden" name="ids" value="<%=query.id%>"/>
 				<input type="hidden" name="do" value="0" />
@@ -59,10 +59,6 @@
                   <td>付款金额：</td>
                   <td><%=data.money%></td>
                 </tr>
-                <tr>
-                  <td>要求付款日期：</td>
-                  <td class="format"><%=data.require_day%></td>
-                </tr>
 				<tr>
                   <td>回款周期：</td>
                   <td><%=data.cycle%>个月</td>
@@ -76,12 +72,22 @@
                   <td><%=data.cycle_money%> <span class="space"></span><span class="weak">尾差金额在最后一个回款周期补回</span></td>
                 </tr>
 				<tr>
+                  <td>备注：</td>
+                  <td><%=data.remark%></td>
+                </tr>
+				<tr>
                   <td>创建日期：</td>
                   <td class="format"><%=new Date(data.created_at).format("yyyy-MM-dd")%> </td>
                 </tr>
                 <tr>
                  <td>制单人：</td>
-                  <td><%=data.make_user?data.make_user.name:""%></td>
+                  <td>
+					<%if(data.from==1){%>
+						<%=data.make_user?data.make_user.name:""%>
+					<%}else{%>
+						<%=data.salon_user?data.salon_user.username:""%>
+					<%}%>
+				  </td>
                </tr>
 			   <tr>
                  <td>付款方式：</td>

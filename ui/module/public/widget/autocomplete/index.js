@@ -5,4 +5,9 @@
 		$('#sn').text(data.sn);
 		$('#salonid').val(data.salon_id);
 	}
+}).on('input','#search',function(){
+	$('#merchantId').val("");
+	$('#merchantname').val("");
+	$('#sn').text("");
+	$('#salonid').val("");
 });	

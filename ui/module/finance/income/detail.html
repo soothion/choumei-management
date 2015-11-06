@@ -10,9 +10,10 @@
         <div class="breadcrumb">
             <a>收入管理</a>
             <span>&gt;</span><a href="index.html">返佣单</a>
+            <span>&gt;</span><%=query.type=='perview' ? '预览返佣单' : '查看返佣单'%>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>返佣单详情</h4>
+                    <h4><%=query.type=='perview' ? '预览 - 返佣单' : '查看返佣单'%></h4>
                 </div>
             </div>
         </div>
@@ -21,7 +22,9 @@
             <script type="text/template" id="table-t">  
 
                 <div style="position:absolute;right:20px;top:40px;">
-                    <button type="button" class="btn fr mr-20" onclick="window.close()">关闭</button>
+                    <button type="button" class="btn fr mr-20" onclick="window.close()">                    
+                        <%=query.type=='perview' ? '关闭预览' : '关闭'%>
+                    </button>
                     <%
                     if(lib.query.type != "perview"){
                     %>
@@ -73,38 +76,45 @@
                         </tr>
 
                         <tr>
-                            <td class="td">制单人：</td>
-                            <td><%=data.created_by%></td>                            
+                            <td class="td">备注：</td>
+                            <td><%=data.note%></td>
                         </tr>
 
-                        <tr>
-                            <td class="td">创建日期：</td>
-                            <td><%=data.created_at && new Date(data.created_at).format("yyyy-MM-dd")%></td>
-                        </tr>   
+                        <%if(query.type!='perview'){%>
+                            <tr>
+                                <td class="td">制单人：</td>
+                                <td><%=data.created_by%></td>                            
+                            </tr>
 
-                        <tr>
-                            <td class="td">确认人：</td>
-                            <td><%=data.confirm_by%></td>
-                        </tr>
+                            <tr>
+                                <td class="td">创建日期：</td>
+                                <td><%=data.created_at && new Date(data.created_at).format("yyyy-MM-dd")%></td>
+                            </tr>   
 
-                        <tr>
-                            <td class="td">确认日期：</td>
-                            <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
-                        </tr>
+                            <tr>
+                                <td class="td">确认人：</td>
+                                <td><%=data.confirm_by%></td>
+                            </tr>
 
-                        <tr>
-                            <td class="td">状态：</td>
-                            <%
-                            var statusText = "";
-                            if(data.status == "1"){
-                                statusText = "已确认";
-                            }
-                            if(data.status == "2"){
-                                statusText = "待确认";
-                            }
-                            %>
-                            <td><%=statusText%></td>                            
-                        </tr>                           
+                            <tr>
+                                <td class="td">确认日期：</td>
+                                <td><%=data.confirm_at && new Date(data.confirm_at).format("yyyy-MM-dd")%></td>
+                            </tr>
+
+                            <tr>
+                                <td class="td">状态：</td>
+                                <%
+                                var statusText = "";
+                                if(data.status == "1"){
+                                    statusText = "已确认";
+                                }
+                                if(data.status == "2"){
+                                    statusText = "待确认";
+                                }
+                                %>
+                                <td><%=statusText%></td>                            
+                            </tr> 
+                        <%}%>                          
                     </tbody>                     
                 </table>
                 </script>
@@ -140,7 +150,8 @@
                                 parent.lib.popup.result({
                                     text:"删除成功",
                                     define:function(){
-                                        history.back();
+                                        //history.back();
+                                        window.close();
                                     }
                                 });                               
                             }
@@ -162,7 +173,8 @@
                                 parent.lib.popup.result({
                                     text:"返佣成功",
                                     define:function(){
-                                        history.back();
+                                        //history.back();
+                                        window.close();
                                     }
                                 });
                             }
