@@ -145,7 +145,7 @@ Route::any('platform/getItemType',array(
 ));
 
 //权限管理后台接口
-//Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
  // Route::group(['middleware' => ['before']], function(){
 
 	//管理员模块
@@ -1153,4 +1153,4 @@ Route::any('platform/getItemType',array(
         'uses'=>'MessageBox\MessageBoxController@dailyMessagePush'
     ));  
     
-//});
+});
