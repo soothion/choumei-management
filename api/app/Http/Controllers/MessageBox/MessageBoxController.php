@@ -15,7 +15,7 @@ use App\Exceptions\ERROR;
 
 class MessageBoxController extends Controller{
     
-    private static $RECEIVE_TYPE_NAME = array('REG' => '所有注册用户','APP' => 'app安装用户','CODE' => '指定特征用户','APPNOTREG' => '安装app未注册用户');
+    private static $RECEIVE_TYPE_NAME = array('REG' => '所有注册用户','APP' => 'app安装用户','CODE' => '指定特征用户','APPNOTREG' => '安装app未注册用户','DAILYAPPNOTREG' => '日增长的安装app未注册用户');
     private static $IS_PUSH_NAME = array('Y' => '已发送','N' => '未发送');
     
    /**
