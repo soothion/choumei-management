@@ -343,7 +343,7 @@
 									var id=$this.attr('id').replace("search","checked");
 									var salon=popup.find('#'+id);
 									if(salon.length==0&&checked){
-										var name=$this.text();
+										var name=$this.data("name");
 										var code=$this.data("code");
 										popup.find('.salon-box').append(lib.ejs.render({url:"/module/config/message/salon-item"},{data:[{recommendCode:code,salonName:name}]}));
 									}
