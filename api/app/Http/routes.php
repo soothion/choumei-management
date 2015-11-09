@@ -151,6 +151,11 @@ Route::any('platform/getItemType',array(
 //商家后台提现
 Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
+//消息盒子内容跳转h5
+ Route::any('messageBox/redirectUrl/{pushId}',array(  
+        'as'=>'messageBox.redirectUrl',
+        'uses'=>'MessageBox\MessageBoxController@redirectUrl'
+    ))->where('pushId', '[0-9]+'); 
 //权限管理后台接口
 Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
  // Route::group(['middleware' => ['before']], function(){

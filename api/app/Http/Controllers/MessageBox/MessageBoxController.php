@@ -175,6 +175,10 @@ class MessageBoxController extends Controller{
         $data['DETAIL'] = empty($param['detail']) ? '' : urldecode($param['detail']);
         $data['IS_PUSH'] = $param['isPush'];
         $data['CREATE_TIME'] =  date('Y-m-d H:i:s');
+        
+        if(!empty($data['DETAIL'])){
+             $data['LINK'] = "http://".$_SERVER['HTTP_HOST'] . '/messageBox/redirectUrl/'.$param['pushId'];
+        }
         $res = PushConf::where('Id','=',$param['pushId'])->update($data);
         if($res === false){
             throw new ApiException('更新失败',ERROR::MessageBox_UPDATE_FAILED);
@@ -447,9 +451,13 @@ class MessageBoxController extends Controller{
         $data['STATUS'] = 'NOM';
         $data['CREATE_TIME'] =  date('Y-m-d H:i:s');
         //DB::enableQueryLog();
-        $res = PushConf::insert($data);
+        $resId = PushConf::insertGetId($data);
         //$queries = DB::getQueryLog();
-        if($res){
+        if($resId){
+            if(empty($data['LINK'])){
+                $resLink = "http://".$_SERVER['HTTP_HOST'] . '/messageBox/redirectUrl/'.$resId;
+                PushConf::where(array('ID' => $resId))->update(array('LINK' => $resLink ));
+            }
             return $this->success();
         }else{
             throw new ApiException('消息添加失败',ERROR::MessageBox_ADD_FAILED);
@@ -751,8 +759,13 @@ class MessageBoxController extends Controller{
                 }
             }
         }else{
-            $res = PushConf::insert($data);
-            if($res){
+           
+            $resId = PushConf::insertGetId($data);
+            if($resId){
+                if(empty($data['LINK'])){
+                    $resLink = "http://".$_SERVER['HTTP_HOST'] . '/messageBox/redirectUrl/'.$resId;
+                    PushConf::where(array('ID' => $resId))->update(array('LINK' => $resLink ));
+                }
                 return $this->success();
             }else{
                 throw new ApiException('消息添加失败',ERROR::MessageBox_ADD_FAILED);
@@ -824,7 +837,20 @@ class MessageBoxController extends Controller{
         $MessageBoxInfo = PushConf::getMessageBoxInfoOnWhere($where,$orderBy,$OrderByVal);
         return $this->success($MessageBoxInfo);        
             
-    }       
+    }
+    
+    // 跳转到h5的详情页面
+    public function redirectUrl($pushId){
+        $messageBoxInfo = PushConf::getMessageBoxInfoByID($pushId);
+        //print_r($messageBoxInfo);exit;
+        if(!empty($messageBoxInfo)){
+            $title = $messageBoxInfo['title'];
+            $detail = $messageBoxInfo['detail'];
+            return view('messageBoxRedirect', ['title' => $title,'detail' => $detail]);
+        }
+        abort(404);
+        
+    }
     
 }
 ?>
