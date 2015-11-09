@@ -1,6 +1,6 @@
 ﻿<%data.forEach(function(item){%>
 <label>
-<input type="checkbox" <%=protocol.custom.disabled?"disabled":""%> value="<%=item.recommendCode%>" <%=protocol.custom.sid&&protocol.custom.sid.indexOf(item.recommendCode)>-1?"checked":""%> /><span><%=item.confTitle%></span>
+<input type="checkbox" <%=protocol.custom.disabled?"disabled":""%> value="<%=item.recommendCode%>" <%=protocol.custom.sid&&protocol.custom.sid.indexOf(item.recommendCode)>-1?"checked":""%> /><span><%=item.confTitle%>(<%=item.recommendCode%>)</span>
 </label>
 <%})%>
 <style type="text/css">
