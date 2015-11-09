@@ -39,7 +39,7 @@
 	'scoreconf.index':'/module/config/app/score.html',
 	'info.index':'/module/store/info/index.html',
 	'messageBox.messageList':"/module/config/message/index.html",
-	'messageBox.dailyMessagePush':"/module/config/message/day.html",
+	'messageBox.showDailyMessage':"/module/config/message/day.html",
 }
 var access={
 	data:[],
