@@ -4,7 +4,11 @@
       <meta charset="utf-8">
 	  <title>臭美管理后台</title>
 	  <script type="text/javascript" src="/js/include.js"></script>
-	  
+	  <style type="text/css">
+		.control-label{
+			width:200px;
+		}
+	  </style>
   </head>
   <body>
 		<div class="breadcrumb">
@@ -29,7 +33,7 @@
 				<input type="hidden" name="pushId" value="<%=query.id%>" />
 				<%}%>
 				<div class="control-group">
-                    <label class="control-label" for=""><span class="red">*</span>接收信息用户：</label>
+                    <label class="control-label" for=""><span class="red">*</span>接收信息用户(编辑不可修改)：</label>
                     <div class="control">
 						<label>
 							<input type="radio" name="receiveType" <%=!data.receiveType||data.receiveType=="REG"?"checked":""%> value="REG" <%=query.id?"disabled":""%>>
@@ -183,6 +187,13 @@
 				.popup-box{
 					line-height:28px;
 				}
+				.popup-box label span{
+					width:202px;
+					overflow:hidden;
+					height:22px;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
 			</style>
 			<h4 class="large">已选店铺</h4>
 			<div class="salon-box" id="box"></div>
@@ -195,8 +206,7 @@
 			<input type="text" name="recommendCode" />
 			<button class="btn">搜索</button>
 			</form>
-			<div class="table" id="table">
-			</div>
+			<div class="table" id="table"></div>
 		</script>
 		<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
 		<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
@@ -276,6 +286,7 @@
 						title:"在线集团列表",
 						content:'<div id="group"></div>',
 						confirm:true,
+						width:912,
 						complete:function(){
 							var ajat="messageBox/getCompanyCode#domid=group&tempid=/module/config/message/group&sid="+sid;
 							if(disabled){
@@ -301,6 +312,7 @@
 						title:"在线活动列表",
 						content:'<div id="activity"></div>',
 						confirm:true,
+						width:912,
 						complete:function(){
 							var ajat="messageBox/getActivityCode#domid=activity&tempid=/module/config/message/activity&sid="+sid;
 							if(disabled){
@@ -336,7 +348,7 @@
 									e.preventDefault();
 									var data=lib.tools.getFormData($(this));
 									parent.lib.ajat("messageBox/addSalon?"+$.param(data)+"#domid=table&tempid=/module/config/message/salon-checked&sid="+sid).render();
-								}).trigger("submit");
+								});
 								popup.on('click','label',function(){
 									var $this=$(this);
 									var checked=$this.children("input")[0].checked;
