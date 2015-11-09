@@ -62,9 +62,9 @@
 							<td><%=item.sendTime%></td>
 							<td><%=item.readNum%></td>
 							<td><%=item.receiveTypeName%></td>
-							<td><%=item.isPushName%></td>
+							<td><%=item.status=="DONE"?"已发送":"未发送"%></td>
 							<td>
-							<%if(item.isPushName=="已发送"){%>
+							<%if(item.status=="DONE"){%>
 							<a class="link" data-slug="messageBox.showMessage" href="edit.html?id=<%=item.id%>&disabled=true">查看</a>	
 							<%}else{%>
 							<a class="link" data-slug="messageBox.showMessage,messageBox.editMessage" href="edit.html?id=<%=item.id%>">编辑</a>	
