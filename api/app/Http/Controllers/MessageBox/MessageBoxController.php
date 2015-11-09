@@ -516,7 +516,7 @@ class MessageBoxController extends Controller{
             $where["salon.district"] = $district;
         }        
         if($recommendCode){
-            $where["recommendCode"] = $recommendCode;
+            $where["dividend.recommend_code"] = $recommendCode;
         }
         
         $where['salon.status'] = 1;
