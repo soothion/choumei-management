@@ -152,7 +152,7 @@ Route::any('platform/getItemType',array(
 Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
 //权限管理后台接口
-//Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
  // Route::group(['middleware' => ['before']], function(){
 
 	//管理员模块
@@ -1164,4 +1164,4 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'uses'=>'MessageBox\MessageBoxController@showDailyMessage'
     )); 
     
-//});
+});
