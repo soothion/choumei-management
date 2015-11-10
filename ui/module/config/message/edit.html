@@ -99,7 +99,7 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>发送时间：</label>
                     <div class="control">
-					<input type="_datetime" required  name="sendTime" <%if(!query.id){%>min="<%=new Date().format("yyyy-MM-dd hh")%>"<%}%>value="<%=data.sendTime%>">
+					<input type="_datetime" required  name="sendTime" <%if(!query.id){%>min="<%=new Date().format('yyyy-MM-dd hh')%>"<%}%>value="<%=data.sendTime||new Date(new Date().getTime()+1000*60*60*5).format('yyyy-MM-dd hh:mm:ss')%>">
 					</div>
                 </div>
 				<div class="control-group">
