@@ -748,14 +748,20 @@ class MessageBoxController extends Controller{
                 DB::rollBack();
                 throw new ApiException('保存失败,当前消息状态不正确');
             }else{
-                $res2 = PushConf::insert($data);
-                if(!$res2){
-                    DB::rollBack();
+			
+				$resId = PushConf::insertGetId($data);
+				if($resId){
+					if(empty($data['LINK'])){
+						$resLink = "http://".$_SERVER['HTTP_HOST'] . '/messageBox/redirectUrl/'.$resId;
+						PushConf::where(array('ID' => $resId))->update(array('LINK' => $resLink ));
+					}
+					DB::commit();
+					return $this->success();
+				}else{
+					DB::rollBack();
                     throw new ApiException('保存失败');
-                }else{
-                    DB::commit();
-                    return $this->success();
-                }
+				}
+				
             }
         }else{
            
