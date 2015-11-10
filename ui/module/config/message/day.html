@@ -20,7 +20,7 @@
 		<script type="text/template" id="form-t">
 		<form  method="post" class="form-vertical" data-role="form" action="messageBox/dailyMessagePush" data-xss="none">
 				<div class="detail-operation">
-					<button class="btn btn-cancel" type="button" >取消</button>
+					<button class="btn" onclick="location.reload();" style="display:none;" type="button" >取消</button>
 					<span class="space"></span>
 					<button class="btn-primary edit" type="button" data-slug="messageBox.dailyMessagePush">编辑</button>
 					<button class="btn-primary" style="display:none;" data-slug="messageBox.dailyMessagePush">提交</button>			
@@ -170,7 +170,7 @@
 					editor.find('textarea').attr("disabled",false);
 				}
 			}).on('click','.edit',function(){
-				$(this).hide().next("button").show();
+				$(this).hide().siblings("button").show();
 				$(this).closest('form').find("input").each(function(){
 					if(this.name=="receive"||this.name=="push"){
 					}else{
