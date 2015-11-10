@@ -174,7 +174,6 @@ class MessageBoxController extends Controller{
         $data['LINK'] = empty($param['link']) ? '' : $param['link'];
         $data['DETAIL'] = empty($param['detail']) ? '' : urldecode($param['detail']);
         $data['IS_PUSH'] = $param['isPush'];
-        $data['CREATE_TIME'] =  date('Y-m-d H:i:s');
         
         if(!empty($data['DETAIL'])){
              $data['LINK'] = "http://".$_SERVER['HTTP_HOST'] . '/messageBox/redirectUrl/'.$param['pushId'];
