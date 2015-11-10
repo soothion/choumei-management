@@ -29,20 +29,20 @@
                     <label class="control-label">开启/暂停本推送：</label>
 					<div class="control">
 						<label class="switch"><input disabled type="checkbox" id="switch" <%=data.isPush=="Y"?"checked":""%>/><span></span></label>
-						<div>前一天安装了截止今天的19:00:00  还未注册的用户，今天的 19:00:00进行发送；<br />
-1、在19:00:00之前成功保存修改，修改信息当天生效，当天发送；<br />
-2、在19:00:00之后（包括19点）成功保存修改，则修改信息第二天生效，第二天发送；</div>
+						
 					</div>
                 </div>  
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>接收信息用户：</label>
                     <div class="control">
 						<label>
-							<input type="checkbox" name="receive" checked disabled>
-							<span>安装未注册</span>
+							<input type="checkbox" name="receive" checked disabled><span>安装未注册</span>
 							<input type="hidden" name="receiveType" value="DAILYAPPNOTREG" />
 						</label>
 						<span class="weak" style="margin-left:-10px">（默认选中，不能去掉）</span>
+						<div>前一天安装了截止今天的19:00:00  还未注册的用户，今天的 19:00:00进行发送；<br />
+1、在19:00:00之前成功保存修改，修改信息当天生效，当天发送；<br />
+2、在19:00:00之后（包括19点）成功保存修改，则修改信息第二天生效，第二天发送；</div>
                     </div>
                 </div>
                 <div class="control-group">

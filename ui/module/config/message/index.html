@@ -61,9 +61,17 @@
 							<td><%=item.sendTime%></td>
 							<td><%=item.readNum%></td>
 							<td><%=item.receiveTypeName%></td>
-							<td><%=item.status=="DONE"?"已发送":"未发送"%></td>
 							<td>
-							<%if(item.status=="DONE"){%>
+								<%if(item.status=="DONE"){%>
+									已发送
+								<%}else if(item.status=="DOING"){%>
+									处理中
+								<%}else{%>
+									未发送
+								<%}%>
+							</td>
+							<td>
+							<%if(item.status=="DONE"||item.status=="DOING"){%>
 							<a class="link" data-slug="messageBox.showMessage" href="edit.html?id=<%=item.id%>&disabled=true">查看</a>	
 							<%}else{%>
 							<a class="link" data-slug="messageBox.showMessage,messageBox.editMessage" href="edit.html?id=<%=item.id%>">编辑</a>	
