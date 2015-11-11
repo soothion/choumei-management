@@ -15,7 +15,7 @@ class Stylist  extends Model {
          $query = Self::getQuery();
          $field=['stylistId','stylistName','mobilephone','sNumber','grade','fastGrade','status'];
          if(!empty($param['salonId'])){
-              $query = $query->where('salonId','like','%'.$param['salonId'].'%');
+              $query = $query->where('salonId',$param['salonId']);
          }
          if(isset($param['stylistName'])&&$param['stylistName']){
               $query = $query->where('stylistName','like','%'.$param['stylistName'].'%');
