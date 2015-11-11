@@ -165,7 +165,7 @@ class MessageBoxController extends Controller{
         if(empty($param['link']) && empty($param['detail'])){
             throw new ApiException('链接必传参数不能为空');
         }
-        if(!empty($param['detail']) && strlen(urldecode($param['detail'])) > 2000){
+        if(!empty($param['detail']) && strlen(urldecode($param['detail'])) > 15000){
             throw new ApiException('富文本内容长度超出');
         }
         if(!in_array(trim($param['isPush']),array('Y','N'))){
@@ -435,7 +435,7 @@ class MessageBoxController extends Controller{
         if(strtotime($param['sendTime']) - time() < 30* 60){
             throw new ApiException('发送时间必须晚于提交时间30分钟之后',ERROR::MessageBox_PARAMETER_ERROR);
         }        
-        if(!empty($param['detail']) && strlen(urldecode($param['detail'])) > 2000){
+        if(!empty($param['detail']) && strlen(urldecode($param['detail'])) > 15000){
             throw new ApiException('富文本内容长度超出');
         }
         $data['RECEIVE_TYPE'] = trim($param['receiveType']);
@@ -731,7 +731,7 @@ class MessageBoxController extends Controller{
         if(empty($param['link']) && empty($param['detail'])){
             throw new ApiException('链接必传参数不能为空');
         }
-        if(!empty($param['detail']) && strlen(urldecode($param['detail'])) > 2000){
+        if(!empty($param['detail']) && strlen(urldecode($param['detail'])) > 15000){
             throw new ApiException('富文本内容长度超出');
         }
         $data['RECEIVE_TYPE'] = 'DAILYAPPNOTREG'; //日增长推送
