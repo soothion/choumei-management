@@ -165,7 +165,7 @@ class SalonItem extends Model {
 				$result['data'][$key]['generalNums'] = self::where(['salonid'=>$val['salonid'],'status'=>1,'item_type'=>1])->count();//普通项目
 				$result['data'][$key]['specialNums'] = self::where(['salonid'=>$val['salonid'],'status'=>1,'item_type'=>2])->count();//限时特价
 				$result['data'][$key]['wareroomNums'] = self::where(['salonid'=>$val['salonid'],'status'=>2])->count();//项目仓库
-				$result['data'][$key]['hairstyNums'] = Hairstylist::where(['salonid'=>$val['salonid'],'status'=>1])->count();//造型师
+				$result['data'][$key]['hairstyNums'] = Hairstylist::where(['salonid'=>$val['salonid']])->where('status','!=',2)->count();//造型师
 			}
 		}
 		return $result;
