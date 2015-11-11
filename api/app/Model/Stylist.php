@@ -21,8 +21,9 @@ class Stylist  extends Model {
               $query = $query->where('stylistName','like','%'.$param['stylistName'].'%');
          }
          if(!empty($param['mobilephone'])){
-            $query = $query->where('mobilephone','like','%'.$param['mobilephone'].'%');
+              $query = $query->where('mobilephone','like','%'.$param['mobilephone'].'%');
          }
+              $query = $query->whereIn('status',[1,3]);
          $sortable_keys=['addTime','grade','fastGrade','status'];
          $sortKey = "addTime";
          $sortType = "DESC";

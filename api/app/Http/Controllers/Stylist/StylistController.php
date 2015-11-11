@@ -110,7 +110,8 @@ class StylistController  extends Controller {
        if($task==true){
             throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
        } 
-       $query=Stylist::where(array('stylistId'=>$stylistId))->delete(); 
+         $data['status']=2;       
+         $query=  Stylist::where(array('stylistId'=>$stylistId))->update($data);    
        if($query){
                 return $this->success();
        }else{
@@ -186,7 +187,7 @@ class StylistController  extends Controller {
          if(!$stylist){
 		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
           }
-         $data['status']=2;       
+         $data['status']=3;       
          $query=  Stylist::where(array('stylistId'=>$stylistId))->update($data);    
          if($query){
                 return  $this->success();
