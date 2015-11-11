@@ -32,7 +32,7 @@ class SalonWorks extends Model {
 		if(!$imgArr || !$salonid || !$type) return false;
 		self::where(['flags'=>$type,'salonid'=>$salonid])->delete();
 		$imgArr = json_decode($imgArr,true);
-		//krsort($imgArr);
+		krsort($imgArr);
 		foreach($imgArr as $key=>$val)
 		{
 			$data = [
