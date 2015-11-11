@@ -234,7 +234,20 @@ class EventServiceProvider extends ServiceProvider
     	'Receivables.export' => [
     			'App\Listeners\ReceivablesEventListener@onExport',
     	],
-    		
+
+    	//消息
+    	'StylistMsgConf.online' => [
+    			'App\Listeners\StylistMsgConfEventListener@online',
+    	],
+    	'StylistMsgConf.update' => [
+    			'App\Listeners\ReceivablesEventListener@onUpdate',
+    	],
+    	'StylistMsgConf.delete' => [
+    			'App\Listeners\ReceivablesEventListener@onDel',
+    	],
+    	'StylistMsgConf.save' => [
+    			'App\Listeners\ReceivablesEventListener@onSave',
+    	],  		
     		
     ];
 

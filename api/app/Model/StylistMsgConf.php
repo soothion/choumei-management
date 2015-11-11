@@ -101,6 +101,7 @@ class StylistMsgConf extends Model {
 				
 			}
 			$status = $query->where('id',$id)->update($save);
+			Event::fire('StylistMsgConf.update','修改消息id：'.$id);
 		}
 		else
 		{
@@ -115,6 +116,7 @@ class StylistMsgConf extends Model {
 			}
 			$save['content_id'] = $contentId;
 			$status = $query->insertGetId($save);	
+			Event::fire('StylistMsgConf.save','添加消息id：'.$status);
 		}
 		return $status;
 	}
@@ -136,6 +138,11 @@ class StylistMsgConf extends Model {
 		if($status == 1)
 		{
 			$data['onlinetime'] = time();
+			Event::fire('StylistMsgConf.online','上线消息id：'.$id);
+		}
+		else 
+		{
+			Event::fire('StylistMsgConf.delete','删除消息id：'.$id);
 		}
 		$status = $query->where('id',$id)->update($data);
 		return $status;

@@ -193,7 +193,7 @@ class Receivables extends Model {
 		{
 			$save['upTime'] = time();
 			$status = self::where('id',$id)->update($save);
-			Event::fire('Receivables.update','修改收款id：'.$id);
+			Event::fire('Receivables.update','修改收款单id：'.$id);
 		}
 		else
 		{
@@ -201,7 +201,7 @@ class Receivables extends Model {
 			$save['preparedBy'] = $user;
 			$save['singleNumber'] = self::createSingleNumber($save['type']);//收款单号
 			$status = self::insertGetId($save);
-			Event::fire('Receivables.save','添加收款id'.$status);
+			Event::fire('Receivables.save','添加收款单id：'.$status);
 			
 		}
 		return $status;
@@ -261,7 +261,7 @@ class Receivables extends Model {
 		}
 		$save['upTime'] = time();
 		$status = self::where('id',$id)->update(['status'=>3,'upTime'=>time()]);//删除
-		Event::fire('Receivables.delete','删除收款id：'.$id);
+		Event::fire('Receivables.delete','删除收款单id：'.$id);
 		return $status;
 	}
 	
@@ -355,7 +355,7 @@ class Receivables extends Model {
 			}
 		}
 		DB::commit();
-		Event::fire('Receivables.confirmReceivables','确认收款id：'.join(',',$idArr));
+		Event::fire('Receivables.confirmReceivables','确认收款单id：'.join(',',$idArr));
 		return true;
 	}
 	
