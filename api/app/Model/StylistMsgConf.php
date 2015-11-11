@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use DB;
 use App\StylistMsgContent;
+use Event;
+
 class StylistMsgConf extends Model {
 
 	protected $table = 'stylist_msg_conf';
