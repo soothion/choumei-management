@@ -240,13 +240,13 @@ class EventServiceProvider extends ServiceProvider
     			'App\Listeners\StylistMsgConfEventListener@online',
     	],
     	'StylistMsgConf.update' => [
-    			'App\Listeners\ReceivablesEventListener@onUpdate',
+    			'App\Listeners\StylistMsgConfEventListener@onUpdate',
     	],
     	'StylistMsgConf.delete' => [
-    			'App\Listeners\ReceivablesEventListener@onDel',
+    			'App\Listeners\StylistMsgConfEventListener@onDel',
     	],
     	'StylistMsgConf.save' => [
-    			'App\Listeners\ReceivablesEventListener@onSave',
+    			'App\Listeners\StylistMsgConfEventListener@onSave',
     	],  		
     		
     ];
