@@ -218,6 +218,24 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\TransactionEventListener@onReject',
         ],
 
+    	//收款单
+    	'Receivables.save' => [
+    			'App\Listeners\ReceivablesEventListener@onSave',
+    	],
+    	'Receivables.update' => [
+    			'App\Listeners\ReceivablesEventListener@onUpdate',
+    	],
+    	'Receivables.delete' => [
+    			'App\Listeners\ReceivablesEventListener@onDel',
+    	],
+    	'Receivables.confirmReceivables' => [
+    			'App\Listeners\ReceivablesEventListener@onConfirmReceivables',
+    	],
+    	'Receivables.export' => [
+    			'App\Listeners\ReceivablesEventListener@onExport',
+    	],
+    		
+    		
     ];
 
     /**
