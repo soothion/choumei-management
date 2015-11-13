@@ -32,7 +32,7 @@ class TicketEventListener {
 		//
 	}
 
-	public function onExport()
+	public function onExport($log='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -43,6 +43,7 @@ class TicketEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '导出兑列表';
+		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
