@@ -252,7 +252,7 @@ class PlatformController extends Controller{
                 }
             }
         }
-        Event::fire('platform.add','添加平台数据');
+        Event::fire('platform.add','添加平台数据: '.$addRes);
         return $this->success();
     }
     /***

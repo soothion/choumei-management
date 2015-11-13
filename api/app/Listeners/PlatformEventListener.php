@@ -32,7 +32,7 @@ class PlatformEventListener {
 		//
 	}
 
-	public function onCreate()
+	public function onCreate($log ='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -43,6 +43,7 @@ class PlatformEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '添加平台活动';
+		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
@@ -65,7 +66,7 @@ class PlatformEventListener {
 		return Log::create($data);
 	}	
 
-	public function onExport()
+	public function onExport($log='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -76,6 +77,7 @@ class PlatformEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '导出平台活动';
+		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);

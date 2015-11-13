@@ -32,7 +32,7 @@ class CouponEventListener {
 		//
 	}
 
-	public function onCreate()
+	public function onCreate($log='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -43,6 +43,7 @@ class CouponEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '添加兑换活动';
+		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
@@ -65,7 +66,7 @@ class CouponEventListener {
 		return Log::create($data);
 	}	
 
-	public function onExport()
+	public function onExport($log='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -76,6 +77,7 @@ class CouponEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '导出兑换活动';
+		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);

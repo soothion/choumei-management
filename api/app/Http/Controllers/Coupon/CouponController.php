@@ -126,7 +126,7 @@ class CouponController extends Controller{
         $addRes = \App\VoucherConf::insertGetId( $data );
 
         if( empty($addRes) ) return $this->error('插入数据失败，请稍后再试');
-        Event::fire('coupon.add','添加兑换数据');
+        Event::fire('coupon.add','添加兑换数据: '.$addRes);
         return $this->success();
     }
     
@@ -797,6 +797,7 @@ class CouponController extends Controller{
                 $result[$key]['REDEEM_CODE'] = $desModel->decrypt( $val['REDEEM_CODE'] );
             unset( $result[$key]['vcTitle'] );
         }
+        Event::fire('coupon.exportCoupon','导出查看实体券编码和密码活动id: '.$vcId);
         //导出excel	   
 		$header = ['兑换券编码','兑换券密码','兑换券金额'];
 		Excel::create($title, function($excel) use($result,$header){
@@ -805,7 +806,6 @@ class CouponController extends Controller{
 	        		$sheet->prependRow(1, $header);//添加表头
 			    });
 		})->export('xls');
-        Event::fire('coupon.exportCoupon','导出查看实体券编码和密码活动id: '.$vcId);
         exit;
     }
     /***
@@ -864,6 +864,7 @@ class CouponController extends Controller{
             $tempData = $this->handleList($res['data']);
             unset( $res );
             $title = '兑换劵活动查询列表' .date('Ymd');
+            Event::fire('coupon.exportList','导出兑换列表数据');
             //导出excel	   
             $header = ['活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门','活动状态'];
             Excel::create($title, function($excel) use($tempData,$header){
@@ -872,7 +873,6 @@ class CouponController extends Controller{
                     $sheet->prependRow(1, $header);//添加表头
                 });
             })->export('xls');
-            Event::fire('coupon.exportList','导出兑换列表数据');
             exit;
         }
         $actType = array('','vcSn','vcTitle');
@@ -900,6 +900,7 @@ class CouponController extends Controller{
         $tempData = $this->handleList($res['data']);
         unset( $res );
         $title = '兑换劵查询列表' .date('Ymd');
+        Event::fire('coupon.exportList','导出兑换列表数据');
         //导出excel	   
         $header = ['活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门','活动状态'];
         Excel::create($title, function($excel) use($tempData,$header){
@@ -908,7 +909,6 @@ class CouponController extends Controller{
                 $sheet->prependRow(1, $header);//添加表头
             });
         })->export('xls');
-        Event::fire('coupon.exportList','导出兑换列表数据');
         exit;
     }
     /***
