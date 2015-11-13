@@ -320,9 +320,9 @@ class PlatformController extends Controller{
 	 ***/
     public function getDepartmentManager($id){
         if($id == 0)
-            $manager = \App\Manager::select(['id','name','department_id'])->get();
+            $manager = \App\Manager::select(['id','name','department_id'])->where(['status'=>1])->get();
         else
-            $manager = \App\Manager::select(['id','name','department_id'])->where('department_id','=',$id)->get();
+            $manager = \App\Manager::select(['id','name','department_id'])->where(['department_id'=>$id,'status'=>1])->get();
         return $this->success( $manager );
     }
     /***
