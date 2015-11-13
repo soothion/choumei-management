@@ -11,7 +11,6 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ERROR;
 use Log;
 use App\User;
-use Event;
 
 class PlatformController extends Controller{
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";

@@ -12,7 +12,6 @@ use App\Exceptions\ERROR;
 use Log;
 use App\VoucherConf;
 use App\Jobs\Coupon;
-use Event;
 
 class CouponController extends Controller{
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
