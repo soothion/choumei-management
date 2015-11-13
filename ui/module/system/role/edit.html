@@ -26,9 +26,6 @@
 		.fa-minus-square-o,.toggle>.square>.fa-plus-square-o{
 			display:none;
 		}
-		.square{
-			margin-left:-15px;
-		}
 		.toggle>.square>.fa-minus-square-o{
 			display:inline-block;
 		}
@@ -104,21 +101,23 @@
 				<div class="control" id="permission">
 					<ul class="tree">
 						<li>
-							<label>
-								<input type="checkbox" class="checkbox" checked disabled>
-								<span></span>
-							</label>				
 							<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
-							<label>基本权限</label>
+							<label for="base_00">基本权限</label>
+							<label>
+								<input id="base_00" type="checkbox" class="checkbox" checked disabled>
+								<span></span>
+							</label>
 							<ul class="child">
 								<li class="super2">
+									<label for="base_01">默认首页</label>
 									<label>
-										<input type="checkbox" class="checkbox" checked disabled>
-										<span>默认首页</span>
+										<input id="base_01" type="checkbox" class="checkbox" checked disabled>
+										<span></span>
 									</label>
+									<label for="base_02">修改信息</label>
 									<label>
-										<input type="checkbox" class="checkbox" checked disabled>
-										<span>修改信息</span>
+										<input id="base_02" type="checkbox" class="checkbox" checked disabled>
+										<span></span>
 									</label>
 								</li>
 							</ul>
@@ -142,19 +141,20 @@
 	<script type="text/template" id="p-t">
 		<%if(data.child&&data.child.length){%>
 		<li>
+			<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
+			<label for="tree_<%=data.id%>"><%=data.title%></label>
 			<label>
 				<input id="tree_<%=data.id%>" <%=sids.indexOf(data.id)>-1?"checked":""%> type="checkbox" name="permissions" value="<%=data.id%>">
 				<span></span>
 			</label>
-			<a class="square"><i class="fa fa-plus-square-o"></i><i class="fa fa-minus-square-o"></i></a>
-			<label for="tree_<%=data.id%>"><%=data.title%></label>
 			<ul class="child"></ul>
 		</li>
 		<%}else{%>
 		<li style="display:inline-block;">
+			<label for="tree_<%=data.id%>"><%=data.title%></label>
 			<label>
-				<input <%=sids.indexOf(data.id)>-1?"checked":""%> type="checkbox" name="permissions" value="<%=data.id%>">
-				<span><%=data.title%></span>
+				<input id="tree_<%=data.id%>" <%=sids.indexOf(data.id)>-1?"checked":""%> type="checkbox" name="permissions" value="<%=data.id%>">
+				<span></span>
 			</label>
 		</li>
 		<%}%>
