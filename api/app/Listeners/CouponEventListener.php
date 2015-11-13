@@ -82,7 +82,7 @@ class CouponEventListener {
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
 	}
-    public function onExportCoupon()
+    public function onExportCoupon($log='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -93,6 +93,7 @@ class CouponEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '导出查看实体券编码和密码活动';
+		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
