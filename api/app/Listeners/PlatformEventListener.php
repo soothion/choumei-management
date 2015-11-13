@@ -32,12 +32,11 @@ class PlatformEventListener {
 		//
 	}
 
-	public function onCreate($user)
+	public function onCreate()
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-		$data['object'] = $user->username;
 
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
@@ -49,18 +48,18 @@ class PlatformEventListener {
 		return Log::create($data);
 	}
 
-	public function onUpdate($user)
+	public function onUpdate($id='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-		$data['object'] = $user->username;
 
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '更新平台活动';
+		$data['object'] = $id;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
@@ -81,7 +80,7 @@ class PlatformEventListener {
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
 	}
-    public function onOffline()
+    public function onOffline($id='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -92,11 +91,12 @@ class PlatformEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '下线平台活动';
+		$data['object'] = $id;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
 	}
-    public function onClose()
+    public function onClose($id='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -107,11 +107,12 @@ class PlatformEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '关闭平台活动';
+		$data['object'] = $id;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
 	}
-    public function onUp()
+    public function onUp($id='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -122,6 +123,7 @@ class PlatformEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '上线平台活动';
+		$data['object'] = $id;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);

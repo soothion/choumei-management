@@ -47,7 +47,7 @@ class TicketEventListener {
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
 	}
-    public function onOffline()
+    public function onOffline($id='')
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -58,6 +58,7 @@ class TicketEventListener {
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '劵作废';
+		$data['object'] = $id;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
