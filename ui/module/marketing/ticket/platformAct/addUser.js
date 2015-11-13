@@ -62,7 +62,7 @@
      * @return {[type]} [description]
      */
     $("#form").on('click','.mobile-button',function(){
-        var baseData = JSON.parse(sessionStorage.getItem('add-base-data'));
+        var baseData = JSON.parse(sessionStorage.getItem('add-base-data'))||{};
         baseData.selectUseType = "3";
         sessionStorage.setItem('add-base-data',JSON.stringify(baseData));
         window.location.href = "addMobile.html?type="+type+'&selectItemType='+selectItemType;
