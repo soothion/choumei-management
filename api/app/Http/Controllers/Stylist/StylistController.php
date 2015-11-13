@@ -380,7 +380,7 @@ class StylistController  extends Controller {
         $param['salonid']=$salon->salonid;
 
         if($stylist['mobilephone']!=$param['mobilephone']){
-                $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->count();
+                $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->whereIn('status',[1,3])->count();
                 if($stylistCount)
                 {
                         throw new ApiException('手机号码重复', ERROR::MERCHANT_MOBILEPHONE_ERROR);
@@ -451,7 +451,7 @@ class StylistController  extends Controller {
         if(!isset($param['IDcard'])&&!isset($param['drivingLicense'])&&!isset($param['passport'])&&!isset($param['officerCert'])){   
                 throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
         }
-        $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->count();
+        $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->whereIn('status',[1,3])->count();
         if($stylistCount)
         {
                 throw new ApiException('手机号码重复', ERROR::MERCHANT_MOBILEPHONE_ERROR);
