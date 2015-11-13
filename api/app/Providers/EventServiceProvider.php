@@ -247,8 +247,58 @@ class EventServiceProvider extends ServiceProvider
     	],
     	'StylistMsgConf.save' => [
     			'App\Listeners\StylistMsgConfEventListener@onSave',
-    	],  		
-    		
+    	], 
+        
+        // 平台活动
+    	'platform.add' => [
+            'App\Listeners\PlatformEventListener@onCreate',
+    	],
+        'platform.editConf' => [
+            'App\Listeners\PlatformEventListener@onUpdate',
+    	],
+        'platform.exportList' => [
+            'App\Listeners\PlatformEventListener@onExport',
+    	],
+        'platform.offlineConf' => [
+            'App\Listeners\PlatformEventListener@onOffline',
+    	],
+        'platform.closeConf' => [
+            'App\Listeners\PlatformEventListener@onClose',
+    	],
+        'platform.upConf' => [
+            'App\Listeners\PlatformEventListener@onUp',
+    	],
+        
+        // 兑换活动
+    	'coupon.add' => [
+            'App\Listeners\CouponEventListener@onCreate',
+    	],
+        'coupon.editConf' => [
+            'App\Listeners\CouponEventListener@onUpdate',
+    	],
+        'coupon.exportList' => [
+            'App\Listeners\CouponEventListener@onExport',
+    	],
+        'coupon.exportCoupon' => [
+            'App\Listeners\CouponEventListener@onExportCoupon',
+    	],
+        'coupon.offlineConf' => [
+            'App\Listeners\CouponEventListener@onOffline',
+    	],
+        'coupon.closeConf' => [
+            'App\Listeners\CouponEventListener@onClose',
+    	],
+        'coupon.upConf' => [
+            'App\Listeners\CouponEventListener@onUp',
+    	],
+        
+        // 劵操作
+        'voucher.invalidStatus' => [
+            'App\Listeners\TicketEventListener@onOffline',
+    	],
+        'voucher.exportTicketList' => [
+            'App\Listeners\TicketEventListener@onExport',
+    	]
     ];
 
     /**
