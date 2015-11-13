@@ -615,7 +615,7 @@ class ItemInfoController extends Controller{
 	    {
 	    	$salon_item['addserviceStr']=implode(',',$addedService);
 	    }
-	    $salon_item['up_time'] 	= $now_time;
+
 	    $salon_item['userId'] 	= $param['userId'];
 	    if(empty($itemid))
 	    {
@@ -625,6 +625,7 @@ class ItemInfoController extends Controller{
 	        }
 	        else
 	        {
+	        	$salon_item['up_time'] 	= $now_time;//上架时间
 	            $salon_item['status'] 	= SalonItem::STATUS_OF_UP;
 	        }
 	        $salon_item['add_time'] 	= $now_time;
