@@ -1098,6 +1098,7 @@ class PlatformController extends Controller{
             $tempData = $this->handleList( $res['data'] );
             unset( $res );
             $title = '现金劵活动查询列表' .date('Ymd');
+            Event::fire('platform.exportList','导出平台列表数据');
             //导出excel	   
             $header = ['活动名称','活动编码','总数上限','已发放数','已使用数','创建时间','活动时间','申请部门','活动状态'];
             Excel::create($title, function($excel) use($tempData,$header){
@@ -1106,7 +1107,6 @@ class PlatformController extends Controller{
                     $sheet->prependRow(1, $header);//添加表头
                 });
             })->export('xls');
-            Event::fire('platform.exportList','导出平台列表数据');
             exit;
         }
         $actType = array('','vcSn','vcTitle');
@@ -1135,6 +1135,7 @@ class PlatformController extends Controller{
         unset( $res );
         $title = '代金劵查询列表' .date('Ymd');
         //导出excel	   
+        Event::fire('platform.exportList','导出平台列表数据');
         $header = ['活动名称','活动编码','总数上限','已发放数','已使用数','创建时间','活动时间','申请部门','活动状态'];
         Excel::create($title, function($excel) use($tempData,$header){
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
@@ -1142,7 +1143,6 @@ class PlatformController extends Controller{
                 $sheet->prependRow(1, $header);//添加表头
             });
         })->export('xls');
-        Event::fire('platform.exportList','导出平台列表数据');
         exit;
     }
     // 校验集团码
