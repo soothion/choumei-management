@@ -10,7 +10,8 @@ class Stylist  extends Model {
     protected $table = 'hairstylist';
     protected $fillable = ['stylistId', 'salonId', 'stylistName','stylistImg','job','mobilephone','addTime','likeNum','signature','status','sex','wechat','qq','email','birthday','IDcard','sNumber','workYears','grade','workExp','educateExp','description','gradeType','osType','fastGrade'];
     public $timestamps = false;
-
+    protected $primaryKey = 'stylistId';
+    
     public static function getStylistList($param) {
          $query = Self::getQuery();
          $field=['stylistId','stylistName','mobilephone','sNumber','grade','fastGrade','status'];
