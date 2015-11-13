@@ -31,6 +31,8 @@
                 $('textarea.add').val(arr.join('\n'));     
             }     
         }
+		$('textarea').attr("disabled",true);
+		$('.btn-primary').hide();
     }
 
     if(flag){
