@@ -1037,7 +1037,7 @@ class PlatformController extends Controller{
             \App\Voucher::whereRaw( $where1 )->update( $voucherData );
         }
         $this->verifyPhone( $vcId );
-        Event::fire('platform.upConf','上线平台活动id: '.$id);
+        Event::fire('platform.upConf','上线平台活动id: '.$vcId);
         return $this->success();
     }
     /***

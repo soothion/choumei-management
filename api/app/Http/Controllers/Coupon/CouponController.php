@@ -715,7 +715,7 @@ class CouponController extends Controller{
 	 ***/
     public function upConf($vcId){
         $this->dispatch(new Coupon($vcId));
-        Event::fire('coupon.upConf','上线兑换活动id: '.$id);
+        Event::fire('coupon.upConf','上线兑换活动id: '.$vcId);
         return $this->success();
     }
 
