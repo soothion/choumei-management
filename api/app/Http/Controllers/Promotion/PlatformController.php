@@ -11,6 +11,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ERROR;
 use Log;
 use App\User;
+use Event;
 
 class PlatformController extends Controller{
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
@@ -252,6 +253,7 @@ class PlatformController extends Controller{
                 }
             }
         }
+        Event::fire('platform.add','添加平台数据新增id：'.$addRes);
         return $this->success();
     }
     /***
@@ -910,6 +912,7 @@ class PlatformController extends Controller{
         }
         $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
         
+        Event::fire('platform.editConf','编辑平台数据id：'.$id);
         return $this->success();
     }
     /***
@@ -942,6 +945,7 @@ class PlatformController extends Controller{
 	 ***/
     public function offlineConf( $id ){
         $update = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>2]);
+        Event::fire('platform.offlineConf','下线平台活动id: '.$id);
         return $this->success();
     }
     /***
@@ -976,6 +980,7 @@ class PlatformController extends Controller{
         $conf = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
         if( $conf )
             \App\Voucher::where(['vcId'=>$id])->whereIn('vStatus',[1,3])->update(['vStatus'=>5]);
+        Event::fire('platform.closeConf','关闭平台活动id: '.$id);
         return $this->success();
     }
     /***
@@ -1033,6 +1038,7 @@ class PlatformController extends Controller{
             \App\Voucher::whereRaw( $where1 )->update( $voucherData );
         }
         $this->verifyPhone( $vcId );
+        Event::fire('platform.upConf','上线平台活动id: '.$id);
         return $this->success();
     }
     /***
@@ -1101,6 +1107,7 @@ class PlatformController extends Controller{
                     $sheet->prependRow(1, $header);//添加表头
                 });
             })->export('xls');
+            Event::fire('platform.exportList','导出平台列表数据');
             exit;
         }
         $actType = array('','vcSn','vcTitle');
@@ -1136,6 +1143,8 @@ class PlatformController extends Controller{
                 $sheet->prependRow(1, $header);//添加表头
             });
         })->export('xls');
+        Event::fire('platform.exportList','导出平台列表数据');
+        exit;
     }
     // 校验集团码
     private function getGroupExists( $code ){

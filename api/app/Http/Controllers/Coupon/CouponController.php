@@ -12,6 +12,7 @@ use App\Exceptions\ERROR;
 use Log;
 use App\VoucherConf;
 use App\Jobs\Coupon;
+use Event;
 
 class CouponController extends Controller{
     private static  $DES_KEY = "authorlsptime20141225\0\0\0";
@@ -33,8 +34,8 @@ class CouponController extends Controller{
      *@apiParam {Number} totalNumber            可选        劵总数
      *@apiParam {String} getTimeStart           可选        劵获取开始时间如 2015-10-16 00:00:00
      *@apiParam {String} getTimeEnd             可选        卷获取结束时间   2015-10-16 23:59:59
-	 *@apiParam {String} addActLimitStartTime   可选        代金劵可使用开始时间 2015-10-16 00:00:00
-	 *@apiParam {String} addActLimitEndTime     可选        代金劵可使用结束时间 2015-10-16 23:59:59
+	 *@apiParam {String} addActLimitStartTime   可选        兑换劵可使用开始时间 2015-10-16 00:00:00
+	 *@apiParam {String} addActLimitEndTime     可选        兑换劵可使用结束时间 2015-10-16 23:59:59
      *@apiParam {Number} fewDay                 可选        劵获取多少天内可用 （和上面劵可使用时间必须达到传其一）
      *@apiParam {String} limitItemTypes         可选        可使用的项目格式如 ",2,3,"
      *@apiParam {String} sendSms                可选        发送的短信内容
@@ -83,7 +84,7 @@ class CouponController extends Controller{
         $exists = \App\VoucherConf::where(['vcSn'=>$data['vcSn']])->count();
         if( $exists ) return $this->error('存在活动编号，请勿重复提交');
         if( !isset($post['totalNumber']) || empty($post['totalNumber'])) return $this->error('兑换劵上限未填写');
-        // 定义代金劵
+        // 定义兑换劵
         $data['useMoney'] = $post['money'];
         $data['getNumMax'] = $post['getSingleLimit'];
         $data['DEPARTMENT_ID'] = $post['departmentId'];
@@ -126,11 +127,12 @@ class CouponController extends Controller{
         $addRes = \App\VoucherConf::insertGetId( $data );
 
         if( empty($addRes) ) return $this->error('插入数据失败，请稍后再试');
+        Event::fire('coupon.add','添加兑换数据新增id：'.$addRes);
         return $this->success();
     }
     
     /***
-	 * @api {get} /coupon/list 2.代金劵配置列表
+	 * @api {get} /coupon/list 2.兑换劵配置列表
 	 * @apiName list
 	 * @apiGroup Coupon
 	 *
@@ -158,7 +160,7 @@ class CouponController extends Controller{
 	 * @apiSuccess {String} status 1. 进行中 2. 暂停 3.已关闭 4. 已结束
 	 * @apiSuccess {String} allNum 发放数
 	 * @apiSuccess {String} useNum 兑换数
-	 * @apiSuccess {String} totalNum 代金劵可领总数
+	 * @apiSuccess {String} totalNum 兑换劵可领总数
 	 * @apiSuccess {String} actTime 活动时间
 	 * 
      * 
@@ -257,7 +259,7 @@ class CouponController extends Controller{
         return $this->success( $res );
     }
     /***
-	 * @api {get} /coupon/actView/:id 3.代金劵活动概览
+	 * @api {get} /coupon/actView/:id 3.兑换劵活动概览
 	 * @apiName actView
 	 * @apiGroup Coupon
 	 *
@@ -406,7 +408,7 @@ class CouponController extends Controller{
             $voucherConfInfo['consumeNum'] = $consumeNum;
             $voucherConfInfo['consumeMoney'] = $consumeNum * $voucherConfInfo['useMoney'];
         }
-        // 查看代金劵是否已经生成过
+        // 查看兑换劵是否已经生成过
         $voucherCount = \App\Voucher::where(['vcId'=>$id])->count();
         $voucherConfInfo['export'] = 0;
         if( !empty($voucherCount) ) $voucherConfInfo['export'] = 1;
@@ -423,7 +425,7 @@ class CouponController extends Controller{
         return $this->success( $voucherConfInfo );
     }
     /***
-	 * @api {post} /coupon/getInfo/:id 4.读取代金劵配置
+	 * @api {post} /coupon/getInfo/:id 4.读取兑换劵配置
 	 * @apiName getInfo
 	 * @apiGroup Coupon
 	 *
@@ -437,7 +439,7 @@ class CouponController extends Controller{
 	 * @apiSuccess {String} actIntro            活动简介.
 	 * @apiSuccess {Number} departmentId        部门.
 	 * @apiSuccess {Number} managerId           负责人.
-	 * @apiSuccess {Number} money               代金劵金额
+	 * @apiSuccess {Number} money               兑换劵金额
 	 * @apiSuccess {Number} totalNumber         代金券可领总数
 	 * @apiSuccess {String} limitItemTypes      限制可使用项目类别格式为（,1,2,）
 	 * @apiSuccess {Number} useLimitTypes       使用限制类型 2 为限制首单
@@ -450,7 +452,7 @@ class CouponController extends Controller{
 	 * @apiSuccess {Number} singleEnoughMoney   获取需满足金额(0表示不限制)
 	 * @apiSuccess {String} sendSms             获取代金券时下发的短信内容
 	 * @apiSuccess {Number} status              活动状态: 1正常 2暂停 3 关闭 4.已结束
-	 * @apiSuccess {Number} fewDay              获取代金劵后多少天内可用
+	 * @apiSuccess {Number} fewDay              获取兑换劵后多少天内可用
 	 * @apiSuccess {String} limitItemTypes      可使用的项目格式如 ",2,3,"
 	 * 
      * 
@@ -516,7 +518,7 @@ class CouponController extends Controller{
         return $this->success( $voucherConfInfo );
     }
     /***
-	 * @api {get} /coupon/editConf 5.编辑平台代金劵活动
+	 * @api {get} /coupon/editConf 5.编辑平台兑换劵活动
 	 * @apiName editConf
 	 * @apiGroup Coupon
 	 *
@@ -530,8 +532,8 @@ class CouponController extends Controller{
      *@apiParam {Number} enoughMoney            可选        满额可用
      *@apiParam {String} getTimeStart           可选        劵获取开始时间如 2015-10-16 00:00:00
      *@apiParam {String} getTimeEnd             可选        卷获取结束时间   2015-10-16 23:59:59
-	 *@apiParam {String} addActLimitStartTime   可选        代金劵可使用开始时间 2015-10-16 00:00:00
-	 *@apiParam {String} addActLimitEndTime     可选        代金劵可使用结束时间 2015-10-16 23:59:59
+	 *@apiParam {String} addActLimitStartTime   可选        兑换劵可使用开始时间 2015-10-16 00:00:00
+	 *@apiParam {String} addActLimitEndTime     可选        兑换劵可使用结束时间 2015-10-16 23:59:59
      *@apiParam {Number} fewDay                 可选        劵获取多少天内可用 （和上面劵可使用时间必须达到传其一）
      *@apiParam {Number} singleEnoughMoney      可选        项目满额获取
      * 
@@ -613,11 +615,11 @@ class CouponController extends Controller{
             return $this->error('限制时间设置错误');
         }
         $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
-        
+        Event::fire('coupon.editConf','编辑兑换数据id：'.$id);
         return $this->success();
     }
     /***
-	 * @api {get} /coupon/offlineConf/{:id} 6.代金劵平台下线操作
+	 * @api {get} /coupon/offlineConf/{:id} 6.兑换劵平台下线操作
 	 * @apiName offlineConf
 	 * @apiGroup Coupon
 	 *
@@ -646,10 +648,11 @@ class CouponController extends Controller{
 	 ***/
     public function offlineConf( $id ){
         $update = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>2]);
+        Event::fire('coupon.offlineConf','下线兑换活动id: '.$id);
         return $this->success();
     }
     /***
-	 * @api {get} /coupon/closeConf/{:id} 7.代金劵平台关闭操作
+	 * @api {get} /coupon/closeConf/{:id} 7.兑换劵平台关闭操作
 	 * @apiName closeConf
 	 * @apiGroup Coupon
 	 *
@@ -680,10 +683,11 @@ class CouponController extends Controller{
         $conf = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
         if( $conf )
             \App\Voucher::where(['vcId'=>$id])->whereIn('vStatus',[1,3])->update(['vStatus'=>5]);
+        Event::fire('coupon.closeConf','关闭兑换活动id: '.$id);
         return $this->success();
     }
     /***
-	 * @api {get} /coupon/upConf/{:id} 8.代金劵平台活动上线操作
+	 * @api {get} /coupon/upConf/{:id} 8.兑换劵平台活动上线操作
 	 * @apiName upConf
 	 * @apiGroup Coupon
 	 *
@@ -712,6 +716,7 @@ class CouponController extends Controller{
 	 ***/
     public function upConf($vcId){
         $this->dispatch(new Coupon($vcId));
+        Event::fire('coupon.upConf','上线兑换活动id: '.$id);
         return $this->success();
     }
 
@@ -721,7 +726,7 @@ class CouponController extends Controller{
 	 * @apiName getCoupon
 	 * @apiGroup Coupon
 	 *
-	 *@apiParam {Number} id                   必填     代金劵配置id
+	 *@apiParam {Number} id                   必填     兑换劵配置id
      * 
      * 
      * 
@@ -760,7 +765,7 @@ class CouponController extends Controller{
 	 * @apiName exportCoupon
 	 * @apiGroup Coupon
 	 *
-	 *@apiParam {Number} id                   必填     代金劵配置id
+	 *@apiParam {Number} id                   必填     兑换劵配置id
      * 
      * 
      * 
@@ -787,7 +792,7 @@ class CouponController extends Controller{
         $result = \App\Voucher::select(['vSn','REDEEM_CODE','vUseMoney','vcTitle'])->where(['vcId'=>$vcId])->get()->toArray();
         $desModel = new \Service\NetDesCrypt;
         $desModel->setKey( self::$DES_KEY );
-		$title = '代金劵-'. $result[0]['vcTitle'] .date('Ymd');
+		$title = '兑换劵-'. $result[0]['vcTitle'] .date('Ymd');
         foreach( $result as $key => $val ){
             if( strlen( $val['REDEEM_CODE'] ) !=8 )
                 $result[$key]['REDEEM_CODE'] = $desModel->decrypt( $val['REDEEM_CODE'] );
@@ -801,9 +806,11 @@ class CouponController extends Controller{
 	        		$sheet->prependRow(1, $header);//添加表头
 			    });
 		})->export('xls');
+        Event::fire('coupon.exportCoupon','导出查看实体券编码和密码活动id: '.$vcId);
+        exit;
     }
     /***
-	 * @api {get} /coupon/exportList 11.导出代金劵配置列表
+	 * @api {get} /coupon/exportList 11.导出兑换劵配置列表
 	 * @apiName exportList
 	 * @apiGroup Coupon
 	 *
@@ -857,7 +864,7 @@ class CouponController extends Controller{
             if( empty($res) ) return $this->success();
             $tempData = $this->handleList($res['data']);
             unset( $res );
-            $title = '代金劵活动查询列表' .date('Ymd');
+            $title = '兑换劵活动查询列表' .date('Ymd');
             //导出excel	   
             $header = ['活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门','活动状态'];
             Excel::create($title, function($excel) use($tempData,$header){
@@ -866,6 +873,7 @@ class CouponController extends Controller{
                     $sheet->prependRow(1, $header);//添加表头
                 });
             })->export('xls');
+            Event::fire('coupon.exportList','导出兑换列表数据');
             exit;
         }
         $actType = array('','vcSn','vcTitle');
@@ -892,7 +900,7 @@ class CouponController extends Controller{
             
         $tempData = $this->handleList($res['data']);
         unset( $res );
-        $title = '代金劵查询列表' .date('Ymd');
+        $title = '兑换劵查询列表' .date('Ymd');
         //导出excel	   
         $header = ['活动名称','活动编码','券总数','已兑换数','已使用数','创建时间','活动时间','申请部门','活动状态'];
         Excel::create($title, function($excel) use($tempData,$header){
@@ -901,6 +909,8 @@ class CouponController extends Controller{
                 $sheet->prependRow(1, $header);//添加表头
             });
         })->export('xls');
+        Event::fire('coupon.exportList','导出兑换列表数据');
+        exit;
     }
     /***
 	 * @api {get} /coupon/getActNum 12.获取活动编码
@@ -942,7 +952,7 @@ class CouponController extends Controller{
    }
     // 获取分类
     private function _getItemType(){
-        // 这里用于 代金劵和配置中会和前端约定 增加一个项目特价类型为typeid为101
+        // 这里用于 兑换劵和配置中会和前端约定 增加一个项目特价类型为typeid为101
         $itemType = \App\SalonItemtype::select(['typeid','typename'])
                 ->where('status','=',1)
                 ->orderBy('sortIt','DESC')
@@ -951,7 +961,7 @@ class CouponController extends Controller{
         array_unshift( $itemType , array('typeid'=>101,'typename'=>'限时特价 ') );
         return $itemType;
     }
-    // 获取代金劵编号
+    // 获取兑换劵编号
     private function getVoucherSn( $p = 'CM' ) {
         $pre = substr(time(), 2);
         $end = '';
@@ -963,7 +973,7 @@ class CouponController extends Controller{
         if ($count) return $this->getVoucherSn();
         return $code;
    }
-   // 获取代金劵状态
+   // 获取兑换劵状态
    private function getVoucherStatusByActId( $vcId ){
         $result = \App\Voucher::select(['vStatus','vUseEnd'])->where(['vcId'=>$vcId])->get();
         
