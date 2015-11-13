@@ -46,7 +46,7 @@
                     <label class="control-label" for=""><span class="red">*</span>店铺编号：</label>
                     <div class="control">
                         <input type="text" name="sn" value="<%=data.sn%>" placeholder="店铺编号" maxlength="10"
-                        data-value="<%=data.sn||""%>" unique="salon/checkSalonSn?sn=${value}" uniquemsg="店铺编号重复">
+                        required data-value="<%=data.sn||""%>" unique="salon/checkSalonSn?sn=${value}" uniquemsg="店铺编号重复">
                     </div>
                 </div> 
                 <div class="control-group">
