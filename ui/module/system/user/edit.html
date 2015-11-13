@@ -118,13 +118,13 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>登陆密码：</label>
                     <div class="control">
-                        <input id="password" type="password" patternmsg="6-20位数字或字母组合" pattern="password" requiredmsg="请输入密码" required placeholder="6-20位数字或字母组合" name="password" value="<%=data.password||""%>" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>>
+                        <input id="password" type="password" patternmsg="6-20位数字或字母组合" pattern="password" requiredmsg="请输入密码" required placeholder="6-20位数字或字母组合" name="password" value="<%=query._?"":"cm123456"%>" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>确认登录密码：</label>
                     <div class="control">
-					<input type="password" match="password" matchmsg="确认密码与密码不一致" pattern="password" requiredmsg="请输入确认密码" required name="confirm" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>></div>
+					<input type="password" match="password" matchmsg="确认密码与密码不一致" pattern="password" requiredmsg="请输入确认密码" required name="confirm" value="<%=query._?"":"cm123456"%>" <%=query._?"disabled":""%> <%=data.status==3?"disabled":""%>></div>
                 </div>
 				<div class="control-group">
 				<label class="control-label" for=""></label>
@@ -151,19 +151,20 @@
     </script>
 	 
 	<script type="text/template" id="roles-t">
+			<label><input type="checkbox" disabled checked /><span>基本角色</span></label>
 			<%
 				var sids=JSON.parse(sessionStorage.getItem("roles"));
 				sessionStorage.removeItem("roles");
 			%>
 			<%data=data.data%>
-			<%for(var i=0;i<data.length;i++){%>
-                <%if(data[i].status!=3){%>
+			<%data.forEach(function(item){%>
+                <%if(item.status!=3){%>
 				<label>
-					<input type="checkbox" required <%=sids&&sids.indexOf(data[i].id)>-1?"checked":""%>  name="roles" value="<%=data[i].id%>" <%=protocol.custom.status==3?"disabled":""%> />
-					<span><%=data[i].name%></span>
+					<input type="checkbox" required <%=sids&&sids.indexOf(item.id)>-1?"checked":""%>  name="roles" value="<%=item.id%>" <%=protocol.custom.status==3?"disabled":""%> />
+					<span><%=item.name%></span>
 				</label>
                 <%}%>
-			<%}%>
+			<%})%>
 			<div class="control-help" style="display:none"></div>
  
 	</script>
