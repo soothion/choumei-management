@@ -126,7 +126,7 @@ class CouponController extends Controller{
         $addRes = \App\VoucherConf::insertGetId( $data );
 
         if( empty($addRes) ) return $this->error('插入数据失败，请稍后再试');
-        Event::fire('coupon.add','添加兑换数据新增id：'.$addRes);
+        Event::fire('coupon.add','添加兑换数据');
         return $this->success();
     }
     
