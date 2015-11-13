@@ -1373,7 +1373,7 @@ class PlatformController extends Controller{
             }
             if( empty($val['totalNum']) )
                 $res['data'][$key]['totalNum'] = '无限';
-            if(!empty($val['totalNum']) && !empty($val['getTypes']) && $val['getTypes']==3 ){
+            if(empty($val['totalNum']) && !empty($val['getTypes']) && $val['getTypes']==3 ){
                 $tmp = \App\Voucher::where(['vcSn'=>$val['vcSn']])->count();
                 $total = $tmp * $val['getNumMax'];
                 $res['data'][$key]['totalNum'] = $total;
