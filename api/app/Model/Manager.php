@@ -185,10 +185,9 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
         $query = $query->where('id','>',1);
 
         //排序
-        if(isset($param['sort_key'])&&$param['sort_key']){
-            $param['sort_type'] = empty($param['sort_type'])?'DESC':$param['sort_type'];
-            $query = $query->orderBy($param['sort_key'],$param['sort_type']);
-        }
+        $sort_key = empty($param['sort_key'])?'id':$param['sort_key'];
+        $sort_type = empty($param['sort_type'])?'DESC':$param['sort_type'];
+        $query = $query->orderBy($sort_key,$sort_type);
 
         return $query;
     }

@@ -383,7 +383,7 @@ class ItemController extends Controller{
 		if(!$item)
 			throw new ApiException('未知项目ID', ERROR::ITEM_NOT_FOUND);
 
-        $result = $item->update(['status'=>SalonItem::STATUS_OF_DOWN]);
+        $result = $item->update(['status'=>SalonItem::STATUS_OF_DOWN,'updateTime'=>time()]);
         if($result)
         {
             return $this->success([]);
