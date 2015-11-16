@@ -630,6 +630,10 @@ class ItemInfoController extends Controller{
 	        }
 	        $salon_item['add_time'] 	= $now_time;
 	    }
+		else
+		{
+			$salon_item['updateTime'] 	= $now_time;
+		}
 	    
 	    //处理购买限制表 开始
 	    $timeLimitInput = isset($param['timeLimitInput'])?intval($param['timeLimitInput']):0;
