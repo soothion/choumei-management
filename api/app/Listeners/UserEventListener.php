@@ -37,7 +37,7 @@ class UserEventListener {
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-		$data['object'] = $user->username;
+		$data['object'] = $user->mobilephone;
 
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
@@ -54,13 +54,30 @@ class UserEventListener {
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-		$data['object'] = $user->username;
+		$data['object'] = $user->mobilephone;
 
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
 		$data['operation'] = '更新用户';
+		$data['slug'] = Route::currentRouteName();
+		$data['ip'] = Request::getClientIp();
+		return Log::create($data);
+	}	
+
+	public function onDelete($user)
+	{
+    	$operator = JWTAuth::parseToken()->authenticate();
+		$data['username'] = $operator->username;
+		$data['roles'] = $operator->roles->toArray();
+		$data['object'] = $user->mobilephone;
+
+		foreach ($data['roles'] as $key => $value) {
+			$roles[] = $value['name'];
+		}
+		$data['roles'] = implode($roles, ',');
+		$data['operation'] = '删除用户';
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
