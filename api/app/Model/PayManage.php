@@ -130,7 +130,7 @@ class PayManage extends Model
         }
         
         $code = self::makeNewCode(self::TYPE_OF_FJY);
-        $merchant_id = Salon::getMercharId($base->salon_id);
+        //$merchant_id = Salon::getMercharId($base->salon_id);
         $record = [
             'type' =>self::TYPE_OF_FJY,
             'code'=>$code,
@@ -138,7 +138,7 @@ class PayManage extends Model
             'w_id'=>$base->id,           
             'salon_id'=>$base->salon_id,
             'salon_uid'=>$base->uid,
-            'merchant_id'=>intval($merchant_id),
+           // 'merchant_id'=>intval($merchant_id),
             'from'=>self::FROM_SHANGMENG,
             'money'=>$base->money,
             'pay_type'=>1,//统一为银行付款
@@ -159,7 +159,7 @@ class PayManage extends Model
             !isset($params['other_id']) ||//代收单id
             !isset($params['other_code']) ||//代收单code
             !isset($params['salon_id']) || 
-            !isset($params['merchant_id']) ||
+           // !isset($params['merchant_id']) ||
             !isset($params['pay_money']) ||//金额
             !isset($params['pay_type']) ||//支付方式
             !isset($params['pay_day']) ||//实际付款日期
@@ -180,7 +180,7 @@ class PayManage extends Model
             'p_id'=>$params['id'],
             'p_code'=>$params['code'],
             'salon_id'=>$params['salon_id'],
-            'merchant_id'=>$params['merchant_id'],
+            //'merchant_id'=>$params['merchant_id'],
             'money'=>$params['pay_money'],
             'pay_type'=>$params['pay_type'],
             'pay_day'=>$params['pay_day'],
@@ -206,7 +206,7 @@ class PayManage extends Model
         if( !isset($params['id']) ||//三方id
             !isset($params['code']) ||//三方code
             !isset($params['salon_id']) || 
-            !isset($params['merchant_id']) ||
+           // !isset($params['merchant_id']) ||
             !isset($params['money']) ||//金额
             !isset($params['receive_type']) ||//支付方式
             !isset($params['receive_day']) ||//实际付款日期
@@ -231,7 +231,7 @@ class PayManage extends Model
             'r_id'=>$params['id'],
             'r_code'=>$params['code'],
             'salon_id'=>$params['salon_id'],
-            'merchant_id'=>$params['merchant_id'],
+          //  'merchant_id'=>$params['merchant_id'],
             'money'=>$params['money'],
             'pay_type'=>$params['receive_type'],
             'pay_day'=>$params['receive_day'],
@@ -250,7 +250,7 @@ class PayManage extends Model
             'other_id'=>$id,
             'other_code'=>$code,
             'salon_id'=>$params['salon_id'],
-            'merchant_id'=>$params['merchant_id'],
+            //'merchant_id'=>$params['merchant_id'],
             'type'=>PrepayBill::TYPE_OF_ALREADYPAY,
             'uid'=>$params['make_uid'],
             'pay_money'=>$params['money'],
@@ -261,7 +261,7 @@ class PayManage extends Model
         ];
         $prepay = PrepayBill::makeCompleted($prepay_params);      
 
-        ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['money'],"预付款返还",$params['make_at']);
+        ShopCount::count_bill_by_pay_money($params['salon_id'], NULL,  $params['money'],"预付款返还",$params['make_at']);
         
         //付款单关联转付单关联
         self::where('id',$id)->update(['p_id'=>$prepay['id'],'p_code'=>$prepay['code']]);
@@ -278,7 +278,7 @@ class PayManage extends Model
     {
         if( !isset($attr['type']) ||
             !isset($attr['salon_id']) ||
-            !isset($attr['merchant_id']) ||
+           // !isset($attr['merchant_id']) ||
             !isset($attr['money']) ||
             !isset($attr['pay_type']) ||
             !isset($attr['remark']) ||
@@ -290,7 +290,7 @@ class PayManage extends Model
         $record = [
             'type'=>intval($attr['type']),
             'salon_id'=>intval($attr['salon_id']),
-            'merchant_id'=>intval($attr['merchant_id']),
+          //  'merchant_id'=>intval($attr['merchant_id']),
             'money'=>floatval($attr['money']),
             'pay_type'=>intval($attr['pay_type']),         
             'make_uid'=>intval($attr['make_uid']),
@@ -336,10 +336,7 @@ class PayManage extends Model
         {
             $record['salon_id'] =intval($attr['salon_id']);
         }
-        if(isset($attr['merchant_id']))
-        {
-            $record['merchant_id'] =intval($attr['merchant_id']);
-        }
+
         if(isset($attr['money']))
         {
             $record['money'] =floatval($attr['money']);
@@ -495,7 +492,7 @@ class PayManage extends Model
                         'other_id'=>$item['id'],
                         'other_code'=>$item['code'],
                         'salon_id'=>$item['salon_id'],
-                        'merchant_id'=>$item['merchant_id'],
+                       // 'merchant_id'=>$item['merchant_id'],
                         'type'=>$type,
                         'uid'=>$uid,
                         'pay_money'=>$item['money'],
@@ -506,11 +503,11 @@ class PayManage extends Model
                     $res = PrepayBill::makeCompleted($record);
                     self::where('id',$item['id'])->update(['p_id'=>$res['id'],'p_code'=>$res['code']]);
                     //结算
-                    ShopCount::count_bill_by_pay_money($item['salon_id'], $item['merchant_id'],$money,$remark,time());
+                    ShopCount::count_bill_by_pay_money($item['salon_id'], NULL,$money,$remark,time());
                 }
                 elseif($item['type'] == self::TYPE_OF_FTZ)
                 {                   
-                    ShopCount::count_bill_by_invest_money($item['salon_id'], $item['merchant_id'], $item['money']);
+                    ShopCount::count_bill_by_invest_money($item['salon_id'], NULL, $item['money']);
                 }
             }
         }
@@ -553,23 +550,23 @@ class PayManage extends Model
             'sn',
         ];
         $base_fields = [
-            'id',
-            'code',
-            'type',
-            'salon_id',
-            'salon_uid',
-            'from',
-            'remark',
-            'merchant_id',
-            'make_uid',
-            'confirm_uid',
-            'cash_uid',
-            'money',
-            'pay_type',
-            'pay_day',
-            'created_at',
-            'confirm_at',
-            'state',
+            'pay_manage.id as id',
+            'pay_manage.code as code',
+            'pay_manage.type as type',
+            'pay_manage.salon_id as salon_id',
+            'pay_manage.salon_uid as salon_uid',
+            'pay_manage.from as from',
+            'pay_manage.remark as remark',
+            'merchant.id as merchant_id',
+            'pay_manage.make_uid as make_uid',
+            'pay_manage.confirm_uid as confirm_uid',
+            'pay_manage.cash_uid as cash_uid',
+            'pay_manage.money as money',
+            'pay_manage.pay_type as pay_type',
+            'pay_manage.pay_day as pay_day',
+            'pay_manage.created_at as created_at',
+            'pay_manage.confirm_at as confirm_at',
+            'pay_manage.state as state',
         ];
         $order_by_fields = [
             'id',
@@ -581,10 +578,10 @@ class PayManage extends Model
             'created_at',
             'state',
         ];
-    
-        $base = self::select($base_fields);
-    
-        // 关键字搜索
+        
+        // 关键字搜索 
+        $key = 0;
+        $keyword = NULL;
         if (isset($options['key']) && ! empty($options['key']) && isset($options['keyword']) && ! empty($options['keyword'])) {
             $key = intval($options['key']);
             $keyword = "%" . str_replace([
@@ -594,28 +591,63 @@ class PayManage extends Model
                 "\\%",
                 "\\_"
             ], $options['keyword']) . "%";
-            if ($key == 1) {
-                $base->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
-            } elseif ($key == 2) {
-                $base->whereRaw("merchant_id in (SELECT `id` FROM `cm_merchant` WHERE `name` LIKE '{$keyword}')");
-            } elseif ($key == 3) {
-                $base->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `sn` LIKE '{$keyword}')");
-            }
+//             if ($key == 1) {
+//                 $base->join("salon",function($join) use($keyword){
+//                     $join->on('salon.salonid','=','pay_manage.salon_id')->where('salon.salonname','like',$keyword);
+//                 });
+//                 // $base->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
+//             } elseif ($key == 2) {
+//                 //                 $base->join("merchant",function($join) use($keyword){
+//                 //                     $join->on('merchant.id','=','pay_manage.merchant_id')->where('merchant.merchant','like',$keyword);
+//                 //                 });
+//                 $base->whereRaw("merchant_id in (SELECT `id` FROM `cm_merchant` WHERE `name` LIKE '{$keyword}')");
+//             } elseif ($key == 3) {
+//                 $base->join("salon",function($join) use($keyword){
+//                     $join->on('salon.salonid','=','pay_manage.salon_id')->where('salon.sn','like',$keyword);
+//                 });
+//                 //$base->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `sn` LIKE '{$keyword}')");
+//             }
         }
+        
+        $base = self::join('salon',function($join) use($key,$keyword){
+           $join->on('salon.salonid','=','pay_manage.salon_id');
+           if(!empty($keyword))
+           {
+               if($key == 1)
+               {
+                   $join->where('salon.salonname','like',$keyword);
+               }
+               elseif($key == 3)
+               {
+                   $join->where('salon.sn','like',$keyword);
+               }
+           };
+        })->join('merchant',function($join) use($key,$keyword){
+           $join->on('merchant.id','=','salon.merchantId');
+           if(!empty($keyword))
+           {
+               if($key == 2)
+               {
+                   $join->where('merchant.name','like',$keyword);
+               }
+           };
+        });
+       
+        $base->select($base_fields);
         
         // 付款单类型
         if (isset($options['type']) && !empty($options['type'])) {
-            $base->where('type', intval($options['type']) );
+            $base->where('pay_manage.type', intval($options['type']) );
         }
         
         // 付款方式类型
         if (isset($options['pay_type']) && !empty($options['pay_type'])) {
-            $base->where('pay_type', intval($options['pay_type']) );
+            $base->where('pay_manage.pay_type', intval($options['pay_type']) );
         }
         
         // 状态
         if (isset($options['state']) && !empty($options['state'])) {
-            $base->where('state', intval($options['state']) );
+            $base->where('pay_manage.state', intval($options['state']) );
         }
         
         $base->with([
@@ -641,13 +673,11 @@ class PayManage extends Model
     
         // 按时间搜索
         if (isset($options['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_min']))) {
-            $base->where('pay_day', ">=", trim($options['pay_time_min']));
+            $base->where('pay_manage.pay_day', ">=", trim($options['pay_time_min']));
         }
         if (isset($options['pay_time_max']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_max']))) {
-            $base->where('pay_day', "<=", trim($options['pay_time_max']))->where('pay_day','>','1970-01-01');
-        }
-        
-        
+            $base->where('pay_manage.pay_day', "<=", trim($options['pay_time_max']))->where('pay_day','>','1970-01-01');
+        }        
     
         // 排序
         if (isset($options['sort_key']) && in_array($options['sort_key'], $order_by_fields)) {
@@ -662,6 +692,82 @@ class PayManage extends Model
             $order_by = "DESC";
         }
         return $base->orderBy($order, $order_by);
+    }
+    
+    public static function detail($id)
+    {
+        $query = self::where('pay_manage.id',intval($id));
+        $query->join('salon',function($join){
+            $join->on('salon.salonid','=','pay_manage.salon_id');
+        })->join('merchant',function($join){
+            $join->on('merchant.id','=','salon.merchantId');
+        });
+        $fields = [
+            'pay_manage.id as id',
+            'pay_manage.w_id as w_id',
+            'pay_manage.code as code',
+            'pay_manage.type as type',
+            'pay_manage.r_id as r_id',
+            'pay_manage.r_code as r_code',
+            'pay_manage.p_id as p_id',
+            'pay_manage.p_code as p_code',
+            'pay_manage.salon_id as salon_id',
+            'merchant.id as merchant_id',
+            'pay_manage.money as money',
+            'pay_manage.pay_type as pay_type',
+           // 'pay_manage.require_day as require_day',
+            'pay_manage.pay_day as pay_day',
+            'pay_manage.cycle as cycle',
+            'pay_manage.cycle_day as cycle_day',
+            'pay_manage.cycle_money as cycle_money',
+            'pay_manage.make_uid as make_uid',
+            'pay_manage.cash_uid as cash_uid',
+            'pay_manage.state as state',
+            'pay_manage.salon_uid as salon_uid',
+            'pay_manage.from as from',
+            'pay_manage.created_at as created_at',
+            'pay_manage.confirm_uid as confirm_uid',
+            'pay_manage.confirm_at as confirm_at',
+            'pay_manage.updated_at as updated_at',
+            'pay_manage.remark as remark',
+        ];
+        $query->with([
+            'make_user' => function ($q)
+            {
+                $q->get(['id','name']);
+            }
+        ])->with([
+            'confirm_user' => function ($q)
+            {
+                $q->get(['id','name']);
+            }
+        ])->with([
+            'cash_user' => function ($q)
+            {
+                $q->get(['id','name']);
+            }
+        ])->with([
+            'salon_user' => function ($q)
+            {
+                $q->get(['salon_user_id','username']);
+            }
+        ])->with([
+            'salon' => function ($q)
+            {
+                $q->get(['salonid','salonname','sn']);
+            }
+        ])->with([
+            'merchant' => function ($q)
+            {
+                $q->get(['id','name']);
+            }
+        ]);
+        $obj = $query->first($fields);
+        if(empty($obj))
+        {
+            return [];
+        }
+        return $obj->toArray();
     }
 
 }

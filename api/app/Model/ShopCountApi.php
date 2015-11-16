@@ -40,7 +40,7 @@ class ShopCountApi
             $rows_num = count($base_order_infos);
             $offset += $size;
             $salon_ids = array_column($base_order_infos, "salonid");
-            $marchant_info = self::getSalonMerchantBaseInfo($salon_ids);            
+            //$marchant_info = self::getSalonMerchantBaseInfo($salon_ids);            
             foreach($base_order_infos as $key => $order)
             {
                 $now_num = $key + $offset + 1;
@@ -49,7 +49,7 @@ class ShopCountApi
                 $money = floatval($order['priceall']);
                 $time = $order['use_time'];                
                 echo "run at {$now_num} / {$total}  count ordersn [{$ordersn}] ...\n";
-                $merchant_id = $marchant_info[$salon_id];
+               // $merchant_id = $marchant_info[$salon_id];
        
                 
                 $ds_code =InsteadReceive::getNewCode();
@@ -59,7 +59,7 @@ class ShopCountApi
                     'type' => 1,
                     'money' => $money,
                     'salon_id' => $salon_id,
-                    'merchant_id' => $merchant_id,
+                    //'merchant_id' => $merchant_id,
                     'created_at' => date("Y-m-d H:i:s", $time)
                 ]);
                 
@@ -69,7 +69,7 @@ class ShopCountApi
                     InsteadReceive::create([
                     'code' => $ds_code,
                     'salon_id' => $salon_id,
-                    'merchant_id' => $merchant_id,
+                   // 'merchant_id' => $merchant_id,
                     'type' => InsteadReceive::TYPE_OF_ORDER,
                     'money' => $money,
                     'day' => date("Y-m-d", $time),
@@ -82,7 +82,7 @@ class ShopCountApi
                     InsteadReceive::where('id',$ir->id)->update(['money'=> $now_money]);
                 }
                 unset($ir);
-                $shop_counts = ShopCount::count_bill_by_receive_money($salon_id, $merchant_id, $money);             
+                $shop_counts = ShopCount::count_bill_by_receive_money($salon_id, NULL, $money);             
             }
             unset($base_order_infos);
         }
@@ -222,7 +222,7 @@ class ShopCountApi
         
         $salon_ids = array_column($base_order_infos, "salonid");
         
-        $marchant_info = self::getSalonMerchantBaseInfo($salon_ids);
+     //   $marchant_info = self::getSalonMerchantBaseInfo($salon_ids);
        
         $res = ['success'=>[],'type'=>1,'already'=>[]];
         foreach($base_order_infos as $order)
@@ -232,8 +232,8 @@ class ShopCountApi
             $type = 1;
             $money = floatval($order['priceall']);
             $time = $order['use_time'];           
-            $merchant_id = $marchant_info[$salon_id];           
-            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$merchant_id,$money,$time,$type);   
+           // $merchant_id = $marchant_info[$salon_id];           
+            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,NULL,$money,$time,$type);   
             if($ret == 1)
             {
                 $res['success'][] = $ordersn;
@@ -265,7 +265,7 @@ class ShopCountApi
         
         $salon_ids = array_column($base_order_infos, "salonId");
         
-        $marchant_info = self::getSalonMerchantBaseInfo($salon_ids);
+       // $marchant_info = self::getSalonMerchantBaseInfo($salon_ids);
          
         $res = ['success'=>[],'type'=>2,'already'=>[]];
         foreach($base_order_infos as $order)
@@ -275,9 +275,9 @@ class ShopCountApi
             $money = floatval($order['money']);
             $time = $order['endTime'];
             $type = 2;
-            $merchant_id = $marchant_info[$salon_id];
+           // $merchant_id = $marchant_info[$salon_id];
             
-            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,$merchant_id,$money,$time,$type);
+            $ret = ShopCount::ShopCountOrder($ordersn,$salon_id,NULL,$money,$time,$type);
             if($ret == 1)
             {
                 $res['success'][] = $ordersn;
@@ -327,8 +327,9 @@ class ShopCountApi
      */
     public static function makePrepay($options)
     {
-        if(isset($options['merchant_id'])
-            && isset($options['type'])
+        if(
+            //isset($options['merchant_id'])
+            isset($options['type'])
             && isset($options['salon_id'])
             && isset($options['uid'])
             && isset($options['pay_money'])
@@ -342,7 +343,7 @@ class ShopCountApi
                 'code' => $pay_code,
                 'type' => PayManage::TYPE_OF_FJY,
                 'salon_id' => $options['salon_id'],
-                'merchant_id' => $options['merchant_id'],
+              //  'merchant_id' => $options['merchant_id'],
                 'money' => $options['pay_money'],
                 'pay_type' => $options['pay_type'],
                 'require_day'=>$options['day'],
@@ -398,10 +399,7 @@ class ShopCountApi
         {
             $pay_record['salon_id'] = $options['salon_id'];
         }
-        if(isset($options['marchant_id']))
-        {
-            $pay_record['marchant_id'] = $options['marchant_id'];
-        }
+
         if(isset($options['pay_money']))
         {
             $pay_record['money'] = $options['pay_money'];
@@ -514,20 +512,20 @@ class ShopCountApi
             'name'
         ];
         $prepay_fields = [
-            'id',
-            'created_at',
-            'merchant_id',
-            'salon_id',
-            'code',
-            'type',
-            'uid',
-            'pay_money',
-            'pay_type',
-            'remark',
+            'prepay_bill.id as id',
+            'prepay_bill.created_at as created_at',
+            'merchant.id as merchant_id',
+            'prepay_bill.salon_id as salon_id',
+            'prepay_bill.code as code',
+            'prepay_bill.type as type',
+            'prepay_bill.uid as uid',
+            'prepay_bill.pay_money as pay_money',
+            'prepay_bill.pay_type as pay_type',
+            'prepay_bill.remark as remark',
             //'cost_money',
-            'day',
-            'pay_day',
-            'state',
+            'prepay_bill.day as day',
+            'prepay_bill.pay_day as pay_day',
+            'prepay_bill.state as state',
         ];
         $order_by_fields = [
             'id',
@@ -539,9 +537,11 @@ class ShopCountApi
             'day'
         ];
         
-        $prepay = PrepayBill::where('state', '<>', PrepayBill::STATE_OF_PREVIEW)->select($prepay_fields);
+        $prepay = PrepayBill::where('prepay_bill.state', '<>', PrepayBill::STATE_OF_PREVIEW);
         
         // 关键字搜索
+        $key = 0;
+        $keyword = NULL;
         if (isset($options['key']) && ! empty($options['key']) && isset($options['keyword']) && ! empty($options['keyword'])) {
             $key = intval($options['key']);
             $keyword = '%' . str_replace([
@@ -551,14 +551,34 @@ class ShopCountApi
                 "\\%",
                 "\\_"
             ], $options['keyword']) . "%";
-            if ($key == 1) {
-                $prepay->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
-            } elseif ($key == 2) {
-                $prepay->whereRaw("merchant_id in (SELECT `id` FROM `cm_merchant` WHERE `name` LIKE '{$keyword}')");
-            } elseif ($key == 3) {
-                $prepay->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `sn` LIKE '{$keyword}')");
-            }
         }
+        
+        
+        $prepay->join('salon',function($join) use($key,$keyword){
+            $join->on('salon.salonid','=','prepay_bill.salon_id');
+            if(!empty($keyword))
+            {
+                if($key == 1)
+                {
+                    $join->where('salon.salonname','like',$keyword);
+                }
+                elseif($key == 3)
+                {
+                    $join->where('salon.sn','like',$keyword);
+                }
+            };
+        })->join('merchant',function($join) use($key,$keyword){
+            $join->on('merchant.id','=','salon.merchantId');
+            if(!empty($keyword))
+            {
+                if($key == 2)
+                {
+                    $join->where('merchant.name','like',$keyword);
+                }
+            };
+        });        
+
+        $prepay->select($prepay_fields);
         
         $prepay->with([
             'user' => function ($q) use($user_fields)
@@ -583,10 +603,10 @@ class ShopCountApi
         
         // 按时间搜索
         if (isset($options['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_min']))) {
-            $prepay->where('pay_day', ">=", trim($options['pay_time_min']));
+            $prepay->where('prepay_bill.pay_day', ">=", trim($options['pay_time_min']));
         }
         if (isset($options['pay_time_max']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_max']))) {
-            $prepay->where('pay_day', "<=", trim($options['pay_time_max']));
+            $prepay->where('prepay_bill.pay_day', "<=", trim($options['pay_time_max']));
         }
         
         // 排序
@@ -600,8 +620,7 @@ class ShopCountApi
             $order_by = "ASC";
         } else {
             $order_by = "DESC";
-        }
-        
+        }        
         return $prepay->orderBy($order, $order_by);
     }
     
@@ -638,14 +657,14 @@ class ShopCountApi
             'name'
         ];
         $instead_receive_fields = [
-            'id',
-            'created_at',
-            'merchant_id',
-            'salon_id',
-            'code',
-            'type',
-            'money',
-            'day'
+            'instead_receive.id as id',
+            'instead_receive.created_at as created_at',
+            'merchant.id as merchant_id',
+            'instead_receive.salon_id as salon_id',
+            'instead_receive.code as code',
+            'instead_receive.type as type',
+            'instead_receive.money as money',
+            'instead_receive.day as day'
         ];
         $order_by_fields = [
             'id',
@@ -656,9 +675,9 @@ class ShopCountApi
             'day'
         ];
         
-        $instead_receive = InsteadReceive::select($instead_receive_fields);
-        
         // 关键字搜索
+        $key = 0;
+        $keyword = NULL;
         if (isset($options['key']) && ! empty($options['key']) && isset($options['keyword']) && ! empty($options['keyword'])) {
             $key = intval($options['key']);
             $keyword = "%" . str_replace([
@@ -668,14 +687,33 @@ class ShopCountApi
                 "\\%",
                 "\\_"
             ], $options['keyword']) . "%";
-            if ($key == 1) {
-                $instead_receive->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
-            } elseif ($key == 2) {
-                $instead_receive->whereRaw("merchant_id in (SELECT `id` FROM `cm_merchant` WHERE `name` LIKE '{$keyword}')");              
-            } elseif ($key == 3) {
-                $instead_receive->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `sn` LIKE '{$keyword}')");             
-            }
         }
+        
+        $instead_receive = InsteadReceive::join('salon',function($join) use($key,$keyword){
+            $join->on('salon.salonid','=','instead_receive.salon_id');
+            if(!empty($keyword))
+            {
+                if($key == 1)
+                {
+                    $join->where('salon.salonname','like',$keyword);
+                }
+                elseif($key == 3)
+                {
+                    $join->where('salon.sn','like',$keyword);
+                }
+            };
+        })->join('merchant',function($join) use($key,$keyword){
+            $join->on('merchant.id','=','salon.merchantId');
+            if(!empty($keyword))
+            {
+                if($key == 2)
+                {
+                    $join->where('merchant.name','like',$keyword);
+                }
+            };
+        });
+
+        $instead_receive->select($instead_receive_fields);
         
         $instead_receive->with([
             'salon' => function ($q) use($salon_fields)
@@ -693,10 +731,10 @@ class ShopCountApi
         
         // 按时间搜索
         if (isset($options['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_min']))) {
-            $instead_receive->where('day', ">=", trim($options['pay_time_min']));
+            $instead_receive->where('instead_receive.day', ">=", trim($options['pay_time_min']));
         }
         if (isset($options['pay_time_max']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_max']))) {
-            $instead_receive->where('day', "<=", trim($options['pay_time_max']));
+            $instead_receive->where('instead_receive.day', "<=", trim($options['pay_time_max']));
         }
         
         // 排序
@@ -749,22 +787,22 @@ class ShopCountApi
             'name'
         ];
         $shop_count_fields = [
-            'id',
-            'created_at',
-            'merchant_id',
-            'salon_id',
-            'pay_money',
-            'cost_money',
-            'commission_money',
-            'commission_return_money',
-            'spend_money',
+            'shop_count.id as id',
+            'shop_count.created_at as created_at',
+            'merchant.id as merchant_id',
+            'shop_count.salon_id as salon_id',
+            'shop_count.pay_money as pay_money',
+            'shop_count.cost_money as cost_money',
+            'shop_count.commission_money as commission_money',
+            'shop_count.commission_return_money as commission_return_money',
+            'shop_count.spend_money as spend_money',
             //'balance_money',
-            'invest_money',
-            'invest_return_money',
+            'shop_count.invest_money as invest_money',
+            'shop_count.invest_return_money as invest_return_money',
             //'invest_balance_money',
-            'borrow_money',
-            'borrow_return_money',
-            'borrow_balance_money'
+            'shop_count.borrow_money as borrow_money',
+            'shop_count.borrow_return_money as borrow_return_money',
+            'shop_count.borrow_balance_money as borrow_balance_money'
         ];
         $order_by_fields = [
             'id',
@@ -782,11 +820,12 @@ class ShopCountApi
             'borrow_return_money',
             'borrow_balance_money'
         ];
-        $shop_count = ShopCount::select($shop_count_fields)->selectRaw('(`pay_money` - `spend_money` + `commission_money` - `commission_return_money`) as `balance_money`')->selectRaw('(`invest_money` - `invest_return_money`) as `invest_balance_money`');
-        
-        //$shop_count = ShopCount::select($shop_count_fields);
+
+        $shop_count = ShopCount::selectRaw('(`cm_shop_count`.`pay_money` - `cm_shop_count`.`spend_money` + `cm_shop_count`.`commission_money` - `cm_shop_count`.`commission_return_money`) as `balance_money`')->selectRaw('(`cm_shop_count`.`invest_money` - `cm_shop_count`.`invest_return_money`) as `invest_balance_money`');
         
         // 关键字搜索
+        $key = 0;
+        $keyword = NULL;
         if (isset($options['key']) && ! empty($options['key']) && isset($options['keyword']) && ! empty($options['keyword'])) {
             $key = intval($options['key']);
             $keyword = "%" . str_replace([
@@ -796,21 +835,40 @@ class ShopCountApi
                 "\\%",
                 "\\_"
             ], $options['keyword']) . "%";
-           if ($key == 1) {
-                $shop_count->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `salonname` LIKE '{$keyword}')");
-            } elseif ($key == 2) {
-                $shop_count->whereRaw("merchant_id in (SELECT `id` FROM `cm_merchant` WHERE `name` LIKE '{$keyword}')");
-            } elseif ($key == 3) {
-                $shop_count->whereRaw("salon_id in (SELECT `salonid` FROM `cm_salon` WHERE `sn` LIKE '{$keyword}')");
-            }
         }
+        
+        $shop_count->join('salon',function($join) use($key,$keyword){
+            $join->on('salon.salonid','=','shop_count.salon_id');
+            if(!empty($keyword))
+            {
+                if($key == 1)
+                {
+                    $join->where('salon.salonname','like',$keyword);
+                }
+                elseif($key == 3)
+                {
+                    $join->where('salon.sn','like',$keyword);
+                }
+            };
+        })->join('merchant',function($join) use($key,$keyword){
+            $join->on('merchant.id','=','salon.merchantId');
+            if(!empty($keyword))
+            {
+                if($key == 2)
+                {
+                    $join->where('merchant.name','like',$keyword);
+                }
+            };
+        });
+        
+        $shop_count->addSelect($shop_count_fields);
         
         // 按时间搜索
         if (isset($options['pay_time_min']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_min']))) {
-            $shop_count->where('day', ">=", trim($options['pay_time_min']));
+            $shop_count->where('shop_count.day', ">=", trim($options['pay_time_min']));
         }
         if (isset($options['pay_time_max']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($options['pay_time_max']))) {
-            $shop_count->where('day', "<=", trim($options['pay_time_max']));
+            $shop_count->where('shop_count.day', "<=", trim($options['pay_time_max']));
         }
         
         $shop_count->with([
@@ -838,7 +896,7 @@ class ShopCountApi
             $order_by = "DESC";
         }
         // 值全为0的不要
-        $shop_count->whereRaw(" NOT (pay_money = 0 and cost_money=0 and spend_money = 0 and balance_money = 0 and invest_money = 0 and invest_return_money = 0 and invest_balance_money = 0 and borrow_money=0 and borrow_return_money = 0 and borrow_return_money = 0 and borrow_balance_money  = 0 )");
+        $shop_count->whereRaw(" NOT (`cm_shop_count`.`pay_money` = 0 and `cm_shop_count`.`spend_money` = 0 and `cm_shop_count`.`invest_money` = 0 and `cm_shop_count`.`invest_return_money` = 0 and `cm_shop_count`.`borrow_money`=0 and `cm_shop_count`.`borrow_return_money` = 0 and `cm_shop_count`.`borrow_balance_money`  = 0 )");
         
         return $shop_count->orderBy($order, $order_by);
     }
@@ -853,9 +911,29 @@ class ShopCountApi
         $salon_fields = ['salonid','salonname','sn'];
         $merchant_fields = ['id','name'];
         $user_fields = ['id','name'];
-        $prepay_fields = ['id','created_at','merchant_id','salon_id','code','type','uid','pay_money','pay_type','day','pay_day','state','remark'];
+        $prepay_fields = [
+            'prepay_bill.id as id',
+            'prepay_bill.created_at as created_at',
+            'merchant.id as merchant_id',
+            'prepay_bill.salon_id as salon_id',
+            'prepay_bill.code as code',
+            'prepay_bill.type as type',
+            'prepay_bill.uid as uid',
+            'prepay_bill.pay_money as pay_money',
+            'prepay_bill.pay_type as pay_type',
+            'prepay_bill.day as day',
+            'prepay_bill.pay_day as pay_day',
+            'prepay_bill.state as state',
+            'prepay_bill.remark as remark',            
+        ];
         
-        $prepay = PrepayBill::where('id',$id);
+        $prepay = PrepayBill::where('prepay_bill.id',$id);
+        $prepay->join('salon',function($join){
+            $join->on('salon.salonid','=','prepay_bill.salon_id');            
+        })->join('merchant',function($join){
+            $join->on('merchant.id','=','salon.merchantId');         
+        });
+        
         $prepay->with([
             'user' => function ($q) use($user_fields)
             {
@@ -888,10 +966,23 @@ class ShopCountApi
     {
         $salon_fields = ['salonid','salonname','sn'];
         $merchant_fields = ['id','name'];
-        $instead_receive_fields = ['id','created_at','merchant_id','salon_id','code','type','money','day'];
+        $instead_receive_fields = [
+            'instead_receive.id as id',
+            'instead_receive.created_at as created_at',
+            'merchant.id as merchant_id',
+            'instead_receive.salon_id as salon_id',
+            'instead_receive.code as code',
+            'instead_receive.type as type',
+            'instead_receive.money as money',            
+            'instead_receive.day as day',            
+        ];
         
-        $instead_receive = InsteadReceive::where('id',$id);
-        
+        $instead_receive = InsteadReceive::where('instead_receive.id',$id);
+        $instead_receive->join('salon',function($join){
+            $join->on('salon.salonid','=','instead_receive.salon_id');
+        })->join('merchant',function($join){
+            $join->on('merchant.id','=','salon.merchantId');
+        });
         $instead_receive->with([
             'salon' => function ($q) use($salon_fields)
             {

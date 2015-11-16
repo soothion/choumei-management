@@ -78,7 +78,7 @@ class PrepayBill extends Model
         if (! isset($params['other_id']) || // 三方id
             ! isset($params['other_code']) || // 三方code
             ! isset($params['salon_id']) || 
-            ! isset($params['merchant_id']) || 
+           // ! isset($params['merchant_id']) || 
             ! isset($params['type']) || // 转付单类型
             ! isset($params['uid']) || // 制单人
             ! isset($params['pay_money']) || //  金额
@@ -95,7 +95,7 @@ class PrepayBill extends Model
         $record = [
             'code'=>$code,
             'salon_id'  => $params['salon_id'],
-            'merchant_id'  => $params['merchant_id'],
+            //'merchant_id'  => $params['merchant_id'],
             'other_id'  => $params['other_id'],
             'other_code'  => $params['other_code'],
             'type'  => $params['type'],
@@ -129,7 +129,7 @@ class PrepayBill extends Model
         if( !isset($params['id']) ||//三方id
             !isset($params['code']) ||//三方code
             !isset($params['salon_id']) ||
-            !isset($params['merchant_id']) ||
+           // !isset($params['merchant_id']) ||
             !isset($params['type']) ||
             !isset($params['money']) ||//金额
             !isset($params['receive_type']) ||//支付方式
@@ -144,7 +144,7 @@ class PrepayBill extends Model
         }        
         $record = [
             'salon_id'  => $params['salon_id'],
-            'merchant_id'  => $params['merchant_id'],
+           // 'merchant_id'  => $params['merchant_id'],
             'other_id'  => $params['id'],
             'other_code'  => $params['code'],
             'type'  => $params['type'],
@@ -161,7 +161,7 @@ class PrepayBill extends Model
            $remark = "预付保证金";
        }
        $count_at = date("Y-m-d H:i:s");
-       ShopCount::count_bill_by_pay_money($params['salon_id'], $params['merchant_id'],  $params['money'],$remark,$count_at);
+       ShopCount::count_bill_by_pay_money($params['salon_id'], NULL,  $params['money'],$remark,$count_at);
        return $res;     
     }
     
