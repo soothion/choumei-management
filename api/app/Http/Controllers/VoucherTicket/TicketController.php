@@ -6,6 +6,7 @@ namespace App\Http\Controllers\VoucherTicket;
 use App\Http\Controllers\Controller;
 use DB;
 use Excel;
+use Event;
 use App\Voucher;
 use Service\NetDesCrypt;
 use App\Exceptions\ApiException;
@@ -237,6 +238,7 @@ class TicketController extends Controller {
         }
 //        unset( $list );
         $title = '现金卷查询列表' .date('Ymd');
+        Event::fire('voucher.exportTicketList','导出劵列表');
         //导出excel	   
         $header = ['券编号','兑换密码','活动编号','活动名称','订单号','券金额','使用时间','用户手机号','使用店铺','现金券状态'];
         Excel::create($title, function($excel) use($tempData,$header){
@@ -245,6 +247,7 @@ class TicketController extends Controller {
                 $sheet->prependRow(1, $header);//添加表头
             });
         })->export('xls');
+        exit;
     }
     /***
 	 * @api {get} /voucher/invalidStatus/:id 2.作废卷
@@ -271,6 +274,7 @@ class TicketController extends Controller {
 	 ***/
     public function invalidStatus($id){
         $res = Voucher::where( ["vId"=>$id,'vStatus'=>1] )->update(['vStatus'=>5]);
+        Event::fire('voucher.invalidStatus','作废劵id: '.$id);
         return $this->success();
     }
      /***

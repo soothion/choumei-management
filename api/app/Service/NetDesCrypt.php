@@ -24,7 +24,6 @@ class NetDesCrypt{
 
     function encrypt($str) {
         //加密，返回大写十六进制字符串
-        $str = urlencode($str);
         $str = $this->pkcs5Pad($str);
         //return bin2hex( mcrypt_cbc($this->type, $this->key, $str, MCRYPT_ENCRYPT, $this->iv ) );
         $oneStr=bin2hex(mcrypt_encrypt($this->type, $this->key, $str, $this->mode, $this->iv));

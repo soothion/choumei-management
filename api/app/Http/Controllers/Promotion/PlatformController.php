@@ -252,6 +252,7 @@ class PlatformController extends Controller{
                 }
             }
         }
+        Event::fire('platform.add','添加平台数据: '.$addRes);
         return $this->success();
     }
     /***
@@ -319,9 +320,9 @@ class PlatformController extends Controller{
 	 ***/
     public function getDepartmentManager($id){
         if($id == 0)
-            $manager = \App\Manager::select(['id','name','department_id'])->get();
+            $manager = \App\Manager::select(['id','name','department_id'])->where(['status'=>1])->get();
         else
-            $manager = \App\Manager::select(['id','name','department_id'])->where('department_id','=',$id)->get();
+            $manager = \App\Manager::select(['id','name','department_id'])->where(['department_id'=>$id,'status'=>1])->get();
         return $this->success( $manager );
     }
     /***
@@ -910,6 +911,7 @@ class PlatformController extends Controller{
         }
         $addRes = \App\VoucherConf::where(['vcId'=>$id])->update( $data );
         
+        Event::fire('platform.editConf','编辑平台数据id：'.$id);
         return $this->success();
     }
     /***
@@ -942,6 +944,7 @@ class PlatformController extends Controller{
 	 ***/
     public function offlineConf( $id ){
         $update = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>2]);
+        Event::fire('platform.offlineConf','下线平台活动id: '.$id);
         return $this->success();
     }
     /***
@@ -976,6 +979,7 @@ class PlatformController extends Controller{
         $conf = \App\VoucherConf::where(['vcId'=>$id])->update(['status'=>3]);
         if( $conf )
             \App\Voucher::where(['vcId'=>$id])->whereIn('vStatus',[1,3])->update(['vStatus'=>5]);
+        Event::fire('platform.closeConf','关闭平台活动id: '.$id);
         return $this->success();
     }
     /***
@@ -1033,6 +1037,7 @@ class PlatformController extends Controller{
             \App\Voucher::whereRaw( $where1 )->update( $voucherData );
         }
         $this->verifyPhone( $vcId );
+        Event::fire('platform.upConf','上线平台活动id: '.$vcId);
         return $this->success();
     }
     /***
@@ -1093,6 +1098,7 @@ class PlatformController extends Controller{
             $tempData = $this->handleList( $res['data'] );
             unset( $res );
             $title = '现金劵活动查询列表' .date('Ymd');
+            Event::fire('platform.exportList','导出平台列表数据');
             //导出excel	   
             $header = ['活动名称','活动编码','总数上限','已发放数','已使用数','创建时间','活动时间','申请部门','活动状态'];
             Excel::create($title, function($excel) use($tempData,$header){
@@ -1129,6 +1135,7 @@ class PlatformController extends Controller{
         unset( $res );
         $title = '代金劵查询列表' .date('Ymd');
         //导出excel	   
+        Event::fire('platform.exportList','导出平台列表数据');
         $header = ['活动名称','活动编码','总数上限','已发放数','已使用数','创建时间','活动时间','申请部门','活动状态'];
         Excel::create($title, function($excel) use($tempData,$header){
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
@@ -1136,6 +1143,7 @@ class PlatformController extends Controller{
                 $sheet->prependRow(1, $header);//添加表头
             });
         })->export('xls');
+        exit;
     }
     // 校验集团码
     private function getGroupExists( $code ){
@@ -1365,7 +1373,7 @@ class PlatformController extends Controller{
             }
             if( empty($val['totalNum']) )
                 $res['data'][$key]['totalNum'] = '无限';
-            if(!empty($val['totalNum']) && !empty($val['getTypes']) && $val['getTypes']==3 ){
+            if(empty($val['totalNum']) && !empty($val['getTypes']) && $val['getTypes']==3 ){
                 $tmp = \App\Voucher::where(['vcSn'=>$val['vcSn']])->count();
                 $total = $tmp * $val['getNumMax'];
                 $res['data'][$key]['totalNum'] = $total;

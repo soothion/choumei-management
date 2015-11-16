@@ -102,7 +102,7 @@ class StylistController  extends Controller {
      *		}
      */
     public function destroy($stylistId){
-       $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
+       $stylist=Stylist::find($stylistId);
        if(!$stylist){
 		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
        }   
@@ -111,7 +111,7 @@ class StylistController  extends Controller {
             throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
        } 
          $data['status']=2;       
-         $query=  Stylist::where(array('stylistId'=>$stylistId))->update($data);    
+         $query=  Stylist::find($stylistId)->update($data); ;    
        if($query){
                 return $this->success();
        }else{
@@ -144,12 +144,12 @@ class StylistController  extends Controller {
      */
     
     public function  enable($stylistId){
-        $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
+        $stylist=Stylist::find($stylistId);
         if(!$stylist){
 		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
          }
          $data['status']=1;       
-         $query=  Stylist::where(array('stylistId'=>$stylistId))->update($data);    
+         $query=  Stylist::find($stylistId)->update($data);    
          if($query){
                 return  $this->success();
          }
@@ -183,12 +183,12 @@ class StylistController  extends Controller {
       */    
     
      public function  disabled($stylistId){
-         $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
+         $stylist=Stylist::find($stylistId);
          if(!$stylist){
 		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
           }
          $data['status']=3;       
-         $query=  Stylist::where(array('stylistId'=>$stylistId))->update($data);    
+         $query=  Stylist::find($stylistId)->update($data);     
          if($query){
                 return  $this->success();
          }
@@ -287,7 +287,7 @@ class StylistController  extends Controller {
      */
     
     public function show($stylistId){
-        $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
+        $stylist=Stylist::find($stylistId);
         if(!$stylist){
 		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR); 
         }
@@ -363,7 +363,7 @@ class StylistController  extends Controller {
    public function  update($stylistId){  
         $param=$this->param;
         $field=['salonid','merchantId'];    
-        $stylist=Stylist::where(array('stylistId'=>$stylistId))->first();
+        $stylist=Stylist::find($stylistId);
         if(!$stylist){
 		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
         }     
@@ -380,7 +380,7 @@ class StylistController  extends Controller {
         $param['salonid']=$salon->salonid;
 
         if($stylist['mobilephone']!=$param['mobilephone']){
-                $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->count();
+                $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->whereIn('status',[1,3])->count();
                 if($stylistCount)
                 {
                         throw new ApiException('手机号码重复', ERROR::MERCHANT_MOBILEPHONE_ERROR);
@@ -451,7 +451,7 @@ class StylistController  extends Controller {
         if(!isset($param['IDcard'])&&!isset($param['drivingLicense'])&&!isset($param['passport'])&&!isset($param['officerCert'])){   
                 throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
         }
-        $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->count();
+        $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->whereIn('status',[1,3])->count();
         if($stylistCount)
         {
                 throw new ApiException('手机号码重复', ERROR::MERCHANT_MOBILEPHONE_ERROR);
