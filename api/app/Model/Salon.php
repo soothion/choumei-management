@@ -569,7 +569,7 @@ class Salon extends Model {
 	public static function setSalonGrade($salonid,$data,$dataInfo,$addAct)
 	{
 		$salonResult = self::where(array('salonid'=>$salonid))->first();
-		if($data['changeInTime'] != $salonResult->changeInTime || $data['salonChangeGrade'] != $salonResult->salonChangeGrade || $addAct == 1)//1 代表添加
+		if($data['changeInTime'] >= $salonResult->changeInTime || $data['salonChangeGrade'] != $salonResult->salonChangeGrade || $addAct == 1)//1 代表添加
 		{
 			SalonRatingsRecord::where(['salonid'=>$salonid])->where('changeTime','>',time())->delete();
 			$logRs = SalonRatingsRecord::where(['salonid'=>$salonid])->orderBy('id','desc')->first();
