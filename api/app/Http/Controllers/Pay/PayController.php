@@ -229,7 +229,7 @@ class PayController extends Controller
         $params = $this->parameters([
             'type' => self::T_INT,
             'salon_id' => self::T_INT,
-            'merchant_id' => self::T_INT,
+            //'merchant_id' => self::T_INT,
             'money' => self::T_FLOAT,            
             'pay_type' => self::T_INT,
             'remark'=>self::T_STRING,            
@@ -333,39 +333,7 @@ class PayController extends Controller
      */
     public function show($id)
     {
-        $query = PayManage::where('id',$id);
-        $query->with([
-            'make_user' => function ($q)
-            {
-                 $q->get(['id','name']);
-            }
-        ])->with([
-            'confirm_user' => function ($q)
-            {
-                 $q->get(['id','name']);
-            }
-        ])->with([
-            'cash_user' => function ($q)
-            {
-                $q->get(['id','name']);
-            }
-        ])->with([
-            'salon_user' => function ($q)
-            {
-                 $q->get(['salon_user_id','username']);
-            }
-        ])->with([
-            'salon' => function ($q)
-            {
-                $q->get(['salonid','salonname','sn']);
-            }
-        ])->with([
-            'merchant' => function ($q)
-            {
-                $q->get(['id','name']);
-            }
-        ]);
-        $item = $query->first()->toArray();
+        $item = PayManage::detail($id);
         
         return $this->success($item);
     }
