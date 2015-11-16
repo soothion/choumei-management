@@ -10,7 +10,7 @@ class Item extends Model {
 	protected $table = 'salon_item';
     protected $primaryKey = 'itemid';
     public $timestamps = false;
-     protected $fillable = ['status','sort_in_type'];
+     protected $fillable = ['status','sort_in_type','updateTime'];
     CONST SALE = 1;//默认在售
     CONST ONSALE = 2;//闲时特价
     CONST UP = 1;//上架
