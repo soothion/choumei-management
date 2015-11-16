@@ -212,7 +212,7 @@
 								</tr>	
 								<tr>
 									<td>最后一次修改时间：</td>
-									<td><%=data.UPDATE_date%></td>
+									<td><%=data.updateTime?new Date(data.updateTime*1000).format("yyyy-MM-dd hh:mm"):""%></td>
 								</tr>
 								<tr>
 									<td>最后一次修改人：</td>
