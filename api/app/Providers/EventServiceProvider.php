@@ -19,7 +19,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         'user.create' => [
             'App\Listeners\UserEventListener@onCreate',
-        ],      
+        ],   
+        'user.delete' => [
+            'App\Listeners\UserEventListener@onCreate',
+        ],     
         'user.export' => [
             'App\Listeners\UserEventListener@onExport',
         ],
