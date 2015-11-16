@@ -125,7 +125,8 @@ class Item extends Model {
                 'salon_item.userId',
                 'salon_item.useLimit',
                 'salon_item.repertory',
-                'salon_item.innage'
+                'salon_item.innage',
+                'salon_item.updateTime'
                 )
             ->find($id);
         if(!$item)

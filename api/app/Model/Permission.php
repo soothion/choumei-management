@@ -37,6 +37,12 @@ class Permission extends Model {
 			$keyword = '%'.$param['keyword'].'%';
 			$query = $query->where('title','like',$keyword);
 		}
+
+        //排序
+    	$sort_key = empty($param['sort_key'])?'id':$param['sort_key'];
+    	$sort_type = empty($param['sort_type'])?'DESC':$param['sort_type'];
+        $query = $query->orderBy($sort_key,$sort_type);
+
 		return $query;
 	}
 }

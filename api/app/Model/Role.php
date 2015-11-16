@@ -68,6 +68,11 @@ class Role extends Model {
 		//隐藏超级管理员
 		$query = $query->where('id','<>',1);
 		
+        //排序
+    	$sort_key = empty($param['sort_key'])?'id':$param['sort_key'];
+    	$sort_type = empty($param['sort_type'])?'DESC':$param['sort_type'];
+        $query = $query->orderBy($sort_key,$sort_type);
+
 		if(isset($param['keyword'])&&$param['keyword']){
 			$keyword = '%'.$param['keyword'].'%';
 			$query = $query->where('name','like',$keyword);
