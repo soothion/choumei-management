@@ -37,7 +37,7 @@ class TicketEventListener {
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -53,7 +53,7 @@ class TicketEventListener {
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}

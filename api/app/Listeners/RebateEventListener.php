@@ -38,7 +38,7 @@ class RebateEventListener {
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
 		$data['object'] = $rebate->sn;
-
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -55,7 +55,7 @@ class RebateEventListener {
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
 		$data['object'] = $rebate->sn;
-
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -74,7 +74,7 @@ class RebateEventListener {
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
 		$data['object'] = implode(',', $rebate);
-
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -90,7 +90,7 @@ class RebateEventListener {
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}

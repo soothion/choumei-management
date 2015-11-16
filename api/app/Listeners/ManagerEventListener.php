@@ -38,7 +38,7 @@ class ManagerEventListener {
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
 		$data['object'] = $user->username;
-
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -55,7 +55,7 @@ class ManagerEventListener {
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
 		$data['object'] = $user->username;
-
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -71,7 +71,7 @@ class ManagerEventListener {
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -86,6 +86,7 @@ class ManagerEventListener {
 	{
 		$data['username'] = $user->username;
 		$data['roles'] = $user->roles->toArray();
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -100,6 +101,7 @@ class ManagerEventListener {
 	{
 		$data['username'] = $user->username;
 		$data['roles'] = $user->roles->toArray();
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}

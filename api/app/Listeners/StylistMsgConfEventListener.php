@@ -38,7 +38,7 @@ class StylistMsgConfEventListener {
 		$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-	
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -56,7 +56,7 @@ class StylistMsgConfEventListener {
 		$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-	
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -73,7 +73,7 @@ class StylistMsgConfEventListener {
 		$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-	
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
@@ -90,7 +90,7 @@ class StylistMsgConfEventListener {
 		$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
 		$data['roles'] = $operator->roles->toArray();
-	
+		$roles = [];
 		foreach ($data['roles'] as $key => $value) {
 			$roles[] = $value['name'];
 		}
