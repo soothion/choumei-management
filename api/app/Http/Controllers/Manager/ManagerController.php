@@ -360,11 +360,12 @@ class ManagerController extends Controller{
 		if(isset($param['password'])&&$param['password']){
 			$param['password'] = bcrypt($param['password']);
 		}
+		$roles = [];
 		if(isset($param['roles'])){
 			$roles = $param['roles'];
-			unset($param['roles']);
-			$update_role = $user->roles()->sync($roles);
 		}
+		unset($param['roles']);
+		$update_role = $user->roles()->sync($roles);
 		$update_user = $user->update($param);
 		if($update_role&&$update_user){
 			DB::commit();
