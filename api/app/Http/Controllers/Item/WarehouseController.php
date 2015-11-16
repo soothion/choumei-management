@@ -219,7 +219,10 @@ class WarehouseController extends Controller
         $ids = explode(",", $params['ids']);
         $ids = array_map("intval", $ids);
         SalonItem::checkUp($ids);
-        $res = SalonItem::whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->update(['status'=>SalonItem::STATUS_OF_UP]);
+        $res = SalonItem::whereIn('itemid',$ids)->where('status',SalonItem::STATUS_OF_DOWN)->update([
+            'status'=>SalonItem::STATUS_OF_UP,
+            'updateTime'=>time(),
+        ]);
        
         if($res)
         {
