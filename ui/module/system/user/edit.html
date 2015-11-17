@@ -159,8 +159,8 @@
 			<%data=data.data%>
 			<%data.forEach(function(item){%>
                 <%if(item.status!=3){%>
-				<label>
-					<input type="checkbox" <%=sids&&sids.indexOf(item.id)>-1?"checked":""%>  name="roles" value="<%=item.id%>" <%=protocol.custom.status==3?"disabled":""%> />
+				<label style="<%=item.id=="22"?"display:none":""%>">
+					<input <%=item.id=="22"?"checked":""%> type="checkbox" <%=sids&&sids.indexOf(item.id)>-1?"checked":""%>  name="roles" value="<%=item.id%>" <%=protocol.custom.status==3?"disabled":""%> />
 					<span><%=item.name%></span>
 				</label>
                 <%}%>

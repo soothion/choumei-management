@@ -50,7 +50,7 @@
 			<div class="detail-operation">
 				<button type="button" class="btn btn-cancel">取消</button>
 				<span class="space"></span>
-				<button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary" style="<%=data.status==3?"display:none":""%>">提交</button>
+				<button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary">提交</button>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色名称：</label>
@@ -58,27 +58,27 @@
 					<%if(data.name){%>
 					<%=data.name||""%>
 					<%}else{%>
-					<input type="text" required name="name" value="<%=data.name||""%>" nospace <%=data.status==3?"disabled":""%>>
+					<input type="text" required name="name" value="<%=data.name||""%>" nospace >
 					<%}%>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属部门：</label>
 				<div class="control">
-					<select required name="department_id"  ajat="list/department#domid=department&tempid=/module/public/template/department&sid=<%=data.department_id||""%>"  id="department" <%=data.status==3?"disabled":""%>></select>
+					<select required name="department_id"  ajat="list/department#domid=department&tempid=/module/public/template/department&sid=<%=data.department_id||""%>"  id="department"></select>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>所属城市：</label>
 				<div class="control">
-					<select required name="city_id"  ajat="list/city#domid=city&tempid=/module/public/template/city&sid=<%=data.city_id%>" id="city" <%=data.status==3?"disabled":""%>>
+					<select required name="city_id"  ajat="list/city#domid=city&tempid=/module/public/template/city&sid=<%=data.city_id%>" id="city" >
 					</select>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色状态：</label>
 				<div class="control">
-					<select required name="status"  <%=data.status==3?"disabled":""%>>
+					<select required name="status">
 						<option value="1" <%=data.status==1?"selected":""%>>正常</option>
 						<option value="2" <%=data.status==2?"selected":""%>>停用</option>
 						<option value="3" <%=data.status==3?"selected":""%>>注销</option>
@@ -87,7 +87,7 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>角色说明：</label>
-				<div class="control"><textarea required name="description" <%=data.status==3?"disabled":""%>><%=data.description||""%></textarea></div>
+				<div class="control"><textarea required name="description"><%=data.description||""%></textarea></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>配置权限：</label>
@@ -127,12 +127,12 @@
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="">信息备注：</label>
-				<div class="control"><textarea <%=data.status==3?"disabled":""%>  name="note"><%=data.note||""%></textarea></div>
+				<div class="control"><textarea name="note"><%=data.note||""%></textarea></div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for=""></label>
 				<div class="control">
-					<button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary" style="<%=data.status==3?"display:none":""%>">提交</button>
+					<button data-slug="<%=query._?"role.update":"role.create"%>" class="btn-primary">提交</button>
 				</div>
 			</div>
 		  </form>
@@ -160,7 +160,7 @@
 		<%}%>
 	</script>
 	<script type="text/javascript">
-		$('#form').one("_ready",function(){
+		$('#form').one("_ready",function(e,data){
 			var sids=JSON.parse(sessionStorage.getItem("permissions"))||[];
 			sessionStorage.removeItem("permissions");
 			var each=function($dom,data){
@@ -176,8 +176,15 @@
 				if(data.result==1){
 					data=data.data;
 					each($('#permission>ul'),data);
+					if((data&&data.response&&data.response.status==3)||lib.query.id==22){
+						$('#form').find('input,select,textarea').each(function(){
+							this.disabled=true;
+						});
+						$('#form').find('.btn-primary').hide();
+					}
 				}
 			});
+			
 		});
 		$('.wrapper').on('click','.square',function(){
 			$(this).closest('li').toggleClass('toggle');
