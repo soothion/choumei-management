@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+      <meta charset="utf-8">
+	  <title>臭美管理后台</title>
+	  <script type="text/javascript" src="/js/include.js"></script>
+  </head>
+  <body>
+		<div class="breadcrumb">
+			<a>系统配置</a><span>&gt;</span><a>反欺诈</a><span>&gt;</span><a>>黑名单-<span class='name'></span></a><span>&gt;</span><a>>手动添加黑名单-<span class='name'></span></a>
+			<div class="flex-box">
+				<div class="flex-item">
+					<h4>手动添加黑名单-<span class='name'></span></h4>
+				</div>
+			</div>
+		</div>
+        <style>
+         .clear-color{
+             background-color: #fff !important;
+             border-color: #fff !important;
+         }
+        </style>
+		<div class="wrapper">
+        <div class="fr">
+        <button class="btn  btn-primary" id="uploadFile">选取文件</button>
+        </div>
+
+        <p class="small">注：通过导入xls. 文件以手动添加黑名单，格式需包含 序号、<span class='name'></span>、备注（进入黑名单原因等）</p>
+
+        <span>预览</span>
+		<div class="table" ajat="requestLog/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+                <table>
+                <thead>
+                <tr>
+                <th>序号</th>
+                <th><span class='name'></span></th>
+                <th>备注</th>
+                <th class='clear-color'></th>
+                </tr>
+                </thead>
+                <tbody>
+                <%data.data && data.data.forEach(function(item,index){%>
+                  <tr>
+                    <td><%=index+1%></td>
+                    <td><%=item.mobilephone%></td>
+                    <td><%=item.username%></td>
+                    <td class='clear-color assertive'><%=item.device_uuid%></td>
+                  </tr>
+                <%})%>
+                </tbody>
+                </table>
+                <div class="pager">
+                </div>
+			</script>
+		</div>
+        <button class="btn">返回</button>
+        <button class="btn btn-primary">提交</button>
+	</div>
+    <script>
+        var configInfo = [
+            {
+                name:'手机号',
+                uploadUrl:'',
+                submitUrl:'',
+            },
+            {
+                name:'设备号',
+                uploadUrl:'',
+                submitUrl:'',
+            },
+            {
+                name:'微信OpenId',
+                uploadUrl:'',
+                submitUrl:'',
+            }
+        ];
+        var pageConfig = configInfo[lib.tools.parseQuery(window.location).item];
+        var renderPage = function(){
+            $('.name').html(pageConfig.name);
+        }();
+        $('#table').on('_ready',function(){
+            $('.name').html(pageConfig.name);
+        })
+        lib.puploader.create({
+                    browse_button: 'uploadFile',
+                    auto_start:true,
+                    domain:pageConfig.uploadUrl,
+                    filters: {
+                        mime_types : [
+                            { title : "Excel files", extensions : "xls,xlsx,csv" },
+                        ]
+                    },
+                    max_file_size:'5mb'
+        });
+    </script>
+  </body>
+</html>
