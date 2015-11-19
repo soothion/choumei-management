@@ -260,7 +260,7 @@
 					cb &&cb();
 				});
 			},
-			getToken:function(cb){
+			getToken:function(cb){//获取七牛token,相关资料http://wiki.choumei.me/pages/viewpage.action?pageId=1869818
 				var self=this;
 				var query={
 					'bundle':"FQA5WK2BN43YRM8Z",
@@ -291,7 +291,7 @@
 							});
 						}
 						clearTimeout(self.timer);
-						self.timer=setTimeout(function(){
+						self.timer=setTimeout(function(){//token是有有效期的
 							lib.puploader.getToken(function(data){
 								Qiniu.token=data.uptoken;
 								Qiniu._fileName=data.fileName;
@@ -300,7 +300,7 @@
 					}
 				});
 			},
-			random:function(len) {
+			random:function(len) {//随机字符串
 				len = len || 32;
 				var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
 				var maxPos = $chars.length;
@@ -327,10 +327,10 @@
 					}
 				};
 				options=$.extend(_default,options);
-				if(options.crop){
+				if(options.crop){//剪裁则不能多选上传
 					options.multi_selection=false;
 				}
-				if(options.domain.indexOf('qiniu')==-1){//七牛上传
+				if(options.domain.indexOf('qiniu')==-1){//非七牛上传
 					seajs.use(['/qiniu/demo/js/plupload/plupload.full.min.js'],function(){
 						seajs.use(['/qiniu/demo/js/plupload/i18n/zh_CN.js']);
 						options.url=options.domain;
@@ -340,7 +340,7 @@
 						uploader.init();
 						if(options.auto_start){
 							uploader.bind('FilesAdded',function(up,files){
-								up.start();
+								up.start();//文件上传
 							});
 						}
 						uploader.bind('UploadFile',function(){
@@ -379,7 +379,7 @@
 						});
 						cb && cb(uploader)
 					});
-				}else{//非七牛上传
+				}else{//七牛上传
 					return Qiniu.uploader(options);
 				}
 			},
