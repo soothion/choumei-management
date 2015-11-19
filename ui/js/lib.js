@@ -462,7 +462,13 @@
 					preloader.load(file.getSource());
 				}
 			},
-			image:function(options,cb){//options参考七牛上传http://developer.qiniu.com/docs/v6/sdk/javascript-sdk.html,options.crop是否支持裁剪，options.imageLimitSize:120*120检测宽高，可以为function(width,height){ return true}
+			/**
+			*options参考七牛上传http://developer.qiniu.com/docs/v6/sdk/javascript-sdk.html
+			*options.crop是否支持裁剪
+			*options.imageLimitSize:120*120检测宽高，可以为function(width,height){ return true}
+			*options.imageArray:[{thumbimg:"",img:""}]加载缩略图
+			*/
+			image:function(options,cb){
 				options=$.extend({
 					successText:'图片上传成功',
 					failText:'图片上传失败',
@@ -513,7 +519,7 @@
 								}
 								uploader.thumbnails.trigger("itemchange");
 							}
-							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){
+							uploader.thumbnails.on('click','.control-thumbnails-remove',function(){//删除缩略图
 								var item=$(this).closest('.control-thumbnails-item');
 								var $parent=item.parent();
 								if(item.attr('id')){
@@ -525,7 +531,7 @@
 								}
 								$parent.trigger("itemchange");
 							});
-							uploader.thumbnails.on('click','.control-thumbnails-before',function(){
+							uploader.thumbnails.on('click','.control-thumbnails-before',function(){//左移缩略图
 							 	var $this=$(this);
 							 	var thumbnail=$this.closest('.control-thumbnails-item');
 							 	var prev=thumbnail.prev('.control-thumbnails-item')
@@ -534,7 +540,7 @@
 							 	}
 								thumbnail.parent().trigger("itemchange");
 							 });
-							 uploader.thumbnails.on('click','.control-thumbnails-after',function(){
+							 uploader.thumbnails.on('click','.control-thumbnails-after',function(){//右移缩略图
 							 	var $this=$(this);
 							 	var thumbnail=$this.closest('.control-thumbnails-item');
 							 	var next=thumbnail.next('.control-thumbnails-item')
@@ -543,12 +549,12 @@
 							 	}
 								thumbnail.parent().trigger("itemchange");
 							 });
-							 uploader.thumbnails.on('click','.control-thumbnails-edit',function(){
+							 uploader.thumbnails.on('click','.control-thumbnails-edit',function(){//编辑缩略图
 								var item=$(this).closest('.control-thumbnails-item');
 								var src=item.find('img').attr('src');
 								uploader.trigger('ImageUploaded',{img:src,_this:item[0]});
 							 });
-							if(options.imageArray){
+							if(options.imageArray){//加载缩略图[{thumbimg:"",img:""}]
 								uploader.thumbnails.prepend(lib.ejs.render({url:"/module/public/template/thumbnails"},{data:options.imageArray}));
 								uploader.thumbnails.trigger("itemchange");
 								if(uploader.thumbnails.children('.control-thumbnails-item').length>=uploader.thumbnails.data('max')){
@@ -635,7 +641,7 @@
 					cb &&cb();
 				});
 			},
-			create:function(options){//options:参考cropper.js
+			create:function(options){//options:参考http://fengyuanchen.github.io/cropper/
 				options=$.extend({
 					thumbnails:['300x300'],
 					aspectRatio:1/1,
@@ -662,7 +668,7 @@
 						cropper.remove();
 						parent.lib.fullpage(false);
 					});
-					options.crop=function(e){//生成裁剪路径：与七牛图片机制相关
+					options.crop=function(e){//生成裁剪路径：与七牛图片裁剪机制相关
 						for(var name in cropper[0].thumbnails){
 							cropper[0].thumbnails[name]=this.src+"?imageMogr2"+"/crop/!"+Math.round(e.width)+"x"+Math.round(e.height)+"a"+Math.round(e.x)+"a"+Math.round(e.y)+"/thumbnail/"+name;
 						}
