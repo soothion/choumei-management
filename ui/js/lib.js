@@ -310,14 +310,14 @@
 				}
 				return pwd.join("");
 			},
-			create:function(options,cb){
+			create:function(options,cb){//options参考七牛上传http://developer.qiniu.com/docs/v6/sdk/javascript-sdk.html
 				var _default={
 					runtimes:'html5,flash,html4',
 					flash_swf_url:'/qiniu/demo/js/plupload/Moxie.swf',
 					silverlight_xap_url:'/qiniu/demo/js/plupload/Moxie.xap',
-					domain:cfg.url.upload,
-					dragdrop:true,
-					multi_selection:false,
+					domain:cfg.url.upload,//上传地址
+					dragdrop:true,//开启可拖曳上传
+					multi_selection:false,//是否多选
 					init:{
 						Key:function(up, file) {
 							// 若想在前端对每个文件的key进行个性化处理，可以配置该函数
@@ -330,7 +330,7 @@
 				if(options.crop){
 					options.multi_selection=false;
 				}
-				if(options.domain.indexOf('qiniu')==-1){
+				if(options.domain.indexOf('qiniu')==-1){//七牛上传
 					seajs.use(['/qiniu/demo/js/plupload/plupload.full.min.js'],function(){
 						seajs.use(['/qiniu/demo/js/plupload/i18n/zh_CN.js']);
 						options.url=options.domain;
@@ -379,16 +379,16 @@
 						});
 						cb && cb(uploader)
 					});
-				}else{
+				}else{//非七牛上传
 					return Qiniu.uploader(options);
 				}
 			},
-			createImage:function(){
+			createImage:function(){//创建图片预览用来检测图片高宽
 				var imagePreview=$('<div style="position:absolute;left:0;top:0;z-index:-1;width:100%;height:100%;overflow:hidden;visibility:hidden;"><img/></div>')
 				$(document.body).append(imagePreview);
 				return imagePreview;
 			},
-			file:function(options,cb){
+			file:function(options,cb){//options参考七牛上传http://developer.qiniu.com/docs/v6/sdk/javascript-sdk.html
 				var self=this;
 				this.use(function(){
 					self.getToken(function(data){
@@ -411,13 +411,13 @@
 								$(document.body).append($dom);
 							}
 						});
-						uploader.bind('UploadProgress',function(){
+						uploader.bind('UploadProgress',function(){//上传中提示
 							parent.lib.popup.loading({text:options.loaderText||'文件上传中..'});
 						});
 						uploader.bind('UploadComplete',function(up,file){
 							$('.popup-overlay').remove();
 						});
-						uploader.bind('FileUploaded',function(up,file,res){
+						uploader.bind('FileUploaded',function(up,file,res){//上传完成
 							if(res&&res.response&&typeof res.response=='string'){
 								var data=JSON.parse(res.response);
 								if(data.code==0){
@@ -433,7 +433,7 @@
 								}
 							}
 						});
-						uploader.bind('Error',function(up, err, errTip){
+						uploader.bind('Error',function(up, err, errTip){//上传异常
 							parent.lib.popup.result({bool:false,text:err.message});
 						});
 						cb &&cb(uploader);
@@ -462,7 +462,7 @@
 					preloader.load(file.getSource());
 				}
 			},
-			image:function(options,cb){
+			image:function(options,cb){//options参考七牛上传http://developer.qiniu.com/docs/v6/sdk/javascript-sdk.html,options.crop是否支持裁剪，options.imageLimitSize:120*120检测宽高，可以为function(width,height){ return true}
 				options=$.extend({
 					successText:'图片上传成功',
 					failText:'图片上传失败',
@@ -477,7 +477,6 @@
 					}
 				}
 				this.file(options,function(uploader){
-					
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
 							var data=JSON.parse(res.response);
@@ -504,7 +503,7 @@
 						if(!options.crop){
 							uploader.thumbnails.addClass('control-thumbnails-unedit');
 						}
-						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){
+						if($target.hasClass('control-image-upload')&&uploader.thumbnails.length==1){//上传多张图片
 							uploader.createThumbnails=function(data){//创建缩略图
 								uploader.thumbnails.children('.control-image-upload').before(lib.ejs.render(
 									{url:uploader.thumbnails.data('tempid')||'/module/public/template/thumbnails'},
@@ -567,7 +566,7 @@
 									});
 								}
 							});
-						}else if($target.closest('.control-single-image').length==1){
+						}else if($target.closest('.control-single-image').length==1){//上传张图片
 							uploader.area=$target.closest('.control-single-image');
 							uploader.preview=function(data){
 								this.area.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
@@ -582,41 +581,42 @@
 							});
 						}
 						uploader.area=$target.closest('.control-single-image');
-						uploader.preview=function($dom,data){
+						uploader.preview=function($dom,data){//更新图片
 							$dom.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
 							$dom.find('input.original').val(data.img).blur();
 							$dom.find('input.thumb').val(data.thumbimg).blur();
 							$dom.find('.control-image-single-remove').show();
 						}
 					}
-					if(options.imageLimitSize){
+					if(options.imageLimitSize){//宽高检测
 						uploader.bind('FilesAdded',function(up, files){
-							plupload.each(files, function(file) {
+							plupload.each(files, function(file) {//遍历文件
 								var image=lib.puploader.createImage();
-								lib.puploader.getSource(file,function(src){
+								lib.puploader.getSource(file,function(src){//获取图片资源
 									image=image.find('img').attr('src',src);
 									var options=up.getOption();
 									var imageLimitSize=options.imageLimitSize;
+									//检测宽高值
 									if(typeof imageLimitSize=="string"){
 										var width=imageLimitSize.split('*')[0];
 										var height=imageLimitSize.split('*')[1];
 										if(image.width()!=width||image.height()!=height){
-											parent.lib.popup.result({bool:false,text:options.sizeErrorText});
+											parent.lib.popup.result({bool:false,text:options.sizeErrorText});//提示图片尺寸大小错误
 											up.removeFile(file);
 										}else{
 											if(options._auto_start){
-												up.start();
+												up.start();//上传文件
 											}
 										}
 										image.parent().remove();
 									}
 									if(typeof imageLimitSize=="function"){
 										if(!imageLimitSize(image.width(),image.height())){
-											parent.lib.popup.result({bool:false,text:options.sizeErrorText});
+											parent.lib.popup.result({bool:false,text:options.sizeErrorText});//提示图片尺寸大小错误
 											up.removeFile(file);
 										}else{
 											if(options._auto_start){
-												up.start();
+												up.start();//上传文件
 											}
 										}
 										image.parent().remove();
@@ -629,13 +629,13 @@
 				});
 			}
 		},
-		cropper:{
+		cropper:{//图片裁剪
 			use:function(cb){
 				seajs.use(['/cropper/cropper.min.css','/cropper/cropper.min.js'],function(){
 					cb &&cb();
 				});
 			},
-			create:function(options){
+			create:function(options){//options:参考cropper.js
 				options=$.extend({
 					thumbnails:['300x300'],
 					aspectRatio:1/1,
@@ -644,7 +644,7 @@
 					minCropBoxHeight:250,
 					autoCropArea: 0.0001
 				},options);
-				options.src=options.src.split('?')[0];
+				options.src=options.src.split('?')[0];//获取原图
 				this.use(function(){
 					var cropper=$(lib.ejs.render({url:"/module/public/template/cropper"},{data:options.src}));
 					cropper.css({opacity:0});
@@ -653,21 +653,22 @@
 					for(var i=0;i<options.thumbnails.length;i++){
 						cropper[0].thumbnails[options.thumbnails[i]]="";
 					}
-					cropper.on('click','.btn-primary',function(){
+					cropper.on('click','.btn-primary',function(){//确认裁剪
 						options.define(cropper[0].thumbnails);
 						cropper.remove();
 						parent.lib.fullpage(false);
 					});
-					cropper.on('click','.btn',function(){
+					cropper.on('click','.btn',function(){//取消裁剪
 						cropper.remove();
 						parent.lib.fullpage(false);
 					});
-					options.crop=function(e){
+					options.crop=function(e){//生成裁剪路径：与七牛图片机制相关
 						for(var name in cropper[0].thumbnails){
 							cropper[0].thumbnails[name]=this.src+"?imageMogr2"+"/crop/!"+Math.round(e.width)+"x"+Math.round(e.height)+"a"+Math.round(e.x)+"a"+Math.round(e.y)+"/thumbnail/"+name;
 						}
 					}
 					$image.on('load',function(){
+						//初始化裁剪
 						var width=$image.width();
 						var height=$image.height();
 						var $win=$(window);
