@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-CN">
     <head>
+		<meta charset="utf-8"/>
         <title>臭美管理后台</title>
         <script type="text/javascript" src="/js/include.js"></script>
     </head>
@@ -111,7 +112,7 @@
 					<td><%=item.require_day%></td>
 					-->
 					<td><%=item.pay_day%></td>				 
-					<td><%=new Date(item.created_at).format("yyyy-MM-dd")%></td>
+					<td><%=item.created_at?new Date(item.created_at).format("yyyy-MM-dd"):""%></td>
 					<td>
 						<%if(item.from==1){%>
 							<%=item.make_user?item.make_user.name:""%>
