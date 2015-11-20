@@ -1,0 +1,273 @@
+<?php
+
+namespace App\Http\Controllers\SystemConfig;
+
+use App\Http\Controllers\Controller;
+use App\Blacklist;
+use Event;
+use Excel;
+use DB;
+Use PDO;
+use Request;
+use Storage;
+use File;
+use Fileentry;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
+
+class BlacklistController extends Controller {
+
+    /**
+     * @api {post} /blacklist/index 1.黑名单列表
+     * @apiName index
+     * @apiGroup blacklist
+     *
+     * @apiParam {Number} page 可选,页码，默认为1.
+     * @apiParam {Number} page_size 可选,默认为20.
+     * @apiParam {String} keyword 可选,搜索关键词.
+     * @apiParam {Number} keywordType 必选,搜索关键词类型，可取0 用户手机号/1 设备号/2 openid.
+     * @apiParam {String} minTime 进入黑名单最小时间 YYYY-MM-DD
+     * @apiParam {String} maxTime 进入黑名单最大时间 YYYY-MM-DD
+     *
+     * @apiSuccess {Number} total 总数据量.
+     * @apiSuccess {Number} per_page 分页大小.
+     * @apiSuccess {Number} current_page 当前页面.
+     * @apiSuccess {Number} last_page 当前页面.
+     * @apiSuccess {Number} from 起始数据.
+     * @apiSuccess {Number} to 结束数据.
+     * @apiSuccess {Number} id 黑名单的id.
+     * @apiSuccess {String} mobilephone 手机号.
+     * @apiSuccess {String} device_uuid 设备号
+     * @apiSuccess {String} openid 微信openid
+     * @apiSuccess {String} add_time 进入黑名单时间
+     * @apiSuccess {String} note 备注
+     *
+     * @apiSuccessExample Success-Response:
+     * {
+     *       result": 1,
+     *      "token": "",
+     *      "data":{
+     *      "total": 6,
+     *       "per_page": 20,
+     *      "current_page": 1,
+     *      "last_page": 1,
+     *      "next_page_url": null,
+     *      "prev_page_url": null,
+     *      "from": 1,
+     *      "to": 6,
+     *      "data":[
+     *      {
+     *      "id": 4,
+     *      "mobilephone": "13856961253",
+     *      "device_uuid": "",
+     *      "openid": "",
+     *      "created_at": "2015-11-18 17:22:14",
+     *      "updated_at": "0000-00-00 00:00:00",
+     *      "note": ""
+     *      },...
+     *                 ]
+     * }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "未授权访问"
+     * 		}
+     */
+    public function index() {
+        $param = $this->param;
+
+        if (isset($param['page']) && !empty($param['page'])) {
+            $page = $param['page'];
+        } else {
+            $page = 1;
+        }
+        if (isset($param['page_size']) && !empty($param['page_size'])) {
+            $size = $param['page_size'];
+        } else {
+            $size = 20;
+        }
+        DB::connection()->setFetchMode(PDO::FETCH_ASSOC);
+        $query = Blacklist::getQueryByParam($param);
+        $blacklists = Blacklist::search($query, $page, $size);
+        return $this->success($blacklists);
+    }
+
+    /**
+     * @api {post} /blacklist/export 2.黑名单导出
+     * @apiName export
+     * @apiGroup blacklist
+     *
+     * @apiParam {Number} page 可选,页码，默认为1.
+     * @apiParam {Number} page_size 可选,默认为20.
+     * @apiParam {String} keyword 可选,搜索关键词.
+     * @apiParam {Number} keywordType 必选,搜索关键词类型，可取0 用户手机号/1 设备号/3 openid.
+     * @apiParam {String} minTime 进入黑名单最小时间 YYYY-MM-DD
+     * @apiParam {String} maxTime 进入黑名单最大时间 YYYY-MM-DD
+     *
+     * @apiErrorExample Error-Response:
+     * {
+     * "result": 0,
+     * "msg": "未授权访问"
+     * }
+     */
+    public function export() {
+        $param = $this->param;
+
+        if (isset($param['page']) && !empty($param['page'])) {
+            $page = $param['page'];
+        } else {
+            $page = 1;
+        }
+        if (isset($param['page_size']) && !empty($param['page_size'])) {
+            $size = $param['page_size'];
+        } else {
+            $size = 20;
+        }
+        if ($param['keywordType'] == '') {
+            throw new ApiException('请设置关键词类型！', 1);
+        }
+        DB::connection()->setFetchMode(PDO::FETCH_ASSOC);
+        $query = Blacklist::getQueryByParam($param);
+        $blacklists = Blacklist::search($query, $page, $size);
+        $keywordName = "";
+
+        switch ($param ["keywordType"]) {
+            case "0" : // 用户手机号				
+                $keywordName = "手机号";
+                break;
+            case "1" : // 设备号
+                $keywordName = "设备号";
+                break;
+            case "2" ://openid
+                $keywordName = "微信OpenId";
+                break;
+            default:
+                throw new ApiException('黑名单无此类别！', 1);
+        }
+
+        $header = [
+            '序号',
+            $keywordName,
+            '进入黑名单时间',
+            '备注',
+        ];
+        $res = Blacklist::format_export_data($blacklists["data"], $param['keywordType']);
+        if (!empty($res)) {
+            Event::fire("blacklist.export");
+        }
+        @ini_set('memory_limit', '256M');
+        $this->export_xls("黑名单列表" . date("Ymd"), $header, $res);
+    }
+
+    /**
+     * @api {post} /blacklist/upload 3.导入黑名单
+     * @apiName upload
+     * @apiGroup blacklist
+     *
+     * @apiParam {File} blacklist 必填,excel文件.
+     * @apiParam {Number} keywordType 必选,搜索关键词类型，可取0 用户手机号/1 设备号/3 openid.
+     *
+     * @apiSuccessExample Success-Response:
+     * 	    {
+     * 	        "result": 1,
+     * 	        "data": null
+     * 	    }
+     * 
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "未授权访问"
+     * 		}
+     */
+    public function upload() {
+        $param = $this->param;
+        if (!isset($param['keywordType'])) {
+            throw new ApiException('请设置关键词类型！', 1);
+        }
+        $file = Request::file('blacklist');
+        if (!$file)
+            throw new ApiException('请上传文件', ERROR::FILE_EMPTY);
+        $extension = $file->getClientOriginalExtension();
+        if (!in_array($extension, ['xls', 'xlsx']))
+            throw new ApiException('请上传xls或者xlsx文件', ERROR::FILE_FORMAT_ERROR);
+
+        $result = false;
+        Excel::load($file->getPathname(), function($reader) use($rebate, &$result) {
+            $reader = $reader->getSheet(0);
+            $array = $reader->toArray();
+            array_shift($array);
+            $data = [];
+            foreach ($array as $key => $value) {
+                if (empty($value[1]))
+                    continue;
+                switch ($param['keywordType']) {
+                    case "0" : // 用户手机号				
+                        $data[$key]['mobilephone'] = $value[1];
+                        break;
+                    case "1" : // 设备号
+                        $data[$key]['device_uuid'] = $value[1];
+                        break;
+                    case "2" ://openid
+                        $data[$key]['openid'] = $value[1];
+                        break;
+                    default:
+                        throw new ApiException('黑名单无此类别！', 1);
+                }
+                $data[$key]['created_at'] = $value[2];
+                $data[$key]['updated_at'] = $value[2];
+                $data[$key]['note'] = $value[3];
+            }
+            if (!empty($data))
+                $result = Blacklist::insert($data);
+        }, 'UTF-8');
+
+        $name = Blacklist::getName();
+        $folder = date('Y/m/d') . '/';
+        $src = $folder . $name . '.' . $extension;
+        Storage::disk('local')->put($src, File::get($file));
+        if ($result)
+            return $this->success();
+        throw new ApiException('黑名单导入失败', ERROR::REBATE_UPLOAD_FAILED);
+    }
+
+    /**
+     * @api {get} /blacklist/remove/{id} 4.移出黑名单
+     * @apiName remove
+     * @apiGroup  blacklist
+     *
+     * @apiParam {Number} id 必选,黑名单的Id.	   
+     *  
+     * @apiSuccess {String} msg 移除信息
+     *
+     * @apiSuccessExample Success-Response:
+     *      {
+     *          result": 1,
+     *          "token": "",
+     *          "data":{
+     *          "msg": "成功移出黑名单！"
+     *      }
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    result": 0,
+     *          "code": 1,
+     *          "msg": "移出黑名单失败",
+     *          "token": ""
+     * 		}
+     */
+    function remove($id) {
+        $id = intval($id);
+        if (empty($id)) {
+            throw new ApiException('找不到id！', ERROR::BOUNTY_ID_NOT_PASS);
+        }
+        $result = Blacklist::where('id', $id)->delete();
+        if ($result) {
+            $res['msg'] = "成功移出黑名单！";
+            return $this->success($res);
+        }
+        throw new ApiException('移出黑名单失败', 1);
+    }
+
+}

@@ -158,7 +158,7 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     ))->where('pushId', '[0-9]+'); 
 //权限管理后台接口
 Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
- // Route::group(['middleware' => ['before']], function(){
+// Route::group(['middleware' => ['before']], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -1169,6 +1169,8 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
         'uses'=>'MessageBox\MessageBoxController@showDailyMessage'
     )); 
     
+    //系统配置
+    
     // 用户中心 用户评论
     Route::any('comment/index',array(  
         'as'=>'comment.index',
@@ -1186,5 +1188,41 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
         'as'=>'comment.delete',
         'uses'=>'Item\CommentController@delete'
     ));
+
+    
+    
+    //黑名单
+    Route::any('blacklist/index',array(  
+        'as'=>'blacklist.index',
+        'uses'=>'SystemConfig\BlacklistController@index'
+    )); 
+    Route::any('blacklist/export',array(  
+        'as'=>'blacklist.export',
+        'uses'=>'SystemConfig\BlacklistController@export'
+    )); 
+    Route::any('blacklist/upload',array(
+		'as'=>'blacklist.upload',
+		'uses'=>'SystemConfig\BlacklistController@upload'
+	));	
+    Route::any('blacklist/remove/{id}',array(
+		'as'=>'blacklist.remove',
+		'uses'=>'SystemConfig\BlacklistController@remove'
+	));	
+    
+    //预警查询
+    
+    Route::any('warning/index',array(  
+        'as'=>'warning.index',
+        'uses'=>'SystemConfig\WarningController@index'
+    )); 
+    Route::any('warning/export',array(  
+        'as'=>'warning.export',
+        'uses'=>'SystemConfig\WarningController@export'
+    )); 
+    Route::any('warning/block',array(  
+        'as'=>'warning.block',
+        'uses'=>'SystemConfig\WarningController@block'
+    )); 
+
     
 });
