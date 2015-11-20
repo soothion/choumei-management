@@ -301,6 +301,14 @@ class EventServiceProvider extends ServiceProvider
     	],
         'voucher.exportTicketList' => [
             'App\Listeners\TicketEventListener@onExport',
+    	],
+        
+        // 用户评价
+        'comment.hidden' => [
+            'App\Listeners\CommentEventListener@onHidden',
+    	],
+        'comment.delete' => [
+            'App\Listeners\CommentEventListener@onDelete',
     	]
     ];
 

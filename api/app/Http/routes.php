@@ -1169,4 +1169,22 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
         'uses'=>'MessageBox\MessageBoxController@showDailyMessage'
     )); 
     
+    // 用户中心 用户评论
+    Route::any('comment/index',array(  
+        'as'=>'comment.index',
+        'uses'=>'Item\CommentController@index'
+    ));
+    Route::any('comment/show/{id}',array(  
+        'as'=>'comment.show',
+        'uses'=>'Item\CommentController@show'
+    ));
+    Route::any('comment/hidden/{id}',array(  
+        'as'=>'comment.hidden',
+        'uses'=>'Item\CommentController@hidden'
+    ));
+    Route::any('comment/delete/{id}',array(  
+        'as'=>'comment.delete',
+        'uses'=>'Item\CommentController@delete'
+    ));
+    
 });
