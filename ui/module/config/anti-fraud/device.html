@@ -29,13 +29,13 @@
               placeholder="请输入用户手机号"/>
               <input type="text" class="input-search hide" name="device_uuid"
               placeholder="请输入用户设备号" />
-              <input type="text" class="input-search hide" name="wechat_openid"
+              <input type="text" class="input-search hide" name="openid"
               placeholder="请输入微信OpenId" />
           </div>
 
           <div class="input-group">
               <span style="padding:0 5px 0 15px">APP版本</span>
-              <input type="text" class="input-search" name="app_version" placeholder="输入版本号进行模糊查询">
+              <input type="text" class="input-search" name="version" placeholder="输入版本号进行模糊查询">
           </div>
 
           <span class="date-group">
@@ -76,7 +76,7 @@
             <td><%=item.mobilephone%></td>
             <td><%=item.username%></td>
             <td><%=item.device_uuid%></td>
-            <td><%=item.wechat_openId%></td>
+            <td><%=item.openid%></td>
             <td><%=item.update_time%></td>
             <td><%=item.device_os%></td>
             <td><%=item.version%></td>
