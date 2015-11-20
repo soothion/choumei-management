@@ -21,33 +21,29 @@
         </style>
 		<div class="wrapper">
         <form data-role="hash">
-            <div class="input-group input-switch">
-                <select>
-                  <option value="1">臭美劵密码</option>
-                  <option value="0">用户手机号</option>
-                  <option value="2">店铺名称</option>
+            <div class="input-group placeholder-switch">
+                <select name="itemMainNum">
+                  <option value="1" placeholder="请输入臭美劵密码">臭美劵密码</option>
+                  <option value="2" placeholder="请输入用户手机号">用户手机号</option>
+                  <option value="3" placeholder="请输入店铺名称">店铺名称</option>
                 </select>
-                <input type="text" class="input-search " name="username"
+                <input type="text" class="input-search " name="keyword"
                 placeholder="请输入臭美劵密码"/>
-                <input type="text" class="input-search hide" name="mobilephone"
-                placeholder="请输入用户手机号"/>
-                <input type="text" class="input-search hide" name="device_uuid"
-                placeholder="请输入店铺名称" />
             </div>
-            <div class="input-group">
+            <div class="date-group">
                 <span style="padding:0 5px 0 15px">评价日期</span>
-                <input type="date" name="minTime" data-role="start" placeholder="YYYY-MM-DD"/>
+                <input type="date" name="date" placeholder="YYYY-MM-DD"/>
             </div>
-            <div class="input-group">
+            <div class="date-group">
                 <span style="padding:0 5px 0 15px">评价结果</span>
-                <select>
+                <select name="satisfyType">
                   <option value="0">全部</option>
                   <option value="1">很满意</option>
                   <option value="2">满意</option>
                   <option value="3">不满意</option>
                 </select>
             </div>
-            <div class="input-group">
+            <div class="date-group">
                 <span style="padding:0 5px 0 15px">状态</span>
                 <select name="status">
                   <option value="0">全部</option>
@@ -59,8 +55,9 @@
           <button class="btn" type="submit">查询</button>
         </form>
 
-		<div class="table" ajat="requestLog/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+		<div class="table" ajat="comment/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
+                <%var statusStr = ['','正常','已隐藏','已删除']%>
                 <table>
                 <thead>
                 <tr>
@@ -78,12 +75,12 @@
                 <%data.data && data.data.forEach(function(item,index){%>
                   <tr>
                     <td><%=index+1%></td>
-                    <td><%=item.mobilephone%></td>
-                    <td><%=item.username%></td>
-                    <td><%=item.device_uuid%></td>
-                    <td><%=item.wechat_openId%></td>
-                    <td><%=item.wechat_openId%></td>
-                    <td><%=item.wechat_openId%></td>
+                    <td><%=item.mobilePhone%></td>
+                    <td><%=item.ticketNo%></td>
+                    <td><%=item.salonName%></td>
+                    <td><%=item.time%></td>
+                    <td><%=item.satisfyType%></td>
+                    <td><%=statusStr[item.status]%></td>
                     <td><a class='link'  href='review_info.html?id=<%=item.id%>'>查看<span class='space'>&gt;</span></a></td>
                   </tr>
                 <%})%>
