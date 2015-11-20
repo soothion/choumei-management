@@ -1,8 +1,9 @@
-﻿
+
 <!DOCTYPE html>
 <html lang="zh-CN">
   <head>
 	  <title>臭美管理后台</title>
+	  <meta charset="utf-8"/>
 	  <script type="text/javascript" src="/js/include.js"></script>
 	  <style type="text/css">
 		.page{
@@ -87,9 +88,47 @@
 						</div>
 						<%}%>
 						<%})%>
+                        <div class="menu-category">
+                            <div class="menu-category-title">
+                                <span>反欺诈</span>
+                            </div>
+                            <ul style="display:block">
+                                <li>
+                                    <a href="/module/config/anti-fraud/device.html" target="main"><i class="fa fa-angle-right"></i>登陆查询</a>
+                                </li>
+                                <li>
+                                    <a href="/module/config/anti-fraud/warning_phone.html" target="main"><i class="fa fa-angle-right"></i>预警查询-手机号</a>
+                                </li>
+                                <li>
+                                    <a href="/module/config/anti-fraud/warning_device.html" target="main"><i class="fa fa-angle-right"></i>预警查询-设备号</a>
+                                </li>
+                                <li>
+                                    <a href="/module/config/anti-fraud/warning_openId.html" data-slug1="/module/config/warning/openId.html" target="main"><i class="fa fa-angle-right"></i>预警查询-微信openId</a>
+                                </li>
+                                <li>
+                                    <a href="/module/config/anti-fraud/black_list_phone.html" data-slug1="" target="main"><i class="fa fa-angle-right"></i>黑名单-手机号</a>
+                                </li>
+                                <li>
+                                    <a href="/module/config/anti-fraud/black_list_deviceId.html" data-slug1="" target="main"><i class="fa fa-angle-right"></i>黑名单-设备号</a>
+                                </li>
+                                <li>
+                                    <a href="/module/config/anti-fraud/black_list_wechatOpenId.html" data-slug1="" target="main"><i class="fa fa-angle-right"></i>黑名单-微信OpenId</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="menu-category">
+                            <div class="menu-category-title">
+                                <span>用户操作</span>
+                            </div>
+                            <ul style="display:block">
+                                <li>
+                                    <a href="" data-slug1="" target="main"><i class="fa fa-angle-right"></i>评价管理</a>
+                                </li>
+                            </ul>
+                        </div>
 					</div>
 					<%}%>
-				<%})%>						
+				<%})%>
 				</div>
 			</div>
          </aside>

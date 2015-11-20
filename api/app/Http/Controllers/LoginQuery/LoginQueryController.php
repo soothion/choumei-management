@@ -21,6 +21,8 @@ class LoginQueryController  extends Controller {
 	 * @apiParam {String} mobilephone 可选,用户手机号.
 	 * @apiParam {String} username 可选,用户臭美号.
 	 * @apiParam {String} device_uuid 可选,用户设备号.
+	 * @apiParam {String} openid 可选,微信OpenId.
+	 * @apiParam {String} version 可选,APP版本.
 	 * @apiParam {String} minTime 可选,最小时间.
     	 * @apiParam {String} maxTime 可选,最大时间.
 	 * @apiParam {Number} page 可选,页数.
@@ -37,6 +39,7 @@ class LoginQueryController  extends Controller {
 	 * @apiSuccess {String} device_uuid 可选,用户设备号.
 	 * @apiSuccess {String} update_time 登录时间.
 	 * @apiSuccess {String} device_os 手机系统.
+	 * @apiSuccess {String} openid 微信OpenId.
 	 * @apiSuccess {String} version APP版本.
      * 
      * 

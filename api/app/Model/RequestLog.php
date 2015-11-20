@@ -1,7 +1,7 @@
 <?php  namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
-
+use DB;
 /**
  * Description of RequestLog
  *
@@ -16,22 +16,26 @@ class RequestLog  extends Model{
     public static function getLogSelect($param){
          $query = Self::getQuery();
          if(!empty($param['mobilephone'])){
-	        $query = $query->where('mobilephone','=',$param['mobilephone']);
+	        $query = $query->where('mobilephone','like','%'.$param['mobilephone'].'%');
 	 }
          if(isset($param['username']) && $param['username']){
-	        $query = $query->where('username','=',$param['username']);
+	        $query = $query->where('username','like','%'.$param['username'].'%');
 	 }
 	 if(isset($param['device_uuid']) && $param['device_uuid']){
-	        $query = $query->where('device_uuid','=',$param['device_uuid']);
+	        $query = $query->where('device_uuid','like','%'.$param['device_uuid'].'%');
+	 }
+
+	 if(isset($param['version']) && $param['version']){
+	        $query = $query->where('version','like','%'.$param['version'].'%');
 	 }
          
          if(isset($param['minTime']) && $param['minTime'] ){
                
-                    $query = $query->where('update_time','>=', $param['minTime']); 
+                $query = $query->where('update_time','>=', $param['minTime']); 
          }
          if( isset($param['maxTime']) && $param['maxTime'] ){ 
              
-                    $query = $query->where('update_time','<=', $param['maxTime'].' 24');    
+                $query = $query->where('update_time','<=', $param['maxTime'].' 24');    
          }
          
          $sortable_keys=['update_time','mobilephone','version'];
@@ -51,13 +55,28 @@ class RequestLog  extends Model{
          AbstractPaginator::currentPageResolver(function() use ($page) {
   	    return $page;
   	 });
-         $fields=['mobilephone','username','device_uuid','update_time','device_os','version','device_type'];
-         $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->paginate($page_size)->toArray();
+         $fields=['request_log.user_id','mobilephone','username','device_uuid','update_time','device_os','version','device_type'];
+         
+         if(isset($param['openid']) && $param['openid']){
+	        $query = $query->where('openid','like','%'.$param['openid'].'%');
+                $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->join('user_openid','user_openid.user_id','=','request_log.user_id')->where('user_openid.status','=',1)->paginate($page_size)->toArray();
+	 }  else {
+                $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->paginate($page_size)->toArray();
+         }
+         
          foreach ($result["data"] as $key => $value) {
              if($value->device_type=="WECHAT")
              {
                 $result["data"][$key]->version="微信公众号（H5）";
              }
+             $fields2=['id','openid'];
+             $openId=DB::table("user_openid")->select($fields2)->where('user_id','=',$value->user_id)->where('status','=',1)->first();
+             if(isset($openId->openid)){
+                $result["data"][$key]->openid=$openId->openid;
+             }else{
+                  $result["data"][$key]->openid="";
+             }
+             
          }
          unset($result['next_page_url']);
          unset($result['prev_page_url']);
