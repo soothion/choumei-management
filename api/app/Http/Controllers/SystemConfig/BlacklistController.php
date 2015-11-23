@@ -191,6 +191,7 @@ class BlacklistController extends Controller {
      */
     public function upload() {
         $param = $this->param;
+        Log::info('BlackList $param is: ', $param);
         if (!isset($param['keywordType'])) {
             throw new ApiException('请设置关键词类型！', 1);
         }
