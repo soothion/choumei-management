@@ -18,7 +18,8 @@
         <form data-role="hash">
             <div class="input-group">
                 <span style="padding:0 5px 0 15px">手机号码：</span>
-                <input type="text" class="input-search" name="app_version" placeholder="请输入手机号">
+                <input type="hidden" name='keywordType' value="0">
+                <input type="text" class="input-search" name="keyword" placeholder="请输入手机号">
             </div>
           <span class="date-group">
               <span style="padding:0 5px 0 15px">进入黑名单时间</span>
@@ -32,13 +33,13 @@
 
         <button class="btn btn-primary">手动添加</button>
 
-        <form action="requestLog/export" data-role="export" data-slug="requestLog.export">
+        <form action="blacklist/export" data-role="export" data-slug="requestLog.export">
           <button class="btn btn-primary" type="submit">
             <i class="fa fa-file-excel-o"></i> 导出
           </button>
         </form>
 
-			<div class="table" ajat="requestLog/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="blacklist/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
         <table>
         <thead>
@@ -55,9 +56,9 @@
           <tr>
             <td><%=index+1%></td>
             <td><%=item.mobilephone%></td>
-            <td><%=item.username%></td>
-            <td><%=item.device_uuid%></td>
-            <td><%=item.wechat_openId%></td>
+            <td><%=item.add_time%></td>
+            <td><%=item.note%></td>
+            <td><form action="blacklist/remove/<%=data.id%>" data-role="normal" onsuccess="location.reload()"><button href="" class="link btn-clear">移出黑名单</button></form></td>
           </tr>
         <%})%>
         </tbody>
