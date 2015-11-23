@@ -191,7 +191,6 @@ class BlacklistController extends Controller {
      */
     public function upload() {
         $param = $this->param;
-        Log::info('BlackList $param is: ', $param);
         if (!isset($param['keywordType'])) {
             throw new ApiException('请设置关键词类型！', 1);
         }
@@ -209,7 +208,6 @@ class BlacklistController extends Controller {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
-            Log::info('BlackList $array is: ', $array);
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
                     continue;
@@ -229,24 +227,24 @@ class BlacklistController extends Controller {
                 $data[$key]['add_time'] = $value[2];
                 $data[$key]['updated_at'] = $value[2];
                 $data[$key]['note'] = $value[3];
-                Log::info('BlackList $data is: ', $data);
                 $redisKey=$redisKey.$value[1];
-                Log::info('BlackList $redisKey is: '. $redisKey);
+                
             }
 
         }, 'UTF-8');
-        Log::info('BlackList data is: ', $data);
         $redisKey=md5($redisKey);
         $redis = Redis::connection();
-        $redis->setex($redisKey,3600*24,$data);
+        $redis->setex($redisKey,3600*24,  json_encode($data));
         
         $name = Blacklist::getName();
         $folder = date('Y/m/d') . '/';
         $src = $folder . $name . '.' . $extension;
+        Log::info('BlackList $src is: '. $src);
         Storage::disk('local')->put($src, File::get($file));
        
         $result["redisKey"]=$redisKey;
         $result["data"]=$data;
+        Log::info('BlackList $data is: '. $data);
         
         return $this->success($result);
 
@@ -285,6 +283,7 @@ class BlacklistController extends Controller {
         }
         $redis = Redis::connection();
         $data=$redis->get($param['redisKey']);
+        $data=  json_decode($data);
         Log::info('BlackList data is: ', $data);
         $result = Blacklist::insert($data);
         if ($result)
