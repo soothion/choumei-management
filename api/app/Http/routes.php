@@ -157,8 +157,8 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'uses'=>'MessageBox\MessageBoxController@redirectUrl'
     ))->where('pushId', '[0-9]+'); 
 //权限管理后台接口
-Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
-// Route::group(['middleware' => ['before']], function(){
+// Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+Route::group(['middleware' => ['before']], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -1203,6 +1203,10 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
     Route::any('blacklist/upload',array(
 		'as'=>'blacklist.upload',
 		'uses'=>'SystemConfig\BlacklistController@upload'
+	));	
+    Route::any('blacklist/submit',array(
+		'as'=>'blacklist.submit',
+		'uses'=>'SystemConfig\BlacklistController@submit'
 	));	
     Route::any('blacklist/remove/{id}',array(
 		'as'=>'blacklist.remove',
