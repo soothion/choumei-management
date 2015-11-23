@@ -64,22 +64,25 @@
                 name:'手机号',
                 uploadUrl:cfg.url.host+'blacklist/upload?keywordType=0&token='+window.localStorage.getItem('token'),
                 submitUrl:'',
+                type:'mobilephone'
             },
             {
                 name:'设备号',
                 uploadUrl:cfg.url.host+'blacklist/upload?keywordType=1&token='+window.localStorage.getItem('token'),
                 submitUrl:'',
+                type:'device_uuid'
             },
             {
                 name:'微信OpenId',
                 uploadUrl:cfg.url.host+'blacklist/upload?keywordType=2&token='+window.localStorage.getItem('token'),
                 submitUrl:'',
+                type:'openid'
             }
         ];
 
         var type = lib.tools.parseQuery(window.location).item;
         var pageConfig = configInfo[type];
-        var renderPage = function(){
+        var initPage = function(){
             $('.name').html(pageConfig.name);
             $('#type').val(type);
         }();
@@ -97,7 +100,15 @@
                         ]
                     },
                     max_file_size:'5mb'
+        },function(uploader){
+            uploader.bind('FileUploadedSuccess',function(up,file,re){
+                renderList(re.data);
+            })
         });
+
+        var renderList = function(data){
+            var newAjat = lib.ajat('#domid=table&tempid=table-t').render(data);
+        }
     </script>
   </body>
 </html>
