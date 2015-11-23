@@ -142,7 +142,7 @@ $(function(){
 		if(total&&parseInt(total)>5000&&!params.currentpage){
 			parent.lib.popup.result({bool:false,text:"数据大于5000条不能导出"});
 		}else{
-			window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
+			window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+(location.hash?"&":"")+$.param(params)+'&token='+localStorage.getItem('token'));
 		}
 	});
 	
