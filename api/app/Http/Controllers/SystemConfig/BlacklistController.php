@@ -205,7 +205,7 @@ class BlacklistController extends Controller {
 //        $result = false;
         $data = [];
         $redisKey='blacklist';
-        Excel::load($file->getPathname(), function($reader){
+        Excel::load($file->getPathname(), function($reader)use($param,&$data,&$redisKey){
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
