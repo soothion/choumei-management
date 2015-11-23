@@ -41,7 +41,7 @@ class BlacklistController extends Controller {
      * @apiSuccess {String} mobilephone 手机号.
      * @apiSuccess {String} device_uuid 设备号
      * @apiSuccess {String} openid 微信openid
-     * @apiSuccess {String} add_time 进入黑名单时间
+     * @apiSuccess {String} create_at 进入黑名单时间
      * @apiSuccess {String} note 备注
      *
      * @apiSuccessExample Success-Response:
@@ -104,7 +104,7 @@ class BlacklistController extends Controller {
      * @apiParam {Number} page 可选,页码，默认为1.
      * @apiParam {Number} page_size 可选,默认为20.
      * @apiParam {String} keyword 可选,搜索关键词.
-     * @apiParam {Number} keywordType 必选,搜索关键词类型，可取0 用户手机号/1 设备号/3 openid.
+     * @apiParam {Number} keywordType 必选,搜索关键词类型，可取0 用户手机号/1 设备号/2 openid.
      * @apiParam {String} minTime 进入黑名单最小时间 YYYY-MM-DD
      * @apiParam {String} maxTime 进入黑名单最大时间 YYYY-MM-DD
      *
@@ -204,7 +204,7 @@ class BlacklistController extends Controller {
 //        $result = false;
         $data = [];
         $redisKey='blacklist';
-        Excel::load($file->getPathname(), function($reader) use($rebate, &$result) {
+        Excel::load($file->getPathname(), function($reader){
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
