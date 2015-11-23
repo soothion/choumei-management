@@ -208,7 +208,7 @@ class BlacklistController extends Controller {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
-            
+            Log::info('BlackList $array is: ', $array);
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
                     continue;
@@ -228,7 +228,9 @@ class BlacklistController extends Controller {
                 $data[$key]['add_time'] = $value[2];
                 $data[$key]['updated_at'] = $value[2];
                 $data[$key]['note'] = $value[3];
+                Log::info('BlackList $data is: ', $data);
                 $redisKey=$redisKey.$value[1];
+                Log::info('BlackList $redisKey is: '. $redisKey);
             }
 
         }, 'UTF-8');
