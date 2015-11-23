@@ -29,6 +29,10 @@ class RequestLog  extends Model{
 	        $query = $query->where('version','like','%'.$param['version'].'%');
 	 }
          
+         if(isset($param['openid']) && $param['openid']){
+	        $query = $query->where('openid','like','%'.$param['openid'].'%');
+	 }
+         
          if(isset($param['minTime']) && $param['minTime'] ){
                
                 $query = $query->where('update_time','>=', $param['minTime']); 
@@ -55,26 +59,14 @@ class RequestLog  extends Model{
          AbstractPaginator::currentPageResolver(function() use ($page) {
   	    return $page;
   	 });
-         $fields=['request_log.user_id','mobilephone','username','device_uuid','update_time','device_os','version','device_type'];
-         
-         if(isset($param['openid']) && $param['openid']){
-	        $query = $query->where('openid','like','%'.$param['openid'].'%');
-                $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->join('user_openid','user_openid.user_id','=','request_log.user_id')->where('user_openid.status','=',1)->paginate($page_size)->toArray();
-	 }  else {
-                $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->paginate($page_size)->toArray();
-         }
+         $fields=['openid','mobilephone','username','device_uuid','update_time','device_os','version','device_type'];
+          
+         $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->paginate($page_size)->toArray();
          
          foreach ($result["data"] as $key => $value) {
              if($value->device_type=="WECHAT")
              {
                 $result["data"][$key]->version="微信公众号（H5）";
-             }
-             $fields2=['id','openid'];
-             $openId=DB::table("user_openid")->select($fields2)->where('user_id','=',$value->user_id)->where('status','=',1)->first();
-             if(isset($openId->openid)){
-                $result["data"][$key]->openid=$openId->openid;
-             }else{
-                  $result["data"][$key]->openid="";
              }
              
          }
