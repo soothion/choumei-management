@@ -13,7 +13,9 @@ use Storage;
 use File;
 use Fileentry;
 use App\Exceptions\ApiException;
+use Illuminate\Support\Facades\Redis as Redis;
 use App\Exceptions\ERROR;
+use Log;
 
 class BlacklistController extends Controller {
 
@@ -162,13 +164,19 @@ class BlacklistController extends Controller {
     }
 
     /**
-     * @api {post} /blacklist/upload 3.导入黑名单
+     * @api {post} /blacklist/upload 3.上传黑名单
      * @apiName upload
      * @apiGroup blacklist
      *
      * @apiParam {File} blacklist 必填,excel文件.
      * @apiParam {Number} keywordType 必选,搜索关键词类型，可取0 用户手机号/1 设备号/3 openid.
      *
+     * @apiSuccess {String} mobilephone 手机号.
+     * @apiSuccess {String} device_uuid 设备号
+     * @apiSuccess {String} openid 微信openid
+     * @apiSuccess {String} add_time 进入黑名单时间
+     * @apiSuccess {String} note 备注
+     * @apiSuccess {String} redisKey 数据缓存key
      * @apiSuccessExample Success-Response:
      * 	    {
      * 	        "result": 1,
@@ -193,12 +201,14 @@ class BlacklistController extends Controller {
         if (!in_array($extension, ['xls', 'xlsx']))
             throw new ApiException('请上传xls或者xlsx文件', ERROR::FILE_FORMAT_ERROR);
 
-        $result = false;
+//        $result = false;
+        $data = [];
+        $redisKey='blacklist';
         Excel::load($file->getPathname(), function($reader) use($rebate, &$result) {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
-            $data = [];
+            
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
                     continue;
@@ -215,25 +225,73 @@ class BlacklistController extends Controller {
                     default:
                         throw new ApiException('黑名单无此类别！', 1);
                 }
-                $data[$key]['created_at'] = $value[2];
+                $data[$key]['add_time'] = $value[2];
                 $data[$key]['updated_at'] = $value[2];
                 $data[$key]['note'] = $value[3];
+                $redisKey=$redisKey.$value[1];
             }
-            if (!empty($data))
-                $result = Blacklist::insert($data);
-        }, 'UTF-8');
 
+        }, 'UTF-8');
+        Log::info('BlackList data is: ', $data);
+        $redisKey=md5($redisKey);
+        $redis = Redis::connection();
+        $redis->setex($redisKey,3600*24,$data);
+        
         $name = Blacklist::getName();
         $folder = date('Y/m/d') . '/';
         $src = $folder . $name . '.' . $extension;
         Storage::disk('local')->put($src, File::get($file));
+       
+        $result["redisKey"]=$redisKey;
+        $result["data"]=$data;
+        
+        return $this->success($result);
+
+    }
+    
+    /**
+     * @api {post} /blacklist/submit 4.提交黑名单
+     * @apiName submit
+     * @apiGroup blacklist
+     *
+     * @apiParam {File} blacklist 必填,excel文件.
+     * @apiParam {Number} keywordType 必选,搜索关键词类型，可取0 用户手机号/1 设备号/3 openid.
+     * @apiParam {String} redisKey 必选，缓存数据key
+     *
+     * @apiSuccess {String} msg 提交信息
+     * @apiSuccessExample Success-Response:
+     * 	    {
+     * 	        "result": 1,
+     * 	        "data": [
+     *              "msg":"黑名单提交成功!"
+     *              ]
+     *              
+     * 	    }
+     * 
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "未授权访问"
+     * 		}
+     */
+    
+    public function submit() {
+        $param = $this->param;
+        if (empty($param['redisKey'])) {
+            throw new ApiException('请提供数据key！', 1);
+        }
+        $redis = Redis::connection();
+        $data=$redis->get($param['redisKey']);
+        Log::info('BlackList data is: ', $data);
+        $result = Blacklist::insert($data);
         if ($result)
-            return $this->success();
-        throw new ApiException('黑名单导入失败', ERROR::REBATE_UPLOAD_FAILED);
+            return $this->success($data["msg"]="黑名单导入成功!");
+        throw new ApiException('黑名单提交失败!', ERROR::REBATE_UPLOAD_FAILED);
+        
     }
 
     /**
-     * @api {get} /blacklist/remove/{id} 4.移出黑名单
+     * @api {get} /blacklist/remove/{id} 5 .移出黑名单
      * @apiName remove
      * @apiGroup  blacklist
      *

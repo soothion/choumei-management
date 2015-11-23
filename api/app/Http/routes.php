@@ -1204,6 +1204,10 @@ Route::group(['middleware' => ['before']], function(){
 		'as'=>'blacklist.upload',
 		'uses'=>'SystemConfig\BlacklistController@upload'
 	));	
+    Route::any('blacklist/submit',array(
+		'as'=>'blacklist.submit',
+		'uses'=>'SystemConfig\BlacklistController@submit'
+	));	
     Route::any('blacklist/remove/{id}',array(
 		'as'=>'blacklist.remove',
 		'uses'=>'SystemConfig\BlacklistController@remove'

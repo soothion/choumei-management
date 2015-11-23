@@ -115,7 +115,7 @@ class Blacklist extends Model {
     
     public static function getName(){
 		$redis = Redis::connection();
-		$key = 'rebate-'.date('ymd');
+		$key = 'blacklist-'.date('ymd');
 		if($redis->get($key)==FALSE)
 			$redis->setex($key,3600*24,0);
 		$name = $redis->incr($key);
