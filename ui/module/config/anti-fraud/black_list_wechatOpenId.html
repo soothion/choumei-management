@@ -33,14 +33,13 @@
 
         <a href="/module/config/anti-fraud/black_list_openIdUpload.html" class="btn btn-primary">手动添加</a>
 
-        <form action="blacklist/export" data-role="export" data-slug="requestLog.export">
-            <input type="hidden" name="keywordType" value="2">
+        <form action="blacklist/openidExport" data-role="export" data-slug="requestLog.export">
           <button class="btn btn-primary" type="submit">
             <i class="fa fa-file-excel-o"></i> 导出
           </button>
         </form>
 
-			<div class="table" ajat="blacklist/index?keywordType=2&<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="blacklist/openidIndex?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
         <table>
         <thead>
