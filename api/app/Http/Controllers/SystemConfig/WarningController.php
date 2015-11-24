@@ -77,7 +77,7 @@ class WarningController extends Controller {
         $param = $this->param;
 
         if (!isset($param['keywordType'])) {
-            throw new ApiException('缺少类型！', 1);
+            throw new ApiException('缺少类型！', ERROR::Warning_KeywordType_Notfound);
         }
         if (isset($param['page']) && !empty($param['page'])) {
             $page = $param['page'];
@@ -138,7 +138,7 @@ class WarningController extends Controller {
         $param = $this->param;
 
         if (!isset($param['keywordType'])) {
-            throw new ApiException('缺少类型！', 1);
+            throw new ApiException('缺少类型！', ERROR::Warning_KeywordType_Notfound);
         }
         if (isset($param['page']) && !empty($param['page'])) {
             $page = $param['page'];
@@ -187,7 +187,7 @@ class WarningController extends Controller {
                 $keywordName = "微信OpenId";
                 break;
             default:
-                throw new ApiException('黑名单无此类别！', 1);
+                throw new ApiException('黑名单无此类别！', ERROR::Warning_KeywordType_Notfound);
         }
 
         $header = [
@@ -237,14 +237,14 @@ class WarningController extends Controller {
     function block() {
         $param = $this->param;
         if (!isset($param['keywordType'])) {
-            throw new ApiException('缺少类型！', 1);
+            throw new ApiException('缺少类型！', ERROR::Warning_KeywordType_Notfound);
         }
         $blacklistStatus = 0;
         switch ($param ["keywordType"]) {
             case "0" : // 用户手机号
                 $blacklistStatus = Blacklist::getStatusbyUserMobile($param["mobilephone"]);
                 if ($blacklistStatus) {
-                    throw new ApiException('黑名单已存在！', 1);
+                    throw new ApiException('已在黑名单内！', ERROR::Blacklist_Exist);
                 }
                 $result = Blacklist::insert(array('mobilephone' => $param["mobilephone"]));
 
@@ -253,7 +253,7 @@ class WarningController extends Controller {
 
                 $blacklistStatus = Blacklist::getStatusbyUserDevice($param["device_uuid"]);
                 if ($blacklistStatus) {
-                    throw new ApiException('黑名单已存在！', 1);
+                    throw new ApiException('已在黑名单内！', ERROR::Blacklist_Exist);
                 }
                 $result = Blacklist::insert(array('device_uuid' => $param["device_uuid"]));
 
@@ -262,7 +262,7 @@ class WarningController extends Controller {
 
                 $blacklistStatus = Blacklist::getStatusbyOpenId($param["openid"]);
                 if ($blacklistStatus) {
-                    throw new ApiException('黑名单已存在！', 1);
+                    throw new ApiException('已在黑名单内！', ERROR::Blacklist_Exist);
                 }
                 $result = Blacklist::insert(array('openid' => $param["openid"]));
 
@@ -273,7 +273,7 @@ class WarningController extends Controller {
             $res['msg'] = "成功移入黑名单！";
             return $this->success($res);
         }
-        throw new ApiException('移入黑名单失败！', 1);
+        throw new ApiException('移入黑名单失败！', ERROR::Blacklist_Block_FAILED);
     }
 
 }

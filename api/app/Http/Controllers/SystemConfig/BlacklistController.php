@@ -128,7 +128,7 @@ class BlacklistController extends Controller {
             $size = 20;
         }
         if ($param['keywordType'] == '') {
-            throw new ApiException('请设置关键词类型！', 1);
+            throw new ApiException('请设置关键词类型！', ERROR::Blacklist_KeywordType_Notfound);
         }
         DB::connection()->setFetchMode(PDO::FETCH_ASSOC);
         $query = Blacklist::getQueryByParam($param);
@@ -146,7 +146,7 @@ class BlacklistController extends Controller {
                 $keywordName = "微信OpenId";
                 break;
             default:
-                throw new ApiException('黑名单无此类别！', 1);
+                throw new ApiException('黑名单无此类别！', ERROR::Blacklist_KeywordType_Notfound);
         }
 
         $header = [
@@ -194,7 +194,7 @@ class BlacklistController extends Controller {
     public function upload() {
         $param = $this->param;
         if (!isset($param['keywordType'])) {
-            throw new ApiException('请设置关键词类型！', 1);
+            throw new ApiException('请设置关键词类型！', ERROR::Blacklist_KeywordType_Notfound);
         }
         $file = Request::file('blacklist');
         if (!$file)
@@ -243,7 +243,7 @@ class BlacklistController extends Controller {
                         }
                         break;
                     default:
-                        throw new ApiException('黑名单无此类别！', 1);
+                        throw new ApiException('黑名单无此类别！', ERROR::Blacklist_KeywordType_Notfound);
                 }
                 $data[$key]['add_time'] = $value[2];
                 $data[$key]['updated_at'] = $value[2];
@@ -259,10 +259,10 @@ class BlacklistController extends Controller {
             $redis->setex($redisKey, 3600 * 24, 0);
         }
 
-        $name = Blacklist::getName();
-        $folder = date('Y/m/d') . '/';
-        $src = $folder . $name . '.' . $extension;
-        Storage::disk('local')->put($src, File::get($file));
+//        $name = Blacklist::getName();
+//        $folder = date('Y/m/d') . '/';
+//        $src = $folder . $name . '.' . $extension;
+//        Storage::disk('local')->put($src, File::get($file));
 
         $result["redisKey"] = $redisKey;
         $result["data"] = $data;
@@ -299,12 +299,12 @@ class BlacklistController extends Controller {
     public function submit() {
         $param = $this->param;
         if (empty($param['redisKey'])) {
-            throw new ApiException('请提供数据key！', 1);
+            throw new ApiException('请提供数据key！', ERROR::Blacklist_RedisKey_Notfound);
         }
         $redis = Redis::connection();
         $data = $redis->get($param['redisKey']);
         if (!$data) {
-            throw new ApiException('黑名单提交失败!', ERROR::REBATE_UPLOAD_FAILED);
+            throw new ApiException('黑名单提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
         }
         $data = json_decode($data);
         Log::info('BlackList data is: ', $data);
@@ -312,7 +312,7 @@ class BlacklistController extends Controller {
         $result = Blacklist::insert($data);
         if ($result)
             return $this->success($data["msg"] = "黑名单导入成功!");
-        throw new ApiException('黑名单提交失败!', ERROR::REBATE_UPLOAD_FAILED);
+        throw new ApiException('黑名单提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
     }
 
     /**
@@ -343,14 +343,14 @@ class BlacklistController extends Controller {
     function remove($id) {
         $id = intval($id);
         if (empty($id)) {
-            throw new ApiException('找不到id！', ERROR::BOUNTY_ID_NOT_PASS);
+            throw new ApiException('找不到id！', ERROR::Blacklist_Id_Notfound);
         }
         $result = Blacklist::where('id', $id)->delete();
         if ($result) {
             $res['msg'] = "成功移出黑名单！";
             return $this->success($res);
         }
-        throw new ApiException('移出黑名单失败', 1);
+        throw new ApiException('移出黑名单失败', ERROR::Blacklist_Remove_FAILED);
     }
 
 }
