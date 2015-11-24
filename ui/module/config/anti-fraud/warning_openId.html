@@ -25,7 +25,7 @@
           <span>
               <label>微信OpenId：</label>
               <input type="text" name="keyword"/>              
-              <input type="hidden" name="keywordType" value="2"/>         
+<!--               <input type="hidden" name="keywordType" value="2"/>   -->       
           </span>         
 
           <span class="date-group">
@@ -44,13 +44,13 @@
           <button class="btn" type="submit">搜索</button>
         </form>
 
-        <form action="warning/export" data-role="export" data-slug="warning/export">
-          <button class="btn" type="button">
+        <form action="warning/openidExport" data-role="export" data-slug="warning/export">
+          <button class="btn">
             <i class="fa fa-file-excel-o"></i> 导出
           </button>
         </form>
 
-        <div class="table" id="table" ajat="<%if(query._){%>warning/index?<%=query._%><%}%>#domid=table&tempid=table-t">
+        <div class="table" id="table" ajat="<%if(query._){%>warning/openidIndex?<%=query._%><%}%>#domid=table&tempid=table-t">
         <script type="text/template" id="table-t">
         <table>
             <thead>
@@ -72,10 +72,9 @@
                 <td><%=item.payNum%></td>
                 <td><%=item.orderNum%></td>
                 <td>
-                    <form action="warning/block" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})" 
+                    <form action="warning/openidBlock" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})" 
                       <%=item.blacklistStatus=='0' ? '':'disabled'%>>
                       <button class="link">移入黑名单</button>
-                      <input type="hidden" name="keywordType" value="2"/>   
                       <input type="hidden" name="openid" value="<%=item.openId%>" />
                     </form>    
                 </td>
@@ -155,19 +154,8 @@
               }
           }, 400)
       });       
+    });       
 
-      $('form[data-role="export"] > button').on('click',function(){
-           if(location.hash){
-              console.log(cfg.getHost()+"warning/export?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
-              window.open(cfg.getHost()+"warning/export?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
-           }else{
-              var start = $("input[date-start='start']").val();
-              var end   = $("input[date-end='end']").val();  
-              console.log(cfg.getHost()+'warning/export?keywordType=2&minTime='+start+'&maxTime='+end+'&token='+localStorage.getItem('token'));            
-              window.open(cfg.getHost()+'warning/export?keywordType=2&minTime='+start+'&maxTime='+end+'&token='+localStorage.getItem('token'));
-           }
-      })             
-    });
     </script>    
   </body>
 </html>
