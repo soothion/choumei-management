@@ -7,10 +7,10 @@
   </head>
   <body>
 		<div class="breadcrumb">
-			<a>系统配置</a><span>&gt;</span><a>反欺诈</a><span>&gt;</span><a>黑名单-<span class='name'></span></a><span>&gt;</span><a>手动添加黑名单-<span class='name'></span></a>
+			<a>系统配置</a><span>&gt;</span><a>反欺诈</a><span>&gt;</span><a>黑名单-手机号</a><span>&gt;</span><a>手动添加黑名单-手机号</a>
 			<div class="flex-box">
 				<div class="flex-item">
-					<h4>手动添加黑名单-<span class='name'></span></h4>
+					<h4>手动添加黑名单-手机号</h4>
 				</div>
 			</div>
 		</div>
@@ -19,6 +19,9 @@
              background-color: #fff !important;
              border-color: #fff !important;
          }
+         .assertive{
+            color:#ea7692;
+         }
         </style>
 		<div class="wrapper">
         <div class="fr">
@@ -26,7 +29,7 @@
             <input type="hidden" name="keywordType" id="type">
         </div>
 
-        <p class="small">注：通过导入xls. 文件以手动添加黑名单，格式需包含 序号、<span class='name'></span>、备注（进入黑名单原因等）</p>
+        <p class="small">注：通过导入xls. 文件以手动添加黑名单，格式需包含 序号、手机号、备注（进入黑名单原因等）</p>
 
         <span>预览</span>
 		<div class="table" id="table">
@@ -35,7 +38,7 @@
                 <thead>
                 <tr>
                 <th>序号</th>
-                <th><span class='name'></span></th>
+                <th>手机号</th>
                 <th>备注</th>
                 <th class='clear-color'></th>
                 </tr>
@@ -63,41 +66,11 @@
         </form>
 	</div>
     <script>
-        var configInfo = [
-            {
-                name:'手机号',
-                uploadUrl:cfg.url.host+'blacklist/upload?keywordType=0&token='+window.localStorage.getItem('token'),
-                submitUrl:'',
-                type:'mobilephone'
-            },
-            {
-                name:'设备号',
-                uploadUrl:cfg.url.host+'blacklist/upload?keywordType=1&token='+window.localStorage.getItem('token'),
-                submitUrl:'',
-                type:'device_uuid'
-            },
-            {
-                name:'微信OpenId',
-                uploadUrl:cfg.url.host+'blacklist/upload?keywordType=2&token='+window.localStorage.getItem('token'),
-                submitUrl:'',
-                type:'openid'
-            }
-        ];
-
-        var type = lib.tools.parseQuery(window.location).item;
-        var pageConfig = configInfo[type];
-        var initPage = function(){
-            $('.name').html(pageConfig.name);
-            $('#type').val(type);
-        }();
-        $('#table').on('_ready',function(){
-            $('.name').html(pageConfig.name);
-        })
         lib.puploader.create({
                     browse_button: 'uploadFile',
                     auto_start:true,
                     file_data_name:"blacklist",
-                    domain:pageConfig.uploadUrl,
+                    domain:cfg.url.host+'blacklist/phoneUpload?token='+window.localStorage.getItem('token'),
                     filters: {
                         mime_types : [
                             { title : "Excel file", extensions : "xls,xlsx,csv" },
