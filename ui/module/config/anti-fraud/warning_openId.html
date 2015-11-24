@@ -88,8 +88,8 @@
         </div>
     </div>
 
-    <script>
-    (function(){
+    <script type="text/javascript">
+    $(function(){
       var max = new Date();     
       var min = new Date(max.getTime()-30*24*60*60*1000);
       $("input[date-start='start']").val(min.format("yyyy-MM-dd"));
@@ -98,7 +98,7 @@
       if(!lib.query._){
         $('form[data-role="hash"]').submit();
       } 
-            
+
       setDate(min,max);
 
       $("input[date-end='end']").on('change',function(){
@@ -167,7 +167,7 @@
               window.open(cfg.getHost()+'warning/export?keywordType=2&minTime='+start+'&maxTime='+end+'&token='+localStorage.getItem('token'));
            }
       })             
-    })()
+    });
     </script>    
   </body>
 </html>
