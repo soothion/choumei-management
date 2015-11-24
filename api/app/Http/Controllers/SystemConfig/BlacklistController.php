@@ -266,6 +266,7 @@ class BlacklistController extends Controller {
 
         $result["redisKey"] = $redisKey;
         $result["data"] = $data;
+        Log::info("blacklist upload result is",$result);
 
         return $this->success($result);
     }

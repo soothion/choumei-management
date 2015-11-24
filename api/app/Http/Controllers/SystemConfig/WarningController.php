@@ -9,6 +9,8 @@ Use PDO;
 use App\Warning;
 use App\RequestLog;
 use App\Blacklist;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class WarningController extends Controller {
 
