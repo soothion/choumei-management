@@ -41,12 +41,13 @@
                 </tr>
                 </thead>
                 <tbody>
+                    <%console.log(data)%>
                 <%data.data && data.data.forEach(function(item,index){%>
                   <tr>
                     <td><%=index+1%></td>
-                    <td><%=item.mobilephone%></td>
-                    <td><%=item.username%></td>
-                    <td class='clear-color assertive'><%=item.device_uuid%></td>
+                    <td><%=item.userInfo%></td>
+                    <td><%=item.note%></td>
+                    <td class='clear-color assertive'><%= item.isMobilephone == 0 ? '存在不规范手机号码，导入失败，请修改导文件重新导入' : ''%></td>
                   </tr>
                 <%})%>
                 </tbody>
@@ -103,10 +104,12 @@
                         ]
                     }
         },function(uploader){
-            uploader.bind('FileUploadedSuccess',function(up,file,re){
-                renderList(re.data);
-                if (re.data.redisKey){
-                    $('#redisKey').val(re.data.redisKey);
+            uploader.bind('FileUploadedSuccess',function(up,up,file,res){
+                var reponseData = JSON.parse(res.response);
+                var tmpKey = reponseData.data.redisKey;
+                renderList(reponseData.data);
+                if (tmpKey){
+                    $('#redisKey').val(tmpKey);
                     $('#submit').removeAttr('disabled');
                 }else{
                     $('#submit').attr('disabled','disabled');
@@ -115,7 +118,7 @@
         });
 
         var renderList = function(data){
-            var newAjat = lib.ajat('#domid=table&tempid=table-t').render(data);
+            var newAjat = lib.ajat('#domid=table&tempid=table-t').template(data);
         }
     </script>
   </body>
