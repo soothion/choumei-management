@@ -160,13 +160,13 @@ class WarningController extends Controller {
                 }
                 break;
             case "1" : // 设备号
-                foreach ($num["data"] as $key => $nums) {
+                foreach ($nums["data"] as $key => $nums) {
                     $nums["data"][$key]["loginNum"] = RequestLog::getLoginNumbyDevice($num["device"]);
                     $nums["data"][$key]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($num["device"]);
                 }
                 break;
             case "2" ://openId
-                foreach ($num["data"] as $key => $nums) {
+                foreach ($nums["data"] as $key => $nums) {
                     $nums["data"][$key]["loginNum"] = RequestLog::getLoginNumbyOpenId($num["openId"]);
                     $nums["data"][$key]["blacklistStatus"] = Blacklist::getStatusbyOpenId($num["openId"]);
                 }
