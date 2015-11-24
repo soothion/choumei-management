@@ -1192,40 +1192,115 @@ Route::group(['middleware' => ['before']], function(){
     
     
     //黑名单
-    Route::any('blacklist/index',array(  
+    Route::any('blacklist/phoneIndex',array(  
+        'as'=>'blacklist.phoneIndex',
+        'uses'=>'SystemConfig\BlacklistController@phoneIndex'
+    )); 
+    Route::any('blacklist/deviceIndex',array(  
+        'as'=>'blacklist.deviceIndex',
+        'uses'=>'SystemConfig\BlacklistController@deviceIndex'
+    )); 
+    Route::any('blacklist/openidIndex',array(  
         'as'=>'blacklist.index',
-        'uses'=>'SystemConfig\BlacklistController@index'
+        'uses'=>'SystemConfig\BlacklistController@openidIndex'
     )); 
-    Route::any('blacklist/export',array(  
-        'as'=>'blacklist.export',
-        'uses'=>'SystemConfig\BlacklistController@export'
+    
+    
+    Route::any('blacklist/phoneExport',array(  
+        'as'=>'blacklist.phoneExport',
+        'uses'=>'SystemConfig\BlacklistController@phoneExport'
     )); 
-    Route::any('blacklist/upload',array(
-		'as'=>'blacklist.upload',
-		'uses'=>'SystemConfig\BlacklistController@upload'
+    Route::any('blacklist/deviceExport',array(  
+        'as'=>'blacklist.deviceExport',
+        'uses'=>'SystemConfig\BlacklistController@deviceExport'
+    )); 
+    Route::any('blacklist/openidExport',array(  
+        'as'=>'blacklist.openidExport',
+        'uses'=>'SystemConfig\BlacklistController@openidExport'
+    )); 
+    
+    
+    Route::any('blacklist/phoneUpload',array(
+		'as'=>'blacklist.phoneUpload',
+		'uses'=>'SystemConfig\BlacklistController@phoneUpload'
 	));	
-    Route::any('blacklist/submit',array(
+    Route::any('blacklist/deviceUpload',array(
+		'as'=>'blacklist.deviceUpload',
+		'uses'=>'SystemConfig\BlacklistController@deviceUpload'
+	));
+    Route::any('blacklist/openidUpload',array(
+		'as'=>'blacklist.openidUpload',
+		'uses'=>'SystemConfig\BlacklistController@openidUpload'
+	));
+    
+    
+    Route::any('blacklist/phoneSubmit',array(
+		'as'=>'blacklist.phoneSubmit',
+		'uses'=>'SystemConfig\BlacklistController@phoneSubmit'
+	));	
+    Route::any('blacklist/deviceSubmit',array(
 		'as'=>'blacklist.submit',
-		'uses'=>'SystemConfig\BlacklistController@submit'
+		'uses'=>'SystemConfig\BlacklistController@deviceSubmit'
 	));	
-    Route::any('blacklist/remove/{id}',array(
-		'as'=>'blacklist.remove',
-		'uses'=>'SystemConfig\BlacklistController@remove'
+    Route::any('blacklist/openidSubmit',array(
+		'as'=>'blacklist.openidSubmit',
+		'uses'=>'SystemConfig\BlacklistController@openidSubmit'
+	));	
+    
+    
+    Route::any('blacklist/phoneRemove/{id}',array(
+		'as'=>'blacklist.phoneRemove',
+		'uses'=>'SystemConfig\BlacklistController@phoneRemove'
+	));	
+    Route::any('blacklist/deviceRemove/{id}',array(
+		'as'=>'blacklist.deviceRemove',
+		'uses'=>'SystemConfig\BlacklistController@deviceRemove'
+	));	
+    Route::any('blacklist/openidRemove/{id}',array(
+		'as'=>'blacklist.openidRemove',
+		'uses'=>'SystemConfig\BlacklistController@openidRemove'
 	));	
     
     //预警查询
     
-    Route::any('warning/index',array(  
-        'as'=>'warning.index',
-        'uses'=>'SystemConfig\WarningController@index'
+    Route::any('warning/phoneIndex',array(  
+        'as'=>'warning.phoneIndex',
+        'uses'=>'SystemConfig\WarningController@phoneIndex'
     )); 
-    Route::any('warning/export',array(  
-        'as'=>'warning.export',
-        'uses'=>'SystemConfig\WarningController@export'
+    Route::any('warning/deviceIndex',array(  
+        'as'=>'warning.deviceIndex',
+        'uses'=>'SystemConfig\WarningController@deviceIndex'
     )); 
-    Route::any('warning/block',array(  
-        'as'=>'warning.block',
-        'uses'=>'SystemConfig\WarningController@block'
+    Route::any('warning/openidIndex',array(  
+        'as'=>'warning.openidIndex',
+        'uses'=>'SystemConfig\WarningController@openidIndex'
+    )); 
+    
+    
+    Route::any('warning/phoneExport',array(  
+        'as'=>'warning.phoneExport',
+        'uses'=>'SystemConfig\WarningController@phoneExport'
+    )); 
+    Route::any('warning/deviceExport',array(  
+        'as'=>'warning.deviceExport',
+        'uses'=>'SystemConfig\WarningController@deviceExport'
+    )); 
+    Route::any('warning/openidExport',array(  
+        'as'=>'warning.openidExport',
+        'uses'=>'SystemConfig\WarningController@openidExport'
+    )); 
+    
+    Route::any('warning/deviceBlock',array(  
+        'as'=>'warning.deviceBlock',
+        'uses'=>'SystemConfig\WarningController@deviceBlock'
+    )); 
+    Route::any('warning/phoneBlock',array(  
+        'as'=>'warning.phoneBlock',
+        'uses'=>'SystemConfig\WarningController@phoneBlock'
+    )); 
+    Route::any('warning/openidBlock',array(  
+        'as'=>'warning.openidBlock',
+        'uses'=>'SystemConfig\WarningController@openidBlock'
     )); 
 
     

@@ -40,7 +40,7 @@ class Warning extends Model {
                 }
 
                 break;
-            case "1" : // 设备号
+            case "2" : // openId
 
                 $fields = [DB::raw("COUNT(DISTINCT shopcartsn) as payNum"), DB::raw("COUNT(cm_request_log.OPENID) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.OPENID as openId"];
                 $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.OPENID')->having(DB::raw("COUNT(cm_request_log.OPENID)"), '>', $orderNum);
@@ -49,7 +49,7 @@ class Warning extends Model {
                 }
 
                 break;
-            case "2" ://openId
+            case "1" ://设备号
                 $fields = [DB::raw("COUNT(DISTINCT shopcartsn) as payNum"), DB::raw("COUNT(cm_request_log.DEVICE_UUID) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.DEVICE_UUID as device"];
                 $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(cm_request_log.DEVICE_UUID)"), '>', $orderNum);
                 if (!empty($val)) {
