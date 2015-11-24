@@ -349,7 +349,7 @@ class WarningController extends Controller {
      * @api {post} /warning/phoneBlock 7.移入黑名单
      * @apiName phoneBlock
      * @apiGroup  warning
-     * @apiParam {Number} mobilephone	   
+     * @apiParam {Number} mobilephone 必选
      * 
      *  
      * @apiSuccess {String} msg 移入信息
@@ -381,7 +381,7 @@ class WarningController extends Controller {
      * @apiName deviceBlock
      * @apiGroup  warning
      *
-     * @apiParam {Number} 必选,device_uuid	 
+     * @apiParam {Number} device_uuid	必选
      * 
      *  
      * @apiSuccess {String} msg 移入信息
@@ -413,7 +413,7 @@ class WarningController extends Controller {
      * @apiName openidBlock
      * @apiGroup  warning
      * 
-     * @apiParam {Number} 必选,openid	 
+     * @apiParam {Number} openid 必选
      * 
      *  
      * @apiSuccess {String} msg 移入信息
