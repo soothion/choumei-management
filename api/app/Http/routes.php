@@ -1201,7 +1201,7 @@ Route::group(['middleware' => ['before']], function(){
         'uses'=>'SystemConfig\BlacklistController@deviceIndex'
     )); 
     Route::any('blacklist/openidIndex',array(  
-        'as'=>'blacklist.index',
+        'as'=>'blacklist.openidIndex',
         'uses'=>'SystemConfig\BlacklistController@openidIndex'
     )); 
     
@@ -1239,7 +1239,7 @@ Route::group(['middleware' => ['before']], function(){
 		'uses'=>'SystemConfig\BlacklistController@phoneSubmit'
 	));	
     Route::any('blacklist/deviceSubmit',array(
-		'as'=>'blacklist.submit',
+		'as'=>'blacklist.deviceSubmit',
 		'uses'=>'SystemConfig\BlacklistController@deviceSubmit'
 	));	
     Route::any('blacklist/openidSubmit',array(

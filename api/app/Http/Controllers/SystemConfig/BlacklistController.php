@@ -76,8 +76,6 @@ class BlacklistController extends Controller {
      * 		    "msg": "未授权访问"
      * 		}
      */
-   
-
     public function phoneIndex() {
         $param = $this->param;
         $param["keywordType"] = 0;
@@ -212,8 +210,8 @@ class BlacklistController extends Controller {
         $blacklists = $this->getIndex($param);
         return $this->success($blacklists);
     }
-    
-     public function getIndex($param) {
+
+    public function getIndex($param) {
 
         if (isset($param['page']) && !empty($param['page'])) {
             $page = $param['page'];
@@ -299,7 +297,6 @@ class BlacklistController extends Controller {
         $this->export($param);
     }
 
-    
     public function export($param) {
 
 //        if (isset($param['page']) && !empty($param['page'])) {
@@ -384,11 +381,11 @@ class BlacklistController extends Controller {
     public function phoneUpload() {
         $param = $this->param;
         $param["keywordType"] = 0;
-        $result=$this->upload($param);
+        $result = $this->upload($param);
         return $this->success($result);
     }
 
-     /**
+    /**
      * @api {post} /blacklist/deviceUpload 8.上传设备号黑名单
      * @apiName deviceUpload
      * @apiGroup blacklist
@@ -423,11 +420,11 @@ class BlacklistController extends Controller {
     public function deviceUpload() {
         $param = $this->param;
         $param["keywordType"] = 1;
-        $result=$this->upload($param);
+        $result = $this->upload($param);
         return $this->success($result);
     }
 
-     /**
+    /**
      * @api {post} /blacklist/openidUpload 9.上传黑名单
      * @apiName openidUpload
      * @apiGroup blacklist
@@ -462,9 +459,10 @@ class BlacklistController extends Controller {
     public function openidUpload() {
         $param = $this->param;
         $param["keywordType"] = 2;
-        $result=$this->upload($param);
+        $result = $this->upload($param);
         return $this->success($result);
     }
+
     public function upload($param) {
         if (!isset($param['keywordType'])) {
             throw new ApiException('请设置关键词类型！', ERROR::Blacklist_KeywordType_Notfound);
@@ -569,10 +567,11 @@ class BlacklistController extends Controller {
     public function phoneSubmit() {
         $param = $this->param;
         $param["keywordType"] = 0;
-        $result=$this->submit($param);
+        $result = $this->submit($param);
         return $this->success($result);
     }
-/**
+
+    /**
      * @api {post} /blacklist/deviceSubmit 11.提交设备号黑名单
      * @apiName deviceSubmit
      * @apiGroup blacklist
@@ -599,10 +598,11 @@ class BlacklistController extends Controller {
     public function deviceSubmit() {
         $param = $this->param;
         $param["keywordType"] = 1;
-        $result=$this->submit($param);
+        $result = $this->submit($param);
         return $this->success($result);
     }
-/**
+
+    /**
      * @api {post} /blacklist/openidSubmit 12.提交openid黑名单
      * @apiName openidSubmit
      * @apiGroup blacklist
@@ -629,9 +629,10 @@ class BlacklistController extends Controller {
     public function openidSubmit() {
         $param = $this->param;
         $param["keywordType"] = 2;
-        $result=$this->submit($param);
+        $result = $this->submit($param);
         return $this->success($result);
     }
+
     public function submit($param) {
         if (empty($param['redisKey'])) {
             throw new ApiException('请提供数据key！', ERROR::Blacklist_RedisKey_Notfound);
@@ -676,10 +677,11 @@ class BlacklistController extends Controller {
      * 		}
      */
     public function phoneRemove($id) {
-        $result=$this->remove($id);
+        $result = $this->remove($id);
         return $this->success($result);
     }
- /**
+
+    /**
      * @api {get} /blacklist/deviceRemove/{id} 14 .移出设备号黑名单
      * @apiName deviceRemove
      * @apiGroup  blacklist
@@ -705,10 +707,11 @@ class BlacklistController extends Controller {
      * 		}
      */
     public function deviceRemove($id) {
-        $result=$this->remove($id);
+        $result = $this->remove($id);
         return $this->success($result);
     }
- /**
+
+    /**
      * @api {get} /blacklist/openidRemove/{id} 15 .移出openid黑名单
      * @apiName openidRemove
      * @apiGroup  blacklist
@@ -734,10 +737,10 @@ class BlacklistController extends Controller {
      * 		}
      */
     public function openidRemove($id) {
-        $result=$this->remove($id);
+        $result = $this->remove($id);
         return $this->success($result);
     }
-    
+
     public function remove($id) {
         $id = intval($id);
         if (empty($id)) {
