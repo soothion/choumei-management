@@ -244,7 +244,7 @@ class BlacklistController extends Controller {
        
         $result["redisKey"]=$redisKey;
         $result["data"]=$data;
-        Log::info('BlackList $data is: '. $data);
+        Log::info('BlackList $data is: ', $data);
         
         return $this->success($result);
 
