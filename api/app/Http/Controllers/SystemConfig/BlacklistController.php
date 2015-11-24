@@ -171,9 +171,7 @@ class BlacklistController extends Controller {
      * @apiParam {File} blacklist 必填,excel文件.
      * @apiParam {Number} keywordType 必选,搜索关键词类型，可取0 用户手机号/1 设备号/3 openid.
      *
-     * @apiSuccess {String} mobilephone 手机号.
-     * @apiSuccess {String} device_uuid 设备号
-     * @apiSuccess {String} openid 微信openid
+     * @apiSuccess {String} userInfo 用户资料:手机号/设备号/openid
      * @apiSuccess {String} add_time 进入黑名单时间
      * @apiSuccess {String} note 备注
      * @apiSuccess {Number} blacklistStatus 黑名单状态 0 不存在黑名单/ 1 已存在黑名单
@@ -182,8 +180,16 @@ class BlacklistController extends Controller {
      * @apiSuccessExample Success-Response:
      * 	    {
      * 	        "result": 1,
-     * 	        "data": null
-     * 	    }
+     * 	        "data": 
+     *              {"redisKey":"9d728e9d887bc882eb232778227329b6",
+     *              "data":[
+     *                      {"device_uuid":" ",
+     *                      "blacklistStatus":1,
+     *                       "add_time":" 2015-11-19 17:22:14",
+     *                      "updated_at":" 2015-11-19 17:22:14",
+     *                      "note":null
+     *                      }...
+     *              }
      * 
      * @apiErrorExample Error-Response:
      * 		{
@@ -215,7 +221,7 @@ class BlacklistController extends Controller {
                     continue;
                 switch ($param['keywordType']) {
                     case "0" : // 用户手机号				
-                        $data[$key]['mobilephone'] = $value[1];
+                        $data[$key]['userInfo'] = $value[1];
                         if (preg_match("/1[3458]{1}\d{9}$/", $value[1])) {
                             $data[$key]['isMobilephone'] = 1;
                         } else {
@@ -229,14 +235,14 @@ class BlacklistController extends Controller {
 
                         break;
                     case "1" : // 设备号
-                        $data[$key]['device_uuid'] = $value[1];
+                        $data[$key]['userInfo'] = $value[1];
                         $data[$key]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($value[1]);
                         if ($data[$key]["blacklistStatus"]) {
                             $available = 0;
                         }
                         break;
                     case "2" ://openid
-                        $data[$key]['openid'] = $value[1];
+                        $data[$key]['userInfo'] = $value[1];
                         $data[$key]["blacklistStatus"] = Blacklist::getStatusbyOpenId($value[1]);
                         if ($data[$key]["blacklistStatus"]) {
                             $available = 0;
@@ -266,7 +272,7 @@ class BlacklistController extends Controller {
 
         $result["redisKey"] = $redisKey;
         $result["data"] = $data;
-        Log::info("blacklist upload result is",$result);
+        Log::info("blacklist upload result is", $result);
 
         return $this->success($result);
     }
