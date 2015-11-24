@@ -176,6 +176,8 @@ class BlacklistController extends Controller {
      * @apiSuccess {String} openid 微信openid
      * @apiSuccess {String} add_time 进入黑名单时间
      * @apiSuccess {String} note 备注
+     * @apiSuccess {Number} blacklistStatus 黑名单状态 0 不存在黑名单/ 1 已存在黑名单
+     * @apiSuccess {Number} isMobilephone 检测手机号 0 手机号码不符合规则/ 1 手机号码不符合规则
      * @apiSuccess {String} redisKey 数据缓存key
      * @apiSuccessExample Success-Response:
      * 	    {
@@ -201,10 +203,10 @@ class BlacklistController extends Controller {
         if (!in_array($extension, ['xls', 'xlsx']))
             throw new ApiException('请上传xls或者xlsx文件', ERROR::FILE_FORMAT_ERROR);
 
-//        $result = false;
         $data = [];
-        $redisKey='blacklist';
-        Excel::load($file->getPathname(), function($reader)use($param,&$data,&$redisKey){
+        $redisKey = 'blacklist';
+        $available = 1;
+        Excel::load($file->getPathname(), function($reader)use($param, &$data, &$redisKey) {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
@@ -214,12 +216,31 @@ class BlacklistController extends Controller {
                 switch ($param['keywordType']) {
                     case "0" : // 用户手机号				
                         $data[$key]['mobilephone'] = $value[1];
+                        if (preg_match("/1[3458]{1}\d{9}$/", $value[1])) {
+                            $data[$key]['isMobilephone'] = 1;
+                        } else {
+                            $data[$key]['isMobilephone'] = 0;
+                        }
+
+                        $data[$key]["blacklistStatus"] = Blacklist::getStatusbyUserMobile($value[1]);
+                        if ($data[$key]['isMobilephone'] || $data[$key]["blacklistStatus"]) {
+                            $available = 0;
+                        }
+
                         break;
                     case "1" : // 设备号
                         $data[$key]['device_uuid'] = $value[1];
+                        $data[$key]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($value[1]);
+                        if ($data[$key]["blacklistStatus"]) {
+                            $available = 0;
+                        }
                         break;
                     case "2" ://openid
                         $data[$key]['openid'] = $value[1];
+                        $data[$key]["blacklistStatus"] = Blacklist::getStatusbyOpenId($value[1]);
+                        if ($data[$key]["blacklistStatus"]) {
+                            $available = 0;
+                        }
                         break;
                     default:
                         throw new ApiException('黑名单无此类别！', 1);
@@ -227,29 +248,28 @@ class BlacklistController extends Controller {
                 $data[$key]['add_time'] = $value[2];
                 $data[$key]['updated_at'] = $value[2];
                 $data[$key]['note'] = $value[3];
-                $redisKey=$redisKey.$value[1];
-                
+                $redisKey = $redisKey . $value[1];
             }
-
         }, 'UTF-8');
-        $redisKey=md5($redisKey);
+        $redisKey = md5($redisKey);
         $redis = Redis::connection();
-        $redis->setex($redisKey,3600*24,  json_encode($data));
-        
+        if ($available) {
+            $redis->setex($redisKey, 3600 * 24, json_encode($data));
+        } else {
+            $redis->setex($redisKey, 3600 * 24, 0);
+        }
+
         $name = Blacklist::getName();
         $folder = date('Y/m/d') . '/';
         $src = $folder . $name . '.' . $extension;
-        Log::info('BlackList $src is: '. $src);
         Storage::disk('local')->put($src, File::get($file));
-       
-        $result["redisKey"]=$redisKey;
-        $result["data"]=$data;
-        Log::info('BlackList $data is: ', $data);
-        
-        return $this->success($result);
 
+        $result["redisKey"] = $redisKey;
+        $result["data"] = $data;
+
+        return $this->success($result);
     }
-    
+
     /**
      * @api {post} /blacklist/submit 4.提交黑名单
      * @apiName submit
@@ -275,21 +295,23 @@ class BlacklistController extends Controller {
      * 		    "msg": "未授权访问"
      * 		}
      */
-    
     public function submit() {
         $param = $this->param;
         if (empty($param['redisKey'])) {
             throw new ApiException('请提供数据key！', 1);
         }
         $redis = Redis::connection();
-        $data=$redis->get($param['redisKey']);
-        $data=  json_decode($data);
+        $data = $redis->get($param['redisKey']);
+        if (!$data) {
+            throw new ApiException('黑名单提交失败!', ERROR::REBATE_UPLOAD_FAILED);
+        }
+        $data = json_decode($data);
         Log::info('BlackList data is: ', $data);
+
         $result = Blacklist::insert($data);
         if ($result)
-            return $this->success($data["msg"]="黑名单导入成功!");
+            return $this->success($data["msg"] = "黑名单导入成功!");
         throw new ApiException('黑名单提交失败!', ERROR::REBATE_UPLOAD_FAILED);
-        
     }
 
     /**
