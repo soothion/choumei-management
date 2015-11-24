@@ -133,4 +133,19 @@ class RequestLog  extends Model{
           }
           return $bases->toArray();
       }
+      
+      public static function getLoginNumbyUserId($userId)
+      {
+          return Self::getQuery()->where("USER_ID",$userId)->where("TYPE","LGN")->count();
+      }
+      
+      public static function getLoginNumbyDevice($userId)
+      {
+          return Self::getQuery()->where("DEVICE_UUID",$userId)->where("TYPE","LGN")->count();
+      }
+      
+      public static function getLoginNumbyOpenId($userId)
+      {
+          return Self::getQuery()->where("OPENID",$userId)->where("TYPE","LGN")->count();
+      }
 }

@@ -123,5 +123,35 @@ class Blacklist extends Model {
 		return 'blacklist'.$name;
 	}
     
+    public static function getStatusbyUserMobile($userMobile){
+		$result = Self::getQuery()->where("mobilephone",$userMobile)->get();
+        if($result)
+        {
+            return 1;
+        }
+        else
+            return 0;
+	}
+    
+    public static function getStatusbyUserDevice($device){
+		$result = Self::getQuery()->where("device_uuid",$device)->get();
+        if($result)
+        {
+            return 1;
+        }
+        else
+            return 0;
+	}
+    
+    public static function getStatusbyOpenId($openId){
+		$result = Self::getQuery()->where("openid",$openId)->get();
+        if($result)
+        {
+            return 1;
+        }
+        else
+            return 0;
+	}
+    
 
 }
