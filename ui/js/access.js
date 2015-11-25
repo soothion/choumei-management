@@ -43,7 +43,7 @@
 	'warning.openidIndex': '/module/config/anti-fraud/warning_openId.html',
 	'warning.deviceIndex': '/module/config/anti-fraud/warning_device.html',
 	'blacklist.phoneIndex': '/module/config/anti-fraud/black_list_phone.html',
-	'blacklist.deviceIndex': '/module/config/anti-fraud/black_list_deviceid.html',
+	'blacklist.deviceIndex': '/module/config/anti-fraud/black_list_deviceId.html',
 	'blacklist.openidIndex': '/module/config/anti-fraud/black_list_wechatOpenId.html',
 	'comment.index': '/module/user/operation/customer_review.html',
 	'requestLog.index': '/module/config/anti-fraud/login_log.html',
