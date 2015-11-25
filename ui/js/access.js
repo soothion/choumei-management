@@ -24,7 +24,7 @@
 	'feed.index':'/module/user/operation/index.html',
 	'order.index':'/module/transaction/order/index.html',
 	'refund.index':'/module/transaction/order/refundment.html',
-	'bounty.index':'/module/transaction/reward/index.html', 
+	'bounty.index':'/module/transaction/reward/index.html',
 	'bounty.refundIndex':'/module/transaction/reward/refundment.html',
 	'requestLog.index':'/module/transaction/other/device.html',
 	'ticket.index':'/module/transaction/other/ticket.html',
@@ -42,7 +42,11 @@
 	'messageBox.showDailyMessage':"/module/config/message/day.html",
 	'warning.phoneIndex' : '/module/config/anti-fraud/warning_phone.html',
 	'warning.openidIndex': '/module/config/anti-fraud/warning_openId.html',
-	'warning.deviceIndex': '/module/config/anti-fraud/warning_device.html'
+	'warning.deviceIndex': '/module/config/anti-fraud/warning_device.html',
+	'blacklist.phoneIndex': '/module/config/anti-fraud/black_list_phone.html',
+	'blacklist.deviceIndex': '/module/config/anti-fraud/black_list_deviceid.html',
+	'blacklist.openidIndex': '/module/config/anti-fraud/black_list_wechatOpenId.html',
+	'comment.index': '/module/user/operation/customer_review.html',
 }
 var access={
 	data:[],
