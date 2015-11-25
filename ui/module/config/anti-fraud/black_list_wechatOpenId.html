@@ -67,6 +67,34 @@
         </div>
 			</script>
 		</div>
+        <script>
+        var today = new Date();
+        var dayTime = 1000*60*60*24;
+
+        var initDate = function(){
+            var minTime = new Date(today.getTime()-7*dayTime).format('yyyy-MM-dd');
+            var maxTime = today.format('yyyy-MM-dd')
+            $('input[name=minTime]').val(minTime).attr('max',maxTime);
+            $('input[name=maxTime]').val(maxTime).attr('min',minTime)
+        }();
+
+        $('body').on('change','input[name=minTime]',function(){
+            var date = new Date($(this).val());
+            initMin(date);
+        }).on('change','input[name=maxTime]',function(){
+            var date = new Date($(this).val());
+            initMax(date);
+        })
+
+        var initMax = function(date){
+            $('input[name=minTime]').attr('max',date.format('yyyy-MM-dd'));
+        }
+
+        var initMin = function(date){
+            $('input[name=maxTime]').attr('min',date.format('yyyy-MM-dd'));
+        }
+
+        </script>
 	</div>
   </body>
 </html>
