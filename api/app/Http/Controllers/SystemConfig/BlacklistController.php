@@ -477,7 +477,7 @@ class BlacklistController extends Controller {
         $data = [];
         $redisKey = 'blacklist';
         $available = 1;
-        Excel::load($file->getPathname(), function($reader)use($param, &$data, &$redisKey) {
+        Excel::load($file->getPathname(), function($reader)use($param, &$data, &$redisKey,&$available) {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
@@ -524,7 +524,6 @@ class BlacklistController extends Controller {
         }, 'UTF-8');
         $redisKey = md5($redisKey);
         $redis = Redis::connection();
-        Log::info("blacklist upload available is". $available); 
         if ($available) {
             $redis->setex($redisKey, 3600 * 24, json_encode($data));
             $result["redisKey"] = $redisKey;
@@ -532,7 +531,6 @@ class BlacklistController extends Controller {
             $redis->setex($redisKey, 3600 * 24, 0);
             $result["redisKey"] = null;
         }
-        Log::info("blacklist upload redisKey is". $redisKey);  
 //        $name = Blacklist::getName();
 //        $folder = date('Y/m/d') . '/';
 //        $src = $folder . $name . '.' . $extension;
