@@ -40,6 +40,9 @@
 	'info.index':'/module/store/info/index.html',
 	'messageBox.messageList':"/module/config/message/index.html",
 	'messageBox.showDailyMessage':"/module/config/message/day.html",
+	'warning.phoneIndex' : '/module/config/anti-fraud/warning_phone.html',
+	'warning.openidIndex': '/module/config/anti-fraud/warning_openId.html',
+	'warning.deviceIndex': '/module/config/anti-fraud/warning_device.html'
 }
 var access={
 	data:[],
