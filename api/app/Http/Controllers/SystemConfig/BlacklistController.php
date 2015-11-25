@@ -529,6 +529,7 @@ class BlacklistController extends Controller {
             $result["redisKey"] = $redisKey;
         } else {
             $redis->setex($redisKey, 3600 * 24, 0);
+            $result["redisKey"] = null;
         }
 
 //        $name = Blacklist::getName();
