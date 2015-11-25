@@ -26,7 +26,6 @@
 	'refund.index':'/module/transaction/order/refundment.html',
 	'bounty.index':'/module/transaction/reward/index.html',
 	'bounty.refundIndex':'/module/transaction/reward/refundment.html',
-	'requestLog.index':'/module/transaction/other/device.html',
 	'ticket.index':'/module/transaction/other/ticket.html',
 	'appointment.index':'/module/transaction/hairstyle/index.html',
 	'voucher.list':'/module/marketing/ticket/cashCouponList/index.html',
@@ -47,6 +46,7 @@
 	'blacklist.deviceIndex': '/module/config/anti-fraud/black_list_deviceid.html',
 	'blacklist.openidIndex': '/module/config/anti-fraud/black_list_wechatOpenId.html',
 	'comment.index': '/module/user/operation/customer_review.html',
+	'requestLog.index': '/module/config/anti-fraud/login_log.html',
 }
 var access={
 	data:[],
