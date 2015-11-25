@@ -115,12 +115,42 @@ class Blacklist extends Model {
     
     public static function getName(){
 		$redis = Redis::connection();
-		$key = 'rebate-'.date('ymd');
+		$key = 'blacklist-'.date('ymd');
 		if($redis->get($key)==FALSE)
 			$redis->setex($key,3600*24,0);
 		$name = $redis->incr($key);
 		$name = str_pad($name, 3,'0',STR_PAD_LEFT);
 		return 'blacklist'.$name;
+	}
+    
+    public static function getStatusbyUserMobile($userMobile){
+		$result = Self::getQuery()->where("mobilephone",$userMobile)->get();
+        if($result)
+        {
+            return 1;
+        }
+        else
+            return 0;
+	}
+    
+    public static function getStatusbyUserDevice($device){
+		$result = Self::getQuery()->where("device_uuid",$device)->get();
+        if($result)
+        {
+            return 1;
+        }
+        else
+            return 0;
+	}
+    
+    public static function getStatusbyOpenId($openId){
+		$result = Self::getQuery()->where("openid",$openId)->get();
+        if($result)
+        {
+            return 1;
+        }
+        else
+            return 0;
 	}
     
 

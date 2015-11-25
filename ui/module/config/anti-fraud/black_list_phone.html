@@ -16,7 +16,7 @@
 		</div>
 		<div class="wrapper">
         <form data-role="hash">
-            <div class="input-group">
+            <div class="date-group">
                 <span style="padding:0 5px 0 15px">手机号码：</span>
                 <input type="hidden" name='keywordType' value="0">
                 <input type="text" class="input-search" name="keyword" placeholder="请输入手机号">
@@ -31,15 +31,15 @@
           <button class="btn" type="submit">查询</button>
         </form>
 
-        <a href="module/config/anti-fraud/black_list_upload.html?item=0" class="btn btn-primary">手动添加</a>
+        <a href="/module/config/anti-fraud/black_list_phoneUpload.html" class="btn btn-primary">手动添加</a>
 
-        <form action="blacklist/export" data-role="export" data-slug="requestLog.export">
+        <form action="blacklist/phoneExport" data-role="export" data-slug="blacklist.phoneExport">
           <button class="btn btn-primary" type="submit">
             <i class="fa fa-file-excel-o"></i> 导出
           </button>
         </form>
 
-			<div class="table" ajat="blacklist/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table"  ajat="blacklist/phoneIndex?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
         <table>
         <thead>
@@ -56,9 +56,9 @@
           <tr>
             <td><%=index+1%></td>
             <td><%=item.mobilephone%></td>
-            <td><%=item.add_time%></td>
+            <td><%=item.created_at%></td>
             <td><%=item.note%></td>
-            <td><form action="blacklist/remove/<%=data.id%>" data-role="normal" onsuccess="location.reload()"><button href="" class="link btn-clear">移出黑名单</button></form></td>
+            <td><form action="blacklist/phoneRemove/<%=item.id%>" data-role="normal" onsuccess="location.reload()"><button data-slug="blacklist.openidRemove" href="" class="link btn-clear">移出黑名单</button></form></td>
           </tr>
         <%})%>
         </tbody>
@@ -67,6 +67,34 @@
         </div>
 			</script>
 		</div>
+        <script>
+        var today = new Date();
+        var dayTime = 1000*60*60*24;
+
+        var initDate = function(){
+            var minTime = new Date(today.getTime()-7*dayTime).format('yyyy-MM-dd');
+            var maxTime = today.format('yyyy-MM-dd')
+            $('input[name=minTime]').val(minTime).attr('max',maxTime);
+            $('input[name=maxTime]').val(maxTime).attr('min',minTime)
+        }();
+
+        $('body').on('change','input[name=minTime]',function(){
+            var date = new Date($(this).val());
+            initMin(date);
+        }).on('change','input[name=maxTime]',function(){
+            var date = new Date($(this).val());
+            initMax(date);
+        })
+
+        var initMax = function(date){
+            $('input[name=minTime]').attr('max',date.format('yyyy-MM-dd'));
+        }
+
+        var initMin = function(date){
+            $('input[name=maxTime]').attr('min',date.format('yyyy-MM-dd'));
+        }
+
+        </script>
 	</div>
   </body>
 </html>

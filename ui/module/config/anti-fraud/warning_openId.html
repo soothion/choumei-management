@@ -24,7 +24,8 @@
         <form data-role="hash"> 
           <span>
               <label>微信OpenId：</label>
-              <input type="text" name="mobilephone" />              
+              <input type="text" name="keyword"/>              
+<!--               <input type="hidden" name="keywordType" value="2"/>   -->       
           </span>         
 
           <span class="date-group">
@@ -36,20 +37,20 @@
 
           <span>
               <label for="">购买单量大于等于：</label>
-              <input type="text" name="num" pattern='number' value="6" maxlength="3"/>
+              <input type="text" name="orderNum" pattern='number' maxlength="3"/>
               <span>（数值最小为6）</span>             
           </span>
 
           <button class="btn" type="submit">搜索</button>
         </form>
 
-        <form action="requestLog/export" data-role="export" data-slug="requestLog.export">
-          <button class="btn" type="submit">
+        <form action="warning/openidExport" data-role="export" data-slug="warning.openidExport">
+          <button class="btn">
             <i class="fa fa-file-excel-o"></i> 导出
           </button>
         </form>
 
-        <div class="table" ajat="requestLog/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+        <div class="table" id="table" ajat="<%if(query._){%>warning/openidIndex?<%=query._%><%}%>#domid=table&tempid=table-t">
         <script type="text/template" id="table-t">
         <table>
             <thead>
@@ -66,11 +67,17 @@
             <%data.data && data.data.forEach(function(item,i){%>
               <tr>
                 <td><%=i+1%></td>
-                <td><%=item.mobilephone%></td>
-                <td><%=item.username%></td>
-                <td><%=item.device_uuid%></td>
-                <td><%=item.update_time%></td>
-                <td><a class="link">移入黑名单</a></td>
+                <td><%=item.userMobile%></td>
+                <td><%=item.loginNum%></td>
+                <td><%=item.payNum%></td>
+                <td><%=item.orderNum%></td>
+                <td>
+                    <form action="warning/openidBlock" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})" 
+                      <%=item.blacklistStatus=='0' ? '':'disabled'%>>
+                      <button class="link" data-slug="warning.openidBlock">移入黑名单</button>
+                      <input type="hidden" name="openid" value="<%=item.openId%>" />
+                    </form>    
+                </td>
               </tr>
             <%})%>
             </tbody>
@@ -80,12 +87,18 @@
         </div>
     </div>
 
-    <script>
-    (function(){
-      var max = new Date();     
+    <script type="text/javascript">
+    $(function(){
+      //var max = new Date(new Date().getTime()-24*60*60*1000);  
+      var max = new Date();      
       var min = new Date(max.getTime()-30*24*60*60*1000);
       $("input[date-start='start']").val(min.format("yyyy-MM-dd"));
       $("input[date-end='end']").val(max.format("yyyy-MM-dd"));
+
+      if(!lib.query._){
+        $('form[data-role="hash"]').submit();
+      } 
+
       setDate(min,max);
 
       $("input[date-end='end']").on('change',function(){
@@ -142,8 +155,8 @@
               }
           }, 400)
       });       
-      
-    })()
+    });       
+
     </script>    
   </body>
 </html>

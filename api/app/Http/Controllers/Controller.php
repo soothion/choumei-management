@@ -135,7 +135,9 @@ abstract class Controller extends BaseController
 	public function export_xls($filename,$header,$datas)
 	{
 	    Excel::create($filename, function($excel) use($datas,$header){
+            $excel->setTitle('sheet');
 	        $excel->sheet('Sheet1', function($sheet) use($datas,$header){
+                
 	            $sheet->fromArray($datas, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
 	            $sheet->prependRow(1, $header);//添加表头
 	    

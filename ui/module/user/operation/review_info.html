@@ -20,12 +20,12 @@
                 <script type="text/template" id='table-t'>
                     <div class="fr wrapper">
                         <form action="comment/hidden/<%=data.id%>" data-role="normal" onsuccess="location.reload()">
-                        <button class="btn" id="hiddenBtn" type="submit" data-toggle="tooltip" <%= data.status != 1 ? "disabled='disabled'" : ""%>  data-placement="top" title="隐藏后，前端-个人中心-查看评价处可视，前端-店铺评价以及商家后台评价管理处不可视">隐藏</button>
+                        <button class="btn" data-slug="comment.hidden" id="hiddenBtn" type="submit" data-toggle="tooltip" <%= data.status != 1 ? "disabled='disabled'" : ""%>  data-placement="top" title="隐藏后，前端-个人中心-查看评价处可视，前端-店铺评价以及商家后台评价管理处不可视">隐藏</button>
                         <input type="hidden" name="id" value="<%=data.id%>">
                     </form>
                         <span class="space"></span>
                         <form action="comment/delete/<%=data.id%>" data-role="normal" onsuccess="location.reload()">
-                        <button class="btn" id="deleteBtn" type="submit" data-toggle="tooltip" <%= data.status != 1 ? "disabled='disabled'" : ""%> data-placement="top" title="删除后，前端-个人中心、前端-店铺评价、商家后台评价管理均处不可视">删除</button>
+                        <button class="btn" data-slug="comment.delete" id="deleteBtn" type="submit" data-toggle="tooltip" <%= data.status != 1 ? "disabled='disabled'" : ""%> data-placement="top" title="删除后，前端-个人中心、前端-店铺评价、商家后台评价管理均处不可视">删除</button>
                         <input type="hidden" name="id" value="<%=data.id%>">
                         </form>
                     </div>

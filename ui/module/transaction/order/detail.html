@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <div class="wrapper" id="table-wrapper" 
+        <div class="wrapper" id="table-wrapper"
         ajat="<%if(query.id){%><%=query.method%><%=query.id%><%}%>#domid=table-wrapper&tempid=table-t">
         <script type="text/template" id="table-t">
             <div class="table">
@@ -33,13 +33,13 @@
 
                         <tr>
                             <td class="first-td">订单编号</td>
-                            <td><%=data.order && data.order.ordersn%></td>                            
+                            <td><%=data.order && data.order.ordersn%></td>
                         </tr>
 
                         <tr>
                             <td class="first-td">购物车序号</td>
-                            <td><%=data.order && data.order.shopcartsn%></td>                            
-                        </tr> 
+                            <td><%=data.order && data.order.shopcartsn%></td>
+                        </tr>
 
                         <tr>
                             <td class="first-td">第三方流水号</td>
@@ -48,7 +48,7 @@
 
                         <tr>
                             <td class="first-td">项目名称</td>
-                            <td><%=data.item && data.item.itemname%></td>                            
+                            <td><%=data.item && data.item.itemname%></td>
                         </tr>
 
                         <tr>
@@ -56,8 +56,8 @@
                             <td>
                              <%=data.salon && data.salon.salonname%>
                             【<%=data.salonRecommendCode && data.salonRecommendCode.recommend_code%>】
-                            </td>                            
-                        </tr> 
+                            </td>
+                        </tr>
 
                         <tr>
                             <td class="first-td">用户臭美号</td>
@@ -66,13 +66,13 @@
 
                         <tr>
                             <td class="first-td">用户手机号</td>
-                            <td><%=data.user && data.user.mobilephone%></td>                            
+                            <td><%=data.user && data.user.mobilephone%></td>
                         </tr>
 
                         <tr>
                             <td class="first-td">订单金额</td>
-                            <td><%=data.order && data.order.priceall%></td>                            
-                        </tr> 
+                            <td><%=data.order && data.order.priceall%></td>
+                        </tr>
 
                         <tr>
                             <td class="first-td">现金券抵扣金额</td>
@@ -86,7 +86,7 @@
 
                         <tr>
                             <td class="first-td">实付金额</td>
-                            <td><%=data.order && data.order.actuallyPay%></td>                            
+                            <td><%=data.order && data.order.actuallyPay%></td>
                         </tr>
 
                         <tr>
@@ -127,7 +127,7 @@
                                             </tr>
                                             <%})%>
                                         <%}%>
-                                            
+
                                         <%if(secondArr.length > 0){%>
                                             <tr>
                                                 <td rowspan="<%=Math.max(secondArr.length + 1,2)%>">
@@ -141,10 +141,10 @@
                                             </tr>
                                             <%})%>
                                         <%}%>
-                                    </tbody>                                
+                                    </tbody>
                                 </table>
-                            </td>                            
-                        </tr> 
+                            </td>
+                        </tr>
 
                         <tr>
                             <td class="first-td">臭美券动态</td>
@@ -174,7 +174,7 @@
                                             <td><%=obj.remark || trendsText[obj.status] %></td>
                                         </tr>
                                         <%}) %>
-                                    </tbody>                                
+                                    </tbody>
                                 </table>
                             </td>
                         </tr>
@@ -191,8 +191,8 @@
                                             <th>券有效期</th>
                                             <th>券状态</th>
                                             <th>时间</th>
-                                        </tr>  
-                                    <thead>                              
+                                        </tr>
+                                    <thead>
                                     <tbody>
                                         <%
                                         var statusText= {
@@ -213,9 +213,9 @@
                                             <td class="format"><%=data.vouchers.vUseTime%></td>
                                         </tr>
                                         <%}%>
-                                    </tbody>                                
+                                    </tbody>
                                 </table>
-                            </td>                            
+                            </td>
                         </tr>
 
                         <tr>
@@ -228,8 +228,8 @@
                                             <th>佣金率</th>
                                             <th>佣金</th>
                                             <th>邀请码（店名）</th>
-                                        </tr> 
-                                    <thead>                                    
+                                        </tr>
+                                    <thead>
                                     <tbody>
                                     <%var grade={"1":"S","2":"A","3":"B","4":"C","5":"新落地","6":"淘汰区"}%>
                                     <%if(data.commission){%>
@@ -242,11 +242,11 @@
                                                 (<%=data.recommend_code && data.recommend_code.salonname%>)
                                             </td>
                                         </tr>
-                                    <%}%>    
-                                    </tbody>                                
+                                    <%}%>
+                                    </tbody>
                                 </table>
-                            </td>                            
-                        </tr> 
+                            </td>
+                        </tr>
 
                         <tr>
                             <td class="first-td">设备信息</td>
@@ -255,27 +255,29 @@
                                     <thead>
                                         <tr>
                                             <th>用户设备号</th>
+                                            <th>微信OpenId</th>
                                             <th>系统</th>
                                             <th>手机型号</th>
                                             <th>网络</th>
                                             <th>APP版本</th>
                                         </tr>
-                                    <thead>                                  
+                                    <thead>
                                     <tbody>
                                     <%if(data.platform){%>
                                         <tr>
                                             <td><%=data.platform.DEVICE_UUID%></td>
+                                            <td><%=data.platform.OPENID%></td>
                                             <td><%=data.platform.DEVICE_OS%></td>
                                             <td><%=data.platform.DEVICE_MODEL%></td>
                                             <td><%=data.platform.DEVICE_NETWORK%></td>
                                             <td><%=data.platform.VERSION%></td>
                                         </tr>
-                                    <%}%>    
-                                    </tbody>                                
+                                    <%}%>
+                                    </tbody>
                                 </table>
                             </td>
-                        </tr>                        
-                    </tbody>                     
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </script>

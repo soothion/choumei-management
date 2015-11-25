@@ -47,9 +47,9 @@
                 <span style="padding:0 5px 0 15px">状态</span>
                 <select name="status">
                   <option value="0">全部</option>
-                  <option value="1">很满意</option>
-                  <option value="2">满意</option>
-                  <option value="3">不满意</option>
+                  <option value="1">正常</option>
+                  <option value="2">已隐藏</option>
+                  <option value="3">已删除</option>
                 </select>
             </div>
           <button class="btn" type="submit">查询</button>
@@ -81,7 +81,7 @@
                     <td><%=item.time%></td>
                     <td><%=item.satisfyType%></td>
                     <td><%=statusStr[item.status]%></td>
-                    <td><a class='link'  href='review_info.html?id=<%=item.id%>'>查看<span class='space'>&gt;</span></a></td>
+                    <td><a class='link'  href='review_info.html?id=<%=item.id%>' data-slug='comment.show'>查看<span class='space'>&gt;</span></a></td>
                   </tr>
                 <%})%>
                 </tbody>
@@ -90,6 +90,9 @@
                 </div>
 			</script>
 		</div>
+        <script>
+        $('input[name=date]').val(new Date().format('yyyy-MM-dd'));
+        </script>
 	</div>
   </body>
 </html>
