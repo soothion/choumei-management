@@ -77,7 +77,8 @@ class WarningController extends Controller {
         $nums = $this->getIndex($param);
         return $this->success($nums);
     }
-/**
+
+    /**
      * @api {post} /warning/deviceIndex 2.预警查询设备号列表
      * @apiName deviceIndex
      * @apiGroup warning
@@ -138,7 +139,8 @@ class WarningController extends Controller {
         $nums = $this->getIndex($param);
         return $this->success($nums);
     }
-/**
+
+    /**
      * @api {post} /warning/openidIndex 3.预警查询openid列表
      * @apiName openidIndex
      * @apiGroup warning
@@ -201,6 +203,11 @@ class WarningController extends Controller {
 
     public function getIndex($param) {
 
+        if (!isset($param['orderNum']) || $param['orderNum'] < 6) {
+            $param['orderNum'] = 6;
+        } else {
+            $param['orderNum'] = $param['orderNum'];
+        }
         if (!isset($param['keywordType'])) {
             throw new ApiException('缺少类型！', ERROR::Warning_KeywordType_Notfound);
         }
@@ -214,6 +221,14 @@ class WarningController extends Controller {
         } else {
             $size = 20;
         }
+        $minTime=null;
+        $maxTime=null;
+        if (!empty($param["minTime"])) {
+            $minTime = $param["minTime"];
+        }
+        if (!empty($param["maxTime"])) {
+            $maxTime = $param["maxTime"];
+        }
         DB::connection()->setFetchMode(PDO::FETCH_ASSOC);
         $nums = Warning::searchOrder($param, $page, $size);
         switch ($param ["keywordType"]) {
@@ -223,18 +238,33 @@ class WarningController extends Controller {
 
                     $nums["data"][$key]["loginNum"] = RequestLog::getLoginNumbyUserId($num["userId"]);
                     $nums["data"][$key]["blacklistStatus"] = Blacklist::getStatusbyUserMobile($num["userMobile"]);
+                    if ($num["orderNum"] >= $param['orderNum']) {
+                        $orderNums=Warning::getOderNumByUserId($num["userId"], $minTime, $maxTime);
+                        $nums["data"][$key]["payNum"]=$orderNums["payNum"];
+                        $nums["data"][$key]["orderNum"]=$orderNums["orderNum"];
+                    }
                 }
                 break;
             case "1" : // 设备号
                 foreach ($nums["data"] as $key => $num) {
                     $nums["data"][$key]["loginNum"] = RequestLog::getLoginNumbyDevice($num["device"]);
                     $nums["data"][$key]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($num["device"]);
+                    if ($num["orderNum"] >= $param['orderNum']) {
+                        $orderNums=Warning::getOderNumByDevice($num["device"], $minTime, $maxTime);
+                        $nums["data"][$key]["payNum"]=$orderNums["payNum"];
+                        $nums["data"][$key]["orderNum"]=$orderNums["orderNum"];
+                    }
                 }
                 break;
             case "2" ://openId
                 foreach ($nums["data"] as $key => $num) {
                     $nums["data"][$key]["loginNum"] = RequestLog::getLoginNumbyOpenId($num["openId"]);
                     $nums["data"][$key]["blacklistStatus"] = Blacklist::getStatusbyOpenId($num["openId"]);
+                    if ($num["orderNum"] >= $param['orderNum']) {
+                        $orderNums=Warning::getOderNumByOpenId($num["openId"], $minTime, $maxTime);
+                        $nums["data"][$key]["payNum"]=$orderNums["payNum"];
+                        $nums["data"][$key]["orderNum"]=$orderNums["orderNum"];
+                    }
                 }
                 break;
         }
@@ -264,7 +294,8 @@ class WarningController extends Controller {
         $param["keywordType"] = 0;
         $this->export($param);
     }
-/**
+
+    /**
      * @api {post} /warning/deviceExport 5.预警查询设备号列表导出
      * @apiName deviceExport
      * @apiGroup warning
@@ -287,7 +318,8 @@ class WarningController extends Controller {
         $param["keywordType"] = 1;
         $this->export($param);
     }
-/**
+
+    /**
      * @api {post} /warning/openidExport 6.预警查询openid列表导出
      * @apiName openidExport
      * @apiGroup warning
@@ -376,7 +408,8 @@ class WarningController extends Controller {
         $result = $this->block($param);
         return $this->success($result);
     }
- /**
+
+    /**
      * @api {post} /warning/deviceBlock 8.移入黑名单
      * @apiName deviceBlock
      * @apiGroup  warning
@@ -408,7 +441,8 @@ class WarningController extends Controller {
         $result = $this->block($param);
         return $this->success($result);
     }
- /**
+
+    /**
      * @api {post} /warning/openidBlock 9.移入黑名单
      * @apiName openidBlock
      * @apiGroup  warning
@@ -457,7 +491,7 @@ class WarningController extends Controller {
                     throw new ApiException('已在黑名单内！', ERROR::Blacklist_Exist);
                 }
 
-                $result = Blacklist::insert(array('mobilephone' => $param["mobilephone"],"created_at"=>$date,"updated_at"=>$date));
+                $result = Blacklist::insert(array('mobilephone' => $param["mobilephone"], "created_at" => $date, "updated_at" => $date));
 
                 break;
             case "1" : // 设备号
@@ -469,7 +503,7 @@ class WarningController extends Controller {
                     throw new ApiException('已在黑名单内！', ERROR::Blacklist_Exist);
                 }
 
-                $result = Blacklist::insert(array('device_uuid' => $param["device_uuid"],"created_at"=>$date,"updated_at"=>$date));
+                $result = Blacklist::insert(array('device_uuid' => $param["device_uuid"], "created_at" => $date, "updated_at" => $date));
 
                 break;
             case "2" ://openId
@@ -480,7 +514,7 @@ class WarningController extends Controller {
                 if ($blacklistStatus) {
                     throw new ApiException('已在黑名单内！', ERROR::Blacklist_Exist);
                 }
-                $result = Blacklist::insert(array('openid' => $param["openid"],"created_at"=>$date,"updated_at"=>$date));
+                $result = Blacklist::insert(array('openid' => $param["openid"], "created_at" => $date, "updated_at" => $date));
 
                 break;
         }

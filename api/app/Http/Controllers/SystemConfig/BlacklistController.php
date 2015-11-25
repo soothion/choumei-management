@@ -40,7 +40,7 @@ class BlacklistController extends Controller {
      * @apiSuccess {String} mobilephone 手机号.
      * @apiSuccess {String} device_uuid 设备号
      * @apiSuccess {String} openid 微信openid
-     * @apiSuccess {String} create_at 进入黑名单时间
+     * @apiSuccess {String} created_at 进入黑名单时间
      * @apiSuccess {String} note 备注
      *
      * @apiSuccessExample Success-Response:
