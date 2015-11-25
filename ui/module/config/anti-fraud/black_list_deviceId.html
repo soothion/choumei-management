@@ -64,7 +64,7 @@
             <td><%=item.device_uuid%></td>
             <td><%=item.add_time%></td>
             <td><%=item.note%></td>
-            <td><form action="blacklist/remove/<%=item.id%>" data-role="normal" onsuccess="location.reload()"><button href="" class="link btn-clear">移出黑名单</button></form></td>
+            <td><form action="blacklist/deviceRemove/<%=item.id%>" data-role="normal" onsuccess="location.reload()"><button href="" class="link btn-clear">移出黑名单</button></form></td>
           </tr>
         <%})%>
         </tbody>

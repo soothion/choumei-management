@@ -58,7 +58,7 @@
             <td><%=item.mobilephone%></td>
             <td><%=item.created_at%></td>
             <td><%=item.note%></td>
-            <td><form action="blacklist/remove/<%=item.id%>" data-role="normal" onsuccess="location.reload()"><button href="" class="link btn-clear">移出黑名单</button></form></td>
+            <td><form action="blacklist/phoneRemove/<%=item.id%>" data-role="normal" onsuccess="location.reload()"><button href="" class="link btn-clear">移出黑名单</button></form></td>
           </tr>
         <%})%>
         </tbody>
