@@ -74,7 +74,7 @@
                 <td>
                     <form action="warning/openidBlock" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})" 
                       <%=item.blacklistStatus=='0' ? '':'disabled'%>>
-                      <button class="link">移入黑名单</button>
+                      <button class="link" data-slug="warning.openidBlock">移入黑名单</button>
                       <input type="hidden" name="openid" value="<%=item.openId%>" />
                     </form>    
                 </td>
