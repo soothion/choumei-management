@@ -244,14 +244,14 @@ class CommentController extends Controller {
     // 获取臭美劵密码
     private function _getByOrderTicketId( $orderTicketId=0 ){
         $ticketno = OrderTicket::select(['ticketno'])->where(['order_ticket_id'=>$orderTicketId])->where('status','<>',2)->first();
-        if( empty($ticketno) ) return $this->error("评论数据错误，未找到关联的臭美劵号");
+        if( empty($ticketno) ) return false;
         $ticketno = $ticketno['ticketno'];
         return $ticketno;
     }
     // 臭美卷号获取 Order_ticket_id
     private function _getByTicketNo( $ticketNo='' ){
         $orderTicketId = OrderTicket::select(['order_ticket_id'])->where(['ticketNo'=>$ticketNo])->where('status','<>',2)->first();
-        if( empty($orderTicketId) ) return $this->error("评论数据错误，未找到关联的order_ticket_id");
+        if( empty($orderTicketId) ) return false;
         $orderTicketId = $orderTicketId['order_ticket_id'];
         return $orderTicketId;
     }
@@ -285,7 +285,7 @@ class CommentController extends Controller {
     }
     // 格式化返回列表
     private function _formatListData( $data ){
-        if( empty($data['data']) ) return $data;
+        if( empty($data) || empty($data['data']) ) return $data;
         $satisfyType = ['','很满意','满意','不满意'];
         $status = ['','正常','隐藏','删除'];
         foreach( $data['data'] as $key => $val ){
