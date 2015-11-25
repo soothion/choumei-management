@@ -226,7 +226,7 @@ class TransactionSearchApi
         })->select(['recommend_code_user.recommend_code','salon.salonname'])->first();
        
         //设备信息
-        $paltform = RequestLog::getLogByOrdersn($ordersn,['DEVICE_UUID','DEVICE_OS','DEVICE_MODEL','DEVICE_NETWORK','VERSION']); 
+        $paltform = RequestLog::getLogByOrdersn($ordersn,['DEVICE_UUID','DEVICE_OS','DEVICE_MODEL','DEVICE_NETWORK','VERSION','OPENID']); 
         
         $paymentlogArr = null;
         $userArr = null;
