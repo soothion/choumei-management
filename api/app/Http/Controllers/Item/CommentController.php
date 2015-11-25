@@ -119,7 +119,7 @@ class CommentController extends Controller {
                     break;
             }
         }
-        $result = $obj->paginate($pageSize)->toArray();
+        $result = $obj->orderBy('id','desc')->paginate($pageSize)->toArray();
         $result = $this->_formatListData( $result );
         return $this->success( $result );
     }
