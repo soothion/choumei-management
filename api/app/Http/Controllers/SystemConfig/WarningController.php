@@ -445,6 +445,7 @@ class WarningController extends Controller {
         if (!isset($param['keywordType'])) {
             throw new ApiException('缺少类型！', ERROR::Warning_KeywordType_Notfound);
         }
+        $date = date('Y-m-d H:i:s');
         $blacklistStatus = 0;
         switch ($param ["keywordType"]) {
             case "0" : // 用户手机号
@@ -456,7 +457,7 @@ class WarningController extends Controller {
                     throw new ApiException('已在黑名单内！', ERROR::Blacklist_Exist);
                 }
 
-                $result = Blacklist::insert(array('mobilephone' => $param["mobilephone"]));
+                $result = Blacklist::insert(array('mobilephone' => $param["mobilephone"],"created_at"=>$date,"updated_at"=>$date));
 
                 break;
             case "1" : // 设备号
@@ -468,7 +469,7 @@ class WarningController extends Controller {
                     throw new ApiException('已在黑名单内！', ERROR::Blacklist_Exist);
                 }
 
-                $result = Blacklist::insert(array('device_uuid' => $param["device_uuid"]));
+                $result = Blacklist::insert(array('device_uuid' => $param["device_uuid"],"created_at"=>$date,"updated_at"=>$date));
 
                 break;
             case "2" ://openId
@@ -479,7 +480,7 @@ class WarningController extends Controller {
                 if ($blacklistStatus) {
                     throw new ApiException('已在黑名单内！', ERROR::Blacklist_Exist);
                 }
-                $result = Blacklist::insert(array('openid' => $param["openid"]));
+                $result = Blacklist::insert(array('openid' => $param["openid"],"created_at"=>$date,"updated_at"=>$date));
 
                 break;
         }

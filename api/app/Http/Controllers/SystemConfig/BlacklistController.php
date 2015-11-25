@@ -494,7 +494,7 @@ class BlacklistController extends Controller {
                         }
 
                         $data[$key]["blacklistStatus"] = Blacklist::getStatusbyUserMobile($value[1]);
-                        if ($data[$key]['isMobilephone'] || $data[$key]["blacklistStatus"]) {
+                        if ($data[$key]['isMobilephone']==0 || $data[$key]["blacklistStatus"]==1) {
                             $available = 0;
                         }
 
@@ -643,6 +643,10 @@ class BlacklistController extends Controller {
             throw new ApiException('黑名单提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
         }
         $data = json_decode($data);
+        $date = date('Y-m-d H:i:s');
+        foreach ($data as $key => $value) {
+           $data[$key]["updated_at"]=$date;
+        }
         Log::info('BlackList data is: ', $data);
 
         $result = Blacklist::insert($data);
