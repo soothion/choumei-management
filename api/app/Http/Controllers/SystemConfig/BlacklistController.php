@@ -478,8 +478,9 @@ class BlacklistController extends Controller {
         $redisKey = 'blacklist';
         $available = 1;
         Excel::load($file->getPathname(), function($reader)use($param, &$data, &$redisKey, &$available) {
-            $reader = $reader->getSheet(0);
+            $reader = $reader->first();
             $array = $reader->toArray();
+            Log::info("blacklist upload array is", $array);
             array_shift($array);
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
