@@ -42,6 +42,7 @@ class RequestLog  extends Model{
                 $query = $query->where('update_time','<=', $param['maxTime'].' 24');    
          }
          
+         $query = $query->where('type','=','LGN');        
          $sortable_keys=['update_time','mobilephone','version'];
          $sortKey = "update_time";
          $sortType = "DESC";
@@ -67,8 +68,7 @@ class RequestLog  extends Model{
              if($value->device_type=="WECHAT")
              {
                 $result["data"][$key]->version="微信公众号（H5）";
-             }
-             
+             }  
          }
          unset($result['next_page_url']);
          unset($result['prev_page_url']);
