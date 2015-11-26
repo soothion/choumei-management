@@ -98,7 +98,7 @@ class Warning extends Model {
                 $query->where('order.add_time', '<=', $maxTime);
             }
         }
-        $fields = [DB::raw("COUNT(DISTINCT shopcartsn)+SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END)-1 as payNum"), DB::raw("COUNT(cm_order.user_id) as orderNum"),"order.user_id as userId"];
+        $fields = [DB::raw("COUNT(DISTINCT shopcartsn)+SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END)-(CASE WHEN SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END) = 0 THEN 0 ELSE 1 END) as payNum"), DB::raw("COUNT(cm_order.user_id) as orderNum"),"order.user_id as userId"];
         return $query->select($fields)->join('user', 'user.user_id', '=', 'order.user_id')->where('user.user_id', '=', $userId)->where('order.ispay', '=', 2)->first();
         
     }
@@ -119,7 +119,7 @@ class Warning extends Model {
                 $query->where('order.add_time', '<=', $maxTime);
             }
         }
-        $fields = [DB::raw("COUNT(DISTINCT shopcartsn)+SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END)-1 as payNum"), DB::raw("COUNT(cm_request_log.OPENID) as orderNum"), "request_log.OPENID as openId"];
+        $fields = [DB::raw("COUNT(DISTINCT shopcartsn)+SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END)-(CASE WHEN SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END) = 0 THEN 0 ELSE 1 END) as payNum"), DB::raw("COUNT(cm_request_log.OPENID) as orderNum"), "request_log.OPENID as openId"];
         return $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->where('request_log.OPENID', '=', $openId)->where('order.ispay', '=', 2)->first();
         
     }
@@ -140,7 +140,7 @@ class Warning extends Model {
                 $query->where('order.add_time', '<=', $maxTime);
             }
         }
-        $fields = [DB::raw("COUNT(DISTINCT shopcartsn)+SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END)-1 as payNum"), DB::raw("COUNT(cm_request_log.DEVICE_UUID) as orderNum"), "request_log.DEVICE_UUID as device"];
+        $fields = [DB::raw("COUNT(DISTINCT shopcartsn)+SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END)-(CASE WHEN SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END) = 0 THEN 0 ELSE 1 END) as payNum"), DB::raw("COUNT(cm_request_log.DEVICE_UUID) as orderNum"), "request_log.DEVICE_UUID as device"];
         return $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->where('request_log.DEVICE_UUID', '=', $device)->where('order.ispay', '=', 2)->first();
         
     }
