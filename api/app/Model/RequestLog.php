@@ -59,7 +59,7 @@ class RequestLog  extends Model{
          AbstractPaginator::currentPageResolver(function() use ($page) {
   	    return $page;
   	 });
-         $fields=['openid','mobilephone','username','device_uuid','update_time','device_os','version','device_type'];
+         $fields=['openid','mobilephone','username','device_uuid','update_time','device_os','version','device_type','type'];
           
          $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->paginate($page_size)->toArray();
          
@@ -67,8 +67,10 @@ class RequestLog  extends Model{
              if($value->device_type=="WECHAT")
              {
                 $result["data"][$key]->version="微信公众号（H5）";
+             }  
+             if($value->type!="LGN"||$value->device_type!="WECHAT"){
+                $result["data"][$key]->openid="";
              }
-             
          }
          unset($result['next_page_url']);
          unset($result['prev_page_url']);
