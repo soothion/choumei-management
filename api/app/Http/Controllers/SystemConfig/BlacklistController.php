@@ -481,7 +481,6 @@ class BlacklistController extends Controller {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
-            Log::info("blacklist upload array is", $array);
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
                     continue;
@@ -517,9 +516,7 @@ class BlacklistController extends Controller {
                     default:
                         throw new ApiException('黑名单无此类别！', ERROR::Blacklist_KeywordType_Notfound);
                 }
-                $data[$key]['add_time'] = $value[2];
-                $data[$key]['updated_at'] = $value[2];
-                $data[$key]['note'] = $value[3];
+                $data[$key]['note'] = $value[2];
                 $redisKey = $redisKey . $value[1];
             }
         }, 'UTF-8');
@@ -646,6 +643,7 @@ class BlacklistController extends Controller {
         $data = json_decode($data);
         $date = date('Y-m-d H:i:s');
         foreach ($data as $key => $value) {
+           $data[$key]["created_at"]=$date;
            $data[$key]["updated_at"]=$date;
         }
         Log::info('BlackList data is: ', $data);
