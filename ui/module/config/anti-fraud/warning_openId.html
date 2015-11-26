@@ -56,7 +56,7 @@
             <thead>
                 <tr>
                     <th>序号</th>
-                    <th>手机号</th>
+                    <th>微信OpenId</th>
                     <th>登录次数</th>
                     <th>支付次数</th>
                     <th>购买单量</th>
@@ -67,7 +67,7 @@
             <%data.data && data.data.forEach(function(item,i){%>
               <tr>
                 <td><%=i+1%></td>
-                <td><%=item.userMobile%></td>
+                <td><%=item.openId%></td>
                 <td><%=item.loginNum%></td>
                 <td><%=item.payNum%></td>
                 <td><%=item.orderNum%></td>
