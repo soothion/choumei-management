@@ -481,11 +481,6 @@ class BlacklistController extends Controller {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
-            if (is_array($array)) {
-                Log::info("blacklist upload array is", $array);
-            } else {
-                Log::info("blacklist upload array is". $array);
-            }
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
                     continue;
@@ -525,6 +520,7 @@ class BlacklistController extends Controller {
                 $redisKey = $redisKey . $value[1];
             }
         }, 'UTF-8');
+        $result["data"] = $data;
         $redisKey = md5($redisKey);
         $redis = Redis::connection();
         if ($available) {
@@ -537,8 +533,7 @@ class BlacklistController extends Controller {
 //        $name = Blacklist::getName();
 //        $folder = date('Y/m/d') . '/';
 //        $src = $folder . $name . '.' . $extension;
-//        Storage::disk('local')->put($src, File::get($file));       
-        $result["data"] = $data;
+//        Storage::disk('local')->put($src, File::get($file));              
         Log::info("blacklist upload result is", $result);
         return $result;
     }
