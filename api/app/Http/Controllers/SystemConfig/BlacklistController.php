@@ -477,10 +477,15 @@ class BlacklistController extends Controller {
         $data = [];
         $redisKey = 'blacklist';
         $available = 1;
-        Excel::load($file->getPathname(), function($reader)use($param, &$data, &$redisKey,&$available) {
+        Excel::load($file->getPathname(), function($reader)use($param, &$data, &$redisKey, &$available) {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
+            if (is_array($array)) {
+                Log::info("blacklist upload array is", $array);
+            } else {
+                Log::info("blacklist upload array is". $array);
+            }
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
                     continue;
@@ -494,7 +499,7 @@ class BlacklistController extends Controller {
                         }
 
                         $data[$key]["blacklistStatus"] = Blacklist::getStatusbyUserMobile($value[1]);
-                        if ($data[$key]['isMobilephone']==0 || $data[$key]["blacklistStatus"]==1) {
+                        if ($data[$key]['isMobilephone'] == 0 || $data[$key]["blacklistStatus"] == 1) {
                             $available = 0;
                         }
 
@@ -643,8 +648,8 @@ class BlacklistController extends Controller {
         $data = json_decode($data);
         $date = date('Y-m-d H:i:s');
         foreach ($data as $key => $value) {
-           $data[$key]["created_at"]=$date;
-           $data[$key]["updated_at"]=$date;
+            $data[$key]["created_at"] = $date;
+            $data[$key]["updated_at"] = $date;
         }
         Log::info('BlackList data is: ', $data);
 
