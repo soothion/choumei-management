@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 Use PDO;
 Use URL;
+use Log;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
@@ -147,6 +148,7 @@ class Warning extends Model {
 
     public static function format_export_data($datas, $keywordType) {
         $res = [];
+        Log::info("waring data is", $datas);
         foreach ($datas as $key => $data) {
             switch ($keywordType) {
                 case "0" : // 用户手机号				
@@ -161,9 +163,10 @@ class Warning extends Model {
                 default:
                     throw new ApiException('预警查询无此类别！', 1);
             }
-            $loginNum = isset($data['loginNum']) ? $data['loginNum'] : '0';
-            $payNum = isset($data['payNum']) ? $data['payNum'] : '0';
-            $orderNum = isset($data['orderNum']) ? $data['orderNum'] : '0';
+            
+            $loginNum = !empty($data['loginNum']) ? $data['loginNum'] : '0';
+            $payNum = !empty($data['payNum']) ? $data['payNum'] : '0';
+            $orderNum = !empty($data['orderNum']) ? $data['orderNum'] : '0';
             $res[] = [
                 $key + 1,
                 $keyword,
