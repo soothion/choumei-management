@@ -481,6 +481,7 @@ class BlacklistController extends Controller {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
+            Log::info("blacklist upload array is", $array);
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
                     continue;
