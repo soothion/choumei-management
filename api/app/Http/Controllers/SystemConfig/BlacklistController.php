@@ -482,12 +482,10 @@ class BlacklistController extends Controller {
             $array = $reader->toArray();
             array_shift($array);
             foreach ($array as $key => $value) {
-                if (empty($value[1]))
-                    continue;
                 switch ($param['keywordType']) {
                     case "0" : // 用户手机号				
                         $data[$key]['userInfo'] = $value[1];
-                        if (preg_match("/1[3458]{1}\d{9}$/", $value[1])) {
+                        if (preg_match("/^1[3458]{1}\d{9}$/", $value[1])) {
                             $data[$key]['isMobilephone'] = 1;
                         } else {
                             $data[$key]['isMobilephone'] = 0;
@@ -502,14 +500,14 @@ class BlacklistController extends Controller {
                     case "1" : // 设备号
                         $data[$key]['userInfo'] = $value[1];
                         $data[$key]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($value[1]);
-                        if ($data[$key]["blacklistStatus"]) {
+                        if ($data[$key]["blacklistStatus"]||$data[$key]["blacklistStatus"]=='') {
                             $available = 0;
                         }
                         break;
                     case "2" ://openid
                         $data[$key]['userInfo'] = $value[1];
                         $data[$key]["blacklistStatus"] = Blacklist::getStatusbyOpenId($value[1]);
-                        if ($data[$key]["blacklistStatus"]) {
+                        if ($data[$key]["blacklistStatus"]||$data[$key]["blacklistStatus"]=='') {
                             $available = 0;
                         }
                         break;
