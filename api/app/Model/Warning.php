@@ -30,7 +30,7 @@ class Warning extends Model {
 
             case "0" : // 用户手机号		
                 $fields = [DB::raw("COUNT(cm_order.user_id) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "user.mobilephone as userMobile", "order.user_id as userId"];
-                $query->select($fields)->join('user', 'user.user_id', '=', 'order.user_id')->groupBy('order.user_id')->having(DB::raw("COUNT(cm_order.user_id)"), '>', $orderNum);
+                $query->select($fields)->join('user', 'user.user_id', '=', 'order.user_id')->groupBy('order.user_id')->having(DB::raw("COUNT(cm_order.user_id)"), '>=', $orderNum);
                 if (!empty($val)) {
                     $query->where('user.mobilephone', 'like', '%' . $val . '%');
                 }
@@ -39,7 +39,7 @@ class Warning extends Model {
             case "2" : // openId
 
                 $fields = [DB::raw("COUNT(cm_request_log.OPENID) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.OPENID as openId"];
-                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.OPENID')->having(DB::raw("COUNT(cm_request_log.OPENID)"), '>', $orderNum);
+                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.OPENID')->having(DB::raw("COUNT(cm_request_log.OPENID)"), '>=', $orderNum);
                 if (!empty($val)) {
                     $query->where('request_log.OPENID', 'like', '%' . $val . '%');
                 }
@@ -47,7 +47,7 @@ class Warning extends Model {
                 break;
             case "1" ://设备号
                 $fields = [DB::raw("COUNT(cm_request_log.DEVICE_UUID) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.DEVICE_UUID as device"];
-                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(cm_request_log.DEVICE_UUID)"), '>', $orderNum);
+                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(cm_request_log.DEVICE_UUID)"), '>=', $orderNum);
                 if (!empty($val)) {
                     $query->where('request_log.DEVICE_UUID', 'like', '%' . $val . '%');
                 }
