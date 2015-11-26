@@ -29,8 +29,8 @@ class Warning extends Model {
         switch ($input ["keywordType"]) {
 
             case "0" : // 用户手机号		
-                $fields = [DB::raw("COUNT(cm_order.user_id) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "user.mobilephone as userMobile", "order.user_id as userId"];
-                $query->select($fields)->join('user', 'user.user_id', '=', 'order.user_id')->groupBy('order.user_id')->having(DB::raw("COUNT(cm_order.user_id)"), '>=', $orderNum);
+                $fields = [DB::raw("COUNT(DISTINCT cm_order.ordersn) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "user.mobilephone as userMobile", "order.user_id as userId"];
+                $query->select($fields)->join('user', 'user.user_id', '=', 'order.user_id')->groupBy('order.user_id')->having(DB::raw("COUNT(DISTINCT cm_order.ordersn)"), '>=', $orderNum);
                 if (!empty($val)) {
                     $query->where('user.mobilephone', 'like', '%' . $val . '%');
                 }
@@ -38,16 +38,16 @@ class Warning extends Model {
                 break;
             case "2" : // openId
 
-                $fields = [DB::raw("COUNT(cm_request_log.OPENID) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.OPENID as openId"];
-                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.OPENID')->having(DB::raw("COUNT(cm_request_log.OPENID)"), '>=', $orderNum);
+                $fields = [DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.OPENID as openId"];
+                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.OPENID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum);
                 if (!empty($val)) {
                     $query->where('request_log.OPENID', 'like', '%' . $val . '%');
                 }
 
                 break;
             case "1" ://设备号
-                $fields = [DB::raw("COUNT(cm_request_log.DEVICE_UUID) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.DEVICE_UUID as device"];
-                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(cm_request_log.DEVICE_UUID)"), '>=', $orderNum);
+                $fields = [DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.DEVICE_UUID as device"];
+                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum);
                 if (!empty($val)) {
                     $query->where('request_log.DEVICE_UUID', 'like', '%' . $val . '%');
                 }
@@ -98,7 +98,7 @@ class Warning extends Model {
                 $query->where('order.add_time', '<=', $maxTime);
             }
         }
-        $fields = [DB::raw("COUNT(DISTINCT shopcartsn)+SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END)-(CASE WHEN SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END) = 0 THEN 0 ELSE 1 END) as payNum"), DB::raw("COUNT(cm_order.user_id) as orderNum"),"order.user_id as userId"];
+        $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_order.ordersn) as orderNum"),"order.user_id as userId"];
         return $query->select($fields)->join('user', 'user.user_id', '=', 'order.user_id')->where('user.user_id', '=', $userId)->where('order.ispay', '=', 2)->first();
         
     }
@@ -119,7 +119,7 @@ class Warning extends Model {
                 $query->where('order.add_time', '<=', $maxTime);
             }
         }
-        $fields = [DB::raw("COUNT(DISTINCT shopcartsn)+SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END)-(CASE WHEN SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END) = 0 THEN 0 ELSE 1 END) as payNum"), DB::raw("COUNT(cm_request_log.OPENID) as orderNum"), "request_log.OPENID as openId"];
+        $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), "request_log.OPENID as openId"];
         return $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->where('request_log.OPENID', '=', $openId)->where('order.ispay', '=', 2)->first();
         
     }
@@ -140,7 +140,7 @@ class Warning extends Model {
                 $query->where('order.add_time', '<=', $maxTime);
             }
         }
-        $fields = [DB::raw("COUNT(DISTINCT shopcartsn)+SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END)-(CASE WHEN SUM(CASE WHEN shopcartsn = '' THEN 1 ELSE 0 END) = 0 THEN 0 ELSE 1 END) as payNum"), DB::raw("COUNT(cm_request_log.DEVICE_UUID) as orderNum"), "request_log.DEVICE_UUID as device"];
+        $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), "request_log.DEVICE_UUID as device"];
         return $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->where('request_log.DEVICE_UUID', '=', $device)->where('order.ispay', '=', 2)->first();
         
     }
