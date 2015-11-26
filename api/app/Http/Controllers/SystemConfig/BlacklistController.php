@@ -481,40 +481,44 @@ class BlacklistController extends Controller {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
+            $n=0;
             foreach ($array as $key => $value) {
+                if (empty($value[1]))
+                    continue;
+                $n=$n+1;
                 switch ($param['keywordType']) {
                     case "0" : // 用户手机号				
-                        $data[$key]['userInfo'] = $value[1];
+                        $data[$n]['userInfo'] = $value[1];
                         if (preg_match("/^1[3458]{1}\d{9}$/", $value[1])) {
-                            $data[$key]['isMobilephone'] = 1;
+                            $data[$n]['isMobilephone'] = 1;
                         } else {
-                            $data[$key]['isMobilephone'] = 0;
+                            $data[$n]['isMobilephone'] = 0;
                         }
 
-                        $data[$key]["blacklistStatus"] = Blacklist::getStatusbyUserMobile($value[1]);
-                        if ($data[$key]['isMobilephone'] == 0 || $data[$key]["blacklistStatus"] == 1) {
+                        $data[$n]["blacklistStatus"] = Blacklist::getStatusbyUserMobile($value[1]);
+                        if ($data[$n]['isMobilephone'] == 0 || $data[$n]["blacklistStatus"] == 1) {
                             $available = 0;
                         }
 
                         break;
                     case "1" : // 设备号
-                        $data[$key]['userInfo'] = $value[1];
-                        $data[$key]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($value[1]);
-                        if ($data[$key]["blacklistStatus"]||$data[$key]["blacklistStatus"]=='') {
+                        $data[$n]['userInfo'] = $value[1];
+                        $data[$n]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($value[1]);
+                        if ($data[$n]["blacklistStatus"]||$data[$n]["blacklistStatus"]=='') {
                             $available = 0;
                         }
                         break;
                     case "2" ://openid
-                        $data[$key]['userInfo'] = $value[1];
-                        $data[$key]["blacklistStatus"] = Blacklist::getStatusbyOpenId($value[1]);
-                        if ($data[$key]["blacklistStatus"]||$data[$key]["blacklistStatus"]=='') {
+                        $data[$n]['userInfo'] = $value[1];
+                        $data[$n]["blacklistStatus"] = Blacklist::getStatusbyOpenId($value[1]);
+                        if ($data[$n]["blacklistStatus"]||$data[$n]["blacklistStatus"]=='') {
                             $available = 0;
                         }
                         break;
                     default:
                         throw new ApiException('黑名单无此类别！', ERROR::Blacklist_KeywordType_Notfound);
                 }
-                $data[$key]['note'] = $value[2];
+                $data[$n]['note'] = $value[2];
                 $redisKey = $redisKey . $value[1];
             }
         }, 'GBK');
