@@ -161,9 +161,9 @@ class Warning extends Model {
                 default:
                     throw new ApiException('预警查询无此类别！', 1);
             }
-            $loginNum = isset($data['loginNum']) ? $data['loginNum'] : '';
-            $payNum = isset($data['payNum']) ? $data['payNum'] : '';
-            $orderNum = isset($data['orderNum']) ? $data['orderNum'] : '';
+            $loginNum = isset($data['loginNum']) ? $data['loginNum'] : '0';
+            $payNum = isset($data['payNum']) ? $data['payNum'] : '0';
+            $orderNum = isset($data['orderNum']) ? $data['orderNum'] : '0';
             $res[] = [
                 $key + 1,
                 $keyword,

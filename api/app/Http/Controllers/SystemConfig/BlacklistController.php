@@ -519,7 +519,7 @@ class BlacklistController extends Controller {
                 $data[$key]['note'] = $value[2];
                 $redisKey = $redisKey . $value[1];
             }
-        }, 'UTF-8//IGNORE');
+        }, 'GBK');
         $result["data"] = $data;
         $redisKey = md5($redisKey);
         $redis = Redis::connection();
