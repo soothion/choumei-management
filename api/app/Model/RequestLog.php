@@ -42,6 +42,7 @@ class RequestLog  extends Model{
                 $query = $query->where('update_time','<=', $param['maxTime'].' 24');    
          }
          
+         $query = $query->where('type','=','LGN');        
          $sortable_keys=['update_time','mobilephone','version'];
          $sortKey = "update_time";
          $sortType = "DESC";
@@ -59,7 +60,7 @@ class RequestLog  extends Model{
          AbstractPaginator::currentPageResolver(function() use ($page) {
   	    return $page;
   	 });
-         $fields=['openid','mobilephone','username','device_uuid','update_time','device_os','version','device_type','type'];
+         $fields=['openid','mobilephone','username','device_uuid','update_time','device_os','version','device_type'];
           
          $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->paginate($page_size)->toArray();
          
@@ -68,9 +69,6 @@ class RequestLog  extends Model{
              {
                 $result["data"][$key]->version="微信公众号（H5）";
              }  
-             if($value->type!="LGN"||$value->device_type!="WECHAT"){
-                $result["data"][$key]->openid="";
-             }
          }
          unset($result['next_page_url']);
          unset($result['prev_page_url']);
