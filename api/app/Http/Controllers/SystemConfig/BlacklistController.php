@@ -481,7 +481,7 @@ class BlacklistController extends Controller {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
-            $n=0;
+            $n=-1;
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
                     continue;
