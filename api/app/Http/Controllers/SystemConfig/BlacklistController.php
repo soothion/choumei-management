@@ -651,7 +651,7 @@ class BlacklistController extends Controller {
             switch ($param['keywordType']) {
                 case "0" : // 用户手机号				
                     $insertDatas["mobilephone"] = $value["userInfo"];
-                    if ($value["blacklistStatus"] == 1) {
+                    if (Blacklist::getStatusbyUserMobile($value["userInfo"])) {
                         $result = Blacklist::where("mobilephone", '=', $value["userInfo"])->update($insertDatas);
                     } else {
                         $result = Blacklist::insert($insertDatas);
@@ -663,7 +663,7 @@ class BlacklistController extends Controller {
                     break;
                 case "1" : // 设备号
                     $insertDatas["device_uuid"] = $value["userInfo"];
-                    if ($value["blacklistStatus"] == 1) {
+                    if (Blacklist::getStatusbyUserDevice($value["userInfo"])) {
                         $result = Blacklist::where("device_uuid", '=', $value["userInfo"])->update($insertDatas);
                     } else {
                         $result = Blacklist::insert($insertDatas);
@@ -676,7 +676,7 @@ class BlacklistController extends Controller {
                     break;
                 case "2" ://openid
                     $insertDatas["openid"] = $value["userInfo"];
-                    if ($value["blacklistStatus"] == 1) {
+                    if (Blacklist::getStatusbyOpenId($value["userInfo"])==1) {
                         $result = Blacklist::where("openid", '=', $value["userInfo"])->update($insertDatas);
                     } else {
                         $result = Blacklist::insert($insertDatas);
