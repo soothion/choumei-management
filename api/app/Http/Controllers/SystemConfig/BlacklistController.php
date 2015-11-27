@@ -504,14 +504,14 @@ class BlacklistController extends Controller {
                     case "1" : // 设备号
                         $data[$n]['userInfo'] = $value[1];
                         $data[$n]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($value[1]);
-                        if ($data[$n]["blacklistStatus"]||$data[$n]["blacklistStatus"]=='') {
+                        if ($data[$n]["blacklistStatus"]== 1) {
                             $available = 0;
                         }
                         break;
                     case "2" ://openid
                         $data[$n]['userInfo'] = $value[1];
                         $data[$n]["blacklistStatus"] = Blacklist::getStatusbyOpenId($value[1]);
-                        if ($data[$n]["blacklistStatus"]||$data[$n]["blacklistStatus"]=='') {
+                        if ($data[$n]["blacklistStatus"]== 1) {
                             $available = 0;
                         }
                         break;
