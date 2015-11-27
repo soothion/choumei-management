@@ -656,6 +656,7 @@ class BlacklistController extends Controller {
                     } else {
                         $result = Blacklist::insert($insertDatas);
                     }
+                    Log::info("submit result is".$result);
                     if (!$result) {
                         throw new ApiException('黑名单部分提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
                     }
@@ -667,9 +668,11 @@ class BlacklistController extends Controller {
                     } else {
                         $result = Blacklist::insert($insertDatas);
                     }
+                    Log::info("submit result is".$result);
                     if (!$result) {
                         throw new ApiException('黑名单部分提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
                     }
+                    
                     break;
                 case "2" ://openid
                     $insertDatas["openid"] = $value["userInfo"];
@@ -678,9 +681,11 @@ class BlacklistController extends Controller {
                     } else {
                         $result = Blacklist::insert($insertDatas);
                     }
+                    Log::info("submit result is".$result);
                     if (!$result) {
                         throw new ApiException('黑名单部分提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
                     }
+                    
                     break;
                 default:
                     throw new ApiException('黑名单无此类别！', ERROR::Blacklist_KeywordType_Notfound);
