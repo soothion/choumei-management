@@ -646,7 +646,10 @@ class BlacklistController extends Controller {
         $date = date('Y-m-d H:i:s');
         $resultMsg="黑名单导入成功！";
         foreach ($data as $key => $value) {
-            $insertDatas["note"] = $value["note"];
+            if(isset($value["note"]))
+            {
+                $insertDatas["note"] = $value["note"];
+            }
             $insertDatas["created_at"] = $date;
             $insertDatas['updated_at'] = $date;
             switch ($param['keywordType']) {
