@@ -495,7 +495,7 @@ class BlacklistController extends Controller {
                             $data[$n]['isMobilephone'] = 0;
                         }
 
-//                        $data[$n]["blacklistStatus"] = Blacklist::getStatusbyUserMobile($value[1]);
+                        $data[$n]["blacklistStatus"] = Blacklist::getStatusbyUserMobile($value[1]);
                         if ($data[$n]['isMobilephone'] == 0) {
                             $available = 0;
                         }
@@ -644,7 +644,6 @@ class BlacklistController extends Controller {
         }
         $data = unserialize($data);
         $date = date('Y-m-d H:i:s');
-        Log::info("submit data is",$data);
         foreach ($data as $key => $value) {
             $insertDatas["note"] = $value["note"];
             $insertDatas["created_at"] = $date;
