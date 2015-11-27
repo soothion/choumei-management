@@ -644,6 +644,7 @@ class BlacklistController extends Controller {
         }
         $data = unserialize($data);
         $date = date('Y-m-d H:i:s');
+        $resultMsg="黑名单导入成功！";
         foreach ($data as $key => $value) {
             $insertDatas["note"] = $value["note"];
             $insertDatas["created_at"] = $date;
@@ -656,9 +657,8 @@ class BlacklistController extends Controller {
                     } else {
                         $result = Blacklist::insert($insertDatas);
                     }
-                    Log::info("submit result is".$result);
                     if (!$result) {
-                        throw new ApiException('黑名单部分提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
+                        $resultMsg='黑名单部分提交失败!';
                     }
                     break;
                 case "1" : // 设备号
@@ -668,9 +668,8 @@ class BlacklistController extends Controller {
                     } else {
                         $result = Blacklist::insert($insertDatas);
                     }
-                    Log::info("submit result is".$result);
                     if (!$result) {
-                        throw new ApiException('黑名单部分提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
+                        $resultMsg='黑名单部分提交失败!';
                     }
                     
                     break;
@@ -681,9 +680,8 @@ class BlacklistController extends Controller {
                     } else {
                         $result = Blacklist::insert($insertDatas);
                     }
-                    Log::info("submit result is".$result);
                     if (!$result) {
-                        throw new ApiException('黑名单部分提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
+                        $resultMsg='黑名单部分提交失败!';
                     }
                     
                     break;
@@ -692,7 +690,7 @@ class BlacklistController extends Controller {
             }
         }
         
-        return $data["msg"] = "黑名单导入成功!";
+        return $data["msg"] = $resultMsg;
     }
 
     /**
