@@ -526,7 +526,7 @@ class BlacklistController extends Controller {
         $redisKey = md5($redisKey);
         $redis = Redis::connection();
         if ($available) {
-            $redis->setex($redisKey, 3600 * 24, json_encode($data));
+            $redis->setex($redisKey, 3600 * 24, serialize($data));
             $result["redisKey"] = $redisKey;
         } else {
             $redis->setex($redisKey, 3600 * 24, 0);
@@ -642,15 +642,31 @@ class BlacklistController extends Controller {
         if (!$data) {
             throw new ApiException('黑名单提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
         }
-        $data = json_decode($data);
+        $data = unserialize($data);
         $date = date('Y-m-d H:i:s');
+        $insertDatas=[];
         foreach ($data as $key => $value) {
-            $data[$key]["created_at"] = $date;
-            $data[$key]["updated_at"] = $date;
-        }
-        Log::info('BlackList data is: ', $data);
+            switch ($param['keywordType']) {
+                    case "0" : // 用户手机号				
+                        $insertDatas[$key]["mobilephone"] = $value["userInfo"];
 
-        $result = Blacklist::insert($data);
+                        break;
+                    case "1" : // 设备号
+                        $insertDatas[$key]["device_uuid"] = $value["userInfo"];
+                        break;
+                    case "2" ://openid
+                        $insertDatas[$key]["openid"] = $value["userInfo"];
+                        break;
+                    default:
+                        throw new ApiException('黑名单无此类别！', ERROR::Blacklist_KeywordType_Notfound);
+                }
+            $insertDatas[$key]["note"] = $value["note"];
+            $insertDatas[$key]["created_at"] = $date;
+            $insertDatas[$key]['updated_at'] = $date;
+        }
+        Log::info('BlackList insertDatas is: ', $insertDatas);
+
+        $result = Blacklist::insert($insertDatas);
         if ($result)
             return $data["msg"] = "黑名单导入成功!";
         throw new ApiException('黑名单提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
