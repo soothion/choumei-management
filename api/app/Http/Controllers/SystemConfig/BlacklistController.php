@@ -481,11 +481,13 @@ class BlacklistController extends Controller {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
-            $n=-1;
+            $n = -1;
+            $value1 = [];
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
                     continue;
-                $n=$n+1;
+                $n = $n + 1;
+                $value1[$key] = $value[1];
                 switch ($param['keywordType']) {
                     case "0" : // 用户手机号				
                         $data[$n]['userInfo'] = $value[1];
@@ -504,14 +506,14 @@ class BlacklistController extends Controller {
                     case "1" : // 设备号
                         $data[$n]['userInfo'] = $value[1];
                         $data[$n]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($value[1]);
-                        if ($data[$n]["blacklistStatus"]== 1) {
+                        if ($data[$n]["blacklistStatus"] == 1) {
                             $available = 0;
                         }
                         break;
                     case "2" ://openid
                         $data[$n]['userInfo'] = $value[1];
                         $data[$n]["blacklistStatus"] = Blacklist::getStatusbyOpenId($value[1]);
-                        if ($data[$n]["blacklistStatus"]== 1) {
+                        if ($data[$n]["blacklistStatus"] == 1) {
                             $available = 0;
                         }
                         break;
@@ -520,6 +522,9 @@ class BlacklistController extends Controller {
                 }
                 $data[$n]['note'] = $value[2];
                 $redisKey = $redisKey . $value[1];
+            }
+            if (count($value1) != count(array_unique($value1))) {
+                $available = 0;
             }
         }, 'GBK');
         $result["data"] = $data;
@@ -644,22 +649,22 @@ class BlacklistController extends Controller {
         }
         $data = unserialize($data);
         $date = date('Y-m-d H:i:s');
-        $insertDatas=[];
+        $insertDatas = [];
         foreach ($data as $key => $value) {
             switch ($param['keywordType']) {
-                    case "0" : // 用户手机号				
-                        $insertDatas[$key]["mobilephone"] = $value["userInfo"];
+                case "0" : // 用户手机号				
+                    $insertDatas[$key]["mobilephone"] = $value["userInfo"];
 
-                        break;
-                    case "1" : // 设备号
-                        $insertDatas[$key]["device_uuid"] = $value["userInfo"];
-                        break;
-                    case "2" ://openid
-                        $insertDatas[$key]["openid"] = $value["userInfo"];
-                        break;
-                    default:
-                        throw new ApiException('黑名单无此类别！', ERROR::Blacklist_KeywordType_Notfound);
-                }
+                    break;
+                case "1" : // 设备号
+                    $insertDatas[$key]["device_uuid"] = $value["userInfo"];
+                    break;
+                case "2" ://openid
+                    $insertDatas[$key]["openid"] = $value["userInfo"];
+                    break;
+                default:
+                    throw new ApiException('黑名单无此类别！', ERROR::Blacklist_KeywordType_Notfound);
+            }
             $insertDatas[$key]["note"] = $value["note"];
             $insertDatas[$key]["created_at"] = $date;
             $insertDatas[$key]['updated_at'] = $date;
