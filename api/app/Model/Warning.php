@@ -40,7 +40,7 @@ class Warning extends Model {
             case "2" : // openId
 
                 $fields = [DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.OPENID as openId"];
-                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.OPENID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum);
+                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.OPENID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.OPENID");
                 if (!empty($val)) {
                     $query->where('request_log.OPENID', 'like', '%' . $val . '%');
                 }
@@ -48,7 +48,7 @@ class Warning extends Model {
                 break;
             case "1" ://设备号
                 $fields = [DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.DEVICE_UUID as device"];
-                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum);
+                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.DEVICE_UUID");
                 if (!empty($val)) {
                     $query->where('request_log.DEVICE_UUID', 'like', '%' . $val . '%');
                 }
