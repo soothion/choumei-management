@@ -19,19 +19,19 @@
                     <a href="coupon_list.html" class="btn" data-slug="coupon.add">
                         打印
                     </a>
-                    <a class="btn" data-slug="coupon.add">
+                    <a class="btn" data-modal='receive' data-slug="coupon.add">
                          接待
                     </a>
-                    <a class="btn" data-slug="coupon.add">
+                    <a class="btn" data-modal='cashier' data-slug="coupon.add">
                          收银
                     </a>
-                    <a class="btn" data-slug="coupon.add">
+                    <a class="btn" data-modal='receipt' data-modal='' data-slug="coupon.add">
                          补开发票
                     </a>
-                    <a class="btn" data-slug="coupon.add">
+                    <a class="btn" data-modal='comp-color' data-slug="coupon.add">
                          补色
                     </a>
-                    <a href="index.html" class="btn" data-slug="coupon.add">
+                    <a href="index.html" data-modal='refund' class="btn" data-slug="coupon.add">
                          退款
                     </a>
                     <a href="index.html" class="btn" data-slug="coupon.add">
@@ -269,34 +269,39 @@
                     'receive':{
                       'title':'用户接待记录',
                       'cancelText':'取消',
-                      'defineText':'保存'
+                      'defineText':'保存',
+                      'confirm':true
                     },
-                    'receive':{
+                    'cashier':{
                       'title':'确认收银',
                       'cancelText':'取消',
-                      'defineText':'确认收银'
+                      'defineText':'确认收银',
+                      'confirm':true
                     },
-                    'receive':{
+                    'comp-color':{
                       'title':'用户补色记录',
                       'cancelText':'取消',
-                      'defineText':'保存'
+                      'defineText':'保存',
+                      'confirm':true
                     },
-                    'receive':{
+                    'refund':{
                       'title':'退款',
                       'cancelText':'取消',
-                      'defineText':'确认退款'
+                      'defineText':'确认退款',
+                      'confirm':true
                     }
-                  }
+                  };
 
                   var bindEvent = function(){
                     $('body').on('click','a[data-modal]',function(){
                       var modal= $(this).attr('data-modal');
-                      initModal(ModalList.modal);
+                      initModal(ModalList[modal]);
                     });
                   }();
 
                   var initModal = function(options){
-                      lib.tools.popup.box(options);
+                    console.log(options)
+                      lib.popup.box(options);
                   }
                  </script>
             </div>
