@@ -64,7 +64,7 @@
             <td><%=item.device_uuid%></td>
             <td><%=item.created_at%></td>
             <td><%=item.note%></td>
-            <td><form action="blacklist/deviceRemove/<%=item.id%>" data-role="normal" onsuccess="location.reload()"><button data-slug="blacklist.deviceRemove" href="" class="link btn-clear">移出黑名单</button></form></td>
+            <td><form action="blacklist/deviceRemove/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})"><button data-slug="blacklist.deviceRemove" href="" class="link btn-clear">移出黑名单</button></form></td>
           </tr>
         <%})%>
         </tbody>

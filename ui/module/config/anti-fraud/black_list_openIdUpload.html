@@ -42,7 +42,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <%console.log(data)%>
                 <%data.data && data.data.forEach(function(item,index){%>
                   <tr>
                     <td><%=index+1%></td>
@@ -67,7 +66,7 @@
                     browse_button: 'uploadFile',
                     auto_start:true,
                     file_data_name:"blacklist",
-                    domain:cfg.url.host+'blacklist/openIdUpload?token='+window.localStorage.getItem('token'),
+                    domain:cfg.url.host+'blacklist/openidUpload?token='+window.localStorage.getItem('token'),
                     filters: {
                         mime_types : [
                             { title : "Excel file", extensions : "xls,xlsx,csv" },

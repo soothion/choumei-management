@@ -53,13 +53,12 @@
         </thead>
         <tbody>
         <%data.data && data.data.forEach(function(item,index){%>
-            <%console.log(item)%>
           <tr>
             <td><%=index+1%></td>
             <td><%=item.openid%></td>
             <td><%=item.created_at%></td>
             <td><%=item.note%></td>
-            <td><form action="blacklist/openidRemove/<%=item.id%>" data-role="normal" onsuccess="location.reload()"><button data-slug="blacklist.openidRemove" href="" class="link btn-clear">移出黑名单</button></form></td>
+            <td><form action="blacklist/openidRemove/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})"><button data-slug="blacklist.openidRemove" href="" class="link btn-clear">移出黑名单</button></form></td>
           </tr>
         <%})%>
         </tbody>

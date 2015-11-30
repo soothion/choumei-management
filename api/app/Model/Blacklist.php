@@ -22,13 +22,13 @@ class Blacklist extends Model {
         if (isset($input['keywordType']))
             switch ($input ["keywordType"]) {
                 case "0" : // 用户手机号				
-                    $query->whereNotNull('mobilephone');
+                    $query->whereNotNull('mobilephone')->where('mobilephone','<>','');
                     break;
                 case "1" : // 设备号
-                    $query->whereNotNull('device_uuid');
+                    $query->whereNotNull('device_uuid')->where('device_uuid','<>','');
                     break;
                 case "2" ://openid
-                    $query->whereNotNull('openid');
+                    $query->whereNotNull('openid')->where('openid','<>','');
                     break;
                 default:
                     throw new ApiException('黑名单无此类别！', 1);

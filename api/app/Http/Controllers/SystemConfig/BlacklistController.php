@@ -481,54 +481,52 @@ class BlacklistController extends Controller {
             $reader = $reader->getSheet(0);
             $array = $reader->toArray();
             array_shift($array);
-            if (is_array($array)) {
-                Log::info("blacklist upload array is", $array);
-            } else {
-                Log::info("blacklist upload array is". $array);
-            }
+            $n = -1;
             foreach ($array as $key => $value) {
                 if (empty($value[1]))
                     continue;
+                $n = $n + 1;
                 switch ($param['keywordType']) {
                     case "0" : // 用户手机号				
-                        $data[$key]['userInfo'] = $value[1];
-                        if (preg_match("/1[3458]{1}\d{9}$/", $value[1])) {
-                            $data[$key]['isMobilephone'] = 1;
+                        $data[$n]['userInfo'] = $value[1];
+                        if (preg_match("/^1[3458]{1}\d{9}$/", $value[1])) {
+                            $data[$n]['isMobilephone'] = 1;
                         } else {
-                            $data[$key]['isMobilephone'] = 0;
+                            $data[$n]['isMobilephone'] = 0;
                         }
 
-                        $data[$key]["blacklistStatus"] = Blacklist::getStatusbyUserMobile($value[1]);
-                        if ($data[$key]['isMobilephone'] == 0 || $data[$key]["blacklistStatus"] == 1) {
+                        $data[$n]["blacklistStatus"] = Blacklist::getStatusbyUserMobile($value[1]);
+                        if ($data[$n]['isMobilephone'] == 0) {
                             $available = 0;
                         }
 
                         break;
                     case "1" : // 设备号
-                        $data[$key]['userInfo'] = $value[1];
-                        $data[$key]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($value[1]);
-                        if ($data[$key]["blacklistStatus"]) {
-                            $available = 0;
-                        }
+                        $data[$n]['userInfo'] = $value[1];
+                        $data[$n]["blacklistStatus"] = Blacklist::getStatusbyUserDevice($value[1]);
+//                        if ($data[$n]["blacklistStatus"] == 1) {
+//                            $available = 0;
+//                        }
                         break;
                     case "2" ://openid
-                        $data[$key]['userInfo'] = $value[1];
-                        $data[$key]["blacklistStatus"] = Blacklist::getStatusbyOpenId($value[1]);
-                        if ($data[$key]["blacklistStatus"]) {
-                            $available = 0;
-                        }
+                        $data[$n]['userInfo'] = $value[1];
+                        $data[$n]["blacklistStatus"] = Blacklist::getStatusbyOpenId($value[1]);
+//                        if ($data[$n]["blacklistStatus"] == 1) {
+//                            $available = 0;
+//                        }
                         break;
                     default:
                         throw new ApiException('黑名单无此类别！', ERROR::Blacklist_KeywordType_Notfound);
                 }
-                $data[$key]['note'] = $value[2];
+                $data[$n]['note'] = $value[2];
                 $redisKey = $redisKey . $value[1];
             }
-        }, 'UTF-8');
+        }, 'GBK');
+        $result["data"] = $data;
         $redisKey = md5($redisKey);
         $redis = Redis::connection();
         if ($available) {
-            $redis->setex($redisKey, 3600 * 24, json_encode($data));
+            $redis->setex($redisKey, 3600 * 24, serialize($data));
             $result["redisKey"] = $redisKey;
         } else {
             $redis->setex($redisKey, 3600 * 24, 0);
@@ -537,8 +535,7 @@ class BlacklistController extends Controller {
 //        $name = Blacklist::getName();
 //        $folder = date('Y/m/d') . '/';
 //        $src = $folder . $name . '.' . $extension;
-//        Storage::disk('local')->put($src, File::get($file));       
-        $result["data"] = $data;
+//        Storage::disk('local')->put($src, File::get($file));              
         Log::info("blacklist upload result is", $result);
         return $result;
     }
@@ -645,18 +642,58 @@ class BlacklistController extends Controller {
         if (!$data) {
             throw new ApiException('黑名单提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
         }
-        $data = json_decode($data);
+        $data = unserialize($data);
         $date = date('Y-m-d H:i:s');
+        $resultMsg="黑名单导入成功！";
         foreach ($data as $key => $value) {
-            $data[$key]["created_at"] = $date;
-            $data[$key]["updated_at"] = $date;
+            if(isset($value["note"]))
+            {
+                $insertDatas["note"] = $value["note"];
+            }
+            $insertDatas["created_at"] = $date;
+            $insertDatas['updated_at'] = $date;
+            switch ($param['keywordType']) {
+                case "0" : // 用户手机号				
+                    $insertDatas["mobilephone"] = $value["userInfo"];
+                    if (Blacklist::getStatusbyUserMobile($value["userInfo"])) {
+                        $result = Blacklist::where("mobilephone", '=', $value["userInfo"])->update($insertDatas);
+                    } else {
+                        $result = Blacklist::insert($insertDatas);
+                    }
+                    if (!$result) {
+                        $resultMsg='黑名单部分提交失败!';
+                    }
+                    break;
+                case "1" : // 设备号
+                    $insertDatas["device_uuid"] = $value["userInfo"];
+                    if (Blacklist::getStatusbyUserDevice($value["userInfo"])) {
+                        $result = Blacklist::where("device_uuid", '=', $value["userInfo"])->update($insertDatas);
+                    } else {
+                        $result = Blacklist::insert($insertDatas);
+                    }
+                    if (!$result) {
+                        $resultMsg='黑名单部分提交失败!';
+                    }
+                    
+                    break;
+                case "2" ://openid
+                    $insertDatas["openid"] = $value["userInfo"];
+                    if (Blacklist::getStatusbyOpenId($value["userInfo"])==1) {
+                        $result = Blacklist::where("openid", '=', $value["userInfo"])->update($insertDatas);
+                    } else {
+                        $result = Blacklist::insert($insertDatas);
+                    }
+                    if (!$result) {
+                        $resultMsg='黑名单部分提交失败!';
+                    }
+                    
+                    break;
+                default:
+                    throw new ApiException('黑名单无此类别！', ERROR::Blacklist_KeywordType_Notfound);
+            }
         }
-        Log::info('BlackList data is: ', $data);
-
-        $result = Blacklist::insert($data);
-        if ($result)
-            return $data["msg"] = "黑名单导入成功!";
-        throw new ApiException('黑名单提交失败!', ERROR::Blacklist_UPLOAD_FAILED);
+        
+        return $data["msg"] = $resultMsg;
     }
 
     /**
