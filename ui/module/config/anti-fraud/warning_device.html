@@ -90,7 +90,7 @@
     $(function(){
       var max = new Date(new Date().getTime()-24*60*60*1000);
       // var max = new Date();
-      var min = new Date(max.getTime()-30*24*60*60*1000);
+      var min = new Date(new Date().getTime()-30*24*60*60*1000);
       $("input[date-start='start']").val(min.format("yyyy-MM-dd"));
       $("input[date-end='end']").val(max.format("yyyy-MM-dd"));
 
