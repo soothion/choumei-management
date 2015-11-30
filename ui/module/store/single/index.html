@@ -79,7 +79,7 @@
 				  <td><%=item.user?item.user.name:""%></td>	
 				  <td title="<%=item.remark%>"><%=item.remark.length>7?item.remark.substring(0,7)+"...":""%></td>  
 				  <td><%=state[item.state]%></td>
-                   <td><a class="link" target="_blank" href="detail.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a>				   
+                   <td><a class="link" href="detail.html?id=<%=item.id%>" data-slug="shop_count.show,shop_count.update">查看</a>				   
 				   </td>
                   </tr>
 				  <%})%>

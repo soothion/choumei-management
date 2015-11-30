@@ -18,13 +18,13 @@
    <div class="wrapper" ajat="pay_manage/show/<%=query.id%>#domid=form&tempid=form-t" id="form">
 		<script type="text/template" id="form-t">
 		<div class="detail-operation">
-			<form action="pay_manage/check" data-slug="pay_manage.check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){window.close()}});">
+			<form action="pay_manage/check" data-slug="pay_manage.check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){history.back()}});">
 				<button class="btn">审批</button>
 				<input type="hidden" name="ids" value="<%=query.id%>"/>
 				<input type="hidden" name="do" value="1" />
 			</form>
 			<span class="space"></span>
-			<form action="pay_manage/check"  data-slug="pay_manage.check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){window.close()}});">
+			<form action="pay_manage/check"  data-slug="pay_manage.check" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){history.back()}});">
 				<button class="btn">审批不通过</button>
 				<input type="hidden" name="ids" value="<%=query.id%>"/>
 				<input type="hidden" name="do" value="0" />

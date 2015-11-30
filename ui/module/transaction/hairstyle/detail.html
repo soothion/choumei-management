@@ -13,14 +13,14 @@
                 <div class="flex-item">
                     <h4>记录详情</h4>
                 </div>
+                <div class="flex-item">
+                    <button type="button" class="btn fr" onclick="history.back()">取消</button>
+                </div>                
             </div>
         </div>
         <div class="wrapper">
             <div class="table-detail" ajat="appointment/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
-				<script type="text/template" id="table-t">
-                <div class="detail-operation">
-                    <button class="btn" type="button" onclick="window.close()">关闭</button>  
-                </div>  
+				<script type="text/template" id="table-t"> 
                 <table>
                     <tbody>
                         <tr>
