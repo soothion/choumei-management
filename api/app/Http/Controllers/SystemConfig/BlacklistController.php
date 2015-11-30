@@ -646,18 +646,19 @@ class BlacklistController extends Controller {
         $date = date('Y-m-d H:i:s');
         $resultMsg="黑名单导入成功！";
         foreach ($data as $key => $value) {
+            $insertDatas=[];
             if(isset($value["note"]))
             {
                 $insertDatas["note"] = $value["note"];
             }
-            $insertDatas["created_at"] = $date;
-            $insertDatas['updated_at'] = $date;
             switch ($param['keywordType']) {
                 case "0" : // 用户手机号				
                     $insertDatas["mobilephone"] = $value["userInfo"];
                     if (Blacklist::getStatusbyUserMobile($value["userInfo"])) {
+                        $insertDatas['updated_at'] = $date;
                         $result = Blacklist::where("mobilephone", '=', $value["userInfo"])->update($insertDatas);
                     } else {
+                        $insertDatas["created_at"] = $date;
                         $result = Blacklist::insert($insertDatas);
                     }
                     if (!$result) {
@@ -667,8 +668,10 @@ class BlacklistController extends Controller {
                 case "1" : // 设备号
                     $insertDatas["device_uuid"] = $value["userInfo"];
                     if (Blacklist::getStatusbyUserDevice($value["userInfo"])) {
+                        $insertDatas['updated_at'] = $date;
                         $result = Blacklist::where("device_uuid", '=', $value["userInfo"])->update($insertDatas);
                     } else {
+                        $insertDatas["created_at"] = $date;
                         $result = Blacklist::insert($insertDatas);
                     }
                     if (!$result) {
@@ -679,8 +682,10 @@ class BlacklistController extends Controller {
                 case "2" ://openid
                     $insertDatas["openid"] = $value["userInfo"];
                     if (Blacklist::getStatusbyOpenId($value["userInfo"])==1) {
+                        $insertDatas['updated_at'] = $date;
                         $result = Blacklist::where("openid", '=', $value["userInfo"])->update($insertDatas);
                     } else {
+                        $insertDatas["created_at"] = $date;
                         $result = Blacklist::insert($insertDatas);
                     }
                     if (!$result) {
