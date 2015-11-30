@@ -83,7 +83,7 @@
                         <td><%=item.over_time%></td>                  
                         <td><%=map[item.status]%></td>
                         <td>
-							<a class="link" data-slug="bonus.show" target="_blank" href="detail.html?id=<%=item.order_ticket_id%>">查看&gt;</a>
+							<a class="link" data-slug="bonus.show" href="detail.html?id=<%=item.order_ticket_id%>">查看&gt;</a>
 							<%if(item.status=="Y"){%>
 							<span class="space"></span>
 							<form data-slug="bonus.close" action="bonus/close/<%=item.order_ticket_id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
