@@ -102,23 +102,13 @@
           setDate(min,max);
 
           $("input[date-end='end']").on('change',function(){
-              var max = new Date($(this).val());
-              var min = new Date(max.getTime()-30*24*60*60*1000);
-              var startDay = new Date($("input[date-start='start']").val());
-              if(startDay > max){
-                $("input[date-start='start']").val(min.format("yyyy-MM-dd"));
-              }
-              setDate(min,max);
+              var endDay = new Date($(this).val());
+              $("input[date-start='start']").attr('max',endDay.format("yyyy-MM-dd"));
           })
 
           $("input[date-start='start']").on('change',function(){
-              var min = new Date($(this).val());
-              var max = new Date(min.getTime()+30*24*60*60*1000);
-              var endDay = new Date($("input[date-end='end']").val());
-              if(endDay < min){
-                $("input[date-end='end']").val(max.format("yyyy-MM-dd"));
-              }
-              setDate(min,max);
+              var startDay = new Date($(this).val());
+              $("input[date-end='end']").attr('min',startDay.format("yyyy-MM-dd"));
           })
 
           function setDate (min,max) {
