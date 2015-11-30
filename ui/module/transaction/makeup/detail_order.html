@@ -264,6 +264,40 @@
                   var clearTmpData  = function(){
                       window.localStorage.removeItem('couponTmpData');
                   }
+
+                  var ModalList = {
+                    'receive':{
+                      'title':'用户接待记录',
+                      'cancelText':'取消',
+                      'defineText':'保存'
+                    },
+                    'receive':{
+                      'title':'确认收银',
+                      'cancelText':'取消',
+                      'defineText':'确认收银'
+                    },
+                    'receive':{
+                      'title':'用户补色记录',
+                      'cancelText':'取消',
+                      'defineText':'保存'
+                    },
+                    'receive':{
+                      'title':'退款',
+                      'cancelText':'取消',
+                      'defineText':'确认退款'
+                    }
+                  }
+
+                  var bindEvent = function(){
+                    $('body').on('click','a[data-modal]',function(){
+                      var modal= $(this).attr('data-modal');
+                      initModal(ModalList.modal);
+                    });
+                  }();
+
+                  var initModal = function(options){
+                      lib.tools.popup.box(options);
+                  }
                  </script>
             </div>
         </div>
