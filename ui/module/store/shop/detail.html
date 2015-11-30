@@ -37,8 +37,13 @@
                         <button class="btn">编辑</button>
                     </a>
                     &nbsp;
-					<%}%>					
-					<button class="btn" type="button" onclick="window.close()">关闭</button>
+					<%}%>	
+
+                    <%if(query.type=="preview"){%>      
+                        <button class="btn" type="button" onclick='window.close()'>关闭预览</button>
+                    <%}else{%> 
+    					<a class="btn" type="button" href='index.html'>取消</a>
+                    <%}%>               
                 </div>
             </div>
                     
