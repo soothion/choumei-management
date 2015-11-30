@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+        <style type="text/css">
+            .tc{
+                text-align: center !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>营销中心</a><span>&gt;</span><a href="index.html">定妆单查询</a>
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4> 定妆单查询 </h4>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <form data-role="hash">
+              <div class="input-group placeholder-switch">
+                   <select name="selectItem">
+                       <option value="0" data-placeholder="请输入手机号">手机号</option>
+                       <option value="1" data-placeholder="请输入预约号">预约号</option>
+                       <option value="2" data-placeholder="请输入推荐号">推荐号</option>
+                   </select>
+                   <input type="text" class="input-search" name="keyword" placeholder="请输入手机号">
+               </div>
+               <span class="space"></span>
+               <span>活动时间：</span>
+               <span class="date-group">
+                   <input type="date" data-role="start" name="startTime" placeholder="YYYY-MM-DD"/>
+                   至
+                   <input type="date" data-role="end" name="endTime" placeholder="YYYY-MM-DD"/>
+               </span>
+              <span class="space"></span>
+              <div class="input-group">
+                   <select name="selectItem">
+                       <option value="0">支付方式</option>
+                       <option value="1" >微信</option>
+                       <option value="2" >支付宝</option>
+                       <option value="3" >易联支付</option>
+                   </select>
+               </div>
+               <span class="space"></span>
+               <div class="input-group">
+                    <select name="selectItem">
+                        <option value="0">订单状态</option>
+                        <option value="1" >未消费</option>
+                        <option value="2" >已完成</option>
+                        <option value="2" >退款中</option>
+                        <option value="2" >已退款</option>
+                        <option value="2" >已补妆</option>
+                        <option value="2" >退款失败</option>
+                    </select>
+                </div>
+
+                <button class="btn" type="submit">查询</button>
+            </form>
+           <div class="table" ajat="coupon/list?<%=query._%>#domid=table&tempid=table-t" id="table">
+            <script type="text/template" id="table-t">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>手机号</th>
+                            <th>姓名</th>
+                            <th>预约项目</th>
+                            <th>预约金额</th>
+                            <th>预约单号</th>
+                            <th>预约日期</th>
+                            <th>推荐码</th>
+                            <th>支付方式</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                <tbody>
+                <%var data=data.data%>
+                <%data.forEach(function(item,index){%>
+                 <tr>
+                  <td><%=index+1%></td>
+                  <td><%=item.vcTitle%></td>
+                  <td><%=item.vcSn%></td>
+                  <td><%=item.totalNum%></td>
+                  <td><%=item.useNum%></td>
+                  <td><%=item.allNum%></td>
+                  <td><%=item.addTime%></td>
+                  <td><%=item.actTime%></td>
+                  <td><%=item.department%></td>
+                  <td><%=status[item.status]%></td>
+                  <td class="tc">
+                    <a class="link" data-slug="coupon.actView" href="detail_order.html#id=<%=item.vcId%>">查看</a>
+                  </td>
+                  </tr>
+                  <%})%>
+                </tbody>
+            </table>
+             <div class="pager"> </div>
+            </script>
+            <script type="text/javascript">
+
+               var clearTmpData  = function(){
+                   window.localStorage.removeItem('couponTmpData');
+               }
+
+               var confirmBox = function(options){
+                    lib.popup.confirm({
+                        text:options.text,
+                        define: function(){
+                            lib.ajax({
+                                url : options.url+options.id
+                            }).done(function(data, status, xhr){
+                                if(data.result == 1){
+                                    parent.lib.popup.result({
+                                        text:options.resultText,
+                                        define:function(){
+                                            location.reload();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+               }
+               var confirmBoxConfig = {
+                    'offline':{
+                        text:'确定将该活动下线吗？',
+                        url:'coupon/offlineConf/',
+                        resultText:'活动下线成功'
+                    },
+                    'online':{
+                        text:'确定将该活动上线吗？',
+                        url:'coupon/upConf/',
+                        resultText:'活动正在上线中...'
+                    },
+                    'close':{
+                        text:'确定将该活动关闭吗？',
+                        url:'coupon/closeConf/',
+                        resultText:'活动关闭成功'
+                    }
+               }
+               $('body').on('click','#offline',function(){
+                    var id = $(this).attr('data-id');
+                    confirmBoxConfig['offline'].id = id;
+                    confirmBox(confirmBoxConfig['offline']);
+
+               }).on('click','#online',function(){
+                    var id = $(this).attr('data-id');
+                    confirmBoxConfig['online'].id = id;
+                    confirmBox(confirmBoxConfig['online']);
+
+               }).on('click','#close',function(){
+                    var id = $(this).attr('data-id');
+                    confirmBoxConfig['close'].id = id;
+                    confirmBox(confirmBoxConfig['close']);
+               }).on('click','#add_new',function(){
+                    clearTmpData();
+                    window.location.href="addBase.html";
+               });
+            </script>
+        </div>
+            </div>
+    </body>
+</html>

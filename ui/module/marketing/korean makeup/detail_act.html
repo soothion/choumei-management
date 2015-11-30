@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>营销中心 </a>
+            <span>&gt;</span><a href="index.html">定妆赠送活动</a>
+            <span>&gt;</span>查看赠送活动
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>查看赠送活动</h4>
+                </div>
+                <div class="flex-item fr">
+                    <a href="coupon_list.html" class="btn fr" data-slug="coupon.add">
+                        查看卷详情
+                    </a>
+                    <a class="btn fr" data-slug="coupon.add">
+                         关闭验证
+                    </a>
+                    <a class="btn fr" data-slug="coupon.add">
+                         开启验证
+                    </a>
+                    <a class="btn fr" data-slug="coupon.add">
+                         关闭活动
+                    </a>
+                    <a class="btn fr" data-slug="coupon.add">
+                         开启活动
+                    </a>
+                    <a href="index.html" class="btn fr" data-slug="coupon.add">
+                         返回
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table table-detail" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
+                <script type="text/template" id='table-t'>
+                <table >
+                <%var status=["","进行中","下线","已关闭","已结束"]%>
+                    <tbody>
+                        <tr>
+                            <td class="td">活动名称：</td>
+                            <td><%=data.vcTitle%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">赠送项目：</td>
+                            <td>无痛水光针</td>
+                        </tr>
+                        <tr>
+                            <td class="td">赠送数量：</td>
+                            <td>4000</td>
+                        </tr>
+                        <tr>
+                            <td class="td">已使用数：</td>
+                            <td>1000</td>
+                        </tr>
+                        <tr>
+                            <td class="td">未使用数：</td>
+                            <td>3000</td>
+                        </tr>
+                        <tr>
+                            <td class="td">活动起始日：</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">活动截止日：</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">有效期：</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">申请部门：</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">负责人：</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">活动简介：</td>
+                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">创建人：</td>
+                            <td><%=status[data.status]%></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">创建时间：</td>
+                            <td><%=data.totalNum%></td>
+                        </tr>
+                    </tbody>
+                </table>
+                 </script>
+                 <script type="text/javascript">
+                  $('body').on('click','#edit_btn',function(){
+                        clearTmpData();
+                        var id = $(this).attr('data-id');
+                        window.location.href="addBase.html?id="+id;
+                  });
+                  var clearTmpData  = function(){
+                      window.localStorage.removeItem('couponTmpData');
+                  }
+                 </script>
+            </div>
+        </div>
+    </body>
+</html>
