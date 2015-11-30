@@ -26,7 +26,7 @@ class Warning extends Model {
             $val = addslashes($val);
             $val = str_replace(['_', '%'], ['\_', '\%'], $val);
         }
-        $orderNum=$input['orderNum'];
+        $orderNum = $input['orderNum'];
         switch ($input ["keywordType"]) {
 
             case "0" : // 用户手机号		
@@ -40,7 +40,10 @@ class Warning extends Model {
             case "2" : // openId
 
                 $fields = [DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.OPENID as openId"];
-                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.OPENID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.OPENID");
+                $query->select($fields)->join('request_log', function($join) {
+                        $join->on('request_log.ORDER_SN', '=', 'order.ordersn')->orOn('request_log.ORDER_SN', '=', 'order.shopcartsn');
+                    })
+                    ->groupBy('request_log.OPENID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.OPENID");
                 if (!empty($val)) {
                     $query->where('request_log.OPENID', 'like', '%' . $val . '%');
                 }
@@ -48,7 +51,9 @@ class Warning extends Model {
                 break;
             case "1" ://设备号
                 $fields = [DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.DEVICE_UUID as device"];
-                $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.DEVICE_UUID");
+                $query->select($fields)->join('request_log', function($join) {
+                    $join->on('request_log.ORDER_SN', '=', 'order.ordersn')->orOn('request_log.ORDER_SN', '=', 'order.shopcartsn');
+                })->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.DEVICE_UUID");
                 if (!empty($val)) {
                     $query->where('request_log.DEVICE_UUID', 'like', '%' . $val . '%');
                 }
@@ -99,18 +104,19 @@ class Warning extends Model {
                 $query->where('order.add_time', '<=', $maxTime);
             }
         }
-        $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_order.ordersn) as orderNum"),"order.user_id as userId"];
+        $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_order.ordersn) as orderNum"), "order.user_id as userId"];
         return $query->select($fields)->join('user', 'user.user_id', '=', 'order.user_id')->where('user.user_id', '=', $userId)->where('order.ispay', '=', 2)->first();
-        
     }
-    
+
     public static function getOderNumByOpenId($openId, $minTime, $maxTime) {
         $query = Self::getQuery();
+        $query1=Self::getQuery();
         //时间范围
         if (!empty($minTime)) {
             $minTime = strtotime($minTime);
             if ($minTime) {
                 $query->where('order.add_time', '>=', $minTime);
+                $query1->where('order.add_time', '>=', $minTime);
             }
         }
         if (!empty($maxTime)) {
@@ -118,20 +124,29 @@ class Warning extends Model {
             if ($maxTime) {
                 $maxTime += 86399;
                 $query->where('order.add_time', '<=', $maxTime);
+                $query1->where('order.add_time', '<=', $maxTime);
             }
         }
-        $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), "request_log.OPENID as openId"];
-        return $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->where('request_log.OPENID', '=', $openId)->where('order.ispay', '=', 2)->first();
         
+        $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_order.ordersn) as orderNum"), "request_log.OPENID as openId"];
+        $orderNum2 = $query1->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.shopcartsn')->where('request_log.OPENID', '=', $openId)->where('order.ispay', '=', 2)->first();
+        $orderNum1 = $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->where('request_log.OPENID', '=', $openId)->where('order.ispay', '=', 2)->first();
+        
+        $orderNum['payNum'] = $orderNum1['payNum'] + $orderNum2['payNum'];
+        $orderNum['orderNum'] = $orderNum1['orderNum'] + $orderNum2['orderNum'];
+        $orderNum['openId'] = $openId;
+        return $orderNum;
     }
-    
+
     public static function getOderNumByDevice($device, $minTime, $maxTime) {
         $query = Self::getQuery();
+        $query1=Self::getQuery();
         //时间范围
         if (!empty($minTime)) {
             $minTime = strtotime($minTime);
             if ($minTime) {
                 $query->where('order.add_time', '>=', $minTime);
+                $query1->where('order.add_time', '>=', $minTime);
             }
         }
         if (!empty($maxTime)) {
@@ -139,11 +154,16 @@ class Warning extends Model {
             if ($maxTime) {
                 $maxTime += 86399;
                 $query->where('order.add_time', '<=', $maxTime);
+                $query1->where('order.add_time', '>=', $minTime);
             }
         }
-        $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), "request_log.DEVICE_UUID as device"];
-        return $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->where('request_log.DEVICE_UUID', '=', $device)->where('order.ispay', '=', 2)->first();
-        
+        $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_order.ordersn) as orderNum"), "request_log.DEVICE_UUID as device"];
+        $orderNum1 = $query->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.ordersn')->where('request_log.DEVICE_UUID', '=', $device)->where('order.ispay', '=', 2)->first();
+        $orderNum2 = $query1->select($fields)->join('request_log', 'request_log.ORDER_SN', '=', 'order.shopcartsn')->where('request_log.DEVICE_UUID', '=', $device)->where('order.ispay', '=', 2)->first();
+        $orderNum['payNum'] = $orderNum1['payNum'] + $orderNum2['payNum'];
+        $orderNum['orderNum'] = $orderNum1['orderNum'] + $orderNum2['orderNum'];
+        $orderNum['device'] = $device;
+        return $orderNum;
     }
 
     public static function format_export_data($datas, $keywordType) {
@@ -163,7 +183,7 @@ class Warning extends Model {
                 default:
                     throw new ApiException('预警查询无此类别！', 1);
             }
-            
+
             $loginNum = !empty($data['loginNum']) ? $data['loginNum'] : '0';
             $payNum = !empty($data['payNum']) ? $data['payNum'] : '0';
             $orderNum = !empty($data['orderNum']) ? $data['orderNum'] : '0';
