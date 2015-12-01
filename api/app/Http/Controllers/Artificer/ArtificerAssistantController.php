@@ -274,6 +274,7 @@ class ArtificerAssistantController extends Controller{
     * @apiSuccess {String} qq             选填,qq.
     * @apiSuccess {String} email          选填,电子邮箱.
 	* @apiSuccess {Number} status         状态标识. 1:正常启用，0:禁用
+	* @apiSuccess {String} pid            选中的专家id
     *
     *
     * 
