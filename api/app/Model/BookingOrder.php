@@ -16,7 +16,7 @@ class BookingOrder extends Model
     
     public function booking_order_item()
     {
-        return $this->hasMany("","ORDER_SN","ORDER_SN");
+        return $this->hasMany("",'ORDER_SN','ORDER_SN');
     }
     
     public static function search($params)
