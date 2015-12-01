@@ -1286,4 +1286,22 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'assistant.show',
         'uses'=>'Artificer\ArtificerAssistantController@show'
     ));
+    //韩式定妆
+    Route::any('banner/index',array(  //
+        'as'=>'banner.index',
+        'uses'=>'Banner\BannerController@index'
+    )); 
+    Route::any('banner/create',array(  //
+        'as'=>'banner.create',
+        'uses'=>'Banner\BannerController@create'
+    )); 
+    Route::any('banner/edit/{id}',array(  //
+        'as'=>'banner.edit',
+        'uses'=>'Banner\BannerController@edit'
+    )); 
+    Route::any('banner/destroy/{id}',array(  //
+        'as'=>'banner.destroy',
+        'uses'=>'Banner\BannerController@destroy'
+    )); 
+   
 });
