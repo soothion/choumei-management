@@ -3,7 +3,7 @@
 	url:'<#MANAGER_BACK_URL#>',
 	env:'dev',
 	dev:{
-		host:'http://192.168.13.46:8165/',
+		host:'http://192.168.13.46:8200/',
 		token:'http://dev-cmweb.choumei.me/v1/file/qiniu/get-token.html',
 		upload:'http://qiniu-plupload.qiniudn.com/',
 		previewMessage:'http://dev-user.choumei.me/'

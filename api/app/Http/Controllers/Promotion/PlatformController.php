@@ -284,8 +284,13 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function getRequestDepartment(){
-        $departmant = \App\Department::select(['id','title'])->get();
-        return $this->success( $departmant );
+        $departmant = \App\Department::select(['id','title'])->get()->toArray();
+        $resurt = [];
+        foreach( $departmant as $val ){
+            $manager = \App\Manager::select(['id','name','department_id'])->where(['department_id'=>$val['id'],'status'=>1])->get()->toArray();
+            if(!empty($manager)) $resurt[] = $val;
+        }
+        return $this->success( $resurt );
     }
     /***
 	 * @api {get} /platform/getDepartmentManager/:id 4.获取部门分类的负责人

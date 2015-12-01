@@ -640,5 +640,87 @@ class ERROR
       *@param 项目不存在
       */
      CONST ITEM_NOT_FOUND =  -51106;
+     
+     
+      
+     ////////////韩式定妆活动模块//////////////
+     /***
+      * @param 活动添加失败
+      */
+     CONST POWDER_ARTICLE_ADD_FIELD = 51300;
+     
+      /***
+      * @param 活动名称已存在
+      */
+     CONST POWDER_ARTICLE_NAME_EXIST = 51301;
+     
+     /***
+      * @param 活动开关失败
+      */
+     CONST POWDER_ARTICLE_SWITCH_STATUS= 51302;
+     
+     /***
+      * @param 活动验证开关失败
+      */
+     CONST POWDER_ARTICLE_SWITCH_VERIFY_STATUS= 51303;
 
+     
+     
+     ////////////韩式定妆项目/////////////
+     /**
+      *@param 参数不全
+      */
+     CONST BEAUTY_ITEM_ERROR =  -51500;
+      
+     /**
+      *@param 更新失败
+      */
+     CONST BEAUTY_ITEM_UPDATE_FAIL =  -51501;
+      
+     
+     /**
+      *@param 项目价格有误
+      */
+     CONST BEAUTY_ITEM_WRONG_PRICE =  -51502;
+     
+     /**
+      *@param 项目不存在
+      */
+     CONST BEAUTY_ITEM_NOT_FOUND =  -51503;
+     
+
+     /**
+      *@param 项目名称重复
+      */
+     CONST BEAUTY_ITEM_NAME_REOEAT =  -51504;
+     
+     /**
+      *@param banner的ID不存在
+      */
+     CONST BEAUTY_BANNER_NOT_ID =  -51505;
+     
+     /**
+      *@param banner的查询错误
+      */
+     CONST BEAUTY_BANNER_SELECT_ERROR =  -51506;
+     
+     /**
+      *@param banner的创建错误
+      */
+     CONST BEAUTY_BANNER_CREATE_ERROR =  -51507;
+     
+     /**
+      *@param banner的修改错误
+      */
+     CONST BEAUTY_BANNER_UPDATE_ERROR =  -51508;
+     
+     /**
+      *@param banner的删除错误
+      */
+     CONST BEAUTY_BANNER_DELETE_ERROR =  -51509;
+     
+     /**
+      *@param 专家编辑的名称重复
+      */
+     CONST ARTIFICER_NAME_EXISTS_ERROR =  -51510;
 }
