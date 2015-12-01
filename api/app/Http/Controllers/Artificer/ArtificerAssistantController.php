@@ -460,7 +460,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success( $result );
     }
     /**
-	 * @api {get} /assistant/getArtificer   8.获取助理专家名字
+	 * @api {get} /assistant/getArtificer   8.获取专家名字
 	 * @apiName     getArtificer
 	 * @apiGroup    Assistant
 	 *
