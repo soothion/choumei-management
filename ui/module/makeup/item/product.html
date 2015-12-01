@@ -17,6 +17,7 @@
         <div class="wrapper">
 			<form action="reservation-progress.html" class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
+				<%var data=JSON.parse(sessionStorage.getItem("formdata"))%>
 				<%if(query.p=="index"){%>
 				<ul class="nav-step flex-box">
 					<li class="flex-item">
@@ -76,17 +77,14 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td data-name="name">预约时间</td>
-										<td data-name="detail">可预约一周内的时间</td>
-										<td><img src="" alt="" /></td>
-										<td><a class="link edit">编辑</a><span class="space"></span><a class="link remove">删除</a></td>
-									</tr>
+									<%if(data.description){%>
+										<%=lib.ejs.render({url:"table-t"},{data:JSON.parse(data.description)})%>
+									<%}%>
 								</tbody>
 							</table>
-							<input type="hidden" name="description" class="json-hidden" required requiredmsg="产品介绍不能为空"/>
+							<textarea name="description" style="display:none" class="json-hidden" required requiredmsg="产品介绍不能为空"><%=data.description%></textarea>
 							<br />
-							<a class="link add">+新增产品介绍</a>
+							<button type="button" class="link add">+新增产品介绍</button>
 						</div>
                     </div>
                 </div> 
@@ -103,16 +101,14 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td data-name="name">预约时间</td>
-										<td data-name="detail">可预约一周内的时间</td>
-										<td><a class="link edit">编辑</a><span class="space"></span><a class="link remove">删除</a></td>
-									</tr>
+									<%if(data.archive){%>
+										<%=lib.ejs.render({url:"table-t"},{data:JSON.parse(data.archive)})%>
+									<%}%>
 								</tbody>
 							</table>
-							<input type="hidden" name="archive" class="json-hidden" required requiredmsg="产品档案不能为空"/>
+							<textarea name="archive" style="display:none" class="json-hidden" required requiredmsg="产品档案不能为空"><%=data.archive%></textarea>
 							<br />
-							<a class="link add">+新增产品档案</a>
+							<button type="button" class="link add">+新增产品档案</button>
 							<br />
 							<br />
 							<div>

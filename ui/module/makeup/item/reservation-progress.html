@@ -17,6 +17,7 @@
         <div class="wrapper">
 			<form action="progress.html" class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
+				<%var data=JSON.parse(sessionStorage.getItem("formdata"))%>
 				<%if(query.p=="index"){%>
 				<ul class="nav-step flex-box">
 					<li class="flex-item">
@@ -76,17 +77,14 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td data-name="name">预约时间</td>
-										<td data-name="detail">可预约一周内的时间</td>
-										<td></td>
-										<td><a class="link edit">编辑</a><span class="space"></span><a class="link remove">删除</a></td>
-									</tr>
+									<%if(data.register_workflow){%>
+										<%=lib.ejs.render({url:"table-t"},{data:JSON.parse(data.register_workflow)})%>
+									<%}%>
 								</tbody>
 							</table>
-							<input type="hidden" name="register_workflow" class="json-hidden" required requiredmsg="预约流程不能为空"/>
+							<textarea name="register_workflow" style="display:none" class="json-hidden" required requiredmsg="预约流程不能为空"><%=data.register_workflow%></textarea>
 							<br />
-							<a class="link add">+新增预约流程</a>
+							<button type="button" class="link add">+新增预约流程</button>
 							<br />
 							<br />
 							<div>

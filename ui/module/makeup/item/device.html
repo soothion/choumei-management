@@ -17,6 +17,7 @@
         <div class="wrapper">
 			<form action="product.html" class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
+				<%var data=JSON.parse(sessionStorage.getItem("formdata"))%>
 				<ul class="nav-step flex-box">
 					<li class="flex-item">
 						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
@@ -47,11 +48,11 @@
                     <div class="control">
 						<div class="control-image">
 							<div class="control-single-image">
-								<img src="" alt=""/>
+								<img src="<%=data.equipment_cover%>" alt=""/>
 								<div class="control-image-ud">
 									<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 								</div>
-								<input type="hidden" name="equipment_cover" class="original" required requiredmsg="请上传设备封面" data-helpid="image-help1">
+								<input type="hidden" name="equipment_cover" value="<%=data.equipment_cover%>" class="original" required requiredmsg="请上传设备封面" data-helpid="image-help1">
 							</div>
 						</div>
 						<div class="weak">请上传690*400的JPG或PNG格式的图标，此图标将显示在项目列表的封面中</div>
@@ -72,12 +73,14 @@
 									</tr>
 								</thead>
 								<tbody>
-									<%=lib.ejs.render({url:"table-t"},{data:[{title:"预约时间",content:"预约时间",image:[{img:"/images/logo.png"}]}]})%>
+									<%if(data.equipment){%>
+										<%=lib.ejs.render({url:"table-t"},{data:JSON.parse(data.equipment)})%>
+									<%}%>
 								</tbody>
 							</table>
-							<input type="hidden" name="equipment" class="json-hidden" required requiredmsg="设备介绍不能为空"/>
+							<textarea name="equipment" style="display:none" class="json-hidden" required requiredmsg="设备介绍不能为空"><%=data.equipment%></textarea>
 							<br />
-							<a class="link add">+新增设备介绍</a>
+							<button type="button" class="link add">+新增设备介绍</button>
 							<br />
 							<br />
 							<div>

@@ -1255,11 +1255,7 @@
 				define:function(){
 					if(!self.el.goback){
 						self.el.goback=function(){
-							if(parent!=window){
-								history.back();
-							}else{
-								window.close();
-							}
+							history.back();
 						}
 					}
 					self.el.goback();

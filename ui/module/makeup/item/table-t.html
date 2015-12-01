@@ -1,11 +1,12 @@
 <%data.forEach(function(item){%>
 <tr>
 	<td data-name="title"><%=item.title%></td>
-	<td data-name="content"><%=item.content%></td>
+	<td data-name="content"><%=item.content.replace(/\/n/g,"</br>")%></td>
 	<%if(item.image!==undefined){%>
 	<td data-name="image">
 		<%item.image.forEach(function(image){%>
 			<img class="image-preview" src="<%=image.img%>" alt="" />
+			<span class="space"></span>
 		<%})%>
 	</td>
 	<%}%>

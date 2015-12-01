@@ -17,8 +17,9 @@
         <div class="wrapper">
 			<form action="handsel.html" class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
+				<%var data=JSON.parse(sessionStorage.getItem("formdata"))%>
 				<%if(query.p=="index"){%>
-				<%document.getElementById("form").action=""%>
+				<%document.getElementById("form").action="beautyItem/update"%>
 				<ul class="nav-step flex-box">
 					<li class="flex-item">
 						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
@@ -60,7 +61,10 @@
 					<li class="flex-item">
 						<span>7.赠送说明</span>
 					</li>
+					<%}else{%>
+						<%document.getElementById("form").action="beautyItem/updateFashion"%>
 					<%}%>
+					<%document.getElementById("form").action=document.getElementById("form").action+"?"+query._%>
 				</ul>
 				<%}%>
                 <div class="control-group">
@@ -77,17 +81,14 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td data-name="name">预约时间</td>
-										<td data-name="detail">可预约一周内的时间</td>
-										<td></td>
-										<td><a class="link edit">编辑</a><span class="space"></span><a class="link remove">删除</a></td>
-									</tr>
+									<%if(data.beauty){%>
+										<%=lib.ejs.render({url:"table-t"},{data:JSON.parse(data.beauty)})%>
+									<%}%>
 								</tbody>
 							</table>
-							<input type="hidden" name="" class="json-hidden" required requiredmsg="定妆流程不能为空"/>
+							<textarea name="beauty" style="display:none" class="json-hidden" required requiredmsg="定妆流程不能为空"><%=data.beauty%></textarea>
 							<br />
-							<a class="link add">+新增定妆流程</a>
+							<button type="button" class="link add">+新增定妆流程</button>
 							<br />
 							<br />
 							<div>
@@ -102,7 +103,7 @@
 						</div>
                     </div>
                 </div>
-				<%document.getElementById("form").action=document.getElementById("form").action+"?"+query._%>
+				
 				</script>
             </form>
         </div>

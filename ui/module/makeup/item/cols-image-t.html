@@ -8,20 +8,20 @@
 </style>
 <form data-role="form" class="popup-form">
 	 <div class="control-group">
-		<label class="control-label" for=""><span class="red">*</span>名称：</label>
+		<label class="control-label" for="">名称：</label>
 		<div class="control">
 			<input type="text" name="title" value="<%=data.title%>" placeholder="0~20个字" maxlength="20" >
 		</div>
 	</div> 
 	 <div class="control-group">
-		<label class="control-label" for=""><span class="red">*</span>内容：</label>
+		<label class="control-label" for="">内容：</label>
 		<div class="control">
 			<textarea name="content" placeholder="0~50000个字" maxlength="500"><%=data.content%></textarea>
 		</div>
 	</div>
 	<%var id=parseInt(Math.random()*100000)%>
 	<div class="control-group">
-		<label class="control-label" for=""><span class="red">*</span>图片：</label>
+		<label class="control-label" for="">图片：</label>
 		<div class="control">
 			<div class="control-image">
 				<div class="control-thumbnails" id="control-thumbnails2" data-max="10">
