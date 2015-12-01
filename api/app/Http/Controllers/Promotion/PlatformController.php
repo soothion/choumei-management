@@ -284,7 +284,12 @@ class PlatformController extends Controller{
 	 *		}
 	 ***/
     public function getRequestDepartment(){
-        $departmant = \App\Department::select(['id','title'])->get();
+        $departmant = \App\Department::select(['id','title'])->get()->toArray();
+        $resurt = [];
+        foreach( $departmant as $val ){
+            $manager = \App\Manager::select(['id','name','department_id'])->where(['department_id'=>$val['id'],'status'=>1])->get()->toArray();
+            if(!empty($manager)) $resurt[] = $val;
+        }
         return $this->success( $departmant );
     }
     /***

@@ -301,7 +301,39 @@ class EventServiceProvider extends ServiceProvider
     	],
         'voucher.exportTicketList' => [
             'App\Listeners\TicketEventListener@onExport',
-    	]
+    	],
+        // 专家列表
+        'artificer.add' => [
+            'App\Listeners\ArtificerEventListener@onCreate',
+    	],
+        'artificer.update' => [
+            'App\Listeners\ArtificerEventListener@onUpdate',
+    	],
+        'artificer.up' => [
+            'App\Listeners\ArtificerEventListener@onUp',
+    	],
+        'artificer.down' => [
+            'App\Listeners\ArtificerEventListener@onDown',
+    	],
+        'artificer.export' => [
+            'App\Listeners\ArtificerEventListener@onExport',
+    	],
+        // 专家助理列表
+        'assistant.add' => [
+            'App\Listeners\AssistantEventListener@onCreate',
+    	],
+        'assistant.update' => [
+            'App\Listeners\AssistantEventListener@onUpdate',
+    	],
+        'assistant.up' => [
+            'App\Listeners\AssistantEventListener@onUp',
+    	],
+        'assistant.down' => [
+            'App\Listeners\AssistantEventListener@onDown',
+    	],
+        'assistant.export' => [
+            'App\Listeners\AssistantEventListener@onExport',
+    	],
     ];
 
     /**
