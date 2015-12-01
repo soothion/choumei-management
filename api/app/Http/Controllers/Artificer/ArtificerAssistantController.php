@@ -134,9 +134,9 @@ class ArtificerAssistantController extends Controller{
         return $this->success( $result );
     }
     /**
-    * @api {Post} /assistant/add/:id  2.专家添加
+    * @api {Post} /assistant/add/:id  2.专家助理添加
     * @apiName add
-    * @apiGroup Artificer
+    * @apiGroup Assistant
     *
     * @apiParam {String} photo          必填,个人照片.
     * @apiParam {String} name           必填,姓名.
@@ -192,7 +192,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success();
     }
     /**
-    * @api {Post} /artificer/update  3.专家编辑
+    * @api {Post} /assistant/update  3.专家编辑
     * @apiName update
     * @apiGroup Assistant
     *
