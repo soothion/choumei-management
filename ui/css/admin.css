@@ -1132,6 +1132,30 @@ form[data-role="hash"] input[type="date"]{
 	margin-top:1px;
 }
 /**图片裁剪end**/
+.table-tab-switch{
+	margin-top:-50px;
+	text-align:center;
+}
+.tab-switch{
+	border-bottom:1px solid #E6EAF2;
+}
+.tab-switch li{
+	display:inline-block;
+	line-height:40px;
+	padding:0px 12px;
+	border:1px solid #E6EAF2;
+	margin-bottom:-1px;
+	background:#f5f5f5;
+	font-size:16px;
+	min-width:100px;
+}
+.tab-switch li.active{
+	background:#fff;
+	border-bottom-color:#fff;
+}
+.tab-switch li a{
+	display:block;
+}
 .ie9 .flex-box{
 	display:table;
 	width:100%;
