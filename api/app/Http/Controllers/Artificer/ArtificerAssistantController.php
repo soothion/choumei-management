@@ -253,7 +253,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success();
     }
     /**
-    * @api {Post} /assistant/show/:id  2.专家添加
+    * @api {Get} /assistant/show/:id  4.专家助理信息
     * @apiName show
     * @apiGroup Assistant
     *
