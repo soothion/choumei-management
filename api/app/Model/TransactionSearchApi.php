@@ -232,7 +232,7 @@ class TransactionSearchApi
         {
             $request_log_code = $shopcartsn;
         }
-        $paltform = RequestLog::getLogByOrdersn($request_log_code,['DEVICE_UUID','DEVICE_OS','DEVICE_MODEL','DEVICE_NETWORK','VERSION','OPENID']); 
+        $paltform = RequestLog::getLogByOrdersn($request_log_code,['DEVICE_UUID','DEVICE_OS','DEVICE_MODEL','DEVICE_NETWORK','VERSION','OPENID','DEVICE_TYPE']); 
         
         $paymentlogArr = null;
         $userArr = null;

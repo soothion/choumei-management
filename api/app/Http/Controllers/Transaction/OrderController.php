@@ -185,6 +185,7 @@ class OrderController extends Controller
      * @apiSuccess {String} platform.DEVICE_MODEL 手机型号
      * @apiSuccess {String} platform.DEVICE_NETWORK 网络
      * @apiSuccess {String} platform.VERSION APP版本
+     * @apiSuccess {String} platform.DEVICE_TYPE 终端类型
      * @apiSuccess {String} platform.OPENID 微信OPENID
      *
      * @apiSuccessExample Success-Response:
