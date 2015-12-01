@@ -275,12 +275,6 @@ class ArtificerController extends Controller{
     * 
     * 
     * 
-    * @apiSuccessExample Success-Response:
-    * 	    {
-    * 	        "result": 1,
-    * 	        "data": null
-    * 	    }
-    *
     * 
     * @apiSuccessExample Success-Response:
     *	{
