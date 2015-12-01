@@ -394,8 +394,7 @@ class BeautyItemController extends Controller{
 	* 
 	* @apiSuccess {String} name 项目名称.
 	* @apiSuccess {Number} level 项目类型 1明星院长； 2院长.
-	* @apiSuccess {Number} price 原价.
-	* @apiSuccess {Number} vip_price 会员价.
+	* @apiSuccess {Array} price 价格 min_price 最小原价 max_price 最大原价 min_vip_price 最小臭美会员价 max_vip_price 最大臭美会员价.
 	* @apiSuccess {Number} quantity 已预约数.
 	* @apiSuccess {Number} item_id 项目id.
 	*
@@ -408,9 +407,13 @@ class BeautyItemController extends Controller{
 	*	    	    "name": 韩式眉毛（明星院长）,
 	*	    	    "level": "1",
 	*				"item_id": "1",
-	*	    	    "price": 12,
-	*	    	    "vip_price": 43,
 	*	    	    "quantity": 42,
+	*               "prices": {
+    *              		 "min_price": 1500,
+    *                	 "max_price": 2500,
+    *                    "min_vip_price": 60,
+    *                    "max_vip_price": 1800
+    *            }
 	*	    },
 	*			......
 	*	    ]
@@ -459,7 +462,8 @@ class BeautyItemController extends Controller{
 	* @apiSuccess {Number} level 类别 1明星院长； 2院长.
 	* @apiSuccess {Number} expire 时间限制.
 	* @apiSuccess {string} present_explain 赠送说明.
-	* @apiSuccess {string} more_prices 规格价格.
+	* @apiSuccess {Array} price 价格 min_price 最小原价 max_price 最大原价 min_vip_price 最小臭美会员价 max_vip_price 最大臭美会员价.
+	* @apiSuccess {Array} more_prices 规格价格.
 	* @apiSuccess {string} quantity 预约数.
 	*
 	* @apiSuccessExample Success-Response:
@@ -492,6 +496,12 @@ class BeautyItemController extends Controller{
    	*       "created_at": "1970-01-01 08:00:00",
   	*       "updated_at": "2015-12-01 09:46:22",
 	*       "quantity": "12",
+	*        "prices": {
+	*              		 "min_price": 1500,
+	*                	 "max_price": 2500,
+	*                    "min_vip_price": 60,
+	*                    "max_vip_price": 1800
+	*            }
   	*       "more_prices": [
    	*          {
    	*              "img": "",
