@@ -1168,5 +1168,40 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
         'as'=>'messageBox.showDailyMessage',
         'uses'=>'MessageBox\MessageBoxController@showDailyMessage'
     )); 
+	
+	//韩式定妆项目
+	Route::any('beautyItem/index',array(  
+        'as'=>'beautyItem.index',
+        'uses'=>'Item\BeautyItemController@index'
+    )); 
+	
+	Route::any('beautyItem/update',array(  
+        'as'=>'beautyItem.update',
+        'uses'=>'Item\BeautyItemController@update'
+    )); 
+	
+	Route::any('beautyItem/show',array(  
+        'as'=>'beautyItem.show',
+        'uses'=>'Item\BeautyItemController@show'
+    ));
     
+	Route::any('beautyItem/checkName',array(  
+        'as'=>'beautyItem.checkName',
+        'uses'=>'Item\BeautyItemController@checkName'
+    ));
+	
+	Route::any('beautyItem/updateFashion',array(  
+        'as'=>'beautyItem.updateFashion',
+        'uses'=>'Item\BeautyItemController@updateFashion'
+    ));
+	
+	Route::any('beautyItem/indexFashion',array(  
+        'as'=>'beautyItem.indexFashion',
+        'uses'=>'Item\BeautyItemController@indexFashion'
+    ));
+	
+	Route::any('beautyItem/showFashion',array(  
+        'as'=>'beautyItem.showFashion',
+        'uses'=>'Item\BeautyItemController@showFashion'
+    ));
 });
