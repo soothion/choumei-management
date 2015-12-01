@@ -21,12 +21,12 @@
         </div>
         <div class="wrapper">
 
-        <form data-role="hash"> 
+        <form data-role="hash">
           <span>
               <label>微信OpenId：</label>
-              <input type="text" name="keyword"/>              
-<!--               <input type="hidden" name="keywordType" value="2"/>   -->       
-          </span>         
+              <input type="text" name="keyword"/>
+<!--               <input type="hidden" name="keywordType" value="2"/>   -->
+          </span>
 
           <span class="date-group">
               <span style="padding:0 5px 0 15px">从</span>
@@ -38,7 +38,7 @@
           <span>
               <label for="">购买单量大于等于：</label>
               <input type="text" name="orderNum" pattern='number' maxlength="3"/>
-              <span>（数值最小为6）</span>             
+              <span>（数值最小为6）</span>
           </span>
 
           <button class="btn" type="submit">搜索</button>
@@ -63,7 +63,7 @@
                     <th>操作</th>
                 </tr>
             </thead>
-            <tbody>           
+            <tbody>
             <%data.data && data.data.forEach(function(item,i){%>
               <tr>
                 <td><%=i+1%></td>
@@ -72,11 +72,11 @@
                 <td><%=item.payNum%></td>
                 <td><%=item.orderNum%></td>
                 <td>
-                    <form action="warning/openidBlock" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})" 
+                    <form action="warning/openidBlock" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})"
                       <%=item.blacklistStatus=='0' ? '':'disabled'%>>
                       <button class="link" data-slug="warning.openidBlock">移入黑名单</button>
                       <input type="hidden" name="openid" value="<%=item.openId%>" />
-                    </form>    
+                    </form>
                 </td>
               </tr>
             <%})%>
@@ -89,53 +89,43 @@
 
     <script type="text/javascript">
     $(function(){
-      //var max = new Date(new Date().getTime()-24*60*60*1000);  
-      var max = new Date();      
-      var min = new Date(max.getTime()-30*24*60*60*1000);
+      var max = new Date(new Date().getTime()-24*60*60*1000);
+      // var max = new Date();
+      var min = new Date(new Date().getTime()-30*24*60*60*1000);
       $("input[date-start='start']").val(min.format("yyyy-MM-dd"));
       $("input[date-end='end']").val(max.format("yyyy-MM-dd"));
 
       if(!lib.query._){
         $('form[data-role="hash"]').submit();
-      } 
+      }
 
       setDate(min,max);
 
       $("input[date-end='end']").on('change',function(){
-          var max = new Date($(this).val());
-          var min = new Date(max.getTime()-30*24*60*60*1000);
-          var startDay = new Date($("input[date-start='start']").val());
-          if(startDay > max){
-            $("input[date-start='start']").val(min.format("yyyy-MM-dd"));
-          }
-          setDate(min,max);        
+          var endDay = new Date($(this).val());
+          $("input[date-start='start']").attr('max',endDay.format("yyyy-MM-dd"));
       })
 
       $("input[date-start='start']").on('change',function(){
-          var min = new Date($(this).val());
-          var max = new Date(min.getTime()+30*24*60*60*1000);
-          var endDay = new Date($("input[date-end='end']").val());
-          if(endDay < min){
-            $("input[date-end='end']").val(max.format("yyyy-MM-dd"));
-          }
-          setDate(min,max);
-      })      
+          var startDay = new Date($(this).val());
+          $("input[date-end='end']").attr('min',startDay.format("yyyy-MM-dd"));
+      })
 
       function setDate (min,max) {
           $("input[date-start='start']").attr('min',min.format("yyyy-MM-dd"));
           $("input[date-start='start']").attr('max',max.format("yyyy-MM-dd"));
 
           $("input[date-end='end']").attr('min',min.format("yyyy-MM-dd"));
-          $("input[date-end='end']").attr('max',max.format("yyyy-MM-dd"));   
+          $("input[date-end='end']").attr('max',max.format("yyyy-MM-dd"));
       }
 
       $("input[pattern='number']").on("keydown",function(e){
           var key = e.which;
           //alert(key)
-          if ((key > 95 && key < 106) || //小键盘上的0到9  
-              (key > 47 && key < 58) || //大键盘上的0到9  
+          if ((key > 95 && key < 106) || //小键盘上的0到9
+              (key > 47 && key < 58) || //大键盘上的0到9
               key == 8 || key == 116 || key == 9 || key == 46 || key == 37 || key == 39
-              //不影响正常编辑键的使用(116:f5;8:BackSpace;9:Tab;46:Delete;37:Left;39:Right;)  
+              //不影响正常编辑键的使用(116:f5;8:BackSpace;9:Tab;46:Delete;37:Left;39:Right;)
           ) {
               return true;
           } else {
@@ -146,17 +136,17 @@
       $("input[pattern='number']").on("input",function(e){
           var self = this;
           var time = setTimeout(function(){
-              clearTimeout(time);            
+              clearTimeout(time);
               if($(self).val()){
                  var num = $(self).val() * 1;
                  if(num < 6){
-                   $("input[pattern='number']").val(6);              
+                   $("input[pattern='number']").val(6);
                  }
               }
           }, 400)
-      });       
-    });       
+      });
+    });
 
-    </script>    
+    </script>
   </body>
 </html>

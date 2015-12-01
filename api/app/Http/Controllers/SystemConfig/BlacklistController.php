@@ -646,18 +646,21 @@ class BlacklistController extends Controller {
         $date = date('Y-m-d H:i:s');
         $resultMsg="黑名单导入成功！";
         foreach ($data as $key => $value) {
+            $insertDatas=[];
+            $insertDatas['updated_at'] = $date;
+            $insertDatas["created_at"] = $date;
             if(isset($value["note"]))
             {
                 $insertDatas["note"] = $value["note"];
             }
-            $insertDatas["created_at"] = $date;
-            $insertDatas['updated_at'] = $date;
             switch ($param['keywordType']) {
                 case "0" : // 用户手机号				
                     $insertDatas["mobilephone"] = $value["userInfo"];
                     if (Blacklist::getStatusbyUserMobile($value["userInfo"])) {
+                        
                         $result = Blacklist::where("mobilephone", '=', $value["userInfo"])->update($insertDatas);
                     } else {
+                        
                         $result = Blacklist::insert($insertDatas);
                     }
                     if (!$result) {
