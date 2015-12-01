@@ -270,25 +270,37 @@
                       'title':'用户接待记录',
                       'cancelText':'取消',
                       'defineText':'保存',
-                      'confirm':true
+                      'confirm':true,
+                      'modalType':'box'
                     },
                     'cashier':{
                       'title':'确认收银',
                       'cancelText':'取消',
                       'defineText':'确认收银',
-                      'confirm':true
+                      'confirm':true,
+                      'modalType':'box'
                     },
                     'comp-color':{
                       'title':'用户补色记录',
                       'cancelText':'取消',
                       'defineText':'保存',
-                      'confirm':true
+                      'confirm':true,
+                      'modalType':'box'
+                    },
+                    'receipt':{
+                      'title':'补开发票',
+                      'content':'<p>你正在给订单开发票，确认开票后不能退回，是否继续</p>',
+                      'cancelText':'取消',
+                      'defineText':'确认',
+                      'confirm':true,
+                      'modalType':'confirm'
                     },
                     'refund':{
                       'title':'退款',
                       'cancelText':'取消',
                       'defineText':'确认退款',
-                      'confirm':true
+                      'confirm':true,
+                      'modalType':'confirm'
                     }
                   };
 
@@ -301,7 +313,7 @@
 
                   var initModal = function(options){
                     console.log(options)
-                      lib.popup.box(options);
+                      lib.popup[options['modalType']](options);
                   }
                  </script>
             </div>
