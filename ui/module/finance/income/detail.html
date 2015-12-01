@@ -22,9 +22,16 @@
             <script type="text/template" id="table-t">  
 
                 <div style="position:absolute;right:20px;top:40px;">
-                    <button type="button" class="btn fr mr-20" onclick="window.close()">                    
-                        <%=query.type=='perview' ? '关闭预览' : '关闭'%>
-                    </button>
+                    <%if(query.type=='perview'){%>
+                        <button type="button" class="btn fr mr-20" onclick="window.close()">
+                            关闭预览
+                        </button>
+                    <%}else{%>
+                        <button type="button" class="btn fr mr-20" onclick="history.back()">
+                            取消
+                        </button>
+                    <%}%>
+
                     <%
                     if(lib.query.type != "perview"){
                     %>

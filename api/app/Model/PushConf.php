@@ -26,6 +26,7 @@ class PushConf extends Model
             'DETAIL as detail',
             'IS_PUSH as isPush',
             'READ_NUM as readNum',
+            'PUSH_NUM as pushNum', 
             'STATUS as status',
             'CREATE_TIME as createTime',
            'UPDATE_TIME as updateTime',

@@ -80,6 +80,7 @@ class MessageBoxController extends Controller{
      *                   "detail": "<p>sdfasfdasdfasfasfdasf</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sdfsdfsfs</p><p>&nbsp; &nbsp;的收费的方式对方</p>",
      *                   "isPush": "Y",
      *                   "readNum": 0,
+     *                   "pushNum": 0,
      *                   "status": "NOM",
      *                   "createTime": "2015-08-31 14:34:05",
      *                   "updateTime": "2015-09-06 10:34:58",
@@ -171,8 +172,8 @@ class MessageBoxController extends Controller{
         if(!in_array(trim($param['isPush']),array('Y','N'))){
             throw new ApiException('参数错误--isPush',ERROR::MessageBox_PARAMETER_ERROR);
         }
-        if(strtotime($param['sendTime']) - time() < 30* 60){
-            throw new ApiException('发送时间必须晚于提交时间30分钟之后',ERROR::MessageBox_PARAMETER_ERROR);
+        if(strtotime($param['sendTime']) - time() < 10* 60){
+            throw new ApiException('发送时间必须晚于提交时间10分钟之后',ERROR::MessageBox_PARAMETER_ERROR);
         }
         $data['TITLE'] = $param['title'];
         $data['CONTENT'] = $param['content'];
@@ -432,8 +433,8 @@ class MessageBoxController extends Controller{
         if(!in_array(trim($param['isPush']),array('Y','N'))){
             throw new ApiException('参数错误--isPush',ERROR::MessageBox_PARAMETER_ERROR);
         }
-        if(strtotime($param['sendTime']) - time() < 30* 60){
-            throw new ApiException('发送时间必须晚于提交时间30分钟之后',ERROR::MessageBox_PARAMETER_ERROR);
+        if(strtotime($param['sendTime']) - time() < 10* 60){
+            throw new ApiException('发送时间必须晚于提交时间10分钟之后',ERROR::MessageBox_PARAMETER_ERROR);
         }        
         if(!empty($param['detail']) && strlen(urldecode($param['detail'])) > 15000){
             throw new ApiException('富文本内容长度超出');

@@ -66,7 +66,7 @@
 				}
 			}
 			options.timeout=options.timeout||9999;
-			
+
 			/*
 			options.headers={
 				token:localStorage.getItem('token')
@@ -116,7 +116,7 @@
 					localStorage.setItem('token',data.token);
 				}
 			});
-			
+
             return promise;
         },
 		getSession:function(){
@@ -190,7 +190,7 @@
                 }else{
 					options.define && options.define.call();
 				}
-                
+
             },
             close: function () {
                 seajs.use(this.path,function(a){
@@ -455,7 +455,7 @@
 					});
 				});
 			},
-			getSource:function(file,cb){//file为plupload事件监听函数参数中的file对象,callback为预览图片准备完成的回调函数 
+			getSource:function(file,cb){//file为plupload事件监听函数参数中的file对象,callback为预览图片准备完成的回调函数
 				if (!file || !/image\//.test(file.type)) return; //确保文件是图片
 				if (file.type == 'image/gif') {//gif使用FileReader进行预览,因为mOxie.Image只支持jpg和png
 					var fr = new mOxie.FileReader();
@@ -492,7 +492,7 @@
 					}
 				}
 				this.file(options,function(uploader){
-					
+
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
 							var data=JSON.parse(res.response);
@@ -577,7 +577,7 @@
 									plupload.each(files, function(file,i) {
 										var exist=up.thumbnails.children().length-1;
 										if(i+exist>=files_number){
-											up.removeFile(file);	
+											up.removeFile(file);
 										}
 									});
 								}
@@ -712,7 +712,7 @@
 		}
     }
     lib.init();
-	
+
     /*Ajat对象*/
     function Ajat(_protocol) {
         this._protocol = _protocol;
@@ -833,13 +833,13 @@
         },
         format : function(){
             $("td.format").each(function(index,item){
-                var val = $(this).text();  
+                var val = $(this).text();
                 if(val){
                 	if(isNaN(val)){
                 		$(this).text(new Date(val).format("yyyy-MM-dd"));
-                	}else{                		
+                	}else{
                         if(val*1){
-	                		$(this).text(new Date(val*1000).format("yyyy-MM-dd"));                        	
+	                		$(this).text(new Date(val*1000).format("yyyy-MM-dd"));
                         }else{
                         	$(this).text("");
                         }
@@ -848,7 +848,7 @@
             });
 
             $("td.formatHms").each(function(index,item){
-                var val = $(this).text();  
+                var val = $(this).text();
                 if(val){
                 	if(isNaN(val)){
                 		$(this).text(new Date(val).format("yyyy-MM-dd hh:mm:ss"));
@@ -900,7 +900,7 @@
         }
     }
 	Ajat.before=function(){
-		
+
 	}
     /**
      * ajat自动执行
@@ -983,7 +983,7 @@
 		seajs.use(arr);
 	}
     lib.Ajat=Ajat;
-	
+
 	/**
 	*form表单封装
 	*/
@@ -1164,7 +1164,7 @@
 			var error=this.getErrorDom($target);
 			var $relative=$target;
 			if($target.siblings('.unit').length==1){
-				$relative=$target.siblings('.unit');	
+				$relative=$target.siblings('.unit');
 			}
 			if($target.parent('label').length==1){
 				$relative=$target.parent('label');
@@ -1175,20 +1175,20 @@
 			}
 			error.show().html(($target.attr('requiredmsg')||requiredmsg));
 			if(!error.is(':visible')){
-				$relative.after(error);	
+				$relative.after(error);
 			}
-			
+
 		},
 		pattern:function(e){//正则表达式校验
 			var $target=$(e.target);
 			var error=this.getErrorDom($target);
 			var $relative=$target;
 			if($target.siblings('.unit').length==1){
-				$relative=$target.siblings('.unit');	
+				$relative=$target.siblings('.unit');
 			}
 			error.show().html(($target.attr('patternmsg')||this.cfg.patternmsg));
 			if(!error.is(':visible')){
-				$relative.after(error);	
+				$relative.after(error);
 			}
 		},
 		unique:function(e,data){//唯一校验
@@ -1196,11 +1196,11 @@
 			var error=this.getErrorDom($target);
 			var $relative=$target;
 			if($target.siblings('.unit').length==1){
-				$relative=$target.siblings('.unit');	
+				$relative=$target.siblings('.unit');
 			}
 			error.show().html((data.msg||$target.attr('uniquemsg')||this.cfg.uniquemsg));
 			if(!error.is(':visible')){
-				$relative.after(error);	
+				$relative.after(error);
 			}
 		},
 		match:function(e){//匹配校验
@@ -1208,11 +1208,11 @@
 			var error=this.getErrorDom($target);
 			var $relative=$target;
 			if($target.siblings('.unit').length==1){
-				$relative=$target.siblings('.unit');	
+				$relative=$target.siblings('.unit');
 			}
 			error.show().text($target.attr('matchmsg'))
 			if(!error.is(':visible')){
-				$relative.after(error);	
+				$relative.after(error);
 			}
 		},
 		error:function(e,data){
@@ -1220,11 +1220,11 @@
 			var error=this.getErrorDom($target);
 			var $relative=$target;
 			if($target.siblings('.unit').length==1){
-				$relative=$target.siblings('.unit');	
+				$relative=$target.siblings('.unit');
 			}
 			error.show().html(data.errormsg);
 			if(!error.is(':visible')){
-				$relative.after(error);	
+				$relative.after(error);
 			}
 		},
 		getErrorDom:function($target){
@@ -1282,7 +1282,7 @@
 			}).on('submit',function(e){
 				e.preventDefault();
 				self.validate();
-				
+
 			}).on('save',function(e,data){
 				self.save(data);
 			}).on('response',function(e,data){
@@ -1346,7 +1346,7 @@
 		}
 	}
 	lib.Form=Form;
-	
+
 	/**
 	*select美化封装
 	*/

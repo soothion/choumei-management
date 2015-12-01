@@ -7,7 +7,7 @@
 		lib.ajatCount++;//ajat添加计件数
         return new lib.Ajat(_protocol);
     }
-	
+
 	lib.Ajat.before=function(){
 		lib.loadingend=function(e){//触发进度条加载完成
 			lib.ajatCount--;//ajat减少计件数
@@ -44,7 +44,7 @@ $(function(){
 	if(breadcrumb.length==1){
 		breadcrumb.html(lib.ejs.render({text:breadcrumb.html().replace(/%&gt;/g,'%>').replace(/&lt;%/g,'<%')},{}));
 	}
-	
+
 	/**hash和加载进度条**/
 	var $body=$(document.body);
 	lib.tools.hashchange=function(obj){//更改浏览器hash值
@@ -69,7 +69,7 @@ $(function(){
 	if($('[ajat]').length==0){
 		parent.$('body').trigger('loadingend');//终止加载状态
 	}
-	
+
 	/**hash表单同步hash查询条件**/
 	$body.one('asynhashform',function(){
 		var hashForm=$('form[data-role="hash"]');
@@ -98,7 +98,7 @@ $(function(){
 			});
 		}
 	});
-	
+
 	/**提交hash地址**/
 	$body.on('submit','form[data-role="hash"]',function(e){//hash表单提交到hash地址查询
 		$(this).trigger('hash');
@@ -145,7 +145,7 @@ $(function(){
 			window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+'&token='+localStorage.getItem('token'));
 		}
 	});
-	
+
 	/**普通表单提交**/
 	$body.on('submit','form[data-role="normal"]',function(e){//一般的数据提交,提交成功后会触发表单reset事件
 		e.preventDefault();
@@ -201,7 +201,7 @@ $(function(){
 							var fn=eval("(function(){"+failEvent+"})");
 							fn.call($this[0]);
 						}
-						$this.trigger('fail',data);	
+						$this.trigger('fail',data);
 					}
 				},
 				error:function(){
@@ -223,7 +223,7 @@ $(function(){
 			request();
 		}
 	});
-	
+
 	/**input-switch/placeholder-switch切换**/
 	$body.on('change','.input-switch select',function(){//input-switch切换输入框
 		var $this=$(this);
@@ -239,7 +239,7 @@ $(function(){
 			$.placeholder($this.next('input'));
 		}
 	});
-	
+
 	/**常见**/
 	$body.on('click','.drop-menu-toggle',function(){//下拉菜单
 		var $this=$(this);
@@ -308,7 +308,7 @@ $(function(){
 				if(active.length>0){
 					$this.trigger('autoinput',active.data());
 				}
-				$this.closest('.complete').find('.complete-position').hide();			
+				$this.closest('.complete').find('.complete-position').hide();
 			}
 			e.preventDefault();
 		}
@@ -337,7 +337,7 @@ $(function(){
 			$(this).trigger('input');
 		})
 	}
-	
+
 	/**全局分页**/
 	$body.on('_ready',function(e,data){
 		var $target=$(e.target);
@@ -347,9 +347,10 @@ $(function(){
 			seajs.use('/js/jquery.pagination.js',function (){
 				var query=$.extend({},lib.query);
 				delete query._;
+				var currentID = query.page;
 				query.page='__id__';
                 $pager.pagination(data.total, {
-					current_page : data.current_page-1,
+					current_page : currentID == data.current_page ? data.current_page-1 :currentID,
 					items_per_page : data.per_page,
 					next_text:'>>',
 					prev_text:'<<',
@@ -370,7 +371,7 @@ $(function(){
 			$pager.append(lib.ejs.render({url:'/module/public/template/pager'},{data:data}));
 		}
 	});
-	
+
 	/**权限控制**/
 	if(parent.access){
 		access.control(document.body);
@@ -378,7 +379,7 @@ $(function(){
 	$body.on('_ready',function(e){
 		access.control(e.target);
 	});
-	
+
 	/**列表复选框**/
 	$body.on('change','.table .select-all input',function(){//全选
 		var bool=this.checked;
@@ -409,7 +410,7 @@ $(function(){
 			})
 		}
 	});
-	
+
 	/**filter-box的展示切换**/
 	$body.on('click','#filter-toggle-btn',function(){//注册#filter-toggle-btn事件，控制.filter-box显示与隐藏
 		var $this=$(this);
@@ -436,11 +437,11 @@ $(function(){
 			localStorage.removeItem('filter-toggle');
 		}
 	}
-	
+
 	$body.on('click','.breadcrumb a,.menu-category a',function(){//注册事件清除filter-toggle信息
 		localStorage.removeItem('filter-toggle');
 	});
-	
+
 	/**日期控件修正**/
 	seajs.use(['/laydate/laydate.js']);
 	if(!lib.tools.browser().webkit){
@@ -455,7 +456,7 @@ $(function(){
 					$(e.target).removeClass('placeholder').trigger("choose");
 				}
 			};
-			laydate(options);			
+			laydate(options);
 		});
 	}
 	$body.on('click','input[type=_datetime]',function(e){
@@ -469,9 +470,9 @@ $(function(){
 				$(e.target).blur().focus().removeClass('placeholder').trigger("choose");
 			}
 		};
-		laydate(options);			
+		laydate(options);
 	});
-	
+
 	/**修正IE9**/
 	if(window.ie9){
 		$(document.body).addClass("ie9");
@@ -493,13 +494,13 @@ $(function(){
 			if($this.data("type") == "1"){
 				src=$this.attr('src')||$this.data('original');
 			}else{
-				src=$this.data('original')||$this.attr('src');				
+				src=$this.data('original')||$this.attr('src');
 			}
 			list.push(src);
 		});
 		parent.lib.popup.swiper({list:list,index:item.index()});
 	});
-	
+
 
 	$body.on('click','.control-single-image img,.image-preview',function(){
 		var $this=$(this);
@@ -638,6 +639,5 @@ Date.prototype.format = function(format){
             format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
         }
     }
-    return format;	
-};   	
-	
+    return format;
+};

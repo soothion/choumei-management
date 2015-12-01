@@ -148,6 +148,28 @@ Route::any('platform/getItemType',array(
     'uses'=>'Promotion\PlatformController@getItemType'
 ));
 
+Route::any('artificer/checkNumberExists/{id}',array(  
+    'as'=>'artificer.checkNumberExists',
+    'uses'=>'Artificer\ArtificerController@checkNumberExists'
+)); 
+Route::any('artificer/checkNameExists/{id}',array(  
+    'as'=>'artificer.checkNameExists',
+    'uses'=>'Artificer\ArtificerController@checkNameExists'
+)); 
+
+
+Route::any('assistant/checkNumberExists/{id}',array(  
+    'as'=>'assistant.checkNumberExists',
+    'uses'=>'Artificer\ArtificerAssistantController@checkNumberExists'
+));
+Route::any('assistant/checkNameExists/{id}',array(  
+    'as'=>'assistant.checkNameExists',
+    'uses'=>'Artificer\ArtificerAssistantController@checkNameExists'
+));
+Route::any('assistant/getArtificer',array(  
+    'as'=>'assistant.getArtificer',
+    'uses'=>'Artificer\ArtificerAssistantController@getArtificer'
+));
 //商家后台提现
 Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
@@ -157,8 +179,8 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'uses'=>'MessageBox\MessageBoxController@redirectUrl'
     ))->where('pushId', '[0-9]+'); 
 //权限管理后台接口
-Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
- // Route::group(['middleware' => ['before']], function(){
+// Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+ Route::group(['middleware' => ['before']], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -1168,5 +1190,118 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
         'as'=>'messageBox.showDailyMessage',
         'uses'=>'MessageBox\MessageBoxController@showDailyMessage'
     )); 
+	
+	//韩式定妆项目
+	Route::any('beautyItem/index',array(  
+        'as'=>'beautyItem.index',
+        'uses'=>'Item\BeautyItemController@index'
+    )); 
+	
+	Route::any('beautyItem/update',array(  
+        'as'=>'beautyItem.update',
+        'uses'=>'Item\BeautyItemController@update'
+    )); 
+	
+	Route::any('beautyItem/show',array(  
+        'as'=>'beautyItem.show',
+        'uses'=>'Item\BeautyItemController@show'
+    ));
     
+	Route::any('beautyItem/checkName',array(  
+        'as'=>'beautyItem.checkName',
+        'uses'=>'Item\BeautyItemController@checkName'
+    ));
+	
+	Route::any('beautyItem/updateFashion',array(  
+        'as'=>'beautyItem.updateFashion',
+        'uses'=>'Item\BeautyItemController@updateFashion'
+    ));
+	
+	Route::any('beautyItem/indexFashion',array(  
+        'as'=>'beautyItem.indexFashion',
+        'uses'=>'Item\BeautyItemController@indexFashion'
+    ));
+	
+	Route::any('beautyItem/showFashion',array(  
+        'as'=>'beautyItem.showFashion',
+        'uses'=>'Item\BeautyItemController@showFashion'
+    ));
+	
+	// 专家助理
+    Route::any('assistant/index',array(  
+        'as'=>'assistant.index',
+        'uses'=>'Artificer\ArtificerAssistantController@index'
+    )); 
+    Route::any('assistant/add',array(  
+        'as'=>'assistant.add',
+        'uses'=>'Artificer\ArtificerAssistantController@add'
+    )); 
+    Route::any('assistant/update',array(  
+        'as'=>'assistant.update',
+        'uses'=>'Artificer\ArtificerAssistantController@save'
+    )); 
+    Route::any('assistant/up/{id}',array(  
+        'as'=>'assistant.up',
+        'uses'=>'Artificer\ArtificerAssistantController@start'
+    ));
+    Route::any('assistant/down/{id}',array(  
+        'as'=>'assistant.down',
+        'uses'=>'Artificer\ArtificerAssistantController@close'
+    ));
+    Route::any('assistant/export',array(  
+        'as'=>'assistant.export',
+        'uses'=>'Artificer\ArtificerAssistantController@export'
+    )); 
+    Route::any('assistant/show/{id}',array(  
+        'as'=>'assistant.show',
+        'uses'=>'Artificer\ArtificerAssistantController@show'
+    ));
+    
+    // 专家助理
+    Route::any('assistant/index',array(  
+        'as'=>'assistant.index',
+        'uses'=>'Artificer\ArtificerAssistantController@index'
+    )); 
+    Route::any('assistant/add',array(  
+        'as'=>'assistant.add',
+        'uses'=>'Artificer\ArtificerAssistantController@add'
+    )); 
+    Route::any('assistant/update',array(  
+        'as'=>'assistant.update',
+        'uses'=>'Artificer\ArtificerAssistantController@save'
+    )); 
+    Route::any('assistant/up/{id}',array(  
+        'as'=>'assistant.up',
+        'uses'=>'Artificer\ArtificerAssistantController@start'
+    ));
+    Route::any('assistant/down/{id}',array(  
+        'as'=>'assistant.down',
+        'uses'=>'Artificer\ArtificerAssistantController@close'
+    ));
+    Route::any('assistant/export',array(  
+        'as'=>'assistant.export',
+        'uses'=>'Artificer\ArtificerAssistantController@export'
+    )); 
+    Route::any('assistant/show/{id}',array(  
+        'as'=>'assistant.show',
+        'uses'=>'Artificer\ArtificerAssistantController@show'
+    ));
+    //韩式定妆
+    Route::any('banner/index',array(  //
+        'as'=>'banner.index',
+        'uses'=>'Banner\BannerController@index'
+    )); 
+    Route::any('banner/create',array(  //
+        'as'=>'banner.create',
+        'uses'=>'Banner\BannerController@create'
+    )); 
+    Route::any('banner/edit/{id}',array(  //
+        'as'=>'banner.edit',
+        'uses'=>'Banner\BannerController@edit'
+    )); 
+    Route::any('banner/destroy/{id}',array(  //
+        'as'=>'banner.destroy',
+        'uses'=>'Banner\BannerController@destroy'
+    )); 
+   
 });
