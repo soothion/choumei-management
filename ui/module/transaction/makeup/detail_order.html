@@ -31,7 +31,7 @@
                     <a class="btn" data-modal='comp-color' data-slug="coupon.add">
                          补色
                     </a>
-                    <a href="index.html" data-modal='refund' class="btn" data-slug="coupon.add">
+                    <a data-modal='refund' class="btn" data-slug="coupon.add">
                          退款
                     </a>
                     <a href="index.html" class="btn" data-slug="coupon.add">
@@ -271,25 +271,27 @@
                       'cancelText':'取消',
                       'defineText':'保存',
                       'confirm':true,
-                      'modalType':'box'
+                      'modalType':'box',
+                      'content':'./modal_receive'
                     },
                     'cashier':{
                       'title':'确认收银',
                       'cancelText':'取消',
                       'defineText':'确认收银',
                       'confirm':true,
-                      'modalType':'box'
+                      'modalType':'box',
+                      'content':'./modal_cashier'
                     },
                     'comp-color':{
                       'title':'用户补色记录',
                       'cancelText':'取消',
                       'defineText':'保存',
                       'confirm':true,
-                      'modalType':'box'
+                      'modalType':'box',
+                      'content':'./modal_compColor'
                     },
                     'receipt':{
-                      'title':'补开发票',
-                      'content':'<p>你正在给订单开发票，确认开票后不能退回，是否继续</p>',
+                      'text':'你正在给订单开发票，确认开票后不能退回，是否继续',
                       'cancelText':'取消',
                       'defineText':'确认',
                       'confirm':true,
@@ -300,7 +302,8 @@
                       'cancelText':'取消',
                       'defineText':'确认退款',
                       'confirm':true,
-                      'modalType':'confirm'
+                      'modalType':'box',
+                      'content':'./modal_refund'
                     }
                   };
 
@@ -312,7 +315,9 @@
                   }();
 
                   var initModal = function(options){
-                    console.log(options)
+                      if (options.content && options.content.indexOf('./')>-1){
+                           options.content =lib.ejs.render({url:options.content});
+                      }
                       lib.popup[options['modalType']](options);
                   }
                  </script>
