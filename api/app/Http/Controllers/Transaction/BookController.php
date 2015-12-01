@@ -361,7 +361,7 @@ class BookController extends Controller
     }
     
     /**
-     * @api {get} /book/refund/{id} 6.预约单--退款
+     * @api {get} /book/refund/{id} 7.预约单--退款
      * @apiName refund
      * @apiGroup book
      *

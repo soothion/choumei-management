@@ -3,9 +3,9 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 Use PDO;
 
-class BeautyMakeup extends Model
+class BookingCash extends Model
 {
-    protected $table = 'beauty_makeup';
+    protected $table = 'booking_cash';
     protected $primaryKey = 'id';
     public $timestamps = false;
 }
