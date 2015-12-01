@@ -267,8 +267,6 @@ class ArtificerAssistantController extends Controller{
     * @apiSuccess {String} number         必填,在职编号.
     * @apiSuccess {Number} workingLife    必填,工作年限.
     * @apiSuccess {String} introduce      必填,个性签名.
-    * @apiSuccess {String} experience     必填,从业经历.
-    * @apiSuccess {String} detail         必填,个人介绍JSON.[{"title":"我很好溜哦","content":"你好呀"},{"title":"ni我很好溜哦","content":"你好呀1"}] title:标题 content:内容
     * @apiSuccess {Number} credential     选填,证件类型 0无填写类型 1身份证； 2军官证； 3驾驶证； 4护照.
     * @apiSuccess {String} cardId         选填,证件类型所对应的证件号码.
     * @apiSuccess {String} mobilePhone    选填,电话.
@@ -282,13 +280,6 @@ class ArtificerAssistantController extends Controller{
     * 
     * 
     * 
-    * 
-    * 
-    * @apiSuccessExample Success-Response:
-    * 	    {
-    * 	        "result": 1,
-    * 	        "data": null
-    * 	    }
     *
     * 
     * @apiSuccessExample Success-Response:
@@ -312,7 +303,8 @@ class ArtificerAssistantController extends Controller{
     *                    "number": 1001,
     *                    "workingLife": 12,
     *                    "introduce": "我来介绍0001",
-    *                    "status": 0
+    *                    "status": 0,
+    *                    "pid": "5,1,2"
     *      }
     *	}
     *
@@ -331,7 +323,7 @@ class ArtificerAssistantController extends Controller{
             'mobilephone as mobilePhone','wechat','qq',
             'email','level','number',
             'working_life as workingLife','introduce',
-            'status',/*'detail','experience'*/
+            'status','pid'/*'detail','experience'*/
         ];
         $info = Artificer::select( $field )->where(['artificer_id'=>$id])->first();
         if( empty($info) ) return $this->error('没有找到专家信息哦');
