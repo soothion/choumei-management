@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+      <meta charset="utf-8">
+      <title>臭美管理后台</title>
+      <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆 </a>
+            <span>&gt;</span><a href="refund_list.html">定妆单退款查询</a>
+            <span>&gt;</span>定妆单退款详情
+            <div class="flex-box">
+                <div class="flex-item">
+                    <h4>定妆单退款详情</h4>
+                </div>
+                <div class="flex-item fr">
+                  <div class="fr">
+                    <a data-modal='refund' class="btn" data-slug="coupon.add">
+                         确认退款
+                    </a>
+                    <a data-modal='refund' class="btn" data-slug="coupon.add">
+                         拒绝退款
+                    </a>
+                    <a href="index.html" class="btn" data-slug="coupon.add">
+                         返回
+                    </a>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="table table-detail" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
+                <script type="text/template" id='table-t'>
+                <table >
+                <%var status=["","进行中","下线","已关闭","已结束"]%>
+                    <tbody>
+                        <tr>
+                            <td class="td">订单号：</td>
+                            <td><%=data.vcTitle%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">预约号：</td>
+                            <td>无痛水光针</td>
+                        </tr>
+                        <tr>
+                            <td class="td">手机号：</td>
+                            <td>无痛水光针</td>
+                        </tr>
+                        <tr>
+                            <td class="td">姓名：</td>
+                            <td>无痛水光针</td>
+                        </tr>
+                        <tr>
+                            <td class="td">性别：</td>
+                            <td>无痛水光针</td>
+                        </tr>
+                        <tr>
+                            <td class="td">预约项目：</td>
+                            <td>无痛水光针</td>
+                        </tr>
+                        <tr>
+                            <td class="td">项目价格：</td>
+                            <td>无痛水光针</td>
+                        </tr>
+                        <tr>
+                            <td class="td">预约日期：</td>
+                            <td>无痛水光针</td>
+                        </tr>
+                        <tr>
+                            <td class="td">推荐码：</td>
+                            <td>无痛水光针</td>
+                        </tr>
+                        <tr>
+                            <td class="td">订单状态：</td>
+                            <td>无痛水光针</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">预约金支付信息</td>
+                        </tr>
+                        <tr>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>支付方式：</th>
+                                            <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                            <th>流水号：</th>
+                                            <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                        </tr>
+                        <tr>
+                            <td class="td">支付金额：</td>
+                            <td>1000</td>
+                        </tr>
+                        <tr>
+                            <td class="td">支付时间：</td>
+                            <td>3000</td>
+                        </tr>
+                        <tr>
+                            <td class="td">支付状态：</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">用户到店记录：</td>
+                        </tr>
+                        <tr>
+                            <td class="td">到店时间：</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">修改预约：</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">沟通记录：</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+                        <tr>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>接待人：</th>
+                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                        <th>接待时间：</th>
+                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </tr>
+                        <tr>
+                            <td colspan="2">退款信息：</td>
+                        </tr>
+                        <tr>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>发起退款：</th>
+                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                        <th>退款原因：</th>
+                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </tr>
+                        <tr>
+                            <td class="td">退款说明：</td>
+                            <td><%=data.actTime%></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">退款方式：</td>
+                        </tr>
+                        <tr>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>退款金额：</th>
+                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                        <th>发起退款时间：</th>
+                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </tr>
+                        <tr>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>退款状态：</th>
+                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                        <th>完成退款时间：</th>
+                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </tr>
+                        <tr>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>审批人：</th>
+                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                        <th>审批时间：</th>
+                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </tr>
+                    </tbody>
+                </table>
+                 </script>
+                 <script type="text/javascript">
+                  $('body').on('click','#edit_btn',function(){
+                        clearTmpData();
+                        var id = $(this).attr('data-id');
+                        window.location.href="addBase.html?id="+id;
+                  });
+                  var clearTmpData  = function(){
+                      window.localStorage.removeItem('couponTmpData');
+                  }
+
+                  var ModalList = {
+                    'receive':{
+                      'title':'用户接待记录',
+                      'cancelText':'取消',
+                      'defineText':'保存',
+                      'confirm':true,
+                      'modalType':'box',
+                      'content':'./modal_receive'
+                    },
+                    'cashier':{
+                      'title':'确认收银',
+                      'cancelText':'取消',
+                      'defineText':'确认收银',
+                      'confirm':true,
+                      'modalType':'box',
+                      'content':'./modal_cashier'
+                    },
+                    'comp-color':{
+                      'title':'用户补色记录',
+                      'cancelText':'取消',
+                      'defineText':'保存',
+                      'confirm':true,
+                      'modalType':'box',
+                      'content':'./modal_compColor'
+                    },
+                    'receipt':{
+                      'text':'你正在给订单开发票，确认开票后不能退回，是否继续',
+                      'cancelText':'取消',
+                      'defineText':'确认',
+                      'confirm':true,
+                      'modalType':'confirm'
+                    },
+                    'refund':{
+                      'title':'退款',
+                      'cancelText':'取消',
+                      'defineText':'确认退款',
+                      'confirm':true,
+                      'modalType':'box',
+                      'content':'./modal_refund'
+                    }
+                  };
+
+                  var bindEvent = function(){
+                    $('body').on('click','a[data-modal]',function(){
+                      var modal= $(this).attr('data-modal');
+                      initModal(ModalList[modal]);
+                    });
+                  }();
+
+                  var initModal = function(options){
+                      if (options.content && options.content.indexOf('./')>-1){
+                           options.content =lib.ejs.render({url:options.content});
+                      }
+                      lib.popup[options['modalType']](options);
+                  }
+                 </script>
+            </div>
+        </div>
+    </body>
+</html>
