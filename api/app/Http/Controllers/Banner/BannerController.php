@@ -58,7 +58,7 @@ class BannerController extends Controller {
     public function index() {
         $param = $this->param;
         if (empty($param['type'])) {
-            throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+            throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         $page = isset($param['page']) ? max($param['page'], 1) : 1;
         $page_size = isset($param['page_size']) ? $param['page_size'] : 20;
@@ -73,7 +73,7 @@ class BannerController extends Controller {
         if ($query) {
             return $this->success($query);
         } else {
-            throw new ApiException('查询banner失败', ERROR::MERCHANT_STYLIST_UPDATE_ERROR);
+            throw new ApiException('查询banner失败', ERROR::BEAUTY_BANNER_SELECT_ERROR);
         }
     }
 
@@ -107,11 +107,11 @@ class BannerController extends Controller {
     public function create() {
         $param = $this->param;
         if (empty($param['type']) || !isset($param['name']) || !isset($param['image']) || empty($param['behavior'])) {
-            throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+            throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
             if (!isset($param['url'])) {
-                throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+                throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
             }
         }
         $param['created_at'] = time();
@@ -122,7 +122,7 @@ class BannerController extends Controller {
             Event::fire('banner.create','主键:'.$id);
             return $this->success();
         } else {
-            throw new ApiException('创建banner失败', ERROR::MERCHANT_STYLIST_UPDATE_ERROR);
+            throw new ApiException('创建banner失败', ERROR::BEAUTY_BANNER_CREATE_ERROR);
         }
     }
 
@@ -157,14 +157,14 @@ class BannerController extends Controller {
         $param = $this->param;
         $banner = Banner::find($id);
         if ($banner == FALSE) {
-            throw new ApiException('找不到这样的banner，id有误', ERROR::MERCHANT_STYLIST_ID_ERROR);
+            throw new ApiException('找不到这样的banner，id有误', ERROR::BEAUTY_BANNER_NOT_ID);
         }
         if (!isset($param['name']) || !isset($param['image']) || empty($param['behavior'])) {
-            throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+            throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
             if (!isset($param['url'])) {
-                throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+                throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
             }
         }
         $param['updated_at'] = time();
@@ -173,7 +173,7 @@ class BannerController extends Controller {
             Event::fire('banner.edit','主键:'.$id);
             return $this->success();
         } else {
-            throw new ApiException('修改banner失败', ERROR::MERCHANT_STYLIST_UPDATE_ERROR);
+            throw new ApiException('修改banner失败', ERROR::BEAUTY_BANNER_UPDATE_ERROR);
         }
     }
 
@@ -203,14 +203,14 @@ class BannerController extends Controller {
     public function destroy($id) {
         $banner = Banner::find($id);
         if ($banner == FALSE) {
-            throw new ApiException('找不到这样的banner，id有误', ERROR::MERCHANT_STYLIST_ID_ERROR);
+            throw new ApiException('找不到这样的banner，id有误', ERROR::BEAUTY_BANNER_NOT_ID);
         }
         $query = Banner::destroy($id);
         if ($query) {
             Event::fire('banner.destroy','主键:'.$id);
             return $this->success();
         } else {
-            throw new ApiException('删除banner失败', ERROR::MERCHANT_STYLIST_UPDATE_ERROR);
+            throw new ApiException('删除banner失败', ERROR::BEAUTY_BANNER_DELETE_ERROR);
         }
     }
 
