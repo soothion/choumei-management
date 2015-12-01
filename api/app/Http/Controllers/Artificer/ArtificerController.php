@@ -395,11 +395,10 @@ class ArtificerController extends Controller{
 	 * @apiName checkNumberExists
 	 * @apiGroup Artificer
 	 *
-	 * @apiParam {Number} id            必填,职工id.
+	 * @apiParam {Number} id            选填（新增的时候可不传）,职工id.
 	 * @apiParam {Number} number        必填,专家编号.
 	 *
 	 *
-	 * @apiSuccess {Number} exists      状态标识. 0:不存在，1:存在
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:
@@ -411,26 +410,24 @@ class ArtificerController extends Controller{
      *      }
 	 *	}
 	 */
-    public function checkNumberExists( $id ){
+    public function checkNumberExists( $id=0 ){
         $param = $this->param;
         $number = isset( $param['number'] ) ? $param['number'] : $this->error('未填写专家编码');
-        $exists = Artificer::where(['number'=>$number,'artificer_id'=>$id])->where('pid','=',NULL)->first();
-        $result = [];
-        $result['exists'] = 0;
-        if( empty($exists) ) return $this->success($result);
-        $result['exists'] = 1;
-        return $this->success( $result );
+        $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number])->where('pid','=',NULL)->first();
+        if( empty($exists) ) return $this->success();
+        $exists = $exists->toArray();
+        if( $id == $exists['id'] ) return $this->success();
+        return $this->error( '专家编号已存在', ERROR::ARTIFICER_NAME_EXISTS_ERROR );
     }
     /**
 	 * @api {get} /artificer/checkNameExists/:id 8.获取专家名字是否存在
 	 * @apiName checkNameExists
 	 * @apiGroup Artificer
 	 *
-	 * @apiParam {Number} id            必填,职工id.
+	 * @apiParam {Number} id            选填（新增的时候可不传）,职工id.
 	 * @apiParam {Number} name          必填,专家名字.
 	 *
 	 *
-	 * @apiSuccess {Number} exists      状态标识. 0:不存在，1:存在
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:
@@ -442,15 +439,14 @@ class ArtificerController extends Controller{
      *      }
 	 *	}
 	 */
-    public function checkNameExists( $id ){
+    public function checkNameExists( $id = 0 ){
         $param = $this->param;
         $name = isset( $param['name'] ) ? $param['name'] : $this->error('未填写专家名字');
-        $exists = Artificer::where(['name'=>$name,'artificer_id'=>$id])->where('pid','=',NULL)->first();
-        $result = [];
-        $result['exists'] = 0;
-        if( empty($exists) ) return $this->success($result);
-        $result['exists'] = 1;
-        return $this->success( $result );
+        $exists = Artificer::select(['artificer_id as id'])->where(['name'=>$name])->where('pid','=',NULL)->first();
+        if( empty($exists) ) return $this->success();
+        $exists = $exists->toArray();
+        if( $id == $exists['id'] ) return $this->success();
+        return $this->error( '专家名称已存在', ERROR::ARTIFICER_NAME_EXISTS_ERROR );
     }
      /**
 	 * @api {post} /artificer/export     9.导出专家列表
