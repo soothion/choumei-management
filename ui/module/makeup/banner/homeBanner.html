@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+
+        <style>
+          .box-warpper{
+            position:relative;
+            width:100%;
+            margin:15px;          
+          }
+
+          .banner{
+            display: inline-block;
+            margin:10px;
+            height:333px;
+            overflow: hidden;
+            border:1px solid  #ddd;
+            width:25%;            
+          }
+
+          ul{
+            display:inline-block;
+            min-width:300px;
+            padding:5px 10px;
+            width:95%;
+          }
+          ul li{
+            padding:5px 2px;
+            overflow: hidden;
+          }
+          .fl{
+            float:left;
+          }
+          .fr{
+            float:right;
+          }
+          .fr a{
+            margin:0 10px;
+          }
+          li div img{
+           width:100%;
+           height:100px;
+          }
+
+          li div{
+            margin:5px 0px;
+          }
+
+          li div label{
+            display:inline-block;
+            min-width:110px;
+            width:30%;
+          }
+
+          li div input{
+            min-width:110px;
+            width:60%;
+          }
+
+          .add-button{
+              height: 320px;
+              line-height: 320px;
+              text-align: center;
+          }
+
+          #banner-button{
+            cursor:pointer;
+          }
+
+          .uploderBox{
+            line-height: 100px;
+            height:100px;
+            border:1px dashed #ddd;
+            text-align: center;
+          }
+
+          .move{
+            cursor:move;
+          }
+
+          .imgWrapper{
+            position: relative;
+          }
+
+          .operation{
+            position:absolute!important;
+            bottom:0px;
+            left:0px;
+            width:100%;
+            height:32px;
+            background:rgba(0,0,0,0.5);
+            color:#ddd;
+            line-height:32px;
+            text-align:center;
+            -webkit-transition:all 0.2s ease 0s;
+            -moz-transition:all 0.2s ease 0s;
+            transition:all 0.2s ease 0s;
+            cursor:pointer;
+            display: none;
+          }
+
+          .img > span:hover{
+                    color:#fff;
+           }          
+
+        </style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="homeBanner.html">主页Banner</a>    
+        </div>
+
+        <div class="box-warpper">
+            <div class="banner">
+                <ul>
+                    <li>
+                        <div class="fl"><h3><strong>Banner1</strong></h3></div>
+                        <div class="fr">
+                            <button class='link' href="">保存</button>
+                            <button class='link' href="">取消</button>
+                            <button class='link del' >删除</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="uploderBox">                           
+                           <button class="btn-primary" id="uploader">上传</button>
+                        </div>                       
+                    </li>
+                    <li style="border-top:1px solid #ddd;">
+                        <div>
+                            <label><span>标题</span></label>
+                            <input type="text" />
+                        </div>
+
+                        <div>
+                            <label><input type="radio" name="link"/><span>h5链接</span></label>
+                            <input type="text" />
+                        </div>
+
+                        <div>
+                            <label><input type="radio" name="link"/><span>App内部链接</span></label>
+                            <input type="text" />
+                        </div>
+
+                        <div>
+                            <label><input type="radio" name="link"/><span>无跳转</span></label>
+                            <input type="text" />
+                        </div>
+                    </li>
+                </ul>             
+            </div>
+        
+            <div id="banner-button" class="banner">
+                <ul>
+                    <li>
+                        <div style="text-align:center;margin-top:100px;">
+                            <button type="button">
+                                <span style="font-size: 4rem;color:#ddd;">+</span><br>
+                                <span style="font-size: 15px;color:#ddd;font-weight:900;">添加</span>
+                            </button>
+                        </div>
+                    </li>
+                </ul>             
+            </div>                                                       
+        </div>
+
+        <script>
+          $(document).ready(function(){
+                var bannerHTML = $('.banner')[0].outerHTML
+                uploader('uploader');
+                $(".box-warpper").on('click','#banner-button',function(){
+                    var id    = 'uploader'+$('.banner').length;
+                    var clone = $(bannerHTML);
+                    clone.find("#uploader").attr("id",id); 
+                    clone.find("strong").text("Banner"+$('.banner').length);             
+                    $("#banner-button").before(clone);
+                    uploader(id);
+                    if($('.banner').length >= 11 ){
+                        $("#banner-button").hide();
+                    }
+                });
+  
+                $(".box-warpper").on('click','.del',function(){
+                    $(this).closest('.banner').remove();
+                })
+
+                function uploader(id){
+                    lib.puploader.image({
+                        browse_button: id,
+                        auto_start:true,
+                        filters: {
+                            mime_types : [
+                                { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+                            ]
+                        },
+                        max_file_size:'10mb',
+                        multi_selection:true,
+                        files_number:1,
+                        crop:true
+                    },function(uploader){
+                        var box = $('#'+id).parent();
+                        uploader.bind('ImageUploaded',function(up,response){
+                            var ratio = new Number(750/500).toFixed(2);
+                            lib.cropper.create({
+                                src:response.img,
+                                aspectRatio : ratio,
+                                thumbnails  : ['750x500'],
+                                define:function(data){
+                                    box.css('display','none');
+                                box.parent().append('<div class="imgWrapper"><img src='+data['750x500']+'></div>');                                    
+                                }
+                            });
+
+                        });
+                    });
+                }               
+          });
+        </script>
+    </body>
+</html>
