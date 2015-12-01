@@ -640,5 +640,34 @@ class ERROR
       *@param 项目不存在
       */
      CONST ITEM_NOT_FOUND =  -51106;
+     
+     
+     ////////////韩式定妆项目/////////////
+     /**
+      *@param 参数不全
+      */
+     CONST BEAUTY_ITEM_ERROR =  -51500;
+      
+     /**
+      *@param 更新失败
+      */
+     CONST BEAUTY_ITEM_UPDATE_FAIL =  -51501;
+      
+     
+     /**
+      *@param 项目价格有误
+      */
+     CONST BEAUTY_ITEM_WRONG_PRICE =  -51502;
+     
+     /**
+      *@param 项目不存在
+      */
+     CONST BEAUTY_ITEM_NOT_FOUND =  -51503;
+     
+
+     /**
+      *@param 项目名称重复
+      */
+     CONST BEAUTY_ITEM_NAME_REOEAT =  -51504;
 
 }

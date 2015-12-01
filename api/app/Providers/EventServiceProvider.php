@@ -301,7 +301,15 @@ class EventServiceProvider extends ServiceProvider
     	],
         'voucher.exportTicketList' => [
             'App\Listeners\TicketEventListener@onExport',
-    	]
+    	],
+		
+		// 韩式定妆项目操作
+        'beautyItem.updateFashion' => [
+            'App\Listeners\BeautyItemEventListener@onUpdateFashion',
+    	],
+        'beautyItem.update' => [
+            'App\Listeners\BeautyItemEventListener@onUpdate',
+    	],
     ];
 
     /**
