@@ -270,7 +270,7 @@
                                             <td><%=data.platform.DEVICE_OS%></td>
                                             <td><%=data.platform.DEVICE_MODEL%></td>
                                             <td><%=data.platform.DEVICE_NETWORK%></td>
-                                            <td><%=data.platform.VERSION%></td>
+                                            <td><%= data.platform.DEVICE_TYPE == 'WECHAT'?'微信公众号（H5）':data.platform.VERSION%></td>
                                         </tr>
                                     <%}%>
                                     </tbody>
