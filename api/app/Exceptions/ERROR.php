@@ -642,6 +642,30 @@ class ERROR
      CONST ITEM_NOT_FOUND =  -51106;
      
      
+      
+     ////////////韩式定妆活动模块//////////////
+     /***
+      * @param 活动添加失败
+      */
+     CONST POWDER_ARTICLE_ADD_FIELD = 51300;
+     
+      /***
+      * @param 活动名称已存在
+      */
+     CONST POWDER_ARTICLE_NAME_EXIST = 51301;
+     
+     /***
+      * @param 活动开关失败
+      */
+     CONST POWDER_ARTICLE_SWITCH_STATUS= 51302;
+     
+     /***
+      * @param 活动验证开关失败
+      */
+     CONST POWDER_ARTICLE_SWITCH_VERIFY_STATUS= 51303;
+
+     
+     
      ////////////韩式定妆项目/////////////
      /**
       *@param 参数不全
@@ -694,5 +718,5 @@ class ERROR
       *@param banner的删除错误
       */
      CONST BEAUTY_BANNER_DELETE_ERROR =  -51509;
-
+     
 }

@@ -1317,5 +1317,27 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'beauty.delete',
         'uses'=>'Beauty\beautyController@delete'
     )); 
+    
+    //定妆活动
+    Route::any('powderArticles/addArticles',array(  
+        'as'=>'powderArticles.addArticles',
+        'uses'=>'powder\powderArticlesController@addArticles'
+    )); 
+    Route::any('powderArticles/articlesList',array(  
+        'as'=>'powderArticles.articlesList',
+        'uses'=>'powder\powderArticlesController@articlesList'
+    ));
+    Route::any('powderArticles/showArticlesInfo',array(  
+        'as'=>'powderArticles.showArticlesInfo',
+        'uses'=>'powder\powderArticlesController@showArticlesInfo'
+    )); 
+    Route::any('powderArticles/switchArticles',array(  
+        'as'=>'powderArticles.switchArticles',
+        'uses'=>'powder\powderArticlesController@switchArticles'
+    ));
+    Route::any('powderArticles/switchVerifyArticles',array(  
+        'as'=>'powderArticles.switchVerifyArticles',
+        'uses'=>'powder\powderArticlesController@switchVerifyArticles'
+    ));
 
 });
