@@ -1303,5 +1303,19 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'banner.destroy',
         'uses'=>'Banner\BannerController@destroy'
     )); 
-   
+    
+    //定妆中心
+    Route::any('beauty/index',array(  
+        'as'=>'beauty.index',
+        'uses'=>'Beauty\beautyController@index'
+    )); 
+    Route::any('beauty/edit',array(  
+        'as'=>'beauty.edit',
+        'uses'=>'Beauty\beautyController@edit'
+    )); 
+    Route::any('beauty/delete',array(  
+        'as'=>'beauty.delete',
+        'uses'=>'Beauty\beautyController@delete'
+    )); 
+
 });

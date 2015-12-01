@@ -352,6 +352,14 @@ class EventServiceProvider extends ServiceProvider
     	],
         'banner.destroy' => [
             'App\Listeners\BannerEventListener@onDestroy',
+        ],
+        
+        // 定妆中心介绍
+        'beauty.edit' => [
+            'App\Listeners\BeautyEventListener@onEdit',
+    	],
+        'beauty.delete' => [
+            'App\Listeners\BeautyEventListener@onDelete',
     	]
 
     ];
