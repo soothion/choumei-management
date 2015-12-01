@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式半永久</a><span>&gt;</span>编辑项目
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>编辑项目</h4>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<form action="product.html" class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
+				<script type="text/template" id="form-t">
+				<%if(query.p=="index"){%>
+				<ul class="nav-step flex-box">
+					<li class="flex-item ">
+						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
+					</li>
+					<li class="flex-item active">
+						<span class="arrow">2.预约详情</span>
+					</li>
+					<li class="flex-item">
+						<span>3.产品介绍</span>
+					</li>
+					<li class="flex-item">
+						<span>4.预约流程</span>
+					</li>
+					<li class="flex-item">
+						<span>5.定妆流程</span>
+					</li>
+				</ul>
+				<%}else{%>
+				<%document.getElementById("form").action="device.html"%>
+				<ul class="nav-step flex-box">
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
+					</li>
+					<li class="flex-item active">
+						<span class="arrow">2.预约详情</span>
+					</li>
+					<li class="flex-item">
+						<span>3.设备介绍</span>
+					</li>
+					<li class="flex-item">
+						<span>4.产品介绍</span>
+					</li>
+					<li class="flex-item">
+						<span>5.预约流程</span>
+					</li>
+					<li class="flex-item">
+						<span>6.定妆流程</span>
+					</li>
+					<%if(data.is_gift==1){%>
+					<li class="flex-item">
+						<span>7.赠送说明</span>
+					</li>
+					<%}%>
+				</ul>
+				<%}%>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>预约详情：</label>
+                    <div class="control">
+						<div class="table makeup-item-list">
+							<table>
+								<thead>
+									<tr>
+										<th>标题</th>
+										<th>内容</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<%=lib.ejs.render({url:"table-t"},{data:[{title:"预约时间",content:"预约时间"}]})%>
+									<tr>
+										<td data-name="title">预约时间</td>
+										<td data-name="content">可预约一周内的时间</td>
+										<td><a class="link edit">编辑</a><span class="space"></span><a class="link remove">删除</a></td>
+									</tr>
+									<tr>
+										<td>专家等级</td>
+										<td>当前项目为(院长)为你服务</td>
+										<td><a class="link edit">编辑</a><span class="space"></span><a class="link remove">删除</a></td>
+									</tr>
+									<tr>
+										<td>预约金</td>
+										<td>当前项目为(院长)为你服务</td>
+										<td><a class="link edit">编辑</a><span class="space"></span><a class="link remove">删除</a></td>
+									</tr>
+									<tr>
+										<td>预约后</td>
+										<td>当前项目为(院长)为你服务</td>
+										<td><a class="link edit">编辑</a><span class="space"></span><a class="link remove">删除</a></td>
+									</tr>
+								</tbody>
+							</table>
+							<input type="hidden" name="register_detail" class="json-hidden" required requiredmsg="预约详情不能为空"/>
+							<br />
+							<a class="link add">+新增预约详情</a>
+							<br />
+							<br />
+							<div>
+								<a class="btn" href="index.html">取消</a>
+								<span class="space"></span>
+								<button class="btn-primary">下一步</button>
+							</div>
+						</div>
+                    </div>
+                </div>
+				<%document.getElementById("form").action=document.getElementById("form").action+"?"+query._%>
+				</script>
+            </form>
+        </div>
+		<script type="text/javascript" src="edit.js"></script>
+    </body>
+</html>

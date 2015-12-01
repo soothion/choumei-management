@@ -7,22 +7,27 @@
     </head>
     <body>
         <div class="breadcrumb">
-            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式半永久</a>
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式快时尚</a>
 			<div class="flex-box">
 			 <div class="flex-item">
-				<h4>韩式半永久</h4>
+				<h4>韩式快时尚</h4>
 			</div>
 		 </div>		 
         </div>		
         <div class="wrapper">
-           <div class="table" ajat="beautyItem/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table-tab-switch">
+				<ul class="tab-switch">
+					<li class="active"><a href="#page=1&is_gift=0">快时尚项目</a></li>
+					<li><a  href="#page=1&is_gift=1">快时尚赠送项目</a></li>
+				</ul>
+			</div>
+           <div class="table" ajat="beautyItem/indexFashion?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
                     <thead>
                         <tr>
                             <th>序号</th>
                             <th>项目名称</th>
-                            <th>项目类型</th>
                             <th>原价</th>                           
                             <th>臭美会员价 </th>                           
                             <th>已预约数</th>                           
@@ -31,16 +36,30 @@
                     </thead>
                 <tbody>
 				<%var data=data.data%>
-				<%var levelArray=["","明星院长","院长"]%>
 				<%data.forEach(function(item,i){%>
                  <tr>
 					<td><%=i+1%></td>
 					<td><%=item.name%></td>
-					<td><%=levelArray[item.level]%></td>
-					<td><%=item.price%></td>
-					<td><%=item.vip_price%></td>
+					<td>
+						<%if(prices.min_price&&prices.max_price){%>
+							<%if(prices.min_price==prices.max_price){%>
+							￥<%=item.prices.min_price%>-￥<%=item.prices.max_price%>
+							<%}else{%>
+							￥<%=item.prices.min_price%>
+							<%}%>
+						<%}%>
+					</td>
+					<td>
+						<%if(prices.min_vip_price&&prices.max_vip_price){%>
+							<%if(prices.min_vip_price==prices.max_vip_price){%>
+							￥<%=item.prices.min_vip_price%>-￥<%=item.prices.max_vip_price%>
+							<%}else{%>
+								￥<%=item.prices.min_vip_price%>
+							<%}%>
+						<%}%>
+					</td>
 					<td><%=item.quantity%></td>
-					<td><a class="link" href="detail.html?id=<%=item.id%>&p=index" data-slug="manager.show,manager.update">查看</a></td>
+					<td><a class="link" href="detail.html?id=<%=item.id%>&p=fashion" data-slug="manager.show,manager.update">查看</a></td>
                   </tr>
 				  <%})%>
                 </tbody>

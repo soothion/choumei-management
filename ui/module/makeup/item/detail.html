@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+		<style type="text/css">
+			.item-sub{
+				padding-left:15px;
+				width:300px;
+			}
+			.item-sub h4{
+				font-size:16px;
+			}
+			.item-images{
+				margin:5px 0 10px 0;
+			}
+			.item-images img{
+				width:100%;
+			}
+		</style>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式半永久</a><span>&gt;</span>查看项目详情
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>查看项目详情</h4>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper" id="detail" ajat="#domid=detail&tempid=detail-t">
+			<script type="text/template" id="detail-t">
+			<div class="detail-operation">
+				<a href="base.html?<%=query._%>" class="btn">编辑</a>
+				<span class="space"></span>
+				<button class="btn btn-cancel" type="button">返回</button>
+			</div>
+			<div class="table-box">
+				<div class="table-detail table-item">
+					<table>
+						<tbody>
+							<tr>
+								<td>项目名称：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>项目介绍：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>类别：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>原价：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>臭美会员价：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>预约详情：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td> 产品介绍：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>预约流程：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>定妆流程：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td colspan="2">其他</td>
+							</tr>
+							<tr>
+								<td>已售数量：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>赠送信息：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>赠送说明：</td>
+								<td></td>
+							</tr>
+							<tr>
+								<td>时间限制：</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="table-item item-sub">
+					<h4>项目icon：</h4>
+					<div class="item-images">
+						<img src="/images/logo.png" alt="" />
+					</div>
+					<h4>项目封面：</h4>
+					<div class="item-images">
+						<img src="/images/logo.png" alt="" />
+					</div>
+					<h4>项目图片：</h4>
+					<div class="item-images">
+						<img src="/images/logo.png" alt="" />
+					</div>
+				</div>
+			</div>
+			</script>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span><a href="index.html">韩式半永久</a><span>&gt;</span>编辑项目
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4>编辑项目</h4>
+			</div>
+		 </div>		 
+        </div>		
+        <div class="wrapper">
+			<form class="form-vertical" data-role="form" id="form" novalidate="novalidate">
+				<ul class="nav-step flex-box">
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>2.预约详情</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>3.产品介绍</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>4.预约流程</span>
+					</li>
+					<li class="flex-item active">
+						<span class="arrow">5.定妆流程</span>
+					</li>
+				</ul>
+				<ul class="nav-step flex-box">
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>2.预约详情</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>3.设备介绍</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>4.产品介绍</span>
+					</li>
+					<li class="flex-item">
+						<span><i class="fa fa-check-circle"></i>5.预约流程</span>
+					</li>
+					<li class="flex-item active">
+						<span class="arrow">6.定妆流程</span>
+					</li>
+					<li class="flex-item">
+						<span>7.赠送说明</span>
+					</li>
+				</ul>
+                <div class="control-group">
+                    <label class="control-label" for=""><span class="red">*</span>定妆流程：</label>
+                    <div class="control">
+						<div class="table makeup-item-list">
+							<table>
+								<thead>
+									<tr>
+										<th>名称</th>
+										<th>内容</th>
+										<th>图片</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td data-name="name">预约时间</td>
+										<td data-name="detail">可预约一周内的时间</td>
+										<td></td>
+										<td><a class="link edit">编辑</a><span class="space"></span><a class="link remove">删除</a></td>
+									</tr>
+								</tbody>
+							</table>
+							<br />
+							<a class="link add">+新增预约流程</a>
+							<br />
+							<br />
+							<div>
+								<a class="btn" href="index.html">取消</a>
+								<span class="space"></span>
+								<a href="base.html" class="btn">返回</a>
+								<span class="space"></span>
+								<button class="btn-primary">下一步</button>
+							</div>
+						</div>
+                    </div>
+                </div> 
+            </form>
+        </div>
+		<script type="text/template" id="popup-t">
+			<style type="text/css">
+				.popup-form input,.popup-form textarea{
+					width:400px;
+				}
+				.popup-form .control-label{
+					width:120px;
+				}
+			</style>
+			<form data-role="form" class="popup-form">
+				 <div class="control-group">
+					<label class="control-label" for=""><span class="red">*</span>标题：</label>
+					<div class="control">
+						<input type="text" name="name" value="<%=data.name%>" placeholder="2~20个字" maxlength="20" required style="width:300px"/>
+					</div>
+				</div> 
+				 <div class="control-group">
+					<label class="control-label" for=""><span class="red">*</span>内容：</label>
+					<div class="control">
+						<textarea name="detail" placeholder="2~500个字" maxlength="500" required style="width:300px"><%=data.detail%></textarea>
+					</div>
+				</div>
+			</form>
+		</script>
+		<script type="text/javascript">
+			$(function(){
+				$('.makeup-item-list').on("click",".remove",function(){
+					$(this).closest("tr").remove();
+				}).on("click",".edit,.add",function(){
+					var $this=$(this);
+					var data={};
+					var tr=null;
+					if($this.hasClass("edit")){
+						$this.closest('td').siblings('td').each(function(){
+							data[$(this).data('name')]=this.innerHTML;
+						});
+						tr=$this.closest('tr');
+					}
+					parent.lib.popup.box({
+						confirm:true,
+						height:300,
+						width:800,
+						content:lib.ejs.render({text:$('#popup-t').html()},{data:data}),
+						complete:function(){
+							lib.popup.resize();
+							var popup=$(this);
+							var form=popup.find('form');
+							new lib.Form(form[0]);
+							popup.find('input').focus();
+							popup.find(".popup-alert-define").on("click",function(e){
+								e.stopPropagation();
+								form.submit();
+								lib.popup.resize();
+							});
+							form.on('save',function(e,data){
+								if(tr){
+									tr.children("td").eq(0).html(data.name);
+									tr.children("td").eq(1).html(data.detail);
+								}else{
+									
+								}
+								lib.popup.close();
+							});
+						}
+					});
+				});
+			})
+		</script>
+    </body>
+</html>
