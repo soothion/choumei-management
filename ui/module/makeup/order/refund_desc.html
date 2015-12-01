@@ -29,6 +29,17 @@
                 </div>
             </div>
         </div>
+        <style>
+        .inner-table tbody td:nth-child(2n+1){
+            background-color: #F6F8F9;
+        }
+        .pad-n{
+            padding:0px !important;
+        }
+        .bor-n{
+            border:0px !important;
+        }
+        </style>
         <div class="wrapper">
             <div class="table table-detail" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id='table-t'>
@@ -79,18 +90,18 @@
                             <td colspan="2">预约金支付信息</td>
                         </tr>
                         <tr>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>支付方式：</th>
-                                            <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                            <th>流水号：</th>
-                                            <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                        </tr>
-                                    </thead>
+                            <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
                                     <tbody>
+                                        <tr>
+                                            <td>支付方式：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td>流水号：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        </tr>
                                     </tbody>
                                 </table>
+                            </td>
                         </tr>
                         <tr>
                             <td class="td">支付金额：</td>
@@ -120,35 +131,37 @@
                             <td><%=data.actTime%></td>
                         </tr>
                         <tr>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>接待人：</th>
-                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                        <th>接待时间：</th>
-                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                    </tr>
-                                </thead>
+                            <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
                                 <tbody>
+                                    <tr>
+                                        <td>接待人：</td>
+                                        <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        <td>接待时间：</td>
+                                        <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                    </tr>
                                 </tbody>
                             </table>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="2">退款信息：</td>
                         </tr>
                         <tr>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>发起退款：</th>
-                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                        <th>退款原因：</th>
-                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                    </tr>
-                                </thead>
+                            <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
                                 <tbody>
+                                    <tr>
+                                        <tr>
+                                            <td>发起退款：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td>退款原因：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        </tr>
+                                    </tr>
                                 </tbody>
                             </table>
+                            </td>
                         </tr>
                         <tr>
                             <td class="td">退款说明：</td>
@@ -158,46 +171,46 @@
                             <td colspan="2">退款方式：</td>
                         </tr>
                         <tr>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>退款金额：</th>
-                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                        <th>发起退款时间：</th>
-                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                    </tr>
-                                </thead>
+                            <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
                                 <tbody>
+                                    <tr>
+                                        <td>退款金额：</td>
+                                        <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        <td>发起退款时间：</td>
+                                        <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                    </tr>
                                 </tbody>
                             </table>
+                        </td>
                         </tr>
                         <tr>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>退款状态：</th>
-                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                        <th>完成退款时间：</th>
-                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                            <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
+                                    <tbody>
+                                        <tr>
+                                            <td>退款状态：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td>完成退款时间：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
                         </tr>
                         <tr>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>审批人：</th>
-                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                        <th>审批时间：</th>
-                                        <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                            <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
+                                    <tbody>
+                                        <tr>
+                                            <td>审批人：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td>审批时间：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

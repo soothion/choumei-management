@@ -719,4 +719,8 @@ class ERROR
       */
      CONST BEAUTY_BANNER_DELETE_ERROR =  -51509;
      
+     /**
+      *@param 专家编辑的名称重复
+      */
+     CONST ARTIFICER_NAME_EXISTS_ERROR =  -51510;
 }

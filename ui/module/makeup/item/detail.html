@@ -29,7 +29,7 @@
 			</div>
 		 </div>		 
         </div>		
-        <div class="wrapper" id="detail" ajat="#domid=detail&tempid=detail-t">
+        <div class="wrapper" id="detail" ajat="<%if(query.p=='index'){%>beautyItem/show<%}else{%>beautyItem/showFashion<%}%>?<%=query._%>#domid=detail&tempid=detail-t">
 			<script type="text/template" id="detail-t">
 			<div class="detail-operation">
 				<a href="base.html?<%=query._%>" class="btn">编辑</a>
@@ -42,58 +42,87 @@
 						<tbody>
 							<tr>
 								<td>项目名称：</td>
-								<td></td>
+								<td><%=data.name%></td>
 							</tr>
 							<tr>
 								<td>项目介绍：</td>
-								<td></td>
+								<td><%=data.detail%></td>
 							</tr>
+							<%if(query.p=="index"){%>
 							<tr>
 								<td>类别：</td>
-								<td></td>
+								<td><%=data.level==1?"明星院长":"院长"%></td>
 							</tr>
+							<%}%>
 							<tr>
 								<td>原价：</td>
-								<td></td>
+								<td>
+									<%if(query.p=="index"){%>
+										￥<%=data.price%>
+									<%}else{%>
+										<%if(data.prices.min_price&&data.prices.max_price){%>
+											<%if(data.prices.min_price!=data.prices.max_price){%>
+											￥<%=data.prices.min_price%>-￥<%=data.prices.max_price%>
+											<%}else{%>
+											￥<%=data.prices.min_price%>
+											<%}%>
+										<%}%>
+									<%}%>
+								</td>
 							</tr>
 							<tr>
 								<td>臭美会员价：</td>
-								<td></td>
+								<td>
+									<%if(query.p=="index"){%>
+										￥<%=data.vip_price%>
+									<%}else{%>
+										<%if(data.prices.min_vip_price&&data.prices.max_vip_price){%>
+											<%if(data.prices.min_vip_price!=data.prices.max_vip_price){%>
+											￥<%=data.prices.min_vip_price%>-￥<%=data.prices.max_vip_price%>
+											<%}else{%>
+											￥<%=data.prices.max_vip_price%>
+											<%}%>
+										<%}%>
+									<%}%>
+								</td>
 							</tr>
 							<tr>
 								<td>预约详情：</td>
-								<td></td>
+								<td><%=data.register_detail%></td>
 							</tr>
 							<tr>
 								<td> 产品介绍：</td>
-								<td></td>
+								<td>
+									<%=data.description%>
+									<%=data.archive%>
+								</td>
 							</tr>
 							<tr>
 								<td>预约流程：</td>
-								<td></td>
+								<td><%=data.register_workflow%></td>
 							</tr>
 							<tr>
 								<td>定妆流程：</td>
-								<td></td>
+								<td><%=data.beauty%></td>
 							</tr>
 							<tr>
 								<td colspan="2">其他</td>
 							</tr>
 							<tr>
 								<td>已售数量：</td>
-								<td></td>
+								<td><%=data.detail%></td>
 							</tr>
 							<tr>
 								<td>赠送信息：</td>
-								<td></td>
+								<td><%=data.detail%></td>
 							</tr>
 							<tr>
 								<td>赠送说明：</td>
-								<td></td>
+								<td><%=data.detail%></td>
 							</tr>
 							<tr>
 								<td>时间限制：</td>
-								<td></td>
+								<td><%=data.detail%></td>
 							</tr>
 						</tbody>
 					</table>
@@ -101,15 +130,16 @@
 				<div class="table-item item-sub">
 					<h4>项目icon：</h4>
 					<div class="item-images">
-						<img src="/images/logo.png" alt="" />
-					</div>
-					<h4>项目封面：</h4>
-					<div class="item-images">
-						<img src="/images/logo.png" alt="" />
+						<img src="<%=data.logo%>" alt="" />
 					</div>
 					<h4>项目图片：</h4>
 					<div class="item-images">
-						<img src="/images/logo.png" alt="" />
+						<%if(data.images){%>
+						<%data.images=JSON.parse(data.images)%>
+						<%data.images&&data.images.forEach(function(item){%>
+						<img src="<%=item.img%>" alt="" />
+						<%})%>
+						<%}%>
 					</div>
 				</div>
 			</div>

@@ -148,21 +148,21 @@ Route::any('platform/getItemType',array(
     'uses'=>'Promotion\PlatformController@getItemType'
 ));
 
-Route::any('artificer/checkNumberExists/{id}',array(  
+Route::any('artificer/checkNumberExists/{id?}',array(  
     'as'=>'artificer.checkNumberExists',
     'uses'=>'Artificer\ArtificerController@checkNumberExists'
 )); 
-Route::any('artificer/checkNameExists/{id}',array(  
+Route::any('artificer/checkNameExists/{id?}',array(  
     'as'=>'artificer.checkNameExists',
     'uses'=>'Artificer\ArtificerController@checkNameExists'
 )); 
 
 
-Route::any('assistant/checkNumberExists/{id}',array(  
+Route::any('assistant/checkNumberExists/{id?}',array(  
     'as'=>'assistant.checkNumberExists',
     'uses'=>'Artificer\ArtificerAssistantController@checkNumberExists'
 ));
-Route::any('assistant/checkNameExists/{id}',array(  
+Route::any('assistant/checkNameExists/{id?}',array(  
     'as'=>'assistant.checkNameExists',
     'uses'=>'Artificer\ArtificerAssistantController@checkNameExists'
 ));

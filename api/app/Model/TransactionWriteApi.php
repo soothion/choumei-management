@@ -7,6 +7,7 @@ namespace App;
 
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use App\ThriftHelperModel;
 class TransactionWriteApi
 {
     /**
@@ -696,65 +697,152 @@ class TransactionWriteApi
      */
     private static function refundOfWx()
     {
-        $args = func_get_args();
-        if (count($args) < 1) {
-            throw new ApiException("必要参数丢失", ERROR::UNKNOWN_ERROR);
-        }
-        $items = $args[0];
-        $ret = [];
-        $ret['info'] = '';
+       $args = func_get_args();
+       if (count($args) < 1) {
+          throw new ApiException("必要参数丢失", ERROR::UNKNOWN_ERROR);
+       }
+       $items = $args[0];
+       $ret = [];
+       $ret['info'] = '';     
+       $thrift = new ThriftHelperModel('','');
+       
+        $wechat_config = self::GetWechatConf(env('APP_ENV'));
+        
         foreach ($items as $item) {
-            $url = $item['url'];
-            unset($item['url']);
-            self::makeSignForPost($item);
-            Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($item) . " \t url : {$url} \n", "wechat");
-            $respnd = Utils::HttpPost($url, $item);
-            Utils::log("pay", date("Y-m-d H:i:s") . "\t [RESPOND] return:  {$respnd} \n", "wechat");
-            $ret['info'] .= $item['ordersn']." ".$respnd . "\n";
+            $ordersn = $item['ordersn'];
+            $money = $item['money'];
+            $bountysn = '';
+            $refundRequestParam = new \cn\choumei\thriftserver\service\stub\gen\WechatRefundRequestParam();
+            $refundRequestParam->payMerchantId = $wechat_config['PAY_MERCHANT_ID'];
+            $refundRequestParam->payMerchantPassword =  $wechat_config['PAY_MERCHANT_PASSWORD'];
+            $refundRequestParam->payRefundUrl =  $wechat_config['PAY_REFUND_URL'];
+            $refundRequestParam->payPartnerId =  $wechat_config['PAY_PARTNER_ID'];
+            $refundRequestParam->payPartnerKey =  $wechat_config['PAY_PARTNER_KEY'];
+            $refundRequestParam->h5AppId =  $wechat_config['H5_APP_ID'];
+            $refundRequestParam->h5MerchantId =  $wechat_config['H5_MERCHANT_ID'];
+            $refundRequestParam->h5RefundUrl =  $wechat_config['H5_REFUND_URL'];
+            $refundRequestParam->h5PartnerKey =  $wechat_config['H5_PARTNER_KEY'];
+            $refundRequestParam->orderSn = $ordersn;
+            $refundRequestParam->bountySn = $bountysn;
+            $refundRequestParam->amount = $money;
+            
+            Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($item) . "\n", "wechat");
+            
+            $refundResponseThrift = $thrift->request('trade-center', 'wechatRefund', array($refundRequestParam));  
+
+            Utils::log("pay", date("Y-m-d H:i:s") . "\t [RESPOND] Response: ".json_encode($refundResponseThrift)." \n", "wechat");
+            if (empty($refundResponseThrift) || !isset($refundResponseThrift['code'])) {
+                $ret['info'] .= '调用微信退款服务失败\n';
+            } elseif ($refundResponseThrift['code'] == '0') {
+                $ret['info'] .= $ordersn.' 微信退款成功\n';               
+            } else {
+                $ret['info'] .= $ordersn.' 微信退款失败\n'.$refundResponseThrift['code'] . ': ' . isset($refundResponseThrift['message'])?$refundResponseThrift['message']:''."\n";
+            }
+            unset($refundRequestParam);
         }
         $ret['info'] = nl2br($ret['info']);
         return $ret;
+        
+//         $args = func_get_args();
+//         if (count($args) < 1) {
+//             throw new ApiException("必要参数丢失", ERROR::UNKNOWN_ERROR);
+//         }
+//         $items = $args[0];
+//         $ret = [];
+//         $ret['info'] = '';
+//         foreach ($items as $item) {
+//             $url = $item['url'];
+//             unset($item['url']);
+//             self::makeSignForPost($item);
+//             Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($item) . " \t url : {$url} \n", "wechat");
+//             $respnd = Utils::HttpPost($url, $item);
+//             Utils::log("pay", date("Y-m-d H:i:s") . "\t [RESPOND] return:  {$respnd} \n", "wechat");
+//             $ret['info'] .= $item['ordersn']." ".$respnd . "\n";
+//         }
+//         $ret['info'] = nl2br($ret['info']);
+//         return $ret;
     }
     
     /**
      * 易联支付
      */
     private static function refundOfYilian()
-    {
-        $url = env("YILIAN_REFUND_NOTIFY_URL",null);
-        if(empty($url))
-        {
-            throw new ApiException("获取配置信息 [YILIAN_REFUND_NOTIFY_URL] 出错",ERROR::CONFIG_LOST);
-        }
-        $args = func_get_args();
+    {      
+       $args = func_get_args();
         if (count($args) < 1) {
             throw new ApiException("必要参数丢失", ERROR::UNKNOWN_ERROR);
         }
         $items = $args[0];
         $ret = [];
-        $ret['info'] = "";
+        $ret['info'] = '';
+        
+        $thrift = new ThriftHelperModel('', '');
+        
+        $payeco_config = self::GetPayEcoConf(env('APP_ENV'));
+        
         foreach ($items as $item) {
-    
-            $argc = array();
-            $argc['body'] = $item;
-            $argc['to'] = 'refund';
-            $argc['type'] = 'Payeco';
-    
-            $argStr = json_encode($argc);
-            $param['code'] = $argStr;
-    
-            Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($param) . " \t url : {$url} \n", "yilian");
-            $respnd = Utils::HttpPost($url, $param);
-            Utils::log("pay", date("Y-m-d H:i:s") . "\t [RESPOND] return:  {$respnd} \n", "yilian");    
-            $resDecode = json_decode($respnd, true);
-            if (isset($resDecode['result']) && $resDecode['result'] == 1) {
-                $ret['info'] .= $item['ordersn'] . " 退款成功  退款方式 易联\n";
+            $ordersn = $item['ordersn'];
+            $extData = "orderSn={$ordersn}";
+            $money =    $item['money'];         
+            $refundSn = $ordersn . 'Z' . time();            
+            $refundRequestParam = new \cn\choumei\thriftserver\service\stub\gen\PayecoRefundRequestParam();
+            $refundRequestParam->paymentSn = $refundSn;
+            $refundRequestParam->amount = $money;
+            $refundRequestParam->merchantId = $payeco_config['MERCHANT_ID'];
+            $refundRequestParam->privateKey = $payeco_config['PRIVATE_KEY'];
+            $refundRequestParam->publicKey = $payeco_config['PUBLIC_KEY'];
+            $refundRequestParam->payecoUrl = $payeco_config['PAYECO_URL'];
+            $refundRequestParam->extData = $extData;
+            
+            $refundResponseThrift = $thrift->request('trade-center', 'payecoRefund', array(
+                $refundRequestParam
+            ));
+            
+            if (empty($refundResponseThrift) || !isset($refundResponseThrift['retCode'])) {
+                $ret['info'] .= '调用易联退款服务失败\n';
+            } elseif ($refundResponseThrift['retCode'] == '0000') {
+                $ret['info'] .= $ordersn.' 易联退款成功\n';               
             } else {
-                $ret['info'] .= $item['ordersn'] . " 退款失败   退款方式 易联\n";
+                $ret['info'] .= $ordersn.' 易联退款失败\n'.$refundResponseThrift['retCode'] . ': ' . isset($refundResponseThrift['retMsg'])?$refundResponseThrift['retMsg']:''."\n";
             }
+            unset($refundRequestParam);
         }
         $ret['info'] = nl2br($ret['info']);
         return $ret;
+//         $url = env("YILIAN_REFUND_NOTIFY_URL",null);
+//         if(empty($url))
+//         {
+//             throw new ApiException("获取配置信息 [YILIAN_REFUND_NOTIFY_URL] 出错",ERROR::CONFIG_LOST);
+//         }
+//         $args = func_get_args();
+//         if (count($args) < 1) {
+//             throw new ApiException("必要参数丢失", ERROR::UNKNOWN_ERROR);
+//         }
+//         $items = $args[0];
+//         $ret = [];
+//         $ret['info'] = "";
+//         foreach ($items as $item) {
+    
+//             $argc = array();
+//             $argc['body'] = $item;
+//             $argc['to'] = 'refund';
+//             $argc['type'] = 'Payeco';
+    
+//             $argStr = json_encode($argc);
+//             $param['code'] = $argStr;
+    
+//             Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($param) . " \t url : {$url} \n", "yilian");
+//             $respnd = Utils::HttpPost($url, $param);
+//             Utils::log("pay", date("Y-m-d H:i:s") . "\t [RESPOND] return:  {$respnd} \n", "yilian");    
+//             $resDecode = json_decode($respnd, true);
+//             if (isset($resDecode['result']) && $resDecode['result'] == 1) {
+//                 $ret['info'] .= $item['ordersn'] . " 退款成功  退款方式 易联\n";
+//             } else {
+//                 $ret['info'] .= $item['ordersn'] . " 退款失败   退款方式 易联\n";
+//             }
+//         }
+//         $ret['info'] = nl2br($ret['info']);
+//         return $ret;
     }
     
 
@@ -925,7 +1013,125 @@ class TransactionWriteApi
             );           
         }
     }
-        
+
+    /**
+     * 获取微信的配置
+     * 
+     * @param string $env            
+     * @return array
+     */
+    public static function GetWechatConf($env = 'prod')
+    {
+        $configs = [
+            'local' => [
+                'PAY_MERCHANT_ID' => '10037612',
+                'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
+                'PAY_REFUND_URL' => 'https://mch.tenpay.com/refundapi/gateway/refund.xml',
+                'PAY_PARTNER_ID' => '1224362901',
+                'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
+                'H5_APP_ID' => 'wxd4c590c3a2dad288',
+                'H5_MERCHANT_ID' => '1243472202',
+                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refundquery',
+                'H5_PARTNER_KEY' => '31D9B01827FF7F850FE94A2FD0D7DE10'
+            ],
+            'dev' => [
+                'PAY_MERCHANT_ID' => '10037612',
+                'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
+                'PAY_REFUND_URL' => 'https://mch.tenpay.com/refundapi/gateway/refund.xml',
+                'PAY_PARTNER_ID' => '1224362901',
+                'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
+                'H5_APP_ID' => 'wxd4c590c3a2dad288',
+                'H5_MERCHANT_ID' => '1243472202',
+                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refundquery',
+                'H5_PARTNER_KEY' => '31D9B01827FF7F850FE94A2FD0D7DE10'
+            ],
+            'test' => [
+                'PAY_MERCHANT_ID' => '10037612',
+                'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
+                'PAY_REFUND_URL' => 'https://mch.tenpay.com/refundapi/gateway/refund.xml',
+                'PAY_PARTNER_ID' => '1224362901',
+                'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
+                'H5_APP_ID' => 'wxd4c590c3a2dad288',
+                'H5_MERCHANT_ID' => '1243472202',
+                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refundquery',
+                'H5_PARTNER_KEY' => '31D9B01827FF7F850FE94A2FD0D7DE10'
+            ],
+            'uat' => [
+                'PAY_MERCHANT_ID' => '10037612',
+                'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
+                'PAY_REFUND_URL' => 'https://mch.tenpay.com/refundapi/gateway/refund.xml',
+                'PAY_PARTNER_ID' => '1224362901',
+                'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
+                'H5_APP_ID' => 'wxd4c590c3a2dad288',
+                'H5_MERCHANT_ID' => '1243472202',
+                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refundquery',
+                'H5_PARTNER_KEY' => '31D9B01827FF7F850FE94A2FD0D7DE10'
+            ],
+            'prod' => [
+                'PAY_MERCHANT_ID' => '10037612',
+                'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
+                'PAY_REFUND_URL' => 'https://mch.tenpay.com/refundapi/gateway/refund.xml',
+                'PAY_PARTNER_ID' => '1224362901',
+                'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
+                'H5_APP_ID' => 'wx6cfe7d87206790b5',
+                'H5_MERCHANT_ID' => '10037612',
+                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refundquery',
+                'H5_PARTNER_KEY' => '31D9B01827FF7F850FE94A2FD0D7DE09'
+            ]
+        ];
+        $key = strtolower($env);
+        if (isset($configs[$key])) {
+            return $configs[$key];
+        }
+        return $configs['prod'];
+    }
+
+    /**
+     * 获取易联的配置
+     * 
+     * @param string $env            
+     * @return array
+     */
+    public static function GetPayEcoConf($env = 'prod')
+    {
+        $configs = [
+            'local' => [
+                'MERCHANT_ID' => '502050000158',
+                'PRIVATE_KEY' => 'MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALgBOGF2251xzolP0V4vhyVjr/2Qki8Xnok2vpuv1ls1GzWxp5swpg7FjPA3V2/gkZq5yOA943xgRydHb2iv39rnxX46iL/sxMUVXo6FrbRlTuQs4Grzfe3hTd95UJRpOjq1IkipN3ybP5UoC/a3OJpOfRDIgcD03QV53ddjno8PAgMBAAECgYEAkgXd4XL6vAq59jxSkeUz4hcnbhnR+O9Mj+XTBChZ+028xzKyKTVFQwnBXEz+5bkYs+pmIJbctjKNpP1Ky5BvG6gZLnbtallr+A8eZSWcvqnDJCcP2VJSRF9vAvwjXofoyMIy0Z533Lldy1KX5bxOk6eBxV55HJnOLZofyWC0NBECQQDfxgF2Wxt/dSPwcJvUQgs6zLLhyxggXMBS2EJ6a7SyMwh0jaZvmWGHNhHf1IyKYSNSYjM3thHGfChRDG+MD1tnAkEA0oEJnYFFACi91J8Dj70BD0okwqOjT+ZyjYMxDjNOZk/Zl95Vxs3o036QmspmjmsWYXsijedn6aVAVLjqQ4kOGQJAHz7nr14TXd2+cfFXYPED3mb8x1hzevlYhXja93sYlRVZJeUti0Gwg4/COS3VnfDoXLWHj0zl+IAXpRGGddkjGwJBAM2/Qd6o0wBs0d5X7es4GSkQlw2HU8Bsxdp7OB9hFmf58/v0XHKMH91X/47L9aGOGbn92LBKVc6QrmggtRh9hUECQQCowGcHum4dShGTAXZ/ZGyIWrRpaIjSMRUqKj2bemi8MWHT/WvNSnASsi8CrzEWtGREcfFtUkPZZOwy7VCpF/d+',
+                'PUBLIC_KEY' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCRxin1FRmBtwYfwK6XKVVXP0FIcF4HZptHgHu+UuON3Jh6WPXc9fNLdsw5Hcmz3F5mYWYq1/WSRxislOl0U59cEPaef86PqBUW9SWxwdmYKB1MlAn5O9M1vgczBl/YqHvuRzfkIaPqSRew11bJWTjnpkcD0H+22kCGqxtYKmv7kwIDAQAB',
+                'PAYECO_URL' => 'https://testmobile.payeco.com'
+            ],
+            'dev' => [
+                'MERCHANT_ID' => '502050000158',
+                'PRIVATE_KEY' => 'MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALgBOGF2251xzolP0V4vhyVjr/2Qki8Xnok2vpuv1ls1GzWxp5swpg7FjPA3V2/gkZq5yOA943xgRydHb2iv39rnxX46iL/sxMUVXo6FrbRlTuQs4Grzfe3hTd95UJRpOjq1IkipN3ybP5UoC/a3OJpOfRDIgcD03QV53ddjno8PAgMBAAECgYEAkgXd4XL6vAq59jxSkeUz4hcnbhnR+O9Mj+XTBChZ+028xzKyKTVFQwnBXEz+5bkYs+pmIJbctjKNpP1Ky5BvG6gZLnbtallr+A8eZSWcvqnDJCcP2VJSRF9vAvwjXofoyMIy0Z533Lldy1KX5bxOk6eBxV55HJnOLZofyWC0NBECQQDfxgF2Wxt/dSPwcJvUQgs6zLLhyxggXMBS2EJ6a7SyMwh0jaZvmWGHNhHf1IyKYSNSYjM3thHGfChRDG+MD1tnAkEA0oEJnYFFACi91J8Dj70BD0okwqOjT+ZyjYMxDjNOZk/Zl95Vxs3o036QmspmjmsWYXsijedn6aVAVLjqQ4kOGQJAHz7nr14TXd2+cfFXYPED3mb8x1hzevlYhXja93sYlRVZJeUti0Gwg4/COS3VnfDoXLWHj0zl+IAXpRGGddkjGwJBAM2/Qd6o0wBs0d5X7es4GSkQlw2HU8Bsxdp7OB9hFmf58/v0XHKMH91X/47L9aGOGbn92LBKVc6QrmggtRh9hUECQQCowGcHum4dShGTAXZ/ZGyIWrRpaIjSMRUqKj2bemi8MWHT/WvNSnASsi8CrzEWtGREcfFtUkPZZOwy7VCpF/d+',
+                'PUBLIC_KEY' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCRxin1FRmBtwYfwK6XKVVXP0FIcF4HZptHgHu+UuON3Jh6WPXc9fNLdsw5Hcmz3F5mYWYq1/WSRxislOl0U59cEPaef86PqBUW9SWxwdmYKB1MlAn5O9M1vgczBl/YqHvuRzfkIaPqSRew11bJWTjnpkcD0H+22kCGqxtYKmv7kwIDAQAB',
+                'PAYECO_URL' => 'https://testmobile.payeco.com'
+            ],
+            'test' => [
+                'MERCHANT_ID' => '502050000158',
+                'PRIVATE_KEY' => 'MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALgBOGF2251xzolP0V4vhyVjr/2Qki8Xnok2vpuv1ls1GzWxp5swpg7FjPA3V2/gkZq5yOA943xgRydHb2iv39rnxX46iL/sxMUVXo6FrbRlTuQs4Grzfe3hTd95UJRpOjq1IkipN3ybP5UoC/a3OJpOfRDIgcD03QV53ddjno8PAgMBAAECgYEAkgXd4XL6vAq59jxSkeUz4hcnbhnR+O9Mj+XTBChZ+028xzKyKTVFQwnBXEz+5bkYs+pmIJbctjKNpP1Ky5BvG6gZLnbtallr+A8eZSWcvqnDJCcP2VJSRF9vAvwjXofoyMIy0Z533Lldy1KX5bxOk6eBxV55HJnOLZofyWC0NBECQQDfxgF2Wxt/dSPwcJvUQgs6zLLhyxggXMBS2EJ6a7SyMwh0jaZvmWGHNhHf1IyKYSNSYjM3thHGfChRDG+MD1tnAkEA0oEJnYFFACi91J8Dj70BD0okwqOjT+ZyjYMxDjNOZk/Zl95Vxs3o036QmspmjmsWYXsijedn6aVAVLjqQ4kOGQJAHz7nr14TXd2+cfFXYPED3mb8x1hzevlYhXja93sYlRVZJeUti0Gwg4/COS3VnfDoXLWHj0zl+IAXpRGGddkjGwJBAM2/Qd6o0wBs0d5X7es4GSkQlw2HU8Bsxdp7OB9hFmf58/v0XHKMH91X/47L9aGOGbn92LBKVc6QrmggtRh9hUECQQCowGcHum4dShGTAXZ/ZGyIWrRpaIjSMRUqKj2bemi8MWHT/WvNSnASsi8CrzEWtGREcfFtUkPZZOwy7VCpF/d+',
+                'PUBLIC_KEY' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCRxin1FRmBtwYfwK6XKVVXP0FIcF4HZptHgHu+UuON3Jh6WPXc9fNLdsw5Hcmz3F5mYWYq1/WSRxislOl0U59cEPaef86PqBUW9SWxwdmYKB1MlAn5O9M1vgczBl/YqHvuRzfkIaPqSRew11bJWTjnpkcD0H+22kCGqxtYKmv7kwIDAQAB',
+                'PAYECO_URL' => 'https://testmobile.payeco.com'
+            ],
+            'uat' => [
+                'MERCHANT_ID' => '502050001806',
+                'PRIVATE_KEY' => 'MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJFhPKmrd6iFtFbg1CQhcDC9YxaA9nxK2AlYGCfk6Qa3Qq6mWtEMcEopBL+ZYWKujSyf7u7er36rvZZ/WYCehdDgeLNT0a0vtwhG8F/0HIM2HW6Fky7eZ+gxg4paj00uHRFgkAE5fg+dVMWPjwoOKJRq8X9qeehWTM9SqX822KHDAgMBAAECgYB5Vxt20jLxaYd36/ekoHQveiM2KTWR0DY4tlqTEbCddmAlvZuXWDZw74OTF8X8w4v5bxPSM/NuWpHHB0wA2k79HpuGtWXhxfQOq6jMKAuh7uX5Q4phubGXVx3yWRqt3//LkBvyHt5hBEIJuukNSohVNdndouV89gVVWHgsEMz3gQJBAN9lEQPdJSthhf0QKOCASfm0cASxI2ds3AWzQu9DXZGK1pIBtWXwpzmrqY1KBMHfA4h/FJyTQ+aSC8PRcYkv/9MCQQCmmTdD7xs3IeAdsszyg4WyT5vSWvjRqjop4R7RurCkicn2HTcW/87aEiPBL1KrwNWKVbitWbd1ZBxSOHXe9pBRAkANNkj/VYDxQ99MzDveqze00PsfC+rwHvwUSjnXNMC/7top4Hf+A3Ggc4qflJUbcjkfRYTOjdciN9kCR8zTNEeJAkEAiHmlK1KZ0d0/UjTh7ZzOjlbmyDjb8i3n/dy8OYUdJXz25FXkhkPCeSQ5BA23RJnwlKVKZz/CqTj8dmJoNOF5MQJAMC4TSKTdUealTcPVVLlvyHapO3qpjRn/miD9u5+x+6cIMsMQQjY846Bth0XUubes83w6uhVBvT12bOitb653Qw==',
+                'PUBLIC_KEY' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoymAVb04bvtIrJxczCT/DYYltVlRjBXEBFDYQpjCgSorM/4vnvVXGRb7cIaWpI5SYR6YKrWjvKTJTzD5merQM8hlbKDucxm0DwEj4JbAJvkmDRTUs/MZuYjBrw8wP7Lnr6D6uThqybENRsaJO4G8tv0WMQZ9WLUOknNv0xOzqFQIDAQAB',
+                'PAYECO_URL' => 'https://mobile.payeco.com'
+            ],
+            'prod' => [
+                'MERCHANT_ID' => '502050001806',
+                'PRIVATE_KEY' => 'MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJFhPKmrd6iFtFbg1CQhcDC9YxaA9nxK2AlYGCfk6Qa3Qq6mWtEMcEopBL+ZYWKujSyf7u7er36rvZZ/WYCehdDgeLNT0a0vtwhG8F/0HIM2HW6Fky7eZ+gxg4paj00uHRFgkAE5fg+dVMWPjwoOKJRq8X9qeehWTM9SqX822KHDAgMBAAECgYB5Vxt20jLxaYd36/ekoHQveiM2KTWR0DY4tlqTEbCddmAlvZuXWDZw74OTF8X8w4v5bxPSM/NuWpHHB0wA2k79HpuGtWXhxfQOq6jMKAuh7uX5Q4phubGXVx3yWRqt3//LkBvyHt5hBEIJuukNSohVNdndouV89gVVWHgsEMz3gQJBAN9lEQPdJSthhf0QKOCASfm0cASxI2ds3AWzQu9DXZGK1pIBtWXwpzmrqY1KBMHfA4h/FJyTQ+aSC8PRcYkv/9MCQQCmmTdD7xs3IeAdsszyg4WyT5vSWvjRqjop4R7RurCkicn2HTcW/87aEiPBL1KrwNWKVbitWbd1ZBxSOHXe9pBRAkANNkj/VYDxQ99MzDveqze00PsfC+rwHvwUSjnXNMC/7top4Hf+A3Ggc4qflJUbcjkfRYTOjdciN9kCR8zTNEeJAkEAiHmlK1KZ0d0/UjTh7ZzOjlbmyDjb8i3n/dy8OYUdJXz25FXkhkPCeSQ5BA23RJnwlKVKZz/CqTj8dmJoNOF5MQJAMC4TSKTdUealTcPVVLlvyHapO3qpjRn/miD9u5+x+6cIMsMQQjY846Bth0XUubes83w6uhVBvT12bOitb653Qw==',
+                'PUBLIC_KEY' => 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoymAVb04bvtIrJxczCT/DYYltVlRjBXEBFDYQpjCgSorM/4vnvVXGRb7cIaWpI5SYR6YKrWjvKTJTzD5merQM8hlbKDucxm0DwEj4JbAJvkmDRTUs/MZuYjBrw8wP7Lnr6D6uThqybENRsaJO4G8tv0WMQZ9WLUOknNv0xOzqFQIDAQAB',
+                'PAYECO_URL' => 'https://mobile.payeco.com'
+            ]
+        ];
+        $key = strtolower($env);
+        if (isset($configs[$key])) {
+            return $configs[$key];
+        }
+        return $configs['prod'];
+    }
 }
 
 ?>

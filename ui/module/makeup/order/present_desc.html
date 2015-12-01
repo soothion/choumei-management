@@ -26,6 +26,17 @@
                 </div>
             </div>
         </div>
+        <style>
+        .inner-table tbody td:nth-child(2n+1){
+            background-color: #F6F8F9;
+        }
+        .pad-n{
+            padding:0px !important;
+        }
+        .bor-n{
+            border:0px !important;
+        }
+        </style>
         <div class="wrapper">
             <div class="table table-detail" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id='table-t'>
@@ -41,21 +52,18 @@
                             <td>无痛水光针</td>
                         </tr>
                         <tr>
-                            <!-- <td class="td">赠送劵号：</td>
-                            <td> -->
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>赠送劵号：</th>
-                                            <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                            <th>活动名称：</th>
-                                            <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                        </tr>
-                                    </thead>
+                            <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
                                     <tbody>
+                                        <tr>
+                                            <td>赠送劵号：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td>活动名称：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        </tr>
                                     </tbody>
                                 </table>
-                            <!-- </td> -->
+                            </td>
                         </tr>
                         <tr>
                             <td class="td">赠送项目：</td>
@@ -89,34 +97,30 @@
                             <td><%=data.actTime%></td>
                         </tr>
 
-                        <tr >
-                              <td>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>专家：</th>
-                                            <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                            <th>助理：</th>
-                                            <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                        </tr>
-                                    </thead>
+                        <tr>
+                            <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
                                     <tbody>
+                                        <tr>
+                                            <td>专家：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td>助理：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                               </td>
                         </tr>
-                        <tr >
-                              <td>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>记录人：</th>
-                                            <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                            <th>记录时间：</th>
-                                            <th><%=data.vcRemark.replace(/\n/g,"</br>")%></th>
-                                        </tr>
-                                    </thead>
+                        <tr>
+                            <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
                                     <tbody>
+                                        <tr>
+                                            <td>记录人：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td>记录时间：</td>
+                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                               </td>

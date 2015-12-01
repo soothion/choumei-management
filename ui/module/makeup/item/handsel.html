@@ -15,8 +15,9 @@
 		 </div>		 
         </div>		
         <div class="wrapper">
-			<form class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
+			<form action="beautyItem/updateFashion" class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
+				<%var data=JSON.parse(sessionStorage.getItem("formdata"))%>
 				<ul class="nav-step flex-box">
 					<li class="flex-item">
 						<span><i class="fa fa-check-circle"></i>1.基本资料</span>
@@ -43,13 +44,13 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>赠送说明：</label>
                     <div class="control">
-						<textarea maxlength="500" name="present_explain" required placeholder="1~500个字"></textarea>
+						<textarea maxlength="500" name="present_explain" required placeholder="1~500个字"><%=data.present_explain%></textarea>
                     </div>
                 </div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>时间限制：</label>
                     <div class="control">
-						<input type="text" name="expire" required min="1" pattern="number" placeholder="1-999整数数字" />天内有效（获取赠送后）<span class="weak">1-999整数数字</span>
+						<input type="text" name="expire" value="<%=data.expire%>" required min="1" pattern="number" placeholder="1-999整数数字" />天内有效（获取赠送后）<span class="weak">1-999整数数字</span>
                     </div>
                 </div>
                 <div class="control-group">
@@ -65,7 +66,13 @@
         </div>
 		<script type="text/javascript">
 			$("#form").on('_ready',function(){
-				
+				this._getFormData=function(){
+					var data=lib.tools.getFormData($(this));
+					data=$.extend(JSON.parse(sessionStorage.getItem("formdata")),data);
+					sessionStorage.setItem("formdata",JSON.stringify(data));
+					data.more_prices=JSON.stringify(data.more_prices);
+					return data;
+				}
 			});
 		</script>
     </body>

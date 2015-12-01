@@ -267,8 +267,6 @@ class ArtificerAssistantController extends Controller{
     * @apiSuccess {String} number         必填,在职编号.
     * @apiSuccess {Number} workingLife    必填,工作年限.
     * @apiSuccess {String} introduce      必填,个性签名.
-    * @apiSuccess {String} experience     必填,从业经历.
-    * @apiSuccess {String} detail         必填,个人介绍JSON.[{"title":"我很好溜哦","content":"你好呀"},{"title":"ni我很好溜哦","content":"你好呀1"}] title:标题 content:内容
     * @apiSuccess {Number} credential     选填,证件类型 0无填写类型 1身份证； 2军官证； 3驾驶证； 4护照.
     * @apiSuccess {String} cardId         选填,证件类型所对应的证件号码.
     * @apiSuccess {String} mobilePhone    选填,电话.
@@ -276,19 +274,13 @@ class ArtificerAssistantController extends Controller{
     * @apiSuccess {String} qq             选填,qq.
     * @apiSuccess {String} email          选填,电子邮箱.
 	* @apiSuccess {Number} status         状态标识. 1:正常启用，0:禁用
+	* @apiSuccess {String} pid            选中的专家id
     *
     *
     * 
     * 
     * 
     * 
-    * 
-    * 
-    * @apiSuccessExample Success-Response:
-    * 	    {
-    * 	        "result": 1,
-    * 	        "data": null
-    * 	    }
     *
     * 
     * @apiSuccessExample Success-Response:
@@ -312,7 +304,8 @@ class ArtificerAssistantController extends Controller{
     *                    "number": 1001,
     *                    "workingLife": 12,
     *                    "introduce": "我来介绍0001",
-    *                    "status": 0
+    *                    "status": 0,
+    *                    "pid": "5,1,2"
     *      }
     *	}
     *
@@ -331,7 +324,7 @@ class ArtificerAssistantController extends Controller{
             'mobilephone as mobilePhone','wechat','qq',
             'email','level','number',
             'working_life as workingLife','introduce',
-            'status',/*'detail','experience'*/
+            'status','pid'/*'detail','experience'*/
         ];
         $info = Artificer::select( $field )->where(['artificer_id'=>$id])->first();
         if( empty($info) ) return $this->error('没有找到专家信息哦');
@@ -402,11 +395,10 @@ class ArtificerAssistantController extends Controller{
 	 * @apiName     checkNumberExists
 	 * @apiGroup    Assistant
 	 *
-	 * @apiParam {Number} id            必填,职工id.
+	 * @apiParam {Number} id              选填（新增的时候可不传）,职工id.
 	 * @apiParam {Number} number          必填,助理专家编号.
 	 *
 	 *
-	 * @apiSuccess {Number} exists      状态标识. 0:不存在，1:存在
 	 * 
 	 * 
 	 * @apiSuccessExample Success-Response:
@@ -421,19 +413,18 @@ class ArtificerAssistantController extends Controller{
     public function checkNumberExists( $id ){
         $param = $this->param;
         $number = isset( $param['number'] ) ? $param['number'] : $this->error('未填写助理专家编码');
-        $exists = Artificer::where(['number'=>$number,'artificer_id'=>$id])->whereRaw('pid is not NULL')->first();
-        $result = [];
-        $result['exists'] = 0;
-        if( empty($exists) ) return $this->success($result);
-        $result['exists'] = 1;
-        return $this->success( $result );
+        $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number,'artificer_id'=>$id])->whereRaw('pid is not NULL')->first();
+        if( empty($exists) ) return $this->success();
+        $exists = $exists->toArray();
+        if( $id == $exists['id'] ) return $this->success();
+        return $this->error( '专家助理编号已存在', ERROR::ARTIFICER_NAME_EXISTS_ERROR );
     }
     /**
 	 * @api {get} /assistant/checkNameExists/:id 8.获取助理专家名字是否存在
 	 * @apiName checkNameExists
 	 * @apiGroup Assistant
 	 *
-	 * @apiParam {Number} id            必填,职工id.
+	 * @apiParam {Number} id            选填（新增的时候可不传）,职工id.
 	 * @apiParam {String} name          必填,助理专家名字.
 	 *
 	 *
@@ -452,12 +443,11 @@ class ArtificerAssistantController extends Controller{
     public function checkNameExists( $id ){
         $param = $this->param;
         $name = isset( $param['name'] ) ? $param['name'] : $this->error('未填写专家名字');
-        $exists = Artificer::where(['name'=>$name,'artificer_id'=>$id])->whereRaw('pid is not NULL')->first();
-        $result = [];
-        $result['exists'] = 0;
-        if( empty($exists) ) return $this->success($result);
-        $result['exists'] = 1;
-        return $this->success( $result );
+        $exists = Artificer::select(['artificer_id as id'])->where(['name'=>$name,'artificer_id'=>$id])->whereRaw('pid is not NULL')->first();
+        if( empty($exists) ) return $this->success();
+        $exists = $exists->toArray();
+        if( $id == $exists['id'] ) return $this->success();
+        return $this->error( '专家助理编号已存在', ERROR::ARTIFICER_NAME_EXISTS_ERROR );
     }
     /**
 	 * @api {get} /assistant/getArtificer   9.获取专家名字
@@ -465,8 +455,6 @@ class ArtificerAssistantController extends Controller{
 	 * @apiGroup    Assistant
 	 *
      * 
-	 * @apiSuccess {Number} id            必填,职工id.
-	 * @apiSuccess {String} name          必填,专家名字.
 	 *
 	 *
 	 * 
