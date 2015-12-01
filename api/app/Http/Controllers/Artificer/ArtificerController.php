@@ -244,7 +244,7 @@ class ArtificerController extends Controller{
         return $this->success();
     }
     /**
-    * @api {Post} /artificer/show/:id  4.专家信息
+    * @api {Get} /artificer/show/:id  4.专家信息
     * @apiName show
     * @apiGroup Artificer
     *
@@ -331,7 +331,7 @@ class ArtificerController extends Controller{
         return $this->success( $info->toArray() );
     }
     /**
-	 * @api {get} /artificer/up/:id 4.启用
+	 * @api {get} /artificer/up/:id 5.启用
 	 * @apiName up
 	 * @apiGroup Artificer
 	 *
@@ -361,7 +361,7 @@ class ArtificerController extends Controller{
         return $this->success();
     }
     /**
-	 * @api {get} /artificer/down/:id 5.禁用
+	 * @api {get} /artificer/down/:id 6.禁用
 	 * @apiName down
 	 * @apiGroup Artificer
 	 *
@@ -391,7 +391,7 @@ class ArtificerController extends Controller{
         return $this->success();
     }
     /**
-	 * @api {get} /artificer/checkNumberExists/:id 6.获取专家编码是否存在
+	 * @api {get} /artificer/checkNumberExists/:id 7.获取专家编码是否存在
 	 * @apiName checkNumberExists
 	 * @apiGroup Artificer
 	 *
@@ -422,7 +422,7 @@ class ArtificerController extends Controller{
         return $this->success( $result );
     }
     /**
-	 * @api {get} /artificer/checkNameExists/:id 7.获取专家名字是否存在
+	 * @api {get} /artificer/checkNameExists/:id 8.获取专家名字是否存在
 	 * @apiName checkNameExists
 	 * @apiGroup Artificer
 	 *
@@ -453,7 +453,7 @@ class ArtificerController extends Controller{
         return $this->success( $result );
     }
      /**
-	 * @api {post} /artificer/export     8.导出专家列表
+	 * @api {post} /artificer/export     9.导出专家列表
 	 * @apiName     export
 	 * @apiGroup    Artificer
 	 *

@@ -338,7 +338,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success( $info->toArray() );
     }
     /**
-	 * @api {get} /assistant/up/:id 4.启用
+	 * @api {get} /assistant/up/:id 5.启用
 	 * @apiName up
 	 * @apiGroup Assistant
 	 *
@@ -368,7 +368,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success();
     }
     /**
-	 * @api {get} /assistant/down/:id 5.禁用
+	 * @api {get} /assistant/down/:id 6.禁用
 	 * @apiName     down
 	 * @apiGroup    Assistant
 	 *
@@ -398,7 +398,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success();
     }
     /**
-	 * @api {get} /assistant/checkNumberExists/:id 6.获取助理专家编码是否存在
+	 * @api {get} /assistant/checkNumberExists/:id 7.获取助理专家编码是否存在
 	 * @apiName     checkNumberExists
 	 * @apiGroup    Assistant
 	 *
@@ -429,7 +429,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success( $result );
     }
     /**
-	 * @api {get} /assistant/checkNameExists/:id 7.获取助理专家名字是否存在
+	 * @api {get} /assistant/checkNameExists/:id 8.获取助理专家名字是否存在
 	 * @apiName checkNameExists
 	 * @apiGroup Assistant
 	 *
@@ -460,7 +460,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success( $result );
     }
     /**
-	 * @api {get} /assistant/getArtificer   8.获取专家名字
+	 * @api {get} /assistant/getArtificer   9.获取专家名字
 	 * @apiName     getArtificer
 	 * @apiGroup    Assistant
 	 *
@@ -489,7 +489,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success( $result );
     }
     /**
-	 * @api {post} /assistant/export     9.导出专家助手列表
+	 * @api {post} /assistant/export     10.导出专家助手列表
 	 * @apiName export
 	 * @apiGroup Assistant
 	 *
