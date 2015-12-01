@@ -179,8 +179,8 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'uses'=>'MessageBox\MessageBoxController@redirectUrl'
     ))->where('pushId', '[0-9]+'); 
 //权限管理后台接口
-// Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
- Route::group(['middleware' => ['before']], function(){
+ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+// Route::group(['middleware' => ['before']], function(){
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -1339,5 +1339,12 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'powderArticles.switchVerifyArticles',
         'uses'=>'powder\powderArticlesController@switchVerifyArticles'
     ));
-
+    Route::any('powderArticles/presentList',array(  
+        'as'=>'powderArticles.presentList',
+        'uses'=>'powder\powderArticlesController@presentList'
+    ));
+    Route::any('powderArticles/presentListInfo',array(  
+        'as'=>'powderArticles.presentListInfo',
+        'uses'=>'powder\powderArticlesController@presentListInfo'
+    ));
 });

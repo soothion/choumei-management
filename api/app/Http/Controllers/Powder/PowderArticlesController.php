@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Model\Present;
+use App\Model\PresentArticleCode;
 
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
@@ -19,6 +20,16 @@ class PowderArticlesController extends Controller
         '停止活动',
         '停止验证',
         '活动过期',
+    );
+    private static $ticketCodeStatus = array(
+        1 =>'已使用',
+        2 =>'未使用',
+        3 =>'已过期',
+    );
+    private static $presentTypeName= array(
+        1=>'消费赠送',
+        2=>'推荐赠送',
+        3=>'活动赠送',
     );
     /**
      * @api {post} /PowderArticles/addArticles 1.添加活动
@@ -461,11 +472,150 @@ class PowderArticlesController extends Controller
         }    
     }
     /**
-    * 定妆赠送活动列表
+    * 定妆赠送活动券信息
      */
-    public function articlesTicketInfo()
+    public function articlesTicketList()
     {
         
+    }
+    
+    /**
+     * @api {post} /PowderArticles/presentList 7.定妆赠送查询列表
+     * 
+     * @apiName presentList
+     * @apiGroup PowderArticles
+     *
+     * @apiParam {Number} mobilephone 选填，手机号
+     * @apiParam {Number} reservateSn 选填，预约号
+     * @apiParam {Number} recommendCode 选填，推荐码
+     * @apiParam {Number} ticketCode 选填，券号
+     * @apiParam {Number} presentType 选填，赠送方式
+     * @apiParam {Number} ticketStatus 选填，券使用状态
+     * @apiParam {String} startTime 选填，赠送开始时间 YY-MM-DD
+     * @apiParam {String} endTime 选填，赠送结束时间 YY-MM-DD
+     * 
+     * @apiSuccess {Number} total 总数据量.
+     * @apiSuccess {Number} per_page 分页大小.
+     * @apiSuccess {Number} current_page 当前页面.
+     * @apiSuccess {Number} last_page 当前页面.
+     * @apiSuccess {Number} from 起始数据.
+     * @apiSuccess {Number} to 结束数据.
+     * 
+     * @apiSuccess {Number} articleCodeId 活动赠送券记录id
+     * @apiSuccess {Number} presentId 活动id.
+     * @apiSuccess {Number} reservateSn 预约号.
+     * @apiSuccess {Number} orderSn 系统内部订单号.
+     * @apiSuccess {Number} itemId 项目id.
+     * @apiSuccess {String} ticketCode 券号.
+     * @apiSuccess {Number} ticketStatus 券状态.
+     * @apiSuccess {Number} mobilephone 手机号.
+     * @apiSuccess {Number} recommendCode 推荐码.
+     * @apiSuccess {Number} presentType 赠送方式.
+     * @apiSuccess {Number} managerId 操作人id.
+     * @apiSuccess {Number} specialistId 专家id.
+     * @apiSuccess {Number} assistantId 助理id.
+     * @apiSuccess {String} expireTime 有效期.
+     * @apiSuccess {String} useTime 使用时间.
+     * @apiSuccess {String} recordTime 记录时间.
+     * @apiSuccess {String} createdTime 添加时间.
+     * @apiSuccess {String} itemName 项目名.
+     * @apiSuccess {String} ticketStatusName 券状态名
+     * @apiSuccess {String} presentTypeName 赠送类型名
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+            "result": 1,
+            "token": "",
+            "data": {
+                "total": 1,
+                "per_page": 20,
+                "current_page": 1,
+                "last_page": 1,
+                "from": 1,
+                "to": 1,
+                "data": [
+                    {
+                        "articleCodeId": 1,
+                        "presentId": 1,
+                        "reservateSn": 123456,
+                        "orderSn": 99999,
+                        "itemId": 1,
+                        "ticketCode": "502",
+                        "ticketStatus": 1,
+                        "mobilephone": 1802669546,
+                        "recommendCode": 5020,
+                        "presentType": 1,
+                        "managerId": 114,
+                        "specialistId": 1,
+                        "assistantId": 3,
+                        "expireTime": "0000-00-00 00:00:00",
+                        "useTime": "0000-00-00",
+                        "recordTime": "0000-00-00 00:00:00",
+                        "createdTime": "0000-00-00",
+                        "itemName": "韩式无痛水光针（赠送）",
+                        "ticketStatusName": "已使用",
+                        "presentTypeName": "消费赠送"
+                    }
+                ]
+            }
+        }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *               "msg" :"必传参数不能为空",
+     *           }
+     */
+    /**
+    * 定妆赠送查询列表
+     */
+    public function presentList()
+    {
+        $param = $this->param;
+        $mobilephone = isset($param['mobilephone']) ? intval($param['mobilephone']) :'';
+        $reservateSn = isset($param['reservateSn']) ? intval($param['reservateSn']) :'';
+        $recommendCode = isset($param['recommendCode']) ? intval($param['recommendCode']) :'';
+        $ticketCode = isset($param['ticketCode']) ? intval($param['ticketCode']) :'';
+        
+        $startTime = isset($param['startTime'])? strtotime($param['startTime']):'';
+        $endTime = isset($param['endTime'])? strtotime($param['endTime']." 23:59:59"):'';
+        
+        $presentType = isset($param['presentType']) ? intval($param['presentType']) :'';
+        $ticketStatus = isset($param['ticketStatus']) ? intval($param['ticketStatus']) :'';
+        
+        $page = isset($param['page'])?max($param['page'],1):1;
+        $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+        
+        $presentListInfo = PresentArticleCode::getPresentList($mobilephone,$reservateSn,$recommendCode,$ticketCode,$startTime,$endTime,$presentType,$ticketStatus,$page,$pageSize);
+        foreach ($presentListInfo['data'] as $key => &$val) {
+            $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']];
+            $val['presentTypeName'] = self::$presentTypeName[$val['presentType']];
+            $val['createTime'] = date('Y-m-d',$val['createTime']);
+        }
+        return $this->success($presentListInfo);
+        
+    }
+    
+    /**
+    * 定妆赠送详情
+     */
+    public function presentListInfo()
+    {
+        $param = $this->param;
+        if(empty($param['articleCodeId'])){
+            throw new ApiException('必传参数不能为空');    
+        }
+        $where = array('article_code_id' => $param['articleCodeId']);
+        $presentListInfoDetail = PresentArticleCode::getPresentListInfoByWhere($where);
+        if(!empty($presentListInfoDetail)){
+            $presentListInfoDetail['ticketStatusName'] = self::$ticketCodeStatus[$presentListInfoDetail['ticketStatus']];
+            $presentListInfoDetail['presentTypeName'] = self::$presentTypeName[$presentListInfoDetail['presentType']];
+            $presentListInfoDetail['createTime'] = date('Y-m-d',$presentListInfoDetail['createTime']);
+        }
+        return $this->success($presentListInfoDetail);
     }
     
 }
