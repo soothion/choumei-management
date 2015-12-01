@@ -148,6 +148,28 @@ Route::any('platform/getItemType',array(
     'uses'=>'Promotion\PlatformController@getItemType'
 ));
 
+Route::any('artificer/checkNumberExists/{id}',array(  
+    'as'=>'artificer.checkNumberExists',
+    'uses'=>'Artificer\ArtificerController@checkNumberExists'
+)); 
+Route::any('artificer/checkNameExists/{id}',array(  
+    'as'=>'artificer.checkNameExists',
+    'uses'=>'Artificer\ArtificerController@checkNameExists'
+)); 
+
+
+Route::any('assistant/checkNumberExists/{id}',array(  
+    'as'=>'assistant.checkNumberExists',
+    'uses'=>'Artificer\ArtificerAssistantController@checkNumberExists'
+));
+Route::any('assistant/checkNameExists/{id}',array(  
+    'as'=>'assistant.checkNameExists',
+    'uses'=>'Artificer\ArtificerAssistantController@checkNameExists'
+));
+Route::any('assistant/getArtificer',array(  
+    'as'=>'assistant.getArtificer',
+    'uses'=>'Artificer\ArtificerAssistantController@getArtificer'
+));
 //商家后台提现
 Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
@@ -1203,5 +1225,65 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 	Route::any('beautyItem/showFashion',array(  
         'as'=>'beautyItem.showFashion',
         'uses'=>'Item\BeautyItemController@showFashion'
+    ));
+	
+	// 专家助理
+    Route::any('assistant/index',array(  
+        'as'=>'assistant.index',
+        'uses'=>'Artificer\ArtificerAssistantController@index'
+    )); 
+    Route::any('assistant/add',array(  
+        'as'=>'assistant.add',
+        'uses'=>'Artificer\ArtificerAssistantController@add'
+    )); 
+    Route::any('assistant/update',array(  
+        'as'=>'assistant.update',
+        'uses'=>'Artificer\ArtificerAssistantController@save'
+    )); 
+    Route::any('assistant/up/{id}',array(  
+        'as'=>'assistant.up',
+        'uses'=>'Artificer\ArtificerAssistantController@start'
+    ));
+    Route::any('assistant/down/{id}',array(  
+        'as'=>'assistant.down',
+        'uses'=>'Artificer\ArtificerAssistantController@close'
+    ));
+    Route::any('assistant/export',array(  
+        'as'=>'assistant.export',
+        'uses'=>'Artificer\ArtificerAssistantController@export'
+    )); 
+    Route::any('assistant/show/{id}',array(  
+        'as'=>'assistant.show',
+        'uses'=>'Artificer\ArtificerAssistantController@show'
+    ));
+    
+    // 专家助理
+    Route::any('assistant/index',array(  
+        'as'=>'assistant.index',
+        'uses'=>'Artificer\ArtificerAssistantController@index'
+    )); 
+    Route::any('assistant/add',array(  
+        'as'=>'assistant.add',
+        'uses'=>'Artificer\ArtificerAssistantController@add'
+    )); 
+    Route::any('assistant/update',array(  
+        'as'=>'assistant.update',
+        'uses'=>'Artificer\ArtificerAssistantController@save'
+    )); 
+    Route::any('assistant/up/{id}',array(  
+        'as'=>'assistant.up',
+        'uses'=>'Artificer\ArtificerAssistantController@start'
+    ));
+    Route::any('assistant/down/{id}',array(  
+        'as'=>'assistant.down',
+        'uses'=>'Artificer\ArtificerAssistantController@close'
+    ));
+    Route::any('assistant/export',array(  
+        'as'=>'assistant.export',
+        'uses'=>'Artificer\ArtificerAssistantController@export'
+    )); 
+    Route::any('assistant/show/{id}',array(  
+        'as'=>'assistant.show',
+        'uses'=>'Artificer\ArtificerAssistantController@show'
     ));
 });
