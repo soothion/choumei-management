@@ -669,5 +669,30 @@ class ERROR
       *@param 项目名称重复
       */
      CONST BEAUTY_ITEM_NAME_REOEAT =  -51504;
+     
+     /**
+      *@param banner的ID不存在
+      */
+     CONST BEAUTY_BANNER_NOT_ID =  -51505;
+     
+     /**
+      *@param banner的查询错误
+      */
+     CONST BEAUTY_BANNER_SELECT_ERROR =  -51506;
+     
+     /**
+      *@param banner的创建错误
+      */
+     CONST BEAUTY_BANNER_CREATE_ERROR =  -51507;
+     
+     /**
+      *@param banner的修改错误
+      */
+     CONST BEAUTY_BANNER_UPDATE_ERROR =  -51508;
+     
+     /**
+      *@param banner的删除错误
+      */
+     CONST BEAUTY_BANNER_DELETE_ERROR =  -51509;
 
 }
