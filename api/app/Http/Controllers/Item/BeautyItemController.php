@@ -261,7 +261,7 @@ class BeautyItemController extends Controller{
 	 * */
 	private  function compositeData($param,$act_type)
 	{
-		$must_param = ['type','name','detail','description','logo','images','level'];
+		$must_param = ['type','name','detail','description','logo','images'];
 		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
 		$data['type'] = isset($param['type'])?intval($param['type']):1;
 		$data['name'] = isset($param['name'])?trim($param['name']):'';
