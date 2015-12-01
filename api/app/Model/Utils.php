@@ -287,6 +287,17 @@ class Utils
 	    $params['token'] =  md5(md5($url).self::TOKEN_KEY);
 	}
 	
+	/**
+	 * 模糊搜索的关键字
+	 * @param string $word
+	 * @return string
+	 */
+	public static function getSearchWord($word)
+	{
+	    $word = trim($word);
+	    return '%' . str_replace(['%','_'], ['\\%','\\_'],$word )."%";
+	}
+	
 
 	/**
 	 * 外部调用统一加密验证
