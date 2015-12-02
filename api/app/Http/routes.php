@@ -1367,7 +1367,6 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'uses'=>'SystemConfig\WarningController@openidBlock'
     )); 
 
-});
 	
 	// 专家
     Route::any('artificer/index',array(  
