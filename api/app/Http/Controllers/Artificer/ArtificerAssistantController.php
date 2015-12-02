@@ -261,7 +261,6 @@ class ArtificerAssistantController extends Controller{
     * @apiSuccess {String} photo          必填,个人照片.
     * @apiSuccess {String} name           必填,姓名.
     * @apiSuccess {Number} sex            必填,性别 1.男 2.女
-    * @apiSuccess {String} country        必填,韩国.
     * @apiSuccess {String} birthday       必填,生日 格式如 2015-02-22.
     * @apiSuccess {Number} level          必填,级别 1明星院长； 2院长.
     * @apiSuccess {String} number         必填,在职编号.
@@ -269,7 +268,7 @@ class ArtificerAssistantController extends Controller{
     * @apiSuccess {String} introduce      必填,个性签名.
     * @apiSuccess {Number} credential     必填,证件类型  1身份证； 2军官证； 3驾驶证； 4护照.
     * @apiSuccess {String} cardId         必填,证件类型所对应的证件号码.
-    * @apiSuccess {String} mobilePhone    选填,电话.
+    * @apiSuccess {String} mobilePhone    必填,电话.
     * @apiSuccess {String} wechat         选填,微信.
     * @apiSuccess {String} qq             选填,qq.
     * @apiSuccess {String} email          选填,电子邮箱.
