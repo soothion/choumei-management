@@ -149,8 +149,11 @@ $('#form').on("_ready",function(){
 					}
 				}
 			});
-			item.title && data.push(item);
+			if(item.title||item.content||item.image){
+				data.push(item);
+			}
 		});
+		console.log(data);
 		table.siblings(".json-hidden").val(data.length==0?"":JSON.stringify(data));
 		table.siblings("button").attr("disabled",trs.length>=20);
 	}).trigger("datachange");

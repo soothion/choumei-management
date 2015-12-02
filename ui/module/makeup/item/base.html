@@ -133,7 +133,7 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>项目名称：</label>
                     <div class="control">
-                        <input type="text" name="name" value="<%=data.name%>" placeholder="限制12个字符" maxlength="12" required data-value="<%=data.name%>" unique="beautyItem/checkName?item_id=<%=query.item_id%>&name=${value}" uniquemsg="已经存在此项目名">
+                        <input type="text" name="name" value="<%=data.name%>" placeholder="1-20个字符" maxlength="20" required data-value="<%=data.name%>" unique="beautyItem/checkName?item_id=<%=query.item_id%>&name=${value}" uniquemsg="已经存在此项目名">
                     </div>
                 </div> 
                 <div class="control-group">
