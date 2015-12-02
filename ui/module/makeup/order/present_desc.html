@@ -38,18 +38,17 @@
         }
         </style>
         <div class="wrapper">
-            <div class="table table-detail" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
+            <div class="table table-detail" style="margin:0" ajat="PowderArticles/presentListInfo?articleCodeId=<%=query.id%>#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id='table-t'>
                 <table >
-                <%var status=["","进行中","下线","已关闭","已结束"]%>
                     <tbody>
                         <tr>
                             <td class="td">订单号：</td>
-                            <td><%=data.vcTitle%></td>
+                            <td><%=data.reservateSn%></td>
                         </tr>
                         <tr>
                             <td class="td">手机号：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.mobilephone%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -57,9 +56,9 @@
                                     <tbody>
                                         <tr>
                                             <td>赠送劵号：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.ticketCode%></td>
                                             <td>活动名称：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.articleName%></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -67,34 +66,34 @@
                         </tr>
                         <tr>
                             <td class="td">赠送项目：</td>
-                            <td>1000</td>
+                            <td><%=data.itemName%></td>
                         </tr>
                         <tr>
                             <td class="td">推荐码：</td>
-                            <td>3000</td>
+                            <td><%=data.recommendCode%></td>
                         </tr>
                         <tr>
                             <td class="td">赠送方式：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.presentTypeName%></td>
                         </tr>
                         <tr>
                             <td class="td">赠送日期：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.createTime%></td>
                         </tr>
                         <tr>
                             <td class="td">有效期：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.expireTime%></td>
                         </tr>
                         <tr>
                             <td class="td">状态：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.ticketStatusName%></td>
                         </tr>
                         <tr>
                             <td colspan="2">使用信息：</td>
                         </tr>
                         <tr>
                             <td class="td">使用日期：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.useTime%></td>
                         </tr>
 
                         <tr>
@@ -103,9 +102,9 @@
                                     <tbody>
                                         <tr>
                                             <td>专家：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.specialistName%>（<%=data.specialistId%>）</td>
                                             <td>助理：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.assistantName%>（<%=data.assistantId%>）</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -117,9 +116,9 @@
                                     <tbody>
                                         <tr>
                                             <td>记录人：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.managerName%></td>
                                             <td>记录时间：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.recordTime%></td>
                                         </tr>
                                     </tbody>
                                 </table>
