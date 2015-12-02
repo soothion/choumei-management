@@ -1,7 +1,7 @@
 <%data.forEach(function(item){%>
 <tr>
 	<td data-name="title"><%=item.title%></td>
-	<td data-name="content"><%=item.content.replace(/\n/g,"</br>")%></td>
+	<td data-name="content"><%=item.content.replace(/\n/g,"<br/>")%></td>
 	<%if(item.image!==undefined){%>
 	<td data-name="image">
 		<%item.image.forEach(function(image){%>

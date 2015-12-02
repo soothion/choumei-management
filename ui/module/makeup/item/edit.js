@@ -150,7 +150,7 @@ $('#form').on("_ready",function(){
 						});
 						item[name]=image;
 					}else{
-						item[name]=td.html().replace(/<\/br>|<br>/g,"\n");
+						item[name]=td.html().replace(/<br\/>|<br>/g,"\n");
 					}
 				}
 			});
