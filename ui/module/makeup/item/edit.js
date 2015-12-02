@@ -85,12 +85,8 @@ $('#form').on("_ready",function(){
 					//imageLimitSize:"750*500",
 					multi_selection:true,
 					files_number:10,
+					thumb:""
 				},function(uploader){
-					uploader.bind('ImageUploaded',function(up,response){
-						up.createThumbnails({
-							img:response.img,
-						}); 
-					});
 					uploader.unbind("UploadComplete");
 					uploader.bind("UploadComplete",function(){
 						parent.lib.popup.resize();
@@ -112,8 +108,8 @@ $('#form').on("_ready",function(){
 				});
 				form.on('save',function(e,data){
 					data.image=[];
-					popup.find(".control-image img").each(function(){
-						data.image.push({img:this.src});
+					popup.find(".control-image input.original").each(function(){
+						data.image.push({img:this.value});
 					});
 					var table=$this.closest('.makeup-item-image-list').find("table");
 					var html=lib.ejs.render({url:"/module/makeup/item/table-t"},{data:[data]});
