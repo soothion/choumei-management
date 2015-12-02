@@ -28,7 +28,8 @@ class AppointmentController extends Controller {
      * @apiParam {String} maxTime 提交最大时间 YYYY-MM-DD
      * @apiParam {String} sortKey 可选,排序关键词 "contacted" 是否联系客户/ "add_time"提交时间.
      * @apiParam {String} sortType 可选,排序 DESC倒序 ASC升序.
-     *
+     * @apiParam {Number} contacted 可选,联系客户，0/未联系  1/已联系.
+     * 
      * @apiSuccess {Number} total 总数据量.
      * @apiSuccess {Number} per_page 分页大小.
      * @apiSuccess {Number} current_page 当前页面.
