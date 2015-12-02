@@ -407,6 +407,7 @@ class ArtificerController extends Controller{
     public function checkNumberExists( $id=0 ){
         $param = $this->param;
         $number = isset( $param['number'] ) ? $param['number'] : $this->error('未填写专家编码');
+        $number = '1'.$number;
         $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number])->where('pid','=',NULL)->first();
         if( empty($exists) ) return $this->success();
         $exists = $exists->toArray();
