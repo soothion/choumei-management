@@ -1444,6 +1444,10 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'banner.destroy',
         'uses'=>'Banner\BannerController@destroy'
     )); 
+    Route::any('banner/sort',array(  //
+        'as'=>'banner.sort',
+        'uses'=>'Banner\BannerController@sort'
+    )); 
     
     //定妆中心
     Route::any('beauty/index',array(  
