@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-02 14:11:22
+* @Last Modified time: 2015-12-02 14:16:27
 */
 
 (function(){       
@@ -37,7 +37,7 @@
         });
 
         lib.puploader.image({
-            browse_button: 'personHomeImages',
+            browse_button: 'personHomeImage',
             auto_start:true,
             filters: {
                 mime_types : [
