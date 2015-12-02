@@ -1533,7 +1533,10 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'powderArticles.presentListInfo',
         'uses'=>'powder\powderArticlesController@presentListInfo'
     ));
-    
+    Route::any('powderArticles/usePresentTicket',array(  
+        'as'=>'powderArticles.usePresentTicket',
+        'uses'=>'powder\powderArticlesController@usePresentTicket'
+    ));
         //定妆单退款
     Route::any('beautyrefund/index',array(  //定妆单退款列表
         'as'=>'beautyrefund.index',

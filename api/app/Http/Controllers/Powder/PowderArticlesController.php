@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\Model\Present;
 use App\Model\PresentArticleCode;
+use DB;
 
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
@@ -694,16 +695,59 @@ class PowderArticlesController extends Controller
         }
         return $this->success($presentListInfoDetail);
     }
-    
+    /**
+     * @api {post} /PowderArticles/usePresentTicket 8.消费券
+     * 
+     * @apiName usePresentTicket
+     * @apiGroup PowderArticles
+     *
+     * @apiParam {Number} articleCodeId 必填，活动赠送券记录id
+     * @apiParam {String} useTime 必填，使用时间 YY-MM-DD
+     * @apiParam {Number} specialistId 必填，专家id
+     * @apiParam {Number} assistantId 必填，助理id
+     * 
+     * @apiSuccess {Array} data 空值.
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": []
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *               "msg" :"必传参数不能为空",
+     *           }
+     */
     /**
      * 定妆赠送消费使用
      */
     public function usePresentTicket(){
         $param = $this->param;
+        $managerId = $this->user->id; //记录人id
+        if(empty($managerId)){
+            throw new ApiException('无法获取此登陆用户id');  
+        }
         if(empty($param['articleCodeId']) || empty($param['useTime']) || empty($param['specialistId']) || empty($param['assistantId'])){
             throw new ApiException('必传参数不能为空');    
         }
-        //活动使用数 +1 同时 修改券状态
+        //判断券状态和活动验证状态
+        $ticketCanUseRes =  PresentArticleCode::getPresentTicketCanUseStatusByWhere($where);
+        //券可用
+        if($ticketCanUseRes){
+            //记录验证信息
+            $res = PresentArticleCode::recordVerifyTicketInfo($managerId,$param['articleCodeId'],$param['useTime'],$param['specialistId'],$param['assistantId']);
+            if($res){
+                return $this->success();
+            }
+        }
+
+        
     }
     
 }
