@@ -1493,15 +1493,15 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     //定妆中心
     Route::any('beauty/index',array(  
         'as'=>'beauty.index',
-        'uses'=>'Beauty\beautyController@index'
+        'uses'=>'Beauty\BeautyController@index'
     )); 
     Route::any('beauty/edit',array(  
         'as'=>'beauty.edit',
-        'uses'=>'Beauty\beautyController@edit'
+        'uses'=>'Beauty\BeautyController@edit'
     )); 
     Route::any('beauty/delete',array(  
         'as'=>'beauty.delete',
-        'uses'=>'Beauty\beautyController@delete'
+        'uses'=>'Beauty\BeautyController@delete'
     )); 
     
     //定妆活动
