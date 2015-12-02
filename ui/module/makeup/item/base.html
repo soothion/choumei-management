@@ -133,13 +133,13 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>项目名称：</label>
                     <div class="control">
-                        <input type="text" name="name" value="<%=data.name%>" placeholder="限制12个字符" maxlength="12" required>
+                        <input type="text" name="name" value="<%=data.name%>" placeholder="限制12个字符" maxlength="12" required data-value="<%=data.name%>" unique="beautyItem/checkName?item_id=<%=query.item_id%>&name=${value}" uniquemsg="已经存在此项目名">
                     </div>
                 </div> 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>项目介绍：</label>
                     <div class="control">
-						<textarea maxlength="5000" name="detail" required placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符"><%=data.detail%></textarea>
+						<textarea class="large" maxlength="5000" name="detail" required placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符"><%=data.detail%></textarea>
                     </div>
                 </div>
 				<div class="control-group">
