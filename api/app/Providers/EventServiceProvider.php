@@ -302,6 +302,7 @@ class EventServiceProvider extends ServiceProvider
         'voucher.exportTicketList' => [
             'App\Listeners\TicketEventListener@onExport',
     	],
+
         
         // 用户评价
         'comment.hidden' => [
@@ -309,7 +310,66 @@ class EventServiceProvider extends ServiceProvider
     	],
         'comment.delete' => [
             'App\Listeners\CommentEventListener@onDelete',
+		
+		// 韩式定妆项目操作
+        'beautyItem.updateFashion' => [
+            'App\Listeners\BeautyItemEventListener@onUpdateFashion',
+    	],
+        'beautyItem.update' => [
+            'App\Listeners\BeautyItemEventListener@onUpdate',
+		],
+        // 专家列表
+        'artificer.add' => [
+            'App\Listeners\ArtificerEventListener@onCreate',
+    	],
+        'artificer.update' => [
+            'App\Listeners\ArtificerEventListener@onUpdate',
+    	],
+        'artificer.up' => [
+            'App\Listeners\ArtificerEventListener@onUp',
+    	],
+        'artificer.down' => [
+            'App\Listeners\ArtificerEventListener@onDown',
+    	],
+        'artificer.export' => [
+            'App\Listeners\ArtificerEventListener@onExport',
+    	],
+        // 专家助理列表
+        'assistant.add' => [
+            'App\Listeners\AssistantEventListener@onCreate',
+    	],
+        'assistant.update' => [
+            'App\Listeners\AssistantEventListener@onUpdate',
+    	],
+        'assistant.up' => [
+            'App\Listeners\AssistantEventListener@onUp',
+    	],
+        'assistant.down' => [
+            'App\Listeners\AssistantEventListener@onDown',
+    	],
+        'assistant.export' => [
+            'App\Listeners\AssistantEventListener@onExport',
+    	],
+        
+        //韩式定妆模块
+        'banner.create' => [
+            'App\Listeners\BannerEventListener@onCreate',
+    	],
+        'banner.edit' => [
+            'App\Listeners\BannerEventListener@onEdit',
+    	],
+        'banner.destroy' => [
+            'App\Listeners\BannerEventListener@onDestroy',
+        ],
+        
+        // 定妆中心介绍
+        'beauty.edit' => [
+            'App\Listeners\BeautyEventListener@onEdit',
+    	],
+        'beauty.delete' => [
+            'App\Listeners\BeautyEventListener@onDelete',
     	]
+
     ];
 
     /**

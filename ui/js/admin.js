@@ -485,6 +485,7 @@ $(function(){
 	/**缩略图预览**/
 	$body.on('click','.control-thumbnails-item img',function(e){
 		var item=$(this).closest('.control-thumbnails-item');
+		if(item.closest('.popup').length==1) return;
 		var list=[];
 		item.parent().children('.control-thumbnails-item').each(function(){
 			var $this=$(this).find('img');
@@ -502,6 +503,7 @@ $(function(){
 
 	$body.on('click','.control-single-image img,.image-preview',function(){
 		var $this=$(this);
+		if($this.closest('.popup').length==1) return;
 		var src=$this.data('original')||$this.attr('src');
 		if(src){
 			parent.lib.popup.swiper({list:[src],index:0});
@@ -611,7 +613,10 @@ $(function(){
 			}
 		});
 	}
-});
+	$body.on("click",'.tab-switch li',function(){
+		$(this).addClass("active").siblings().removeClass("active");
+	})
+}); 
 
 Date.prototype.format = function(format){
     var t = this;

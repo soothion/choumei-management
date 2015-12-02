@@ -20,6 +20,10 @@ Route::any('/', function () {
 Route::any('test',array(
 	'uses'=>'IndexController@test'
 ));
+//测试控制器
+Route::any('makeup/test',array(
+	'uses'=>'Transaction\MakeupController@test'
+));
 
 Route::any('captcha', 'IndexController@captcha');
 Route::any('login', 'IndexController@login');
@@ -148,6 +152,28 @@ Route::any('platform/getItemType',array(
     'uses'=>'Promotion\PlatformController@getItemType'
 ));
 
+Route::any('artificer/checkNumberExists/{id?}',array(  
+    'as'=>'artificer.checkNumberExists',
+    'uses'=>'Artificer\ArtificerController@checkNumberExists'
+)); 
+Route::any('artificer/checkNameExists/{id?}',array(  
+    'as'=>'artificer.checkNameExists',
+    'uses'=>'Artificer\ArtificerController@checkNameExists'
+)); 
+
+
+Route::any('assistant/checkNumberExists/{id?}',array(  
+    'as'=>'assistant.checkNumberExists',
+    'uses'=>'Artificer\ArtificerAssistantController@checkNumberExists'
+));
+Route::any('assistant/checkNameExists/{id?}',array(  
+    'as'=>'assistant.checkNameExists',
+    'uses'=>'Artificer\ArtificerAssistantController@checkNameExists'
+));
+Route::any('assistant/getArtificer',array(  
+    'as'=>'assistant.getArtificer',
+    'uses'=>'Artificer\ArtificerAssistantController@getArtificer'
+));
 //商家后台提现
 Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
@@ -157,8 +183,9 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'uses'=>'MessageBox\MessageBoxController@redirectUrl'
     ))->where('pushId', '[0-9]+'); 
 //权限管理后台接口
-// Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
-Route::group(['middleware' => ['before']], function(){
+//Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+  Route::group(['middleware' => ['before']], function(){
+
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -1340,4 +1367,146 @@ Route::group(['middleware' => ['before']], function(){
         'uses'=>'SystemConfig\WarningController@openidBlock'
     )); 
 
+});
+	
+	// 专家
+    Route::any('artificer/index',array(  
+        'as'=>'artificer.index',
+        'uses'=>'Artificer\ArtificerController@index'
+    )); 
+    Route::any('artificer/add',array(  
+        'as'=>'artificer.add',
+        'uses'=>'Artificer\ArtificerController@add'
+    )); 
+    Route::any('artificer/update',array(  
+        'as'=>'artificer.update',
+        'uses'=>'Artificer\ArtificerController@save'
+    )); 
+    Route::any('artificer/up/{id}',array(  
+        'as'=>'artificer.up',
+        'uses'=>'Artificer\ArtificerController@start'
+    )); 
+    Route::any('artificer/down/{id}',array(  
+        'as'=>'artificer.down',
+        'uses'=>'Artificer\ArtificerController@close'
+    )); 
+    Route::any('artificer/export',array(  
+        'as'=>'artificer.export',
+        'uses'=>'Artificer\ArtificerController@export'
+    )); 
+    Route::any('artificer/show/{id}',array(  
+        'as'=>'artificer.show',
+        'uses'=>'Artificer\ArtificerController@show'
+    )); 
+    
+    // 专家助理
+    Route::any('assistant/index',array(  
+        'as'=>'assistant.index',
+        'uses'=>'Artificer\ArtificerAssistantController@index'
+    )); 
+    Route::any('assistant/add',array(  
+        'as'=>'assistant.add',
+        'uses'=>'Artificer\ArtificerAssistantController@add'
+    )); 
+    Route::any('assistant/update',array(  
+        'as'=>'assistant.update',
+        'uses'=>'Artificer\ArtificerAssistantController@save'
+    )); 
+    Route::any('assistant/up/{id}',array(  
+        'as'=>'assistant.up',
+        'uses'=>'Artificer\ArtificerAssistantController@start'
+    ));
+    Route::any('assistant/down/{id}',array(  
+        'as'=>'assistant.down',
+        'uses'=>'Artificer\ArtificerAssistantController@close'
+    ));
+    Route::any('assistant/export',array(  
+        'as'=>'assistant.export',
+        'uses'=>'Artificer\ArtificerAssistantController@export'
+    )); 
+    Route::any('assistant/show/{id}',array(  
+        'as'=>'assistant.show',
+        'uses'=>'Artificer\ArtificerAssistantController@show'
+    ));
+    //韩式定妆
+    Route::any('banner/index',array(  //
+        'as'=>'banner.index',
+        'uses'=>'Banner\BannerController@index'
+    )); 
+    Route::any('banner/create',array(  //
+        'as'=>'banner.create',
+        'uses'=>'Banner\BannerController@create'
+    )); 
+    Route::any('banner/edit/{id}',array(  //
+        'as'=>'banner.edit',
+        'uses'=>'Banner\BannerController@edit'
+    )); 
+    Route::any('banner/destroy/{id}',array(  //
+        'as'=>'banner.destroy',
+        'uses'=>'Banner\BannerController@destroy'
+    )); 
+    
+    //定妆中心
+    Route::any('beauty/index',array(  
+        'as'=>'beauty.index',
+        'uses'=>'Beauty\beautyController@index'
+    )); 
+    Route::any('beauty/edit',array(  
+        'as'=>'beauty.edit',
+        'uses'=>'Beauty\beautyController@edit'
+    )); 
+    Route::any('beauty/delete',array(  
+        'as'=>'beauty.delete',
+        'uses'=>'Beauty\beautyController@delete'
+    )); 
+    
+    //定妆活动
+    Route::any('powderArticles/addArticles',array(  
+        'as'=>'powderArticles.addArticles',
+        'uses'=>'powder\powderArticlesController@addArticles'
+    )); 
+    Route::any('powderArticles/articlesList',array(  
+        'as'=>'powderArticles.articlesList',
+        'uses'=>'powder\powderArticlesController@articlesList'
+    ));
+    Route::any('powderArticles/showArticlesInfo',array(  
+        'as'=>'powderArticles.showArticlesInfo',
+        'uses'=>'powder\powderArticlesController@showArticlesInfo'
+    )); 
+    Route::any('powderArticles/switchArticles',array(  
+        'as'=>'powderArticles.switchArticles',
+        'uses'=>'powder\powderArticlesController@switchArticles'
+    ));
+    Route::any('powderArticles/switchVerifyArticles',array(  
+        'as'=>'powderArticles.switchVerifyArticles',
+        'uses'=>'powder\powderArticlesController@switchVerifyArticles'
+    ));
+    Route::any('powderArticles/presentList',array(  
+        'as'=>'powderArticles.presentList',
+        'uses'=>'powder\powderArticlesController@presentList'
+    ));
+    Route::any('powderArticles/presentListInfo',array(  
+        'as'=>'powderArticles.presentListInfo',
+        'uses'=>'powder\powderArticlesController@presentListInfo'
+    ));
+    
+        //定妆单退款
+    Route::any('beautyrefund/index',array(  //定妆单退款列表
+        'as'=>'beautyrefund.index',
+        'uses'=>'Transaction\BeautyRefundController@index'
+    )); 
+    Route::any('beautyrefund/show/{id}',array(  //定妆单退款详情
+        'as'=>'beautyrefund.show',
+        'uses'=>'Transaction\BeautyRefundController@show'
+    )); 
+    
+    Route::any('beautyrefund/reject',array(  //定妆单 拒绝退款
+        'as'=>'beautyrefund.reject',
+        'uses'=>'Transaction\BeautyRefundController@reject'
+    )); 
+    
+    Route::any('beautyrefund/accept',array(  //定妆单 确认退款
+        'as'=>'beautyrefund.accept',
+        'uses'=>'Transaction\BeautyRefundController@accept'
+    )); 
 });
