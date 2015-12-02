@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Artificer;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Database\Eloquent\Model;
 
@@ -73,17 +74,25 @@ class PresentArticleCode extends Model
     
     public static function getPresentListInfoByWhere($where){
         $field1 = self::$presentArticleCodeField;
-        $field2 = array('present.name as articleName','managers.name as managerName' );
+        $field2 = array('present.name as articleName','present.verify_status as verifyStatus','managers.name as managerName','artificer.name as specialistName' );
         $field = array_merge($field1,$field2);
         $query = self::select($field)
                 ->leftJoin('beauty_item', 'present_article_code.item_id', '=', 'beauty_item.item_id')
                 ->leftJoin('present', 'present_article_code.present_id', '=', 'present_article_code.present_id')
-                ->leftJoin('managers', 'present_article_code.manager_id', '=', 'managers.id');
+                ->leftJoin('managers', 'present_article_code.manager_id', '=', 'managers.id')
+                ->leftJoin('artificer','present_article_code.specialist_id','=','artificer.artificer_id');
         $presentListInfoDetail = $query->where($where)->first();
         if($presentListInfoDetail === null){
             return [];
         }else{
-            return $presentListInfoDetail->toArray();
+            $presentListInfoDetailRes = $presentListInfoDetail->toArray();
+            $assistantInfo = Artificer::select('name')->where('artificer_id','=',$presentListInfoDetailRes['assistantId'])->first();
+            if($assistantInfo === null){
+                $presentListInfoDetailRes['assistantName'] = '';
+            }else{
+                $presentListInfoDetailRes['assistantName'] = $assistantInfo['name'];
+            }
+            return $presentListInfoDetailRes;
         }
     }
 }

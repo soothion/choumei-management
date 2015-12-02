@@ -9,7 +9,6 @@ use App\Exceptions\ERROR;
 use App\Exceptions\ApiException;
 use Event;
 
-
 class BannerController extends Controller {
 
     /**
@@ -90,9 +89,9 @@ class BannerController extends Controller {
             return $page;
         });
         if ($param['type'] == 1) {
-            $query = Banner::where('type', '=', 1)->paginate($page_size)->toArray();
+            $query = Banner::where('type', '=', 1)->orderBy('sort', 'asc')->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
         } else {
-            $query = Banner::whereln('type', '=', [2, 3, 4])->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
+            $query = Banner::whereIn('type',[2,3,4])->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
         }
         unset($query['next_page_url']);
         unset($query['prev_page_url']);
@@ -238,6 +237,53 @@ class BannerController extends Controller {
         } else {
             throw new ApiException('删除banner失败', ERROR::BEAUTY_BANNER_DELETE_ERROR);
         }
+    }
+
+    /**
+     * @api {post} /banner/sort 5.主页banner的排序
+     * @apiName sort
+     * @apiGroup  Banner
+     *
+     * @apiParam {Json} sort 必填,顺序  [{"id":11,"sort":1},{"id":5,"sort":2}...].  排序,是sort的升序
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     * 	    "result": 1,
+     * 	    "msg": "",
+     * 	    "data": {
+     * 	    }
+     * 	}
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "修改失败"
+     * 		}
+     */
+    public function sort() {
+        $param = $this->param;
+        $date[] = array();
+        $banner[] = array();
+        $date = json_decode($param['sort']);
+        for ($i = 0; $i < count($date); $i++) {
+            $banner = $date[$i];
+            $query1 = Banner::where('banner_id', '=', $banner->id)->first();
+            if ($query1 == FALSE) {
+                throw new ApiException('集合中有id不存在', ERROR::BEAUTY_BANNER_NOT_ID);
+            }
+        }
+        for ($i = 0; $i < count($date); $i++) {
+            $banner = $date[$i];
+            $date2['updated_at'] = time();
+            $date2['sort'] = $banner->sort;
+            $query = Banner::where('banner_id', '=', $banner->id)->update($date2);
+            if ($query == FALSE) {
+                throw new ApiException('修改失败', ERROR::BEAUTY_BANNER_UPDATE_ERROR);
+            }
+        }
+        return $this->success();
     }
 
 }

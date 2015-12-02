@@ -74,6 +74,7 @@ class PowderArticlesController extends Controller
     public function addArticles()
     {
         $param = $this->param;
+        $createrId = $this->user->id;
         if(empty($param['articleName']) || empty($param['itemId']) || empty($param['nums']) || empty($param['startTime']) || empty($param['endTime']) || empty($param['expireTime']) || empty($param['departmentId']) || empty($param['userId'])){
             throw new ApiException('必传参数不能为空');
         }
@@ -108,6 +109,7 @@ class PowderArticlesController extends Controller
         $data['expire_at'] = $param['expireTime'];
         $data['department_id'] = $param['departmentId'];
         $data['user_id'] = $param['userId'];
+        $data['creater_id'] = $createrId;
         $data['detail'] = isset($param['detail']) ? $param['detail'] : '' ;
         $data['created_at'] = time();
         $resId = Present::insertGetId($data);
@@ -149,7 +151,8 @@ class PowderArticlesController extends Controller
      * @apiSuccess {String} expireTime 活动有效时间.
      * @apiSuccess {Number} departmentId 部门id.
      * @apiSuccess {String} departmentName 部门名.
-     * @apiSuccess {Number} userId 用户id.
+     * @apiSuccess {Number} userId 负责人id.
+     * @apiSuccess {Number} createrId 创建人id.
      * @apiSuccess {String} detail 活动详情.
      * @apiSuccess {Number} articleStatus 活动状态 1: 开启  2: 关闭'.
      * @apiSuccess {Number} verifyStatus 验证状态 1: 开启验证 2: 关闭验证.
@@ -181,6 +184,7 @@ class PowderArticlesController extends Controller
      *                   "departmentId": 1,
      *                   "departmentName": "总裁办",
      *                   "userId": 9527,
+     *                   "createrId": 9527,
      *                   "detail": "这是一个活动",
      *                   "articleStatus": 1,
      *                   "verifyStatus": 1,
@@ -335,7 +339,7 @@ class PowderArticlesController extends Controller
         $articlesInfo = Present::getArticlesInfoByWhere($where);
         if(!empty($articlesInfo)){
             $articlesInfo['notUseNum'] = $articlesInfo['quantity'] - $articlesInfo['useNum'];
-            $articlesInfo['createTime'] = date('Y-m-d',$articlesInfo['createTime']);
+            $articlesInfo['createTime'] = date('Y-m-d',$articlesInfo['createTime']);       
         }
         return $this->success($articlesInfo);       
     }
@@ -407,7 +411,7 @@ class PowderArticlesController extends Controller
         }
     }
     /**
-     * @api {post} /PowderArticles/switchVerifyArticles 4.定妆活动验证开关
+     * @api {post} /PowderArticles/switchVerifyArticles 5.定妆活动验证开关
      * 
      * @apiName switchVerifyArticles
      * @apiGroup PowderArticles
@@ -480,7 +484,7 @@ class PowderArticlesController extends Controller
     }
     
     /**
-     * @api {post} /PowderArticles/presentList 7.定妆赠送查询列表
+     * @api {post} /PowderArticles/presentList 6.定妆赠送查询列表
      * 
      * @apiName presentList
      * @apiGroup PowderArticles
@@ -570,7 +574,7 @@ class PowderArticlesController extends Controller
      *           }
      */
     /**
-    * 定妆赠送查询列表
+    * 定妆赠送查询
      */
     public function presentList()
     {
@@ -598,7 +602,80 @@ class PowderArticlesController extends Controller
         return $this->success($presentListInfo);
         
     }
-    
+    /**
+     * @api {post} /PowderArticles/presentListInfo 7.定妆赠送详情
+     * 
+     * @apiName presentListInfo
+     * @apiGroup PowderArticles
+     *
+     * @apiParam {Number} articleCodeId 必填，活动赠送券记录id
+     * 
+     * @apiSuccess {Number} presentId 活动id.
+     * @apiSuccess {Number} reservateSn 预约订单号.
+     * @apiSuccess {Number} itemId 项目id.
+     * @apiSuccess {Number} orderSn 系统内部订单号.
+     * @apiSuccess {Number} ticketCode 券号.
+     * @apiSuccess {Number} ticketStatus 券使用状态. 1:已使用 2:未使用 3: 已过期
+     * @apiSuccess {Number} verifyStatus 验证券状态. 1: 开启验证 2: 关闭验证
+     * @apiSuccess {Number} mobilephone 手机号.
+     * @apiSuccess {String} createTime 创建时间.
+     * @apiSuccess {String} recordTime 记录时间.
+     * @apiSuccess {String} expireTime 券有效时间.
+     * @apiSuccess {String} useTime 使用时间.
+     * @apiSuccess {Number} recommendCode 推荐码.
+     * @apiSuccess {Number} presentType 赠送类型.
+     * @apiSuccess {Number} managerId 记录人id.
+     * @apiSuccess {Number} specialistId 专家id.
+     * @apiSuccess {Number} assistantId 助理id.
+     * @apiSuccess {String} itemName 项目名
+     * @apiSuccess {String} articleName 活动名
+     * @apiSuccess {String} managerName 负责人
+     * @apiSuccess {String} specialistName 专家名
+     * @apiSuccess {String} assistantName 助理名
+     * @apiSuccess {String} ticketStatusName 券状态名
+     * @apiSuccess {String} presentTypeName 赠送类型名
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": {
+     *           "articleCodeId": 1,
+     *           "presentId": 1,
+     *           "reservateSn": 123456,
+     *           "orderSn": 99999,
+     *           "itemId": 1,
+     *           "ticketCode": "502",
+     *           "ticketStatus": 1,
+     *           "mobilephone": 1802669546,
+     *           "recommendCode": 5020,
+     *           "presentType": 1,
+     *           "managerId": 114,
+     *           "specialistId": 1,
+     *           "assistantId": 3,
+     *           "expireTime": "0000-00-00 00:00:00",
+     *           "useTime": "0000-00-00 00:00:00",
+     *           "recordTime": "0000-00-00 00:00:00",
+     *           "createTime": "1970-01-01",
+     *           "itemName": "韩式无痛水光针（赠送）",
+     *           "articleName": "test1",
+     *           "managerName": "测试用户1",
+     *           "specialistName": "XIAOd",
+     *           "assistantName": "",
+     *           "ticketStatusName": "已使用",
+     *           "presentTypeName": "消费赠送"
+     *       }
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *               "msg" :"必传参数不能为空",
+     *           }
+     */
     /**
     * 定妆赠送详情
      */
@@ -616,6 +693,17 @@ class PowderArticlesController extends Controller
             $presentListInfoDetail['createTime'] = date('Y-m-d',$presentListInfoDetail['createTime']);
         }
         return $this->success($presentListInfoDetail);
+    }
+    
+    /**
+     * 定妆赠送消费使用
+     */
+    public function usePresentTicket(){
+        $param = $this->param;
+        if(empty($param['articleCodeId']) || empty($param['useTime']) || empty($param['specialistId']) || empty($param['assistantId'])){
+            throw new ApiException('必传参数不能为空');    
+        }
+        //活动使用数 +1 同时 修改券状态
     }
     
 }
