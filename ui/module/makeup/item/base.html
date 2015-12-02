@@ -5,9 +5,6 @@
         <title>臭美管理后台</title>
         <script type="text/javascript" src="/js/include.js"></script>
 		<style type="text/css">
-			.format-group .control-label,.format-group .control{
-				_vertical-align:top;
-			}
 			.format-group .control-image{
 				margin-left:5px;
 			}
@@ -28,6 +25,7 @@
 			}
 			.item-input{
 				padding-top:20px;
+				padding-right:15px;
 			}
 			.format-group input{
 				min-width:0!important;
@@ -64,8 +62,15 @@
 		 </div>		 
         </div>		
         <div class="wrapper">
-			<form action="reservation.html" class="form-vertical" data-role="form" id="form" ajat="#domid=form&tempid=form-t">
+			<form action="reservation.html" class="form-vertical" data-role="form" id="form" ajat="<%if(query.p=='index'){%>beautyItem/show<%}else{%>beautyItem/showFashion<%}%>?<%=query._%>#domid=form&tempid=form-t">
 				<script type="text/template" id="form-t">
+				<%
+					if(sessionStorage.getItem("formdata")){
+						data=JSON.parse(sessionStorage.getItem("formdata"));
+					}else{
+						sessionStorage.setItem("formdata",JSON.stringify(data));
+					}
+				%>
 				<%if(query.p=="index"){%>
 				<ul class="nav-step flex-box">
 					<li class="flex-item active">
@@ -152,7 +157,7 @@
 								</div>
 							</div>
 						</div>
-						<input type="hidden" name="images" id="item-images" value="<%=data.images%>" required requiredmsg="请上传项目图片" data-helpid="image-help2">
+						<textarea name="images"  id="item-images" style="display:none" required requiredmsg="请上传项目图片" data-helpid="image-help2"><%=data.images%></textarea>
 						<div class="weak">请上传750*500的JPG或PNG格式的图标，此图片将显示在项目详情中，最多上传10张</div>
 						<div class="control-help" style="display:none" id="image-help2"></div>
                     </div>
@@ -170,13 +175,13 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>原价：</label>
                     <div class="control">
-						<input type="text" placeholder="1~99999整数" pattern="number" min="1" required name="price"/>
+						<input type="text" placeholder="1~99999整数" pattern="number" min="1" value="<%=data.price%>" required name="price"/>
                     </div>
                 </div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>臭美会员价：</label>
                     <div class="control">
-						<input type="text" placeholder="1~99999整数，必须≤市场价" pattern="number" min="1" required name="vip_price"/>
+						<input type="text" placeholder="1~99999整数，必须≤市场价" pattern="number" min="1" value="<%=data.vip_price%>" required name="vip_price"/>
                     </div>
                 </div>
 				<%}%>
@@ -194,11 +199,12 @@
 						<li class="table-item"><span class="red">*</span>臭美会员价：<br /></li>
 						<li class="table-item"></li>
 					</ul>
+					
 				</div>
 				</div>
 				<br />
 				<br />
-				<input type="hidden" name="more_prices" />
+				<textarea name="more_prices" id="more_prices" style="display:none"><%=JSON.stringify(data.more_prices)%></textarea>
 				<%}%>
                 <div class="control-group">
                     <label class="control-label" for=""></label>
@@ -213,28 +219,28 @@
 		<script type="text/template" id="format-t">
 			<%data.forEach(function(item,i){%>
 			<%var id=parseInt(Math.random()*1000000)%>
-			<div class="control-group format-group">
+			<div class="control-group format-group format-group-item">
 				<ul class="table-box">
 					<li class="table-item">
 						<div class="control-image">
 							<div class="control-single-image">
-								<img src="" alt=""/>
+								<img src="<%=item.img%>" alt=""/>
 								<div class="control-image-ud">
 									<div id="upload-<%=id%>"><i class="fa fa-cloud-upload"></i>上传图片</div>
 								</div>
-								<input type="hidden" name="original" class="original" value="<%=data.original%>" required requiredmsg="请上传规格图片" data-helpid="help-<%=id%>">
+								<input type="hidden" name="img" class="original" value="<%=item.img%>" required requiredmsg="请上传规格图片" data-helpid="help-<%=id%>">
 							</div>
 						</div>
 						<div class="control-help" id="help-<%=id%>" style="display:none"></div>
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="2~10个字" minlength="2" value="<%=item.name%>" required />
+						<input type="text" placeholder="2~10个字" minlength="2" value="<%=item.norm%>" required name="norm" />
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="1~99999整数" min="1" pattern="number"  value="<%=item.name%>" required/>
+						<input type="text" placeholder="1~99999整数" min="1" pattern="number"  value="<%=item.price%>" required name="price"/>
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="1~99999整数，必须≤市场价" min="1" pattern="number"  value="<%=item.name%>" required/>
+						<input type="text" placeholder="1~99999整数，必须≤市场价" min="1" pattern="number"  value="<%=item.vip_price%>" required name="vip_price"/>
 					</li>
 					<li class="table-item item-input">
 						<%if(data.init&&i==0){%>
@@ -248,7 +254,8 @@
 			<%})%>
 		</script>
 		<script type="text/javascript">
-			$('#form').on('_ready',function(){
+			$('#form').on('_ready',function(e,data){
+				data=data.response;
 				lib.puploader.image({
 					browse_button: 'shopUpload',
 					auto_start:true,
@@ -258,7 +265,7 @@
 						]
 					},
 					max_file_size:'10mb',
-					//imageArray:currentData.salonImg,
+					imageArray:data.images?JSON.parse(data.images):[],
 					//imageLimitSize:"750*500",
 					multi_selection:true,
 					files_number:10,
@@ -363,12 +370,28 @@
 						});
 					}
 					var data=[{}];
+					var more_prices=$('#more_prices').val();
+					if(more_prices){
+						data=JSON.parse(more_prices);
+					}
 					data.init=true;
 					createFormat(data);
 				}
 				
 				this._getFormData=function(){
-					console.log("dddd");
+					var data=lib.tools.getFormData($(this));
+					if(lib.query.p=='fashion'){
+						data.more_prices=[];
+						$('.format-group-item').each(function(){
+							var temp={};
+							$(this).find("input").each(function(){
+								temp[this.name]=this.value;
+							});
+							data.more_prices.push(temp);
+						});
+					}
+					data=$.extend(JSON.parse(sessionStorage.getItem("formdata")),data);
+					sessionStorage.setItem("formdata",JSON.stringify(data))
 				}
 			});
 			
