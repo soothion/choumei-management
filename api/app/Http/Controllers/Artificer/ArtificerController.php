@@ -129,6 +129,7 @@ class ArtificerController extends Controller{
     * @apiGroup Artificer
     *
     * @apiParam {String} photo          必填,个人照片.
+    * @apiParam {String} pageImage    必填  主页图片
     * @apiParam {String} name           必填,姓名.
     * @apiParam {Number} sex            必填,性别 1.男 2.女
     * @apiParam {String} country        必填,韩国.
@@ -189,6 +190,7 @@ class ArtificerController extends Controller{
     *
     * @apiParam {Number} id             必填,专家id.
     * @apiParam {String} photo          必填,个人照片.
+    * @apiParam {String} pageImage    必填  主页图片
     * @apiParam {String} name           必填,姓名.
     * @apiParam {Number} sex            必填,性别 1.男 2.女
     * @apiParam {String} country        必填,韩国.
@@ -541,6 +543,7 @@ class ArtificerController extends Controller{
     private function _formatReceiveData( $param ){
         $data = [];
         $data['photo'] = $photo = isset( $param['photo'] ) ? $param['photo'] : $this->error('个人图片未填写');
+        $data['page_image'] = $pageImage = isset( $param['pageImage'] ) ? $param['pageImage'] : $this->error('主页图片未填写');
         $data['name'] = $name = isset( $param['name'] ) ? $param['name'] : $this->error('专家姓名未填写');
         $data['sex'] = $gender = isset( $param['sex'] ) ? $param['sex'] : $this->error('性别未填写');
         $data['country'] = $country = isset( $param['country'] ) ? $param['country'] : $this->error('国籍未填写');
