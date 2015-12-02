@@ -226,18 +226,20 @@
 			},
 			resize:function(){
 				var popup=$('.popup').filter(":not('.popup-tips')");
-				var body=popup.find('.popup-box-body');
-				if(body[0].scrollHeight>body.height()){
-					var height=body[0].scrollHeight;
-					if(body[0].scrollHeight+60>$(window).height()){
-						height=$(window).height()-60;
+				if(popup.length>0){
+					var body=popup.find('.popup-box-body');
+					if(body[0].scrollHeight>body.height()){
+						var height=body[0].scrollHeight;
+						if(body[0].scrollHeight+60>$(window).height()){
+							height=$(window).height()-60;
+						}
+						body.height(height);
 					}
-					body.height(height);
+					popup.css({
+						marginTop:-popup.height()/2,
+						marginLeft:-popup.width()/2
+					});
 				}
-				popup.css({
-					marginTop:-popup.height()/2,
-					marginLeft:-popup.width()/2
-				});
 			}
         },
 		getFormData:function($form){

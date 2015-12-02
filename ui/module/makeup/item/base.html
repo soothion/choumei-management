@@ -369,13 +369,8 @@
 							}
 						});
 					}
-					var data=[{}];
-					var more_prices=$('#more_prices').val();
-					if(more_prices){
-						data=JSON.parse(more_prices);
-					}
 					data.init=true;
-					createFormat(data);
+					createFormat(data.more_prices.length>0?data.more_prices:[{}]);
 				}
 				
 				this._getFormData=function(){
@@ -385,12 +380,15 @@
 						$('.format-group-item').each(function(){
 							var temp={};
 							$(this).find("input").each(function(){
-								temp[this.name]=this.value;
+								if(this.name){
+									temp[this.name]=this.value;
+								}
 							});
 							data.more_prices.push(temp);
 						});
 					}
 					data=$.extend(JSON.parse(sessionStorage.getItem("formdata")),data);
+					data.more_prices=JSON.stringify(data.more_prices);
 					sessionStorage.setItem("formdata",JSON.stringify(data))
 				}
 			});

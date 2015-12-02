@@ -70,7 +70,7 @@
 					var data=lib.tools.getFormData($(this));
 					data=$.extend(JSON.parse(sessionStorage.getItem("formdata")),data);
 					sessionStorage.setItem("formdata",JSON.stringify(data));
-					data.more_prices=JSON.stringify(data.more_prices);
+					
 					return data;
 				}
 			});
