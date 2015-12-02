@@ -317,7 +317,7 @@ class ArtificerController extends Controller{
     public function show($id){
         $field = [
             'artificer_id as id','name',
-            'photo','pageImage','sex','country',
+            'photo','page_image as pageImage','sex','country',
             'birthday','credential','card_id as cardId',
             'mobilephone as mobilePhone','wechat','qq',
             'email','level','number',
