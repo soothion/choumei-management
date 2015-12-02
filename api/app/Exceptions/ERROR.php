@@ -355,6 +355,39 @@ class ERROR
      */
      CONST MessageBox_ADD_FAILED =  -52002;
      
+     ////////////系统配置预警查询黑名单模块//////////////
+     /**
+     *@param keywordType没有传递
+     */
+     CONST Warning_KeywordType_Notfound =  -53000;
+	 /**
+     *@param 黑名单已存在
+     */
+     CONST Blacklist_Exist =  -53001;
+      /**
+     *@param RedisKey没有传递
+     */
+     CONST Blacklist_RedisKey_Notfound =  -53002;
+     /**
+     *@param 黑名单提交失败
+     */
+     CONST Blacklist_UPLOAD_FAILED =  -53003;
+	 /**
+     *@param 找不到id
+     */
+     CONST Blacklist_Id_Notfound =  -53004;
+      /**
+     *@param 移除黑名单失败
+     */
+     CONST Blacklist_Remove_FAILED =  -53005;
+     /**
+     *@param keywordType没有传递
+     */
+     CONST Blacklist_KeywordType_Notfound =  -53006;
+     /**
+     *@param 移入黑名单失败
+     */
+     CONST Blacklist_Block_FAILED =  -53007;
      
 
 	 ////////////图片风格模块//////////////

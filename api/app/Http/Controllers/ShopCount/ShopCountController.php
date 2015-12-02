@@ -458,11 +458,7 @@ class ShopCountController extends Controller
             $str = "赏金单结算";
             $res = ShopCountApi::countBounty($orders);
             ShopCountApi::commissionBounty($orders);
-        }
-        if(!empty($res))
-        {
-            Event::fire("shopcount.countOrder",[['operation'=>$str,'object'=>$param['ordersn']]]);
-        }        
+        }     
         return $this->success($res);
        
     }

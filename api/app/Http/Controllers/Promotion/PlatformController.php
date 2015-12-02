@@ -880,12 +880,9 @@ class PlatformController extends Controller{
         }
         if( isset($post['enoughMoney']) ) $data['useNeedMoney'] = $post['enoughMoney'];
         if( isset( $post['getSingleLimit'] ) )  $data['getNumMax'] = $post['getSingleLimit'];
-        if( isset($post['totalNumber']) ) $data['useTotalNum'] = $post['totalNumber'];
         if( isset($post['sendSms']) ) $data['SMS_ON_GAINED'] = $post['sendSms'];
         if( isset($post['singleEnoughMoney']) ) $data['getNeedMoney'] = $post['singleEnoughMoney'];
         
-        if( isset($post['money'])&&!empty($post['money']) && ($post['money']>999 ||$post['getSingleLimit']<1))
-            return $this->error('券金额只能在1~999');
         if( isset($post['useNeedMoney'])&&!empty($post['useNeedMoney']) && $post['useNeedMoney']>999)
             return $this->error('券总数只能在0~999');
         if( isset($post['totalNumber'])&&!empty($post['totalNumber']) && ($post['totalNumber']>999999 ||$post['totalNumber']<1))

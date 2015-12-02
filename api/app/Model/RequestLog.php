@@ -1,7 +1,7 @@
 <?php  namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
-
+use DB;
 /**
  * Description of RequestLog
  *
@@ -16,24 +16,33 @@ class RequestLog  extends Model{
     public static function getLogSelect($param){
          $query = Self::getQuery();
          if(!empty($param['mobilephone'])){
-	        $query = $query->where('mobilephone','=',$param['mobilephone']);
+	        $query = $query->where('mobilephone','like','%'.$param['mobilephone'].'%');
 	 }
          if(isset($param['username']) && $param['username']){
-	        $query = $query->where('username','=',$param['username']);
+	        $query = $query->where('username','like','%'.$param['username'].'%');
 	 }
 	 if(isset($param['device_uuid']) && $param['device_uuid']){
-	        $query = $query->where('device_uuid','=',$param['device_uuid']);
+	        $query = $query->where('device_uuid','like','%'.$param['device_uuid'].'%');
+	 }
+
+	 if(isset($param['version']) && $param['version']){
+	        $query = $query->where('version','like','%'.$param['version'].'%');
+	 }
+         
+         if(isset($param['openid']) && $param['openid']){
+	        $query = $query->where('openid','like','%'.$param['openid'].'%');
 	 }
          
          if(isset($param['minTime']) && $param['minTime'] ){
                
-                    $query = $query->where('update_time','>=', $param['minTime']); 
+                $query = $query->where('update_time','>=', $param['minTime']); 
          }
          if( isset($param['maxTime']) && $param['maxTime'] ){ 
              
-                    $query = $query->where('update_time','<=', $param['maxTime'].' 24');    
+                $query = $query->where('update_time','<=', $param['maxTime'].' 24');    
          }
          
+         $query = $query->where('type','=','LGN');        
          $sortable_keys=['update_time','mobilephone','version'];
          $sortKey = "update_time";
          $sortType = "DESC";
@@ -51,13 +60,15 @@ class RequestLog  extends Model{
          AbstractPaginator::currentPageResolver(function() use ($page) {
   	    return $page;
   	 });
-         $fields=['mobilephone','username','device_uuid','update_time','device_os','version','device_type'];
+         $fields=['openid','mobilephone','username','device_uuid','update_time','device_os','version','device_type'];
+          
          $result = $query->select($fields)->join('user','user.user_id','=','request_log.user_id')->paginate($page_size)->toArray();
+         
          foreach ($result["data"] as $key => $value) {
              if($value->device_type=="WECHAT")
              {
                 $result["data"][$key]->version="微信公众号（H5）";
-             }
+             }  
          }
          unset($result['next_page_url']);
          unset($result['prev_page_url']);
@@ -121,5 +132,20 @@ class RequestLog  extends Model{
               return [];
           }
           return $bases->toArray();
+      }
+      
+      public static function getLoginNumbyUserId($userId)
+      {
+          return Self::getQuery()->where("USER_ID",$userId)->where("TYPE","LGN")->count();
+      }
+      
+      public static function getLoginNumbyDevice($userId)
+      {
+          return Self::getQuery()->where("DEVICE_UUID",$userId)->where("TYPE","LGN")->count();
+      }
+      
+      public static function getLoginNumbyOpenId($userId)
+      {
+          return Self::getQuery()->where("OPENID",$userId)->where("TYPE","LGN")->count();
       }
 }

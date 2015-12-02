@@ -133,6 +133,9 @@ class TicketController extends Controller {
         $list = $obj->orderBy('vId','DESC')->paginate($pageSize)->toArray();
         foreach($list['data'] as $key => $val ){
             $list['data'][$key]['vUseTime'] = empty($list['data'][$key]['vUseTime']) ? '' : date('Y-m-d H:i:s',$val['vUseTime']);
+            if( $val['vStatus'] == 1 ){
+                $list['data'][$key]['vSalonName'] = '';
+            }
         }
         return $this->success( $list );
     }
@@ -225,7 +228,11 @@ class TicketController extends Controller {
             $tempData[$key][] = $val['vUseMoney'];
             $tempData[$key][] = empty($list['data'][$key]['vUseTime']) ? '' : date('Y-m-d H:i:s',$val['vUseTime']);
             $tempData[$key][] = $val['vMobilephone'];
-            $tempData[$key][] = $val['vSalonName'];
+            if( $val['vStatus'] == 1 ){
+                $tempData[$key][]['vSalonName'] = ' ';
+            }else{
+                $tempData[$key][] = $val['vSalonName'];
+            }
             
             if( $val['vStatus'] != 2 && !empty($val['vUseEnd']) && $val['vUseEnd'] < time() ){
                 $tempData[$key][] = $t[ 5 ];
@@ -426,7 +433,10 @@ class TicketController extends Controller {
                 }
             }
         }
-        
+        if( $voucherInfo['vStatus'] == 1 ){
+            $voucherInfo['vSalonName'] = '';
+            $voucherInfo['vItemName'] = '';
+        }
         return $this->success( $voucherInfo );
 	}
     // 获取分类

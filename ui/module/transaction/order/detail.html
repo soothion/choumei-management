@@ -257,6 +257,7 @@
                                     <thead>
                                         <tr>
                                             <th>用户设备号</th>
+                                            <th>微信OpenId</th>
                                             <th>系统</th>
                                             <th>手机型号</th>
                                             <th>网络</th>
@@ -267,6 +268,7 @@
                                     <%if(data.platform){%>
                                         <tr>
                                             <td><%=data.platform.DEVICE_UUID%></td>
+                                            <td><%=data.platform.OPENID%></td>
                                             <td><%=data.platform.DEVICE_OS%></td>
                                             <td><%=data.platform.DEVICE_MODEL%></td>
                                             <td><%=data.platform.DEVICE_NETWORK%></td>
