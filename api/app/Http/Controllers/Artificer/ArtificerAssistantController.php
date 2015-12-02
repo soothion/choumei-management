@@ -407,7 +407,7 @@ class ArtificerAssistantController extends Controller{
      *      }
 	 *	}
 	 */
-    public function checkNumberExists( $id ){
+    public function checkNumberExists( $id = 0 ){
         $param = $this->param;
         $number = isset( $param['number'] ) ? $param['number'] : $this->error('未填写助理专家编码');
         $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number,'artificer_id'=>$id])->whereRaw('pid is not NULL')->first();
@@ -437,7 +437,7 @@ class ArtificerAssistantController extends Controller{
      *      }
 	 *	}
 	 */
-    public function checkNameExists( $id ){
+    public function checkNameExists( $id = 0 ){
         $param = $this->param;
         $name = isset( $param['name'] ) ? $param['name'] : $this->error('未填写专家名字');
         $exists = Artificer::select(['artificer_id as id'])->where(['name'=>$name,'artificer_id'=>$id])->whereRaw('pid is not NULL')->first();
@@ -588,7 +588,6 @@ class ArtificerAssistantController extends Controller{
         $data['name'] = $name = isset( $param['name'] ) ? $param['name'] : $this->error('专家姓名未填写');
         $data['sex'] = $gender = isset( $param['sex'] ) ? $param['sex'] : $this->error('性别未填写');
         $data['birthday'] = $birthday = isset( $param['birthday'] ) ? $param['birthday'] : $this->error('出生日期未填写');
-        $data['level'] = $level = isset( $param['level'] ) ? $param['level'] : $this->error('级别未填写');
         $data['number'] = $jobNumber = isset( $param['number'] ) ? $param['number'] : $this->error('在职编号未填写');
         $data['working_life'] = $jobYear = isset( $param['workingLife'] ) ? $param['workingLife'] : $this->error('工作年限未填写');
         $data['pid'] = $pid = isset( $param['pid'] ) ? $param['pid'] : $this->error('所属专家未填写');
@@ -607,6 +606,7 @@ class ArtificerAssistantController extends Controller{
         $data['qq'] = $qq = isset( $param['qq'] ) ? $param['qq'] : '';
         $data['email'] = $email = isset( $param['email'] ) ? $param['email'] : '';
         $data['country'] = '';
+        $data['level'] = '';
         if( $credentialType && $credentialValue ){ 
             $data['credential'] = $credentialType;
             $data['card_id'] = $credentialValue;
