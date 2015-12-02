@@ -101,12 +101,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% var levelText = {'1':'明星院长','2':'院长'}%>
-                        <tr>
-                            <td class="td">级别：</td>
-                            <td><%=levelText[data.level]%></td>
-                        </tr>
-
                         <tr>
                             <td class="td">在职编号：</td>
                             <td><%=data.number%></td>
@@ -145,7 +139,10 @@
                 function init(){
                     var promise = lib.ajat('assistant/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
                     promise.done(function(data){
-                    $('img').attr('src',data.data.photo);                 
+                        if(data.data.photo){
+                            var image = JSON.parse(data.data.photo);
+                            $('img').attr('src',image.thumbimg);                 
+                        }
                     }); 
                 }                
                 init();
