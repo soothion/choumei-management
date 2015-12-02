@@ -310,7 +310,7 @@ class EventServiceProvider extends ServiceProvider
     	],
         'comment.delete' => [
             'App\Listeners\CommentEventListener@onDelete',
-		
+		],
 		// 韩式定妆项目操作
         'beautyItem.updateFashion' => [
             'App\Listeners\BeautyItemEventListener@onUpdateFashion',
