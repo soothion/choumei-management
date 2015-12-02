@@ -49,6 +49,21 @@
 			#format-group{
 				margin-left:100px;
 			}
+			.control-thumbnails .control-thumbnails-item:first-child:before{
+				position:absolute;
+				left:0px;
+				top:0px;
+				content:"首";
+				background: rgb(73,155,234); /* Old browsers */
+				background: -moz-linear-gradient(-45deg, rgba(73,155,234,1) 0%, ,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* FF3.6-15 */
+				background: -webkit-linear-gradient(-45deg, rgba(73,155,234,1) 0%,,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* Chrome10-25,Safari5.1-6 */
+				background: linear-gradient(135deg, rgba(73,155,234,1) 0%,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+				width:40px;
+				height:40px;
+				color:#fff;
+				z-index:100;
+				text-indent:8px;
+			}
 		</style>
     </head>
     <body>
@@ -207,7 +222,7 @@
 				<%}%>
                 <div class="control-group">
                     <label class="control-label" for=""></label>
-                    <a class="btn" href="index.html">取消</a>
+                    <a class="btn" href="<%=query.p=="index"?"index.html":"fashion.html"%>">取消</a>
 					<span class="space"></span>
                     <button class="btn-primary">下一步</button>
                 </div>

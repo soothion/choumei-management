@@ -69,6 +69,8 @@ class BeautyController extends Controller {
      * @apiName edit
      * @apiGroup  beauty
      *
+     * @apiParam {String} data 编辑的Json格式内容.
+     * 
      * @apiSuccess {String} msg 提交信息
      * 
      *
@@ -110,8 +112,9 @@ class BeautyController extends Controller {
      * @apiName delete
      * @apiGroup  beauty
      *
-     * @apiSuccess {String} msg 提交信息
+     * @apiParam {String} data 编辑的Json格式内容.
      * 
+     * @apiSuccess {String} msg 提交信息
      *
      *
      * @apiSuccessExample Success-Response:

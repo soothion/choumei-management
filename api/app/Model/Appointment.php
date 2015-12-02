@@ -74,6 +74,9 @@ class Appointment extends Model {
                 $query->where('add_time', '<=', $maxTime);
             }
         }
+        if (isset($input["contacted"])) {
+                $query->where('contacted', '=', $input["contacted"]);
+        }
         return $query;
     }
 

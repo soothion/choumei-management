@@ -23,12 +23,18 @@
 						<option value="2" >集团邀请码</option>
 						<option value="3">商家邀请码</option>
 						<option value="4">活动邀请码</option>
+						<option value="5">店铺推荐码</option>
+						<option value="6">用户推荐码</option>
+						<option value="7">活动推荐码</option>
 					</select>
 					<input type="text" name="username" placeholder="请输入臭美号" />
 					<input type="text" name="mobilephone" style="display:none"  placeholder="请输入手机号"/>
 					<input type="text" name="companyCode" style="display:none"  placeholder="请输入集团邀请码"/>
 					<input type="text" name="recommendCode" style="display:none"  placeholder="请输入商家邀请码"/>
 					<input type="text" name="recommendCode" style="display:none"  placeholder="请输入活动邀请码"/>
+					<input type="text" name="recommendCode" style="display:none"  placeholder="店铺推荐码"/>
+					<input type="text" name="recommendCode" style="display:none"  placeholder="用户推荐码"/>
+					<input type="text" name="recommendCode" style="display:none"  placeholder="活动推荐码"/>
 				</span>
 				选择性别
 				<select name="sex">
@@ -70,6 +76,9 @@
 					  <th>集团邀请码</th>
 					  <th>商家邀请码</th>
 					  <th>活动邀请码</th>
+					  <th>店铺推荐码</th>
+					  <th>用户推荐码</th>
+					  <th>活动推荐码</th>
 					  <th>注册时间</th>
 					  <th>操作</th>
 					</tr>
@@ -88,6 +97,9 @@
 					  <td><%=item.companyCode%></td>
 					  <td><%=item.activity!=1?item.recommendCode:""%></td>
 					  <td><%=item.activity==1?item.recommendCode:""%></td>
+					  <td><%=item.add_time%></td>
+					  <td><%=item.add_time%></td>
+					  <td><%=item.add_time%></td>
 					  <td><%=item.add_time%></td>
 					  <td>
 						 <a class="link" data-slug="user.show,user.update" href="detail.html?id=<%=item.user_id%>">查看</a>
