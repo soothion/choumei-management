@@ -20,6 +20,10 @@ Route::any('/', function () {
 Route::any('test',array(
 	'uses'=>'IndexController@test'
 ));
+//测试控制器
+Route::any('makeup/test',array(
+	'uses'=>'Transaction\MakeupController@test'
+));
 
 Route::any('captcha', 'IndexController@captcha');
 Route::any('login', 'IndexController@login');
@@ -179,8 +183,13 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'uses'=>'MessageBox\MessageBoxController@redirectUrl'
     ))->where('pushId', '[0-9]+'); 
 //权限管理后台接口
+<<<<<<< Updated upstream
 //  Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
 Route::group(['middleware' => ['before']], function(){
+=======
+//Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+  Route::group(['middleware' => ['before']], function(){
+>>>>>>> Stashed changes
 
 	//管理员模块
 	Route::any('manager/index',array(
@@ -1207,6 +1216,7 @@ Route::group(['middleware' => ['before']], function(){
         'uses'=>'Item\BeautyItemController@show'
     ));
     
+
 	Route::any('beautyItem/checkName',array(  
         'as'=>'beautyItem.checkName',
         'uses'=>'Item\BeautyItemController@checkName'
@@ -1226,6 +1236,7 @@ Route::group(['middleware' => ['before']], function(){
         'as'=>'beautyItem.showFashion',
         'uses'=>'Item\BeautyItemController@showFashion'
     ));
+<<<<<<< Updated upstream
 	
 	// 专家
     Route::any('artificer/index',array(  
@@ -1347,4 +1358,33 @@ Route::group(['middleware' => ['before']], function(){
         'as'=>'powderArticles.presentListInfo',
         'uses'=>'powder\powderArticlesController@presentListInfo'
     ));
+    
+        //定妆单退款
+    Route::any('beautyrefund/index',array(  //定妆单退款列表
+        'as'=>'beautyrefund.index',
+        'uses'=>'Transaction\BeautyRefundController@index'
+    )); 
+    Route::any('beautyrefund/show/{id}',array(  //定妆单退款详情
+        'as'=>'beautyrefund.show',
+        'uses'=>'Transaction\BeautyRefundController@show'
+    )); 
+    
+    Route::any('beautyrefund/reject',array(  //定妆单 拒绝退款
+        'as'=>'beautyrefund.reject',
+        'uses'=>'Transaction\BeautyRefundController@reject'
+    )); 
+    
+    Route::any('beautyrefund/accept',array(  //定妆单 确认退款
+        'as'=>'beautyrefund.accept',
+        'uses'=>'Transaction\BeautyRefundController@accept'
+    )); 
 });
+        
+    
+        
+
+     
+   
+    
+
+
