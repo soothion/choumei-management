@@ -134,7 +134,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success( $result );
     }
     /**
-    * @api {Post} /assistant/add/:id  2.专家助理添加
+    * @api {Post} /assistant/add    2.专家助理添加
     * @apiName add
     * @apiGroup Assistant
     *
@@ -590,7 +590,6 @@ class ArtificerAssistantController extends Controller{
         $data['photo'] = $photo = isset( $param['photo'] ) ? $param['photo'] : $this->error('个人图片未填写');
         $data['name'] = $name = isset( $param['name'] ) ? $param['name'] : $this->error('专家姓名未填写');
         $data['sex'] = $gender = isset( $param['sex'] ) ? $param['sex'] : $this->error('性别未填写');
-        $data['country'] = $country = isset( $param['country'] ) ? $param['country'] : $this->error('国籍未填写');
         $data['birthday'] = $birthday = isset( $param['birthday'] ) ? $param['birthday'] : $this->error('出生日期未填写');
         $data['level'] = $level = isset( $param['level'] ) ? $param['level'] : $this->error('级别未填写');
         $data['number'] = $jobNumber = isset( $param['number'] ) ? $param['number'] : $this->error('在职编号未填写');
@@ -603,9 +602,14 @@ class ArtificerAssistantController extends Controller{
         $credentialType = isset( $param['credential'] ) ? $param['credential'] : 0;
         $credentialValue = isset( $param['cardId'] ) ? $param['cardId'] : '';
         $data['mobilephone'] = $mobilePhone = isset( $param['mobilePhone'] ) ? $param['mobilePhone'] : '';
+        
+        if( empty($credentialType) && empty($credentialValue) ) return $this->error('身份证件未填写');
+        if( empty($mobilePhone)) return $this->error('手机号码未填写');
+        
         $data['wechat'] = $wechat = isset( $param['wechat'] ) ? $param['wechat'] : '';
         $data['qq'] = $qq = isset( $param['qq'] ) ? $param['qq'] : '';
         $data['email'] = $email = isset( $param['email'] ) ? $param['email'] : '';
+        $data['country'] = '';
         if( $credentialType && $credentialValue ){ 
             $data['credential'] = $credentialType;
             $data['card_id'] = $credentialValue;

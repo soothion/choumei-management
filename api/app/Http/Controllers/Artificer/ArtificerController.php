@@ -124,7 +124,7 @@ class ArtificerController extends Controller{
         return $this->success( $result );
     }
     /**
-    * @api {Post} /artificer/add/:id  2.专家添加
+    * @api {Post} /artificer/add    2.专家添加
     * @apiName add
     * @apiGroup Artificer
     *
