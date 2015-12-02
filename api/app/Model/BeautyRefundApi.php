@@ -68,8 +68,8 @@ class BeautyRefundApi extends TransactionWriteApi {
         }
         $payment_indexes = Utils::column_to_key("ordersn", $payments);
         $refund_items = self::getBeautyRefundItems($fundflow, $payment_indexes, $refund_indexes);
-        //状态修改为退款中
-        self::modifBookingOrderStatusInRefund($ordersns);
+        //状态修改为退款中    申请退款就是退款中
+//        self::modifBookingOrderStatusInRefund($ordersns);
 
         //微信
         if (isset($refund_items['wx']) && count($refund_items['wx']) > 0) {
@@ -188,6 +188,7 @@ class BeautyRefundApi extends TransactionWriteApi {
     }
 
     /*
+     * @deprecated
      * 将预约订单标记为退款中
      */
 
