@@ -27,7 +27,6 @@ $('#form').on("_ready",function(){
 				popup.find(".popup-alert-define").on("click",function(e){
 					e.stopPropagation();
 					form.submit();
-					parent.lib.popup.resize();
 				});
 				form.on('save',function(e,data){
 					var html=lib.ejs.render({url:"/module/makeup/item/table-t"},{data:[data]});
@@ -38,7 +37,6 @@ $('#form').on("_ready",function(){
 						$this.closest('.makeup-item-list').find('tbody').append(html);
 					}
 					table.trigger('datachange');
-					parent.lib.popup.close();
 				});
 				parent.lib.popup.resize();
 			}
@@ -159,6 +157,7 @@ $('#form').on("_ready",function(){
 		table.siblings(".json-hidden").val(data.length==0?"":JSON.stringify(data));
 		table.siblings("button").attr("disabled",trs.length>=20);
 	}).trigger("datachange");
+	
 	this._getFormData=function(){
 		var data=lib.tools.getFormData($(this));
 		data=$.extend(JSON.parse(sessionStorage.getItem("formdata")),data);
