@@ -126,7 +126,7 @@
                               }
                           })
                   }).on('_ready','#table',function(res){
-                      console.log(res);
+                      lib.ajat('#domid=table&tempid=table-t').template(res.response.data);
                   })
 
 

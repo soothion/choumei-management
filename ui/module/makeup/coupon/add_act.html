@@ -20,48 +20,56 @@
         </div>
 
         <div class="wrapper">
-            <form class="form-vertical" data-role="form" id="form">
+            <form class="form-vertical" action="PowderArticles/addArticles" data-role="form" id="form" confirm="">
                     <div id="pageContent">
-                      <script type="text/template" id='addBase_1'>
                           <div class="control-group">
                               <label class="control-label" for=""><span class="red">*</span>活动名称：</label>
                               <div class="control">
-                                      <input type="text" name="actName" value="<%=data.actName%>" placeholder="活动简短描述"
+                                      <input type="text" name="articleName"  placeholder="活动简短描述"
                                       maxlength="20" required >
                               </div>
                           </div>
                           <div class="control-group">
                               <label class="control-label" for=""><span class="red">*</span>赠送项目：</label>
-                              <div class="control">
-                                      <label for="">无痛水光针</label>
+                              <div class="control" id="item" ajat="beautyItem/indexFashion?is_gift=1#domid=item&tempid=item-t">
+                                  <script type="text/template" id="item-t">
+                                      <label for=""><%=data.data[0].name%></label>
+                                      <input name="itemId" type="hidden" required value="<%=data.data[0].item_id%>">
+                                  </script>
                               </div>
                           </div>
                           <div class="control-group">
                               <label class="control-label" for=""><span class="red">*</span>赠送数量：</label>
                               <div class="control">
-                                <input type="text" name="actName" value="<%=data.actName%>" placeholder="需打印的赠送券张数"
-                                maxlength="20" required >
+                                <input type="text" name="nums"  placeholder="需打印的赠送券张数"
+                                max="99999999" pattern='number' required >
                               </div>
                           </div>
                           <div class="control-group">
                               <label class="control-label" for=""><span class="red">*</span>活动起始日：</label>
                               <div class="control">
-                                <input type="date" data-role="start"   name="startTime" id="startTime" placeholder="YYYY-MM-DD" required/>
+                                <input type="date" data-role="start"   name="startTime" id="startTime"  placeholder="YYYY-MM-DD" required/>
 
                               </div>
                           </div>
                           <div class="control-group">
                               <label class="control-label" for=""><span class="red">*</span>活动截止日：</label>
                               <div class="control">
-                                    <input type="date" data-role="end" match="startTime" name="endTime" placeholder="YYYY-MM-DD" required/>
+                                    <input type="date" data-role="end" match="startTime"  id="endTime" name="endTime" placeholder="YYYY-MM-DD" required/>
+                              </div>
+                          </div>
+                          <div class="control-group">
+                              <label class="control-label" for=""><span class="red">*</span>有效期：</label>
+                              <div class="control">
+                                    <input type="date" match="startTime"  id="expireTime" name="expireTime" placeholder="YYYY-MM-DD" required/>
                               </div>
                           </div>
                           <div class="control-group">
                               <label class="control-label" for=""><span class="red">*</span>申请部门：</label>
                               <div class="control">
-                                  <select name="departmentId" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> ajat-one="true" id="department"
-                          ajat="platform/getRequestDepartment#domid=department&amp;tempid=department-t&sid=<%=data.departmentId%>&status=<%=data.status%>"  required
-                          ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t&sid=<%=data.managerId%>&status=<%=data.status%>"
+                                  <select name="departmentId" ajat-one="true" id="department"
+                          ajat="platform/getRequestDepartment#domid=department&amp;tempid=department-t"  required
+                          ajat-change="platform/getDepartmentManager/${value}#domid=manager&tempid=manager_t"
                           >
                                   </select>
                               </div>
@@ -73,9 +81,9 @@
                               <span class="control-help" style="display:none;"></span>
                           </div>
                           <div class="control-group">
-                              <label class="control-label" for=""><span class="red">*</span>活动简介：</label>
+                              <label class="control-label" for="">活动简介：</label>
                               <div class="control">
-                                  <textarea maxlength="5000" <%= data.status ==3 || data.status == 4 ? "disabled='disabled'" : ''%> name="actIntro" placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符" required style="height:150px;width:500px"><%=data.actIntro%></textarea>
+                                  <textarea maxlength="1000" name="detail" placeholder="包含活动策划案例，时间，逻辑规则，限制1~1000个字符" style="height:150px;width:500px"></textarea>
                               </div>
                           </div>
                           <div class="control-group">
@@ -94,18 +102,16 @@
             <input type="hidden" name="actNo" value="<%=data.actNo%>" required>
         </script>
         <script type="text/template" id="department-t">
-        <% sessionStorage.setItem("departmentList",JSON.stringify(data))%>
             <option value="">全部</option>
             <%data.forEach(function(item){%>
-            <option <%if (protocol.custom.sid == item.id){%> selected <%}%>value="<%=item.id%>"><%=item.title%></option>
+            <option value="<%=item.id%>"><%=item.title%></option>
             <%})%>
         </script>
         <script type="text/template" id='manager_t'>
-        <%sessionStorage.setItem("managerList",JSON.stringify(data))%>
 		<%if(data.length>0){%>
         <%data.forEach(function(item){%>
         <label class="label">
-            <input type="radio"  <%if (protocol.custom.sid == item.id){%> checked='checked' <%}%> <%= protocol.custom.status==3 || protocol.custom.status==4 ? "disabled='disabled'" : ""%> class="label" name="managerId" value="<%=item.id%>" required>
+            <input type="radio" class="label" name="userId" value="<%=item.id%>" required>
             <span><%=item.name%></span>
         </label>
         <%})%>
@@ -114,67 +120,39 @@
 		<%}%>
         </script>
         <script>
-            var getTemplateData = function(){
-                var id = lib.query.id;
-				if (id && !getTmpData() ){
-                    lib.ajax({
-                        url:"coupon/getInfo/"+id
-                    }).done(function(data, status, xhr){
-                        if (data.result == 1){
-                            templateRender(data.data);
-                            setTmpData(data.data);
+        lib.Form.prototype.save = function(data){
+            var $form = $('#form'),
+                 url = $form.attr('action'),
+                 data = lib.tools.getFormData($form);
+                lib.popup.confirm({
+                    text:'活动创建后不能删除，不能编辑，是否继续',
+                    define:function(){
+                        lib.ajax({
+                         url:url,
+                         data:data,
+                         type:'POST',
+                         success:function(data){
+                             setTimeout(function(){
+                                 $form.attr('disabled',false);
+                             },1100);
+                            if(data.result==1){
+                                location.href="./index.html";
+                            }
                         }
-                    });
-                }else if ( getTmpData() && getTmpData().vcId == id){
-                    templateRender(getTmpData());
-                } else {
-                    clearTmpData();
-                    templateRender({});
+                    })
                 }
-            };
-
-            var templateRender = function(data){
-                lib.ajat('#domid=pageContent&tempid=addBase_1').template(data);
-            };
-
-            var getTmpData = function(){
-               var tmp = JSON.parse(window.localStorage.getItem('couponTmpData'));
-               return tmp;
-            };
-
-            var setTmpData = function(data){
-                window.localStorage.setItem('couponTmpData',JSON.stringify(data));
-            }
+            })
+        }
 
 
-            lib.Form.prototype.save = function(data){
-                var tmpData = $.extend(getTmpData(),data);
-				var managerList=JSON.parse(sessionStorage.getItem('managerList'));
-				if(managerList){
-					for (var i = managerList.length - 1; i >= 0; i--) {
-						if (managerList[i].id == tmpData.managerId){
-							tmpData.manager_name = managerList[i].name;
-						}
-					}
-				}
-				var departmentList=JSON.parse(sessionStorage.getItem('departmentList'));
-				if(departmentList){
-					for (var i = departmentList.length - 1; i >= 0; i--) {
-						if (departmentList[i].id == tmpData.departmentId){
-							tmpData.department_title = departmentList[i].title;
-						}
-					}
-				}
-                setTmpData(tmpData);
-                location.href="addTicket.html"+(lib.query._?"?"+lib.query._:"")
-            }
 
-            var clearTmpData  = function(){
-                window.localStorage.removeItem('couponTmpData');
-            }
-
-
-            getTemplateData();
+           var today = new Date().format("yyyy-MM-dd");
+           $('#startTime').attr('min',today).val(today);
+           $('#endTime').attr('min',today).val(today);
+           $('#expireTime').attr('min',today).val(today);
+           $('body').on('change','#startTime',function(){
+               $('#endTime,#expireTime').attr('min',$(this).val());
+           })
         </script>
     </body>
 </html>
