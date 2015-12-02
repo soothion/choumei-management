@@ -276,7 +276,7 @@ class BannerController extends Controller {
         }
         for ($i = 0; $i < count($date); $i++) {
             $banner = $date[$i];
-            var_dump($banner->id);
+            $date2['updated_at'] = time();
             $date2['sort'] = $banner->sort;
             $query = Banner::where('banner_id', '=', $banner->id)->update($date2);
             if ($query == FALSE) {
