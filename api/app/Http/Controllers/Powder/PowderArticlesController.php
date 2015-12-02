@@ -477,15 +477,137 @@ class PowderArticlesController extends Controller
         }    
     }
     /**
-    * 定妆赠送活动券信息
+     * @api {post} /PowderArticles/articlesTicketList 6.兑换券详情
+     * 
+     * @apiName articlesTicketList
+     * @apiGroup PowderArticles
+     *
+     * @apiParam {Number} presentId 必填，活动id
+     * 
+     * @apiSuccess {Number} total 总数据量.
+     * @apiSuccess {Number} per_page 分页大小.
+     * @apiSuccess {Number} current_page 当前页面.
+     * @apiSuccess {Number} last_page 当前页面.
+     * @apiSuccess {Number} from 起始数据.
+     * @apiSuccess {Number} to 结束数据.
+     * 
+     * @apiSuccess {String} itemName 项目名.
+     * @apiSuccess {Number} TicketCode 券号.
+     * @apiSuccess {String} startTime 活动开始时间.
+     * @apiSuccess {String} endTime 活动结束时间.
+     * @apiSuccess {String} ticketStatusName 券状态名.
+     * 
+     * @apiSuccessExample Success-Response:
+     * {
+     *       "result": 1,
+     *       "token": "",
+     *       "data": {
+     *           "total": 2,
+     *           "per_page": 20,
+     *           "current_page": 1,
+     *           "last_page": 1,
+     *           "from": 1,
+     *           "to": 2,
+     *           "data": [
+     *               {
+     *                   "itemName": "韩式无痛水光针（赠送）",
+     *                   "TicketCode": "502",
+     *                   "startTime": "2015-11-30 00:00:00",
+     *                   "endTime": "2015-11-30 23:59:59",
+     *                   "ticketStatus": 1,
+     *                   "ticketStatusName": "已使用"
+     *               },
+     *               {
+     *                   "itemName": "韩式无痛水光针（赠送）",
+     *                   "TicketCode": "502",
+     *                   "startTime": "2015-11-30 00:00:00",
+     *                   "endTime": "2015-11-30 23:59:59",
+     *                   "ticketStatus": 2,
+     *                   "ticketStatusName": "未使用"
+     *               }
+     *           ]
+     *       }
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *               "msg" :"必传参数不能为空",
+     *           }
+     */
+    /**
+    * 兑换券详情
      */
     public function articlesTicketList()
     {
+        $param = $this->param;
+        if(empty($param['presentId'])){
+            throw new ApiException('必传参数不能为空');    
+        }
+        $page = isset($param['page'])?max($param['page'],1):1;
+        $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
         
+        $articleTicketInfoRes =  PresentArticleCode::getArticleTicketInfo($param['presentId'],$page,$pageSize);
+        foreach($articleTicketInfoRes['data'] as $key => &$val){
+            $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']];
+        }
+        return $this->success($articleTicketInfoRes);
+    }
+    /**
+     * @api {post} /PowderArticles/exportArticlesTicketList 7.导出定妆活动券
+     * 
+     * @apiName exportArticlesTicketList
+     * @apiGroup PowderArticles
+     *
+     * @apiParam {Number} presentId 必填，活动id
+     * 
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *               "msg" :"必传参数不能为空",
+     *           }
+     */
+    /**
+     * 导出券
+     */
+    public function exportArticlesTicketList(){
+        $param = $this->param;
+        if(empty($param['presentId'])){
+            throw new ApiException('必传参数不能为空');    
+        }
+        //获取活动名称
+        $where = array('present_id'=>$param['presentId']);
+        $articleInfo = Present::getArticleInfoByWhere($where);
+        $articleAllTicketInfoRes =  PresentArticleCode::getAllArticleTicketInfoForExport($param['presentId']);
+        foreach ($articleAllTicketInfoRes as $key => $val) {
+            $res['$key']['itemName'] = $val->itemName;
+            $res['$key']['ticketCode'] = $val->ticketCode;
+            $res['$key']['startTime'] = $val->startTime;
+            $res['$key']['endTime'] = $val->endTime;
+            $res['$key']['ticketStatusName'] = self::$ticketCodeStatus[$val->ticketStatus]; 
+        }
+        
+        $header = [
+            '赠送项目',
+            '赠送券编码',
+            '活动起始日',
+            '活动截止日',
+            '状态',
+        ];
+//        if (!empty($res)) {
+//            Event::fire("appointment.export");
+//        }
+        @ini_set('memory_limit', '256M');
+        $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $res);
     }
     
     /**
-     * @api {post} /PowderArticles/presentList 6.定妆赠送查询列表
+     * @api {post} /PowderArticles/presentList 8.定妆赠送查询列表
      * 
      * @apiName presentList
      * @apiGroup PowderArticles
@@ -604,7 +726,7 @@ class PowderArticlesController extends Controller
         
     }
     /**
-     * @api {post} /PowderArticles/presentListInfo 7.定妆赠送详情
+     * @api {post} /PowderArticles/presentListInfo 9.定妆赠送详情
      * 
      * @apiName presentListInfo
      * @apiGroup PowderArticles
@@ -696,7 +818,7 @@ class PowderArticlesController extends Controller
         return $this->success($presentListInfoDetail);
     }
     /**
-     * @api {post} /PowderArticles/usePresentTicket 8.消费券
+     * @api {post} /PowderArticles/usePresentTicket 10.消费券
      * 
      * @apiName usePresentTicket
      * @apiGroup PowderArticles

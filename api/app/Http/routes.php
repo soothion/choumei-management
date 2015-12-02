@@ -1537,6 +1537,15 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'powderArticles.usePresentTicket',
         'uses'=>'powder\powderArticlesController@usePresentTicket'
     ));
+    Route::any('powderArticles/articlesTicketList',array(  
+        'as'=>'powderArticles.articlesTicketList',
+        'uses'=>'powder\powderArticlesController@articlesTicketList'
+    ));
+    Route::any('powderArticles/exportArticlesTicketList',array(  
+        'as'=>'powderArticles.exportArticlesTicketList',
+        'uses'=>'powder\powderArticlesController@exportArticlesTicketList'
+    ));
+    
         //定妆单退款
     Route::any('beautyrefund/index',array(  //定妆单退款列表
         'as'=>'beautyrefund.index',
