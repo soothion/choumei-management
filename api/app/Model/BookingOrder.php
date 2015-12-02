@@ -63,24 +63,31 @@ class BookingOrder extends Model
     
     public static function detail($id)
     {
-        $base = self::where('ID',$id)->first();
+        $base = self::where('ID',$id)->with(['user'=>function($q){
+            $q->get(['user_id','nickname','sex']);
+        }])->first();
+        
         if(empty($base))
         {
             throw new ApiException("预约单{$id} 不存在", ERROR::ORDER_NOT_EXIST);
         }
-        $base->user();
-        $base->bill();
-        $base->cash();
-        $base->receive();
-        $base->salon_refund();
+        
         $base = $base->toArray();
         
         $item_fields = ['ORDER_SN','ITEM_ID','ITEM_NAME'];
         $items = BookingOrderItem::where('ORDER_SN',$base['ORDER_SN'])->get($item_fields)->toArray();
-        
+        $ordersn = $base['ORDER_SN'];
+        $fundflows = Fundflow::where('record_no',$ordersn)->get(['record_no','pay_type'])->toArray();
+        $payment_log = PaymentLog::where('ordersn',$ordersn)->first(['ordersn','tn','amount'])->toArray();
         return [
             'order'=>$base,
             'order_item'=>$items,
+            'fundflow'=>$fundflows,
+            'payment_log'=>$payment_log,
+            'booking_bill'=>BookingBill::getByBookingId($id),
+            'booking_cash'=>BookingCash::getByBookingId($id),
+            'booking_receive'=>BookingReceive::getByBookingId($id),
+            'booking_salon_refund'=>BookingSalonRefund::getByBookingId($id),
         ];
     }
     
@@ -88,9 +95,6 @@ class BookingOrder extends Model
     {
         $select_fields = [
             'cm_booking_order.*',
-            'cm_user.user_id as user_id',
-            'cm_user.nickname as nickname',
-            'cm_user.mobilephone as mobilephone',
             'cm_fundflow.record_no as record_no',
             'cm_fundflow.pay_type as pay_type',
         ];
@@ -127,13 +131,15 @@ class BookingOrder extends Model
          {
              $base->where('booking_order.STATUS',$pay_state);
          }
-        $base->join('user', function ($join) use($key, $keyword)
-        {
-            $join->on('booking_order.USER_ID', '=', 'user.user_id');
-            if ($key == 1 && ! empty($keyword)) {
-                $join->where('user.mobilephone', '=', $keyword);
-            }
-        });
+         
+         if($key == 1 && ! empty($keyword))
+         {
+             $base->where('booking_order.BOOKER_PHONE','like',$keyword);
+         }   
+         if($key == 2 && ! empty($keyword))
+         {
+             $base->where('booking_order.BOOKING_SN','like',$keyword);
+         }    
         
         $base->join('fundflow', function ($join) use($pay_type)
         {
