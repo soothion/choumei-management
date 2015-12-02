@@ -360,9 +360,10 @@ class BeautyItemController extends Controller{
 	*/
 	public function checkName()
 	{
+		$param = $this->param;
 		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
 		$name = isset($param['name'])?trim($param['name']):'';
-		if($item_id || $name)
+		if(!$item_id || !$name)
 		{
 			throw new ApiException("参数错误", ERROR::BEAUTY_ITEM_ERROR);
 		}

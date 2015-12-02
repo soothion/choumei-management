@@ -21,7 +21,7 @@ class BeautyRefundController extends Controller {
      * @apiParam {String} start_time 开始时间 YYYY-MM-DD
      * @apiParam {String} end_time 结束时间 YYYY-MM-DD
      * @apiParam {String} pay_type 0 全部  2 支付宝 3 微信 7 积分 10 易联支付
-     * @apiParam {String} state 0 全部  7已退款 10退款中  9退款失败 (多个用','隔开)
+     * @apiParam {String} state 订单退款状态 0 -全部  RFN - 退款中，RFD - 已退款' TODO
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      *
@@ -37,7 +37,7 @@ class BeautyRefundController extends Controller {
      * @apiSuccess {String} booking_sn 预约号
      * @apiSuccess {String} money 退款金额
      * @apiSuccess {String} retype  退款方式 1原路返还 2退回余额
-     * @apiSuccess {String} status 退款状态  6待审核,7退款完成,10退款中
+     * @apiSuccess {String} status 退款状态  RFN - 退款中，RFD - 已退款'
      * @apiSuccess {String} user_id 付款人id
      * @apiSuccess {String} username 用户姓名
      * @apiSuccess {String} mobilephone 用户手机号
@@ -86,8 +86,8 @@ class BeautyRefundController extends Controller {
             'start_time' => self::T_STRING,
             'end_time' => self::T_STRING,
             'pay_type' => self::T_INT,
-            'state' => self::T_STRING,
-            'page' => self::T_INT, //state 0 全部  6待审核 7已退款 10退款中  9拒绝退款 (多个用','隔开)
+            'state' => self::T_STRING, //state 0 全部  状态：NEW - 未支付,PYD - 已支付,CSD - 已消费,RFN - 申请退款(退款中),RFD - 已退款',
+            'page' => self::T_INT,
             'page_size' => self::T_INT,
         ]);
         $param['startTime'] = isset($param['start_time']) ? $param['start_time'] : '';
@@ -104,7 +104,7 @@ class BeautyRefundController extends Controller {
     }
 
     /**
-     * @api {get} /beautyrefund/show/:id 2.定妆单退款列表
+     * @api {get} /beautyrefund/show/:id 2.定妆单退款详情
      * @apiName show
      * @apiGroup beautyrefund
      *
@@ -128,6 +128,12 @@ class BeautyRefundController extends Controller {
      * @apiSuccess {String} add_time 退款时间
      * @apiSuccess {String} opt_time 审批时间
      * @apiSuccess {String} opt_user  审批人
+     * @apiSuccess {String} recommend_code  推荐码
+     * @apiSuccess {String} arrive_at 到店时间
+     * @apiSuccess {String} update_booking_date  修改的预约时间
+     * @apiSuccess {String} remark  沟通记录
+     * @apiSuccess {String} receiver  接待人
+     * @apiSuccess {String} create_at  接待时间
      *
      * @apiSuccessExample Success-Response:
      * {
@@ -150,7 +156,15 @@ class BeautyRefundController extends Controller {
      *       "money": "290.00",
      *       "add_time": "2015-01-02 16:11:47",
      *       "opt_time": 0,
-     *       "opt_user": ""
+     *       "opt_user": "",
+     *       "recommend_code": "",
+     * "receive": {
+     *      "arrive_at": "2015-12-01 00:00:00",
+     *      "update_booking_date": "2015-12-03",
+     *      "remark": "fasdfasdfasdfafasdf",
+     *      "receiver": 1,
+     *       "create_at": "2015-12-10 00:00:00"
+     *  }
      *   }
      * }
      * 
@@ -187,7 +201,7 @@ class BeautyRefundController extends Controller {
         if (count($ids) < 1) {
             throw new ApiException("ids参数不能为空", ERROR::PARAMS_LOST);
         }
-        $res = BeautyRefundApi::reject($ids);
+        $res = BeautyRefundApi::rejectBeauty($ids);
         return $this->success($res);
     }
 
@@ -248,8 +262,43 @@ class BeautyRefundController extends Controller {
         if (count($ids) < 1) {
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
         }
-        $info = BeautyRefundApi::accpet($ids);
+        $info = BeautyRefundApi::accpetBeauty($ids);
         return $this->success();
+    }
+
+    /**
+     * 支付宝的回调
+     */
+    public function beauty_call_back_of_alipay() {
+        $input = [
+            'GET' => $_GET,
+            "POST" => $_POST
+        ];
+        Utils::log('pay', date("Y-m-d H:i:s") . "\t order " . json_encode($input, JSON_UNESCAPED_UNICODE) . "\t\n", "alipay_callback");
+
+        $is_debug = false;
+        if (isset($_GET['is_debug']) && $_GET['is_debug'] == 1) {
+            $is_debug = true;
+        }
+        if (isset($_POST['is_debug']) && $_POST['is_debug'] == 1) {
+            $is_debug = true;
+        }
+
+        //以下为debug的写法
+        //$ret = AlipaySimple::callback(array(D("Refund"),"alipayRefundCallback"),[],false);
+        //以下为正式的写法
+        $ret = AlipaySimple::callback(function($args) {
+                    return BeautyRefundApi::callBackOfAlipay($args);
+                }, [], $is_debug);
+
+        if ($ret) {
+            Utils::log('pay', date("Y-m-d H:i:s") . "\t callback success \t " . json_encode($input, JSON_UNESCAPED_UNICODE) . "\t\n", "alipay_callback");
+            echo "success";
+        } else {
+            Utils::log('pay', date("Y-m-d H:i:s") . "\t callback fail \t " . json_encode($input, JSON_UNESCAPED_UNICODE) . "\t\n", "alipay_callback");
+            echo "fail";
+        }
+        die();
     }
 
 }

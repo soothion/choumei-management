@@ -133,13 +133,13 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>项目名称：</label>
                     <div class="control">
-                        <input type="text" name="name" value="<%=data.name%>" placeholder="限制12个字符" maxlength="12" required>
+                        <input type="text" name="name" value="<%=data.name%>" placeholder="1-20个字符" maxlength="20" required data-value="<%=data.name%>" unique="beautyItem/checkName?item_id=<%=query.item_id%>&name=${value}" uniquemsg="已经存在此项目名">
                     </div>
                 </div> 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>项目介绍：</label>
                     <div class="control">
-						<textarea maxlength="5000" name="detail" required placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符"><%=data.detail%></textarea>
+						<textarea class="large" maxlength="5000" name="detail" required placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符"><%=data.detail%></textarea>
                     </div>
                 </div>
 				<div class="control-group">
@@ -189,13 +189,13 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>原价：</label>
                     <div class="control">
-						<input type="text" placeholder="1~99999整数" pattern="number" min="1" value="<%=data.price%>" required name="price"/>
+						<input type="text" placeholder="1~99999整数" pattern="number" min="1" max="99999" value="<%=data.price%>" required name="price"/>
                     </div>
                 </div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>臭美会员价：</label>
                     <div class="control">
-						<input type="text" placeholder="1~99999整数，必须≤市场价" pattern="number" min="1" value="<%=data.vip_price%>" required name="vip_price"/>
+						<input type="text" placeholder="1~99999整数，必须≤原价" pattern="number" max="99999" min="1" value="<%=data.vip_price%>" required name="vip_price"/>
                     </div>
                 </div>
 				<%}%>
@@ -248,13 +248,13 @@
 						<div class="control-help" id="help-<%=id%>" style="display:none"></div>
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="2~10个字" minlength="2" value="<%=item.norm%>" required name="norm" />
+						<input type="text" placeholder="2~10个字" minlength="2" maxlength="10" value="<%=item.norm%>" required name="norm" />
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="1~99999整数" min="1" pattern="number"  value="<%=item.price%>" required name="price"/>
+						<input type="text" placeholder="1~99999整数" min="1" max="99999" pattern="number"  value="<%=item.price%>" required name="price"/>
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="1~99999整数，小于等于原价" min="1" pattern="number"  value="<%=item.vip_price%>" required name="vip_price"/>
+						<input type="text" placeholder="1~99999整数，小于等于原价" min="1" max="99999"pattern="number"  value="<%=item.vip_price%>" required name="vip_price"/>
 					</li>
 					<li class="table-item item-input">
 						<%if(data.init&&i==0){%>
@@ -270,6 +270,12 @@
 		<script type="text/javascript">
 			$('#form').on('_ready',function(e,data){
 				data=data.response;
+				var imagesArr=[];
+				if(data.images){
+					JSON.parse(data.images).forEach(function(item){
+						imagesArr.push({img:item});
+					})
+				}
 				lib.puploader.image({
 					browse_button: 'shopUpload',
 					auto_start:true,
@@ -279,7 +285,7 @@
 						]
 					},
 					max_file_size:'10mb',
-					imageArray:data.images?JSON.parse(data.images):[],
+					imageArray:data.images?imagesArr:[],
 					//imageLimitSize:"750*500",
 					multi_selection:true,
 					files_number:10,
@@ -305,7 +311,7 @@
 					uploader.thumbnails.on('itemchange',function(){
 						var images=[];
 						$('.control-thumbnails input.original').each(function(){
-							images.push({img:this.value});
+							images.push(this.value);
 						});
 						$('#item-images').val(JSON.stringify(images));
 					});

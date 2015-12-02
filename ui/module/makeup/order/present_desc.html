@@ -17,7 +17,7 @@
                 <div class="flex-item fr">
                   <div class="fr" id="breadcrumb">
                     <script id="breadcrumb-t" type="text/template">
-                        <a data-modal='refund' <%if (data.ticketStatus !=1){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
+                        <a data-modal='useCoupon' <%if (data.ticketStatus !=1){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
                              消费使用
                         </a>
                         <a href="present_list.html" class="btn" data-slug="coupon.add">
@@ -90,6 +90,7 @@
                             <td class="td">状态：</td>
                             <td><%=data.ticketStatusName%></td>
                         </tr>
+                        <%if (data.ticketStatus == 1){%>
                         <tr>
                             <td colspan="2">使用信息：</td>
                         </tr>
@@ -126,6 +127,7 @@
                                 </table>
                               </td>
                         </tr>
+                        <%}%>
                     </tbody>
                 </table>
                  </script>
@@ -133,6 +135,46 @@
                  $('#table').on('_ready',function(res){
                      lib.ajat("#domid=breadcrumb&tmpid=breadcrumb-t").template(res.response.data);
                  })
+
+                 var completeDefine = function(){
+                     var popup = $(this);
+                     var form = popup.find('form');
+                     var newForm = new lib.Form(form[0]);
+                     popup.find('.popup-alert-define').unbind('click').on("click",function(e){
+                        e.stopPropagation();
+                        form.submit();
+                     });
+                     form.on('success',function(){
+                         location.reload();
+                     })
+                 };
+                 var ModalList = {
+                   'useCoupon':{
+                     'title':'使用消费劵',
+                     'cancelText':'取消',
+                     'defineText':'保存',
+                     'confirm':true,
+                     'modalType':'box',
+                     'url':'./modal_useCoupon',
+                     'complete':completeDefine
+                 }
+                 };
+
+                 var bindEvent = function(){
+                   $('body').on('click','a[data-modal]',function(){
+                     var modal= $(this).attr('data-modal');
+                     initModal(ModalList[modal]);
+                   });
+                 }();
+
+                 var initModal = function(options){
+                     if (options.url && options.url.indexOf('./')>-1){
+                          options.content =lib.ejs.render({url:options.url});
+                     }else{
+                          options.content =lib.ejs.render({text:$(options.url).html()});
+                     }
+                     parent.lib.popup[options['modalType']](options);
+                 }
 
                  </script>
             </div>

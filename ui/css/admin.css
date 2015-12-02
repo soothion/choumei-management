@@ -678,6 +678,10 @@ input:focus+.unit{
 	width:550px;
 	height:150px;
 }
+textarea.large{
+	width:550px;
+	height:150px;
+}
 .keypress-help{
 	position:absolute;
 	right:16px;

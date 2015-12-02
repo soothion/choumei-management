@@ -84,6 +84,7 @@ class BookingOrder extends Model
             'order_item'=>$items,
             'fundflow'=>$fundflows,
             'payment_log'=>$payment_log,
+            'makeup'=>BeautyMakeup::getByBookingId($id),
             'booking_bill'=>BookingBill::getByBookingId($id),
             'booking_cash'=>BookingCash::getByBookingId($id),
             'booking_receive'=>BookingReceive::getByBookingId($id),

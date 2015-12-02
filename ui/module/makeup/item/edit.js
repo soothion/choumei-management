@@ -27,7 +27,6 @@ $('#form').on("_ready",function(){
 				popup.find(".popup-alert-define").on("click",function(e){
 					e.stopPropagation();
 					form.submit();
-					parent.lib.popup.resize();
 				});
 				form.on('save',function(e,data){
 					var html=lib.ejs.render({url:"/module/makeup/item/table-t"},{data:[data]});
@@ -69,7 +68,7 @@ $('#form').on("_ready",function(){
 		parent.lib.popup.box({
 			confirm:true,
 			height:300,
-			width:800,
+			width:820,
 			content:lib.ejs.render({url:"/module/makeup/item/cols-image-t"},{data:data}),
 			complete:function(){
 				var popup=$(this);
@@ -87,12 +86,8 @@ $('#form').on("_ready",function(){
 					//imageLimitSize:"750*500",
 					multi_selection:true,
 					files_number:10,
+					thumb:""
 				},function(uploader){
-					uploader.bind('ImageUploaded',function(up,response){
-						up.createThumbnails({
-							img:response.img,
-						}); 
-					});
 					uploader.unbind("UploadComplete");
 					uploader.bind("UploadComplete",function(){
 						parent.lib.popup.resize();
@@ -114,8 +109,8 @@ $('#form').on("_ready",function(){
 				});
 				form.on('save',function(e,data){
 					data.image=[];
-					popup.find(".control-image img").each(function(){
-						data.image.push({img:this.src});
+					popup.find(".control-image input.original").each(function(){
+						data.image.push(this.value);
 					});
 					var table=$this.closest('.makeup-item-image-list').find("table");
 					var html=lib.ejs.render({url:"/module/makeup/item/table-t"},{data:[data]});
@@ -146,7 +141,7 @@ $('#form').on("_ready",function(){
 					if(name=="image"){
 						var image=[];
 						td.find("img").each(function(){
-							image.push({img:this.src});
+							image.push(this.src);
 						});
 						item[name]=image;
 					}else{
@@ -154,11 +149,15 @@ $('#form').on("_ready",function(){
 					}
 				}
 			});
-			item.title && data.push(item);
+			if(item.title||item.content||item.image){
+				data.push(item);
+			}
 		});
+		console.log(data);
 		table.siblings(".json-hidden").val(data.length==0?"":JSON.stringify(data));
 		table.siblings("button").attr("disabled",trs.length>=20);
 	}).trigger("datachange");
+	
 	this._getFormData=function(){
 		var data=lib.tools.getFormData($(this));
 		data=$.extend(JSON.parse(sessionStorage.getItem("formdata")),data);

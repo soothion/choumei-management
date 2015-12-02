@@ -139,9 +139,18 @@
                             <td><%=data.experience%></td>
                         </tr>     
 
-                        <tr style="height:100px">
+                        <tr style="height:200px">
                             <td class="td">荣誉资质：</td>
-                            <td><%=data.description%></td>
+                            <td>  
+                                <%if(data.detail){%>
+                                    <% var detailArr = JSON.parse(data.detail)%>
+                                    <% detailArr.forEach(function(item,i){%>
+                                        <%=item.title%><br>
+                                        <%=item.content.split("\n").join("<br>")%><br><br>
+                                    <%})%>
+                                <%}%>
+     
+                            </td>
                         </tr>                       
                     </tbody>                     
                 </table>                                                                           
@@ -157,7 +166,10 @@
             (function(){
                 var promise = lib.ajat('artificer/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
                 promise.done(function(data){
-                $('img').attr('src',data.data.photo);                 
+                    if(data.data && data.data.photo){
+                       var photo = JSON.parse(data.data.photo);
+                       $('img').attr('src',photo.thumbimg);
+                    }                 
                 }); 
             })();
         </script>          
