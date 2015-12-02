@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Manager;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,6 +23,7 @@ class Present extends Model
             'present.expire_at as expireTime',
             'present.department_id as departmentId',
             'present.user_id as userId',
+            'present.creater_id as createrId',
             'present.detail',
             'present.article_status as articleStatus',
             'present.verify_status as verifyStatus',
@@ -76,7 +78,15 @@ class Present extends Model
         if($articlesInfo === null){
             return [];
         }else{
-            return $articlesInfo->toArray();
+            $allInfo = $articlesInfo->toArray();
+            $createrInfo = Manager::select('name')->where('id','=',$articlesInfo['createrId'])->first();
+            if($createrInfo === null){
+                $allInfo['creater'] = '';
+            }else{
+                $createrName = $createrInfo->toArray();
+                $allInfo['creater'] = $createrName['name'];
+            }
+            return $allInfo;
         }
         
     }

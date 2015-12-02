@@ -11,18 +11,6 @@
             padding:0;
             text-align: center!important;
             height:33px;  
-        }  
-        .tab input[type="date"] {
-            min-width:160px!important;
-            width:100%;
-            border: none;
-            visibility: hidden;
-        }
-        .tab input[type="text"] {
-            min-width:300px!important;
-            width:100%;
-            border: none;
-            visibility:hidden;
         }           
       </style>
     </head>
@@ -42,47 +30,42 @@
                 <script type="text/template" id="table-t">
                 <div style="position:absolute;right:20px;top:40px;">
 
-                    <a type="button" class="btn mr-20" href="edit.html#id=597" 
+                    <a type="button" class="btn mr-20" href="edit.html#id=<%=data.id%>" 
                     data-slug="stylist.update">
                         编辑
                     </a>
                     &nbsp;
-                    <button type="button" class="btn mr-20" onclick="window.close()">
+                    <button type="button" class="btn mr-20" onclick="history.back()">
                         返回
                     </button>                  
                 </div> 
 
                 <table>
                     <tbody>
-                        <tr style="height:60px">
-                            <td colspan="4">
-                            <strong style="padding-left:15px;font-size:18px"><%=data.salonname%></strong>
-                            </td>
-                        </tr>
-
                         <tr>
                             <td class="td">姓名：</td>
-                            <td colspan="3"><%=data.stylistName%></td>
+                            <td colspan="3"><%=data.name%></td>
                         </tr>
 
                         <tr>
-                            <%var sexText = {"0":"保密","1":"男","2":"女"} %>
+                            <%var sexText = {"1":"男","2":"女"} %>
                             <td class="td">性别：</td>
                             <td colspan="3"><%=sexText[data.sex]%></td>
                         </tr>
 
                         <tr>
                             <td class="td">国籍：</td>
-                            <td><%=data.stylistName%></td>
+                            <td><%=data.country%></td>
                             <td class="td">出生日期：</td>
-                            <td><%=data.stylistName%></td>
+                            <td><%=data.birthday%></td>
                         </tr>
 
                         <tr>
+                            <% var type={'0':'无填写类型', '1':'身份证', '2':'军官证', '3':'驾驶证', '4':'护照'}%>
                             <td class="td">证件类型：</td>
-                            <td><%=data.stylistName%></td>
+                            <td><%=type[data.credential]%></td>
                             <td class="td">证件编号：</td>
-                            <td><%=data.stylistName%></td>
+                            <td><%=data.cardId%></td>
                         </tr>
 
                         <tr>
@@ -106,8 +89,9 @@
                         </tr>   
 
                         <tr>
+                            <% var statusText = {"0":"禁用中","1":"启用中"}; %>
                             <td class="td">状态：</td>
-                            <td colspan="3" class="format"><%=data.birthday%></td>
+                            <td colspan="3"><%=statusText[data.status]%></td>
                         </tr>                                               
                     </tbody>                     
                 </table>
@@ -121,18 +105,19 @@
                     <tbody>
 
                         <tr>
+                            <% var levelText = {'1':'明星院长','2':'院长'}%>
                             <td class="td">级别：</td>
-                            <td><%=data.job%></td>
+                            <td><%=levelText[data.level]%></td>
                         </tr>
 
                         <tr>
                             <td class="td">在职编号：</td>
-                            <td><%=data.sNumber%></td>
+                            <td><%=data.number%></td>
                         </tr>
 
                         <tr>
                             <td class="td">工作年限：</td>
-                            <td><%=data.workYears%></td>
+                            <td><%=data.workingLife%></td>
                         </tr>                       
                     </tbody>                     
                 </table> 
@@ -146,12 +131,12 @@
                     <tbody>
                         <tr style="height:100px">
                             <td class="td">个性签名：</td>
-                            <td><%=data.signature%></td>
+                            <td><%=data.introduce%></td>
                         </tr>
 
                         <tr style="height:100px">
                             <td class="td">从业经验：</td>
-                            <td><%=data.description%></td>
+                            <td><%=data.experience%></td>
                         </tr>     
 
                         <tr style="height:100px">
@@ -165,66 +150,15 @@
         </div>
 
         <div style="float:left;margin:15px 0 15px 20px;">
-          <img src="" style="width:256px;height:256px"/>
+          <img  style="width:256px;height:256px"/>
         </div>
 
         <script>
             (function(){
-                function init(){
-                    var promise = lib.ajat('stylist/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
-                    promise.done(function(data){
-                    $('img').attr('src',data.data.stylistImg);                 
-                    }); 
-                }
-
-                $("#table-wrapper").on('click','.isAble',function(){
-                    var reward = $(this).data("reward");
-                    var status = $(this).data("status");
-                    if(reward == "1" && status=="1"){
-                        lib.popup.alert({text:'此造型师有未完成打赏的赏金单，完成订单后才能禁用'});
-                        return;
-                    }                    
-                    var action = $(this).data('action');
-                    lib.ajax({
-                        type: "post",
-                        url : action+$(this).data('stylistid')
-                    }).done(function(data, status, xhr){
-                        if(data.result == 1){
-                            parent.lib.popup.result({text:"操作成功"});
-                            init();
-                        }
-                    })
-                })
-
-                $("#table-wrapper").on('click','.del',function(){
-                    var status = $(this).data("status");
-                    if(status == "1"){
-                        lib.popup.alert({text:'此造型师有未完成打赏的赏金单，完成订单后才能删除'});
-                        return;
-                    }
-                    if(status == "2"){
-                        lib.popup.confirm({
-                            text:'删除造型师后，此造型师的接单记录、作品记录也将一并清除，是否继续删除 ',
-                            define:function(){
-                                lib.ajax({
-                                    type: "post",
-                                    url : "stylist/destroy/"+lib.query.id
-                                }).done(function(data, status, xhr){
-                                    if(data.result == 1){
-                                        parent.lib.popup.result({
-                                            text:"删除成功",
-                                            define:function(){
-                                                window.close();
-                                            }
-                                        });                                        
-                                    }
-                                });                                 
-                            }
-                        })
-                    }
-                })                
-
-                init();
+                var promise = lib.ajat('artificer/show/'+lib.query.id+'#domid=table-wrapper&tempid=table-t').render();
+                promise.done(function(data){
+                $('img').attr('src',data.data.photo);                 
+                }); 
             })();
         </script>          
     </body>

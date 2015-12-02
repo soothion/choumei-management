@@ -102,21 +102,7 @@
         </div>
 
         <script type="text/javascript">
-            $(function(){
-                $('#table').on('change','tbody label input',function(){
-                    if($('tbody label input:checked').length>0){
-                        $('.table-bottom button').attr('disabled',false);
-                    }else{
-                        $('.table-bottom button').attr('disabled',true);
-                    }
-                    var checked=$('tbody label input:checked');
-                    var ids=[];
-                    checked.each(function(){
-                        ids.push(this.value);
-                    });
-                    //$('.table-bottom input[name="ids"]').val(ids.toString());
-                })
-            });
+
         </script>
 
   </body>
