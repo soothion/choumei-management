@@ -18,7 +18,7 @@ $('#form').on("_ready",function(){
 			confirm:true,
 			height:300,
 			width:800,
-			content:lib.ejs.render({url:"cols-t"},{data:data}),
+			content:lib.ejs.render({url:"/module/makeup/item/cols-t"},{data:data}),
 			complete:function(){
 				var popup=$(this);
 				var form=popup.find('form');
@@ -30,7 +30,7 @@ $('#form').on("_ready",function(){
 					parent.lib.popup.resize();
 				});
 				form.on('save',function(e,data){
-					var html=lib.ejs.render({url:"table-t"},{data:[data]});
+					var html=lib.ejs.render({url:"/module/makeup/item/table-t"},{data:[data]});
 					var table=$this.closest('.makeup-item-list').find("table");
 					if(tr){
 						tr.replaceWith(html);
@@ -70,7 +70,7 @@ $('#form').on("_ready",function(){
 			confirm:true,
 			height:300,
 			width:800,
-			content:lib.ejs.render({url:"cols-image-t"},{data:data}),
+			content:lib.ejs.render({url:"/module/makeup/item/cols-image-t"},{data:data}),
 			complete:function(){
 				var popup=$(this);
 				var form=popup.find('form');
@@ -118,7 +118,7 @@ $('#form').on("_ready",function(){
 						data.image.push({img:this.src});
 					});
 					var table=$this.closest('.makeup-item-image-list').find("table");
-					var html=lib.ejs.render({url:"table-t"},{data:[data]});
+					var html=lib.ejs.render({url:"/module/makeup/item/table-t"},{data:[data]});
 					if(tr){
 						tr.replaceWith(html);
 					}else{
