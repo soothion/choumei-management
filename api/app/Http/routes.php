@@ -752,7 +752,48 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 		'as'=>'appointment.export',
 		'uses'=>'Transaction\AppointmentController@export'
     ));
+    
+    //预约单
+    Route::any('book/index',array(  //预约单列表
+    'as'=>'book.index',
+    'uses'=>'Transaction\BookController@index'
+        ));
+    
+    Route::any('book/show/{id}',array(  //查看预约单
+    'as'=>'book.show',
+    'uses'=>'Transaction\BookController@show'
+        ));
+    
+    Route::any('book/receive/{id}',array(  //接待
+    'as'=>'book.receive',
+    'uses'=>'Transaction\BookController@receive'
+        ));
 	
+    Route::any('book/receive/{id}',array(  //接待
+    'as'=>'book.receive',
+    'uses'=>'Transaction\BookController@receive'
+        ));
+    
+    Route::any('book/cash/{id}',array(  //收银
+    'as'=>'book.cash',
+    'uses'=>'Transaction\BookController@cash'
+        ));
+    
+    Route::any('book/bill/{id}',array(  //开发票
+    'as'=>'book.bill',
+    'uses'=>'Transaction\BookController@bill'
+        ));
+    
+    Route::any('book/relatively/{id}',array(  //补色
+    'as'=>'book.relatively',
+    'uses'=>'Transaction\BookController@relatively'
+        ));
+    
+    Route::any('book/refund/{id}',array(  //退款
+    'as'=>'book.refund',
+    'uses'=>'Transaction\BookController@refund'
+        ));
+
 	//消息管理
 	Route::any('message/create',array(  //添加消息
 		'as'=>'message.create',
