@@ -135,6 +135,19 @@
                  $('#table').on('_ready',function(res){
                      lib.ajat("#domid=breadcrumb&tmpid=breadcrumb-t").template(res.response.data);
                  })
+
+                 var completeDefine = function(){
+                     var popup = $(this);
+                     var form = popup.find('form');
+                     var newForm = new lib.Form(form[0]);
+                     popup.find('.popup-alert-define').unbind('click').on("click",function(e){
+                        e.stopPropagation();
+                        form.submit();
+                     });
+                     form.on('success',function(){
+                         location.reload();
+                     })
+                 };
                  var ModalList = {
                    'useCoupon':{
                      'title':'使用消费劵',
@@ -143,18 +156,7 @@
                      'confirm':true,
                      'modalType':'box',
                      'url':'./modal_useCoupon',
-                     'complete':function(){
-                         var popup = $(this);
-                         var form = popup.find('form');
-         				 var newForm = new lib.Form(form[0]);
-         				 popup.find('.popup-alert-define').unbind('click').on("click",function(e){
-         					e.stopPropagation();
-         					form.submit();
-         				 });
-                         form.on('success',function(){
-                             location.reload();
-                         })
-                     }
+                     'complete':completeDefine
                  }
                  };
 

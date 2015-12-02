@@ -255,6 +255,19 @@
                 </table>
                  </script>
                  <script type="text/javascript">
+
+                 var completeDefine = function(){
+                     var popup = $(this);
+                     var form = popup.find('form');
+                     var newForm = new lib.Form(form[0]);
+                     popup.find('.popup-alert-define').unbind('click').on("click",function(e){
+                        e.stopPropagation();
+                        form.submit();
+                     });
+                     form.on('success',function(){
+                         location.reload();
+                     })
+                 }
                   var ModalList = {
                     'receive':{
                       'title':'用户接待记录',
@@ -262,7 +275,8 @@
                       'defineText':'保存',
                       'confirm':true,
                       'modalType':'box',
-                      'url':'./modal_receive'
+                      'url':'./modal_receive',
+                      'complete':completeDefine
                     },
                     'cashier':{
                       'title':'确认收银',
@@ -270,7 +284,8 @@
                       'defineText':'确认收银',
                       'confirm':true,
                       'modalType':'box',
-                      'url':'./modal_cashier'
+                      'url':'./modal_cashier',
+                      'complete':completeDefine
                     },
                     'comp-color':{
                       'title':'用户补色记录',
@@ -278,14 +293,16 @@
                       'defineText':'保存',
                       'confirm':true,
                       'modalType':'box',
-                      'url':'./modal_compColor'
+                      'url':'./modal_compColor',
+                      'complete':completeDefine
                     },
                     'receipt':{
                       'text':'你正在给订单开发票，确认开票后不能退回，是否继续',
                       'cancelText':'取消',
                       'defineText':'确认',
                       'confirm':true,
-                      'modalType':'confirm'
+                      'modalType':'confirm',
+                      'complete':completeDefine
                     },
                     'refund':{
                       'title':'退款',
@@ -293,7 +310,9 @@
                       'defineText':'确认退款',
                       'confirm':true,
                       'modalType':'box',
-                      'url':'./modal_refund'
+                      'url':'./modal_refund',
+                      'complete':completeDefine
+
                     }
                   };
 
