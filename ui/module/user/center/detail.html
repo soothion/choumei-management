@@ -243,7 +243,111 @@
 						</tbody>
 					</table>
 				</div>
+				<div class="table-detail">
+					<table>
+						<thead>
+							<tr>
+								<th colspan="2" style="line-height:32px">
+									帐户信息
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>注册时间：  <%=data.add_time%></td>
+								<td>注册方式：手机注册</td>
+							</tr>
+							<tr>
+								<td>绑定手机号：  <%=data.mobilephone%></td>
+								<td>会员等级：<%=data.level?"V"+data.level:""%></td>
+							</tr>
+							<tr>
+								<td>会员积分：  <input type="text" value="<%=data.grade%>" name="grade" required pattern="number" /></td>
+								<td>成长值：<input type="text" value="<%=data.growth%>" name="growth" required pattern="number"/></td>
+							</tr>
+							<tr>
+								<td>登录密码：<%=data.password?"已设置":"未设置"%></td>
+								<td>支付密码：<%=data.costpwd?"已设置":"未设置"%></td>
+							</tr>
+							<tr>
+								<td>加入集团：<%=data.companyName%> <%if(data.companyCode){%><span class="space"></span><button  data-slug="user.update" class="btn off-code"  form="companyName">解绑集团码</button><%}%></td>
+								<td>活动邀请码：<%=!data.salonname?data.recommendCode:""%></td>
+							</tr>
+							<tr>
+								<td colspan="2">店铺邀请码：<%=data.salonname?data.recommendCode:""%></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<br />
+				<div class="table-detail">
+					<table>
+						<thead>
+							<tr>
+								<th style="line-height:32px">
+									用户推荐情况
+								</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="table">
+					<table>
+						<thead>
+							<tr>
+								<th>码类型</th>
+								<th>码编号</th>
+								<th>店铺（活动）类型</th>
+								<th>填写时间</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>集团邀请码</td>
+								<td>60001</td>
+								<td>顺丰集团</td>
+								<td>2015-06-06   15：30：20</td>
+								<td><button class="link">解除集团码</button></td>
+							</tr>
+							<tr>
+								<td>商家邀请码</td>
+								<td>60001</td>
+								<td>顺丰集团</td>
+								<td>2015-06-06   15：30：20</td>
+								<td>无</td>
+							</tr>
+							<tr>
+								<td>活动邀请码</td>
+								<td>60001</td>
+								<td>顺丰集团</td>
+								<td>2015-06-06   15：30：20</td>
+								<td>无</td>
+							</tr>
+							<tr>
+								<td>店铺推荐码</td>
+								<td>无</td>
+								<td>无</td>
+								<td>无</td>
+								<td>无</td>
+							</tr>
+							<tr>
+								<td>活动推荐码</td>
+								<td>无</td>
+								<td>无</td>
+								<td>无</td>
+								<td>无</td>
+							</tr>
+							<tr>
+								<td>用户推荐码</td>
+								<td>60001</td>
+								<td>无</td>
+								<td>2015-06-06   15：30：20</td>
+								<td>无</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<div class="tc">
 					<button class="btn-primary" data-slug="user.update">提交</button>
 					<span class="space"></span>
