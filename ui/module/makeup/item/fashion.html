@@ -15,11 +15,13 @@
 		 </div>		 
         </div>		
         <div class="wrapper">
-			<div class="table-tab-switch">
+			<div class="table-tab-switch" id="switch" ajat="#domid=switch&tempid=switch-t">
+				<script type="text/template" id="switch-t">
 				<ul class="tab-switch">
-					<li class="active"><a href="#page=1&is_gift=0">快时尚项目</a></li>
-					<li><a  href="#page=1&is_gift=1">快时尚赠送项目</a></li>
+					<li <%if(query.is_gift!=1){%> class="active" <%}%>><a href="#is_gift=0">快时尚项目</a></li>
+					<li <%if(query.is_gift==1){%> class="active" <%}%>><a href="#is_gift=1">快时尚赠送项目</a></li>
 				</ul>
+				</script>
 			</div>
            <div class="table" ajat="beautyItem/indexFashion?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
