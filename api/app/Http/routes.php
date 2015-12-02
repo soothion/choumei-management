@@ -183,13 +183,8 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'uses'=>'MessageBox\MessageBoxController@redirectUrl'
     ))->where('pushId', '[0-9]+'); 
 //权限管理后台接口
-<<<<<<< Updated upstream
-//  Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
-Route::group(['middleware' => ['before']], function(){
-=======
 //Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
   Route::group(['middleware' => ['before']], function(){
->>>>>>> Stashed changes
 
 	//管理员模块
 	Route::any('manager/index',array(
