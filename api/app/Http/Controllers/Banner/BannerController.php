@@ -91,7 +91,7 @@ class BannerController extends Controller {
         if ($param['type'] == 1) {
             $query = Banner::where('type', '=', 1)->orderBy('sort', 'asc')->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
         } else {
-            $query = Banner::whereln('type', '=', [2, 3, 4])->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
+            $query = Banner::whereIn('type',[2,3,4])->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
         }
         unset($query['next_page_url']);
         unset($query['prev_page_url']);
