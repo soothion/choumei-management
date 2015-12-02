@@ -267,8 +267,8 @@ class ArtificerAssistantController extends Controller{
     * @apiSuccess {String} number         必填,在职编号.
     * @apiSuccess {Number} workingLife    必填,工作年限.
     * @apiSuccess {String} introduce      必填,个性签名.
-    * @apiSuccess {Number} credential     选填,证件类型 0无填写类型 1身份证； 2军官证； 3驾驶证； 4护照.
-    * @apiSuccess {String} cardId         选填,证件类型所对应的证件号码.
+    * @apiSuccess {Number} credential     必填,证件类型  1身份证； 2军官证； 3驾驶证； 4护照.
+    * @apiSuccess {String} cardId         必填,证件类型所对应的证件号码.
     * @apiSuccess {String} mobilePhone    选填,电话.
     * @apiSuccess {String} wechat         选填,微信.
     * @apiSuccess {String} qq             选填,qq.
