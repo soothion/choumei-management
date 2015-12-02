@@ -410,7 +410,7 @@ class ArtificerAssistantController extends Controller{
     public function checkNumberExists( $id = 0 ){
         $param = $this->param;
         $number = isset( $param['number'] ) ? $param['number'] : $this->error('未填写助理专家编码');
-        $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number,'artificer_id'=>$id])->whereRaw('pid is not NULL')->first();
+        $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number])->whereRaw('pid is not NULL')->first();
         if( empty($exists) ) return $this->success();
         $exists = $exists->toArray();
         if( $id == $exists['id'] ) return $this->success();
@@ -440,7 +440,7 @@ class ArtificerAssistantController extends Controller{
     public function checkNameExists( $id = 0 ){
         $param = $this->param;
         $name = isset( $param['name'] ) ? $param['name'] : $this->error('未填写专家名字');
-        $exists = Artificer::select(['artificer_id as id'])->where(['name'=>$name,'artificer_id'=>$id])->whereRaw('pid is not NULL')->first();
+        $exists = Artificer::select(['artificer_id as id'])->where(['name'=>$name])->whereRaw('pid is not NULL')->first();
         if( empty($exists) ) return $this->success();
         $exists = $exists->toArray();
         if( $id == $exists['id'] ) return $this->success();
