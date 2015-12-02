@@ -187,7 +187,7 @@ class ArtificerAssistantController extends Controller{
         $addData = $this->_formatReceiveData( $param );
         $addData['created_at'] = time();
         $lastId = Artificer::insertGetId( $addData );
-        Event::fire('assistant.add','添加专家助理 id: '.$lastId);
+//        Event::fire('assistant.add','添加专家助理 id: '.$lastId);
         return $this->success();
     }
     /**
@@ -247,7 +247,7 @@ class ArtificerAssistantController extends Controller{
         $saveData = $this->_formatReceiveData( $param );
         $saveData['updated_at'] = time();
         Artificer::where(['artificer_id'=>$id])->update( $saveData );
-        Event::fire('assistant.update','编辑专家助理 id: '.$id);
+//        Event::fire('assistant.update','编辑专家助理 id: '.$id);
         return $this->success();
     }
     /**
@@ -354,7 +354,7 @@ class ArtificerAssistantController extends Controller{
 	 */
     public function start($id){
         Artificer::where(['artificer_id'=>$id,'status'=>0])->update(['status'=>1]);
-        Event::fire('assistant.up','启用专家助理 id: '.$id);
+//        Event::fire('assistant.up','启用专家助理 id: '.$id);
         return $this->success();
     }
     /**
@@ -384,7 +384,7 @@ class ArtificerAssistantController extends Controller{
 	 */
     public function close($id){
         Artificer::where(['artificer_id'=>$id,'status'=>1])->update(['status'=>0]);
-        Event::fire('assistant.down','禁用专家助理 id: '.$id);
+//        Event::fire('assistant.down','禁用专家助理 id: '.$id);
         return $this->success();
     }
     /**
@@ -411,10 +411,8 @@ class ArtificerAssistantController extends Controller{
         $param = $this->param;
         $number = isset( $param['number'] ) ? $param['number'] : $this->error('未填写助理专家编码');
         $number = 'M'.$number;
-        $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number])->whereRaw('pid is not NULL')->first();
-        if( empty($exists) ) return $this->success();
-        $exists = $exists->toArray();
-        if( $id == $exists['id'] ) return $this->success();
+        $flag = $this->_checkNumberExists( $id , $number );
+        if( !$flag ) return $this->success();
         return $this->error( '专家助理编号已存在', ERROR::ARTIFICER_NAME_EXISTS_ERROR );
     }
     /**
@@ -441,10 +439,8 @@ class ArtificerAssistantController extends Controller{
     public function checkNameExists( $id = 0 ){
         $param = $this->param;
         $name = isset( $param['name'] ) ? $param['name'] : $this->error('未填写专家名字');
-        $exists = Artificer::select(['artificer_id as id'])->where(['name'=>$name])->whereRaw('pid is not NULL')->first();
-        if( empty($exists) ) return $this->success();
-        $exists = $exists->toArray();
-        if( $id == $exists['id'] ) return $this->success();
+        $flag = $this->_checkNameExists( $id , $name );
+        if( !$flag ) return $this->success();
         return $this->error( '专家助理编号已存在', ERROR::ARTIFICER_NAME_EXISTS_ERROR );
     }
     /**
@@ -573,7 +569,7 @@ class ArtificerAssistantController extends Controller{
             $tempData[$key][] = $t3[ $val['status'] ];
             
         }
-        Event::fire('assistant.export','导出专家助手查询列表');
+//        Event::fire('assistant.export','导出专家助手查询列表');
         Excel::create($title, function($excel) use($tempData,$header){
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
                 $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
@@ -593,8 +589,6 @@ class ArtificerAssistantController extends Controller{
         $data['working_life'] = $jobYear = isset( $param['workingLife'] ) ? $param['workingLife'] : $this->error('工作年限未填写');
         $data['pid'] = $pid = isset( $param['pid'] ) ? $param['pid'] : $this->error('所属专家未填写');
         $data['introduce'] = $signature = isset( $param['introduce'] ) ? $param['introduce'] : $this->error('个性签名未填写');
-//        $data['experience'] = $jobEmpiric = isset( $param['experience'] ) ? $param['experience'] : $this->error('从业经验未填写');
-//        $data['detail'] = $jobDetail = isset( $param['detail'] ) ? $param['detail'] : $this->error('个人介绍未填写');
         // 证件类型
         $credentialType = isset( $param['credential'] ) ? $param['credential'] : 0;
         $credentialValue = isset( $param['cardId'] ) ? $param['cardId'] : '';
@@ -611,6 +605,17 @@ class ArtificerAssistantController extends Controller{
         if( $credentialType && $credentialValue ){ 
             $data['credential'] = $credentialType;
             $data['card_id'] = $credentialValue;
+        }
+        // 检验 专家姓名 和 专家编号是否存在
+        if( isset( $param['id'] ) && !empty( $param['id'] ) ){
+            $nameExists = $this->_checkNameExists( $param['id'] , $name );
+            $numberExists = $this->_checkNumberExists( $param['id'] , $jobNumber );
+        }else{
+            $nameExists = $this->_checkNameExists( 0 , $name );
+            $numberExists = $this->_checkNumberExists( 0 , $jobNumber );
+        }
+        if( $nameExists || $numberExists ){
+            return $this->error( '专家名字或者编号有重复哦~' );
         }
         return $data;
     }
@@ -650,5 +655,21 @@ class ArtificerAssistantController extends Controller{
             unset( $result['data'][$key]['pid'] );
         }
         return $result;
+    }
+    private function _checkNumberExists( $id=0 , $number='' ){
+        if(empty($number)) return false;
+        $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number])->whereRaw('pid is not NULL')->first();
+        if( empty($exists) ) return false;
+        $exists = $exists->toArray();
+        if( $id == $exists['id'] ) return false;
+        return true;
+    }
+    private function _checkNameExists( $id = 0 , $name='' ){
+        if(empty($name)) return false;
+        $exists = Artificer::select(['artificer_id as id'])->where(['name'=>$name])->whereRaw('pid is not NULL')->first();
+        if( empty($exists) ) return false;
+        $exists = $exists->toArray();
+        if( $id == $exists['id'] ) return false;
+        return true;
     }
 }

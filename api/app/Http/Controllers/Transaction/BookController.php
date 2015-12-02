@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\TransactionSearchApi;
 use App\Mapping;
 use Event;
+use App\BookingOrder;
 
 class BookController extends Controller
 {
@@ -121,17 +122,17 @@ class BookController extends Controller
        $params = $this->parameters([
             'key' => self::T_INT,
             'keyword' => self::T_STRING,
-            'pay_time_min' => self::T_STRING,
-            'pay_time_max' => self::T_STRING,
-            'pay_type' => self::T_STRING,
-            'pay_state' => self::T_INT,
+            'min_time_' => self::T_STRING,
+            'max_time' => self::T_STRING,
+            'pay_type' => self::T_INT,
+            'pay_state' => self::T_STRING,
             'page' => self::T_INT,
             'page_size' => self::T_INT,
             'sort_key' => self::T_STRING,
             'sort_type' => self::T_STRING,
        ]);
        
-       $items = TransactionSearchApi::searchOfOrder($params);
+       $items = BookingOrder::search($params);
        return $this->success($items);
     }
 
