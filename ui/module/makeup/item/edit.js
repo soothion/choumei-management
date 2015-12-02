@@ -31,12 +31,13 @@ $('#form').on("_ready",function(){
 				});
 				form.on('save',function(e,data){
 					var html=lib.ejs.render({url:"table-t"},{data:[data]});
+					var table=$this.closest('.makeup-item-list').find("table");
 					if(tr){
 						tr.replaceWith(html);
 					}else{
 						$this.closest('.makeup-item-list').find('tbody').append(html);
 					}
-					$this.closest('.makeup-item-list').find("table").trigger('datachange');
+					table.trigger('datachange');
 					parent.lib.popup.close();
 				});
 				parent.lib.popup.resize();
@@ -116,13 +117,14 @@ $('#form').on("_ready",function(){
 					popup.find(".control-image img").each(function(){
 						data.image.push({img:this.src});
 					});
+					var table=$this.closest('.makeup-item-image-list').find("table");
 					var html=lib.ejs.render({url:"table-t"},{data:[data]});
 					if(tr){
 						tr.replaceWith(html);
 					}else{
 						$this.closest('.makeup-item-image-list').find('tbody').append(html);
 					}
-					$this.closest('.makeup-item-image-list').find("table").trigger('datachange');
+					table.trigger('datachange');
 					parent.lib.popup.close();
 				});
 				parent.lib.popup.resize();
@@ -148,7 +150,7 @@ $('#form').on("_ready",function(){
 						});
 						item[name]=image;
 					}else{
-						item[name]=td.html().replace(/<\/br>/g,"/n");
+						item[name]=td.html().replace(/<\/br>|<br>/g,"\n");
 					}
 				}
 			});

@@ -25,7 +25,6 @@
 			}
 			.item-input{
 				padding-top:20px;
-				padding-right:15px;
 			}
 			.format-group input{
 				min-width:0!important;
@@ -240,7 +239,7 @@
 						<input type="text" placeholder="1~99999整数" min="1" pattern="number"  value="<%=item.price%>" required name="price"/>
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="1~99999整数，必须≤市场价" min="1" pattern="number"  value="<%=item.vip_price%>" required name="vip_price"/>
+						<input type="text" placeholder="1~99999整数，小于等于原价" min="1" pattern="number"  value="<%=item.vip_price%>" required name="vip_price"/>
 					</li>
 					<li class="table-item item-input">
 						<%if(data.init&&i==0){%>
@@ -331,6 +330,8 @@
 						$(this).closest('.format-group').remove();
 					}).on('click','.add-format',function(){
 						createFormat([{}]);
+					}).on('blur','input[name="price"]',function(){
+						$(this).parent().next().find('input').attr('max',$.trim(this.value));
 					});
 					var createFormat=function(data){
 						formatGroup.append(lib.ejs.render({text:$('#format-t').html()},{data:data}));
@@ -369,8 +370,11 @@
 							}
 						});
 					}
-					data.init=true;
-					createFormat(data.more_prices.length>0?data.more_prices:[{}]);
+					data.more_prices.init=true;
+					if(data.more_prices.length==0){
+						data.more_prices.push({});
+					}
+					createFormat(data.more_prices);
 				}
 				
 				this._getFormData=function(){
@@ -381,7 +385,7 @@
 							var temp={};
 							$(this).find("input").each(function(){
 								if(this.name){
-									temp[this.name]=this.value;
+									temp[this.name]=$.trim(this.value);
 								}
 							});
 							data.more_prices.push(temp);

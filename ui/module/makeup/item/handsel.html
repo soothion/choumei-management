@@ -70,10 +70,13 @@
 					var data=lib.tools.getFormData($(this));
 					data=$.extend(JSON.parse(sessionStorage.getItem("formdata")),data);
 					sessionStorage.setItem("formdata",JSON.stringify(data));
-					
 					return data;
 				}
+				this.goback=function(){
+					location.href="fashion.html#is_gift=1";
+				}
 			});
+		</script>
 		</script>
     </body>
 </html>

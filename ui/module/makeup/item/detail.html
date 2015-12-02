@@ -18,6 +18,16 @@
 			.item-images img{
 				width:100%;
 			}
+			p,h4,.images{
+				margin:10px 0;
+			}
+			h4{
+				font-weight:bold;
+				font-size:14px;
+			}
+			.images img{
+				display:block;
+			}
 		</style>
     </head>
     <body>
@@ -46,7 +56,7 @@
 							</tr>
 							<tr>
 								<td>项目介绍：</td>
-								<td><%=data.detail%></td>
+								<td><%=data.detail.replace(/\n/g,"</br>")%></td>
 							</tr>
 							<%if(query.p=="index"){%>
 							<tr>
@@ -88,22 +98,81 @@
 							</tr>
 							<tr>
 								<td>预约详情：</td>
-								<td><%=data.register_detail%></td>
+								<td>
+									<%if(data.register_detail){%>
+									<table>
+										<tbody>
+											<%JSON.parse(data.register_detail).forEach(function(item){%>
+											<tr>
+												<td><%=item.title%></td>
+												<td><%=item.content.replace(/\n/g,"</br>")%></td>
+											</tr>
+											<%})%>
+										</tbody>
+									</table>
+									<%}%>
+								</td>
 							</tr>
 							<tr>
 								<td> 产品介绍：</td>
 								<td>
-									<%=data.description%>
-									<%=data.archive%>
+									<%if(data.description){%>
+									<%JSON.parse(data.description).forEach(function(item){%>
+									<h4><%=item.title%></h4>
+									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<div class="images">
+										<%item.image.forEach(function(image){%>
+										<img src="<%=image.img%>" alt="" />
+										<%})%>
+									</div>
+									<%})%>
+									<%}%>
+									<br />
+									<%if(data.archive){%>
+									<table>
+										<tbody>
+											<%JSON.parse(data.archive).forEach(function(item){%>
+											<tr>
+												<td><%=item.title%></td>
+												<td><%=item.content.replace(/\n/g,"</br>")%></td>
+											</tr>
+											<%})%>
+										</tbody>
+									</table>
+									<%}%>
 								</td>
 							</tr>
 							<tr>
 								<td>预约流程：</td>
-								<td><%=data.register_workflow%></td>
+								<td>
+									<%if(data.register_workflow){%>
+									<%JSON.parse(data.register_workflow).forEach(function(item){%>
+									<h4><%=item.title%></h4>
+									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<div class="images">
+										<%item.image.forEach(function(image){%>
+										<img src="<%=image.img%>" alt="" />
+										<%})%>
+									</div>
+									<%})%>
+									<%}%>
+								</td>
 							</tr>
 							<tr>
 								<td>定妆流程：</td>
-								<td><%=data.beauty%></td>
+								<td>
+									<%if(data.beauty){%>
+									<%JSON.parse(data.beauty).forEach(function(item){%>
+									<h4><%=item.title%></h4>
+									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<div class="images">
+										<%item.image.forEach(function(image){%>
+										<img src="<%=image.img%>" alt="" />
+										<%})%>
+									</div>
+									<%})%>
+									<%}%>
+								</td>
 							</tr>
 							<tr>
 								<td colspan="2">其他</td>
@@ -112,18 +181,19 @@
 								<td>已售数量：</td>
 								<td><%=data.detail%></td>
 							</tr>
+							<%if(data.is_gift==1){%>
 							<tr>
-								<td>赠送信息：</td>
-								<td><%=data.detail%></td>
+								<td colspan="2">赠送信息</td>
 							</tr>
 							<tr>
 								<td>赠送说明：</td>
-								<td><%=data.detail%></td>
+								<td><%=data.present_explain.replace(/\n/g,"</br>")%></td>
 							</tr>
 							<tr>
 								<td>时间限制：</td>
-								<td><%=data.detail%></td>
+								<td><%=data.expire%></td>
 							</tr>
+							<%}%>
 						</tbody>
 					</table>
 				</div>

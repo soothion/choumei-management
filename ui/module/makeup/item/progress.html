@@ -37,7 +37,6 @@
 						<span class="arrow">5.定妆流程</span>
 					</li>
 				</ul>
-				<%document.getElementById("form").action=document.getElementById("form").action+"?"+query._%>
 				<%}else{%>
 				<ul class="nav-step flex-box">
 					<li class="flex-item">
@@ -96,11 +95,11 @@
 							<div>
 								<a class="btn" href="index.html">取消</a>
 								<span class="space"></span>
-								<%if(query.p=="index"){%>
+								<%if(query.p=="index"||data.is_gift==0){%>
 								<a href="base.html" class="btn">返回</a>
 								<span class="space"></span>
 								<%}%>
-								<button class="btn-primary"><%=query.p=="index"?"提交":"下一步"%></button>
+								<button class="btn-primary"><%=query.p=="index"||data.is_gift==0?"提交":"下一步"%></button>
 							</div>
 						</div>
                     </div>
@@ -110,5 +109,19 @@
             </form>
         </div>
 		<script type="text/javascript" src="edit.js"></script>
+		<script type="text/javascript">
+			$("#form").on("_ready",function(){
+				if(lib.query.p=="index"){
+					this.goback=function(){
+						location.href="index.html";
+					}
+				}
+				if(lib.query.p=="fashion"&&$('.btn-primary').text()=="提交"){
+					this.goback=function(){
+						location.href="fashion.html";
+					}
+				}
+			})
+		</script>
     </body>
 </html>
