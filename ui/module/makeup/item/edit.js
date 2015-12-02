@@ -68,7 +68,7 @@ $('#form').on("_ready",function(){
 		parent.lib.popup.box({
 			confirm:true,
 			height:300,
-			width:800,
+			width:820,
 			content:lib.ejs.render({url:"/module/makeup/item/cols-image-t"},{data:data}),
 			complete:function(){
 				var popup=$(this);
@@ -110,7 +110,7 @@ $('#form').on("_ready",function(){
 				form.on('save',function(e,data){
 					data.image=[];
 					popup.find(".control-image input.original").each(function(){
-						data.image.push({img:this.value});
+						data.image.push(this.value);
 					});
 					var table=$this.closest('.makeup-item-image-list').find("table");
 					var html=lib.ejs.render({url:"/module/makeup/item/table-t"},{data:[data]});
@@ -141,7 +141,7 @@ $('#form').on("_ready",function(){
 					if(name=="image"){
 						var image=[];
 						td.find("img").each(function(){
-							image.push({img:this.src});
+							image.push(this.src);
 						});
 						item[name]=image;
 					}else{

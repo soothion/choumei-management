@@ -195,7 +195,7 @@
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>臭美会员价：</label>
                     <div class="control">
-						<input type="text" placeholder="1~99999整数，必须≤市场价" pattern="number" min="1" value="<%=data.vip_price%>" required name="vip_price"/>
+						<input type="text" placeholder="1~99999整数，必须≤原价" pattern="number" min="1" value="<%=data.vip_price%>" required name="vip_price"/>
                     </div>
                 </div>
 				<%}%>
@@ -270,6 +270,12 @@
 		<script type="text/javascript">
 			$('#form').on('_ready',function(e,data){
 				data=data.response;
+				var imagesArr=[];
+				if(data.images){
+					JSON.parse(data.images).forEach(function(item){
+						imagesArr.push({img:item});
+					})
+				}
 				lib.puploader.image({
 					browse_button: 'shopUpload',
 					auto_start:true,
@@ -279,7 +285,7 @@
 						]
 					},
 					max_file_size:'10mb',
-					imageArray:data.images?JSON.parse(data.images):[],
+					imageArray:data.images?imagesArr:[],
 					//imageLimitSize:"750*500",
 					multi_selection:true,
 					files_number:10,
@@ -305,7 +311,7 @@
 					uploader.thumbnails.on('itemchange',function(){
 						var images=[];
 						$('.control-thumbnails input.original').each(function(){
-							images.push({img:this.value});
+							images.push(this.value);
 						});
 						$('#item-images').val(JSON.stringify(images));
 					});

@@ -121,7 +121,7 @@
 									<p><%=item.content.replace(/\n/g,"</br>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
-										<img src="<%=image.img%>" alt="" />
+										<img src="<%=image%>" alt="" />
 										<%})%>
 									</div>
 									<%})%>
@@ -150,7 +150,7 @@
 									<p><%=item.content.replace(/\n/g,"</br>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
-										<img src="<%=image.img%>" alt="" />
+										<img src="<%=image%>" alt="" />
 										<%})%>
 									</div>
 									<%})%>
@@ -166,7 +166,7 @@
 									<p><%=item.content.replace(/\n/g,"</br>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
-										<img src="<%=image.img%>" alt="" />
+										<img src="<%=image%>" alt="" />
 										<%})%>
 									</div>
 									<%})%>
@@ -206,7 +206,7 @@
 						<%if(data.images){%>
 						<%data.images=JSON.parse(data.images)%>
 						<%data.images&&data.images.forEach(function(item){%>
-						<img src="<%=item.img%>" alt="" />
+						<img src="<%=item%>" alt="" />
 						<%})%>
 						<%}%>
 					</div>
