@@ -596,7 +596,7 @@ class ArtificerAssistantController extends Controller{
         
         if( empty($credentialType) && empty($credentialValue) ) return $this->error('身份证件未填写');
         if( empty($mobilePhone)) return $this->error('手机号码未填写');
-        
+        if( !empty($pid) && count(explode(',',$pid))>3 ) return $this->error('pid传值错误，归属专家只能最多只能选择3个');
         $data['wechat'] = $wechat = isset( $param['wechat'] ) ? $param['wechat'] : '';
         $data['qq'] = $qq = isset( $param['qq'] ) ? $param['qq'] : '';
         $data['email'] = $email = isset( $param['email'] ) ? $param['email'] : '';
