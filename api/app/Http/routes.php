@@ -1231,7 +1231,6 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'beautyItem.showFashion',
         'uses'=>'Item\BeautyItemController@showFashion'
     ));
-<<<<<<< Updated upstream
 	
 	// 专家
     Route::any('artificer/index',array(  
