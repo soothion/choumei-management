@@ -249,23 +249,23 @@ class ArtificerController extends Controller{
     * @apiGroup Artificer
     *
     * @apiSuccess {Number} id             专家id
-    * @apiSuccess {String} photo          必填,个人照片.
-    * @apiSuccess {String} name           必填,姓名.
-    * @apiSuccess {Number} sex            必填,性别 1.男 2.女
-    * @apiSuccess {String} country        必填,韩国.
-    * @apiSuccess {String} birthday       必填,生日 格式如 2015-02-22.
-    * @apiSuccess {Number} level          必填,级别 1明星院长； 2院长.
-    * @apiSuccess {String} number         必填,在职编号.
-    * @apiSuccess {Number} workingLife    必填,工作年限.
-    * @apiSuccess {String} introduce      必填,个性签名.
-    * @apiSuccess {String} experience     必填,从业经历.
-    * @apiSuccess {String} detail         必填,个人介绍JSON.[{"title":"我很好溜哦","content":"你好呀"},{"title":"ni我很好溜哦","content":"你好呀1"}] title:标题 content:内容
-    * @apiSuccess {String} credential     选填,证件类型 0无填写类型 1身份证； 2军官证； 3驾驶证； 4护照.
-    * @apiSuccess {String} cardId         选填,证件类型所对应的证件号码.
-    * @apiSuccess {String} mobilePhone    选填,电话.
-    * @apiSuccess {String} wechat         选填,微信.
-    * @apiSuccess {String} qq             选填,qq.
-    * @apiSuccess {String} email          选填,电子邮箱.
+    * @apiSuccess {String} photo          个人照片.
+    * @apiSuccess {String} name           姓名.
+    * @apiSuccess {Number} sex            性别 1.男 2.女
+    * @apiSuccess {String} country        韩国.
+    * @apiSuccess {String} birthday       生日 格式如 2015-02-22.
+    * @apiSuccess {Number} level          级别 1明星院长； 2院长.
+    * @apiSuccess {String} number         在职编号.
+    * @apiSuccess {Number} workingLife    工作年限.
+    * @apiSuccess {String} introduce      个性签名.
+    * @apiSuccess {String} experience     从业经历.
+    * @apiSuccess {String} detail         个人介绍JSON.[{"title":"我很好溜哦","content":"你好呀"},{"title":"ni我很好溜哦","content":"你好呀1"}] title:标题 content:内容
+    * @apiSuccess {String} credential     证件类型 0无填写类型 1身份证； 2军官证； 3驾驶证； 4护照.
+    * @apiSuccess {String} cardId         证件类型所对应的证件号码.
+    * @apiSuccess {String} mobilePhone    电话.
+    * @apiSuccess {String} wechat         微信.
+    * @apiSuccess {String} qq             qq.
+    * @apiSuccess {String} email          电子邮箱.
 	* @apiSuccess {String} status         状态标识. 1:正常启用，0:禁用
     *
     *
@@ -407,6 +407,7 @@ class ArtificerController extends Controller{
     public function checkNumberExists( $id=0 ){
         $param = $this->param;
         $number = isset( $param['number'] ) ? $param['number'] : $this->error('未填写专家编码');
+        $number = '1'.$number;
         $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number])->where('pid','=',NULL)->first();
         if( empty($exists) ) return $this->success();
         $exists = $exists->toArray();

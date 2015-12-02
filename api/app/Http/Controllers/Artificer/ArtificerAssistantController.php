@@ -141,16 +141,15 @@ class ArtificerAssistantController extends Controller{
     * @apiParam {String} photo          必填,个人照片.
     * @apiParam {String} name           必填,姓名.
     * @apiParam {Number} sex            必填,性别 1.男 2.女
-    * @apiParam {String} country        必填,韩国.
     * @apiParam {String} birthday       必填,生日 格式如 2015-02-22.
     * @apiParam {Number} level          必填,级别 1明星院长； 2院长.
     * @apiParam {String} number         必填,在职编号.
     * @apiParam {Number} workingLife    必填,工作年限.
     * @apiParam {String} pid            必填,所属专家. 如 1,2,3
     * @apiParam {String} introduce      必填,个性签名.
-    * @apiParam {Number} credential     选填,证件类型 0无填写类型 1身份证； 2军官证； 3驾驶证； 4护照.
-    * @apiParam {Number} cardId         选填,证件类型所对应的证件号码.
-    * @apiParam {Number} mobilePhone    选填,电话.
+    * @apiParam {Number} credential     必填,证件类型 0无填写类型 1身份证； 2军官证； 3驾驶证； 4护照.
+    * @apiParam {Number} cardId         必填,证件类型所对应的证件号码.
+    * @apiParam {Number} mobilePhone    必填,电话.
     * @apiParam {Number} wechat         选填,微信.
     * @apiParam {Number} qq             选填,qq.
     * @apiParam {Number} email          选填,电子邮箱.
@@ -200,7 +199,6 @@ class ArtificerAssistantController extends Controller{
     * @apiParam {String} photo          必填,个人照片.
     * @apiParam {String} name           必填,姓名.
     * @apiParam {Number} sex            必填,性别 1.男 2.女
-    * @apiParam {String} country        必填,韩国.
     * @apiParam {String} birthday       必填,生日 格式如 2015-02-22.
     * @apiParam {Number} level          必填,级别 1明星院长； 2院长.
     * @apiParam {String} number         必填,在职编号.
@@ -208,9 +206,9 @@ class ArtificerAssistantController extends Controller{
     * @apiParam {String} introduce      必填,个性签名.
     * @apiParam {String} experience     必填,从业经历.
     * @apiParam {String} detail         必填,个人介绍JSON.
-    * @apiParam {String} credential     选填,证件类型 0无填写类型 1身份证； 2军官证； 3驾驶证； 4护照.
-    * @apiParam {String} cardId         选填,证件类型所对应的证件号码.
-    * @apiParam {String} mobilePhone    选填,电话.
+    * @apiParam {String} credential     必填,证件类型 0无填写类型 1身份证； 2军官证； 3驾驶证； 4护照.
+    * @apiParam {String} cardId         必填,证件类型所对应的证件号码.
+    * @apiParam {String} mobilePhone    必填,电话.
     * @apiParam {String} wechat         选填,微信.
     * @apiParam {String} qq             选填,qq.
     * @apiParam {String} email          选填,电子邮箱.
@@ -258,20 +256,20 @@ class ArtificerAssistantController extends Controller{
     * @apiGroup Assistant
     *
     * @apiSuccess {Number} id             专家助手id
-    * @apiSuccess {String} photo          必填,个人照片.
-    * @apiSuccess {String} name           必填,姓名.
-    * @apiSuccess {Number} sex            必填,性别 1.男 2.女
-    * @apiSuccess {String} birthday       必填,生日 格式如 2015-02-22.
-    * @apiSuccess {Number} level          必填,级别 1明星院长； 2院长.
-    * @apiSuccess {String} number         必填,在职编号.
-    * @apiSuccess {Number} workingLife    必填,工作年限.
-    * @apiSuccess {String} introduce      必填,个性签名.
-    * @apiSuccess {Number} credential     必填,证件类型  1身份证； 2军官证； 3驾驶证； 4护照.
-    * @apiSuccess {String} cardId         必填,证件类型所对应的证件号码.
-    * @apiSuccess {String} mobilePhone    必填,电话.
-    * @apiSuccess {String} wechat         选填,微信.
-    * @apiSuccess {String} qq             选填,qq.
-    * @apiSuccess {String} email          选填,电子邮箱.
+    * @apiSuccess {String} photo          个人照片.
+    * @apiSuccess {String} name           姓名.
+    * @apiSuccess {Number} sex            性别 1.男 2.女
+    * @apiSuccess {String} birthday       生日 格式如 2015-02-22.
+    * @apiSuccess {Number} level          级别 1明星院长； 2院长.
+    * @apiSuccess {String} number         在职编号.
+    * @apiSuccess {Number} workingLife    工作年限.
+    * @apiSuccess {String} introduce      个性签名.
+    * @apiSuccess {Number} credential     证件类型  1身份证； 2军官证； 3驾驶证； 4护照.
+    * @apiSuccess {String} cardId         证件类型所对应的证件号码.
+    * @apiSuccess {String} mobilePhone    电话.
+    * @apiSuccess {String} wechat         微信.
+    * @apiSuccess {String} qq             qq.
+    * @apiSuccess {String} email          电子邮箱.
 	* @apiSuccess {Number} status         状态标识. 1:正常启用，0:禁用
 	* @apiSuccess {String} pid            选中的专家id
     *
@@ -409,10 +407,11 @@ class ArtificerAssistantController extends Controller{
      *      }
 	 *	}
 	 */
-    public function checkNumberExists( $id ){
+    public function checkNumberExists( $id = 0 ){
         $param = $this->param;
         $number = isset( $param['number'] ) ? $param['number'] : $this->error('未填写助理专家编码');
-        $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number,'artificer_id'=>$id])->whereRaw('pid is not NULL')->first();
+        $number = 'M'.$number;
+        $exists = Artificer::select(['artificer_id as id'])->where(['number'=>$number])->whereRaw('pid is not NULL')->first();
         if( empty($exists) ) return $this->success();
         $exists = $exists->toArray();
         if( $id == $exists['id'] ) return $this->success();
@@ -439,10 +438,10 @@ class ArtificerAssistantController extends Controller{
      *      }
 	 *	}
 	 */
-    public function checkNameExists( $id ){
+    public function checkNameExists( $id = 0 ){
         $param = $this->param;
         $name = isset( $param['name'] ) ? $param['name'] : $this->error('未填写专家名字');
-        $exists = Artificer::select(['artificer_id as id'])->where(['name'=>$name,'artificer_id'=>$id])->whereRaw('pid is not NULL')->first();
+        $exists = Artificer::select(['artificer_id as id'])->where(['name'=>$name])->whereRaw('pid is not NULL')->first();
         if( empty($exists) ) return $this->success();
         $exists = $exists->toArray();
         if( $id == $exists['id'] ) return $this->success();
@@ -590,7 +589,6 @@ class ArtificerAssistantController extends Controller{
         $data['name'] = $name = isset( $param['name'] ) ? $param['name'] : $this->error('专家姓名未填写');
         $data['sex'] = $gender = isset( $param['sex'] ) ? $param['sex'] : $this->error('性别未填写');
         $data['birthday'] = $birthday = isset( $param['birthday'] ) ? $param['birthday'] : $this->error('出生日期未填写');
-        $data['level'] = $level = isset( $param['level'] ) ? $param['level'] : $this->error('级别未填写');
         $data['number'] = $jobNumber = isset( $param['number'] ) ? $param['number'] : $this->error('在职编号未填写');
         $data['working_life'] = $jobYear = isset( $param['workingLife'] ) ? $param['workingLife'] : $this->error('工作年限未填写');
         $data['pid'] = $pid = isset( $param['pid'] ) ? $param['pid'] : $this->error('所属专家未填写');
@@ -609,6 +607,7 @@ class ArtificerAssistantController extends Controller{
         $data['qq'] = $qq = isset( $param['qq'] ) ? $param['qq'] : '';
         $data['email'] = $email = isset( $param['email'] ) ? $param['email'] : '';
         $data['country'] = '';
+        $data['level'] = '';
         if( $credentialType && $credentialValue ){ 
             $data['credential'] = $credentialType;
             $data['card_id'] = $credentialValue;
