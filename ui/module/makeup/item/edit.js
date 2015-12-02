@@ -102,6 +102,12 @@ $('#form').on("_ready",function(){
 				popup.find('input').focus();
 				popup.find(".popup-alert-define").on("click",function(e){
 					e.stopPropagation();
+					var data=lib.tools.getFormData(form);
+					if(!data.title&&!data.content&&form.find('img').length==0){
+						form.find('.control-help').show();
+						parent.lib.popup.resize();
+						return;
+					}
 					form.submit();
 					parent.lib.popup.resize();
 				});
