@@ -13,19 +13,20 @@
       </style>
   </head>
   <body>
-    <div class="breadcrumb">
-        <a>韩式定妆 </a><span>&gt;</span><a href="index.html">专家列表</a>
-        <span>&gt;</span><a href="edit.html">新增专家资料</a>
-        <div class="flex-box">
-            <div class="flex-item">
-                <h4 id="title">新增专家资料</h4>
-            </div>
-        </div>
-    </div>
 
     <div class="wrapper">
         <form class="form-vertical" data-role="form" id="form">
         <script type="text/template" id="form-t" ajats="<%if(query.id){%>assistant/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
+            <div class="breadcrumb">
+                <a>韩式定妆 </a><span>&gt;</span><a href="index.html">专家列表</a>
+                <span>&gt;</span><a href="edit.html"><%=query.id ? '编辑专家助理资料':'新增专家助理资料'%></a>
+                <div class="flex-box">
+                    <div class="flex-item">
+                        <h4><%=query.id ? '编辑专家助理资料':'新增专家助理资料'%></h4>
+                    </div>
+                </div>
+            </div>
+
             <div class="detail-operation">
                 <button type="button" class="btn btn-cancel">取消</button>
                 <span class="space"></span>
