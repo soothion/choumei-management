@@ -4,96 +4,14 @@ namespace App;
 
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use App\TransactionWriteApi;
 
-class BeautyRefundApi {
-
-    /**
-     * 退款单状态  正常
-     * @var unknown
-     */
-    CONST REFUND_STATUS_OF_NORMAL = 1;
-
-    /**
-     * 退款单状态  取消
-     * @var unknown
-     */
-    CONST REFUND_STATUS_OF_CANCLE = 2;
-
-    /**
-     * 退款失败
-     * @var unknown
-     */
-    CONST ORDER_STATUS_REFUND_FAILED = 9;
-
-    /**
-     * 订单状态 退款中
-     * @var unknown
-     */
-    CONST ORDER_STATUS_OF_IN_REFUND = 10;
-
-    /**
-     * 退回银联
-     * @var unknown
-     */
-    CONST REFUND_TO_UNION = 1;
-
-    /**
-     * 退回支付宝
-     * @var unknown
-     */
-    CONST REFUND_TO_ALIPAY = 2;
-
-    /**
-     * 退回微信
-     * @var unknown
-     */
-    CONST REFUND_TO_WX = 3;
-
-    /**
-     * 退回余额
-     * @var unknown
-     */
-    CONST REFUND_TO_BALANCE = 4;
-
-    /**
-     * 退回红包
-     * @var unknown
-     */
-    CONST REFUND_TO_HONGBAO = 5;
-
-    /**
-     * 退回优惠券
-     * @var unknown
-     */
-    CONST REFUND_TO_YOUHUI = 6;
-
-    /**
-     * 退回易联
-     * @var unknown
-     */
-    CONST REFUND_TO_YILIAN = 10;
-
-    /**
-     * 流水类型  消费
-     * @var unknown
-     */
-    CONST REFUND_CODE_TYPE_OF_CUSTOM = 2;
-
-    /**
-     * 流水中的退款状态 未退款
-     */
-    CONST FUNDFLOW_REFUND_STATE_OF_UNCOMPLETED = 1;
-
-    /**
-     * 流水中的退款状态 已退款
-     */
-    CONST FUNDFLOW_REFUND_STATE_OF_COMPLETED = 2;
-
+class BeautyRefundApi extends TransactionWriteApi {
     /*
      * 拒绝退款
      */
 
-    public static function reject($ids) {
+    public static function rejectBeauty($ids) {
         $refundsArr = OrderRefund::whereIn('order_refund_id', $ids)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->get(['ordersn', 'booking_sn'])->toArray();
         if (empty($refundsArr)) {
             throw new ApiException("未找到退款单信息", ERROR::REFUND_FLOW_LOST);
@@ -109,16 +27,225 @@ class BeautyRefundApi {
         if ($bookingUp !== false && $refundUp !== false) {
             return [];
         } else {
-            throw new ApiException("操作失败",ERROR::REFUND_FLOW_LOST);
+            throw new ApiException("操作失败", ERROR::REFUND_FLOW_LOST);
         }
     }
-    
-    
+
     /*
      * 确认退款
      */
-    
-    public static function accpet($ids){
+
+    public static function accpetBeauty($ids) {
+        $arr = [
+            [
+                'tn' => 'dddd',
+                'ordersn' => 'ssss',
+                'money' => 10
+            ],
+            [
+                'tn' => 'dddd',
+                'ordersn' => 'ssss',
+                'money' => 10
+            ],
+        ];
+        $tn = array_column($arr, 'booking_sn');
+        print_r($tn);
+        exit;
+        $refunds = self::checkBeautyRefund($ids);
+        $ordersns = array_column($refunds, 'ordersn');
+        $refund_indexes = Utils::column_to_key("ordersn", $refunds);
+        $fundflow = Fundflow::where('code_type', self::REFUND_CODE_TYPE_OF_CUSTOM)
+                        ->where('refund_state', '!=', self::FUNDFLOW_REFUND_STATE_OF_COMPLETED)
+                        ->whereIn('record_no', $ordersns)
+                        ->select(['record_no', 'pay_type', 'user_id', 'money'])
+                        ->get()->toArray();
+        if (empty($fundflow)) {
+            throw new ApiException("找不到退款的支付流水信息", ERROR::REFUND_FLOW_LOST);
+        }
+        $payments = PaymentLog::whereIn('ordersn', $ordersns)->get(['ordersn', 'tn', 'device', 'batch_no', 'alipay_updated'])->toArray();
+        if (empty($payments)) {
+            throw new ApiException("退款单找不到对应的payment log 信息", ERROR::REFUND_PAYMENT_LOG_LOST);
+        }
+        $payment_indexes = Utils::column_to_key("ordersn", $payments);
+        $refund_items = self::getBeautyRefundItems($fundflow, $payment_indexes, $refund_indexes);
+        //状态修改为退款中
+        self::modifBookingOrderStatusInRefund($ordersns);
+
+        //微信
+        if (isset($refund_items['wx']) && count($refund_items['wx']) > 0) {
+            $res['wx'] = self::refundOfWx($refund_items['wx']);
+        }
+        //易联
+        if (isset($refund_items['yilian']) && count($refund_items['yilian']) > 0) {
+            $res['yilian'] = self::refundOfYilian($refund_items['yilian']);
+        }
+        //支付宝
+        if (isset($refund_items['alipay']) && count($refund_items['alipay']) > 0) {
+            $res['alipay'] = self::refundOfAlipay($refund_items['alipay']);
+        }
+        return $res;
+    }
+
+    private static function checkBeautyRefund($ids) {
+        $countIds = count($ids);
+        $refunds = OrderRefund::whereIn('order_refund_id', $ids)->where('status', self::REFUND_STATUS_OF_NORMAL)->get(['ordersn', 'booking_sn', 'retype', 'rereason'])->toArray();
+        if (empty($refunds)) {
+            throw new ApiException("退款id下取不到信息", ERROR::PARAMS_LOST);
+        }
+        if ($countIds != count($refunds)) {
+            throw new ApiException("您选的部分订单不存在退款信息", ERROR::REFUND_STATE_WRONG);
+        }
+        $ordersns = array_column($refunds, 'ordersn');
+        $orderNum = BookingOrder::whereIn('ORDER_SN', $ordersns)->where('STATUS', 'RFN')->count();
+        if (intval($orderNum) !== $countIds) {
+            throw new ApiException("关联的订单状态不正确", ERROR::REFUND_STATE_WRONG);
+        }
+        return $refunds;
+    }
+
+    private static function getBeautyRefundItems($fundflow, $payments, $refunds) {
+        $wx_refund_url_of_web = env("WX_REFUND_URL_OF_WEB", null);
+        $wx_refund_url_of_sdk = env("WX_REFUND_URL_OF_SDK", null);
+        if (empty($wx_refund_url_of_web) || empty($wx_refund_url_of_sdk)) {
+            throw new ApiException("获取配置信息 [WX_REFUND_URL_OF_WEB] 或者 [WX_REFUND_URL_OF_SDK] 出错", ERROR::CONFIG_LOST);
+        }
+        $res = [
+            'union' => [],
+            'alipay' => [],
+            'wx' => [],
+            'yilian' => []
+        ];
+        foreach ($fundflow as $flow) {
+            $ordersn = $flow['record_no'];
+            if (!isset($refunds[$ordersn]) || !isset($payments[$ordersn])) {
+                throw new ApiException("退款的关键信息不全", ERROR::REFUND_LOST_PRIMARY_INFO);
+            }
+            $booking_sn = $refunds[$ordersn]['booking_sn'];
+            if (!isset($booking_sn) || empty($booking_sn)) {
+                throw new ApiException("退款的关键信息不全", ERROR::REFUND_LOST_PRIMARY_INFO);
+            }
+            $pay_type = $flow['pay_type']; //1原路退款 2 为退回余额
+            $user_id = $flow['user_id'];
+            $money = $flow['money'];
+            $reason = implode(',', Mapping::getRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
+
+
+            $device = null;
+            $tn = '';
+            $batch_no = '';
+            $alipay_updated = 0;
+            if (isset($payments[$ordersn])) {
+                $tn = $payments[$ordersn]['tn'];
+                $device = $payments[$ordersn]['device'];
+                $batch_no = $payments[$ordersn]['batch_no'];
+                $alipay_updated = $payments[$ordersn]['alipay_updated'];
+            }
+            if (empty($tn)) {
+                throw new ApiException("ordersn '{$ordersn}' can not find tn", ERROR::REFUND_CANT_FIND_TN);
+            }
+            switch ($pay_type) {
+                case self::REFUND_TO_UNION:
+                    $res['union'][] = [
+                        'ordersn' => $ordersn,
+                        'user_id' => $user_id,
+                        'money' => $money,
+                        'tn' => $tn
+                    ];
+                    break;
+                case self::REFUND_TO_ALIPAY:
+                    if (!empty($batch_no) && (time() - $alipay_updated) < 7200) {
+                        throw new ApiException("ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁", ERROR::UNKNOWN_ERROR);
+                    }
+                    $res['alipay'][] = [
+                        'tn' => $tn,
+                        'money' => $money,
+                        'reason' => $reason,
+                        'ordersn' => $ordersn,
+                        'booking_sn' => $booking_sn
+                    ];
+                    break;
+                case self::REFUND_TO_WX:
+                    $url = $device == 2 ? $wx_refund_url_of_web : $wx_refund_url_of_sdk;
+                    $res['wx'][] = [
+                        'tn' => $tn,
+                        'money' => $money,
+                        'ordersn' => $ordersn,
+                        'user_id' => $user_id,
+                        'url' => $url
+                    ];
+                    break;
+                case self::REFUND_TO_YILIAN:
+                    $res['yilian'][] = [
+                        'tn' => $tn,
+                        'amount' => $money,
+                        'ordersn' => $ordersn,
+                        'user_id' => $user_id
+                    ];
+            }
+            $res['specail'][] = $ordersn;
+        }
+        return $res;
+    }
+
+    /*
+     * 将预约订单标记为退款中
+     */
+
+    private static function modifBookingOrderStatusInRefund($ordersns) {
+        $ordersns = array_unique($ordersns);
+        $count = count($ordersns);
+        if ($count < 1) {
+            return false;
+        }
+        // 流水中是否有记录
+        $fundflow = Fundflow::whereIn('record_no', $ordersns)->where('code_type', self::REFUND_CODE_TYPE_OF_CUSTOM)->get(['record_no'])->toArray();
+        if (empty($fundflow)) {
+            throw new ApiException("找不到订单流水信息", ERROR::REFUND_FLOW_LOST);
+        }
+        $fundflow_ordersns = array_unique(array_column($fundflow, 'record_no'));
+        $diff = array_diff($ordersns, $fundflow_ordersns);
+        if (count($diff) > 0) {
+            throw new ApiException("部分订单流水信息丢失", ERROR::REFUND_FLOW_LOST);
+        }
+        BookingOrder::whereIn('ORDER_SN', $ordersns)->where('STATUS', 'RFN')->update(['STATUS' => 'RFI']);  // 状态必须为申请退款 更改为退款中  TODO
+        return true;
+    }
+
+    /*
+     * 支付宝回调
+     */
+
+    public static function callBackOfAlipay() {
+        $args = func_get_args();
+        //成功 则改变退款的状态
+        if (isset($args[0]) && isset($args[0]['success']) && isset($args[0]['batch_no']) && isset($args[0]['success_num']) && !empty($args[0]['batch_no']) && count($args[0]['success']) > 0) {
+            $items = $args[0]['success'];
+            $tns = Utils::get_column_array("tn", $items);
+            $batch_no = $args[0]['batch_no'];
+            if (count($tns) > 0) {
+                $logs = PaymentLog::whereIn("tn", $tns)->where('batch_no', $batch_no)->get(['tn', 'ordersn']);
+                if (!empty($logs)) {
+                    $logArr = $logs->toArray();
+                    $ordersns = array_column($logArr, "ordersn");
+                    self::modifBookingOrderStatusRefundCompleted($ordersns);
+                }
+            }
+        }
+    }
+
+    /*
+     * 支付宝退款完成  修改booking_order表的数据
+     */
+
+    public static function modifBookingOrderStatusRefundCompleted($ordersns) {
+        $ordersns = array_unique($ordersns);
+        if (count($ordersns) < 1) {
+            return false;
+        }
+        $now_time = time();
+        OrderRefund::whereIn('ordersn', $ordersns)->update(['opt_time' => $now_time]);
+        BookingOrder::whereIn('ORDER_SN', $ordersns)->update(['status' => 'RFD']);  //退款完成
+        self::modifFundflowCompleted($ordersns);
         return true;
     }
 
