@@ -252,6 +252,7 @@ class ArtificerController extends Controller{
     *
     * @apiSuccess {Number} id             专家id
     * @apiSuccess {String} photo          个人照片.
+    * @apiSuccess {String} pageImage      主页照片.
     * @apiSuccess {String} name           姓名.
     * @apiSuccess {Number} sex            性别 1.男 2.女
     * @apiSuccess {String} country        韩国.
@@ -286,6 +287,7 @@ class ArtificerController extends Controller{
     *                   "id": 2,
     *                    "name": "LFR-T001",
     *                    "photo": "http://img01.choumei.cn/1/785973/201509281548144342652083878597311884.jpg",
+    *                    "pageImage": "http://img01.choumei.cn/1/785973/201509281548144342652083878597311884.jpg",
     *                    "sex": 1,
     *                    "country": "韩国",
     *                    "birthday": "1968-06-15",
@@ -315,7 +317,7 @@ class ArtificerController extends Controller{
     public function show($id){
         $field = [
             'artificer_id as id','name',
-            'photo','sex','country',
+            'photo','page_image as pageImage','sex','country',
             'birthday','credential','card_id as cardId',
             'mobilephone as mobilePhone','wechat','qq',
             'email','level','number',

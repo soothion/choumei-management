@@ -48,6 +48,7 @@ class MessageBoxController extends Controller{
      * @apiSuccess {String} detail 富文本信息内容.
      * @apiSuccess {String} isPush 推送状态.
      * @apiSuccess {Number} readNum 阅读数.
+     * @apiSuccess {Number} pushNum 推送用户数.
      * @apiSuccess {String} status 消息配置状态.
      * @apiSuccess {String} creatTime 创建时间.
      * @apiSuccess {String} updateTIme 更新时间.
