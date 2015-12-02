@@ -14,6 +14,7 @@
 			}
 			.item-images img{
 				width:100%;
+				margin-bottom:10px;
 			}
 			p,h4,.images{
 				margin:10px 0;
@@ -172,7 +173,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="2"><h4>其他</h4></td>
+								<th colspan="2" >其他</th>
 							</tr>
 							<tr>
 								<td>已售数量：</td>
@@ -180,7 +181,7 @@
 							</tr>
 							<%if(data.is_gift==1){%>
 							<tr>
-								<td colspan="2"><h4>赠送信息</h4></td>
+								<th colspan="2">赠送信息</th>
 							</tr>
 							<tr>
 								<td>赠送说明：</td>
@@ -195,7 +196,7 @@
 					</table>
 				</div>
 				<div class="table-item item-sub">
-					<h4>项目icon：</h4>
+					<h4 style="margin-top:0">项目icon：</h4>
 					<div class="item-images">
 						<img src="<%=data.logo%>" alt="" />
 					</div>
