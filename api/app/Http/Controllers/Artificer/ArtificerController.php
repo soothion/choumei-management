@@ -129,7 +129,7 @@ class ArtificerController extends Controller{
     * @apiGroup Artificer
     *
     * @apiParam {String} photo          必填,个人照片.
-    * @apiSuccess {String} pageImage    必填  主页图片
+    * @apiParam {String} pageImage    必填  主页图片
     * @apiParam {String} name           必填,姓名.
     * @apiParam {Number} sex            必填,性别 1.男 2.女
     * @apiParam {String} country        必填,韩国.
@@ -190,7 +190,7 @@ class ArtificerController extends Controller{
     *
     * @apiParam {Number} id             必填,专家id.
     * @apiParam {String} photo          必填,个人照片.
-    * @apiSuccess {String} pageImage    必填  主页图片
+    * @apiParam {String} pageImage    必填  主页图片
     * @apiParam {String} name           必填,姓名.
     * @apiParam {Number} sex            必填,性别 1.男 2.女
     * @apiParam {String} country        必填,韩国.
