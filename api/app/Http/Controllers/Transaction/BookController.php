@@ -186,7 +186,8 @@ class BookController extends Controller
      * @apiSuccess {String} booking_salon_refund.remark 退款说明
      * @apiSuccess {String} booking_salon_refund.created_at 退款时间
      * @apiSuccess {String} booking_salon_refund.manager 退款人信息     
-     *
+     * 
+     * @apiSuccessExample Success-Response:
      *       {
      *         "result": 1,
      *         "token": "",
