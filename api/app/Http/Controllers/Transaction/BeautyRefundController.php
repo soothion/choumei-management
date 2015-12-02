@@ -104,7 +104,7 @@ class BeautyRefundController extends Controller {
     }
 
     /**
-     * @api {get} /beautyrefund/show/:id 2.定妆单退款列表
+     * @api {get} /beautyrefund/show/:id 2.定妆单退款详情
      * @apiName show
      * @apiGroup beautyrefund
      *
@@ -187,7 +187,7 @@ class BeautyRefundController extends Controller {
         if (count($ids) < 1) {
             throw new ApiException("ids参数不能为空", ERROR::PARAMS_LOST);
         }
-        $res = BeautyRefundApi::reject($ids);
+        $res = BeautyRefundApi::rejectBeauty($ids);
         return $this->success($res);
     }
 
@@ -248,8 +248,51 @@ class BeautyRefundController extends Controller {
         if (count($ids) < 1) {
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
         }
-        $info = BeautyRefundApi::accpet($ids);
+        $info = BeautyRefundApi::accpetBeauty($ids);
         return $this->success();
+    }
+    
+    
+     /**
+     * 支付宝的回调
+     */
+    public function beauty_call_back_of_alipay()
+    {
+        $input = [
+            'GET' => $_GET,
+            "POST" => $_POST
+        ];
+        Utils::log('pay',date("Y-m-d H:i:s") . "\t order " . json_encode($input,JSON_UNESCAPED_UNICODE)."\t\n", "alipay_callback");
+        
+        $is_debug = false;
+        if(isset($_GET['is_debug']) && $_GET['is_debug'] == 1)
+        {
+            $is_debug = true;
+        }
+        if(isset($_POST['is_debug']) && $_POST['is_debug'] == 1)
+        {
+            $is_debug = true;
+        }
+            
+        //以下为debug的写法
+        //$ret = AlipaySimple::callback(array(D("Refund"),"alipayRefundCallback"),[],false);
+         
+        //以下为正式的写法
+        $ret = AlipaySimple::callback(function($args){
+            return BeautyRefundApi::callBackOfAlipay($args);
+        },[],$is_debug);
+         
+        if($ret)
+        {
+            Utils::log('pay',date("Y-m-d H:i:s") . "\t callback success \t " . json_encode($input,JSON_UNESCAPED_UNICODE)."\t\n", "alipay_callback");
+            echo "success";
+        }
+        else
+        {
+            Utils::log('pay',date("Y-m-d H:i:s") . "\t callback fail \t " . json_encode($input,JSON_UNESCAPED_UNICODE)."\t\n", "alipay_callback");
+            echo "fail";
+        }
+        die();
     }
 
 }

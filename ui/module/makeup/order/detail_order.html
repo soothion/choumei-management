@@ -255,15 +255,6 @@
                 </table>
                  </script>
                  <script type="text/javascript">
-                  $('body').on('click','#edit_btn',function(){
-                        clearTmpData();
-                        var id = $(this).attr('data-id');
-                        window.location.href="addBase.html?id="+id;
-                  });
-                  var clearTmpData  = function(){
-                      window.localStorage.removeItem('couponTmpData');
-                  }
-
                   var ModalList = {
                     'receive':{
                       'title':'用户接待记录',
@@ -271,7 +262,7 @@
                       'defineText':'保存',
                       'confirm':true,
                       'modalType':'box',
-                      'content':'./modal_receive'
+                      'url':'./modal_receive'
                     },
                     'cashier':{
                       'title':'确认收银',
@@ -279,7 +270,7 @@
                       'defineText':'确认收银',
                       'confirm':true,
                       'modalType':'box',
-                      'content':'./modal_cashier'
+                      'url':'./modal_cashier'
                     },
                     'comp-color':{
                       'title':'用户补色记录',
@@ -287,7 +278,7 @@
                       'defineText':'保存',
                       'confirm':true,
                       'modalType':'box',
-                      'content':'./modal_compColor'
+                      'url':'./modal_compColor'
                     },
                     'receipt':{
                       'text':'你正在给订单开发票，确认开票后不能退回，是否继续',
@@ -302,7 +293,7 @@
                       'defineText':'确认退款',
                       'confirm':true,
                       'modalType':'box',
-                      'content':'./modal_refund'
+                      'url':'./modal_refund'
                     }
                   };
 
@@ -314,8 +305,8 @@
                   }();
 
                   var initModal = function(options){
-                      if (options.content && options.content.indexOf('./')>-1){
-                           options.content =lib.ejs.render({url:options.content});
+                      if (options.url && options.url.indexOf('./')>-1){
+                           options.content =lib.ejs.render({url:options.url});
                       }
                       lib.popup[options['modalType']](options);
                   }
