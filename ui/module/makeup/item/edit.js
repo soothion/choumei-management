@@ -73,7 +73,7 @@ $('#form').on("_ready",function(){
 			complete:function(){
 				var popup=$(this);
 				var form=popup.find('form');
-				lib.puploader.image({
+				parent.lib.puploader.image({
 					browse_button: popup.find(".control-image-upload>div").attr('id'),
 					auto_start:true,
 					filters: {
