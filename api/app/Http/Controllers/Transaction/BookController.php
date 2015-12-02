@@ -156,6 +156,13 @@ class BookController extends Controller
      * @apiSuccess {String} fundflow.pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
      * @apiSuccess {String} paymentlog 流水信息
      * @apiSuccess {String} paymentlog.tn 第三方流水号
+     * @apiSuccess {String} makeup 补妆信息
+     * @apiSuccess {String} makeup.remark 说明
+     * @apiSuccess {String} makeup.work_at 补妆时间
+     * @apiSuccess {String} makeup.created_at 操作时间
+     * @apiSuccess {String} makeup.manager 操作人信息
+     * @apiSuccess {String} makeup.expert 专家信息
+     * @apiSuccess {String} makeup.assistant 助理信息
      * @apiSuccess {String} booking_bill 发票信息
      * @apiSuccess {String} booking_bill.created_at 开发票时间
      * @apiSuccess {String} booking_bill.manager 开发票操作人信息
@@ -174,7 +181,7 @@ class BookController extends Controller
      * @apiSuccess {String} booking_receive.created_at 接待时间
      * @apiSuccess {String} booking_receive.manager 接待人信息
      * @apiSuccess {String} booking_salon_refund 退款信息
-     * @apiSuccess {String} booking_salon_refund.back_to 退款方式1:微信2:支付宝3:银联,4:现金'
+     * @apiSuccess {String} booking_salon_refund.back_to 退款方式1:微信2:支付宝3:银联,4:现金
      * @apiSuccess {String} booking_salon_refund.money 退款金额
      * @apiSuccess {String} booking_salon_refund.remark 退款说明
      * @apiSuccess {String} booking_salon_refund.created_at 退款时间
@@ -232,6 +239,22 @@ class BookController extends Controller
      *             "tn": "1002360799201508070568495032",
      *             "amount": "1.00"
      *           },
+     *            "makeup": {
+     *                 "id": 1,
+     *                 "booking_id": 1,
+     *                 "booking_sn": "fasdfasdf",
+     *                 "order_sn": "fasdfasdf",
+     *                 "expert_uid": 1,
+     *                 "assistant_uid": 2,
+     *                 "work_at": "2015-12-06",
+     *                 "remark": "fasdfadfasdfasdfasdfasdfasdfasdf",
+     *                 "uid": 1,
+     *                 "created_at": "2015-12-03 00:00:00",
+     *                 "manager": {
+     *                   "id": 1,
+     *                   "name": "超级管理员"
+     *                 }
+     *               },
      *           "booking_bill": {
      *             "id": 1,
      *             "booking_id": 1,
@@ -325,6 +348,11 @@ class BookController extends Controller
      * @apiName receive
      * @apiGroup book
      * 
+     * @apiParam {Number} arrive_at 到店时间   YYYY-MM-DD
+     * @apiParam {String} update_booking_date 修改预约时间 YYYY-MM-DD
+     * @apiParam {String} remark 沟通记录
+     * @apiParam {String} item_ids 预约项目修改  多个id用','隔开
+     * 
      * @apiSuccessExample Success-Response:
      *       {
      *       }
@@ -338,7 +366,13 @@ class BookController extends Controller
      */
     public function receive($id)
     {
-        return $this->success(['id'=>$id]);
+        $params = $this->parameters([
+            'arrive_at' => self::T_STRING,
+            'update_booking_date' => self::T_STRING,
+            'remark' => self::T_STRING,
+            'item_ids' => self::T_STRING,
+       ]);
+       return $this->success(['id'=>$id]);
     }
     
     /**
@@ -346,6 +380,13 @@ class BookController extends Controller
      * @apiName cash
      * @apiGroup book
      *
+     * @apiParam {Number} pay_type 支付方式1:微信2:支付宝3:POS机,4:现金,5:微信+现金6:支付宝+现金7:POS机+现金
+     * @apiParam {Number} other_money 其他方式的支付金额
+     * @apiParam {Number} cash_money 现金金额
+     * @apiParam {Number} deduction_money 抵扣金额
+     * @apiParam {Number} expert_uid 专家id
+     * @apiParam {Number} assistant_uid 助理id
+     * 
      * @apiSuccessExample Success-Response:
      *       {
      *       }
@@ -359,6 +400,15 @@ class BookController extends Controller
      */
     public function cash($id)
     {
+        $params = $this->parameters([
+            'pay_type' => self::T_INT,
+            'other_money' => self::T_FLOAT,
+            'cash_money' => self::T_FLOAT,
+            'deduction_money' => self::T_FLOAT,
+            'expert_uid'=> self::T_INT,
+            'assistant_uid'=> self::T_INT,
+        ]);
+        
         return $this->success(['id'=>$id]);
     }
     
@@ -388,6 +438,12 @@ class BookController extends Controller
      * @apiName relatively
      * @apiGroup book
      *
+     * @apiParam {Number} expert_uid 专家id
+     * @apiParam {Number} assistant_uid 助理id
+     * @apiParam {String} remark 说明
+     * @apiParam {String} work_at 补色日期 YYYY-MM-DD
+
+     * 
      * @apiSuccessExample Success-Response:
      *       {
      *       }
@@ -401,6 +457,12 @@ class BookController extends Controller
      */
     public function relatively($id)
     {
+        $params = $this->parameters([
+            'remark' => self::T_STRING,
+            'work_at' => self::T_STRING,
+            'expert_uid'=> self::T_INT,
+            'assistant_uid'=> self::T_INT,
+        ]);
         return $this->success(['id'=>$id]);
     }
     
@@ -408,6 +470,10 @@ class BookController extends Controller
      * @api {get} /book/refund/{id} 7.预约单--退款
      * @apiName refund
      * @apiGroup book
+     * 
+     * @apiParam {Number} back_to 退款方式1:微信2:支付宝3:银联,4:现金
+     * @apiParam {Number} money 金额
+     * @apiParam {String} remark 说明
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -422,6 +488,11 @@ class BookController extends Controller
      */
     public function refund($id)
     {
+        $params = $this->parameters([
+            'remark' => self::T_STRING,
+            'money' => self::T_FLOAT,
+            'back_to' => self::T_INT,
+        ]);
         return $this->success(['id'=>$id]);
     }
     
