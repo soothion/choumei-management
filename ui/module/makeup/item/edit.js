@@ -37,6 +37,7 @@ $('#form').on("_ready",function(){
 						$this.closest('.makeup-item-list').find('tbody').append(html);
 					}
 					table.trigger('datachange');
+					parent.lib.popup.close();
 				});
 				parent.lib.popup.resize();
 			}
