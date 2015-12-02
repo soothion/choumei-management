@@ -134,7 +134,7 @@ class ArtificerAssistantController extends Controller{
         return $this->success( $result );
     }
     /**
-    * @api {Post} /assistant/add/:id  2.专家助理添加
+    * @api {Post} /assistant/add    2.专家助理添加
     * @apiName add
     * @apiGroup Assistant
     *
@@ -261,15 +261,14 @@ class ArtificerAssistantController extends Controller{
     * @apiSuccess {String} photo          必填,个人照片.
     * @apiSuccess {String} name           必填,姓名.
     * @apiSuccess {Number} sex            必填,性别 1.男 2.女
-    * @apiSuccess {String} country        必填,韩国.
     * @apiSuccess {String} birthday       必填,生日 格式如 2015-02-22.
     * @apiSuccess {Number} level          必填,级别 1明星院长； 2院长.
     * @apiSuccess {String} number         必填,在职编号.
     * @apiSuccess {Number} workingLife    必填,工作年限.
     * @apiSuccess {String} introduce      必填,个性签名.
-    * @apiSuccess {Number} credential     选填,证件类型 0无填写类型 1身份证； 2军官证； 3驾驶证； 4护照.
-    * @apiSuccess {String} cardId         选填,证件类型所对应的证件号码.
-    * @apiSuccess {String} mobilePhone    选填,电话.
+    * @apiSuccess {Number} credential     必填,证件类型  1身份证； 2军官证； 3驾驶证； 4护照.
+    * @apiSuccess {String} cardId         必填,证件类型所对应的证件号码.
+    * @apiSuccess {String} mobilePhone    必填,电话.
     * @apiSuccess {String} wechat         选填,微信.
     * @apiSuccess {String} qq             选填,qq.
     * @apiSuccess {String} email          选填,电子邮箱.
@@ -590,7 +589,6 @@ class ArtificerAssistantController extends Controller{
         $data['photo'] = $photo = isset( $param['photo'] ) ? $param['photo'] : $this->error('个人图片未填写');
         $data['name'] = $name = isset( $param['name'] ) ? $param['name'] : $this->error('专家姓名未填写');
         $data['sex'] = $gender = isset( $param['sex'] ) ? $param['sex'] : $this->error('性别未填写');
-        $data['country'] = $country = isset( $param['country'] ) ? $param['country'] : $this->error('国籍未填写');
         $data['birthday'] = $birthday = isset( $param['birthday'] ) ? $param['birthday'] : $this->error('出生日期未填写');
         $data['level'] = $level = isset( $param['level'] ) ? $param['level'] : $this->error('级别未填写');
         $data['number'] = $jobNumber = isset( $param['number'] ) ? $param['number'] : $this->error('在职编号未填写');
@@ -603,9 +601,14 @@ class ArtificerAssistantController extends Controller{
         $credentialType = isset( $param['credential'] ) ? $param['credential'] : 0;
         $credentialValue = isset( $param['cardId'] ) ? $param['cardId'] : '';
         $data['mobilephone'] = $mobilePhone = isset( $param['mobilePhone'] ) ? $param['mobilePhone'] : '';
+        
+        if( empty($credentialType) && empty($credentialValue) ) return $this->error('身份证件未填写');
+        if( empty($mobilePhone)) return $this->error('手机号码未填写');
+        
         $data['wechat'] = $wechat = isset( $param['wechat'] ) ? $param['wechat'] : '';
         $data['qq'] = $qq = isset( $param['qq'] ) ? $param['qq'] : '';
         $data['email'] = $email = isset( $param['email'] ) ? $param['email'] : '';
+        $data['country'] = '';
         if( $credentialType && $credentialValue ){ 
             $data['credential'] = $credentialType;
             $data['card_id'] = $credentialValue;
