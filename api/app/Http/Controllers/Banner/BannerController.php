@@ -240,7 +240,7 @@ class BannerController extends Controller {
     }
 
     /**
-     * @api {post} /banner/destroy/:id 5.主页banner的排序
+     * @api {post} /banner/sort 5.主页banner的排序
      * @apiName sort
      * @apiGroup  Banner
      *
