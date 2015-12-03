@@ -15,9 +15,10 @@
                     <h4>定妆单退款详情</h4>
                 </div>
                 <div class="flex-item fr">
-                  <div class="fr" id='breadcrumb' ajat="#domid=breadcrumb&tempid=breadcrumb-t">
+                  <div class="fr">
+                      <span id="breadcrumb">
                       <script type="text/template" id="breadcrumb-t">
-                          <form   action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <form  action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
                               <input type="hidden" name="ids" value="<%=query.id%>">
                           <button class="btn" data-slug="coupon.add">
                                确认退款
@@ -29,10 +30,11 @@
                                拒绝退款
                           </button>
                           </form>
-                          <a href="refund_list.html" class="btn" data-slug="coupon.add">
-                               返回
-                          </a>
                       </script>
+                      </span>
+                      <a href="refund_list.html" class="btn" data-slug="coupon.add">
+                           返回
+                      </a>
                   </div>
                 </div>
             </div>
@@ -249,6 +251,11 @@
                         </tr>
                     </tbody>
                 </table>
+                 </script>
+                 <script>
+                    $('#table').on('_ready',function(){
+                        lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').render();
+                    })
                  </script>
             </div>
         </div>
