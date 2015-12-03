@@ -150,6 +150,8 @@ return [
 
         Choumei\ChoumeiServiceProvider::class,
 
+        sngrl\SphinxSearch\SphinxSearchServiceProvider::class
+
     ],
 
     /*

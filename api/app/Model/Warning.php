@@ -45,7 +45,7 @@ class Warning extends Model {
                     })
                     ->groupBy('request_log.OPENID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.OPENID");
                 if (!empty($val)) {
-                    $query->where('request_log.OPENID', 'like', '%' . $val . '%');
+                    $query->where('request_log.OPENID', '=', $val);
                 }
 
                 break;
@@ -55,7 +55,7 @@ class Warning extends Model {
                     $join->on('request_log.ORDER_SN', '=', 'order.ordersn')->orOn('request_log.ORDER_SN', '=', 'order.shopcartsn');
                 })->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.DEVICE_UUID");
                 if (!empty($val)) {
-                    $query->where('request_log.DEVICE_UUID', 'like', '%' . $val . '%');
+                    $query->where('request_log.DEVICE_UUID', '=', $val);
                 }
                 break;
             default:
