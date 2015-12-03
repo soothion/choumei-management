@@ -81,7 +81,7 @@ class BeautyItemController extends Controller{
 	* @apiParam {string} level 必填,类别 1明星院长； 2院长.
 	* @apiParam {string} price 必填,原价.
 	* @apiParam {string} vip_price 必填,会员价.
-	* @apiParam {string} workflow_name 流程名称.
+	* @apiParam {string} beauty_workflow_name 流程名称.
 	*
 	* @apiSuccessExample Success-Response:
 	*	{
@@ -136,7 +136,7 @@ class BeautyItemController extends Controller{
 	* @apiSuccess {string} level 类别 1明星院长； 2院长.
 	* @apiSuccess {string} price 原价.
 	* @apiSuccess {string} vip_price 会员价.
-	* @apiSuccess {string} workflow_name 流程名称.
+	* @apiSuccess {string} beauty_workflow_name 流程名称.
 	*
 	* @apiSuccessExample Success-Response:
 	*{
@@ -162,7 +162,7 @@ class BeautyItemController extends Controller{
 	*        vip_price: 0,
 	*        expire: 0,
 	*        explain: "",
-	*        workflow_name: "12",
+	*        beauty_workflow_name: "12",
 	*        created_at: "2015-01-01 08:00:00",
 	*        updated_at: "2015-11-30 16:18:17"
 	*    }
@@ -211,7 +211,7 @@ class BeautyItemController extends Controller{
 	* @apiParam {string} equipment 必填,设备介绍JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
 	* @apiParam {string} present_explain 必填,赠送说明.	
 	* @apiParam {string} equipment_slogan 必填,设备宣传语.	
-	* @apiParam {string} workflow_name 必填,流程名称.	
+	* @apiParam {string} beauty_workflow_name 必填,流程名称.	
 	* @apiParam {string} expire 必填,时间限制.	
 	* @apiParam {string} is_gift 必填,是否是赠送项目0否 1是.	
 	* 
@@ -266,7 +266,7 @@ class BeautyItemController extends Controller{
 	 * */
 	private  function compositeData($param,$act_type)
 	{
-		$must_param = ['type','name','detail','description','logo','images','workflow_name'];
+		$must_param = ['type','name','detail','description','logo','images','beauty_workflow_name'];
 		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
 		$data['type'] = isset($param['type'])?intval($param['type']):1;
 		$data['name'] = isset($param['name'])?trim($param['name']):'';
@@ -291,7 +291,7 @@ class BeautyItemController extends Controller{
 		$data['level'] = isset($param['level'])?trim($param['level']):'';
 		$data['price'] = isset($param['price'])?intval($param['price']):'';
 		$data['vip_price'] = isset($param['vip_price'])?intval($param['vip_price']):'';
-		$data['workflow_name'] = isset($param['workflow_name'])?trim($param['workflow_name']):'';
+		$data['beauty_workflow_name'] = isset($param['beauty_workflow_name'])?trim($param['beauty_workflow_name']):'';
 		$data['equipment_slogan'] = isset($param['equipment_slogan'])?trim($param['equipment_slogan']):'';
 		
 		
@@ -476,7 +476,7 @@ class BeautyItemController extends Controller{
 	* @apiSuccess {Array} more_prices 规格价格.
 	* @apiSuccess {string} quantity 预约数.
 	* @apiSuccess {string} equipment_slogan 必填,设备宣传语.	
-	* @apiSuccess {string} workflow_name 必填,流程名称.
+	* @apiSuccess {string} beauty_workflow_name 必填,流程名称.
 	*
 	* @apiSuccessExample Success-Response:
 	* {
@@ -509,7 +509,7 @@ class BeautyItemController extends Controller{
   	*       "updated_at": "2015-12-01 09:46:22",
 	*       "quantity": "12",
 	*       "equipment_slogan": "12",
-	*       "workflow_name": "12",
+	*       "beauty_workflow_name": "12",
 	*       "prices": {
 	*              		 "min_price": 1500,
 	*                	 "max_price": 2500,
