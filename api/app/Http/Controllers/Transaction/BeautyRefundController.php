@@ -21,7 +21,7 @@ class BeautyRefundController extends Controller {
      * @apiParam {String} start_time 开始时间 YYYY-MM-DD
      * @apiParam {String} end_time 结束时间 YYYY-MM-DD
      * @apiParam {String} pay_type 0 全部  2 支付宝 3 微信 7 积分 10 易联支付
-     * @apiParam {String} state 订单退款状态 0 -全部  RFN - 退款中，RFD - 已退款' TODO
+     * @apiParam {String} state 订单退款状态  全部(用逗号分隔其他所有状态)  RFN - 退款中，RFD - 已退款' TODO
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      *

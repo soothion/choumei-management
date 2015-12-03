@@ -48,7 +48,7 @@ class OrderRefund extends Model {
 
         $query = self::select($fields);
         
-        $query = self::getRefundView($query);
+        $query = self::getRefundView($query,$param);
         $query = self::whereConditionRefund($query, $param);
         AbstractPaginator::currentPageResolver(function () use($page) {
             return $page;
@@ -59,11 +59,14 @@ class OrderRefund extends Model {
         return $refundList;
     }
 
-    private static function getRefundView($query) {
+    private static function getRefundView($query,$param) {
         
         $query->leftJoin('booking_order', 'booking_order.ORDER_SN', '=', 'order_refund.ordersn')
                 ->leftJoin('booking_order_item', 'booking_order_item.ORDER_SN', '=', 'order_refund.ordersn')
                 ->leftJoin('fundflow', 'record_no', '=', 'order_refund.ordersn');
+        if(isset($param['key']) && isset($param['keyword']) && ($param['key']==3) && !empty($param['keyword'])){
+            $query->leftJoin('recommend_code_user','recommend_code_user.user_id','=','order_refund.user_id');
+        }
 
         $query->orderBy('order_refund_id', 'DESC');
         return $query;
@@ -86,20 +89,21 @@ class OrderRefund extends Model {
         }
         //付款状态
         if (isset($param['state']) && $param['state']) {
-            $state_ids = explode(",", $params['state']);
-            $state_ids = array_map("intval", $state_ids);
-            $base->whereIn('order.status', $state_ids);
+            $state_str = explode(",", $params['state']);
+            $base->whereIn('booking_order.STATUS', $state_str);
         }
         if (isset($param['key']) && isset($param['keyword']) && $param['key'] && !empty($param['keyword'])) {
             switch ($param['key']) {
                 case 1:
-                    $query->where('booker_phone', $param['keyword']);
+                    $query->where('booking_order.booker_phone', $param['keyword']);
                     break;
                 case 2:
                     // TODO  预约号
+                    $query->where('order_refund.booking_sn',$param['keyword']);
                     break;
                 case 3:
                     //TODO  推荐码
+                    $query->where('recommend_code_user.recommend_code',$param['keyword']);
                     break;
                 default :
                     break;
