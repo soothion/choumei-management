@@ -589,7 +589,7 @@ class UserController extends Controller{
 
 
     /**
-     * @api {post} /user/enable/:id 8.删除用户信息
+     * @api {post} /user/enable/:id 8.启用用户
      * @apiName enable
      * @apiGroup User
      *
@@ -612,7 +612,7 @@ class UserController extends Controller{
 
 
     /**
-     * @api {post} /user/disable/:id 9.删除用户信息
+     * @api {post} /user/disable/:id 9.禁用用户
      * @apiName disable
      * @apiGroup User
      *
