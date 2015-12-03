@@ -86,6 +86,19 @@ class BookingOrder extends Model
         $fundflows = Fundflow::where('record_no',$ordersn)->get(['record_no','pay_type'])->toArray();
         $payment_log = PaymentLog::where('ordersn',$ordersn)->first(['ordersn','tn','amount'])->toArray();
         $recommend = RecommendCodeUser::where('user_id',$base['USER_ID'])->whereIn('type',[2,3])->first(['id','user_id','recommend_code']);
+        
+        $item_amount = 0;
+        if(!empty($beauty_items))
+        {
+            $to_pay_amounts = array_map("floatval",array_column($beauty_items, "to_pay_amount"));
+            $item_amount = array_sum($to_pay_amounts);
+        }
+        else
+        {
+            $to_pay_amounts = array_map("floatval",array_column($items, "PAYABLE"));
+            $item_amount = array_sum($to_pay_amounts);
+        }
+        $base['item_amount'] = $item_amount;
         if(empty($recommend))
         {
             $recommend = NULL;

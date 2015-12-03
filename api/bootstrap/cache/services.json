@@ -29,8 +29,7 @@
         "Maatwebsite\\Excel\\ExcelServiceProvider",
         "Mews\\Captcha\\CaptchaServiceProvider",
         "Tymon\\JWTAuth\\Providers\\JWTAuthServiceProvider",
-        "Choumei\\ChoumeiServiceProvider",
-        "sngrl\\SphinxSearch\\SphinxSearchServiceProvider"
+        "Choumei\\ChoumeiServiceProvider"
     ],
     "eager": [
         "Illuminate\\Auth\\AuthServiceProvider",
@@ -50,8 +49,7 @@
         "Maatwebsite\\Excel\\ExcelServiceProvider",
         "Mews\\Captcha\\CaptchaServiceProvider",
         "Tymon\\JWTAuth\\Providers\\JWTAuthServiceProvider",
-        "Choumei\\ChoumeiServiceProvider",
-        "sngrl\\SphinxSearch\\SphinxSearchServiceProvider"
+        "Choumei\\ChoumeiServiceProvider"
     ],
     "deferred": {
         "command.app.name": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
@@ -71,14 +69,12 @@
         "command.listener.make": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.model.make": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.optimize": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
-        "command.policy.make": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.provider.make": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.request.make": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.route.cache": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.route.clear": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.route.list": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.serve": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
-        "command.test.make": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.tinker": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.up": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
         "command.vendor.publish": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",

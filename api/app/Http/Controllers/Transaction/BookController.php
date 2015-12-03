@@ -177,6 +177,7 @@ class BookController extends Controller
      * @apiSuccess {String} order_item.ITEM_NAME 项目名称
      * @apiSuccess {String} order_item.AMOUNT 总额
      * @apiSuccess {String} order_item.PAYABLE 应付总额
+     * @apiSuccess {String} order_item.item_amount 项目总价
      * @apiSuccess {String} beauty_order_item 实做项目信息
      * @apiSuccess {String} beauty_order_item.id 项目ID
      * @apiSuccess {String} beauty_order_item.item_name 项目名称
@@ -244,6 +245,7 @@ class BookController extends Controller
      *             "CONSUME_TIME": null,
      *             "CREATE_TIME": "2015-12-01 17:18:23",
      *             "UPDATE_TIME": "0000-00-00 00:00:00",
+     *             "item_amount":1955,
      *             "user": {
      *               "user_id": 1,
      *               "nickname": "小康",

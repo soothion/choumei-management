@@ -191,7 +191,7 @@ class OrderRefund extends Model {
             'booking_sn' => $refund->booking_sn,
             'booker_phone' => $bookingOrder->booker_phone,
             'booker_name' => $bookingOrder->booker_name,
-            'booking_order_item'=>$bookingOrderItem,
+            'booking_order_item' => $bookingOrderItem,
 //            'item_name' => $bookingOrderItem->item_name,
 //            'price' => $bookingOrderItem->price,
             'booking_date' => $bookingOrder->booking_date,
@@ -201,12 +201,16 @@ class OrderRefund extends Model {
             'payment_sn' => $paymentLog->payment_sn, //流水号
             'payable' => $bookingOrder->payable, //流水号
             'paied_time' => $bookingOrder->paied_time, //流水号
+            'pay_status' => 1, //支付状态 
             // 退款信息
+            'refund_from' => 1, //用户
             'rereason' => $refund->rereason,
+            'refund_desc' => $refund->rereason,
+            'refund_type' => $fundflow->pay_type,
             'money' => $refund->money,
             'add_time' => date("Y-m-d H:i:s", $refund->add_time),
-            'opt_time' => $refund->opt_time, //操作时间
-            'rereason' => $refund->rereason,
+            'opt_time' => !empty($refund->opt_time) ? date("Y-m-d H:i:s", $refund->opt_time) : '', //操作时间
+            'complete_time' => !empty($refund->opt_time) ? date("Y-m-d H:i:s", $refund->opt_time) : '', //操作时间
             'opt_user' => $optUser, //审批人
             'recommend_code' => !empty($recommendInfo) ? $recommendInfo->recommend_code : '',
             'receive' => $receive
