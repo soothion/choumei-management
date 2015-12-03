@@ -174,6 +174,16 @@ Route::any('assistant/getArtificer',array(
     'as'=>'assistant.getArtificer',
     'uses'=>'Artificer\ArtificerAssistantController@getArtificer'
 ));
+
+Route::any('artificer/search/{name}',array(  
+    'as'=>'assistant.search',
+    'uses'=>'Artificer\ArtificerController@searchNameAndNumber'
+));
+
+Route::any('assistant/search/{name}',array(  
+    'as'=>'assistant.search',
+    'uses'=>'Artificer\ArtificerAssistantController@searchNameAndNumber'
+));
 //商家后台提现
 Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
