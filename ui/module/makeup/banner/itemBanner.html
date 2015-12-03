@@ -113,11 +113,9 @@
             box-shadow:none!important;
             background:none;                
           }
-
           .hidden{
-             display:none!important;
-          }          
-
+             display:none;
+          }     
         </style>
     </head>
     <body>
@@ -174,14 +172,15 @@
                               <div class="thumbnails-item-btn">
                                   <button type="button" class="btn-primary" id="uploader2">上传</button>
                               </div>                             
-                          <%}%>  
+                          <%}%>
                         </div>
                     </li>
+                    <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
                     <li style="border-top:1px solid #ddd;">
                         <div style="margin-top:10px">
                             <label><span>题目</span></label>
-                            <input type="text" name="name" value="<%=item2.name%>" required disabled/>
-                        </div>
+                            <input type="text" name="name" value="<%=item2.name%>" placeholder="1~20个字符，必填" required disabled/>
+                        </div>                        
                     </li>
                 </ul>          
             </form>
@@ -219,10 +218,11 @@
                           <%}%>  
                         </div>
                     </li>
+                    <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
                     <li style="border-top:1px solid #ddd;">
                         <div style="margin-top:10px">
                             <label><span>题目</span></label>
-                            <input type="text" name="name" value="<%=item3.name%>" required disabled/>
+                            <input type="text" name="name" value="<%=item3.name%>" placeholder="1~20个字符，必填" required disabled/>
                         </div>
                     </li>
                 </ul>          
@@ -258,13 +258,15 @@
                               <div class="thumbnails-item-btn">
                                   <button type="button" class="btn-primary" id="uploader4">上传</button>
                               </div>                             
-                          <%}%>  
+                          <%}%>
+
                         </div>
                     </li>
+                    <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
                     <li style="border-top:1px solid #ddd;">
                         <div style="margin-top:10px">
                             <label><span>题目</span></label>
-                            <input type="text" name="name" value="<%=item4.name%>" required disabled/>
+                            <input type="text" name="name" value="<%=item4.name%>"  placeholder="1~20个字符，必填" required disabled/>
                         </div>
                     </li>
                 </ul>          

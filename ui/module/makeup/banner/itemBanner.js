@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-02 19:50:31
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-03 19:45:26
+* @Last Modified time: 2015-12-03 20:44:30
 */
 
 $(function(){
@@ -31,9 +31,14 @@ $(function(){
         var topBanner = $(this).closest('.banner');
         topBanner.find('.operation').addClass('hidden');
         topBanner.find('input').attr('disabled',true);
+        topBanner.find('.control-help').hide();
     })
      
-    lib.Form.prototype.save = function(data){
+    lib.Form.prototype.save = function(data){  
+        if(!data.image){    
+            $(this.el).find('.control-help').show();
+            return;  
+        }   
         lib.ajax({
             type: "post",
             url : data.id ? "banner/edit/"+data.id : "banner/create",
