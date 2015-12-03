@@ -86,9 +86,11 @@
                     "10":"易联"
                 }%>
                 <%var status={
-                     "6":"待审核",
-                     "RFD":"已退款",
-                     "RFN":"退款中"
+                    'NEW':'未支付',
+                    'PYD':'已支付',
+                    'CSD':'已消费',
+                    'RFN':'申请退款',
+                    'RFD':'已退款',
                 }%>
                 <%data.forEach(function(item,index){%>
                  <tr>

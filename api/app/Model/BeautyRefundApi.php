@@ -49,8 +49,6 @@ class BeautyRefundApi extends TransactionWriteApi {
             ],
         ];
         $tn = array_column($arr, 'booking_sn');
-        print_r($tn);
-        exit;
         $refunds = self::checkBeautyRefund($ids);
         $ordersns = array_column($refunds, 'ordersn');
         $refund_indexes = Utils::column_to_key("ordersn", $refunds);
