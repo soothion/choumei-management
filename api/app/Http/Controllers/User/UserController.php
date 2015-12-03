@@ -108,7 +108,7 @@ class UserController extends Controller{
      * @apiParam {String} username 可选,臭美号;
      * @apiParam {String} mobilephone 可选,手机号;
      * @apiParam {String} companyCode 可选,集团邀请码;
-     * @apiParam {String} recommendCode 可选,商家推荐码或活动邀请码;
+     * @apiParam {String} recommendCode 可选,商家推荐码或活动邀请码或其他所有码都是这个;
      * @apiParam {Number} sex 可选,性别,0未知、1男、2女;
      * @apiParam {String} start_at 可选,起始注册时间;
      * @apiParam {String} end_at 可选,截止注册时间;
@@ -120,6 +120,7 @@ class UserController extends Controller{
      * @apiParam {String} sort_type 排序方式,DESC或者ASC;默认DESC
      *
      *
+     * @apiSuccess {Array} recommend_codes 当type为1,并且activity为1时,为活动邀请码;当type为2并且activity为2时,为商家邀请码;type为2时为美妆店铺邀请码,type为3时为推荐用户,type为4时为美妆店铺活动码
      *
      * @apiSuccessExample Success-Response:
      *    {
