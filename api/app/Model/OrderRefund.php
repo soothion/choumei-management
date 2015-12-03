@@ -145,6 +145,7 @@ class OrderRefund extends Model {
             'booking_order.booking_date',
             'booking_order.payable',
             'booking_order.paied_time',
+            'booking_order.booker_sex',
         ];
         //booking_order_item
         $booking_order_item_fields = [
@@ -196,6 +197,7 @@ class OrderRefund extends Model {
 //            'price' => $bookingOrderItem->price,
             'booking_date' => $bookingOrder->booking_date,
             'status' => $bookingOrder->status,
+            'booker_sex' => $bookingOrder->booker_sex,
             // 预约金支付信息
             'pay_type' => $fundflow->pay_type,
             'payment_sn' => $paymentLog->payment_sn, //流水号
