@@ -135,7 +135,7 @@ class BannerController extends Controller {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
-            if (empty($param['url'])) {
+            if (empty($param['url']) && $param['type'] == 1) {
                 throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
             }
         }
@@ -188,7 +188,7 @@ class BannerController extends Controller {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
-            if (empty($param['url'])) {
+            if (empty($param['url']) && $param['type'] == 1) {
                 throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
             }
         }
