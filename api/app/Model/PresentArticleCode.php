@@ -6,6 +6,8 @@ use App\Artificer;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Facades\Redis as Redis;
+
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 
@@ -201,5 +203,18 @@ class PresentArticleCode extends Model
                 ->get() ->toArray();
         return $res;
 
+    }
+    
+    // 获取系统内部订单号
+    public static function getOrderSn($p = 'DZ'){
+        $pre = $p.date('ymd');
+        $redis = Redis::connection();
+        $key = 'OSN-'.date('ymd');
+        if($redis->get($key)==FALSE)
+            $redis->setex($key,3600*24,0);
+        $sn = $redis->incr($key);
+        $sn = str_pad($sn, 5,'0',STR_PAD_LEFT);
+        $sn = $pre.$sn;
+        return $sn;
     }
 }
