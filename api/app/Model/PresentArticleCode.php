@@ -198,7 +198,7 @@ class PresentArticleCode extends Model
                 ->where('present_article_code.present_id','=',$presentId)
                 ->leftJoin('present', 'present.present_id', '=', 'present_article_code.present_id')
                 ->leftJoin('beauty_item', 'present.item_id', '=', 'beauty_item.item_id')
-                ->get();
+                ->get() ->toArray();
         return $res;
 
     }

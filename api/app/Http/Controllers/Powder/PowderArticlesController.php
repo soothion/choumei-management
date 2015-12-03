@@ -577,19 +577,17 @@ class PowderArticlesController extends Controller
      */
     public function exportArticlesTicketList(){
         $param = $this->param;
+        $param['presentId']= 1;
         if(empty($param['presentId'])){
             throw new ApiException('必传参数不能为空');    
         }
+         @set_time_limit(0);
         //获取活动名称
         $where = array('present_id'=>$param['presentId']);
         $articleInfo = Present::getArticleInfoByWhere($where);
         $articleAllTicketInfoRes =  PresentArticleCode::getAllArticleTicketInfoForExport($param['presentId']);
-        foreach ($articleAllTicketInfoRes as $key => $val) {
-            $res['$key']['itemName'] = $val->itemName;
-            $res['$key']['ticketCode'] = $val->ticketCode;
-            $res['$key']['startTime'] = $val->startTime;
-            $res['$key']['endTime'] = $val->endTime;
-            $res['$key']['ticketStatusName'] = self::$ticketCodeStatus[$val->ticketStatus]; 
+        foreach ($articleAllTicketInfoRes as &$val) {
+            $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']]; 
         }
         
         $header = [
@@ -602,7 +600,7 @@ class PowderArticlesController extends Controller
 //        if (!empty($res)) {
 //            Event::fire("appointment.export");
 //        }
-        @ini_set('memory_limit', '256M');
+        @ini_set('memory_limit', '512M');
         $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $res);
     }
     
