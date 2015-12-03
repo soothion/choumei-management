@@ -15,15 +15,20 @@
                     <h4>定妆单详情</h4>
                 </div>
                 <div class="flex-item fr">
-                  <div class="fr" id="breadcrumb">
+                  <div class="fr" >
+                    <span id="breadcrumb">
                     <script id="breadcrumb-t" type="text/template">
-                        <a data-modal='useCoupon' <%if (data.ticketStatus !=1){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
+                        <form data-role="form" action="PowderArticles/usePresentTicket">
+                        <input type="hidden" name="articleCodeId" value="<%data.articleCodeId%>">
+                        <button data-modal='useCoupon' <%if (data.ticketStatus !=1){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
                              消费使用
-                        </a>
-                        <a href="present_list.html" class="btn" data-slug="coupon.add">
-                             返回
-                        </a>
+                        </button>
+                    </form>
                     </script>
+                    </span>
+                    <a href="present_list.html" class="btn" data-slug="coupon.add">
+                         返回
+                    </a>
                   </div>
                 </div>
             </div>

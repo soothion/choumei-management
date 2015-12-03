@@ -8,7 +8,7 @@
 <div class="control-group">
     <label class="control-label" for=""><span class="red">*</span>专家：</label>
     <div class="control">
-        <input id="search" name="expert_uid" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop"
+        <input id="search" name="specialistId" type="text" ajat-complete="artificer/search/${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop"
                         ajat-resources="/module/public/widget/autocomplete/index.js"
                         autocomplete="off" required />
                     <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ></div>
@@ -18,7 +18,7 @@
 <div class="control-group">
     <label class="control-label" for=""><span class="red">*</span>助理：</label>
     <div class="control">
-        <input id="search" name="assistant_uid" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop"
+        <input id="search" name="assistantId" type="text" ajat-complete="assistant/search/${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop"
                         ajat-resources="/module/public/widget/autocomplete/index.js"
                         autocomplete="off" required />
                     <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ></div>
