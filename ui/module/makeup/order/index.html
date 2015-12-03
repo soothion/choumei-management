@@ -22,32 +22,32 @@
         <div class="wrapper">
             <form data-role="hash">
               <div class="input-group placeholder-switch">
-                   <select name="selectItem">
-                       <option value="0" data-placeholder="请输入手机号">手机号</option>
-                       <option value="1" data-placeholder="请输入预约号">预约号</option>
-                       <option value="2" data-placeholder="请输入推荐号">推荐号</option>
+                   <select name="key">
+                       <option value="1" data-placeholder="请输入手机号">手机号</option>
+                       <option value="2" data-placeholder="请输入预约号">预约号</option>
+                       <option value="3" data-placeholder="请输入推荐号">推荐号</option>
                    </select>
                    <input type="text" class="input-search" name="keyword" placeholder="请输入手机号">
                </div>
                <span class="space"></span>
                <span>活动时间：</span>
                <span class="date-group">
-                   <input type="date" data-role="start" name="startTime" placeholder="YYYY-MM-DD"/>
+                   <input type="date" data-role="start" name="min_time" placeholder="YYYY-MM-DD"/>
                    至
-                   <input type="date" data-role="end" name="endTime" placeholder="YYYY-MM-DD"/>
+                   <input type="date" data-role="end" name="max_time" placeholder="YYYY-MM-DD"/>
                </span>
               <span class="space"></span>
               <div class="input-group">
-                   <select name="selectItem">
+                   <select name="pay_type">
                        <option value="0">支付方式</option>
-                       <option value="1" >微信</option>
+                       <option value="3" >微信</option>
                        <option value="2" >支付宝</option>
-                       <option value="3" >易联支付</option>
+                       <option value="10" >易联支付</option>
                    </select>
                </div>
                <span class="space"></span>
                <div class="input-group">
-                    <select name="selectItem">
+                    <select name="status">
                         <option value="0">订单状态</option>
                         <option value="1" >未消费</option>
                         <option value="2" >已完成</option>
@@ -60,7 +60,7 @@
 
                 <button class="btn" type="submit">查询</button>
             </form>
-           <div class="table" ajat="coupon/list?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="book/index?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -80,87 +80,44 @@
                     </thead>
                 <tbody>
                 <%var data=data.data%>
+                <%var pay_type_desc={
+                    "1":"网银",
+                    "2":"支付宝",
+                    "3":"微信",
+                    "4":"余额",
+                    "7":"积分",
+                    "10":"易联"
+                }%>
+                <%var status={
+                    'NEW':'未支付',
+                    'PYD':'已支付',
+                    'CSD':'已消费',
+                    'RFN':'申请退款',
+                    'RFD':'已退款',
+                }%>
                 <%data.forEach(function(item,index){%>
                  <tr>
                   <td><%=index+1%></td>
-                  <td><%=item.vcTitle%></td>
-                  <td><%=item.vcSn%></td>
-                  <td><%=item.totalNum%></td>
-                  <td><%=item.useNum%></td>
-                  <td><%=item.allNum%></td>
-                  <td><%=item.addTime%></td>
-                  <td><%=item.actTime%></td>
-                  <td><%=item.department%></td>
-                  <td><%=status[item.status]%></td>
+                  <td><%=item.BOOKER_PHONE%></td>
+                  <td><%=item.BOOKER_NAME%></td>
+                  <td><%var orderItems=[];
+                  item.booking_order_item.forEach(function(orderItem){
+                      orderItems.push(orderItem.ITEM_NAME);
+                  })%><%=orderItems.join(",")%></td>
+                  <td><%=item.AMOUNT%></td>
+                  <td><%=item.BOOKING_SN%></td>
+                  <td><%=item.BOOKING_DATE%></td>
+                  <td><%=item.recommend_code%></td>
+                  <td><%=pay_type_desc[item.pay_type]%></td>
+                  <td><%=status[item.STATUS]%></td>
                   <td class="tc">
-                    <a class="link" data-slug="coupon.actView" href="detail_order.html#id=<%=item.vcId%>">查看</a>
+                    <a class="link" data-slug="coupon.actView" href="detail_order.html#id=<%=item.ID%>">查看</a>
                   </td>
                   </tr>
                   <%})%>
                 </tbody>
             </table>
              <div class="pager"> </div>
-            </script>
-            <script type="text/javascript">
-
-               var clearTmpData  = function(){
-                   window.localStorage.removeItem('couponTmpData');
-               }
-
-               var confirmBox = function(options){
-                    lib.popup.confirm({
-                        text:options.text,
-                        define: function(){
-                            lib.ajax({
-                                url : options.url+options.id
-                            }).done(function(data, status, xhr){
-                                if(data.result == 1){
-                                    parent.lib.popup.result({
-                                        text:options.resultText,
-                                        define:function(){
-                                            location.reload();
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-               }
-               var confirmBoxConfig = {
-                    'offline':{
-                        text:'确定将该活动下线吗？',
-                        url:'coupon/offlineConf/',
-                        resultText:'活动下线成功'
-                    },
-                    'online':{
-                        text:'确定将该活动上线吗？',
-                        url:'coupon/upConf/',
-                        resultText:'活动正在上线中...'
-                    },
-                    'close':{
-                        text:'确定将该活动关闭吗？',
-                        url:'coupon/closeConf/',
-                        resultText:'活动关闭成功'
-                    }
-               }
-               $('body').on('click','#offline',function(){
-                    var id = $(this).attr('data-id');
-                    confirmBoxConfig['offline'].id = id;
-                    confirmBox(confirmBoxConfig['offline']);
-
-               }).on('click','#online',function(){
-                    var id = $(this).attr('data-id');
-                    confirmBoxConfig['online'].id = id;
-                    confirmBox(confirmBoxConfig['online']);
-
-               }).on('click','#close',function(){
-                    var id = $(this).attr('data-id');
-                    confirmBoxConfig['close'].id = id;
-                    confirmBox(confirmBoxConfig['close']);
-               }).on('click','#add_new',function(){
-                    clearTmpData();
-                    window.location.href="addBase.html";
-               });
             </script>
         </div>
             </div>

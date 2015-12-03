@@ -20,6 +20,11 @@ class BookingOrder extends Model
         return $this->hasMany(BookingOrderItem::class,'ORDER_SN','ORDER_SN');
     }
     
+    public function beauty_order_item()
+    {
+        return $this->hasMany(BeautyOrderItem::class,'ORDER_SN','order_sn');
+    }
+    
     public function user()
     {
         return $this->belongsTo(User::class,'USER_ID','user_id');
@@ -73,17 +78,42 @@ class BookingOrder extends Model
         }
         
         $base = $base->toArray();
-        
-        $item_fields = ['ORDER_SN','ITEM_ID','ITEM_NAME'];
-        $items = BookingOrderItem::where('ORDER_SN',$base['ORDER_SN'])->get($item_fields)->toArray();
         $ordersn = $base['ORDER_SN'];
+        $item_fields = ['ORDER_SN','ITEM_ID','ITEM_NAME','AMOUNT','PAYABLE'];
+        $beauty_item_fields = ['order_sn','item_id','item_name','amount','to_pay_amount'];
+        $items = BookingOrderItem::where('ORDER_SN',$ordersn)->get($item_fields)->toArray();
+        $beauty_items = BeautyOrderItem::where('order_sn',$ordersn)->get($beauty_item_fields)->toArray();
         $fundflows = Fundflow::where('record_no',$ordersn)->get(['record_no','pay_type'])->toArray();
         $payment_log = PaymentLog::where('ordersn',$ordersn)->first(['ordersn','tn','amount'])->toArray();
+        $recommend = RecommendCodeUser::where('user_id',$base['USER_ID'])->whereIn('type',[2,3])->first(['id','user_id','recommend_code']);
+        
+        $item_amount = 0;
+        if(!empty($beauty_items))
+        {
+            $to_pay_amounts = array_map("floatval",array_column($beauty_items, "to_pay_amount"));
+            $item_amount = array_sum($to_pay_amounts);
+        }
+        else
+        {
+            $to_pay_amounts = array_map("floatval",array_column($items, "PAYABLE"));
+            $item_amount = array_sum($to_pay_amounts);
+        }
+        $base['item_amount'] = $item_amount;
+        if(empty($recommend))
+        {
+            $recommend = NULL;
+        }
+        else 
+        {
+            $recommend = $recommend->toArray();
+        }
         return [
             'order'=>$base,
-            'order_item'=>$items,
+            'order_item'=>$items,           
             'fundflow'=>$fundflows,
             'payment_log'=>$payment_log,
+            'recommend'=>$recommend,
+            'beauty_order_item'=>$beauty_items,
             'makeup'=>BeautyMakeup::getByBookingId($id),
             'booking_bill'=>BookingBill::getByBookingId($id),
             'booking_cash'=>BookingCash::getByBookingId($id),
@@ -98,6 +128,7 @@ class BookingOrder extends Model
             'cm_booking_order.*',
             'cm_fundflow.record_no as record_no',
             'cm_fundflow.pay_type as pay_type',
+            'cm_recommend_code_user.recommend_code as recommend_code',
         ];
         
         $base = self::selectRaw(implode(',',$select_fields));
@@ -121,16 +152,21 @@ class BookingOrder extends Model
         }
         
         if (isset($params['min_time']) && !empty($params['min_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['min_time']))) {
-            $min_time = $params['min_time'];
-            $base->whereRaw("(`cm_booking_order`.`UPDATED_BOOKING_DATE` is NULL AND `cm_booking_order`.`BOOKING_DATE` >= '{$min_time}') OR (`cm_booking_order`.`UPDATED_BOOKING_DATE` is NOT NULL AND `cm_booking_order`.`UPDATED_BOOKING_DATE` >= '{$min_time}')");
+          $base->where("booking_order.BOOKING_DATE",">=", $params['min_time']);
         }
         if (isset($params['max_time']) && !empty($params['max_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['max_time']))) {
-            $max_time = $params['max_time'];
-            $base->whereRaw("(`cm_booking_order`.`UPDATED_BOOKING_DATE` is NULL AND `cm_booking_order`.`BOOKING_DATE` <= '{$max_time}') OR (`cm_booking_order`.`UPDATED_BOOKING_DATE` is NOT NULL AND `cm_booking_order`.`UPDATED_BOOKING_DATE` <= '{$max_time}')");
-         }
+            $base->where("booking_order.BOOKING_DATE","<=", $params['max_time']); 
+        }
          if(!empty($pay_state))
          {
-             $base->where('booking_order.STATUS',$pay_state);
+             if($pay_state == "Y")
+             {
+                 $base->where('booking_order.TOUCHED_UP',$pay_state);
+             }
+             else 
+             {
+                 $base->where('booking_order.STATUS',$pay_state);
+             }
          }
          
          if($key == 1 && ! empty($keyword))
@@ -150,16 +186,32 @@ class BookingOrder extends Model
             }
         });
         
+        $base->join('recommend_code_user', function ($join) use($key,$keyword)
+        {
+            $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('type',[2,3]);
+            if ($key == 3 && !empty($keyword)) {
+                $join->where('recommend_code_user.recommend_code', 'like', $keyword);
+            }
+        });
+        
         $booking_order_item_fields = [
             'ORDER_SN',
             'ITEM_NAME'
+        ];
+        $beauty_order_item_fields = [
+            'order_sn',
+            'item_name'
         ];
         
         $base->with([
             'booking_order_item' => function ($q) use($booking_order_item_fields)
             {
                 $q->get($booking_order_item_fields);
-            }
+            },
+            'beauty_order_item' => function ($q) use($beauty_order_item_fields)
+            {
+                $q->get($beauty_order_item_fields);
+            },
         ]);
         $base->orderBy('booking_order.CREATE_TIME', 'DESC');
         return $base;

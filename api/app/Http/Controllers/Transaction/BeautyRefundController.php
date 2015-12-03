@@ -8,6 +8,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use App\BeautyRefundApi;
+use App\BookingOrderItem;
 
 class BeautyRefundController extends Controller {
 
@@ -21,7 +22,7 @@ class BeautyRefundController extends Controller {
      * @apiParam {String} start_time 开始时间 YYYY-MM-DD
      * @apiParam {String} end_time 结束时间 YYYY-MM-DD
      * @apiParam {String} pay_type 0 全部  2 支付宝 3 微信 7 积分 10 易联支付
-     * @apiParam {String} state 订单退款状态 0 -全部  RFN - 退款中，RFD - 已退款' TODO
+     * @apiParam {String} state 订单退款状态  全部(用逗号分隔其他所有状态)  RFN - 退款中，RFD - 已退款' RFE - 退款失败 TODO
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      *
@@ -37,7 +38,7 @@ class BeautyRefundController extends Controller {
      * @apiSuccess {String} booking_sn 预约号
      * @apiSuccess {String} money 退款金额
      * @apiSuccess {String} retype  退款方式 1原路返还 2退回余额
-     * @apiSuccess {String} status 退款状态  RFN - 退款中，RFD - 已退款'
+     * @apiSuccess {String} status 退款状态  RFN - 退款中，RFD - 已退款 RFE - 退款失败
      * @apiSuccess {String} user_id 付款人id
      * @apiSuccess {String} username 用户姓名
      * @apiSuccess {String} mobilephone 用户手机号
@@ -45,33 +46,62 @@ class BeautyRefundController extends Controller {
      * @apiSuccess {String} pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额  7 积分  10易联
      *
      * @apiSuccessExample Success-Response:
-     *  {    
-     *   "result": 1,
-     *   "token": "",
-     *   "data": {
-     *      "total": 1,
-     *      "per_page": 10,
-     *      "current_page": 1,
-     *      "last_page": 1,
-     *      "from": 1,
-     *      "to": 1,
-     *      "data": [
-     *          {
-     *              "order_refund_id": 19,
-     *              "ordersn": "3891556931672",
-     *              "user_id": 306818,
-     *              "add_time": "2015-01-02 16:11:47",
-     *              "money": "290.00",
-     *              "booking_sn": "",
-     *              "status": "PYD",
-     *              "item_name": "测试时",
-     *              "pay_type": 2,
-     *              "username": "10306724",
-     *              "mobilephone": "18681442252"
-     *          }
-     *      ]
+     * {
+     *      "result": 1,
+     *     "token": "",
+     *     "data": {
+     *         "total": 2,
+     *         "per_page": 20,
+     *         "current_page": 1,
+     *         "last_page": 1,
+     *         "from": 1,
+     *         "to": 2,
+     *         "data": [
+     *             {
+     *                 "order_refund_id": 1756,
+     *                 "ordersn": "4902596925807",
+     *                 "user_id": 123132132,
+     *                 "add_time": "2015-12-01 14:05:39",
+     *                 "money": "121123.00",
+     *                 "booking_sn": "",
+     *                 "refund_status": 1,
+     *                 "status": "RFN",
+     *                 "booker_name": "老黄（女士）",
+     *                 "booker_phone": "",
+     *                 "pay_type": null,
+     *                "booking_order_item": [
+     *                     {
+     *                        "order_sn": "4902596925807",
+     *                        "item_name": "韩式提拉"
+     *                     }
+     *                ]
+     *             },
+     *             {
+     *                 "order_refund_id": 19,
+     *                 "ordersn": "3891556931672",
+     *                 "user_id": 306818,
+     *                 "add_time": "2015-01-02 16:11:47",
+     *                 "money": "290.00",
+     *                 "booking_sn": "sad2323232",
+     *                 "refund_status": 1,
+     *                 "status": "RFN",
+     *                 "booker_name": "",
+     *                 "booker_phone": null,
+     *                  "pay_type": 2,
+     *                 "booking_order_item": [
+     *                      {
+     *                         "order_sn": "3891556931672",
+     *                         "item_name": "测试时"
+     *                      },
+     *                      {
+     *                          "order_sn": "3891556931672",
+     *                          "item_name": "韩式提拉"
+     *                      }
+     *                  ]
+     *              }
+     *          ]
+     *      }
      *  }
-     *  } 
      *        
      * @apiErrorExample Error-Response:
      * 		{
@@ -99,6 +129,14 @@ class BeautyRefundController extends Controller {
         $data = [];
         foreach ($refundList['data'] as &$value) {
             $value['add_time'] = date("Y-m-d H:i:s", $value['add_time']);
+            // 查找项目信息
+            $booking_order_items = BookingOrderItem::where('order_sn', $value['ordersn'])->get(['order_sn', 'item_name'])->toArray();
+            $value['booking_order_item'] = $booking_order_items;
+            unset($booking_order_item);
+            //如果在退款中   查询是否是退款失败
+            if ($value['status'] == 'RFN' && $value['refund_status'] == 3) {
+                $value['status'] = 'RFE';
+            }
         }
         return $this->success($refundList);
     }
@@ -116,17 +154,21 @@ class BeautyRefundController extends Controller {
      * @apiSuccess {String} price  项目价格
      * @apiSuccess {String} booking_date 预约日期
      * @apiSuccess {String} recommend_code 推荐码 TODO
-     * @apiSuccess {String} status 订单状态  NEW - 未支付,PYD - 已支付,CSD - 已消费,RFN - 申请退款,RFD - 已退款' TODO
-     * @apiSuccess {String} pay_type 支付方式
+     * @apiSuccess {String} status 订单状态 RFN - 申请退款,RFD - 已退款'，RFE -退款失败 TODO
+     * @apiSuccess {String} pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额  7 积分  10易联
      * @apiSuccess {String} payment_sn   流水号
      * @apiSuccess {String} payable 支付金额
      * @apiSuccess {String} paied_time 支付时间
+     * @apiSuccess {String} pay_status 支付状态 1成功 2失败
+     * @apiSuccess {String} refund_from 发起退款 1 用户 2臭美人员
      * @apiSuccess {String} rereason 退款原因  
-     * @apiSuccess {String} rereason 退款说明
+     * @apiSuccess {String} refund_desc 退款说明  
+     * @apiSuccess {String} refund_type 退款方式    1 网银 2 支付宝 3 微信 4 余额  7 积分  10易联
      * @apiSuccess {Number} money   退款金额
      * @apiSuccess {String} add_time 发起退款时间
      * @apiSuccess {String} add_time 退款时间
      * @apiSuccess {String} opt_time 审批时间
+     * @apiSuccess {String} complete_time 完成退款时间
      * @apiSuccess {String} opt_user  审批人
      * @apiSuccess {String} recommend_code  推荐码
      * @apiSuccess {String} arrive_at 到店时间
@@ -136,37 +178,50 @@ class BeautyRefundController extends Controller {
      * @apiSuccess {String} create_at  接待时间
      *
      * @apiSuccessExample Success-Response:
-     * {
-     *  "result": 1,
-     *   "token": "",
-     * "data": {
-     *     "ordersn": "3891556931672",
-     *      "booking_sn": "",
-     *      "booker_phone": null,
-     *      "booker_name": "",
-     *      "item_name": "测试时",
-     *      "price": "100.00",
-     *      "booking_date": null,
-     *      "status": "RFN",
-     *       "pay_type": 2,
-     *       "payment_sn": "3891556931672Z1438915583",
-     *       "payable": "0.00",
-     *       "paied_time": null,
-     *       "rereason": "2",
-     *       "money": "290.00",
-     *       "add_time": "2015-01-02 16:11:47",
-     *       "opt_time": 0,
-     *       "opt_user": "",
-     *       "recommend_code": "",
-     * "receive": {
-     *      "arrive_at": "2015-12-01 00:00:00",
-     *      "update_booking_date": "2015-12-03",
-     *      "remark": "fasdfasdfasdfafasdf",
-     *      "receiver": 1,
-     *       "create_at": "2015-12-10 00:00:00"
+     *       {
+     *       "result": 1,
+     *       "token": "",
+     *       "data": {
+     *           "ordersn": "3891556931672",
+     *           "booking_sn": "sad2323232",
+     *           "booker_phone": "18611112222",
+     *           "booker_name": "预约人",
+     *           "booking_order_item": [
+     *               {
+     *                   "item_name": "测试时",
+     *                   "price": "100.00"
+     *               },
+     *               {
+     *                   "item_name": "韩式提拉",
+     *                   "price": "0.00"
+     *               }
+     *           ],
+     *           "booking_date": "2015-12-07",
+     *           "status": "RFN",
+     *           "pay_type": 2,
+     *           "payment_sn": "3891556931672Z1438915583",
+     *           "payable": "100.00",
+     *           "paied_time": "2015-10-12 00:00:00",
+     *           "pay_status": 1,
+     *           "refund_from": 1,
+     *           "rereason": "2",
+     *           "refund_desc": "2",
+     *           "refund_type": 2,
+     *           "money": "290.00",
+     *           "add_time": "2015-01-02 16:11:47",
+     *           "opt_time": "",
+     *           "complete_time": "",
+     *           "opt_user": "",
+     *          "recommend_code": "",
+     *         "receive": {
+     *             "arrive_at": "",
+     *             "update_booking_date": "",
+     *             "remark": "",
+     *             "receiver": "",
+     *             "create_at": ""
+     *         }
+     *      }
      *  }
-     *   }
-     * }
      * 
      * @apiErrorExample Error-Response:
      * 		{

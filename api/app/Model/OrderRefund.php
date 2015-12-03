@@ -38,17 +38,17 @@ class OrderRefund extends Model {
             'order_refund.add_time',
             'order_refund.money',
             'order_refund.booking_sn',
+            'order_refund.status as refund_status',
             'booking_order.status',
             'booking_order.booker_name',
             'booking_order.booker_phone',
-            'booking_order_item.item_name',
             'fundflow.pay_type',
         ];
 
 
         $query = self::select($fields);
-        
-        $query = self::getRefundView($query);
+
+        $query = self::getRefundView($query, $param);
         $query = self::whereConditionRefund($query, $param);
         AbstractPaginator::currentPageResolver(function () use($page) {
             return $page;
@@ -59,11 +59,13 @@ class OrderRefund extends Model {
         return $refundList;
     }
 
-    private static function getRefundView($query) {
-        
+    private static function getRefundView($query, $param) {
+
         $query->leftJoin('booking_order', 'booking_order.ORDER_SN', '=', 'order_refund.ordersn')
-                ->leftJoin('booking_order_item', 'booking_order_item.ORDER_SN', '=', 'order_refund.ordersn')
                 ->leftJoin('fundflow', 'record_no', '=', 'order_refund.ordersn');
+        if (isset($param['key']) && isset($param['keyword']) && ($param['key'] == 3) && !empty($param['keyword'])) {
+            $query->leftJoin('recommend_code_user', 'recommend_code_user.user_id', '=', 'order_refund.user_id');
+        }
 
         $query->orderBy('order_refund_id', 'DESC');
         return $query;
@@ -71,7 +73,7 @@ class OrderRefund extends Model {
 
     private static function whereConditionRefund($query, $param) {
         //必要条件 退款状态 为可用
-        $query->where("order_refund.status", TransactionWriteApi::REFUND_STATUS_OF_NORMAL)->where('order_refund.item_type', '!=', "MF");
+        $query->where('order_refund.item_type', '!=', "MF");
 
         // 按时间搜索
         if (!empty($param['start_time'])) {
@@ -86,20 +88,27 @@ class OrderRefund extends Model {
         }
         //付款状态
         if (isset($param['state']) && $param['state']) {
-            $state_ids = explode(",", $params['state']);
-            $state_ids = array_map("intval", $state_ids);
-            $base->whereIn('order.status', $state_ids);
+            $state_str = explode(",", $param['state']);
+            if (count($state_str) == 3) { //全选
+                $query->whereIn('booking_order.STATUS', $state_str)->where("order_refund.status", '!=', 2);
+            } elseif (count($state_str) == 1 && $state_str[0] == 'RFE') {  //仅选择了退款失败
+                $query->where("order_refund.status", 3);
+            } else {
+                $query->whereIn('booking_order.STATUS', $state_str)->where("order_refund.status", 1);
+            }
         }
         if (isset($param['key']) && isset($param['keyword']) && $param['key'] && !empty($param['keyword'])) {
             switch ($param['key']) {
                 case 1:
-                    $query->where('booker_phone', $param['keyword']);
+                    $query->where('booking_order.booker_phone', $param['keyword']);
                     break;
                 case 2:
                     // TODO  预约号
+                    $query->where('order_refund.booking_sn', $param['keyword']);
                     break;
                 case 3:
                     //TODO  推荐码
+                    $query->where('recommend_code_user.recommend_code', $param['keyword']);
                     break;
                 default :
                     break;
@@ -147,7 +156,7 @@ class OrderRefund extends Model {
             'fundflow.pay_type'
         ];
         // payment_log
-        $payment_log_fields=[
+        $payment_log_fields = [
             'payment_log.payment_sn',
         ];
         $refund = self::select($fields)->where('order_refund_id', $order_refund_id)->where('item_type', '!=', 'MF')->first();
@@ -155,51 +164,56 @@ class OrderRefund extends Model {
             throw new ApiException("退款单 [{$order_refund_id}] 不存在", ERROR::REFUND_NOT_EXIST);
         }
         $bookingOrder = BookingOrder::select($booking_order_fields)->where('order_sn', $refund->ordersn)->first();
-        $bookingOrderItem = BookingOrderItem::select($booking_order_item_fields)->where('order_sn', $refund->ordersn)->first();
+        $bookingOrderItem = BookingOrderItem::select($booking_order_item_fields)->where('order_sn', $refund->ordersn)->get()->toArray();
         $fundflow = Fundflow::select($fundflow_fields)->where('record_no', $refund->ordersn)->first();
         $paymentLog = PaymentLog::select($payment_log_fields)->where('ordersn', $refund->ordersn)->first();
-        $optUser=  !empty($refund->opt_user_id)?Manager::find($refund->opt_user_id)->name:'';
+        $optUser = !empty($refund->opt_user_id) ? Manager::find($refund->opt_user_id)->name : '';
         //推荐码
-         $recommendInfo=  RecommendCodeUser::where('user_id',$refund->user_id)->whereIn('type',['2','3'])->first();
-         // 接待信息
-         $bookingReceive=  BookingReceive::where('booking_sn',$refund->booking_sn)->first();
-         $receive=[
-             'arrive_at'=>'',
-             'update_booking_date'=>'',
-             'remark'=>'',
-             'receiver'=>'',
-             'create_at'=>''
-         ];
-         if(!empty($bookingReceive)){
-             $receive['update_booking_date']=$bookingReceive->update_booking_date;
-             $receive['remark']=$bookingReceive->remark;
-             $receive['receiver']=$bookingReceive->uid; //TODO 查询具体的人姓名
-             $receive['create_at']=(string)$bookingReceive->created_at; //TODO 查询具体的人姓名
-             $receive['arrive_at']=$bookingReceive->arrive_at;
-         }
-        $res=[
-            'ordersn'=>$refund->ordersn,
-            'booking_sn'=>$refund->booking_sn,
-            'booker_phone'=>$bookingOrder->booker_phone,
-            'booker_name'=>$bookingOrder->booker_name,
-            'item_name'=>$bookingOrderItem->item_name,
-            'price'=>$bookingOrderItem->price,
-            'booking_date'=>$bookingOrder->booking_date,
-            'status'=>$bookingOrder->status,
+        $recommendInfo = RecommendCodeUser::where('user_id', $refund->user_id)->whereIn('type', ['2', '3'])->first();
+        // 接待信息
+        $bookingReceive = BookingReceive::where('booking_sn', $refund->booking_sn)->first();
+        $receive = [
+            'arrive_at' => '',
+            'update_booking_date' => '',
+            'remark' => '',
+            'receiver' => '',
+            'create_at' => ''
+        ];
+        if (!empty($bookingReceive)) {
+            $receive['update_booking_date'] = $bookingReceive->update_booking_date;
+            $receive['remark'] = $bookingReceive->remark;
+            $receive['receiver'] = !empty($bookingReceive->uid) ? Manager::where('id', $bookingReceive->uid)->first()->name : ''; //TODO 查询具体的人姓名
+            $receive['create_at'] = (string) $bookingReceive->created_at; //TODO 查询具体的人姓名
+            $receive['arrive_at'] = $bookingReceive->arrive_at;
+        }
+        $res = [
+            'ordersn' => $refund->ordersn,
+            'booking_sn' => $refund->booking_sn,
+            'booker_phone' => $bookingOrder->booker_phone,
+            'booker_name' => $bookingOrder->booker_name,
+            'booking_order_item' => $bookingOrderItem,
+//            'item_name' => $bookingOrderItem->item_name,
+//            'price' => $bookingOrderItem->price,
+            'booking_date' => $bookingOrder->booking_date,
+            'status' => $bookingOrder->status,
             // 预约金支付信息
-            'pay_type'=>$fundflow->pay_type,
-            'payment_sn'=>$paymentLog->payment_sn,  //流水号
-            'payable'=>$bookingOrder->payable,  //流水号
-            'paied_time'=>$bookingOrder->paied_time,  //流水号
+            'pay_type' => $fundflow->pay_type,
+            'payment_sn' => $paymentLog->payment_sn, //流水号
+            'payable' => $bookingOrder->payable, //流水号
+            'paied_time' => $bookingOrder->paied_time, //流水号
+            'pay_status' => 1, //支付状态 
             // 退款信息
-            'rereason'=>$refund->rereason,
-            'money'=>$refund->money,
-            'add_time'=>date("Y-m-d H:i:s",$refund->add_time),
-            'opt_time'=>$refund->opt_time, //操作时间
-            'rereason'=>$refund->rereason,
-            'opt_user'=>$optUser, //审批人
-            'recommend_code'=>!empty($recommendInfo)?$recommendInfo->recommend_code:'',
-            'receive'=>$receive
+            'refund_from' => 1, //用户
+            'rereason' => $refund->rereason,
+            'refund_desc' => $refund->rereason,
+            'refund_type' => $fundflow->pay_type,
+            'money' => $refund->money,
+            'add_time' => date("Y-m-d H:i:s", $refund->add_time),
+            'opt_time' => !empty($refund->opt_time) ? date("Y-m-d H:i:s", $refund->opt_time) : '', //操作时间
+            'complete_time' => !empty($refund->opt_time) ? date("Y-m-d H:i:s", $refund->opt_time) : '', //操作时间
+            'opt_user' => $optUser, //审批人
+            'recommend_code' => !empty($recommendInfo) ? $recommendInfo->recommend_code : '',
+            'receive' => $receive
         ];
         return $res;
     }

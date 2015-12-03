@@ -181,8 +181,8 @@
                     <label class="control-label" for=""><span class="red">*</span>项目类别：</label>
                     <div class="control">
 						<select name="level" required>
-							<option value="1">明星院长</option>
-							<option value="2">院长</option>
+							<option <%=data.level==1?"selected":""%> value="1">明星院长</option>
+							<option <%=data.level==2?"selected":""%> value="2">院长</option>
 						</select>
                     </div>
                 </div>

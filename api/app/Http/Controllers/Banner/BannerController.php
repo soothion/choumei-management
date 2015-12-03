@@ -29,7 +29,7 @@ class BannerController extends Controller {
      * @apiSuccess {String} name 'banner名称',(即项目名称)
      * @apiSuccess {String} image bnnaer图片.
      * @apiSuccess {Number} behavior  链接到哪里 1H5； 2app内部； 3无跳转',
-     * @apiSuccess {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"home","id":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',home-美发店铺主页,artificer-专家主页,urlId:对应的下拉单的序号(另外的那个标的主键) )
+     * @apiSuccess {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"SPM","itemId":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',salons-美发店铺主页,artificers-专家主页,itemId:主键 (SPM - 半永久,FFA - 快时尚'是itemId, ,salons-美发店铺主页-则是salonId))
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -61,7 +61,7 @@ class BannerController extends Controller {
      *                                   "name": "无痛水光针",
      *                                   "image": "http://img01.choumei.cn/1/7/2015102714041445925884600748229.jpg",
      *                                   "behavior": 2,
-     *                                   "url": {"type":"home","urlId":1},
+     *                                   "url": {"type":"SPM","itemId":1},
      *                                   "created_at": 1448871460,
      *                                   "updated_at": 1448871460
      *                               },
@@ -111,7 +111,7 @@ class BannerController extends Controller {
      * @apiParam {String} name 必填,题目.
      * @apiParam {String} image 必填,bnnaer图片的路径.
      * @apiParam {Number} behavior 必填,'链接到哪里 1H5； 2app内部； 3无跳转'(单选按钮),
-     * @apiParam {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"home","id":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',home-美发店铺主页,artificer-专家主页,id:对应的下拉单的序号 )
+     * @apiParam {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"SPM","itemId":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',salons-美发店铺主页,artificers-专家主页,itemId:同上 )
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -135,7 +135,7 @@ class BannerController extends Controller {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
-            if (empty($param['url'])) {
+            if (empty($param['url']) && $param['type'] == 1) {
                 throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
             }
         }
@@ -160,7 +160,7 @@ class BannerController extends Controller {
      * @apiParam {String} name 必填,题目.
      * @apiParam {String} image 必填,bnnaer图片的路径.
      * @apiParam {Number} behavior 必填,'链接到哪里 1H5； 2app内部； 3无跳转'(单选按钮),
-     * @apiParam {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"home","id":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',home-美发店铺主页,artificer-专家主页,id:对应的下拉单的序号 )
+     * @apiParam {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"SPM","itemId":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',salons-美发店铺主页,artificers-专家主页,itemId:同上 )
      * 
      * 
      * @apiSuccessExample Success-Response:
@@ -188,7 +188,7 @@ class BannerController extends Controller {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
-            if (empty($param['url'])) {
+            if (empty($param['url']) && $param['type'] == 1) {
                 throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
             }
         }
