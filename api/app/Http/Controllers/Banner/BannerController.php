@@ -131,8 +131,11 @@ class BannerController extends Controller {
      */
     public function create() {
         $param = $this->param;
-        if (empty($param['type']) || !isset($param['name']) || !isset($param['image']) || empty($param['behavior'])) {
+        if (empty($param['type']) || !isset($param['name']) || !isset($param['image'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
+        }
+        if(empty($param['behavior']) && $param['type'] == 1){
+             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
             if (empty($param['url']) && $param['type'] == 1) {
@@ -184,8 +187,11 @@ class BannerController extends Controller {
         if ($banner == FALSE) {
             throw new ApiException('找不到这样的banner，id有误', ERROR::BEAUTY_BANNER_NOT_ID);
         }
-        if (!isset($param['name']) || !isset($param['image']) || empty($param['behavior'])) {
+        if (!isset($param['name']) || !isset($param['image'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
+        }
+        if(empty($param['behavior']) && $param['type'] == 1){
+             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
             if (empty($param['url']) && $param['type'] == 1) {
