@@ -93,7 +93,7 @@
                             <td class="td">预约项目：</td>
                             <td><%var orderItems=[];
                             item.booking_order_item.forEach(function(orderItem){
-                                orderItems.push(orderItem.ITEM_NAME);
+                                orderItems.push(orderItem.item_name);
                             })%><%=orderItems.join(",")%></td>
                         </tr>
                         <tr>
@@ -243,9 +243,6 @@
                         </tr>
                     </tbody>
                 </table>
-                 </script>
-                 <script type="text/javascript">
-
                  </script>
             </div>
         </div>
