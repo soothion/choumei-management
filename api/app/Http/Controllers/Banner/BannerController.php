@@ -131,14 +131,11 @@ class BannerController extends Controller {
      */
     public function create() {
         $param = $this->param;
-        if (empty($param['type']) || !isset($param['name']) || !isset($param['image'])) {
+        if (empty($param['type']) || !isset($param['name']) || !isset($param['image']) || empty($param['behavior'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
-        if(empty($param['behavior']) && $param['type'] == 1){
-             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
-        }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
-            if (empty($param['url']) && $param['type'] == 1) {
+            if (empty($param['url'])) {
                 throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
             }
         }
@@ -161,6 +158,7 @@ class BannerController extends Controller {
      *
      * @apiParam {Number} id 必填,主键.
      * @apiParam {String} name 必填,题目.
+     * @apiParam {Number} type 必填, 'banner类型 1主页banner； 2快时尚； 3专家；4半永久',.
      * @apiParam {String} image 必填,bnnaer图片的路径.
      * @apiParam {Number} behavior 必填,'链接到哪里 1H5； 2app内部； 3无跳转'(单选按钮),
      * @apiParam {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"SPM","itemId":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',salons-美发店铺主页,artificers-专家主页,itemId:同上 )
@@ -186,18 +184,18 @@ class BannerController extends Controller {
         $banner = Banner::find($id);
         if ($banner == FALSE) {
             throw new ApiException('找不到这样的banner，id有误', ERROR::BEAUTY_BANNER_NOT_ID);
-        }
-        if (!isset($param['name']) || !isset($param['image'])) {
+        }       
+        if (!isset($param['name']) || !isset($param['image']) || empty($param['type'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
-        if(empty($param['behavior']) && $param['type'] == 1){
-             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
+                
+        if($param['type'] == 1){
+            if ($param['behavior'] == 1 || $param['behavior'] == 2) {
+                if (empty($param['url'])) {
+                    throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
+                }
         }
-        if ($param['behavior'] == 1 || $param['behavior'] == 2) {
-            if (empty($param['url']) && $param['type'] == 1) {
-                throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
-            }
-        }
+        }  
         $param['updated_at'] = time();
         $query = Banner::find($id)->update($param);
         if ($query) {
