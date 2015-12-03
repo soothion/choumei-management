@@ -54,6 +54,16 @@ class BookingCash extends Model
         return $base->toArray();
     }
     
+    /**
+     * 收银
+     * @param int $booking_id
+     * @param array $params
+     */
+    public static function cash($booking_id,$params)
+    {
+        
+    }
+    
     public function isFillable($key)
     {
         return true;
