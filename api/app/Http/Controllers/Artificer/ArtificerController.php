@@ -326,7 +326,10 @@ class ArtificerController extends Controller{
         ];
         $info = Artificer::select( $field )->where(['artificer_id'=>$id])->first();
         if( empty($info) ) return $this->error('没有找到专家信息哦');
-        return $this->success( $info->toArray() );
+        $info = $info->toArray();
+        $info['mobilePhone'] = $info['mobilePhone'] ?:'';
+        $info['qq'] = $info['qq'] ?:'';
+        return $this->success( $info );
     }
     /**
 	 * @api {get} /artificer/up/:id 5.启用
