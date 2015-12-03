@@ -322,14 +322,12 @@ class TransactionWriteApi
             $items = $args[0]['success'];
             $tns = Utils::get_column_array("tn",$items);
             $batch_no = $args[0]['batch_no'];
-            if(count($tns) > 0)
-            {
-                $logs = PaymentLog::whereIn("tn",$tns)->where('batch_no',$batch_no)->get(['tn','ordersn']);
-                if(!empty($logs))
-                {
+            if (count($tns) > 0) {
+                $logs = PaymentLog::whereIn("tn", $tns)->where('batch_no', $batch_no)->get(['tn', 'ordersn']);
+                if (!empty($logs)) {
                     $logArr = $logs->toArray();
                     $ordersns = array_column($logArr, "ordersn");
-                    self::modifOrderStatusRefundCompleted($ordersns,"支付宝退款完成");
+                    self::modifOrderStatusRefundCompleted($ordersns, "支付宝退款完成");
                     self::modiSoldNumMinus($ordersns);
                 }
             }
@@ -430,6 +428,9 @@ class TransactionWriteApi
         return true;
     }
     
+    
+   
+
     /**
      * 
      */
@@ -695,7 +696,7 @@ class TransactionWriteApi
     /**
      * 微信退款
      */
-    private static function refundOfWx()
+    protected static function refundOfWx()
     {
        $args = func_get_args();
        if (count($args) < 1) {
@@ -766,7 +767,7 @@ class TransactionWriteApi
     /**
      * 易联支付
      */
-    private static function refundOfYilian()
+    protected static function refundOfYilian()
     {      
        $args = func_get_args();
         if (count($args) < 1) {
@@ -849,13 +850,8 @@ class TransactionWriteApi
     /**
      * 支付宝退款
      */
-    private static function refundOfAlipay()
+    protected static function refundOfAlipay()
     {
-        $url = env("ALIPAY_REFUND_NOTIFY_URL",null);  
-        if(empty($url))
-        {
-            throw new ApiException("获取配置信息 [ALIPAY_REFUND_NOTIFY_URL] 出错",ERROR::CONFIG_LOST);
-        }
         $args = func_get_args(); 
         if (count($args) < 1) {
             throw new ApiException("必要参数丢失", ERROR::UNKNOWN_ERROR);
@@ -865,6 +861,18 @@ class TransactionWriteApi
         {
             return [];
         }
+        $booking_sns=  array_column($array,'booking_sn');
+        if(empty($booking_sns)){
+            $url = env("ALIPAY_REFUND_NOTIFY_URL",null);  
+        }else{
+            $url = env("ALIPAY_REFUND_NOTIFY_URL",null);  //TODO   URL需要更换
+        }
+          
+        if(empty($url))
+        {
+            throw new ApiException("获取配置信息 [ALIPAY_REFUND_NOTIFY_URL] 出错",ERROR::CONFIG_LOST);
+        }
+        
         $batch_no = AlipaySimple::getRandomBatchNo();   
         // 写入退款批次号
         self::UpdateAlipayBatchNo($batch_no, $items);

@@ -9,24 +9,23 @@
 				padding-left:15px;
 				width:300px;
 			}
-			.item-sub h4{
-				font-size:16px;
-			}
 			.item-images{
 				margin:5px 0 10px 0;
 			}
 			.item-images img{
 				width:100%;
+				margin-bottom:10px;
 			}
-			p,h4,.images{
+			p,.wrapper h4,.images{
 				margin:10px 0;
 			}
-			h4{
+			.wrapper h4{
 				font-weight:bold;
 				font-size:14px;
 			}
 			.images img{
 				display:block;
+				margin-bottom:10px;
 			}
 		</style>
     </head>
@@ -37,8 +36,9 @@
 			 <div class="flex-item">
 				<h4>查看项目详情</h4>
 			</div>
-		 </div>		 
-        </div>		
+			</div>
+			<hr />		 
+        </div>	
         <div class="wrapper" id="detail" ajat="<%if(query.p=='index'){%>beautyItem/show<%}else{%>beautyItem/showFashion<%}%>?<%=query._%>#domid=detail&tempid=detail-t">
 			<script type="text/template" id="detail-t">
 			<div class="detail-operation">
@@ -56,7 +56,7 @@
 							</tr>
 							<tr>
 								<td>项目介绍：</td>
-								<td><%=data.detail.replace(/\n/g,"</br>")%></td>
+								<td><%=data.detail.replace(/\n/g,"<br/>")%></td>
 							</tr>
 							<%if(query.p=="index"){%>
 							<tr>
@@ -113,6 +113,24 @@
 									<%}%>
 								</td>
 							</tr>
+							<%if(query.p=="fashion"){%>
+							<tr>
+								<td> 设备介绍：</td>
+								<td>
+									<%if(data.equipment){%>
+									<%JSON.parse(data.equipment).forEach(function(item){%>
+									<h4><%=item.title%></h4>
+									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<div class="images">
+										<%item.image.forEach(function(image){%>
+										<img src="<%=image%>" alt="" />
+										<%})%>
+									</div>
+									<%})%>
+									<%}%>
+								</td>
+							</tr>
+							<%}%>
 							<tr>
 								<td> 产品介绍：</td>
 								<td>
@@ -122,7 +140,7 @@
 									<p><%=item.content.replace(/\n/g,"</br>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
-										<img src="<%=image.img%>" alt="" />
+										<img src="<%=image%>" alt="" />
 										<%})%>
 									</div>
 									<%})%>
@@ -151,7 +169,7 @@
 									<p><%=item.content.replace(/\n/g,"</br>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
-										<img src="<%=image.img%>" alt="" />
+										<img src="<%=image%>" alt="" />
 										<%})%>
 									</div>
 									<%})%>
@@ -167,7 +185,7 @@
 									<p><%=item.content.replace(/\n/g,"</br>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
-										<img src="<%=image.img%>" alt="" />
+										<img src="<%=image%>" alt="" />
 										<%})%>
 									</div>
 									<%})%>
@@ -175,15 +193,15 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="2">其他</td>
+								<th colspan="2" >其他</th>
 							</tr>
 							<tr>
-								<td>已售数量：</td>
-								<td><%=data.detail%></td>
+								<td>已预约数：</td>
+								<td><%=data.quantity%></td>
 							</tr>
 							<%if(data.is_gift==1){%>
 							<tr>
-								<td colspan="2">赠送信息</td>
+								<th colspan="2">赠送信息</th>
 							</tr>
 							<tr>
 								<td>赠送说明：</td>
@@ -198,7 +216,7 @@
 					</table>
 				</div>
 				<div class="table-item item-sub">
-					<h4>项目icon：</h4>
+					<h4 style="margin-top:0">项目icon：</h4>
 					<div class="item-images">
 						<img src="<%=data.logo%>" alt="" />
 					</div>
@@ -207,7 +225,7 @@
 						<%if(data.images){%>
 						<%data.images=JSON.parse(data.images)%>
 						<%data.images&&data.images.forEach(function(item){%>
-						<img src="<%=item.img%>" alt="" />
+						<img src="<%=item%>" alt="" />
 						<%})%>
 						<%}%>
 					</div>

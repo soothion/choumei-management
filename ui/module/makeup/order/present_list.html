@@ -21,7 +21,7 @@
         </div>
         <div class="wrapper">
             <form data-role="hash">
-              <div class="input-group placeholder-switch">
+              <div class="input-group input-switch">
                    <select name="selectItem">
                        <option value="0" data-placeholder="请输入手机号">手机号</option>
                        <option value="1" data-placeholder="请输入预约号">预约号</option>
@@ -29,7 +29,10 @@
                         data-placeholder="请输入赠送卷号">赠送卷号</option>
                         <option value="2"    data-placeholder="请输入推荐号">推荐号</option>
                    </select>
-                   <input type="text" class="input-search" name="keyword" placeholder="请输入手机号">
+                   <input type="text" class="input-search" name="mobilephone" placeholder="请输入手机号">
+                   <input type="text" class="input-search" name="reservateSn" placeholder="请输入预约号">
+                   <input type="text" class="input-search" name="recommendCode" placeholder="请输入赠送卷号">
+                   <input type="text" class="input-search" name="ticketCode" placeholder="请输入推荐号">
                </div>
                <span class="space"></span>
                <!-- <span>活动时间：</span> -->
@@ -40,7 +43,7 @@
                </span>
               <span class="space"></span>
               <div class="input-group">
-                   <select name="selectItem">
+                   <select name="presentType">
                        <option value="0">赠送方式</option>
                        <option value="1" >消费赠送</option>
                        <option value="2" >推荐赠送</option>
@@ -49,17 +52,17 @@
                </div>
                <span class="space"></span>
                <div class="input-group">
-                    <select name="selectItem">
+                    <select name="ticketStatus">
                         <option value="0">状态</option>
                         <option value="1" >未使用</option>
                         <option value="2" >已使用</option>
-                        <option value="2" >已过期</option>
+                        <option value="3" >已过期</option>
                     </select>
                 </div>
 
                 <button class="btn" type="submit">查询</button>
             </form>
-           <div class="table" ajat="coupon/list?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="PowderArticles/presentList?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -81,17 +84,16 @@
                 <%data.forEach(function(item,index){%>
                  <tr>
                   <td><%=index+1%></td>
-                  <td><%=item.vcTitle%></td>
-                  <td><%=item.vcSn%></td>
-                  <td><%=item.totalNum%></td>
-                  <td><%=item.useNum%></td>
-                  <td><%=item.allNum%></td>
-                  <td><%=item.addTime%></td>
-                  <td><%=item.actTime%></td>
-                  <td><%=item.department%></td>
-                  <td><%=status[item.status]%></td>
+                  <td><%=item.mobilephone%></td>
+                  <td><%=item.ticketCode%></td>
+                  <td><%=item.itemName%></td>
+                  <td><%=item.recommendCode%></td>
+                  <td><%=item.presentTypeName%></td>
+                  <td><%=item.createdTime%></td>
+                  <td><%=item.expireTime%></td>
+                  <td><%=item.ticketStatusName%></td>
                   <td class="tc">
-                    <a class="link" data-slug="coupon.actView" href="present_desc.html#id=<%=item.vcId%>">查看</a>
+                    <a class="link" data-slug="coupon.actView" href="present_desc.html#id=<%=item.articleCodeId%>">查看</a>
                   </td>
                   </tr>
                   <%})%>

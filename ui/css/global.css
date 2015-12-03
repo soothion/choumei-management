@@ -349,6 +349,7 @@ input[type="button"]::-moz-focus-inner { border:none; padding:0; }
 .popup-box{
 	background:#fff;
 	border-radius:5px;
+	line-height:1.75;
 }
 .popup-box-title{
 	padding:0px 10px;

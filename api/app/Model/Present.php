@@ -2,8 +2,12 @@
 
 namespace App\Model;
 
+use App\Manager;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Database\Eloquent\Model;
+
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class Present extends Model
 {
@@ -22,12 +26,21 @@ class Present extends Model
             'present.expire_at as expireTime',
             'present.department_id as departmentId',
             'present.user_id as userId',
+            'present.creater_id as createrId',
             'present.detail',
             'present.article_status as articleStatus',
             'present.verify_status as verifyStatus',
             'present.article_type as articleType',
             'present.created_at as createTime',         
        );
+    public static function getArticleInfoByWhere($where){
+        $res = self::where($where)->first();
+        if($res === null){
+            throw new ApiException('找不到改活动'); 
+        }else{
+            return $res->toArray();
+        }
+    }
     
     public static function getArticlesList($name,$departmentId,$startTime,$endTime,$page,$pageSize){
         $field1 = self::$presentField;
@@ -76,7 +89,15 @@ class Present extends Model
         if($articlesInfo === null){
             return [];
         }else{
-            return $articlesInfo->toArray();
+            $allInfo = $articlesInfo->toArray();
+            $createrInfo = Manager::select('name')->where('id','=',$articlesInfo['createrId'])->first();
+            if($createrInfo === null){
+                $allInfo['creater'] = '';
+            }else{
+                $createrName = $createrInfo->toArray();
+                $allInfo['creater'] = $createrName['name'];
+            }
+            return $allInfo;
         }
         
     }

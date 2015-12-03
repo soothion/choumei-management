@@ -510,6 +510,9 @@
 										if(options.thumb&&data.response.thumbimg){
 											data.response.thumbimg=data.response.thumbimg.replace('w/100/h/100',options.thumb);
 										}
+										if(!options.thumb){
+											delete data.response.thumbimg;
+										}
 										up.createThumbnails(data.response)
 									}else{
 										up.preview(up.area,data.response);

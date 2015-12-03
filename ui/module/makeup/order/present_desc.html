@@ -8,20 +8,22 @@
     <body>
         <div class="breadcrumb">
             <a>韩式定妆 </a>
-            <span>&gt;</span><a href="index.html">定妆单赠送查询</a>
+            <span>&gt;</span><a href="present_list.html">定妆单赠送查询</a>
             <span>&gt;</span>定妆单赠送详情
             <div class="flex-box">
                 <div class="flex-item">
                     <h4>定妆单详情</h4>
                 </div>
                 <div class="flex-item fr">
-                  <div class="fr">
-                    <a data-modal='refund' class="btn" data-slug="coupon.add">
-                         消费使用
-                    </a>
-                    <a href="index.html" class="btn" data-slug="coupon.add">
-                         返回
-                    </a>
+                  <div class="fr" id="breadcrumb">
+                    <script id="breadcrumb-t" type="text/template">
+                        <a data-modal='useCoupon' <%if (data.ticketStatus !=1){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
+                             消费使用
+                        </a>
+                        <a href="present_list.html" class="btn" data-slug="coupon.add">
+                             返回
+                        </a>
+                    </script>
                   </div>
                 </div>
             </div>
@@ -38,18 +40,17 @@
         }
         </style>
         <div class="wrapper">
-            <div class="table table-detail" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
+            <div class="table table-detail" style="margin:0" ajat="PowderArticles/presentListInfo?articleCodeId=<%=query.id%>#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id='table-t'>
                 <table >
-                <%var status=["","进行中","下线","已关闭","已结束"]%>
                     <tbody>
                         <tr>
                             <td class="td">订单号：</td>
-                            <td><%=data.vcTitle%></td>
+                            <td><%=data.reservateSn%></td>
                         </tr>
                         <tr>
                             <td class="td">手机号：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.mobilephone%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -57,9 +58,9 @@
                                     <tbody>
                                         <tr>
                                             <td>赠送劵号：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.ticketCode%></td>
                                             <td>活动名称：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.articleName%></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -67,34 +68,35 @@
                         </tr>
                         <tr>
                             <td class="td">赠送项目：</td>
-                            <td>1000</td>
+                            <td><%=data.itemName%></td>
                         </tr>
                         <tr>
                             <td class="td">推荐码：</td>
-                            <td>3000</td>
+                            <td><%=data.recommendCode%></td>
                         </tr>
                         <tr>
                             <td class="td">赠送方式：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.presentTypeName%></td>
                         </tr>
                         <tr>
                             <td class="td">赠送日期：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.createTime%></td>
                         </tr>
                         <tr>
                             <td class="td">有效期：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.expireTime%></td>
                         </tr>
                         <tr>
                             <td class="td">状态：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.ticketStatusName%></td>
                         </tr>
+                        <%if (data.ticketStatus == 1){%>
                         <tr>
                             <td colspan="2">使用信息：</td>
                         </tr>
                         <tr>
                             <td class="td">使用日期：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.useTime%></td>
                         </tr>
 
                         <tr>
@@ -103,9 +105,9 @@
                                     <tbody>
                                         <tr>
                                             <td>专家：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.specialistName%>（<%=data.specialistId%>）</td>
                                             <td>助理：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.assistantName%>（<%=data.assistantId%>）</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -117,82 +119,63 @@
                                     <tbody>
                                         <tr>
                                             <td>记录人：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.managerName%></td>
                                             <td>记录时间：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.recordTime%></td>
                                         </tr>
                                     </tbody>
                                 </table>
                               </td>
                         </tr>
+                        <%}%>
                     </tbody>
                 </table>
                  </script>
                  <script type="text/javascript">
-                  $('body').on('click','#edit_btn',function(){
-                        clearTmpData();
-                        var id = $(this).attr('data-id');
-                        window.location.href="addBase.html?id="+id;
-                  });
-                  var clearTmpData  = function(){
-                      window.localStorage.removeItem('couponTmpData');
-                  }
+                 $('#table').on('_ready',function(res){
+                     lib.ajat("#domid=breadcrumb&tmpid=breadcrumb-t").template(res.response.data);
+                 })
 
-                  var ModalList = {
-                    'receive':{
-                      'title':'用户接待记录',
-                      'cancelText':'取消',
-                      'defineText':'保存',
-                      'confirm':true,
-                      'modalType':'box',
-                      'content':'./modal_receive'
-                    },
-                    'cashier':{
-                      'title':'确认收银',
-                      'cancelText':'取消',
-                      'defineText':'确认收银',
-                      'confirm':true,
-                      'modalType':'box',
-                      'content':'./modal_cashier'
-                    },
-                    'comp-color':{
-                      'title':'用户补色记录',
-                      'cancelText':'取消',
-                      'defineText':'保存',
-                      'confirm':true,
-                      'modalType':'box',
-                      'content':'./modal_compColor'
-                    },
-                    'receipt':{
-                      'text':'你正在给订单开发票，确认开票后不能退回，是否继续',
-                      'cancelText':'取消',
-                      'defineText':'确认',
-                      'confirm':true,
-                      'modalType':'confirm'
-                    },
-                    'refund':{
-                      'title':'退款',
-                      'cancelText':'取消',
-                      'defineText':'确认退款',
-                      'confirm':true,
-                      'modalType':'box',
-                      'content':'./modal_refund'
-                    }
-                  };
+                 var completeDefine = function(){
+                     var popup = $(this);
+                     var form = popup.find('form');
+                     var newForm = new lib.Form(form[0]);
+                     popup.find('.popup-alert-define').unbind('click').on("click",function(e){
+                        e.stopPropagation();
+                        form.submit();
+                     });
+                     form.on('success',function(){
+                         location.reload();
+                     })
+                 };
+                 var ModalList = {
+                   'useCoupon':{
+                     'title':'使用消费劵',
+                     'cancelText':'取消',
+                     'defineText':'保存',
+                     'confirm':true,
+                     'modalType':'box',
+                     'url':'./modal_useCoupon',
+                     'complete':completeDefine
+                 }
+                 };
 
-                  var bindEvent = function(){
-                    $('body').on('click','a[data-modal]',function(){
-                      var modal= $(this).attr('data-modal');
-                      initModal(ModalList[modal]);
-                    });
-                  }();
+                 var bindEvent = function(){
+                   $('body').on('click','a[data-modal]',function(){
+                     var modal= $(this).attr('data-modal');
+                     initModal(ModalList[modal]);
+                   });
+                 }();
 
-                  var initModal = function(options){
-                      if (options.content && options.content.indexOf('./')>-1){
-                           options.content =lib.ejs.render({url:options.content});
-                      }
-                      lib.popup[options['modalType']](options);
-                  }
+                 var initModal = function(options){
+                     if (options.url && options.url.indexOf('./')>-1){
+                          options.content =lib.ejs.render({url:options.url});
+                     }else{
+                          options.content =lib.ejs.render({text:$(options.url).html()});
+                     }
+                     parent.lib.popup[options['modalType']](options);
+                 }
+
                  </script>
             </div>
         </div>

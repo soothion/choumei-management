@@ -13,19 +13,20 @@
       </style>
   </head>
   <body>
-    <div class="breadcrumb">
-        <a>韩式定妆 </a><span>&gt;</span><a href="index.html">专家列表</a>
-        <span>&gt;</span><a href="edit.html">新增专家资料</a>
-        <div class="flex-box">
-            <div class="flex-item">
-                <h4 id="title">新增专家资料</h4>
-            </div>
-        </div>
-    </div>
 
     <div class="wrapper">
         <form class="form-vertical" data-role="form" id="form">
-        <script type="text/template" id="form-t" ajat="<%if(query.id){%>assistant/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
+        <script type="text/template" id="form-t" ajats="<%if(query.id){%>assistant/show/<%=query.id%><%}%>#domid=form&tempid=form-t">
+            <div class="breadcrumb">
+                <a>韩式定妆 </a><span>&gt;</span><a href="index.html">专家列表</a>
+                <span>&gt;</span><a href="edit.html"><%=query.id ? '编辑专家助理资料':'新增专家助理资料'%></a>
+                <div class="flex-box">
+                    <div class="flex-item">
+                        <h4><%=query.id ? '编辑专家助理资料':'新增专家助理资料'%></h4>
+                    </div>
+                </div>
+            </div>
+
             <div class="detail-operation">
                 <button type="button" class="btn btn-cancel">取消</button>
                 <span class="space"></span>
@@ -41,30 +42,12 @@
                 <label class="control-label" for=""><span class="red">*</span>个人图片：</label>
                 <div class="control">
                     <div class="control-thumbnails" id="control-thumbnails1" data-max="1">
-                        <%
-                        if(query.id && data.photo){
-                           //var obj = JSON.parse(data.photo);
-                        %>
-                            <div class="control-thumbnails-item">
-                                <img src="<%=obj.thumbimg%>" data-original="<%=obj.img%>">
-                                <a class="fa fa-times-circle control-thumbnails-remove"></a>
-                                <div class="control-thumbnails-operation flex-box">
-                                    <span class="control-thumbnails-before flex-item">
-                                        <i class="fa fa-long-arrow-left"></i>
-                                    </span>
-                                    <span class="control-thumbnails-after flex-item">
-                                        <i class="fa fa-long-arrow-right"></i>
-                                    </span>
-                                </div>
-                            </div> 
-                        <%}else{%>    
-                            <div class="control-image-upload" style="width:150px;height:150px;line-height:145px">
-                                <div id="personImageUpload">
-                                    <i class="fa fa-image"></i>
-                                    <em>上传个人图片</em>
-                                </div>
-                            </div>                            
-                        <%}%>    
+                        <div class="control-image-upload" style="width:150px;height:150px;line-height:145px">
+                            <div id="personImageUpload">
+                                <i class="fa fa-image"></i>
+                                <em>上传个人图片</em>
+                            </div>
+                        </div>                             
                     </div>
                     <span class="control-help upload-image-tip" style="display:none;">请上传个人图片</span> 
                 </div>
@@ -79,7 +62,8 @@
                 <label class="control-label" for=""><span class="red">*</span>姓名：</label>
                 <div class="control">
                     <input type="text" name="name" placeholder="1~8个汉字，姓名唯一" maxlength="8" required
-                    value="<%=data.name%>" data-value="<%=data.name||""%>" uniquerrrr="assistant/checkNameExists/<%=data.id%>?name=${value}" uniquemsg="姓名已经存在">
+                    value="<%=data.name%>" data-value="<%=data.name||""%>" 
+                    unique="assistant/checkNameExists<%=query.id ? '/'+query.id : '' %>?name=${value}" uniquemsg="姓名已经存在">
                    
                 </div>
             </div>
@@ -126,7 +110,7 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>手机号码：</label>
                 <div class="control">
-                    <input type="text" name="mobilePhone" placeholder="11位有效数字手机号码" value="<%=data.mobilephone%>" maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号" required>
+                    <input type="text" name="mobilePhone" placeholder="11位有效数字手机号码" value="<%=data.mobilePhone%>" maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号" required>
                 </div>
             </div> 
 
@@ -141,7 +125,7 @@
             <div class="control-group">
                 <label class="control-label" for="">QQ号：</label>
                 <div class="control">
-                    <input type="text" name="qq" placeholder="QQ号码" value="" pattern='number'
+                    <input type="text" name="qq" placeholder="QQ号码" value="<%=data.qq%>" pattern='number'
                     maxlength="25">
                 </div>
             </div>  
@@ -149,7 +133,7 @@
             <div class="control-group">
                 <label class="control-label" for="">邮箱：</label>
                 <div class="control">
-                    <input type="text" name="email" placeholder="邮箱地址" value="" pattern="email" maxLength="50">
+                    <input type="text" name="email" placeholder="邮箱地址" value="<%=data.email%>" pattern="email" maxLength="50">
                 </div>
             </div>  
 
@@ -161,8 +145,9 @@
             <div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>在职编号：</label>
                 <div class="control">
-                    <span><strong>M</strong></span>
-                    <input type="text" name="number" placeholder="输入三位在职编号" value="<%=data.number%>" pattern='number' maxlength="3" required>
+                    <span><strong>M</strong></span>&nbsp;
+                    <input type="text" name="number" placeholder="输入三位在职编号" value="<%= data.number ? data.number.replace('M','') : ''%>" pattern='number' maxlength="3" required data-value="<%=data.number||""%>" 
+                    unique="assistant/checkNumberExists<%=query.id ? '/'+query.id : '' %>?number=${value}" uniquemsg="在职编号已经存在">
                 </div>
             </div>
 
@@ -172,13 +157,14 @@
                     <input type="text" name="workingLife" placeholder="1~99整数" value="<%=data.workingLife%>" 
                     pattern='number' maxlength="2" required>
                     <span><strong>年</strong></span>
-                    <span class="control-help pid" style="display: none;">为填写</span>
+                    <span class="control-help" style="display: none;">为填写</span>
                 </div>
             </div> 
 
             <div class="control-group">
                 <label class="control-label" for="">所属专家：<br>(最多0~3个)</label>
-                <div class="control" id="professional" ajat="assistant/getArtificer#domid=professional&tempid=professional_t&pid=<%=data.pid%>">
+                <div class="control" id="professional"  ajat-one="true"
+                ajat="assistant/getArtificer#domid=professional&tempid=professional_t&pid=<%=data.pid%>">
 
                 </div>
                 
@@ -193,9 +179,7 @@
                 <label class="control-label" for="">自我描述：</label>
                 <div class="control">
                     <div class="keypress" maxlength="50">
-                        <textarea maxlength="50" data-helpid="textarea-help" name="introduce">
-                            <%=data.introduce%>
-                        </textarea>
+                        <textarea maxlength="50" data-helpid="textarea-help" name="introduce"><%=data.introduce%></textarea>
                     </div>
                     <div class="keypress-help" style="display:none;" id="textarea-help"></div>
                 </div>
@@ -208,7 +192,7 @@
             </div>                    
         </script>        
         </form>      
-    </div>
+    </div>   
 
     <script type="text/template" id="professional_t">
         <%
@@ -219,108 +203,17 @@
                 arrIds[item] = true;
             });
         }
-        %>
+        %>            
         <%data.forEach&&data.forEach(function(item){%>
-            <label class="label">
-                <input type="checkbox" class="label" name="pid" value="<%=item.id%>" <%= arrIds[item.id] ? 'checked' : ''%>>
-                <span><%=item.name%></span>
-            </label>            
+        <label class="label">
+            <input type="checkbox" class="label" name="pid" value="<%=item.id%>" <%= arrIds[item.id] ? 'checked' : ''%>>
+            <span><%=item.name%></span>
+        </label>  
         <%})%>
         <span class="control-help pid" style="display: none;">最多只能选3个</span>
-    </script>  
+    </script>    
 
-    <script>
-        $(document).on('_ready',function(){
-            lib.puploader.image({
-                browse_button: 'personImageUpload',
-                auto_start:true,
-                filters: {
-                    mime_types : [
-                        { title : "Image files", extensions : "jpg,png,jpeg,gif" },
-                    ]
-                },
-                max_file_size:'10mb',
-                multi_selection:true,
-                files_number:1,
-                crop:true
-            },function(uploader){
-                uploader.bind('ImageUploaded',function(up,response){
-                    lib.cropper.create({
-                        src:response.img,
-                        aspectRatio : 750/500,
-                        thumbnails  : ["750x500"],
-                        define:function(data){
-                            if(up.createThumbnails&&!response.edit&&!response._this){
-                                up.createThumbnails({
-                                    thumbimg:data["750x500"],
-                                    img:response.img
-                                });
-                            }else{
-                                up.preview($(response._this),{thumbimg:data["750x500"]});
-                            }
-                            $("#form .upload-image-tip").hide();
-                        }
-                    });              
-                });
-            });
 
-            function checkedImage(){
-                var len = $("#form .control-thumbnails-item img").length;
-                if(len){
-                    return true;
-                }else{
-                    $("#form .upload-image-tip").show();
-                    return false;
-                }
-            }
-
-            // $("#form").on('pass','input[name=number]',function(){
-            //     var self = this;
-            //     lib.ajax({
-            //         type: "post",
-            //         url : 'assistant/checkNumberExists',
-            //         async:false,
-            //         data: {number:"M"+$(this).val()}    
-            //     }).done(function(data, status, xhr){
-            //         debugger;
-            //     })     
-            // })            
-
-            lib.Form.prototype.save = function(data){
-                if(!checkedImage()) return;
-                if(data.pid && data.pid.length >3){
-                    $(".pid").show();
-                }else{
-                    $(".pid").hide();
-                }
-                var element = $(".control-thumbnails-item img");
-                var img = {};
-                img['thumbimg'] = element.attr('src');
-                img['img']      = element.data('original');
-                data.photo      = JSON.stringify(img);
-                data.number     = "M"+data.number;
-                if(data.pid) data.pid=data.pid.toString();
-                if(lib.query.id) data.id=lib.query.id;
-                submit(data)               
-            } 
-
-            function submit(data){
-                lib.ajax({
-                    type: "post",
-                    url : lib.query.id ? "assistant/update/"+lib.query.id :"assistant/add/",
-                    data: data    
-                }).done(function(data, status, xhr){
-                    if(data.result == 1){
-                        parent.lib.popup.result({
-                            text:"操作成功！",
-                            define:function(){
-                                history.back();
-                            }
-                        });                                   
-                    }           
-                });
-            }                     
-        })
-    </script>
+    <script src="edit.js"></script>
   </body>
 </html>

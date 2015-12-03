@@ -55,7 +55,7 @@
 								<input type="hidden" name="equipment_cover" value="<%=data.equipment_cover%>" class="original" required requiredmsg="请上传设备封面" data-helpid="image-help1">
 							</div>
 						</div>
-						<div class="weak">请上传690*400的JPG或PNG格式的图标，此图标将显示在项目列表的封面中</div>
+						<div class="weak">请上传JPG或PNG格式的图标，可通过编辑裁剪690*400，此图标将显示在项目列表中</div>
 						<div class="control-help" style="display:none" id="image-help1"></div>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
 							<br />
 							<br />
 							<div>
-								<a class="btn" href="index.html">取消</a>
+								<a class="btn" href="<%=query.p=="index"?"index.html":"fashion.html"%>">取消</a>
 								<span class="space"></span>
 								<button class="btn-primary">下一步</button>
 							</div>
@@ -107,7 +107,21 @@
 							{ title : "Image files", extensions : "jpg,png,jpeg" },
 						]
 					},
-					max_file_size:'2mb'
+					max_file_size:'2mb',
+					crop:true
+				},function(uploader){
+					uploader.bind('ImageUploaded',function(up,response){
+						lib.cropper.create({
+							src:response.img,
+							aspectRatio : 690/400,
+							thumbnails  : ["690x400"],
+							define:function(data){
+								up.preview($('#imageUpload').closest('.control-single-image'),{
+									img:data["690x400"],
+								});
+							}
+						});						
+					});					
 				});
 			})
 		</script>

@@ -44,20 +44,20 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>赠送说明：</label>
                     <div class="control">
-						<textarea maxlength="500" name="present_explain" required placeholder="1~500个字"><%=data.present_explain%></textarea>
+						<textarea class="large" maxlength="500" name="present_explain" required placeholder="1~500个字"><%=data.present_explain%></textarea>
                     </div>
                 </div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>时间限制：</label>
                     <div class="control">
-						<input type="text" name="expire" value="<%=data.expire%>" required min="1" pattern="number" placeholder="1-999整数数字" />天内有效（获取赠送后）<span class="weak">1-999整数数字</span>
+						<input type="text" name="expire" value="<%=data.expire%>" required min="1" max="999" pattern="number" placeholder="1-999整数数字" />天内有效（获取赠送后）<span class="weak">1-999整数数字</span>
                     </div>
                 </div>
                 <div class="control-group">
                     <label class="control-label" for=""></label>
-                    <a class="btn" href="index.html">取消</a>
+                    <a class="btn" href="<%=query.p=="index"?"index.html":"fashion.html"%>">取消</a>
 					<span class="space"></span>
-					<a class="btn" href="base.html">返回</a>
+					<a class="btn" href="base.html?<%=query._%>">返回</a>
 					<span class="space"></span>
                     <button class="btn-primary">提交</button>
                 </div>
@@ -73,7 +73,7 @@
 					return data;
 				}
 				this.goback=function(){
-					location.href="/module/makeup/item/fashion.html#is_gift=1";
+					location.href="/module/makeup/item/detail.html?"+lib.query._;
 				}
 			});
 		</script>

@@ -10,13 +10,13 @@
 	 <div class="control-group">
 		<label class="control-label" for=""><span class="red">*</span>标题：</label>
 		<div class="control">
-			<input type="text" name="title" value="<%=data.title%>" placeholder="2~20个字" maxlength="20" required style="width:300px"/>
+			<input type="text" name="title" value="<%=data.title%>" placeholder="2~20个字" maxlength="20" minlength="2" required />
 		</div>
 	</div> 
 	 <div class="control-group">
 		<label class="control-label" for=""><span class="red">*</span>内容：</label>
 		<div class="control">
-			<textarea name="content" placeholder="2~500个字" maxlength="500" required style="width:300px"><%=data.content%></textarea>
+			<textarea class="large" name="content" placeholder="2~500个字" maxlength="500" minlength="2" required ><%=data.content?data.content.replace(/<br\/>|<br>/g,"\n"):""%></textarea>
 		</div>
 	</div>
 </form>

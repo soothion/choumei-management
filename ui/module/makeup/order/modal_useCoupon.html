@@ -1,0 +1,28 @@
+<form action="PowderArticles/usePresentTicket" data-role="form" id="form">
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>使用日期：</label>
+    <div class="control">
+            <input type="date" data-role="start" value="<%=new Date().format('yyyy-MM-dd')%>"  name="useTime" id="useTime" placeholder="YYYY-MM-DD" required/>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>专家：</label>
+    <div class="control">
+        <input id="search" name="specialistId" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop"
+                        ajat-resources="/module/public/widget/autocomplete/index.js"
+                        autocomplete="off" required />
+                    <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ></div>
+                    <span id="sn" class="weak"></span>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for=""><span class="red">*</span>助理：</label>
+    <div class="control">
+        <input id="search" name="assistantId" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop"
+                        ajat-resources="/module/public/widget/autocomplete/index.js"
+                        autocomplete="off" required />
+                    <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ></div>
+                    <span id="sn" class="weak"></span>
+    </div>
+</div>
+</form>

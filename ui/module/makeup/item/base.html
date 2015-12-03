@@ -49,6 +49,21 @@
 			#format-group{
 				margin-left:100px;
 			}
+			.control-thumbnails .control-thumbnails-item:first-child:before{
+				position:absolute;
+				left:0px;
+				top:0px;
+				content:"首";
+				background: rgb(73,155,234); /* Old browsers */
+				background: -moz-linear-gradient(-45deg, rgba(73,155,234,1) 0%, ,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* FF3.6-15 */
+				background: -webkit-linear-gradient(-45deg, rgba(73,155,234,1) 0%,,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* Chrome10-25,Safari5.1-6 */
+				background: linear-gradient(135deg, rgba(73,155,234,1) 0%,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+				width:40px;
+				height:40px;
+				color:#fff;
+				z-index:100;
+				text-indent:8px;
+			}
 		</style>
     </head>
     <body>
@@ -118,13 +133,13 @@
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>项目名称：</label>
                     <div class="control">
-                        <input type="text" name="name" value="<%=data.name%>" placeholder="限制12个字符" maxlength="12" required>
+                        <input type="text" name="name" value="<%=data.name%>" placeholder="1-20个字符" maxlength="20" required data-value="<%=data.name%>" unique="beautyItem/checkName?item_id=<%=query.item_id%>&name=${value}" uniquemsg="已经存在此项目名">
                     </div>
                 </div> 
                 <div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>项目介绍：</label>
                     <div class="control">
-						<textarea maxlength="5000" name="detail" required placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符"><%=data.detail%></textarea>
+						<textarea class="large" maxlength="5000" name="detail" required placeholder="包含活动策划案例，时间，逻辑规则，限制1~5000个字符"><%=data.detail%></textarea>
                     </div>
                 </div>
 				<div class="control-group">
@@ -139,7 +154,7 @@
 								<input type="hidden" name="logo" class="original" value="<%=data.logo%>" required requiredmsg="请上传项目icon" data-helpid="image-help1">
 							</div>
 						</div>
-						<div class="weak">请上传300*300PX的JPG或PNG格式的图标，此图标将显示在项目列表中</div>
+						<div class="weak">请上传140*140JPG或PNG格式的图标，可通过编辑裁剪，此图标将显示在项目列表中</div>
 						<div class="control-help" style="display:none" id="image-help1"></div>
                     </div>
                 </div>
@@ -157,7 +172,7 @@
 							</div>
 						</div>
 						<textarea name="images"  id="item-images" style="display:none" required requiredmsg="请上传项目图片" data-helpid="image-help2"><%=data.images%></textarea>
-						<div class="weak">请上传750*500的JPG或PNG格式的图标，此图片将显示在项目详情中，最多上传10张</div>
+						<div class="weak">请上传750*500JPG或PNG格式的图标，可通过编辑裁剪，此图标将显示在项目列表中，最多上传10张</div>
 						<div class="control-help" style="display:none" id="image-help2"></div>
                     </div>
                 </div>
@@ -166,21 +181,21 @@
                     <label class="control-label" for=""><span class="red">*</span>项目类别：</label>
                     <div class="control">
 						<select name="level" required>
-							<option value="1">明星院长</option>
-							<option value="2">院长</option>
+							<option <%=data.level==1?"selected":""%> value="1">明星院长</option>
+							<option <%=data.level==2?"selected":""%> value="2">院长</option>
 						</select>
                     </div>
                 </div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>原价：</label>
                     <div class="control">
-						<input type="text" placeholder="1~99999整数" pattern="number" min="1" value="<%=data.price%>" required name="price"/>
+						<input type="text" placeholder="1~99999整数" pattern="number" min="1" max="99999" value="<%=data.price%>" required name="price"/>
                     </div>
                 </div>
 				<div class="control-group">
                     <label class="control-label" for=""><span class="red">*</span>臭美会员价：</label>
                     <div class="control">
-						<input type="text" placeholder="1~99999整数，必须≤市场价" pattern="number" min="1" value="<%=data.vip_price%>" required name="vip_price"/>
+						<input type="text" placeholder="1~99999整数，必须≤原价" pattern="number" max="99999" min="1" value="<%=data.vip_price%>" required name="vip_price"/>
                     </div>
                 </div>
 				<%}%>
@@ -207,7 +222,7 @@
 				<%}%>
                 <div class="control-group">
                     <label class="control-label" for=""></label>
-                    <a class="btn" href="index.html">取消</a>
+                    <a class="btn" href="<%=query.p=="index"?"index.html":"fashion.html"%>">取消</a>
 					<span class="space"></span>
                     <button class="btn-primary">下一步</button>
                 </div>
@@ -233,13 +248,13 @@
 						<div class="control-help" id="help-<%=id%>" style="display:none"></div>
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="2~10个字" minlength="2" value="<%=item.norm%>" required name="norm" />
+						<input type="text" placeholder="2~10个字" minlength="2" maxlength="10" value="<%=item.norm%>" required name="norm" />
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="1~99999整数" min="1" pattern="number"  value="<%=item.price%>" required name="price"/>
+						<input type="text" placeholder="1~99999整数" min="1" max="99999" pattern="number"  value="<%=item.price%>" required name="price"/>
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="1~99999整数，小于等于原价" min="1" pattern="number"  value="<%=item.vip_price%>" required name="vip_price"/>
+						<input type="text" placeholder="1~99999整数，小于等于原价" min="1" max="99999"pattern="number"  value="<%=item.vip_price%>" required name="vip_price"/>
 					</li>
 					<li class="table-item item-input">
 						<%if(data.init&&i==0){%>
@@ -255,6 +270,12 @@
 		<script type="text/javascript">
 			$('#form').on('_ready',function(e,data){
 				data=data.response;
+				var imagesArr=[];
+				if(data.images){
+					JSON.parse(data.images).forEach(function(item){
+						imagesArr.push({img:item});
+					})
+				}
 				lib.puploader.image({
 					browse_button: 'shopUpload',
 					auto_start:true,
@@ -264,7 +285,7 @@
 						]
 					},
 					max_file_size:'10mb',
-					imageArray:data.images?JSON.parse(data.images):[],
+					imageArray:data.images?imagesArr:[],
 					//imageLimitSize:"750*500",
 					multi_selection:true,
 					files_number:10,
@@ -290,7 +311,7 @@
 					uploader.thumbnails.on('itemchange',function(){
 						var images=[];
 						$('.control-thumbnails input.original').each(function(){
-							images.push({img:this.value});
+							images.push(this.value);
 						});
 						$('#item-images').val(JSON.stringify(images));
 					});
@@ -312,10 +333,10 @@
 						lib.cropper.create({
 							src:response.img,
 							aspectRatio : 1,
-							thumbnails  : ["300x300"],
+							thumbnails  : ["140x140"],
 							define:function(data){
 								up.preview($('#imageUpload').closest('.control-single-image'),{
-									img:data["300x300"],
+									img:data["140x140"],
 								});
 							}
 						});	

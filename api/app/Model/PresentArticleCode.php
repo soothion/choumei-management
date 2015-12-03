@@ -2,8 +2,12 @@
 
 namespace App\Model;
 
+use App\Artificer;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Database\Eloquent\Model;
+
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class PresentArticleCode extends Model
 {
@@ -73,17 +77,129 @@ class PresentArticleCode extends Model
     
     public static function getPresentListInfoByWhere($where){
         $field1 = self::$presentArticleCodeField;
-        $field2 = array('present.name as articleName','managers.name as managerName' );
+        $field2 = array('present.name as articleName','present.verify_status as verifyStatus','managers.name as managerName','artificer.name as specialistName' );
         $field = array_merge($field1,$field2);
         $query = self::select($field)
                 ->leftJoin('beauty_item', 'present_article_code.item_id', '=', 'beauty_item.item_id')
-                ->leftJoin('present', 'present_article_code.present_id', '=', 'present_article_code.present_id')
-                ->leftJoin('managers', 'present_article_code.manager_id', '=', 'managers.id');
+                ->leftJoin('present', 'present_article_code.present_id', '=', 'present.present_id')
+                ->leftJoin('managers', 'present_article_code.manager_id', '=', 'managers.id')
+                ->leftJoin('artificer','present_article_code.specialist_id','=','artificer.artificer_id');
         $presentListInfoDetail = $query->where($where)->first();
         if($presentListInfoDetail === null){
             return [];
         }else{
-            return $presentListInfoDetail->toArray();
+            $presentListInfoDetailRes = $presentListInfoDetail->toArray();
+            $assistantInfo = Artificer::select('name')->where('artificer_id','=',$presentListInfoDetailRes['assistantId'])->first();
+            if($assistantInfo === null){
+                $presentListInfoDetailRes['assistantName'] = '';
+            }else{
+                $presentListInfoDetailRes['assistantName'] = $assistantInfo['name'];
+            }
+            return $presentListInfoDetailRes;
         }
+    }
+    
+    /**
+     * 根据券id，获取是否可验证状态
+     */
+    public static function getPresentTicketCanUseStatusByWhere($where){
+        $field = array(
+            'present.verify_status as verifyStatus',
+            'departments.title as departmentName',
+            'present_article_code.expire_at as expireTime',
+            'present_article_code.status as ticketStatus',
+        );
+        $query = self::select($field)
+                ->leftJoin('present', 'present.present_id', '=', 'present_article_code.present_id')
+                ->leftJoin('departments','present.department_id', '=', 'departments.id');
+        $presentTicketCanUseStatusInfo = $query->where($where)->first();
+        if($presentTicketCanUseStatusInfo === null){
+            throw new ApiException('赠送券信息不存在');  
+        }else{
+            $res = $presentTicketCanUseStatusInfo->toArray();
+            if($res['ticketStatus'] == 1){
+                throw new ApiException('赠送券已使用');  
+            }elseif($res['ticketStatus'] == 3 || time() > strtotime ($res['expireTime'])){
+                throw new ApiException('赠送券已过期');  
+            }elseif($res['verifyStatus'] == 2){
+                throw new ApiException('赠送券已停用，请联系'.$res['departmentName']); 
+            }else{
+                return 1;
+            }
+        }
+    }
+    
+    /**
+     * 记录验证券信息
+     * 活动使用数 +1 同时 修改券状态
+     */
+    public static function recordVerifyTicketInfo($managerId,$articleCodeId,$useTime,$specialistId,$assistantId){
+        $data['status'] = 1;
+        $data['manager_id'] = $managerId;
+        $data['specialist_id'] = $specialistId;
+        $data['assistant_id'] = $assistantId;
+        $data['use_time'] = $useTime;
+        $data['updated_at'] = time();
+        $updateRes = self::where('article_code_id','=',$articleCodeId)->update($data);
+        if($updateRes === false){
+            throw new ApiException('使用赠送券失败'); 
+        }else{
+            //活动使用数 +1
+            $res = Present::where('present_article_code.article_code_id','=',$articleCodeId)
+                     ->leftJoin('present', 'present.present_id', '=', 'present_article_code.present_id')
+                    ->increment('present.use_num',1);
+            if(!$res){
+                //记录错误日志，不进行异常处理
+                
+            }
+        }
+        return 1;
+        
+    }
+    
+    /**
+     * 获取券相关信息
+     */
+    public static function getArticleTicketInfo($presentId,$page,$pageSize){
+        $field = array(
+            'beauty_item.name as itemName',
+            'present_article_code.code as TicketCode',
+            'present.start_at as startTime',
+            'present.end_at as endTime',
+            'present_article_code.status as ticketStatus',
+        );
+        $query = self::select($field)
+                ->where('present_article_code.present_id','=',$presentId)
+                ->leftJoin('present', 'present.present_id', '=', 'present_article_code.present_id')
+                ->leftJoin('beauty_item', 'present.item_id', '=', 'beauty_item.item_id');
+        //手动设置页数
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+              return $page;
+        });      
+        $articleTicketInfo = $query->paginate($pageSize)->toArray();
+        unset($articleTicketInfo['next_page_url']);
+        unset($articleTicketInfo['prev_page_url']);
+        return $articleTicketInfo;
+        
+    }
+    
+    /**
+     * 获取当前活动所有券相关信息
+     */
+    public static function getAllArticleTicketInfoForExport($presentId){
+        $field = array(
+            'beauty_item.name as itemName',
+            'present_article_code.code as ticketCode',
+            'present.start_at as startTime',
+            'present.end_at as endTime',
+            'present_article_code.status as ticketStatus',
+        );
+        $res = self::select($field)
+                ->where('present_article_code.present_id','=',$presentId)
+                ->leftJoin('present', 'present.present_id', '=', 'present_article_code.present_id')
+                ->leftJoin('beauty_item', 'present.item_id', '=', 'beauty_item.item_id')
+                ->get() ->toArray();
+        return $res;
+
     }
 }

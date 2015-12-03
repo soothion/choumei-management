@@ -35,4 +35,9 @@ class PowderArticleTicket extends Job implements SelfHandling,ShouldQueue
     {
         //
     }
+    
+    //生成券号
+    private function createArticleTicketCode(){
+        
+    }
 }

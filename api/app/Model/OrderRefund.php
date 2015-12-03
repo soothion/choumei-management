@@ -47,8 +47,8 @@ class OrderRefund extends Model {
 
 
         $query = self::select($fields);
-
-        $query = self::getRefundView($query);
+        
+        $query = self::getRefundView($query,$param);
         $query = self::whereConditionRefund($query, $param);
         AbstractPaginator::currentPageResolver(function () use($page) {
             return $page;
@@ -59,11 +59,14 @@ class OrderRefund extends Model {
         return $refundList;
     }
 
-    private static function getRefundView($query) {
+    private static function getRefundView($query,$param) {
         
         $query->leftJoin('booking_order', 'booking_order.ORDER_SN', '=', 'order_refund.ordersn')
                 ->leftJoin('booking_order_item', 'booking_order_item.ORDER_SN', '=', 'order_refund.ordersn')
                 ->leftJoin('fundflow', 'record_no', '=', 'order_refund.ordersn');
+        if(isset($param['key']) && isset($param['keyword']) && ($param['key']==3) && !empty($param['keyword'])){
+            $query->leftJoin('recommend_code_user','recommend_code_user.user_id','=','order_refund.user_id');
+        }
 
         $query->orderBy('order_refund_id', 'DESC');
         return $query;
@@ -86,20 +89,21 @@ class OrderRefund extends Model {
         }
         //付款状态
         if (isset($param['state']) && $param['state']) {
-            $state_ids = explode(",", $params['state']);
-            $state_ids = array_map("intval", $state_ids);
-            $base->whereIn('order.status', $state_ids);
+            $state_str = explode(",", $params['state']);
+            $base->whereIn('booking_order.STATUS', $state_str);
         }
         if (isset($param['key']) && isset($param['keyword']) && $param['key'] && !empty($param['keyword'])) {
             switch ($param['key']) {
                 case 1:
-                    $query->where('booker_phone', $param['keyword']);
+                    $query->where('booking_order.booker_phone', $param['keyword']);
                     break;
                 case 2:
                     // TODO  预约号
+                    $query->where('order_refund.booking_sn',$param['keyword']);
                     break;
                 case 3:
                     //TODO  推荐码
+                    $query->where('recommend_code_user.recommend_code',$param['keyword']);
                     break;
                 default :
                     break;
@@ -159,6 +163,24 @@ class OrderRefund extends Model {
         $fundflow = Fundflow::select($fundflow_fields)->where('record_no', $refund->ordersn)->first();
         $paymentLog = PaymentLog::select($payment_log_fields)->where('ordersn', $refund->ordersn)->first();
         $optUser=  !empty($refund->opt_user_id)?Manager::find($refund->opt_user_id)->name:'';
+        //推荐码
+         $recommendInfo=  RecommendCodeUser::where('user_id',$refund->user_id)->whereIn('type',['2','3'])->first();
+         // 接待信息
+         $bookingReceive=  BookingReceive::where('booking_sn',$refund->booking_sn)->first();
+         $receive=[
+             'arrive_at'=>'',
+             'update_booking_date'=>'',
+             'remark'=>'',
+             'receiver'=>'',
+             'create_at'=>''
+         ];
+         if(!empty($bookingReceive)){
+             $receive['update_booking_date']=$bookingReceive->update_booking_date;
+             $receive['remark']=$bookingReceive->remark;
+             $receive['receiver']=$bookingReceive->uid; //TODO 查询具体的人姓名
+             $receive['create_at']=(string)$bookingReceive->created_at; //TODO 查询具体的人姓名
+             $receive['arrive_at']=$bookingReceive->arrive_at;
+         }
         $res=[
             'ordersn'=>$refund->ordersn,
             'booking_sn'=>$refund->booking_sn,
@@ -180,6 +202,8 @@ class OrderRefund extends Model {
             'opt_time'=>$refund->opt_time, //操作时间
             'rereason'=>$refund->rereason,
             'opt_user'=>$optUser, //审批人
+            'recommend_code'=>!empty($recommendInfo)?$recommendInfo->recommend_code:'',
+            'receive'=>$receive
         ];
         return $res;
     }

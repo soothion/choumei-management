@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\Model\Present;
 use App\Model\PresentArticleCode;
+use DB;
 
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
@@ -74,6 +75,7 @@ class PowderArticlesController extends Controller
     public function addArticles()
     {
         $param = $this->param;
+        $createrId = $this->user->id;
         if(empty($param['articleName']) || empty($param['itemId']) || empty($param['nums']) || empty($param['startTime']) || empty($param['endTime']) || empty($param['expireTime']) || empty($param['departmentId']) || empty($param['userId'])){
             throw new ApiException('必传参数不能为空');
         }
@@ -108,6 +110,7 @@ class PowderArticlesController extends Controller
         $data['expire_at'] = $param['expireTime'];
         $data['department_id'] = $param['departmentId'];
         $data['user_id'] = $param['userId'];
+        $data['creater_id'] = $createrId;
         $data['detail'] = isset($param['detail']) ? $param['detail'] : '' ;
         $data['created_at'] = time();
         $resId = Present::insertGetId($data);
@@ -149,7 +152,8 @@ class PowderArticlesController extends Controller
      * @apiSuccess {String} expireTime 活动有效时间.
      * @apiSuccess {Number} departmentId 部门id.
      * @apiSuccess {String} departmentName 部门名.
-     * @apiSuccess {Number} userId 用户id.
+     * @apiSuccess {Number} userId 负责人id.
+     * @apiSuccess {Number} createrId 创建人id.
      * @apiSuccess {String} detail 活动详情.
      * @apiSuccess {Number} articleStatus 活动状态 1: 开启  2: 关闭'.
      * @apiSuccess {Number} verifyStatus 验证状态 1: 开启验证 2: 关闭验证.
@@ -181,6 +185,7 @@ class PowderArticlesController extends Controller
      *                   "departmentId": 1,
      *                   "departmentName": "总裁办",
      *                   "userId": 9527,
+     *                   "createrId": 9527,
      *                   "detail": "这是一个活动",
      *                   "articleStatus": 1,
      *                   "verifyStatus": 1,
@@ -335,7 +340,7 @@ class PowderArticlesController extends Controller
         $articlesInfo = Present::getArticlesInfoByWhere($where);
         if(!empty($articlesInfo)){
             $articlesInfo['notUseNum'] = $articlesInfo['quantity'] - $articlesInfo['useNum'];
-            $articlesInfo['createTime'] = date('Y-m-d',$articlesInfo['createTime']);
+            $articlesInfo['createTime'] = date('Y-m-d',$articlesInfo['createTime']);       
         }
         return $this->success($articlesInfo);       
     }
@@ -407,7 +412,7 @@ class PowderArticlesController extends Controller
         }
     }
     /**
-     * @api {post} /PowderArticles/switchVerifyArticles 4.定妆活动验证开关
+     * @api {post} /PowderArticles/switchVerifyArticles 5.定妆活动验证开关
      * 
      * @apiName switchVerifyArticles
      * @apiGroup PowderArticles
@@ -472,15 +477,135 @@ class PowderArticlesController extends Controller
         }    
     }
     /**
-    * 定妆赠送活动券信息
+     * @api {post} /PowderArticles/articlesTicketList 6.兑换券详情
+     * 
+     * @apiName articlesTicketList
+     * @apiGroup PowderArticles
+     *
+     * @apiParam {Number} presentId 必填，活动id
+     * 
+     * @apiSuccess {Number} total 总数据量.
+     * @apiSuccess {Number} per_page 分页大小.
+     * @apiSuccess {Number} current_page 当前页面.
+     * @apiSuccess {Number} last_page 当前页面.
+     * @apiSuccess {Number} from 起始数据.
+     * @apiSuccess {Number} to 结束数据.
+     * 
+     * @apiSuccess {String} itemName 项目名.
+     * @apiSuccess {Number} TicketCode 券号.
+     * @apiSuccess {String} startTime 活动开始时间.
+     * @apiSuccess {String} endTime 活动结束时间.
+     * @apiSuccess {String} ticketStatusName 券状态名.
+     * 
+     * @apiSuccessExample Success-Response:
+     * {
+     *       "result": 1,
+     *       "token": "",
+     *       "data": {
+     *           "total": 2,
+     *           "per_page": 20,
+     *           "current_page": 1,
+     *           "last_page": 1,
+     *           "from": 1,
+     *           "to": 2,
+     *           "data": [
+     *               {
+     *                   "itemName": "韩式无痛水光针（赠送）",
+     *                   "TicketCode": "502",
+     *                   "startTime": "2015-11-30 00:00:00",
+     *                   "endTime": "2015-11-30 23:59:59",
+     *                   "ticketStatus": 1,
+     *                   "ticketStatusName": "已使用"
+     *               },
+     *               {
+     *                   "itemName": "韩式无痛水光针（赠送）",
+     *                   "TicketCode": "502",
+     *                   "startTime": "2015-11-30 00:00:00",
+     *                   "endTime": "2015-11-30 23:59:59",
+     *                   "ticketStatus": 2,
+     *                   "ticketStatusName": "未使用"
+     *               }
+     *           ]
+     *       }
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *               "msg" :"必传参数不能为空",
+     *           }
+     */
+    /**
+    * 兑换券详情
      */
     public function articlesTicketList()
     {
+        $param = $this->param;
+        if(empty($param['presentId'])){
+            throw new ApiException('必传参数不能为空');    
+        }
+        $page = isset($param['page'])?max($param['page'],1):1;
+        $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
         
+        $articleTicketInfoRes =  PresentArticleCode::getArticleTicketInfo($param['presentId'],$page,$pageSize);
+        foreach($articleTicketInfoRes['data'] as $key => &$val){
+            $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']];
+        }
+        return $this->success($articleTicketInfoRes);
+    }
+    /**
+     * @api {post} /PowderArticles/exportArticlesTicketList 7.导出定妆活动券
+     * 
+     * @apiName exportArticlesTicketList
+     * @apiGroup PowderArticles
+     *
+     * @apiParam {Number} presentId 必填，活动id
+     * 
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *               "msg" :"必传参数不能为空",
+     *           }
+     */
+    /**
+     * 导出券
+     */
+    public function exportArticlesTicketList(){
+        $param = $this->param;
+        $param['presentId']= 1;
+        if(empty($param['presentId'])){
+            throw new ApiException('必传参数不能为空');    
+        }
+         @set_time_limit(0);
+        //获取活动名称
+        $where = array('present_id'=>$param['presentId']);
+        $articleInfo = Present::getArticleInfoByWhere($where);
+        $articleAllTicketInfoRes =  PresentArticleCode::getAllArticleTicketInfoForExport($param['presentId']);
+        foreach ($articleAllTicketInfoRes as &$val) {
+            $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']]; 
+        }
+        
+        $header = [
+            '赠送项目',
+            '赠送券编码',
+            '活动起始日',
+            '活动截止日',
+            '状态',
+        ];
+//        if (!empty($res)) {
+//            Event::fire("appointment.export");
+//        }
+        @ini_set('memory_limit', '512M');
+        $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $res);
     }
     
     /**
-     * @api {post} /PowderArticles/presentList 7.定妆赠送查询列表
+     * @api {post} /PowderArticles/presentList 8.定妆赠送查询列表
      * 
      * @apiName presentList
      * @apiGroup PowderArticles
@@ -570,7 +695,7 @@ class PowderArticlesController extends Controller
      *           }
      */
     /**
-    * 定妆赠送查询列表
+    * 定妆赠送查询
      */
     public function presentList()
     {
@@ -598,7 +723,80 @@ class PowderArticlesController extends Controller
         return $this->success($presentListInfo);
         
     }
-    
+    /**
+     * @api {post} /PowderArticles/presentListInfo 9.定妆赠送详情
+     * 
+     * @apiName presentListInfo
+     * @apiGroup PowderArticles
+     *
+     * @apiParam {Number} articleCodeId 必填，活动赠送券记录id
+     * 
+     * @apiSuccess {Number} presentId 活动id.
+     * @apiSuccess {Number} reservateSn 预约订单号.
+     * @apiSuccess {Number} itemId 项目id.
+     * @apiSuccess {Number} orderSn 系统内部订单号.
+     * @apiSuccess {Number} ticketCode 券号.
+     * @apiSuccess {Number} ticketStatus 券使用状态. 1:已使用 2:未使用 3: 已过期
+     * @apiSuccess {Number} verifyStatus 验证券状态. 1: 开启验证 2: 关闭验证
+     * @apiSuccess {Number} mobilephone 手机号.
+     * @apiSuccess {String} createTime 创建时间.
+     * @apiSuccess {String} recordTime 记录时间.
+     * @apiSuccess {String} expireTime 券有效时间.
+     * @apiSuccess {String} useTime 使用时间.
+     * @apiSuccess {Number} recommendCode 推荐码.
+     * @apiSuccess {Number} presentType 赠送类型.
+     * @apiSuccess {Number} managerId 记录人id.
+     * @apiSuccess {Number} specialistId 专家id.
+     * @apiSuccess {Number} assistantId 助理id.
+     * @apiSuccess {String} itemName 项目名
+     * @apiSuccess {String} articleName 活动名
+     * @apiSuccess {String} managerName 负责人
+     * @apiSuccess {String} specialistName 专家名
+     * @apiSuccess {String} assistantName 助理名
+     * @apiSuccess {String} ticketStatusName 券状态名
+     * @apiSuccess {String} presentTypeName 赠送类型名
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": {
+     *           "articleCodeId": 1,
+     *           "presentId": 1,
+     *           "reservateSn": 123456,
+     *           "orderSn": 99999,
+     *           "itemId": 1,
+     *           "ticketCode": "502",
+     *           "ticketStatus": 1,
+     *           "mobilephone": 1802669546,
+     *           "recommendCode": 5020,
+     *           "presentType": 1,
+     *           "managerId": 114,
+     *           "specialistId": 1,
+     *           "assistantId": 3,
+     *           "expireTime": "0000-00-00 00:00:00",
+     *           "useTime": "0000-00-00 00:00:00",
+     *           "recordTime": "0000-00-00 00:00:00",
+     *           "createTime": "1970-01-01",
+     *           "itemName": "韩式无痛水光针（赠送）",
+     *           "articleName": "test1",
+     *           "managerName": "测试用户1",
+     *           "specialistName": "XIAOd",
+     *           "assistantName": "",
+     *           "ticketStatusName": "已使用",
+     *           "presentTypeName": "消费赠送"
+     *       }
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *               "msg" :"必传参数不能为空",
+     *           }
+     */
     /**
     * 定妆赠送详情
      */
@@ -616,6 +814,60 @@ class PowderArticlesController extends Controller
             $presentListInfoDetail['createTime'] = date('Y-m-d',$presentListInfoDetail['createTime']);
         }
         return $this->success($presentListInfoDetail);
+    }
+    /**
+     * @api {post} /PowderArticles/usePresentTicket 10.消费券
+     * 
+     * @apiName usePresentTicket
+     * @apiGroup PowderArticles
+     *
+     * @apiParam {Number} articleCodeId 必填，活动赠送券记录id
+     * @apiParam {String} useTime 必填，使用时间 YY-MM-DD
+     * @apiParam {Number} specialistId 必填，专家id
+     * @apiParam {Number} assistantId 必填，助理id
+     * 
+     * @apiSuccess {Array} data 空值.
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     *       "result": 1,
+     *       "token": "",
+     *       "data": []
+     *   }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     *               "result": 0,
+     *               "code": 0,
+     *               "token": "",
+     *               "msg" :"必传参数不能为空",
+     *           }
+     */
+    /**
+     * 定妆赠送消费使用
+     */
+    public function usePresentTicket(){
+        $param = $this->param;
+        $managerId = $this->user->id; //记录人id
+        if(empty($managerId)){
+            throw new ApiException('无法获取此登陆用户id');  
+        }
+        if(empty($param['articleCodeId']) || empty($param['useTime']) || empty($param['specialistId']) || empty($param['assistantId'])){
+            throw new ApiException('必传参数不能为空');    
+        }
+        //判断券状态和活动验证状态
+        $ticketCanUseRes =  PresentArticleCode::getPresentTicketCanUseStatusByWhere($where);
+        //券可用
+        if($ticketCanUseRes){
+            //记录验证信息
+            $res = PresentArticleCode::recordVerifyTicketInfo($managerId,$param['articleCodeId'],$param['useTime'],$param['specialistId'],$param['assistantId']);
+            if($res){
+                return $this->success();
+            }
+        }
+
+        
     }
     
 }

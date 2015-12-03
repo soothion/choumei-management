@@ -93,10 +93,10 @@
 							<br />
 							<br />
 							<div>
-								<a class="btn" href="index.html">取消</a>
+								<a class="btn" href="<%=query.p=="index"?"index.html":"fashion.html"%>">取消</a>
 								<span class="space"></span>
 								<%if(query.p=="index"||data.is_gift==0){%>
-								<a href="base.html" class="btn">返回</a>
+								<a href="base.html?<%=query._%>" class="btn">返回</a>
 								<span class="space"></span>
 								<%}%>
 								<button class="btn-primary"><%=query.p=="index"||data.is_gift==0?"提交":"下一步"%></button>
@@ -111,15 +111,8 @@
 		<script type="text/javascript" src="edit.js"></script>
 		<script type="text/javascript">
 			$("#form").on("_ready",function(){
-				if(lib.query.p=="index"){
-					this.goback=function(){
-						location.href="/module/makeup/item/index.html";
-					}
-				}
-				if(lib.query.p=="fashion"&&$('.btn-primary').text()=="提交"){
-					this.goback=function(){
-						location.href="/module/makeup/item/fashion.html";
-					}
+				this.goback=function(){
+					location.href="/module/makeup/item/detail.html?"+lib.query._;
 				}
 			})
 		</script>
