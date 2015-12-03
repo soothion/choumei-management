@@ -153,7 +153,6 @@ $('#form').on("_ready",function(){
 				data.push(item);
 			}
 		});
-		console.log(data);
 		table.siblings(".json-hidden").val(data.length==0?"":JSON.stringify(data));
 		table.siblings("button").attr("disabled",trs.length>=20);
 	}).trigger("datachange");

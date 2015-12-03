@@ -1,3 +1,4 @@
+<form action="book/receive/<%=query.id%>" data-role="normal">
 <div class="control-group">
     <label class="control-label" for="">预约日期：</label>
     <div class="control">
@@ -7,27 +8,32 @@
 <div class="control-group">
     <label class="control-label" for=""><span class="red">*</span>到店时间：</label>
     <div class="control">
-            <input type="date" data-role="start" value="<%=new Date().format('yyyy-MM-dd')%>"  name="startTime" id="startTime" placeholder="YYYY-MM-DD" required/>
+            <input type="date" data-role="start" value="<%=new Date().format('yyyy-MM-dd')%>"  name="arrive_at" id="startTime" placeholder="YYYY-MM-DD" required/>
     </div>
 </div>
 <div class="control-group">
     <label class="control-label" for=""><span class="red">*</span>修改预约：</label>
     <div class="control">
-            <input type="date" data-role="start" min="<%=new Date().format('yyyy-MM-dd')%>" name="startTime" id="startTime" placeholder="YYYY-MM-DD" required/>
+            <input type="date" data-role="start" min="<%=new Date().format('yyyy-MM-dd')%>" name="update_booking_date" id="startTime" placeholder="YYYY-MM-DD" required/>
     </div>
 </div>
 <div class="control-group">
     <label class="control-label" for=""><span class="red">*</span>预约项目：</label>
-    <div class="control">
-        <label class="label">
-            <input type="radio" required>
-            <span>无痛水光针</span>
-        </label>
+    <div class="control" ajat="beautyItem/indexFashion#domid=item&tempid=item-t" id="item">
+        <script type="text/template" id="item-t">
+            <%data.data&&data.data.forEach(function(item){%>
+            <label class="label">
+                <input type="checkbox" value="<%=item.item_id%>" name="item_ids" required>
+                <span><%=item.name%></span>
+            </label>
+            <%})%>
+        </script>
     </div>
 </div>
 <div class="control-group">
-    <label class="control-label" for=""><span class="red">*</span>活动简介：</label>
+    <label class="control-label" for=""><span class="red">*</span>沟通记录：</label>
     <div class="control">
-        <textarea maxlength="1000" name="actIntro" placeholder="包含活动策划案例，时间，逻辑规则，限制1~1000个字符" required style="height:150px;width:500px"></textarea>
+        <textarea maxlength="1000" name="remark" placeholder="限制1~1000个字符" required style="height:150px;width:500px"></textarea>
     </div>
 </div>
+</form>

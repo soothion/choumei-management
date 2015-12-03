@@ -244,6 +244,18 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 		'as'=>'user.destroy',
 		'uses'=>'UserController@destroy'
 	));
+	Route::any('user/enable/{id}',array(
+		'as'=>'user.enable',
+		'uses'=>'UserController@enable'
+	));
+	Route::any('user/disable/{id}',array(
+		'as'=>'user.disable',
+		'uses'=>'UserController@disable'
+	));
+	Route::any('user/resetCompanyCode/{id}',array(
+		'as'=>'user.resetCompanyCode',
+		'uses'=>'UserController@resetCompanyCode'
+	));
 	Route::any('user/company',array(
 		'as'=>'user.company',
 		'uses'=>'UserController@company'

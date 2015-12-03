@@ -16,7 +16,7 @@
                 </div>
                 <div class="flex-item fr">
                   <div class="fr">
-                    <a href="coupon_list.html" class="btn" data-slug="coupon.add">
+                    <a onclick="print()" class="btn" data-slug="coupon.add">
                         打印
                     </a>
                     <a class="btn" data-modal='receive' data-slug="coupon.add">
@@ -53,50 +53,76 @@
         }
         </style>
         <div class="wrapper">
-            <div class="table table-detail" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
+            <div class="table table-detail" style="margin:0" ajat="book/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id='table-t'>
                 <table >
-                <%var status=["","进行中","下线","已关闭","已结束"]%>
+                    <%var pay_type_desc={
+                        "1":"网银",
+                        "2":"支付宝",
+                        "3":"微信",
+                        "4":"余额",
+                        "7":"积分",
+                        "10":"易联"
+                    }%>
+                    <%var status={
+                        'NEW':'未支付',
+                        'PYD':'已支付',
+                        'CSD':'已消费',
+                        'RFN':'申请退款',
+                        'RFD':'已退款',
+                    }%>
+                    <%var cash_type_desc={
+                         '1':'微信',
+                         '2':'支付宝',
+                         '3':'POS机',
+                         '4':'现金',
+                         '5':'微信+现金' ,
+                         '6':'支付宝+现金' ,
+                         '7':'POS机+现金'
+                    }%>
                     <tbody>
                         <tr>
                             <td class="td">订单号：</td>
-                            <td><%=data.vcTitle%></td>
+                            <td><%=data.order.ORDER_SN%></td>
                         </tr>
                         <tr>
                             <td class="td">预约号：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.order.BOOKING_SN%></td>
                         </tr>
                         <tr>
                             <td class="td">手机号：</td>
-                            <td>4000</td>
+                            <td><%=data.order.BOOKER_PHONE%></td>
                         </tr>
                         <tr>
                             <td class="td">姓名：</td>
-                            <td>1000</td>
+                            <td><%=data.order.BOOKER_NAME%></td>
                         </tr>
                         <tr>
                             <td class="td">性别：</td>
-                            <td>3000</td>
+                            <td><%= data.order.user.sex == 1 ?'男':'女'%></td>
                         </tr>
                         <tr>
                             <td class="td">预约项目：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%var orderItems=[];
+                            data.order_item.forEach(function(orderItem){
+                                orderItems.push(orderItem.ITEM_NAME);
+                            })%><%=orderItems.join(",")%></td>
                         </tr>
                         <tr>
                             <td class="td">项目价格：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.order.AMOUNT%></td>
                         </tr>
                         <tr>
                             <td class="td">预约日期：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.order.BOOKING_DATE%></td>
                         </tr>
                         <tr>
                             <td class="td">推荐码：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.order.recommend_code%></td>
                         </tr>
                         <tr>
                             <td class="td">订单状态：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=status[data.order.STATUS]%></td>
                         </tr>
                         <tr>
                             <td  colspan="2">预约金支付信息</td>
@@ -108,9 +134,9 @@
                                     <tbody>
                                         <tr>
                                             <td>支付方式：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=pay_type_desc[data.fundflow.pay_type]%></td>
                                             <td>流水号：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.paymentlog.tn%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -118,26 +144,34 @@
                         </tr>
                         <tr>
                             <td class="td">支付金额：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%=data.order.AMOUNT%></td>
                         </tr>
                         <tr>
                             <td class="td">支付状态：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%=status[data.order.STATUS]%></td>
                         </tr>
+                        <%if (data.booking_receive){%>
                         <tr>
-                            <td  colspan="2">用户到点记录</td>
+                            <td  colspan="2">用户到店记录</td>
                         </tr>
                         <tr>
                             <td class="td">到店时间：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%=data.booking_receive.arrive_at%></td>
                         </tr>
                         <tr>
                             <td class="td">修改预约：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%=data.booking_receive.update_booking_date%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">实做项目：</td>
+                            <td><%var beauty_order_Items=[];
+                            data.beauty_order_item.forEach(function(beauty_orderItem){
+                                beauty_order_Items.push(beauty_orderItem.item_name);
+                            })%><%=beauty_order_Items.join(",")%></td>
                         </tr>
                         <tr>
                             <td class="td">沟通记录：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%=data.booking_receive.remark%></td>
                         </tr>
                         <tr >
                             <td colspan="2" class="pad-n bor-n">
@@ -145,15 +179,16 @@
                                     <tbody>
                                         <tr>
                                             <td>接待人：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.booking_receive.manager.name%></td>
                                             <td>接待时间：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.booking_receive.created_at%></td>
                                         </tr>
                                     </tbody>
                             </table>
                             </td>
                         </tr>
-
+                        <%}%>
+                        <%if (data.booking_cash){%>
                         <tr>
                             <td colspan="2">收银信息：</td>
                         </tr>
@@ -163,7 +198,7 @@
                         </tr>
                         <tr>
                             <td class="td">已付定金：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%=data.order.AMOUNT%></td>
                         </tr>
                         <tr>
                             <td class="td">应收金额：</td>
@@ -171,32 +206,126 @@
                         </tr>
                         <tr>
                             <td class="td">支付方式：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%=cash_type_desc[data.booking_cash.pay_type]%></td>
                         </tr>
+                        <%if (data.booking_cash.pay_type < 5 ){%>
                         <tr>
-                            <td class="td">现金支付：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td class="td">%=cash_type_desc[data.booking_cash.pay_type]%>支付：</td>
+                            <td><%=data.booking_cash.pay_type == 4 ?data.booking_cash.cash_money : data.booking_cash.other_money%></td>
                         </tr>
+                        <%}else{%>
+                            <tr >
+                                <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
+                                        <tbody>
+                                            <tr>
+                                                <td><%if (data.booking_cash.pay_type == 5){%>微信<%}%><%if (data.booking_cash.pay_type == 6){%>支付宝<%}%><%if (data.booking_cash.pay_type == 7){%>POS机<%}%>支付：</td>
+                                                <td><%=data.booking_cash.other_money%></td>
+                                                <td>现金支付：</td>
+                                                <td><%=data.booking_cash.cash_money%></td>
+                                            </tr>
+                                        </tbody>
+                                </table>
+                                </td>
+                            </tr>
+                        <%}%>
+                        <%if (data.booking_cash.deduction_money){%>
+                        <tr>
+                            <td class="td">抵扣金额：</td>
+                            <td><%=data.booking_cash.deduction_money%></td>
+                        </tr>
+                        <%}%>
                         <tr >
                             <td colspan="2" class="pad-n bor-n">
                             <table class="inner-table bor-n">
                                     <tbody>
                                         <tr>
                                             <td>收银人：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.booking_cash.manager%></td>
                                             <td>收银时间：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.booking_cash.created_at%></td>
+                                        </tr>
+                                    </tbody>
+                            </table>
+                            </td>
+                        </tr>
+                        <%}%>
+                        <%if (data.booking_salon_refund){%>
+                        <tr>
+                            <td colspan="2">退款信息：</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="pad-n bor-n">
+                            <table class="inner-table bor-n">
+                                    <tbody>
+                                        <tr>
+                                            <td>发起退款：</td>
+                                            <td>臭美工作人员</td>
+                                            <td>退款原因：</td>
+                                            <td><%=data.booking_salon_refund.remark%></td>
                                         </tr>
                                     </tbody>
                             </table>
                             </td>
                         </tr>
                         <tr>
+                            <td class="td">退款说明：</td>
+                            <td><%=data.booking_salon_refund.remark%></td>
+                        </tr>
+                        <tr>
+                            <td class="td">退款方式：</td>
+                            <td><%=data.booking_cash.deduction_money%></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="pad-n bor-n">
+                            <table class="inner-table bor-n">
+                                    <tbody>
+                                        <tr>
+                                            <td>退款金额：</td>
+                                            <td><%=data.booking_salon_refund.money%></td>
+                                            <td>发起退款时间：</td>
+                                            <td><%=data.booking_salon_refund.created_at%></td>
+                                        </tr>
+                                    </tbody>
+                            </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="pad-n bor-n">
+                            <table class="inner-table bor-n">
+                                    <tbody>
+                                        <tr>
+                                            <td>退款状态：</td>
+                                            <td>已退款</td>
+                                            <td>退款时间：</td>
+                                            <td><%=data.booking_salon_refund.created_at%></td>
+                                        </tr>
+                                    </tbody>
+                            </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="pad-n bor-n">
+                            <table class="inner-table bor-n">
+                                    <tbody>
+                                        <tr>
+                                            <td>审批人：</td>
+                                            <td><%=data.booking_salon_refund.manager.name%></td>
+                                            <td>审批时间：</td>
+                                            <td><%=data.booking_salon_refund.created_at%></td>
+                                        </tr>
+                                    </tbody>
+                            </table>
+                            </td>
+                        </tr>
+                        <%}%>
+                        <%if (data.makeup){%>
+                        <tr>
                             <td colspan="2">补色信息：</td>
                         </tr>
                         <tr>
                             <td class="td">补色日期：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%=data.makeup.work_at%></td>
                         </tr>
                         <tr >
                             <td colspan="2" class="pad-n bor-n">
@@ -204,9 +333,9 @@
                                     <tbody>
                                         <tr>
                                             <td>补色专家：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.makeup.expert.name%>（<%=data.makeup.expert.number%>）</td>
                                             <td>补色助理：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.makeup.assistant.name%>（<%=data.makeup.assistant.number%>）</td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -214,7 +343,7 @@
                         </tr>
                         <tr>
                             <td class="td">补色说明：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%=data.makeup.remark.replace(/\n/g,"</br>")%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -222,20 +351,22 @@
                                     <tbody>
                                         <tr>
                                             <td>记录人：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.makeup.manager.name%></td>
                                             <td>记录时间：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.makeup.created_at%></td>
                                         </tr>
                                     </tbody>
                             </table>
                             </td>
                         </tr>
+                        <%}%>
+                        <%if (data.booking_bill){%>
                         <tr>
                             <td colspan="2">发票记录：</td>
                         </tr>
                         <tr>
                             <td class="td">发票状态：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td>已开发票</td>
                         </tr>
                         <tr >
                             <td colspan="2" class="pad-n bor-n">
@@ -243,19 +374,20 @@
                                     <tbody>
                                         <tr>
                                             <td>记录人：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.booking_bill.manager.name%></td>
                                             <td>记录时间：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.booking_bill.created_at%></td>
                                         </tr>
                                     </tbody>
                             </table>
                             </td>
                         </tr>
+                        <%}%>
                     </tbody>
                 </table>
                  </script>
                  <script type="text/javascript">
-
+                 var orderInfo = {},id=lib.tools.parseQuery(window.location.href).id;
                  var completeDefine = function(){
                      var popup = $(this);
                      var form = popup.find('form');
@@ -302,7 +434,16 @@
                       'defineText':'确认',
                       'confirm':true,
                       'modalType':'confirm',
-                      'complete':completeDefine
+                      'complete':completeDefine,
+                      'define':function(){
+                          lib.ajax({
+                              url:'book/bill/'+id
+                          }).done(function(data, status, xhr){
+                              if(data.result == 1){
+                                  location.reload();
+                              }
+                          });
+                      }
                     },
                     'refund':{
                       'title':'退款',
@@ -321,6 +462,9 @@
                       var modal= $(this).attr('data-modal');
                       initModal(ModalList[modal]);
                     });
+                    $('#table').on('_ready',function(data){
+                        orderInfo = data.data;
+                    })
                   }();
 
                   var initModal = function(options){

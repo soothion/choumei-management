@@ -33,6 +33,11 @@ class BookingReceive extends Model
         return $base->toArray();
     }
     
+    public static function receive($id,$params)
+    {
+        
+    }
+    
     public function isFillable($key)
     {
         return true;

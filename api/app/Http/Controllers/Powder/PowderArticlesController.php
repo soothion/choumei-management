@@ -11,6 +11,8 @@ use App\Model\Present;
 use App\Model\PresentArticleCode;
 use DB;
 
+use App\Jobs\PowderArticleTicket;
+
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 
@@ -76,6 +78,7 @@ class PowderArticlesController extends Controller
     {
         $param = $this->param;
         $createrId = $this->user->id;
+        //$createrId = 1;
         if(empty($param['articleName']) || empty($param['itemId']) || empty($param['nums']) || empty($param['startTime']) || empty($param['endTime']) || empty($param['expireTime']) || empty($param['departmentId']) || empty($param['userId'])){
             throw new ApiException('必传参数不能为空');
         }
@@ -117,6 +120,7 @@ class PowderArticlesController extends Controller
         //$queries = DB::getQueryLog();
         if($resId){
             $res['presentId'] = $resId;
+            $this->dispatch(new PowderArticleTicket($resId));
             return $this->success($res);
         }else{
             throw new ApiException('活动添加失败',ERROR::POWDER_ARTICLE_ADD_FIELD);
@@ -577,7 +581,6 @@ class PowderArticlesController extends Controller
      */
     public function exportArticlesTicketList(){
         $param = $this->param;
-        $param['presentId']= 1;
         if(empty($param['presentId'])){
             throw new ApiException('必传参数不能为空');    
         }
@@ -866,7 +869,7 @@ class PowderArticlesController extends Controller
                 return $this->success();
             }
         }
-
+        
         
     }
     

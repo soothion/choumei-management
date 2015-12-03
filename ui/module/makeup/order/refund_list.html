@@ -22,43 +22,42 @@
         <div class="wrapper">
             <form data-role="hash">
               <div class="input-group placeholder-switch">
-                   <select name="selectItem">
-                       <option value="0" data-placeholder="请输入手机号">手机号</option>
-                       <option value="1" data-placeholder="请输入预约号">预约号</option>
-                       <option value="2"    data-placeholder="请输入推荐号">推荐号</option>
+                   <select name="key">
+                       <option value="1" data-placeholder="请输入手机号">手机号</option>
+                       <option value="2" data-placeholder="请输入预约号">预约号</option>
+                       <option value="3"    data-placeholder="请输入推荐号">推荐号</option>
                    </select>
                    <input type="text" class="input-search" name="keyword" placeholder="请输入手机号">
                </div>
                <span class="space"></span>
                <!-- <span>活动时间：</span> -->
                <span class="date-group">
-                   <input type="date" data-role="start" name="startTime" placeholder="YYYY-MM-DD"/>
+                   <input type="date" data-role="start" name="start_time" placeholder="YYYY-MM-DD"/>
                    至
-                   <input type="date" data-role="end" name="endTime" placeholder="YYYY-MM-DD"/>
+                   <input type="date" data-role="end" name="end_time" placeholder="YYYY-MM-DD"/>
                </span>
               <span class="space"></span>
               <div class="input-group">
-                   <select name="selectItem">
+                   <select name="pay_type">
                        <option value="0">支付方式</option>
-                       <option value="1" >微信</option>
+                       <option value="3" >微信</option>
                        <option value="2" >支付宝</option>
-                       <option value="3" >银联</option>
-                       <option value="3" >积分兑换</option>
+                       <option value="10" >易联支付</option>
                    </select>
                </div>
                <span class="space"></span>
                <div class="input-group">
-                    <select name="selectItem">
+                    <select name="state">
                         <option value="0">退款状态</option>
-                        <option value="1" >退款中</option>
-                        <option value="2" >已退款</option>
-                        <option value="2" >退款失败</option>
+                        <option value="RFN" >退款中</option>
+                        <option value="RFD" >已退款</option>
+                        <option value="RFE" >退款失败</option>
                     </select>
                 </div>
 
                 <button class="btn" type="submit">查询</button>
             </form>
-           <div class="table" ajat="coupon/list?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="beautyrefund/index?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -78,20 +77,39 @@
                     </thead>
                 <tbody>
                 <%var data=data.data%>
+                <%var pay_type_desc={
+                    "1":"网银",
+                    "2":"支付宝",
+                    "3":"微信",
+                    "4":"余额",
+                    "7":"积分",
+                    "10":"易联"
+                }%>
+                <%var status={
+                    'NEW':'未支付',
+                    'PYD':'已支付',
+                    'CSD':'已消费',
+                    'RFN':'申请退款',
+                    'RFD':'已退款',
+                    'RFE':'退款失败',
+                }%>
                 <%data.forEach(function(item,index){%>
                  <tr>
-                  <td><label><input type="checkbox" name="feed" form="destroy" form="form" value="<%=item.id%>"/><span></span></label></td>
+                  <td><label><input type="checkbox"  value="<%=item.order_refund_id%>"/><span></span></label></td>
                   <td><%=index+1%></td>
-                  <td><%=item.vcTitle%></td>
-                  <td><%=item.vcSn%></td>
-                  <td><%=item.totalNum%></td>
-                  <td><%=item.useNum%></td>
-                  <td><%=item.allNum%></td>
-                  <td><%=item.addTime%></td>
-                  <td><%=item.actTime%></td>
+                  <td><%=item.booker_phone%></td>
+                  <td><%=item.booker_name%></td>
+                  <td><%var orderItems=[];
+                  item.booking_order_item.forEach(function(orderItem){
+                      orderItems.push(orderItem.item_name);
+                  })%><%=orderItems.join(",")%></td>
+                  <td><%=item.money%></td>
+                  <td><%=item.booking_sn%></td>
+                  <td><%=item.add_time%></td>
+                  <td><%=pay_type_desc[item.pay_type]%></td>
                   <td><%=status[item.status]%></td>
                   <td class="tc">
-                    <a class="link" data-slug="coupon.actView" href="refund_desc.html#id=<%=item.vcId%>">查看</a>
+                    <a class="link" data-slug="coupon.actView" href="refund_desc.html#id=<%=item.order_refund_id%>">查看</a>
                   </td>
                   </tr>
                   <%})%>
@@ -99,23 +117,73 @@
             </table>
             <div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form disabled data-slug="feed.destroy" action="feed/destroy" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-					<button class="btn">确认退款</button>
-				</form>
-                <form disabled data-slug="feed.destroy" action="feed/destroy" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-					<button class="btn">拒绝退款</button>
-				</form>
+				<button disabled class="btn" data-action="accpent" type="button">确认退款</button>
+				<button disabled class="btn" data-action="reject" type="button">拒绝退款</button>
 			</div>
              <div class="pager"> </div>
             </script>
             <script type="text/javascript">
-        		$('#table').on('click','input',function(){
-        			if($('tbody label input:checked').length>0){
-        				$('.table-bottom form').attr('disabled',false);
+            var ids=[];
+            var confirmBox = function(options){
+                 parent.lib.popup.confirm({
+                     text:options.text,
+                     cancelText:options.cancelText,
+                     defineText:options.defineText,
+                     define: function(){
+                         lib.ajax({
+                             url : options.url,
+                             data: options.data
+                         }).done(function(data, status, xhr){
+                             if(data.result == 1){
+                                 parent.lib.popup.result({
+                                     define:function(){
+                                         location.reload();
+                                     }
+                                 });
+                             }
+                         });
+                     }
+                 });
+            }
+
+            var getConfig = function(action){
+                var confirmBoxConfig = {
+                    'accpent':{
+                        'text':'已选中'+ids.length+'个退款单，是否确认退款',
+                        'cancelText':'取消退款',
+                        'defineText':'确认退款',
+                        'url':'beautyrefund/accpent',
+                        'data':{
+                            'ids':ids.join(",")
+                        }
+                    },
+                    'reject':{
+                        'text':'你正在给'+ids.length+'个退款单取消退款，是否执行',
+                        'cancelText':'取消',
+                        'defineText':'执行',
+                        'url':'beautyrefund/reject',
+                        'data':{
+                            'ids':ids.join(",")
+                        }
+                    }
+                }
+                return confirmBoxConfig[action]
+            }
+
+        		$('#table').on('change','input',function(){
+                    var checkedBox = $('tbody label input:checked');ids = [];
+        			if(checkedBox.length>0){
+                        $.each(checkedBox,function(item){
+                            ids.push($(this).val())
+                        });
+        				$('.table-bottom button').removeAttr('disabled');
         			}else{
-        				$('.table-bottom form').attr('disabled',true);
+        				$('.table-bottom button').attr('disabled','disabled');
         			}
-        		})
+        		}).on('click','button',function(){
+                    var action = $(this).attr('data-action');
+                    confirmBox(getConfig(action));
+                })
         	</script>
         </div>
             </div>

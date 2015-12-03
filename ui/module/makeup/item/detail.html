@@ -117,6 +117,7 @@
 							<tr>
 								<td> 设备介绍：</td>
 								<td>
+									<h4><%=data.equipment_slogan%></h4>
 									<%if(data.equipment){%>
 									<%JSON.parse(data.equipment).forEach(function(item){%>
 									<h4><%=item.title%></h4>
@@ -179,6 +180,7 @@
 							<tr>
 								<td>定妆流程：</td>
 								<td>
+									<h4><%=data.beauty_workflow_name%></h4>
 									<%if(data.beauty){%>
 									<%JSON.parse(data.beauty).forEach(function(item){%>
 									<h4><%=item.title%></h4>
