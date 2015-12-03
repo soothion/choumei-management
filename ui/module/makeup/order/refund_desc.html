@@ -17,13 +17,13 @@
                 <div class="flex-item fr">
                   <div class="fr" id='breadcrumb' ajat="#domid=breadcrumb&tempid=breadcrumb-t">
                       <script type="text/template" id="breadcrumb-t">
-                          <form  data-slug="feed.destroy" action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <form   action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
                               <input type="hidden" name="ids" value="<%=query.id%>">
                           <button class="btn" data-slug="coupon.add">
                                确认退款
                           </button>
                           </form>
-                          <form  data-slug="feed.destroy" action="beautyrefund/reject" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <form  action="beautyrefund/reject" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.href='refund_list.html'}})">
                               <input type="hidden" name="ids" value="<%=query.id%>">
                           <button class="btn" data-slug="coupon.add">
                                拒绝退款
@@ -46,6 +46,9 @@
         }
         .bor-n{
             border:0px !important;
+        }
+        td.td{
+            background-color: #F6F8F9;
         }
         </style>
         <div class="wrapper">
@@ -87,18 +90,21 @@
                         </tr>
                         <tr>
                             <td class="td">性别：</td>
-                            <td><%=data.sex%></td>
+                            <td><%=data.booker_sex=='F' ? '女':'男'%></td>
                         </tr>
                         <tr>
                             <td class="td">预约项目：</td>
                             <td><%var orderItems=[];
-                            item.booking_order_item.forEach(function(orderItem){
+                            data.booking_order_item.forEach(function(orderItem){
                                 orderItems.push(orderItem.item_name);
                             })%><%=orderItems.join(",")%></td>
                         </tr>
                         <tr>
                             <td class="td">项目价格：</td>
-                            <td><%=data.price%></td>
+                            <td><%var orderPrice=0;
+                            data.booking_order_item.forEach(function(orderItem){
+                                orderPrice = orderPrice+Number(orderItem.price)
+                            })%><%=orderPrice%></td>
                         </tr>
                         <tr>
                             <td class="td">预约日期：</td>
@@ -139,9 +145,9 @@
                         </tr>
                         <tr>
                             <td class="td">支付状态：</td>
-                            <td>支付<%= pay_status == 1 ? '成功':'失败'%></td>
+                            <td>支付<%= data.pay_status == 1 ? '成功':'失败'%></td>
                         </tr>
-                        <%if (data.receive){%>
+                        <%if (data.receive.arrive_at){%>
                         <tr>
                             <td colspan="2">用户到店记录：</td>
                         </tr>
@@ -196,7 +202,7 @@
                             <td><%=data.refund_desc%></td>
                         </tr>
                         <tr>
-                            <td colspan="2">退款方式：</td>
+                            <td class="td">退款方式：</td>
                             <td><%=pay_type_desc[data.refund_type]%></td>
                         </tr>
                         <tr>
@@ -219,7 +225,7 @@
                                     <tbody>
                                         <tr>
                                             <td>退款状态：</td>
-                                            <td><%=data.vcRemark%></td>
+                                            <td><%=status[data.status]%></td>
                                             <td>退款时间：</td>
                                             <td><%=data.complete_time%></td>
                                         </tr>

@@ -97,9 +97,12 @@
                  <tr>
                   <td><label><input type="checkbox"  value="<%=item.order_refund_id%>"/><span></span></label></td>
                   <td><%=index+1%></td>
-                  <td><%=item.mobilephone%></td>
-                  <td><%=item.username%></td>
-                  <td><%=item.item_name%></td>
+                  <td><%=item.booker_phone%></td>
+                  <td><%=item.booker_name%></td>
+                  <td><%var orderItems=[];
+                  item.booking_order_item.forEach(function(orderItem){
+                      orderItems.push(orderItem.item_name);
+                  })%><%=orderItems.join(",")%></td>
                   <td><%=item.money%></td>
                   <td><%=item.booking_sn%></td>
                   <td><%=item.add_time%></td>
