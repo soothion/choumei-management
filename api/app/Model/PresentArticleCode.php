@@ -156,4 +156,50 @@ class PresentArticleCode extends Model
         return 1;
         
     }
+    
+    /**
+     * 获取券相关信息
+     */
+    public static function getArticleTicketInfo($presentId,$page,$pageSize){
+        $field = array(
+            'beauty_item.name as itemName',
+            'present_article_code.code as TicketCode',
+            'present.start_at as startTime',
+            'present.end_at as endTime',
+            'present_article_code.status as ticketStatus',
+        );
+        $query = self::select($field)
+                ->where('present_article_code.present_id','=',$presentId)
+                ->leftJoin('present', 'present.present_id', '=', 'present_article_code.present_id')
+                ->leftJoin('beauty_item', 'present.item_id', '=', 'beauty_item.item_id');
+        //手动设置页数
+        AbstractPaginator::currentPageResolver(function() use ($page) {
+              return $page;
+        });      
+        $articleTicketInfo = $query->paginate($pageSize)->toArray();
+        unset($articleTicketInfo['next_page_url']);
+        unset($articleTicketInfo['prev_page_url']);
+        return $articleTicketInfo;
+        
+    }
+    
+    /**
+     * 获取当前活动所有券相关信息
+     */
+    public static function getAllArticleTicketInfoForExport($presentId){
+        $field = array(
+            'beauty_item.name as itemName',
+            'present_article_code.code as ticketCode',
+            'present.start_at as startTime',
+            'present.end_at as endTime',
+            'present_article_code.status as ticketStatus',
+        );
+        $res = self::select($field)
+                ->where('present_article_code.present_id','=',$presentId)
+                ->leftJoin('present', 'present.present_id', '=', 'present_article_code.present_id')
+                ->leftJoin('beauty_item', 'present.item_id', '=', 'beauty_item.item_id')
+                ->get();
+        return $res;
+
+    }
 }

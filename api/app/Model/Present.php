@@ -6,6 +6,9 @@ use App\Manager;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
+
 class Present extends Model
 {
     protected $table = 'present';
@@ -30,6 +33,14 @@ class Present extends Model
             'present.article_type as articleType',
             'present.created_at as createTime',         
        );
+    public static function getArticleInfoByWhere($where){
+        $res = self::where($where)->first();
+        if($res === null){
+            throw new ApiException('找不到改活动'); 
+        }else{
+            return $res->toArray();
+        }
+    }
     
     public static function getArticlesList($name,$departmentId,$startTime,$endTime,$page,$pageSize){
         $field1 = self::$presentField;

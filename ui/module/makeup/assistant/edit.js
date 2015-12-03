@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-02 09:30:19
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-02 13:45:18
+* @Last Modified time: 2015-12-02 18:52:43
 */
 
 (function(){     
@@ -93,7 +93,7 @@
     function submit(data){
         lib.ajax({
             type: "post",
-            url : lib.query.id ? "assistant/update/"+lib.query.id :"assistant/add",
+            url : lib.query.id ? "assistant/update" :"assistant/add",
             data: data    
         }).done(function(data, status, xhr){
             if(data.result == 1){
