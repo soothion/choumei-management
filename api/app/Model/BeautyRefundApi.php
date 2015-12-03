@@ -23,7 +23,7 @@ class BeautyRefundApi extends TransactionWriteApi {
             throw new ApiException("部分退款的预约单状态不正确", ERROR::REFUND_STATE_WRONG);
         }
         $bookingUp = BookingOrder::whereIn('ORDER_SN', $ordersns)->where('STATUS', 'RFN')->update(['STATUS' => 'PYD']);
-        $refundUp = OrderRefund::whereIn('booking_sn', $bookOrdersns)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->update(['status' => self::REFUND_STATUS_OF_CANCLE]);
+        $refundUp = OrderRefund::whereIn('order_refund_id', $ids)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->update(['status' => self::REFUND_STATUS_OF_CANCLE]);
         if ($bookingUp !== false && $refundUp !== false) {
             return [];
         } else {
