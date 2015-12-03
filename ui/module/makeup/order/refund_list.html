@@ -93,7 +93,7 @@
                 }%>
                 <%data.forEach(function(item,index){%>
                  <tr>
-                  <td><label><input type="checkbox" name="ids" form="accept" form="reject" value="<%=item.order_refund_id%>"/><span></span></label></td>
+                  <td><label><input type="checkbox"  value="<%=item.order_refund_id%>"/><span></span></label></td>
                   <td><%=index+1%></td>
                   <td><%=item.mobilephone%></td>
                   <td><%=item.username%></td>
@@ -112,21 +112,28 @@
             </table>
             <div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form disabled data-slug="feed.destroy" action="beautyrefund/accept" id="accept" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+				<form disabled data-slug="feed.destroy" action="beautyrefund/accept" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                    <input type="hidden" name="ids" value="">
 					<button class="btn">确认退款</button>
 				</form>
-                <form disabled data-slug="feed.destroy" action="beautyrefund/reject" id="reject" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                <form disabled data-slug="feed.destroy" action="beautyrefund/reject" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                    <input type="hidden" name="ids" value="">
 					<button class="btn">拒绝退款</button>
 				</form>
 			</div>
              <div class="pager"> </div>
             </script>
             <script type="text/javascript">
-        		$('#table').on('click','input',function(){
-        			if($('tbody label input:checked').length>0){
-        				$('.table-bottom form').attr('disabled',false);
+        		$('#table').on('change','input',function(){
+                    var checkedBox = $('tbody label input:checked'),ids = [];
+        			if(checkedBox.length>0){
+                        $.each(checkedBox,function(item){
+                            ids.push($(this).val())
+                        });
+                        $('.table-bottom input[name=ids]').val(ids.join(","))
+        				$('.table-bottom form').removeAttr('disabled');
         			}else{
-        				$('.table-bottom form').attr('disabled',true);
+        				$('.table-bottom form').attr('disabled','disabled');
         			}
         		})
         	</script>
