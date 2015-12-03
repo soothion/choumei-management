@@ -187,6 +187,10 @@ class OrderRefund extends Model {
             $receive['create_at'] = (string) $bookingReceive->created_at; //TODO 查询具体的人姓名
             $receive['arrive_at'] = $bookingReceive->arrive_at;
         }
+        //如果在退款中   查询是否是退款失败
+        if ($bookingOrder->status == 'RFN' && $refund->status == 3) {
+            $bookingOrder->status = 'RFE';
+        }
         $res = [
             'ordersn' => $refund->ordersn,
             'booking_sn' => $refund->booking_sn,
