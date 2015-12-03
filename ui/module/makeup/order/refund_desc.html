@@ -58,6 +58,15 @@
                     'CSD':'已消费',
                     'RFN':'申请退款',
                     'RFD':'已退款',
+                    'RFE':'退款失败',
+                }%>
+                <%var pay_type_desc={
+                    "1":"网银",
+                    "2":"支付宝",
+                    "3":"微信",
+                    "4":"余额",
+                    "7":"积分",
+                    "10":"易联"
                 }%>
                     <tbody>
                         <tr>
@@ -78,11 +87,14 @@
                         </tr>
                         <tr>
                             <td class="td">性别：</td>
-                            <td><%=data.status%></td>
+                            <td><%=data.sex%></td>
                         </tr>
                         <tr>
                             <td class="td">预约项目：</td>
-                            <td><%=data.item_name%></td>
+                            <td><%var orderItems=[];
+                            item.booking_order_item.forEach(function(orderItem){
+                                orderItems.push(orderItem.ITEM_NAME);
+                            })%><%=orderItems.join(",")%></td>
                         </tr>
                         <tr>
                             <td class="td">项目价格：</td>
@@ -98,7 +110,7 @@
                         </tr>
                         <tr>
                             <td class="td">订单状态：</td>
-                            <td><%=data.status%></td>
+                            <td><%=status[data.status]%></td>
                         </tr>
                         <tr>
                             <td colspan="2">预约金支付信息</td>
@@ -109,7 +121,7 @@
                                     <tbody>
                                         <tr>
                                             <td>支付方式：</td>
-                                            <td><%=data.pay_type%></td>
+                                            <td><%=pay_type_desc[data.pay_type]%></td>
                                             <td>流水号：</td>
                                             <td><%=data.payment_sn%></td>
                                         </tr>
@@ -127,8 +139,9 @@
                         </tr>
                         <tr>
                             <td class="td">支付状态：</td>
-                            <td><%=data.actTime%></td>
+                            <td>支付<%= pay_status == 1 ? '成功':'失败'%></td>
                         </tr>
+                        <%if (data.receive){%>
                         <tr>
                             <td colspan="2">用户到店记录：</td>
                         </tr>
@@ -142,7 +155,7 @@
                         </tr>
                         <tr>
                             <td class="td">沟通记录：</td>
-                            <td><%=data.v%></td>
+                            <td><%=data.remark%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -158,6 +171,7 @@
                             </table>
                             </td>
                         </tr>
+                        <%}%>
                         <tr>
                             <td colspan="2">退款信息：</td>
                         </tr>
@@ -168,7 +182,7 @@
                                     <tr>
                                         <tr>
                                             <td>发起退款：</td>
-                                            <td><%=data.rereason%></td>
+                                            <td><%= data.refund_from == 1?'用户':'臭美人员'%></td>
                                             <td>退款原因：</td>
                                             <td><%=data.rereason%></td>
                                         </tr>
@@ -179,10 +193,11 @@
                         </tr>
                         <tr>
                             <td class="td">退款说明：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.refund_desc%></td>
                         </tr>
                         <tr>
                             <td colspan="2">退款方式：</td>
+                            <td><%=pay_type_desc[data.refund_type]%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -205,8 +220,8 @@
                                         <tr>
                                             <td>退款状态：</td>
                                             <td><%=data.vcRemark%></td>
-                                            <td>完成退款时间：</td>
-                                            <td><%=data.vcRemark%></td>
+                                            <td>退款时间：</td>
+                                            <td><%=data.complete_time%></td>
                                         </tr>
                                     </tbody>
                                 </table>

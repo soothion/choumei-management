@@ -51,7 +51,7 @@
                         <option value="0">退款状态</option>
                         <option value="RFN" >退款中</option>
                         <option value="RFD" >已退款</option>
-                        <option value="9" >退款失败</option>
+                        <option value="RFE" >退款失败</option>
                     </select>
                 </div>
 
@@ -91,6 +91,7 @@
                     'CSD':'已消费',
                     'RFN':'申请退款',
                     'RFD':'已退款',
+                    'RFE':'退款失败',
                 }%>
                 <%data.forEach(function(item,index){%>
                  <tr>
