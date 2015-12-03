@@ -16,7 +16,7 @@ use App\Exceptions\ERROR;
 
 class UserController extends Controller{
     /**
-     * @api {post} /user/survey 1.用户根况
+     * @api {post} /user/survey 1.用户概况
      * @apiName survey
      * @apiGroup User
      *
@@ -133,20 +133,36 @@ class UserController extends Controller{
      *            "from": 1,
      *            "to": 20,
      *            "data": [
-     *                {
-     *                    "user_id": 8635360,
-     *                    "username": "10800054",
-     *                    "nickname": "光芒万丈的火腿肠",
-     *                    "sex": "男",
-     *                    "growth": null,
-     *                    "mobilephone": 18500001111,
-     *                    "area": "",
-     *                    "hair_type": 2,
-     *                    "companyCode": null,
-     *                    "recommendCode": null,
-     *                    "add_time": "2015-08-27 21:32:36",
-     *                    "level": 2
-     *                }
+	 *	            {
+	 *	                "user_id": 1238231,
+	 *	                "username": "12236252",
+	 *	                "nickname": "倾国倾城的苹果7",
+	 *	                "sex": "未知",
+	 *	                "growth": 0,
+	 *	                "mobilephone": 15807553008,
+	 *	                "area": "",
+	 *	                "companyCode": null,
+	 *	                "activity": 2,
+	 *	                "add_time": "2015-11-27 15:29:16",
+	 *	                "recommend_codes": [
+	 *	                    {
+	 *	                        "user_id": 1238231,
+	 *	                        "recommend_code": "6383",
+	 *	                        "type": "1"
+	 *	                    },
+	 *	                    {
+	 *	                        "user_id": 1238231,
+	 *	                        "recommend_code": "8862",
+	 *	                        "type": "2"
+	 *	                    },
+	 *	                    {
+	 *	                        "user_id": 1238231,
+	 *	                        "recommend_code": "6383",
+	 *	                        "type": "3"
+	 *	                    }
+	 *	                ],
+	 *	                "level": 0
+	 *	            }
      *            ]
      *        }
      *    }
@@ -176,7 +192,6 @@ class UserController extends Controller{
             'user.mobilephone',
             'user.area',
             'company_code.code as companyCode',
-            // 'recommend_code_user.recommend_code as recommendCode',
             'activity',
             'user.add_time'
         );
@@ -235,13 +250,12 @@ class UserController extends Controller{
             'user.mobilephone',
             'user.area',
             'company_code.code as companyCode',
-            'recommend_code_user.recommend_code as recommendCode',
             'activity',
             'user.add_time'
         );
 
         //分页
-        $array = $query->select($fields)->take(5000)->get();
+        $array = $query->select($fields)->take(100)->get();
         $result = [];
         foreach ($array as $key=>$value) {
             $result[$key]['id'] = $key+1;
@@ -251,9 +265,34 @@ class UserController extends Controller{
             $result[$key]['growth'] = User::getLevel($value->growth);
             $result[$key]['mobilephone'] = $value->mobilephone;
             $result[$key]['area'] = $value->area;
-            $result[$key]['companyCode'] = $value->companyCode;
-            $result[$key]['salonCode'] = $value->activity==2?$value->recommendCode:'';
-            $result[$key]['activityCode'] = $value->activity==1?$value->recommendCode:'';
+            //占位，确保顺序不变
+            $result[$key]['companyCode'] = '';
+            $result[$key]['salonCode'] = '';
+            $result[$key]['activityCode'] = '';
+            $result[$key]['beautySalon'] = '';
+            $result[$key]['beautyActiity'] = '';
+            $result[$key]['beautyUser'] = '';
+            
+            if(count($value['recommendCodes'])>0){
+	            foreach ($value['recommendCodes'] as $k => $v) {
+		            if($v->type=="1"){
+		            	if($value->activity==1)
+		            		$result[$key]['activityCode'] = $v->recommend_code;
+	    	          	if($value->activity==2)
+		            		$result[$key]['salonCode'] = $v->recommend_code;
+		            }
+		            	
+		            if($v->type=="2")
+		            	$result[$key]['beautySalon'] = $v->recommend_code;
+
+	                if($v->type=="3")
+	            	    $result[$key]['beautyUser'] = $v->recommend_code;
+
+	                if($v->type=="4")
+	            	    $result[$key]['beautyActiity'] = $v->recommend_code;
+	            }
+            }
+
             $result[$key]['add_time'] = date('Y-m-d H:i:s',intval($value->add_time));
         }
 
@@ -262,7 +301,7 @@ class UserController extends Controller{
 
         //导出excel
         $title = '用户列表'.date('Ymd');
-        $header = ['序号','臭美号','昵称','性别','会员等级','手机号','地区','集团邀请码','商家邀请码','活动邀请码','注册时间'];
+        $header = ['序号','臭美号','昵称','性别','会员等级','手机号','地区','集团邀请码','商家邀请码','活动邀请码','店铺推荐码','活动推荐码','用户推荐码','注册时间'];
         Excel::create($title, function($excel) use($result,$header){
             $excel->sheet('Sheet1', function($sheet) use($result,$header){
                     $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
@@ -324,6 +363,23 @@ class UserController extends Controller{
      *            "companyName": null,
      *            "recommendCode": "8280",
      *            "salonname": "嘉美专业烫染",
+     *            "recommendCodes": [
+	 *		            {
+	 *		                "user_id": 1238231,
+	 *		                "recommend_code": "6383",
+	 *		                "type": "1"
+	 *		            },
+	 *		            {
+ 	 *		                "user_id": 1238231,
+	 *		                "recommend_code": "8862",
+	 *		                "type": "2"
+	 *		            },
+	 *		            {
+	 *		                "user_id": 1238231,
+	 *		                "recommend_code": "6383",
+	 *		                "type": "3"
+	 *		            }
+	 *		        ],
      *            "level": 6
      *        }
      *    }
@@ -353,14 +409,18 @@ class UserController extends Controller{
             'user.companyId',
             'company_code.code as companyCode',
             'company_code.companyName',
-            'recommend_code_user.recommend_code as recommendCode',
             'salon.salonname'
         ];
         $user = User::leftJoin('recommend_code_user','user.user_id','=','recommend_code_user.user_id')
             ->leftJoin('salon','salon.salonid','=','recommend_code_user.salon_id')
+            ->where('recommend_code_user.type','=',1)
             ->leftJoin('company_code','company_code.companyId','=','user.companyId')
             ->select($fields)
             ->find($id);
+        $user->recommendCodes = DB::table('recommend_code_user')
+        	->where('user_id','=',$id)
+        	->select('user_id','recommend_code','type')
+        	->get();
 
         if(!$user)
             throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
@@ -525,6 +585,72 @@ class UserController extends Controller{
         unset($result['next_page_url']);
         unset($result['prev_page_url']);
         return $this->success($result);
+    }
+
+
+    /**
+     * @api {post} /user/enable/:id 8.启用用户
+     * @apiName enable
+     * @apiGroup User
+     *
+     * @apiParam {String} id 用户ID.
+     */
+    public function enable($id)
+    {
+        $user = User::find($id);
+        if(!$user)
+            throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+         $result = $user->update(['status'=>0]);
+        if($result){
+            //触发事件，写入日志
+            Event::fire('user.enable',array($user));
+            return $this->success();
+        }
+        throw new ApiException('用户启用败', ERROR::USER_UPDATE_FAILED);
+    }
+
+
+
+    /**
+     * @api {post} /user/disable/:id 9.禁用用户
+     * @apiName disable
+     * @apiGroup User
+     *
+     * @apiParam {String} id 用户ID.
+     */
+    public function disable($id)
+    {
+        $user = User::find($id);
+        if(!$user)
+            throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+        $result = $user->update(['status'=>1]);
+        if($result){
+            //触发事件，写入日志
+            Event::fire('user.disable',array($user));
+            return $this->success();
+        }
+        throw new ApiException('用户禁用失败', ERROR::USER_UPDATE_FAILED);
+    }
+
+    /**
+     * @api {post} /user/resetCompanyCode/:id 10.解绑用户集团码
+     * @apiName resetCompanyCode
+     * @apiGroup User
+     *
+     * @apiParam {String} id 用户ID.
+     */
+    public function resetCompanyCode($id)
+    {
+        $user = User::find($id);
+        if(!$user)
+            throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+        $result = DB::table('company_code_user')->where('user_id','=',$id);
+        if($result){
+            //触发事件，写入日志
+            Event::fire('user.resetCompanyCode',array($user));
+            return $this->success();
+        }
+        throw new ApiException('集团码解除失败', ERROR::USER_UPDATE_FAILED);
     }
 
 }
