@@ -337,7 +337,8 @@ class UserController extends Controller{
      * @apiSuccess {String} companyCode 集团码.
      * @apiSuccess {String} companyName 集团名.
      * @apiSuccess {String} recommendCode 推荐码.
-     * @apiSuccess {String} salonname 商家名,如果此项为空,那么
+     * @apiSuccess {String} salonname 商家名
+     * @apiSuccess {String} activityName 活动名称
      * @apiSuccess {String} level 等级.
      *
      *
@@ -363,7 +364,9 @@ class UserController extends Controller{
      *            "companyCode": null,
      *            "companyName": null,
      *            "recommendCode": "8280",
-     *            "salonname": "嘉美专业烫染",
+     *            "salonname": "发丝缘",
+	 *			  "event_conf_id": 50,
+	 *			  "activityName": "测试活动122",
      *            "recommendCodes": [
 	 *		            {
 	 *		                "user_id": 1238231,
@@ -395,7 +398,7 @@ class UserController extends Controller{
     {
         $fields = [
             'username',
-            'img',
+            'user.img',
             'nickname',
             'sex',
             'hair_type',
@@ -407,21 +410,28 @@ class UserController extends Controller{
             'growth',
             'password',
             'costpwd',
+            'activity',
             'user.companyId',
             'company_code.code as companyCode',
             'company_code.companyName',
+            'salon.salonname',
+            'dividend.event_conf_id',
+            'eventspecial5.name as activityName',
             'salon.salonname'
         ];
         $user = User::leftJoin('recommend_code_user','user.user_id','=','recommend_code_user.user_id')
             ->leftJoin('salon','salon.salonid','=','recommend_code_user.salon_id')
             ->where('recommend_code_user.type','=',1)
             ->leftJoin('company_code','company_code.companyId','=','user.companyId')
+            ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
+            ->leftJoin('eventspecial5','dividend.event_conf_id','=','eventspecial5.eventspecialid')
             ->select($fields)
             ->find($id);
         $user->recommendCodes = DB::table('recommend_code_user')
         	->where('user_id','=',$id)
-        	->select('user_id','recommend_code','type')
+        	->select('user_id','recommend_code','type','add_time')
         	->get();
+
 
         if(!$user)
             throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
