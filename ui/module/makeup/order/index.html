@@ -22,32 +22,32 @@
         <div class="wrapper">
             <form data-role="hash">
               <div class="input-group placeholder-switch">
-                   <select name="selectItem">
-                       <option value="0" data-placeholder="请输入手机号">手机号</option>
-                       <option value="1" data-placeholder="请输入预约号">预约号</option>
-                       <option value="2" data-placeholder="请输入推荐号">推荐号</option>
+                   <select name="key">
+                       <option value="1" data-placeholder="请输入手机号">手机号</option>
+                       <option value="2" data-placeholder="请输入预约号">预约号</option>
+                       <option value="3" data-placeholder="请输入推荐号">推荐号</option>
                    </select>
                    <input type="text" class="input-search" name="keyword" placeholder="请输入手机号">
                </div>
                <span class="space"></span>
                <span>活动时间：</span>
                <span class="date-group">
-                   <input type="date" data-role="start" name="startTime" placeholder="YYYY-MM-DD"/>
+                   <input type="date" data-role="start" name="min_time" placeholder="YYYY-MM-DD"/>
                    至
-                   <input type="date" data-role="end" name="endTime" placeholder="YYYY-MM-DD"/>
+                   <input type="date" data-role="end" name="max_time" placeholder="YYYY-MM-DD"/>
                </span>
               <span class="space"></span>
               <div class="input-group">
-                   <select name="selectItem">
+                   <select name="pay_type">
                        <option value="0">支付方式</option>
-                       <option value="1" >微信</option>
+                       <option value="3" >微信</option>
                        <option value="2" >支付宝</option>
-                       <option value="3" >易联支付</option>
+                       <option value="10" >易联支付</option>
                    </select>
                </div>
                <span class="space"></span>
                <div class="input-group">
-                    <select name="selectItem">
+                    <select name="status">
                         <option value="0">订单状态</option>
                         <option value="1" >未消费</option>
                         <option value="2" >已完成</option>
@@ -60,7 +60,7 @@
 
                 <button class="btn" type="submit">查询</button>
             </form>
-           <div class="table" ajat="coupon/list?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="book/index?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>

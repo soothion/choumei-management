@@ -15,16 +15,24 @@
                     <h4>定妆单退款详情</h4>
                 </div>
                 <div class="flex-item fr">
-                  <div class="fr">
-                    <a data-modal='refund' class="btn" data-slug="coupon.add">
-                         确认退款
-                    </a>
-                    <a data-modal='refund' class="btn" data-slug="coupon.add">
-                         拒绝退款
-                    </a>
-                    <a href="index.html" class="btn" data-slug="coupon.add">
-                         返回
-                    </a>
+                  <div class="fr" id='breadcrumb' ajat="#domid=breadcrumb&tempid=breadcrumb-t">
+                      <script type="text/template" id="breadcrumb-t">
+                          <form  data-slug="feed.destroy" action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                              <input type="hidden" name="ids" value="<%=query.id%>">
+                          <button class="btn" data-slug="coupon.add">
+                               确认退款
+                          </button>
+                          </form>
+                          <form  data-slug="feed.destroy" action="beautyrefund/reject" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                              <input type="hidden" name="ids" value="<%=query.id%>">
+                          <button class="btn" data-slug="coupon.add">
+                               拒绝退款
+                          </button>
+                          </form>
+                          <a href="refund_list.html" class="btn" data-slug="coupon.add">
+                               返回
+                          </a>
+                      </script>
                   </div>
                 </div>
             </div>
@@ -41,50 +49,50 @@
         }
         </style>
         <div class="wrapper">
-            <div class="table table-detail" style="margin:0" ajat="coupon/actView/<%=query.id%>#domid=table&tempid=table-t" id="table">
+            <div class="table table-detail" style="margin:0" ajat="beautyrefund/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id='table-t'>
                 <table >
                 <%var status=["","进行中","下线","已关闭","已结束"]%>
                     <tbody>
                         <tr>
                             <td class="td">订单号：</td>
-                            <td><%=data.vcTitle%></td>
+                            <td><%=data.ordersn%></td>
                         </tr>
                         <tr>
                             <td class="td">预约号：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.booking_sn%></td>
                         </tr>
                         <tr>
                             <td class="td">手机号：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.booker_phone%></td>
                         </tr>
                         <tr>
                             <td class="td">姓名：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.booker_name%></td>
                         </tr>
                         <tr>
                             <td class="td">性别：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.status%></td>
                         </tr>
                         <tr>
                             <td class="td">预约项目：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.item_name%></td>
                         </tr>
                         <tr>
                             <td class="td">项目价格：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.price%></td>
                         </tr>
                         <tr>
                             <td class="td">预约日期：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.booking_date%></td>
                         </tr>
                         <tr>
                             <td class="td">推荐码：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.recommend_code%></td>
                         </tr>
                         <tr>
                             <td class="td">订单状态：</td>
-                            <td>无痛水光针</td>
+                            <td><%=data.status%></td>
                         </tr>
                         <tr>
                             <td colspan="2">预约金支付信息</td>
@@ -95,9 +103,9 @@
                                     <tbody>
                                         <tr>
                                             <td>支付方式：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.pay_type%></td>
                                             <td>流水号：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.payment_sn%></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -105,11 +113,11 @@
                         </tr>
                         <tr>
                             <td class="td">支付金额：</td>
-                            <td>1000</td>
+                            <td><%=data.payable%></td>
                         </tr>
                         <tr>
                             <td class="td">支付时间：</td>
-                            <td>3000</td>
+                            <td><%=data.paied_time%></td>
                         </tr>
                         <tr>
                             <td class="td">支付状态：</td>
@@ -120,15 +128,15 @@
                         </tr>
                         <tr>
                             <td class="td">到店时间：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.arrive_at%></td>
                         </tr>
                         <tr>
                             <td class="td">修改预约：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.update_booking_date%></td>
                         </tr>
                         <tr>
                             <td class="td">沟通记录：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.v%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -136,9 +144,9 @@
                                 <tbody>
                                     <tr>
                                         <td>接待人：</td>
-                                        <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        <td><%=data.receiver%></td>
                                         <td>接待时间：</td>
-                                        <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        <td><%=data.create_at%></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -154,9 +162,9 @@
                                     <tr>
                                         <tr>
                                             <td>发起退款：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.rereason%></td>
                                             <td>退款原因：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.rereason%></td>
                                         </tr>
                                     </tr>
                                 </tbody>
@@ -176,9 +184,9 @@
                                 <tbody>
                                     <tr>
                                         <td>退款金额：</td>
-                                        <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        <td><%=data.money%></td>
                                         <td>发起退款时间：</td>
-                                        <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                        <td><%=data.add_time%></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -190,9 +198,9 @@
                                     <tbody>
                                         <tr>
                                             <td>退款状态：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.vcRemark%></td>
                                             <td>完成退款时间：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.vcRemark%></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -204,9 +212,9 @@
                                     <tbody>
                                         <tr>
                                             <td>审批人：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.opt_user%></td>
                                             <td>审批时间：</td>
-                                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                                            <td><%=data.opt_time%></td>
                                         </tr>
                                     </tbody>
                                 </table>
