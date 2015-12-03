@@ -52,7 +52,13 @@
             <div class="table table-detail" style="margin:0" ajat="beautyrefund/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id='table-t'>
                 <table >
-                <%var status=["","进行中","下线","已关闭","已结束"]%>
+                <%var status={
+                    'NEW':'未支付',
+                    'PYD':'已支付',
+                    'CSD':'已消费',
+                    'RFN':'申请退款',
+                    'RFD':'已退款',
+                }%>
                     <tbody>
                         <tr>
                             <td class="td">订单号：</td>

@@ -42,16 +42,15 @@
                        <option value="0">支付方式</option>
                        <option value="3" >微信</option>
                        <option value="2" >支付宝</option>
-                       <option value="10" >银联</option>
-                       <option value="7" >积分兑换</option>
+                       <option value="10" >易联支付</option>
                    </select>
                </div>
                <span class="space"></span>
                <div class="input-group">
                     <select name="state">
                         <option value="0">退款状态</option>
-                        <option value="10" >退款中</option>
-                        <option value="7" >已退款</option>
+                        <option value="RFN" >退款中</option>
+                        <option value="RFD" >已退款</option>
                         <option value="9" >退款失败</option>
                     </select>
                 </div>
@@ -88,8 +87,8 @@
                 }%>
                 <%var status={
                      "6":"待审核",
-                     "7":"退款完成",
-                     "10":"退款中"
+                     "RFD":"已退款",
+                     "RFN":"退款中"
                 }%>
                 <%data.forEach(function(item,index){%>
                  <tr>
@@ -112,30 +111,73 @@
             </table>
             <div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<form disabled data-slug="feed.destroy" action="beautyrefund/accept" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-                    <input type="hidden" name="ids" value="">
-					<button class="btn">确认退款</button>
-				</form>
-                <form disabled data-slug="feed.destroy" action="beautyrefund/reject" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-                    <input type="hidden" name="ids" value="">
-					<button class="btn">拒绝退款</button>
-				</form>
+				<button disabled class="btn" data-action="accpent" type="button">确认退款</button>
+				<button disabled class="btn" data-action="reject" type="button">拒绝退款</button>
 			</div>
              <div class="pager"> </div>
             </script>
             <script type="text/javascript">
+            var ids=[];
+            var confirmBox = function(options){
+                 parent.lib.popup.confirm({
+                     text:options.text,
+                     cancelText:options.cancelText,
+                     defineText:options.defineText,
+                     define: function(){
+                         lib.ajax({
+                             url : options.url,
+                             data: options.data
+                         }).done(function(data, status, xhr){
+                             if(data.result == 1){
+                                 parent.lib.popup.result({
+                                     define:function(){
+                                         location.reload();
+                                     }
+                                 });
+                             }
+                         });
+                     }
+                 });
+            }
+
+            var getConfig = function(action){
+                var confirmBoxConfig = {
+                    'accpent':{
+                        'text':'已选中'+ids.length+'个退款单，是否确认退款',
+                        'cancelText':'取消退款',
+                        'defineText':'确认退款',
+                        'url':'beautyrefund/accpent',
+                        'data':{
+                            'ids':ids.join(",")
+                        }
+                    },
+                    'reject':{
+                        'text':'你正在给'+ids.length+'个退款单取消退款，是否执行',
+                        'cancelText':'取消',
+                        'defineText':'执行',
+                        'url':'beautyrefund/reject',
+                        'data':{
+                            'ids':ids.join(",")
+                        }
+                    }
+                }
+                return confirmBoxConfig[action]
+            }
+
         		$('#table').on('change','input',function(){
-                    var checkedBox = $('tbody label input:checked'),ids = [];
+                    var checkedBox = $('tbody label input:checked');ids = [];
         			if(checkedBox.length>0){
                         $.each(checkedBox,function(item){
                             ids.push($(this).val())
                         });
-                        $('.table-bottom input[name=ids]').val(ids.join(","))
-        				$('.table-bottom form').removeAttr('disabled');
+        				$('.table-bottom button').removeAttr('disabled');
         			}else{
-        				$('.table-bottom form').attr('disabled','disabled');
+        				$('.table-bottom button').attr('disabled','disabled');
         			}
-        		})
+        		}).on('click','button',function(){
+                    var action = $(this).attr('data-action');
+                    confirmBox(getConfig(action));
+                })
         	</script>
         </div>
             </div>
