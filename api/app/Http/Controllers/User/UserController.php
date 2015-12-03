@@ -16,7 +16,7 @@ use App\Exceptions\ERROR;
 
 class UserController extends Controller{
     /**
-     * @api {post} /user/survey 1.用户根况
+     * @api {post} /user/survey 1.用户概况
      * @apiName survey
      * @apiGroup User
      *
@@ -634,7 +634,7 @@ class UserController extends Controller{
 
     /**
      * @api {post} /user/resetCompanyCode/:id 10.解绑用户集团码
-     * @apiName disable
+     * @apiName resetCompanyCode
      * @apiGroup User
      *
      * @apiParam {String} id 用户ID.
