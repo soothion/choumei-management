@@ -13,6 +13,7 @@ use App\BookingSalonRefund;
 use App\BeautyMakeup;
 use App\BookingBill;
 use App\BookingCash;
+use App\BookingReceive;
 
 class BookController extends Controller
 {
@@ -185,6 +186,8 @@ class BookController extends Controller
      * @apiSuccess {String} fundflow.pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
      * @apiSuccess {String} paymentlog 流水信息
      * @apiSuccess {String} paymentlog.tn 第三方流水号
+     * @apiSuccess {String} recommend 推荐信息
+     * @apiSuccess {String} recommend_code 推荐码
      * @apiSuccess {String} makeup 补妆信息
      * @apiSuccess {String} makeup.remark 说明
      * @apiSuccess {String} makeup.work_at 补妆时间
@@ -289,6 +292,11 @@ class BookController extends Controller
      *             "ordersn": "3891556931672",
      *             "tn": "1002360799201508070568495032",
      *             "amount": "1.00"
+     *           },
+     *           "recommend": {
+     *              "id":123,
+     *              "user_id":456,
+     *              "recommend_code":"fsadasdd",
      *           },
      *            "makeup": {
      *                 "id": 1,
@@ -433,6 +441,7 @@ class BookController extends Controller
             'remark' => self::T_STRING,
             'item_ids' => self::T_STRING,
        ]);
+       BookingReceive::receive($id,$params);
        return $this->success(['id'=>$id]);
     }
     
