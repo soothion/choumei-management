@@ -177,7 +177,7 @@ class UserController extends Controller{
 		    'user.mobilephone',
 		    'user.area',
 		    'company_code.code as companyCode',
-		    'recommend_code_user.recommend_code as recommendCode',
+		    // 'recommend_code_user.recommend_code as recommendCode',
 		    'activity',
 		    'user.add_time'
 		);

@@ -25,9 +25,14 @@ class User extends  Model
     public $timestamps = false;
 
 
+    public function recommendCodes(){
+        return $this->hasMany('App\RecommendCodeUser');
+    }
+
     public static function getQueryByParam($param=[]){
         $query = Self::leftJoin('company_code','user.companyId','=','company_code.companyId')
         	->leftJoin('recommend_code_user','user.user_id','=','recommend_code_user.user_id')
+            ->where('recommend_code_user.type','=',1)
             ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code');
 
         if(!empty($param['username'])){
@@ -43,8 +48,15 @@ class User extends  Model
         	$query = $query->where('company_code.code','=',$param['companyCode']);
         }
 
+
+        $query = $query->with(['recommendCodes'=>function($q){
+            $q->select('user_id','recommend_code','type');
+        }]);     
+
         if(!empty($param['recommendCode'])){
-        	$query = $query->where('recommend_code_user.recommend_code','=',$param['recommendCode']);
+            $query = $query->whereHas('recommendCodes',function($q) use($param){
+                $q->where('recommend','=',$param['recommendCode']);
+            });
         }
 
         if(!empty($param['sex'])){
