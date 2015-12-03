@@ -154,7 +154,7 @@
 								<input type="hidden" name="logo" class="original" value="<%=data.logo%>" required requiredmsg="请上传项目icon" data-helpid="image-help1">
 							</div>
 						</div>
-						<div class="weak">请上传300*300PX的JPG或PNG格式的图标，此图标将显示在项目列表中</div>
+						<div class="weak">请上传140*140JPG或PNG格式的图标，可通过编辑裁剪，此图标将显示在项目列表中</div>
 						<div class="control-help" style="display:none" id="image-help1"></div>
                     </div>
                 </div>
@@ -172,7 +172,7 @@
 							</div>
 						</div>
 						<textarea name="images"  id="item-images" style="display:none" required requiredmsg="请上传项目图片" data-helpid="image-help2"><%=data.images%></textarea>
-						<div class="weak">请上传750*500的JPG或PNG格式的图标，此图片将显示在项目详情中，最多上传10张</div>
+						<div class="weak">请上传750*500JPG或PNG格式的图标，可通过编辑裁剪，此图标将显示在项目列表中，最多上传10张</div>
 						<div class="control-help" style="display:none" id="image-help2"></div>
                     </div>
                 </div>
@@ -333,10 +333,10 @@
 						lib.cropper.create({
 							src:response.img,
 							aspectRatio : 1,
-							thumbnails  : ["300x300"],
+							thumbnails  : ["140x140"],
 							define:function(data){
 								up.preview($('#imageUpload').closest('.control-single-image'),{
-									img:data["300x300"],
+									img:data["140x140"],
 								});
 							}
 						});	
