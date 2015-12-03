@@ -144,7 +144,7 @@ class BannerController extends Controller {
         $query = Banner::create($param);
         $id = $query->banner_id;
         if ($query) {
-            Event::fire('banner.create','主键:'.$id);
+       //     Event::fire('banner.create','主键:'.$id);
             return $this->success();
         } else {
             throw new ApiException('创建banner失败', ERROR::BEAUTY_BANNER_CREATE_ERROR);
@@ -199,7 +199,7 @@ class BannerController extends Controller {
         $param['updated_at'] = time();
         $query = Banner::find($id)->update($param);
         if ($query) {
-            Event::fire('banner.edit','主键:'.$id);
+         //   Event::fire('banner.edit','主键:'.$id);
             return $this->success();
         } else {
             throw new ApiException('修改banner失败', ERROR::BEAUTY_BANNER_UPDATE_ERROR);
@@ -236,7 +236,7 @@ class BannerController extends Controller {
         }
         $query = Banner::destroy($id);
         if ($query) {
-            Event::fire('banner.destroy','主键:'.$id);
+          //  Event::fire('banner.destroy','主键:'.$id);
             return $this->success();
         } else {
             throw new ApiException('删除banner失败', ERROR::BEAUTY_BANNER_DELETE_ERROR);
