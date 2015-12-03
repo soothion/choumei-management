@@ -177,7 +177,7 @@ class UserController extends Controller{
 		    'user.mobilephone',
 		    'user.area',
 		    'company_code.code as companyCode',
-		    // 'recommend_code_user.recommend_code as recommendCode',
+		    'recommend_code_user.recommend_code as recommendCode',
 		    'activity',
 		    'user.add_time'
 		);
@@ -529,6 +529,48 @@ class UserController extends Controller{
 		unset($result['next_page_url']);
 	    unset($result['prev_page_url']);
 		return $this->success($result);
+	}
+
+	/**
+	 * @api {post} /user/enable/:id 8.启用用户
+	 * @apiName destroy
+	 * @apiGroup User
+	 *
+	 * @apiParam {String} id 用户ID.
+	 */
+	public function enable($id)
+	{
+		$user = User::find($id);
+		if(!$user)
+			throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+		$result = $user->update(['status'=>1]);
+		if($result){
+			//触发事件，写入日志
+			Event::fire('user.enable',array($user));
+			return $this->success();
+		}
+		throw new ApiException('用户启用失败', ERROR::USER_UPDATE_FAILED);
+	}
+
+	/**
+	 * @api {post} /user/disable/:id 9.禁用用户
+	 * @apiName destroy
+	 * @apiGroup User
+	 *
+	 * @apiParam {String} id 用户ID.
+	 */
+	public function disable($id)
+	{
+		$user = User::find($id);
+		if(!$user)
+			throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+		$result = $user->update(['status'=>0]);
+		if($result){
+			//触发事件，写入日志
+			Event::fire('user.disable',array($user));
+			return $this->success();
+		}
+		throw new ApiException('用户禁用失败', ERROR::USER_UPDATE_FAILED);
 	}
 
 }

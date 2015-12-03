@@ -25,85 +25,73 @@ class User extends  Model
     public $timestamps = false;
 
 
-    public function recommendCodes(){
-        return $this->hasMany('App\RecommendCodeUser');
-    }
-
     public static function getQueryByParam($param=[]){
         $query = Self::leftJoin('company_code','user.companyId','=','company_code.companyId')
-        	->leftJoin('recommend_code_user','user.user_id','=','recommend_code_user.user_id')
-            ->where('recommend_code_user.type','=',1)
+            ->leftJoin('recommend_code_user','user.user_id','=','recommend_code_user.user_id')
             ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code');
 
         if(!empty($param['username'])){
-        	$username = '%'.$param['username'].'%';
-        	$query = $query->where('username','like',$username);
+            $username = '%'.$param['username'].'%';
+            $query = $query->where('username','like',$username);
         }
 
         if(!empty($param['mobilephone'])){
-        	$query = $query->where('mobilephone','=',$param['mobilephone']);
+            $query = $query->where('mobilephone','=',$param['mobilephone']);
         }
 
         if(!empty($param['companyCode'])){
-        	$query = $query->where('company_code.code','=',$param['companyCode']);
+            $query = $query->where('company_code.code','=',$param['companyCode']);
         }
 
-
-        $query = $query->with(['recommendCodes'=>function($q){
-            $q->select('user_id','recommend_code','type');
-        }]);     
-
         if(!empty($param['recommendCode'])){
-            $query = $query->whereHas('recommendCodes',function($q) use($param){
-                $q->where('recommend','=',$param['recommendCode']);
-            });
+            $query = $query->where('recommend_code_user.recommend_code','=',$param['recommendCode']);
         }
 
         if(!empty($param['sex'])){
-        	$query = $query->where('sex','=',$param['sex']);
+            $query = $query->where('sex','=',$param['sex']);
         }
 
         if(!empty($param['start_at'])){
-        	$start_at = strtotime($param['start_at']);
-        	$query = $query->where('user.add_time','>=',$start_at);
+            $start_at = strtotime($param['start_at']);
+            $query = $query->where('user.add_time','>=',$start_at);
         }
 
         if(!empty($param['end_at'])){
-        	$end_at = strtotime($param['end_at'])+3600*24;
-        	$query = $query->where('user.add_time','<=',$end_at);
+            $end_at = strtotime($param['end_at'])+3600*24;
+            $query = $query->where('user.add_time','<=',$end_at);
         }
 
         if(!empty($param['area'])){
-        	$area = '%'.$param['area'].'%';
-        	$query = $query->where('area','like',$area);
+            $area = '%'.$param['area'].'%';
+            $query = $query->where('area','like',$area);
         }
 
         //排序
-    	$sort_key = empty($param['sort_key'])?'user.user_id':$param['sort_key'];
-    	$sort_type = empty($param['sort_type'])?'DESC':$param['sort_type'];
+        $sort_key = empty($param['sort_key'])?'user.user_id':$param['sort_key'];
+        $sort_type = empty($param['sort_type'])?'DESC':$param['sort_type'];
         $query = $query->orderBy($sort_key,$sort_type);
  
         return $query;
     }
 
     public static function getLevel($growth=0){
-    	$level = DB::table('user_level')
-    		->where('growth','<=',$growth)
-    		->orderBy('level','DESC')
-    		->pluck('level');
-    	return $level;
+        $level = DB::table('user_level')
+            ->where('growth','<=',$growth)
+            ->orderBy('level','DESC')
+            ->pluck('level');
+        return $level;
     }
 
     public static function getSex($sex=0){
-    	$sex = intval($sex);
-    	$mapping = [
-    		0=>'未知',
-    		1=>'女',
-    		2=>'男'
-    	];
-    	if(empty($mapping[$sex]))
-    		return '未知';
-    	return $mapping[$sex];
+        $sex = intval($sex);
+        $mapping = [
+            0=>'未知',
+            1=>'女',
+            2=>'男'
+        ];
+        if(empty($mapping[$sex]))
+            return '未知';
+        return $mapping[$sex];
     }
     
     public static function getUsersByIds($uids) {
