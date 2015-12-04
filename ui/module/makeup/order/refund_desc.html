@@ -18,13 +18,13 @@
                   <div class="fr">
                       <span id="breadcrumb">
                       <script type="text/template" id="breadcrumb-t">
-                          <form  action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <form <%if (data.status == 'RFD'){%>disabled='disabled'<%}%> action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="refund(data.data)">
                               <input type="hidden" name="ids" value="<%=query.id%>">
                           <button class="btn" data-slug="coupon.add">
                                确认退款
                           </button>
                           </form>
-                          <form  action="beautyrefund/reject" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.href='refund_list.html'}})">
+                          <form  action="beautyrefund/reject" id="destroy" data-role="normal" onsuccess="lib.popup.result({text:'拒绝退款成功',define:function(){location.href='refund_list.html';}});">
                               <input type="hidden" name="ids" value="<%=query.id%>">
                           <button class="btn" data-slug="coupon.add">
                                拒绝退款
@@ -43,6 +43,9 @@
         .inner-table tbody td:nth-child(2n+1){
             background-color: #F6F8F9;
         }
+        .inner-table tbody td:nth-child(2n){
+            width:35%;
+        }
         .pad-n{
             padding:0px !important;
         }
@@ -53,6 +56,20 @@
             background-color: #F6F8F9;
         }
         </style>
+        <form id='alipaysubmit' name='alipaysubmit' target="_blank" style="display:none" method='post'
+        action='https://mapi.alipay.com/gateway.do?_input_charset=utf-8'>
+            <input type='hidden' name='_input_charset' value=''/>
+            <input type='hidden' name='batch_no' value=''/>
+            <input type='hidden' name='batch_num' value=''/>
+            <input type='hidden' name='detail_data' value=''/>
+            <input type='hidden' name='notify_url' value=''/>
+            <input type='hidden' name='partner' value=''/>
+            <input type='hidden' name='refund_date' value=''/>
+            <input type='hidden' name='seller_email' value=''/>
+            <input type='hidden' name='service' value=''/>
+            <input type='hidden' name='sign' value=''/>
+            <input type='hidden' name='sign_type' value=''/>
+        </form>
         <div class="wrapper">
             <div class="table table-detail" style="margin:0" ajat="beautyrefund/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id='table-t'>
@@ -253,9 +270,23 @@
                 </table>
                  </script>
                  <script>
-                    $('#table').on('_ready',function(){
+                    $('#table').on('_ready',function(e,res){
                         lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').render();
                     })
+                    var refund = function(data){
+                        lib.popup.result({
+                            text:'退款成功',
+                            define:function(){
+                                location.reload();
+                            }
+                        });
+                        if(data.alipay && data.alipay.form_args){
+                          $.each($("#alipaysubmit").serializeArray(),function(i,field){
+                            $("input[name='"+field.name+"']").val(data.alipay.form_args[field.name]);
+                          })
+                          $("#alipaysubmit").submit();
+                        }
+                    }
                  </script>
             </div>
         </div>

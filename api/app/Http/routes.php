@@ -126,6 +126,11 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 	'as'=>'AlipayRefundNotify.callback_alipay',
 	'uses'=>'Alipay\AlipayRefundNotifyController@callback_alipay'
 ));
+//退款回调 支付宝 定妆单
+Route::any('beautyrefund/beauty_call_back_of_alipay',array( 
+	'as'=>'beautyrefund.beauty_call_back_of_alipay',
+	'uses'=>'Transaction\BeautyRefundController@beauty_call_back_of_alipay'
+));
 // 营销平台活动用到的
 Route::any('platform/getRequestDepartment',array(  
     'as'=>'platform.getRequestDepartment',
@@ -160,7 +165,17 @@ Route::any('artificer/checkNameExists/{id?}',array(
     'as'=>'artificer.checkNameExists',
     'uses'=>'Artificer\ArtificerController@checkNameExists'
 )); 
+Route::any('beautyItem/itemList',array(  
+	'as'=>'beautyItem.itemList',
+	'uses'=>'Item\BeautyItemController@itemList'
+));
 
+Route::any('beautyItem/checkName',array(  
+	'as'=>'beautyItem.checkName',
+	'uses'=>'Item\BeautyItemController@checkName'
+));
+	
+	
 
 Route::any('assistant/checkNumberExists/{id?}',array(  
     'as'=>'assistant.checkNumberExists',
@@ -1276,11 +1291,6 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     ));
     
 
-	Route::any('beautyItem/checkName',array(  
-        'as'=>'beautyItem.checkName',
-        'uses'=>'Item\BeautyItemController@checkName'
-    ));
-	
 	Route::any('beautyItem/updateFashion',array(  
         'as'=>'beautyItem.updateFashion',
         'uses'=>'Item\BeautyItemController@updateFashion'

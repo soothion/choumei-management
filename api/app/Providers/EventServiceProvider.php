@@ -368,6 +368,20 @@ class EventServiceProvider extends ServiceProvider
     	],
         'beauty.delete' => [
             'App\Listeners\BeautyEventListener@onDelete',
+    	],
+        
+        //定妆赠送活动
+        'powder.create' => [
+            'App\Listeners\PowderEventListener@onCreate',
+    	],
+        'powder.showArticleDetail' => [
+            'App\Listeners\PowderEventListener@onShowArticleDetail',
+    	],
+        'powder.closeArticleVerify' => [
+            'App\Listeners\PowderEventListener@onCloseArticleVerify',
+    	],
+        'powder.closeArticle' => [
+            'App\Listeners\PowderEventListener@onCloseArticle',
     	]
 
     ];

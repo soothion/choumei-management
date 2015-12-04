@@ -18,8 +18,11 @@
                   <div class="fr" >
                     <span id="breadcrumb">
                     <script id="breadcrumb-t" type="text/template">
-                        <a data-modal='useCoupon' <%if (data.ticketStatus !=1){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
+                        <%console.log(data)%>
+                        <a  data-modal='useCoupon'>
+                        <button <%if (data.ticketStatus !=2){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
                              消费使用
+                        </button>
                         </a>
                     </script>
                     </span>
@@ -34,21 +37,27 @@
         .inner-table tbody td:nth-child(2n+1){
             background-color: #F6F8F9;
         }
+        .inner-table tbody td:nth-child(2n){
+            width: 35%;
+        }
         .pad-n{
             padding:0px !important;
         }
         .bor-n{
             border:0px !important;
         }
+        td.td{
+            background-color: #F6F8F9;
+        }
         </style>
         <div class="wrapper">
-            <div class="table table-detail" style="margin:0" ajat="PowderArticles/presentListInfo?articleCodeId=<%=query.id%>#domid=table&tempid=table-t" id="table">
+            <div class="table table-detail" style="margin:0" ajat="powderArticles/presentListInfo?articleCodeId=<%=query.id%>#domid=table&tempid=table-t" id="table">
                 <script type="text/template" id='table-t'>
                 <table >
                     <tbody>
                         <tr>
                             <td class="td">订单号：</td>
-                            <td><%=data.reservateSn%></td>
+                            <td><%=data.orderSn%></td>
                         </tr>
                         <tr>
                             <td class="td">手机号：</td>
@@ -134,8 +143,8 @@
                 </table>
                  </script>
                  <script type="text/javascript">
-                 $('#table').on('_ready',function(res){
-                     lib.ajat("#domid=breadcrumb&tmpid=breadcrumb-t").template(res.response.data);
+                 $('#table').on('_ready',function(e,res){
+                     lib.ajat("#domid=breadcrumb&tempid=breadcrumb-t").template(res.response);
                  })
 
                  var completeDefine = function(){
