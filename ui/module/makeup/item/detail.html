@@ -42,7 +42,7 @@
         <div class="wrapper" id="detail" ajat="<%if(query.p=='index'){%>beautyItem/show<%}else{%>beautyItem/showFashion<%}%>?<%=query._%>#domid=detail&tempid=detail-t">
 			<script type="text/template" id="detail-t">
 			<div class="detail-operation">
-				<a href="base.html?<%=query._%>" onclick="sessionStorage.removeItem('formdata')" class="btn">编辑</a>
+				<a href="base.html?<%=query._%>" onclick="sessionStorage.removeItem('formdata')" data-slug="<%=query.p=="index"?"beautyItem.update":"beautyItem.updateFashion"%>" class="btn">编辑</a>
 				<span class="space"></span>
 				<button class="btn btn-cancel" type="button">返回</button>
 			</div>

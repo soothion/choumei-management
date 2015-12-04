@@ -924,6 +924,7 @@ class PowderArticlesController extends Controller
             DB::rollBack();
             throw new ApiException('插入赠送券失败');
         }
+        DB::commit();
         return 1;
     }
     
