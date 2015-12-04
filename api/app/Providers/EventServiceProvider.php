@@ -394,7 +394,24 @@ class EventServiceProvider extends ServiceProvider
     	],
         'powder.useArticleTicket' => [
             'App\Listeners\PowderArticlesEventListener@onUseArticleTicket',
-    	]
+    	],
+
+		//定妆单操作
+        'booking.receive' => [
+            'App\Listeners\BookingOrderEventListener@onReceive',
+        ],
+        'booking.cash' => [
+            'App\Listeners\BookingOrderEventListener@onCash',
+        ],
+        'booking.bill' => [
+            'App\Listeners\BookingOrderEventListener@onBill',
+        ],
+        'booking.relatively' => [
+            'App\Listeners\BookingOrderEventListener@onRelatively',
+        ],
+        'booking.refund' => [
+            'App\Listeners\BookingOrderEventListener@onRefund',
+        ],
 
     ];
 

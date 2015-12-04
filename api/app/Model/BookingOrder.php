@@ -68,9 +68,7 @@ class BookingOrder extends Model
     
     public static function detail($id)
     {
-        $base = self::where('ID',$id)->with(['user'=>function($q){
-            $q->get(['user_id','nickname','sex']);
-        }])->first();
+        $base = self::where('ID',$id)->first();
         
         if(empty($base))
         {
@@ -86,7 +84,20 @@ class BookingOrder extends Model
         $fundflows = Fundflow::where('record_no',$ordersn)->get(['record_no','pay_type'])->toArray();
         $payment_log = PaymentLog::where('ordersn',$ordersn)->first(['ordersn','tn','amount'])->toArray();
         $recommend = RecommendCodeUser::where('user_id',$base['USER_ID'])->whereIn('type',[2,3])->first(['id','user_id','recommend_code']);
-        
+        $refund_fields = ['ordersn','user_id','money','opt_user_id','rereason','add_time','opt_time','status','booking_sn','item_type','rereason'];
+        $order_refund = OrderRefund::where('ordersn',$ordersn)->first($refund_fields);
+        if(empty($order_refund))
+        {
+            $order_refund = NULL;
+        }
+        else 
+        {
+            $order_refund = $order_refund->toArray();
+            $order_refund['manager'] = Manager::getBaseInfo($order_refund['opt_user_id']);
+            if ($base['STATUS'] == 'RFN' && $order_refund['status'] == 3) {
+                $base['STATUS'] == 'RFE';
+            }
+        }
         $item_amount = 0;
         if(!empty($beauty_items))
         {
@@ -119,6 +130,7 @@ class BookingOrder extends Model
             'booking_cash'=>BookingCash::getByBookingId($id),
             'booking_receive'=>BookingReceive::getByBookingId($id),
             'booking_salon_refund'=>BookingSalonRefund::getByBookingId($id),
+            'order_refund'=>$order_refund,
         ];
     }
     
@@ -126,6 +138,8 @@ class BookingOrder extends Model
     {
         $select_fields = [
             'cm_booking_order.*',
+            'cm_beauty_makeup.id as beauty_makeup_id',
+            'cm_order_refund.status as refund_status',
             'cm_fundflow.record_no as record_no',
             'cm_fundflow.pay_type as pay_type',
             'cm_recommend_code_user.recommend_code as recommend_code',
@@ -161,12 +175,29 @@ class BookingOrder extends Model
          {
              if($pay_state == "Y")
              {
-                // $base->where('booking_order.TOUCHED_UP',$pay_state);
+                 $base->join('beauty_makeup',function($join){
+                     $join->on('beauty_makeup.booking_id', '=', 'booking_order.ID');
+                 });
+             }
+             else if($pay_state == "FAILD")
+             {
+                 $base->join('order_refund',function($join){
+                     $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status',3);
+                 });
              }
              else 
              {
                  $base->where('booking_order.STATUS',$pay_state);
              }
+         }
+         else 
+         {
+             $base->leftJoin('beauty_makeup',function($join){
+                 $join->on('beauty_makeup.booking_id', '=', 'booking_order.ID');
+             });
+             $base->leftJoin('order_refund',function($join){
+                 $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN');
+             });
          }
          
          if($key == 1 && ! empty($keyword))
@@ -188,7 +219,7 @@ class BookingOrder extends Model
         
         $base->leftJoin('recommend_code_user', function ($join) use($key,$keyword)
         {
-            $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('type',[2,3]);
+            $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('type',[2,3,4]);
             if ($key == 3 && !empty($keyword)) {
                 $join->where('recommend_code_user.recommend_code', 'like', $keyword);
             }
