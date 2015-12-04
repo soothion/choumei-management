@@ -154,7 +154,8 @@
         <div class="box-warpper" ajat="banner/index?type=1#domid=warpper&tempid=warpper-t" id="warpper">
             <script type="text/template" id="warpper-t">
               <%data.data && data.data.forEach(function(item,i){%>
-              <form data-role="form" class="banner move" draggable="true" id="form<%=i%>">
+              <form data-role="form" class="banner move" draggable="true" id="form<%=i%>" 
+              bannerId="<%=item.banner_id%>">
                   <ul>
                       <li>
                           <div class="fl"><h3><strong>Banner<%=i+1%></strong></h3></div>

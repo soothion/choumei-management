@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-04 18:30:41
+* @Last Modified time: 2015-12-04 19:21:41
 */
 
 $(function(){
@@ -141,8 +141,9 @@ $(function(){
         }
         var clone = moveTarget.clone();
         moveTarget.remove();
-        $(ev.target).closest('form').after(clone);                     
-    });
+        $(ev.target).closest('form').after(clone);
+        sort();                     
+    }); 
 
     $(".box-warpper").on('dragstart','form',function(ev){       
         moveTarget = $(ev.currentTarget);
@@ -151,6 +152,21 @@ $(function(){
         }
     });
 
+    function sort(){
+        var arr = [];
+        $('form[bannerId]').each(function(item,i){
+            arr.push({id:$(item).attr('bannerId'),sort:i+1});
+        });
+        lib.ajax({
+            type: "post",
+            url : 'banner/sort',
+            data: {sort:JSON.parse(arr)}
+        }).done(function(data, status, xhr){
+            if(data.result == 0){
+                 location.reload();
+            }
+        })       
+    }
 
     lib.Form.prototype.save = function(data){
         data.behavior = $(this.el).find('input:checked').val();
