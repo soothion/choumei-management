@@ -1537,43 +1537,43 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     //定妆活动
     Route::any('powderArticles/addArticles',array(  
         'as'=>'powderArticles.addArticles',
-        'uses'=>'powder\powderArticlesController@addArticles'
+        'uses'=>'Powder\powderArticlesController@addArticles'
     )); 
     Route::any('powderArticles/articlesList',array(  
         'as'=>'powderArticles.articlesList',
-        'uses'=>'powder\powderArticlesController@articlesList'
+        'uses'=>'Powder\powderArticlesController@articlesList'
     ));
     Route::any('powderArticles/showArticlesInfo',array(  
         'as'=>'powderArticles.showArticlesInfo',
-        'uses'=>'powder\powderArticlesController@showArticlesInfo'
+        'uses'=>'Powder\powderArticlesController@showArticlesInfo'
     )); 
     Route::any('powderArticles/switchArticles',array(  
         'as'=>'powderArticles.switchArticles',
-        'uses'=>'powder\powderArticlesController@switchArticles'
+        'uses'=>'Powder\powderArticlesController@switchArticles'
     ));
     Route::any('powderArticles/switchVerifyArticles',array(  
         'as'=>'powderArticles.switchVerifyArticles',
-        'uses'=>'powder\powderArticlesController@switchVerifyArticles'
+        'uses'=>'Powder\powderArticlesController@switchVerifyArticles'
     ));
     Route::any('powderArticles/presentList',array(  
         'as'=>'powderArticles.presentList',
-        'uses'=>'powder\powderArticlesController@presentList'
+        'uses'=>'Powder\powderArticlesController@presentList'
     ));
     Route::any('powderArticles/presentListInfo',array(  
         'as'=>'powderArticles.presentListInfo',
-        'uses'=>'powder\powderArticlesController@presentListInfo'
+        'uses'=>'Powder\powderArticlesController@presentListInfo'
     ));
     Route::any('powderArticles/usePresentTicket',array(  
         'as'=>'powderArticles.usePresentTicket',
-        'uses'=>'powder\powderArticlesController@usePresentTicket'
+        'uses'=>'Powder\powderArticlesController@usePresentTicket'
     ));
     Route::any('powderArticles/articlesTicketList',array(  
         'as'=>'powderArticles.articlesTicketList',
-        'uses'=>'powder\powderArticlesController@articlesTicketList'
+        'uses'=>'Powder\powderArticlesController@articlesTicketList'
     ));
     Route::any('powderArticles/exportArticlesTicketList',array(  
         'as'=>'powderArticles.exportArticlesTicketList',
-        'uses'=>'powder\powderArticlesController@exportArticlesTicketList'
+        'uses'=>'Powder\powderArticlesController@exportArticlesTicketList'
     ));
     
         //定妆单退款
