@@ -1260,6 +1260,11 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     )); 
 	
 	//韩式定妆项目
+	Route::any('beautyItem/itemList',array(  
+        'as'=>'beautyItem.itemList',
+        'uses'=>'Item\BeautyItemController@itemList'
+    ));
+	
 	Route::any('beautyItem/index',array(  
         'as'=>'beautyItem.index',
         'uses'=>'Item\BeautyItemController@index'

@@ -561,6 +561,42 @@ class BeautyItemController extends Controller{
 		$beautyItem['quantity']  = $quantityRs->quantity?$quantityRs->quantity:0;
 		return $this->success($beautyItem);
 	}
+	
+	
+		/**
+	* @api {post} /beautyItem/itemList 8.韩式定妆项目列表
+	* @apiName itemList
+	* @apiGroup  beautyItem
+	* 
+	* @apiSuccess {String} name 项目名称.
+	* @apiSuccess {Number} item_id 项目id.
+	*
+	* @apiSuccessExample Success-Response:
+	*{
+	*	    "result": 1,
+	*	    "token": "",
+	*	    "data": [
+	*	    {
+	*	    	    "name": 韩式眉毛（明星院长）,
+	*	    	    "item_id": "1",
+	*	    },
+	*			......
+	*	    ]
+	*}
+	*
+	*
+	*
+	* @apiErrorExample Error-Response:
+	*		{
+	*		    "result": 0,
+	*		    "msg": "未授权访问"
+	*		}
+	*/
+	public function itemList()
+	{
+		$result = BeautyItem::select(['item_id','name'])->orderBy('item_id', 'desc')->get();
+		return $this->success($result);
+	}
 }
 
 ?>
