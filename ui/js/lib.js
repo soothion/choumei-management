@@ -314,6 +314,19 @@
 								Qiniu._fileName=data.fileName;
 							});
 						},1000*60);
+					},
+					error:function(){
+						parent.lib.popup.result({
+							text:'获取上传token失败',
+							bool:false
+						});
+						clearTimeout(self.timer);
+						self.timer=setTimeout(function(){//token是有有效期的
+							lib.puploader.getToken(function(data){
+								Qiniu.token=data.uptoken;
+								Qiniu._fileName=data.fileName;
+							});
+						},1000*60);
 					}
 				});
 			},
