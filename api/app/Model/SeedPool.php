@@ -16,10 +16,11 @@ class SeedPool extends Model
     /**
      * 根据条件，获取所需要的赠送券
      */
-    public static function getArticleTicketFromPool($limit){
+    public static function getArticleTicketFromPool($limit=1,$orderby = array('ID' => 'desc')){
         $where = array('TYPE' => 'GSN','STATUS' => 'NEW');
         $res =  self::select('SEED as articleTicket')
                ->where($where)
+               ->orderby($orderby)
                ->limit($limit)
                ->get()->toArray();
         if(empty($res)){

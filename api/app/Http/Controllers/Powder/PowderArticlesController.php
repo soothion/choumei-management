@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Present;
 use App\Model\PresentArticleCode;
 use DB;
+use App\Model\SeedPool;
 
 use App\Jobs\PowderArticleTicket;
 
@@ -868,9 +869,62 @@ class PowderArticlesController extends Controller
             if($res){
                 return $this->success();
             }
+        }         
+    }
+    
+    /**
+     * 线上活动增加预约号记录
+     */
+    public function addReservateSnAfterConsume($userData=array()){
+        if(empty($userData['user_id']) || empty($userData['mobilephone']) || empty($userData['present_type'])){
+            throw new ApiException('必传参数不能为空');
         }
-        
-        
+        //获取活动信息
+        $where = array(
+            'article_status' => 1,
+            'article_type' => 2,
+        );
+        $presentInfo = Present::getArticleInfoByWhere($where);
+        //截止日期后不能赠送
+        if(strtotime($presentInfo['end_at']) < time()){
+            throw new ApiException('活动截止后不能赠送');
+        }else{
+            $data['present_id'] = $presentInfo['present_id'];
+            $data['item_id'] = $presentInfo['item_id'];
+            $data['user_id'] = $userData['user_id'];
+            $data['mobilephone'] = $presentInfo['mobilephone'];
+            $data['recommend_code'] = isset($presentInfo['recommend_code']) ? $presentInfo['recommend_code'] : 0;
+            $data['present_type'] = $presentInfo['present_type'];
+            //三个月内有效
+            $data['expire_at'] = date("Y-m-d",strtotime("+3 month"))." 23:59:59";
+            $data['created_at'] = time();
+        }
+        //获取预约号
+        $reservateSnInfo = SeedPool::getReservateSnFromPool();
+        $data['reservate_sn'] = $reservateSnInfo['reservateSn'];
+        //获取赠送券号
+        $articleTicketInfo = SeedPool::getArticleTicketFromPool(1,array('ID'=>'asc'));
+        $data['code'] = $articleTicketInfo['articleTicket'];
+        DB::beginTransaction();
+        //更新预约号
+        $updateReservateSnRes = SeedPool::where(array('SEED' => $reservateSnInfo['reservateSn'],'TYPE' => 'TKT'))->update(array('STATUS' => 'USD'));
+        if(!$updateReservateSnRes){
+            DB::rollBack();
+            throw new ApiException('更新预约号失败');
+        }
+        //更新赠送券号
+        $updateArticleTicketRes = SeedPool::where(array('SEED' => $articleTicketInfo['articleTicket'],'TYPE' => 'GSN'))->update(array('STATUS' => 'USD'));
+        if(!$updateArticleTicketRes){
+            DB::rollBack();
+            throw new ApiException('更新赠送券号失败');
+        }
+        //插入赠送券表cm_present_article_code
+        $insertRes = PresentArticleCode::insertGetId($data);
+        if(!$insertRes){
+            DB::rollBack();
+            throw new ApiException('插入赠送券失败');
+        }
+        return 1;
     }
     
 }
