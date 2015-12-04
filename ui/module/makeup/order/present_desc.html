@@ -18,8 +18,11 @@
                   <div class="fr" >
                     <span id="breadcrumb">
                     <script id="breadcrumb-t" type="text/template">
-                        <a data-modal='useCoupon' <%if (data.ticketStatus !=1){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
+                        <%console.log(data)%>
+                        <a  data-modal='useCoupon'>
+                        <button <%if (data.ticketStatus !=2){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
                              消费使用
+                        </button>
                         </a>
                     </script>
                     </span>
@@ -33,6 +36,9 @@
         <style>
         .inner-table tbody td:nth-child(2n+1){
             background-color: #F6F8F9;
+        }
+        .inner-table tbody td:nth-child(2n){
+            width: 35%;
         }
         .pad-n{
             padding:0px !important;
@@ -138,7 +144,6 @@
                  </script>
                  <script type="text/javascript">
                  $('#table').on('_ready',function(e,res){
-                     console.log(res)
                      lib.ajat("#domid=breadcrumb&tempid=breadcrumb-t").template(res.response);
                  })
 
