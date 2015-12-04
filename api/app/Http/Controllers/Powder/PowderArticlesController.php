@@ -881,7 +881,7 @@ class PowderArticlesController extends Controller
      * @return int
      * @throws ApiException
      */
-    public function addReservateSnAfterConsume($user_id,$mobilephone,$present_type,$recommend_code=0){
+    public static function addReservateSnAfterConsume($user_id,$mobilephone,$present_type,$recommend_code=0){
         if(empty($user_id) || empty($mobilephone) || empty($present_type)){
             throw new ApiException('必传参数不能为空');
         }
