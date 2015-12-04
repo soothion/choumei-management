@@ -3,7 +3,10 @@
 }
 
 document.onreadystatechange=function(){};//主页不启动加载进度条
-
+if(parent!=window){
+	$(document.body).hide();
+	parent.lib.popup.result({bool:false,text:"页面不存在"});
+}
 $('#page').on('_ready',function(){//#page _ready事件
 	
 	window.onresize=function(){//注册resize事件

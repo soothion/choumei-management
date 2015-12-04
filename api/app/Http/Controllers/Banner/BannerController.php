@@ -12,7 +12,7 @@ use Event;
 class BannerController extends Controller {
 
     /**
-     * @api {post} /banner/index 1.主页或项目banner列表
+     * @api {post} /banner/index 1.主页banner列表    banner/index2 项目banner列表
      * @apiName index
      * @apiGroup  Banner
      *
@@ -152,7 +152,7 @@ class BannerController extends Controller {
     }
 
     /**
-     * @api {post} /banner/edit/:id 3.主页或项目banner的修改
+     * @api {post} /banner/edit/:id 3.主页banner的修改   banner/edit2/:id项目banner的修改
      * @apiName edit
      * @apiGroup  Banner
      *

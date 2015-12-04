@@ -297,12 +297,13 @@
 							aspectRatio : 750/500,
 							thumbnails  : ["750x500"],
 							define:function(data){
+								console.log(data);
 								if(up.createThumbnails&&!response.edit&&!response._this){
 									up.createThumbnails({
 										img:data["750x500"],
 									});
 								}else{
-									up.preview($(response._this),{thumbimg:data[name]});
+									up.preview($(response._this),{thumbimg:data["750x500"]});
 									$(response._this).parent().trigger('itemchange');
 								}
 							}
