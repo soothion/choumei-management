@@ -36,7 +36,7 @@ class PowderArticlesController extends Controller
         3=>'活动赠送',
     );
     /**
-     * @api {post} /PowderArticles/addArticles 1.添加活动
+     * @api {post} /powderArticles/addArticles 1.添加活动
      * 
      * @apiName addArticles
      * @apiGroup PowderArticles
@@ -78,8 +78,8 @@ class PowderArticlesController extends Controller
     public function addArticles()
     {
         $param = $this->param;
-        $createrId = $this->user->id;
-        //$createrId = 1;
+        //$createrId = $this->user->id;
+        $createrId = 1;
         if(empty($param['articleName']) || empty($param['itemId']) || empty($param['nums']) || empty($param['startTime']) || empty($param['endTime']) || empty($param['expireTime']) || empty($param['departmentId']) || empty($param['userId'])){
             throw new ApiException('必传参数不能为空');
         }
@@ -111,7 +111,7 @@ class PowderArticlesController extends Controller
         $data['quantity'] = $param['nums'];      
         $data['start_at'] = $param['startTime'];
         $data['end_at']  = $param['endTime']." 23:59:59";
-        $data['expire_at'] = $param['expireTime'];
+        $data['expire_at'] = $param['expireTime']." 23:59:59";
         $data['department_id'] = $param['departmentId'];
         $data['user_id'] = $param['userId'];
         $data['creater_id'] = $createrId;
@@ -128,7 +128,7 @@ class PowderArticlesController extends Controller
         }
     }
     /**
-     * @api {post} /PowderArticles/articlesList 2.定妆活动列表
+     * @api {post} /powderArticles/articlesList 2.定妆活动列表
      * 
      * @apiName articlesList
      * @apiGroup PowderArticles
@@ -269,7 +269,7 @@ class PowderArticlesController extends Controller
     }
     
     /**
-     * @api {post} /PowderArticles/showArticlesInfo 3.定妆活动详情
+     * @api {post} /powderArticles/showArticlesInfo 3.定妆活动详情
      * 
      * @apiName showArticlesInfo
      * @apiGroup PowderArticles
@@ -351,7 +351,7 @@ class PowderArticlesController extends Controller
     }
     
     /**
-     * @api {post} /PowderArticles/switchArticles 4.定妆活动开关
+     * @api {post} /powderArticles/switchArticles 4.定妆活动开关
      * 
      * @apiName switchArticles
      * @apiGroup PowderArticles
@@ -417,7 +417,7 @@ class PowderArticlesController extends Controller
         }
     }
     /**
-     * @api {post} /PowderArticles/switchVerifyArticles 5.定妆活动验证开关
+     * @api {post} /powderArticles/switchVerifyArticles 5.定妆活动验证开关
      * 
      * @apiName switchVerifyArticles
      * @apiGroup PowderArticles
@@ -461,15 +461,15 @@ class PowderArticlesController extends Controller
             if(time() > strtotime($articlesInfo['expire_at'])){
                 throw new ApiException('活动已过期');
             }elseif($articlesInfo['verifyStatus'] == $param['verifyStatus']){
-                if($param['articleStatus'] == 1){
+                if($param['verifyStatus'] == 1){
                     throw new ApiException('活动验证已开启，无需再开启');
                 }
-                if($param['articleStatus'] == 2){
+                if($param['verifyStatus'] == 2){
                     throw new ApiException('活动验证已关闭，无需再关闭');
                 }
             }else {
                 //进行更新
-                $data = array('article_status' => $param['articleStatus'],'updated_at' => time());
+                $data = array('verify_status' => $param['verifyStatus'],'updated_at' => time());
                 $res = Present::where($where)->update($data);
                 if($res === false){
                     throw new ApiException('更新失败',ERROR::POWDER_ARTICLE_SWITCH_VERIFY_STATUS);
@@ -482,7 +482,7 @@ class PowderArticlesController extends Controller
         }    
     }
     /**
-     * @api {post} /PowderArticles/articlesTicketList 6.兑换券详情
+     * @api {post} /powderArticles/articlesTicketList 6.兑换券详情
      * 
      * @apiName articlesTicketList
      * @apiGroup PowderArticles
@@ -562,7 +562,7 @@ class PowderArticlesController extends Controller
         return $this->success($articleTicketInfoRes);
     }
     /**
-     * @api {post} /PowderArticles/exportArticlesTicketList 7.导出定妆活动券
+     * @api {post} /powderArticles/exportArticlesTicketList 7.导出定妆活动券
      * 
      * @apiName exportArticlesTicketList
      * @apiGroup PowderArticles
@@ -593,7 +593,6 @@ class PowderArticlesController extends Controller
         foreach ($articleAllTicketInfoRes as &$val) {
             $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']]; 
         }
-        
         $header = [
             '赠送项目',
             '赠送券编码',
@@ -605,11 +604,11 @@ class PowderArticlesController extends Controller
 //            Event::fire("appointment.export");
 //        }
         @ini_set('memory_limit', '512M');
-        $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $res);
+        $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $articleAllTicketInfoRes);
     }
     
     /**
-     * @api {post} /PowderArticles/presentList 8.定妆赠送查询列表
+     * @api {post} /powderArticles/presentList 8.定妆赠送查询列表
      * 
      * @apiName presentList
      * @apiGroup PowderArticles
@@ -728,7 +727,7 @@ class PowderArticlesController extends Controller
         
     }
     /**
-     * @api {post} /PowderArticles/presentListInfo 9.定妆赠送详情
+     * @api {post} /powderArticles/presentListInfo 9.定妆赠送详情
      * 
      * @apiName presentListInfo
      * @apiGroup PowderArticles
@@ -820,7 +819,7 @@ class PowderArticlesController extends Controller
         return $this->success($presentListInfoDetail);
     }
     /**
-     * @api {post} /PowderArticles/usePresentTicket 10.消费券
+     * @api {post} /powderArticles/usePresentTicket 10.消费券
      * 
      * @apiName usePresentTicket
      * @apiGroup PowderArticles
@@ -853,7 +852,8 @@ class PowderArticlesController extends Controller
      */
     public function usePresentTicket(){
         $param = $this->param;
-        $managerId = $this->user->id; //记录人id
+        //$managerId = $this->user->id; //记录人id
+        $managerId = 1;
         if(empty($managerId)){
             throw new ApiException('无法获取此登陆用户id');  
         }
@@ -861,6 +861,9 @@ class PowderArticlesController extends Controller
             throw new ApiException('必传参数不能为空');    
         }
         //判断券状态和活动验证状态
+        $where = array(
+           'present_article_code.article_code_id' => $param['articleCodeId']
+        );
         $ticketCanUseRes =  PresentArticleCode::getPresentTicketCanUseStatusByWhere($where);
         //券可用
         if($ticketCanUseRes){
@@ -874,9 +877,15 @@ class PowderArticlesController extends Controller
     
     /**
      * 线上活动增加预约号记录
+     * @param type $user_id
+     * @param type $mobilephone
+     * @param type $present_type  '赠送类型 1:消费赠送 2:推荐赠送 3:活动赠送',
+     * @param type $recommend_code  推荐码
+     * @return int
+     * @throws ApiException
      */
-    public function addReservateSnAfterConsume($userData=array()){
-        if(empty($userData['user_id']) || empty($userData['mobilephone']) || empty($userData['present_type'])){
+    public static function addReservateSnAfterConsume($user_id,$mobilephone,$present_type,$recommend_code=0){
+        if(empty($user_id) || empty($mobilephone) || empty($present_type)){
             throw new ApiException('必传参数不能为空');
         }
         //获取活动信息
@@ -892,19 +901,21 @@ class PowderArticlesController extends Controller
             $data['present_id'] = $presentInfo['present_id'];
             $data['item_id'] = $presentInfo['item_id'];
             $data['user_id'] = $userData['user_id'];
-            $data['mobilephone'] = $presentInfo['mobilephone'];
-            $data['recommend_code'] = isset($presentInfo['recommend_code']) ? $presentInfo['recommend_code'] : 0;
-            $data['present_type'] = $presentInfo['present_type'];
+            $data['mobilephone'] = $mobilephone;
+            $data['recommend_code'] = $recommend_code;
+            $data['present_type'] = $present_type;
             //三个月内有效
             $data['expire_at'] = date("Y-m-d",strtotime("+3 month"))." 23:59:59";
             $data['created_at'] = time();
         }
+        //获取内部订单号
+        $data['ordersn'] = PresentArticleCode::getOrderSn();
         //获取预约号
         $reservateSnInfo = SeedPool::getReservateSnFromPool();
         $data['reservate_sn'] = $reservateSnInfo['reservateSn'];
         //获取赠送券号
-        $articleTicketInfo = SeedPool::getArticleTicketFromPool(1,array('ID'=>'asc'));
-        $data['code'] = $articleTicketInfo['articleTicket'];
+        $articleTicketInfo = SeedPool::getArticleTicketFromPool(1,'asc');
+        $data['code'] = $articleTicketInfo[0];
         DB::beginTransaction();
         //更新预约号
         $updateReservateSnRes = SeedPool::where(array('SEED' => $reservateSnInfo['reservateSn'],'TYPE' => 'TKT'))->update(array('STATUS' => 'USD'));
@@ -913,7 +924,7 @@ class PowderArticlesController extends Controller
             throw new ApiException('更新预约号失败');
         }
         //更新赠送券号
-        $updateArticleTicketRes = SeedPool::where(array('SEED' => $articleTicketInfo['articleTicket'],'TYPE' => 'GSN'))->update(array('STATUS' => 'USD'));
+        $updateArticleTicketRes = SeedPool::where(array('SEED' => substr($articleTicketInfo[0],2),'TYPE' => 'GSN'))->update(array('STATUS' => 'USD'));
         if(!$updateArticleTicketRes){
             DB::rollBack();
             throw new ApiException('更新赠送券号失败');
@@ -926,6 +937,17 @@ class PowderArticlesController extends Controller
         }
         DB::commit();
         return 1;
+    }
+    /**
+     * 测试使用 
+     */
+    public function test(){
+        $seedRes = SeedPool::getArticleTicketFromPool(1);
+        foreach ($seedRes as $key => $value) {
+            $seeds[] = substr($value,2);
+        }
+        print_r($seedRes);
+        print_r($seeds);
     }
     
 }

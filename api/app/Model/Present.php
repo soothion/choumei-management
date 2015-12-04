@@ -51,10 +51,10 @@ class Present extends Model
                 ->leftJoin('departments','present.department_id', '=', 'departments.id');
         
         if($name){
-           $query = $query->where('name','like','%'.$name.'%');
+           $query = $query->where('present.name','like','%'.$name.'%');
         }
         if($departmentId){
-           $query = $query->where('department_id','=',$departmentId);
+           $query = $query->where('present.department_id','=',$departmentId);
         }
         if($startTime){
             $query = $query->where('present.created_at','>=',$startTime);

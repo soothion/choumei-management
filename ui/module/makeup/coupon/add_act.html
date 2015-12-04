@@ -20,7 +20,7 @@
         </div>
 
         <div class="wrapper">
-            <form class="form-vertical" action="PowderArticles/addArticles" data-role="form" id="form" confirm="">
+            <form class="form-vertical" action="powderArticles/addArticles" data-role="form" id="form" confirm="">
                     <div id="pageContent">
                           <div class="control-group">
                               <label class="control-label" for=""><span class="red">*</span>活动名称：</label>
@@ -124,7 +124,7 @@
             var $form = $('#form'),
                  url = $form.attr('action'),
                  data = lib.tools.getFormData($form);
-                lib.popup.confirm({
+                parent.lib.popup.confirm({
                     text:'活动创建后不能删除，不能编辑，是否继续',
                     define:function(){
                         lib.ajax({

@@ -67,7 +67,7 @@ class PowderArticleTicket extends Job implements SelfHandling,ShouldQueue
                 $insert = ' INSERT cm_present_article_code (`present_id`,`ordersn`,`item_id`,`code`,`status`,`present_type`,`expire_at`,`created_at`) VALUES ';
                 $i=$offset;
                 while($i<$limit) { 
-                    $code = $seedRes[$i]['articleTicket'];
+                    $code = $seedRes[$i];
                     $ordersn = PresentArticleCode::getOrderSn();
                     if( $i==$offset )
                         $insert .= " ( $presentId , '$ordersn', $itemId, '$code', $ticketStatus, $presentType, '$expireTime',$createdTime)";
@@ -110,7 +110,7 @@ class PowderArticleTicket extends Job implements SelfHandling,ShouldQueue
      */
     private  function updateArticleTicketStatus($seedRes){
         foreach ($seedRes as $key => $value) {
-            $seeds[] = $value['articleTicket'];
+            $seeds[] = substr($value,2);
         }
         $where = array('TYPE' => 'GSN');
         $updateRes  = SeedPool::where($where)->whereIn('SEED',$seeds)->update(array('STATUS' => 'USD' ,'UPDATE_TIME' => date( "Y-m-d H:i:s" )));
