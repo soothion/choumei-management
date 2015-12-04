@@ -594,17 +594,15 @@
 							});
 						}else if($target.closest('.control-single-image').length==1){//上传张图片
 							uploader.area=$target.closest('.control-single-image');
-							uploader.preview=function(data){
-								this.area.find('img').attr('src',data.thumbimg||data.img).data('original',data.img);
-								this.area.find('input.original').val(data.img).blur();
-								this.area.find('input.thumb').val(data.thumbimg).blur();
-							}
-							uploader.thumbnails.on('click','.control-thumbnails-edit',function(){
-								var $this=$(this).closest('.control-thumbnails-item');
+							uploader.area.on('click','.control-single-image-edit',function(){
+								var $this=$(this).closest('.control-single-image');
 								var $img=$this.find('img');
 								var original=$img.data('original')?$img.data('original'):$img.attr('src')
 								uploader.trigger('ImageUploaded',{img:original,_this:$this[0]});
 							});
+							if(options.crop&&uploader.area.find("img").attr("src")){
+								uploader.area.prepend('<a class="control-single-image-edit"><i class="fa fa-pencil-square-o"></i></a>');
+							}
 						}
 						uploader.area=$target.closest('.control-single-image');
 						uploader.preview=function($dom,data){//更新图片
