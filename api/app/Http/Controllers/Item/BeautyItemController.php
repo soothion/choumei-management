@@ -570,6 +570,8 @@ class BeautyItemController extends Controller{
 	* 
 	* @apiSuccess {String} name 项目名称.
 	* @apiSuccess {Number} item_id 项目id.
+	* @apiSuccess {Number} type 项目类型 1韩式定妆； 2快时尚.
+	* @apiSuccess {Number} is_gift 是否是赠送项目 0否 1是
 	*
 	* @apiSuccessExample Success-Response:
 	*{
@@ -579,6 +581,8 @@ class BeautyItemController extends Controller{
 	*	    {
 	*	    	    "name": 韩式眉毛（明星院长）,
 	*	    	    "item_id": "1",
+	*	    	    "type": "1",
+	*	    	    "is_gift": "0",
 	*	    },
 	*			......
 	*	    ]
@@ -594,7 +598,7 @@ class BeautyItemController extends Controller{
 	*/
 	public function itemList()
 	{
-		$result = BeautyItem::select(['item_id','name'])->orderBy('item_id', 'desc')->get();
+		$result = BeautyItem::select(['item_id','name','is_gift','type'])->orderBy('item_id', 'desc')->get();
 		return $this->success($result);
 	}
 }
