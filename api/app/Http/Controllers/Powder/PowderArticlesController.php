@@ -36,7 +36,7 @@ class PowderArticlesController extends Controller
         3=>'活动赠送',
     );
     /**
-     * @api {post} /PowderArticles/addArticles 1.添加活动
+     * @api {post} /powderArticles/addArticles 1.添加活动
      * 
      * @apiName addArticles
      * @apiGroup PowderArticles
@@ -128,7 +128,7 @@ class PowderArticlesController extends Controller
         }
     }
     /**
-     * @api {post} /PowderArticles/articlesList 2.定妆活动列表
+     * @api {post} /powderArticles/articlesList 2.定妆活动列表
      * 
      * @apiName articlesList
      * @apiGroup PowderArticles
@@ -269,7 +269,7 @@ class PowderArticlesController extends Controller
     }
     
     /**
-     * @api {post} /PowderArticles/showArticlesInfo 3.定妆活动详情
+     * @api {post} /powderArticles/showArticlesInfo 3.定妆活动详情
      * 
      * @apiName showArticlesInfo
      * @apiGroup PowderArticles
@@ -351,7 +351,7 @@ class PowderArticlesController extends Controller
     }
     
     /**
-     * @api {post} /PowderArticles/switchArticles 4.定妆活动开关
+     * @api {post} /powderArticles/switchArticles 4.定妆活动开关
      * 
      * @apiName switchArticles
      * @apiGroup PowderArticles
@@ -417,7 +417,7 @@ class PowderArticlesController extends Controller
         }
     }
     /**
-     * @api {post} /PowderArticles/switchVerifyArticles 5.定妆活动验证开关
+     * @api {post} /powderArticles/switchVerifyArticles 5.定妆活动验证开关
      * 
      * @apiName switchVerifyArticles
      * @apiGroup PowderArticles
@@ -482,7 +482,7 @@ class PowderArticlesController extends Controller
         }    
     }
     /**
-     * @api {post} /PowderArticles/articlesTicketList 6.兑换券详情
+     * @api {post} /powderArticles/articlesTicketList 6.兑换券详情
      * 
      * @apiName articlesTicketList
      * @apiGroup PowderArticles
@@ -562,7 +562,7 @@ class PowderArticlesController extends Controller
         return $this->success($articleTicketInfoRes);
     }
     /**
-     * @api {post} /PowderArticles/exportArticlesTicketList 7.导出定妆活动券
+     * @api {post} /powderArticles/exportArticlesTicketList 7.导出定妆活动券
      * 
      * @apiName exportArticlesTicketList
      * @apiGroup PowderArticles
@@ -609,7 +609,7 @@ class PowderArticlesController extends Controller
     }
     
     /**
-     * @api {post} /PowderArticles/presentList 8.定妆赠送查询列表
+     * @api {post} /powderArticles/presentList 8.定妆赠送查询列表
      * 
      * @apiName presentList
      * @apiGroup PowderArticles
@@ -728,7 +728,7 @@ class PowderArticlesController extends Controller
         
     }
     /**
-     * @api {post} /PowderArticles/presentListInfo 9.定妆赠送详情
+     * @api {post} /powderArticles/presentListInfo 9.定妆赠送详情
      * 
      * @apiName presentListInfo
      * @apiGroup PowderArticles
@@ -820,7 +820,7 @@ class PowderArticlesController extends Controller
         return $this->success($presentListInfoDetail);
     }
     /**
-     * @api {post} /PowderArticles/usePresentTicket 10.消费券
+     * @api {post} /powderArticles/usePresentTicket 10.消费券
      * 
      * @apiName usePresentTicket
      * @apiGroup PowderArticles
@@ -874,9 +874,15 @@ class PowderArticlesController extends Controller
     
     /**
      * 线上活动增加预约号记录
+     * @param type $user_id
+     * @param type $mobilephone
+     * @param type $present_type  '赠送类型 1:消费赠送 2:推荐赠送 3:活动赠送',
+     * @param type $recommend_code  推荐码
+     * @return int
+     * @throws ApiException
      */
-    public function addReservateSnAfterConsume($userData=array()){
-        if(empty($userData['user_id']) || empty($userData['mobilephone']) || empty($userData['present_type'])){
+    public function addReservateSnAfterConsume($user_id,$mobilephone,$present_type,$recommend_code=0){
+        if(empty($user_id) || empty($mobilephone) || empty($present_type)){
             throw new ApiException('必传参数不能为空');
         }
         //获取活动信息
@@ -892,13 +898,15 @@ class PowderArticlesController extends Controller
             $data['present_id'] = $presentInfo['present_id'];
             $data['item_id'] = $presentInfo['item_id'];
             $data['user_id'] = $userData['user_id'];
-            $data['mobilephone'] = $presentInfo['mobilephone'];
-            $data['recommend_code'] = isset($presentInfo['recommend_code']) ? $presentInfo['recommend_code'] : 0;
-            $data['present_type'] = $presentInfo['present_type'];
+            $data['mobilephone'] = $mobilephone;
+            $data['recommend_code'] = $recommend_code;
+            $data['present_type'] = $present_type;
             //三个月内有效
             $data['expire_at'] = date("Y-m-d",strtotime("+3 month"))." 23:59:59";
             $data['created_at'] = time();
         }
+        //获取内部订单号
+        $data['ordersn'] = PresentArticleCode::getOrderSn();
         //获取预约号
         $reservateSnInfo = SeedPool::getReservateSnFromPool();
         $data['reservate_sn'] = $reservateSnInfo['reservateSn'];
