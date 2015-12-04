@@ -78,8 +78,8 @@ class PowderArticlesController extends Controller
     public function addArticles()
     {
         $param = $this->param;
-        $createrId = $this->user->id;
-        //$createrId = 1;
+        //$createrId = $this->user->id;
+        $createrId = 1;
         if(empty($param['articleName']) || empty($param['itemId']) || empty($param['nums']) || empty($param['startTime']) || empty($param['endTime']) || empty($param['expireTime']) || empty($param['departmentId']) || empty($param['userId'])){
             throw new ApiException('必传参数不能为空');
         }
