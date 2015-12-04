@@ -9,6 +9,10 @@ use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use App\BeautyRefundApi;
 use App\BookingOrderItem;
+use App\Utils;
+use App\AlipaySimple;
+
+
 
 class BeautyRefundController extends Controller {
 
@@ -319,8 +323,14 @@ class BeautyRefundController extends Controller {
         if (count($ids) < 1) {
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
         }
-        $info = BeautyRefundApi::accpetBeauty($ids);
-        return $this->success();
+         //操作人ID
+        if (!empty($this->user)) {
+            $opt_user_id = $this->user->id;
+        } else {
+            $opt_user_id = 0;
+        }
+        $info = BeautyRefundApi::accpetBeauty($ids,$opt_user_id);
+        return $this->success($info);
     }
 
     /**

@@ -18,23 +18,25 @@
                     <h4> 查看赠送活动 </h4>
                 </div>
                 <div class="flex-item">
-                  <div class="fr">
-                  <form action="PowderArticles/exportArticlesTicketList" data-role="export">
-                      <button class="btn " data-slug="coupon.exportList">
-                      <i class="fa fa-file-excel-o"></i> 导出
-                      </button>
-                  </form>
-                  <a href="detail_act.html">
-                  <div class="btn " href="detail_act.html">
-                         返回
-                  </div>
-                  </a>
+                  <div class="fr" ajat="#domid=breadcrumb&tempid=breadcrumb-t" id="breadcrumb">
+                      <script id="breadcrumb-t" type="text/template">
+                          <form action="powderArticles/exportArticlesTicketList" data-role="export">
+                              <button class="btn " data-slug="coupon.exportList">
+                              <i class="fa fa-file-excel-o"></i> 导出
+                              </button>
+                          </form>
+                          <a href="detail_act.html#id=<%=query.presentId%>">
+                          <div class="btn " href="detail_act.html">
+                                 返回
+                          </div>
+                          </a>
+                      </script>
                   </div>
                 </div>
             </div>
         </div>
         <div class="wrapper">
-           <div class="table" ajat="PowderArticles/articlesTicketList?presentId=<%=query.id%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="powderArticles/articlesTicketList?presentId=<%=query.presentId%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
