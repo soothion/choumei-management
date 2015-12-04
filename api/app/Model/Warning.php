@@ -4,12 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
-Use PDO;
-Use URL;
+use PDO;
+use URL;
 use Log;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use Illuminate\Support\Facades\Redis as Redis;
 
 class Warning extends Model {
 
@@ -18,6 +19,13 @@ class Warning extends Model {
     public $timestamps = false;
 
     public static function searchOrder($input, $page, $size) {
+        //如果搜索条件相同,直接从缓存读取数据
+        $key = md5(serialize($input).$page.$size);
+        $redis = Redis::connection();
+        if($result = $redis->get($key))
+            return unserialize($result);
+
+
         $query = Self::getQuery();
         // 是否有输入关键字搜索 
         $val = '';
@@ -85,6 +93,7 @@ class Warning extends Model {
             return $page;
         });
         $nums = $query->where('order.ispay', '=', 2)->orderBy(DB::raw("MAX(cm_order.add_time)"), "DESC")->paginate($size)->toArray();
+        $redis->setex($key,3600*24,serialize($nums));
         return $nums;
     }
 
