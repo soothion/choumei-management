@@ -49,7 +49,8 @@
 	'requestLog.index': '/module/config/anti-fraud/login_log.html',
 	'beautyItem.index':'/module/makeup/item/index.html',
 	'beautyItem.indexFashion':'/module/makeup/item/fashion.html',
-	'banner.index':'/module/makeup/banner/homeBanner.html'
+	'banner.index':'/module/makeup/banner/homeBanner.html',
+	'banner.index2':'/module/makeup/banner/itemBanner.html'
 }
 var access={
 	data:[],
