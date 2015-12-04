@@ -45,6 +45,9 @@
         .inner-table tbody td:nth-child(2n+1){
             background-color: #F6F8F9;
         }
+        .inner-table tbody td:nth-child(2n){
+            width: 35%;
+        }
         .pad-n{
             padding:0px !important;
         }
@@ -241,7 +244,7 @@
                                     <tbody>
                                         <tr>
                                             <td>收银人：</td>
-                                            <td><%=data.booking_cash.manager%></td>
+                                            <td><%=data.booking_cash.manager.name%></td>
                                             <td>收银时间：</td>
                                             <td><%=data.booking_cash.created_at%></td>
                                         </tr>

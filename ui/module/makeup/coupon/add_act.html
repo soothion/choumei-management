@@ -124,7 +124,7 @@
             var $form = $('#form'),
                  url = $form.attr('action'),
                  data = lib.tools.getFormData($form);
-                lib.popup.confirm({
+                parent.lib.popup.confirm({
                     text:'活动创建后不能删除，不能编辑，是否继续',
                     define:function(){
                         lib.ajax({

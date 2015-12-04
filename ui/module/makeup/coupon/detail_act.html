@@ -17,10 +17,10 @@
                 <div class="flex-item ">
                     <div class="fr" id="breadcrumb">
                         <script type="text/template" id='breadcrumb-t'>
-                        <a href="coupon_list.html#id=<%=query.id%>" class="btn" data-slug="coupon.add">
+                        <a href="coupon_list.html#presentId=<%=query.id%>" class="btn" data-slug="coupon.add">
                             查看卷详情
                         </a>
-                        <%if data.articleStatus == 1{%>
+                        <%if (data.articleStatus == 1){%>
                         <a class="btn" data-check data-url='powderArticles/switchArticles' data-text='关闭验证后此活动的赠送券将无法使用，是否关闭' data-status='0' data-slug="coupon.add">
                              关闭验证
                         </a>
@@ -126,7 +126,7 @@
                               }
                           })
                   }).on('_ready','#table',function(e,res){
-                      lib.ajat('#domid=table&tempid=table-t').template(res.response);
+                      lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').template(res.response);
                   })
 
 
