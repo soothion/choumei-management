@@ -47,6 +47,9 @@
 	'blacklist.openidIndex': '/module/config/anti-fraud/black_list_wechatOpenId.html',
 	'comment.index': '/module/user/operation/customer_review.html',
 	'requestLog.index': '/module/config/anti-fraud/login_log.html',
+	'beautyItem.index':'/module/makeup/item/index.html',
+	'beautyItem.indexFashion':'/module/makeup/item/fashion.html',
+	'banner.index':'/module/makeup/banner/homeBanner.html'
 }
 var access={
 	data:[],
