@@ -569,12 +569,7 @@ class BookController extends Controller
         if(!in_array($state,['CSD']))
         {
             throw new ApiException("定妆单[{$id}]状态不正确", ERROR::ORDER_STATUS_WRONG);
-        }
-        $is_makeup = $base->TOUCHED_UP;
-        if($is_makeup == "Y")
-        {
-            throw new ApiException("定妆单[{$id}]已经补妆过", ERROR::ORDER_STATUS_WRONG);
-        }
+        }       
         $makeup = BeautyMakeup::where('booking_id',$id)->first();
         if(!empty($makeup))
         {

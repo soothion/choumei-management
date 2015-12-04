@@ -18,12 +18,9 @@
                   <div class="fr" >
                     <span id="breadcrumb">
                     <script id="breadcrumb-t" type="text/template">
-                        <form data-role="form" action="PowderArticles/usePresentTicket">
-                        <input type="hidden" name="articleCodeId" value="<%data.articleCodeId%>">
-                        <button data-modal='useCoupon' <%if (data.ticketStatus !=1){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
+                        <a data-modal='useCoupon' <%if (data.ticketStatus !=1){%>disabled='disabled'<%}%> class="btn" data-slug="coupon.add">
                              消费使用
-                        </button>
-                    </form>
+                        </a>
                     </script>
                     </span>
                     <a href="present_list.html" class="btn" data-slug="coupon.add">
