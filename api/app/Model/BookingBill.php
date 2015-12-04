@@ -19,7 +19,7 @@ class BookingBill extends Model
             return null;
         }
         $res = $base->toArray();
-        $res['manager']=self::getManager($res['uid']);
+        $res['manager'] = Manager::getBaseInfo($res['uid']);
         return $res;
     }
     

@@ -19,6 +19,8 @@ class BeautyMakeup extends Model
         }
         $res = $base->toArray();
         $res['manager']=self::getManager($res['uid']);
+        $res['expert'] = Artificer::getBaseInfo($res['expert_uid']);
+        $res['assistant'] = Artificer::getBaseInfo($res['assistant_uid']);        
         return $res;
     }
     
@@ -31,7 +33,7 @@ class BeautyMakeup extends Model
         }
         return $base->toArray();
     }
-    
+
     public function isFillable($key)
     {
         return true;

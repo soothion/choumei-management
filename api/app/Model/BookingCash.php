@@ -18,40 +18,10 @@ class BookingCash extends Model
             return null;
         }
         $res = $base->toArray();
-        $res['manager'] = self::getManager($res['uid']);
-        $res['expert'] = self::getExpert($res['expert_uid']);
-        $res['assistant'] = self::getAssistant($res['assistant_uid']);
+        $res['manager'] = Manager::getBaseInfo($res['uid']);
+        $res['expert'] = Artificer::getBaseInfo($res['expert_uid']);
+        $res['assistant'] = Artificer::getBaseInfo($res['assistant_uid']);  
         return $res;
-    }
-    
-    public static function getManager($uid)
-    {
-        $base = Manager::where('id',$uid)->first(['id','name']);
-        if(empty($base))
-        {
-            return null;
-        }
-        return $base->toArray();
-    }
-    
-    public static function getExpert($uid)
-    {
-        $base = Artificer::where('artificer_id',$uid)->first(['artificer_id','name','number']);
-        if(empty($base))
-        {
-            return null;
-        }
-        return $base->toArray();
-    }
-    
-    public static function getAssistant($uid)
-    {
-        $base = Artificer::where('artificer_id',$uid)->first(['artificer_id','name','number']);
-        if(empty($base))
-        {
-            return null;
-        }
-        return $base->toArray();
     }
     
     /**

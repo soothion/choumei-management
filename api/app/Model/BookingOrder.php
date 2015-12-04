@@ -178,7 +178,7 @@ class BookingOrder extends Model
              $base->where('booking_order.BOOKING_SN','like',$keyword);
          }    
         
-        $base->join('fundflow', function ($join) use($pay_type)
+        $base->leftJoin('fundflow', function ($join) use($pay_type)
         {
             $join->on('booking_order.ORDER_SN', '=', 'fundflow.record_no');
             if (! empty($pay_type)) {

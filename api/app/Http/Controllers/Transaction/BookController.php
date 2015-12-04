@@ -172,12 +172,12 @@ class BookController extends Controller
      * @apiSuccess {String} order.CONSUME_TIME 消费时间
      * @apiSuccess {String} order.CREATE_TIME 预约时间
      * @apiSuccess {String} order.UPDATE_TIME 最近修改时间
+     * @apiSuccess {String} order.item_amount 项目总价
      * @apiSuccess {String} order_item 项目信息
      * @apiSuccess {String} order_item.ID 项目ID
      * @apiSuccess {String} order_item.ITEM_NAME 项目名称
      * @apiSuccess {String} order_item.AMOUNT 总额
      * @apiSuccess {String} order_item.PAYABLE 应付总额
-     * @apiSuccess {String} order_item.item_amount 项目总价
      * @apiSuccess {String} beauty_order_item 实做项目信息
      * @apiSuccess {String} beauty_order_item.id 项目ID
      * @apiSuccess {String} beauty_order_item.item_name 项目名称
