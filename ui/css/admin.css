@@ -664,6 +664,14 @@ input:focus+.unit{
 .control-single-image .control-thumbnails-remove{
 	display:none;
 }
+.control-single-image-edit{
+	position:absolute;
+	right:0;
+	top:0;
+	font-size:19px;
+	line-height:100%;
+	padding:2px;
+}
 .image-preview{
 	width:40px;
 	height:40px;
