@@ -62,7 +62,7 @@
 
                 <button class="btn" type="submit">查询</button>
             </form>
-           <div class="table" ajat="PowderArticles/presentList?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="powderArticles/presentList?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -89,7 +89,7 @@
                   <td><%=item.itemName%></td>
                   <td><%=item.recommendCode%></td>
                   <td><%=item.presentTypeName%></td>
-                  <td><%=item.createdTime%></td>
+                  <td><%=item.createTime%></td>
                   <td><%=item.expireTime%></td>
                   <td><%=item.ticketStatusName%></td>
                   <td class="tc">
