@@ -161,7 +161,7 @@ class BookingOrder extends Model
          {
              if($pay_state == "Y")
              {
-                 $base->where('booking_order.TOUCHED_UP',$pay_state);
+                // $base->where('booking_order.TOUCHED_UP',$pay_state);
              }
              else 
              {
@@ -186,7 +186,7 @@ class BookingOrder extends Model
             }
         });
         
-        $base->join('recommend_code_user', function ($join) use($key,$keyword)
+        $base->leftJoin('recommend_code_user', function ($join) use($key,$keyword)
         {
             $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('type',[2,3]);
             if ($key == 3 && !empty($keyword)) {
