@@ -461,15 +461,15 @@ class PowderArticlesController extends Controller
             if(time() > strtotime($articlesInfo['expire_at'])){
                 throw new ApiException('活动已过期');
             }elseif($articlesInfo['verifyStatus'] == $param['verifyStatus']){
-                if($param['articleStatus'] == 1){
+                if($param['verifyStatus'] == 1){
                     throw new ApiException('活动验证已开启，无需再开启');
                 }
-                if($param['articleStatus'] == 2){
+                if($param['verifyStatus'] == 2){
                     throw new ApiException('活动验证已关闭，无需再关闭');
                 }
             }else {
                 //进行更新
-                $data = array('article_status' => $param['articleStatus'],'updated_at' => time());
+                $data = array('verify_status' => $param['verifyStatus'],'updated_at' => time());
                 $res = Present::where($where)->update($data);
                 if($res === false){
                     throw new ApiException('更新失败',ERROR::POWDER_ARTICLE_SWITCH_VERIFY_STATUS);

@@ -372,16 +372,28 @@ class EventServiceProvider extends ServiceProvider
         
         //定妆赠送活动
         'powder.create' => [
-            'App\Listeners\PowderEventListener@onCreate',
+            'App\Listeners\PowderArticlesEventListener@onCreate',
+    	],
+        'powder.selectArticle' => [
+            'App\Listeners\PowderArticlesEventListener@onSelectArticle',
     	],
         'powder.showArticleDetail' => [
-            'App\Listeners\PowderEventListener@onShowArticleDetail',
+            'App\Listeners\PowderArticlesEventListener@onShowArticleDetail',
     	],
         'powder.closeArticleVerify' => [
-            'App\Listeners\PowderEventListener@onCloseArticleVerify',
+            'App\Listeners\PowderArticlesEventListener@onCloseArticleVerify',
     	],
         'powder.closeArticle' => [
-            'App\Listeners\PowderEventListener@onCloseArticle',
+            'App\Listeners\PowderArticlesEventListener@onCloseArticle',
+    	],
+        'powder.exportArticleTicket' => [
+            'App\Listeners\PowderArticlesEventListener@onExportArticleTicket',
+    	],
+        'powder.selectArticleTicket' => [
+            'App\Listeners\PowderArticlesEventListener@onSelectArticleTicket',
+    	],
+        'powder.useArticleTicket' => [
+            'App\Listeners\PowderArticlesEventListener@onUseArticleTicket',
     	]
 
     ];
