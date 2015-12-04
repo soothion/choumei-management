@@ -911,8 +911,8 @@ class PowderArticlesController extends Controller
         $reservateSnInfo = SeedPool::getReservateSnFromPool();
         $data['reservate_sn'] = $reservateSnInfo['reservateSn'];
         //获取赠送券号
-        $articleTicketInfo = SeedPool::getArticleTicketFromPool(1,array('ID'=>'asc'));
-        $data['code'] = $articleTicketInfo['articleTicket'];
+        $articleTicketInfo = SeedPool::getArticleTicketFromPool(1,'asc');
+        $data['code'] = $articleTicketInfo[0];
         DB::beginTransaction();
         //更新预约号
         $updateReservateSnRes = SeedPool::where(array('SEED' => $reservateSnInfo['reservateSn'],'TYPE' => 'TKT'))->update(array('STATUS' => 'USD'));
@@ -921,7 +921,7 @@ class PowderArticlesController extends Controller
             throw new ApiException('更新预约号失败');
         }
         //更新赠送券号
-        $updateArticleTicketRes = SeedPool::where(array('SEED' => $articleTicketInfo['articleTicket'],'TYPE' => 'GSN'))->update(array('STATUS' => 'USD'));
+        $updateArticleTicketRes = SeedPool::where(array('SEED' => substr($articleTicketInfo[0],2),'TYPE' => 'GSN'))->update(array('STATUS' => 'USD'));
         if(!$updateArticleTicketRes){
             DB::rollBack();
             throw new ApiException('更新赠送券号失败');
@@ -934,6 +934,17 @@ class PowderArticlesController extends Controller
         }
         DB::commit();
         return 1;
+    }
+    /**
+     * 测试使用 
+     */
+    public function test(){
+        $seedRes = SeedPool::getArticleTicketFromPool(1);
+        foreach ($seedRes as $key => $value) {
+            $seeds[] = substr($value,2);
+        }
+        print_r($seedRes);
+        print_r($seeds);
     }
     
 }

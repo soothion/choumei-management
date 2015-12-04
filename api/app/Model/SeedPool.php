@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
@@ -16,20 +17,19 @@ class SeedPool extends Model
     /**
      * 根据条件，获取所需要的赠送券
      */
-    public static function getArticleTicketFromPool($limit=1,$orderby = array('ID' => 'desc')){
-        $where = array('TYPE' => 'GSN','STATUS' => 'NEW');
-        $res =  self::select('SEED as articleTicket')
-               ->where($where)
-               ->orderby($orderby)
-               ->limit($limit)
-               ->get()->toArray();
+    public static function getArticleTicketFromPool($limit=1,$orderby = 'desc'){
+        $sql = "select CONCAT('SZ',SEED) as articleTicket from cm_seed_pool where TYPE = 'GSN' and STATUS = 'NEW' order by ID $orderby limit $limit;";
+        $res = DB::select($sql);
         if(empty($res)){
             throw new ApiException('无法获取定妆赠送活动券');    
         }
         if(count($res) != $limit){
             throw new ApiException('臭美池中的券不够'); 
         }
-        return $res;
+        foreach ($res as $key => $value) {
+            $seedRes[] = $value->articleTicket;
+        }
+        return $seedRes;
     }
     
 
