@@ -126,6 +126,11 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 	'as'=>'AlipayRefundNotify.callback_alipay',
 	'uses'=>'Alipay\AlipayRefundNotifyController@callback_alipay'
 ));
+//退款回调 支付宝 定妆单
+Route::any('beautyrefund/beauty_call_back_of_alipay',array( 
+	'as'=>'beautyrefund.beauty_call_back_of_alipay',
+	'uses'=>'Transaction\BeautyRefundController@beauty_call_back_of_alipay'
+));
 // 营销平台活动用到的
 Route::any('platform/getRequestDepartment',array(  
     'as'=>'platform.getRequestDepartment',
