@@ -207,15 +207,17 @@
                               </label>
 
                               <%if(item.behavior=="2"){ var url = JSON.parse(item.url);%>
-                                  <select name="url" style="width:30%" disabled class="background" url=<%=item.url%>>                                    
+                                  <select name="url" style="width:26.5%" disabled class="background" url=<%=item.url%>>                                    
                                   </select>
 
-                                  <input type="text" style="width:26.5%" disabled class="background"/>
+                                  <input type="text" style="width:26.5%" disabled placeholder="店铺名称1~15个字" class="background <%=url.type=='salons'?'':'hidden'%>" value="<%=item.name%>" required
+                                    name="salonname"/>
                               <%}else{%>
                                   <select name="url" style="width:26.5%;" disabled class="hidden">
 
                                   </select>
-                                  <input type="text" style="width:30%" class="hidden" disabled maxLength="15" placeholder="店铺名称1~15个字"/>
+                                  <input type="text" style="width:26.5%" class="hidden" disabled maxLength="15" 
+                                  placeholder="店铺名称1~15个字" name="salonname" required/>
                               <%}%>
                           </div>
 
@@ -291,7 +293,7 @@
 
                             </select>
 
-                            <input type="text" style="width:26.5%" placeholder="店铺名称1~15个字" maxLength='15' disabled/>
+                            <input type="text" name="salonname" style="width:26.5%" placeholder="店铺名称1~15个字" maxLength='15' disabled required/>
                         </div>
 
                         <div class="mr">

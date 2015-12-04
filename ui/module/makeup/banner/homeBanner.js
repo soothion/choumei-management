@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-04 18:13:04
+* @Last Modified time: 2015-12-04 18:30:41
 */
 
 $(function(){
@@ -120,6 +120,14 @@ $(function(){
                 })
             }
         })         
+    });
+
+    $(".box-warpper").on('change','select',function(e){
+        if($(this).val()=="salons_salonId"){
+            $(this).next().removeClass('hidden');
+        }else{
+            $(this).next().addClass('hidden');
+        }
     });
     
     $(".box-warpper").on('dragover',function(ev){
