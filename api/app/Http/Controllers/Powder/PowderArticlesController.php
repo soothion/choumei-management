@@ -111,7 +111,7 @@ class PowderArticlesController extends Controller
         $data['quantity'] = $param['nums'];      
         $data['start_at'] = $param['startTime'];
         $data['end_at']  = $param['endTime']." 23:59:59";
-        $data['expire_at'] = $param['expireTime'];
+        $data['expire_at'] = $param['expireTime']." 23:59:59";
         $data['department_id'] = $param['departmentId'];
         $data['user_id'] = $param['userId'];
         $data['creater_id'] = $createrId;
@@ -593,7 +593,6 @@ class PowderArticlesController extends Controller
         foreach ($articleAllTicketInfoRes as &$val) {
             $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']]; 
         }
-        
         $header = [
             '赠送项目',
             '赠送券编码',
@@ -605,7 +604,7 @@ class PowderArticlesController extends Controller
 //            Event::fire("appointment.export");
 //        }
         @ini_set('memory_limit', '512M');
-        $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $res);
+        $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $articleAllTicketInfoRes);
     }
     
     /**
@@ -853,7 +852,8 @@ class PowderArticlesController extends Controller
      */
     public function usePresentTicket(){
         $param = $this->param;
-        $managerId = $this->user->id; //记录人id
+        //$managerId = $this->user->id; //记录人id
+        $managerId = 1;
         if(empty($managerId)){
             throw new ApiException('无法获取此登陆用户id');  
         }
@@ -861,6 +861,9 @@ class PowderArticlesController extends Controller
             throw new ApiException('必传参数不能为空');    
         }
         //判断券状态和活动验证状态
+        $where = array(
+           'present_article_code.article_code_id' => $param['articleCodeId']
+        );
         $ticketCanUseRes =  PresentArticleCode::getPresentTicketCanUseStatusByWhere($where);
         //券可用
         if($ticketCanUseRes){

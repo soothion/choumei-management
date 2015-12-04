@@ -5,6 +5,8 @@ namespace App\Model;
 use App\Artificer;
 use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Database\Eloquent\Model;
+use App\Model\Present;
+use Log;
 
 use Illuminate\Support\Facades\Redis as Redis;
 
@@ -147,13 +149,22 @@ class PresentArticleCode extends Model
             throw new ApiException('使用赠送券失败'); 
         }else{
             //活动使用数 +1
-            $res = Present::where('present_article_code.article_code_id','=',$articleCodeId)
-                     ->leftJoin('present', 'present.present_id', '=', 'present_article_code.present_id')
-                    ->increment('present.use_num',1);
-            if(!$res){
-                //记录错误日志，不进行异常处理
-                
+            $presentRes = self::select('present_id')->where('article_code_id','=',$articleCodeId)->first();
+            if($presentRes === null){
+                Log::info('找不到该活动:', $articleCodeId);
+            }else{
+                $res= $presentRes->toArray();
+                $presentId = $res['present_id'];
             }
+            if($presentId){
+                $res = Present::where('present_id','=',$presentId)
+                    ->increment('present.use_num',1);
+                if(!$res){
+                    //记录错误日志，不进行异常处理
+                    Log::info('活动赠送券使用后，使用数增加失败:', $articleCodeId);
+                }
+            }
+            
         }
         return 1;
         
