@@ -93,9 +93,11 @@ class Warning extends Model {
             ->orderBy(DB::raw("MAX(cm_order.add_time)"), "DESC")
             ->take($size)
             ->skip($offset)
-            ->toArray();
-        $redis->setex($key,3600*24,serialize($nums));
-        return $nums;
+            ->get();
+        $return['data'] = $nums;
+        $return['current_page'] = $page;
+        $redis->setex($key,3600*24,serialize($return));
+        return $return;
     }
 
     public static function getOderNumByUserId($userId, $minTime, $maxTime) {
