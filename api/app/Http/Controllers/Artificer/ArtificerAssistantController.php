@@ -452,7 +452,8 @@ class ArtificerAssistantController extends Controller{
 	 * @apiGroup    Assistant
 	 *
      * 
-	 *
+	 *@apiSuccess {Number} id            选填（新增的时候可不传）,职工id.
+	 *@apiSuccess {String} name          必填,助理专家名字.
 	 *
 	 * 
 	 * 
@@ -580,6 +581,37 @@ class ArtificerAssistantController extends Controller{
             });
         })->export('xls');
         exit;
+    }
+    /**
+	 * @api {get} /assistant/search/:keyword   11.搜索专家助理名字
+	 * @apiName     search
+	 * @apiGroup    Assistant
+	 *
+     * 
+	 * @apiParam {String} keyword           搜索关键词.
+	 *
+	 * @apiSuccess {Number} id             职工id.
+	 * @apiSuccess {String} name           助理专家名字.
+	 * @apiSuccess {String} number         助理专家编号.
+	 * 
+	 * @apiSuccessExample Success-Response:
+	 *	{
+	 *	    "result": 1,
+	 *	    "token": "",
+	 *	    "data": [
+     *          {
+     *              "id": 1,
+     *              "name": "XIAOd",
+     *              "number": "M001"
+     *          }
+     *      ]
+	 *	}
+	 */
+    public function searchNameAndNumber( $fixStr = ''){
+        if( empty( $fixStr ) ) return $this->success();
+        $field = ['artificer_id as id','name','number'];
+        $result = Artificer::select( $field )->whereRaw('(name like "%'. $fixStr .'%" OR number like "%'. $fixStr .'%") AND pid is NOT NULL')->get();
+        return $this->success($result);
     }
     // 接收天界或者修改的数据
     private function _formatReceiveData( $param ){

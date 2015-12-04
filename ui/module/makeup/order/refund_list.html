@@ -48,16 +48,16 @@
                <span class="space"></span>
                <div class="input-group">
                     <select name="state">
-                        <option value="0">退款状态</option>
+                        <option value="RFN,RFD,RFE">退款状态</option>
                         <option value="RFN" >退款中</option>
                         <option value="RFD" >已退款</option>
-                        <option value="9" >退款失败</option>
+                        <option value="RFE" >退款失败</option>
                     </select>
                 </div>
 
                 <button class="btn" type="submit">查询</button>
             </form>
-           <div class="table" ajat="beautyrefund/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="beautyrefund/index?<%if (!query.state){%>state=RFN,RFD,RFE<%}%><%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -89,16 +89,20 @@
                     'NEW':'未支付',
                     'PYD':'已支付',
                     'CSD':'已消费',
-                    'RFN':'申请退款',
+                    'RFN':'退款中',
                     'RFD':'已退款',
+                    'RFE':'退款失败',
                 }%>
                 <%data.forEach(function(item,index){%>
                  <tr>
                   <td><label><input type="checkbox"  value="<%=item.order_refund_id%>"/><span></span></label></td>
                   <td><%=index+1%></td>
-                  <td><%=item.mobilephone%></td>
-                  <td><%=item.username%></td>
-                  <td><%=item.item_name%></td>
+                  <td><%=item.booker_phone%></td>
+                  <td><%=item.booker_name%></td>
+                  <td><%var orderItems=[];
+                  item.booking_order_item.forEach(function(orderItem){
+                      orderItems.push(orderItem.item_name);
+                  })%><%=orderItems.join(",")%></td>
                   <td><%=item.money%></td>
                   <td><%=item.booking_sn%></td>
                   <td><%=item.add_time%></td>

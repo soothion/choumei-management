@@ -145,6 +145,7 @@ class OrderRefund extends Model {
             'booking_order.booking_date',
             'booking_order.payable',
             'booking_order.paied_time',
+            'booking_order.booker_sex',
         ];
         //booking_order_item
         $booking_order_item_fields = [
@@ -186,6 +187,10 @@ class OrderRefund extends Model {
             $receive['create_at'] = (string) $bookingReceive->created_at; //TODO 查询具体的人姓名
             $receive['arrive_at'] = $bookingReceive->arrive_at;
         }
+        //如果在退款中   查询是否是退款失败
+        if ($bookingOrder->status == 'RFN' && $refund->status == 3) {
+            $bookingOrder->status = 'RFE';
+        }
         $res = [
             'ordersn' => $refund->ordersn,
             'booking_sn' => $refund->booking_sn,
@@ -196,6 +201,7 @@ class OrderRefund extends Model {
 //            'price' => $bookingOrderItem->price,
             'booking_date' => $bookingOrder->booking_date,
             'status' => $bookingOrder->status,
+            'booker_sex' => $bookingOrder->booker_sex,
             // 预约金支付信息
             'pay_type' => $fundflow->pay_type,
             'payment_sn' => $paymentLog->payment_sn, //流水号

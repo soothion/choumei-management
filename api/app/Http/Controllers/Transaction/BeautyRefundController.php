@@ -150,6 +150,7 @@ class BeautyRefundController extends Controller {
      * @apiSuccess {String} booking_sn 预约号
      * @apiSuccess {String} booker_phone  手机号
      * @apiSuccess {String} booker_name 姓名
+     * @apiSuccess {String} booker_sex 预约人性别: F - 女, M - 男',
      * @apiSuccess {String} item_name 预约项目
      * @apiSuccess {String} price  项目价格
      * @apiSuccess {String} booking_date 预约日期
@@ -186,6 +187,7 @@ class BeautyRefundController extends Controller {
      *           "booking_sn": "sad2323232",
      *           "booker_phone": "18611112222",
      *           "booker_name": "预约人",
+     *           "booker_sex": "F",
      *           "booking_order_item": [
      *               {
      *                   "item_name": "测试时",

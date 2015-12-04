@@ -8,7 +8,6 @@
         <style>
           .box-warpper{
             position:relative;
-            width:100%;
             margin:15px;          
           }
 
@@ -16,9 +15,10 @@
             display: inline-block;
             margin:10px;
             height:333px;
+            width:25%;
+            min-width:320px;            
             overflow: hidden;
             border:1px solid  #ddd;
-            width:25%;            
           }
 
           ul{
@@ -27,26 +27,31 @@
             padding:5px 10px;
             width:95%;
           }
+
           ul li{
             padding:5px 2px;
             overflow: hidden;
           }
+
           .fl{
             float:left;
           }
+
           .fr{
             float:right;
           }
+
           .fr a{
             margin:0 10px;
           }
+
+          .mr{
+            margin: 10px 0;
+          }
+
           li div img{
            width:100%;
            height:100px;
-          }
-
-          li div{
-            margin:5px 0px;
           }
 
           li div label{
@@ -70,19 +75,18 @@
             cursor:pointer;
           }
 
-          .uploderBox{
-            line-height: 100px;
-            height:100px;
-            border:1px dashed #ddd;
-            text-align: center;
+          .plus-button{
+            display: inline-block;
+            margin:10px;
+            height:333px;
+            width:25%;
+            min-width:320px;  
+            overflow: hidden;          
+            border:1px solid  #ddd;            
           }
 
           .move{
             cursor:move;
-          }
-
-          .imgWrapper{
-            position: relative;
           }
 
           .operation{
@@ -98,14 +102,46 @@
             -webkit-transition:all 0.2s ease 0s;
             -moz-transition:all 0.2s ease 0s;
             transition:all 0.2s ease 0s;
-            cursor:pointer;
-            display: none;
           }
 
-          .img > span:hover{
-                    color:#fff;
-           }          
+          .operation{
+            font-size:1.5rem;
+            height:0px;
+            overflow:hidden;
+          } 
 
+          .thumbnails-item{
+            position:relative;
+            line-height: 100px;
+            height:100px;
+            text-align: center;             
+          }
+
+          .dashed{
+            border:1px dashed #ddd;
+          }
+
+          .thumbnails-item:hover .operation{
+              height:32px;
+          }
+
+          .hidden{
+             display:none!important;
+          }
+
+          .dis-line{
+            border:1px solid #E6EAF2!important;    
+          }
+
+          label>input[type="radio"][disabled]+span,select:disabled,input:disabled{
+            opacity: 1;
+            cursor: inherit;
+            background-color: #fff;
+            border:none;
+            box-shadow:none!important;
+            background:none;                
+          }
+        
         </style>
     </head>
     <body>
@@ -113,47 +149,78 @@
             <a>韩式定妆</a><span>&gt;</span><a href="homeBanner.html">主页Banner</a>    
         </div>
 
-        <div class="box-warpper">
-            <div class="banner">
-                <ul>
-                    <li>
-                        <div class="fl"><h3><strong>Banner1</strong></h3></div>
-                        <div class="fr">
-                            <button class='link' href="">保存</button>
-                            <button class='link' href="">取消</button>
-                            <button class='link del' >删除</button>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="uploderBox">                           
-                           <button class="btn-primary" id="uploader">上传</button>
-                        </div>                       
-                    </li>
-                    <li style="border-top:1px solid #ddd;">
-                        <div>
-                            <label><span>标题</span></label>
-                            <input type="text" />
-                        </div>
+        <div class="box-warpper" ajat="banner/index?type=1#domid=warpper&tempid=warpper-t" id="warpper">
+            <script type="text/template" id="warpper-t">
+              <%data.data && data.data.forEach(function(item,i){%>
+              <form data-role="form" class="banner">
+                  <ul>
+                      <li>
+                          <div class="fl"><h3><strong>Banner<%=i+1%></strong></h3></div>
+                          <div class="fr">
+                              <button class='link save hidden'>保存</button>
+                              <a class='link canncel hidden'>取消</a>
+                              <a class='link edit'>编辑</a>
+                              <a class='link del' id="<%=item.banner_id%>">删除</a>
+                          </div>
+                      </li>
 
-                        <div>
-                            <label><input type="radio" name="link"/><span>h5链接</span></label>
-                            <input type="text" />
-                        </div>
+                      <li>
+                          <div class="thumbnails-item">
+                              <img src='<%=item.image%>' data-original=''>
+                              <div class="operation hidden">
+                                  <i class="fa fa-pencil-square-o"></i>
+                              </div>                                 
+                          </div>                        
+                      </li>
 
-                        <div>
-                            <label><input type="radio" name="link"/><span>App内部链接</span></label>
-                            <input type="text" />
-                        </div>
+                      <li style="border-top:1px solid #ddd;">
 
-                        <div>
-                            <label><input type="radio" name="link"/><span>无跳转</span></label>
-                            <input type="text" />
-                        </div>
-                    </li>
-                </ul>             
-            </div>
-        
-            <div id="banner-button" class="banner">
+                          <div class="mr">
+                              <label><span>标题</span></label>
+                              <input type="text" name="name" value="<%=item.name%>" disabled/>
+                          </div>
+
+                          <div class="mr radios">
+                              <label class="radio">
+                                  <input type="radio" name="behavior<%=i%>" value="1" <%=item.behavior=="1" ? "checked" : ""%> disabled/>
+                                  <span>h5链接</span>
+                              </label>
+                              <input type="text" name="url" value="<%=item.behavior=='1' ? item.url : ''%>" disabled/>
+                          </div>
+
+                          <div class="mr radios">
+                              <label class="radio">
+                                  <input type="radio" name="behavior<%=i%>" value="2" <%=item.behavior=="2" ? "checked" : ""%> disabled />
+                                  <span>App内部链接</span>
+                              </label>
+
+                              <%if(item.behavior=="2"){ var url = JSON.parse(item.url)%>
+                                  <select name="url" style="width:29%" disabled>
+                                    <option value="salons_itemId" <%= url.type=="salons" ? 'selected' : ''%>>美发店铺主页</option>
+                                    <option value="artificers_itemId" <%= url.type=="artificers" ? 'selected' : ''%>>专家主页</option>
+                                  </select>
+                                  <input type="text" style="width:29%" disabled/>
+                              <%}else{%>
+                                  <select name="url" style="width:29%" readOnly>
+                                    <option value="salons_itemId">美发店铺主页</option>
+                                    <option value="artificers_itemId">专家主页</option>
+                                  </select>
+                                  <input type="text" style="width:29%" value="" disabled />
+                              <%}%>
+                          </div>
+
+                          <div class="mr">
+                              <label class="radio">
+                                  <input type="radio" name="behavior<%=i%>" value="3" <%=item.behavior=="3" ? "checked":""%> disabled/>
+                                  <span>无跳转</span>
+                              </label>
+                          </div>
+                      </li>
+                  </ul>             
+              </form>
+            <%})%> 
+            <%if(data.data && data.data.length < 10){%>          
+            <div class="plus-button">
                 <ul>
                     <li>
                         <div style="text-align:center;margin-top:100px;">
@@ -164,60 +231,50 @@
                         </div>
                     </li>
                 </ul>             
-            </div>                                                       
+            </div>
+            <%}%> 
+            <div class="banner template" style="display:none">
+                <ul>
+                    <li>
+                        <div class="fl"><h3><strong>Banner1</strong></h3></div>
+                        <div class="fr">
+                            <button class='link save'>保存</button>
+                            <button class='link cannel'>取消</button>
+                            <button class='link del' >删除</button>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="thumbnails-item dashed">
+                              <button class="btn-primary uploader">上传</button>                                     
+                        </div>                       
+                    </li>
+
+                    <li style="border-top:1px solid #ddd;">
+                        <div class="mr">
+                            <label><span>标题</span></label>
+                            <input type="text" />
+                        </div>
+                        <div class="mr">
+                            <label><input type="radio" name="link"/><span>h5链接</span></label>
+                            <input type="text" />
+                        </div>
+                        <div class="mr">
+                            <label><input type="radio" name="link"/><span>App内部链接</span></label>
+                            <select name="" id="" style="width:25%">
+                              <option value="salons">美发店铺主页</option>
+                              <option value="artificers">专家主页</option>
+                            </select>
+                            <input type="text" style="width:25%"/>
+                        </div>
+                        <div class="mr">
+                            <label><input type="radio" name="link"/><span>无跳转</span></label>
+                        </div>
+                    </li>
+                </ul>             
+            </div>                                                                    
+            </script>             
         </div>
-
-        <script>
-          $(document).ready(function(){
-                var bannerHTML = $('.banner')[0].outerHTML
-                uploader('uploader');
-                $(".box-warpper").on('click','#banner-button',function(){
-                    var id    = 'uploader'+$('.banner').length;
-                    var clone = $(bannerHTML);
-                    clone.find("#uploader").attr("id",id); 
-                    clone.find("strong").text("Banner"+$('.banner').length);             
-                    $("#banner-button").before(clone);
-                    uploader(id);
-                    if($('.banner').length >= 11 ){
-                        $("#banner-button").hide();
-                    }
-                });
-  
-                $(".box-warpper").on('click','.del',function(){
-                    $(this).closest('.banner').remove();
-                })
-
-                function uploader(id){
-                    lib.puploader.image({
-                        browse_button: id,
-                        auto_start:true,
-                        filters: {
-                            mime_types : [
-                                { title : "Image files", extensions : "jpg,png,jpeg,gif" },
-                            ]
-                        },
-                        max_file_size:'10mb',
-                        multi_selection:true,
-                        files_number:1,
-                        crop:true
-                    },function(uploader){
-                        var box = $('#'+id).parent();
-                        uploader.bind('ImageUploaded',function(up,response){
-                            var ratio = new Number(750/500).toFixed(2);
-                            lib.cropper.create({
-                                src:response.img,
-                                aspectRatio : ratio,
-                                thumbnails  : ['750x500'],
-                                define:function(data){
-                                    box.css('display','none');
-                                box.parent().append('<div class="imgWrapper"><img src='+data['750x500']+'></div>');                                    
-                                }
-                            });
-
-                        });
-                    });
-                }               
-          });
-        </script>
+        <script src="homeBanner.js"></script>
     </body>
 </html>

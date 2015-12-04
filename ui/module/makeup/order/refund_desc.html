@@ -15,24 +15,26 @@
                     <h4>定妆单退款详情</h4>
                 </div>
                 <div class="flex-item fr">
-                  <div class="fr" id='breadcrumb' ajat="#domid=breadcrumb&tempid=breadcrumb-t">
+                  <div class="fr">
+                      <span id="breadcrumb">
                       <script type="text/template" id="breadcrumb-t">
-                          <form  data-slug="feed.destroy" action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <form  action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
                               <input type="hidden" name="ids" value="<%=query.id%>">
                           <button class="btn" data-slug="coupon.add">
                                确认退款
                           </button>
                           </form>
-                          <form  data-slug="feed.destroy" action="beautyrefund/reject" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+                          <form  action="beautyrefund/reject" id="destroy" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.href='refund_list.html'}})">
                               <input type="hidden" name="ids" value="<%=query.id%>">
                           <button class="btn" data-slug="coupon.add">
                                拒绝退款
                           </button>
                           </form>
-                          <a href="refund_list.html" class="btn" data-slug="coupon.add">
-                               返回
-                          </a>
                       </script>
+                      </span>
+                      <a href="refund_list.html" class="btn" data-slug="coupon.add">
+                           返回
+                      </a>
                   </div>
                 </div>
             </div>
@@ -47,6 +49,9 @@
         .bor-n{
             border:0px !important;
         }
+        td.td{
+            background-color: #F6F8F9;
+        }
         </style>
         <div class="wrapper">
             <div class="table table-detail" style="margin:0" ajat="beautyrefund/show/<%=query.id%>#domid=table&tempid=table-t" id="table">
@@ -58,6 +63,15 @@
                     'CSD':'已消费',
                     'RFN':'申请退款',
                     'RFD':'已退款',
+                    'RFE':'退款失败',
+                }%>
+                <%var pay_type_desc={
+                    "1":"网银",
+                    "2":"支付宝",
+                    "3":"微信",
+                    "4":"余额",
+                    "7":"积分",
+                    "10":"易联"
                 }%>
                     <tbody>
                         <tr>
@@ -78,15 +92,21 @@
                         </tr>
                         <tr>
                             <td class="td">性别：</td>
-                            <td><%=data.status%></td>
+                            <td><%=data.booker_sex=='F' ? '女':'男'%></td>
                         </tr>
                         <tr>
                             <td class="td">预约项目：</td>
-                            <td><%=data.item_name%></td>
+                            <td><%var orderItems=[];
+                            data.booking_order_item.forEach(function(orderItem){
+                                orderItems.push(orderItem.item_name);
+                            })%><%=orderItems.join(",")%></td>
                         </tr>
                         <tr>
                             <td class="td">项目价格：</td>
-                            <td><%=data.price%></td>
+                            <td><%var orderPrice=0;
+                            data.booking_order_item.forEach(function(orderItem){
+                                orderPrice = orderPrice+Number(orderItem.price)
+                            })%><%=orderPrice%></td>
                         </tr>
                         <tr>
                             <td class="td">预约日期：</td>
@@ -98,7 +118,7 @@
                         </tr>
                         <tr>
                             <td class="td">订单状态：</td>
-                            <td><%=data.status%></td>
+                            <td><%=status[data.status]%></td>
                         </tr>
                         <tr>
                             <td colspan="2">预约金支付信息</td>
@@ -109,7 +129,7 @@
                                     <tbody>
                                         <tr>
                                             <td>支付方式：</td>
-                                            <td><%=data.pay_type%></td>
+                                            <td><%=pay_type_desc[data.pay_type]%></td>
                                             <td>流水号：</td>
                                             <td><%=data.payment_sn%></td>
                                         </tr>
@@ -127,8 +147,9 @@
                         </tr>
                         <tr>
                             <td class="td">支付状态：</td>
-                            <td><%=data.actTime%></td>
+                            <td>支付<%= data.pay_status == 1 ? '成功':'失败'%></td>
                         </tr>
+                        <%if (data.receive.arrive_at){%>
                         <tr>
                             <td colspan="2">用户到店记录：</td>
                         </tr>
@@ -142,7 +163,7 @@
                         </tr>
                         <tr>
                             <td class="td">沟通记录：</td>
-                            <td><%=data.v%></td>
+                            <td><%=data.remark%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -158,6 +179,7 @@
                             </table>
                             </td>
                         </tr>
+                        <%}%>
                         <tr>
                             <td colspan="2">退款信息：</td>
                         </tr>
@@ -168,7 +190,7 @@
                                     <tr>
                                         <tr>
                                             <td>发起退款：</td>
-                                            <td><%=data.rereason%></td>
+                                            <td><%= data.refund_from == 1?'用户':'臭美人员'%></td>
                                             <td>退款原因：</td>
                                             <td><%=data.rereason%></td>
                                         </tr>
@@ -179,10 +201,11 @@
                         </tr>
                         <tr>
                             <td class="td">退款说明：</td>
-                            <td><%=data.actTime%></td>
+                            <td><%=data.refund_desc%></td>
                         </tr>
                         <tr>
-                            <td colspan="2">退款方式：</td>
+                            <td class="td">退款方式：</td>
+                            <td><%=pay_type_desc[data.refund_type]%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -204,9 +227,9 @@
                                     <tbody>
                                         <tr>
                                             <td>退款状态：</td>
-                                            <td><%=data.vcRemark%></td>
-                                            <td>完成退款时间：</td>
-                                            <td><%=data.vcRemark%></td>
+                                            <td><%=status[data.status]%></td>
+                                            <td>退款时间：</td>
+                                            <td><%=data.complete_time%></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -229,8 +252,10 @@
                     </tbody>
                 </table>
                  </script>
-                 <script type="text/javascript">
-
+                 <script>
+                    $('#table').on('_ready',function(){
+                        lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').render();
+                    })
                  </script>
             </div>
         </div>

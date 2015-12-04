@@ -1,3 +1,4 @@
+<form action="book/receive/<%=query.id%>" data-role="normal">
 <div class="control-group">
     <label class="control-label" for="">项目价格：</label>
     <div class="control">
@@ -7,7 +8,7 @@
 <div class="control-group">
     <label class="control-label" for="">已付定金：</label>
     <div class="control">
-            <label for="">400</label>
+            <label for=""><%=orderInfo.AMOUNT%></label>
     </div>
 </div>
 <div class="control-group">
@@ -19,33 +20,33 @@
 <div class="control-group">
     <label class="control-label" for=""><span class="red">*</span>支付方式：</label>
     <div class="control">
-            <select class="" name="">
-                <option value="">微信</option>
-                <option value="">支付宝</option>
-                <option value="">POS机</option>
-                <option value="">现金</option>
-                <option value="">微信+现金</option>
-                <option value="">支付宝+现金</option>
-                <option value="">POS机+现金</option>
+            <select id="pay_type" name="pay_type">
+                <option value="1" selected>微信</option>
+                <option value="2">支付宝</option>
+                <option value="3">POS机</option>
+                <option value="4">现金</option>
+                <option value="5">微信+现金</option>
+                <option value="6">支付宝+现金</option>
+                <option value="7">POS机+现金</option>
             </select>
     </div>
 </div>
-<div class="control-group">
-    <label class="control-label" for=""><span class="red">*</span>微信支付：</label>
+<div class="control-group" id="other_money">
+    <label class="control-label" for=""><span class="red">*</span><span id="pay_name">微信</span>支付：</label>
     <div class="control">
-            <input type="text"   name="startTime" id="startTime" required/>
+            <input type="text" pattern='number'  name="other_money"  required/>
     </div>
 </div>
-<div class="control-group">
+<div class="control-group" id="cash_money">
     <label class="control-label" for=""><span class="red">*</span>现金支付：</label>
     <div class="control">
-            <input type="text"   name="startTime" id="startTime" required/>
+            <input type="text" pattern='number' name="cash_money"  required/>
     </div>
 </div>
 <div class="control-group">
     <label class="control-label" for="">其它抵扣：</label>
     <div class="control">
-            <input type="text"   name="startTime" id="startTime" />
+            <input type="text" pattern='number' name="deduction_money" id="startTime" />
     </div>
 </div>
 <div class="control-group">
@@ -68,3 +69,31 @@
                     <span id="sn" class="weak"></span>
     </div>
 </div>
+</form>
+<script>
+    var cash_type_desc={
+     '1':'微信',
+     '2':'支付宝',
+     '3':'POS机',
+     '4':'现金',
+     '5':'微信' ,
+     '6':'支付宝' ,
+     '7':'POS机'}
+    $('#pay_type').on('change',function(){
+        var value = $(this).val(),
+            $cash_money = $('#cash_money'),
+            $other_money=$('#other_money'),
+            $pay_name = $('#pay_name');
+        if (value > 3){
+            $cash_money.show();
+        }else{
+            $cash_money.hide();
+        }
+        if (value !=4){
+            $other_money.show();
+            $pay_name.html(cash_type_desc[value]);
+        }else{
+            $other_money.hide();
+        }
+    })
+</script>

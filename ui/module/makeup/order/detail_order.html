@@ -16,7 +16,7 @@
                 </div>
                 <div class="flex-item fr">
                   <div class="fr">
-                    <a href="coupon_list.html" class="btn" data-slug="coupon.add">
+                    <a onclick="print()" class="btn" data-slug="coupon.add">
                         打印
                     </a>
                     <a class="btn" data-modal='receive' data-slug="coupon.add">
@@ -387,7 +387,7 @@
                 </table>
                  </script>
                  <script type="text/javascript">
-
+                 var orderInfo = {},id=lib.tools.parseQuery(window.location.href).id;
                  var completeDefine = function(){
                      var popup = $(this);
                      var form = popup.find('form');
@@ -434,7 +434,16 @@
                       'defineText':'确认',
                       'confirm':true,
                       'modalType':'confirm',
-                      'complete':completeDefine
+                      'complete':completeDefine,
+                      'define':function(){
+                          lib.ajax({
+                              url:'book/bill/'+id
+                          }).done(function(data, status, xhr){
+                              if(data.result == 1){
+                                  location.reload();
+                              }
+                          });
+                      }
                     },
                     'refund':{
                       'title':'退款',
@@ -453,6 +462,9 @@
                       var modal= $(this).attr('data-modal');
                       initModal(ModalList[modal]);
                     });
+                    $('#table').on('_ready',function(data){
+                        orderInfo = data.data;
+                    })
                   }();
 
                   var initModal = function(options){

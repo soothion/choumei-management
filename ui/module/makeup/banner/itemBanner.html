@@ -8,7 +8,6 @@
         <style>
           .box-warpper{
             position:relative;
-            width:100%;
             margin:15px;          
           }
 
@@ -18,7 +17,8 @@
             height:235px;
             overflow: hidden;
             border:1px solid  #ddd;
-            width:25%;            
+            width:25%;
+            min-width:320px;             
           }
 
           ul{
@@ -27,6 +27,7 @@
             padding:5px 10px;
             width:95%;
           }
+          
           ul li{
             padding:5px 2px;
             overflow: hidden;
@@ -40,19 +41,16 @@
           .fr a{
             margin:0 10px;
           }
+
           li div img{
            width:100%;
            height:100px;
           }
 
-          li div{
-            margin:5px 0px;
-          }
-
           li div label{
             display:inline-block;
-            min-width:110px;
-            width:30%;
+            min-width:50px;
+            width:10%;
           }
 
           li div input{
@@ -61,26 +59,63 @@
           }
 
           .add-button{
-              height: 320px;
-              line-height: 320px;
-              text-align: center;
+            height: 320px;
+            line-height: 320px;
+            text-align: center;
           }
 
           #banner-button{
             cursor:pointer;
           }
 
-          .uploderBox{
-            line-height: 100px;
-            height:100px;
-            border:1px dashed #ddd;
-            text-align: center;
+          .operation{
+            position:absolute!important;
+            bottom:0px;
+            left:0px;
+            width:100%;
+            height:32px;
+            background:rgba(0,0,0,0.5);
+            color:#ddd;
+            line-height:32px;
+            text-align:center;
+            -webkit-transition:all 0.2s ease 0s;
+            -moz-transition:all 0.2s ease 0s;
+            transition:all 0.2s ease 0s;
           }
 
-          .move{
-            cursor:move;
+          .operation{
+            font-size:1.5rem;
+            height:0px;
+            overflow:hidden;
+            cursor: pointer;
+          } 
+
+          .thumbnails-item{
+            position:relative;
+            line-height: 100px;
+            height:100px;
+            text-align: center;             
           }
-       
+
+          .dashed{
+            border:1px dashed #ddd;
+          }
+
+          .thumbnails-item:hover .operation{
+              height:32px;
+          }
+
+          input:disabled{
+            opacity: 1;
+            cursor: inherit;
+            background-color: #fff;
+            border:none;
+            box-shadow:none!important;
+            background:none;                
+          }
+          .hidden{
+             display:none;
+          }     
         </style>
     </head>
     <body>
@@ -88,97 +123,156 @@
             <a>韩式定妆</a><span>&gt;</span><a href="homeBanner.html">主页Banner</a>    
         </div>
 
-        <div class="box-warpper">
-            <div class="banner">
+        <div class="box-warpper" id="warpper">           
+            <script type="text/template" id="warpper-t">
+            <%
+              var item2 = "";
+              var item3 = "";
+              var item4 = "";
+              data.data.forEach(function(item,i){
+                  if(item.type == "2"){
+                    item2 = item;
+                  }
+                  if(item.type == "3"){
+                    item3 = item;
+                  } 
+                  if(item.type == "4"){
+                    item4 = item;
+                  }  
+              })
+            %>
+
+            <form class="banner" data-role="form" >
                 <ul>
                     <li>
-                        <div class="fl"><h3><strong>Banner1</strong></h3></div>
+                        <input type="hidden" name="id" value="<%= item2 ? item2.banner_id : ''%>">
+                        <input type="hidden" name="type" value="<%= item2 ? item2.type : ''%>">
+                        <div class="fl"><h3><strong>快时尚Banner</strong></h3></div>
                         <div class="fr">
-                            <button class='link' href="">保存</button>
-                            <button class='link' href="">取消</button>
-                            <button class='link del' >删除</button>
+                            <button class='link save hidden'>保存</button>
+                            <a class='link cancel hidden'>取消</a>
+                            <a class='link edit'>编辑</a>
                         </div>
                     </li>
                     <li>
-                        <div class="uploderBox">                           
-                           <button class="btn-primary" id="uploader">上传</button>
-                        </div>                       
-                    </li>
-                    <li style="border-top:1px solid #ddd;">
-                        <div>
-                            <label><span>专家主页Banner</span></label>
-                            <input type="text" />
-                        </div>
+                        <div class="thumbnails-item <%= item2 ? '' : 'dashed'%>">
+                          <%if(item2){%>
+                              <div class="thumbnails-item-btn" style="display:none">
+                                  <button type="button" class="btn-primary" id="uploader2">上传</button>
+                              </div>
 
+                              <div class="thumbnails-item-img">
+                                  <img src='<%=item2.image%>'>
+                                  <input type="hidden" name="image" value='<%=item2.image%>' required>
+                                  <div class="operation hidden">
+                                      <i class="fa fa-pencil-square-o"></i>
+                                  </div>
+                              <div>                          
+                          <%}else{%> 
+                              <div class="thumbnails-item-btn">
+                                  <button type="button" class="btn-primary" id="uploader2">上传</button>
+                              </div>                             
+                          <%}%>
+                        </div>
                     </li>
-                </ul>             
-            </div>
-        
-            <div id="banner-button" class="banner">
+                    <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
+                    <li style="border-top:1px solid #ddd;">
+                        <div style="margin-top:10px">
+                            <label><span>题目</span></label>
+                            <input type="text" name="name" value="<%=item2.name%>" placeholder="1~20个字符，必填" required disabled/>
+                        </div>                        
+                    </li>
+                </ul>          
+            </form>
+
+            <form class="banner" data-role="form">
                 <ul>
                     <li>
-                        <div style="text-align:center;margin-top:50px;">
-                            <button type="button">
-                                <span style="font-size: 4rem;color:#ddd;">+</span><br>
-                                <span style="font-size: 15px;color:#ddd;font-weight:900;">添加</span>
-                            </button>
+                        <input type="hidden" name="id" value="<%= item3 ? item3.banner_id : ''%>">
+                        <input type="hidden" name="type" value="<%= item3 ? item3.type : ''%>">
+                        <div class="fl"><h3><strong>专家Banner</strong></h3></div>
+                        <div class="fr">
+                            <button class='link save hidden'>保存</button>
+                            <a class='link cancel hidden'>取消</a>
+                            <a class='link edit'>编辑</a>
                         </div>
                     </li>
-                </ul>             
-            </div>                                                       
+                    <li>
+                        <div class="thumbnails-item <%= item3 ? '' : 'dashed'%> ">
+                          <%if(item3){%>
+                              <div class="thumbnails-item-btn" style="display:none">
+                                  <button type="button" class="btn-primary" id="uploader3">上传</button>
+                              </div>
+
+                              <div class="thumbnails-item-img">
+                                  <img src='<%=item3.image%>'>
+                                  <input type="hidden" name="image" value='<%=item3.image%>' required>
+                                  <div class="operation hidden">
+                                      <i class="fa fa-pencil-square-o"></i>
+                                  </div>
+                              <div>                          
+                          <%}else{%> 
+                              <div class="thumbnails-item-btn">
+                                  <button type="button" class="btn-primary" id="uploader3">上传</button>
+                              </div>                             
+                          <%}%>  
+                        </div>
+                    </li>
+                    <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
+                    <li style="border-top:1px solid #ddd;">
+                        <div style="margin-top:10px">
+                            <label><span>题目</span></label>
+                            <input type="text" name="name" value="<%=item3.name%>" placeholder="1~20个字符，必填" required disabled/>
+                        </div>
+                    </li>
+                </ul>          
+            </form>
+
+            <form class="banner" data-role="form">
+                <ul>
+                    <li>
+                        <input type="hidden" name="id" value="<%= item4 ? item4.banner_id : ''%>">
+                        <input type="hidden" name="type" value="<%= item4 ? item4.type : ''%>">
+                        <div class="fl"><h3><strong>半永久Banner</strong></h3></div>
+                        <div class="fr">
+                            <button class='link save hidden'>保存</button>
+                            <a class='link cancel hidden'>取消</a>
+                            <a class='link edit'>编辑</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="thumbnails-item <%= item4 ? '' : 'dashed'%>">
+                          <%if(item4){%>
+                              <div class="thumbnails-item-btn" style="display:none">
+                                  <button type="button" class="btn-primary" id="uploader4">上传</button>
+                              </div>
+
+                              <div class="thumbnails-item-img">
+                                  <img src='<%=item4.image%>'>
+                                  <input type="hidden" name="image" value='<%=item4.image%>' required>
+                                  <div class="operation hidden">
+                                      <i class="fa fa-pencil-square-o"></i>
+                                  </div>
+                              <div>                          
+                          <%}else{%> 
+                              <div class="thumbnails-item-btn">
+                                  <button type="button" class="btn-primary" id="uploader4">上传</button>
+                              </div>                             
+                          <%}%>
+
+                        </div>
+                    </li>
+                    <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
+                    <li style="border-top:1px solid #ddd;">
+                        <div style="margin-top:10px">
+                            <label><span>题目</span></label>
+                            <input type="text" name="name" value="<%=item4.name%>"  placeholder="1~20个字符，必填" required disabled/>
+                        </div>
+                    </li>
+                </ul>          
+            </form>
+        </script>                                 
         </div>
-
-        <script>
-          $(document).ready(function(){
-                var bannerHTML = $('.banner')[0].outerHTML
-                uploader('uploader');
-                $(".box-warpper").on('click','#banner-button',function(){
-                    var id    = 'uploader'+$('.banner').length;
-                    var clone = $(bannerHTML);
-                    clone.find("#uploader").attr("id",id); 
-                    clone.find("strong").text("Banner"+$('.banner').length);             
-                    $("#banner-button").before(clone);
-                    uploader(id);
-                    if($('.banner').length >= 11 ){
-                        $("#banner-button").hide();
-                    }
-                });
-  
-                $(".box-warpper").on('click','.del',function(){
-                    $(this).closest('.banner').remove();
-                })
-
-                function uploader(id){
-                    lib.puploader.image({
-                        browse_button: id,
-                        auto_start:true,
-                        filters: {
-                            mime_types : [
-                                { title : "Image files", extensions : "jpg,png,jpeg,gif" },
-                            ]
-                        },
-                        max_file_size:'10mb',
-                        multi_selection:true,
-                        files_number:1,
-                        crop:true
-                    },function(uploader){
-                        var box = $('#'+id).parent();
-                        uploader.bind('ImageUploaded',function(up,response){
-                            var ratio = new Number(750/500).toFixed(2);
-                            lib.cropper.create({
-                                src:response.img,
-                                aspectRatio : ratio,
-                                thumbnails  : ['750x500'],
-                                define:function(data){
-                                    box.css('display','none');
-                                box.parent().append('<div class="imgWrapper"><img src='+data['750x500']+'></div>');                                    
-                                }
-                            });
-
-                        });
-                    });
-                }               
-          });
-        </script>
+        <script src="itemBanner.js"></script>
     </body>
 </html>
