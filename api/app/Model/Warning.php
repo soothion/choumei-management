@@ -166,7 +166,7 @@ class Warning extends Model {
             if ($maxTime) {
                 $maxTime += 86399;
                 $query->where('order.add_time', '<=', $maxTime);
-                $query1->where('order.add_time', '>=', $minTime);
+                $query1->where('order.add_time', '<=', $maxTime);
             }
         }
         $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_order.ordersn) as orderNum"), "request_log.DEVICE_UUID as device"];
