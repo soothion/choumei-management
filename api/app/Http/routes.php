@@ -160,7 +160,17 @@ Route::any('artificer/checkNameExists/{id?}',array(
     'as'=>'artificer.checkNameExists',
     'uses'=>'Artificer\ArtificerController@checkNameExists'
 )); 
+Route::any('beautyItem/itemList',array(  
+	'as'=>'beautyItem.itemList',
+	'uses'=>'Item\BeautyItemController@itemList'
+));
 
+Route::any('beautyItem/checkName',array(  
+	'as'=>'beautyItem.checkName',
+	'uses'=>'Item\BeautyItemController@checkName'
+));
+	
+	
 
 Route::any('assistant/checkNumberExists/{id?}',array(  
     'as'=>'assistant.checkNumberExists',
@@ -1260,11 +1270,6 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     )); 
 	
 	//韩式定妆项目
-	Route::any('beautyItem/itemList',array(  
-        'as'=>'beautyItem.itemList',
-        'uses'=>'Item\BeautyItemController@itemList'
-    ));
-	
 	Route::any('beautyItem/index',array(  
         'as'=>'beautyItem.index',
         'uses'=>'Item\BeautyItemController@index'
@@ -1281,11 +1286,6 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     ));
     
 
-	Route::any('beautyItem/checkName',array(  
-        'as'=>'beautyItem.checkName',
-        'uses'=>'Item\BeautyItemController@checkName'
-    ));
-	
 	Route::any('beautyItem/updateFashion',array(  
         'as'=>'beautyItem.updateFashion',
         'uses'=>'Item\BeautyItemController@updateFashion'
