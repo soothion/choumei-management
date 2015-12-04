@@ -4,10 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
-use PDO;
-use URL;
+Use PDO;
+Use URL;
 use Log;
-use App\RequestLog;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
@@ -19,7 +18,7 @@ class Warning extends Model {
     public $timestamps = false;
 
     public static function searchOrder($input, $page, $size) {
-        
+        $query = Self::getQuery();
         // 是否有输入关键字搜索 
         $val = '';
         if (!empty($input["keyword"])) {
@@ -28,100 +27,64 @@ class Warning extends Model {
             $val = str_replace(['_', '%'], ['\_', '\%'], $val);
         }
         $orderNum = $input['orderNum'];
-
-        //时间范围
-        if (!empty($input["minTime"])) {
-            if ($input["minTime"] < "2015-11-25") {
-                $input["minTime"] = "2015-11-25";
-            }
-        }
-
-
         switch ($input ["keywordType"]) {
 
-            case "0" : // 用户手机号		
-                $query = Self::getQuery();
+            case "0" : // 用户手机号     
                 $fields = [DB::raw("COUNT(DISTINCT cm_order.ordersn) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "user.mobilephone as userMobile", "order.user_id as userId"];
                 $query->select($fields)->join('user', 'user.user_id', '=', 'order.user_id')->groupBy('order.user_id')->having(DB::raw("COUNT(DISTINCT cm_order.ordersn)"), '>=', $orderNum);
                 if (!empty($val)) {
                     $query->where('user.mobilephone', 'like', '%' . $val . '%');
                 }
 
-                if (!empty($input["minTime"])) {
-                    $minTime = strtotime($input["minTime"]);
-                    if ($minTime) {
-                        $query->where('order.add_time', '>=', $minTime);
-                    }
-                }
-
-                if (!empty($input["maxTime"])) {
-                    $maxTime = strtotime($input["maxTime"]);
-                    if ($maxTime) {
-                        $maxTime += 86399;
-                        $query->where('order.add_time', '<=', $maxTime);
-                    }
-                }
-                $query = $query->where('order.ispay', '=', 2)->orderBy(DB::raw("MAX(cm_order.add_time)"), "DESC");
-
                 break;
             case "2" : // openId
-                $query = RequestLog::getQuery();
-                $fields = [DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), DB::raw("MAX(cm_request_log.create_time)as maxOrderTime"), "request_log.OPENID as openId"];
-                $query->select($fields)
+
+                $fields = [DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.OPENID as openId"];
+                $query->select($fields)->join('request_log', function($join) {
+                        $join->on('request_log.ORDER_SN', '=', 'order.ordersn')->orOn('request_log.ORDER_SN', '=', 'order.shopcartsn');
+                    })
                     ->groupBy('request_log.OPENID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.OPENID");
                 if (!empty($val)) {
                     $query->where('request_log.OPENID', 'like', '%' . $val . '%');
                 }
 
-                if (!empty($input["minTime"])) {
-                    $minTime = $input["minTime"];
-                    if ($minTime) {
-                        $query->where('request_log.create_time', '>=', $minTime);
-                    }
-                }
-
-                if (!empty($input["maxTime"])) {
-                    $maxTime = $input["maxTime"];
-                    if ($maxTime) {
-                        $query->where('request_log.create_time', '<=', $maxTime);
-                    }
-                }
-
-                $query = $query->orderBy(DB::raw("MAX(cm_request_log.create_time)"), "DESC");
                 break;
             case "1" ://设备号
-                $query = RequestLog::getQuery();
-                $fields = [DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), DB::raw("MAX(cm_request_log.create_time)as maxOrderTime"), "request_log.DEVICE_UUID as device"];
-                $query->select($fields)
-                    ->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.DEVICE_UUID");
+                $fields = [DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "request_log.DEVICE_UUID as device"];
+                $query->select($fields)->join('request_log', function($join) {
+                    $join->on('request_log.ORDER_SN', '=', 'order.ordersn')->orOn('request_log.ORDER_SN', '=', 'order.shopcartsn');
+                })->groupBy('request_log.DEVICE_UUID')->having(DB::raw("COUNT(DISTINCT cm_request_log.ORDER_SN)"), '>=', $orderNum)->whereNotNull("request_log.DEVICE_UUID");
                 if (!empty($val)) {
                     $query->where('request_log.DEVICE_UUID', 'like', '%' . $val . '%');
                 }
-
-                if (!empty($input["minTime"])) {
-                    $minTime = $input["minTime"];
-                    if ($minTime) {
-                        $query->where('request_log.create_time', '>=', $minTime);
-                    }
-                }
-
-                if (!empty($input["maxTime"])) {
-                    $maxTime = $input["maxTime"];
-                    if ($maxTime) {
-                        $query->where('request_log.create_time', '<=', $maxTime);
-                    }
-                }
-                $query = $query->orderBy(DB::raw("MAX(cm_request_log.create_time)"), "DESC");
                 break;
             default:
                 throw new ApiException('不支持其他类似搜索！', 1);
+        }
+
+        //时间范围
+        if (!empty($input["minTime"])) {
+            if ($input["minTime"] < "2015-11-25") {
+                $input["minTime"] = "2015-11-25";
+            }
+            $minTime = strtotime($input["minTime"]);
+            if ($minTime) {
+                $query->where('order.add_time', '>=', $minTime);
+            }
+        }
+        if (!empty($input["maxTime"])) {
+            $maxTime = strtotime($input["maxTime"]);
+            if ($maxTime) {
+                $maxTime += 86399;
+                $query->where('order.add_time', '<=', $maxTime);
+            }
         }
 
         //手动设置页数
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });
-        $nums = $query->paginate($size)->toArray();
+        $nums = $query->where('order.ispay', '=', 2)->orderBy(DB::raw("MAX(cm_order.add_time)"), "DESC")->paginate($size)->toArray();
         return $nums;
     }
 
@@ -208,7 +171,7 @@ class Warning extends Model {
         Log::info("waring data is", $datas);
         foreach ($datas as $key => $data) {
             switch ($keywordType) {
-                case "0" : // 用户手机号				
+                case "0" : // 用户手机号             
                     $keyword = isset($data['userMobile']) ? ' ' . $data['userMobile'] : '';
                     break;
                 case "1" : // 设备号
