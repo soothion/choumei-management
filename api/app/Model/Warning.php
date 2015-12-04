@@ -88,11 +88,12 @@ class Warning extends Model {
             }
         }
 
-        //手动设置页数
-        AbstractPaginator::currentPageResolver(function() use ($page) {
-            return $page;
-        });
-        $nums = $query->where('order.ispay', '=', 2)->orderBy(DB::raw("MAX(cm_order.add_time)"), "DESC")->paginate($size)->toArray();
+        $offset = ($page-1)*$size;
+        $nums = $query->where('order.ispay', '=', 2)
+            ->orderBy(DB::raw("MAX(cm_order.add_time)"), "DESC")
+            ->take($size)
+            ->skip($offset)
+            ->toArray();
         $redis->setex($key,3600*24,serialize($nums));
         return $nums;
     }
