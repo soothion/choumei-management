@@ -468,8 +468,8 @@ class BookController extends Controller
      * @apiParam {Number} other_money 其他方式的支付金额
      * @apiParam {Number} cash_money 现金金额
      * @apiParam {Number} deduction_money 抵扣金额
-     * @apiParam {Number} expert_uid 专家id
-     * @apiParam {Number} assistant_uid 助理id
+     * @apiParam {Number} specialistId 专家id
+     * @apiParam {Number} assistantId 助理id
      * 
      * @apiSuccessExample Success-Response:
      *       {
@@ -489,9 +489,10 @@ class BookController extends Controller
             'other_money' => self::T_FLOAT,
             'cash_money' => self::T_FLOAT,
             'deduction_money' => self::T_FLOAT,
-            'expert_uid'=> self::T_INT,
-            'assistant_uid'=> self::T_INT,
+            'specialistId'=> self::T_INT,
+            'assistantId'=> self::T_INT,
         ]);
+        //$params['uid'] = 1;
         $params['uid'] = $this->user->id;        
         $book = BookingCash::cash($id,$params);
         $custom_uid = $book['USER_ID'];
@@ -501,8 +502,8 @@ class BookController extends Controller
         {
             $is_first = true;
         }
-        
-        self::givePresent($custom_uid,$is_first);
+        self::givePresent($custom_uid,true);
+        //self::givePresent($custom_uid,$is_first);
         Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success(['id'=>$id]);
     }
@@ -557,8 +558,8 @@ class BookController extends Controller
      * @apiName relatively
      * @apiGroup book
      *
-     * @apiParam {Number} expert_uid 专家id
-     * @apiParam {Number} assistant_uid 助理id
+     * @apiParam {Number} specialistId 专家id
+     * @apiParam {Number} assistantId 助理id
      * @apiParam {String} remark 说明
      * @apiParam {String} work_at 补色日期 YYYY-MM-DD
 
@@ -579,16 +580,16 @@ class BookController extends Controller
         $params = $this->parameters([
             'remark' => self::T_STRING,
             'work_at' => self::T_STRING,
-            'expert_uid'=> self::T_INT,
-            'assistant_uid'=> self::T_INT,
+            'specialistId'=> self::T_INT,
+            'assistantId'=> self::T_INT,
         ]);
         $base = BookingOrder::where("ID",$id)->first();
         if(empty($base))
         {
             throw new ApiException("定妆单[{$id}]不存在或者已经被删除", ERROR::ORDER_NOT_EXIST);
         }
-        $state = $base->status;
-        if(!in_array($state,['CSD']))
+        $state = $base->STATUS;
+        if($state != "CSD")
         {
             throw new ApiException("定妆单[{$id}]状态不正确", ERROR::ORDER_STATUS_WRONG);
         }       
@@ -604,8 +605,8 @@ class BookController extends Controller
             'order_sn'=>$base->ORDER_SN,
             'work_at'=>date("Y-m-d",strtotime($params['work_at'])),
             'remark'=>$params['remark'],
-            'expert_uid'=>$params['expert_uid'],
-            'assistant_uid'=>$params['assistant_uid'],
+            'expert_uid'=>$params['specialistId'],
+            'assistant_uid'=>$params['assistantId'],
             'created_at'=>date("Y-m-d H:i:s"),
         ]);
         Event::fire('booking.relatively',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
@@ -644,7 +645,7 @@ class BookController extends Controller
         {
             throw new ApiException("定妆单[{$id}]不存在或者已经被删除", ERROR::ORDER_NOT_EXIST);
         }
-        $state = $base->status;
+        $state = $base->STATUS;
         if($state != "CSD")
         {
             throw new ApiException("定妆单[{$id}]状态不正确,不允许退款", ERROR::ORDER_STATUS_WRONG);
@@ -672,7 +673,6 @@ class BookController extends Controller
         Order::where('ordersn',$base->BOOKING_SN)->update(['status'=>4,'use_time'=>$time]); 
          
         Event::fire('booking.refund',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
-
         
         return $this->success(['id'=>$id]);
     }
@@ -708,13 +708,11 @@ class BookController extends Controller
             }
             foreach($recommend_users as  $u)
             {
-                $u['present_type'] = 1;
-                PowderArticlesController::addReservateSnAfterConsume($u);
+                PowderArticlesController::addReservateSnAfterConsume($u['user_id'],$u['mobilephone'],1);
             }
             foreach($customer_users as  $u)
             {
-                $u['present_type'] = 1;
-                PowderArticlesController::addReservateSnAfterConsume($u);
+                PowderArticlesController::addReservateSnAfterConsume($u['user_id'],$u['mobilephone'],1);
             }
         }
     }
