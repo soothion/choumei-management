@@ -311,6 +311,11 @@ class BeautyItemController extends Controller{
 				throw new ApiException("缺失参数", ERROR::BEAUTY_ITEM_ERROR);
 			} 
 		}
+		if($data['price'] < $data['vip_price'] && $data['type'] == 1)
+		{
+			throw new ApiException("价格参数错误", ERROR::BEAUTY_ITEM_WRONG_PRICE);
+		}
+		
 		return $data;
 	}
 

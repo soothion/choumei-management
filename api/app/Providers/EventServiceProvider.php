@@ -386,15 +386,29 @@ class EventServiceProvider extends ServiceProvider
         'powder.closeArticle' => [
             'App\Listeners\PowderArticlesEventListener@onCloseArticle',
     	],
+        'powder.showArticleTicketInfo' => [
+            'App\Listeners\PowderArticlesEventListener@onShowArticleTicketInfo',
+    	],
         'powder.exportArticleTicket' => [
             'App\Listeners\PowderArticlesEventListener@onExportArticleTicket',
     	],
-        'powder.selectArticleTicket' => [
-            'App\Listeners\PowderArticlesEventListener@onSelectArticleTicket',
+        'powder.showTicketInfo' => [
+            'App\Listeners\PowderArticlesEventListener@onShowTicketInfo',
     	],
         'powder.useArticleTicket' => [
             'App\Listeners\PowderArticlesEventListener@onUseArticleTicket',
     	],
+
+        //定妆单退款
+        'BeautyRefund.show'=>[
+          'App\listeners\BeautyRefundEventListener@onShow'  
+        ],
+        'BeautyRefund.reject'=>[
+          'App\listeners\BeautyRefundEventListener@onReject'  
+        ],
+        'BeautyRefund.accept'=>[
+          'App\listeners\BeautyRefundEventListener@onAccept'  
+	],
 
 		//定妆单操作
         'booking.receive' => [
