@@ -50,7 +50,7 @@ class PresentArticleCode extends Model
             $query = $query->where('reservate_sn','=',$reservateSn);
         }
         if($recommendCode){
-            $query = $query->where('$recommend_code','=',$recommendCode);
+            $query = $query->where('recommend_code','=',$recommendCode);
         }
         if($ticketCode){
             $query = $query->where('code','=',$ticketCode);
