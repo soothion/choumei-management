@@ -386,11 +386,14 @@ class EventServiceProvider extends ServiceProvider
         'powder.closeArticle' => [
             'App\Listeners\PowderArticlesEventListener@onCloseArticle',
     	],
+        'powder.showArticleTicketInfo' => [
+            'App\Listeners\PowderArticlesEventListener@onShowArticleTicketInfo',
+    	],
         'powder.exportArticleTicket' => [
             'App\Listeners\PowderArticlesEventListener@onExportArticleTicket',
     	],
-        'powder.selectArticleTicket' => [
-            'App\Listeners\PowderArticlesEventListener@onSelectArticleTicket',
+        'powder.showTicketInfo' => [
+            'App\Listeners\PowderArticlesEventListener@onShowTicketInfo',
     	],
         'powder.useArticleTicket' => [
             'App\Listeners\PowderArticlesEventListener@onUseArticleTicket',
