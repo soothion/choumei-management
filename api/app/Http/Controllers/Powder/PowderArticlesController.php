@@ -600,7 +600,10 @@ class PowderArticlesController extends Controller
         $articleInfo = Present::getArticleInfoByWhere($where);
         $articleAllTicketInfoRes =  PresentArticleCode::getAllArticleTicketInfoForExport($param['presentId']);
         foreach ($articleAllTicketInfoRes as &$val) {
+            $val['startTime'] = substr($val['startTime'], 0,10);
+            $val['endTime'] = substr($val['endTime'], 0,10);
             $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']]; 
+            unset($val['ticketStatus']);
         }
         $header = [
             '赠送项目',
@@ -609,11 +612,10 @@ class PowderArticlesController extends Controller
             '活动截止日',
             '状态',
         ];
-//        if (!empty($res)) {
-//            Event::fire("appointment.export");
-//        }
+        if (!empty($articleAllTicketInfoRes)) {
+            Event::fire('powder.exportArticleTicket','导出活动券,活动编号：'.$param['presentId']);
+        }
         @ini_set('memory_limit', '512M');
-        Event::fire('powder.exportArticleTicket','导出活动券,活动编号：'.$param['presentId']);
         $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $articleAllTicketInfoRes);
     }
     
