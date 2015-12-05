@@ -566,6 +566,8 @@ class PowderArticlesController extends Controller
         $articleTicketInfoRes =  PresentArticleCode::getArticleTicketInfo($param['presentId'],$page,$pageSize);
         foreach($articleTicketInfoRes['data'] as $key => &$val){
             $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']];
+            $val['startTime'] = substr($val['startTime'], 0,10);
+            $val['endTime'] = substr($val['endTime'], 0,10);
         }
         Event::fire('powder.showArticleTicketInfo','兑换券详情,活动编号：'.$param['presentId']);   
         return $this->success($articleTicketInfoRes);
@@ -600,7 +602,10 @@ class PowderArticlesController extends Controller
         $articleInfo = Present::getArticleInfoByWhere($where);
         $articleAllTicketInfoRes =  PresentArticleCode::getAllArticleTicketInfoForExport($param['presentId']);
         foreach ($articleAllTicketInfoRes as &$val) {
+            $val['startTime'] = substr($val['startTime'], 0,10);
+            $val['endTime'] = substr($val['endTime'], 0,10);
             $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']]; 
+            unset($val['ticketStatus']);
         }
         $header = [
             '赠送项目',
@@ -609,11 +614,10 @@ class PowderArticlesController extends Controller
             '活动截止日',
             '状态',
         ];
-//        if (!empty($res)) {
-//            Event::fire("appointment.export");
-//        }
+        if (!empty($articleAllTicketInfoRes)) {
+            Event::fire('powder.exportArticleTicket','导出活动券,活动编号：'.$param['presentId']);
+        }
         @ini_set('memory_limit', '512M');
-        Event::fire('powder.exportArticleTicket','导出活动券,活动编号：'.$param['presentId']);
         $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $articleAllTicketInfoRes);
     }
     
@@ -824,6 +828,8 @@ class PowderArticlesController extends Controller
             $presentListInfoDetail['ticketStatusName'] = self::$ticketCodeStatus[$presentListInfoDetail['ticketStatus']];
             $presentListInfoDetail['presentTypeName'] = self::$presentTypeName[$presentListInfoDetail['presentType']];
             $presentListInfoDetail['createTime'] = date('Y-m-d',$presentListInfoDetail['createTime']);
+            $presentListInfoDetail['useTime'] = substr($presentListInfoDetail['useTime'],0,10);
+            $presentListInfoDetail['recordTime'] = substr($presentListInfoDetail['recordTime'],0,16);
         }
         Event::fire('powder.showTicketInfo','定妆赠送详情,活动赠送券记录id：'.$param['articleCodeId']);
         return $this->success($presentListInfoDetail);
