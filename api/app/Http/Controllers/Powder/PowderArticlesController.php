@@ -824,6 +824,8 @@ class PowderArticlesController extends Controller
             $presentListInfoDetail['ticketStatusName'] = self::$ticketCodeStatus[$presentListInfoDetail['ticketStatus']];
             $presentListInfoDetail['presentTypeName'] = self::$presentTypeName[$presentListInfoDetail['presentType']];
             $presentListInfoDetail['createTime'] = date('Y-m-d',$presentListInfoDetail['createTime']);
+            $presentListInfoDetail['useTime'] = substr($presentListInfoDetail['useTime'],0,10);
+            $presentListInfoDetail['recordTime'] = substr($presentListInfoDetail['recordTime'],0,16);
         }
         Event::fire('powder.showTicketInfo','定妆赠送详情,活动赠送券记录id：'.$param['articleCodeId']);
         return $this->success($presentListInfoDetail);
