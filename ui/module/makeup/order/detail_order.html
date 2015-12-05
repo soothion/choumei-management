@@ -281,9 +281,10 @@
                             <td class="td">退款说明：</td>
                             <td><%=data.booking_salon_refund.remark%></td>
                         </tr>
+                        <%var back_to_desc=[,'微信','支付宝','银联','现金']%>
                         <tr>
                             <td class="td">退款方式：</td>
-                            <td><%=data.booking_cash.deduction_money%></td>
+                            <td><%=back_to_desc[data.booking_salon_refund.back_to]%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -396,7 +397,7 @@
                 </table>
                  </script>
                  <script type="text/javascript">
-                 var orderInfo = {},id=lib.tools.parseQuery(window.location.href).id;
+                 var orderInfo = {},id=lib.query.id
                  var completeDefine = function(){
                      var popup = $(this);
                      var form = popup.find('form');
