@@ -126,13 +126,10 @@
               height:32px;
           }
 
-          .hidden{
-             display:none!important;
-          }
           label>input[type="radio"][disabled]+span{
             opacity: 1;
             cursor: inherit;
-            background-color: #fff;            
+            background-color: #fff;          
           }
           select:disabled,input:disabled{
             cursor: inherit; 
@@ -142,7 +139,26 @@
             opacity: 1;
             border:none;
             background-color: #fff!important;      
-          }          
+          } 
+
+          .hidden{
+             display:none!important;
+          }
+          .control{
+            position: absolute;
+            width:26.5%;
+          } 
+          .complete{
+            display:inline-block;
+          }
+          .control input{
+            width:100%;
+            min-width: 100px;
+          }
+
+          .radios{
+            position: relative;
+          }
         
         </style>
     </head>
@@ -154,15 +170,14 @@
         <div class="box-warpper" ajat="banner/index?type=1#domid=warpper&tempid=warpper-t" id="warpper">
             <script type="text/template" id="warpper-t">
               <%data.data && data.data.forEach(function(item,i){%>
-              <form data-role="form" class="banner move" draggable="true" id="form<%=i%>" 
-              bannerId="<%=item.banner_id%>">
+              <form data-role="form" class="banner move" draggable="true" id="<%=item.banner_id%>" url="<%=item.image%>">
                   <ul>
                       <li>
                           <div class="fl"><h3><strong>Banner<%=i+1%></strong></h3></div>
                           <div class="fr">
                               <button class='link save hidden'>保存</button>
-                              <a class='link canncel hidden'>取消</a>
-                              <a class='link edit'>编辑</a>
+                              <button type="reset" class='link canncel hidden'>取消</button>
+                              <button type="button" class='link edit'>编辑</button>
                               <a class='link del' id="<%=item.banner_id%>">删除</a>
                               <input type="hidden" name="id" value="<%=item.banner_id%>">
                               <input type="hidden" name="type" value="1">
@@ -185,7 +200,7 @@
                           </div>                        
                       </li>
 
-                      <li style="border-top:1px solid #ddd;">
+                      <li style="border-top:1px solid #ddd;padding-left:5px">
                           <div class="mr">
                               <label><span>标题</span></label>
                               <input type="text" name="name" placeholder="1~20个字符，必填" value="<%=item.name%>" 
@@ -211,8 +226,12 @@
                                   <select name="url" style="width:26.5%" disabled class="background" url=<%=item.url%>>                                    
                                   </select>
 
-                                  <input type="text" style="width:26.5%" disabled placeholder="店铺名称1~15个字" class="background <%=url.type=='salons'?'':'hidden'%>" value="<%=item.name%>" required
-                                    name="salonname"/>
+                                  <div class="control complete">
+                                  <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" 
+                                    ajat-resources="/module/public/widget/autocomplete/index.js"
+                                    autocomplete="off" required style="width:100px"/>
+                                    <div class="complete-position" id="complete-position"></div>
+                                    </div>                                    
                               <%}else{%>
                                   <select name="url" style="width:26.5%;" disabled class="hidden">
 
@@ -254,8 +273,8 @@
                         <div class="fl"><h3><strong></strong></h3></div>
                         <div class="fr">
                             <button class='link save'>保存</button>
-                            <a class='link canncel'>取消</a>
-                            <a class='link edit hidden'>编辑</a>
+                            <button type="reset" class='link canncel'>取消</button>
+                            <button type="button" class='link edit hidden'>编辑</button>
                             <a class='link del'>删除</a>
                             <input type="hidden" name="id" value="">
                             <input type="hidden" name="type" value="1">
@@ -295,6 +314,7 @@
                             </select>
 
                             <input type="text" name="salonname" style="width:26.5%" placeholder="店铺名称1~15个字" maxLength='15' disabled required/>
+
                         </div>
 
                         <div class="mr">

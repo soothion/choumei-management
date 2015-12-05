@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-04 19:21:41
+* @Last Modified time: 2015-12-05 14:53:20
 */
 
 $(function(){
@@ -15,8 +15,7 @@ $(function(){
         clone.css('display','').removeClass("template");
         clone.find('input[type=radio]').attr('name','behavior'+len);
         clone.find('.uploader').attr('id','uploader'+len);
-        clone.find("strong").text("Banner"+len);
-        clone.attr('id','form'+len);       
+        clone.find("strong").text("Banner"+len);     
         $(this).before(clone);
         new lib.Form(clone);
         if($('.banner').length >= 11 ){
@@ -27,14 +26,18 @@ $(function(){
 
     $(".box-warpper").on('click','.del',function(){
         var id = $(this).attr('id');
-        lib.ajax({
-            type: "post",
-            url : "banner/destroy/"+id
-        }).done(function(data, status, xhr){
-            if(data.result == 1){
-                location.reload();
-            }
-        })
+        if(id){
+            lib.ajax({
+                type: "post",
+                url : "banner/destroy/"+id
+            }).done(function(data, status, xhr){
+                if(data.result == 1){
+                    location.reload();
+                }
+            })
+        }else{
+            $(this).closest('.banner').remove();
+        }
     });
 
     $(".box-warpper").on('click','.edit',function(){
@@ -51,9 +54,20 @@ $(function(){
         topBanner.find('input[type=radio]').removeAttr('disabled');  
         topBanner.find('input[name=name]').removeAttr('disabled');
         topBanner.removeClass('move');  
-        var li = topBanner.find('input:checked').closest('.radios');       
-        li.find('input').removeAttr('disabled');
-        li.find('select').removeAttr('disabled');        
+
+        var radios = topBanner.find('input:checked').closest('.radios');
+        if(radios.find('input:checked').val()=="2"){
+            radios.find('select').removeAttr('disabled'); 
+            if(radios.find('select').val()=="salons_salonId"){
+                radios.find('input').removeAttr('disabled'); 
+            }else{
+                radios.find('input').addClass("hidden"); 
+            }
+        }else{
+            radios.find('input').removeAttr('disabled');            
+        }
+        topBanner.siblings().find('button.edit').attr('disabled',true);
+
     });
 
     $(".box-warpper").on('click','input[type=radio]',function(){
@@ -75,16 +89,21 @@ $(function(){
         var topBanner = $(this).closest('.banner');
         topBanner.addClass('move');
         topBanner.find('.operation').addClass('hidden');
-        topBanner.find('input[type=text]').attr('disabled',true)
-        .addClass('background').addClass('hidden');
-        topBanner.find('select').attr('disabled',true)
-        .addClass('background').addClass('hidden');
-        topBanner.find('input[name=name]').removeClass('hidden');
-        var li = topBanner.find('input:checked').closest('.radios');
-        li.find('input').removeClass('hidden');
-        li.find('select').removeClass('hidden');
-
-
+        topBanner.siblings().find('button.edit').removeAttr('disabled');
+        var url = topBanner.attr('url');
+        if(url){
+            topBanner.find('.thumbnails-item-img img').attr('src',url);
+            topBanner.find('.thumbnails-item-img input').attr('value',url);
+        }else{
+            topBanner.find('.thumbnails-item-btn').css('display','inline-block');
+            topBanner.find('.thumbnails-item-img').remove();
+        }
+        var li = topBanner.find('li').last();
+        li.find('input').attr('disabled',true).addClass('background').addClass('hidden');
+        li.find('select').attr('disabled',true).addClass('background').addClass('hidden');
+        li.find('input[name=name]').removeClass('hidden');
+        li.find('input:checked').closest('.radios').find('input').removeClass('hidden');
+        li.find('input:checked').closest('.radios').find('select').removeClass('hidden');        
     });
 
     $(".box-warpper").on('_ready',function(){
@@ -124,8 +143,10 @@ $(function(){
 
     $(".box-warpper").on('change','select',function(e){
         if($(this).val()=="salons_salonId"){
+            $(this).next().removeAttr('disabled');
             $(this).next().removeClass('hidden');
         }else{
+             $(this).next().attr('disabled',true);
             $(this).next().addClass('hidden');
         }
     });
@@ -139,34 +160,37 @@ $(function(){
         if($(ev.currentTarget).attr('id') == moveTarget.attr('id')){
             return;
         }
-        var clone = moveTarget.clone();
+        $(ev.currentTarget).after(moveTarget.clone());
         moveTarget.remove();
-        $(ev.target).closest('form').after(clone);
-        sort();                     
-    }); 
-
-    $(".box-warpper").on('dragstart','form',function(ev){       
-        moveTarget = $(ev.currentTarget);
-        if(moveTarget.find('.edit').hasClass('hidden')){
-            return false;
-        }
-    });
-
-    function sort(){
         var arr = [];
-        $('form[bannerId]').each(function(item,i){
-            arr.push({id:$(item).attr('bannerId'),sort:i+1});
+        $('form[id]').each(function(i,item){
+            arr.push({id:$(item).attr('id'),sort:i+1});
         });
+
         lib.ajax({
             type: "post",
             url : 'banner/sort',
-            data: {sort:JSON.parse(arr)}
-        }).done(function(data, status, xhr){
+            data: {sort:JSON.stringify(arr)}
+        }).complete(function(xhr, status){
+            var data = JSON.parse(xhr.responseText);
             if(data.result == 0){
-                 location.reload();
+                parent.lib.popup.result({
+                    bool : false,
+                    text : data.msg || "操作失败",
+                    define:function(){
+                        location.reload();
+                    }
+                });                 
             }
-        })       
-    }
+        });                    
+    }); 
+
+    $(".box-warpper").on('dragstart','form',function(ev){       
+        moveTarget = $(ev.currentTarget);    
+        if($('.box-warpper').find('form[url]').find('button.edit[disabled]').length>0){
+            return false;
+        }
+    });
 
     lib.Form.prototype.save = function(data){
         data.behavior = $(this.el).find('input:checked').val();
