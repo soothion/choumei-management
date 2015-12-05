@@ -269,7 +269,7 @@
                                     <tbody>
                                         <tr>
                                             <td>发起退款：</td>
-                                            <td>臭美工作人员</td>
+                                            <td><%= data.booking_salon_refund ?'臭美工作人员':'用户'%></td>
                                             <td>退款原因：</td>
                                             <td><%=data.booking_salon_refund.remark%></td>
                                         </tr>
