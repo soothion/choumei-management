@@ -14,26 +14,30 @@
                 <div class="flex-item">
                     <h4>定妆单详情</h4>
                 </div>
-                <div class="flex-item fr">
+                <div class="flex-item fr no-print">
                   <div class="fr">
-                    <a onclick="print()" class="btn" data-slug="coupon.add">
-                        打印
-                    </a>
-                    <a class="btn" data-modal='receive' data-slug="coupon.add">
-                         接待
-                    </a>
-                    <a class="btn" data-modal='cashier' data-slug="coupon.add">
-                         收银
-                    </a>
-                    <a class="btn" data-modal='receipt' data-modal='' data-slug="coupon.add">
-                         补开发票
-                    </a>
-                    <a class="btn" data-modal='comp-color' data-slug="coupon.add">
-                         补色
-                    </a>
-                    <a data-modal='refund' class="btn" data-slug="coupon.add">
-                         退款
-                    </a>
+                    <span id="breadcrumb">
+                        <script type="text/template" id="breadcrumb-t">
+                            <a onclick="print()" class="btn" data-slug="coupon.add">
+                                打印
+                            </a>
+                            <button <%if (data.booking_receive){%>disabled='disabled'<%}%> class="btn" data-modal='receive' data-slug="coupon.add">
+                                 接待
+                            </button>
+                            <button <%if (data.booking_cash){%>disabled='disabled'<%}%> class="btn" data-modal='cashier' data-slug="coupon.add">
+                                 收银
+                            </button>
+                            <button <%if (data.booking_bill || !data.booking_cash){%>disabled='disabled'<%}%> class="btn" data-modal='receipt' data-modal='' data-slug="coupon.add">
+                                 补开发票
+                            </button>
+                            <button <%if (data.makeup || !data.booking_cash){%>disabled='disabled'<%}%> class="btn" data-modal='comp-color' data-slug="coupon.add">
+                                 补色
+                            </button>
+                            <button <%if (data.booking_salon_refund || !data.booking_cash){%>disabled='disabled'<%}%> data-modal='refund' class="btn" data-slug="coupon.add">
+                                 退款
+                            </button>
+                        </script>
+                    </span>
                     <a href="index.html" class="btn" data-slug="coupon.add">
                          返回
                     </a>
@@ -42,6 +46,13 @@
             </div>
         </div>
         <style>
+        @media print
+        {
+            .no-print, .no-print *
+            {
+                display: none !important;
+            }
+        }
         .inner-table tbody td:nth-child(2n+1){
             background-color: #F6F8F9;
         }
@@ -468,12 +479,13 @@
                   };
 
                   var bindEvent = function(){
-                    $('body').on('click','a[data-modal]',function(){
+                    $('body').on('click','[data-modal]',function(){
                       var modal= $(this).attr('data-modal');
                       initModal(ModalList[modal]);
                     });
                     $('#table').on('_ready',function(e,res){
                         orderInfo = res.response;
+                        lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').template(orderInfo);
                     })
                   }();
 
