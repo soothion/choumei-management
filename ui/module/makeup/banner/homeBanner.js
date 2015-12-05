@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-05 18:39:04
+* @Last Modified time: 2015-12-05 19:02:50
 */
 
 $(function(){
@@ -145,11 +145,9 @@ $(function(){
 
     $(".box-warpper").on('change','select',function(e){
         if($(this).val()=="salons_salonId"){
-            $(this).next().removeAttr('disabled');
-            $(this).next().removeClass('hidden');
+            $(this).next().find('input').removeClass('hidden').removeAttr('disabled');
         }else{
-             $(this).next().attr('disabled',true);
-            $(this).next().addClass('hidden');
+            $(this).next().find('input').addClass('hidden').attr('disabled',true);
         }
     });
     
@@ -161,8 +159,14 @@ $(function(){
         ev.preventDefault();
         if($(ev.currentTarget).attr('id') == moveTarget.attr('id')){
             return;
+        }        
+        var targetId = $(ev.currentTarget).attr('id');
+        var prevId = moveTarget.prev().attr('id');
+        if(targetId==prevId){
+            $(ev.currentTarget).before(moveTarget.clone());
+        }else{
+            $(ev.currentTarget).after(moveTarget.clone());           
         }
-        $(ev.currentTarget).after(moveTarget.clone());
         moveTarget.remove();
         var arr = [];
         $('form[id]').each(function(i,item){

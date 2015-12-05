@@ -218,9 +218,9 @@
                                   <select name="url" disabled  url=<%=item.url%>></select>
 
                                   <div class="control complete">
-                                    <input id="search" type="text" name="salonname" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
+                                    <input id="search" type="text" name="salonname" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
                                     ajat-resources="/module/public/widget/autocomplete/index.js"
-                                    autocomplete="off" <%=item.salonname%>/>
+                                    autocomplete="off" <%=item.salonname%> class="<%=url.type!='salons'?'hidden':''%>"/>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                   </div>                                    
                               <%}else{%>
@@ -278,7 +278,7 @@
                         </div>                        
                     </li>
 
-                    <li><span class="control-help imageTip" style="display:none">请先上传图片</span></li>
+                    <li style="padding:0"><span class="control-help imageTip" style="display:none">请先上传图片</span></li>
 
                     <li class="inputBox">
                         <div class="radios">
