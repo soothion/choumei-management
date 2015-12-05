@@ -50,7 +50,7 @@ class BookingReceive extends Model
         }
         else
         {
-            self::deleteOldItems($ordersn);
+            self::deleteOldItems($ordersn);        
             self::insertNewItems($ordersn, $params['item_ids']);
         }
         
@@ -94,15 +94,16 @@ class BookingReceive extends Model
     public static function deleteOldItems($ordersn)
     {
         BeautyOrderItem::where('order_sn',$ordersn)->delete();
-    }    
+    }  
+      
     public static function insertNewItems($ordersn,$item_ids)
-    {
-        if(count($item_ids<1))
+    {      
+        if(count($item_ids)<1)
         {
             return ;
         }
-        $datetime = date("Y-m-d H:i:s");
-        $origin_items = BeautyItem::whereIn('item_id',$item_ids)->get(['item_id','beauty_id','name','price','vip_price'])->toArray();
+        $datetime = date("Y-m-d H:i:s");        
+        $origin_items = BeautyItem::whereIn('item_id',$item_ids)->get(['item_id','beauty_id','name','price','vip_price'])->toArray();   
       
         foreach ($origin_items as $item)
         {       
@@ -116,8 +117,8 @@ class BookingReceive extends Model
             $attrs['price'] = $item['price'];
             $attrs['discount_price'] = $item['vip_price'];
             $attrs['amount'] = $item['price'];
-            $attrs['to_pay_amount'] = $item['vip_price'];
-            BeautyOrderItem::create($attrs);        
+            $attrs['to_pay_amount'] = $item['vip_price'];            
+            BeautyOrderItem::create($attrs);  
         }
     }
     
