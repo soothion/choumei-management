@@ -452,7 +452,7 @@ class BookController extends Controller
             'remark' => self::T_STRING,
             'item_ids' => self::T_STRING,
        ]);
-       $params['item_ids'] = array_unique(array_map("intval",explode(",", item_ids)));
+       $params['item_ids'] = array_unique(array_map("intval",explode(",", $params['item_ids'])));
        $params['uid'] = $this->user->id;
        $book = BookingReceive::receive($id,$params);
        Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
