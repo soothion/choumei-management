@@ -368,7 +368,61 @@ class EventServiceProvider extends ServiceProvider
     	],
         'beauty.delete' => [
             'App\Listeners\BeautyEventListener@onDelete',
-    	]
+    	],
+        
+        //定妆赠送活动
+        'powder.create' => [
+            'App\Listeners\PowderArticlesEventListener@onCreate',
+    	],
+        'powder.selectArticle' => [
+            'App\Listeners\PowderArticlesEventListener@onSelectArticle',
+    	],
+        'powder.showArticleDetail' => [
+            'App\Listeners\PowderArticlesEventListener@onShowArticleDetail',
+    	],
+        'powder.closeArticleVerify' => [
+            'App\Listeners\PowderArticlesEventListener@onCloseArticleVerify',
+    	],
+        'powder.closeArticle' => [
+            'App\Listeners\PowderArticlesEventListener@onCloseArticle',
+    	],
+        'powder.exportArticleTicket' => [
+            'App\Listeners\PowderArticlesEventListener@onExportArticleTicket',
+    	],
+        'powder.selectArticleTicket' => [
+            'App\Listeners\PowderArticlesEventListener@onSelectArticleTicket',
+    	],
+        'powder.useArticleTicket' => [
+            'App\Listeners\PowderArticlesEventListener@onUseArticleTicket',
+    	],
+
+        //定妆单退款
+        'BeautyRefund.show'=>[
+          'App\listeners\BeautyRefundEventListener@onShow'  
+        ],
+        'BeautyRefund.reject'=>[
+          'App\listeners\BeautyRefundEventListener@onReject'  
+        ],
+        'BeautyRefund.accept'=>[
+          'App\listeners\BeautyRefundEventListener@onAccept'  
+	],
+
+		//定妆单操作
+        'booking.receive' => [
+            'App\Listeners\BookingOrderEventListener@onReceive',
+        ],
+        'booking.cash' => [
+            'App\Listeners\BookingOrderEventListener@onCash',
+        ],
+        'booking.bill' => [
+            'App\Listeners\BookingOrderEventListener@onBill',
+        ],
+        'booking.relatively' => [
+            'App\Listeners\BookingOrderEventListener@onRelatively',
+        ],
+        'booking.refund' => [
+            'App\Listeners\BookingOrderEventListener@onRefund',
+        ],
 
     ];
 

@@ -30,9 +30,9 @@
                         <option value="2"    data-placeholder="请输入推荐号">推荐号</option>
                    </select>
                    <input type="text" class="input-search" name="mobilephone" placeholder="请输入手机号">
-                   <input type="text" class="input-search" name="reservateSn" placeholder="请输入预约号">
-                   <input type="text" class="input-search" name="recommendCode" placeholder="请输入赠送卷号">
-                   <input type="text" class="input-search" name="ticketCode" placeholder="请输入推荐号">
+                   <input type="text" class="input-search hide" name="reservateSn" placeholder="请输入预约号">
+                   <input type="text" class="input-search hide" name="recommendCode" placeholder="请输入赠送卷号">
+                   <input type="text" class="input-search hide" name="ticketCode" placeholder="请输入推荐号">
                </div>
                <span class="space"></span>
                <!-- <span>活动时间：</span> -->
@@ -54,15 +54,15 @@
                <div class="input-group">
                     <select name="ticketStatus">
                         <option value="0">状态</option>
-                        <option value="1" >未使用</option>
-                        <option value="2" >已使用</option>
+                        <option value="2" >未使用</option>
+                        <option value="1" >已使用</option>
                         <option value="3" >已过期</option>
                     </select>
                 </div>
 
                 <button class="btn" type="submit">查询</button>
             </form>
-           <div class="table" ajat="PowderArticles/presentList?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="powderArticles/presentList?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -89,7 +89,7 @@
                   <td><%=item.itemName%></td>
                   <td><%=item.recommendCode%></td>
                   <td><%=item.presentTypeName%></td>
-                  <td><%=item.createdTime%></td>
+                  <td><%=item.createTime%></td>
                   <td><%=item.expireTime%></td>
                   <td><%=item.ticketStatusName%></td>
                   <td class="tc">

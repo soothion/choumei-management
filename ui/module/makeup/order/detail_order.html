@@ -45,11 +45,17 @@
         .inner-table tbody td:nth-child(2n+1){
             background-color: #F6F8F9;
         }
+        .inner-table tbody td:nth-child(2n){
+            width: 35%;
+        }
         .pad-n{
             padding:0px !important;
         }
         .bor-n{
             border:0px !important;
+        }
+        td.td{
+            background-color: #F6F8F9;
         }
         </style>
         <div class="wrapper">
@@ -136,7 +142,7 @@
                                             <td>支付方式：</td>
                                             <td><%=pay_type_desc[data.fundflow.pay_type]%></td>
                                             <td>流水号：</td>
-                                            <td><%=data.paymentlog.tn%></td>
+                                            <td><%=data.paymentlog && data.paymentlog.tn%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -194,7 +200,7 @@
                         </tr>
                         <tr>
                             <td class="td">项目价格：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%=data.order.item_amount%></td>
                         </tr>
                         <tr>
                             <td class="td">已付定金：</td>
@@ -202,7 +208,7 @@
                         </tr>
                         <tr>
                             <td class="td">应收金额：</td>
-                            <td><%=data.vcRemark.replace(/\n/g,"</br>")%></td>
+                            <td><%= data.order.item_amount - data.order.AMOUNT%></td>
                         </tr>
                         <tr>
                             <td class="td">支付方式：</td>
@@ -210,7 +216,7 @@
                         </tr>
                         <%if (data.booking_cash.pay_type < 5 ){%>
                         <tr>
-                            <td class="td">%=cash_type_desc[data.booking_cash.pay_type]%>支付：</td>
+                            <td class="td"><%=cash_type_desc[data.booking_cash.pay_type]%>支付：</td>
                             <td><%=data.booking_cash.pay_type == 4 ?data.booking_cash.cash_money : data.booking_cash.other_money%></td>
                         </tr>
                         <%}else{%>
@@ -241,7 +247,7 @@
                                     <tbody>
                                         <tr>
                                             <td>收银人：</td>
-                                            <td><%=data.booking_cash.manager%></td>
+                                            <td><%=data.booking_cash.manager.name%></td>
                                             <td>收银时间：</td>
                                             <td><%=data.booking_cash.created_at%></td>
                                         </tr>
@@ -310,7 +316,7 @@
                                     <tbody>
                                         <tr>
                                             <td>审批人：</td>
-                                            <td><%=data.booking_salon_refund.manager.name%></td>
+                                            <td><%=data.booking_salon_refund.manager && data.booking_salon_refund.manager.name%></td>
                                             <td>审批时间：</td>
                                             <td><%=data.booking_salon_refund.created_at%></td>
                                         </tr>
@@ -333,9 +339,9 @@
                                     <tbody>
                                         <tr>
                                             <td>补色专家：</td>
-                                            <td><%=data.makeup.expert.name%>（<%=data.makeup.expert.number%>）</td>
+                                            <td><%if (data.makeup.expert){%><%=data.makeup.expert.name%>（<%=data.makeup.expert.number%>）<%}%></td>
                                             <td>补色助理：</td>
-                                            <td><%=data.makeup.assistant.name%>（<%=data.makeup.assistant.number%>）</td>
+                                            <td><%if (data.makeup.assistant){%><%=data.makeup.assistant.name%>（<%=data.makeup.assistant.number%>）<%}%></td>
                                         </tr>
                                     </tbody>
                             </table>

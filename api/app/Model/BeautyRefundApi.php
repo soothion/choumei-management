@@ -23,7 +23,7 @@ class BeautyRefundApi extends TransactionWriteApi {
             throw new ApiException("部分退款的预约单状态不正确", ERROR::REFUND_STATE_WRONG);
         }
         $bookingUp = BookingOrder::whereIn('ORDER_SN', $ordersns)->where('STATUS', 'RFN')->update(['STATUS' => 'PYD']);
-        $refundUp = OrderRefund::whereIn('booking_sn', $bookOrdersns)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->update(['status' => self::REFUND_STATUS_OF_CANCLE]);
+        $refundUp = OrderRefund::whereIn('order_refund_id', $ids)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->update(['status' => self::REFUND_STATUS_OF_CANCLE]);
         if ($bookingUp !== false && $refundUp !== false) {
             return [];
         } else {
@@ -35,22 +35,10 @@ class BeautyRefundApi extends TransactionWriteApi {
      * 确认退款
      */
 
-    public static function accpetBeauty($ids) {
-        $arr = [
-            [
-                'tn' => 'dddd',
-                'ordersn' => 'ssss',
-                'money' => 10
-            ],
-            [
-                'tn' => 'dddd',
-                'ordersn' => 'ssss',
-                'money' => 10
-            ],
-        ];
-        $tn = array_column($arr, 'booking_sn');
+    public static function accpetBeauty($ids, $opt_user_id) {
         $refunds = self::checkBeautyRefund($ids);
         $ordersns = array_column($refunds, 'ordersn');
+//        print_r($ordersns);exit;
         $refund_indexes = Utils::column_to_key("ordersn", $refunds);
         $fundflow = Fundflow::where('code_type', self::REFUND_CODE_TYPE_OF_CUSTOM)
                         ->where('refund_state', '!=', self::FUNDFLOW_REFUND_STATE_OF_COMPLETED)
@@ -66,9 +54,9 @@ class BeautyRefundApi extends TransactionWriteApi {
         }
         $payment_indexes = Utils::column_to_key("ordersn", $payments);
         $refund_items = self::getBeautyRefundItems($fundflow, $payment_indexes, $refund_indexes);
-        //状态修改为退款中    申请退款就是退款中
-//        self::modifBookingOrderStatusInRefund($ordersns);
-
+        //添加审批人ID
+        self::modifBookingOrderRefundOptUser($ids, $opt_user_id);  
+//print_r($refund_items);exit;
         //微信
         if (isset($refund_items['wx']) && count($refund_items['wx']) > 0) {
             $res['wx'] = self::refundOfWx($refund_items['wx']);
@@ -86,7 +74,7 @@ class BeautyRefundApi extends TransactionWriteApi {
 
     private static function checkBeautyRefund($ids) {
         $countIds = count($ids);
-        $refunds = OrderRefund::whereIn('order_refund_id', $ids)->where('status', self::REFUND_STATUS_OF_NORMAL)->get(['ordersn', 'booking_sn', 'retype', 'rereason'])->toArray();
+        $refunds = OrderRefund::whereIn('order_refund_id', $ids)->where('status', '!=', self::REFUND_STATUS_OF_CANCLE)->get(['ordersn', 'booking_sn', 'retype', 'rereason'])->toArray();
         if (empty($refunds)) {
             throw new ApiException("退款id下取不到信息", ERROR::PARAMS_LOST);
         }
@@ -151,9 +139,9 @@ class BeautyRefundApi extends TransactionWriteApi {
                     ];
                     break;
                 case self::REFUND_TO_ALIPAY:
-                    if (!empty($batch_no) && (time() - $alipay_updated) < 7200) {
-                        throw new ApiException("ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁", ERROR::UNKNOWN_ERROR);
-                    }
+//                    if (!empty($batch_no) && (time() - $alipay_updated) < 7200) {
+//                        throw new ApiException("ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁", ERROR::UNKNOWN_ERROR);
+//                    }
                     $res['alipay'][] = [
                         'tn' => $tn,
                         'money' => $money,
@@ -169,15 +157,17 @@ class BeautyRefundApi extends TransactionWriteApi {
                         'money' => $money,
                         'ordersn' => $ordersn,
                         'user_id' => $user_id,
-                        'url' => $url
+                        'url' => $url,
+                        'booking_sn' => $booking_sn
                     ];
                     break;
                 case self::REFUND_TO_YILIAN:
                     $res['yilian'][] = [
                         'tn' => $tn,
-                        'amount' => $money,
+                        'money' => $money,
                         'ordersn' => $ordersn,
-                        'user_id' => $user_id
+                        'user_id' => $user_id,
+                        'booking_sn' => $booking_sn
                     ];
             }
             $res['specail'][] = $ordersn;
@@ -190,23 +180,8 @@ class BeautyRefundApi extends TransactionWriteApi {
      * 将预约订单标记为退款中
      */
 
-    private static function modifBookingOrderStatusInRefund($ordersns) {
-        $ordersns = array_unique($ordersns);
-        $count = count($ordersns);
-        if ($count < 1) {
-            return false;
-        }
-        // 流水中是否有记录
-        $fundflow = Fundflow::whereIn('record_no', $ordersns)->where('code_type', self::REFUND_CODE_TYPE_OF_CUSTOM)->get(['record_no'])->toArray();
-        if (empty($fundflow)) {
-            throw new ApiException("找不到订单流水信息", ERROR::REFUND_FLOW_LOST);
-        }
-        $fundflow_ordersns = array_unique(array_column($fundflow, 'record_no'));
-        $diff = array_diff($ordersns, $fundflow_ordersns);
-        if (count($diff) > 0) {
-            throw new ApiException("部分订单流水信息丢失", ERROR::REFUND_FLOW_LOST);
-        }
-        BookingOrder::whereIn('ORDER_SN', $ordersns)->where('STATUS', 'RFN')->update(['STATUS' => 'RFI']);  // 状态必须为申请退款 更改为退款中  TODO
+    private static function modifBookingOrderRefundOptUser($ids, $opt_user_id) {
+        OrderRefund::whereIn('order_refund_id', $ids)->update(['opt_user_id' => $opt_user_id]);  // 状态必须为申请退款 更改为退款中  TODO
         return true;
     }
 

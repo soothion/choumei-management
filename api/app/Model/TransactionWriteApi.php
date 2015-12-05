@@ -726,9 +726,13 @@ class TransactionWriteApi
             $refundRequestParam->orderSn = $ordersn;
             $refundRequestParam->bountySn = $bountysn;
             $refundRequestParam->amount = $money;
+            if(isset($item['booking_sn'])){  //如果是定妆单
+                $refundRequestParam->beautySn = $ordersn;
+                $refundRequestParam->orderSn = '';  
+            }
             
             Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($item) . "\n", "wechat");
-            
+//            print_r($refundRequestParam);exit;
             $refundResponseThrift = $thrift->request('trade-center', 'wechatRefund', array($refundRequestParam));  
 
             Utils::log("pay", date("Y-m-d H:i:s") . "\t [RESPOND] Response: ".json_encode($refundResponseThrift)." \n", "wechat");
@@ -794,11 +798,14 @@ class TransactionWriteApi
             $refundRequestParam->publicKey = $payeco_config['PUBLIC_KEY'];
             $refundRequestParam->payecoUrl = $payeco_config['PAYECO_URL'];
             $refundRequestParam->extData = $extData;
-            
+            if(isset($item['booking_sn'])){
+                $extData = "beautySn={$ordersn}";
+                $refundRequestParam->extData=$extData;
+            }
+//            print_r($refundRequestParam);exit;
             $refundResponseThrift = $thrift->request('trade-center', 'payecoRefund', array(
                 $refundRequestParam
             ));
-            
             if (empty($refundResponseThrift) || !isset($refundResponseThrift['retCode'])) {
                 $ret['info'] .= '调用易联退款服务失败\n';
             } elseif ($refundResponseThrift['retCode'] == '0000') {
@@ -861,11 +868,11 @@ class TransactionWriteApi
         {
             return [];
         }
-        $booking_sns=  array_column($array,'booking_sn');
+        $booking_sns=  array_column($items,'booking_sn');
         if(empty($booking_sns)){
             $url = env("ALIPAY_REFUND_NOTIFY_URL",null);  
         }else{
-            $url = env("ALIPAY_REFUND_NOTIFY_URL",null);  //TODO   URL需要更换
+            $url = env("ALIPAY_BEAUTY_REFUND_CALLBACK_URL",null);  //TODO   URL需要更换
         }
           
         if(empty($url))
@@ -880,7 +887,7 @@ class TransactionWriteApi
         $ret = [];
         $data = ['notify_url' => $url,'batch_no' => $batch_no,'detail_data' => $items];
         // 支付宝的表单提交 for debug
-        //$ret['form_args'] = AlipaySimple::refund($data,AlipaySimple::REFUND_RETURN_TYPE_HTML);
+//        $ret['form_args'] = AlipaySimple::refund($data,AlipaySimple::REFUND_RETURN_TYPE_HTML);
         $ret['form_args'] = AlipaySimple::refund($data,AlipaySimple::REFUND_RETURN_TYPE_ARRAY);     
         return $ret;
     }

@@ -48,7 +48,7 @@
                <span class="space"></span>
                <div class="input-group">
                     <select name="state">
-                        <option value="0">退款状态</option>
+                        <option value="RFN,RFD,RFE">退款状态</option>
                         <option value="RFN" >退款中</option>
                         <option value="RFD" >已退款</option>
                         <option value="RFE" >退款失败</option>
@@ -57,7 +57,7 @@
 
                 <button class="btn" type="submit">查询</button>
             </form>
-           <div class="table" ajat="beautyrefund/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="beautyrefund/index?<%if (!query.state){%>state=RFN,RFD,RFE<%}%><%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -89,7 +89,7 @@
                     'NEW':'未支付',
                     'PYD':'已支付',
                     'CSD':'已消费',
-                    'RFN':'申请退款',
+                    'RFN':'退款中',
                     'RFD':'已退款',
                     'RFE':'退款失败',
                 }%>

@@ -126,6 +126,11 @@ Route::any('AlipayRefundNotify/callback_alipay',array(  //赏金单支付包退�
 	'as'=>'AlipayRefundNotify.callback_alipay',
 	'uses'=>'Alipay\AlipayRefundNotifyController@callback_alipay'
 ));
+//退款回调 支付宝 定妆单
+Route::any('beautyrefund/beauty_call_back_of_alipay',array( 
+	'as'=>'beautyrefund.beauty_call_back_of_alipay',
+	'uses'=>'Transaction\BeautyRefundController@beauty_call_back_of_alipay'
+));
 // 营销平台活动用到的
 Route::any('platform/getRequestDepartment',array(  
     'as'=>'platform.getRequestDepartment',
@@ -160,7 +165,17 @@ Route::any('artificer/checkNameExists/{id?}',array(
     'as'=>'artificer.checkNameExists',
     'uses'=>'Artificer\ArtificerController@checkNameExists'
 )); 
+Route::any('beautyItem/itemList',array(  
+	'as'=>'beautyItem.itemList',
+	'uses'=>'Item\BeautyItemController@itemList'
+));
 
+Route::any('beautyItem/checkName',array(  
+	'as'=>'beautyItem.checkName',
+	'uses'=>'Item\BeautyItemController@checkName'
+));
+	
+	
 
 Route::any('assistant/checkNumberExists/{id?}',array(  
     'as'=>'assistant.checkNumberExists',
@@ -1276,11 +1291,6 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     ));
     
 
-	Route::any('beautyItem/checkName',array(  
-        'as'=>'beautyItem.checkName',
-        'uses'=>'Item\BeautyItemController@checkName'
-    ));
-	
 	Route::any('beautyItem/updateFashion',array(  
         'as'=>'beautyItem.updateFashion',
         'uses'=>'Item\BeautyItemController@updateFashion'
@@ -1495,12 +1505,20 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'banner.index',
         'uses'=>'Banner\BannerController@index'
     )); 
+    Route::any('banner/index2',array(  //
+        'as'=>'banner.index2',
+        'uses'=>'Banner\BannerController@index'
+    )); 
     Route::any('banner/create',array(  //
         'as'=>'banner.create',
         'uses'=>'Banner\BannerController@create'
     )); 
     Route::any('banner/edit/{id}',array(  //
         'as'=>'banner.edit',
+        'uses'=>'Banner\BannerController@edit'
+    )); 
+    Route::any('banner/edit2/{id}',array(  //
+        'as'=>'banner.edit2',
         'uses'=>'Banner\BannerController@edit'
     )); 
     Route::any('banner/destroy/{id}',array(  //
@@ -1529,43 +1547,43 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     //定妆活动
     Route::any('powderArticles/addArticles',array(  
         'as'=>'powderArticles.addArticles',
-        'uses'=>'powder\powderArticlesController@addArticles'
+        'uses'=>'Powder\PowderArticlesController@addArticles'
     )); 
     Route::any('powderArticles/articlesList',array(  
         'as'=>'powderArticles.articlesList',
-        'uses'=>'powder\powderArticlesController@articlesList'
+        'uses'=>'Powder\PowderArticlesController@articlesList'
     ));
     Route::any('powderArticles/showArticlesInfo',array(  
         'as'=>'powderArticles.showArticlesInfo',
-        'uses'=>'powder\powderArticlesController@showArticlesInfo'
+        'uses'=>'Powder\PowderArticlesController@showArticlesInfo'
     )); 
     Route::any('powderArticles/switchArticles',array(  
         'as'=>'powderArticles.switchArticles',
-        'uses'=>'powder\powderArticlesController@switchArticles'
+        'uses'=>'Powder\PowderArticlesController@switchArticles'
     ));
     Route::any('powderArticles/switchVerifyArticles',array(  
         'as'=>'powderArticles.switchVerifyArticles',
-        'uses'=>'powder\powderArticlesController@switchVerifyArticles'
+        'uses'=>'Powder\PowderArticlesController@switchVerifyArticles'
     ));
     Route::any('powderArticles/presentList',array(  
         'as'=>'powderArticles.presentList',
-        'uses'=>'powder\powderArticlesController@presentList'
+        'uses'=>'Powder\PowderArticlesController@presentList'
     ));
     Route::any('powderArticles/presentListInfo',array(  
         'as'=>'powderArticles.presentListInfo',
-        'uses'=>'powder\powderArticlesController@presentListInfo'
+        'uses'=>'Powder\PowderArticlesController@presentListInfo'
     ));
     Route::any('powderArticles/usePresentTicket',array(  
         'as'=>'powderArticles.usePresentTicket',
-        'uses'=>'powder\powderArticlesController@usePresentTicket'
+        'uses'=>'Powder\PowderArticlesController@usePresentTicket'
     ));
     Route::any('powderArticles/articlesTicketList',array(  
         'as'=>'powderArticles.articlesTicketList',
-        'uses'=>'powder\powderArticlesController@articlesTicketList'
+        'uses'=>'Powder\PowderArticlesController@articlesTicketList'
     ));
     Route::any('powderArticles/exportArticlesTicketList',array(  
         'as'=>'powderArticles.exportArticlesTicketList',
-        'uses'=>'powder\powderArticlesController@exportArticlesTicketList'
+        'uses'=>'Powder\PowderArticlesController@exportArticlesTicketList'
     ));
     
         //定妆单退款

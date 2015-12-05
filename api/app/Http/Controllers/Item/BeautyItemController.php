@@ -69,7 +69,7 @@ class BeautyItemController extends Controller{
 	*
 	* @apiParam {Number} item_id 必填,项目id.
 	* @apiParam {string} name 必填,项目名称.
-	* @apiParam {Number} type  必填,1韩式定妆 2快时尚.
+	* @apiParam {Number} type  必填,1韩式半永久 2快时尚.
 	* @apiParam {string} detail 必填,项目介绍.
 	* @apiParam {string} description 必填,产品介绍JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
 	* @apiParam {string} archive 必填,产品档案JSON[{"title": "预约时间","content": "可预约一周内的时间"},{"title": "专家等级","content": "当前项目为(院长)为你服务"}].
@@ -124,7 +124,7 @@ class BeautyItemController extends Controller{
 	*
 	* @apiParam {Number} item_id 必填,项目id.
 	* @apiSuccess {string} name 项目名称.
-	* @apiSuccess {Number} type  1韩式定妆 2快时尚.
+	* @apiSuccess {Number} type  1韩式半永久 2快时尚.
 	* @apiSuccess {string} detail 项目介绍.
 	* @apiSuccess {string} description 产品介绍JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
 	* @apiSuccess {string} archive 产品档案JSON[{"title": "预约时间","content": "可预约一周内的时间"},{"title": "专家等级","content": "当前项目为(院长)为你服务"}].
@@ -196,7 +196,7 @@ class BeautyItemController extends Controller{
 	*
 	* @apiParam {Number} item_id 必填,项目id.
 	* @apiParam {string} name 必填,项目名称.
-	* @apiParam {Number} type  必填,1韩式定妆 2快时尚.
+	* @apiParam {Number} type  必填,1韩式半永久 2快时尚.
 	* @apiParam {string} detail 必填,项目介绍.
 	* @apiParam {string} description 必填,产品介绍JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
 	* @apiParam {string} archive 必填,产品档案JSON[{"title": "预约时间","content": "可预约一周内的时间"},{"title": "专家等级","content": "当前项目为(院长)为你服务"}].
@@ -311,6 +311,11 @@ class BeautyItemController extends Controller{
 				throw new ApiException("缺失参数", ERROR::BEAUTY_ITEM_ERROR);
 			} 
 		}
+		if($data['price'] < $data['vip_price'] && $data['type'] == 1)
+		{
+			throw new ApiException("价格参数错误", ERROR::BEAUTY_ITEM_WRONG_PRICE);
+		}
+		
 		return $data;
 	}
 
@@ -458,7 +463,7 @@ class BeautyItemController extends Controller{
 	* 
 	* @apiSuccess {Number} item_id 项目id.
 	* @apiSuccess {string} name 项目名称.
-	* @apiSuccess {Number} type  1韩式定妆 2快时尚.
+	* @apiSuccess {Number} type  1韩式半永久 2快时尚.
 	* @apiSuccess {string} detail 项目介绍.
 	* @apiSuccess {string} description 产品介绍JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
 	* @apiSuccess {string} archive 产品档案JSON[{"title": "预约时间","content": "可预约一周内的时间"},{"title": "专家等级","content": "当前项目为(院长)为你服务"}].
@@ -560,6 +565,46 @@ class BeautyItemController extends Controller{
 		$quantityRs = BeautyItem::getQuantity($item_id);
 		$beautyItem['quantity']  = $quantityRs->quantity?$quantityRs->quantity:0;
 		return $this->success($beautyItem);
+	}
+	
+	
+		/**
+	* @api {post} /beautyItem/itemList 8.韩式定妆项目列表
+	* @apiName itemList
+	* @apiGroup  beautyItem
+	* 
+	* @apiSuccess {String} name 项目名称.
+	* @apiSuccess {Number} item_id 项目id.
+	* @apiSuccess {Number} type 项目类型 1韩式半永久 2快时尚.
+	* @apiSuccess {Number} is_gift 是否是赠送项目 0否 1是
+	*
+	* @apiSuccessExample Success-Response:
+	*{
+	*	    "result": 1,
+	*	    "token": "",
+	*	    "data": [
+	*	    {
+	*	    	    "name": 韩式眉毛（明星院长）,
+	*	    	    "item_id": "1",
+	*	    	    "type": "1",
+	*	    	    "is_gift": "0",
+	*	    },
+	*			......
+	*	    ]
+	*}
+	*
+	*
+	*
+	* @apiErrorExample Error-Response:
+	*		{
+	*		    "result": 0,
+	*		    "msg": "未授权访问"
+	*		}
+	*/
+	public function itemList()
+	{
+		$result = BeautyItem::select(['item_id','name','is_gift','type'])->orderBy('item_id', 'desc')->get();
+		return $this->success($result);
 	}
 }
 

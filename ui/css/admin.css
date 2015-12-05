@@ -664,6 +664,29 @@ input:focus+.unit{
 .control-single-image .control-thumbnails-remove{
 	display:none;
 }
+.control-single-image-edit{
+	  position: absolute;
+	  right: -6px;
+	  top: -3px;
+	  font-size: 19px;
+	  line-height: 100%;
+	  padding: 5px;
+	  border-radius: 50px;
+	  background: rgba(255,255,255,0.8);
+	  border-left:1px solid #ddd;
+	  border-bottom:1px solid #ddd;
+	  opacity:0;
+}
+.control-single-image-edit .fa{
+	position:relative;
+	top:2px;
+}
+.control-single-image-edit:hover{
+	color:#58A2EC;
+}
+.control-single-image:hover .control-single-image-edit{
+	opacity:1;
+}
 .image-preview{
 	width:40px;
 	height:40px;

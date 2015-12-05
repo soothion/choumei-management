@@ -192,4 +192,13 @@ class Manager extends Model implements AuthenticatableContract, CanResetPassword
         return $query;
     }
 
+    public static function getBaseInfo($id)
+    {
+        $base = Manager::where('id',$id)->first(['id','name']);
+        if(empty($base))
+        {
+            return null;
+        }
+        return $base->toArray();
+    }
 }
