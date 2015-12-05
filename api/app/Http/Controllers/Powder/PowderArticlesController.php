@@ -906,9 +906,15 @@ class PowderArticlesController extends Controller
             'article_type' => 2,
         );
         $presentInfo = Present::getArticleInfoByWhere($where);
-        //截止日期后不能赠送
-        if(strtotime($presentInfo['end_at']) < time()){
+        //活动没有开始，不能赠送
+        if(strtotime($presentInfo['start_at']) > time()){
+            throw new ApiException('活动还没开始不能赠送');
+        }else if(strtotime($presentInfo['end_at']) < time()){
+            //截止日期后不能赠送
             throw new ApiException('活动截止后不能赠送');
+        }elseif(strtotime($presentInfo['expire_at']) < time()){
+            //有效期后不能赠送
+            throw new ApiException('活动过了有效期后不能赠送');
         }else{
             $data['present_id'] = $presentInfo['present_id'];
             $data['item_id'] = $presentInfo['item_id'];

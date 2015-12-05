@@ -105,7 +105,7 @@
                         </tr>
                         <tr>
                             <td class="td">性别：</td>
-                            <td><%= data.order.user.sex == 1 ?'男':'女'%></td>
+                            <td><%= data.order.BOOKER_SEX == 'M' ?'男':'女'%></td>
                         </tr>
                         <tr>
                             <td class="td">预约项目：</td>
@@ -116,7 +116,7 @@
                         </tr>
                         <tr>
                             <td class="td">项目价格：</td>
-                            <td><%=data.order.AMOUNT%></td>
+                            <td><%=data.order.item_amount%></td>
                         </tr>
                         <tr>
                             <td class="td">预约日期：</td>
@@ -140,9 +140,12 @@
                                     <tbody>
                                         <tr>
                                             <td>支付方式：</td>
-                                            <td><%=pay_type_desc[data.fundflow.pay_type]%></td>
+                                            <td><%var payment_list=[];
+                                            data.fundflow.forEach(function(payment_item){
+                                                payment_list.push(pay_type_desc[payment_item.pay_type]);
+                                            })%><%=payment_list.join(",")%></td>
                                             <td>流水号：</td>
-                                            <td><%=data.paymentlog && data.paymentlog.tn%></td>
+                                            <td><%=data.payment_log.tn%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -204,11 +207,11 @@
                         </tr>
                         <tr>
                             <td class="td">已付定金：</td>
-                            <td><%=data.order.AMOUNT%></td>
+                            <td><%=data.order.PAYABLE%></td>
                         </tr>
                         <tr>
                             <td class="td">应收金额：</td>
-                            <td><%= data.order.item_amount - data.order.AMOUNT%></td>
+                            <td><%= data.order.item_amount - data.order.PAYABLE%></td>
                         </tr>
                         <tr>
                             <td class="td">支付方式：</td>
@@ -468,8 +471,8 @@
                       var modal= $(this).attr('data-modal');
                       initModal(ModalList[modal]);
                     });
-                    $('#table').on('_ready',function(data){
-                        orderInfo = data.data;
+                    $('#table').on('_ready',function(e,res){
+                        orderInfo = res.response;
                     })
                   }();
 
