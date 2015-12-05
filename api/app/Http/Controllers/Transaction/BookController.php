@@ -673,7 +673,6 @@ class BookController extends Controller
         Order::where('ordersn',$base->BOOKING_SN)->update(['status'=>4,'use_time'=>$time]); 
          
         Event::fire('booking.refund',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
-
         
         return $this->success(['id'=>$id]);
     }
@@ -709,13 +708,11 @@ class BookController extends Controller
             }
             foreach($recommend_users as  $u)
             {
-                $u['present_type'] = 1;
-                PowderArticlesController::addReservateSnAfterConsume($u);
+                PowderArticlesController::addReservateSnAfterConsume($u['user_id'],$u['mobilephone'],1);
             }
             foreach($customer_users as  $u)
             {
-                $u['present_type'] = 1;
-                PowderArticlesController::addReservateSnAfterConsume($u);
+                PowderArticlesController::addReservateSnAfterConsume($u['user_id'],$u['mobilephone'],1);
             }
         }
     }
