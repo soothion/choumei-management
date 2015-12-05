@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-05 18:15:27
+* @Last Modified time: 2015-12-05 18:39:04
 */
 
 $(function(){
@@ -15,7 +15,12 @@ $(function(){
         clone.css('display','').removeClass("template");
         clone.find('input[type=radio]').attr('name','behavior'+len);
         clone.find('.uploader').attr('id','uploader'+len);
-        clone.find("strong").text("Banner"+len);     
+        clone.find("strong").text("Banner"+len); 
+        var complete = clone.find('#search').attr('ajat-complete');
+        complete = complete.replace('complete-position','complete-position'+len);
+        clone.find('#search').attr('ajat-complete',complete);
+        clone.find('.complete-position').attr('id','complete-position'+len);
+
         $(this).before(clone);
         new lib.Form(clone);
         if($('.banner').length >= 11 ){
