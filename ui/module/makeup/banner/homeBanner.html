@@ -6,69 +6,46 @@
         <script type="text/javascript" src="/js/include.js"></script>
 
         <style>
-          .box-warpper{
-            position:relative;
-            margin:15px;          
-          }
-
+          .box-warpper{position:relative;margin:15px;}
           .banner{
             display: inline-block;
             margin:10px;
-            width:25%;
-            height:370px;
-            min-width:320px;            
-            overflow: hidden;
+            width:28%;
+            min-width:350px;            
             border:1px solid  #ddd;
           }
-
-          ul{
-            display:inline-block;
-            min-width:300px;
-            padding:5px 10px;
-            width:95%;
+          ul{display:inline-block;padding:10px;width:95%}
+          ul li{padding:5px 0;position:relative}
+          .clearfix:after{
+            content: "020"; 
+            display: block; 
+            height: 0; 
+            clear: both; 
+            visibility: hidden;  
           }
-
-          ul li{
-            padding:5px 2px;
-            overflow: hidden;
+          .clearfix {
+            zoom: 1; 
           }
-
-          .fl{
-            float:left;
-          }
-
-          .fr{
-            float:right;
-          }
-
-          .fr a{
-            margin:0 10px;
-          }
-
-          .mr{
-            margin: 10px 0;
-          }
+          .fl{float:left;}
+          .fr{float:right;}
+          .fr a{margin:0 10px;}
 
           li div img{
            width:100%;
            height:120px;
           }
-
           li div label{
             display:inline-block;
             min-width:110px;
-            width:30%;
           }
-
           li div input{
+            width:60%;
             min-width:100px;
-            width:55%;
           }
-
           .add-button{
-              height: 320px;
-              line-height: 320px;
-              text-align: center;
+            height: 320px;
+            line-height: 320px;
+            text-align: center;
           }
 
           #banner-button{
@@ -77,18 +54,18 @@
 
           .plus-button{
             display: inline-block;
-            margin:10px;
-            height:370px;
-            width:25%;
-            min-width:320px;  
-            overflow: hidden;          
-            border:1px solid  #ddd;            
+            margin: 10px;
+            height: 362px;
+            line-height: 362px;
+            width: 28%;
+            min-width: 350px;
+            border: 1px solid #ddd;
+            position: relative;
+            vertical-align: top;          
           }
-
           .move{
             cursor:move;
           }
-
           .operation{
             position:absolute!important;
             bottom:0px;
@@ -103,7 +80,6 @@
             -moz-transition:all 0.2s ease 0s;
             transition:all 0.2s ease 0s;
           }
-
           .operation{
             font-size:1.5rem;
             height:0px;
@@ -123,14 +99,14 @@
           }
 
           .thumbnails-item:hover .operation{
-              height:32px;
+            height:32px;
           }
 
           label>input[type="radio"][disabled]+span{
             opacity: 1;
             cursor: inherit;
             background-color: #fff;          
-          }
+          }     
           select:disabled,input:disabled{
             cursor: inherit; 
             background:none;             
@@ -144,13 +120,20 @@
           .hidden{
              display:none!important;
           }
+
+          select{
+            width:29.5%!important;
+          }
+
           .control{
             position: absolute;
-            width:26.5%;
+            width:29.5%;
           } 
+
           .complete{
             display:inline-block;
           }
+
           .control input{
             width:100%;
             min-width: 100px;
@@ -158,6 +141,11 @@
 
           .radios{
             position: relative;
+            margin: 10px 0;
+          }
+          .inputBox{
+            border-top:1px solid #ddd;
+            padding-left:5px;
           }
         
         </style>
@@ -172,7 +160,7 @@
               <%data.data && data.data.forEach(function(item,i){%>
               <form data-role="form" class="banner move" draggable="true" id="<%=item.banner_id%>" url="<%=item.image%>">
                   <ul>
-                      <li>
+                      <li class="clearfix">
                           <div class="fl"><h3><strong>Banner<%=i+1%></strong></h3></div>
                           <div class="fr">
                               <button class='link save hidden'>保存</button>
@@ -185,6 +173,7 @@
                       </li>
 
                       <li>
+                                                
                           <div class="thumbnails-item">
                               <div class="thumbnails-item-btn" style="display:none">
                                   <button type="button" class="btn-primary" id="uploader<%=i%>">上传</button>
@@ -196,52 +185,55 @@
                                   <div class="operation hidden">
                                       <i class="fa fa-pencil-square-o"></i>
                                   </div>
-                              <div>                                  
-                          </div>                        
+                              <div>                             
+                          </div>  
                       </li>
 
-                      <li style="border-top:1px solid #ddd;padding-left:5px">
-                          <div class="mr">
+                      <li style="padding:0"><span class="control-help imageTip" style="display:none">请先上传图片</span></li>
+
+                      <li class="inputBox">
+                          <div class="radios">
                               <label><span>标题</span></label>
-                              <input type="text" name="name" placeholder="1~20个字符，必填" value="<%=item.name%>" 
-                              disabled class="background" required maxLength="20"/>
+                              <input id="title" type="text" name="name" placeholder="1~20个字符，必填" value="<%=item.name%>" 
+                              disabled  required maxLength="20"/>
                           </div>
 
-                          <div class="mr radios">
+                          <div class="radios">
                               <label class="radio">
                                   <input type="radio" name="behavior<%=i%>" value="1" <%=item.behavior=="1" ? "checked" : ""%> disabled/>
                                   <span>h5链接</span>
                               </label>
 
-                              <input type="text" name="url" class="<%=item.behavior=='1'?'background':'hidden'%>" placeholder="输入h5链接地址，带http://" value="<%=item.behavior=='1' ? item.url : ''%>" disabled required/>
+                              <input id="h5url" type="text" name="url" class="<%=item.behavior=='1'?'':''%>" placeholder="输入h5链接地址，带http://" value="<%=item.behavior=='1' ? item.url : ''%>" disabled required/>
                           </div>
 
-                          <div class="mr radios">
+                          <div class="radios">
                               <label class="radio">
                                   <input type="radio" name="behavior<%=i%>" value="2" <%=item.behavior=="2" ? "checked" : ""%> disabled />
                                   <span>App内部链接</span>
                               </label>
 
-                              <%if(item.behavior=="2"){ var url = JSON.parse(item.url);%>
-                                  <select name="url" style="width:26.5%" disabled class="background" url=<%=item.url%>>                                    
-                                  </select>
+                              <%if(item.behavior=="2"){var url = JSON.parse(item.url);%>
+                                  <select name="url" disabled  url=<%=item.url%>></select>
 
                                   <div class="control complete">
-                                  <input id="search" type="text" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" 
+                                    <input id="search" type="text" name="salonname" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
                                     ajat-resources="/module/public/widget/autocomplete/index.js"
-                                    autocomplete="off" required style="width:100px"/>
+                                    autocomplete="off" <%=item.salonname%>/>
                                     <div class="complete-position" id="complete-position"></div>
-                                    </div>                                    
+                                  </div>                                    
                               <%}else{%>
-                                  <select name="url" style="width:26.5%;" disabled class="hidden">
-
-                                  </select>
-                                  <input type="text" style="width:26.5%" class="hidden" disabled maxLength="15" 
-                                  placeholder="店铺名称1~15个字" name="salonname" required/>
+                                  <select name="url" style="width:26.5%;" disabled></select>
+                                  <div class="control complete">
+                                    <input id="search" type="text" name="salonname" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
+                                    ajat-resources="/module/public/widget/autocomplete/index.js"
+                                    autocomplete="off" <%=item.salonname%>/>
+                                    <div class="complete-position" id="complete-position"></div>
+                                  </div> 
                               <%}%>
                           </div>
 
-                          <div class="mr">
+                          <div class="radios">
                               <label class="radio">
                                   <input type="radio" name="behavior<%=i%>" value="3" <%=item.behavior=="3" ? "checked":""%> disabled/>
                                   <span>无跳转</span>
@@ -254,22 +246,18 @@
 
             <%if(data.data && data.data.length < 10){%>          
             <div class="plus-button">
-                <ul>
-                    <li>
-                        <div style="text-align:center;margin-top:100px;">
-                            <button type="button">
-                                <span style="font-size: 4rem;color:#ddd;">+</span><br>
-                                <span style="font-size: 15px;color:#ddd;font-weight:900;">添加</span>
-                            </button>
-                        </div>
-                    </li>
-                </ul>             
+              <div style="text-align:center;">
+                  <button type="button">
+                      <span style="font-size: 4rem;color:#ddd;">+</span><br>
+                      <span style="font-size: 15px;color:#ddd;font-weight:900;">添加</span>
+                  </button>
+              </div>                
             </div>
             <%}%> 
 
-            <form data-role="form" class="banner template" style="display:none" draggable="true">
+            <form data-role="form" class="banner template" style="display:none">
                 <ul>
-                    <li>
+                    <li class="clearfix">
                         <div class="fl"><h3><strong></strong></h3></div>
                         <div class="fr">
                             <button class='link save'>保存</button>
@@ -289,35 +277,39 @@
                         </div>                        
                     </li>
 
-                    <li style="border-top:1px solid #ddd;">
-                        <div class="mr">
+                    <li><span class="control-help imageTip" style="display:none">请先上传图片</span></li>
+
+                    <li class="inputBox">
+                        <div class="radios">
                             <label><span>标题</span></label>
-                            <input type="text" name="name" placeholder="1~20个字符，必填" required maxLength="20"/>
+                            <input id="title" type="text" name="name" placeholder="1~20个字符，必填" required maxLength="20"/>
                         </div>
 
-                        <div class="mr radios">
+                        <div class="radios">
                             <label class="radio">
                                 <input type="radio" name="behavior" value="1" checked/>
                                 <span>h5链接</span>
                             </label>
-                            <input type="text" name="url" placeholder="输入h5链接地址，带http://" required/>
+
+                            <input id="h5url" type="text" name="url" placeholder="输入h5链接地址，带http://"  required/>
                         </div>
 
-                        <div class="mr radios">
-                            <label class="radio">
-                                <input type="radio" name="behavior" value="2"/>
-                                <span>App内部链接</span>
-                            </label>
+                        <div class="radios">
+                          <label class="radio">
+                              <input type="radio" name="behavior" value="2" />
+                              <span>App内部链接</span>
+                          </label>
 
-                            <select name="url" id="select" style="width:26.5%;" disabled >
+                          <select name="url" style="width:26.5%;" disabled></select>
 
-                            </select>
-
-                            <input type="text" name="salonname" style="width:26.5%" placeholder="店铺名称1~15个字" maxLength='15' disabled required/>
-
+                          <div class="control complete">
+                            <input id="search" type="text" name="salonname" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" ajat-resources="/module/public/widget/autocomplete/index.js"
+                              autocomplete="off" disabled/>
+                            <div class="complete-position" id="complete-position"></div>
+                          </div>                             
                         </div>
 
-                        <div class="mr">
+                        <div class="radios">
                             <label class="radio">
                                 <input type="radio" name="behavior" value="3"/>
                                 <span>无跳转</span>
@@ -325,7 +317,7 @@
                         </div>
                     </li>
                 </ul>             
-            </form>                                                                                
+            </form>                                                                               
             </script>            
         </div>
         <script src="homeBanner.js"></script>

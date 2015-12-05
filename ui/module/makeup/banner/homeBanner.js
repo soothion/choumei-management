@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-05 14:53:20
+* @Last Modified time: 2015-12-05 18:15:27
 */
 
 $(function(){
@@ -47,37 +47,24 @@ $(function(){
         parent.find('.edit').addClass('hidden');
 
         var topBanner = $(this).closest('.banner');
-        topBanner.find('.operation').removeClass('hidden');
-        topBanner.find('input').removeClass('hidden').removeClass('background'); 
-        topBanner.find('select').removeClass('hidden').removeClass('background');
-        
-        topBanner.find('input[type=radio]').removeAttr('disabled');  
-        topBanner.find('input[name=name]').removeAttr('disabled');
-        topBanner.removeClass('move');  
-
-        var radios = topBanner.find('input:checked').closest('.radios');
-        if(radios.find('input:checked').val()=="2"){
-            radios.find('select').removeAttr('disabled'); 
-            if(radios.find('select').val()=="salons_salonId"){
-                radios.find('input').removeAttr('disabled'); 
-            }else{
-                radios.find('input').addClass("hidden"); 
-            }
-        }else{
-            radios.find('input').removeAttr('disabled');            
-        }
+        topBanner.removeClass('move');
         topBanner.siblings().find('button.edit').attr('disabled',true);
+        topBanner.find('.operation').removeClass('hidden');
 
-    });
+        topBanner.find('input[type=radio]').removeAttr('disabled');
+        topBanner.find('#title').removeAttr('disabled');
 
-    $(".box-warpper").on('click','input[type=radio]',function(){
-        var top = $(this).closest('li');
-        top.find('.radios').find('input[type=text]').attr('disabled',true);
-        top.find('.radios').find('select').attr('disabled',true);
-
-        var parent = $(this).closest('.radios');
-        parent.find('input[disabled]').removeAttr('disabled'); 
-        parent.find('select[disabled]').removeAttr('disabled');
+        var val = topBanner.find('input:checked').val();
+        if(val == '1'){
+            topBanner.find('#h5url').removeAttr('disabled');
+        }
+        if(val == '2'){
+            topBanner.find('select').removeAttr('disabled')
+            var selectValue = topBanner.find('select').val();   
+            if(selectValue == "salons_salonId"){
+                topBanner.find("#search").removeClass('hidden').removeAttr('disabled'); 
+            }         
+        }
     });
 
     $(".box-warpper").on('click','.canncel',function(){
@@ -85,11 +72,7 @@ $(function(){
         parent.find('.save').addClass('hidden');
         parent.find('.canncel').addClass('hidden');
         parent.find('.edit').removeClass('hidden');
-
         var topBanner = $(this).closest('.banner');
-        topBanner.addClass('move');
-        topBanner.find('.operation').addClass('hidden');
-        topBanner.siblings().find('button.edit').removeAttr('disabled');
         var url = topBanner.attr('url');
         if(url){
             topBanner.find('.thumbnails-item-img img').attr('src',url);
@@ -98,12 +81,26 @@ $(function(){
             topBanner.find('.thumbnails-item-btn').css('display','inline-block');
             topBanner.find('.thumbnails-item-img').remove();
         }
-        var li = topBanner.find('li').last();
-        li.find('input').attr('disabled',true).addClass('background').addClass('hidden');
-        li.find('select').attr('disabled',true).addClass('background').addClass('hidden');
-        li.find('input[name=name]').removeClass('hidden');
-        li.find('input:checked').closest('.radios').find('input').removeClass('hidden');
-        li.find('input:checked').closest('.radios').find('select').removeClass('hidden');        
+        topBanner.addClass('move');
+        topBanner.find('.operation').addClass('hidden');
+        topBanner.find('.control-help').hide();
+        topBanner.siblings().find('button.edit').removeAttr('disabled');
+        topBanner.find('input[type=radio]').attr('disabled',true);
+        topBanner.find('#title').attr('disabled',true);
+        topBanner.find('#h5url').attr('disabled',true);
+        topBanner.find('select').attr('disabled',true);
+        topBanner.find('#search').attr('disabled',true);    
+    });
+
+    $(".box-warpper").on('click','input[type=radio]',function(){ 
+        var box = $(this).closest('.inputBox');
+        box.find('#h5url').attr('disabled',true);
+        box.find('select').attr('disabled',true);
+        box.find('#search').attr('disabled',true); 
+        box.find('.control-help').hide();
+        var radios = $(this).closest('.radios');
+        radios.find('input[disabled]').removeAttr('disabled'); 
+        radios.find('select[disabled]').removeAttr('disabled');        
     });
 
     $(".box-warpper").on('_ready',function(){
@@ -193,6 +190,10 @@ $(function(){
     });
 
     lib.Form.prototype.save = function(data){
+        if(!data.image){
+            $(this.el).find('.imageTip').show();
+            return;
+        }
         data.behavior = $(this.el).find('input:checked').val();
         if(data.behavior=="2"){
             var arr = data.url.split("_");
@@ -254,6 +255,7 @@ $(function(){
             aspectRatio : ratio,
             thumbnails  : [name],
             define:function(data){
+                item.closest('.banner').find(".imageTip").hide();
                 item.find('.thumbnails-item-btn').css('display','none');
                 item.find('.thumbnails-item-img').remove();
                 item.removeClass('dashed');
