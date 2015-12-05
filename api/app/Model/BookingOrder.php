@@ -97,6 +97,7 @@ class BookingOrder extends Model
             if ($base['STATUS'] == 'RFN' && $order_refund['status'] == 3) {
                 $base['STATUS'] == 'RFE';
             }
+            $order_refund['refund_desc'] = $order_refund['rereason'];
         }
         $item_amount = 0;
         if(!empty($beauty_items))
