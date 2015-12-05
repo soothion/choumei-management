@@ -42,7 +42,7 @@ class ArtificerEventListener {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '添加专家助理';
+		$data['operation'] = '添加专家';
 		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
@@ -59,7 +59,7 @@ class ArtificerEventListener {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '编辑专家助理';
+		$data['operation'] = '编辑专家';
 		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
@@ -76,7 +76,7 @@ class ArtificerEventListener {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '导出专家助理列表';
+		$data['operation'] = '导出专家列表';
 		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
@@ -92,7 +92,7 @@ class ArtificerEventListener {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '禁用专家助理';
+		$data['operation'] = '禁用专家';
 		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
@@ -108,7 +108,7 @@ class ArtificerEventListener {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '启用专家助理';
+		$data['operation'] = '启用专家';
 		$data['object'] = $log;
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
