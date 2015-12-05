@@ -180,7 +180,7 @@ class ArtificerController extends Controller{
         $addData = $this->_formatReceiveData( $param );
         $addData['created_at'] = time();
         $lastId = Artificer::insertGetId( $addData );
-//        Event::fire('artificer.add','添加专家数据: '.$lastId);
+        Event::fire('artificer.add','添加专家数据: '.$lastId);
         return $this->success();
     }
     /**
@@ -242,7 +242,7 @@ class ArtificerController extends Controller{
         $saveData = $this->_formatReceiveData( $param );
         $saveData['updated_at'] = time();
         Artificer::where(['artificer_id'=>$id])->update( $saveData );
-//        Event::fire('artificer.update','编辑专家数据: '.$id);
+        Event::fire('artificer.update','编辑专家数据: '.$id);
         return $this->success();
     }
     /**
@@ -358,7 +358,7 @@ class ArtificerController extends Controller{
 	 */
     public function start($id){
         Artificer::where(['artificer_id'=>$id,'status'=>0])->update(['status'=>1]);
-//        Event::fire('artificer.up','启用专家 id: '.$id);
+        Event::fire('artificer.up','启用专家 id: '.$id);
         return $this->success();
     }
     /**
@@ -388,7 +388,7 @@ class ArtificerController extends Controller{
 	 */
     public function close($id){
         Artificer::where(['artificer_id'=>$id,'status'=>1])->update(['status'=>0]);
-//        Event::fire('artificer.down','禁用专家 id: '.$id);
+        Event::fire('artificer.down','禁用专家 id: '.$id);
         return $this->success();
     }
     /**
@@ -531,7 +531,7 @@ class ArtificerController extends Controller{
             $val['level'] = $t2[ $val['level'] ];
             $val['status'] = $t3[ $val['status'] ];
         }
-//        Event::fire('artificer.export','导出专家查询列表');
+        Event::fire('artificer.export','导出专家查询列表');
         Excel::create($title, function($excel) use($tempData,$header){
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
                 $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
