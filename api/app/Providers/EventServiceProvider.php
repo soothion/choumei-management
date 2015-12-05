@@ -397,7 +397,35 @@ class EventServiceProvider extends ServiceProvider
     	],
         'powder.useArticleTicket' => [
             'App\Listeners\PowderArticlesEventListener@onUseArticleTicket',
-    	]
+    	],
+
+        //定妆单退款
+        'BeautyRefund.show'=>[
+          'App\listeners\BeautyRefundEventListener@onShow'  
+        ],
+        'BeautyRefund.reject'=>[
+          'App\listeners\BeautyRefundEventListener@onReject'  
+        ],
+        'BeautyRefund.accept'=>[
+          'App\listeners\BeautyRefundEventListener@onAccept'  
+	],
+
+		//定妆单操作
+        'booking.receive' => [
+            'App\Listeners\BookingOrderEventListener@onReceive',
+        ],
+        'booking.cash' => [
+            'App\Listeners\BookingOrderEventListener@onCash',
+        ],
+        'booking.bill' => [
+            'App\Listeners\BookingOrderEventListener@onBill',
+        ],
+        'booking.relatively' => [
+            'App\Listeners\BookingOrderEventListener@onRelatively',
+        ],
+        'booking.refund' => [
+            'App\Listeners\BookingOrderEventListener@onRefund',
+        ],
 
     ];
 
