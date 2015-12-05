@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-02 19:50:31
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-05 11:09:40
+* @Last Modified time: 2015-12-05 11:19:45
 */
 
 $(function(){
@@ -21,6 +21,7 @@ $(function(){
         var topBanner = $(this).closest('.banner');
         topBanner.find('.operation').removeClass('hidden');
         topBanner.find('input').removeAttr('disabled');
+        topBanner.siblings().find('button.edit').attr('disabled',true);
     })
 
     $(".box-warpper").on('click','.cancel',function(){
@@ -32,6 +33,7 @@ $(function(){
         topBanner.find('.operation').addClass('hidden');
         topBanner.find('input').attr('disabled',true);
         topBanner.find('.control-help').hide();
+        topBanner.siblings().find('button.edit').removeAttr('disabled');
         var url = topBanner.attr('url');
         if(url){
             topBanner.find('.thumbnails-item-img img').attr('src',url);
