@@ -566,6 +566,8 @@ class PowderArticlesController extends Controller
         $articleTicketInfoRes =  PresentArticleCode::getArticleTicketInfo($param['presentId'],$page,$pageSize);
         foreach($articleTicketInfoRes['data'] as $key => &$val){
             $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']];
+            $val['startTime'] = substr($val['startTime'], 0,10);
+            $val['endTime'] = substr($val['endTime'], 0,10);
         }
         Event::fire('powder.showArticleTicketInfo','兑换券详情,活动编号：'.$param['presentId']);   
         return $this->success($articleTicketInfoRes);
