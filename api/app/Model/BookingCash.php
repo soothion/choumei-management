@@ -62,8 +62,8 @@ class BookingCash extends Model
             'other_money'=>$params['other_money'],
             'cash_money'=>$params['cash_money'],
             'deduction_money'=>$params['deduction_money'],
-            'expert_uid'=>$params['expert_uid'],
-            'assistant_uid'=>$params['assistant_uid'],
+            'expert_uid'=>$params['specialistId'],
+            'assistant_uid'=>$params['assistantId'],
         ];
         self::create($attr);
         
