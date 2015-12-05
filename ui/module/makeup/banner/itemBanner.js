@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-02 19:50:31
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-03 20:44:30
+* @Last Modified time: 2015-12-05 11:09:40
 */
 
 $(function(){
@@ -32,6 +32,14 @@ $(function(){
         topBanner.find('.operation').addClass('hidden');
         topBanner.find('input').attr('disabled',true);
         topBanner.find('.control-help').hide();
+        var url = topBanner.attr('url');
+        if(url){
+            topBanner.find('.thumbnails-item-img img').attr('src',url);
+            topBanner.find('.thumbnails-item-img input').attr('value',url);
+        }else{
+            topBanner.find('.thumbnails-item-btn').css('display','inline-block');
+            topBanner.find('.thumbnails-item-img').remove();
+        }
     })
      
     lib.Form.prototype.save = function(data){  
@@ -142,7 +150,7 @@ $(function(){
                 item.find('.thumbnails-item-btn').css('display','none');
                 item.find('.thumbnails-item-img').remove();
                 item.removeClass('dashed');
-                item.append('<div class="thumbnails-item-img"><img src='+data[name]+'><input type="hidden" name="image" value='+data[name]+' required><div class="operation"><i class="fa fa-pencil-square-o"></i></div><div>'); 
+                item.append('<div class="thumbnails-item-img"><img src='+data[name]+'><input type="hidden" name="image" value='+data[name]+'><div class="operation"><i class="fa fa-pencil-square-o"></i></div><div>'); 
             }
         });        
     }
