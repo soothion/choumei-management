@@ -54,5 +54,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('inspire')
                  ->hourly();
+        $schedule->command('code:expire')
+                 ->dailyAt('00:00');
     }
 }
