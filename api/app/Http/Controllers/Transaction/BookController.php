@@ -502,9 +502,9 @@ class BookController extends Controller
         {
             $is_first = true;
         }
-        
-        self::givePresent($custom_uid,$is_first);
-        //Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
+        self::givePresent($custom_uid,true);
+        //self::givePresent($custom_uid,$is_first);
+        Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success(['id'=>$id]);
     }
     
@@ -588,8 +588,8 @@ class BookController extends Controller
         {
             throw new ApiException("定妆单[{$id}]不存在或者已经被删除", ERROR::ORDER_NOT_EXIST);
         }
-        $state = $base->status;
-        if(!in_array($state,['CSD']))
+        $state = $base->STATUS;
+        if($state != "CSD")
         {
             throw new ApiException("定妆单[{$id}]状态不正确", ERROR::ORDER_STATUS_WRONG);
         }       
@@ -645,7 +645,7 @@ class BookController extends Controller
         {
             throw new ApiException("定妆单[{$id}]不存在或者已经被删除", ERROR::ORDER_NOT_EXIST);
         }
-        $state = $base->status;
+        $state = $base->STATUS;
         if($state != "CSD")
         {
             throw new ApiException("定妆单[{$id}]状态不正确,不允许退款", ERROR::ORDER_STATUS_WRONG);
