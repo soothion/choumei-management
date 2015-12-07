@@ -138,9 +138,9 @@ class BeautyRefundApi extends TransactionWriteApi {
                     ];
                     break;
                 case self::REFUND_TO_ALIPAY:
-//                    if (!empty($batch_no) && (time() - $alipay_updated) < 7200) {
-//                        throw new ApiException("ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁", ERROR::UNKNOWN_ERROR);
-//                    }
+                    if (!empty($batch_no) && (time() - $alipay_updated) < 7200) {
+                        throw new ApiException("ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁", ERROR::UNKNOWN_ERROR);
+                    }
                     $res['alipay'][] = [
                         'tn' => $tn,
                         'money' => $money,
