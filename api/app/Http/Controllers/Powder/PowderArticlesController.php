@@ -351,9 +351,9 @@ class PowderArticlesController extends Controller
         if(!empty($articlesInfo)){
             $articlesInfo['notUseNum'] = $articlesInfo['quantity'] - $articlesInfo['useNum'];
             $articlesInfo['createTime'] = date('Y-m-d H:i:s',$articlesInfo['createTime']);       
-            $val['startTime'] = substr($val['startTime'], 0,10);
-            $val['endTime'] = substr($val['endTime'], 0,10);
-            $val['expireTime'] = substr($val['expireTime'], 0,10);
+            $articlesInfo['startTime'] = substr($articlesInfo['startTime'], 0,10);
+            $articlesInfo['endTime'] = substr($articlesInfo['endTime'], 0,10);
+            $articlesInfo['expireTime'] = substr($articlesInfo['expireTime'], 0,10);
         }
         Event::fire('powder.showArticleDetail','定妆活动详情,活动编号:'.$param['presentId']);
         return $this->success($articlesInfo);       
