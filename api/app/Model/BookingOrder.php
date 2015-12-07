@@ -84,7 +84,7 @@ class BookingOrder extends Model
         $fundflows = Fundflow::where('record_no',$ordersn)->get(['record_no','pay_type'])->toArray();
         $payment_log = PaymentLog::where('ordersn',$ordersn)->first(['ordersn','tn','amount'])->toArray();
         $recommend = RecommendCodeUser::where('user_id',$base['USER_ID'])->whereIn('type',[2,3])->first(['id','user_id','recommend_code']);
-        $refund_fields = ['ordersn','user_id','money','opt_user_id','rereason','add_time','opt_time','status','booking_sn','item_type','rereason'];
+        $refund_fields = ['ordersn','user_id','money','opt_user_id','rereason','add_time','opt_time','status','booking_sn','item_type','rereason','other_rereason'];
         $order_refund = OrderRefund::where('ordersn',$ordersn)->first($refund_fields);
         if(empty($order_refund))
         {
