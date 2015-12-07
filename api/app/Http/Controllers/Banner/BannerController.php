@@ -103,11 +103,11 @@ class BannerController extends Controller {
     }
 
     /**
-     * @api {post} /banner/create 2.主页或项目banner的添加
+     * @api {post} /banner/create 2.主页banner的添加
      * @apiName create
      * @apiGroup  Banner
      *
-     * @apiParam {Number} type 必填, 'banner类型 1主页banner； 2快时尚； 3专家；4半永久',.
+     * @apiParam {Number} type 必填, 'banner类型 1主页banner；
      * @apiParam {String} name 必填,题目.
      * @apiParam {String} image 必填,bnnaer图片的路径.
      * @apiParam {Number} behavior 必填,'链接到哪里 1H5； 2app内部； 3无跳转'(单选按钮),
@@ -147,7 +147,48 @@ class BannerController extends Controller {
        //     Event::fire('banner.create','主键:'.$id);
             return $this->success();
         } else {
-            throw new ApiException('创建banner失败', ERROR::BEAUTY_BANNER_CREATE_ERROR);
+            throw new ApiException('创建主页banner失败', ERROR::BEAUTY_BANNER_CREATE_ERROR);
+        }
+    }
+    
+     /**
+     * @api {post} /banner/create2 6.项目banner的添加
+     * @apiName create2
+     * @apiGroup  Banner
+     *
+     * @apiParam {Number} type 必填, 'banner类型  2快时尚； 3专家；4半永久',.
+     * @apiParam {String} name 必填,题目.
+     * @apiParam {String} image 必填,bnnaer图片的路径.
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     * 	    "result": 1,
+     * 	    "msg": "",
+     * 	    "data": {
+     * 	    }
+     * 	}
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "创建banner失败"
+     * 		}
+     */
+    public function create2() {
+        $param = $this->param;
+        if (empty($param['type']) || !isset($param['name']) || !isset($param['image'])) {
+            throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
+        }
+        $param['created_at'] = time();
+        $param['updated_at'] = time();
+        $query = Banner::create($param);
+        $id = $query->banner_id;
+        if ($query) {
+            return $this->success();
+        } else {
+            throw new ApiException('创建项目banner失败', ERROR::BEAUTY_BANNER_CREATE_ERROR);
         }
     }
 

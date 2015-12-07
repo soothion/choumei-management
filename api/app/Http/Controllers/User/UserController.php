@@ -401,6 +401,7 @@ class UserController extends Controller{
             'user.img',
             'nickname',
             'sex',
+            'user.status',
             'hair_type',
             'area',
             'birthday',
