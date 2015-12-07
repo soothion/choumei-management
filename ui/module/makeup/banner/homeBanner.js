@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-05 19:02:50
+* @Last Modified time: 2015-12-05 19:15:17
 */
 
 $(function(){
@@ -37,7 +37,13 @@ $(function(){
                 url : "banner/destroy/"+id
             }).done(function(data, status, xhr){
                 if(data.result == 1){
-                    location.reload();
+                    parent.lib.popup.result({
+                        bool : true,
+                        text : "操作成功",
+                        define:function(){
+                            location.reload();
+                        }
+                    });                 
                 }
             })
         }else{
