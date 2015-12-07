@@ -18,6 +18,7 @@ $('#form').on("_ready",function(){
 			confirm:true,
 			height:300,
 			width:800,
+			defineText:tr?"保存":"保存并新增",
 			content:lib.ejs.render({url:"/module/makeup/item/cols-t"},{data:data}),
 			complete:function(){
 				var popup=$(this);
@@ -69,6 +70,7 @@ $('#form').on("_ready",function(){
 			confirm:true,
 			height:300,
 			width:820,
+			defineText:tr?"保存":"保存并新增",
 			content:lib.ejs.render({url:"/module/makeup/item/cols-image-t"},{data:data}),
 			complete:function(){
 				var popup=$(this);
