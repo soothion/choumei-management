@@ -239,6 +239,9 @@ class BannerController extends Controller {
                 }
         }
         }  
+        if(!array_key_exists('salonName',$param)){
+            $param['salonName']="";
+        }
         $param['updated_at'] = time();
         $query = Banner::find($id)->update($param);
         if ($query) {
