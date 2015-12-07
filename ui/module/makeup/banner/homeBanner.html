@@ -64,6 +64,13 @@
             position: relative;
             vertical-align: top;          
           }
+
+          .plus-button button{
+            display: inline-block;
+            width:100%;
+            height:100%;
+          }
+
           .move{
             cursor:move;
           }
@@ -171,8 +178,8 @@
                           <div class="fr">
                               <button class='link save hidden'>保存</button>
                               <button type="reset" class='link canncel hidden'>取消</button>
-                              <button type="button" class='link edit'>编辑</button>
-                              <a class='link del' id="<%=item.banner_id%>">删除</a>
+                              <button type="button" class='link edit' data-slug="banner.edit">编辑</button>
+                              <a class='link del' id="<%=item.banner_id%>" data-slug="banner.destroy">删除</a>
                               <input type="hidden" name="id" value="<%=item.banner_id%>">
                               <input type="hidden" name="type" value="1">
                           </div>
@@ -224,7 +231,7 @@
                                   <div class="control complete">
                                     <input id="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
                                     ajat-resources="/module/public/widget/autocomplete/index.js"
-                                    autocomplete="off" <%=item.salonName%> class="<%=url.type!='salons'?'hidden':''%>"/>
+                                    autocomplete="off" value="<%=item.salonName%>" class="<%=url.type!='salons'?'hidden':''%>"/>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                   </div>                                    
                               <%}else{%>                                  
@@ -232,7 +239,7 @@
                                   <div class="control complete">
                                     <input id="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
                                     ajat-resources="/module/public/widget/autocomplete/index.js"
-                                    autocomplete="off" <%=item.salonName%>/>
+                                    autocomplete="off" value="<%=item.salonName%>"/>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                   </div> 
                               <%}%>
@@ -251,8 +258,8 @@
 
             <%if(data.data && data.data.length < 10){%>          
             <div class="plus-button">
-              <div style="text-align:center;">
-                  <button type="button">
+              <div style="text-align:center;height:100%;width:100%">
+                  <button type="button" data-slug="banner.create">
                       <span style="font-size: 4rem;color:#ddd;">+</span><br>
                       <span style="font-size: 15px;color:#ddd;font-weight:900;">添加</span>
                   </button>

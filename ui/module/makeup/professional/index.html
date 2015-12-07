@@ -13,8 +13,9 @@
                     <h4>专家列表</h4>
                 </div>
                  <div>
-                    <a class="btn-primary" data-slug="merchant.save" href="edit.html">
-                    <i class="fa fa-plus"></i>新增专家</a>
+                    <a class="btn-primary" data-slug="artificer.add" href="edit.html">
+                    <i class="fa fa-plus"></i>新增专家
+                    </a>
                 </div>
             </div>
         </div>
@@ -34,7 +35,7 @@
                   
                 </form>
                 &nbsp;
-                <form action="artificer/export" data-role="export" data-slug="merchant.export">
+                <form action="artificer/export" data-role="export" data-slug="artificer.export">
                     <button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button>
                 </form>
             </div>
@@ -85,17 +86,17 @@
                         <td>
                             <%if(item.status == "0"){%>                       
                                 <form action="artificer/up/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-                                  <button class="link" >启用</button>
+                                  <button class="link" data-slug="artificer.up">启用</button>
                                 </form>
                             <%}else{%>
                                 <form action="artificer/down/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
-                                  <button class="link" >禁用</button>
+                                  <button class="link" data-slug="artificer.down">禁用</button>
                                 </form>
                             <%}%> 
 
                             <span style="margin:0 5px;color:#ddd">|</span>
 
-                            <a class="link"  href="detail.html#id=<%=item.id%>">
+                            <a class="link"  href="detail.html#id=<%=item.id%>" data-slug="artificer.show,artificer.update">
                                 查看&gt;
                             </a>
                         </td>

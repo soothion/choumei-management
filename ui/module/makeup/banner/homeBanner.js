@@ -2,14 +2,14 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-07 11:43:19
+* @Last Modified time: 2015-12-07 14:48:49
 */
 
 $(function(){
 
     var moveTarget = {};
 
-    $(".box-warpper").on('click','.plus-button',function(){
+    $(".box-warpper").on('click','.plus-button button',function(){
         var len = $('.banner').length;
         var clone = $('.template').clone();               
         clone.css('display','').removeClass("template");
@@ -21,7 +21,7 @@ $(function(){
         clone.find('#search').attr('ajat-complete',complete);
         clone.find('.complete-position').attr('id','complete-position'+len);
 
-        $(this).before(clone);
+        $('.plus-button').before(clone);
         new lib.Form(clone);
         if($('.banner').length >= 11 ){
             $(".plus-button").hide();
@@ -61,7 +61,7 @@ $(function(){
         topBanner.removeClass('move');
         topBanner.siblings().find('button.edit').attr('disabled',true);
         topBanner.find('.operation').removeClass('hidden');
-
+        topBanner.find('button.btn-primary').removeAttr('disabled');
         topBanner.find('input[type=radio]').removeAttr('disabled');
         topBanner.find('#title').removeAttr('disabled');
 
@@ -92,7 +92,9 @@ $(function(){
             topBanner.find('.thumbnails-item-btn').css('display','inline-block');
             topBanner.find('.thumbnails-item-img').remove();
         }
-        topBanner.addClass('move');
+        if(topBanner.attr('id') && topBanner.attr('url')){
+            topBanner.addClass('move');           
+        }
         topBanner.find('.operation').addClass('hidden');
         topBanner.find('.control-help').hide();
         topBanner.siblings().find('button.edit').removeAttr('disabled');
@@ -100,7 +102,8 @@ $(function(){
         topBanner.find('#title').attr('disabled',true);
         topBanner.find('#h5url').attr('disabled',true);
         topBanner.find('select').attr('disabled',true);
-        topBanner.find('#search').attr('disabled',true);    
+        topBanner.find('#search').attr('disabled',true);
+        topBanner.find('button.btn-primary').attr('disabled',true);    
     });
 
     $(".box-warpper").on('click','input[type=radio]',function(){ 
