@@ -805,11 +805,7 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     'as'=>'book.receive',
     'uses'=>'Transaction\BookController@receive'
         ));
-	
-    Route::any('book/receive/{id}',array(  //接待
-    'as'=>'book.receive',
-    'uses'=>'Transaction\BookController@receive'
-        ));
+
     
     Route::any('book/cash/{id}',array(  //收银
     'as'=>'book.cash',
