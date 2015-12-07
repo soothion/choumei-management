@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-07 16:54:02
+* @Last Modified time: 2015-12-07 17:11:13
 */
 
 $(function(){
@@ -12,6 +12,7 @@ $(function(){
     $(".box-warpper").on('click','.plus-button button',function(){
         $(this).attr('disabled',true);
         $("form").find('button.edit').attr('disabled',true);
+        $("form[id]").removeClass('move');
 
         var len = $('.banner').length;
         var clone = $('.template').clone();               
@@ -57,7 +58,8 @@ $(function(){
             var len = $("form[draggable='false']").find('button.edit.hidden').length;
             if(len == 1){
                 $("form").find('button.edit').removeAttr('disabled');  
-                $(".plus-button button").removeAttr('disabled');                  
+                $(".plus-button button").removeAttr('disabled');
+                $("form[id]").addClass('move');                  
             }          
         }
     });
@@ -69,7 +71,7 @@ $(function(){
         parent.find('.edit').addClass('hidden');
 
         var topBanner = $(this).closest('.banner');
-        topBanner.removeClass('move');
+        //topBanner.removeClass('move');
         //topBanner.siblings().find('button.edit').attr('disabled',true);
         topBanner.find('.operation').removeClass('hidden');
         topBanner.find('button.btn-primary').removeAttr('disabled');
@@ -87,7 +89,8 @@ $(function(){
             }         
         }
         $("form").find('button.edit').attr('disabled',true);
-        $(".plus-button button").attr('disabled',true);  
+        $(".plus-button button").attr('disabled',true);
+        $("form[id]").removeClass('move');  
     });
 
     $(".box-warpper").on('click','.canncel',function(){
@@ -104,9 +107,10 @@ $(function(){
             topBanner.find('.thumbnails-item-btn').css('display','inline-block');
             topBanner.find('.thumbnails-item-img').remove();
         }
-        if(topBanner.attr('id') && topBanner.attr('url')){
-            topBanner.addClass('move');           
-        }
+        // if(topBanner.attr('id') && topBanner.attr('url')){
+        //     topBanner.addClass('move');           
+        // }
+        $("form[id]").addClass('move');  
         topBanner.find('.operation').addClass('hidden');
         topBanner.find('.control-help').hide();
         //topBanner.siblings().find('button.edit').removeAttr('disabled');
