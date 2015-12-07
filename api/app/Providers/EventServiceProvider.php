@@ -25,6 +25,15 @@ class EventServiceProvider extends ServiceProvider
         ],     
         'user.export' => [
             'App\Listeners\UserEventListener@onExport',
+        ],        
+        'user.disable' => [
+            'App\Listeners\UserEventListener@onDisable',
+        ],        
+        'user.enable' => [
+            'App\Listeners\UserEventListener@onEnable',
+        ],        
+        'user.resetCompanyCode' => [
+            'App\Listeners\UserEventListener@onResetCompanyCode',
         ],
         'login' => [
             'App\Listeners\UserEventListener@onLogin',
