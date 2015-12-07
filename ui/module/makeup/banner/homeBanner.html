@@ -222,17 +222,17 @@
                               <%if(item.behavior=="2"){var url = JSON.parse(item.url);%>
                                   <select name="url" disabled  url=<%=item.url%>></select>
                                   <div class="control complete">
-                                    <input id="search" type="text" name="salonname" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
+                                    <input id="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
                                     ajat-resources="/module/public/widget/autocomplete/index.js"
-                                    autocomplete="off" <%=item.salonname%> class="<%=url.type!='salons'?'hidden':''%>"/>
+                                    autocomplete="off" <%=item.salonName%> class="<%=url.type!='salons'?'hidden':''%>"/>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                   </div>                                    
                               <%}else{%>                                  
                                   <select name="url" disabled></select>
                                   <div class="control complete">
-                                    <input id="search" type="text" name="salonname" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
+                                    <input id="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
                                     ajat-resources="/module/public/widget/autocomplete/index.js"
-                                    autocomplete="off" <%=item.salonname%>/>
+                                    autocomplete="off" <%=item.salonName%>/>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                   </div> 
                               <%}%>
@@ -308,7 +308,7 @@
                           <select name="url" style="width:26.5%;" disabled></select>
 
                           <div class="control complete">
-                            <input id="search" type="text" name="salonname" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" ajat-resources="/module/public/widget/autocomplete/index.js"
+                            <input id="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" ajat-resources="/module/public/widget/autocomplete/index.js"
                               autocomplete="off" disabled/>
                             <div class="complete-position" id="complete-position"></div>
                           </div>                             
