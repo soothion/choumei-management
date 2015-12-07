@@ -58,7 +58,7 @@
                     </select>
                 </div>
 
-                <button class="btn" type="submit">查询</button>
+                <button class="btn" type="submit" data-slug="book.index">查询</button>
             </form>
            <div class="table" ajat="book/index?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
@@ -111,7 +111,7 @@
                   <td><%=pay_type_desc[item.pay_type]%></td>
                   <td><%=status[item.STATUS]%></td>
                   <td class="tc">
-                    <a class="link" data-slug="coupon.actView" href="detail_order.html#id=<%=item.ID%>">查看</a>
+                    <a class="link" data-slug="book.show" href="detail_order.html#id=<%=item.ID%>">查看</a>
                   </td>
                   </tr>
                   <%})%>
