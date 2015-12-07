@@ -108,7 +108,7 @@ class ArtificerAssistantController extends Controller{
                     $obj->where(['mobilephone'=>$keyword]);
                     break;
                 case 4:
-                    $artificer = Artificer::select(['artificer_id'])->where(['pid'=>NULL,'status'=>'NOM','name'=>$keyword])->first();
+                    $artificer = Artificer::select(['artificer_id'])->where(['pid'=>NULL,'name'=>$keyword])->first();
                     if(empty($artificer)) return $this->success();
                     $artificerId = $artificer->toArray()['artificer_id'];
                     $obj->whereRaw(' pid like "%'.$artificerId.'%"');
@@ -131,6 +131,7 @@ class ArtificerAssistantController extends Controller{
             }
         }
         $result = $this->_formatListData( $result );
+//        var_dump($result);exit;
         return $this->success( $result );
     }
     /**
