@@ -191,7 +191,7 @@
                         </tr>
                         <tr>
                             <td class="td">沟通记录：</td>
-                            <td><%=data.booking_receive.remark%></td>
+                            <td><%=data.booking_receive && data.booking_receive.remark%></td>
                         </tr>
                         <tr >
                             <td colspan="2" class="pad-n bor-n">
@@ -282,7 +282,7 @@
                                             <td>发起退款：</td>
                                             <td><%= data.booking_salon_refund ?'臭美工作人员':'用户'%></td>
                                             <td>退款原因：</td>
-                                            <td><%=data.booking_salon_refund.remark || data.order_refund.rereason%></td>
+                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark)|| data.order_refund.rereason%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -290,12 +290,12 @@
                         </tr>
                         <tr>
                             <td class="td">退款说明：</td>
-                            <td><%=data.booking_salon_refund.remark || data.order_refund.refund_desc%></td>
+                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark) || data.order_refund.refund_desc%></td>
                         </tr>
                         <%var back_to_desc=[,'微信','支付宝','银联','现金']%>
                         <tr>
                             <td class="td">退款方式：</td>
-                            <td><%=back_to_desc[data.booking_salon_refund.back_to] || payment_list.join(',')%></td>
+                            <td><%=back_to_desc [data.booking_salon_refund &&data.booking_salon_refund.back_to] || payment_list.join(',')%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -303,9 +303,9 @@
                                     <tbody>
                                         <tr>
                                             <td>退款金额：</td>
-                                            <td><%=data.booking_salon_refund.money || data.order_refund.money%></td>
+                                            <td><%= ( data.booking_salon_refund &&data.booking_salon_refund.money) || data.order_refund.money%></td>
                                             <td>发起退款时间：</td>
-                                            <td><%=data.booking_salon_refund.created_at || data.order_refund.add_time%></td>
+                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || data.order_refund.add_time%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -317,10 +317,9 @@
                                     <tbody>
                                         <tr>
                                             <td>退款状态：</td>
-                                            <td>已退款</td>
                                             <td><%= status[data.order.STATUS] || status[data.order_refund.status]%></td>
                                             <td>退款时间：</td>
-                                            <td><%=data.booking_salon_refund.created_at || data.order_refund.complete_time%></td>
+                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || data.order_refund.complete_time%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -332,9 +331,9 @@
                                     <tbody>
                                         <tr>
                                             <td>审批人：</td>
-                                            <td><%= data.booking_salon_refund.manager.name || data.order_refund.opt_user%></td>
+                                            <td><%=  ( data.booking_salon_refund &&data.booking_salon_refund.manager.name) || data.order_refund.opt_user%></td>
                                             <td>审批时间：</td>
-                                            <td><%=data.booking_salon_refund.created_at || data.order_refund.opt_time%></td>
+                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || data.order_refund.opt_time%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -365,7 +364,7 @@
                         </tr>
                         <tr>
                             <td class="td">补色说明：</td>
-                            <td><%=data.makeup.remark.replace(/\n/g,"</br>")%></td>
+                            <td><%=data.makeup.remark && data.makeup.remark.replace(/\n/g,"</br>")%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
