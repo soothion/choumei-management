@@ -144,7 +144,6 @@
                         <tr>
                             <td  colspan="2">预约金支付信息</td>
                         </tr>
-
                         <tr >
                             <td colspan="2" class="pad-n bor-n">
                             <table class="inner-table bor-n">
@@ -156,7 +155,7 @@
                                                 payment_list.push(pay_type_desc[payment_item.pay_type]);
                                             })%><%=payment_list.join(",")%></td>
                                             <td>流水号：</td>
-                                            <td><%=data.payment_log.tn%></td>
+                                            <td><%=data.payment_log && data.payment_log.tn%></td>
                                         </tr>
                                     </tbody>
                             </table>
