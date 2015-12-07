@@ -127,8 +127,8 @@
           }
 
           .control{
-            position: absolute;
             width:29.5%;
+            position: absolute;
           } 
 
           .complete{
@@ -138,6 +138,11 @@
           .control input{
             width:100%;
             min-width: 100px;
+          }
+
+          .control > div{
+             min-width: 100%;
+             width: 200%;
           }
 
           .radios{
@@ -216,15 +221,14 @@
 
                               <%if(item.behavior=="2"){var url = JSON.parse(item.url);%>
                                   <select name="url" disabled  url=<%=item.url%>></select>
-
                                   <div class="control complete">
                                     <input id="search" type="text" name="salonname" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
                                     ajat-resources="/module/public/widget/autocomplete/index.js"
                                     autocomplete="off" <%=item.salonname%> class="<%=url.type!='salons'?'hidden':''%>"/>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                   </div>                                    
-                              <%}else{%>
-                                  <select name="url" style="width:26.5%;" disabled></select>
+                              <%}else{%>                                  
+                                  <select name="url" disabled></select>
                                   <div class="control complete">
                                     <input id="search" type="text" name="salonname" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
                                     ajat-resources="/module/public/widget/autocomplete/index.js"

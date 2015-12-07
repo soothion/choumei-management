@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-05 19:15:17
+* @Last Modified time: 2015-12-07 11:43:19
 */
 
 $(function(){
@@ -114,11 +114,13 @@ $(function(){
         radios.find('select[disabled]').removeAttr('disabled');        
     });
 
-    $(".box-warpper").on('_ready',function(){
+    $(".box-warpper").on('_ready',function(e){
+        if(!$(e.target).hasClass('box-warpper')) return;
         var uploadBtnArr = $(this).find('button[id^=uploader]');
         uploadBtnArr.each(function(i,item){
             uploader($(item).attr('id'));
         });
+
         lib.ajax({
             type: "get",
             url : 'beautyItem/itemList',
@@ -150,6 +152,8 @@ $(function(){
     });
 
     $(".box-warpper").on('change','select',function(e){
+        $(this).find('option[selected=selected]').removeAttr('selected');
+        $(this).find('option[value='+$(this).val()+']').attr('selected','selected');
         if($(this).val()=="salons_salonId"){
             $(this).next().find('input').removeClass('hidden').removeAttr('disabled');
         }else{
