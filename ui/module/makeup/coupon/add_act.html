@@ -90,7 +90,7 @@
                               <label class="control-label" for=""></label>
                               <a href="index.html">
                               <button class="btn" type="button" style="margin-right:20px">取消</button></a>
-                              <button class="btn-primary">提交</button>
+                              <button class="btn-primary" data-slug="powderArticles.addArticles">提交</button>
                           </div>
                       </script>
                     </div>
@@ -134,7 +134,7 @@
                          success:function(data){
                              setTimeout(function(){
                                  $form.attr('disabled',false);
-                             },1100);
+                             },1000);
                             if(data.result==1){
                                 location.href="./index.html";
                             }

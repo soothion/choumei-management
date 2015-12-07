@@ -18,7 +18,7 @@
                     <h4> 定妆赠送活动 </h4>
                 </div>
                 <div class="flex-item">
-                    <a href="add_act.html" class="btn-primary fr" data-slug="coupon.add">
+                    <a href="add_act.html" class="btn-primary fr" data-slug="powderArticles.addArticles">
                         <i class="fa fa-plus"></i> 新增兑换活动
                     </a>
                 </div>
@@ -48,7 +48,7 @@
                     至
                     <input type="date" data-role="end" name="endTime" placeholder="YYYY-MM-DD"/>
                 </span>
-                <button class="btn" type="submit">查询</button>
+                <button class="btn" type="submit" data-slug="powderArticles.articlesList">查询</button>
             </form>
            <div class="table" ajat="powderArticles/articlesList?<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
@@ -87,7 +87,7 @@
                   <td><%=item.createTime%></td>
                   <td><%=item.articleStatusName%></td>
                   <td class="tc">
-                    <a class="link" data-slug="coupon.actView" href="detail_act.html#id=<%=item.presentId%>">查看</a>
+                    <a class="link" data-slug="powderArticles.showArticlesInfo" href="detail_act.html#id=<%=item.presentId%>">查看</a>
                   </td>
                   </tr>
                   <%})%>

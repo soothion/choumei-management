@@ -60,8 +60,7 @@
 					</tbody>
 				</table>
 			</div>
-			<form action="user/update/<%=query.id%>" data-role="normal" id="companyCode" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
-				<input type="hidden" name="companyCode" value="" />
+			<form action="user/resetCompanyCode/<%=query.id%>" data-role="normal" id="companyCode" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
 			</form>
 			<br />
 			<form action="user/update/<%=query.id%>" data-role="form">

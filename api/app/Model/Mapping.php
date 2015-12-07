@@ -72,6 +72,17 @@ class Mapping
         ];
     }
     
+    public static function BeautyRefundRereasonNames()
+    {
+        return [
+            0=>'买错了／买多了',
+            1=>'朋友／网上评价不好',
+            2=>'担心伤害健康',
+            3=>'太贵了',
+            4=>'去过了不太满意',
+        ];
+    }
+    
     public static function FundflowPayTypeNames()
     {
         return [

@@ -55,7 +55,7 @@ class BeautyRefundApi extends TransactionWriteApi {
         $payment_indexes = Utils::column_to_key("ordersn", $payments);
         $refund_items = self::getBeautyRefundItems($fundflow, $payment_indexes, $refund_indexes);
         //添加审批人ID
-        self::modifBookingOrderRefundOptUser($ids, $opt_user_id);  
+        self::modifBookingOrderRefundOptUser($ids, $opt_user_id);
 //print_r($refund_items);exit;
         //微信
         if (isset($refund_items['wx']) && count($refund_items['wx']) > 0) {
@@ -74,7 +74,7 @@ class BeautyRefundApi extends TransactionWriteApi {
 
     private static function checkBeautyRefund($ids) {
         $countIds = count($ids);
-        $refunds = OrderRefund::whereIn('order_refund_id', $ids)->where('status', '!=', self::REFUND_STATUS_OF_CANCLE)->get(['ordersn', 'booking_sn', 'retype', 'rereason'])->toArray();
+        $refunds = OrderRefund::whereIn('order_refund_id', $ids)->where('status', '!=', self::REFUND_STATUS_OF_CANCLE)->get(['ordersn', 'booking_sn', 'retype', 'rereason', 'other_rereason'])->toArray();
         if (empty($refunds)) {
             throw new ApiException("退款id下取不到信息", ERROR::PARAMS_LOST);
         }
@@ -113,9 +113,8 @@ class BeautyRefundApi extends TransactionWriteApi {
             $pay_type = $flow['pay_type']; //1原路退款 2 为退回余额
             $user_id = $flow['user_id'];
             $money = $flow['money'];
-            $reason = implode(',', Mapping::getRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
-
-
+            $reason = implode(',', Mapping::BeautyRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
+            $reason = !empty($reason) ? $reason . "," . $refunds[$ordersn]['other_rereason'] : $refunds[$ordersn]['other_rereason'];
             $device = null;
             $tn = '';
             $batch_no = '';
