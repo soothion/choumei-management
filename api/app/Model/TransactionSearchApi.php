@@ -810,8 +810,8 @@ class TransactionSearchApi
     
     public static function makeWhereOfRefund(&$base,$params)
     {
-        //必要条件 退款状态 为可用
-        $base->where("order_refund.status", TransactionWriteApi::REFUND_STATUS_OF_NORMAL);
+        //必要条件 退款状态 为可用   必须为美发
+        $base->where("order_refund.status", TransactionWriteApi::REFUND_STATUS_OF_NORMAL)->where("order_refund.item_type",'MF');
         
         // 按时间搜索
         if (isset($params['refund_min_time']) && !empty($params['refund_min_time']) && preg_match("/^\d{4}\-\d{2}\-\d{2}$/", trim($params['refund_min_time']))) {
