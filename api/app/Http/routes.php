@@ -1509,6 +1509,10 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'banner.create',
         'uses'=>'Banner\BannerController@create'
     )); 
+    Route::any('banner/create2',array(  //
+        'as'=>'banner.create2',
+        'uses'=>'Banner\BannerController@create2'
+    )); 
     Route::any('banner/edit/{id}',array(  //
         'as'=>'banner.edit',
         'uses'=>'Banner\BannerController@edit'
