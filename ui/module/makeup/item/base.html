@@ -28,7 +28,7 @@
 			}
 			.format-group input{
 				min-width:0!important;
-				width:100%;
+				width:98%;
 				margin-bottom:5px;
 			}
 			.format-group .link{
@@ -343,9 +343,7 @@
 						});	
 					});						
 				});
-				$('input[name="price"]').on('blur',function(){
-					$('input[name="vip_price"]').attr('max',$.trim(this.value));
-				});
+				
 				/**
 				*规格加载，添加，删除
 				*/
@@ -355,6 +353,8 @@
 						$(this).closest('.format-group').remove();
 					}).on('click','.add-format',function(){
 						createFormat([{}]);
+					}).on('blur','input[name="price"]',function(){
+						$(this).closest('li').next().find('input').attr('max',$.trim(this.value));
 					})
 					
 					var createFormat=function(data){
@@ -400,6 +400,10 @@
 						more_prices.push({});
 					}
 					createFormat(more_prices);
+				}else{
+					$('input[name="price"]').on('blur',function(){
+						$('input[name="vip_price"]').attr('max',$.trim(this.value));
+					});
 				}
 				
 				this._getFormData=function(){
