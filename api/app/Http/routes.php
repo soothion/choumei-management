@@ -805,11 +805,7 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     'as'=>'book.receive',
     'uses'=>'Transaction\BookController@receive'
         ));
-	
-    Route::any('book/receive/{id}',array(  //接待
-    'as'=>'book.receive',
-    'uses'=>'Transaction\BookController@receive'
-        ));
+
     
     Route::any('book/cash/{id}',array(  //收银
     'as'=>'book.cash',
@@ -1512,6 +1508,10 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     Route::any('banner/create',array(  //
         'as'=>'banner.create',
         'uses'=>'Banner\BannerController@create'
+    )); 
+    Route::any('banner/create2',array(  //
+        'as'=>'banner.create2',
+        'uses'=>'Banner\BannerController@create2'
     )); 
     Route::any('banner/edit/{id}',array(  //
         'as'=>'banner.edit',

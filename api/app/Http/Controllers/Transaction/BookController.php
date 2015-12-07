@@ -502,8 +502,8 @@ class BookController extends Controller
         {
             $is_first = true;
         }
-        self::givePresent($custom_uid,true);
-        //self::givePresent($custom_uid,$is_first);
+        //self::givePresent($custom_uid,true);
+        self::givePresent($custom_uid,$is_first);
         Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success(['id'=>$id]);
     }

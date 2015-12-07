@@ -2,13 +2,13 @@
 * @Author: anchen
 * @Date:   2015-12-02 19:50:31
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-05 11:19:45
+* @Last Modified time: 2015-12-07 10:04:11
 */
 
 $(function(){
 
     function init(){
-        var promise = lib.ajat("banner/index?type=2#domid=warpper&tempid=warpper-t").render();
+        var promise = lib.ajat("banner/index2?type=2#domid=warpper&tempid=warpper-t").render();
         promise.done(function(data){initUploader();});
     }
 
@@ -51,7 +51,7 @@ $(function(){
         }   
         lib.ajax({
             type: "post",
-            url : data.id ? "banner/edit/"+data.id : "banner/create",
+            url : data.id ? "banner/edit2/"+data.id : "banner/create",
             data:data
         }).done(function(data, status, xhr){
             if(data.result == 1){

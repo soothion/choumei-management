@@ -189,6 +189,7 @@ class UserController extends Controller{
             'user.username',
             'user.nickname',
             'user.sex',
+            'user.status',
             'user.growth',
             'user.mobilephone',
             'user.area',
@@ -401,6 +402,7 @@ class UserController extends Controller{
             'user.img',
             'nickname',
             'sex',
+            'user.status',
             'hair_type',
             'area',
             'birthday',
@@ -655,7 +657,7 @@ class UserController extends Controller{
         $user = User::find($id);
         if(!$user)
             throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
-        $result = DB::table('company_code_user')->where('user_id','=',$id);
+        $result = $user->update(['companyId'=>0]);
         if($result){
             //触发事件，写入日志
             Event::fire('user.resetCompanyCode',array($user));
