@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-07 14:48:49
+* @Last Modified time: 2015-12-07 16:45:16
 */
 
 $(function(){
@@ -10,6 +10,9 @@ $(function(){
     var moveTarget = {};
 
     $(".box-warpper").on('click','.plus-button button',function(){
+        $(this).attr('disabled',true);
+        $("form").find('button.edit').attr('disabled',true);
+
         var len = $('.banner').length;
         var clone = $('.template').clone();               
         clone.css('display','').removeClass("template");
@@ -20,8 +23,8 @@ $(function(){
         complete = complete.replace('complete-position','complete-position'+len);
         clone.find('#search').attr('ajat-complete',complete);
         clone.find('.complete-position').attr('id','complete-position'+len);
-
         $('.plus-button').before(clone);
+
         new lib.Form(clone);
         if($('.banner').length >= 11 ){
             $(".plus-button").hide();
@@ -48,6 +51,14 @@ $(function(){
             })
         }else{
             $(this).closest('.banner').remove();
+            //编辑按钮 hidden 表示 ，取消、保存按钮可见，  
+            //因为下面有个模板(form.template )的编辑按钮是hidden，所以len等于1表示所有
+            //form[draggable='false']")下的按钮都可见，可以执行下面的操作
+            var len = $("form[draggable='false']").find('button.edit.hidden').length;
+            if(len == 1){
+                $("form").find('button.edit').removeAttr('disabled');  
+                $(".plus-button button").removeAttr('disabled');                  
+            }          
         }
     });
 
@@ -59,12 +70,11 @@ $(function(){
 
         var topBanner = $(this).closest('.banner');
         topBanner.removeClass('move');
-        topBanner.siblings().find('button.edit').attr('disabled',true);
+        //topBanner.siblings().find('button.edit').attr('disabled',true);
         topBanner.find('.operation').removeClass('hidden');
         topBanner.find('button.btn-primary').removeAttr('disabled');
         topBanner.find('input[type=radio]').removeAttr('disabled');
         topBanner.find('#title').removeAttr('disabled');
-
         var val = topBanner.find('input:checked').val();
         if(val == '1'){
             topBanner.find('#h5url').removeAttr('disabled');
@@ -76,6 +86,8 @@ $(function(){
                 topBanner.find("#search").removeClass('hidden').removeAttr('disabled'); 
             }         
         }
+        $("form").find('button.edit').attr('disabled',true);
+        $(".plus-button button").attr('disabled',true);  
     });
 
     $(".box-warpper").on('click','.canncel',function(){
@@ -97,13 +109,15 @@ $(function(){
         }
         topBanner.find('.operation').addClass('hidden');
         topBanner.find('.control-help').hide();
-        topBanner.siblings().find('button.edit').removeAttr('disabled');
+        //topBanner.siblings().find('button.edit').removeAttr('disabled');
         topBanner.find('input[type=radio]').attr('disabled',true);
         topBanner.find('#title').attr('disabled',true);
         topBanner.find('#h5url').attr('disabled',true);
         topBanner.find('select').attr('disabled',true);
         topBanner.find('#search').attr('disabled',true);
-        topBanner.find('button.btn-primary').attr('disabled',true);    
+        topBanner.find('button.btn-primary').attr('disabled',true);
+        $("form").find('button.edit').removeAttr('disabled');
+        $(".plus-button button").removeAttr('disabled');    
     });
 
     $(".box-warpper").on('click','input[type=radio]',function(){ 
@@ -164,11 +178,11 @@ $(function(){
         }
     });
     
-    $(".box-warpper").on('dragover',function(ev){
+    $(".box-warpper").on('dragover','form[id]',function(ev){
         ev.preventDefault();
     });
 
-    $(".box-warpper").on('drop','form',function(ev){
+    $(".box-warpper").on('drop','form[id]',function(ev){
         ev.preventDefault();
         if($(ev.currentTarget).attr('id') == moveTarget.attr('id')){
             return;
@@ -195,7 +209,7 @@ $(function(){
             if(data.result == 0){
                 parent.lib.popup.result({
                     bool : false,
-                    text : data.msg || "操作失败",
+                    text : data.msg || "移动操作失败",
                     define:function(){
                         location.reload();
                     }
@@ -204,7 +218,7 @@ $(function(){
         });                    
     }); 
 
-    $(".box-warpper").on('dragstart','form',function(ev){       
+    $(".box-warpper").on('dragstart','form[id]',function(ev){       
         moveTarget = $(ev.currentTarget);    
         if($('.box-warpper').find('form[url]').find('button.edit[disabled]').length>0){
             return false;
