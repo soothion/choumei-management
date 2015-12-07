@@ -189,6 +189,7 @@ class UserController extends Controller{
             'user.username',
             'user.nickname',
             'user.sex',
+            'user.status',
             'user.growth',
             'user.mobilephone',
             'user.area',
