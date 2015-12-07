@@ -231,7 +231,7 @@
                                   <div class="control complete">
                                     <input id="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
                                     ajat-resources="/module/public/widget/autocomplete/index.js"
-                                    autocomplete="off" value="<%=item.salonName%>" class="<%=url.type!='salons'?'hidden':''%>"/>
+                                    autocomplete="off" value="<%=item.salonName%>" class="<%=url.type!='salon'?'hidden':''%>"/>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                   </div>                                    
                               <%}else{%>                                  

@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-07 17:11:13
+* @Last Modified time: 2015-12-07 17:27:38
 */
 
 $(function(){
@@ -84,7 +84,7 @@ $(function(){
         if(val == '2'){
             topBanner.find('select').removeAttr('disabled')
             var selectValue = topBanner.find('select').val();   
-            if(selectValue == "salons_salonId"){
+            if(selectValue == "salon_salonId"){
                 topBanner.find("#search").removeClass('hidden').removeAttr('disabled'); 
             }         
         }
@@ -149,7 +149,7 @@ $(function(){
         }).done(function(data, status, xhr){
             if(data.result==1 && data.data){
                 var arr = [];
-                arr.push("<option value='salons_salonId'>美发店铺主页</option>");
+                arr.push("<option value='salon_salonId'>美发店铺主页</option>");
                 arr.push("<option value='artificers'>专家主页</option>");
                 var obj = {'1':'SPM','2':'FFA'}
                 data.data.forEach(function(item,i){
@@ -159,7 +159,7 @@ $(function(){
                     $(item).append(arr.join(''));
                     if($(item).attr('url')){
                         var url = JSON.parse($(item).attr('url'));
-                        if(url.type=="salons"){
+                        if(url.type=="salon"){
                             $($(item).find('option')[0]).attr('selected',true)
                         }else if(url.type=="artificers"){
                             $($(item).find('option')[1]).attr('selected',true)
@@ -175,7 +175,7 @@ $(function(){
     $(".box-warpper").on('change','select',function(e){
         $(this).find('option[selected=selected]').removeAttr('selected');
         $(this).find('option[value='+$(this).val()+']').attr('selected','selected');
-        if($(this).val()=="salons_salonId"){
+        if($(this).val()=="salon_salonId"){
             $(this).next().find('input').removeClass('hidden').removeAttr('disabled');
         }else{
             $(this).next().find('input').addClass('hidden').attr('disabled',true);
@@ -237,7 +237,7 @@ $(function(){
         data.behavior = $(this.el).find('input:checked').val();
         if(data.behavior=="2"){
             var arr = data.url.split("_");
-            if(arr[0]=="salons"){
+            if(arr[0]=="salon"){
                 data.url = {type:arr[0],salonId:'salonId'};
             }else if(arr[0]=="artificers"){ 
                 data.url = {type:arr[0]};
