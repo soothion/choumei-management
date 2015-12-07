@@ -54,7 +54,7 @@
 	'assistant.index':'/module/makeup/assistant/index.html',
 	'artificer.index':'/module/makeup/professional/index.html',
     'book.index':'/module/makeup/order/index.html',
-    'powderArticles.showArticlesInfo':'module/makeup/coupon/index.html',
+    'powderArticles.articlesList':'module/makeup/coupon/index.html',
     'powderArticles.presentList':'/module/makeup/order/present_list.html'
 }
 var access={
