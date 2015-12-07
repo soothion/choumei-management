@@ -299,7 +299,7 @@ class UserController extends Controller{
         }
 
         // 触发事件，写入日志
-        // Event::fire('user.export');
+        Event::fire('user.export');
 
         //导出excel
         $title = '用户列表'.date('Ymd');
