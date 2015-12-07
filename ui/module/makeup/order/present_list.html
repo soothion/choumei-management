@@ -101,67 +101,6 @@
             </table>
              <div class="pager"> </div>
             </script>
-            <script type="text/javascript">
-
-               var clearTmpData  = function(){
-                   window.localStorage.removeItem('couponTmpData');
-               }
-
-               var confirmBox = function(options){
-                    lib.popup.confirm({
-                        text:options.text,
-                        define: function(){
-                            lib.ajax({
-                                url : options.url+options.id
-                            }).done(function(data, status, xhr){
-                                if(data.result == 1){
-                                    parent.lib.popup.result({
-                                        text:options.resultText,
-                                        define:function(){
-                                            location.reload();
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-               }
-               var confirmBoxConfig = {
-                    'offline':{
-                        text:'确定将该活动下线吗？',
-                        url:'coupon/offlineConf/',
-                        resultText:'活动下线成功'
-                    },
-                    'online':{
-                        text:'确定将该活动上线吗？',
-                        url:'coupon/upConf/',
-                        resultText:'活动正在上线中...'
-                    },
-                    'close':{
-                        text:'确定将该活动关闭吗？',
-                        url:'coupon/closeConf/',
-                        resultText:'活动关闭成功'
-                    }
-               }
-               $('body').on('click','#offline',function(){
-                    var id = $(this).attr('data-id');
-                    confirmBoxConfig['offline'].id = id;
-                    confirmBox(confirmBoxConfig['offline']);
-
-               }).on('click','#online',function(){
-                    var id = $(this).attr('data-id');
-                    confirmBoxConfig['online'].id = id;
-                    confirmBox(confirmBoxConfig['online']);
-
-               }).on('click','#close',function(){
-                    var id = $(this).attr('data-id');
-                    confirmBoxConfig['close'].id = id;
-                    confirmBox(confirmBoxConfig['close']);
-               }).on('click','#add_new',function(){
-                    clearTmpData();
-                    window.location.href="addBase.html";
-               });
-            </script>
         </div>
             </div>
     </body>

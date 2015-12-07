@@ -394,11 +394,11 @@ class PowderArticlesController extends Controller
             throw new ApiException('活动开关参数错误');
         }
         $where = array('present_id' => intval($param['presentId']));
-        $field = array('expire_at','article_status as articleStatus');
+        $field = array('end_at','article_status as articleStatus');
         $articlesInfo = Present::select($field)->where($where)->first();
         if(!empty($articlesInfo)){
-            if(time() > strtotime($articlesInfo['expire_at'])){
-                throw new ApiException('活动已过期');
+            if(time() > strtotime($articlesInfo['end_at'])){
+                throw new ApiException('活动已截止');
             }elseif($articlesInfo['articleStatus'] == $param['articleStatus']){
                 if($param['articleStatus'] == 1){
                     throw new ApiException('活动已开启，无需再开启');
@@ -735,6 +735,7 @@ class PowderArticlesController extends Controller
             $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']];
             $val['presentTypeName'] = self::$presentTypeName[$val['presentType']];
             $val['createTime'] = date('Y-m-d',$val['createTime']);
+            $val['expireTime'] = substr($val['expireTime'],0,10);
         }
         return $this->success($presentListInfo);
         
@@ -830,6 +831,7 @@ class PowderArticlesController extends Controller
             $presentListInfoDetail['createTime'] = date('Y-m-d',$presentListInfoDetail['createTime']);
             $presentListInfoDetail['useTime'] = substr($presentListInfoDetail['useTime'],0,10);
             $presentListInfoDetail['recordTime'] = substr($presentListInfoDetail['recordTime'],0,16);
+            $presentListInfoDetail['expireTime'] = substr($presentListInfoDetail['expireTime'],0,10);
         }
         Event::fire('powder.showTicketInfo','定妆赠送详情,活动赠送券记录id：'.$param['articleCodeId']);
         return $this->success($presentListInfoDetail);
@@ -923,7 +925,7 @@ class PowderArticlesController extends Controller
         }else{
             $data['present_id'] = $presentInfo['present_id'];
             $data['item_id'] = $presentInfo['item_id'];
-            $data['user_id'] = $userData['user_id'];
+            $data['user_id'] = $user_id;
             $data['mobilephone'] = $mobilephone;
             $data['recommend_code'] = $recommend_code;
             $data['present_type'] = $present_type;
