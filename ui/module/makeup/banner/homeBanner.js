@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-07 16:45:16
+* @Last Modified time: 2015-12-07 16:54:02
 */
 
 $(function(){
@@ -209,7 +209,7 @@ $(function(){
             if(data.result == 0){
                 parent.lib.popup.result({
                     bool : false,
-                    text : data.msg || "移动操作失败",
+                    text : data.msg || "移动排序失败",
                     define:function(){
                         location.reload();
                     }
