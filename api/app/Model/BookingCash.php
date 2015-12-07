@@ -3,6 +3,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 Use PDO;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
 
 class BookingCash extends Model
 {
@@ -18,40 +20,10 @@ class BookingCash extends Model
             return null;
         }
         $res = $base->toArray();
-        $res['manager'] = self::getManager($res['uid']);
-        $res['expert'] = self::getExpert($res['expert_uid']);
-        $res['assistant'] = self::getAssistant($res['assistant_uid']);
+        $res['manager'] = Manager::getBaseInfo($res['uid']);
+        $res['expert'] = Artificer::getBaseInfo($res['expert_uid']);
+        $res['assistant'] = Artificer::getBaseInfo($res['assistant_uid']);  
         return $res;
-    }
-    
-    public static function getManager($uid)
-    {
-        $base = Manager::where('id',$uid)->first(['id','name']);
-        if(empty($base))
-        {
-            return null;
-        }
-        return $base->toArray();
-    }
-    
-    public static function getExpert($uid)
-    {
-        $base = Artificer::where('artificer_id',$uid)->first(['artificer_id','name','number']);
-        if(empty($base))
-        {
-            return null;
-        }
-        return $base->toArray();
-    }
-    
-    public static function getAssistant($uid)
-    {
-        $base = Artificer::where('artificer_id',$uid)->first(['artificer_id','name','number']);
-        if(empty($base))
-        {
-            return null;
-        }
-        return $base->toArray();
     }
     
     /**
@@ -61,7 +33,43 @@ class BookingCash extends Model
      */
     public static function cash($booking_id,$params)
     {
+        $base = BookingOrder::where('ID',$booking_id)->first();
+        if(empty($base))
+        {
+            throw new ApiException("定妆单{$booking_id}不存在或者已经被删除!", ERROR::ORDER_NOT_EXIST);
+        }
+        $base= $base->toArray();
+        if($base['STATUS'] !== "PYD")
+        {
+            throw new ApiException("定妆单{$booking_id}状态不正确!", ERROR::ORDER_STATUS_WRONG);
+        }
+        $receive = BookingReceive::where('booking_id',$booking_id)->first();
+        if(empty($receive))
+        {
+            BookingReceive::receive($booking_id, ['uid'=>$params['uid']],true);
+        }    
+        $ordersn = $base['ORDER_SN'];
+        $time = time();
+        $datetime = date("Y-m-d H:i:s",$time);
+        $attr = [
+            'booking_id'=>$booking_id,
+            'booking_sn'=>$ordersn,
+            'order_sn'=>$base['ORDER_SN'],
+            'booking_sn'=>$base['ORDER_SN'],
+            'uid'=>$params['uid'],
+            'created_at'=>$datetime,
+            'pay_type'=>$params['pay_type'],
+            'other_money'=>$params['other_money'],
+            'cash_money'=>$params['cash_money'],
+            'deduction_money'=>$params['deduction_money'],
+            'expert_uid'=>$params['specialistId'],
+            'assistant_uid'=>$params['assistantId'],
+        ];
+        self::create($attr);
         
+        BookingOrder::where('ID',$booking_id)->update(['STATUS'=>'CSD','CONSUME_TIME'=>$datetime,'UPDATE_TIME'=>$datetime]);
+        Order::where('ordersn',$ordersn)->update(['status'=>7]);
+        return $base;
     }
     
     public function isFillable($key)

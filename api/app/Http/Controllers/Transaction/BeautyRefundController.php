@@ -11,7 +11,7 @@ use App\BeautyRefundApi;
 use App\BookingOrderItem;
 use App\Utils;
 use App\AlipaySimple;
-
+use Event;
 
 
 class BeautyRefundController extends Controller {
@@ -237,6 +237,9 @@ class BeautyRefundController extends Controller {
      */
     public function show($id) {
         $detail = OrderRefund::makeupRefundDetail($id);
+        if(!empty($detail)){//记录日志
+            Event::fire("BeautyRefund.show");
+        }
         return $this->success($detail);
     }
 
@@ -263,6 +266,7 @@ class BeautyRefundController extends Controller {
             throw new ApiException("ids参数不能为空", ERROR::PARAMS_LOST);
         }
         $res = BeautyRefundApi::rejectBeauty($ids);
+        Event::fire("BeautyRefund.reject");
         return $this->success($res);
     }
 
@@ -330,6 +334,8 @@ class BeautyRefundController extends Controller {
             $opt_user_id = 0;
         }
         $info = BeautyRefundApi::accpetBeauty($ids,$opt_user_id);
+        //记录日志
+        Event::fire("BeautyRefund.accept");
         return $this->success($info);
     }
 

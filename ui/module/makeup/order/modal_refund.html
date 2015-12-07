@@ -1,20 +1,20 @@
-<form action="book/refund/<%=query.id%>" data-role="normal">
+<form action="book/refund/<%=query.id%>" data-role="form">
 <div class="control-group">
     <label class="control-label" for="">项目价格：</label>
     <div class="control">
-            <label for="">2015-01-03</label>
+            <label for=""><%=orderInfo.order.item_amount%></label>
     </div>
 </div>
 <div class="control-group">
     <label class="control-label" for="">已付定金：</label>
     <div class="control">
-            <label for=""><%=orderInfo.order.AMOUNT%></label>
+            <label for=""><%=orderInfo.order.PAYABLE%></label>
     </div>
 </div>
 <div class="control-group">
     <label class="control-label" for="">应收金额：</label>
     <div class="control">
-            <label for="">3699</label>
+            <label for=""><%= orderInfo.order.item_amount - orderInfo.order.PAYABLE%></label>
     </div>
 </div>
 <div class="control-group">
@@ -26,7 +26,7 @@
 <div class="control-group">
     <label class="control-label" for="">实收金额：</label>
     <div class="control">
-            <label for=""><span class="red">3699</span></label>
+            <label for=""><span class="red"><%=orderInfo.order.item_amount-orderInfo.booking_cash.deduction_money%></span></label>
     </div>
 </div>
 <div class="control-group">

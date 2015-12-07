@@ -19,18 +19,8 @@ class BookingBill extends Model
             return null;
         }
         $res = $base->toArray();
-        $res['manager']=self::getManager($res['uid']);
+        $res['manager'] = Manager::getBaseInfo($res['uid']);
         return $res;
-    }
-    
-    public static function getManager($uid)
-    {
-        $base = Manager::where('id',$uid)->first(['id','name']);
-        if(empty($base))
-        {
-            return null;
-        }
-        return $base->toArray();
     }
     
     public function isFillable($key)

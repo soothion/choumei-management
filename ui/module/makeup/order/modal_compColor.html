@@ -1,4 +1,4 @@
-<form action="book/relatively/<%=query.id%>" data-role="normal">
+<form action="book/relatively/<%=query.id%>" data-role="form">
 <div class="control-group">
     <label class="control-label" for=""><span class="red">*</span>补色日期：</label>
     <div class="control">
@@ -8,21 +8,19 @@
 <div class="control-group">
     <label class="control-label" for=""><span class="red">*</span>专家：</label>
     <div class="control">
-        <input id="search" name="specialistId" type="text" ajat-complete="artificer/search/${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop"
-                        ajat-resources="/module/public/widget/autocomplete/index.js"
-                        autocomplete="off" required />
-                    <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ></div>
-                    <span id="sn" class="weak"></span>
+        <input class="searchInput" id="search" type="text" ajat-complete="artificer/search/${value}#domid=complete-position-specialistId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+        <input type="hidden" name="specialistId" class="inputId" value="" required>
+        <div class="complete-position" id="complete-position-specialistId" style="width:20%;min-width:250px;" ></div>
+        <span id="sn" class="weak"></span>
     </div>
 </div>
 <div class="control-group">
     <label class="control-label" for=""><span class="red">*</span>助理：</label>
     <div class="control">
-        <input id="search" name="assistantId" type="text" ajat-complete="assistant/search/${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop"
-                        ajat-resources="/module/public/widget/autocomplete/index.js"
-                        autocomplete="off" required />
-                    <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;" ></div>
-                    <span id="sn" class="weak"></span>
+        <input class="searchInput" id="search" type="text" ajat-complete="assistant/search/${value}#domid=complete-position-assistantId&tempid=/module/makeup/order/template/list-t" autocomplete="off" />
+        <input type="hidden" name="assistantId" class="inputId" value="" required>
+        <div class="complete-position" id="complete-position-assistantId" style="width:20%;min-width:250px;" ></div>
+        <span id="sn" class="weak"></span>
     </div>
 </div>
 <div class="control-group">
@@ -31,4 +29,17 @@
         <textarea maxlength="500" name="remark" placeholder="限制1~500个字符"  style="height:150px;width:500px"></textarea>
     </div>
 </div>
+<script>
+$('.searchInput').on('input',function(){
+    $(this).siblings('.complete-position').show().siblings('.inputId').val('');
+})
+$('.complete-position').on('click','li',function(){
+    var $this=$(this),
+        inputDesc = $this.html(),
+        id=$this.attr('data-id'),
+        parent= $this.parents('.complete-position');
+    parent.siblings('#search').val(inputDesc).siblings('.inputId').val(id);
+    parent.hide();
+})
+</script>
 </form>

@@ -372,17 +372,60 @@ class EventServiceProvider extends ServiceProvider
         
         //定妆赠送活动
         'powder.create' => [
-            'App\Listeners\PowderEventListener@onCreate',
+            'App\Listeners\PowderArticlesEventListener@onCreate',
+    	],
+        'powder.selectArticle' => [
+            'App\Listeners\PowderArticlesEventListener@onSelectArticle',
     	],
         'powder.showArticleDetail' => [
-            'App\Listeners\PowderEventListener@onShowArticleDetail',
+            'App\Listeners\PowderArticlesEventListener@onShowArticleDetail',
     	],
         'powder.closeArticleVerify' => [
-            'App\Listeners\PowderEventListener@onCloseArticleVerify',
+            'App\Listeners\PowderArticlesEventListener@onCloseArticleVerify',
     	],
         'powder.closeArticle' => [
-            'App\Listeners\PowderEventListener@onCloseArticle',
-    	]
+            'App\Listeners\PowderArticlesEventListener@onCloseArticle',
+    	],
+        'powder.showArticleTicketInfo' => [
+            'App\Listeners\PowderArticlesEventListener@onShowArticleTicketInfo',
+    	],
+        'powder.exportArticleTicket' => [
+            'App\Listeners\PowderArticlesEventListener@onExportArticleTicket',
+    	],
+        'powder.showTicketInfo' => [
+            'App\Listeners\PowderArticlesEventListener@onShowTicketInfo',
+    	],
+        'powder.useArticleTicket' => [
+            'App\Listeners\PowderArticlesEventListener@onUseArticleTicket',
+    	],
+
+        //定妆单退款
+        'BeautyRefund.show'=>[
+          'App\listeners\BeautyRefundEventListener@onShow'  
+        ],
+        'BeautyRefund.reject'=>[
+          'App\listeners\BeautyRefundEventListener@onReject'  
+        ],
+        'BeautyRefund.accept'=>[
+          'App\listeners\BeautyRefundEventListener@onAccept'  
+	],
+
+		//定妆单操作
+        'booking.receive' => [
+            'App\Listeners\BookingOrderEventListener@onReceive',
+        ],
+        'booking.cash' => [
+            'App\Listeners\BookingOrderEventListener@onCash',
+        ],
+        'booking.bill' => [
+            'App\Listeners\BookingOrderEventListener@onBill',
+        ],
+        'booking.relatively' => [
+            'App\Listeners\BookingOrderEventListener@onRelatively',
+        ],
+        'booking.refund' => [
+            'App\Listeners\BookingOrderEventListener@onRefund',
+        ],
 
     ];
 

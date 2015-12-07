@@ -108,7 +108,7 @@ class ArtificerAssistantController extends Controller{
                     $obj->where(['mobilephone'=>$keyword]);
                     break;
                 case 4:
-                    $artificer = Artificer::select(['artificer_id'])->where(['pid'=>NULL,'status'=>'NOM','name'=>$keyword])->first();
+                    $artificer = Artificer::select(['artificer_id'])->where(['pid'=>NULL,'name'=>$keyword])->first();
                     if(empty($artificer)) return $this->success();
                     $artificerId = $artificer->toArray()['artificer_id'];
                     $obj->whereRaw(' pid like "%'.$artificerId.'%"');
@@ -131,6 +131,7 @@ class ArtificerAssistantController extends Controller{
             }
         }
         $result = $this->_formatListData( $result );
+//        var_dump($result);exit;
         return $this->success( $result );
     }
     /**
@@ -187,7 +188,7 @@ class ArtificerAssistantController extends Controller{
         $addData = $this->_formatReceiveData( $param );
         $addData['created_at'] = time();
         $lastId = Artificer::insertGetId( $addData );
-//        Event::fire('assistant.add','添加专家助理 id: '.$lastId);
+        Event::fire('assistant.add','添加专家助理 id: '.$lastId);
         return $this->success();
     }
     /**
@@ -247,7 +248,7 @@ class ArtificerAssistantController extends Controller{
         $saveData = $this->_formatReceiveData( $param );
         $saveData['updated_at'] = time();
         Artificer::where(['artificer_id'=>$id])->update( $saveData );
-//        Event::fire('assistant.update','编辑专家助理 id: '.$id);
+        Event::fire('assistant.update','编辑专家助理 id: '.$id);
         return $this->success();
     }
     /**
@@ -357,7 +358,7 @@ class ArtificerAssistantController extends Controller{
 	 */
     public function start($id){
         Artificer::where(['artificer_id'=>$id,'status'=>0])->update(['status'=>1]);
-//        Event::fire('assistant.up','启用专家助理 id: '.$id);
+        Event::fire('assistant.up','启用专家助理 id: '.$id);
         return $this->success();
     }
     /**
@@ -387,7 +388,7 @@ class ArtificerAssistantController extends Controller{
 	 */
     public function close($id){
         Artificer::where(['artificer_id'=>$id,'status'=>1])->update(['status'=>0]);
-//        Event::fire('assistant.down','禁用专家助理 id: '.$id);
+        Event::fire('assistant.down','禁用专家助理 id: '.$id);
         return $this->success();
     }
     /**
@@ -573,7 +574,7 @@ class ArtificerAssistantController extends Controller{
             $tempData[$key][] = $t3[ $val['status'] ];
             
         }
-//        Event::fire('assistant.export','导出专家助手查询列表');
+        Event::fire('assistant.export','导出专家助手查询列表');
         Excel::create($title, function($excel) use($tempData,$header){
             $excel->sheet('Sheet1', function($sheet) use($tempData,$header){
                 $sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false

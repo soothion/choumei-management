@@ -14,6 +14,10 @@ use App\BeautyMakeup;
 use App\BookingBill;
 use App\BookingCash;
 use App\BookingReceive;
+use App\RecommendCodeUser;
+use App\User;
+use App\Http\Controllers\Powder\PowderArticlesController;
+use App\Order;
 
 class BookController extends Controller
 {
@@ -27,7 +31,7 @@ class BookController extends Controller
      * @apiParam {String} min_time 预约时间 YYYY-MM-DD
      * @apiParam {String} max_time 预约时间 YYYY-MM-DD
      * @apiParam {String} pay_type 0 全部 2 支付宝 3 微信 10易联
-     * @apiParam {String} status 0 全部  NEW - 未支付  PYD - 已支付  (未消费)CSD - 已消费  RFN - 申请退款(退款中)  RFD - 已退款  Y已补妆
+     * @apiParam {String} status 0 全部  NEW - 未支付  PYD - 已支付  (未消费)CSD - 已消费  RFN - 申请退款(退款中)  RFD - 已退款  Y已补妆 退款失败FAILD
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      * @apiParam {String} sort_key 排序的键 []
@@ -59,6 +63,8 @@ class BookController extends Controller
      * @apiSuccess {String} order.UPDATE_TIME 最近修改时间
      * @apiSuccess {String} order.pay_type 支付方式:1 网银/2 支付宝/3 微信/4 余额/5 红包/6 优惠券/7 积分/8邀请码兑换 /9 现金券/10 易联支付
      * @apiSuccess {String} order.recommend_code 推荐码
+     * @apiSuccess {String} order.beauty_makeup_id 是否已补妆 为空时为否 
+     * @apiSuccess {String} order.refund_status 为3时为退款失败
      * @apiSuccess {String} booking_order_item 预约项目信息
      * @apiSuccess {String} booking_order_item.ITEM_NAME 项目名称
      * @apiSuccess {String} beauty_order_item 实际项目信息
@@ -97,6 +103,8 @@ class BookController extends Controller
      *               "UPDATE_TIME": "0000-00-00 00:00:00",
      *               "record_no": "3891556931672",
      *               "pay_type": 2,
+     *               "beauty_makeup_id":null,
+     *               "refund_status":1,
      *               "recommend_code":null,
      *               "booking_order_item": [
      *                 {
@@ -162,22 +170,22 @@ class BookController extends Controller
      * @apiSuccess {String} order.UPDATED_BOOKING_DATE 修改后的预约日期
      * @apiSuccess {String} order.QUANTITY 数量
      * @apiSuccess {String} order.AMOUNT 订单金额
-     * @apiSuccess {String} order.PAYABLE 应付金额
+     * @apiSuccess {String} order.PAYABLE 应付金额(已支付)
      * @apiSuccess {String} order.BOOKER_NAME 预约人姓名
+     * @apiSuccess {String} order.BOOKER_SEX 预约人性别
      * @apiSuccess {String} order.BOOKER_PHONE 预约人电话
      * @apiSuccess {String} order.BOOKER_NAME 预约人姓名
-     * @apiSuccess {String} order.STATUS 订单状态 NEW - 未支付,PYD - 已支付,CSD - 已消费,RFN - 申请退款,RFD - 已退款
-     * @apiSuccess {String} order.TOUCHED_UP 是否已补妆 Y:是 N(空):否
+     * @apiSuccess {String} order.STATUS 订单状态 NEW - 未支付,PYD - 已支付,CSD - 已消费,RFN - 申请退款,RFD - 已退款  RFE退款失败
      * @apiSuccess {String} order.PAIED_TIME 支付时间
      * @apiSuccess {String} order.CONSUME_TIME 消费时间
      * @apiSuccess {String} order.CREATE_TIME 预约时间
      * @apiSuccess {String} order.UPDATE_TIME 最近修改时间
-     * @apiSuccess {String} order_item 项目信息
+     * @apiSuccess {String} order.item_amount 项目总价
+     * @apiSuccess {String} order_item 预约项目信息
      * @apiSuccess {String} order_item.ID 项目ID
      * @apiSuccess {String} order_item.ITEM_NAME 项目名称
-     * @apiSuccess {String} order_item.AMOUNT 总额
+     * @apiSuccess {String} order_item.AMOUNT 预约金总额
      * @apiSuccess {String} order_item.PAYABLE 应付总额
-     * @apiSuccess {String} order_item.item_amount 项目总价
      * @apiSuccess {String} beauty_order_item 实做项目信息
      * @apiSuccess {String} beauty_order_item.id 项目ID
      * @apiSuccess {String} beauty_order_item.item_name 项目名称
@@ -188,7 +196,7 @@ class BookController extends Controller
      * @apiSuccess {String} paymentlog 流水信息
      * @apiSuccess {String} paymentlog.tn 第三方流水号
      * @apiSuccess {String} recommend 推荐信息
-     * @apiSuccess {String} recommend_code 推荐码
+     * @apiSuccess {String} recommend.recommend_code 推荐码
      * @apiSuccess {String} makeup 补妆信息
      * @apiSuccess {String} makeup.remark 说明
      * @apiSuccess {String} makeup.work_at 补妆时间
@@ -210,16 +218,20 @@ class BookController extends Controller
      * @apiSuccess {String} booking_cash.assistant 助理信息
      * @apiSuccess {String} booking_receive 接待信息
      * @apiSuccess {String} booking_receive.update_booking_date 实际接待日期
+     * @apiSuccess {String} booking_receive.remark 沟通记录
      * @apiSuccess {String} booking_receive.arrive_at 到店时间
      * @apiSuccess {String} booking_receive.created_at 接待时间
      * @apiSuccess {String} booking_receive.manager 接待人信息
-     * @apiSuccess {String} booking_receive.remark 说明
-     * @apiSuccess {String} booking_salon_refund 退款信息
+     * @apiSuccess {String} booking_salon_refund 退款信息(特殊退款)
      * @apiSuccess {String} booking_salon_refund.back_to 退款方式1:微信2:支付宝3:银联,4:现金
      * @apiSuccess {String} booking_salon_refund.money 退款金额
      * @apiSuccess {String} booking_salon_refund.remark 退款说明
      * @apiSuccess {String} booking_salon_refund.created_at 退款时间
      * @apiSuccess {String} booking_salon_refund.manager 退款人信息     
+     * @apiSuccess {String} order_refund 退款信息(客服申请的退款)
+     * @apiSuccess {String} order_refund.add_time 申请退款时间
+     * @apiSuccess {String} order_refund.opt_time 退款审批时间
+     * @apiSuccess {String} order_refund.manager  审批人信息    
      * 
      * @apiSuccessExample Success-Response:
      *       {
@@ -232,57 +244,36 @@ class BookController extends Controller
      *             "BOOKING_SN": "sad2323232",
      *             "USER_ID": 1,
      *             "BOOKING_DATE": "2015-12-07",
-     *             "UPDATED_BOOKING_DATE": null,
+     *             "UPDATED_BOOKING_DATE": "2015-12-03",
      *             "QUANTITY": 0,
-     *             "AMOUNT": "0.00",
-     *             "PAYABLE": "0.00",
-     *             "BOOKER_NAME": "",
-     *             "BOOKER_PHONE": null,
+     *             "AMOUNT": "100.00",
+     *             "PAYABLE": "100.00",
+     *             "BOOKER_NAME": "预约人",
+     *             "BOOKER_SEX": "F",
+     *             "BOOKER_PHONE": "18611112222",
      *             "STATUS": "RFN",
-     *             "TOUCHED_UP": null,
-     *             "INSTRUCTIONS": null,
+     *             "INSTRUCTIONS": "1",
      *             "PAIED_TIME": "2015-10-12 00:00:00",
-     *             "CONSUME_TIME": null,
+     *             "CONSUME_TIME": "2015-12-03 16:15:32",
      *             "CREATE_TIME": "2015-12-01 17:18:23",
-     *             "UPDATE_TIME": "0000-00-00 00:00:00",
-     *             "item_amount":1955,
-     *             "user": {
-     *               "user_id": 1,
-     *               "nickname": "小康",
-     *               "sex": 2
-     *             }
+     *             "UPDATE_TIME": "2015-12-03 16:23:01",
+     *             "item_amount": 120
      *           },
-     *          "order_item": [
-     *                 {
-     *                   "ORDER_SN": "3891556931672",
-     *                   "ITEM_ID": 111,
-     *                   "ITEM_NAME": "测试时",
-     *                   "AMOUNT": "0.00",
-     *                   "PAYABLE": "0.00"
-     *                 },
-     *                 {
-     *                   "ORDER_SN": "3891556931672",
-     *                   "ITEM_ID": 2,
-     *                   "ITEM_NAME": "韩式提拉",
-     *                   "AMOUNT": "0.00",
-     *                   "PAYABLE": "0.00"
-     *                 }
-     *           ],
-     *           "beauty_order_item": [
-     *                 {
-     *                   "order_sn": "3891556931672",
-     *                   "item_id": 111,
-     *                   "item_name": "测试时",
-     *                   "amount": "0.00",
-     *                   "to_pay_amount": "0.00"
-     *                 },
-     *                 {
-     *                   "order_sn": "3891556931672",
-     *                   "item_id": 2,
-     *                   "item_name": "韩式提拉",
-     *                   "amount": "0.00",
-     *                   "to_pay_amount": "0.00"
-     *                 }
+     *           "order_item": [
+     *             {
+     *               "ORDER_SN": "3891556931672",
+     *               "ITEM_ID": 111,
+     *               "ITEM_NAME": "测试时",
+     *               "AMOUNT": "0.00",
+     *               "PAYABLE": "0.00"
+     *             },
+     *             {
+     *               "ORDER_SN": "3891556931672",
+     *               "ITEM_ID": 2,
+     *               "ITEM_NAME": "韩式提拉",
+     *               "AMOUNT": "0.00",
+     *               "PAYABLE": "0.00"
+     *             }
      *           ],
      *           "fundflow": [
      *             {
@@ -296,36 +287,43 @@ class BookController extends Controller
      *             "amount": "1.00"
      *           },
      *           "recommend": {
-     *              "id":123,
-     *              "user_id":456,
-     *              "recommend_code":"fsadasdd",
+     *              "recommend_code":"123456789",
      *           },
-     *            "makeup": {
-     *                 "id": 1,
-     *                 "booking_id": 1,
-     *                 "booking_sn": "fasdfasdf",
-     *                 "order_sn": "fasdfasdf",
-     *                 "expert_uid": 1,
-     *                 "assistant_uid": 2,
-     *                 "work_at": "2015-12-06",
-     *                 "remark": "fasdfadfasdfasdfasdfasdfasdfasdf",
-     *                 "uid": 1,
-     *                 "created_at": "2015-12-03 00:00:00",
-     *                 "manager": {
-     *                   "id": 1,
-     *                   "name": "超级管理员"
-     *                 },
-     *                "expert": {
-     *                    "artificer_id": 1,
-     *                    "name": "XIAOd",
-     *                    "number": "6"
-     *                  },
-     *                "assistant": {
-     *                    "artificer_id": 1,
-     *                    "name": "XIAOd",
-     *                    "number": "6"
-     *                  }
-     *               },
+     *           "beauty_order_item": [
+     *             {
+     *               "order_sn": "3891556931672",
+     *               "item_id": 3,
+     *               "item_name": "韩式无痛水光针",
+     *               "amount": "850.00",
+     *               "to_pay_amount": "120.00"
+     *             }
+     *           ],
+     *           "makeup": {
+     *             "id": 1,
+     *             "booking_id": 1,
+     *             "booking_sn": "fasdfasdf",
+     *             "order_sn": "fasdfasdf",
+     *             "expert_uid": 18,
+     *             "assistant_uid": 17,
+     *             "work_at": "2015-12-06",
+     *             "remark": "fasdfadfasdfasdfasdfasdfasdfasdf",
+     *             "uid": 1,
+     *             "created_at": "2015-12-03 00:00:00",
+     *             "manager": {
+     *               "id": 1,
+     *               "name": "超级管理员"
+     *             },
+     *             "expert": {
+     *               "artificer_id": 18,
+     *               "name": "ddfdsfs",
+     *               "number": "M222"
+     *             },
+     *             "assistant": {
+     *               "artificer_id": 17,
+     *               "name": "fsfsffff",
+     *               "number": "M982"
+     *             }
+     *           },
      *           "booking_bill": {
      *             "id": 1,
      *             "booking_id": 1,
@@ -343,12 +341,12 @@ class BookController extends Controller
      *             "booking_id": 1,
      *             "booking_sn": "fasdfasdf",
      *             "order_sn": "fasdfasdfasdf",
-     *             "booking_cash": 1,
+     *             "pay_type": 1,
      *             "other_money": "10.00",
      *             "cash_money": "20.00",
      *             "deduction_money": "30.00",
-     *             "expert_uid": 1,
-     *             "assistant_uid": 1,
+     *             "expert_uid": 17,
+     *             "assistant_uid": 18,
      *             "created_at": "2015-12-02 00:00:00",
      *             "uid": 1,
      *             "manager": {
@@ -356,23 +354,22 @@ class BookController extends Controller
      *               "name": "超级管理员"
      *             },
      *             "expert": {
-     *               "artificer_id": 1,
-     *               "name": "XIAOd",
-     *               "number": "6"
+     *               "artificer_id": 17,
+     *               "name": "fsfsffff",
+     *               "number": "M982"
      *             },
      *             "assistant": {
-     *               "artificer_id": 1,
-     *               "name": "XIAOd",
-     *               "number": "6"
+     *               "artificer_id": 18,
+     *               "name": "ddfdsfs",
+     *               "number": "M222"
      *             }
      *           },
      *           "booking_receive": {
      *             "id": 1,
      *             "booking_id": 1,
-     *             "booking_sn": "fasdfa",
+     *             "booking_sn": "sad23232321",
      *             "order_sn": "fasdfasdf",
      *             "update_booking_date": "2015-12-03",
-     *             "money": "369.00",
      *             "remark": "fasdfasdfasdfafasdf",
      *             "arrive_at": "2015-12-01 00:00:00",
      *             "created_at": "2015-12-10 00:00:00",
@@ -396,9 +393,21 @@ class BookController extends Controller
      *               "id": 1,
      *               "name": "超级管理员"
      *             }
+     *           },
+     *           "order_refund": {
+     *             "ordersn": "3891556931672",
+     *             "user_id": 720005,
+     *             "money": "1.00",
+     *             "opt_user_id": 0,
+     *             "rereason": "2",
+     *             "add_time": 1438926590,
+     *             "opt_time": 0,
+     *             "status": 2,
+     *             "booking_sn": "",
+     *             "item_type": "MF",
+     *             "manager": null
      *           }
      *         }
-     *       }
      *
      *
      * @apiErrorExample Error-Response:
@@ -443,7 +452,10 @@ class BookController extends Controller
             'remark' => self::T_STRING,
             'item_ids' => self::T_STRING,
        ]);
-       BookingReceive::receive($id,$params);
+       $params['item_ids'] = array_unique(array_map("intval",explode(",", $params['item_ids'])));
+       $params['uid'] = $this->user->id;
+       $book = BookingReceive::receive($id,$params);
+       Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
        return $this->success(['id'=>$id]);
     }
     
@@ -456,8 +468,8 @@ class BookController extends Controller
      * @apiParam {Number} other_money 其他方式的支付金额
      * @apiParam {Number} cash_money 现金金额
      * @apiParam {Number} deduction_money 抵扣金额
-     * @apiParam {Number} expert_uid 专家id
-     * @apiParam {Number} assistant_uid 助理id
+     * @apiParam {Number} specialistId 专家id
+     * @apiParam {Number} assistantId 助理id
      * 
      * @apiSuccessExample Success-Response:
      *       {
@@ -477,10 +489,22 @@ class BookController extends Controller
             'other_money' => self::T_FLOAT,
             'cash_money' => self::T_FLOAT,
             'deduction_money' => self::T_FLOAT,
-            'expert_uid'=> self::T_INT,
-            'assistant_uid'=> self::T_INT,
+            'specialistId'=> self::T_INT,
+            'assistantId'=> self::T_INT,
         ]);
-        BookingCash::cash($id,$params);
+        //$params['uid'] = 1;
+        $params['uid'] = $this->user->id;        
+        $book = BookingCash::cash($id,$params);
+        $custom_uid = $book['USER_ID'];
+        $first_book = BookingOrder::where("USER_ID",$custom_uid)->where("STATUS","CSD")->orderBy("CONSUME_TIME","ASC")->first();
+        $is_first = false;
+        if(! empty($first_book) && $first_book->USER_ID == $custom_uid)
+        {
+            $is_first = true;
+        }
+        self::givePresent($custom_uid,true);
+        //self::givePresent($custom_uid,$is_first);
+        Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success(['id'=>$id]);
     }
     
@@ -520,13 +544,12 @@ class BookController extends Controller
         }
         BookingBill::create([
         'booking_id'=>$id,
-        //#@todo
-        'uid'=>1,
+        'uid'=>$this->user->id,
         'booking_sn'=>$base->BOOKING_SN,
         'order_sn'=>$base->ORDER_SN,
         'created_at'=>date("Y-m-d H:i:s"),
         ]);
-        //#@todo do other thing
+        Event::fire('booking.bill',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
         return $this->success(['id'=>$id]);
     }
     
@@ -535,8 +558,8 @@ class BookController extends Controller
      * @apiName relatively
      * @apiGroup book
      *
-     * @apiParam {Number} expert_uid 专家id
-     * @apiParam {Number} assistant_uid 助理id
+     * @apiParam {Number} specialistId 专家id
+     * @apiParam {Number} assistantId 助理id
      * @apiParam {String} remark 说明
      * @apiParam {String} work_at 补色日期 YYYY-MM-DD
 
@@ -557,16 +580,16 @@ class BookController extends Controller
         $params = $this->parameters([
             'remark' => self::T_STRING,
             'work_at' => self::T_STRING,
-            'expert_uid'=> self::T_INT,
-            'assistant_uid'=> self::T_INT,
+            'specialistId'=> self::T_INT,
+            'assistantId'=> self::T_INT,
         ]);
         $base = BookingOrder::where("ID",$id)->first();
         if(empty($base))
         {
             throw new ApiException("定妆单[{$id}]不存在或者已经被删除", ERROR::ORDER_NOT_EXIST);
         }
-        $state = $base->status;
-        if(!in_array($state,['CSD']))
+        $state = $base->STATUS;
+        if($state != "CSD")
         {
             throw new ApiException("定妆单[{$id}]状态不正确", ERROR::ORDER_STATUS_WRONG);
         }       
@@ -577,17 +600,16 @@ class BookController extends Controller
         }
         BeautyMakeup::create([
             'booking_id'=>$id,
-            //#@todo 
-            'uid'=>1,
+            'uid'=>$this->user->id,
             'booking_sn'=>$base->BOOKING_SN,
             'order_sn'=>$base->ORDER_SN,
             'work_at'=>date("Y-m-d",strtotime($params['work_at'])),
             'remark'=>$params['remark'],
-            'expert_uid'=>$params['expert_uid'],
-            'assistant_uid'=>$params['assistant_uid'],
+            'expert_uid'=>$params['specialistId'],
+            'assistant_uid'=>$params['assistantId'],
             'created_at'=>date("Y-m-d H:i:s"),
         ]);
-        //#@todo do other thing
+        Event::fire('booking.relatively',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
         return $this->success(['id'=>$id]);
     }
     
@@ -623,8 +645,8 @@ class BookController extends Controller
         {
             throw new ApiException("定妆单[{$id}]不存在或者已经被删除", ERROR::ORDER_NOT_EXIST);
         }
-        $state = $base->status;
-        if(!in_array($state,['PYD','CSD']))
+        $state = $base->STATUS;
+        if($state != "CSD")
         {
             throw new ApiException("定妆单[{$id}]状态不正确,不允许退款", ERROR::ORDER_STATUS_WRONG);
         }
@@ -633,24 +655,65 @@ class BookController extends Controller
         {
             throw new ApiException("定妆单[{$id}]已经退款,不允许重复退款", ERROR::ORDER_STATUS_WRONG);
         }
-        BookingOrder::where("ID",$id)->update(['STATUS'=>'RFD']);
         
+        $time = time();
+        $datetime = date("Y-m-d H:i:s",$time);
         BookingSalonRefund::create([
             'booking_id'=>$id,
-            //#@todo
-            'uid'=>1,
+            'uid'=>$this->user->id,
             'booking_sn'=>$base->BOOKING_SN,
             'order_sn'=>$base->ORDER_SN,
             'back_to'=>$params['back_to'],
             'money'=>$params['money'],
             'remark'=>$params['remark'],
-            'created_at'=>date("Y-m-d H:i:s"),
+            'created_at'=>$datetime,
         ]);
         
-        //#@todo do other thing
+        BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD','UPDATE_TIME'=>$datetime]);
+        Order::where('ordersn',$base->BOOKING_SN)->update(['status'=>4,'use_time'=>$time]); 
+         
+        Event::fire('booking.refund',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
         
         return $this->success(['id'=>$id]);
     }
     
-    
+    public static function givePresent($customer_uid,$is_first=false)
+    {
+
+        $recommends = RecommendCodeUser::where('user_id',$customer_uid)->whereIn("type",[2,3])->get(['recommend_code','type'])->toArray();
+        if(count($recommends)>0)
+        {
+            $user_mobilephone = [];
+            $to_give_user = [];
+            $recommend_users = [];
+            $customer_users = [];
+            foreach($recommends as $recommend)
+            {
+                if($recommend['type'] == 2)
+                {
+                    $to_give_user[] = $customer_uid;
+                }
+                else if($is_first)
+                {
+                     $user_mobilephone[] = $recommend['recommend_code'];
+                }
+            }
+            if(count($user_mobilephone)>0)
+            {
+                $recommend_users = User::whereIn('mobilephone',$user_mobilephone)->get(['user_id','mobilephone'])->toArray();
+            }
+            if(count($to_give_user)>0)
+            {
+                $customer_users = User::whereIn('user_id',$to_give_user)->get(['user_id','mobilephone'])->toArray();
+            }
+            foreach($recommend_users as  $u)
+            {
+                PowderArticlesController::addReservateSnAfterConsume($u['user_id'],$u['mobilephone'],1);
+            }
+            foreach($customer_users as  $u)
+            {
+                PowderArticlesController::addReservateSnAfterConsume($u['user_id'],$u['mobilephone'],1);
+            }
+        }
+    }
 }

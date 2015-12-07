@@ -50,7 +50,7 @@ class PresentArticleCode extends Model
             $query = $query->where('reservate_sn','=',$reservateSn);
         }
         if($recommendCode){
-            $query = $query->where('$recommend_code','=',$recommendCode);
+            $query = $query->where('recommend_code','=',$recommendCode);
         }
         if($ticketCode){
             $query = $query->where('code','=',$ticketCode);
@@ -143,6 +143,7 @@ class PresentArticleCode extends Model
         $data['specialist_id'] = $specialistId;
         $data['assistant_id'] = $assistantId;
         $data['use_time'] = $useTime;
+        $data['record_time'] = date('Y-m-d H:i:s',time());
         $data['updated_at'] = time();
         $updateRes = self::where('article_code_id','=',$articleCodeId)->update($data);
         if($updateRes === false){
