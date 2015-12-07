@@ -99,7 +99,7 @@ class UserEventListener {
 		return Log::create($data);
 	}
 
-	public function onDisable()
+	public function onDisable($user)
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -115,7 +115,7 @@ class UserEventListener {
 		return Log::create($data);
 	}
 
-	public function onEnable()
+	public function onEnable($user)
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -131,7 +131,7 @@ class UserEventListener {
 		return Log::create($data);
 	}
 
-	public function onResetCompanyCode()
+	public function onResetCompanyCode($user)
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
