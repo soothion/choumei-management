@@ -28,7 +28,7 @@
 			}
 			.format-group input{
 				min-width:0!important;
-				width:100%;
+				width:98%;
 				margin-bottom:5px;
 			}
 			.format-group .link{
@@ -218,7 +218,7 @@
 				</div>
 				<br />
 				<br />
-				<textarea name="more_prices" id="more_prices" style="display:none"><%=JSON.stringify(data.more_prices)%></textarea>
+				<textarea name="more_prices" id="more_prices" style="display:none"><%=typeof data.more_prices=="string"?data.more_prices:JSON.stringify(data.more_prices)%></textarea>
 				<%}%>
                 <div class="control-group">
                     <label class="control-label" for=""></label>
@@ -343,6 +343,7 @@
 						});	
 					});						
 				});
+				
 				/**
 				*规格加载，添加，删除
 				*/
@@ -353,8 +354,9 @@
 					}).on('click','.add-format',function(){
 						createFormat([{}]);
 					}).on('blur','input[name="price"]',function(){
-						$(this).parent().next().find('input').attr('max',$.trim(this.value));
-					});
+						$(this).closest('li').next().find('input').attr('max',$.trim(this.value));
+					})
+					
 					var createFormat=function(data){
 						formatGroup.append(lib.ejs.render({text:$('#format-t').html()},{data:data}));
 						instanceUpload();
@@ -392,11 +394,16 @@
 							}
 						});
 					}
-					data.more_prices.init=true;
-					if(data.more_prices.length==0){
-						data.more_prices.push({});
+					var more_prices=JSON.parse($('#more_prices').val());
+					more_prices.init=true;
+					if(more_prices.length==0){
+						more_prices.push({});
 					}
-					createFormat(data.more_prices);
+					createFormat(more_prices);
+				}else{
+					$('input[name="price"]').on('blur',function(){
+						$('input[name="vip_price"]').attr('max',$.trim(this.value));
+					});
 				}
 				
 				this._getFormData=function(){

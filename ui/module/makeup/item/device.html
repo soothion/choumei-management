@@ -81,7 +81,7 @@
 								</thead>
 								<tbody>
 									<%if(data.equipment){%>
-										<%=lib.ejs.render({url:"table-t"},{data:JSON.parse(data.equipment)})%>
+										<%=lib.ejs.render({url:"table-t"},{data:typeof data.equipment=="string"?JSON.parse(data.equipment):data.equipment})%>
 									<%}%>
 								</tbody>
 							</table>
