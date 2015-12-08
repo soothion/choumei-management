@@ -429,14 +429,17 @@ class UserController extends Controller{
             ->leftJoin('eventspecial5','dividend.event_conf_id','=','eventspecial5.eventspecialid')
             ->select($fields)
             ->find($id);
+
+        if(!$user)
+            throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+        
         $user->recommendCodes = DB::table('recommend_code_user')
         	->where('user_id','=',$id)
         	->select('user_id','recommend_code','type','add_time')
         	->get();
 
 
-        if(!$user)
-            throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+
 
         $user->add_time = date('Y-m-d',$user->add_time);
         $user->sex = User::getSex($user->sex);
