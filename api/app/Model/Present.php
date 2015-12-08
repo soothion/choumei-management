@@ -62,7 +62,7 @@ class Present extends Model
         if($endTime){
            $query = $query->where('present.created_at','<=',$endTime);
         }
-        $query = $query->orderBy('present.expire_at','asc')->orderBy('present.verify_status','desc')->orderBy('present.article_status','desc');
+        $query = $query->orderByRaw('case when NOW() > `cm_present`.`expire_at` then `cm_present`.`expire_at`  else null end')->orderBy('present.verify_status','desc')->orderBy('present.article_status','desc');
         //手动设置页数
         AbstractPaginator::currentPageResolver(function() use ($page) {
               return $page;
