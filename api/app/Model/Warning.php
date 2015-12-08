@@ -4,12 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
-Use PDO;
-Use URL;
+use PDO;
+use URL;
 use Log;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use Illuminate\Support\Facades\Redis as Redis;
 
 class Warning extends Model {
 
@@ -18,6 +19,13 @@ class Warning extends Model {
     public $timestamps = false;
 
     public static function searchOrder($input, $page, $size) {
+        //如果搜索条件相同,直接从缓存读取数据
+        $key = md5(serialize($input).$page.$size);
+        $redis = Redis::connection();
+        if($result = $redis->get($key))
+            return unserialize($result);
+
+
         $query = Self::getQuery();
         // 是否有输入关键字搜索 
         $val = '';
@@ -29,7 +37,7 @@ class Warning extends Model {
         $orderNum = $input['orderNum'];
         switch ($input ["keywordType"]) {
 
-            case "0" : // 用户手机号		
+            case "0" : // 用户手机号     
                 $fields = [DB::raw("COUNT(DISTINCT cm_order.ordersn) as orderNum"), DB::raw("MAX(cm_order.add_time)as maxOrderTime"), "user.mobilephone as userMobile", "order.user_id as userId"];
                 $query->select($fields)->join('user', 'user.user_id', '=', 'order.user_id')->groupBy('order.user_id')->having(DB::raw("COUNT(DISTINCT cm_order.ordersn)"), '>=', $orderNum);
                 if (!empty($val)) {
@@ -80,12 +88,16 @@ class Warning extends Model {
             }
         }
 
-        //手动设置页数
-        AbstractPaginator::currentPageResolver(function() use ($page) {
-            return $page;
-        });
-        $nums = $query->where('order.ispay', '=', 2)->orderBy(DB::raw("MAX(cm_order.add_time)"), "DESC")->paginate($size)->toArray();
-        return $nums;
+        $offset = ($page-1)*$size;
+        $nums = $query->where('order.ispay', '=', 2)
+            ->orderBy(DB::raw("MAX(cm_order.add_time)"), "DESC")
+            ->take($size)
+            ->skip($offset)
+            ->get();
+        $return['data'] = $nums;
+        $return['current_page'] = $page;
+        $redis->setex($key,3600*24,serialize($return));
+        return $return;
     }
 
     public static function getOderNumByUserId($userId, $minTime, $maxTime) {
@@ -154,7 +166,7 @@ class Warning extends Model {
             if ($maxTime) {
                 $maxTime += 86399;
                 $query->where('order.add_time', '<=', $maxTime);
-                $query1->where('order.add_time', '>=', $minTime);
+                $query1->where('order.add_time', '<=', $maxTime);
             }
         }
         $fields = [DB::raw("COUNT(DISTINCT IF(cm_order.shopcartsn='', cm_order.ordersn, cm_order.shopcartsn)) as payNum"), DB::raw("COUNT(DISTINCT cm_order.ordersn) as orderNum"), "request_log.DEVICE_UUID as device"];
@@ -171,7 +183,7 @@ class Warning extends Model {
         Log::info("waring data is", $datas);
         foreach ($datas as $key => $data) {
             switch ($keywordType) {
-                case "0" : // 用户手机号				
+                case "0" : // 用户手机号             
                     $keyword = isset($data['userMobile']) ? ' ' . $data['userMobile'] : '';
                     break;
                 case "1" : // 设备号

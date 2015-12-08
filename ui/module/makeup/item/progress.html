@@ -89,7 +89,7 @@
 								</thead>
 								<tbody>
 									<%if(data.beauty){%>
-										<%=lib.ejs.render({url:"table-t"},{data:JSON.parse(data.beauty)})%>
+										<%=lib.ejs.render({url:"table-t"},{data:typeof data.beauty=="string"?JSON.parse(data.beauty):data.beauty})%>
 									<%}%>
 								</tbody>
 							</table>

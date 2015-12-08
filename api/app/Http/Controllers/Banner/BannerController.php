@@ -28,7 +28,8 @@ class BannerController extends Controller {
      * @apiSuccess {Number} type  'banner类型 1主页banner； （2快时尚； 3专家；4半永久'）是项目,.
      * @apiSuccess {String} name 'banner名称',(即项目名称)
      * @apiSuccess {String} image bnnaer图片.
-     * @apiSuccess {Number} behavior  链接到哪里 1H5； 2app内部； 3无跳转',
+     * @apiSuccess {String} salonName  salon店的名称
+     * @apiSuccess {Number} behavior  链接到哪里  0无跳转;1H5； 2app内部',
      * @apiSuccess {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"SPM","itemId":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',salons-美发店铺主页,artificers-专家主页,itemId:主键 (SPM - 半永久,FFA - 快时尚'是itemId, ,salons-美发店铺主页-则是salonName))
      * 
      * 
@@ -110,7 +111,8 @@ class BannerController extends Controller {
      * @apiParam {Number} type 必填, 'banner类型 1主页banner；
      * @apiParam {String} name 必填,题目.
      * @apiParam {String} image 必填,bnnaer图片的路径.
-     * @apiParam {Number} behavior 必填,'链接到哪里 1H5； 2app内部； 3无跳转'(单选按钮),
+     * @apiParam {String} salonName 可选, salon店的名称
+     * @apiParam {Number} behavior 必填, 链接到哪里  0无跳转; 1H5； 2app内部',
      * @apiParam {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"SPM","itemId":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',salons-美发店铺主页,artificers-专家主页,同上 )
      * 
      * 
@@ -184,7 +186,6 @@ class BannerController extends Controller {
         $param['created_at'] = time();
         $param['updated_at'] = time();
         $query = Banner::create($param);
-        $id = $query->banner_id;
         if ($query) {
             return $this->success();
         } else {
@@ -199,9 +200,10 @@ class BannerController extends Controller {
      *
      * @apiParam {Number} id 必填,主键.
      * @apiParam {String} name 必填,题目.
+     * @apiParam {String} salonName 可选, salon店的名称
      * @apiParam {Number} type 必填, 'banner类型 1主页banner； 2快时尚； 3专家；4半永久',.
      * @apiParam {String} image 必填,bnnaer图片的路径.
-     * @apiParam {Number} behavior 必填,'链接到哪里 1H5； 2app内部； 3无跳转'(单选按钮),
+     * @apiParam {Number} behavior 必填, 链接到哪里  0无跳转; 1H5； 2app内部',(单选按钮),
      * @apiParam {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"SPM","itemId":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',salons-美发店铺主页,artificers-专家主页,同上 )
      * 
      * 
@@ -237,6 +239,9 @@ class BannerController extends Controller {
                 }
         }
         }  
+        if(!array_key_exists('salonName',$param)){
+            $param['salonName']="";
+        }
         $param['updated_at'] = time();
         $query = Banner::find($id)->update($param);
         if ($query) {

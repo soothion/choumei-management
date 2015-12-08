@@ -60,7 +60,11 @@ class BeautyController extends Controller {
      */
     function index() {
 
-        $bountys = Beauty::getBeauty();
+        $bountys = Beauty::getBeauty();       
+        if(!preg_match('/[^,:{}\\[\\]0-9.\-+Eaeflnr-u \n\r\t]/',$bountys->detail))
+        {
+            return $this->success(null);
+        }
         return $this->success($bountys->detail);
     }
 
@@ -94,9 +98,13 @@ class BeautyController extends Controller {
     function edit() {
         $param = $this->param;
         if (!isset($param["data"])) {
-            throw new ApiException('请输入更新数据！', ERROR::BOUNTY_ID_NOT_PASS);
+            throw new ApiException('请输入更新数据！', ERROR::Beauty_DATA_NOTFOUND);
         }
         $data = $param["data"];
+        if(!preg_match('/[^,:{}\\[\\]0-9.\-+Eaeflnr-u \n\r\t]/',$data))
+        {
+            throw new ApiException('请输入正确的json格式数据！', ERROR::Beauty_DATA_ISNOTJSON);
+        }
         $result = Beauty::where('beauty_id', '=', 1)->update(array("detail" => $data));
         if ($result) {
             Event::fire('beauty.edit','定妆中心介绍内容编辑为:'.$data);
@@ -136,9 +144,13 @@ class BeautyController extends Controller {
     function delete() {
         $param = $this->param;
         if (!isset($param["data"])) {
-            throw new ApiException('请输入更新数据！', ERROR::BOUNTY_ID_NOT_PASS);
+            throw new ApiException('请输入更新数据！', ERROR::Beauty_DATA_NOTFOUND);
         }
         $data = $param["data"];
+        if(!preg_match('/[^,:{}\\[\\]0-9.\-+Eaeflnr-u \n\r\t]/',$data))
+        {
+            throw new ApiException('请输入正确的json格式数据！', ERROR::Beauty_DATA_ISNOTJSON);
+        }
         $result = Beauty::where('beauty_id', '=', 1)->update(array("detail" => $data));
         if ($result) {
             Event::fire('beauty.delete','定妆中心介绍内容删除为:'.$data);

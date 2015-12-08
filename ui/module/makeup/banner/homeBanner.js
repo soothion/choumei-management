@@ -2,14 +2,18 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-05 19:15:17
+* @Last Modified time: 2015-12-07 17:27:38
 */
 
 $(function(){
 
     var moveTarget = {};
 
-    $(".box-warpper").on('click','.plus-button',function(){
+    $(".box-warpper").on('click','.plus-button button',function(){
+        $(this).attr('disabled',true);
+        $("form").find('button.edit').attr('disabled',true);
+        $("form[id]").removeClass('move');
+
         var len = $('.banner').length;
         var clone = $('.template').clone();               
         clone.css('display','').removeClass("template");
@@ -20,8 +24,8 @@ $(function(){
         complete = complete.replace('complete-position','complete-position'+len);
         clone.find('#search').attr('ajat-complete',complete);
         clone.find('.complete-position').attr('id','complete-position'+len);
+        $('.plus-button').before(clone);
 
-        $(this).before(clone);
         new lib.Form(clone);
         if($('.banner').length >= 11 ){
             $(".plus-button").hide();
@@ -48,6 +52,15 @@ $(function(){
             })
         }else{
             $(this).closest('.banner').remove();
+            //编辑按钮 hidden 表示 ，取消、保存按钮可见，  
+            //因为下面有个模板(form.template )的编辑按钮是hidden，所以len等于1表示所有
+            //form[draggable='false']")下的按钮都可见，可以执行下面的操作
+            var len = $("form[draggable='false']").find('button.edit.hidden').length;
+            if(len == 1){
+                $("form").find('button.edit').removeAttr('disabled');  
+                $(".plus-button button").removeAttr('disabled');
+                $("form[id]").addClass('move');                  
+            }          
         }
     });
 
@@ -58,13 +71,12 @@ $(function(){
         parent.find('.edit').addClass('hidden');
 
         var topBanner = $(this).closest('.banner');
-        topBanner.removeClass('move');
-        topBanner.siblings().find('button.edit').attr('disabled',true);
+        //topBanner.removeClass('move');
+        //topBanner.siblings().find('button.edit').attr('disabled',true);
         topBanner.find('.operation').removeClass('hidden');
-
+        topBanner.find('button.btn-primary').removeAttr('disabled');
         topBanner.find('input[type=radio]').removeAttr('disabled');
         topBanner.find('#title').removeAttr('disabled');
-
         var val = topBanner.find('input:checked').val();
         if(val == '1'){
             topBanner.find('#h5url').removeAttr('disabled');
@@ -72,10 +84,13 @@ $(function(){
         if(val == '2'){
             topBanner.find('select').removeAttr('disabled')
             var selectValue = topBanner.find('select').val();   
-            if(selectValue == "salons_salonId"){
+            if(selectValue == "salon_salonId"){
                 topBanner.find("#search").removeClass('hidden').removeAttr('disabled'); 
             }         
         }
+        $("form").find('button.edit').attr('disabled',true);
+        $(".plus-button button").attr('disabled',true);
+        $("form[id]").removeClass('move');  
     });
 
     $(".box-warpper").on('click','.canncel',function(){
@@ -92,15 +107,21 @@ $(function(){
             topBanner.find('.thumbnails-item-btn').css('display','inline-block');
             topBanner.find('.thumbnails-item-img').remove();
         }
-        topBanner.addClass('move');
+        // if(topBanner.attr('id') && topBanner.attr('url')){
+        //     topBanner.addClass('move');           
+        // }
+        $("form[id]").addClass('move');  
         topBanner.find('.operation').addClass('hidden');
         topBanner.find('.control-help').hide();
-        topBanner.siblings().find('button.edit').removeAttr('disabled');
+        //topBanner.siblings().find('button.edit').removeAttr('disabled');
         topBanner.find('input[type=radio]').attr('disabled',true);
         topBanner.find('#title').attr('disabled',true);
         topBanner.find('#h5url').attr('disabled',true);
         topBanner.find('select').attr('disabled',true);
-        topBanner.find('#search').attr('disabled',true);    
+        topBanner.find('#search').attr('disabled',true);
+        topBanner.find('button.btn-primary').attr('disabled',true);
+        $("form").find('button.edit').removeAttr('disabled');
+        $(".plus-button button").removeAttr('disabled');    
     });
 
     $(".box-warpper").on('click','input[type=radio]',function(){ 
@@ -114,11 +135,13 @@ $(function(){
         radios.find('select[disabled]').removeAttr('disabled');        
     });
 
-    $(".box-warpper").on('_ready',function(){
+    $(".box-warpper").on('_ready',function(e){
+        if(!$(e.target).hasClass('box-warpper')) return;
         var uploadBtnArr = $(this).find('button[id^=uploader]');
         uploadBtnArr.each(function(i,item){
             uploader($(item).attr('id'));
         });
+
         lib.ajax({
             type: "get",
             url : 'beautyItem/itemList',
@@ -126,7 +149,7 @@ $(function(){
         }).done(function(data, status, xhr){
             if(data.result==1 && data.data){
                 var arr = [];
-                arr.push("<option value='salons_salonId'>美发店铺主页</option>");
+                arr.push("<option value='salon_salonId'>美发店铺主页</option>");
                 arr.push("<option value='artificers'>专家主页</option>");
                 var obj = {'1':'SPM','2':'FFA'}
                 data.data.forEach(function(item,i){
@@ -136,7 +159,7 @@ $(function(){
                     $(item).append(arr.join(''));
                     if($(item).attr('url')){
                         var url = JSON.parse($(item).attr('url'));
-                        if(url.type=="salons"){
+                        if(url.type=="salon"){
                             $($(item).find('option')[0]).attr('selected',true)
                         }else if(url.type=="artificers"){
                             $($(item).find('option')[1]).attr('selected',true)
@@ -150,18 +173,20 @@ $(function(){
     });
 
     $(".box-warpper").on('change','select',function(e){
-        if($(this).val()=="salons_salonId"){
+        $(this).find('option[selected=selected]').removeAttr('selected');
+        $(this).find('option[value='+$(this).val()+']').attr('selected','selected');
+        if($(this).val()=="salon_salonId"){
             $(this).next().find('input').removeClass('hidden').removeAttr('disabled');
         }else{
             $(this).next().find('input').addClass('hidden').attr('disabled',true);
         }
     });
     
-    $(".box-warpper").on('dragover',function(ev){
+    $(".box-warpper").on('dragover','form[id]',function(ev){
         ev.preventDefault();
     });
 
-    $(".box-warpper").on('drop','form',function(ev){
+    $(".box-warpper").on('drop','form[id]',function(ev){
         ev.preventDefault();
         if($(ev.currentTarget).attr('id') == moveTarget.attr('id')){
             return;
@@ -188,7 +213,7 @@ $(function(){
             if(data.result == 0){
                 parent.lib.popup.result({
                     bool : false,
-                    text : data.msg || "操作失败",
+                    text : data.msg || "移动排序失败",
                     define:function(){
                         location.reload();
                     }
@@ -197,7 +222,7 @@ $(function(){
         });                    
     }); 
 
-    $(".box-warpper").on('dragstart','form',function(ev){       
+    $(".box-warpper").on('dragstart','form[id]',function(ev){       
         moveTarget = $(ev.currentTarget);    
         if($('.box-warpper').find('form[url]').find('button.edit[disabled]').length>0){
             return false;
@@ -212,7 +237,7 @@ $(function(){
         data.behavior = $(this.el).find('input:checked').val();
         if(data.behavior=="2"){
             var arr = data.url.split("_");
-            if(arr[0]=="salons"){
+            if(arr[0]=="salon"){
                 data.url = {type:arr[0],salonId:'salonId'};
             }else if(arr[0]=="artificers"){ 
                 data.url = {type:arr[0]};

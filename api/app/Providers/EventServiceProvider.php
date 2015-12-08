@@ -410,13 +410,13 @@ class EventServiceProvider extends ServiceProvider
 
         //定妆单退款
         'BeautyRefund.show'=>[
-          'App\listeners\BeautyRefundEventListener@onShow'  
+          'App\Listeners\BeautyRefundEventListener@onShow',  
         ],
         'BeautyRefund.reject'=>[
-          'App\listeners\BeautyRefundEventListener@onReject'  
+          'App\Listeners\BeautyRefundEventListener@onReject',  
         ],
         'BeautyRefund.accept'=>[
-          'App\listeners\BeautyRefundEventListener@onAccept'  
+          'App\Listeners\BeautyRefundEventListener@onAccept', 
 	],
 
 		//定妆单操作

@@ -37,8 +37,8 @@
 	'salonstar.index':'/module/config/app/vantages.html',
 	'scoreconf.index':'/module/config/app/score.html',
 	'info.index':'/module/store/info/index.html',
-	'messageBox.messageList':"/module/config/message/index.html",
-	'messageBox.showDailyMessage':"/module/config/message/day.html",
+	'messageBox.messageList':'/module/config/message/index.html',
+	'messageBox.showDailyMessage':'/module/config/message/day.html',
 	'warning.phoneIndex' : '/module/config/anti-fraud/warning_phone.html',
 	'warning.openidIndex': '/module/config/anti-fraud/warning_openId.html',
 	'warning.deviceIndex': '/module/config/anti-fraud/warning_device.html',
@@ -55,7 +55,9 @@
 	'artificer.index':'/module/makeup/professional/index.html',
     'book.index':'/module/makeup/order/index.html',
     'powderArticles.articlesList':'module/makeup/coupon/index.html',
-    'powderArticles.presentList':'/module/makeup/order/present_list.html'
+    'powderArticles.presentList':'/module/makeup/order/present_list.html',
+    'beautyrefund.index':'/module/makeup/order/refund_list.html',
+	'beauty.index':'/module/makeup/introduction.html'
 }
 var access={
 	data:[],

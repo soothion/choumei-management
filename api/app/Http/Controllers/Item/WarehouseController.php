@@ -313,7 +313,7 @@ class WarehouseController extends Controller
 	        $data['salon_item']['status'] = SalonItem::STATUS_OF_DOWN;
 	        SalonItem::upsertItem($data,$item['priceStyle'],$salon_id);
 	    }
-	   // Event::fire('warehouse.import');
+	   Event::fire('warehouse.import');
 	    return $this->success([]);
 	}
 	

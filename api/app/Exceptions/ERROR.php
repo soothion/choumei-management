@@ -756,4 +756,15 @@ class ERROR
       *@param 专家编辑的名称重复
       */
      CONST ARTIFICER_NAME_EXISTS_ERROR =  -51510;
+     
+      ////////////定妆中心/////////////
+     /**
+      *@param 参数不全
+      */
+     CONST Beauty_DATA_NOTFOUND =  -51800;
+      
+     /**
+      *@param data格式不是json
+      */
+     CONST Beauty_DATA_ISNOTJSON =  -51801;
 }

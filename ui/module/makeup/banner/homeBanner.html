@@ -64,6 +64,13 @@
             position: relative;
             vertical-align: top;          
           }
+
+          .plus-button button{
+            display: inline-block;
+            width:100%;
+            height:100%;
+          }
+
           .move{
             cursor:move;
           }
@@ -127,8 +134,8 @@
           }
 
           .control{
-            position: absolute;
             width:29.5%;
+            position: absolute;
           } 
 
           .complete{
@@ -138,6 +145,11 @@
           .control input{
             width:100%;
             min-width: 100px;
+          }
+
+          .control > div{
+             min-width: 100%;
+             width: 200%;
           }
 
           .radios{
@@ -166,8 +178,8 @@
                           <div class="fr">
                               <button class='link save hidden'>保存</button>
                               <button type="reset" class='link canncel hidden'>取消</button>
-                              <button type="button" class='link edit'>编辑</button>
-                              <a class='link del' id="<%=item.banner_id%>">删除</a>
+                              <button type="button" class='link edit' data-slug="banner.edit">编辑</button>
+                              <a class='link del' id="<%=item.banner_id%>" data-slug="banner.destroy">删除</a>
                               <input type="hidden" name="id" value="<%=item.banner_id%>">
                               <input type="hidden" name="type" value="1">
                           </div>
@@ -194,7 +206,7 @@
 
                       <li class="inputBox">
                           <div class="radios">
-                              <label><span>标题</span></label>
+                              <label><span>题目：</span></label>
                               <input id="title" type="text" name="name" placeholder="1~20个字符，必填" value="<%=item.name%>" 
                               disabled  required maxLength="20"/>
                           </div>
@@ -216,19 +228,18 @@
 
                               <%if(item.behavior=="2"){var url = JSON.parse(item.url);%>
                                   <select name="url" disabled  url=<%=item.url%>></select>
-
                                   <div class="control complete">
-                                    <input id="search" type="text" name="salonname" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
+                                    <input id="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
                                     ajat-resources="/module/public/widget/autocomplete/index.js"
-                                    autocomplete="off" <%=item.salonname%> class="<%=url.type!='salons'?'hidden':''%>"/>
+                                    autocomplete="off" value="<%=item.salonName%>" class="<%=url.type!='salon'?'hidden':''%>"/>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                   </div>                                    
-                              <%}else{%>
-                                  <select name="url" style="width:26.5%;" disabled></select>
+                              <%}else{%>                                  
+                                  <select name="url" disabled></select>
                                   <div class="control complete">
-                                    <input id="search" type="text" name="salonname" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
+                                    <input id="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
                                     ajat-resources="/module/public/widget/autocomplete/index.js"
-                                    autocomplete="off" <%=item.salonname%>/>
+                                    autocomplete="off" value="<%=item.salonName%>"/>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                   </div> 
                               <%}%>
@@ -236,7 +247,7 @@
 
                           <div class="radios">
                               <label class="radio">
-                                  <input type="radio" name="behavior<%=i%>" value="3" <%=item.behavior=="3" ? "checked":""%> disabled/>
+                                  <input type="radio" name="behavior<%=i%>" value="0" <%=item.behavior=="0" ? "checked":""%> disabled/>
                                   <span>无跳转</span>
                               </label>
                           </div>
@@ -247,8 +258,8 @@
 
             <%if(data.data && data.data.length < 10){%>          
             <div class="plus-button">
-              <div style="text-align:center;">
-                  <button type="button">
+              <div style="text-align:center;height:100%;width:100%">
+                  <button type="button" data-slug="banner.create">
                       <span style="font-size: 4rem;color:#ddd;">+</span><br>
                       <span style="font-size: 15px;color:#ddd;font-weight:900;">添加</span>
                   </button>
@@ -256,7 +267,7 @@
             </div>
             <%}%> 
 
-            <form data-role="form" class="banner template" style="display:none">
+            <form data-role="form" class="banner template" draggable="false" style="display:none">
                 <ul>
                     <li class="clearfix">
                         <div class="fl"><h3><strong></strong></h3></div>
@@ -282,7 +293,7 @@
 
                     <li class="inputBox">
                         <div class="radios">
-                            <label><span>标题</span></label>
+                            <label><span>题目：</span></label>
                             <input id="title" type="text" name="name" placeholder="1~20个字符，必填" required maxLength="20"/>
                         </div>
 
@@ -304,7 +315,7 @@
                           <select name="url" style="width:26.5%;" disabled></select>
 
                           <div class="control complete">
-                            <input id="search" type="text" name="salonname" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" ajat-resources="/module/public/widget/autocomplete/index.js"
+                            <input id="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" ajat-resources="/module/public/widget/autocomplete/index.js"
                               autocomplete="off" disabled/>
                             <div class="complete-position" id="complete-position"></div>
                           </div>                             
@@ -312,7 +323,7 @@
 
                         <div class="radios">
                             <label class="radio">
-                                <input type="radio" name="behavior" value="3"/>
+                                <input type="radio" name="behavior" value="0"/>
                                 <span>无跳转</span>
                             </label>
                         </div>
