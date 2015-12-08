@@ -7,6 +7,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Banner;
 use App\Exceptions\ERROR;
 use App\Exceptions\ApiException;
+use Log;
 use Event;
 
 class BannerController extends Controller {
@@ -244,6 +245,7 @@ class BannerController extends Controller {
             $param['salonName']="";
         }
         $param['updated_at'] = time();
+        Log::info("param is ",$param);
         $query = Banner::find($id)->update($param);
         if ($query) {
          //   Event::fire('banner.edit','主键:'.$id);
