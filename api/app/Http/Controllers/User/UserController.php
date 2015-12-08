@@ -421,10 +421,12 @@ class UserController extends Controller{
             'eventspecial5.name as activityName',
             'salon.salonname'
         ];
-        $user = User::leftJoin('recommend_code_user','user.user_id','=','recommend_code_user.user_id')
+        $user = User::leftJoin('company_code','company_code.companyId','=','user.companyId')
+            ->leftJoin('recommend_code_user',function($join){
+                $join->on('user.user_id','=','recommend_code_user.user_id')
+                    ->where('recommend_code_user.type','=',1);
+            })
             ->leftJoin('salon','salon.salonid','=','recommend_code_user.salon_id')
-            ->where('recommend_code_user.type','=',1)
-            ->leftJoin('company_code','company_code.companyId','=','user.companyId')
             ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
             ->leftJoin('eventspecial5','dividend.event_conf_id','=','eventspecial5.eventspecialid')
             ->select($fields)
@@ -432,7 +434,7 @@ class UserController extends Controller{
 
         if(!$user)
             throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
-        
+
         $user->recommendCodes = DB::table('recommend_code_user')
         	->where('user_id','=',$id)
         	->select('user_id','recommend_code','type','add_time')
