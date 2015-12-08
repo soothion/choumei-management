@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-07 17:27:38
+* @Last Modified time: 2015-12-08 17:45:16
 */
 
 $(function(){
@@ -34,34 +34,41 @@ $(function(){
     });
 
     $(".box-warpper").on('click','.del',function(){
-        var id = $(this).attr('id');
-        if(id){
-            lib.ajax({
-                type: "post",
-                url : "banner/destroy/"+id
-            }).done(function(data, status, xhr){
-                if(data.result == 1){
-                    parent.lib.popup.result({
-                        bool : true,
-                        text : "操作成功",
-                        define:function(){
-                            location.reload();
+        var self = this;
+        parent.lib.popup.confirm({
+            text:'确定要删除吗？',
+            define:function(){                            
+                var id = $(self).attr('id');
+                if(id){
+                    lib.ajax({
+                        type: "post",
+                        url : "banner/destroy/"+id
+                    }).done(function(data, status, xhr){
+                        if(data.result == 1){
+                            parent.lib.popup.result({
+                                bool : true,
+                                text : "操作成功",
+                                define:function(){
+                                    location.reload();
+                                }
+                            });                 
                         }
-                    });                 
+                    })
+                }else{
+                    $(self).closest('.banner').remove();
+                    //编辑按钮 hidden 表示 ，取消、保存按钮可见，  
+                    //因为下面有个模板(form.template )的编辑按钮是hidden，所以len等于1表示所有
+                    //form[draggable='false']")下的按钮都可见，可以执行下面的操作
+                    var len = $("form[draggable='false']").find('button.edit.hidden').length;
+                    if(len == 1){
+                        $("form").find('button.edit').removeAttr('disabled');  
+                        $(".plus-button button").removeAttr('disabled');
+                        $("form[id]").addClass('move');                  
+                    }          
                 }
-            })
-        }else{
-            $(this).closest('.banner').remove();
-            //编辑按钮 hidden 表示 ，取消、保存按钮可见，  
-            //因为下面有个模板(form.template )的编辑按钮是hidden，所以len等于1表示所有
-            //form[draggable='false']")下的按钮都可见，可以执行下面的操作
-            var len = $("form[draggable='false']").find('button.edit.hidden').length;
-            if(len == 1){
-                $("form").find('button.edit').removeAttr('disabled');  
-                $(".plus-button button").removeAttr('disabled');
-                $("form[id]").addClass('move');                  
-            }          
-        }
+            }
+        })
+
     });
 
     $(".box-warpper").on('click','.edit',function(){
