@@ -65,7 +65,7 @@ class BeautyController extends Controller {
         {
             return $this->success(null);
         }
-        elseif(!preg_match('/[^,:{}\\[\\]0-9.\-+Eaeflnr-u \n\r\t]/',$bountys->detail))
+        elseif(!preg_match('/[^,:{}\\[\\]0-9.\-+Eaeflnr-u \n\r\t]/',$beautys->detail))
         {
             return $this->success(null);
         }
