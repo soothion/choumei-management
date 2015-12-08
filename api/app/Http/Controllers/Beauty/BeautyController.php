@@ -60,12 +60,16 @@ class BeautyController extends Controller {
      */
     function index() {
 
-        $bountys = Beauty::getBeauty();       
-        if(!preg_match('/[^,:{}\\[\\]0-9.\-+Eaeflnr-u \n\r\t]/',$bountys->detail))
+        $beautys = Beauty::getBeauty();
+        if(!$beautys)
         {
             return $this->success(null);
         }
-        return $this->success($bountys->detail);
+        elseif(!preg_match('/[^,:{}\\[\\]0-9.\-+Eaeflnr-u \n\r\t]/',$beautys->detail))
+        {
+            return $this->success(null);
+        }
+        return $this->success($beautys->detail);
     }
 
     /**
