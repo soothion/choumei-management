@@ -7,6 +7,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Banner;
 use App\Exceptions\ERROR;
 use App\Exceptions\ApiException;
+use Log;
 use Event;
 
 class BannerController extends Controller {
@@ -133,7 +134,7 @@ class BannerController extends Controller {
      */
     public function create() {
         $param = $this->param;
-        if (empty($param['type']) || !isset($param['name']) || !isset($param['image']) || empty($param['behavior'])) {
+        if (empty($param['type']) || !isset($param['name']) || !isset($param['image']) || !isset($param['behavior'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
@@ -141,11 +142,20 @@ class BannerController extends Controller {
                 throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
             }
         }
-        $param['created_at'] = time();
-        $param['updated_at'] = time();
-        $query = Banner::create($param);
-        $id = $query->banner_id;
-        if ($query) {
+        $date['type']=$param['type'];
+        $date['name']=$param['name'];
+        $date['image']=$param['image'];
+        $date['behavior']=$param['behavior'];
+        if (!empty($param['url'])) {
+            $date['url']=$param['url'];
+        }
+        if (!empty($param['salonName'])) {
+            $date['salonName']=$param['salonName'];
+        }
+        $date['created_at'] = time();
+        $date['updated_at'] = time();
+        $id = Banner::insertGetId($date);
+        if ($id) {
        //     Event::fire('banner.create','主键:'.$id);
             return $this->success();
         } else {
@@ -183,9 +193,13 @@ class BannerController extends Controller {
         if (empty($param['type']) || !isset($param['name']) || !isset($param['image'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
-        $param['created_at'] = time();
-        $param['updated_at'] = time();
-        $query = Banner::create($param);
+        $date['type']=$param['type'];
+        $date['name']=$param['name'];
+        $date['image']=$param['image'];
+        $date['behavior']=0;
+        $date['created_at'] = time();
+        $date['updated_at'] = time();
+        $query = Banner::insert($date);
         if ($query) {
             return $this->success();
         } else {
@@ -242,8 +256,17 @@ class BannerController extends Controller {
         if(!array_key_exists('salonName',$param)){
             $param['salonName']="";
         }
-        $param['updated_at'] = time();
-        $query = Banner::find($id)->update($param);
+        $data['type']=$param['type'];
+        $data['image']=$param['image'];
+        $data['salonName']=$param['salonName'];
+        $data['name']=$param['name'];
+        $data['behavior']=$param['behavior'];
+        $data['updated_at']=time();
+        Log::info("param is ",$data);
+        if (!empty($param['url'])) {
+            $data['url']=$param['url'];
+        }
+        $query = Banner::where('banner_id',$id)->update($data);
         if ($query) {
          //   Event::fire('banner.edit','主键:'.$id);
             return $this->success();
