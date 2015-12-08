@@ -10,6 +10,9 @@ use Event;
 use App\BeautyItemNorm;
 class BeautyItemController extends Controller{
 
+	//json 字段
+	private $requiredParameter = ['description','archive','beauty','register_detail','equipment','register_workflow','images'];
+
 	/**
 	* @api {post} /beautyItem/index 1.韩式半永久列表
 	* @apiName index
@@ -182,7 +185,7 @@ class BeautyItemController extends Controller{
 		$beautyItem = BeautyItem::find($item_id);
 		if(!$item_id || !$beautyItem)
 			throw new ApiException('未知项目',ERROR::BEAUTY_ITEM_NOT_FOUND);
-		
+		$this->parameterValidation($beautyItem);
 		$quantityRs = BeautyItem::getQuantity($item_id);
 		$beautyItem['quantity']  = $quantityRs->quantity?$quantityRs->quantity:0;
 		return $this->success($beautyItem);
@@ -560,6 +563,8 @@ class BeautyItemController extends Controller{
 			throw new ApiException('未知项目',ERROR::BEAUTY_ITEM_NOT_FOUND);
 		
 		$beautyItem = $beautyItem->toArray();
+		$this->parameterValidation($beautyItem);
+
 		$beautyItem['prices'] = BeautyItem::getMinMaxPrices($item_id);
 		$beautyItem['more_prices'] = BeautyItemNorm::where(['item_id'=>$item_id])->select(['img_url as img','norm','price','vip_price'])->get()->toArray();
 		$quantityRs = BeautyItem::getQuantity($item_id);
@@ -605,6 +610,27 @@ class BeautyItemController extends Controller{
 	{
 		$result = BeautyItem::select(['item_id','name','is_gift','type'])->orderBy('item_id', 'desc')->get();
 		return $this->success($result);
+	}
+	
+	/**
+	*json 数据错误处理
+	*
+	*/
+	private function parameterValidation(&$beautyItem)
+	{
+		if(!$beautyItem) return $beautyItem;
+		foreach($this->requiredParameter as $val)
+		{
+			if($beautyItem[$val])
+			{
+				$flag = json_decode($beautyItem[$val],true);
+				if(!is_array($flag))
+				{
+					$beautyItem[$val] = '';
+				}
+			}
+		}
+		return $beautyItem;
 	}
 }
 

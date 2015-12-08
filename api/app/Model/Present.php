@@ -44,9 +44,20 @@ class Present extends Model
     
     public static function getArticlesList($name,$departmentId,$startTime,$endTime,$page,$pageSize){
         $field1 = self::$presentField;
-        $field2 = array('beauty_item.name as itemName','departments.title as departmentName');
-        $field = array_merge($field1,$field2);
-        $query = self::select($field)
+        foreach ($field1 as $key => &$value) {
+            $value = 'cm_'.$value;
+        }       
+        $field2 = array('cm_beauty_item.name as itemName','cm_departments.title as departmentName');
+        $field3 = array('(CASE
+                    WHEN NOW() > `cm_present`.`expire_at` THEN
+                            0
+                    ELSE
+                            1
+                    END) as xx'
+            );        
+        $field = array_merge($field1,$field2,$field3);
+        $fieldSql=  implode(",", $field);
+        $query = self::selectRaw($fieldSql)
                 ->leftJoin('beauty_item', 'present.item_id', '=', 'beauty_item.item_id')
                 ->leftJoin('departments','present.department_id', '=', 'departments.id');
         
@@ -62,7 +73,7 @@ class Present extends Model
         if($endTime){
            $query = $query->where('present.created_at','<=',$endTime);
         }
-        $query = $query->orderBy('present.created_at','desc');
+        $query = $query->orderBy('xx')->orderBy('present.verify_status','desc')->orderBy('present.article_status','desc');
         //手动设置页数
         AbstractPaginator::currentPageResolver(function() use ($page) {
               return $page;
