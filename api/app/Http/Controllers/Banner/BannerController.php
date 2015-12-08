@@ -261,13 +261,14 @@ class BannerController extends Controller {
         $data['salonName']=$param['salonName'];
         $data['name']=$param['name'];
         $data['behavior']=$param['behavior'];
-        $data['updated_at']=time();
+        $data['updated_at']=time();        
         if (!empty($param['url'])) {
             $data['url']=$param['url'];
         }
         $query = Banner::where('banner_id',$id)->update($data);
         if ($query) {
-            Event::fire('banner.edit','主键:'.$id);
+            Log::info("param is ",$data);
+          //  Event::fire('banner.edit','主键:'.$id);
             return $this->success();
         } else {
             throw new ApiException('修改banner失败', ERROR::BEAUTY_BANNER_UPDATE_ERROR);
