@@ -262,7 +262,6 @@ class BannerController extends Controller {
         $data['name']=$param['name'];
         $data['behavior']=$param['behavior'];
         $data['updated_at']=time();
-        Log::info("param is ",$data);
         if (!empty($param['url'])) {
             $data['url']=$param['url'];
         }
