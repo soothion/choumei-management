@@ -244,9 +244,20 @@ class BannerController extends Controller {
         if(!array_key_exists('salonName',$param)){
             $param['salonName']="";
         }
-        $param['updated_at'] = time();
-        Log::info("param is ",$param);
-        $query = Banner::find($id)->update($param);
+//        $param['updated_at'] = time();
+//        Log::info("param is ",$param);
+        $data['id']=$id;
+        $data['type']=$param['type'];
+        $data['image']=$param['image'];
+        $data['salonName']=$param['salonName'];
+        $data['name']=$param['name'];
+        $data['behavior']=$param['behavior'];
+        $data['updated_at']=time();
+        Log::info("param is ",$data);
+        if (!empty($param['url'])) {
+            $data['url']=$param['url'];
+        }
+        $query = Banner::find($id)->update($data);
         if ($query) {
          //   Event::fire('banner.edit','主键:'.$id);
             return $this->success();
