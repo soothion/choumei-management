@@ -133,7 +133,7 @@ class BannerController extends Controller {
      */
     public function create() {
         $param = $this->param;
-        if (empty($param['type']) || !isset($param['name']) || !isset($param['image']) || empty($param['behavior'])) {
+        if (empty($param['type']) || !isset($param['name']) || !isset($param['image']) || !isset($param['behavior'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
@@ -183,6 +183,7 @@ class BannerController extends Controller {
         if (empty($param['type']) || !isset($param['name']) || !isset($param['image'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
+        $param['behavior']=0;
         $param['created_at'] = time();
         $param['updated_at'] = time();
         $query = Banner::create($param);
