@@ -557,7 +557,7 @@ class ArtificerAssistantController extends Controller{
         $result = $this->_formatListData( $result );
         $t = $result['data'];
         $title = '专家查询列表' .date('Ymd');
-        $header = ['专家姓名','性别','国籍','工作年限','级别','在职编号','所属专家','手机号码','状态 '];
+        $header = ['助理姓名','性别','工作年限','在职编号','所属专家','手机号码','状态 '];
         $t1 = ['','男','女'];
         $t2 = ['','明星院长','院长'];
         $t3 = ['禁用','启用'];
@@ -565,9 +565,7 @@ class ArtificerAssistantController extends Controller{
         foreach( $t as $key=>$val ){
             $tempData[$key][] = $val['name'];
             $tempData[$key][] = $t1[ $val['sex'] ];
-            $tempData[$key][] = $val['country'];
             $tempData[$key][] = $val['workingLife'];
-            $tempData[$key][] = $t2[ $val['level'] ];
             $tempData[$key][] = $val['number'];
             $tempData[$key][] = $val['relegation'];
             $tempData[$key][] = $val['mobilePhone'];
