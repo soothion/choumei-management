@@ -189,6 +189,7 @@ class UserController extends Controller{
             'user.username',
             'user.nickname',
             'user.sex',
+            'user.status',
             'user.growth',
             'user.mobilephone',
             'user.area',
@@ -298,7 +299,7 @@ class UserController extends Controller{
         }
 
         // 触发事件，写入日志
-        // Event::fire('user.export');
+        Event::fire('user.export');
 
         //导出excel
         $title = '用户列表'.date('Ymd');
@@ -401,6 +402,7 @@ class UserController extends Controller{
             'user.img',
             'nickname',
             'sex',
+            'user.status',
             'hair_type',
             'area',
             'birthday',
@@ -419,22 +421,27 @@ class UserController extends Controller{
             'eventspecial5.name as activityName',
             'salon.salonname'
         ];
-        $user = User::leftJoin('recommend_code_user','user.user_id','=','recommend_code_user.user_id')
+        $user = User::leftJoin('company_code','company_code.companyId','=','user.companyId')
+            ->leftJoin('recommend_code_user',function($join){
+                $join->on('user.user_id','=','recommend_code_user.user_id')
+                    ->where('recommend_code_user.type','=',1);
+            })
             ->leftJoin('salon','salon.salonid','=','recommend_code_user.salon_id')
-            ->where('recommend_code_user.type','=',1)
-            ->leftJoin('company_code','company_code.companyId','=','user.companyId')
             ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
             ->leftJoin('eventspecial5','dividend.event_conf_id','=','eventspecial5.eventspecialid')
             ->select($fields)
             ->find($id);
+
+        if(!$user)
+            throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+
         $user->recommendCodes = DB::table('recommend_code_user')
         	->where('user_id','=',$id)
         	->select('user_id','recommend_code','type','add_time')
         	->get();
 
 
-        if(!$user)
-            throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+
 
         $user->add_time = date('Y-m-d',$user->add_time);
         $user->sex = User::getSex($user->sex);
@@ -655,7 +662,7 @@ class UserController extends Controller{
         $user = User::find($id);
         if(!$user)
             throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
-        $result = DB::table('company_code_user')->where('user_id','=',$id);
+        $result = $user->update(['companyId'=>0]);
         if($result){
             //触发事件，写入日志
             Event::fire('user.resetCompanyCode',array($user));

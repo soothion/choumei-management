@@ -134,6 +134,7 @@ class OrderRefund extends Model {
             'order_refund.booking_sn',
             'order_refund.item_type',
             'order_refund.rereason',
+            'order_refund.other_rereason',
         ];
         //booking_order
         $booking_order_fields = [
@@ -191,6 +192,8 @@ class OrderRefund extends Model {
         if ($bookingOrder->status == 'RFN' && $refund->status == 3) {
             $bookingOrder->status = 'RFE';
         }
+        $reason = implode(',', Mapping::BeautyRefundRereasonNames(explode(',', $refund->rereason)));
+        $reason = !empty($reason) ? $reason . "," . $refund->rereason : $refund->other_rereason;
         $res = [
             'ordersn' => $refund->ordersn,
             'booking_sn' => $refund->booking_sn,
@@ -210,8 +213,8 @@ class OrderRefund extends Model {
             'pay_status' => 1, //支付状态 
             // 退款信息
             'refund_from' => 1, //用户
-            'rereason' => $refund->rereason,
-            'refund_desc' => $refund->rereason,
+            'rereason' => $reason,
+            'refund_desc' => $reason,
             'refund_type' => $fundflow->pay_type,
             'money' => $refund->money,
             'add_time' => date("Y-m-d H:i:s", $refund->add_time),

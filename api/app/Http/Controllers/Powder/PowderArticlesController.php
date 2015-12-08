@@ -79,8 +79,7 @@ class PowderArticlesController extends Controller
     public function addArticles()
     {
         $param = $this->param;
-        //$createrId = $this->user->id;
-        $createrId = 1;
+        $createrId = $this->user->id;
         if(empty($param['articleName']) || empty($param['itemId']) || empty($param['nums']) || empty($param['startTime']) || empty($param['endTime']) || empty($param['expireTime']) || empty($param['departmentId']) || empty($param['userId'])){
             throw new ApiException('必传参数不能为空');
         }
@@ -265,6 +264,9 @@ class PowderArticlesController extends Controller
            }
            $val['notUseNum'] = $val['quantity'] - $val['useNum'];
            $val['createTime'] = date('Y-m-d',$val['createTime']);
+           $val['startTime'] = substr($val['startTime'], 0,10);
+           $val['endTime'] = substr($val['endTime'], 0,10);
+           $val['expireTime'] = substr($val['expireTime'], 0,10);
         }
         Event::fire('powder.selectArticle','赠送活动查询');
         return $this->success($articlesList);
@@ -348,7 +350,10 @@ class PowderArticlesController extends Controller
         $articlesInfo = Present::getArticlesInfoByWhere($where);
         if(!empty($articlesInfo)){
             $articlesInfo['notUseNum'] = $articlesInfo['quantity'] - $articlesInfo['useNum'];
-            $articlesInfo['createTime'] = date('Y-m-d',$articlesInfo['createTime']);       
+            $articlesInfo['createTime'] = date('Y-m-d H:i:s',$articlesInfo['createTime']);       
+            $articlesInfo['startTime'] = substr($articlesInfo['startTime'], 0,10);
+            $articlesInfo['endTime'] = substr($articlesInfo['endTime'], 0,10);
+            $articlesInfo['expireTime'] = substr($articlesInfo['expireTime'], 0,10);
         }
         Event::fire('powder.showArticleDetail','定妆活动详情,活动编号:'.$param['presentId']);
         return $this->success($articlesInfo);       
@@ -870,8 +875,7 @@ class PowderArticlesController extends Controller
      */
     public function usePresentTicket(){
         $param = $this->param;
-        //$managerId = $this->user->id; //记录人id
-        $managerId = 1;
+        $managerId = $this->user->id; //记录人id
         if(empty($managerId)){
             throw new ApiException('无法获取此登陆用户id');  
         }
@@ -962,17 +966,6 @@ class PowderArticlesController extends Controller
         }
         DB::commit();
         return 1;
-    }
-    /**
-     * 测试使用 
-     */
-    public function test(){
-        $seedRes = SeedPool::getArticleTicketFromPool(1);
-        foreach ($seedRes as $key => $value) {
-            $seeds[] = substr($value,2);
-        }
-        print_r($seedRes);
-        print_r($seeds);
     }
     
 }

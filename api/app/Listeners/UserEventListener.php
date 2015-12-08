@@ -99,4 +99,52 @@ class UserEventListener {
 		return Log::create($data);
 	}
 
+	public function onDisable($user)
+	{
+    	$operator = JWTAuth::parseToken()->authenticate();
+		$data['username'] = $operator->username;
+		$data['roles'] = $operator->roles->toArray();
+		$roles = [];
+		foreach ($data['roles'] as $key => $value) {
+			$roles[] = $value['name'];
+		}
+		$data['roles'] = implode($roles, ',');
+		$data['operation'] = '禁用用户';
+		$data['slug'] = Route::currentRouteName();
+		$data['ip'] = Request::getClientIp();
+		return Log::create($data);
+	}
+
+	public function onEnable($user)
+	{
+    	$operator = JWTAuth::parseToken()->authenticate();
+		$data['username'] = $operator->username;
+		$data['roles'] = $operator->roles->toArray();
+		$roles = [];
+		foreach ($data['roles'] as $key => $value) {
+			$roles[] = $value['name'];
+		}
+		$data['roles'] = implode($roles, ',');
+		$data['operation'] = '启用用户';
+		$data['slug'] = Route::currentRouteName();
+		$data['ip'] = Request::getClientIp();
+		return Log::create($data);
+	}
+
+	public function onResetCompanyCode($user)
+	{
+    	$operator = JWTAuth::parseToken()->authenticate();
+		$data['username'] = $operator->username;
+		$data['roles'] = $operator->roles->toArray();
+		$roles = [];
+		foreach ($data['roles'] as $key => $value) {
+			$roles[] = $value['name'];
+		}
+		$data['roles'] = implode($roles, ',');
+		$data['operation'] = '解除集团码';
+		$data['slug'] = Route::currentRouteName();
+		$data['ip'] = Request::getClientIp();
+		return Log::create($data);
+	}
+
 }

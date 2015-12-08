@@ -2,13 +2,13 @@
 * @Author: anchen
 * @Date:   2015-12-02 19:50:31
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-05 11:19:45
+* @Last Modified time: 2015-12-07 10:39:49
 */
 
 $(function(){
 
     function init(){
-        var promise = lib.ajat("banner/index?type=2#domid=warpper&tempid=warpper-t").render();
+        var promise = lib.ajat("banner/index2?type=2#domid=warpper&tempid=warpper-t").render();
         promise.done(function(data){initUploader();});
     }
 
@@ -22,6 +22,7 @@ $(function(){
         topBanner.find('.operation').removeClass('hidden');
         topBanner.find('input').removeAttr('disabled');
         topBanner.siblings().find('button.edit').attr('disabled',true);
+        topBanner.find('button.btn-primary').removeAttr('disabled');
     })
 
     $(".box-warpper").on('click','.cancel',function(){
@@ -29,11 +30,14 @@ $(function(){
         parent.find('.save').addClass('hidden');
         parent.find('.cancel').addClass('hidden');
         parent.find('.edit').removeClass('hidden');
+
         var topBanner = $(this).closest('.banner');
         topBanner.find('.operation').addClass('hidden');
         topBanner.find('input').attr('disabled',true);
         topBanner.find('.control-help').hide();
         topBanner.siblings().find('button.edit').removeAttr('disabled');
+        topBanner.find('button.btn-primary').attr('disabled',true);
+
         var url = topBanner.attr('url');
         if(url){
             topBanner.find('.thumbnails-item-img img').attr('src',url);
@@ -51,7 +55,7 @@ $(function(){
         }   
         lib.ajax({
             type: "post",
-            url : data.id ? "banner/edit/"+data.id : "banner/create",
+            url : data.id ? "banner/edit2/"+data.id : "banner/create2",
             data:data
         }).done(function(data, status, xhr){
             if(data.result == 1){

@@ -175,7 +175,7 @@ class BookController extends Controller
      * @apiSuccess {String} order.BOOKER_SEX 预约人性别
      * @apiSuccess {String} order.BOOKER_PHONE 预约人电话
      * @apiSuccess {String} order.BOOKER_NAME 预约人姓名
-     * @apiSuccess {String} order.STATUS 订单状态 NEW - 未支付,PYD - 已支付,CSD - 已消费,RFN - 申请退款,RFD - 已退款  RFE退款失败
+     * @apiSuccess {String} order.STATUS 订单状态 NEW - 未支付,PYD - 已支付,CSD - 已消费,RFN - 申请退款,RFD - 已退款  RFD-OFL 线下已退款 RFE退款失败
      * @apiSuccess {String} order.PAIED_TIME 支付时间
      * @apiSuccess {String} order.CONSUME_TIME 消费时间
      * @apiSuccess {String} order.CREATE_TIME 预约时间
@@ -502,8 +502,8 @@ class BookController extends Controller
         {
             $is_first = true;
         }
-        self::givePresent($custom_uid,true);
-        //self::givePresent($custom_uid,$is_first);
+        //self::givePresent($custom_uid,true);
+        self::givePresent($custom_uid,$is_first);
         Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success(['id'=>$id]);
     }
@@ -669,7 +669,7 @@ class BookController extends Controller
             'created_at'=>$datetime,
         ]);
         
-        BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD','UPDATE_TIME'=>$datetime]);
+        BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]);
         Order::where('ordersn',$base->BOOKING_SN)->update(['status'=>4,'use_time'=>$time]); 
          
         Event::fire('booking.refund',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);

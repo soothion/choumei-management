@@ -78,7 +78,7 @@
 								</thead>
 								<tbody>
 									<%if(data.register_workflow){%>
-										<%=lib.ejs.render({url:"table-t"},{data:JSON.parse(data.register_workflow)})%>
+										<%=lib.ejs.render({url:"table-t"},{data:typeof data.register_workflow=="string"?JSON.parse(data.register_workflow):data.register_workflow})%>
 									<%}%>
 								</tbody>
 							</table>

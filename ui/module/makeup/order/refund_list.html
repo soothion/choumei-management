@@ -55,9 +55,9 @@
                     </select>
                 </div>
 
-                <button class="btn" type="submit">查询</button>
+                <button class="btn" type="submit" data-slug="beautyrefund.index">查询</button>
             </form>
-           <div class="table" ajat="beautyrefund/index?<%if (!query.state){%>state=RFN,RFD,RFE<%}%><%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="beautyrefund/index?<%if (!query.state){%>state=RFN,RFD,RFE<%}%>&<%=query._%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -89,9 +89,10 @@
                     'NEW':'未支付',
                     'PYD':'已支付',
                     'CSD':'已消费',
-                    'RFN':'退款中',
+                    'RFN':'申请退款',
                     'RFD':'已退款',
                     'RFE':'退款失败',
+                    'RFD-OFL':'线下已退款',
                 }%>
                 <%data.forEach(function(item,index){%>
                  <tr>
@@ -109,7 +110,7 @@
                   <td><%=pay_type_desc[item.pay_type]%></td>
                   <td><%=status[item.status]%></td>
                   <td class="tc">
-                    <a class="link" data-slug="coupon.actView" href="refund_desc.html#id=<%=item.order_refund_id%>">查看</a>
+                    <a class="link" data-slug="beautyrefund.show" href="refund_desc.html#id=<%=item.order_refund_id%>">查看</a>
                   </td>
                   </tr>
                   <%})%>

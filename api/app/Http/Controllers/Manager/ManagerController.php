@@ -183,7 +183,7 @@ class ManagerController extends Controller{
 	    	$result[$key]['created_at'] = $value->created_at;
 	    }
 		// 触发事件，写入日志
-	    // Event::fire('manager.export');
+	    Event::fire('manager.export');
 		
 		//导出excel	   
 		$title = '用户列表'.date('Ymd');

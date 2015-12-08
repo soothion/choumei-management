@@ -20,7 +20,7 @@ class User extends  Model
 
     protected $table = 'user';
     protected $primaryKey = 'user_id';
-    protected $fillable = ['username','nickname','password','email','img','add_time','last_time','sex','hair_type','birthday','area','growth','grade','mobilephone','costpwd','companyId'];
+    protected $fillable = ['username','nickname','password','email','img','add_time','last_time','sex','status','hair_type','birthday','area','growth','grade','mobilephone','costpwd','companyId'];
     public $timestamps = false;
 
     public function recommendCodes(){
@@ -29,8 +29,10 @@ class User extends  Model
 
     public static function getQueryByParam($param=[]){
         $query = Self::leftJoin('company_code','user.companyId','=','company_code.companyId')
-            ->leftJoin('recommend_code_user','user.user_id','=','recommend_code_user.user_id')
-            ->where('recommend_code_user.type','=',1)
+            ->leftJoin('recommend_code_user',function($join){
+                $join->on('user.user_id','=','recommend_code_user.user_id')
+                    ->where('recommend_code_user.type','=',1);
+            })
             ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code');
 
         if(!empty($param['username'])){

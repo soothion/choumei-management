@@ -14,11 +14,9 @@
           .banner{
             display: inline-block;
             margin:10px;
-            height:235px;
-            overflow: hidden;
-            border:1px solid  #ddd;
-            width:25%;
-            min-width:320px;             
+            width:28%;
+            min-width:350px;            
+            border:1px solid  #ddd;          
           }
 
           ul{
@@ -27,10 +25,20 @@
             padding:5px 10px;
             width:95%;
           }
+
+          .clearfix:after{
+            content: "020"; 
+            display: block; 
+            height: 0; 
+            clear: both; 
+            visibility: hidden;  
+          }
+          .clearfix {
+            zoom: 1; 
+          }          
           
           ul li{
             padding:5px 2px;
-            overflow: hidden;
           }
           .fl{
             float:left;
@@ -106,15 +114,15 @@
           }
 
           input:disabled{
-            opacity: 1;
             cursor: inherit;
-            background-color: #fff;
-            border:none;
-            box-shadow:none!important;
             background:none;                
+/*            opacity: 1;*/
+/*            background-color: #fff;*/
+/*            border:none;*/
+/*            box-shadow:none!important;*/
           }
           .hidden{
-             display:none;
+             display:none!important;
           }     
         </style>
     </head>
@@ -144,14 +152,14 @@
 
             <form class="banner" data-role="form" url="<%=item2 ? item2.image : ''%>">
                 <ul>
-                    <li>
+                    <li class="clearfix">
                         <input type="hidden" name="id" value="<%= item2 ? item2.banner_id : ''%>">
-                        <input type="hidden" name="type" value="<%= item2 ? item2.type : ''%>">
+                        <input type="hidden" name="type" value="<%= item2 ? item2.type : '2'%>">
                         <div class="fl"><h3><strong>快时尚Banner</strong></h3></div>
                         <div class="fr">
-                            <button class='link save hidden'>保存</button>
-                            <button type="reset" class='link cancel hidden'>取消</button>
-                            <button type="button" class='link edit'>编辑</button>
+                            <button class='link save <%= item2 ? "hidden" : "" %>' data-slug="banner.create2,banner.edit2">保存</button>
+                            <button type="reset" class='link cancel <%= item2 ? "hidden" : "" %>'>取消</button>
+                            <button type="button" class='link edit <%= item2 ? "" : "hidden" %>' data-slug="banner.edit2">编辑</button>
                         </div>
                     </li>
                     <li>
@@ -178,8 +186,8 @@
                     <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
                     <li style="border-top:1px solid #ddd;">
                         <div style="margin-top:10px">
-                            <label><span>题目</span></label>
-                            <input type="text" name="name" value="<%=item2.name%>" placeholder="1~20个字符，必填" required disabled/>
+                            <label><span>题目：</span></label>
+                            <input type="text" name="name" value="<%=item2.name%>" placeholder="1~20个字符，必填" required <%= item2 ? "disabled" : "" %>/>
                         </div>                        
                     </li>
                 </ul>          
@@ -187,14 +195,14 @@
 
             <form class="banner" data-role="form" url="<%=item3 ? item3.image : ''%>">
                 <ul>
-                    <li>
+                    <li class="clearfix">
                         <input type="hidden" name="id" value="<%= item3 ? item3.banner_id : ''%>">
-                        <input type="hidden" name="type" value="<%= item3 ? item3.type : ''%>">
+                        <input type="hidden" name="type" value="<%= item3 ? item3.type : '3'%>">
                         <div class="fl"><h3><strong>专家Banner</strong></h3></div>
                         <div class="fr">
-                            <button class='link save hidden'>保存</button>
-                            <button type="reset" class='link cancel hidden'>取消</button>
-                            <button type="button" class='link edit'>编辑</button>
+                            <button class='link save <%= item3 ? "hidden" : "" %>'>保存</button>
+                            <button type="reset" class='link cancel <%= item3 ? "hidden" : "" %>'>取消</button>
+                            <button type="button" class='link edit <%= item3 ? "" : "hidden" %>'>编辑</button>
                         </div>
                     </li>
                     <li>
@@ -221,8 +229,8 @@
                     <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
                     <li style="border-top:1px solid #ddd;">
                         <div style="margin-top:10px">
-                            <label><span>题目</span></label>
-                            <input type="text" name="name" value="<%=item3.name%>" placeholder="1~20个字符，必填" required disabled/>
+                            <label><span>题目：</span></label>
+                            <input type="text" name="name" value="<%=item3.name%>" placeholder="1~20个字符，必填" required <%= item3 ? "disabled" : "" %>/>
                         </div>
                     </li>
                 </ul>          
@@ -230,14 +238,14 @@
 
             <form class="banner" data-role="form" url="<%=item4 ? item4.image : ''%>">
                 <ul>
-                    <li>
+                    <li class="clearfix">
                         <input type="hidden" name="id" value="<%= item4 ? item4.banner_id : ''%>">
-                        <input type="hidden" name="type" value="<%= item4 ? item4.type : ''%>">
+                        <input type="hidden" name="type" value="<%= item4 ? item4.type : '4'%>">
                         <div class="fl"><h3><strong>半永久Banner</strong></h3></div>
                         <div class="fr">
-                            <button class='link save hidden'>保存</button>
-                            <button type="reset" class='link cancel hidden'>取消</button>
-                            <button type="button" class='link edit'>编辑</button>
+                            <button class='link save <%= item4 ? "hidden" : "" %>'>保存</button>
+                            <button type="reset" class='link cancel <%= item4 ? "hidden" : "" %>'>取消</button>
+                            <button type="button" class='link edit <%= item4 ? "" : "hidden" %>'>编辑</button>
                         </div>
                     </li>
                     <li>
@@ -265,8 +273,8 @@
                     <li style="padding:0"><span class="control-help" style="display:none">请先上传图片</span></li>
                     <li style="border-top:1px solid #ddd;">
                         <div style="margin-top:10px">
-                            <label><span>题目</span></label>
-                            <input type="text" name="name" value="<%=item4.name%>"  placeholder="1~20个字符，必填" required disabled/>
+                            <label><span>题目：</span></label>
+                            <input type="text" name="name" value="<%=item4.name%>"  placeholder="1~20个字符，必填" required <%= item4 ? "disabled" : "" %> />
                         </div>
                     </li>
                 </ul>          

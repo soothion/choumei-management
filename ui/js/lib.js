@@ -613,7 +613,7 @@
 								var original=$img.data('original')?$img.data('original'):$img.attr('src')
 								uploader.trigger('ImageUploaded',{img:original,_this:$this[0]});
 							});
-							if(options.crop&&uploader.area.find("img").attr("src")){
+							if(options.crop){
 								uploader.area.prepend('<a class="control-single-image-edit"><i class="fa fa-pencil-square-o"></i></a>');
 							}
 						}

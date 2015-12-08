@@ -97,32 +97,42 @@
 					  <td><%=item.companyCode%></td>
 					  <td>
 						<%item.recommend_codes.forEach(function(code){%>
-							 <%=item.activity==2&&code.type==1?code.recommendCode:""%>
+							 <%=item.activity==2&&code.type==1?code.recommend_code:""%>
 						<%})%>
 					 </td>
 					  <td>
 						<%item.recommend_codes.forEach(function(code){%>
-							<%=item.activity==1&&code.type==1?code.recommendCode:""%>
+							<%=item.activity==1&&code.type==1?code.recommend_code:""%>
 						<%})%>
 					 </td>
 					  <td>
 						<%item.recommend_codes.forEach(function(code){%>
-							<%=code.type==2?code.recommendCode:""%>
+							<%=code.type==2?code.recommend_code:""%>
 						<%})%>
 						</td>
 					  <td>
 						<%item.recommend_codes.forEach(function(code){%>
-							<%=code.type==3?code.recommendCode:""%>
+							<%=code.type==3?code.recommend_code:""%>
 						<%})%>
 					  </td>
 					  <td>
 						<%item.recommend_codes.forEach(function(code){%>
-							<%=code.type==4?code.recommendCode:""%>
+							<%=code.type==4?code.recommend_code:""%>
 						<%})%>
 					  </td>
 					  <td><%=item.add_time%></td>
 					  <td>
 						 <a class="link" data-slug="user.show,user.update" href="detail.html?id=<%=item.user_id%>">查看</a>
+						 <span class="space"></span>
+						 <%if(item.status==1){%>
+						 <form action="user/enable/<%=item.user_id%>" data-role="normal" data-slug="user.enable" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+							<button class="link">启用</button>
+						 </form>
+						 <%}else{%>
+						 <form action="user/disable/<%=item.user_id%>" data-role="normal" data-slug="user.disable" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+							<button class="link">禁用</button>
+						 </form>
+						 <%}%>
 					  </td>
 					</tr>
 					<%})%>

@@ -78,7 +78,7 @@
 								</thead>
 								<tbody>
 									<%if(data.register_detail){%>
-										<%=lib.ejs.render({url:"table-t"},{data:JSON.parse(data.register_detail)})%>
+										<%=lib.ejs.render({url:"table-t"},{data:typeof data.register_detail=="string"?JSON.parse(data.register_detail):data.register_detail})%>
 									<%}%>
 								</tbody>
 							</table>

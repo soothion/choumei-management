@@ -82,10 +82,18 @@ class BookingOrder extends Model
         $items = BookingOrderItem::where('ORDER_SN',$ordersn)->get($item_fields)->toArray();
         $beauty_items = BeautyOrderItem::where('order_sn',$ordersn)->get($beauty_item_fields)->toArray();
         $fundflows = Fundflow::where('record_no',$ordersn)->get(['record_no','pay_type'])->toArray();
-        $payment_log = PaymentLog::where('ordersn',$ordersn)->first(['ordersn','tn','amount'])->toArray();
+        $payment_log = PaymentLog::where('ordersn',$ordersn)->first(['ordersn','tn','amount']);
         $recommend = RecommendCodeUser::where('user_id',$base['USER_ID'])->whereIn('type',[2,3])->first(['id','user_id','recommend_code']);
-        $refund_fields = ['ordersn','user_id','money','opt_user_id','rereason','add_time','opt_time','status','booking_sn','item_type','rereason'];
+        $refund_fields = ['ordersn','user_id','money','opt_user_id','rereason','add_time','opt_time','status','booking_sn','item_type','rereason','other_rereason'];
         $order_refund = OrderRefund::where('ordersn',$ordersn)->first($refund_fields);
+        if(empty($payment_log))
+        {
+            $payment_log = NULL;
+        }
+        else
+        {
+            $payment_log = $payment_log->toArray();
+        }
         if(empty($order_refund))
         {
             $order_refund = NULL;
@@ -97,7 +105,10 @@ class BookingOrder extends Model
             if ($base['STATUS'] == 'RFN' && $order_refund['status'] == 3) {
                 $base['STATUS'] == 'RFE';
             }
-            $order_refund['refund_desc'] = $order_refund['rereason'];
+            $reason = str_replace(array_keys(Mapping::BeautyRefundRereasonNames()), array_values(Mapping::BeautyRefundRereasonNames()), $order_refund['rereason']);
+            $reason = !empty($reason) ? $reason . "," . $order_refund['other_rereason'] : $order_refund['other_rereason'];
+            $order_refund['rereason'] = $reason;
+            $order_refund['refund_desc'] = $reason;
         }
         $item_amount = 0;
         if(!empty($beauty_items))
