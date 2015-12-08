@@ -154,9 +154,8 @@ class BannerController extends Controller {
         }
         $date['created_at'] = time();
         $date['updated_at'] = time();
-        $query = Banner::create($date);
-        $id = $query->banner_id;
-        if ($query) {
+        $id = Banner::insertGetId($date);
+        if ($id) {
        //     Event::fire('banner.create','主键:'.$id);
             return $this->success();
         } else {
@@ -200,7 +199,7 @@ class BannerController extends Controller {
         $date['behavior']=0;
         $date['created_at'] = time();
         $date['updated_at'] = time();
-        $query = Banner::create($date);
+        $query = Banner::insert($date);
         if ($query) {
             return $this->success();
         } else {
