@@ -272,7 +272,7 @@
                  </script>
                  <script>
                     $('#table').on('_ready',function(e,res){
-                        lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').render();
+                        lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').template(res.response);
                     })
                     var refund = function(data){
                         lib.popup.result({
