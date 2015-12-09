@@ -96,7 +96,7 @@
                 }%>
                 <%data.forEach(function(item,index){%>
                  <tr>
-                  <td><label><input type="checkbox"  value="<%=item.order_refund_id%>"/><span></span></label></td>
+                  <td><label><input <%if (item.status == 'RFD'){%>disabled='disabled'<%}%> type="checkbox"  value="<%=item.order_refund_id%>"/><span></span></label></td>
                   <td><%=index+1%></td>
                   <td><%=item.booker_phone%></td>
                   <td><%=item.booker_name%></td>
