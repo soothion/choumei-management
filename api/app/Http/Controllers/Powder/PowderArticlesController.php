@@ -985,6 +985,15 @@ class PowderArticlesController extends Controller
         $articleTicketInfo = SeedPool::getArticleTicketFromPool(1,'asc');
         $data['code'] = $articleTicketInfo[0];
         DB::beginTransaction();
+        //活动券总数+1
+        $resPreIncrement = Present::where($where)
+                    ->increment('present.quantity',1);
+        if(!$resPreIncrement){
+            DB::rollBack();
+            //记录错误日志
+            Log::info('线上活动赠送券使用后，使用数增加失败');
+            throw new ApiException('线上活动赠送券使用后,使用数增加失败');
+        }
         //更新预约号
         $updateReservateSnRes = SeedPool::where(array('SEED' => $reservateSnInfo['reservateSn'],'TYPE' => 'TKT'))->update(array('STATUS' => 'USD'));
         if(!$updateReservateSnRes){
