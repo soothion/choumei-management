@@ -192,8 +192,8 @@ class OrderRefund extends Model {
         if ($bookingOrder->status == 'RFN' && $refund->status == 3) {
             $bookingOrder->status = 'RFE';
         }
-        $reason = implode(',', Mapping::BeautyRefundRereasonNames(explode(',', $refund->rereason)));
-        $reason = !empty($reason) ? $reason . "," . $refund->rereason : $refund->other_rereason;
+        $reason = implode(',', Mapping::getBeautyRefundRereasonNames(explode(',', $refund->rereason)));
+        $reason = !empty($reason) ? $reason . "," . $refund->other_rereason : $refund->other_rereason;
         $res = [
             'ordersn' => $refund->ordersn,
             'booking_sn' => $refund->booking_sn,
