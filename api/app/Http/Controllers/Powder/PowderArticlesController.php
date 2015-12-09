@@ -132,8 +132,8 @@ class PowderArticlesController extends Controller
         //$queries = DB::getQueryLog();
         if($resId){
             $res['presentId'] = $resId;
-            //$this->dispatch(new PowderArticleTicket($resId));
-            //Event::fire('powder.create','添加赠送活动,活动编号:'.$resId);
+            $this->dispatch(new PowderArticleTicket($resId));
+            Event::fire('powder.create','添加赠送活动,活动编号:'.$resId);
             return $this->success($res);
         }else{
             throw new ApiException('活动添加失败',ERROR::POWDER_ARTICLE_ADD_FIELD);
