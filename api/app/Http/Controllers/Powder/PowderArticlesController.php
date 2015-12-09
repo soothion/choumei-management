@@ -947,6 +947,7 @@ class PowderArticlesController extends Controller
      * @throws ApiException
      */
     public static function addReservateSnAfterConsume($user_id,$mobilephone,$present_type,$recommend_code=0){
+        Log::info("获取时间：".date('Y-m-d H:i:s',time())."--用户id:".$user_id."--手机号:".$mobilephone."--赠送类型:".$present_type."--推荐码:".$recommend_code);
         if(empty($user_id) || empty($mobilephone) || empty($present_type)){
             throw new ApiException('必传参数不能为空');
         }
@@ -967,7 +968,9 @@ class PowderArticlesController extends Controller
             $data['item_id'] = $presentInfo['item_id'];
             $data['user_id'] = $user_id;
             $data['mobilephone'] = $mobilephone;
-            $data['recommend_code'] = $recommend_code;
+            if($recommend_code){
+                $data['recommend_code'] = $recommend_code;
+            }           
             $data['present_type'] = $present_type;
             //三个月内有效
             $data['expire_at'] = date("Y-m-d",strtotime("+3 month"))." 23:59:59";
