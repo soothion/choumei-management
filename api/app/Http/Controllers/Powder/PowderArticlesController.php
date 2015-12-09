@@ -303,6 +303,7 @@ class PowderArticlesController extends Controller
      * @apiSuccess {Number} userId 用户id.
      * @apiSuccess {String} detail 活动详情.
      * @apiSuccess {Number} articleStatus 活动状态 1: 开启  2: 关闭'.
+     * @apiSuccess {Number} articleExpireStatus 活动过期状态 1: 没过期  2: 已过期'.
      * @apiSuccess {Number} verifyStatus 验证状态 1: 开启验证 2: 关闭验证.
      * @apiSuccess {Number} articleType 活动类型 1: 线下  2: 线上.
      * @apiSuccess {String} createTime 活动创建时间
@@ -322,6 +323,7 @@ class PowderArticlesController extends Controller
      *           "startTime": "2015-12-30 00:00:00",
      *           "endTime": "2015-12-30 23:59:59",
      *           "expireTime": "2016-12-03 00:00:00",
+     *           "articleExpireStatus" : 1,
      *           "departmentId": 1,
      *           "departmentName": "总裁办",
      *           "userId": 115,
@@ -360,9 +362,13 @@ class PowderArticlesController extends Controller
             $articlesInfo['createTime'] = date('Y-m-d H:i:s',$articlesInfo['createTime']);       
             $articlesInfo['startTime'] = substr($articlesInfo['startTime'], 0,10);
             $articlesInfo['endTime'] = substr($articlesInfo['endTime'], 0,10);
+            $articlesInfo['articleExpireStatus'] = 1;//活动没有过期
             if($articlesInfo['articleType'] == 2){
                 $articlesInfo['expireTime'] = '获赠90天内有效';
             }else{
+                if(time() > strtotime($articlesInfo['expireTime'])){
+                    $articlesInfo['articleExpireStatus'] = 2; //已过期
+                }
                 $articlesInfo['expireTime'] = substr($articlesInfo['expireTime'], 0,10);
             }
             
