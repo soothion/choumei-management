@@ -7,7 +7,7 @@
     </head>
     <body>
         <div class="breadcrumb">
-            <a>交易管理 </a>
+            <a>韩式定妆 </a>
             <span>&gt;</span><a href="index.html">定妆单查询</a>
             <span>&gt;</span>定妆单详情
             <div class="flex-box">
@@ -137,7 +137,7 @@
                         </tr>
                         <tr>
                             <td class="td">推荐码：</td>
-                            <td><%=data.order.recommend_code%></td>
+                            <td><%=data.recommend && data.recommend.recommend_code%></td>
                         </tr>
                         <tr>
                             <td class="td">订单状态：</td>
@@ -494,7 +494,7 @@
                       if (options.url && options.url.indexOf('./')>-1){
                            options.content =lib.ejs.render({url:options.url});
                       }
-                      lib.popup[options['modalType']](options);
+                      parent.lib.popup[options['modalType']](options);
                   }
                  </script>
             </div>
