@@ -44,16 +44,16 @@ class PresentArticleCode extends Model
         $query = self::select($field)
                 ->leftJoin('beauty_item', 'present_article_code.item_id', '=', 'beauty_item.item_id');
         if($mobilephone){
-            $query = $query->where('mobilephone','=',$mobilephone);
+            $query = $query->where('mobilephone','like','%'.$mobilephone.'%');
         }
         if($reservateSn){
-            $query = $query->where('reservate_sn','=',$reservateSn);
+            $query = $query->where('reservate_sn','like','%'.$reservateSn.'%');
         }
         if($recommendCode){
-            $query = $query->where('recommend_code','=',$recommendCode);
+            $query = $query->where('recommend_code','like','%'.$recommendCode.'%');
         }
         if($ticketCode){
-            $query = $query->where('code','=',$ticketCode);
+            $query = $query->where('code','like','%'.$ticketCode.'%');
         }
         if($startTime){
             $query = $query->where('present_article_code.created_at','>=',$startTime);
