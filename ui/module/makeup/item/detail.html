@@ -150,6 +150,9 @@
 									<%if(data.archive){%>
 									<table>
 										<tbody>
+											<tr>
+												<td colspan="2" style="font-weight:bold;">产品档案</td>
+											</tr>
 											<%JSON.parse(data.archive).forEach(function(item){%>
 											<tr>
 												<td><%=item.title%></td>
