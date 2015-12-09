@@ -181,7 +181,7 @@ class BeautyRefundApi extends TransactionWriteApi {
      */
 
     private static function modifBookingOrderRefundOptUser($ids, $opt_user_id) {
-        OrderRefund::whereIn('order_refund_id', $ids)->update(['opt_user_id' => $opt_user_id]);  // 状态必须为申请退款 更改为退款中  TODO
+        OrderRefund::whereIn('order_refund_id', $ids)->update(['opt_user_id' => $opt_user_id,'opt_time'=>time()]);  // 状态必须为申请退款 更改为退款中  TODO
         return true;
     }
 
