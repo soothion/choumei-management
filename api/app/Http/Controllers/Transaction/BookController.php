@@ -144,7 +144,7 @@ class BookController extends Controller
        $params = $this->parameters([
             'key' => self::T_INT,
             'keyword' => self::T_STRING,
-            'min_time_' => self::T_STRING,
+            'min_time' => self::T_STRING,
             'max_time' => self::T_STRING,
             'pay_type' => self::T_INT,
             'pay_state' => self::T_STRING,
