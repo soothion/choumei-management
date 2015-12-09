@@ -48,23 +48,6 @@ class PowderArticlesEventListener {
             $data['ip'] = Request::getClientIp();
             return Log::create($data);
 	}
-        //查询赠送活动列表
-        public function onSelectArticle($log ='')
-	{
-            $operator = JWTAuth::parseToken()->authenticate();
-            $data['username'] = $operator->username;
-            $data['roles'] = $operator->roles->toArray();
-            $roles = [];
-            foreach ($data['roles'] as $key => $value) {
-                    $roles[] = $value['name'];
-            }
-            $data['roles'] = implode($roles, ',');
-            $data['operation'] = '查询赠送活动';
-            $data['object'] = $log;
-            $data['slug'] = Route::currentRouteName();
-            $data['ip'] = Request::getClientIp();
-            return Log::create($data);
-	}
         //查看活动详情
         public function onShowArticleDetail($log ='')
 	{

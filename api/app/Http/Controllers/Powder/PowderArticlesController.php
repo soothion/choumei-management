@@ -268,7 +268,6 @@ class PowderArticlesController extends Controller
            $val['endTime'] = substr($val['endTime'], 0,10);
            $val['expireTime'] = substr($val['expireTime'], 0,10);
         }
-        Event::fire('powder.selectArticle','赠送活动查询');
         return $this->success($articlesList);
         
     }
