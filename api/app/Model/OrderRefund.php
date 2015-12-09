@@ -80,7 +80,7 @@ class OrderRefund extends Model {
             $query->where('order_refund.add_time', '>=', strtotime($param['add_time']));
         }
         if (!empty($param['end_time'])) {
-            $query->where('order_refund.end_time', '<=', strtotime($param['end_time']));
+            $query->where('order_refund.add_time', '<=', strtotime($param['end_time']));
         }
         //支付方式
         if (isset($param['pay_type']) && $param['pay_type']) {
