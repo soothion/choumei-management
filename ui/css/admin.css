@@ -726,6 +726,7 @@ textarea.large{
 .table table,.table-detail table{
 	width:100%;
 	border:1px solid #E6EAF2;
+	word-break: break-word;
 }
 .table tbody tr:hover,.table-detail tbody tr:hover{
 	background:#eee;
