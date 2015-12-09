@@ -18,6 +18,7 @@ use App\RecommendCodeUser;
 use App\User;
 use App\Http\Controllers\Powder\PowderArticlesController;
 use App\Order;
+use App\Utils;
 
 class BookController extends Controller
 {
@@ -492,7 +493,7 @@ class BookController extends Controller
             'specialistId'=> self::T_INT,
             'assistantId'=> self::T_INT,
         ]);
-        //$params['uid'] = 1;
+       // $params['uid'] = 1;
         $params['uid'] = $this->user->id;        
         $book = BookingCash::cash($id,$params);
         $custom_uid = $book['USER_ID'];
@@ -503,7 +504,13 @@ class BookController extends Controller
             $is_first = true;
         }
         //self::givePresent($custom_uid,true);
-        self::givePresent($custom_uid,$is_first);
+        try{
+            self::givePresent($custom_uid,$is_first);
+        }
+        catch (\Exception $e)
+        {
+            Utils::log("present", $e->getMessage());
+        }
         Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success(['id'=>$id]);
     }
@@ -525,15 +532,14 @@ class BookController extends Controller
      *		}
      */
     public function bill($id)
-    {
-        return $this->success(['id'=>$id]);
+    {      
         $base = BookingOrder::where("ID",$id)->first();
         if(empty($base))
         {
             throw new ApiException("定妆单[{$id}]不存在或者已经被删除", ERROR::ORDER_NOT_EXIST);
         }
-        $state = $base->status;
-        if(!in_array($state,['CSD']))
+        $state = $base->STATUS;
+        if($state != "CSD")
         {
             throw new ApiException("定妆单[{$id}]状态不正确", ERROR::ORDER_STATUS_WRONG);
         }       
@@ -549,7 +555,7 @@ class BookController extends Controller
         'order_sn'=>$base->ORDER_SN,
         'created_at'=>date("Y-m-d H:i:s"),
         ]);
-        Event::fire('booking.bill',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
+        //Event::fire('booking.bill',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
         return $this->success(['id'=>$id]);
     }
     

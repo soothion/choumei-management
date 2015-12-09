@@ -118,7 +118,7 @@
             </table>
             <div class="table-bottom">
 				<label class="select-all"><input type="checkbox"/><span>全选</span></label>
-				<button disabled class="btn" data-action="accpent" type="button">确认退款</button>
+				<button disabled class="btn" data-action="accept" type="button">确认退款</button>
 				<button disabled class="btn" data-action="reject" type="button">拒绝退款</button>
 			</div>
              <div class="pager"> </div>
@@ -149,11 +149,11 @@
 
             var getConfig = function(action){
                 var confirmBoxConfig = {
-                    'accpent':{
+                    'accept':{
                         'text':'已选中'+ids.length+'个退款单，是否确认退款',
                         'cancelText':'取消退款',
                         'defineText':'确认退款',
-                        'url':'beautyrefund/accpent',
+                        'url':'beautyrefund/accept',
                         'data':{
                             'ids':ids.join(",")
                         }
