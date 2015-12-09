@@ -133,6 +133,10 @@
             width:29.5%!important;
           }
 
+          .s-list{
+            width: 180px;
+          }
+
           .control{
             width:29.5%;
             position: absolute;
@@ -229,18 +233,20 @@
                               <%if(item.behavior=="2"){var url = JSON.parse(item.url);%>
                                   <select name="url" disabled  url=<%=item.url%>></select>
                                   <div class="control complete">
-                                    <input class="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
+                                    <input class="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required disabled
                                     autocomplete="off" value="<%=item.salonName%>" class="<%=url.type!='salon'?'hidden':''%>"/>
-                                    <input type="hidden" class="salonId" name="salonId" value="<%=item.salonId%>" required>
+                                    <input type="hidden" class="salonId" name="salonId" value="<%=item.salonId%>" 
+                                    required disabled>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                     <span class="control-help" style="display: none;">未填写</span>
                                   </div>                                    
                               <%}else{%>                                  
                                   <select name="url" disabled></select>
                                   <div class="control complete">
-                                    <input class="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
-                                    autocomplete="off" value="<%=item.salonName%>" required />
-                                    <input type="hidden" class="salonId" name="salonId" value="<%=item.salonId%>" required>
+                                    <input class="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
+                                    autocomplete="off" value="<%=item.salonName%>" required disabled/>
+                                    <input type="hidden" class="salonId" name="salonId" value="<%=item.salonId%>" 
+                                    required disabled>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
                                     <span class="control-help" style="display: none;">未填写</span>
                                   </div> 
@@ -319,7 +325,7 @@
                           <div class="control complete">
                             <input class="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" 
                               autocomplete="off" disabled required requiredmsg="未填写"/>
-                            <input type="hidden" class="salonId" name="salonId" required>
+                            <input type="hidden" class="salonId" name="salonId" disabled required>
                             <div class="complete-position" id="complete-position"></div>
                             <span class="control-help" style="display: none;">未填写</span>
                           </div>                             
