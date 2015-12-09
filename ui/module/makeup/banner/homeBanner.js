@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-08 17:45:16
+* @Last Modified time: 2015-12-09 15:26:04
 */
 
 $(function(){
@@ -20,9 +20,9 @@ $(function(){
         clone.find('input[type=radio]').attr('name','behavior'+len);
         clone.find('.uploader').attr('id','uploader'+len);
         clone.find("strong").text("Banner"+len); 
-        var complete = clone.find('#search').attr('ajat-complete');
+        var complete = clone.find('.search').attr('ajat-complete');
         complete = complete.replace('complete-position','complete-position'+len);
-        clone.find('#search').attr('ajat-complete',complete);
+        clone.find('.search').attr('ajat-complete',complete);
         clone.find('.complete-position').attr('id','complete-position'+len);
         $('.plus-button').before(clone);
 
@@ -91,8 +91,8 @@ $(function(){
         if(val == '2'){
             topBanner.find('select').removeAttr('disabled')
             var selectValue = topBanner.find('select').val();   
-            if(selectValue == "salon_salonId"){
-                topBanner.find("#search").removeClass('hidden').removeAttr('disabled'); 
+            if(selectValue == "salon"){
+                topBanner.find(".search").removeClass('hidden').removeAttr('disabled'); 
             }         
         }
         $("form").find('button.edit').attr('disabled',true);
@@ -125,7 +125,7 @@ $(function(){
         topBanner.find('#title').attr('disabled',true);
         topBanner.find('#h5url').attr('disabled',true);
         topBanner.find('select').attr('disabled',true);
-        topBanner.find('#search').attr('disabled',true);
+        topBanner.find('.search').attr('disabled',true);
         topBanner.find('button.btn-primary').attr('disabled',true);
         $("form").find('button.edit').removeAttr('disabled');
         $(".plus-button button").removeAttr('disabled');    
@@ -135,7 +135,8 @@ $(function(){
         var box = $(this).closest('.inputBox');
         box.find('#h5url').attr('disabled',true);
         box.find('select').attr('disabled',true);
-        box.find('#search').attr('disabled',true); 
+        box.find('.search').attr('disabled',true); 
+        box.find('.salonId').attr('disabled',true); 
         box.find('.control-help').hide();
         var radios = $(this).closest('.radios');
         radios.find('input[disabled]').removeAttr('disabled'); 
@@ -156,7 +157,7 @@ $(function(){
         }).done(function(data, status, xhr){
             if(data.result==1 && data.data){
                 var arr = [];
-                arr.push("<option value='salon_salonId'>美发店铺主页</option>");
+                arr.push("<option value='salon'>美发店铺主页</option>");
                 arr.push("<option value='artificers'>专家主页</option>");
                 var obj = {'1':'SPM','2':'FFA'}
                 data.data.forEach(function(item,i){
@@ -182,12 +183,22 @@ $(function(){
     $(".box-warpper").on('change','select',function(e){
         $(this).find('option[selected=selected]').removeAttr('selected');
         $(this).find('option[value='+$(this).val()+']').attr('selected','selected');
-        if($(this).val()=="salon_salonId"){
+        if($(this).val()=="salon"){
             $(this).next().find('input').removeClass('hidden').removeAttr('disabled');
         }else{
             $(this).next().find('input').addClass('hidden').attr('disabled',true);
         }
     });
+
+    $(".box-warpper").on('autoinput','.search',function(e,data){
+        var banner = $(this).closest('.banner');
+        if(data){
+            banner.find('.salonId').val(data.salon_id);
+        }
+    }).on('input','.search',function(){
+        var banner = $(this).closest('.banner')
+        banner.find('.salonId').val("");
+    });     
     
     $(".box-warpper").on('dragover','form[id]',function(ev){
         ev.preventDefault();
@@ -245,7 +256,7 @@ $(function(){
         if(data.behavior=="2"){
             var arr = data.url.split("_");
             if(arr[0]=="salon"){
-                data.url = {type:arr[0],salonId:'salonId'};
+                data.url = {type:arr[0]};
             }else if(arr[0]=="artificers"){ 
                 data.url = {type:arr[0]};
             }else{

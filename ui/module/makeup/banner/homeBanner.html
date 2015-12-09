@@ -229,18 +229,20 @@
                               <%if(item.behavior=="2"){var url = JSON.parse(item.url);%>
                                   <select name="url" disabled  url=<%=item.url%>></select>
                                   <div class="control complete">
-                                    <input id="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
-                                    ajat-resources="/module/public/widget/autocomplete/index.js"
+                                    <input class="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required
                                     autocomplete="off" value="<%=item.salonName%>" class="<%=url.type!='salon'?'hidden':''%>"/>
+                                    <input type="hidden" class="salonId" name="salonId" value="<%=item.salonId%>" required>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
+                                    <span class="control-help" style="display: none;">未填写</span>
                                   </div>                                    
                               <%}else{%>                                  
                                   <select name="url" disabled></select>
                                   <div class="control complete">
-                                    <input id="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
-                                    ajat-resources="/module/public/widget/autocomplete/index.js"
-                                    autocomplete="off" value="<%=item.salonName%>"/>
+                                    <input class="search" type="text" name="salonName" disabled ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
+                                    autocomplete="off" value="<%=item.salonName%>" required />
+                                    <input type="hidden" class="salonId" name="salonId" value="<%=item.salonId%>" required>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
+                                    <span class="control-help" style="display: none;">未填写</span>
                                   </div> 
                               <%}%>
                           </div>
@@ -315,9 +317,11 @@
                           <select name="url" style="width:26.5%;" disabled></select>
 
                           <div class="control complete">
-                            <input id="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" ajat-resources="/module/public/widget/autocomplete/index.js"
-                              autocomplete="off" disabled/>
+                            <input class="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" 
+                              autocomplete="off" disabled required requiredmsg="未填写"/>
+                            <input type="hidden" class="salonId" name="salonId" required>
                             <div class="complete-position" id="complete-position"></div>
+                            <span class="control-help" style="display: none;">未填写</span>
                           </div>                             
                         </div>
 
