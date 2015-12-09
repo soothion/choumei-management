@@ -500,10 +500,10 @@ class PowderArticlesController extends Controller
             throw new ApiException('活动开关参数错误');
         }
         $where = array('present_id' => intval($param['presentId']));
-        $field = array('expire_at','verify_status as verifyStatus');
+        $field = array('expire_at','verify_status as verifyStatus','article_type');
         $articlesInfo = Present::select($field)->where($where)->first();
         if(!empty($articlesInfo)){
-            if(time() > strtotime($articlesInfo['expire_at'])){
+            if(time() > strtotime($articlesInfo['expire_at']) && $articlesInfo['article_type'] == 1){
                 throw new ApiException('活动已过期');
             }elseif($articlesInfo['verifyStatus'] == $param['verifyStatus']){
                 if($param['verifyStatus'] == 1){
