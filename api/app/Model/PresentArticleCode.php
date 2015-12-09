@@ -81,7 +81,7 @@ class PresentArticleCode extends Model
     
     public static function getPresentListInfoByWhere($where){
         $field1 = self::$presentArticleCodeField;
-        $field2 = array('present.name as articleName','present.verify_status as verifyStatus','managers.name as managerName','artificer.name as specialistName' );
+        $field2 = array('present.name as articleName','present.verify_status as verifyStatus','managers.name as managerName','artificer.name as specialistName', 'artificer.number as specialistNumber');
         $field = array_merge($field1,$field2);
         $query = self::select($field)
                 ->leftJoin('beauty_item', 'present_article_code.item_id', '=', 'beauty_item.item_id')
@@ -93,11 +93,12 @@ class PresentArticleCode extends Model
             return [];
         }else{
             $presentListInfoDetailRes = $presentListInfoDetail->toArray();
-            $assistantInfo = Artificer::select('name')->where('artificer_id','=',$presentListInfoDetailRes['assistantId'])->first();
+            $assistantInfo = Artificer::select('name','number')->where('artificer_id','=',$presentListInfoDetailRes['assistantId'])->first();
             if($assistantInfo === null){
                 $presentListInfoDetailRes['assistantName'] = '';
             }else{
                 $presentListInfoDetailRes['assistantName'] = $assistantInfo['name'];
+                $presentListInfoDetailRes['assistantNumber'] = $assistantInfo['number'];
             }
             return $presentListInfoDetailRes;
         }
