@@ -738,7 +738,6 @@ class PowderArticlesController extends Controller
         foreach ($presentListInfo['data'] as $key => &$val) {
             $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']];
             $val['presentTypeName'] = self::$presentTypeName[$val['presentType']];
-            $val['createTime'] = date('Y-m-d',$val['createTime']);
             $val['expireTime'] = substr($val['expireTime'],0,10);
         }
         return $this->success($presentListInfo);
@@ -832,7 +831,6 @@ class PowderArticlesController extends Controller
         if(!empty($presentListInfoDetail)){
             $presentListInfoDetail['ticketStatusName'] = self::$ticketCodeStatus[$presentListInfoDetail['ticketStatus']];
             $presentListInfoDetail['presentTypeName'] = self::$presentTypeName[$presentListInfoDetail['presentType']];
-            $presentListInfoDetail['createTime'] = date('Y-m-d',$presentListInfoDetail['createTime']);
             $presentListInfoDetail['useTime'] = substr($presentListInfoDetail['useTime'],0,10);
             $presentListInfoDetail['recordTime'] = substr($presentListInfoDetail['recordTime'],0,16);
             $presentListInfoDetail['expireTime'] = substr($presentListInfoDetail['expireTime'],0,10);
