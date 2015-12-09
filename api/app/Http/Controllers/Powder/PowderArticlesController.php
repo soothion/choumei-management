@@ -269,12 +269,12 @@ class PowderArticlesController extends Controller
                 }else{
                     $val['articleStatusName'] = self::$articleStatusName[0];  //活动正常
                 }
+                $val['expireTime'] = substr($val['expireTime'], 0,10);
            }
            $val['notUseNum'] = $val['quantity'] - $val['useNum'];
            $val['createTime'] = date('Y-m-d',$val['createTime']);
            $val['startTime'] = substr($val['startTime'], 0,10);
            $val['endTime'] = substr($val['endTime'], 0,10);
-           $val['expireTime'] = substr($val['expireTime'], 0,10);
         }
         return $this->success($articlesList);
         
