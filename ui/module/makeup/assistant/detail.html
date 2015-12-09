@@ -84,7 +84,12 @@
                         <tr>
                             <td class="td">邮箱：</td>
                             <td colspan="3"><%=data.email%></td>
-                        </tr>   
+                        </tr>  
+
+                        <tr>
+                            <td class="td">所属专家：</td>
+                            <td colspan="3"><%=query.relegation%></td>
+                        </tr> 
 
                         <tr>
                             <% var statusText = {"0":"禁用中","1":"启用中"}; %>
@@ -131,6 +136,7 @@
         </div>
 
         <div style="float:left;margin:15px 0 15px 20px;">
+          <div style="margin-bottom:5px"><strong>个人图片：</strong></div>
           <img src="" style="width:256px;height:256px"/>
         </div>
 
