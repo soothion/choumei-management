@@ -45,7 +45,7 @@ class PresentArticleCodeExpire extends Command
             Log::info(date('Y-m-d H:i:s',time())."更新赠送券状态失败,请联系管理员");
         }
         Log::info("更新赠送券执行完毕:". date('Y-m-d H:i:s',time()).";共更新数据量：".$affected);
-        echo "执行完毕".date('Y-m-d H:i:s',time());
+        echo "执行完毕".date('Y-m-d H:i:s',time()).";共更新数据量：".$affected;
     }
     
     
