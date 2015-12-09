@@ -251,16 +251,24 @@ class PowderArticlesController extends Controller
         $articlesList = Present::getArticlesList($name,$departmentId,$startTime,$endTime,$page,$pageSize);
         foreach ($articlesList['data'] as $key => &$val) {
            if($val['articleType'] == 2){
-               $val['articleType'] = "获赠90天内有效";
-           }
-           if(time() > strtotime($val['expireTime'])){
-               $val['articleStatusName'] = self::$articleStatusName[3]; //活动已过期
-           }elseif ($val['verifyStatus'] == 2){
-               $val['articleStatusName'] = self::$articleStatusName[2];  //关闭验证
-           }elseif ($val['articleStatus'] == 2) {
-               $val['articleStatusName'] = self::$articleStatusName[1];  //停止活动
+               $val['expireTime'] = "获赠90天内有效";
+               if ($val['verifyStatus'] == 2){
+                    $val['articleStatusName'] = self::$articleStatusName[2];  //关闭验证
+                }elseif ($val['articleStatus'] == 2) {
+                    $val['articleStatusName'] = self::$articleStatusName[1];  //停止活动
+                }else{
+                    $val['articleStatusName'] = self::$articleStatusName[0];  //活动正常
+                }
            }else{
-               $val['articleStatusName'] = self::$articleStatusName[0];  //活动正常
+               if(time() > strtotime($val['expireTime'])){
+                    $val['articleStatusName'] = self::$articleStatusName[3]; //活动已过期
+                }elseif ($val['verifyStatus'] == 2){
+                    $val['articleStatusName'] = self::$articleStatusName[2];  //关闭验证
+                }elseif ($val['articleStatus'] == 2) {
+                    $val['articleStatusName'] = self::$articleStatusName[1];  //停止活动
+                }else{
+                    $val['articleStatusName'] = self::$articleStatusName[0];  //活动正常
+                }
            }
            $val['notUseNum'] = $val['quantity'] - $val['useNum'];
            $val['createTime'] = date('Y-m-d',$val['createTime']);
@@ -352,7 +360,12 @@ class PowderArticlesController extends Controller
             $articlesInfo['createTime'] = date('Y-m-d H:i:s',$articlesInfo['createTime']);       
             $articlesInfo['startTime'] = substr($articlesInfo['startTime'], 0,10);
             $articlesInfo['endTime'] = substr($articlesInfo['endTime'], 0,10);
-            $articlesInfo['expireTime'] = substr($articlesInfo['expireTime'], 0,10);
+            if($articlesInfo['articleType'] == 2){
+                $articlesInfo['expireTime'] = '获赠90天内有效';
+            }else{
+                $articlesInfo['expireTime'] = substr($articlesInfo['expireTime'], 0,10);
+            }
+            
         }
         Event::fire('powder.showArticleDetail','定妆活动详情,活动编号:'.$param['presentId']);
         return $this->success($articlesInfo);       
