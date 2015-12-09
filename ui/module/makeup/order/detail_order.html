@@ -33,7 +33,7 @@
                             <button <%if (data.makeup || !data.booking_cash || (data.booking_salon_refund || data.order_refund)){%>disabled='disabled'<%}%> class="btn" data-modal='comp-color' data-slug="book.relatively">
                                  补色
                             </button>
-                            <button <%if ( (data.booking_salon_refund || order_refund) || !data.booking_cash){%>disabled='disabled'<%}%> data-modal='refund' class="btn" data-slug="book.refund">
+                            <button <%if ( (data.booking_salon_refund || data.order_refund) || !data.booking_cash){%>disabled='disabled'<%}%> data-modal='refund' class="btn" data-slug="book.refund">
                                  退款
                             </button>
                         </script>
