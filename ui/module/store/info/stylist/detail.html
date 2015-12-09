@@ -58,8 +58,8 @@
                         编辑
                     </a>
                     &nbsp;
-                    <button type="button" class="btn mr-20" onclick="window.close()">
-                        关闭
+                    <button type="button" class="btn mr-20" onclick="history.back()">
+                        取消
                     </button>                  
                 </div> 
 
@@ -314,7 +314,7 @@
                                         parent.lib.popup.result({
                                             text:"删除成功",
                                             define:function(){
-                                                window.close();
+                                                history.back();
                                             }
                                         });                                        
                                     }

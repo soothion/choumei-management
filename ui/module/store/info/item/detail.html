@@ -35,18 +35,18 @@
 						}
 					%>
 					<%if(query.p=="warehouse"){%>
-					<form data-slug="warehouse.puton" action="warehouse/puton" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){self.style.display='none'}})">
+					<form data-slug="warehouse.puton" action="warehouse/puton" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){history.back()}})">
 						<button class="btn">上架</button><span class="space"></span>
 						<input type="hidden" name="ids" value="<%=query.id%>" />
 					</form>
 					<span class="space"></span>
-					<form data-slug="warehouse.destroy" action="warehouse/destroy" data-role="normal" data-confirm="您正在删除此项目，是否继续 " onsuccess="var self=this;parent.lib.popup.result({define:function(){window.close()}})">
+					<form data-slug="warehouse.destroy" action="warehouse/destroy" data-role="normal" data-confirm="您正在删除此项目，是否继续 " onsuccess="var self=this;parent.lib.popup.result({define:function(){history.back()}})">
 						<button class="btn">删除</button><span class="space"></span>
 						<input type="hidden" name="ids" value="<%=query.id%>" />
 					</form>
 					<span class="space"></span>
 					<%}else{%>
-					<form data-slug="item.down" action="item/down/<%=query.id%>" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){self.style.display='none'}})">
+					<form data-slug="item.down" action="item/down/<%=query.id%>" data-role="normal" onsuccess="var self=this;parent.lib.popup.result({define:function(){history.back()}})">
 						<button class="btn">下架</button>
 					</form>
 					<span class="space"></span>
