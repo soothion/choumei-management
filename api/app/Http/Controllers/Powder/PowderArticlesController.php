@@ -754,6 +754,8 @@ class PowderArticlesController extends Controller
             //线下活动没有赠送日期
             if($val['reservateSn'] === null){
                 $val['createTime'] = '';
+            }else{
+                $val['createTime'] = date('Y-m-d',$val['createTime']);
             }
             $val['expireTime'] = substr($val['expireTime'],0,10);
         }
@@ -851,6 +853,8 @@ class PowderArticlesController extends Controller
             //线下活动没有赠送日期
             if($presentListInfoDetail['reservateSn'] === null){
                 $presentListInfoDetail['createTime'] = '';
+            }else{
+                $presentListInfoDetail['createTime'] = date('Y-m-d',$presentListInfoDetail['createTime']);
             }
             $presentListInfoDetail['useTime'] = substr($presentListInfoDetail['useTime'],0,10);
             $presentListInfoDetail['recordTime'] = substr($presentListInfoDetail['recordTime'],0,16);
