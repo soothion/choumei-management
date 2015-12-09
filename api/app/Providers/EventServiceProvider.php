@@ -383,9 +383,6 @@ class EventServiceProvider extends ServiceProvider
         'powder.create' => [
             'App\Listeners\PowderArticlesEventListener@onCreate',
     	],
-        'powder.selectArticle' => [
-            'App\Listeners\PowderArticlesEventListener@onSelectArticle',
-    	],
         'powder.showArticleDetail' => [
             'App\Listeners\PowderArticlesEventListener@onShowArticleDetail',
     	],
