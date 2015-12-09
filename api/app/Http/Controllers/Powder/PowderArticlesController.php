@@ -132,6 +132,11 @@ class PowderArticlesController extends Controller
         //$queries = DB::getQueryLog();
         if($resId){
             $res['presentId'] = $resId;
+            //查询种子池中活动券是否够用
+            $seed = SeedPool::where(array('TYPE' => 'GSN' , 'STATUS' => 'NEW'))->count();
+            if($seed < $param['nums']){
+                throw new ApiException('活动券数量超过10万，现在无法发券，目前券可使用数最多为'.$seed);
+            }           
             $this->dispatch(new PowderArticleTicket($resId));
             Event::fire('powder.create','添加赠送活动,活动编号:'.$resId);
             return $this->success($res);

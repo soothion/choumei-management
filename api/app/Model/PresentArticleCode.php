@@ -154,6 +154,7 @@ class PresentArticleCode extends Model
             $presentRes = self::select('present_id')->where('article_code_id','=',$articleCodeId)->first();
             if($presentRes === null){
                 Log::info('找不到该活动:', $articleCodeId);
+                throw new ApiException('验证完毕，但线上活动找不到该活动');
             }else{
                 $res= $presentRes->toArray();
                 $presentId = $res['present_id'];
