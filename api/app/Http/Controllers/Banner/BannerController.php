@@ -146,6 +146,11 @@ class BannerController extends Controller {
         $date['name']=$param['name'];
         $date['image']=$param['image'];
         $date['behavior']=$param['behavior'];
+        if(!empty($param['salonId'])){
+            $temp=json_decode($param['url']);
+            $temp->salonId=$param['salonId'];
+            $param['url']=  json_encode($temp);
+        }
         if (!empty($param['url'])) {
             $date['url']=$param['url'];
         }
@@ -252,7 +257,12 @@ class BannerController extends Controller {
                     throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
                 }
         }
-        }  
+        } 
+        if(!empty($param['salonId'])){
+            $temp=json_decode($param['url']);
+            $temp->salonId=$param['salonId'];
+            $param['url']=  json_encode($temp);
+        }
         if(!array_key_exists('salonName',$param)){
             $param['salonName']="";
         }
