@@ -12,6 +12,7 @@ use App\Model\PresentArticleCode;
 use DB;
 use App\Model\SeedPool;
 use Event;
+use Log;
 
 use App\Jobs\PowderArticleTicket;
 
@@ -80,8 +81,18 @@ class PowderArticlesController extends Controller
     {
         $param = $this->param;
         $createrId = $this->user->id;
-        if(empty($param['articleName']) || empty($param['itemId']) || empty($param['nums']) || empty($param['startTime']) || empty($param['endTime']) || empty($param['expireTime']) || empty($param['departmentId']) || empty($param['userId'])){
+        if(empty($param['articleName']) || empty($param['itemId']) || empty($param['startTime']) || empty($param['endTime']) || empty($param['expireTime']) || empty($param['departmentId']) || empty($param['userId'])){
             throw new ApiException('必传参数不能为空');
+        }
+        if(!isset($param['nums'])){
+            throw new ApiException('必传参数不能为空');
+        }else{
+            if($param['nums'] == 0){
+                throw new ApiException('赠送数量不能为0');
+            }
+            if(!is_int($param['nums'])){
+                throw new ApiException('赠送数量必须为整数');
+            }
         }
         if(strlen($param['articleName']) > 60){
             throw new ApiException('活动名称长度限制20字');
@@ -246,27 +257,35 @@ class PowderArticlesController extends Controller
         $endTime = isset($param['endTime'])? strtotime($param['endTime']." 23:59:59"):'';
         
         $page = isset($param['page'])?max($param['page'],1):1;
-        $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+        $pageSize = isset($param['page_size'])?$param['page_size']:20;
         
         $articlesList = Present::getArticlesList($name,$departmentId,$startTime,$endTime,$page,$pageSize);
         foreach ($articlesList['data'] as $key => &$val) {
            if($val['articleType'] == 2){
-               $val['articleType'] = "获赠90天内有效";
-           }
-           if(time() > strtotime($val['expireTime'])){
-               $val['articleStatusName'] = self::$articleStatusName[3]; //活动已过期
-           }elseif ($val['verifyStatus'] == 2){
-               $val['articleStatusName'] = self::$articleStatusName[2];  //关闭验证
-           }elseif ($val['articleStatus'] == 2) {
-               $val['articleStatusName'] = self::$articleStatusName[1];  //停止活动
+               $val['expireTime'] = "获赠90天内有效";
+               if ($val['verifyStatus'] == 2){
+                    $val['articleStatusName'] = self::$articleStatusName[2];  //关闭验证
+                }elseif ($val['articleStatus'] == 2) {
+                    $val['articleStatusName'] = self::$articleStatusName[1];  //停止活动
+                }else{
+                    $val['articleStatusName'] = self::$articleStatusName[0];  //活动正常
+                }
            }else{
-               $val['articleStatusName'] = self::$articleStatusName[0];  //活动正常
+               if(time() > strtotime($val['expireTime'])){
+                    $val['articleStatusName'] = self::$articleStatusName[3]; //活动已过期
+                }elseif ($val['verifyStatus'] == 2){
+                    $val['articleStatusName'] = self::$articleStatusName[2];  //关闭验证
+                }elseif ($val['articleStatus'] == 2) {
+                    $val['articleStatusName'] = self::$articleStatusName[1];  //停止活动
+                }else{
+                    $val['articleStatusName'] = self::$articleStatusName[0];  //活动正常
+                }
+                $val['expireTime'] = substr($val['expireTime'], 0,10);
            }
            $val['notUseNum'] = $val['quantity'] - $val['useNum'];
            $val['createTime'] = date('Y-m-d',$val['createTime']);
            $val['startTime'] = substr($val['startTime'], 0,10);
            $val['endTime'] = substr($val['endTime'], 0,10);
-           $val['expireTime'] = substr($val['expireTime'], 0,10);
         }
         return $this->success($articlesList);
         
@@ -295,6 +314,7 @@ class PowderArticlesController extends Controller
      * @apiSuccess {Number} userId 用户id.
      * @apiSuccess {String} detail 活动详情.
      * @apiSuccess {Number} articleStatus 活动状态 1: 开启  2: 关闭'.
+     * @apiSuccess {Number} articleExpireStatus 活动过期状态 1: 没过期  2: 已过期'.
      * @apiSuccess {Number} verifyStatus 验证状态 1: 开启验证 2: 关闭验证.
      * @apiSuccess {Number} articleType 活动类型 1: 线下  2: 线上.
      * @apiSuccess {String} createTime 活动创建时间
@@ -314,6 +334,7 @@ class PowderArticlesController extends Controller
      *           "startTime": "2015-12-30 00:00:00",
      *           "endTime": "2015-12-30 23:59:59",
      *           "expireTime": "2016-12-03 00:00:00",
+     *           "articleExpireStatus" : 1,
      *           "departmentId": 1,
      *           "departmentName": "总裁办",
      *           "userId": 115,
@@ -352,7 +373,16 @@ class PowderArticlesController extends Controller
             $articlesInfo['createTime'] = date('Y-m-d H:i:s',$articlesInfo['createTime']);       
             $articlesInfo['startTime'] = substr($articlesInfo['startTime'], 0,10);
             $articlesInfo['endTime'] = substr($articlesInfo['endTime'], 0,10);
-            $articlesInfo['expireTime'] = substr($articlesInfo['expireTime'], 0,10);
+            $articlesInfo['articleExpireStatus'] = 1;//活动没有过期
+            if($articlesInfo['articleType'] == 2){
+                $articlesInfo['expireTime'] = '获赠90天内有效';
+            }else{
+                if(time() > strtotime($articlesInfo['expireTime'])){
+                    $articlesInfo['articleExpireStatus'] = 2; //已过期
+                }
+                $articlesInfo['expireTime'] = substr($articlesInfo['expireTime'], 0,10);
+            }
+            
         }
         Event::fire('powder.showArticleDetail','定妆活动详情,活动编号:'.$param['presentId']);
         return $this->success($articlesInfo);       
@@ -565,7 +595,7 @@ class PowderArticlesController extends Controller
             throw new ApiException('必传参数不能为空');    
         }
         $page = isset($param['page'])?max($param['page'],1):1;
-        $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+        $pageSize = isset($param['page_size'])?$param['page_size']:20;
         
         $articleTicketInfoRes =  PresentArticleCode::getArticleTicketInfo($param['presentId'],$page,$pageSize);
         foreach($articleTicketInfoRes['data'] as $key => &$val){
@@ -732,13 +762,18 @@ class PowderArticlesController extends Controller
         $ticketStatus = isset($param['ticketStatus']) ? intval($param['ticketStatus']) :'';
         
         $page = isset($param['page'])?max($param['page'],1):1;
-        $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+        $pageSize = isset($param['page_size'])?$param['page_size']:20;
         
         $presentListInfo = PresentArticleCode::getPresentList($mobilephone,$reservateSn,$recommendCode,$ticketCode,$startTime,$endTime,$presentType,$ticketStatus,$page,$pageSize);
         foreach ($presentListInfo['data'] as $key => &$val) {
             $val['ticketStatusName'] = self::$ticketCodeStatus[$val['ticketStatus']];
             $val['presentTypeName'] = self::$presentTypeName[$val['presentType']];
-            $val['createTime'] = date('Y-m-d',$val['createTime']);
+            //线下活动没有赠送日期
+            if($val['reservateSn'] === null){
+                $val['createTime'] = '';
+            }else{
+                $val['createTime'] = date('Y-m-d',$val['createTime']);
+            }
             $val['expireTime'] = substr($val['expireTime'],0,10);
         }
         return $this->success($presentListInfo);
@@ -832,7 +867,12 @@ class PowderArticlesController extends Controller
         if(!empty($presentListInfoDetail)){
             $presentListInfoDetail['ticketStatusName'] = self::$ticketCodeStatus[$presentListInfoDetail['ticketStatus']];
             $presentListInfoDetail['presentTypeName'] = self::$presentTypeName[$presentListInfoDetail['presentType']];
-            $presentListInfoDetail['createTime'] = date('Y-m-d',$presentListInfoDetail['createTime']);
+            //线下活动没有赠送日期
+            if($presentListInfoDetail['reservateSn'] === null){
+                $presentListInfoDetail['createTime'] = '';
+            }else{
+                $presentListInfoDetail['createTime'] = date('Y-m-d',$presentListInfoDetail['createTime']);
+            }
             $presentListInfoDetail['useTime'] = substr($presentListInfoDetail['useTime'],0,10);
             $presentListInfoDetail['recordTime'] = substr($presentListInfoDetail['recordTime'],0,16);
             $presentListInfoDetail['expireTime'] = substr($presentListInfoDetail['expireTime'],0,10);
@@ -907,6 +947,7 @@ class PowderArticlesController extends Controller
      * @throws ApiException
      */
     public static function addReservateSnAfterConsume($user_id,$mobilephone,$present_type,$recommend_code=0){
+        Log::info("获取时间：".date('Y-m-d H:i:s',time())."--用户id:".$user_id."--手机号:".$mobilephone."--赠送类型:".$present_type."--推荐码:".$recommend_code);
         if(empty($user_id) || empty($mobilephone) || empty($present_type)){
             throw new ApiException('必传参数不能为空');
         }
@@ -922,15 +963,14 @@ class PowderArticlesController extends Controller
         }else if(strtotime($presentInfo['end_at']) < time()){
             //截止日期后不能赠送
             throw new ApiException('活动截止后不能赠送');
-        }elseif(strtotime($presentInfo['expire_at']) < time()){
-            //有效期后不能赠送
-            throw new ApiException('活动过了有效期后不能赠送');
         }else{
             $data['present_id'] = $presentInfo['present_id'];
             $data['item_id'] = $presentInfo['item_id'];
             $data['user_id'] = $user_id;
             $data['mobilephone'] = $mobilephone;
-            $data['recommend_code'] = $recommend_code;
+            if($recommend_code){
+                $data['recommend_code'] = $recommend_code;
+            }           
             $data['present_type'] = $present_type;
             //三个月内有效
             $data['expire_at'] = date("Y-m-d",strtotime("+3 month"))." 23:59:59";
@@ -949,18 +989,21 @@ class PowderArticlesController extends Controller
         $updateReservateSnRes = SeedPool::where(array('SEED' => $reservateSnInfo['reservateSn'],'TYPE' => 'TKT'))->update(array('STATUS' => 'USD'));
         if(!$updateReservateSnRes){
             DB::rollBack();
+            Log::info("线上更新预约号失败:".$reservateSnInfo['reservateSn']);
             throw new ApiException('更新预约号失败');
         }
         //更新赠送券号
         $updateArticleTicketRes = SeedPool::where(array('SEED' => substr($articleTicketInfo[0],2),'TYPE' => 'GSN'))->update(array('STATUS' => 'USD'));
         if(!$updateArticleTicketRes){
             DB::rollBack();
+            Log::info("线上更新赠送券号失败:".substr($articleTicketInfo[0],2));
             throw new ApiException('更新赠送券号失败');
         }
         //插入赠送券表cm_present_article_code
         $insertRes = PresentArticleCode::insertGetId($data);
         if(!$insertRes){
             DB::rollBack();
+            Log::info("线上插入赠送券失败:".substr($articleTicketInfo[0],2));
             throw new ApiException('插入赠送券失败');
         }
         DB::commit();

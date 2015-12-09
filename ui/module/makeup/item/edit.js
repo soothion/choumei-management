@@ -1,8 +1,14 @@
 $('#form').on("_ready",function(){
 	$('.makeup-item-list').on("click",".remove",function(){
-		var table=$(this).closest("table");
-		$(this).closest("tr").remove();
-		table.trigger("datachange");
+		var $this=$(this);
+		parent.lib.popup.confirm({
+			text:"确认删除吗？",
+			define:function(){
+				var table=$this.closest("table");
+				$this.closest("tr").remove();
+				table.trigger("datachange");
+			}
+		})
 	}).on("click",".edit,.add",function(){
 		var $this=$(this);
 		var data={};
@@ -46,9 +52,15 @@ $('#form').on("_ready",function(){
 	});
 	
 	$('.makeup-item-image-list').on("click",".remove",function(){
-		var table=$(this).closest("table");
-		$(this).closest("tr").remove();
-		table.trigger("datachange");
+		var $this=$(this);
+		parent.lib.popup.confirm({
+			text:"确认删除吗？",
+			define:function(){
+				var table=$this.closest("table");
+				$this.closest("tr").remove();
+				table.trigger("datachange");
+			}
+		})
 	}).on("click",".edit,.add",function(){
 		var $this=$(this);
 		var data={};

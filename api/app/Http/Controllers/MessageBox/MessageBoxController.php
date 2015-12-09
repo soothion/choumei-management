@@ -110,7 +110,7 @@ class MessageBoxController extends Controller{
         $endTime = isset($param['endTime'])? $param['endTime']." 23:59:59":'';
         
         $page = isset($param['page'])?max($param['page'],1):1;
-        $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+        $pageSize = isset($param['page_size'])?$param['page_size']:20;
         $status = 'DEL';
         $receiveType = 'DAILYAPPNOTREG';
         $res = PushConf::getMessageBoxInfo($title,$status,$receiveType,$startTime,$endTime, $page, $pageSize);

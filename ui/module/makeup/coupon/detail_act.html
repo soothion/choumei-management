@@ -20,6 +20,7 @@
                         <a href="coupon_list.html#presentId=<%=query.id%>" class="btn" data-slug="powderArticles.articlesTicketList">
                             查看卷详情
                         </a>
+                        <%if (data.articleExpireStatus == 1){%>
                         <%if (data.verifyStatus == 1){%>
                         <a class="btn" data-check data-url='powderArticles/switchVerifyArticles' data-text='关闭验证后此活动的赠送券将无法使用，是否关闭' data-status='2' data-id='<%=query.id%>' data-slug="powderArticles.switchVerifyArticles">
                              关闭验证
@@ -37,6 +38,7 @@
                         <a class="btn" data-check data-url='powderArticles/switchArticles' data-text='开启活动后将继续赠送，是否开启' data-id='<%=query.id%>' data-status='1' data-slug="powderArticles.switchArticles">
                              开启活动
                         </a>
+                        <%}%>
                         <%}%>
                         <a href="index.html" class="btn">
                              返回

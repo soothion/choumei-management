@@ -92,6 +92,14 @@ class BannerController extends Controller {
         });
         if ($param['type'] == 1) {
             $query = Banner::where('type', '=', 1)->orderBy('sort', 'asc')->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
+            foreach ($query['data'] as $key =>$value) {
+                if(isset($value['url'])){
+                    $temp = json_decode($value['url'],true);
+                    if(isset($temp['salonId'])){
+                        $query['data'][$key]['salonId'] = $temp['salonId'];
+                    }
+                }
+            }
         } else {
             $query = Banner::whereIn('type',[2,3,4])->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
         }
@@ -146,6 +154,11 @@ class BannerController extends Controller {
         $date['name']=$param['name'];
         $date['image']=$param['image'];
         $date['behavior']=$param['behavior'];
+        if(!empty($param['salonId'])){
+            $temp=json_decode($param['url']);
+            $temp->salonId=$param['salonId'];
+            $param['url']=  json_encode($temp);
+        }
         if (!empty($param['url'])) {
             $date['url']=$param['url'];
         }
@@ -252,7 +265,12 @@ class BannerController extends Controller {
                     throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
                 }
         }
-        }  
+        } 
+        if(!empty($param['salonId'])){
+            $temp=json_decode($param['url']);
+            $temp->salonId=$param['salonId'];
+            $param['url']=  json_encode($temp);
+        }
         if(!array_key_exists('salonName',$param)){
             $param['salonName']="";
         }
