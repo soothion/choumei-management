@@ -100,15 +100,15 @@ class OrderRefund extends Model {
         if (isset($param['key']) && isset($param['keyword']) && $param['key'] && !empty($param['keyword'])) {
             switch ($param['key']) {
                 case 1:
-                    $query->where('booking_order.booker_phone', $param['keyword']);
+                    $query->where('booking_order.booker_phone','like', '%'.$param['keyword'].'%');
                     break;
                 case 2:
                     // TODO  预约号
-                    $query->where('order_refund.booking_sn', $param['keyword']);
+                    $query->where('order_refund.booking_sn','like','%'.$param['keyword'].'%');
                     break;
                 case 3:
                     //TODO  推荐码
-                    $query->where('recommend_code_user.recommend_code', $param['keyword']);
+                    $query->where('recommend_code_user.recommend_code','like', '%'.$param['keyword'].'%');
                     break;
                 default :
                     break;
