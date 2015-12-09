@@ -113,7 +113,8 @@ class BeautyRefundApi extends TransactionWriteApi {
             $pay_type = $flow['pay_type']; //1原路退款 2 为退回余额
             $user_id = $flow['user_id'];
             $money = $flow['money'];
-            $reason = implode(',', Mapping::BeautyRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
+//            $reason = implode(',', Mapping::BeautyRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
+            $reason = implode(',',Mapping::getRefundRereasonNames(explode(',',$refunds[$ordersn]['rereason']))); 
             $reason = !empty($reason) ? $reason . "," . $refunds[$ordersn]['other_rereason'] : $refunds[$ordersn]['other_rereason'];
             $device = null;
             $tn = '';
