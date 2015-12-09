@@ -12,6 +12,7 @@ use App\Model\PresentArticleCode;
 use DB;
 use App\Model\SeedPool;
 use Event;
+use Log;
 
 use App\Jobs\PowderArticleTicket;
 
@@ -951,9 +952,6 @@ class PowderArticlesController extends Controller
         }else if(strtotime($presentInfo['end_at']) < time()){
             //截止日期后不能赠送
             throw new ApiException('活动截止后不能赠送');
-        }elseif(strtotime($presentInfo['expire_at']) < time()){
-            //有效期后不能赠送
-            throw new ApiException('活动过了有效期后不能赠送');
         }else{
             $data['present_id'] = $presentInfo['present_id'];
             $data['item_id'] = $presentInfo['item_id'];
@@ -978,18 +976,21 @@ class PowderArticlesController extends Controller
         $updateReservateSnRes = SeedPool::where(array('SEED' => $reservateSnInfo['reservateSn'],'TYPE' => 'TKT'))->update(array('STATUS' => 'USD'));
         if(!$updateReservateSnRes){
             DB::rollBack();
+            Log::info("线上更新预约号失败:".$reservateSnInfo['reservateSn']);
             throw new ApiException('更新预约号失败');
         }
         //更新赠送券号
         $updateArticleTicketRes = SeedPool::where(array('SEED' => substr($articleTicketInfo[0],2),'TYPE' => 'GSN'))->update(array('STATUS' => 'USD'));
         if(!$updateArticleTicketRes){
             DB::rollBack();
+            Log::info("线上更新赠送券号失败:".substr($articleTicketInfo[0],2));
             throw new ApiException('更新赠送券号失败');
         }
         //插入赠送券表cm_present_article_code
         $insertRes = PresentArticleCode::insertGetId($data);
         if(!$insertRes){
             DB::rollBack();
+            Log::info("线上插入赠送券失败:".substr($articleTicketInfo[0],2));
             throw new ApiException('插入赠送券失败');
         }
         DB::commit();
