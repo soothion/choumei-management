@@ -92,6 +92,14 @@ class BannerController extends Controller {
         });
         if ($param['type'] == 1) {
             $query = Banner::where('type', '=', 1)->orderBy('sort', 'asc')->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
+            foreach ($query['data'] as $key =>$value) {
+                if(isset($value['url'])){
+                    $temp = json_decode($value['url'],true);
+                    if(isset($temp['salonId'])){
+                        $query['data'][$key]['salonId'] = $temp['salonId'];
+                    }
+                }
+            }
         } else {
             $query = Banner::whereIn('type',[2,3,4])->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
         }
