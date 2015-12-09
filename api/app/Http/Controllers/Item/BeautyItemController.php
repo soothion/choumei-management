@@ -608,7 +608,7 @@ class BeautyItemController extends Controller{
 	*/
 	public function itemList()
 	{
-		$result = BeautyItem::select(['item_id','name','is_gift','type'])->orderBy('item_id', 'desc')->get();
+		$result = BeautyItem::select(['item_id','name','is_gift','type'])->orderBy('level', 'desc')->orderBy('item_id', 'desc')->get();
 		return $this->success($result);
 	}
 	

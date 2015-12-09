@@ -22,7 +22,7 @@ class BeautyItem extends Model {
 		    return $page;
 		});
 		
-	    $query = self::select($fields)->orderBy('item_id', 'desc');
+	    $query = self::select($fields)->orderBy('level', 'desc')->orderBy('item_id', 'desc');
 		if(isset($type) && intval($type))
 		{
 			$query = $query->where('type','=',$type);
