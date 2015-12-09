@@ -197,6 +197,10 @@ class BookingOrder extends Model
                      $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status',3);
                  });
              }
+             else if($pay_state == "RFD")
+             {
+                 $base->whereIn('booking_order.STATUS',['RFD','RFD-OFL']);
+             }
              else 
              {
                  $base->where('booking_order.STATUS',$pay_state);
@@ -219,24 +223,39 @@ class BookingOrder extends Model
          if($key == 2 && ! empty($keyword))
          {
              $base->where('booking_order.BOOKING_SN','like',$keyword);
-         }    
-        
-        $base->leftJoin('fundflow', function ($join) use($pay_type)
+         } 
+            
+        if(!empty($pay_type))
         {
-            $join->on('booking_order.ORDER_SN', '=', 'fundflow.record_no');
-            if (! empty($pay_type)) {
-                $join->where('fundflow.pay_type', '=', $pay_type);
-            }
-        });
-        
-        $base->leftJoin('recommend_code_user', function ($join) use($key,$keyword)
+            $base->join('fundflow', function ($join) use($pay_type)
+            {
+                $join->on('booking_order.ORDER_SN', '=', 'fundflow.record_no')->where('fundflow.pay_type', '=', $pay_type);
+            });
+        }
+        else 
         {
-            $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('type',[2,3,4]);
-            if ($key == 3 && !empty($keyword)) {
-                $join->where('recommend_code_user.recommend_code', 'like', $keyword);
-            }
-        });
+            $base->leftJoin('fundflow', function ($join)
+            {
+                $join->on('booking_order.ORDER_SN', '=', 'fundflow.record_no');
+            });
+        }
         
+        if ($key == 3 && !empty($keyword))
+        {
+            $base->join('recommend_code_user', function ($join) use($key,$keyword)
+            {
+                $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('type',[2,3])->where('recommend_code_user.recommend_code', 'like', $keyword);
+             
+            });
+        }
+        else 
+        {
+            $base->leftJoin('recommend_code_user', function ($join) 
+            {
+                $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('type',[2,3]);
+            });            
+        }
+       
         $booking_order_item_fields = [
             'ORDER_SN',
             'ITEM_NAME'

@@ -18,6 +18,7 @@ use App\RecommendCodeUser;
 use App\User;
 use App\Http\Controllers\Powder\PowderArticlesController;
 use App\Order;
+use App\Utils;
 
 class BookController extends Controller
 {
@@ -503,7 +504,13 @@ class BookController extends Controller
             $is_first = true;
         }
         //self::givePresent($custom_uid,true);
-        self::givePresent($custom_uid,$is_first);
+        try{
+            self::givePresent($custom_uid,$is_first);
+        }
+        catch (\Exception $e)
+        {
+            Utils::log("present", $e->getMessage());
+        }
         Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success(['id'=>$id]);
     }
