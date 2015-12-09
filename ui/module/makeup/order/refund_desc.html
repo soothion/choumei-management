@@ -20,13 +20,13 @@
                       <script type="text/template" id="breadcrumb-t">
                           <form data-slug="beautyrefund.accept" <%if (data.status == 'RFD'){%>disabled='disabled'<%}%> action="beautyrefund/accept" id="destroy" data-role="normal" onsuccess="refund(data.data)">
                               <input type="hidden" name="ids" value="<%=query.id%>">
-                          <button class="btn" data-slug="beautyrefund.accept">
+                          <button class="btn" <%if (data.status == 'RFD'){%>disabled='disabled'<%}%>  data-slug="beautyrefund.accept">
                                确认退款
                           </button>
                           </form>
-                          <form data-slug="beautyrefund.reject" action="beautyrefund/reject" id="destroy" data-role="normal" onsuccess="lib.popup.result({text:'拒绝退款成功',define:function(){location.href='refund_list.html';}});">
+                          <form data-slug="beautyrefund.reject" action="beautyrefund/reject" <%if (data.status == 'RFD'){%>disabled='disabled'<%}%> id="destroy" data-role="normal" onsuccess="lib.popup.result({text:'拒绝退款成功',define:function(){location.href='refund_list.html';}});">
                               <input type="hidden" name="ids" value="<%=query.id%>">
-                          <button class="btn" data-slug="beautyrefund.reject">
+                          <button class="btn" <%if (data.status == 'RFD'){%>disabled='disabled'<%}%>  data-slug="beautyrefund.reject">
                                拒绝退款
                           </button>
                           </form>
@@ -272,7 +272,7 @@
                  </script>
                  <script>
                     $('#table').on('_ready',function(e,res){
-                        lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').render();
+                        lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').template(res.response);
                     })
                     var refund = function(data){
                         lib.popup.result({

@@ -21,10 +21,10 @@
                             <a onclick="print()" class="btn" data-slug="coupon.add">
                                 打印
                             </a>
-                            <button <%if (data.booking_receive){%>disabled='disabled'<%}%> class="btn" data-modal='receive' data-slug="book.receive">
+                            <button <%if (data.booking_receive || (data.booking_salon_refund || data.order_refund)){%>disabled='disabled'<%}%> class="btn" data-modal='receive' data-slug="book.receive">
                                  接待
                             </button>
-                            <button <%if (data.booking_cash){%>disabled='disabled'<%}%> class="btn" data-modal='cashier' data-slug="book.cash">
+                            <button <%if (data.booking_cash || (data.booking_salon_refund || data.order_refund)){%>disabled='disabled'<%}%> class="btn" data-modal='cashier' data-slug="book.cash">
                                  收银
                             </button>
                             <button <%if (data.booking_bill || !data.booking_cash || (data.booking_salon_refund || data.order_refund)){%>disabled='disabled'<%}%> class="btn" data-modal='receipt' data-modal='' data-slug="book.bill">
@@ -33,7 +33,7 @@
                             <button <%if (data.makeup || !data.booking_cash || (data.booking_salon_refund || data.order_refund)){%>disabled='disabled'<%}%> class="btn" data-modal='comp-color' data-slug="book.relatively">
                                  补色
                             </button>
-                            <button <%if ( (data.booking_salon_refund || order_refund) || !data.booking_cash){%>disabled='disabled'<%}%> data-modal='refund' class="btn" data-slug="book.refund">
+                            <button <%if ( (data.booking_salon_refund || data.order_refund) || !data.booking_cash){%>disabled='disabled'<%}%> data-modal='refund' class="btn" data-slug="book.refund">
                                  退款
                             </button>
                         </script>
