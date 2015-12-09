@@ -246,7 +246,7 @@ class PowderArticlesController extends Controller
         $endTime = isset($param['endTime'])? strtotime($param['endTime']." 23:59:59"):'';
         
         $page = isset($param['page'])?max($param['page'],1):1;
-        $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+        $pageSize = isset($param['page_size'])?$param['page_size']:20;
         
         $articlesList = Present::getArticlesList($name,$departmentId,$startTime,$endTime,$page,$pageSize);
         foreach ($articlesList['data'] as $key => &$val) {
@@ -578,7 +578,7 @@ class PowderArticlesController extends Controller
             throw new ApiException('必传参数不能为空');    
         }
         $page = isset($param['page'])?max($param['page'],1):1;
-        $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+        $pageSize = isset($param['page_size'])?$param['page_size']:20;
         
         $articleTicketInfoRes =  PresentArticleCode::getArticleTicketInfo($param['presentId'],$page,$pageSize);
         foreach($articleTicketInfoRes['data'] as $key => &$val){
@@ -745,7 +745,7 @@ class PowderArticlesController extends Controller
         $ticketStatus = isset($param['ticketStatus']) ? intval($param['ticketStatus']) :'';
         
         $page = isset($param['page'])?max($param['page'],1):1;
-        $pageSize = isset($param['pageSize'])?$param['pageSize']:20;
+        $pageSize = isset($param['page_size'])?$param['page_size']:20;
         
         $presentListInfo = PresentArticleCode::getPresentList($mobilephone,$reservateSn,$recommendCode,$ticketCode,$startTime,$endTime,$presentType,$ticketStatus,$page,$pageSize);
         foreach ($presentListInfo['data'] as $key => &$val) {
