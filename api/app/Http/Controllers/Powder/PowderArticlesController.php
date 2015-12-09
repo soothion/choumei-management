@@ -81,8 +81,18 @@ class PowderArticlesController extends Controller
     {
         $param = $this->param;
         $createrId = $this->user->id;
-        if(empty($param['articleName']) || empty($param['itemId']) || empty($param['nums']) || empty($param['startTime']) || empty($param['endTime']) || empty($param['expireTime']) || empty($param['departmentId']) || empty($param['userId'])){
+        if(empty($param['articleName']) || empty($param['itemId']) || empty($param['startTime']) || empty($param['endTime']) || empty($param['expireTime']) || empty($param['departmentId']) || empty($param['userId'])){
             throw new ApiException('必传参数不能为空');
+        }
+        if(!isset($param['nums'])){
+            throw new ApiException('必传参数不能为空');
+        }else{
+            if($param['nums'] == 0){
+                throw new ApiException('赠送数量不能为0');
+            }
+            if(!is_int($param['nums'])){
+                throw new ApiException('赠送数量必须为整数');
+            }
         }
         if(strlen($param['articleName']) > 60){
             throw new ApiException('活动名称长度限制20字');
@@ -122,8 +132,8 @@ class PowderArticlesController extends Controller
         //$queries = DB::getQueryLog();
         if($resId){
             $res['presentId'] = $resId;
-            $this->dispatch(new PowderArticleTicket($resId));
-            Event::fire('powder.create','添加赠送活动,活动编号:'.$resId);
+            //$this->dispatch(new PowderArticleTicket($resId));
+            //Event::fire('powder.create','添加赠送活动,活动编号:'.$resId);
             return $this->success($res);
         }else{
             throw new ApiException('活动添加失败',ERROR::POWDER_ARTICLE_ADD_FIELD);
