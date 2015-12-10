@@ -686,71 +686,36 @@ class BookController extends Controller
     public static function givePresent($customer_uid,$ordersn,$is_first=false)
     {
         $recommends = RecommendCodeUser::where('user_id',$customer_uid)->whereIn("type",[2,3])->get(['recommend_code','type'])->toArray(); 
-        if(count($recommends)<1)
+        
+        if(count($recommends)!=1)
         {
             return ;
         }
-        $customer_user = User::where('user_id',$customer_uid)->first(['user_id','mobilephone']);
-        if(empty($customer_user))
+        
+        $recommend = $recommends[0];
+        
+        $send_uid = null;
+        
+        if($recommend['type'] == 2)//店铺推荐
         {
-            throw new ApiException("用户不存在 uid:{$customer_uid}");
+             $send_uid = $customer_uid;
         }
-        $customer_phone = $customer_user->mobilephone;
-        
-        $mobilephones = array_column($recommends, 'recommend_code');
-        
-        $recommend_users = User::whereIn('mobilephone',$mobilephones)->get(['user_id','mobilephone'])->toArray();
-        $recommend_users_idx = Utils::column_to_key("user_id",$recommend_users);
-        $recommend_users_mobilephone = Utils::column_to_key("mobilephone",$recommend_users);
-   
-        if(count($recommends)>0)
+        else 
         {
-            $send_users = [];
-            foreach($recommends as $recommend)
+            if($is_first)
             {
-                $info = [];
-                if($recommend['type'] == 2)//店铺推荐
-                {
-                    $info['user_id'] = $customer_uid;
-                    $info['type'] = 1;
-                    $info['mobilephone'] = $customer_phone;
-                    $info['code'] = $recommend['recommend_code'];             
-                }
-                else
-                {
-                    if($is_first)
-                    {
-                        $code = $recommend['recommend_code'];
-                        $info['code'] = $code;                        
-                        if($code == $customer_phone)
-                        {
-                            $info['user_id'] = $customer_uid;
-                            $info['mobilephone'] = $customer_phone;
-                        }
-                        else 
-                        {
-                            $info['user_id'] = $recommend_users_mobilephone[$code]['user_id'];
-                            $info['mobilephone'] = $recommend_users_mobilephone[$code]['mobilephone'];
-                        }
-                        $info['type'] = 2;                       
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                $send_users[] = $info;
+                 $recommend_users = User::whereIn('mobilephone',$recommend['recommend_code'])->get(['user_id'])->toArray();
+                 if(count($recommend_users)>0)
+                 {
+                     $send_uid = $recommend_users['user_id'];
+                 }
             }
-            
-            foreach($send_users as  $u)
-            {
-                $uid = $u['user_id'];
-                $mobilephone = $u['mobilephone'];
-                $type = $u['type'];
-                $recommend_code = $u['code'];
-                Utils::log("present",date("Y-m-d H:i:s")." ordersn:{$ordersn} type:{$type} uid:{$uid} mobilephone:{$mobilephone} recommend_code:{$recommend_code} \n","send_present");
-                PowderArticlesController::addReservateSnAfterConsume($ordersn,$u['user_id'],$u['mobilephone'],$type,$recommend_code);
-            }
+        }
+        
+        if(!empty($send_uid))
+        {
+            Utils::log("present",date("Y-m-d H:i:s")." ordersn:{$ordersn} uid:{$send_uid} \n","send_present");
+            PowderArticlesController::addReservateSnAfterConsume($ordersn,$send_uid);
         }
     }
 }
