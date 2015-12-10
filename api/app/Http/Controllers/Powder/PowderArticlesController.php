@@ -90,9 +90,6 @@ class PowderArticlesController extends Controller
             if($param['nums'] == 0){
                 throw new ApiException('赠送数量不能为0');
             }
-            if(!is_int($param['nums'])){
-                throw new ApiException('赠送数量必须为整数');
-            }
         }
         if(strlen($param['articleName']) > 60){
             throw new ApiException('活动名称长度限制20字');
@@ -117,6 +114,11 @@ class PowderArticlesController extends Controller
         if($count){
             throw new ApiException('活动名称已存在',ERROR::POWDER_ARTICLE_NAME_EXIST);
         }
+        //查询种子池中活动券是否够用
+        $seed = SeedPool::where(array('TYPE' => 'GSN' , 'STATUS' => 'NEW'))->count();
+        if($seed < $param['nums']){
+            throw new ApiException('活动券数量超过10万，现在无法发券，目前券可使用数最多为'.$seed);
+        }
         $data['name'] = $param['articleName'];
         $data['item_id'] = $param['itemId'];
         $data['quantity'] = $param['nums'];      
@@ -131,12 +133,7 @@ class PowderArticlesController extends Controller
         $resId = Present::insertGetId($data);
         //$queries = DB::getQueryLog();
         if($resId){
-            $res['presentId'] = $resId;
-            //查询种子池中活动券是否够用
-            $seed = SeedPool::where(array('TYPE' => 'GSN' , 'STATUS' => 'NEW'))->count();
-            if($seed < $param['nums']){
-                throw new ApiException('活动券数量超过10万，现在无法发券，目前券可使用数最多为'.$seed);
-            }           
+            $res['presentId'] = $resId;                     
             $this->dispatch(new PowderArticleTicket($resId));
             Event::fire('powder.create','添加赠送活动,活动编号:'.$resId);
             return $this->success($res);
@@ -987,7 +984,7 @@ class PowderArticlesController extends Controller
         $reservateSnInfo = SeedPool::getReservateSnFromPool();
         $data['reservate_sn'] = $reservateSnInfo['reservateSn'];
         //获取赠送券号
-        $articleTicketInfo = SeedPool::getArticleTicketFromPool(1,'asc');
+        $articleTicketInfo = SeedPool::getArticleTicketFromPoolForOnline(1,'asc');
         $data['code'] = $articleTicketInfo[0];
         DB::beginTransaction();
         //活动券总数+1

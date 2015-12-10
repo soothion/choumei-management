@@ -187,7 +187,8 @@ class PresentArticleCode extends Model
         $query = self::select($field)
                 ->where('present_article_code.present_id','=',$presentId)
                 ->leftJoin('present', 'present.present_id', '=', 'present_article_code.present_id')
-                ->leftJoin('beauty_item', 'present.item_id', '=', 'beauty_item.item_id');
+                ->leftJoin('beauty_item', 'present.item_id', '=', 'beauty_item.item_id')
+                ->orderBy('present_article_code.created_at','desc');
         //手动设置页数
         AbstractPaginator::currentPageResolver(function() use ($page) {
               return $page;
@@ -214,6 +215,7 @@ class PresentArticleCode extends Model
                 ->where('present_article_code.present_id','=',$presentId)
                 ->leftJoin('present', 'present.present_id', '=', 'present_article_code.present_id')
                 ->leftJoin('beauty_item', 'present.item_id', '=', 'beauty_item.item_id')
+                ->orderBy('present_article_code.created_at','desc')
                 ->get() ->toArray();
         return $res;
 
