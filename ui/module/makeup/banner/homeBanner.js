@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-10 11:25:17
+* @Last Modified time: 2015-12-10 15:11:13
 */
 
 $(function(){
@@ -78,8 +78,6 @@ $(function(){
         parent.find('.edit').addClass('hidden');
 
         var topBanner = $(this).closest('.banner');
-        //topBanner.removeClass('move');
-        //topBanner.siblings().find('button.edit').attr('disabled',true);
         topBanner.find('.operation').removeClass('hidden');
         topBanner.find('button.btn-primary').removeAttr('disabled');
         topBanner.find('input[type=radio]').removeAttr('disabled');
@@ -92,7 +90,9 @@ $(function(){
             topBanner.find('select').removeAttr('disabled')
             var selectValue = topBanner.find('select').val();   
             if(selectValue == "salon"){
-                topBanner.find(".search").removeClass('hidden').removeAttr('disabled'); 
+                topBanner.find(".search").removeClass('hidden').removeAttr('disabled');
+                topBanner.find(".salonId").removeAttr('disabled');
+
             }         
         }
         $("form").find('button.edit').attr('disabled',true);
@@ -127,6 +127,7 @@ $(function(){
         topBanner.find('#h5url').attr('disabled',true);
         topBanner.find('select').attr('disabled',true);
         topBanner.find('.search').attr('disabled',true);
+        topBanner.find('.salonId').attr('disabled',true);
         topBanner.find('button.btn-primary').attr('disabled',true);
         $("form").find('button.edit').removeAttr('disabled');
         $(".plus-button button").removeAttr('disabled');    
