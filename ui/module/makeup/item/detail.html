@@ -134,7 +134,7 @@
 											<%JSON.parse(data.register_detail).forEach(function(item){%>
 											<tr>
 												<td><%=item.title%></td>
-												<td><%=item.content.replace(/\n/g,"</br>")%></td>
+												<td><%=item.content.replace(/\n/g,"<br/>")%></td>
 											</tr>
 											<%})%>
 										</tbody>
@@ -150,7 +150,7 @@
 									<%if(data.equipment){%>
 									<%JSON.parse(data.equipment).forEach(function(item){%>
 									<h4><%=item.title%></h4>
-									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
 										<img src="<%=image%>" alt="" />
@@ -167,7 +167,7 @@
 									<%if(data.description){%>
 									<%JSON.parse(data.description).forEach(function(item){%>
 									<h4><%=item.title%></h4>
-									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
 										<img src="<%=image%>" alt="" />
@@ -185,7 +185,7 @@
 											<%JSON.parse(data.archive).forEach(function(item){%>
 											<tr>
 												<td><%=item.title%></td>
-												<td><%=item.content.replace(/\n/g,"</br>")%></td>
+												<td><%=item.content.replace(/\n/g,"<br/>")%></td>
 											</tr>
 											<%})%>
 										</tbody>
@@ -199,7 +199,7 @@
 									<%if(data.register_workflow){%>
 									<%JSON.parse(data.register_workflow).forEach(function(item){%>
 									<h4><%=item.title%></h4>
-									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
 										<img src="<%=image%>" alt="" />
@@ -216,7 +216,7 @@
 									<%if(data.beauty){%>
 									<%JSON.parse(data.beauty).forEach(function(item){%>
 									<h4><%=item.title%></h4>
-									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
 										<img src="<%=image%>" alt="" />
