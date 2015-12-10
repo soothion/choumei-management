@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-10 10:28:58
+* @Last Modified time: 2015-12-10 10:38:00
 */
 
 (function(){       
@@ -26,7 +26,7 @@
             auto_start:true,
             filters: {
                 mime_types : [
-                    { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+                    { title : "Image files", extensions : "jpg,png,jpeg" },
                 ]
             },
             max_file_size:'10mb',
@@ -45,7 +45,7 @@
             auto_start:true,
             filters: {
                 mime_types : [
-                    { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+                    { title : "Image files", extensions : "jpg,png,jpeg" },
                 ]
             },
             max_file_size:'10mb',
