@@ -472,7 +472,7 @@ class ArtificerAssistantController extends Controller{
 	 */
     public function getArtificer(){
         $field = ['artificer_id as id','name'];
-        $result = Artificer::select($field)->where(['pid'=>NULL])->get()->toArray();
+        $result = Artificer::select($field)->where(['pid'=>NULL,'status'=>1])->get()->toArray();
         return $this->success( $result );
     }
     /**
@@ -666,15 +666,14 @@ class ArtificerAssistantController extends Controller{
         $uniqueArr = array_unique($tempAll);
         foreach( $uniqueArr as $val ){
             $name = $this->_getArtificerNameById( $val );
-            if($name === false) $this->error('获取归属专家id错误');
-            $tempName[ $val ] = $name;
+            if($name)  $tempName[ $val ] = $name;
         }
         return $this->_formatSigleToString( $result,$tempItem,$tempName );
     }
     // 根据职工id获取职工的姓名
     private function _getArtificerNameById( $artificerId ){
         $field = ['name'];
-        $name = Artificer::select($field)->where(['artificer_id'=>$artificerId])->first();
+        $name = Artificer::select($field)->where(['artificer_id'=>$artificerId,'status'=>1])->first();
         if(empty($name)) return false;
         return $name->toArray()['name'];
     }
