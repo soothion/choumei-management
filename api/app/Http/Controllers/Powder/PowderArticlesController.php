@@ -756,9 +756,9 @@ class PowderArticlesController extends Controller
     public function presentList()
     {
         $param = $this->param;
-        $mobilephone = isset($param['mobilephone']) ? intval($param['mobilephone']) :'';
+        $mobilephone = isset($param['mobilephone']) ? $param['mobilephone'] :'';
         $reservateSn = isset($param['reservateSn']) ? trim($param['reservateSn']) :'';
-        $recommendCode = isset($param['recommendCode']) ? intval($param['recommendCode']) :'';
+        $recommendCode = isset($param['recommendCode']) ? $param['recommendCode'] :'';
         $ticketCode = isset($param['ticketCode']) ? trim($param['ticketCode']) :'';
         $startTime = isset($param['startTime'])? strtotime($param['startTime']):'';
         $endTime = isset($param['endTime'])? strtotime($param['endTime']." 23:59:59"):'';
