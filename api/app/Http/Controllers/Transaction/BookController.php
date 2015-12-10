@@ -707,7 +707,7 @@ class BookController extends Controller
                  $recommend_users = User::whereIn('mobilephone',$recommend['recommend_code'])->get(['user_id'])->toArray();
                  if(count($recommend_users)>0)
                  {
-                     $send_uid = $recommend_users['user_id'];
+                     $send_uid = $recommend_users[0]['user_id'];
                  }
             }
         }
