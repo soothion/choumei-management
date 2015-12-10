@@ -91,7 +91,7 @@ class BannerController extends Controller {
             return $page;
         });
         if ($param['type'] == 1) {
-            $query = Banner::where('type', '=', 1)->orderBy('sort', 'asc')->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
+            $query = Banner::where('type', '=', 1)->orderBy('sort', 'asc')->orderBy('created_at', 'asc')->paginate($page_size)->toArray();
             foreach ($query['data'] as $key =>$value) {
                 if(isset($value['url'])){
                     $temp = json_decode($value['url'],true);
@@ -151,6 +151,7 @@ class BannerController extends Controller {
             }
         }
         $date['type']=$param['type'];
+        $date['sort']=10;
         $date['name']=$param['name'];
         $date['image']=$param['image'];
         $date['behavior']=$param['behavior'];
