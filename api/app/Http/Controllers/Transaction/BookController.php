@@ -505,7 +505,7 @@ class BookController extends Controller
         }
         //self::givePresent($custom_uid,true);
         try{
-            self::givePresent($custom_uid,$is_first);
+            self::givePresent($custom_uid,$book['ORDER_SN'],$is_first);
         }
         catch (\Exception $e)
         {
@@ -683,7 +683,7 @@ class BookController extends Controller
         return $this->success(['id'=>$id]);
     }
     
-    public static function givePresent($customer_uid,$is_first=false)
+    public static function givePresent($customer_uid,$ordersn,$is_first=false)
     {
         $recommends = RecommendCodeUser::where('user_id',$customer_uid)->whereIn("type",[2,3])->get(['recommend_code','type'])->toArray(); 
         if(count($recommends)<1)
@@ -748,8 +748,8 @@ class BookController extends Controller
                 $mobilephone = $u['mobilephone'];
                 $type = $u['type'];
                 $recommend_code = $u['code'];
-                Utils::log("present",date("Y-m-d H:i:s")."type:{$type} uid:{$uid} mobilephone:{$mobilephone} recommend_code:{$recommend_code} \n","send_present");
-                PowderArticlesController::addReservateSnAfterConsume($u['user_id'],$u['mobilephone'],$type,$recommend_code);
+                Utils::log("present",date("Y-m-d H:i:s")." ordersn:{$ordersn} type:{$type} uid:{$uid} mobilephone:{$mobilephone} recommend_code:{$recommend_code} \n","send_present");
+                PowderArticlesController::addReservateSnAfterConsume($ordersn,$u['user_id'],$u['mobilephone'],$type,$recommend_code);
             }
         }
     }
