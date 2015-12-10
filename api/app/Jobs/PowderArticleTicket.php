@@ -55,7 +55,7 @@ class PowderArticleTicket extends Job implements SelfHandling,ShouldQueue
         if($count > 0){
             $seedRes = $this->getArticleTicketCodeFromSeedPool($count);
             if(!$seedRes){
-                return false;
+                return true;
             }
             $pageSize = 2000;
             $totalPage = ceil($count/$pageSize);
@@ -89,7 +89,7 @@ class PowderArticleTicket extends Job implements SelfHandling,ShouldQueue
                 } 
                 if($insertTimes > 5){
                     Log::info("定妆数据第{$page}页数据处理失败次数过多，已停止重试,请稍后删除已插入数据");
-                    return false;
+                    return true;
                 }
             }
             //更新券状态
