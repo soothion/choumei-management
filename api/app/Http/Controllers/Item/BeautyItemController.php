@@ -578,6 +578,10 @@ class BeautyItemController extends Controller{
 	* @apiName itemList
 	* @apiGroup  beautyItem
 	* 
+	* @apiParam   {Array} 参数不传 默认返回所有项目
+	* @apiParam   {Number} type 选填,项目类型 1韩式半永久 2快时尚.
+	* @apiParam   {Number} is_gift 选填,是否是赠送项目 0否 1是
+	* 
 	* @apiSuccess {String} name 项目名称.
 	* @apiSuccess {Number} item_id 项目id.
 	* @apiSuccess {Number} type 项目类型 1韩式半永久 2快时尚.
@@ -608,7 +612,20 @@ class BeautyItemController extends Controller{
 	*/
 	public function itemList()
 	{
-		$result = BeautyItem::select(['item_id','name','is_gift','type'])->orderBy('type', 'asc')->orderBy('level', 'asc')->orderBy('item_id', 'desc')->get();
+		$param = $this->param;
+		$type = isset($param['type'])?intval($param['type']):0;
+		$is_gift = isset($param['is_gift'])?intval($param['is_gift']):0;
+		
+		$query = BeautyItem::select(['item_id','name','is_gift','type']);
+		if($type == 1)
+		{
+			$query = $query->where(['type'=>$type]);
+		}
+		elseif($type == 2)
+		{
+			$query = $query->where(['type'=>$type,'is_gift'=>$is_gift]);
+		}
+		$result = $query->orderBy('type', 'asc')->orderBy('level', 'asc')->orderBy('item_id', 'desc')->get();
 		return $this->success($result);
 	}
 	
