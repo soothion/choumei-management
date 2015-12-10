@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Log;
 
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
@@ -21,7 +22,8 @@ class SeedPool extends Model
         $sql = "select CONCAT('SZ',SEED) as articleTicket from cm_seed_pool where TYPE = 'GSN' and STATUS = 'NEW' order by ID $orderby limit $limit;";
         $res = DB::select($sql);
         if(empty($res)){
-            throw new ApiException('无法获取定妆赠送活动券');    
+            Log::info('无法获取定妆赠送活动券,券数量不足');
+            throw new ApiException('无法获取定妆赠送活动券,券数量不足');    
         }
         if(count($res) != $limit){
             throw new ApiException('臭美池中的券不够'); 

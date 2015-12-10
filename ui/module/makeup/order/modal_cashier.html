@@ -100,10 +100,10 @@ $('.complete-position').on('click','li',function(){
             $cash_money.hide();
         }
         if (value !=4){
-            $other_money.show();
+            $other_money.show().find('input[name=other_money]').removeAttr('disabled');
             $pay_name.html(cash_type_desc[value]);
         }else{
-            $other_money.hide();
+            $other_money.hide().find('input[name=other_money]').attr('disabled','disabeld');
         }
     })
 </script>

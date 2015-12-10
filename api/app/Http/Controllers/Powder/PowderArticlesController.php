@@ -132,6 +132,11 @@ class PowderArticlesController extends Controller
         //$queries = DB::getQueryLog();
         if($resId){
             $res['presentId'] = $resId;
+            //查询种子池中活动券是否够用
+            $seed = SeedPool::where(array('TYPE' => 'GSN' , 'STATUS' => 'NEW'))->count();
+            if($seed < $param['nums']){
+                throw new ApiException('活动券数量超过10万，现在无法发券，目前券可使用数最多为'.$seed);
+            }           
             $this->dispatch(new PowderArticleTicket($resId));
             Event::fire('powder.create','添加赠送活动,活动编号:'.$resId);
             return $this->success($res);
@@ -495,10 +500,10 @@ class PowderArticlesController extends Controller
             throw new ApiException('活动开关参数错误');
         }
         $where = array('present_id' => intval($param['presentId']));
-        $field = array('expire_at','verify_status as verifyStatus');
+        $field = array('expire_at','verify_status as verifyStatus','article_type');
         $articlesInfo = Present::select($field)->where($where)->first();
         if(!empty($articlesInfo)){
-            if(time() > strtotime($articlesInfo['expire_at'])){
+            if(time() > strtotime($articlesInfo['expire_at']) && $articlesInfo['article_type'] == 1){
                 throw new ApiException('活动已过期');
             }elseif($articlesInfo['verifyStatus'] == $param['verifyStatus']){
                 if($param['verifyStatus'] == 1){
@@ -985,6 +990,15 @@ class PowderArticlesController extends Controller
         $articleTicketInfo = SeedPool::getArticleTicketFromPool(1,'asc');
         $data['code'] = $articleTicketInfo[0];
         DB::beginTransaction();
+        //活动券总数+1
+        $resPreIncrement = Present::where($where)
+                    ->increment('present.quantity',1);
+        if(!$resPreIncrement){
+            DB::rollBack();
+            //记录错误日志
+            Log::info('线上活动赠送券使用后，使用数增加失败');
+            throw new ApiException('线上活动赠送券使用后,使用数增加失败');
+        }
         //更新预约号
         $updateReservateSnRes = SeedPool::where(array('SEED' => $reservateSnInfo['reservateSn'],'TYPE' => 'TKT'))->update(array('STATUS' => 'USD'));
         if(!$updateReservateSnRes){

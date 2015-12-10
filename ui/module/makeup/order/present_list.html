@@ -62,7 +62,7 @@
 
                 <button class="btn" type="submit">查询</button>
             </form>
-           <div class="table" ajat="powderArticles/presentList?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="<%if (query._){%>powderArticles/presentList?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -80,8 +80,7 @@
                         </tr>
                     </thead>
                 <tbody>
-                <%var data=data.data%>
-                <%data.forEach(function(item,index){%>
+                <%data.data && data.data.forEach(function(item,index){%>
                  <tr>
                   <td><%=index+1%></td>
                   <td><%=item.mobilephone%></td>

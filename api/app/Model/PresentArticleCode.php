@@ -44,16 +44,16 @@ class PresentArticleCode extends Model
         $query = self::select($field)
                 ->leftJoin('beauty_item', 'present_article_code.item_id', '=', 'beauty_item.item_id');
         if($mobilephone){
-            $query = $query->where('mobilephone','=',$mobilephone);
+            $query = $query->where('mobilephone','like','%'.$mobilephone.'%');
         }
         if($reservateSn){
-            $query = $query->where('reservate_sn','=',$reservateSn);
+            $query = $query->where('reservate_sn','like','%'.$reservateSn.'%');
         }
         if($recommendCode){
-            $query = $query->where('recommend_code','=',$recommendCode);
+            $query = $query->where('recommend_code','like','%'.$recommendCode.'%');
         }
         if($ticketCode){
-            $query = $query->where('code','=',$ticketCode);
+            $query = $query->where('code','like','%'.$ticketCode.'%');
         }
         if($startTime){
             $query = $query->where('present_article_code.created_at','>=',$startTime);
@@ -154,6 +154,7 @@ class PresentArticleCode extends Model
             $presentRes = self::select('present_id')->where('article_code_id','=',$articleCodeId)->first();
             if($presentRes === null){
                 Log::info('找不到该活动:', $articleCodeId);
+                throw new ApiException('验证完毕，但线上活动找不到该活动');
             }else{
                 $res= $presentRes->toArray();
                 $presentId = $res['present_id'];

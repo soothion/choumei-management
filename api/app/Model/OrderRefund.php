@@ -77,10 +77,10 @@ class OrderRefund extends Model {
 
         // 按时间搜索
         if (!empty($param['start_time'])) {
-            $query->where('order_refund.add_time', '>=', $param['add_time']);
+            $query->where('order_refund.add_time', '>=', strtotime($param['start_time']."00:00:00"));
         }
         if (!empty($param['end_time'])) {
-            $query->where('order_refund.end_time', '<=', $param['end_time']);
+            $query->where('order_refund.add_time', '<=', strtotime($param['end_time']."23:59:59"));
         }
         //支付方式
         if (isset($param['pay_type']) && $param['pay_type']) {
@@ -100,15 +100,15 @@ class OrderRefund extends Model {
         if (isset($param['key']) && isset($param['keyword']) && $param['key'] && !empty($param['keyword'])) {
             switch ($param['key']) {
                 case 1:
-                    $query->where('booking_order.booker_phone', $param['keyword']);
+                    $query->where('booking_order.booker_phone','like', '%'.$param['keyword'].'%');
                     break;
                 case 2:
                     // TODO  预约号
-                    $query->where('order_refund.booking_sn', $param['keyword']);
+                    $query->where('order_refund.booking_sn','like','%'.$param['keyword'].'%');
                     break;
                 case 3:
                     //TODO  推荐码
-                    $query->where('recommend_code_user.recommend_code', $param['keyword']);
+                    $query->where('recommend_code_user.recommend_code','like', '%'.$param['keyword'].'%');
                     break;
                 default :
                     break;
