@@ -242,6 +242,9 @@ class UserController extends Controller{
     {
         $param = $this->param;
         $query = User::getQueryByParam($param);
+        $page = isset($param['page'])?max($param['page'],1):1;
+        $page_size = isset($param['page_size'])?$param['page_size']:20;
+        $offset = ($page-1)*$page_size;
 
         $fields = array(
             'user.user_id',
@@ -257,7 +260,7 @@ class UserController extends Controller{
         );
 
         //分页
-        $array = $query->select($fields)->take(100)->get();
+        $array = $query->select($fields)->take($page_size)->skip($offset)->get()->toArray();
         $result = [];
         foreach ($array as $key=>$value) {
             $result[$key]['id'] = $key+1;
