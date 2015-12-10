@@ -1,4 +1,4 @@
-    <%data.data&&data.data.forEach(function(item){%>
+    <%data.forEach(function(item){%>
     <label class="label">
         <input type="checkbox" class="item_ids" value="<%=item.item_id%>" >
         <span><%=item.name%></span>
@@ -15,7 +15,6 @@
             $('.item_ids:checked').each(function(item){
                 itemList.push($(this).val());
             })
-            console.log(itemList);
             $("#item_ids").val(itemList.join(','));
         }
         initItemsValue();

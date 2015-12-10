@@ -244,7 +244,7 @@ class BookingOrder extends Model
         {
             $base->join('recommend_code_user', function ($join) use($key,$keyword)
             {
-                $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('type',[2,3])->where('recommend_code_user.recommend_code', 'like', $keyword);
+                $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('recommend_code_user.type',[2,3])->where('recommend_code_user.recommend_code', 'like', $keyword);
              
             });
         }
@@ -252,7 +252,7 @@ class BookingOrder extends Model
         {
             $base->leftJoin('recommend_code_user', function ($join) 
             {
-                $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('type',[2,3]);
+                $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('recommend_code_user.type',[2,3]);
             });            
         }
        
