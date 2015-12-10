@@ -274,10 +274,12 @@ $(function(){
 				if(window.ajaxComplete&&window.ajaxComplete.abort){
 					window.ajaxComplete.abort();
 				}
+				var completePosition=$this.closest('.complete').find('.complete-position');
+				completePosition.one('exception',function(e){
+					e.stopPropagation();
+				});
 				window.ajaxComplete=lib.ajat(ajat).render().done(function(){
-					$this.closest('.complete').find('.complete-position').show().one('exception',function(e,data){
-						e.stopPropagation();
-					});
+					completePosition.show();
 					$this.removeClass('complete-loader');
 					delete window.ajaxComplete;
 				});
