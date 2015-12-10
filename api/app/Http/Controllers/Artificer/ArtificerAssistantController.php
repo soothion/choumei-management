@@ -609,7 +609,7 @@ class ArtificerAssistantController extends Controller{
     public function searchNameAndNumber( $fixStr = ''){
         if( empty( $fixStr ) ) return $this->success();
         $field = ['artificer_id as id','name','number'];
-        $result = Artificer::select( $field )->whereRaw('(name like "%'. $fixStr .'%" OR number like "%'. $fixStr .'%") AND pid is NOT NULL')->get();
+        $result = Artificer::select( $field )->whereRaw('(name like "%'. $fixStr .'%" OR number like "%'. $fixStr .'%") AND status=1 AND pid is NOT NULL')->get();
         return $this->success($result);
     }
     // 接收天界或者修改的数据
