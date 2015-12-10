@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-09 15:26:04
+* @Last Modified time: 2015-12-10 11:25:17
 */
 
 $(function(){
@@ -108,19 +108,20 @@ $(function(){
         var topBanner = $(this).closest('.banner');
         var url = topBanner.attr('url');
         if(url){
-            topBanner.find('.thumbnails-item-img img').attr('src',url);
-            topBanner.find('.thumbnails-item-img input').attr('value',url);
+            if(topBanner.find('.thumbnails-item-img').length > 0){
+                topBanner.find('.thumbnails-item-img img').attr('src',url);
+                topBanner.find('.thumbnails-item-img input').attr('value',url);                
+            }else{
+                topBanner.find('.thumbnails-item-btn').css('display','none');
+                appendImgItem(topBanner.find('.thumbnails-item'),url);                
+            }
         }else{
             topBanner.find('.thumbnails-item-btn').css('display','inline-block');
             topBanner.find('.thumbnails-item-img').remove();
         }
-        // if(topBanner.attr('id') && topBanner.attr('url')){
-        //     topBanner.addClass('move');           
-        // }
         $("form[id]").addClass('move');  
         topBanner.find('.operation').addClass('hidden');
         topBanner.find('.control-help').hide();
-        //topBanner.siblings().find('button.edit').removeAttr('disabled');
         topBanner.find('input[type=radio]').attr('disabled',true);
         topBanner.find('#title').attr('disabled',true);
         topBanner.find('#h5url').attr('disabled',true);
@@ -299,11 +300,15 @@ $(function(){
                 var ratio = new Number(750/528).toFixed(2);
                 createThumbnails(up,response,ratio,'750x528',item);
             });
-            item.on('click','.fa',function(){                
+            item.on('click','.fa-pencil-square-o',function(){                
                 var src = item.find('img').attr('src');
                 src = src.split('?')[0]+"?imageView2/0/w/720/h/1280";
                 uploader.trigger('ImageUploaded',{img:src});
-            }) 
+            })
+            item.on('click','.fa-times-circle-o',function(){                
+                item.find('.thumbnails-item-img').remove();
+                item.find('.thumbnails-item-btn').show();
+            })  
         });
     } 
 
@@ -317,8 +322,12 @@ $(function(){
                 item.find('.thumbnails-item-btn').css('display','none');
                 item.find('.thumbnails-item-img').remove();
                 item.removeClass('dashed');
-                item.append('<div class="thumbnails-item-img"><img src='+data[name]+'><input type="hidden" name="image" value='+data[name]+' required><div class="operation"><i class="fa fa-pencil-square-o"></i></div><div>');
+                appendImgItem(item,data[name]);
             }
         });        
+    }
+
+    function appendImgItem(item,url){
+        item.append('<div class="thumbnails-item-img"><img src='+url+'><input type="hidden" name="image" value='+url+' required><div class="operation"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;<i class="fa fa-times-circle-o"></i></div><div>');        
     }                  
 });
