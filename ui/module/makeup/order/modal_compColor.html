@@ -40,6 +40,9 @@ $('.complete-position').on('click','li',function(){
         parent= $this.parents('.complete-position');
     parent.siblings('#search').val(inputDesc).siblings('.inputId').val(id);
     parent.hide();
+});
+$('body').on('click',function(){
+    $('.complete-position').hide();
 })
 </script>
 </form>
