@@ -278,8 +278,11 @@ class BannerController extends Controller {
         $data['image']=$param['image'];
         $data['salonName']=$param['salonName'];
         $data['name']=$param['name'];
-        if (!empty($param['behavior'])) {
+        if (isset($param['behavior'])) {
             $data['behavior']=$param['behavior'];
+            if ($param['behavior'] == 0) {
+                $data['url'] = "";
+            }
         }
         $data['updated_at']=time();        
         if (!empty($param['url'])) {
