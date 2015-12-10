@@ -29,6 +29,10 @@
     </div>
 </div>
 <script>
-    lib.ajat('beautyItem/itemList?type=2#domid=item&tempid=/module/makeup/order/template/label').render();
+    var selectedItems = [];
+    orderInfo.order_item.forEach(function(item,index){
+        selectedItems.push(item.ITEM_ID);
+    })
+    lib.ajat('beautyItem/itemList#selected='+selectedItems.join(',')+'&domid=item&tempid=/module/makeup/order/template/label').render();
 </script>
 </form>
