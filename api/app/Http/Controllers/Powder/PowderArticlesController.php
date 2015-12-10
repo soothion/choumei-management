@@ -941,16 +941,17 @@ class PowderArticlesController extends Controller
     
     /**
      * 线上活动增加预约号记录
+     * @param type $item_ordersn 定妆项目订单号
      * @param type $user_id
      * @param type $mobilephone
      * @param type $present_type  '赠送类型 1:消费赠送 2:推荐赠送 3:活动赠送',
-     * @param type $recommend_code  推荐码
+     * @param type $recommend_code 推荐码
      * @return int
      * @throws ApiException
      */
-    public static function addReservateSnAfterConsume($user_id,$mobilephone,$present_type,$recommend_code=''){
-        Log::info("获取时间：".date('Y-m-d H:i:s',time())."--用户id:".$user_id."--手机号:".$mobilephone."--赠送类型:".$present_type."--推荐码:".$recommend_code);
-        if(empty($user_id) || empty($mobilephone) || empty($present_type)){
+    public static function addReservateSnAfterConsume($item_ordersn,$user_id,$mobilephone,$present_type,$recommend_code=''){
+        Log::info("获取时间：".date('Y-m-d H:i:s',time())."--订单号：".$item_ordersn."--用户id:".$user_id."--手机号:".$mobilephone."--赠送类型:".$present_type."--推荐码:".$recommend_code);
+        if(empty($item_ordersn) || empty($user_id) || empty($mobilephone) || empty($present_type)){
             throw new ApiException('必传参数不能为空');
         }
         //获取活动信息
@@ -969,6 +970,7 @@ class PowderArticlesController extends Controller
             $data['present_id'] = $presentInfo['present_id'];
             $data['item_id'] = $presentInfo['item_id'];
             $data['user_id'] = $user_id;
+            $data['item_ordersn'] = $item_ordersn;
             $data['mobilephone'] = $mobilephone;
             if($recommend_code){
                 $data['recommend_code'] = $recommend_code;
