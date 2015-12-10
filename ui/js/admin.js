@@ -529,11 +529,7 @@ $(function(){
 	});
 	/**btn-cancel操作处理**/
 	$body.on('click','.btn-cancel',function(){
-		if(window==parent){
-			window.close();
-		}else{
-			history.back();
-		}
+		history.back();
 	});
 	$body.on('exception',function(e,data){
 		if(data&&data.errorLevel=='xhr'){
@@ -590,14 +586,6 @@ $(function(){
 				new lib.Form(this);
 			}
 		}).find('form[data-role="hash"]').attr('novalidate','novalidate');
-	});
-	/**btn-cancel操作处理**/
-	$body.on('click','.btn-cancel',function(){
-		if(window==parent){
-			window.close();
-		}else{
-			history.back();
-		}
 	});
 	$body.on('exception',function(e,data){
 		if(data&&data.errorLevel=='xhr'){
