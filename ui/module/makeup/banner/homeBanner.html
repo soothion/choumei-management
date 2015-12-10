@@ -221,7 +221,7 @@
                                   <span>h5链接</span>
                               </label>
 
-                              <input id="h5url" type="text" name="url" class="<%=item.behavior=='1'?'':''%>" placeholder="输入h5链接地址，带http://" value="<%=item.behavior=='1' ? item.url : ''%>" disabled required/>
+                              <input id="h5url" type="text" name="url" class="<%=item.behavior=='1'?'':''%>" placeholder="输入h5链接地址，带http://" pattern="(^http:\/\/)" patternmsg="h5链接有误" value="<%=item.behavior=='1' ? item.url : ''%>" disabled required/>
                           </div>
 
                           <div class="radios">
@@ -311,7 +311,7 @@
                                 <span>h5链接</span>
                             </label>
 
-                            <input id="h5url" type="text" name="url" placeholder="输入h5链接地址，带http://"  required/>
+                            <input id="h5url" type="text" name="url" placeholder="输入h5链接地址，带http://"  pattern="(^http:\/\/)" patternmsg="h5链接有误" required/>
                         </div>
 
                         <div class="radios">
