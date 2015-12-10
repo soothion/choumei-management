@@ -509,7 +509,7 @@ class BookController extends Controller
         }
         catch (\Exception $e)
         {
-            Utils::log("present", $e->getMessage());
+            Utils::log("present", date("Y-m-d H:i:s").$e->getMessage()."\n");
         }
         Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success(['id'=>$id]);
@@ -713,7 +713,7 @@ class BookController extends Controller
                 {
                     $info['user_id'] = $customer_uid;
                     $info['type'] = 1;
-                    $info['mobilephone'] = $recommend_users_idx[$customer_uid]['mobilephone'];
+                    $info['mobilephone'] = $customer_phone;
                     $info['code'] = $recommend['recommend_code'];             
                 }
                 else
@@ -748,7 +748,7 @@ class BookController extends Controller
                 $mobilephone = $u['mobilephone'];
                 $type = $u['type'];
                 $recommend_code = $u['code'];
-                Utils::log("present","type:{$type} uid:{$uid} mobilephone:{$mobilephone} recommend_code:{$recommend_code} \n","send_present");
+                Utils::log("present",date("Y-m-d H:i:s")."type:{$type} uid:{$uid} mobilephone:{$mobilephone} recommend_code:{$recommend_code} \n","send_present");
                 PowderArticlesController::addReservateSnAfterConsume($u['user_id'],$u['mobilephone'],$type,$recommend_code);
             }
         }
