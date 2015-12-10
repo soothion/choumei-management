@@ -215,7 +215,6 @@ class BeautyItemController extends Controller{
 	* @apiParam {string} present_explain 必填,赠送说明.	
 	* @apiParam {string} equipment_slogan 必填,设备宣传语.	
 	* @apiParam {string} beauty_workflow_name 必填,流程名称.	
-	* @apiParam {string} expire 必填,时间限制.	
 	* @apiParam {string} is_gift 必填,是否是赠送项目0否 1是.	
 	* 
 	* 
@@ -303,7 +302,6 @@ class BeautyItemController extends Controller{
 		$data['equipment_cover'] = isset($param['equipment_cover'])?trim($param['equipment_cover']):'';//设备封面
 		$data['equipment'] = isset($param['equipment'])?trim($param['equipment']):'';//设备介绍
 		$data['present_explain'] = isset($param['present_explain'])?trim($param['present_explain']):'';
-		$data['expire'] = isset($param['expire'])?trim($param['expire']):'';
 		$data['is_gift'] = isset($param['is_gift'])?intval($param['is_gift']):0;//是否是赠送项目
 		
 		$retMissing = '';
