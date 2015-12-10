@@ -137,12 +137,7 @@ $(function(){
 	}).on('submit','form[data-role="export"]',function(e){//导出功能
 		e.preventDefault();
 		var params=lib.tools.getFormData($(this));
-		var total=$('#pager-total').val();
-		if(total&&parseInt(total)>5000&&!params.currentpage){
-			parent.lib.popup.result({bool:false,text:"数据大于5000条不能导出"});
-		}else{
-			window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+(location.hash?"&":"")+$.param(params)+'&token='+localStorage.getItem('token'));
-		}
+		window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+(location.hash?"&":"")+$.param(params)+'&token='+localStorage.getItem('token'));
 	});
 
 	/**普通表单提交**/
