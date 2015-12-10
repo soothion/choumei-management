@@ -230,6 +230,8 @@ class DelegateController extends Controller
             'sort_type'=>self::T_STRING,
         ]);
         $header = ['店铺编码','店铺名称','代收单号','代收金额','代收日期'];
+        $param['page'] = isset($param['page'])?$param['page']:1;
+        $param['page_size'] = isset($param['page_size'])?$param['page_size']:20;
         $page = max(1,$param['page']);
         $page_size = max(1,$param['page_size']);
         $items = ShopCountApi::getInsteadReceiveCondition($param)->skip(($page-1)*$page_size)->take($page_size)->get()->toArray();
