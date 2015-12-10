@@ -738,6 +738,9 @@ textarea.large{
 	text-align:left;
 	border:1px solid #E6EAF2;
 }
+.table .link,.table-detail .link{
+	  white-space: nowrap;
+}
 td.colswrap{
 	padding-top:5px!important;
 	padding-bottom:5px!important;
