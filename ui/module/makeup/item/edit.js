@@ -92,12 +92,12 @@ $('#form').on("_ready",function(){
 					auto_start:true,
 					filters: {
 						mime_types : [
-							{ title : "Image files", extensions : "jpg,png,jpeg,gif" },
+							{ title : "Image files", extensions : "jpg,png,jpeg" },
 						]
 					},
 					max_file_size:'10mb',
 					imageArray:image,
-					//imageLimitSize:"750*500",
+					imageLimitSize:"690*400",
 					multi_selection:true,
 					files_number:10,
 					thumb:""
