@@ -275,7 +275,9 @@ $(function(){
 					window.ajaxComplete.abort();
 				}
 				window.ajaxComplete=lib.ajat(ajat).render().done(function(){
-					$this.closest('.complete').find('.complete-position').show();
+					$this.closest('.complete').find('.complete-position').show().one('exception',function(e,data){
+						e.stopPropagation();
+					});
 					$this.removeClass('complete-loader');
 					delete window.ajaxComplete;
 				});
