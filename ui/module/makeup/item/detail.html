@@ -24,8 +24,24 @@
 				font-size:14px;
 			}
 			.images img{
-				display:block;
+				margin-right:10px;
 				margin-bottom:10px;
+				width:350px;
+			}
+			.control-thumbnails-item:first-child:before{
+				position:absolute;
+				left:0px;
+				top:0px;
+				content:"首";
+				background: rgb(73,155,234); /* Old browsers */
+				background: -moz-linear-gradient(-45deg, rgba(73,155,234,1) 0%, ,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* FF3.6-15 */
+				background: -webkit-linear-gradient(-45deg, rgba(73,155,234,1) 0%,,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* Chrome10-25,Safari5.1-6 */
+				background: linear-gradient(135deg, rgba(73,155,234,1) 0%,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+				width:40px;
+				height:40px;
+				color:#fff;
+				z-index:100;
+				text-indent:8px;
 			}
 		</style>
     </head>
@@ -57,6 +73,19 @@
 							<tr>
 								<td>项目介绍：</td>
 								<td><%=data.detail.replace(/\n/g,"<br/>")%></td>
+							</tr>
+							<tr>
+								<td>项目图片：</td>
+								<td>
+									<%if(data.images){%>
+										<%data.images=JSON.parse(data.images)%>
+										<%data.images&&data.images.forEach(function(item){%>
+											<div class="control-thumbnails-item" style="margin:5px;">
+												<img src="<%=item%>" alt="" />
+											</div>
+										<%})%>
+									<%}%>
+								</td>
 							</tr>
 							<%if(query.p=="index"){%>
 							<tr>
@@ -225,15 +254,6 @@
 					<div class="item-images">
 						<%if(data.logo){%>
 						<img src="<%=data.logo%>" alt="" />
-						<%}%>
-					</div>
-					<h4>项目图片：</h4>
-					<div class="item-images">
-						<%if(data.images){%>
-						<%data.images=JSON.parse(data.images)%>
-						<%data.images&&data.images.forEach(function(item){%>
-						<img src="<%=item%>" alt="" />
-						<%})%>
 						<%}%>
 					</div>
 				</div>
