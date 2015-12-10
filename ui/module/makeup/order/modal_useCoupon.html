@@ -27,7 +27,6 @@
 </form>
 <script>
     $('.searchInput').on('input',function(){
-        console.log($(this).siblings('.complete-position'))
         $(this).siblings('.complete-position').show().siblings('.inputId').val('');
     })
     $('.complete-position').on('click','li',function(){
@@ -37,5 +36,8 @@
             parent= $this.parents('.complete-position');
         parent.siblings('#search').val(inputDesc).siblings('.inputId').val(id);
         parent.hide();
+    });
+    $('body').on('click',function(){
+        $('.complete-position').hide();
     })
 </script>
