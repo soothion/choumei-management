@@ -79,6 +79,7 @@
 					  <th>店铺推荐码</th>
 					  <th>活动推荐码</th>
 					  <th>用户推荐码</th>
+					  <th>状态</th>
 					  <th>注册时间</th>
 					  <th>操作</th>
 					</tr>
@@ -120,6 +121,7 @@
 							<%=code.type==4?code.recommend_code:""%>
 						<%})%>
 					  </td>
+					  <td><%=item.status==1?"禁用":"启用"%></td>
 					  <td><%=item.add_time%></td>
 					  <td>
 						 <a class="link" data-slug="user.show,user.update" href="detail.html?id=<%=item.user_id%>">查看</a>
