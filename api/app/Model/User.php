@@ -54,11 +54,11 @@ class User extends  Model
 
         if(!empty($param['recommendCode'])){
             $query = $query->whereHas('recommendCodes',function($q) use($param){
-                $q->where('recommend','=',$param['recommendCode']);
+                $q->where('recommend_code','=',$param['recommendCode']);
             });
         }
 
-        if(!empty($param['sex'])){
+        if(isset($param['sex'])){
             $query = $query->where('sex','=',$param['sex']);
         }
 
