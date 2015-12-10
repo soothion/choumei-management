@@ -16,17 +16,43 @@ class SeedPool extends Model
     public $timestamps = false;
     
     /**
-     * 根据条件，获取所需要的赠送券
+     * 根据条件，获取所需要的赠送券,提供给线下活动，队列使用
      */
     public static function getArticleTicketFromPool($limit=1,$orderby = 'desc'){
         $sql = "select CONCAT('SZ',SEED) as articleTicket from cm_seed_pool where TYPE = 'GSN' and STATUS = 'NEW' order by ID $orderby limit $limit;";
         $res = DB::select($sql);
         if(empty($res)){
-            Log::info('无法获取定妆赠送活动券,券数量不足');
-            throw new ApiException('无法获取定妆赠送活动券,券数量不足');    
+            Log::info('线下活动无法获取定妆赠送活动券,券数量不足');
+            return false;    
         }
         if(count($res) != $limit){
-            throw new ApiException('臭美池中的券不够'); 
+            Log::info('线下活动臭美池中的券不够');
+            return false;
+        }
+        foreach ($res as $key => $value) {
+            $seedRes[] = $value->articleTicket;
+        }
+        return $seedRes;
+    }
+    /**
+     * 
+     * @param type $limit
+     * @param type $orderby
+     * @return type
+     * @throws ApiException
+     * 线下活动发券
+     */
+    
+    public static function getArticleTicketFromPoolForOnline($limit=1,$orderby = 'desc'){
+        $sql = "select CONCAT('SZ',SEED) as articleTicket from cm_seed_pool where TYPE = 'GSN' and STATUS = 'NEW' order by ID $orderby limit $limit;";
+        $res = DB::select($sql);
+        if(empty($res)){
+            Log::info('无法获取定妆赠送活动券,券数量不足');
+            throw new ApiException('无法获取定妆赠送活动券,券数量不足');       
+        }
+        if(count($res) != $limit){
+            Log::info('臭美池中的券不够');
+            throw new ApiException('臭美池中的券不够');    
         }
         foreach ($res as $key => $value) {
             $seedRes[] = $value->articleTicket;

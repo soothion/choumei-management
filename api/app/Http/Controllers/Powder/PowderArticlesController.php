@@ -90,9 +90,6 @@ class PowderArticlesController extends Controller
             if($param['nums'] == 0){
                 throw new ApiException('赠送数量不能为0');
             }
-            if(!is_int($param['nums'])){
-                throw new ApiException('赠送数量必须为整数');
-            }
         }
         if(strlen($param['articleName']) > 60){
             throw new ApiException('活动名称长度限制20字');
@@ -987,7 +984,7 @@ class PowderArticlesController extends Controller
         $reservateSnInfo = SeedPool::getReservateSnFromPool();
         $data['reservate_sn'] = $reservateSnInfo['reservateSn'];
         //获取赠送券号
-        $articleTicketInfo = SeedPool::getArticleTicketFromPool(1,'asc');
+        $articleTicketInfo = SeedPool::getArticleTicketFromPoolForOnline(1,'asc');
         $data['code'] = $articleTicketInfo[0];
         DB::beginTransaction();
         //活动券总数+1
