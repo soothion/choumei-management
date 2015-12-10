@@ -665,7 +665,7 @@ class PowderArticlesController extends Controller
      *
      * @apiParam {Number} mobilephone 选填，手机号
      * @apiParam {Number} reservateSn 选填，预约号
-     * @apiParam {Number} recommendCode 选填，推荐码
+     * @apiParam {String} recommendCode 选填，推荐码
      * @apiParam {Number} ticketCode 选填，券号
      * @apiParam {Number} presentType 选填，赠送方式
      * @apiParam {Number} ticketStatus 选填，券使用状态
@@ -687,7 +687,7 @@ class PowderArticlesController extends Controller
      * @apiSuccess {String} ticketCode 券号.
      * @apiSuccess {Number} ticketStatus 券状态.
      * @apiSuccess {Number} mobilephone 手机号.
-     * @apiSuccess {Number} recommendCode 推荐码.
+     * @apiSuccess {String} recommendCode 推荐码.
      * @apiSuccess {Number} presentType 赠送方式.
      * @apiSuccess {Number} managerId 操作人id.
      * @apiSuccess {Number} specialistId 专家id.
@@ -801,7 +801,7 @@ class PowderArticlesController extends Controller
      * @apiSuccess {String} recordTime 记录时间.
      * @apiSuccess {String} expireTime 券有效时间.
      * @apiSuccess {String} useTime 使用时间.
-     * @apiSuccess {Number} recommendCode 推荐码.
+     * @apiSuccess {String} recommendCode 推荐码.
      * @apiSuccess {Number} presentType 赠送类型.
      * @apiSuccess {Number} managerId 记录人id.
      * @apiSuccess {Number} specialistId 专家id.
@@ -948,7 +948,7 @@ class PowderArticlesController extends Controller
      * @return int
      * @throws ApiException
      */
-    public static function addReservateSnAfterConsume($user_id,$mobilephone,$present_type,$recommend_code=0){
+    public static function addReservateSnAfterConsume($user_id,$mobilephone,$present_type,$recommend_code=''){
         Log::info("获取时间：".date('Y-m-d H:i:s',time())."--用户id:".$user_id."--手机号:".$mobilephone."--赠送类型:".$present_type."--推荐码:".$recommend_code);
         if(empty($user_id) || empty($mobilephone) || empty($present_type)){
             throw new ApiException('必传参数不能为空');
