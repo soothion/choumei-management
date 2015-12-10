@@ -578,7 +578,6 @@ class BeautyItemController extends Controller{
 	* @apiName itemList
 	* @apiGroup  beautyItem
 	* 
-	* @apiParam   {Array} 参数不传 默认返回所有项目
 	* @apiParam   {Number} type 选填,项目类型 1韩式半永久 2快时尚.
 	* @apiParam   {Number} is_gift 选填,是否是赠送项目 0否 1是
 	* 
