@@ -168,7 +168,7 @@
 								<td>集团邀请码</td>
 								<td><%=data.companyCode?data.companyCode:"无"%></td>
 								<td><%=data.companyName?data.companyName:"无"%></td>
-								<td>无</td>
+								<td><%=data.companyCodeAddtime?new Date(data.companyCodeAddtime*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td><%if(data.companyCode){%><button data-slug="user.update" form="companyCode" class="link off-code">解绑集团码</button><%}else{%>无<%}%></td>
 							</tr>
 							<tr>
@@ -334,7 +334,7 @@
 								<td>集团邀请码</td>
 								<td><%=data.companyCode?data.companyCode:"无"%></td>
 								<td><%=data.companyName?data.companyName:"无"%></td>
-								<td>无</td>
+								<td><%=data.companyCodeAddtime?new Date(data.companyCodeAddtime*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td><%if(data.companyCode){%><button data-slug="user.update" form="companyCode" class="link off-code">解绑集团码</button><%}else{%>无<%}%></td>
 							</tr>
 							<tr>
