@@ -113,12 +113,12 @@
 						</td>
 					  <td>
 						<%item.recommend_codes.forEach(function(code){%>
-							<%=code.type==3?code.recommend_code:""%>
+							<%=code.type==4?code.recommend_code:""%>
 						<%})%>
 					  </td>
 					  <td>
 						<%item.recommend_codes.forEach(function(code){%>
-							<%=code.type==4?code.recommend_code:""%>
+							<%=code.type==3?code.recommend_code:""%>
 						<%})%>
 					  </td>
 					  <td><%=item.status==1?"禁用":"启用"%></td>
