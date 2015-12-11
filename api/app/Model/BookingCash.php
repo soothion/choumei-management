@@ -77,9 +77,8 @@ class BookingCash extends Model
         $datetime = date("Y-m-d H:i:s",$time);
         $attr = [
             'booking_id'=>$booking_id,
-            'booking_sn'=>$ordersn,
             'order_sn'=>$base['ORDER_SN'],
-            'booking_sn'=>$base['BOOKING_SN'],
+            'booking_sn'=>empty($base['BOOKING_SN'])?"":$base['BOOKING_SN'],
             'uid'=>$params['uid'],
             'created_at'=>$datetime,
             'pay_type'=>$params['pay_type'],
