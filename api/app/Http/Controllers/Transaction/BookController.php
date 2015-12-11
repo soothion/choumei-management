@@ -497,7 +497,7 @@ class BookController extends Controller
         $params['uid'] = $this->user->id;        
         $book = BookingCash::cash($id,$params);
         $custom_uid = $book['USER_ID'];
-        $first_book = BookingOrder::where("USER_ID",$custom_uid)->where("STATUS","CSD")->orderBy("CONSUME_TIME","ASC")->first();
+        $first_book = BookingOrder::where("USER_ID",$custom_uid)->whereIn("STATUS",["CSD","RFD-OFL"])->orderBy("CONSUME_TIME","ASC")->first();
         $is_first = false;
         if(! empty($first_book) && $first_book->USER_ID == $custom_uid)
         {
@@ -704,7 +704,7 @@ class BookController extends Controller
         {
             if($is_first)
             {
-                 $recommend_users = User::whereIn('mobilephone',$recommend['recommend_code'])->get(['user_id'])->toArray();
+                 $recommend_users = User::where('mobilephone',$recommend['recommend_code'])->get(['user_id'])->toArray();
                  if(count($recommend_users)>0)
                  {
                      $send_uid = $recommend_users[0]['user_id'];
