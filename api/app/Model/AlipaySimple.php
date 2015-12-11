@@ -147,7 +147,7 @@ class AlipaySimple
     
     public static function getDefualtRefundParams()
     {
-        return [
+        $config  = [
             "service" => "refund_fastpay_by_platform_pwd", // 三方接口名称
             "partner" => "2088701753684258", // 合作者身份ID
             "_input_charset" => "utf-8", // 参数编码字符集
@@ -160,6 +160,15 @@ class AlipaySimple
             "detail_data" => ""
         ] // 单笔数据集
         ;
+        
+        //测试环境账号独立
+        if(strtolower(env("APP_ENV","")) == "test")
+        {
+            $config['partner'] = "2088911446736234";
+            $config['seller_email'] = "zfb2@choumei.cn";
+        }
+        
+        return $config;
     }
     
     /**
@@ -198,6 +207,13 @@ class AlipaySimple
     
             // 访问模式,根据自己的服务器是否支持ssl访问，若支持请选择https；若不支持请选择http
             $alipay_config['transport'] = 'http';
+            //测试环境账号独立
+            if(strtolower(env("APP_ENV","")) == "test")
+            {
+                $alipay_config['partner'] = "2088911446736234";
+                $alipay_config['private_key_path'] = $alipay_base_path . 'rsa_private_key.test.pem';
+                $alipay_config['key'] = 's4gziv0g4ryj1my1as9djjomhp5fz3ia';
+            }
             self::$config = $alipay_config;
         }
         return self::$config;
