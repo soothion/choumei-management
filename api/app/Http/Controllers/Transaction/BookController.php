@@ -670,7 +670,6 @@ class BookController extends Controller
         }
         
         $max_return  = bcadd($cash->other_money, $cash->cash_money,2);
-        $max_return = bcsub($max_return,$cash->deduction_money,2);
         if($params['money'] > $max_return)
         {
             throw new ApiException("定妆单[{$id}] 最大允许退款 {$max_return}. 退款金额错误，请查询", ERROR::PARAMETER_ERROR);
