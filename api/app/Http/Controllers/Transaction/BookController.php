@@ -662,6 +662,19 @@ class BookController extends Controller
             throw new ApiException("定妆单[{$id}]已经退款,不允许重复退款", ERROR::ORDER_STATUS_WRONG);
         }
         
+        $cash = BookingCash::where('booking_id',$id)->first();
+        
+        if(empty($cash))
+        {
+            throw new ApiException("定妆单[{$id}]状态不正确,找不到收银信息,不允许退款", ERROR::ORDER_STATUS_WRONG);
+        }
+        
+        $max_return  = bcadd($cash->other_money, $cash->cash_money,2);
+        if($params['money'] > $max_return)
+        {
+            throw new ApiException("定妆单[{$id}] 最大允许退款 {$max_return}. 退款金额错误，请查询", ERROR::PARAMETER_ERROR);
+        }        
+        
         $time = time();
         $datetime = date("Y-m-d H:i:s",$time);
         BookingSalonRefund::create([
