@@ -289,7 +289,7 @@
                                             <td>发起退款：</td>
                                             <td><%= data.booking_salon_refund ?'臭美工作人员':'用户'%></td>
                                             <td>退款原因：</td>
-                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark)|| data.order_refund.rereason%></td>
+                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark)|| (data.order_refund &&data.order_refund.rereason)%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -297,7 +297,7 @@
                         </tr>
                         <tr>
                             <td class="td">退款说明：</td>
-                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark) || data.order_refund.refund_desc%></td>
+                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark) || (data.order_refund &&data.order_refund.refund_desc)%></td>
                         </tr>
                         <%var back_to_desc=[,'微信','支付宝','银联','现金']%>
                         <tr>
@@ -310,9 +310,9 @@
                                     <tbody>
                                         <tr>
                                             <td>退款金额：</td>
-                                            <td><%= ( data.booking_salon_refund &&data.booking_salon_refund.money) || data.order_refund.money%></td>
+                                            <td><%= ( data.booking_salon_refund &&data.booking_salon_refund.money) || (data.order_refund &&data.order_refund.money)%></td>
                                             <td>发起退款时间：</td>
-                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || data.order_refund.add_time%></td>
+                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || (data.order_refund && data.order_refund.add_time)%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -492,6 +492,7 @@
                     });
                     $('#table').on('_ready',function(e,res){
                         orderInfo = res.response;
+                        parent.orderInfo = orderInfo;
                         lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').template(orderInfo);
                     })
                   }();
