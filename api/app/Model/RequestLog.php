@@ -26,7 +26,16 @@ class RequestLog  extends Model{
 	 }
 
 	 if(isset($param['version']) && $param['version']){
-	        $query = $query->where('version','like','%'.$param['version'].'%');
+                if(strstr('微信公众号（H5）', $param['version']) !== false){ 
+                    if($param['version']==5){
+                         $query = $query->where('version','like','%'.$param['version'].'%');
+                    }else{
+                         $query = $query->where('device_type','=','WECHAT');
+                    }
+                }else{
+                    $query = $query->where('device_type','!=','WECHAT');
+                    $query = $query->where('version','like','%'.$param['version'].'%');
+                }
 	 }
          
          if(isset($param['openid']) && $param['openid']){
@@ -41,7 +50,7 @@ class RequestLog  extends Model{
              
                 $query = $query->where('update_time','<=', $param['maxTime'].' 24');    
          }
-         
+
          $query = $query->where('type','=','LGN');        
          $sortable_keys=['update_time','mobilephone','version'];
          $sortKey = "update_time";

@@ -733,6 +733,9 @@ textarea.large{
 .table tbody tr:hover,.table-detail tbody tr:hover{
 	background:#eee;
 }
+.table tbody tr:hover td,.table-detail tbody tr:hover td{
+	background-color:transparent;
+}
 .table td,.table th,.table-detail td,.table-detail th{
 	padding:8px;
 	text-align:left;
@@ -755,6 +758,7 @@ th.colswrap{
 	min-width:100px;
 	max-width:250px;
 	padding-left:30px;
+	background:rgba(0,0,0,0.035);
 }
 .table-detail thead td{
 	font-size:18px;

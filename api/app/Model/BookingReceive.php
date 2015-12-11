@@ -58,8 +58,7 @@ class BookingReceive extends Model
         $attr = [
             'booking_id'=>$id,
             'booking_sn'=>$ordersn,
-            'order_sn'=>$base['ORDER_SN'],
-            'booking_sn'=>$base['ORDER_SN'],
+            'booking_sn'=>empty($base['BOOKING_SN'])?"":$base['BOOKING_SN'],
             'uid'=>$params['uid'],
             'created_at'=>$datetime,
         ];

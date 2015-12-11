@@ -350,7 +350,13 @@
 				if(lib.query.p=='fashion'){
 					var formatGroup=$('#format-group');
 					$('#format-group').on('click','.remove-format',function(){
-						$(this).closest('.format-group').remove();
+						var $this=$(this);
+						parent.lib.popup.confirm({
+							text:"确认删除此规格？",
+							define:function(){
+								$this.closest('.format-group').remove();	
+							}
+						});
 					}).on('click','.add-format',function(){
 						createFormat([{}]);
 					}).on('blur','input[name="price"]',function(){

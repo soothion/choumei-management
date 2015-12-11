@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-09 15:26:04
+* @Last Modified time: 2015-12-11 11:34:42
 */
 
 $(function(){
@@ -78,8 +78,6 @@ $(function(){
         parent.find('.edit').addClass('hidden');
 
         var topBanner = $(this).closest('.banner');
-        //topBanner.removeClass('move');
-        //topBanner.siblings().find('button.edit').attr('disabled',true);
         topBanner.find('.operation').removeClass('hidden');
         topBanner.find('button.btn-primary').removeAttr('disabled');
         topBanner.find('input[type=radio]').removeAttr('disabled');
@@ -92,7 +90,9 @@ $(function(){
             topBanner.find('select').removeAttr('disabled')
             var selectValue = topBanner.find('select').val();   
             if(selectValue == "salon"){
-                topBanner.find(".search").removeClass('hidden').removeAttr('disabled'); 
+                topBanner.find(".search").removeClass('hidden').removeAttr('disabled');
+                topBanner.find(".salonId").removeAttr('disabled');
+
             }         
         }
         $("form").find('button.edit').attr('disabled',true);
@@ -108,24 +108,26 @@ $(function(){
         var topBanner = $(this).closest('.banner');
         var url = topBanner.attr('url');
         if(url){
-            topBanner.find('.thumbnails-item-img img').attr('src',url);
-            topBanner.find('.thumbnails-item-img input').attr('value',url);
+            if(topBanner.find('.thumbnails-item-img').length > 0){
+                topBanner.find('.thumbnails-item-img img').attr('src',url);
+                topBanner.find('.thumbnails-item-img input').attr('value',url);                
+            }else{
+                topBanner.find('.thumbnails-item-btn').css('display','none');
+                appendImgItem(topBanner.find('.thumbnails-item'),url);                
+            }
         }else{
             topBanner.find('.thumbnails-item-btn').css('display','inline-block');
             topBanner.find('.thumbnails-item-img').remove();
         }
-        // if(topBanner.attr('id') && topBanner.attr('url')){
-        //     topBanner.addClass('move');           
-        // }
         $("form[id]").addClass('move');  
         topBanner.find('.operation').addClass('hidden');
         topBanner.find('.control-help').hide();
-        //topBanner.siblings().find('button.edit').removeAttr('disabled');
         topBanner.find('input[type=radio]').attr('disabled',true);
         topBanner.find('#title').attr('disabled',true);
         topBanner.find('#h5url').attr('disabled',true);
         topBanner.find('select').attr('disabled',true);
         topBanner.find('.search').attr('disabled',true);
+        topBanner.find('.salonId').attr('disabled',true);
         topBanner.find('button.btn-primary').attr('disabled',true);
         $("form").find('button.edit').removeAttr('disabled');
         $(".plus-button button").removeAttr('disabled');    
@@ -286,7 +288,7 @@ $(function(){
             auto_start:true,
             filters: {
             mime_types : [
-            { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+            { title : "Image files", extensions : "jpg,png,jpeg" },
             ]
             },
             max_file_size:'10mb',
@@ -299,11 +301,15 @@ $(function(){
                 var ratio = new Number(750/528).toFixed(2);
                 createThumbnails(up,response,ratio,'750x528',item);
             });
-            item.on('click','.fa',function(){                
+            item.on('click','.fa-pencil-square-o',function(){                
                 var src = item.find('img').attr('src');
                 src = src.split('?')[0]+"?imageView2/0/w/720/h/1280";
                 uploader.trigger('ImageUploaded',{img:src});
-            }) 
+            })
+            item.on('click','.fa-times-circle-o',function(){                
+                item.find('.thumbnails-item-img').remove();
+                item.find('.thumbnails-item-btn').show();
+            })  
         });
     } 
 
@@ -317,8 +323,12 @@ $(function(){
                 item.find('.thumbnails-item-btn').css('display','none');
                 item.find('.thumbnails-item-img').remove();
                 item.removeClass('dashed');
-                item.append('<div class="thumbnails-item-img"><img src='+data[name]+'><input type="hidden" name="image" value='+data[name]+' required><div class="operation"><i class="fa fa-pencil-square-o"></i></div><div>');
+                appendImgItem(item,data[name]);
             }
         });        
+    }
+
+    function appendImgItem(item,url){
+        item.append('<div class="thumbnails-item-img"><img src='+url+'><input type="hidden" name="image" value='+url+' required><div class="operation"><i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;<i class="fa fa-times-circle-o"></i></div><div>');        
     }                  
 });

@@ -137,7 +137,8 @@ $(function(){
 	}).on('submit','form[data-role="export"]',function(e){//导出功能
 		e.preventDefault();
 		var params=lib.tools.getFormData($(this));
-		window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+(location.hash?"&":"")+$.param(params)+'&token='+localStorage.getItem('token'));
+		console.log(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+($.param(params)?"&":"")+$.param(params));
+		window.open(cfg.getHost()+$(this).attr('action')+"?"+location.hash.replace('#','')+($.param(params)?"&":"")+$.param(params)+'&token='+localStorage.getItem('token'));
 	});
 
 	/**普通表单提交**/
@@ -528,11 +529,7 @@ $(function(){
 	});
 	/**btn-cancel操作处理**/
 	$body.on('click','.btn-cancel',function(){
-		if(window==parent){
-			window.close();
-		}else{
-			history.back();
-		}
+		history.back();
 	});
 	$body.on('exception',function(e,data){
 		if(data&&data.errorLevel=='xhr'){
@@ -589,14 +586,6 @@ $(function(){
 				new lib.Form(this);
 			}
 		}).find('form[data-role="hash"]').attr('novalidate','novalidate');
-	});
-	/**btn-cancel操作处理**/
-	$body.on('click','.btn-cancel',function(){
-		if(window==parent){
-			window.close();
-		}else{
-			history.back();
-		}
 	});
 	$body.on('exception',function(e,data){
 		if(data&&data.errorLevel=='xhr'){

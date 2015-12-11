@@ -200,7 +200,7 @@
                                   <img src='<%=item.image%>'>
                                   <input type="hidden" name="image" value='<%=item.image%>' required>
                                   <div class="operation hidden">
-                                      <i class="fa fa-pencil-square-o"></i>
+                                      <i class="fa fa-pencil-square-o"></i>&nbsp;&nbsp;<i class="fa fa-times-circle-o"></i>
                                   </div>
                               <div>                             
                           </div>  
@@ -221,7 +221,7 @@
                                   <span>h5链接</span>
                               </label>
 
-                              <input id="h5url" type="text" name="url" class="<%=item.behavior=='1'?'':''%>" placeholder="输入h5链接地址，带http://" value="<%=item.behavior=='1' ? item.url : ''%>" disabled required/>
+                              <input id="h5url" type="text" name="url" class="<%=item.behavior=='1'?'':''%>" placeholder="输入h5链接地址，带http://" pattern="(^http:\/\/)" patternmsg="h5链接有误" value="<%=item.behavior=='1' ? item.url : ''%>" disabled required/>
                           </div>
 
                           <div class="radios">
@@ -233,8 +233,8 @@
                               <%if(item.behavior=="2"){var url = JSON.parse(item.url);%>
                                   <select name="url" disabled  url=<%=item.url%>></select>
                                   <div class="control complete">
-                                    <input class="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" required disabled
-                                    autocomplete="off" value="<%=item.salonName%>" class="<%=url.type!='salon'?'hidden':''%>"/>
+                                    <input class="search <%=url.type=='salon'?'':'hidden'%>" type="text" name="salonName" 
+                                    ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" autocomplete="off" value="<%=item.salonName%>" required disabled/>
                                     <input type="hidden" class="salonId" name="salonId" value="<%=item.salonId%>" 
                                     required disabled>
                                     <div class="complete-position" id="complete-position<%=i%>"></div>
@@ -311,7 +311,7 @@
                                 <span>h5链接</span>
                             </label>
 
-                            <input id="h5url" type="text" name="url" placeholder="输入h5链接地址，带http://"  required/>
+                            <input id="h5url" type="text" name="url" placeholder="输入h5链接地址，带http://"  pattern="(^http:\/\/)" patternmsg="h5链接有误" required/>
                         </div>
 
                         <div class="radios">
@@ -327,7 +327,6 @@
                               autocomplete="off" disabled required requiredmsg="未填写"/>
                             <input type="hidden" class="salonId" name="salonId" disabled required>
                             <div class="complete-position" id="complete-position"></div>
-                            <span class="control-help" style="display: none;">未填写</span>
                           </div>                             
                         </div>
 

@@ -7,6 +7,7 @@
 	  <style type="text/css">
 		.table-detail tbody td:nth-child(odd){
 			width:50%;
+			background:transparent;
 		}
 		.table-detail thead th{
 			padding-left:20px;
@@ -24,46 +25,25 @@
 					<h4>用户信息</h4>
 				</div>
 			</div>
+			<hr />
 		</div>
+		
 		<div class="wrapper" ajat="user/show/<%=query.id%>#domid=detail&tempid=detail-t" id="detail">
 			<script type="text/template" id="detail-t">
-			<div class="table-detail">
-				<table>
-					<thead>
-						<tr>
-							<th>对本账号操作</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<!--
-								<form action="user/update/<%=query.id%>" data-role="normal" onresize="parent.lib.popup.result()">
-									<button class="btn">解绑当前手机</button>
-									<input type="hidden" name="mobilephone" value="" />
-								</form>
-								-->
-								<span class="space"></span>
-								<form data-slug="user.destroy" data-slug="user.destroy" action="user/destroy/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){window.close();}})">
-									<button class="btn">删除账号</button>
-								</form>
-								<span class="space"></span>
-								<button class="btn btn-edit" data-slug="user.update">
-									编辑
-								</button>
-								<button class="btn btn-cancel" style="display:none">
-									取消
-								</button>
-
-							</td>
-						</tr>
-					</tbody>
-				</table>
+			<div class="detail-operation">
+				<button class="btn btn-edit" data-slug="user.update">
+					编辑
+				</button>
+				<button class="btn-primary" data-slug="user.update" form="form" style="display:none">提交</button>
+				<span class="space"></span>
+				<button class="btn" onclick="history.back()" >
+					取消
+				</button>
 			</div>
 			<form action="user/resetCompanyCode/<%=query.id%>" data-role="normal" id="companyCode" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
 			</form>
 			<br />
-			<form action="user/update/<%=query.id%>" data-role="form">
+			<form action="user/update/<%=query.id%>" data-role="form" id="form">
 			<div class="detail">
 				<div class="table-detail">
 					<table>
@@ -127,8 +107,7 @@
 								<td>会员等级：<%=data.level?"V"+data.level:""%></td>
 							</tr>
 							<tr>
-								<td>会员积分：  <%=data.grade%></td>
-								<td>成长值：<%=data.growth%></td>
+								<td colspan="2">成长值：<%=data.growth%></td>
 							</tr>
 							<!--
 							<tr>
@@ -187,16 +166,16 @@
 						<tbody>
 							<tr>
 								<td>集团邀请码</td>
-								<td><%=data.companyCode%></td>
-								<td><%=data.companyName%></td>
-								<td>无</td>
+								<td><%=data.companyCode?data.companyCode:"无"%></td>
+								<td><%=data.companyName?data.companyName:"无"%></td>
+								<td><%=data.companyCodeAddtime?new Date(data.companyCodeAddtime*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td><%if(data.companyCode){%><button data-slug="user.update" form="companyCode" class="link off-code">解绑集团码</button><%}else{%>无<%}%></td>
 							</tr>
 							<tr>
 								<td>商家邀请码</td>
 								<td><%=data.activity==2&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
 								<td><%=data.activity==2&&code1&&code1.type==1?code1.salonname:"无"%></td>
-								<td><%=data.activity==2&&code1&&code1.type==1?code1.add_time:"无"%></td>
+								<td><%=data.activity==2&&code1&&code1.type==1?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>无</td>
 							</tr>
 							<tr>
@@ -214,14 +193,14 @@
 								<td>无</td>
 							</tr>
 							<tr>
-								<td>活动推荐码</td>
+								<td>用户推荐码</td>
 								<td><%=code3?code3.recommend_code:"无"%></td>
 								<td>无</td>
 								<td><%=code3&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>无</td>
 							</tr>
 							<tr>
-								<td>用户推荐码</td>
+								<td>活动推荐码</td>
 								<td><%=code4?code4.recommend_code:"无"%></td>
 								<td>无</td>
 								<td><%=code4&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
@@ -314,8 +293,9 @@
 								<td>会员等级：<%=data.level?"V"+data.level:""%></td>
 							</tr>
 							<tr>
-								<td>会员积分：  <input type="text" value="<%=data.grade%>" name="grade" required pattern="number" /></td>
-								<td>成长值：<input type="text" value="<%=data.growth%>" name="growth" required pattern="number"/></td>
+								<!--
+								<td>会员积分：  <input type="text" value="<%=data.grade%>" name="grade" required pattern="number" /></td>-->
+								<td colspan="2">成长值：<input type="text" value="<%=data.growth%>" name="growth" required pattern="number"/></td>
 							</tr>
 							<!--
 							<tr>
@@ -352,45 +332,45 @@
 						<tbody>
 							<tr>
 								<td>集团邀请码</td>
-								<td>60001</td>
-								<td>顺丰集团</td>
-								<td>2015-06-06   15：30：20</td>
+								<td><%=data.companyCode?data.companyCode:"无"%></td>
+								<td><%=data.companyName?data.companyName:"无"%></td>
+								<td><%=data.companyCodeAddtime?new Date(data.companyCodeAddtime*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td><%if(data.companyCode){%><button data-slug="user.update" form="companyCode" class="link off-code">解绑集团码</button><%}else{%>无<%}%></td>
 							</tr>
 							<tr>
 								<td>商家邀请码</td>
-								<td><%=data.activity==2&&code1&&code1==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==2&&code1&&code1==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==2&&code1&&code1==1?code1.recommend_code:"无"%></td>
+								<td><%=data.activity==2&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
+								<td><%=data.activity==2&&code1&&code1.type==1?code1.salonname:"无"%></td>
+								<td><%=data.activity==2&&code1&&code1.type==1?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>无</td>
 							</tr>
 							<tr>
 								<td>活动邀请码</td>
-								<td><%=data.activity==1&&code1&&code1==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==1&&code1&&code1==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==1&&code1&&code1==1?code1.recommend_code:"无"%></td>
+								<td><%=data.activity==1&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
+								<td><%=data.activity==1&&code1&&code1.type==1?code1.activityName:"无"%></td>
+								<td><%=data.activity==1&&code1&&code1.type==1&&code1.add_time?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>无</td>
 							</tr>
 							<tr>
 								<td>店铺推荐码</td>
 								<td><%=code2?code2.recommend_code:"无"%></td>
-								<td><%=code2?code2.recommend_code:"无"%></td>
-								<td><%=code2?code2.recommend_code:"无"%></td>
-								<td><%=code2?code2.recommend_code:"无"%></td>
-							</tr>
-							<tr>
-								<td>活动推荐码</td>
-								<td><%=code3?code3.recommend_code:"无"%></td>
-								<td><%=code3?code3.recommend_code:"无"%></td>
-								<td><%=code3?code3.recommend_code:"无"%></td>
-								<td><%=code3?code3.recommend_code:"无"%></td>
+								<td>无</td>
+								<td><%=code2&&code2.add_time?new Date(code2.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>无</td>
 							</tr>
 							<tr>
 								<td>用户推荐码</td>
+								<td><%=code3?code3.recommend_code:"无"%></td>
+								<td>无</td>
+								<td><%=code3&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>无</td>
+							</tr>
+							<tr>
+								<td>活动推荐码</td>
 								<td><%=code4?code4.recommend_code:"无"%></td>
-								<td><%=code4?code4.recommend_code:"无"%></td>
-								<td><%=code4?code4.recommend_code:"无"%></td>
-								<td><%=code4?code4.recommend_code:"无"%></td>
+								<td>无</td>
+								<td><%=code4&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>无</td>
 							</tr>
 						</tbody>
 					</table>
@@ -400,7 +380,7 @@
 				<div class="tc">
 					<button class="btn-primary" data-slug="user.update">提交</button>
 					<span class="space"></span>
-					<button class="btn btn-cancel">取消</button>
+					<button class="btn" onclick="history.back()">取消</button>
 				</div>
 			</div>
 			</form>
@@ -429,8 +409,7 @@
 		<script type="text/javascript">
 			$(document).on('click','.btn-edit',function(){
 				$('.detail').hide().siblings().show();
-				$(this).hide();
-				$('.btn-cancel').show();
+				$(this).hide().siblings().show();
 			});
 			$('#detail').one('_ready',function(){
 				$('#province,#city,#area').on('change',function(){

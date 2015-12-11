@@ -58,6 +58,10 @@
         }
         .inner-table tbody td:nth-child(2n){
             width: 35%;
+            background-color: #fff;
+        }
+        .white-bg{
+            background-color: #fff !important;
         }
         .inner-table{
             margin: -1px;
@@ -150,7 +154,7 @@
                             <td><%=status[data.order.STATUS]%></td>
                         </tr>
                         <tr>
-                            <td  colspan="2">预约金支付信息</td>
+                            <td  colspan="2" class="white-bg">预约金支付信息</td>
                         </tr>
                         <tr >
                             <td colspan="2" class="pad-n bor-n">
@@ -174,12 +178,16 @@
                             <td><%=data.order.AMOUNT%></td>
                         </tr>
                         <tr>
+                            <td class="td">支付时间：</td>
+                            <td><%=data.order.PAIED_TIME%></td>
+                        </tr>
+                        <tr>
                             <td class="td">支付状态：</td>
                             <td><%=status[data.order.STATUS]%></td>
                         </tr>
                         <%if (data.booking_receive){%>
                         <tr>
-                            <td  colspan="2">用户到店记录</td>
+                            <td  colspan="2" class="white-bg">用户到店记录</td>
                         </tr>
                         <tr>
                             <td class="td">到店时间：</td>
@@ -217,7 +225,7 @@
                         <%}%>
                         <%if (data.booking_cash){%>
                         <tr>
-                            <td colspan="2">收银信息：</td>
+                            <td colspan="2" class="white-bg">收银信息</td>
                         </tr>
                         <tr>
                             <td class="td">项目价格：</td>
@@ -279,7 +287,7 @@
                         <%}%>
                         <%if (data.booking_salon_refund || data.order_refund){%>
                         <tr>
-                            <td colspan="2">退款信息：</td>
+                            <td colspan="2" class="white-bg">退款信息</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -289,7 +297,7 @@
                                             <td>发起退款：</td>
                                             <td><%= data.booking_salon_refund ?'臭美工作人员':'用户'%></td>
                                             <td>退款原因：</td>
-                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark)|| data.order_refund.rereason%></td>
+                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark)|| (data.order_refund &&data.order_refund.rereason)%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -297,7 +305,7 @@
                         </tr>
                         <tr>
                             <td class="td">退款说明：</td>
-                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark) || data.order_refund.refund_desc%></td>
+                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark) || (data.order_refund &&data.order_refund.refund_desc)%></td>
                         </tr>
                         <%var back_to_desc=[,'微信','支付宝','银联','现金']%>
                         <tr>
@@ -310,9 +318,9 @@
                                     <tbody>
                                         <tr>
                                             <td>退款金额：</td>
-                                            <td><%= ( data.booking_salon_refund &&data.booking_salon_refund.money) || data.order_refund.money%></td>
+                                            <td><%= ( data.booking_salon_refund &&data.booking_salon_refund.money) || (data.order_refund &&data.order_refund.money)%></td>
                                             <td>发起退款时间：</td>
-                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || data.order_refund.add_time%></td>
+                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || (data.order_refund && data.order_refund.add_time)%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -349,7 +357,7 @@
                         <%}%>
                         <%if (data.makeup){%>
                         <tr>
-                            <td colspan="2">补色信息：</td>
+                            <td colspan="2" class="white-bg">补色信息</td>
                         </tr>
                         <tr>
                             <td class="td">补色日期：</td>
@@ -390,7 +398,7 @@
                         <%}%>
                         <%if (data.booking_bill){%>
                         <tr>
-                            <td colspan="2">发票记录：</td>
+                            <td colspan="2" class="white-bg">发票记录</td>
                         </tr>
                         <tr>
                             <td class="td">发票状态：</td>
@@ -492,6 +500,7 @@
                     });
                     $('#table').on('_ready',function(e,res){
                         orderInfo = res.response;
+                        parent.orderInfo = orderInfo;
                         lib.ajat('#domid=breadcrumb&tempid=breadcrumb-t').template(orderInfo);
                     })
                   }();

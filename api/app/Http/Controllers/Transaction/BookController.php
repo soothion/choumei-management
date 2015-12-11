@@ -147,7 +147,7 @@ class BookController extends Controller
             'min_time' => self::T_STRING,
             'max_time' => self::T_STRING,
             'pay_type' => self::T_INT,
-            'pay_state' => self::T_STRING,
+            'status' => self::T_STRING,
             'page' => self::T_INT,
             'page_size' => self::T_INT,
             'sort_key' => self::T_STRING,
@@ -497,7 +497,7 @@ class BookController extends Controller
         $params['uid'] = $this->user->id;        
         $book = BookingCash::cash($id,$params);
         $custom_uid = $book['USER_ID'];
-        $first_book = BookingOrder::where("USER_ID",$custom_uid)->where("STATUS","CSD")->orderBy("CONSUME_TIME","ASC")->first();
+        $first_book = BookingOrder::where("USER_ID",$custom_uid)->whereIn("STATUS",["CSD","RFD-OFL"])->orderBy("CONSUME_TIME","ASC")->first();
         $is_first = false;
         if(! empty($first_book) && $first_book->USER_ID == $custom_uid)
         {
@@ -505,7 +505,7 @@ class BookController extends Controller
         }
         //self::givePresent($custom_uid,true);
         try{
-            self::givePresent($custom_uid,$is_first);
+            self::givePresent($custom_uid,$book['ORDER_SN'],$is_first);
         }
         catch (\Exception $e)
         {
@@ -662,6 +662,19 @@ class BookController extends Controller
             throw new ApiException("定妆单[{$id}]已经退款,不允许重复退款", ERROR::ORDER_STATUS_WRONG);
         }
         
+        $cash = BookingCash::where('booking_id',$id)->first();
+        
+        if(empty($cash))
+        {
+            throw new ApiException("定妆单[{$id}]状态不正确,找不到收银信息,不允许退款", ERROR::ORDER_STATUS_WRONG);
+        }
+        
+        $max_return  = bcadd($cash->other_money, $cash->cash_money,2);
+        if($params['money'] > $max_return)
+        {
+            throw new ApiException("定妆单[{$id}] 最大允许退款 {$max_return}. 退款金额错误，请查询", ERROR::PARAMETER_ERROR);
+        }        
+        
         $time = time();
         $datetime = date("Y-m-d H:i:s",$time);
         BookingSalonRefund::create([
@@ -683,74 +696,39 @@ class BookController extends Controller
         return $this->success(['id'=>$id]);
     }
     
-    public static function givePresent($customer_uid,$is_first=false)
+    public static function givePresent($customer_uid,$ordersn,$is_first=false)
     {
         $recommends = RecommendCodeUser::where('user_id',$customer_uid)->whereIn("type",[2,3])->get(['recommend_code','type'])->toArray(); 
-        if(count($recommends)<1)
+        
+        if(count($recommends)!=1)
         {
             return ;
         }
-        $customer_user = User::where('user_id',$customer_uid)->first(['user_id','mobilephone']);
-        if(empty($customer_user))
+        
+        $recommend = $recommends[0];
+        
+        $send_uid = null;
+        
+        if($recommend['type'] == 2)//店铺推荐
         {
-            throw new ApiException("用户不存在 uid:{$customer_uid}");
+             $send_uid = $customer_uid;
         }
-        $customer_phone = $customer_user->mobilephone;
-        
-        $mobilephones = array_column($recommends, 'recommend_code');
-        
-        $recommend_users = User::whereIn('mobilephone',$mobilephones)->get(['user_id','mobilephone'])->toArray();
-        $recommend_users_idx = Utils::column_to_key("user_id",$recommend_users);
-        $recommend_users_mobilephone = Utils::column_to_key("mobilephone",$recommend_users);
-   
-        if(count($recommends)>0)
+        else 
         {
-            $send_users = [];
-            foreach($recommends as $recommend)
+            if($is_first)
             {
-                $info = [];
-                if($recommend['type'] == 2)//店铺推荐
-                {
-                    $info['user_id'] = $customer_uid;
-                    $info['type'] = 1;
-                    $info['mobilephone'] = $customer_phone;
-                    $info['code'] = $recommend['recommend_code'];             
-                }
-                else
-                {
-                    if($is_first)
-                    {
-                        $code = $recommend['recommend_code'];
-                        $info['code'] = $code;                        
-                        if($code == $customer_phone)
-                        {
-                            $info['user_id'] = $customer_uid;
-                            $info['mobilephone'] = $customer_phone;
-                        }
-                        else 
-                        {
-                            $info['user_id'] = $recommend_users_mobilephone[$code]['user_id'];
-                            $info['mobilephone'] = $recommend_users_mobilephone[$code]['mobilephone'];
-                        }
-                        $info['type'] = 2;                       
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
-                $send_users[] = $info;
+                 $recommend_users = User::where('mobilephone',$recommend['recommend_code'])->get(['user_id'])->toArray();
+                 if(count($recommend_users)>0)
+                 {
+                     $send_uid = $recommend_users[0]['user_id'];
+                 }
             }
-            
-            foreach($send_users as  $u)
-            {
-                $uid = $u['user_id'];
-                $mobilephone = $u['mobilephone'];
-                $type = $u['type'];
-                $recommend_code = $u['code'];
-                Utils::log("present",date("Y-m-d H:i:s")."type:{$type} uid:{$uid} mobilephone:{$mobilephone} recommend_code:{$recommend_code} \n","send_present");
-                PowderArticlesController::addReservateSnAfterConsume($u['user_id'],$u['mobilephone'],$type,$recommend_code);
-            }
+        }
+        
+        if(!empty($send_uid))
+        {
+            Utils::log("present",date("Y-m-d H:i:s")." ordersn:{$ordersn} uid:{$send_uid} \n","send_present");
+            PowderArticlesController::addReservateSnAfterConsume($ordersn,$send_uid);
         }
     }
 }

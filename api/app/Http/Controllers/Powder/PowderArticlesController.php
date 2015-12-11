@@ -9,6 +9,9 @@ use App\Http\Controllers\Controller;
 
 use App\Model\Present;
 use App\Model\PresentArticleCode;
+use App\User;
+use App\RecommendCodeUser;
+use App\BookingOrder;
 use DB;
 use App\Model\SeedPool;
 use Event;
@@ -114,6 +117,11 @@ class PowderArticlesController extends Controller
         if($count){
             throw new ApiException('活动名称已存在',ERROR::POWDER_ARTICLE_NAME_EXIST);
         }
+        //查询种子池中活动券是否够用
+        $seed = SeedPool::where(array('TYPE' => 'GSN' , 'STATUS' => 'NEW'))->count();
+        if($seed < $param['nums']){
+            throw new ApiException('活动券数量超过10万，现在无法发券，目前券可使用数最多为'.$seed);
+        }
         $data['name'] = $param['articleName'];
         $data['item_id'] = $param['itemId'];
         $data['quantity'] = $param['nums'];      
@@ -128,12 +136,7 @@ class PowderArticlesController extends Controller
         $resId = Present::insertGetId($data);
         //$queries = DB::getQueryLog();
         if($resId){
-            $res['presentId'] = $resId;
-            //查询种子池中活动券是否够用
-            $seed = SeedPool::where(array('TYPE' => 'GSN' , 'STATUS' => 'NEW'))->count();
-            if($seed < $param['nums']){
-                throw new ApiException('活动券数量超过10万，现在无法发券，目前券可使用数最多为'.$seed);
-            }           
+            $res['presentId'] = $resId;                     
             $this->dispatch(new PowderArticleTicket($resId));
             Event::fire('powder.create','添加赠送活动,活动编号:'.$resId);
             return $this->success($res);
@@ -665,7 +668,7 @@ class PowderArticlesController extends Controller
      *
      * @apiParam {Number} mobilephone 选填，手机号
      * @apiParam {Number} reservateSn 选填，预约号
-     * @apiParam {Number} recommendCode 选填，推荐码
+     * @apiParam {String} recommendCode 选填，推荐码
      * @apiParam {Number} ticketCode 选填，券号
      * @apiParam {Number} presentType 选填，赠送方式
      * @apiParam {Number} ticketStatus 选填，券使用状态
@@ -687,7 +690,7 @@ class PowderArticlesController extends Controller
      * @apiSuccess {String} ticketCode 券号.
      * @apiSuccess {Number} ticketStatus 券状态.
      * @apiSuccess {Number} mobilephone 手机号.
-     * @apiSuccess {Number} recommendCode 推荐码.
+     * @apiSuccess {String} recommendCode 推荐码.
      * @apiSuccess {Number} presentType 赠送方式.
      * @apiSuccess {Number} managerId 操作人id.
      * @apiSuccess {Number} specialistId 专家id.
@@ -801,7 +804,7 @@ class PowderArticlesController extends Controller
      * @apiSuccess {String} recordTime 记录时间.
      * @apiSuccess {String} expireTime 券有效时间.
      * @apiSuccess {String} useTime 使用时间.
-     * @apiSuccess {Number} recommendCode 推荐码.
+     * @apiSuccess {String} recommendCode 推荐码.
      * @apiSuccess {Number} presentType 赠送类型.
      * @apiSuccess {Number} managerId 记录人id.
      * @apiSuccess {Number} specialistId 专家id.
@@ -939,19 +942,49 @@ class PowderArticlesController extends Controller
         }         
     }
     
+    
     /**
      * 线上活动增加预约号记录
-     * @param type $user_id
-     * @param type $mobilephone
-     * @param type $present_type  '赠送类型 1:消费赠送 2:推荐赠送 3:活动赠送',
-     * @param type $recommend_code  推荐码
+     * @param type $item_ordersn 定妆项目订单号
+     * @param type $user_id 赠送给用户的用户id
      * @return int
      * @throws ApiException
      */
-    public static function addReservateSnAfterConsume($user_id,$mobilephone,$present_type,$recommend_code=0){
-        Log::info("获取时间：".date('Y-m-d H:i:s',time())."--用户id:".$user_id."--手机号:".$mobilephone."--赠送类型:".$present_type."--推荐码:".$recommend_code);
-        if(empty($user_id) || empty($mobilephone) || empty($present_type)){
+    public static function addReservateSnAfterConsume($item_ordersn,$user_id){
+        Log::info("获取时间：".date('Y-m-d H:i:s',time())."--订单号：".$item_ordersn."--用户id:".$user_id);
+        if(empty($item_ordersn) || empty($user_id)){
             throw new ApiException('必传参数不能为空');
+        }
+        //根据订单号获取消费人的order_user_id
+        $bookingOrderInfo = BookingOrder::select('USER_ID')->where(array('ORDER_SN' => $item_ordersn))->first();
+        if($bookingOrderInfo === null){
+            Log::info('无法获取定妆消费用户,定妆消费用户订单号：'.$item_ordersn);
+            throw new ApiException('无法获取定妆消费用户'); 
+        }else{
+            $bookingOrderInfoRes =  $bookingOrderInfo->toArray();
+            $item_user_id = $bookingOrderInfoRes['USER_ID'];
+        }
+        $present_type = 1;  //默认消费赠送
+        if($item_user_id != $user_id){
+            //如果送给别人，消费类型就是推荐赠送
+            $present_type = 2;
+        }
+        //获取用户手机号
+        $userInfo = User::select('mobilephone')->where(array('user_id' => $user_id))->first();
+        if($userInfo === null){
+            Log::info('无法获取用户手机号,用户id:'.$user_id);
+            throw new ApiException('无法获取用户手机号'); 
+        }else{
+            $userInfoRes =  $userInfo->toArray();
+        }
+        $mobilephone = $userInfoRes['mobilephone'];
+        //获取推荐码 和 赠送类型       
+        $recommendCodeInfo = RecommendCodeUser::select('recommend_code','type')->where(array('user_id' => $user_id))->whereIn('type',[2, 3])->first();
+        if($recommendCodeInfo === null){
+            Log::info('用户无推荐码信息,用户id:'.$user_id);
+        }else{
+            $recommendCodeInfoRes =  $recommendCodeInfo->toArray();
+            $recommend_code = $recommendCodeInfoRes['recommend_code'];
         }
         //获取活动信息
         $where = array(
@@ -969,10 +1002,11 @@ class PowderArticlesController extends Controller
             $data['present_id'] = $presentInfo['present_id'];
             $data['item_id'] = $presentInfo['item_id'];
             $data['user_id'] = $user_id;
+            $data['item_ordersn'] = $item_ordersn;
             $data['mobilephone'] = $mobilephone;
-            if($recommend_code){
+            if(isset($recommend_code)){
                 $data['recommend_code'] = $recommend_code;
-            }           
+            }          
             $data['present_type'] = $present_type;
             //三个月内有效
             $data['expire_at'] = date("Y-m-d",strtotime("+3 month"))." 23:59:59";

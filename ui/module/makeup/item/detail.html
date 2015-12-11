@@ -24,8 +24,27 @@
 				font-size:14px;
 			}
 			.images img{
-				display:block;
+				margin-right:10px;
 				margin-bottom:10px;
+				width:350px;
+			}
+			.control-thumbnails-item:first-child:before{
+				position:absolute;
+				left:0px;
+				top:0px;
+				content:"首";
+				background: rgb(73,155,234); /* Old browsers */
+				background: -moz-linear-gradient(-45deg, rgba(73,155,234,1) 0%, ,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* FF3.6-15 */
+				background: -webkit-linear-gradient(-45deg, rgba(73,155,234,1) 0%,,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* Chrome10-25,Safari5.1-6 */
+				background: linear-gradient(135deg, rgba(73,155,234,1) 0%,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+				width:40px;
+				height:40px;
+				color:#fff;
+				z-index:100;
+				text-indent:8px;
+			}
+			.table-detail tbody td:nth-child(odd){
+				font-weight:bold;
 			}
 		</style>
     </head>
@@ -57,6 +76,19 @@
 							<tr>
 								<td>项目介绍：</td>
 								<td><%=data.detail.replace(/\n/g,"<br/>")%></td>
+							</tr>
+							<tr>
+								<td>项目图片：</td>
+								<td>
+									<%if(data.images){%>
+										<%data.images=JSON.parse(data.images)%>
+										<%data.images&&data.images.forEach(function(item){%>
+											<div class="control-thumbnails-item" style="margin:5px;">
+												<img src="<%=item%>" alt="" />
+											</div>
+										<%})%>
+									<%}%>
+								</td>
 							</tr>
 							<%if(query.p=="index"){%>
 							<tr>
@@ -105,7 +137,7 @@
 											<%JSON.parse(data.register_detail).forEach(function(item){%>
 											<tr>
 												<td><%=item.title%></td>
-												<td><%=item.content.replace(/\n/g,"</br>")%></td>
+												<td><%=item.content.replace(/\n/g,"<br/>")%></td>
 											</tr>
 											<%})%>
 										</tbody>
@@ -121,7 +153,7 @@
 									<%if(data.equipment){%>
 									<%JSON.parse(data.equipment).forEach(function(item){%>
 									<h4><%=item.title%></h4>
-									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
 										<img src="<%=image%>" alt="" />
@@ -138,7 +170,7 @@
 									<%if(data.description){%>
 									<%JSON.parse(data.description).forEach(function(item){%>
 									<h4><%=item.title%></h4>
-									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
 										<img src="<%=image%>" alt="" />
@@ -156,7 +188,7 @@
 											<%JSON.parse(data.archive).forEach(function(item){%>
 											<tr>
 												<td><%=item.title%></td>
-												<td><%=item.content.replace(/\n/g,"</br>")%></td>
+												<td><%=item.content.replace(/\n/g,"<br/>")%></td>
 											</tr>
 											<%})%>
 										</tbody>
@@ -170,7 +202,7 @@
 									<%if(data.register_workflow){%>
 									<%JSON.parse(data.register_workflow).forEach(function(item){%>
 									<h4><%=item.title%></h4>
-									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
 										<img src="<%=image%>" alt="" />
@@ -187,7 +219,7 @@
 									<%if(data.beauty){%>
 									<%JSON.parse(data.beauty).forEach(function(item){%>
 									<h4><%=item.title%></h4>
-									<p><%=item.content.replace(/\n/g,"</br>")%></p>
+									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
 										<img src="<%=image%>" alt="" />
@@ -210,7 +242,7 @@
 							</tr>
 							<tr>
 								<td>赠送说明：</td>
-								<td><%=data.present_explain.replace(/\n/g,"</br>")%></td>
+								<td><%=data.present_explain.replace(/\n/g,"<br/>")%></td>
 							</tr>
 							<tr>
 								<td>时间限制：</td>
@@ -225,15 +257,6 @@
 					<div class="item-images">
 						<%if(data.logo){%>
 						<img src="<%=data.logo%>" alt="" />
-						<%}%>
-					</div>
-					<h4>项目图片：</h4>
-					<div class="item-images">
-						<%if(data.images){%>
-						<%data.images=JSON.parse(data.images)%>
-						<%data.images&&data.images.forEach(function(item){%>
-						<img src="<%=item%>" alt="" />
-						<%})%>
 						<%}%>
 					</div>
 				</div>
