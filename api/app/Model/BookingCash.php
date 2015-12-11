@@ -43,19 +43,42 @@ class BookingCash extends Model
         {
             throw new ApiException("定妆单{$booking_id}状态不正确!", ERROR::ORDER_STATUS_WRONG);
         }
+        $ordersn = $base['ORDER_SN'];
+        $item_total = 0;
+        $book_money = $base['PAYABLE'];
         $receive = BookingReceive::where('booking_id',$booking_id)->first();
         if(empty($receive))
         {
+            $item_info = BookingOrderItem::where('ORDER_SN',$ordersn)->selectRaw("SUM(`PAYABLE`) as `to_pay_amount`")->first();
+            if(!empty($item_info))
+            {
+                $item_total = $item_info->to_pay_amount;
+            }
             BookingReceive::receive($booking_id, ['uid'=>$params['uid']],true);
-        }    
-        $ordersn = $base['ORDER_SN'];
+        } 
+        else 
+        {
+            $item_info = BeautyOrderItem::where('order_sn',$ordersn)->selectRaw("SUM(`to_pay_amount`) as `to_pay_amount`")->first();
+            if(!empty($item_info))
+            {
+                $item_total = $item_info->to_pay_amount;
+            }
+        }   
+        $params['cash_money'] = isset($params['cash_money'])?$params['cash_money']:0;
+        $real_to_pay = bcsub ($item_total, $book_money,2);
+        $input_to_pay = bcadd($params['cash_money'],$params['other_money'],2);
+        $input_to_pay = bcadd($input_to_pay,$params['deduction_money'],2);
+        if($real_to_pay !== $input_to_pay)
+        {
+            throw new ApiException("收银金额错误，请查询",ERROR::PARAMETER_ERROR);
+        }
         $time = time();
         $datetime = date("Y-m-d H:i:s",$time);
         $attr = [
             'booking_id'=>$booking_id,
             'booking_sn'=>$ordersn,
             'order_sn'=>$base['ORDER_SN'],
-            'booking_sn'=>$base['ORDER_SN'],
+            'booking_sn'=>$base['BOOKING_SN'],
             'uid'=>$params['uid'],
             'created_at'=>$datetime,
             'pay_type'=>$params['pay_type'],
