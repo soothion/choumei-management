@@ -34,19 +34,19 @@
 <div class="control-group" id="other_money">
     <label class="control-label" for=""><span class="red">*</span><span id="pay_name">微信</span>支付：</label>
     <div class="control">
-            <input type="text" pattern='float' min='0' name="other_money"  required/>
+            <input type="text" pattern='float' name="other_money"  required/>
     </div>
 </div>
 <div class="control-group" style="display:none;" id="cash_money">
     <label class="control-label" for=""><span class="red">*</span>现金支付：</label>
     <div class="control">
-            <input type="text" pattern='float' min='0' name="cash_money" value="0" required/>
+            <input type="text" pattern='float' name="cash_money" value="0" required/>
     </div>
 </div>
 <div class="control-group">
     <label class="control-label" for="">其它抵扣：</label>
     <div class="control">
-            <input type="text" pattern='float' min='0' value="0" name="deduction_money" max="<%=orderInfo.order.item_amount - orderInfo.order.PAYABLE%>" />
+            <input type="text" pattern='float' value="0" name="deduction_money" max="<%=orderInfo.order.item_amount - orderInfo.order.PAYABLE%>" />
     </div>
 </div>
 <div class="control-group">
