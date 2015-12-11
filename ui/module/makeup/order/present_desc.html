@@ -38,6 +38,10 @@
         }
         .inner-table tbody td:nth-child(2n){
             width: 35%;
+            background-color: #fff;
+        }
+        .white-bg{
+            background-color: #fff !important;
         }
         .inner-table{
             margin: -1px;
@@ -108,7 +112,7 @@
                         </tr>
                         <%if (data.ticketStatus == 1){%>
                         <tr>
-                            <td colspan="2">使用信息：</td>
+                            <td colspan="2" class='white-bg'>使用信息</td>
                         </tr>
                         <tr>
                             <td class="td">使用日期：</td>
