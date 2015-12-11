@@ -497,7 +497,7 @@ class BookController extends Controller
         $params['uid'] = $this->user->id;        
         $book = BookingCash::cash($id,$params);
         $custom_uid = $book['USER_ID'];
-        $first_book = BookingOrder::where("USER_ID",$custom_uid)->where("STATUS","CSD")->orderBy("CONSUME_TIME","ASC")->first();
+        $first_book = BookingOrder::where("USER_ID",$custom_uid)->whereIn("STATUS",["CSD","RFD-OFL"])->orderBy("CONSUME_TIME","ASC")->first();
         $is_first = false;
         if(! empty($first_book) && $first_book->USER_ID == $custom_uid)
         {
