@@ -76,7 +76,7 @@ class BeautyItem extends Model {
 			$ofNums = 0;
 			//线上
 			$nums = $query =  PresentArticleCode::leftjoin('booking_order', 'booking_order.ORDER_SN', '=', 'present_article_code.item_ordersn')
-				->selectRaw('count(*) as `nums`')->whereRaw("cm_booking_order.`STATUS` !='RFD' and cm_present_article_code.`item_ordersn`  IS not NULL")->first();
+				->selectRaw('count(*) as `nums`')->whereRaw("cm_booking_order.`STATUS` NOT IN('RFD','RFD-OFL') and cm_present_article_code.`item_ordersn`  IS not NULL")->first();
 			if($nums)
 			{
 				$onNums = $nums->nums;
