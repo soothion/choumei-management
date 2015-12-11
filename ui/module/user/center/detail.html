@@ -33,14 +33,16 @@
 				<button class="btn btn-edit" data-slug="user.update">
 					编辑
 				</button>
-				<button class="btn" onclick="history.back()" style="display:none">
+				<button class="btn-primary" data-slug="user.update" form="form" style="display:none">提交</button>
+				<span class="space"></span>
+				<button class="btn" onclick="history.back()" >
 					取消
 				</button>
 			</div>
 			<form action="user/resetCompanyCode/<%=query.id%>" data-role="normal" id="companyCode" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
 			</form>
 			<br />
-			<form action="user/update/<%=query.id%>" data-role="form">
+			<form action="user/update/<%=query.id%>" data-role="form" id="form">
 			<div class="detail">
 				<div class="table-detail">
 					<table>
@@ -104,8 +106,7 @@
 								<td>会员等级：<%=data.level?"V"+data.level:""%></td>
 							</tr>
 							<tr>
-								<td>会员积分：  <%=data.grade%></td>
-								<td>成长值：<%=data.growth%></td>
+								<td colspan="2">成长值：<%=data.growth%></td>
 							</tr>
 							<!--
 							<tr>
@@ -173,7 +174,7 @@
 								<td>商家邀请码</td>
 								<td><%=data.activity==2&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
 								<td><%=data.activity==2&&code1&&code1.type==1?code1.salonname:"无"%></td>
-								<td><%=data.activity==2&&code1&&code1.type==1?code1.add_time:"无"%></td>
+								<td><%=data.activity==2&&code1&&code1.type==1?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>无</td>
 							</tr>
 							<tr>
@@ -291,8 +292,9 @@
 								<td>会员等级：<%=data.level?"V"+data.level:""%></td>
 							</tr>
 							<tr>
-								<td>会员积分：  <input type="text" value="<%=data.grade%>" name="grade" required pattern="number" /></td>
-								<td>成长值：<input type="text" value="<%=data.growth%>" name="growth" required pattern="number"/></td>
+								<!--
+								<td>会员积分：  <input type="text" value="<%=data.grade%>" name="grade" required pattern="number" /></td>-->
+								<td colspan="2">成长值：<input type="text" value="<%=data.growth%>" name="growth" required pattern="number"/></td>
 							</tr>
 							<!--
 							<tr>
@@ -329,45 +331,45 @@
 						<tbody>
 							<tr>
 								<td>集团邀请码</td>
-								<td>60001</td>
-								<td>顺丰集团</td>
-								<td>2015-06-06   15：30：20</td>
+								<td><%=data.companyCode%></td>
+								<td><%=data.companyName%></td>
+								<td>无</td>
 								<td><%if(data.companyCode){%><button data-slug="user.update" form="companyCode" class="link off-code">解绑集团码</button><%}else{%>无<%}%></td>
 							</tr>
 							<tr>
 								<td>商家邀请码</td>
-								<td><%=data.activity==2&&code1&&code1==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==2&&code1&&code1==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==2&&code1&&code1==1?code1.recommend_code:"无"%></td>
+								<td><%=data.activity==2&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
+								<td><%=data.activity==2&&code1&&code1.type==1?code1.salonname:"无"%></td>
+								<td><%=data.activity==2&&code1&&code1.type==1?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>无</td>
 							</tr>
 							<tr>
 								<td>活动邀请码</td>
-								<td><%=data.activity==1&&code1&&code1==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==1&&code1&&code1==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==1&&code1&&code1==1?code1.recommend_code:"无"%></td>
+								<td><%=data.activity==1&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
+								<td><%=data.activity==1&&code1&&code1.type==1?code1.activityName:"无"%></td>
+								<td><%=data.activity==1&&code1&&code1.type==1&&code1.add_time?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>无</td>
 							</tr>
 							<tr>
 								<td>店铺推荐码</td>
 								<td><%=code2?code2.recommend_code:"无"%></td>
-								<td><%=code2?code2.recommend_code:"无"%></td>
-								<td><%=code2?code2.recommend_code:"无"%></td>
-								<td><%=code2?code2.recommend_code:"无"%></td>
+								<td>无</td>
+								<td><%=code2&&code2.add_time?new Date(code2.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>无</td>
 							</tr>
 							<tr>
 								<td>活动推荐码</td>
 								<td><%=code3?code3.recommend_code:"无"%></td>
-								<td><%=code3?code3.recommend_code:"无"%></td>
-								<td><%=code3?code3.recommend_code:"无"%></td>
-								<td><%=code3?code3.recommend_code:"无"%></td>
+								<td>无</td>
+								<td><%=code3&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>无</td>
 							</tr>
 							<tr>
 								<td>用户推荐码</td>
 								<td><%=code4?code4.recommend_code:"无"%></td>
-								<td><%=code4?code4.recommend_code:"无"%></td>
-								<td><%=code4?code4.recommend_code:"无"%></td>
-								<td><%=code4?code4.recommend_code:"无"%></td>
+								<td>无</td>
+								<td><%=code4&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td>无</td>
 							</tr>
 						</tbody>
 					</table>
