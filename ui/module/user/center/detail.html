@@ -7,6 +7,7 @@
 	  <style type="text/css">
 		.table-detail tbody td:nth-child(odd){
 			width:50%;
+			background:transparent;
 		}
 		.table-detail thead th{
 			padding-left:20px;
@@ -165,8 +166,8 @@
 						<tbody>
 							<tr>
 								<td>集团邀请码</td>
-								<td><%=data.companyCode%></td>
-								<td><%=data.companyName%></td>
+								<td><%=data.companyCode?data.companyCode:"无"%></td>
+								<td><%=data.companyName?data.companyName:"无"%></td>
 								<td>无</td>
 								<td><%if(data.companyCode){%><button data-slug="user.update" form="companyCode" class="link off-code">解绑集团码</button><%}else{%>无<%}%></td>
 							</tr>
@@ -192,14 +193,14 @@
 								<td>无</td>
 							</tr>
 							<tr>
-								<td>活动推荐码</td>
+								<td>用户推荐码</td>
 								<td><%=code3?code3.recommend_code:"无"%></td>
 								<td>无</td>
 								<td><%=code3&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>无</td>
 							</tr>
 							<tr>
-								<td>用户推荐码</td>
+								<td>活动推荐码</td>
 								<td><%=code4?code4.recommend_code:"无"%></td>
 								<td>无</td>
 								<td><%=code4&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
@@ -331,8 +332,8 @@
 						<tbody>
 							<tr>
 								<td>集团邀请码</td>
-								<td><%=data.companyCode%></td>
-								<td><%=data.companyName%></td>
+								<td><%=data.companyCode?data.companyCode:"无"%></td>
+								<td><%=data.companyName?data.companyName:"无"%></td>
 								<td>无</td>
 								<td><%if(data.companyCode){%><button data-slug="user.update" form="companyCode" class="link off-code">解绑集团码</button><%}else{%>无<%}%></td>
 							</tr>
@@ -358,14 +359,14 @@
 								<td>无</td>
 							</tr>
 							<tr>
-								<td>活动推荐码</td>
+								<td>用户推荐码</td>
 								<td><%=code3?code3.recommend_code:"无"%></td>
 								<td>无</td>
 								<td><%=code3&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>无</td>
 							</tr>
 							<tr>
-								<td>用户推荐码</td>
+								<td>活动推荐码</td>
 								<td><%=code4?code4.recommend_code:"无"%></td>
 								<td>无</td>
 								<td><%=code4&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>

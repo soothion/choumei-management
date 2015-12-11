@@ -2,7 +2,7 @@
 <div class="control-group">
     <label class="control-label" for="">预约日期：</label>
     <div class="control">
-            <label for="">2015-01-03</label>
+            <label for=""><%=orderInfo.order.BOOKING_DATE%></label>
     </div>
 </div>
 <div class="control-group">
@@ -25,7 +25,9 @@
 <div class="control-group">
     <label class="control-label" for="">沟通记录：</label>
     <div class="control">
+        <div class="keypress" maxlength="1000">
         <textarea maxlength="1000" name="remark" placeholder="限制1~1000个字符" style="height:150px;width:500px"></textarea>
+    </div>
     </div>
 </div>
 <script>
