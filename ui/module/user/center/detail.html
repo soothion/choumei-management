@@ -31,7 +31,7 @@
 		<div class="wrapper" ajat="user/show/<%=query.id%>#domid=detail&tempid=detail-t" id="detail">
 			<script type="text/template" id="detail-t">
 			<div class="detail-operation">
-				<button class="btn btn-edit" data-slug="user.update">
+				<button type="button" class="btn btn-edit" data-slug="user.update">
 					编辑
 				</button>
 				<button class="btn-primary" data-slug="user.update" form="form" style="display:none">提交</button>
@@ -380,7 +380,7 @@
 				<div class="tc">
 					<button class="btn-primary" data-slug="user.update">提交</button>
 					<span class="space"></span>
-					<button class="btn" onclick="history.back()">取消</button>
+					<button class="btn" type="button" onclick="history.back()">取消</button>
 				</div>
 			</div>
 			</form>

@@ -72,36 +72,19 @@ class BeautyItem extends Model {
 	{
 		if($is_gift)
 		{
-			$onNums = 0;
-			$ofNums = 0;
-			//线上
-			$nums = $query =  PresentArticleCode::leftjoin('booking_order', 'booking_order.ORDER_SN', '=', 'present_article_code.item_ordersn')
-				->selectRaw('count(*) as `nums`')->whereRaw("cm_booking_order.`STATUS` NOT IN('RFD','RFD-OFL') and cm_present_article_code.`item_ordersn`  IS not NULL")->first();
-			if($nums)
-			{
-				$onNums = $nums->nums;
-			}
-			//线下记录
-			$xNums = PresentArticleCode::selectRaw('count(*) as `nums`')->whereRaw('item_ordersn  is NULL')->first();
-			if($xNums)
-			{
-				$ofNums = $xNums->nums;
-			}
-			return  $onNums+$ofNums;
-			//return  PresentArticleCode::selectRaw('count(*) as `quantity`')->first();
-			
+			$numsObj = PresentArticleCode::selectRaw('count(*) as `quantity`')->first();
 		}
 		else
 		{
 			$numsObj = BookingCalendar::selectRaw('SUM(QUANTITY) as `quantity`')->where(['ITEM_ID'=>$item_id])->first();
-			if($numsObj)
-			{
-				return $numsObj->quantity;
-			}
-			else
-			{
-				return 0;
-			}
+		}
+		if($numsObj)
+		{
+			return $numsObj->quantity;
+		}
+		else
+		{
+			return 0;
 		}
 
 	}	
