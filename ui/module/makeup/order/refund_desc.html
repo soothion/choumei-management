@@ -44,7 +44,11 @@
             background-color: #F6F8F9;
         }
         .inner-table tbody td:nth-child(2n){
-            width:35%;
+            width: 35%;
+            background-color: #fff;
+        }
+        .white-bg{
+            background-color: #fff !important;
         }
         .inner-table{
             margin: -1px;
@@ -145,7 +149,7 @@
                             <td><%=status[data.status]%></td>
                         </tr>
                         <tr>
-                            <td colspan="2">预约金支付信息</td>
+                            <td colspan="2" class='white-bg'>预约金支付信息</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
@@ -175,7 +179,7 @@
                         </tr>
                         <%if (data.receive.arrive_at){%>
                         <tr>
-                            <td colspan="2">用户到店记录：</td>
+                            <td colspan="2" class='white-bg'>用户到店记录</td>
                         </tr>
                         <tr>
                             <td class="td">到店时间：</td>
@@ -205,7 +209,7 @@
                         </tr>
                         <%}%>
                         <tr>
-                            <td colspan="2">退款信息：</td>
+                            <td colspan="2" class='white-bg'>退款信息</td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">

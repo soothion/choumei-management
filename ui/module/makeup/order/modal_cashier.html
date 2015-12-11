@@ -46,7 +46,7 @@
 <div class="control-group">
     <label class="control-label" for="">其它抵扣：</label>
     <div class="control">
-            <input type="text" pattern='float' value="0" name="deduction_money" id="startTime" />
+            <input type="text" pattern='float' value="0" name="deduction_money" max="<%=orderInfo.order.item_amount - orderInfo.order.PAYABLE%>" />
     </div>
 </div>
 <div class="control-group">
