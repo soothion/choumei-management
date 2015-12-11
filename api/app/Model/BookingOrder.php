@@ -167,9 +167,9 @@ class BookingOrder extends Model
         {
             $pay_type = $params['pay_type'];
         }
-        if(isset($params['pay_state']) && !empty($params['pay_state']))
+        if(isset($params['status']) && !empty($params['status']))
         {
-            $pay_state = $params['pay_state'];
+            $pay_state = $params['status'];
         }
         if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty(trim($params['keyword'])))
         {

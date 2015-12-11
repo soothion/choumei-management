@@ -147,7 +147,7 @@ class BookController extends Controller
             'min_time' => self::T_STRING,
             'max_time' => self::T_STRING,
             'pay_type' => self::T_INT,
-            'pay_state' => self::T_STRING,
+            'status' => self::T_STRING,
             'page' => self::T_INT,
             'page_size' => self::T_INT,
             'sort_key' => self::T_STRING,
