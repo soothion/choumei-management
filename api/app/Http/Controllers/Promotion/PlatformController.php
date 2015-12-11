@@ -6,6 +6,7 @@ use DB;
 use Excel;
 use Event;
 use App\Voucher;
+use App\ThriftHelperModel;
 use App\Exceptions\ApiException;
 use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ERROR;
@@ -1039,7 +1040,7 @@ class PlatformController extends Controller{
             \App\Voucher::whereRaw( $where1 )->update( $voucherData );
         }
         $this->verifyPhone( $vcId );
-        Event::fire('platform.upConf','上线平台活动id: '.$vcId);
+//         Event::fire('platform.upConf','上线平台活动id: '.$vcId);
         return $this->success();
     }
     /***
@@ -1262,7 +1263,7 @@ class PlatformController extends Controller{
 
         if( !empty($getItemType) || !empty($getNeedMoney)  || $nowItStart || $nowGtEnd )
             return false;
-
+        
         // 找到活动对应的手机号码
         $phoneList = \App\Voucher::select(['vMobilephone','vcTitle','vUseMoney','vUseEnd'])->whereRaw('vcId='.$vcId.' and ( vStatus=3 or vStatus=1)')->get()->toArray();
 
@@ -1277,14 +1278,12 @@ class PlatformController extends Controller{
             $errMsg = date('Y-m-d H:i:s') .  "代金劵发送短信的手机号码失败的有" . $val['vMobilephone'];
             if( !empty($sms) ){
                 $sms = str_replace(['[useMoney]','[name]','[overtime]'], [$userMoney,$vcTitle,$useEnd], $sms);
-                $res = \App\Utils::sendphonemsg($val['vMobilephone'],$sms);
-                $successMsg .= ' - ' .$res;
-                $errMsg .= ' - '.$res;
-                // 发送短息成功
-                if( stripos($res,'ok') !== false )
-                    Log::info( $successMsg );
-                else
-                    Log::info( $errMsg );
+//				改用thrift调用发送短信
+				$thrift = new ThriftHelperModel();
+				$res = $thrift->request('sms-center', 'sendSmsByType', array($val['vMobilephone'], $sms, '127.0.0.1', 1));
+				$resultMsg = $res == 1 ? '成功' : '失败';
+                $msg = '代金劵发送信息 ： '.$resultMsg .' , 用户手机号码 ：' . $val['vMobilephone'] . ' , 用户信息：' . $sms ;
+				Log::info( $msg );
             }
             // 写入到推送表
             $userId = User::verifyUserPhoneExists( $val['vMobilephone'] );
