@@ -420,12 +420,14 @@ class UserController extends Controller{
             'user.companyId',
             'company_code.code as companyCode',
             'company_code.companyName',
+            'company_code_user.addTime as companyCodeAddtime',
             'salon.salonname',
             'dividend.event_conf_id',
             'eventspecial5.name as activityName',
             'salon.salonname'
         ];
         $user = User::leftJoin('company_code','company_code.companyId','=','user.companyId')
+            ->leftJoin('company_code_user','user.user_id','=','company_code_user.user_id')
             ->leftJoin('recommend_code_user',function($join){
                 $join->on('user.user_id','=','recommend_code_user.user_id')
                     ->where('recommend_code_user.type','=',1);
@@ -666,13 +668,20 @@ class UserController extends Controller{
         $user = User::find($id);
         if(!$user)
             throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
-        $result = $user->update(['companyId'=>0]);
-        if($result){
+        DB::beginTransaction();
+        $update = $user->update(['companyId'=>0]);
+        $delete = DB::table('company_code_user')->where('user_id','=',$id)->delete();
+        if($update&&$delete){
+            DB::commit();
             //触发事件，写入日志
             Event::fire('user.resetCompanyCode',array($user));
             return $this->success();
         }
-        throw new ApiException('集团码解除失败', ERROR::USER_UPDATE_FAILED);
+        else
+        {
+            DB::rollBack();
+            throw new ApiException('集团码解除失败', ERROR::USER_UPDATE_FAILED);
+        }
     }
 
 }
