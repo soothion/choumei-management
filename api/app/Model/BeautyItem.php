@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\AbstractPaginator;
 use App\BookingCalendar;
 use App\BeautyItemNorm;
+use App\Model\PresentArticleCode;
 class BeautyItem extends Model {
 
 	protected $table = 'beauty_item';
@@ -16,7 +17,7 @@ class BeautyItem extends Model {
 	public static function getBeautyItem($page,$page_size,$type,$is_gift)
 	{
 		//$fields = ['item_id','beauty_id','type','name','detail','description','archive','beauty','register_detail','equipment','equipment_cover','register_workflow','presen','logo','images','level','price','vip_price','expire','present_explain','is_gift','created_at','updated_at'];
-		$fields = ['item_id','beauty_id','type','name','level','price','vip_price'];
+		$fields = ['item_id','beauty_id','type','name','level','price','vip_price','is_gift'];
 		//手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
@@ -38,8 +39,8 @@ class BeautyItem extends Model {
 		
 			foreach($result['data'] as $key=>$val)
 			{	
-				$quantityRs = self::getQuantity($val['item_id']);
-				$result['data'][$key]['quantity'] =  $quantityRs->quantity?$quantityRs->quantity:0;
+				$quantityRs = self::getQuantity($val['item_id'],$val['is_gift']);
+				$result['data'][$key]['quantity'] =  $quantityRs;
 				if($val['type'] == 2)//韩式快时尚 多规格价格查询
 				{
 					$priceRs = self::getMinMaxPrices($val['item_id']);
@@ -67,9 +68,42 @@ class BeautyItem extends Model {
 	*获取总预约数
 	*item_id 项目Id
 	*/
-	public static function getQuantity($item_id)
+	public static function getQuantity($item_id,$is_gift=0)
 	{
-		return  BookingCalendar::selectRaw('SUM(QUANTITY) as `quantity`')->where(['ITEM_ID'=>$item_id])->first();
+		if($is_gift)
+		{
+			$onNums = 0;
+			$ofNums = 0;
+			//线上
+			$nums = $query =  PresentArticleCode::leftjoin('booking_order', 'booking_order.ORDER_SN', '=', 'present_article_code.item_ordersn')
+				->selectRaw('count(*) as `nums`')->whereRaw("cm_booking_order.`STATUS` !='RFD' and cm_present_article_code.`item_ordersn`  IS not NULL")->first();
+			if($nums)
+			{
+				$onNums = $nums->nums;
+			}
+			//线下记录
+			$xNums = PresentArticleCode::selectRaw('count(*) as `nums`')->whereRaw('item_ordersn  is NULL')->first();
+			if($xNums)
+			{
+				$ofNums = $xNums->nums;
+			}
+			return  $onNums+$ofNums;
+			//return  PresentArticleCode::selectRaw('count(*) as `quantity`')->first();
+			
+		}
+		else
+		{
+			$numsObj = BookingCalendar::selectRaw('SUM(QUANTITY) as `quantity`')->where(['ITEM_ID'=>$item_id])->first();
+			if($numsObj)
+			{
+				return $numsObj->quantity;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
 	}	
 	
 }
