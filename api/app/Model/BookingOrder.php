@@ -167,9 +167,9 @@ class BookingOrder extends Model
         {
             $pay_type = $params['pay_type'];
         }
-        if(isset($params['pay_state']) && !empty($params['pay_state']))
+        if(isset($params['status']) && !empty($params['status']))
         {
-            $pay_state = $params['pay_state'];
+            $pay_state = $params['status'];
         }
         if (isset($params['key']) && ! empty($params['key']) && isset($params['keyword']) && ! empty(trim($params['keyword'])))
         {
@@ -191,26 +191,38 @@ class BookingOrder extends Model
                      $join->on('beauty_makeup.booking_id', '=', 'booking_order.ID');
                  });
              }
-             else if($pay_state == "FAILD")
-             {
-                 $base->join('order_refund',function($join){
-                     $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status','<>',2);
-                 });
-             }
-             else if($pay_state == "RFD")
-             {
-                 $base->whereIn('booking_order.STATUS',['RFD','RFD-OFL']);
-             }
              else 
              {
-                 $base->where('booking_order.STATUS',$pay_state);
+                 if($pay_state == "FAILD")
+                 {
+                     $base->join('order_refund',function($join){
+                         $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status',3);
+                     });
+                 }
+                 else 
+                 {
+                     if($pay_state == "RFD")
+                     {
+                         $base->whereIn('booking_order.STATUS',['RFD','RFD-OFL']);
+                     }
+                     else 
+                     {
+                         $base->where('booking_order.STATUS',$pay_state);
+                     }
+                     
+                     $base->leftJoin('order_refund',function($join){
+                         $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status','<>',2);
+                     });
+                 }
+                 
+                 $base->leftJoin('beauty_makeup',function($join){
+                     $join->on('beauty_makeup.booking_id', '=', 'booking_order.ID');
+                 });
              }
          }
          else 
          {
-             $base->leftJoin('beauty_makeup',function($join){
-                 $join->on('beauty_makeup.booking_id', '=', 'booking_order.ID');
-             });
+            
              $base->leftJoin('order_refund',function($join){
                  $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status','<>',2);
              });

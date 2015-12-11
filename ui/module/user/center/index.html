@@ -61,7 +61,7 @@
 				<button class="btn">搜索</button>
 			</form>
 			<form action="user/export" data-role="export" data-slug="user.export"><button class="btn"><i class="fa fa-file-excel-o"></i> 导出</button></form>
-			<div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<div class="table" ajat="user/index?<%=query._%>#domid=table&tempid=table-t&timeout=30000" id="table">
 				<script type="text/template" id="table-t">
 				<table>
 				  <thead>

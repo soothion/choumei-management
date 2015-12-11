@@ -43,7 +43,8 @@
 }
 .con-special{
     width:30%;
-    padding-left: 30px!important;            
+    padding-left: 30px!important;     
+	background:rgba(0,0,0,0.035);
 }
 .map{
     display: inline-block;
