@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 
 use App\Model\Present;
 use App\Model\PresentArticleCode;
+use App\User;
+use App\RecommendCodeUser;
 use DB;
 use App\Model\SeedPool;
 use Event;
@@ -939,20 +941,37 @@ class PowderArticlesController extends Controller
         }         
     }
     
+    
     /**
      * 线上活动增加预约号记录
      * @param type $item_ordersn 定妆项目订单号
      * @param type $user_id
-     * @param type $mobilephone
-     * @param type $present_type  '赠送类型 1:消费赠送 2:推荐赠送 3:活动赠送',
-     * @param type $recommend_code 推荐码
      * @return int
      * @throws ApiException
      */
-    public static function addReservateSnAfterConsume($item_ordersn,$user_id,$mobilephone,$present_type,$recommend_code=''){
-        Log::info("获取时间：".date('Y-m-d H:i:s',time())."--订单号：".$item_ordersn."--用户id:".$user_id."--手机号:".$mobilephone."--赠送类型:".$present_type."--推荐码:".$recommend_code);
-        if(empty($item_ordersn) || empty($user_id) || empty($mobilephone) || empty($present_type)){
+    public static function addReservateSnAfterConsume($item_ordersn,$user_id){
+        Log::info("获取时间：".date('Y-m-d H:i:s',time())."--订单号：".$item_ordersn."--用户id:".$user_id);
+        if(empty($item_ordersn) || empty($user_id)){
             throw new ApiException('必传参数不能为空');
+        }
+        //获取用户手机号
+        $userInfo = User::select('mobilephone')->where(array('user_id' => $user_id))->first();
+        if($userInfo === null){
+            Log::info('无法获取用户手机号,用户id:'.$user_id);
+            throw new ApiException('无法获取用户手机号'); 
+        }else{
+            $userInfoRes =  $userInfo->toArray();
+        }
+        $mobilephone = $userInfoRes['mobilephone'];
+        //获取推荐码 和 赠送类型
+        $present_type = 1;  //默认消费赠送
+        $recommendCodeInfo = RecommendCodeUser::select('recommend_code','type')->where(array('user_id' => $user_id))->whereIn('type',[2, 3])->first();
+        if($recommendCodeInfo === null){
+            Log::info('用户无推荐码信息,用户id:'.$user_id);
+        }else{
+            $recommendCodeInfoRes =  $recommendCodeInfo->toArray();
+            $present_type = ($recommendCodeInfoRes['type'] == 2) ? 1:2;
+            $recommend_code = $recommendCodeInfoRes['recommend_code'];
         }
         //获取活动信息
         $where = array(
@@ -972,9 +991,9 @@ class PowderArticlesController extends Controller
             $data['user_id'] = $user_id;
             $data['item_ordersn'] = $item_ordersn;
             $data['mobilephone'] = $mobilephone;
-            if($recommend_code){
+            if(isset($recommend_code)){
                 $data['recommend_code'] = $recommend_code;
-            }           
+            }          
             $data['present_type'] = $present_type;
             //三个月内有效
             $data['expire_at'] = date("Y-m-d",strtotime("+3 month"))." 23:59:59";

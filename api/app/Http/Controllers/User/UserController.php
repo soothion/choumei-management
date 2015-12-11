@@ -260,7 +260,7 @@ class UserController extends Controller{
         );
 
         //分页
-        $array = $query->select($fields)->take($page_size)->skip($offset)->get()->toArray();
+        $array = $query->select($fields)->take($page_size)->skip($offset)->get();
         $result = [];
         foreach ($array as $key=>$value) {
             $result[$key]['id'] = $key+1;
