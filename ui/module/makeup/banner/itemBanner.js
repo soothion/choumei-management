@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-02 19:50:31
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-10 11:43:36
+* @Last Modified time: 2015-12-11 11:35:01
 */
 
 $(function(){
@@ -80,7 +80,7 @@ $(function(){
             auto_start:true,
             filters: {
             mime_types : [
-            { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+            { title : "Image files", extensions : "jpg,png,jpeg" },
             ]
             },
             max_file_size:'10mb',
@@ -111,7 +111,7 @@ $(function(){
             auto_start:true,
             filters: {
             mime_types : [
-            { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+            { title : "Image files", extensions : "jpg,png,jpeg" },
             ]
             },
             max_file_size:'10mb',
@@ -141,7 +141,7 @@ $(function(){
             auto_start:true,
             filters: {
             mime_types : [
-            { title : "Image files", extensions : "jpg,png,jpeg,gif" },
+            { title : "Image files", extensions : "jpg,png,jpeg" },
             ]
             },
             max_file_size:'10mb',
