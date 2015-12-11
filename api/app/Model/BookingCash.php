@@ -65,6 +65,7 @@ class BookingCash extends Model
             }
         }   
         $params['cash_money'] = isset($params['cash_money'])?$params['cash_money']:0;
+        $params['other_money'] = isset($params['other_money'])?$params['other_money']:0;
         $real_to_pay = bcsub ($item_total, $book_money,2);
         $input_to_pay = bcadd($params['cash_money'],$params['other_money'],2);
         $input_to_pay = bcadd($input_to_pay,$params['deduction_money'],2);
