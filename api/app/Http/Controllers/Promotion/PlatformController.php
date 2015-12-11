@@ -1280,7 +1280,7 @@ class PlatformController extends Controller{
                 $sms = str_replace(['[useMoney]','[name]','[overtime]'], [$userMoney,$vcTitle,$useEnd], $sms);
 //				改用thrift调用发送短信
 				$thrift = new ThriftHelperModel();
-				$res = $thrift->request('sms-center', 'sendSmsByType', array($val['vMobilephone'], $sms, '127.0.0.1', 1));
+				$res = $thrift->request('sms-center', 'sendSmsByType', array($val['vMobilephone'], $sms, '127.0.0.1', 3));
 				$resultMsg = $res == 1 ? '成功' : '失败';
                 $msg = '代金劵发送信息 ： '.$resultMsg .' , 用户手机号码 ：' . $val['vMobilephone'] . ' , 用户信息：' . $sms ;
 				Log::info( $msg );
