@@ -207,6 +207,7 @@ class UserController extends Controller{
             $result[$key] = $user;
         }
         $data['current_page'] = $page;
+        $data['per_page'] = $page_size;
         $data['data'] = $result;
         return $this->success($data);
 
