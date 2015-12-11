@@ -264,7 +264,6 @@ class UserController extends Controller{
         $array = $query->select($fields)->take($page_size)->skip($offset)->get();
         $result = [];
         foreach ($array as $key=>$value) {
-            $result[$key]['id'] = $key+1;
             $result[$key]['username'] = $value->username;
             $result[$key]['nickname'] = $value->nickname;
             $result[$key]['sex'] = User::getSex($value->sex);
@@ -307,7 +306,7 @@ class UserController extends Controller{
 
         //导出excel
         $title = '用户列表'.date('Ymd');
-        $header = ['序号','臭美号','昵称','性别','会员等级','手机号','地区','集团邀请码','商家邀请码','活动邀请码','店铺推荐码','活动推荐码','用户推荐码','注册时间'];
+        $header = ['臭美号','昵称','性别','会员等级','手机号','地区','集团邀请码','商家邀请码','活动邀请码','店铺推荐码','活动推荐码','用户推荐码','注册时间'];
         Excel::create($title, function($excel) use($result,$header){
             $excel->sheet('Sheet1', function($sheet) use($result,$header){
                     $sheet->fromArray($result, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
