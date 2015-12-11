@@ -157,7 +157,7 @@ class BookingOrder extends Model
             'cm_recommend_code_user.recommend_code as recommend_code',
         ];
         
-        $base = self::selectRaw(implode(',',$select_fields));
+        $base = self::selectRaw(implode(',',$select_fields))->where('booking_order.STATUS', "<>","NEW");
         
         $key = NULL;
         $keyword = NULL;

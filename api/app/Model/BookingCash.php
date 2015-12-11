@@ -65,6 +65,7 @@ class BookingCash extends Model
             }
         }   
         $params['cash_money'] = isset($params['cash_money'])?$params['cash_money']:0;
+        $params['other_money'] = isset($params['other_money'])?$params['other_money']:0;
         $real_to_pay = bcsub ($item_total, $book_money,2);
         $input_to_pay = bcadd($params['cash_money'],$params['other_money'],2);
         $input_to_pay = bcadd($input_to_pay,$params['deduction_money'],2);
@@ -76,9 +77,8 @@ class BookingCash extends Model
         $datetime = date("Y-m-d H:i:s",$time);
         $attr = [
             'booking_id'=>$booking_id,
-            'booking_sn'=>$ordersn,
             'order_sn'=>$base['ORDER_SN'],
-            'booking_sn'=>$base['BOOKING_SN'],
+            'booking_sn'=>empty($base['BOOKING_SN'])?"":$base['BOOKING_SN'],
             'uid'=>$params['uid'],
             'created_at'=>$datetime,
             'pay_type'=>$params['pay_type'],

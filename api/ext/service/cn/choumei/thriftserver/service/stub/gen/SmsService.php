@@ -66,6 +66,14 @@ interface SmsServiceIf extends \cn\choumei\thriftserver\service\stub\gen\BaseSer
    * @return \cn\choumei\thriftserver\service\stub\gen\AddUserCodeRet
    */
   public function addUserCode(\cn\choumei\thriftserver\service\stub\gen\AddUserCodeParam $addUserCodeParam);
+  /**
+   * @param string $mobilephone
+   * @param string $content
+   * @param string $ip
+   * @param int $type
+   * @return \cn\choumei\thriftserver\service\stub\gen\SendSmsRet
+   */
+  public function sendSmsByType($mobilephone, $content, $ip, $type);
 }
 
 class SmsServiceClient extends \cn\choumei\thriftserver\service\stub\gen\BaseServiceClient implements \cn\choumei\thriftserver\service\stub\gen\SmsServiceIf {
@@ -439,6 +447,60 @@ class SmsServiceClient extends \cn\choumei\thriftserver\service\stub\gen\BaseSer
       return $result->success;
     }
     throw new \Exception("addUserCode failed: unknown result");
+  }
+
+  public function sendSmsByType($mobilephone, $content, $ip, $type)
+  {
+    $this->send_sendSmsByType($mobilephone, $content, $ip, $type);
+    return $this->recv_sendSmsByType();
+  }
+
+  public function send_sendSmsByType($mobilephone, $content, $ip, $type)
+  {
+    $args = new \cn\choumei\thriftserver\service\stub\gen\SmsService_sendSmsByType_args();
+    $args->mobilephone = $mobilephone;
+    $args->content = $content;
+    $args->ip = $ip;
+    $args->type = $type;
+    $bin_accel = ($this->output_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_write_binary');
+    if ($bin_accel)
+    {
+      thrift_protocol_write_binary($this->output_, 'sendSmsByType', TMessageType::CALL, $args, $this->seqid_, $this->output_->isStrictWrite());
+    }
+    else
+    {
+      $this->output_->writeMessageBegin('sendSmsByType', TMessageType::CALL, $this->seqid_);
+      $args->write($this->output_);
+      $this->output_->writeMessageEnd();
+      $this->output_->getTransport()->flush();
+    }
+  }
+
+  public function recv_sendSmsByType()
+  {
+    $bin_accel = ($this->input_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_read_binary');
+    if ($bin_accel) $result = thrift_protocol_read_binary($this->input_, '\cn\choumei\thriftserver\service\stub\gen\SmsService_sendSmsByType_result', $this->input_->isStrictRead());
+    else
+    {
+      $rseqid = 0;
+      $fname = null;
+      $mtype = 0;
+
+      $this->input_->readMessageBegin($fname, $mtype, $rseqid);
+      if ($mtype == TMessageType::EXCEPTION) {
+        $x = new TApplicationException();
+        $x->read($this->input_);
+        $this->input_->readMessageEnd();
+        throw $x;
+      }
+      $result = new \cn\choumei\thriftserver\service\stub\gen\SmsService_sendSmsByType_result();
+      $result->read($this->input_);
+      $this->input_->readMessageEnd();
+    }
+    if ($result->success !== null) {
+      return $result->success;
+    }
+    throw new \Exception("sendSmsByType failed: unknown result");
   }
 
 }
@@ -1059,4 +1121,102 @@ class SmsService_addUserCode_result extends TBase {
 
 }
 
+class SmsService_sendSmsByType_args extends TBase {
+  static $_TSPEC;
+
+  /**
+   * @var string
+   */
+  public $mobilephone = null;
+  /**
+   * @var string
+   */
+  public $content = null;
+  /**
+   * @var string
+   */
+  public $ip = null;
+  /**
+   * @var int
+   */
+  public $type = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'mobilephone',
+          'type' => TType::STRING,
+          ),
+        2 => array(
+          'var' => 'content',
+          'type' => TType::STRING,
+          ),
+        3 => array(
+          'var' => 'ip',
+          'type' => TType::STRING,
+          ),
+        4 => array(
+          'var' => 'type',
+          'type' => TType::I32,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      parent::__construct(self::$_TSPEC, $vals);
+    }
+  }
+
+  public function getName() {
+    return 'SmsService_sendSmsByType_args';
+  }
+
+  public function read($input)
+  {
+    return $this->_read('SmsService_sendSmsByType_args', self::$_TSPEC, $input);
+  }
+
+  public function write($output) {
+    return $this->_write('SmsService_sendSmsByType_args', self::$_TSPEC, $output);
+  }
+
+}
+
+class SmsService_sendSmsByType_result extends TBase {
+  static $_TSPEC;
+
+  /**
+   * @var \cn\choumei\thriftserver\service\stub\gen\SendSmsRet
+   */
+  public $success = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        0 => array(
+          'var' => 'success',
+          'type' => TType::STRUCT,
+          'class' => '\cn\choumei\thriftserver\service\stub\gen\SendSmsRet',
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      parent::__construct(self::$_TSPEC, $vals);
+    }
+  }
+
+  public function getName() {
+    return 'SmsService_sendSmsByType_result';
+  }
+
+  public function read($input)
+  {
+    return $this->_read('SmsService_sendSmsByType_result', self::$_TSPEC, $input);
+  }
+
+  public function write($output) {
+    return $this->_write('SmsService_sendSmsByType_result', self::$_TSPEC, $output);
+  }
+
+}
 

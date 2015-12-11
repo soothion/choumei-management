@@ -186,8 +186,7 @@ class BeautyItemController extends Controller{
 		if(!$item_id || !$beautyItem)
 			throw new ApiException('未知项目',ERROR::BEAUTY_ITEM_NOT_FOUND);
 		$this->parameterValidation($beautyItem);
-		$quantityRs = BeautyItem::getQuantity($item_id);
-		$beautyItem['quantity']  = $quantityRs->quantity?$quantityRs->quantity:0;
+		$beautyItem['quantity']  = BeautyItem::getQuantity($item_id);
 		return $this->success($beautyItem);
 	}
 	
@@ -565,8 +564,7 @@ class BeautyItemController extends Controller{
 
 		$beautyItem['prices'] = BeautyItem::getMinMaxPrices($item_id);
 		$beautyItem['more_prices'] = BeautyItemNorm::where(['item_id'=>$item_id])->select(['img_url as img','norm','price','vip_price'])->get()->toArray();
-		$quantityRs = BeautyItem::getQuantity($item_id);
-		$beautyItem['quantity']  = $quantityRs->quantity?$quantityRs->quantity:0;
+		$beautyItem['quantity']  = BeautyItem::getQuantity($item_id,$beautyItem['is_gift']);
 		return $this->success($beautyItem);
 	}
 	

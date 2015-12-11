@@ -11,6 +11,7 @@ use App\Model\Present;
 use App\Model\PresentArticleCode;
 use App\User;
 use App\RecommendCodeUser;
+use App\BookingOrder;
 use DB;
 use App\Model\SeedPool;
 use Event;
@@ -945,7 +946,7 @@ class PowderArticlesController extends Controller
     /**
      * 线上活动增加预约号记录
      * @param type $item_ordersn 定妆项目订单号
-     * @param type $user_id
+     * @param type $user_id 赠送给用户的用户id
      * @return int
      * @throws ApiException
      */
@@ -953,6 +954,20 @@ class PowderArticlesController extends Controller
         Log::info("获取时间：".date('Y-m-d H:i:s',time())."--订单号：".$item_ordersn."--用户id:".$user_id);
         if(empty($item_ordersn) || empty($user_id)){
             throw new ApiException('必传参数不能为空');
+        }
+        //根据订单号获取消费人的order_user_id
+        $bookingOrderInfo = BookingOrder::select('USER_ID')->where(array('ORDER_SN' => $item_ordersn))->first();
+        if($bookingOrderInfo === null){
+            Log::info('无法获取定妆消费用户,定妆消费用户订单号：'.$item_ordersn);
+            throw new ApiException('无法获取定妆消费用户'); 
+        }else{
+            $bookingOrderInfoRes =  $bookingOrderInfo->toArray();
+            $item_user_id = $bookingOrderInfoRes['USER_ID'];
+        }
+        $present_type = 1;  //默认消费赠送
+        if($item_user_id != $user_id){
+            //如果送给别人，消费类型就是推荐赠送
+            $present_type = 2;
         }
         //获取用户手机号
         $userInfo = User::select('mobilephone')->where(array('user_id' => $user_id))->first();
@@ -963,14 +978,12 @@ class PowderArticlesController extends Controller
             $userInfoRes =  $userInfo->toArray();
         }
         $mobilephone = $userInfoRes['mobilephone'];
-        //获取推荐码 和 赠送类型
-        $present_type = 1;  //默认消费赠送
+        //获取推荐码 和 赠送类型       
         $recommendCodeInfo = RecommendCodeUser::select('recommend_code','type')->where(array('user_id' => $user_id))->whereIn('type',[2, 3])->first();
         if($recommendCodeInfo === null){
             Log::info('用户无推荐码信息,用户id:'.$user_id);
         }else{
             $recommendCodeInfoRes =  $recommendCodeInfo->toArray();
-            $present_type = ($recommendCodeInfoRes['type'] == 2) ? 1:2;
             $recommend_code = $recommendCodeInfoRes['recommend_code'];
         }
         //获取活动信息
