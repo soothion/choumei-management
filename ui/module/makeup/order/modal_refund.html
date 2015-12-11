@@ -26,7 +26,7 @@
 <div class="control-group">
     <label class="control-label" for="">实收金额：</label>
     <div class="control">
-            <label for=""><span class="red"><%=orderInfo.order.item_amount-orderInfo.booking_cash.deduction_money%></span></label>
+            <label for=""><span class="red"><%= orderInfo.order.item_amount - orderInfo.order.PAYABLE-orderInfo.booking_cash.deduction_money%></span></label>
     </div>
 </div>
 <div class="control-group">
@@ -43,7 +43,7 @@
 <div class="control-group">
     <label class="control-label" for=""><span class="red">*</span>退款金额：</label>
     <div class="control">
-            <input type="text" pattern="float" name="money" max="<%=orderInfo.order.item_amount-orderInfo.booking_cash.deduction_money%>" required/>
+            <input type="text" pattern="float" name="money" max="<%= orderInfo.order.item_amount - orderInfo.order.PAYABLE-orderInfo.booking_cash.deduction_money%>" required/>
     </div>
 </div>
 <div class="control-group">
