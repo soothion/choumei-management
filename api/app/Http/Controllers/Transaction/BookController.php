@@ -505,7 +505,7 @@ class BookController extends Controller
         }
         //self::givePresent($custom_uid,true);
         try{
-            self::givePresent($custom_uid,$book['ORDER_SN'],$is_first);
+            self::givePresent($custom_uid,$book['ORDER_SN'],$is_first,$first_book->CONSUME_TIME);
         }
         catch (\Exception $e)
         {
@@ -696,9 +696,9 @@ class BookController extends Controller
         return $this->success(['id'=>$id]);
     }
     
-    public static function givePresent($customer_uid,$ordersn,$is_first=false)
+    public static function givePresent($customer_uid,$ordersn,$is_first = false,$first_consume_time = 0)
     {
-        $recommends = RecommendCodeUser::where('user_id',$customer_uid)->whereIn("type",[2,3])->get(['recommend_code','type'])->toArray(); 
+        $recommends = RecommendCodeUser::where('user_id',$customer_uid)->whereIn("type",[2,3])->get(['recommend_code','type','add_time'])->toArray(); 
         
         if(count($recommends)!=1)
         {
@@ -711,7 +711,10 @@ class BookController extends Controller
         
         if($recommend['type'] == 2)//店铺推荐
         {
-             $send_uid = $customer_uid;
+            if($recommend['add_time'] <= strtotime($first_consume_time))
+            {
+                $send_uid = $customer_uid;
+            }
         }
         else 
         {
