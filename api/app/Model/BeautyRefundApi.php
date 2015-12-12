@@ -25,7 +25,7 @@ class BeautyRefundApi extends TransactionWriteApi {
         $bookingUp = BookingOrder::whereIn('ORDER_SN', $ordersns)->where('STATUS', 'RFN')->update(['STATUS' => 'PYD']);
         $refundUp = OrderRefund::whereIn('order_refund_id', $ids)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->update(['status' => self::REFUND_STATUS_OF_CANCLE]);
         //修改接待信息
-        $bookingReceiveUp=  BookingReceive::whereIn('order_sn',$ordersns)->where('state', '1')->update(['state'=>0]);
+        $bookingReceiveUp = BookingReceive::whereIn('order_sn', $ordersns)->where('state', '1')->update(['state' => 0]);
         if ($bookingUp !== false && $refundUp !== false) {
             return [];
         } else {
@@ -116,8 +116,9 @@ class BeautyRefundApi extends TransactionWriteApi {
             $user_id = $flow['user_id'];
             $money = $flow['money'];
 //            $reason = implode(',', Mapping::BeautyRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
-            $reason = implode(',',Mapping::getRefundRereasonNames(explode(',',$refunds[$ordersn]['rereason']))); 
+            $reason = implode(',', Mapping::getRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
             $reason = !empty($reason) ? $reason . "," . $refunds[$ordersn]['other_rereason'] : $refunds[$ordersn]['other_rereason'];
+            $reason = substr($reason,0,80);  //退款愿意不能超过250个字节  粗处粗略截取
             $device = null;
             $tn = '';
             $batch_no = '';
@@ -184,7 +185,7 @@ class BeautyRefundApi extends TransactionWriteApi {
      */
 
     private static function modifBookingOrderRefundOptUser($ids, $opt_user_id) {
-        OrderRefund::whereIn('order_refund_id', $ids)->update(['opt_user_id' => $opt_user_id,'opt_time'=>time()]);  // 状态必须为申请退款 更改为退款中  TODO
+        OrderRefund::whereIn('order_refund_id', $ids)->update(['opt_user_id' => $opt_user_id, 'opt_time' => time()]);  // 状态必须为申请退款 更改为退款中  TODO
         return true;
     }
 
