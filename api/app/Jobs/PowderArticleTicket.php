@@ -127,7 +127,7 @@ class PowderArticleTicket extends Job implements SelfHandling,ShouldQueue
                  * 0-4999  5000-9999 分批次
                  */
                 if($key >= $pageSize * ($page - 1) && $key < $page * $pageSize){
-                    $eachSeeds = $value;
+                    $eachSeeds[] = $value;
                 }                
             }
                       
