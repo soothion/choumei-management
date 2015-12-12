@@ -16,6 +16,7 @@ use DB;
 use App\Model\SeedPool;
 use Event;
 use Log;
+use Excel;
 
 use App\Jobs\PowderArticleTicket;
 
@@ -661,7 +662,8 @@ class PowderArticlesController extends Controller
             Event::fire('powder.exportArticleTicket','导出活动券,活动编号：'.$param['presentId']);
         }
         @ini_set('memory_limit', '512M');
-        $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $articleAllTicketInfoRes);
+        $this->store_xls_onServer($articleInfo['name'] . date("Ymd"), $header, $articleAllTicketInfoRes);
+        $this->downloads($articleInfo['name'] . date("Ymd").'.xls');
     }
     
     /**
@@ -1057,6 +1059,35 @@ class PowderArticlesController extends Controller
         }
         DB::commit();
         return 1;
+    }
+    private function store_xls_onServer($filename,$header,$datas){
+        Excel::create($filename, function($excel) use($datas,$header){
+        $excel->setTitle('sheet');
+            $excel->sheet('Sheet1', function($sheet) use($datas,$header){
+
+                $sheet->fromArray($datas, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+                $sheet->prependRow(1, $header);//添加表头
+
+            });
+        })->store('xls');
+    }
+    
+    private function downloads($name){
+        
+        $file_dir = storage_path('exports/');
+        if (!file_exists($file_dir.$name)){
+            header("Content-type: text/html; charset=utf-8");
+            echo "File not found!";
+            exit; 
+        } else {
+            $file = fopen($file_dir.$name,"r"); 
+            Header("Content-type: application/octet-stream");
+            Header("Accept-Ranges: bytes");
+            Header("Accept-Length: ".filesize($file_dir . $name));
+            Header("Content-Disposition: attachment; filename=".$name);
+            echo fread($file, filesize($file_dir.$name));
+            fclose($file);
+        }
     }
     
 }
