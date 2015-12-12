@@ -120,7 +120,7 @@ class PowderArticlesController extends Controller
         }
         //查询种子池中活动券是否够用
         $seed = SeedPool::where(array('TYPE' => 'GSN' , 'STATUS' => 'NEW'))->count();
-        if($seed < 100000){
+        if($seed < 50000){
             throw new ApiException('线下活动券数量已超标，现在无法添加活动,请联系管理员');
         }
         if($param['nums'] > 100000){
