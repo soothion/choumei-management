@@ -118,14 +118,15 @@ class PowderArticlesController extends Controller
         if($count){
             throw new ApiException('活动名称已存在',ERROR::POWDER_ARTICLE_NAME_EXIST);
         }
+        //限制发送数量
+        if($param['nums'] > 100000){
+            throw new ApiException('活动券数量超过10万，无法发券,请重试');
+        }
         //查询种子池中活动券是否够用
         $seed = SeedPool::where(array('TYPE' => 'GSN' , 'STATUS' => 'NEW'))->count();
         if($seed < 100000){
             throw new ApiException('线下活动券数量已超标，现在无法添加活动,请联系管理员');
-        }
-        if($param['nums'] > 100000){
-            throw new ApiException('活动券数量超过10万，无法发券,请重试');
-        }
+        }       
         $data['name'] = $param['articleName'];
         $data['item_id'] = $param['itemId'];
         $data['quantity'] = $param['nums'];      
