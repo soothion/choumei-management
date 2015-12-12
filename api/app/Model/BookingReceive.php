@@ -57,7 +57,7 @@ class BookingReceive extends Model
         $datetime = date("Y-m-d H:i:s");
         $attr = [
             'booking_id'=>$id,
-            'booking_sn'=>$ordersn,
+            'order_sn'=>$ordersn,
             'booking_sn'=>empty($base['BOOKING_SN'])?"":$base['BOOKING_SN'],
             'uid'=>$params['uid'],
             'created_at'=>$datetime,
@@ -77,7 +77,8 @@ class BookingReceive extends Model
         else 
         {
             $attr['arrive_at'] = $datetime;
-        }        
+        }  
+        BookingReceive::where("booking_id",$id)->delete();
         BookingReceive::create($attr);
         return $base;
     }
