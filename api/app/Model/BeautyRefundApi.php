@@ -118,7 +118,7 @@ class BeautyRefundApi extends TransactionWriteApi {
 //            $reason = implode(',', Mapping::BeautyRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
             $reason = implode(',', Mapping::getRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
             $reason = !empty($reason) ? $reason . "," . $refunds[$ordersn]['other_rereason'] : $refunds[$ordersn]['other_rereason'];
-            $reason = substr($reason,0,80);  //退款愿意不能超过250个字节  粗处粗略截取
+            $reason = mb_substr($reason,0,80);  //退款愿意不能超过250个字节  粗处粗略截取
             $device = null;
             $tn = '';
             $batch_no = '';
