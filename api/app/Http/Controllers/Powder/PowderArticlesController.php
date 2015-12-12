@@ -640,7 +640,8 @@ class PowderArticlesController extends Controller
         if(empty($param['presentId'])){
             throw new ApiException('必传参数不能为空');    
         }
-         @set_time_limit(0);
+        @set_time_limit(0);
+        @ini_set('memory_limit', '512M');
         //获取活动名称
         $where = array('present_id'=>$param['presentId']);
         $articleInfo = Present::getArticleInfoByWhere($where);
@@ -661,9 +662,8 @@ class PowderArticlesController extends Controller
         if (!empty($articleAllTicketInfoRes)) {
             Event::fire('powder.exportArticleTicket','导出活动券,活动编号：'.$param['presentId']);
         }
-        @ini_set('memory_limit', '512M');
-        $this->store_xls_onServer($articleInfo['name'] . date("Ymd"), $header, $articleAllTicketInfoRes);
-        $this->downloads($articleInfo['name'] . date("Ymd").'.xls');
+       
+        $this->export_xls($articleInfo['name'] . date("Ymd"), $header, $articleAllTicketInfoRes);
     }
     
     /**
