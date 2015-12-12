@@ -113,13 +113,47 @@ class PowderArticleTicket extends Job implements SelfHandling,ShouldQueue
             $seeds[] = substr($value,2);
         }
         $where = array('TYPE' => 'GSN');
-        $updateRes  = SeedPool::where($where)->whereIn('SEED',$seeds)->update(array('STATUS' => 'USD' ,'UPDATE_TIME' => date( "Y-m-d H:i:s" )));
-        if($updateRes === false){
-            Log::info("定妆赠送券状态更新sql错误");
-        }elseif($updateRes != count($seeds)){
-            Log::info("定妆赠送券状态部分数据更新失败");
-        }else{
+        
+        $pageSize = 5000;
+        $totalPage = ceil(count($seeds)/$pageSize);
+        //失败了尝试的次数
+        $times = 0;
+        //每次成功的总次数
+        $succeedTimes = 0;
+        for($page = 1; $page <= $totalPage; $page++){
+            $eachSeeds = array();
+            foreach ($seeds as $key => $value) {
+                /**
+                 * 0-4999  5000-9999 分批次
+                 */
+                if($key >= $pageSize * ($page - 1) && $key < $page * $pageSize){
+                    $eachSeeds = $value;
+                }                
+            }
+                      
+            $updateRes  = SeedPool::where($where)->whereIn('SEED',$eachSeeds)->update(array('STATUS' => 'USD' ,'UPDATE_TIME' => date( "Y-m-d H:i:s" )));
+            if($updateRes === false){
+                Log::info("定妆赠送券状态更新sql错误,第{$page}页");
+                $page--;
+                $times++;
+            }elseif($updateRes != count($eachSeeds)){
+                Log::info("定妆赠送券状态部分数据更新失败,第{$page}页");
+                $page--;
+                $times++;
+            }else{
+                $succeedTimes++;
+            }
+        }
+        if($succeedTimes == $totalPage){
             return 1;
-        }     
+        }else{
+            Log::info("定妆赠送券状态更新失败，当前时间：". date("Y-m-d H:i:s"));
+            $logInfoSeeds = implode(",", $seeds);
+            Log::info("当前种子为：".$logInfoSeeds);
+            return TRUE;
+        }
+                 
+        
+        
     }
 }
