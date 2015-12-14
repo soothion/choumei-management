@@ -14,7 +14,7 @@
         })
        }
     })
-    itemList.forEach(function(item){
+    itemList.forEach(function(item,index){
         for (var i = 0;i<selectedItems.length;i++){
             if (item.item_id == selectedItems[i].split('_')[0]){
               if (!item.moreId){

@@ -32,7 +32,8 @@
 </div>
 <script>
     var selectedItems = [];
-    var orderItems = orderInfo.beauty_order_item ? orderInfo.beauty_order_item : orderInfo.order_item;
+    var orderItems = orderInfo.beauty_order_item.length ? orderInfo.beauty_order_item : orderInfo.order_item;
+    console.log(orderItems);
     orderItems.forEach(function(item,index){
         var item_id = item.item_id ? item.item_id:item.ITEM_ID;
         if (item.norm_id){
