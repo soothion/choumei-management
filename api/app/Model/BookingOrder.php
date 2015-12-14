@@ -196,8 +196,7 @@ class BookingOrder extends Model
                 $order_refund_joined = true;
                 $base->join('order_refund', function ($join)
                 {
-                    $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')
-                        ->where('order_refund.status', 3);
+                    $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status','=', 3);
                 });
             } elseif ($pay_state == "RFD") {
                 $base->whereIn('booking_order.STATUS', [
