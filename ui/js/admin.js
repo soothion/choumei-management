@@ -383,7 +383,7 @@ $(function(){
 	$body.on('change','.table .select-all input',function(){//全选
 		var bool=this.checked;
 		var _this=this;
-		$(this).closest('.table').find('tbody input[type="checkbox"]').each(function(){
+		$(this).closest('.table').find('tbody label input[type="checkbox"]').each(function(){
 			if(!this.disabled){
 				this.checked=bool;
 				$(this).trigger('change');
@@ -395,7 +395,7 @@ $(function(){
 			}
 		})
 	});
-	$body.on('change','.table tbody input[type="checkbox"]',function(){//表行复选框
+	$body.on('change','.table tbody label input[type="checkbox"]',function(){//表行复选框
 		var $this=$(this);
 		var tr=$this.closest('tr');
 		if(this.checked){
