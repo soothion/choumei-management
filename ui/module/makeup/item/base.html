@@ -257,13 +257,13 @@
 						<input type="text" placeholder="2~10个字" minlength="2" maxlength="10" value="<%=item.norm%>" required name="norm" />
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="1~99整数" min="1" max="99" pattern="number"  value="<%=item.times%>" required name="times"/>
+						<input type="text" placeholder="1~99整数" min="1" max="99" pattern="number"  value="<%=item.times?item.times:""%>" required name="times"/>
 					</li>
 					<li class="table-item item-input">
 						<input type="text"  value="<%=item.size%>" required name="size" placeholder="文本"/>
 					</li>
 					<li class="table-item item-input">
-						<input type="text" placeholder="1~99999整数" min="1" max="99999" pattern="number"  value="<%=item.price%>" required name="price"/>
+						<input type="text" placeholder="1~99999整数" min="1" max="99999" pattern="number"  value="<%=item.price?item.price:""%>" required name="price"/>
 					</li>
 					<li class="table-item item-input">
 						<input type="text" placeholder="1~99999整数，小于等于原价" min="1" max="99999"pattern="number"  value="<%=item.vip_price%>" required name="vip_price"/>
