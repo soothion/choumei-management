@@ -559,7 +559,14 @@ class TransactionWriteApi
             }
             $retype = intval($refunds[$ordersn]['retype']); 
             $pay_type = intval($flow['pay_type']);
-            if(!in_array($pay_type, [self::REFUND_TO_UNION,self::REFUND_TO_ALIPAY,self::REFUND_TO_WX,self::REFUND_TO_BALANCE,self::REFUND_TO_YILIAN]))
+            if(!in_array($pay_type, [
+                self::REFUND_TO_UNION,
+                self::REFUND_TO_ALIPAY,
+                self::REFUND_TO_WX,
+                self::REFUND_TO_BALANCE,
+                self::REFUND_TO_HONGBAO,
+                self::REFUND_TO_YOUHUI,
+                self::REFUND_TO_YILIAN]))
             {
                 continue;
             }
