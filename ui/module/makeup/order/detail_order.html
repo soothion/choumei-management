@@ -206,7 +206,7 @@
                         </tr>
                         <tr>
                             <td class="td">沟通记录：</td>
-                            <td><%=data.booking_receive && data.booking_receive.remark.replace(/\n/g,'<br/>')%></td>
+                            <td><%=data.booking_receive && data.booking_receive.remark && data.booking_receive.remark.replace(/\n/g,'<br/>')%></td>
                         </tr>
                         <tr >
                             <td colspan="2" class="pad-n bor-n">
@@ -379,7 +379,7 @@
                         </tr>
                         <tr>
                             <td class="td">补色说明：</td>
-                            <td><%=data.makeup.remark && data.makeup.remark.replace(/\n/g,"</br>")%></td>
+                            <td><%=data.makeup && data.makeup.remark && data.makeup.remark.replace(/\n/g,"</br>")%></td>
                         </tr>
                         <tr>
                             <td colspan="2" class="pad-n bor-n">
