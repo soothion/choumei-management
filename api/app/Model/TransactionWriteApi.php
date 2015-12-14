@@ -557,14 +557,16 @@ class TransactionWriteApi
             {                
                 throw new ApiException("退款的关键信息不全",ERROR::REFUND_LOST_PRIMARY_INFO);
             }
-            $retype = intval($refunds[$ordersn]['retype']);      
+            $retype = intval($refunds[$ordersn]['retype']); 
+            $pay_type = intval($flow['pay_type']);
+            if(!in_array($pay_type, [self::REFUND_TO_UNION,self::REFUND_TO_ALIPAY,self::REFUND_TO_WX,self::REFUND_TO_BALANCE,self::REFUND_TO_YILIAN]))
+            {
+                continue;
+            }
+            
             if($retype == self::REFUND_RETYPE_REFUND_TO_BALANCE)
             {
                 $pay_type = self::REFUND_TO_BALANCE;
-            }
-            else
-            {
-                $pay_type = intval($flow['pay_type']);
             }
             $user_id = $flow['user_id'];
             $money = $flow['money'];
