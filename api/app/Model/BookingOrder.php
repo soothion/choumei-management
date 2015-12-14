@@ -188,6 +188,7 @@ class BookingOrder extends Model
         if (! empty($pay_state)) {
             if ($pay_state == "Y") {
                 $beauty_makeup_joined = true;
+                $base->where("booking_order.STATUS","CSD");
                 $base->join('beauty_makeup', function ($join)
                 {
                     $join->on('beauty_makeup.booking_id', '=', 'booking_order.ID');
