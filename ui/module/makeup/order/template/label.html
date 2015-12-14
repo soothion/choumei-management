@@ -1,26 +1,36 @@
 
    <%
    var selectedItems = protocol.custom.selected.split(',');
-    data.forEach(function(item){
-        for (var i = 0;i<selectedItems.length;i++){
-           if (item.item_id == selectedItems[i].split('_')[0]){
-            item.selected = true;
-            item.moreId = selectedItems[i].split('_')[1] || '';
-           }
+   var itemList = [];
+   data.forEach(function(item,index){
+       if (!item.more_prices){
+         itemList.push(item);
+       }else{
+        item.more_prices.forEach(function(more,index){
+          var moreItem = JSON.parse(JSON.stringify(item));
+          moreItem.moreId = more.id;
+          moreItem.norm = more.norm;
+          itemList.push(moreItem);
+        })
        }
-    if (item.more_prices && item.more_prices.length > 0){
-          item.more_prices.forEach(function(more,index){
-    if (!item.moreId){%>
-    <label class="label">
-        <input type="checkbox" class="item_ids" <%if (item.selected && index==0){%>checked='checked'<%}%> value="<%=item.item_id+'_'+more.id%>" >
-        <span><%=item.name+'&middot;'+more.norm%></span>
-    </label>
-    <%}else{%>
+    })
+    itemList.forEach(function(item){
+        for (var i = 0;i<selectedItems.length;i++){
+            if (item.item_id == selectedItems[i].split('_')[0]){
+              if (!item.moreId){
+                  item.selected = true;
+              }else if (item.moreId == selectedItems[i].split('_')[1]){
+                  item.selected = true;
+              }
+           }
+        }
+    if (item.moreId){
+    %>
    <label class="label">
-        <input type="checkbox" class="item_ids" <%if (item.selected && item.moreId==more.id){%>checked='checked'<%}%> value="<%=item.item_id%>_<%=more.id%>" >
-        <span><%=item.name+'&middot;'+more.norm%></span>
+        <input type="checkbox" class="item_ids" <%if (item.selected){%>checked='checked'<%}%> value="<%=item.item_id%>_<%=item.moreId%>" >
+        <span><%=item.name+'&middot;'+item.norm%></span>
   </label>
-    <%}})}else{%>
+    <%}else{%>
      <label class="label">
         <input type="checkbox" class="item_ids" <%if (item.selected){%>checked='checked'<%}%> value="<%=item.item_id%>" >
         <span><%=item.name%></span>
