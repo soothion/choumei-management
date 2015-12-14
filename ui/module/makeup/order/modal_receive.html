@@ -32,9 +32,15 @@
 </div>
 <script>
     var selectedItems = [];
-    orderInfo.order_item.forEach(function(item,index){
-        selectedItems.push(item.ITEM_ID);
-    })
+    var orderItems = orderInfo.beauty_order_item ? orderInfo.beauty_order_item : orderInfo.order_item;
+    orderItems.forEach(function(item,index){
+        var item_id = item.item_id ? item.item_id:item.ITEM_ID;
+        if (item.norm_id){
+            selectedItems.push(item_id+'_'+item.norm_id);
+        }else{
+            selectedItems.push(item_id);
+        }
+    });
     lib.ajat('beautyItem/itemList#selected='+selectedItems.join(',')+'&domid=item&tempid=/module/makeup/order/template/label').render();
 </script>
 </form>
