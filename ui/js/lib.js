@@ -414,7 +414,7 @@
 				}
 			},
 			createImage:function(){//创建图片预览用来检测图片高宽
-				var imagePreview=$('<div style="position:absolute;left:0;top:0;z-index:-1;width:100%;height:100%;overflow:hidden;visibility:hidden;"><img/></div>')
+				var imagePreview=$('<div style="position:absolute;left:0;top:0;z-index:-1;width:100%;height:100%;overflow:hidden;visibility:hidden;"><img style="max-width:none"/></div>')
 				$(document.body).append(imagePreview);
 				return imagePreview;
 			},
@@ -645,7 +645,7 @@
 												up.start();//上传文件
 											}
 										}
-										image.parent().remove();
+										//image.parent().remove();
 									}
 									if(typeof imageLimitSize=="function"){
 										if(!imageLimitSize(image.width(),image.height())){
@@ -656,7 +656,7 @@
 												up.start();//上传文件
 											}
 										}
-										image.parent().remove();
+										//image.parent().remove();
 									}
 								});
 							});
