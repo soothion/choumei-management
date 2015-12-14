@@ -115,6 +115,8 @@ class BookingReceive extends Model
             $attrs['beauty_id'] = $item['beauty_id'];
             $attrs['item_id'] = $item['item_id'];
             $attrs['item_name'] = $item['item_name'];
+            $attrs['norm_id'] = $item['norm_id'];
+            $attrs['norm_name'] = $item['norm_name'];
             $attrs['quantity'] = 1;
             $attrs['price'] = $item['price'];
             $attrs['discount_price'] = $item['discount_price'];
