@@ -78,7 +78,7 @@ class BookingOrder extends Model
         $base = $base->toArray();
         $ordersn = $base['ORDER_SN'];
         $item_fields = ['ORDER_SN','ITEM_ID','ITEM_NAME','AMOUNT','PAYABLE'];
-        $beauty_item_fields = ['order_sn','item_id','item_name','amount','to_pay_amount'];
+        $beauty_item_fields = ['order_sn','item_id','item_name','norm_id','norm_name','amount','to_pay_amount'];
         $items = BookingOrderItem::where('ORDER_SN',$ordersn)->get($item_fields)->toArray();
         $beauty_items = BeautyOrderItem::where('order_sn',$ordersn)->get($beauty_item_fields)->toArray();
         $fundflows = Fundflow::where('record_no',$ordersn)->get(['record_no','pay_type'])->toArray();
@@ -270,7 +270,8 @@ class BookingOrder extends Model
         ];
         $beauty_order_item_fields = [
             'order_sn',
-            'item_name'
+            'item_name',
+            'norm_name',
         ];
         
         $base->with([

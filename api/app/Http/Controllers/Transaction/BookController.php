@@ -70,6 +70,7 @@ class BookController extends Controller
      * @apiSuccess {String} booking_order_item.ITEM_NAME 项目名称
      * @apiSuccess {String} beauty_order_item 实际项目信息
      * @apiSuccess {String} beauty_order_item.item_name 项目名称
+     * @apiSuccess {String} beauty_order_item.norm_name 项目规格名称
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -188,10 +189,12 @@ class BookController extends Controller
      * @apiSuccess {String} order_item.AMOUNT 预约金总额
      * @apiSuccess {String} order_item.PAYABLE 应付总额
      * @apiSuccess {String} beauty_order_item 实做项目信息
-     * @apiSuccess {String} beauty_order_item.id 项目ID
+     * @apiSuccess {String} beauty_order_item.item_id 项目ID
      * @apiSuccess {String} beauty_order_item.item_name 项目名称
      * @apiSuccess {String} beauty_order_item.amout 总额
      * @apiSuccess {String} beauty_order_item.to_pay_amount 应付总额
+     * @apiSuccess {String} beauty_order_item.norm_id 项目规格ID
+     * @apiSuccess {String} beauty_order_item.norm_name 项目规格名称
      * @apiSuccess {String} fundflow 金额构成
      * @apiSuccess {String} fundflow.pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
      * @apiSuccess {String} paymentlog 流水信息
@@ -297,7 +300,9 @@ class BookController extends Controller
      *               "item_id": 3,
      *               "item_name": "韩式无痛水光针",
      *               "amount": "850.00",
-     *               "to_pay_amount": "120.00"
+     *               "to_pay_amount": "120.00",
+     *               "norm_id":0,
+     *               "norm_name":"",
      *             }
      *           ],
      *           "makeup": {
@@ -434,7 +439,7 @@ class BookController extends Controller
      * @apiParam {Number} arrive_at 到店时间   YYYY-MM-DD
      * @apiParam {String} update_booking_date 修改预约时间 YYYY-MM-DD
      * @apiParam {String} remark 沟通记录
-     * @apiParam {String} item_ids 预约项目修改  多个id用','隔开
+     * @apiParam {String} item_ids 预约项目修改  多个id用','隔开 {item_id1}[_{norm_id1}[_{norm_id2}]],{item_id2}[_{norm_id3}[_{norm_id4}]]...
      * 
      * @apiSuccessExample Success-Response:
      *       {
@@ -455,7 +460,7 @@ class BookController extends Controller
             'remark' => self::T_STRING,
             'item_ids' => self::T_STRING,
        ]);
-       $params['item_ids'] = array_unique(array_map("intval",explode(",", $params['item_ids'])));
+       $params['item_ids'] = explode(",", $params['item_ids']);
        $params['uid'] = $this->user->id;
        $book = BookingReceive::receive($id,$params);
        Event::fire('booking.cash',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
