@@ -505,9 +505,10 @@ class BookController extends Controller
         {
             $is_first = true;
         }
+        $first_time = BookingOrder::where("USER_ID",$custom_uid)->orderBy("CREATE_TIME","ASC")->first();
         //self::givePresent($custom_uid,true);
         try{
-            self::givePresent($custom_uid,$book['ORDER_SN'],$is_first,$first_book->CONSUME_TIME);
+            self::givePresent($custom_uid,$book['ORDER_SN'],$is_first,$first_time->CREATE_TIME);
         }
         catch (\Exception $e)
         {
