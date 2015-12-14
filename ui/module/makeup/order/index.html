@@ -60,7 +60,7 @@
 
                 <button class="btn" type="submit" data-slug="book.index">查询</button>
             </form>
-           <div class="table" ajat="book/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="<%if (query._){%>book/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
             <script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -69,6 +69,7 @@
                             <th>手机号</th>
                             <th>姓名</th>
                             <th>预约项目</th>
+                            <th>实做项目</th>
                             <th>预约金额</th>
                             <th>预约单号</th>
                             <th>预约日期</th>
@@ -79,7 +80,6 @@
                         </tr>
                     </thead>
                 <tbody>
-                <%var data=data.data%>
                 <%var pay_type_desc={
                     "1":"网银",
                     "2":"支付宝",
@@ -97,7 +97,7 @@
                     'RFE':'退款失败',
                     'RFD-OFL':'已退款',
                 }%>
-                <%data.forEach(function(item,index){%>
+                <%data.data && data.data.forEach(function(item,index){%>
                  <tr>
                   <td><%=index+1%></td>
                   <td><%=item.BOOKER_PHONE%></td>
@@ -106,6 +106,10 @@
                   item.booking_order_item.forEach(function(orderItem){
                       orderItems.push(orderItem.ITEM_NAME);
                   })%><%=orderItems.join(",")%></td>
+                  <td><%var beauty_order_items=[];
+                  item.beauty_order_item.forEach(function(beauty_orderItem){
+                      beauty_order_items.push(beauty_orderItem.ITEM_NAME);
+                  })%><%=beauty_order_items.join(",")%></td>
                   <td><%=item.AMOUNT%></td>
                   <td><%=item.BOOKING_SN%></td>
                   <td><%=item.BOOKING_DATE%></td>
