@@ -17,11 +17,20 @@
         }
 
     %>
+    <%
+        if (item.more_prices && item.more_prices.length > 0){
+          item.more_prices.forEach(function(more,index){
+    %>
     <label class="label">
+        <input type="checkbox" class="item_ids" <%if (item.selected && index==0){%>checked='checked'<%}%> value="<%=item.item_id%>_<%=more.id%>" >
+        <span><%=item.name+'&middot;'+more.norm%></span>
+    </label>
+    <%})}else{%>
+     <label class="label">
         <input type="checkbox" class="item_ids" <%if (item.selected){%>checked='checked'<%}%> value="<%=item.item_id%>" >
         <span><%=item.name%></span>
     </label>
-    <%})%>
+    <%}})%>
     <input type="hidden" required name="item_ids"  id="item_ids" requiredmsg='请选择服务项目'>
     <script>
         $('.item_ids').on('change',function(){

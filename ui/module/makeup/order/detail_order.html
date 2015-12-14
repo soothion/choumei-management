@@ -205,7 +205,7 @@
                         </tr>
                         <tr>
                             <td class="td">沟通记录：</td>
-                            <td><%=data.booking_receive && data.booking_receive.remark%></td>
+                            <td><%=data.booking_receive && data.booking_receive.remark.replace(/\n/g,'<br/>')%></td>
                         </tr>
                         <tr >
                             <td colspan="2" class="pad-n bor-n">
