@@ -87,7 +87,7 @@ $('#form').on("_ready",function(){
 			complete:function(){
 				var popup=$(this);
 				var form=popup.find('form');
-				var options={
+				parent.lib.puploader.image({
 					browse_button: popup.find(".control-image-upload>div").attr('id'),
 					auto_start:true,
 					filters: {
@@ -97,21 +97,19 @@ $('#form').on("_ready",function(){
 					},
 					max_file_size:'10mb',
 					imageArray:image,
-					imageLimitSize:"690*400",
 					multi_selection:true,
 					files_number:10,
-					thumb:""
-				}
-				if(location.href.indexOf("reservation-progress.html")>-1){
-					delete options.imageLimitSize;
-				}
-				parent.lib.puploader.image(options,function(uploader){
-					uploader.unbind("UploadComplete");
-					uploader.bind("UploadComplete",function(){
+					thumb:"",
+					imageLimitSize:function(width,height){
+						return width<=2000&&height<=1500;
+					}
+				},function(uploader){
+						uploader.unbind("UploadComplete");
+						uploader.bind("UploadComplete",function(){
+							parent.lib.popup.resize();
+						});
 						parent.lib.popup.resize();
 					});
-					parent.lib.popup.resize();
-				});
 				new lib.Form(form[0]);
 				popup.find('input').focus();
 				popup.find(".popup-alert-define").on("click",function(e){

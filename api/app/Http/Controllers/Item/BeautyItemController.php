@@ -208,7 +208,7 @@ class BeautyItemController extends Controller{
 	* @apiParam {string} logo 必填,项目icon.
 	* @apiParam {string} images 必填,项目图片JSON[{"img":"http: \/\/sm.choumei.cn\/Uploads\/salonbrand\/2015-06-15\/143434957914358.jpg"},{"img":"http: \/\/sm.choumei.cn\/Uploads\/salonbrand\/2015-06-15\/163434957914352.jpg"}].
 	* @apiParam {string} level 必填,类别 1明星院长； 2院长.
-	* @apiParam {string} more_prices 必填,价格规格JSON [{"img":"http:\/\/www.jt.com\/images\/logo.png","norm":"腰部","price":"1500","vip_price":"60"},{"img":"http:\/\/www.jt.com\/images\/logo.png","norm":"手臂","price":"2500","vip_price":"1800"}].
+	* @apiParam {string} more_prices 必填,价格规格JSON [{"img":"http:\/\/www.jt.com\/images\/logo.png","norm":"腰部","price":"1500","vip_price":"60","size":"4-8","times":"6"},{"img":"http:\/\/www.jt.com\/images\/logo.png","norm":"手臂","price":"2500","vip_price":"1800","size":"4-8","times":"6"}].
 	* @apiParam {string} equipment_cover 必填,设备封面
 	* @apiParam {string} equipment 必填,设备介绍JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
 	* @apiParam {string} present_explain 必填,赠送说明.	
@@ -341,6 +341,8 @@ class BeautyItemController extends Controller{
 					'norm'=>$val['norm'],
 					'price'=>$val['price'],
 					'vip_price'=>$val['vip_price'],
+					'times'=>$val['times'],
+					'size'=>$val['size'],
 					'item_id'=>$param['item_id'],
 					'created_at'=>time(),
 			];
@@ -526,19 +528,25 @@ class BeautyItemController extends Controller{
    	*              "img": "",
    	*              "norm": "234",
    	*              "price": 33,
-  	*               "vip_price": 20
+  	*              "vip_price": 20,
+  	*              "size": 20,
+  	*              "times": 20,	
    	*          },
   	*           {
    	*              "img": "",
    	*              "norm": "343",
    	*              "price": 50,
-   	*              "vip_price": 10
+   	*              "vip_price": 10,
+  	*              "size": 20,
+  	*              "times": 20,	
    	*          },
    	*          {
    	*              "img": "",
   	*               "norm": "",
    	*              "price": 5434,
-   	*              "vip_price": 652
+   	*              "vip_price": 652,
+  	*              "size": 20,
+  	*              "times": 20,	
   	*           }
   	*       ]
   	*   }
@@ -563,7 +571,7 @@ class BeautyItemController extends Controller{
 		$this->parameterValidation($beautyItem);
 
 		$beautyItem['prices'] = BeautyItem::getMinMaxPrices($item_id);
-		$beautyItem['more_prices'] = BeautyItemNorm::where(['item_id'=>$item_id])->select(['img_url as img','norm','price','vip_price'])->get()->toArray();
+		$beautyItem['more_prices'] = BeautyItemNorm::where(['item_id'=>$item_id])->select(['img_url as img','norm','price','vip_price','size','times'])->get()->toArray();
 		$beautyItem['quantity']  = BeautyItem::getQuantity($item_id,$beautyItem['is_gift']);
 		return $this->success($beautyItem);
 	}
@@ -581,6 +589,7 @@ class BeautyItemController extends Controller{
 	* @apiSuccess {Number} item_id 项目id.
 	* @apiSuccess {Number} type 项目类型 1韩式半永久 2快时尚.
 	* @apiSuccess {Number} is_gift 是否是赠送项目 0否 1是
+	* @apiSuccess {Array} more_prices 多规格展示  id 规格id norm 规格名称
 	*
 	* @apiSuccessExample Success-Response:
 	*{
@@ -592,6 +601,17 @@ class BeautyItemController extends Controller{
 	*	    	    "item_id": "1",
 	*	    	    "type": "1",
 	*	    	    "is_gift": "0",
+	*               "more_prices": [
+    *               {
+    *                  "id": 47,
+    *                  "img": "http://img01.choumei.cn/1/7/2015120217501449049856031749987.jpg?imageMogr2/crop/!75x75a50a0/thumbnail/100x100",
+    *                  "norm": "腿部",
+    *                  "price": 850,
+    *                  "vip_price": 120,
+    *                  "size": "",
+    *                  "times": 0
+    *              }
+    *         ]
 	*	    },
 	*			......
 	*	    ]
@@ -620,7 +640,13 @@ class BeautyItemController extends Controller{
 		{
 			$query = $query->where(['type'=>$type,'is_gift'=>$is_gift]);
 		}
-		$result = $query->orderBy('type', 'asc')->orderBy('level', 'asc')->orderBy('item_id', 'desc')->get();
+		$result = $query->orderBy('type', 'asc')->orderBy('level', 'asc')->orderBy('item_id', 'desc')->get()->toArray();
+		foreach($result as &$val)
+		{
+			if($val['type'] == 2)
+				$val['more_prices'] =  BeautyItemNorm::where(['item_id'=>$val['item_id']])->select(['id','img_url as img','norm','price','vip_price','size','times'])->get()->toArray();
+		}
+		
 		return $this->success($result);
 	}
 	
