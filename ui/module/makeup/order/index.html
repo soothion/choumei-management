@@ -108,7 +108,7 @@
                   })%><%=orderItems.join(",")%></td>
                   <td><%var beauty_order_items=[];
                   item.beauty_order_item.forEach(function(beauty_orderItem){
-                      beauty_order_items.push(beauty_orderItem.ITEM_NAME);
+                      beauty_order_items.push(beauty_orderItem.item_name);
                   })%><%=beauty_order_items.join(",")%></td>
                   <td><%=item.AMOUNT%></td>
                   <td><%=item.BOOKING_SN%></td>
