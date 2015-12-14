@@ -21,7 +21,7 @@
                             <a onclick="print()" class="btn" data-slug="coupon.add">
                                 打印
                             </a>
-                            <button <%if ((data.booking_receive || (data.booking_salon_refund || data.order_refund) || data.booking_cash)){%>disabled='disabled'<%}%> class="btn" data-modal='receive' data-slug="book.receive">
+                            <button <%if ( data.booking_cash){%>disabled='disabled'<%}%> class="btn" data-modal='receive' data-slug="book.receive">
                                  接待
                             </button>
                             <button <%if (data.booking_cash || (data.booking_salon_refund || data.order_refund)){%>disabled='disabled'<%}%> class="btn" data-modal='cashier' data-slug="book.cash">
@@ -185,17 +185,16 @@
                             <td class="td">支付状态：</td>
                             <td><%=status[data.order.STATUS]%></td>
                         </tr>
-                        <%if (data.booking_receive){%>
                         <tr>
                             <td  colspan="2" class="white-bg">用户到店记录</td>
                         </tr>
                         <tr>
                             <td class="td">到店时间：</td>
-                            <td><%=data.booking_receive.arrive_at%></td>
+                            <td><%= data.booking_receive ?data.booking_receive.arrive_at:''%></td>
                         </tr>
                         <tr>
                             <td class="td">修改预约：</td>
-                            <td><%=data.booking_receive.update_booking_date%></td>
+                            <td><%= data.booking_receive ?data.booking_receive.update_booking_date:''%></td>
                         </tr>
                         <tr>
                             <td class="td">实做项目：</td>
@@ -214,15 +213,14 @@
                                     <tbody>
                                         <tr>
                                             <td>接待人：</td>
-                                            <td><%=data.booking_receive.manager.name%></td>
+                                            <td><%= data.booking_receive ?data.booking_receive.manager.name:''%></td>
                                             <td>接待时间：</td>
-                                            <td><%=data.booking_receive.created_at%></td>
+                                            <td><%=data.booking_receive ?data.booking_receive.created_at:''%></td>
                                         </tr>
                                     </tbody>
                             </table>
                             </td>
                         </tr>
-                        <%}%>
                         <%if (data.booking_cash){%>
                         <tr>
                             <td colspan="2" class="white-bg">收银信息</td>
