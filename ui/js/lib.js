@@ -645,7 +645,7 @@
 												up.start();//上传文件
 											}
 										}
-										//image.parent().remove();
+										image.parent().remove();
 									}
 									if(typeof imageLimitSize=="function"){
 										if(!imageLimitSize(image.width(),image.height())){
@@ -656,7 +656,7 @@
 												up.start();//上传文件
 											}
 										}
-										//image.parent().remove();
+										image.parent().remove();
 									}
 								});
 							});
