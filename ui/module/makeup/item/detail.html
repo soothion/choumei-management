@@ -9,10 +9,10 @@
 				padding-left:15px;
 				width:300px;
 			}
-			.item-images{
+			.item-logo{
 				margin:5px 0 10px 0;
 			}
-			.item-images img{
+			.item-logo img{
 				width:100%;
 				margin-bottom:10px;
 			}
@@ -23,12 +23,7 @@
 				font-weight:bold;
 				font-size:14px;
 			}
-			.images img{
-				margin-right:10px;
-				margin-bottom:10px;
-				width:350px;
-			}
-			.control-thumbnails-item:first-child:before{
+			.item-images .control-thumbnails-item:first-child:before{
 				position:absolute;
 				left:0px;
 				top:0px;
@@ -79,7 +74,7 @@
 							</tr>
 							<tr>
 								<td>项目图片：</td>
-								<td>
+								<td class="item-images">
 									<%if(data.images){%>
 										<%data.images=JSON.parse(data.images)%>
 										<%data.images&&data.images.forEach(function(item){%>
@@ -156,7 +151,9 @@
 									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
-										<img src="<%=image%>" alt="" />
+											<div class="control-thumbnails-item" style="margin:5px;">
+												<img src="<%=image%>" alt="" />
+											</div>
 										<%})%>
 									</div>
 									<%})%>
@@ -173,7 +170,9 @@
 									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
-										<img src="<%=image%>" alt="" />
+											<div class="control-thumbnails-item" style="margin:5px;">
+												<img src="<%=image%>" alt="" />
+											</div>
 										<%})%>
 									</div>
 									<%})%>
@@ -205,7 +204,9 @@
 									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
-										<img src="<%=image%>" alt="" />
+											<div class="control-thumbnails-item" style="margin:5px;">
+												<img src="<%=image%>" alt="" />
+											</div>
 										<%})%>
 									</div>
 									<%})%>
@@ -222,7 +223,9 @@
 									<p><%=item.content.replace(/\n/g,"<br/>")%></p>
 									<div class="images">
 										<%item.image.forEach(function(image){%>
-										<img src="<%=image%>" alt="" />
+											<div class="control-thumbnails-item" style="margin:5px;">
+												<img src="<%=image%>" alt="" />
+											</div>
 										<%})%>
 									</div>
 									<%})%>
@@ -254,7 +257,7 @@
 				</div>
 				<div class="table-item item-sub">
 					<h4 style="margin-top:0">项目icon：</h4>
-					<div class="item-images">
+					<div class="item-logo">
 						<%if(data.logo){%>
 						<img src="<%=data.logo%>" alt="" />
 						<%}%>
