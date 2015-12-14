@@ -48,24 +48,20 @@ class BookingCash extends Model
         $book_money = $base['PAYABLE'];
         $receive = BookingReceive::where('booking_id',$booking_id)->first();
         if(empty($receive))
-        {
-            $item_info = BookingOrderItem::where('ORDER_SN',$ordersn)->selectRaw("SUM(`PAYABLE`) as `to_pay_amount`")->first();
-            if(!empty($item_info))
-            {
-                $item_total = $item_info->to_pay_amount;
-            }
+        {          
             BookingReceive::receive($booking_id, ['uid'=>$params['uid']],true);
         } 
-        else 
+        
+        $item_info = BeautyOrderItem::where('order_sn',$ordersn)->selectRaw("SUM(`to_pay_amount`) as `to_pay_amount`")->first();
+        
+        if(!empty($item_info))
         {
-            $item_info = BeautyOrderItem::where('order_sn',$ordersn)->selectRaw("SUM(`to_pay_amount`) as `to_pay_amount`")->first();
-            if(!empty($item_info))
-            {
-                $item_total = $item_info->to_pay_amount;
-            }
-        }   
+           $item_total = $item_info->to_pay_amount;
+        } 
+        
         $params['cash_money'] = isset($params['cash_money'])?$params['cash_money']:0;
         $params['other_money'] = isset($params['other_money'])?$params['other_money']:0;
+        $params['deduction_money'] = isset($params['deduction_money'])?$params['deduction_money']:0;
         $real_to_pay = bcsub ($item_total, $book_money,2);
         $input_to_pay = bcadd($params['cash_money'],$params['other_money'],2);
         $input_to_pay = bcadd($input_to_pay,$params['deduction_money'],2);
