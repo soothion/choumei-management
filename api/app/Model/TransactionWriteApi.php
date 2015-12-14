@@ -797,7 +797,7 @@ class TransactionWriteApi
         foreach ($items as $item) {
             $ordersn = $item['ordersn'];
             $extData = "orderSn={$ordersn}";
-            $money =    $item['money'];         
+            $money =    $item['amount'];         
             $refundSn = $ordersn . 'Z' . time();            
             $refundRequestParam = new \cn\choumei\thriftserver\service\stub\gen\PayecoRefundRequestParam();
             $refundRequestParam->paymentSn = $refundSn;
