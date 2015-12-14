@@ -22,7 +22,7 @@ class BookingOrder extends Model
     
     public function beauty_order_item()
     {
-        return $this->hasMany(BeautyOrderItem::class,'ORDER_SN','order_sn');
+        return $this->hasMany(BeautyOrderItem::class,'order_sn','ORDER_SN');
     }
     
     public function user()
