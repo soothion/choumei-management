@@ -589,6 +589,7 @@ class BeautyItemController extends Controller{
 	* @apiSuccess {Number} item_id 项目id.
 	* @apiSuccess {Number} type 项目类型 1韩式半永久 2快时尚.
 	* @apiSuccess {Number} is_gift 是否是赠送项目 0否 1是
+	* @apiSuccess {Array} more_prices 多规格展示  id 规格id norm 规格名称
 	*
 	* @apiSuccessExample Success-Response:
 	*{
@@ -600,6 +601,17 @@ class BeautyItemController extends Controller{
 	*	    	    "item_id": "1",
 	*	    	    "type": "1",
 	*	    	    "is_gift": "0",
+	*               "more_prices": [
+    *               {
+    *                  "id": 47,
+    *                  "img": "http://img01.choumei.cn/1/7/2015120217501449049856031749987.jpg?imageMogr2/crop/!75x75a50a0/thumbnail/100x100",
+    *                  "norm": "腿部",
+    *                  "price": 850,
+    *                  "vip_price": 120,
+    *                  "size": "",
+    *                  "times": 0
+    *              }
+    *         ]
 	*	    },
 	*			......
 	*	    ]
@@ -628,7 +640,13 @@ class BeautyItemController extends Controller{
 		{
 			$query = $query->where(['type'=>$type,'is_gift'=>$is_gift]);
 		}
-		$result = $query->orderBy('type', 'asc')->orderBy('level', 'asc')->orderBy('item_id', 'desc')->get();
+		$result = $query->orderBy('type', 'asc')->orderBy('level', 'asc')->orderBy('item_id', 'desc')->get()->toArray();
+		foreach($result as &$val)
+		{
+			if($val['type'] == 2)
+				$val['more_prices'] =  BeautyItemNorm::where(['item_id'=>$val['item_id']])->select(['id','img_url as img','norm','price','vip_price','size','times'])->get()->toArray();
+		}
+		
 		return $this->success($result);
 	}
 	
