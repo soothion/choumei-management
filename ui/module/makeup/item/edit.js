@@ -87,7 +87,7 @@ $('#form').on("_ready",function(){
 			complete:function(){
 				var popup=$(this);
 				var form=popup.find('form');
-				parent.lib.puploader.image({
+				var options={
 					browse_button: popup.find(".control-image-upload>div").attr('id'),
 					auto_start:true,
 					filters: {
@@ -101,7 +101,11 @@ $('#form').on("_ready",function(){
 					multi_selection:true,
 					files_number:10,
 					thumb:""
-				},function(uploader){
+				}
+				if(location.href.indexOf("reservation-progress.html")>-1){
+					delete options.imageLimitSize;
+				}
+				parent.lib.puploader.image(options,function(uploader){
 					uploader.unbind("UploadComplete");
 					uploader.bind("UploadComplete",function(){
 						parent.lib.popup.resize();
