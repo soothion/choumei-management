@@ -33,7 +33,11 @@
 <script>
     var selectedItems = [];
     orderInfo.order_item.forEach(function(item,index){
-        selectedItems.push(item.ITEM_ID);
+        if (item.norm_id){
+            selectedItems.push(item.ITEM_ID+'_'+item.norm_id);
+        }else{
+            selectedItems.push(item.ITEM_ID);
+        }
     })
     lib.ajat('beautyItem/itemList#selected='+selectedItems.join(',')+'&domid=item&tempid=/module/makeup/order/template/label').render();
 </script>

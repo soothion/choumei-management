@@ -1,31 +1,26 @@
 
    <%
-   var inArray = function(source,array){
-       for (var i = 0;i<array.length;i++){
-           if (source == array[i]){
-               return true;
+   var selectedItems = protocol.custom.selected.split(',');
+    data.forEach(function(item){
+        for (var i = 0;i<selectedItems.length;i++){
+           if (item.item_id == selectedItems[i].split('_')[0]){
+            item.selected = true;
+            item.moreId = selectedItems[i].split('_')[1] || '';
            }
        }
-       return false;
-   }
-   var selectedItems = protocol.custom.selected.split(',');
-   %>
-    <%data.forEach(function(item){%>
-    <%
-        if (inArray(item.item_id,selectedItems)){
-            item.selected = true;
-        }
-
-    %>
-    <%
-        if (item.more_prices && item.more_prices.length > 0){
+    if (item.more_prices && item.more_prices.length > 0){
           item.more_prices.forEach(function(more,index){
-    %>
+    if (!item.moreId){%>
     <label class="label">
-        <input type="checkbox" class="item_ids" <%if (item.selected && index==0){%>checked='checked'<%}%> value="<%=item.item_id%>_<%=more.id%>" >
+        <input type="checkbox" class="item_ids" <%if (item.selected && index==0){%>checked='checked'<%}%> value="<%=item.item_id+'_'+more.id%>" >
         <span><%=item.name+'&middot;'+more.norm%></span>
     </label>
-    <%})}else{%>
+    <%}else{%>
+   <label class="label">
+        <input type="checkbox" class="item_ids" <%if (item.selected && item.moreId==more.id){%>checked='checked'<%}%> value="<%=item.item_id%>_<%=more.id%>" >
+        <span><%=item.name+'&middot;'+more.norm%></span>
+  </label>
+    <%}})}else{%>
      <label class="label">
         <input type="checkbox" class="item_ids" <%if (item.selected){%>checked='checked'<%}%> value="<%=item.item_id%>" >
         <span><%=item.name%></span>

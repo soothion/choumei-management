@@ -151,7 +151,7 @@
                         </tr>
                         <tr>
                             <td class="td">订单状态：</td>
-                            <td><%=status[data.order.STATUS]%></td>
+                            <td><%= data.order.STATUS == 'CSD' && data.makeup ? '已补色':status[data.order.STATUS]%></td>
                         </tr>
                         <tr>
                             <td  colspan="2" class="white-bg">预约金支付信息</td>
@@ -200,7 +200,8 @@
                             <td class="td">实做项目：</td>
                             <td><%var beauty_order_Items=[];
                             data.beauty_order_item.forEach(function(beauty_orderItem){
-                                beauty_order_Items.push(beauty_orderItem.item_name);
+                                var beauty_name = beauty_orderItem.norm_name ? beauty_orderItem.item_name+'&mitdot;'+beauty_orderItem.norm_name : beauty_orderItem.item_name;
+                                beauty_order_Items.push(beauty_name);
                             })%><%=beauty_order_Items.join(",")%></td>
                         </tr>
                         <tr>
@@ -434,7 +435,6 @@
                             returnData.deduction_money = returnData.deduction_money || 0;
                             return returnData;
                         }
-                        console.log(newForm.el._getFormData());
                         form.submit();
                      });
                      form.on('success',function(){
