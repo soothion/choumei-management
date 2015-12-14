@@ -18,7 +18,7 @@
 				width:auto;
 			}
 			.format-group .table-item{
-				width:200px;
+				width:150px;
 			}
 			.format-group .table-item:first-child{
 				width:180px;
@@ -208,9 +208,15 @@
 							<span class="red">*</span>规格：<br />
 						</li>
 						<li class="table-item">
+							<span class="red">*</span>次数(次)：<br />
+						</li>
+						<li class="table-item">
+							<span class="red">*</span>尺寸(cm)：<br />
+						</li>
+						<li class="table-item">
 							<span class="red">*</span>原价：<br />
 						</li>
-						<li class="table-item"><span class="red">*</span>臭美会员价：<br /></li>
+						<li class="table-item"><span class="red">*</span>臭美会员价：<br /><div class="weak" style="height:0;margin-top:-5px"><span class="space"></span>小于等于原价</div></li>
 						<li class="table-item"></li>
 					</ul>
 					
@@ -251,6 +257,12 @@
 						<input type="text" placeholder="2~10个字" minlength="2" maxlength="10" value="<%=item.norm%>" required name="norm" />
 					</li>
 					<li class="table-item item-input">
+						<input type="text" placeholder="1~99整数" min="1" max="99" pattern="number"  value="<%=item.times%>" required name="times"/>
+					</li>
+					<li class="table-item item-input">
+						<input type="text"  value="<%=item.size%>" required name="size" placeholder="文本"/>
+					</li>
+					<li class="table-item item-input">
 						<input type="text" placeholder="1~99999整数" min="1" max="99999" pattern="number"  value="<%=item.price%>" required name="price"/>
 					</li>
 					<li class="table-item item-input">
@@ -258,7 +270,9 @@
 					</li>
 					<li class="table-item item-input">
 						<%if(data.init&&i==0){%>
-						<button type="button" class="link add-format">添加</button>
+						<%if(query.is_gift!=1){%>
+							<button type="button" class="link add-format">添加</button>
+						<%}%>
 						<%}else{%>
 						<button type="button" class="link remove-format">删除</button>
 						<%}%>
