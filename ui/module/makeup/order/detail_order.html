@@ -262,7 +262,7 @@
                                 </td>
                             </tr>
                         <%}%>
-                        <%if (data.booking_cash.deduction_money){%>
+                        <%if (data.booking_cash.deduction_money && data.booking_cash.deduction_money!=0){%>
                         <tr>
                             <td class="td">抵扣金额：</td>
                             <td><%=data.booking_cash.deduction_money%></td>
@@ -293,9 +293,10 @@
                                     <tbody>
                                         <tr>
                                             <td>发起退款：</td>
-                                            <td><%= data.booking_salon_refund ?'臭美工作人员':'用户'%></td>
+                                            <td><%= data.booking_salon_refund ?'臭美人员':'用户'%></td>
                                             <td>退款原因：</td>
-                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.remark)|| (data.order_refund &&data.order_refund.rereason)%></td>
+                                            <td><%= data.order_refund ? data.order_refund.rereason:'用户不想做了' %>
+                                           </td>
                                         </tr>
                                     </tbody>
                             </table>
