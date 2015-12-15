@@ -168,7 +168,7 @@ class BeautyRefundApi extends TransactionWriteApi {
                 case self::REFUND_TO_YILIAN:
                     $res['yilian'][] = [
                         'tn' => $tn,
-                        'money' => $money,
+                        'amount' => $money,
                         'ordersn' => $ordersn,
                         'user_id' => $user_id,
                         'booking_sn' => $booking_sn
