@@ -290,8 +290,18 @@ class BeautyItemController extends Controller{
 		$data['logo'] = isset($param['logo'])?trim($param['logo']):'';
 		$data['images'] = isset($param['images'])?trim($param['images']):'';
 		$data['level'] = isset($param['level'])?trim($param['level']):'';
-		$data['price'] = isset($param['price'])?intval($param['price']):'';
-		$data['vip_price'] = isset($param['vip_price'])?intval($param['vip_price']):'';
+		if($data['type'] != 1)
+		{
+			$data['price'] = isset($param['price'])?intval($param['price']):'';
+			$data['vip_price'] = isset($param['vip_price'])?intval($param['vip_price']):'';
+		}
+		else
+		{
+			$data['price'] = 0;
+			$data['vip_price'] = 0;
+		}
+
+		
 		$data['beauty_workflow_name'] = isset($param['beauty_workflow_name'])?trim($param['beauty_workflow_name']):'';
 		$data['equipment_slogan'] = isset($param['equipment_slogan'])?trim($param['equipment_slogan']):'';
 		
