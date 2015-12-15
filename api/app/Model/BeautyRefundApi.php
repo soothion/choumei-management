@@ -56,9 +56,12 @@ class BeautyRefundApi extends TransactionWriteApi {
         }
         $payment_indexes = Utils::column_to_key("ordersn", $payments);
         $refund_items = self::getBeautyRefundItems($fundflow, $payment_indexes, $refund_indexes);
+//        print_r($refund_items);exit;
         //添加审批人ID
         self::modifBookingOrderRefundOptUser($ids, $opt_user_id);
-//print_r($refund_items);exit;
+        //循环时  有可能超时
+         @set_time_limit(0);
+         @ini_set('memory_limit', '512M');
         //微信
         if (isset($refund_items['wx']) && count($refund_items['wx']) > 0) {
             $res['wx'] = self::refundOfWx($refund_items['wx']);
