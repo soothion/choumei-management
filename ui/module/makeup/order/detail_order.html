@@ -334,7 +334,7 @@
                                             <td>退款状态：</td>
                                             <td><%= status[data.order.STATUS] || status[data.order_refund.status]%></td>
                                             <td>退款时间：</td>
-                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || data.order_refund.complete_time%></td>
+                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || (data.order_refund&&data.order_refund.complete_time)%></td>
                                         </tr>
                                     </tbody>
                             </table>
@@ -346,9 +346,9 @@
                                     <tbody>
                                         <tr>
                                             <td>审批人：</td>
-                                            <td><%=  ( data.booking_salon_refund &&data.booking_salon_refund.manager.name) || data.order_refund.opt_user%></td>
+                                            <td><%=  ( data.booking_salon_refund &&data.booking_salon_refund.manager.name) || (data.order_refund&&data.order_refund.manager.name)%></td>
                                             <td>审批时间：</td>
-                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || data.order_refund.opt_time%></td>
+                                            <td><%= (data.booking_salon_refund &&data.booking_salon_refund.created_at) || (data.order_refund&&data.order_refund.opt_time)%></td>
                                         </tr>
                                     </tbody>
                             </table>
