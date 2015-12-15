@@ -109,6 +109,9 @@ class BookingOrder extends Model
             $reason = !empty($reason) ? $reason . "," . $order_refund['other_rereason'] : $order_refund['other_rereason'];
             $order_refund['rereason'] = $reason;
             $order_refund['refund_desc'] = $reason;
+            $order_refund['add_time'] = date("Y-m-d H:i:s",$order_refund['add_time']);
+            $order_refund['opt_time'] = empty($order_refund['opt_time'])?"":date("Y-m-d H:i:s",$order_refund['opt_time']);
+            $order_refund['complete_time'] = $order_refund['opt_time'] ;
         }
         $item_amount = 0;
         if(!empty($beauty_items))

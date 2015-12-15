@@ -27,7 +27,7 @@
            if (!selectedItems[i].split('_')[1] && selectedItems[i].split('_')[0] == item.item_id){
                 if (!defaultChecked[item.item_id]){
                   item.selected = true;
-                  defaultChecked[item.item_id]=item.item_id;
+                  defaultChecked[item.item_id]=item;
                 }
            }
         }
