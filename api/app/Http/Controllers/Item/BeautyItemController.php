@@ -290,7 +290,7 @@ class BeautyItemController extends Controller{
 		$data['logo'] = isset($param['logo'])?trim($param['logo']):'';
 		$data['images'] = isset($param['images'])?trim($param['images']):'';
 		$data['level'] = isset($param['level'])?trim($param['level']):'';
-		if($data['type'] != 1)
+		if($data['type'] == 1)
 		{
 			$data['price'] = isset($param['price'])?intval($param['price']):'';
 			$data['vip_price'] = isset($param['vip_price'])?intval($param['vip_price']):'';
