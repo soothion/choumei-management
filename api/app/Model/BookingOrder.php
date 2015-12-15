@@ -114,16 +114,15 @@ class BookingOrder extends Model
             $order_refund['complete_time'] = $order_refund['opt_time'] ;
         }
         $item_amount = 0;
-        if(!empty($beauty_items))
+        if(empty($beauty_items))
         {
-            $to_pay_amounts = array_map("floatval",array_column($beauty_items, "to_pay_amount"));
-            $item_amount = array_sum($to_pay_amounts);
+            $item_ids = array_map("intval",array_column($items, "ITEM_ID"));
+            $beauty_items = BookingReceive::getItemNormInfoAtFirst($item_ids);
         }
-        else
-        {
-            $to_pay_amounts = array_map("floatval",array_column($items, "PAYABLE"));
-            $item_amount = array_sum($to_pay_amounts);
-        }
+               
+        $to_pay_amounts = array_map("floatval",array_column($beauty_items, "to_pay_amount"));
+        $item_amount = array_sum($to_pay_amounts);
+     
         $base['item_amount'] = $item_amount;
         if(empty($recommend))
         {
