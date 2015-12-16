@@ -94,9 +94,7 @@
 							<tr>
 								<td>原价：</td>
 								<td>
-									<%if(query.p=="index"){%>
-										￥<%=data.price%>
-									<%}else{%>
+									<%if(query.p=="fashion"&&data.genre!=1){%>
 										<%if(data.prices.min_price&&data.prices.max_price){%>
 											<%if(data.prices.min_price!=data.prices.max_price){%>
 											￥<%=data.prices.min_price%>-￥<%=data.prices.max_price%>
@@ -104,15 +102,15 @@
 											￥<%=data.prices.min_price%>
 											<%}%>
 										<%}%>
+									<%}else{%>
+										￥<%=data.price%>
 									<%}%>
 								</td>
 							</tr>
 							<tr>
 								<td>臭美会员价：</td>
 								<td>
-									<%if(query.p=="index"){%>
-										￥<%=data.vip_price%>
-									<%}else{%>
+									<%if(query.p=="fashion"&&data.genre!=1){%>
 										<%if(data.prices.min_vip_price&&data.prices.max_vip_price){%>
 											<%if(data.prices.min_vip_price!=data.prices.max_vip_price){%>
 											￥<%=data.prices.min_vip_price%>-￥<%=data.prices.max_vip_price%>
@@ -120,6 +118,8 @@
 											￥<%=data.prices.max_vip_price%>
 											<%}%>
 										<%}%>
+									<%}else{%>
+										￥<%=data.vip_price%>
 									<%}%>
 								</td>
 							</tr>
