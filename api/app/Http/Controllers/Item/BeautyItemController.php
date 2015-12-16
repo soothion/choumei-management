@@ -238,7 +238,10 @@ class BeautyItemController extends Controller{
 	{
 		$param = $this->param;
 		$data = $this->compositeData($param,2);
-		$norm_data = $this->compositeNormByType($param);
+		if($itemResult->genre == 0)//不是水光针项目
+		{
+			$norm_data = $this->compositeNormByType($param);
+		}
 		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
 		DB::beginTransaction();
 		$result = BeautyItem::where(['item_id'=>$item_id])->update($data);
