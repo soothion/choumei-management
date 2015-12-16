@@ -740,6 +740,7 @@ textarea.large{
 	padding:8px;
 	text-align:left;
 	border:1px solid #E6EAF2;
+	min-width:40px;
 }
 .table .link,.table-detail .link{
 	  white-space: nowrap;
