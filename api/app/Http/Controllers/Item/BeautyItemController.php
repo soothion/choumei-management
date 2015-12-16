@@ -238,6 +238,7 @@ class BeautyItemController extends Controller{
 	{
 		$param = $this->param;
 		$data = $this->compositeData($param,2);
+		$itemResult = $this->itemResult;
 		if($itemResult->genre == 0)//不是水光针项目
 		{
 			$norm_data = $this->compositeNormByType($param);
@@ -250,7 +251,7 @@ class BeautyItemController extends Controller{
 			DB::rollBack();
 			throw new ApiException('更新失败',ERROR::BEAUTY_ITEM_UPDATE_FAIL);
 		}
-		$itemResult = $this->itemResult;
+		
 		if($itemResult->genre == 0)//不是水光针项目
 		{
 			BeautyItemNorm::where(['item_id'=>$item_id])->delete();
