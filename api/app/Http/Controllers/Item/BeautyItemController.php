@@ -10,6 +10,8 @@ use Event;
 use App\BeautyItemNorm;
 class BeautyItemController extends Controller{
 
+	private $itemResult;
+
 	//json 字段
 	private $requiredParameter = ['description','archive','beauty','register_detail','equipment','register_workflow','images'];
 
@@ -140,7 +142,7 @@ class BeautyItemController extends Controller{
 	* @apiSuccess {string} price 原价.
 	* @apiSuccess {string} vip_price 会员价.
 	* @apiSuccess {string} beauty_workflow_name 流程名称.
-	*
+	* @apiSuccess {string} genre 0其他 1水光针.
 	* @apiSuccessExample Success-Response:
 	*{
 	*    result: 1,
@@ -214,7 +216,7 @@ class BeautyItemController extends Controller{
 	* @apiParam {string} present_explain 必填,赠送说明.	
 	* @apiParam {string} equipment_slogan 必填,设备宣传语.	
 	* @apiParam {string} beauty_workflow_name 必填,流程名称.	
-	* @apiParam {string} is_gift 必填,是否是赠送项目0否 1是.	
+	* @apiParam {string} is_gift 必填,是否是赠送项目0否 1是.
 	* 
 	* 
 	* @apiSuccessExample Success-Response:
@@ -245,13 +247,17 @@ class BeautyItemController extends Controller{
 			DB::rollBack();
 			throw new ApiException('更新失败',ERROR::BEAUTY_ITEM_UPDATE_FAIL);
 		}
-		BeautyItemNorm::where(['item_id'=>$item_id])->delete();
-		foreach($norm_data as $val)
+		$itemResult = $this->itemResult;
+		if($itemResult->genre == 0)//不是水光针项目
 		{
-			if(!BeautyItemNorm::insertGetId($val))
+			BeautyItemNorm::where(['item_id'=>$item_id])->delete();
+			foreach($norm_data as $val)
 			{
-				DB::rollBack();
-				throw new ApiException('更新失败',ERROR::BEAUTY_ITEM_UPDATE_FAIL);
+				if(!BeautyItemNorm::insertGetId($val))
+				{
+					DB::rollBack();
+					throw new ApiException('更新失败',ERROR::BEAUTY_ITEM_UPDATE_FAIL);
+				}
 			}
 		}
 		DB::commit();
@@ -281,6 +287,8 @@ class BeautyItemController extends Controller{
 			throw new ApiException('项目名称重复',ERROR::BEAUTY_ITEM_NAME_REOEAT);
 		}
 		
+		$this->itemResult = $beautyItem;
+		
 		$data['detail'] = isset($param['detail'])?trim($param['detail']):'';
 		$data['description'] = isset($param['description'])?trim($param['description']):'';
 		$data['archive'] = isset($param['archive'])?trim($param['archive']):'';
@@ -290,7 +298,7 @@ class BeautyItemController extends Controller{
 		$data['logo'] = isset($param['logo'])?trim($param['logo']):'';
 		$data['images'] = isset($param['images'])?trim($param['images']):'';
 		$data['level'] = isset($param['level'])?trim($param['level']):'';
-		if($data['type'] == 1)
+		if($data['type'] == 1 || $beautyItem->genre == 1)
 		{
 			$data['price'] = isset($param['price'])?intval($param['price']):'';
 			$data['vip_price'] = isset($param['vip_price'])?intval($param['vip_price']):'';
@@ -347,12 +355,12 @@ class BeautyItemController extends Controller{
 				throw new ApiException("价格参数错误", ERROR::BEAUTY_ITEM_WRONG_PRICE);
 			}
 			$result[] = [
-					'img_url'=>$val['img'],
+					'img_url'=>isset($val['img'])?$val['img']:'',
 					'norm'=>$val['norm'],
 					'price'=>$val['price'],
 					'vip_price'=>$val['vip_price'],
-					'times'=>$val['times'],
-					'size'=>$val['size'],
+					'times'=>isset($val['times'])?$val['times']:'',
+					'size'=>isset($val['size'])?$val['size']:'',
 					'item_id'=>$param['item_id'],
 					'created_at'=>time(),
 			];
@@ -494,6 +502,7 @@ class BeautyItemController extends Controller{
 	* @apiSuccess {string} quantity 预约数.
 	* @apiSuccess {string} equipment_slogan 必填,设备宣传语.	
 	* @apiSuccess {string} beauty_workflow_name 必填,流程名称.
+	* @apiSuccess {string} genre 0其他 1水光针.	
 	*
 	* @apiSuccessExample Success-Response:
 	* {
