@@ -16,8 +16,7 @@ class BeautyItem extends Model {
 	
 	public static function getBeautyItem($page,$page_size,$type,$is_gift)
 	{
-		//$fields = ['item_id','beauty_id','type','name','detail','description','archive','beauty','register_detail','equipment','equipment_cover','register_workflow','presen','logo','images','level','price','vip_price','expire','present_explain','is_gift','created_at','updated_at'];
-		$fields = ['item_id','beauty_id','type','name','level','price','vip_price','is_gift'];
+		$fields = ['item_id','beauty_id','type','name','level','price','vip_price','is_gift','genre'];
 		//手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 		    return $page;
@@ -41,7 +40,7 @@ class BeautyItem extends Model {
 			{	
 				$quantityRs = self::getQuantity($val['item_id'],$val['is_gift']);
 				$result['data'][$key]['quantity'] =  $quantityRs;
-				if($val['type'] == 2)//韩式快时尚 多规格价格查询
+				if($val['type'] == 2 && $val['genre'] != 1)//韩式快时尚 多规格价格查询
 				{
 					$priceRs = self::getMinMaxPrices($val['item_id']);
 					$result['data'][$key]['prices'] =  $priceRs;
