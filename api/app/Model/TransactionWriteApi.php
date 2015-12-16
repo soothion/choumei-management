@@ -715,9 +715,7 @@ class TransactionWriteApi
        $ret = [];
        $ret['info'] = '';     
        $thrift = new ThriftHelperModel('','');
-       
         $wechat_config = self::GetWechatConf(env('APP_ENV'));
-        
         foreach ($items as $item) {
             $ordersn = $item['ordersn'];
             $money = $item['money'];
@@ -739,7 +737,6 @@ class TransactionWriteApi
                 $refundRequestParam->beautySn = $ordersn;
                 $refundRequestParam->orderSn = '';  
             }
-            
             Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($item) . "\n", "wechat");
 //            print_r($refundRequestParam);exit;
             $refundResponseThrift = $thrift->request('trade-center', 'wechatRefund', array($refundRequestParam));  
@@ -750,7 +747,7 @@ class TransactionWriteApi
             } elseif ($refundResponseThrift['code'] == '0') {
                 $ret['info'] .= $ordersn.' 微信退款成功\n';               
             } else {
-                $ret['info'] .= $ordersn.' 微信退款失败\n'.$refundResponseThrift['code'] . ': ' . isset($refundResponseThrift['message'])?$refundResponseThrift['message']:''."\n";
+                $ret['info'] .= $ordersn.' 微信退款失败\n'.$refundResponseThrift['code'] . ': ' . (isset($refundResponseThrift['message'])?$refundResponseThrift['message']:'') ."\n";
             }
             unset($refundRequestParam);
         }
@@ -820,11 +817,12 @@ class TransactionWriteApi
             } elseif ($refundResponseThrift['retCode'] == '0000') {
                 $ret['info'] .= $ordersn.' 易联退款成功\n';               
             } else {
-                $ret['info'] .= $ordersn.' 易联退款失败\n'.$refundResponseThrift['retCode'] . ': ' . isset($refundResponseThrift['retMsg'])?$refundResponseThrift['retMsg']:''."\n";
+                $ret['info'] .= $ordersn.' 易联退款失败\n'.$refundResponseThrift['retCode'] . ': '. (isset($refundResponseThrift['retMsg'])?$refundResponseThrift['retMsg']:'') ."\n";
             }
             unset($refundRequestParam);
         }
         $ret['info'] = nl2br($ret['info']);
+        
         return $ret;
 //         $url = env("YILIAN_REFUND_NOTIFY_URL",null);
 //         if(empty($url))
