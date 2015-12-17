@@ -654,7 +654,7 @@ class BeautyItemController extends Controller{
 		$type = isset($param['type'])?intval($param['type']):0;
 		$is_gift = isset($param['is_gift'])?intval($param['is_gift']):0;
 		
-		$query = BeautyItem::select(['item_id','name','is_gift','type']);
+		$query = BeautyItem::select(['item_id','name','is_gift','type','genre']);
 		if($type == 1)
 		{
 			$query = $query->where(['type'=>$type]);
