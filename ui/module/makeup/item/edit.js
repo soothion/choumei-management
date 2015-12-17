@@ -157,7 +157,7 @@ $('#form').on("_ready",function(){
 					if(name=="image"){
 						var image=[];
 						td.find("img").each(function(){
-							image.push(this.src);
+							image.push(this.src.split("?")[0]);
 						});
 						item[name]=image;
 					}else{

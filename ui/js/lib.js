@@ -525,6 +525,7 @@
 										}
 										if(!options.thumb){
 											delete data.response.thumbimg;
+											data.response.img=data.response.img.split('?')[0];
 										}
 										up.createThumbnails(data.response)
 									}else{
