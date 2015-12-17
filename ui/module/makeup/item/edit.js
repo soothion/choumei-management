@@ -95,13 +95,13 @@ $('#form').on("_ready",function(){
 							{ title : "Image files", extensions : "jpg,png,jpeg" },
 						]
 					},
-					max_file_size:'10mb',
+					max_file_size:'50mb',
 					imageArray:image,
 					multi_selection:true,
 					files_number:10,
 					thumb:"",
 					imageLimitSize:function(width,height){
-						return width<=2000&&height<=1500;
+						return width<=20000&&height<=20000;
 					}
 				},function(uploader){
 						uploader.unbind("UploadComplete");
