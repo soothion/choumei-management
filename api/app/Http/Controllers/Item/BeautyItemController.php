@@ -239,7 +239,7 @@ class BeautyItemController extends Controller{
 		$param = $this->param;
 		$data = $this->compositeData($param,2);
 		$itemResult = $this->itemResult;
-		if($itemResult->genre == 0)//不是水光针项目
+		if($itemResult->genre != 1)//不是水光针项目
 		{
 			$norm_data = $this->compositeNormByType($param);
 		}
@@ -252,7 +252,7 @@ class BeautyItemController extends Controller{
 			throw new ApiException('更新失败',ERROR::BEAUTY_ITEM_UPDATE_FAIL);
 		}
 		
-		if($itemResult->genre == 0)//不是水光针项目
+		if($itemResult->genre != 1)//不是水光针项目  0其他 1水光针 2纤体
 		{
 			BeautyItemNorm::where(['item_id'=>$item_id])->delete();
 			foreach($norm_data as $val)
@@ -666,7 +666,7 @@ class BeautyItemController extends Controller{
 		$result = $query->orderBy('type', 'asc')->orderBy('level', 'asc')->orderBy('item_id', 'desc')->get()->toArray();
 		foreach($result as &$val)
 		{
-			if($val['type'] == 2)
+			if($val['type'] == 2 && $val['genre'] != 1)
 				$val['more_prices'] =  BeautyItemNorm::where(['item_id'=>$val['item_id']])->select(['id','img_url as img','norm','price','vip_price','size','times'])->get()->toArray();
 		}
 		
