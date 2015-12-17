@@ -92,7 +92,7 @@
                               <label class="control-label" for=""></label>
                               <a href="index.html">
                               <button class="btn" type="button" style="margin-right:20px">取消</button></a>
-                              <button class="btn-primary" data-slug="powderArticles.addArticles">提交</button>
+                              <button class="btn-primary" id="submit" data-slug="powderArticles.addArticles">提交</button>
                           </div>
                       </script>
                     </div>
@@ -126,8 +126,12 @@
             var $form = $('#form'),
                  url = $form.attr('action'),
                  data = lib.tools.getFormData($form);
+                 $form.attr('disabled',true);
                 parent.lib.popup.confirm({
                     text:'活动创建后不能删除，不能编辑，是否继续',
+                    cancel:function(){
+                      $form.attr('disabled',false);
+                    },
                     define:function(){
                         lib.ajax({
                          url:url,
