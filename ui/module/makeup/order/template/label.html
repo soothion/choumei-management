@@ -3,7 +3,7 @@
    var selectedItems = protocol.custom.selected.split(',');
    var itemList = [];
    data.forEach(function(item,index){
-       if (!item.more_prices){
+       if (!item.more_prices || item.more_prices.length == 0){
          itemList.push(item);
        }else{
         item.more_prices.forEach(function(more,index){
