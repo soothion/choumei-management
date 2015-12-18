@@ -506,7 +506,7 @@
 					sizeErrorText:'图片的尺寸大小不正确',
 					thumb:"w/160/h/160"
 				},options);
-				if(options.imageLimitSize){
+				if(options.imageLimitSize||options.setSizeURL){
 					if(options.auto_start===true){
 						options._auto_start=true;
 						options.auto_start=false;
@@ -526,6 +526,10 @@
 										if(!options.thumb){
 											delete data.response.thumbimg;
 											data.response.img=data.response.img.split('?')[0];
+											if(up.sizeURL){
+												data.response.img+=up.sizeURL;
+											}
+											console.log(data.response.img);
 										}
 										up.createThumbnails(data.response)
 									}else{
@@ -659,6 +663,22 @@
 										}
 										image.parent().remove();
 									}
+								});
+							});
+						});
+					}
+					//设置原图高宽
+					if(options.setSizeURL){
+						uploader.bind('FilesAdded',function(up, files){
+							plupload.each(files, function(file) {//遍历文件
+								var image=lib.puploader.createImage();
+								lib.puploader.getSource(file,function(src){//获取图片资源
+									image=image.find('img').attr('src',src);
+									up.sizeURL="#w="+image.width()+"&h="+image.height();
+									if(options._auto_start){
+										up.start();//上传文件
+									}
+									image.parent().remove();
 								});
 							});
 						});
