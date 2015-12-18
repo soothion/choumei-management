@@ -1053,7 +1053,7 @@ class TransactionWriteApi
                 'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
                 'H5_APP_ID' => 'wxd4c590c3a2dad288',
                 'H5_MERCHANT_ID' => '1243472202',
-                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refundquery',
+                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refund',
                 'H5_PARTNER_KEY' => '31D9B01827FF7F850FE94A2FD0D7DE10'
             ],
             'dev' => [
@@ -1064,7 +1064,7 @@ class TransactionWriteApi
                 'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
                 'H5_APP_ID' => 'wxd4c590c3a2dad288',
                 'H5_MERCHANT_ID' => '1243472202',
-                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refundquery',
+                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refund',
                 'H5_PARTNER_KEY' => '31D9B01827FF7F850FE94A2FD0D7DE10'
             ],
             'test' => [
@@ -1086,7 +1086,7 @@ class TransactionWriteApi
                 'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
                 'H5_APP_ID' => 'wxd4c590c3a2dad288',
                 'H5_MERCHANT_ID' => '1243472202',
-                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refundquery',
+                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refund',
                 'H5_PARTNER_KEY' => '31D9B01827FF7F850FE94A2FD0D7DE10'
             ],
             'prod' => [
@@ -1097,7 +1097,7 @@ class TransactionWriteApi
                 'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
                 'H5_APP_ID' => 'wx6cfe7d87206790b5',
                 'H5_MERCHANT_ID' => '10037612',
-                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refundquery',
+                'H5_REFUND_URL' => 'https://api.mch.weixin.qq.com/pay/refund',
                 'H5_PARTNER_KEY' => '31D9B01827FF7F850FE94A2FD0D7DE09'
             ]
         ];
