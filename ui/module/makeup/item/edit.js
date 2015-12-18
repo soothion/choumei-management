@@ -95,14 +95,14 @@ $('#form').on("_ready",function(){
 							{ title : "Image files", extensions : "jpg,png,jpeg" },
 						]
 					},
-					max_file_size:'50mb',
+					max_file_size:'20mb',
 					imageArray:image,
 					multi_selection:true,
 					files_number:10,
 					thumb:"",
 					setSizeURL:true,
 					imageLimitSize:function(width,height){
-						return width<=20000&&height<=20000;
+						return width<=8000&&height<=8000;
 					}
 				},function(uploader){
 						uploader.unbind("UploadComplete");
