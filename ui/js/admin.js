@@ -495,7 +495,6 @@ $(function(){
 			}else{
 				src=$this.data('original')||$this.attr('src');
 			}
-			console.log(src);
 			if(src.indexOf("?")==-1){
 				if(src.indexOf("#")==-1){
 					src+="?imageView2/1/w/2000/h/2000"

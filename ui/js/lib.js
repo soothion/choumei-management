@@ -529,7 +529,6 @@
 											if(up.sizeURL){
 												data.response.img+=up.sizeURL;
 											}
-											console.log(data.response);
 										}
 										up.createThumbnails(data.response)
 									}else{
