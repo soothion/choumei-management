@@ -495,6 +495,14 @@ $(function(){
 			}else{
 				src=$this.data('original')||$this.attr('src');
 			}
+			console.log(src);
+			if(src.indexOf("?")==-1){
+				if(src.indexOf("#")==-1){
+					src+="?imageView2/1/w/2000/h/2000"
+				}else{
+					src=src.replace("#","?imageView2/1/w/2000/h/2000#");
+				}
+			}
 			list.push(src);
 		});
 		parent.lib.popup.swiper({list:list,index:item.index()});
