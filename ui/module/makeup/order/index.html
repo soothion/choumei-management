@@ -8,6 +8,9 @@
             .tc{
                 text-align: center !important;
             }
+            .hidden{
+              display: none;
+            }
         </style>
     </head>
     <body>
@@ -17,6 +20,12 @@
                 <div class="flex-item">
                     <h4> 定妆单查询 </h4>
                 </div>
+
+                <div class="flex-item">
+                    <button id="add_book" class="btn-primary fr">
+                        <i class="fa fa-plus"></i> 新增
+                    </button>
+                </div>                
             </div>
         </div>
         <div class="wrapper">
@@ -126,6 +135,32 @@
              <div class="pager"> </div>
             </script>
         </div>
-            </div>
+        </div>
+        <script>
+          $(document).ready(function(){
+              $("#add_book").on('click',function(){
+                  parent.lib.popup.box({
+                      'title':'创建预约',
+                      'cancelText':'取消',
+                      'defineText':'确认预约',
+                      'height'    : $(window).height()-200,
+                      'content'   : lib.ejs.render({url:'./modal_add'}),
+                      'complete'  : function(){
+                           var form = $(this).find('form');
+                           var newForm = new parent.lib.Form(form[0]);
+                           var today = new Date().format('yyyy-MM-dd');
+                           form.find('input[type=date]').attr('min',today).val(today);
+                           $(this).find('.popup-alert-define').on('click',function(){
+
+                           }) 
+                                                     
+                           // form.on('success',function(){
+                           //     location.reload();
+                           // })
+                      }               
+                  });
+              });
+          });
+        </script>
     </body>
 </html>

@@ -7,10 +7,12 @@
   </head>
   <body>
 		<div class="breadcrumb">
-			<a>店铺管理</a><span>&gt;</span><a href="../index.html">店铺资料</a>
+			<a>店铺管理</a><span>&gt;</span>
+			<a href="../index.html">店铺资料</a><span>&gt;</span>
+			<a href="index.html">店铺人员列表</a>
 			<div class="flex-box">
 				<div class="flex-item">
-					<h4>造型师列表-<%=query.salonname%></h4>
+					<h4>店铺人员列表-<%=query.salonname%></h4>
 				</div>
 			</div>
 		</div>
@@ -20,12 +22,12 @@
 					<div class="input-group input-switch">
 						<select>
 							<option value="0">手机号</option>
-							<option value="1">造型师名称</option>
+							<option value="1">店铺人员名称</option>
 						</select>
 						<input class="input-search" type="text" name="mobilephone"  
 						placeholder="请输入手机号码">
 						<input class="input-search hide" type="text" name="stylistName" 
-						placeholder="请输入造型师名称">
+						placeholder="请输入店铺人员名称">
 						<button class="btn btn-search">
 							<i class="fa fa-search"></i>
 						</button>
@@ -39,12 +41,13 @@
 				<thead>
 					<tr> 					     
 					<th>序号</th>
-					<th>造型师名称</th>
+					<th>店铺人员名称</th>
+					<th>类型</th>
 					<th>手机号</th>
 					<th>在职编号</th>
 					<th>悬赏等级</th>
 					<th>快剪等级</th>
-					<th>作品</th>
+					<th>作品数</th>
 					<th>状态</th>
 					<th>操作</th>
 					</tr>
@@ -61,6 +64,7 @@
 						<tr>				 
 						<td><%=i+1%></td>
 						<td><%=item.stylistName%></td>
+						<td></td>
 						<td><%=item.mobilephone%></td>
 						<td><%=item.sNumber%></td>
 						<td><%=gradeText[item.grade]%></td>
