@@ -637,6 +637,10 @@
 									image=image.find('img').attr('src',src);
 									var options=up.getOption();
 									var imageLimitSize=options.imageLimitSize;
+									//设置原图高宽
+									if(options.setSizeURL){
+										up.sizeURL="#w="+image.width()+"&h="+image.height();
+									}
 									//检测宽高值
 									if(typeof imageLimitSize=="string"){
 										var width=imageLimitSize.split('*')[0];
@@ -662,22 +666,6 @@
 										}
 										image.parent().remove();
 									}
-								});
-							});
-						});
-					}
-					//设置原图高宽
-					if(options.setSizeURL){
-						uploader.bind('FilesAdded',function(up, files){
-							plupload.each(files, function(file) {//遍历文件
-								var image=lib.puploader.createImage();
-								lib.puploader.getSource(file,function(src){//获取图片资源
-									image=image.find('img').attr('src',src);
-									up.sizeURL="#w="+image.width()+"&h="+image.height();
-									if(options._auto_start){
-										up.start();//上传文件
-									}
-									image.parent().remove();
 								});
 							});
 						});
