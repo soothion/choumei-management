@@ -432,7 +432,31 @@ class BookController extends Controller
     }
     
     /**
-     * @api {get} /book/receive/{id} 3.预约单--接待
+     * @api {get} /book/create 3.预约单--新增代客预约单
+     * @apiName create
+     * @apiGroup book
+     *
+     * @apiParam {Number}  pramas 待定
+     *
+     * @apiSuccessExample Success-Response:
+     *       {
+     *       }
+     *
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "未授权访问"
+     *		}
+     */
+    public function create($id)
+    {
+        //#@todo 需求待定
+        return $this->success([]);
+    }
+    
+    /**
+     * @api {get} /book/receive/{id} 4.预约单--接待
      * @apiName receive
      * @apiGroup book
      * 
@@ -468,7 +492,7 @@ class BookController extends Controller
     }
     
     /**
-     * @api {get} /book/cash/{id} 4.预约单--收银
+     * @api {get} /book/cash/{id} 5.预约单--收银
      * @apiName cash
      * @apiGroup book
      *
@@ -524,7 +548,7 @@ class BookController extends Controller
     }
     
     /**
-     * @api {get} /book/bill/{id} 5.预约单--开发票
+     * @api {get} /book/bill/{id} 6.预约单--开发票
      * @apiName bill
      * @apiGroup book
      *
@@ -568,7 +592,7 @@ class BookController extends Controller
     }
     
     /**
-     * @api {get} /book/relatively/{id} 6.预约单--补色
+     * @api {get} /book/relatively/{id} 7.预约单--补色
      * @apiName relatively
      * @apiGroup book
      *
@@ -628,7 +652,7 @@ class BookController extends Controller
     }
     
     /**
-     * @api {get} /book/refund/{id} 7.预约单--退款
+     * @api {get} /book/refund/{id} 8.预约单--退款
      * @apiName refund
      * @apiGroup book
      * 

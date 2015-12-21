@@ -39,10 +39,11 @@ class BookingReceive extends Model
             throw new ApiException("定妆单{$id}不存在或者已经被删除!", ERROR::ORDER_NOT_EXIST);
         }
         $base= $base->toArray();
-        if($base['STATUS'] !== "PYD")
-        {
-            throw new ApiException("定妆单{$id}状态不正确!", ERROR::ORDER_STATUS_WRONG);
-        }
+        // 任何状态下都允许接待
+//         if($base['STATUS'] !== "PYD")
+//         {
+//             throw new ApiException("定妆单{$id}状态不正确!", ERROR::ORDER_STATUS_WRONG);
+//         }
         $ordersn = $base['ORDER_SN'];
         if($copy_from_base)
         {

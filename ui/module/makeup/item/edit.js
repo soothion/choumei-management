@@ -100,6 +100,7 @@ $('#form').on("_ready",function(){
 					multi_selection:true,
 					files_number:10,
 					thumb:"",
+					setSizeURL:true,
 					imageLimitSize:function(width,height){
 						return width<=2000&&height<=1500;
 					}

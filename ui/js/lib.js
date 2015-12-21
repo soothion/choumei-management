@@ -507,7 +507,7 @@
 					thumb:"w/160/h/160"
 				},options);
 				if(options.imageLimitSize){
-					if(options.auto_start===true){
+					if(options.auto_start===true||options.setSizeURL){
 						options._auto_start=true;
 						options.auto_start=false;
 					}
@@ -516,6 +516,10 @@
 					uploader.bind('FileUploaded',function(up,file,res){
 						if(res&&res.response&&typeof res.response=='string'){
 							var data=JSON.parse(res.response);
+							if(up.sizeURL){
+								data.response.thumbimg+=up.sizeURL;
+								data.response.img+=up.sizeURL;
+							}
 							var options=up.getOption();
 							if(data.code==0){
 								if(!options.crop){
@@ -658,6 +662,22 @@
 										}
 										image.parent().remove();
 									}
+								});
+							});
+						});
+					}
+					//设置原图高宽
+					if(options.setSizeURL){
+						uploader.bind('FilesAdded',function(up, files){
+							plupload.each(files, function(file) {//遍历文件
+								var image=lib.puploader.createImage();
+								lib.puploader.getSource(file,function(src){//获取图片资源
+									image=image.find('img').attr('src',src);
+									up.sizeURL="#w="+image.width()+"&h="+image.height();
+									if(options._auto_start){
+										up.start();//上传文件
+									}
+									image.parent().remove();
 								});
 							});
 						});

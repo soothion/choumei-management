@@ -796,6 +796,11 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
     'uses'=>'Transaction\BookController@index'
         ));
     
+    Route::any('book/create',array(  //新增代客预约单
+    'as'=>'book.create',
+    'uses'=>'Transaction\BookController@create'
+        ));
+    
     Route::any('book/show/{id}',array(  //查看预约单
     'as'=>'book.show',
     'uses'=>'Transaction\BookController@show'
