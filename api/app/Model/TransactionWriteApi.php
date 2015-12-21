@@ -737,7 +737,7 @@ class TransactionWriteApi
                 $refundRequestParam->beautySn = $ordersn;
                 $refundRequestParam->orderSn = '';  
             }
-            Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: " . json_encode($item) . "\n", "wechat");
+             Utils::log("pay", date("Y-m-d H:i:s") . "\t [REQUEST] send data: item[ " . json_encode($item) . "] config[".json_encode($wechat_config)."]  refundRequestParam[".json_encode($refundRequestParam)."]\n", "wechat");
 //            print_r($refundRequestParam);exit;
             $refundResponseThrift = $thrift->request('trade-center', 'wechatRefund', array($refundRequestParam));  
 
