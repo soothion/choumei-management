@@ -12,6 +12,9 @@ use App\Model\PresentArticleCode;
 use App\User;
 use App\RecommendCodeUser;
 use App\BookingOrder;
+use App\ThriftHelperModel;
+use App\BeautyItem;
+use App\Push;
 use DB;
 use App\Model\SeedPool;
 use Event;
@@ -976,14 +979,14 @@ class PowderArticlesController extends Controller
             $present_type = 2;
         }
         //获取用户手机号
-        $userInfo = User::select('mobilephone')->where(array('user_id' => $user_id))->first();
+        $userInfo = User::select('mobilephone','os_type')->where(array('user_id' => $user_id))->first();
         if($userInfo === null){
             Log::info('无法获取用户手机号,用户id:'.$user_id);
             throw new ApiException('无法获取用户手机号'); 
         }else{
             $userInfoRes =  $userInfo->toArray();
         }
-        $mobilephone = $userInfoRes['mobilephone'];
+        $mobilephone = $userInfoRes['mobilephone'];  
         //获取推荐码 和 赠送类型       
         $recommendCodeInfo = RecommendCodeUser::select('recommend_code','type')->where(array('user_id' => $user_id))->whereIn('type',[2, 3])->first();
         if($recommendCodeInfo === null){
@@ -1058,6 +1061,52 @@ class PowderArticlesController extends Controller
             throw new ApiException('插入赠送券失败');
         }
         DB::commit();
+        //发送短信 和 推送消息
+        // 1. 获取被赠送人预约名称
+        $presentUserInfo = BookingOrder::select('BOOKER_NAME')->where(array('USER_ID' => $user_id))->first();
+        if($presentUserInfo === null){
+            $bookingName = $mobilephone;
+        }else{
+            $presentUserInfoRes =  $presentUserInfo->toArray();
+            $bookingName = $presentUserInfoRes['BOOKER_NAME'];
+        }
+        // 2. 获取赠送项目信息
+        $beautyItemInfo = BeautyItem::select('name','price')->where(array('item_id' => $presentInfo['item_id']))->first();
+        if($beautyItemInfo === null){
+            Log::info("无法获取赠送项目相关信息,item_id:".$presentInfo['item_id']."--被赠送人id:".$user_id);
+        }else{
+            $beautyItemInfoRes = $beautyItemInfo->toArray();
+            $beautyItemName = $beautyItemInfoRes['name'];
+            $beautyItemPrice = $beautyItemInfoRes['price'];
+        }
+        //发短信
+        if($beautyItemInfo){
+            $thrift = new ThriftHelperModel();
+            $sms = "亲爱的{$bookingName}，恭喜您获得臭美赠送价值{$beautyItemPrice}元的{$beautyItemName}免费体验1次，预约号为：{$reservateSnInfo['reservateSn']}。无须提前预约，到店提供预约号即可。下载臭美App，http://t.cn/RZXyLPg 了解更多";
+            $res = $thrift->request('sms-center', 'sendSmsByType', array($mobilephone, $sms, '127.0.0.1', 5));
+            $resultMsg = $res == 1 ? '成功' : '失败';
+            $msg = '线上活动赠送项目发送信息 ： '.$resultMsg .' , 用户手机号码 ：' . $mobilephone . ' , 预约号：' . $reservateSnInfo['reservateSn'] ;
+            Log::info( $msg );
+        }
+        
+        //推送消息
+        if( !empty($user_id) ){                       
+            $dataPush['RECEIVER_USER_ID'] = $user_id;
+            $dataPush['TYPE'] = 'USR';
+            if( !empty( $userInfoRes['os_type']) && in_array($userInfoRes['os_type'], array(1,2))){
+                $dataPush['OS_TYPE'] = $userInfoRes['os_type'] == 1 ? 'ANDROID':'IOS';
+            }                
+            $dataPush['TITLE'] = "消费成功，收到一份价值{$beautyItemPrice}元的消费奖励";
+            $dataPush['MESSAGE'] = "你获得了臭美赠送的价值{$beautyItemPrice}元的{$beautyItemName}项目免费体验1次，点击查看";
+            $dataPush['PRIORITY'] = 1;
+            $dataPush['EVENT'] = "{'event':'presentItem','userId':{$user_id},'articleCodeId':{$insertRes},'msgType':11}";
+            $dataPush['STATUS'] = 'NEW';
+            $dataPush['CREATE_TIME'] = date('Y-m-d H:i:s');
+            $getPushId = Push::insert( $dataPush );
+            if(!$getPushId){
+                Log::info("推送消息插入失败，articleCodeId：".$insertRes."--用户id：".$user_id);
+            }
+        }
         return 1;
     }
     private function store_xls_onServer($filename,$header,$datas){
