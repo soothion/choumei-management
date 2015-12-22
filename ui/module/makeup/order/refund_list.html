@@ -53,8 +53,15 @@
                         <option value="RFD" >已退款</option>
                         <option value="RFE" >退款失败</option>
                     </select>
+               </div>
+               <span class="space"></span>
+               <div class="input-group">
+                    <select name="refund_user">
+                        <option value="1">发起退款</option>
+                        <option value="2" >用户</option>
+                        <option value="3" >臭美人员</option>
+                    </select>
                 </div>
-
                 <button class="btn" type="submit" data-slug="beautyrefund.index">查询</button>
             </form>
             <form id='alipaysubmit' name='alipaysubmit' target="_blank" style="display:none" method='post'
@@ -85,7 +92,7 @@
                             <th>预约号</th>
                             <th>退款日期</th>
                             <th>支付方式</th>
-                            <th>状态</th>
+                            <th><a data-role="hash" href="#page=1&sort_key=status&sort_type=<%=query.sort_type=='DESC'?'ASC':'DESC'%>">状态 <i class="fa fa-sort"></i></a></th>
                             <th>操作</th>
                         </tr>
                     </thead>

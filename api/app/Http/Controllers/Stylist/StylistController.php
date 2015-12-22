@@ -1,4 +1,6 @@
-<?php    namespace App\Http\Controllers\Stylist;
+<?php
+
+namespace App\Http\Controllers\Stylist;
 
 use App\Stylist;
 use App\Http\Controllers\Controller;
@@ -6,7 +8,8 @@ use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use DB;
 
-class StylistController  extends Controller {
+class StylistController extends Controller {
+
     /**
      * @api {post} /stylist/index 1.造型师列表
      * @apiName list
@@ -28,9 +31,10 @@ class StylistController  extends Controller {
      * @apiSuccess {Number} stylistId 造型师ID.
      * @apiSuccess {String} stylistName 造型师名称.
      * @apiSuccess {Number} mobilephone 手机号.
+     * @apiSuccess {Number} type 类型：  1 造型师  2 助理  3 其他  （2,3）grade、fastGrade、num直接为“无”.
      * @apiSuccess {String} sNumber 在职编号.
      * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
-     * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪.
+     * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪  .
      * @apiSuccess {Number} status 状态:1正常;2:禁用..
      * @apiSuccess {Number} num 作品数.
      * 
@@ -65,19 +69,17 @@ class StylistController  extends Controller {
      *
      *
      * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "未授权访问"
-     *		}
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "未授权访问"
+     * 		}
      */
-    
-    public function index(){
-        $param=$this->param;
-        $query=Stylist::getStylistList($param);
+    public function index() {
+        $param = $this->param;
+        $query = Stylist::getStylistList($param);
         return $this->success($query);
     }
-    
-    
+
     /**
      * @api {post} /stylist/destroy/:id  3.删除造型师
      * @apiName destroy
@@ -87,39 +89,39 @@ class StylistController  extends Controller {
      * 
      * 
      * @apiSuccessExample Success-Response:
-     *	{
-     *	    "result": 1,
-     *	    "msg": "",
-     *	    "data": {
-     *	    }
-     *	}
+     * 	{
+     * 	    "result": 1,
+     * 	    "msg": "",
+     * 	    "data": {
+     * 	    }
+     * 	}
      *
      *
      * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "删除造型师失败"
-     *		}
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "删除造型师失败"
+     * 		}
      */
-    public function destroy($stylistId){
-       $stylist=Stylist::find($stylistId);
-       if(!$stylist){
-		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
-       }   
-       $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId))->whereIn('btStatus',[2,3])->count();
-       if($task==true){
-            throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
-       } 
-         $data['status']=2;       
-         $query=  Stylist::find($stylistId)->update($data); ;    
-       if($query){
-                return $this->success();
-       }else{
-                throw new ApiException('删除造型师失败', ERROR::MERCHANT_STYLIST_DELETE_ERROR);
-       }
+    public function destroy($stylistId) {
+        $stylist = Stylist::find($stylistId);
+        if (!$stylist) {
+            throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
+        }
+//       $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId))->whereIn('btStatus',[2,3])->count();
+//       if($task==true){
+//            throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
+//       } 
+        $data['status'] = 2;
+        $query = Stylist::find($stylistId)->update($data);
+        if ($query) {
+            return $this->success();
+        } else {
+            throw new ApiException('删除造型师失败', ERROR::MERCHANT_STYLIST_DELETE_ERROR);
+        }
     }
 
-   /**
+    /**
      * @api {post} /stylist/enable/:id  4.启用造型师
      * @apiName enable
      * @apiGroup  Stylist
@@ -128,76 +130,72 @@ class StylistController  extends Controller {
      * 
      * 
      * @apiSuccessExample Success-Response:
-     *	{
-     *	    "result": 1,
-     *	    "msg": "",
-     *	    "data": {
-     *	    }
-     *	}
+     * 	{
+     * 	    "result": 1,
+     * 	    "msg": "",
+     * 	    "data": {
+     * 	    }
+     * 	}
      *
      *
      * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "启用造型师失败"
-     *		}
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "启用造型师失败"
+     * 		}
      */
-    
-    public function  enable($stylistId){
-        $stylist=Stylist::find($stylistId);
-        if(!$stylist){
-		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
-         }
-         $data['status']=1;       
-         $query=  Stylist::find($stylistId)->update($data);    
-         if($query){
-                return  $this->success();
-         }
-         else{
-                throw new ApiException('启用造型师失败', ERROR::MERCHANT_STYLIST_ENABLE_ERROR);
-         }            
+    public function enable($stylistId) {
+        $stylist = Stylist::find($stylistId);
+        if (!$stylist) {
+            throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
+        }
+        $data['status'] = 1;
+        $query = Stylist::find($stylistId)->update($data);
+        if ($query) {
+            return $this->success();
+        } else {
+            throw new ApiException('启用造型师失败', ERROR::MERCHANT_STYLIST_ENABLE_ERROR);
+        }
     }
-    
+
     /**
-      * @api {post} /stylist/disabled/:id  5.禁用造型师
-      * @apiName disabled
-      * @apiGroup  Stylist
-      *
-      * @apiParam {Number} id 必填,主键.
-      * 
-      * 
-      * @apiSuccessExample Success-Response:
-      *	{
-      *	    "result": 1,
-      *	    "msg": "",
-      *	    "data": {
-      *	    }
-      *	}
-      *
-      *
-      * @apiErrorExample Error-Response:
-      *		{
-      *		    "result": 0,
-      *		    "msg": "禁用造型师失败"
-      *		}
-      */    
-    
-     public function  disabled($stylistId){
-         $stylist=Stylist::find($stylistId);
-         if(!$stylist){
-		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
-          }
-         $data['status']=3;       
-         $query=  Stylist::find($stylistId)->update($data);     
-         if($query){
-                return  $this->success();
-         }
-         else{
-                throw new ApiException('禁用造型师失败', ERROR::MERCHANT_STYLIST_DESABLED_ERROR);
-         }            
+     * @api {post} /stylist/disabled/:id  5.禁用造型师
+     * @apiName disabled
+     * @apiGroup  Stylist
+     *
+     * @apiParam {Number} id 必填,主键.
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     * 	    "result": 1,
+     * 	    "msg": "",
+     * 	    "data": {
+     * 	    }
+     * 	}
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "禁用造型师失败"
+     * 		}
+     */
+    public function disabled($stylistId) {
+        $stylist = Stylist::find($stylistId);
+        if (!$stylist) {
+            throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
+        }
+        $data['status'] = 3;
+        $query = Stylist::find($stylistId)->update($data);
+        if ($query) {
+            return $this->success();
+        } else {
+            throw new ApiException('禁用造型师失败', ERROR::MERCHANT_STYLIST_DESABLED_ERROR);
+        }
     }
-   
-     /**
+
+    /**
      * @api {post} /stylist/show/:id 6.查看造型师
      * @apiName show
      * @apiGroup Stylist
@@ -206,6 +204,8 @@ class StylistController  extends Controller {
      *
      * @apiSuccess {Number} stylistId 造型师ID.
      * @apiSuccess {Number} salonId 店铺编号.
+     * @apiSuccess {Number} startType 是否启动:  1 启动代客预约  2 暂停代客预约.
+     * @apiSuccess {Number} type 类型：  1 造型师  2 助理  3 其他 .
      * @apiSuccess {String} stylistName 造型师名称.
      * @apiSuccess {String} stylistImg 造型师图像.
      * @apiSuccess {String} job 职位.
@@ -280,41 +280,38 @@ class StylistController  extends Controller {
      *
      *
      * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "未授权访问"
-     *		}
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "未授权访问"
+     * 		}
      */
-    
-    public function show($stylistId){
-        $stylist=Stylist::find($stylistId);
-        if(!$stylist){
-		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR); 
+    public function show($stylistId) {
+        $stylist = Stylist::find($stylistId);
+        if (!$stylist) {
+            throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
         }
-//        $stylist->workExp=json_decode($stylist['workExp'],true);
-//        $stylist->educateExp=json_decode($stylist['educateExp'],true);
-          $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId))->whereIn('btStatus',[2,3])->count();
-        if($task==true){
-                $stylist->reward=1;
-        } else{
-                $stylist->reward=2;
-        }   
-        $field=['salonname','merchantId'];
-        $salon=DB::table('salon')->select($field)->where(array("salonid"=>$stylist->salonId))->first(); 
-         if($salon===false){
-                throw new ApiException('店铺不存在', ERROR::MERCHANT_NOTNAME_ERROR); 
+        $task = DB::table('bounty_task')->where(array('hairstylistId' => $stylistId))->whereIn('btStatus', [2, 3])->count();
+        if ($task == true) {
+            $stylist->reward = 1;
+        } else {
+            $stylist->reward = 2;
         }
-        $field2=['name'];
-        $merchant=DB::table('merchant')->select($field2)->where(array("id"=>$salon->merchantId))->first();  
-        if($merchant===false){
-                throw new ApiException('没有所属商户', ERROR::MERCHANT_NOT_MERCHANT_ERROR); 
+        $field = ['salonname', 'merchantId'];
+        $salon = DB::table('salon')->select($field)->where(array("salonid" => $stylist->salonId))->first();
+        if ($salon === false) {
+            throw new ApiException('店铺不存在', ERROR::MERCHANT_NOTNAME_ERROR);
         }
-        $stylist->salonname=$salon->salonname;
-        $stylist->name=$merchant->name;
+        $field2 = ['name'];
+        $merchant = DB::table('merchant')->select($field2)->where(array("id" => $salon->merchantId))->first();
+        if ($merchant === false) {
+            throw new ApiException('没有所属商户', ERROR::MERCHANT_NOT_MERCHANT_ERROR);
+        }
+        $stylist->salonname = $salon->salonname;
+        $stylist->name = $merchant->name;
         return $this->success($stylist);
     }
-    
-     /**
+
+    /**
      * @api {post} /stylist/update/:id 7.修改造型师
      * @apiName update
      * @apiGroup Stylist
@@ -333,6 +330,8 @@ class StylistController  extends Controller {
      * @apiParam {Number} birthday 必填,出生日期.
      * @apiParam {String} IDcard 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,身份证.
      * @apiParam {String} sNumber 必填,在职编号.
+     * @apiParam {Number} type 可选, 类型：  1 造型师  2 助理  3 其他 ..
+     * @apiParam {Number} startType 可选,是否启动:  1 启动代客预约  2 暂停代客预约.
      * @apiParam {Numder} workYears 必填,工作年限.
      * @apiParam {String} job 必填,门店职位.
      * @apiParam {Numder} grade 可选,悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
@@ -346,56 +345,53 @@ class StylistController  extends Controller {
      * @apiParam {String} salonname 必填,店铺名称.
      *
      * @apiSuccessExample Success-Response:
-     *	{
-     *	    "result": 1,
-     *	    "msg": "",
-     *	    "data": {
-     *	    }
-     *	}
+     * 	{
+     * 	    "result": 1,
+     * 	    "msg": "",
+     * 	    "data": {
+     * 	    }
+     * 	}
      *
      * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "未授权访问"
-     *		}
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "未授权访问"
+     * 		}
      */
-           
-   public function  update($stylistId){  
-        $param=$this->param;
-        $field=['salonid','merchantId'];    
-        $stylist=Stylist::find($stylistId);
-        if(!$stylist){
-		throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
-        }     
-        if(!isset($param['stylistImg'])||!isset($param['stylistName'])||empty($param['sex'])||!isset($param['mobilephone'])||!isset($param['job'])||empty($param['birthday'])||empty($param['sNumber'])||empty($param['workYears'])||empty($param['signature'])){
-                throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+    public function update($stylistId) {
+        $param = $this->param;
+        $field = ['salonid', 'merchantId'];
+        $stylist = Stylist::find($stylistId);
+        if (!$stylist) {
+            throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
         }
-        if(!isset($param['IDcard'])&&!isset($param['drivingLicense'])&&!isset($param['passport'])&&!isset($param['officerCert'])){   
-                throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+        if (!isset($param['stylistImg']) || !isset($param['stylistName']) || empty($param['sex']) || !isset($param['mobilephone']) || !isset($param['job']) || empty($param['birthday']) || empty($param['sNumber']) || empty($param['workYears']) || empty($param['signature'])) {
+            throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
         }
-        $salon=DB::table('salon')->select($field)->where(array("salonname"=>$param['salonname']))->first();
-        if($salon==FALSE){
-                throw new ApiException('店铺名称不存在', ERROR::MERCHANT_NOTNAME_ERROR);
-        } 
-        $param['salonid']=$salon->salonid;
+        if (!isset($param['IDcard']) && !isset($param['drivingLicense']) && !isset($param['passport']) && !isset($param['officerCert'])) {
+            throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+        }
+        $salon = DB::table('salon')->select($field)->where(array("salonname" => $param['salonname']))->first();
+        if ($salon == FALSE) {
+            throw new ApiException('店铺名称不存在', ERROR::MERCHANT_NOTNAME_ERROR);
+        }
+        $param['salonid'] = $salon->salonid;
 
-        if($stylist['mobilephone']!=$param['mobilephone']){
-                $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->whereIn('status',[1,3])->count();
-                if($stylistCount)
-                {
-                        throw new ApiException('手机号码重复', ERROR::MERCHANT_MOBILEPHONE_ERROR);
-                }  
+        if ($stylist['mobilephone'] != $param['mobilephone']) {
+            $stylistCount = Stylist::where(array('mobilephone' => $param['mobilephone']))->whereIn('status', [1, 3])->count();
+            if ($stylistCount) {
+                throw new ApiException('手机号码重复', ERROR::MERCHANT_MOBILEPHONE_ERROR);
+            }
         }
-        $query=Stylist::updateStylist($stylistId,$param);
-        if($query){
-                return  $this->success();
-        }else{
-                throw new ApiException('修改造型师失败', ERROR::MERCHANT_STYLIST_UPDATE_ERROR);
+        $query = Stylist::updateStylist($stylistId, $param);
+        if ($query) {
+            return $this->success();
+        } else {
+            throw new ApiException('修改造型师失败', ERROR::MERCHANT_STYLIST_UPDATE_ERROR);
         }
-    }  
-       
-    
-     /**
+    }
+
+    /**
      * @api {post} /stylist/create/:id 8.创建造型师
      * @apiName create
      * @apiGroup Stylist
@@ -411,6 +407,8 @@ class StylistController  extends Controller {
      * @apiParam {String} qq 可选,QQ.
      * @apiParam {String} email 可选,email.
      * @apiParam {Number} birthday 必填,出生日期.
+     * @apiParam {Number} type 必填, 类型：  1 造型师  2 助理  3 其他 ..
+     * @apiParam {Number} startType 必填,是否启动:  1 启动代客预约  2 暂停代客预约.
      * @apiParam {String} IDcard 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,身份证.
      * @apiParam {String} sNumber 必填,在职编号.
      * @apiParam {Numder} workYears 必填,工作年限.
@@ -425,43 +423,41 @@ class StylistController  extends Controller {
      * @apiParam {String} officerCert 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,军官证.
      *
      * @apiSuccessExample Success-Response:
-     *	{
-     *	    "result": 1,
-     *	    "msg": "",
-     *	    "data": {
-     *	    }
-     *	}
+     * 	{
+     * 	    "result": 1,
+     * 	    "msg": "",
+     * 	    "data": {
+     * 	    }
+     * 	}
      *
      * @apiErrorExample Error-Response:
-     *		{
-     *		    "result": 0,
-     *		    "msg": "未授权访问"
-     *		}
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "未授权访问"
+     * 		}
      */
-    
-     public function  create($salonid){
-        $param=$this->param;
-        $salon=DB::table('salon')->where(array('salonid'=>$salonid))->first();
-        if(!$salon){
-		throw new ApiException('找不到该店铺', ERROR::MERCHANT_ID_IS_ERROR);
-        } 
-        if(!isset($param['stylistImg'])||empty($param['img'])||!isset($param['stylistName'])||empty($param['sex'])||!isset($param['mobilephone'])||!isset($param['job'])||empty($param['birthday'])||empty($param['sNumber'])||empty($param['workYears'])||empty($param['signature'])){
-                throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);     
+    public function create($salonid) {
+        $param = $this->param;
+        $salon = DB::table('salon')->where(array('salonid' => $salonid))->first();
+        if (!$salon) {
+            throw new ApiException('找不到该店铺', ERROR::MERCHANT_ID_IS_ERROR);
         }
-        if(!isset($param['IDcard'])&&!isset($param['drivingLicense'])&&!isset($param['passport'])&&!isset($param['officerCert'])){   
-                throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
+        if (!isset($param['stylistImg']) || empty($param['img']) || empty($param['type']) || empty($param['startType']) || !isset($param['stylistName']) || empty($param['sex']) || !isset($param['mobilephone']) || !isset($param['job']) || empty($param['birthday']) || empty($param['sNumber']) || empty($param['workYears']) || empty($param['signature'])) {
+            throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
         }
-        $stylistCount = Stylist::where(array('mobilephone'=>$param['mobilephone']))->whereIn('status',[1,3])->count();
-        if($stylistCount)
-        {
-                throw new ApiException('手机号码重复', ERROR::MERCHANT_MOBILEPHONE_ERROR);
+        if (!isset($param['IDcard']) && !isset($param['drivingLicense']) && !isset($param['passport']) && !isset($param['officerCert'])) {
+            throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
         }
-        $query= Stylist::createStylist($salonid, $param);
-        if($query){
-                return  $this->success();
-        }else{
-                throw new ApiException('创建造型师失败', ERROR::MERCHANT_STYLIST_CREATE_ERROR);
+        $stylistCount = Stylist::where(array('mobilephone' => $param['mobilephone']))->whereIn('status', [1, 3])->count();
+        if ($stylistCount) {
+            throw new ApiException('手机号码重复', ERROR::MERCHANT_MOBILEPHONE_ERROR);
         }
-     }  
-     
+        $query = Stylist::createStylist($salonid, $param);
+        if ($query) {
+            return $this->success();
+        } else {
+            throw new ApiException('创建造型师失败', ERROR::MERCHANT_STYLIST_CREATE_ERROR);
+        }
+    }
+
 }

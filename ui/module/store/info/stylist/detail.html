@@ -23,17 +23,34 @@
             width:100%;
             border: none;
             visibility:hidden;
+        } 
+
+        label.switch > input[type="checkbox"] + span {
+          width:60px;
+          color:#fff;
+          line-height: 24px;
+          text-indent: 28px;
+        }
+
+        label.switch > input[type="checkbox"]:checked + span {
+          background: #58A2EC;
+          text-indent: 8px;
         }           
+
+        label.switch > input[type="checkbox"]:checked + span:after {
+          left:39px;
+        }                  
       </style>
     </head>
     <body>
         <div class="breadcrumb">
             <a>店铺管理</a>
             <span>&gt;</span><a href="../index.html">店铺资料</a>
-            <span>&gt;</span><a href="index.html">造型师列表</a>
+            <span>&gt;</span><a href="index.html">店铺人员列表</a>
+            <span>&gt;</span><a href="detail.html">查看店铺人员资料</a>
             <div class="flex-box">
                 <div class="flex-item">
-                    <h4>查看造型师资料</h4>
+                    <h4>查看店铺人员资料</h4>
                 </div>
             </div>
         </div>
@@ -62,6 +79,17 @@
                         取消
                     </button>                  
                 </div> 
+
+                <div style="margin-bottom:10px">
+                    <span>开启/暂停代客预约</span>
+                    <%if(data.startType == "1"){%>
+                    <label class="switch"><input type="checkbox" checked disabled/><span>NO</span></label>
+                    <%}%>
+
+                    <%if(data.startType == "2"){%>
+                    <label class="switch"><input type="checkbox" disabled/><span>OFF</span></label>
+                    <%}%>                    
+                </div>
 
                 <table>
                     <tbody>
@@ -171,7 +199,12 @@
                             <td class="td">快剪等级</td>
                             <%var fastGradeText = {"1":"普通快剪", "2":"总监快剪"}%>
                             <td><%=fastGradeText[data.fastGrade]%></td>                            
-                        </tr>                        
+                        </tr> 
+
+                        <tr>
+                            <td class="td">类型</td>
+                            <td></td>                            
+                        </tr>                       
                     </tbody>                     
                 </table> 
 
@@ -265,6 +298,7 @@
         </div>
 
         <div style="float:left;margin:15px 0 15px 20px;">
+          <h3 style="margin-bottom:10px;"><strong>个人图片：</strong></h3>
           <img src="" style="width:256px;height:256px"/>
         </div>
 

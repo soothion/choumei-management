@@ -153,6 +153,26 @@
                             <td class="td">订单状态：</td>
                             <td><%= data.order.STATUS == 'CSD' && data.makeup ? '已补色':status[data.order.STATUS]%></td>
                         </tr>
+
+                        <tr>
+                            <td  colspan="2" class="white-bg">代预约方信息</td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">渠道：</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">推荐人：</td>
+                            <td></td>
+                        </tr>                        
+
+                        <tr>
+                            <td class="td">机号：</td>
+                            <td></td>
+                        </tr>
+
                         <tr>
                             <td  colspan="2" class="white-bg">预约金支付信息</td>
                         </tr>
@@ -185,6 +205,36 @@
                             <td class="td">支付状态：</td>
                             <td><%=status[data.order.STATUS]%></td>
                         </tr>
+
+                        <tr>
+                            <td colspan="2" class='white-bg'>客服调整信息</td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">修改预约：</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class="td">预约时间：</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="pad-n bor-n">
+                                <table class="inner-table bor-n">
+                                    <tbody>
+                                        <tr>
+                                            <td>客服：</td>
+                                            <td></td>
+                                            <td>调整时间：</td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>                         
+
                         <tr>
                             <td  colspan="2" class="white-bg">用户到店记录</td>
                         </tr>
