@@ -77,6 +77,7 @@ class BookingOrder extends Model
         
         $base = $base->toArray();
         $ordersn = $base['ORDER_SN'];
+        $manager_id = $base['CUSTOMER_SERVICE_ID'];
         $item_fields = ['ORDER_SN','ITEM_ID','ITEM_NAME','AMOUNT','PAYABLE'];
         $beauty_item_fields = ['order_sn','item_id','item_name','norm_id','norm_name','amount','to_pay_amount'];
         $items = BookingOrderItem::where('ORDER_SN',$ordersn)->get($item_fields)->toArray();
@@ -86,6 +87,11 @@ class BookingOrder extends Model
         $recommend = RecommendCodeUser::where('user_id',$base['USER_ID'])->whereIn('type',[2,3])->first(['id','user_id','recommend_code']);
         $refund_fields = ['ordersn','user_id','money','opt_user_id','rereason','add_time','opt_time','status','booking_sn','item_type','rereason','other_rereason'];
         $order_refund = OrderRefund::where('ordersn',$ordersn)->where('status',1)->first($refund_fields);
+        $base['manager'] = null;
+        if(!empty($manager_id))
+        {
+            $base['manager'] = Manager::getBaseInfo($manager_id);
+        }
         if(empty($payment_log))
         {
             $payment_log = NULL;
