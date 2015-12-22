@@ -169,7 +169,7 @@ class BookController extends Controller
      * @apiSuccess {String} order.ORDER_SN 订单号
      * @apiSuccess {String} order.BOOKING_SN 预约号
      * @apiSuccess {String} order.BOOKING_DATE 预约日期
-     * @apiSuccess {String} order.UPDATED_BOOKING_DATE 修改后的预约日期
+     * @apiSuccess {String} order.UPDATED_BOOKING_DATE 修改后的预约日期 / 客服调整的预约日期
      * @apiSuccess {String} order.QUANTITY 数量
      * @apiSuccess {String} order.AMOUNT 订单金额
      * @apiSuccess {String} order.PAYABLE 应付金额(已支付)
@@ -182,6 +182,8 @@ class BookController extends Controller
      * @apiSuccess {String} order.CONSUME_TIME 消费时间
      * @apiSuccess {String} order.CREATE_TIME 预约时间
      * @apiSuccess {String} order.UPDATE_TIME 最近修改时间
+     * @apiSuccess {String} order.BOOKING_DESC 预约时间  DEF-未选择，MORNING - 上午，AFTERNOON下午
+     * @apiSuccess {Object} order.manager 客服信息
      * @apiSuccess {String} order.item_amount 项目总价
      * @apiSuccess {String} order_item 预约项目信息
      * @apiSuccess {String} order_item.ID 项目ID
@@ -741,12 +743,13 @@ class BookController extends Controller
         
         $send_uid = null;
         
-        if($recommend['type'] == 2)//店铺推荐
+        if($recommend['type'] == 2)//店铺推荐 需求修改 不送
         {
-            if($recommend['add_time'] <= strtotime($first_consume_time))
-            {
-                $send_uid = $customer_uid;
-            }
+            
+//             if($recommend['add_time'] <= strtotime($first_consume_time))
+//             {
+//                 $send_uid = $customer_uid;
+//             }
         }
         else 
         {

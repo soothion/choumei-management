@@ -65,9 +65,11 @@ class BookingReceive extends Model
             'uid'=>$params['uid'],
             'created_at'=>$datetime,
         ];
+        $base_update_attr = ['COME_SHOP'=>'COME'];
         if(isset($params['update_booking_date']))
         {
             $attr['update_booking_date'] = date("Y-m-d",strtotime($params['update_booking_date']));
+            $base_update_attr['UPDATED_BOOKING_DATE'] = $attr['update_booking_date'];
         }
         if(isset($params['remark']))
         {
@@ -82,6 +84,7 @@ class BookingReceive extends Model
             $attr['arrive_at'] = $datetime;
         }  
         BookingReceive::where("booking_id",$id)->delete();
+        BookingOrder::where('booking_id',$id)->update($base_update_attr);
         BookingReceive::create($attr);
         return $base;
     }
