@@ -56,20 +56,27 @@
 					<%
 					  data=data.data
                       var gradeText = { "1":"资深发型师","2":"资深发型师","1,2":"资深发型师","3":"设计总监", 
-                      "4":"美发大师"};
-                      var fastGradeText = {"1":"普通快剪", "2":"总监快剪"}
+                      "4":"美发大师","无":"无"};
+                      var fastGradeText = {"1":"普通快剪", "2":"总监快剪","无":"无"}
                       var statusText = {"1":"正常","2":"禁用"};
+                      var typeText = {'1':'造型师','2':'助理','3':'其他'};
 					%>
 					<%data.forEach(function(item,i){%>
 						<tr>				 
 						<td><%=i+1%></td>
 						<td><%=item.stylistName%></td>
-						<td></td>
+						<td><%=typeText[item.type]%></td>
 						<td><%=item.mobilephone%></td>
-						<td><%=item.sNumber%></td>
+						<td><%=item.sNumber+"号"%></td>
 						<td><%=gradeText[item.grade]%></td>
 						<td><%=fastGradeText[item.fastGrade]%></td>
-						<td><a class="link" data-slug="works.index" href="works.html#id=<%=item.stylistId%>"><%=item.num%></a></td>
+						<td>
+						    <%if(item.type == "1"){%>
+							<a class="link" data-slug="works.index" href="works.html#id=<%=item.stylistId%>"><%=item.num%></a>
+							<%}else{%>
+                            无
+							<%}%>
+						</td>
 						<td><%=statusText[item.status]%></td>
 						<td>
 						<a class="link" data-slug="stylist.show,stylist.update" href="detail.html#id=<%=item.stylistId%>">
