@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">       
+        <title>臭美管理后台</title>
+        <script type="text/javascript" src="/js/include.js"></script>
+		<link rel="stylesheet" href="index.css" />
+    </head>
+    <body>
+        <div class="breadcrumb">
+            <a>韩式定妆</a><span>&gt;</span>顾客预约时间
+			<div class="flex-box">
+			 <div class="flex-item">
+				<h4> 顾客预约时间</h4>
+			</div>
+		 </div>		 
+        </div>		
+         <div class="wrapper">
+			<form data-role="hash">
+				<div class="position-group">
+					<ul class="table-box">
+						<li class="table-item"><i class="fa fa-chevron-left"></i></li>
+						<li class="table-item"><input type="month" required placeholder="yyyy-mm" value="2015-12"/></li>
+						<li class="table-item"><i class="fa fa-chevron-right"></i></li>
+					</ul>
+				</div>
+			</form>
+           <div class="table" ajat="beautyItem/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+			<script type="text/template" id="table-t">
+				<table>
+					<thead>
+						<tr>
+							<th>星期日</th>
+							<th>星期一</th>
+							<th>星期二</th>
+							<th>星期三</th>
+							<th>星期四</th>
+							<th>星期五</th>
+							<th>星期六</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td disabled>
+								<h4>1</h4>
+								<p class="weak">
+									实际预约数：<span style="display:none">206</span> <input type="text" value="206" /> <br />
+									预约上限：<span style="display:none">300</span> <input type="text" value="300"/>
+								</p>
+							</td>
+							<td>
+								<h4>2</h4>
+								<p class="weak">
+									实际预约数：<span>206</span> <input type="text" value="206" class="hide" /> <br />
+									预约上限：<span>300</span> <input type="text" value="300" class="hide"/>
+								</p>
+							</td>
+							<td>
+								<h4>3</h4>
+								<p class="weak">
+									实际预约数：<span>206</span> <input type="text" value="206" class="hide" /> <br />
+									预约上限：<span>300</span> <input type="text" value="300" class="hide"/>
+								</p>
+							</td>
+							<td>
+								<h4>4</h4>
+								<p class="weak">
+									实际预约数：<span>206</span> <input type="text" value="206" class="hide" /> <br />
+									预约上限：<span>300</span> <input type="text" value="300" class="hide"/>
+								</p>
+							</td>
+							<td>
+								<h4>5</h4>
+								<p class="weak">
+									实际预约数：<span>206</span> <input type="text" value="206" class="hide" /> <br />
+									预约上限：<span>300</span> <input type="text" value="300" class="hide"/>
+								</p>
+							</td>
+							<td>
+								<h4>6</h4>
+								<p class="weak">
+									实际预约数：<span>206</span> <input type="text" value="206" class="hide" /> <br />
+									预约上限：<span>300</span> <input type="text" value="300" class="hide"/>
+								</p>
+							</td>
+							<td>
+								<h4>7</h4>
+								<p class="weak">
+									实际预约数：<span>206</span> <input type="text" value="206" class="hide" /> <br />
+									预约上限：<span>300</span> <input type="text" value="300" class="hide"/>
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</script>
+        </div>
+            </div>
+		<script type="text/javascript">
+			$(document.body).on("click",'.fa-chevron-right',function(){
+				var input=$('.position-group input');
+				var date=new Date(input.val());
+				var month=date.getMonth();
+				if(month==11){
+					date.setFullYear(date.getFullYear()+1);
+					date.setMonth(0);
+				}else{
+					date.setMonth(month+1);
+				}
+				input.val(date.format("yyyy-MM"));
+			}).on("click",'.fa-chevron-left',function(){
+				var input=$('.position-group input');
+				var date=new Date(input.val());
+				var month=date.getMonth();
+				if(month==0){
+					date.setFullYear(date.getFullYear()-1);
+					date.setMonth(11);
+				}else{
+					date.setMonth(month-1);
+				}
+				input.val(date.format("yyyy-MM"));
+			})
+		</script>
+    </body>
+</html>
