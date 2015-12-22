@@ -42,6 +42,8 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\CountOrder::class,
         //定妆赠送券过期后，修改状态
         \App\Console\Commands\PresentArticleCodeExpire::class,  
+        //定妆赠送券过期提醒
+        \App\Console\Commands\PresentItemExpireRemind::class,  
     ];
 
     /**
