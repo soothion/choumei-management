@@ -208,8 +208,8 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'uses'=>'MessageBox\MessageBoxController@redirectUrl'
     ))->where('pushId', '[0-9]+'); 
 //权限管理后台接口
-Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
- // Route::group(['middleware' => ['before']], function(){
+// Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+ Route::group(['middleware' => ['before']], function(){
 
 
 	//管理员模块
@@ -1610,4 +1610,25 @@ Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
         'as'=>'beautyrefund.accept',
         'uses'=>'Transaction\BeautyRefundController@accept'
     )); 
+    
+    // 预约日历
+    Route::any('calendar/index',array(  
+    'as'=>'bookingCalendar.index',
+    'uses'=>'BookCalendar\CalendarController@index'
+    ));
+    
+    Route::any('calendar/getDay',array( 
+    'as'=>'bookingCalendar.getDay',
+    'uses'=>'BookCalendar\CalendarController@getDayIndex'
+    ));
+    
+    Route::any('calendar/status/{orderSn}',array( 
+    'as'=>'bookingCalendar.status',
+    'uses'=>'BookCalendar\CalendarController@modifyDayStatus'
+    ));
+    
+    Route::any('calendar/modifyDay',array(  
+    'as'=>'bookingCalendar.modifyDay',
+    'uses'=>'BookCalendar\CalendarController@modifyDayIndex'
+    ));
 });
