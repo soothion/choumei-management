@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-10-09 10:53:59
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-18 12:08:39
+* @Last Modified time: 2015-12-21 11:11:14
 */
 
 (function(){       
@@ -63,11 +63,12 @@
     }
 
     $("#form").on('change','.switch>input',function(e){
-        $(this).siblings('input[type="hidden"]').val(this.checked ? "Y" : "N");
         if(this.checked){
             $(this).siblings('span').text("NO");
+            $(this).val("1");
         }else{
-            $(this).siblings('span').text("OFF"); 
+            $(this).siblings('span').text("OFF");
+            $(this).val("2"); 
         }
     });
 
@@ -86,9 +87,13 @@
 
     $("#form").on('click','.tab td',function(){
         $(this).children().css('opacity','1');
+    });    
+
+    $("#form").on('click','#professionType',function(){
+        
     });
 
-    $("#form").on('click','input[type="checkbox"]',function(){   
+    $("#form").on('click','#updateSalonCheckbox',function(){   
         if($(this).val() == "1"){
             lib.popup.alert({text:'此造型师有未完成的赏金单，请完成后再更换店铺!'});
             return false;

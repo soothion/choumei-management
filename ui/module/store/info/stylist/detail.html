@@ -82,7 +82,13 @@
 
                 <div style="margin-bottom:10px">
                     <span>开启/暂停代客预约</span>
+                    <%if(data.startType == "1"){%>
                     <label class="switch"><input type="checkbox" checked disabled/><span>NO</span></label>
+                    <%}%>
+
+                    <%if(data.startType == "2"){%>
+                    <label class="switch"><input type="checkbox" disabled/><span>OFF</span></label>
+                    <%}%>                    
                 </div>
 
                 <table>
