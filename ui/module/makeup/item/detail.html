@@ -82,7 +82,7 @@
 							<tr>
 								<td>臭美O2O爆品价：</td>
 								<td>
-									<%if(query.p=="fashion"&&data.genre!=1){%>
+									<%if(query.p=="fashion"){%>
 										<%if(data.prices.min_vip_price&&data.prices.max_vip_price){%>
 											<%if(data.prices.min_vip_price!=data.prices.max_vip_price){%>
 											￥<%=data.prices.min_vip_price%>-￥<%=data.prices.max_vip_price%>
@@ -98,7 +98,7 @@
 							<tr>
 								<td>国内美容机构市场价：</td>
 								<td>
-									<%if(query.p=="fashion"&&data.genre!=1){%>
+									<%if(query.p=="fashion"){%>
 										<%if(data.prices.min_price&&data.prices.max_price){%>
 											<%if(data.prices.min_price!=data.prices.max_price){%>
 											￥<%=data.prices.min_price%>-￥<%=data.prices.max_price%>

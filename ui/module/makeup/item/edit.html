@@ -184,22 +184,8 @@
         </div>
 		<script type="text/template" id="format-t">
 			<%data.forEach(function(item,i){%>
-			<%var id=parseInt(Math.random()*1000000)%>
 			<div class="control-group format-group format-group-item">
 				<ul class="table-box">
-					<!--
-					<li class="table-item">
-						<div class="control-image">
-							<div class="control-single-image">
-								<img src="<%=item.img%>" alt=""/>
-								<div class="control-image-ud">
-									<div id="upload-<%=id%>"><i class="fa fa-cloud-upload"></i>上传图片</div>
-								</div>
-								<input type="hidden" name="img" class="original" value="<%=item.img%>" required requiredmsg="请上传规格图片" data-helpid="help-<%=id%>">
-							</div>
-						</div>
-						<div class="control-help" id="help-<%=id%>" style="display:none"></div>
-					</li>-->
 					<li class="table-item item-input">
 						<input type="text" placeholder="2~10个字" minlength="2" maxlength="10" value="<%=item.norm%>" required name="norm" />
 					</li>
@@ -217,7 +203,7 @@
 					</li>
 					<li class="table-item item-input">
 						<%if(data.init&&i==0){%>
-						<%if(query.is_gift!=1){%>
+						<%if(data.genre!=1){%>
 							<button type="button" class="link add-format">添加</button>
 						<%}%>
 						<%}else{%>
@@ -280,6 +266,7 @@
 					}
 					var more_prices=JSON.parse($('#more_prices').val());
 					more_prices.init=true;
+					more_prices.genre=data.genre
 					if(more_prices.length==0){
 						more_prices.push({});
 					}
