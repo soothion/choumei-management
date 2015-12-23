@@ -13,7 +13,7 @@ use Event;
 class BannerController extends Controller {
 
     /**
-     * @api {post} /banner/index 1.主页banner列表    banner/index2 项目banner列表
+     * @api {post} /banner/index 1.banner列表  
      * @apiName index
      * @apiGroup  Banner
      *
@@ -90,15 +90,15 @@ class BannerController extends Controller {
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });
-            $query = Banner::where('type', '=', $param['type'])->orderBy('sort', 'asc')->orderBy('created_at', 'asc')->paginate($page_size)->toArray();
-            foreach ($query['data'] as $key =>$value) {
-                if(isset($value['url'])){
-                    $temp = json_decode($value['url'],true);
-                    if(isset($temp['salonId'])){
-                        $query['data'][$key]['salonId'] = $temp['salonId'];
-                    }
+        $query = Banner::where('type', '=', $param['type'])->orderBy('sort', 'asc')->orderBy('created_at', 'asc')->paginate($page_size)->toArray();
+        foreach ($query['data'] as $key =>$value) {
+            if(isset($value['url'])){
+                $temp = json_decode($value['url'],true);
+                if(isset($temp['salonId'])){
+                    $query['data'][$key]['salonId'] = $temp['salonId'];
                 }
             }
+        }
         unset($query['next_page_url']);
         unset($query['prev_page_url']);
         if ($query) {
@@ -145,6 +145,13 @@ class BannerController extends Controller {
             if (empty($param['url'])) {
                 throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
             }
+        }
+        $field = ['price','priceOri','introduce'];
+        $banner = Banner::select($field)->where('type', '=', $param['type'])->first();
+        if($banner == true){
+            $date['price']=$banner['price'];
+            $date['priceOri']=$banner['priceOri'];
+            $date['introduce']=$banner['introduce'];
         }
         $date['type']=$param['type'];
         $date['sort']=10;
@@ -332,5 +339,50 @@ class BannerController extends Controller {
         }
         return $this->success();
     }
-
+    
+    /**
+     * @api {post} /banner/createOrSave 6.描述和介绍增加和修改
+     * @apiName createOrSave
+     * @apiGroup  Banner
+     *
+     * @apiParam {Number} type 必填,''banner类型  ‘1’‘ 代表主页banner；’2‘ 代表定妆banner；’3‘ 代表迁体banner；’4‘ 代表水光针banner； 
+     * @apiParam {String} price 必填,  臭APP爆品价； 
+     * @apiParam {String} priceOri 必填, 国内美容机构市场价； 
+     * @apiParam {Text} introduce 必填,  'banner项目的介绍和描述'； 
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     * 	    "result": 1,
+     * 	    "msg": "",
+     * 	    "data": {
+     * 	    }
+     * 	}
+     *
+     *
+     * @apiErrorExample Error-Response:
+     * 		{
+     * 		    "result": 0,
+     * 		    "msg": "删除banner失败"
+     * 		}
+     */
+    public function  createOrSave(){
+        $param = $this->param;
+        $data = [];
+        if (empty($param['type']) || !isset($param['price']) || !isset($param['priceOri']) || !isset($param['introduce'])) {
+            throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
+        }
+        $data['price']=$param['price'];
+        $data['priceOri']=$param['priceOri'];
+        $data['introduce']=$param['introduce'];
+        $query = Banner::where('type',$param['type'])->update($data);
+        
+        if ($query) {
+            Log::info("param is ",$data);
+            return $this->success();
+        } else {
+            throw new ApiException('banner的描述和介绍失败!', ERROR::BEAUTY_BANNER_UPDATE_ERROR);
+        }
+        
+    }
 }
