@@ -296,7 +296,8 @@ class StylistController extends Controller {
         } else {
             $stylist->reward = 2;
         }
-        $booking = DB::table('cm_booking_order')->where('USER_ID',$stylistId)->whereIn('STATUS', ['PYD', 'RFN'])->count();
+      //  $booking = DB::table('cm_booking_order')->where('USER_ID',$stylistId)->whereIn('STATUS', ['PYD', 'RFN'])->count();
+        $booking=0;
         if ($booking == true) {
             $stylist->booking = 1;
         } else {
