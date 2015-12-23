@@ -17,7 +17,7 @@ class BannerController extends Controller {
      * @apiName index
      * @apiGroup  Banner
      *
-     * @apiParam {Number} type 必填,'1' 代表主页banner  （2快时尚； 3专家；4半永久'）是项目,.
+     * @apiParam {Number} type 必填,''banner类型  ‘1’‘ 代表主页banner；’2‘ 代表定妆banner；’3‘ 代表迁体banner；’4‘ 代表水光针banner； 
      * 
      * @apiSuccess {Number} total 总数据量.
      * @apiSuccess {Number} per_page 分页大小.
@@ -26,7 +26,7 @@ class BannerController extends Controller {
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
      * @apiSuccess {Number} banner_id  主键.    
-     * @apiSuccess {Number} type  'banner类型 1主页banner； （2快时尚； 3专家；4半永久'）是项目,.
+     * @apiSuccess {Number} type  ''banner类型  ‘1’‘ 代表主页banner；’2‘ 代表定妆banner；’3‘ 代表迁体banner；’4‘ 代表水光针banner；  
      * @apiSuccess {String} name 'banner名称',(即项目名称)
      * @apiSuccess {String} image bnnaer图片.
      * @apiSuccess {String} salonName  salon店的名称
@@ -90,8 +90,7 @@ class BannerController extends Controller {
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });
-        if ($param['type'] == 1) {
-            $query = Banner::where('type', '=', 1)->orderBy('sort', 'asc')->orderBy('created_at', 'asc')->paginate($page_size)->toArray();
+            $query = Banner::where('type', '=', $param['type'])->orderBy('sort', 'asc')->orderBy('created_at', 'asc')->paginate($page_size)->toArray();
             foreach ($query['data'] as $key =>$value) {
                 if(isset($value['url'])){
                     $temp = json_decode($value['url'],true);
@@ -100,9 +99,6 @@ class BannerController extends Controller {
                     }
                 }
             }
-        } else {
-            $query = Banner::whereIn('type',[2,3,4])->orderBy('created_at', 'desc')->paginate($page_size)->toArray();
-        }
         unset($query['next_page_url']);
         unset($query['prev_page_url']);
         if ($query) {
@@ -113,11 +109,11 @@ class BannerController extends Controller {
     }
 
     /**
-     * @api {post} /banner/create 2.主页banner的添加
+     * @api {post} /banner/create 2.banner的添加
      * @apiName create
      * @apiGroup  Banner
      *
-     * @apiParam {Number} type 必填, 'banner类型 1主页banner；
+     * @apiParam {Number} type 必填,  ''banner类型  ‘1’‘ 代表主页banner；’2‘ 代表定妆banner；’3‘ 代表迁体banner；’4‘ 代表水光针banner；  
      * @apiParam {String} name 必填,题目.
      * @apiParam {String} image 必填,bnnaer图片的路径.
      * @apiParam {String} salonName 可选, salon店的名称
@@ -177,59 +173,16 @@ class BannerController extends Controller {
         }
     }
     
-     /**
-     * @api {post} /banner/create2 6.项目banner的添加
-     * @apiName create2
-     * @apiGroup  Banner
-     *
-     * @apiParam {Number} type 必填, 'banner类型  2快时尚； 3专家；4半永久',.
-     * @apiParam {String} name 必填,题目.
-     * @apiParam {String} image 必填,bnnaer图片的路径.
-     * 
-     * 
-     * @apiSuccessExample Success-Response:
-     * 	{
-     * 	    "result": 1,
-     * 	    "msg": "",
-     * 	    "data": {
-     * 	    }
-     * 	}
-     *
-     *
-     * @apiErrorExample Error-Response:
-     * 		{
-     * 		    "result": 0,
-     * 		    "msg": "创建banner失败"
-     * 		}
-     */
-    public function create2() {
-        $param = $this->param;
-        if (empty($param['type']) || !isset($param['name']) || !isset($param['image'])) {
-            throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
-        }
-        $date['type']=$param['type'];
-        $date['name']=$param['name'];
-        $date['image']=$param['image'];
-        $date['behavior']=0;
-        $date['created_at'] = time();
-        $date['updated_at'] = time();
-        $query = Banner::insert($date);
-        if ($query) {
-            return $this->success();
-        } else {
-            throw new ApiException('创建项目banner失败', ERROR::BEAUTY_BANNER_CREATE_ERROR);
-        }
-    }
+
 
     /**
-     * @api {post} /banner/edit/:id 3.主页banner的修改   banner/edit2/:id项目banner的修改
+     * @api {post} /banner/edit/:id 3.banner的修改 
      * @apiName edit
      * @apiGroup  Banner
      *
      * @apiParam {Number} id 必填,主键.
      * @apiParam {String} name 必填,题目.
      * @apiParam {String} salonName 可选, salon店的名称
-     * @apiParam {Number} type 必填, 'banner类型 1主页banner； 2快时尚； 3专家；4半永久',.
      * @apiParam {String} image 必填,bnnaer图片的路径.
      * @apiParam {Number} behavior 必填, 链接到哪里  0无跳转; 1H5； 2app内部',(单选按钮),
      * @apiParam {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"SPM","itemId":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',salons-美发店铺主页,artificers-专家主页,同上 )
@@ -256,17 +209,14 @@ class BannerController extends Controller {
         if ($banner == FALSE) {
             throw new ApiException('找不到这样的banner，id有误', ERROR::BEAUTY_BANNER_NOT_ID);
         }       
-        if (!isset($param['name']) || !isset($param['image']) || empty($param['type'])) {
+        if (!isset($param['name']) || !isset($param['image']) || empty($param['behavior'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
+        }          
+        if ($param['behavior'] == 1 || $param['behavior'] == 2) {
+            if (empty($param['url'])) {
+                throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
+            }
         }
-                
-        if($param['type'] == 1){
-            if ($param['behavior'] == 1 || $param['behavior'] == 2) {
-                if (empty($param['url'])) {
-                    throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
-                }
-        }
-        } 
         if(!empty($param['salonId'])){
             $temp=json_decode($param['url']);
             $temp->salonId=$param['salonId'];
@@ -300,7 +250,7 @@ class BannerController extends Controller {
     }
 
     /**
-     * @api {post} /banner/destroy/:id 4.主页或项目banner的删除
+     * @api {post} /banner/destroy/:id 4.banner的删除
      * @apiName destroy
      * @apiGroup  Banner
      *
@@ -337,7 +287,7 @@ class BannerController extends Controller {
     }
 
     /**
-     * @api {post} /banner/sort 5.主页banner的排序
+     * @api {post} /banner/sort 5.banner的排序
      * @apiName sort
      * @apiGroup  Banner
      *
