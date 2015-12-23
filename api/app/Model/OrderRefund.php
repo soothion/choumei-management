@@ -380,4 +380,83 @@ class OrderRefund extends Model {
         return $res;
     }
 
+    public static function detail($id) {
+        $base = BookingOrder::where('ID', $id)->first();
+
+        if (empty($base)) {
+            throw new ApiException("预约单{$id} 不存在", ERROR::ORDER_NOT_EXIST);
+        }
+
+        $base = $base->toArray();
+        $ordersn = $base['ORDER_SN'];
+        $manager_id = $base['CUSTOMER_SERVICE_ID'];
+        $item_fields = ['ORDER_SN', 'ITEM_ID', 'ITEM_NAME', 'AMOUNT', 'PAYABLE'];
+        $beauty_item_fields = ['order_sn', 'item_id', 'item_name', 'norm_id', 'norm_name', 'amount', 'to_pay_amount'];
+        $items = BookingOrderItem::where('ORDER_SN', $ordersn)->get($item_fields)->toArray();
+        $beauty_items = BeautyOrderItem::where('order_sn', $ordersn)->get($beauty_item_fields)->toArray();
+        $fundflows = Fundflow::where('record_no', $ordersn)->get(['record_no', 'pay_type'])->toArray();
+        $payment_log = PaymentLog::where('ordersn', $ordersn)->first(['ordersn', 'tn', 'amount']);
+        $recommend = RecommendCodeUser::where('user_id', $base['USER_ID'])->whereIn('type', [2, 3])->first(['id', 'user_id', 'recommend_code']);
+        $refund_fields = ['order_refund_id','ordersn', 'user_id', 'money', 'opt_user_id', 'rereason', 'add_time', 'opt_time', 'status', 'booking_sn', 'item_type', 'rereason', 'other_rereason'];
+        $order_refund = OrderRefund::where('ordersn', $ordersn)->where('status', 1)->first($refund_fields);
+        $base['manager'] = null;
+        if (!empty($manager_id)) {
+            $base['manager'] = Manager::getBaseInfo($manager_id);
+        }
+        if (empty($payment_log)) {
+            $payment_log = NULL;
+        } else {
+            $payment_log = $payment_log->toArray();
+        }
+        if (empty($order_refund)) {
+            $order_refund = NULL;
+        } else {
+            $order_refund = $order_refund->toArray();
+            $order_refund['manager'] = Manager::getBaseInfo($order_refund['opt_user_id']);
+            if ($base['STATUS'] == 'RFN' && $order_refund['status'] == 3) {
+                $base['STATUS'] == 'RFE';
+            }
+            $reason = str_replace(array_keys(Mapping::BeautyRefundRereasonNames()), array_values(Mapping::BeautyRefundRereasonNames()), $order_refund['rereason']);
+            $reason = !empty($reason) ? $reason . "," . $order_refund['other_rereason'] : $order_refund['other_rereason'];
+            $order_refund['rereason'] = $reason;
+            $order_refund['refund_desc'] = $reason;
+            $order_refund['add_time'] = date("Y-m-d H:i:s", $order_refund['add_time']);
+            $order_refund['opt_time'] = empty($order_refund['opt_time']) ? "" : date("Y-m-d H:i:s", $order_refund['opt_time']);
+            $order_refund['complete_time'] = $order_refund['opt_time'];
+        }
+        $item_amount = 0;
+        $is_virtual_beauty = false;
+        if (empty($beauty_items)) {
+            $is_virtual_beauty = true;
+            $item_ids = array_map("intval", array_column($items, "ITEM_ID"));
+            $beauty_items = BookingReceive::getItemNormInfoAtFirst($item_ids);
+        }
+        $to_pay_amounts = array_map("floatval", array_column($beauty_items, "to_pay_amount"));
+        $item_amount = array_sum($to_pay_amounts);
+        if ($is_virtual_beauty) {
+            $beauty_items = [];
+        }
+
+        $base['item_amount'] = $item_amount;
+        if (empty($recommend)) {
+            $recommend = NULL;
+        } else {
+            $recommend = $recommend->toArray();
+        }
+        return [
+            'order' => $base,
+            'order_item' => $items,
+            'fundflow' => $fundflows,
+            'payment_log' => $payment_log,
+            'recommend' => $recommend,
+            'beauty_order_item' => $beauty_items,
+            'makeup' => BeautyMakeup::getByBookingId($id),
+            'booking_bill' => BookingBill::getByBookingId($id),
+            'booking_cash' => BookingCash::getByBookingId($id),
+            'booking_receive' => BookingReceive::getByBookingId($id),
+            'booking_salon_refund' => BookingSalonRefund::getByBookingId($id),
+            'order_refund' => $order_refund,
+        ];
+    }
+
 }
