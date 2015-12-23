@@ -99,13 +99,13 @@ class CalendarController extends Controller {
 		return $this->success($returnData);
 	}
 	/***
-	 * @api {post} /calendar/getDay 2.平台活动配置列表
+	 * @api {post} /calendar/getDay 2.查看日期订单预约情况
 	* @apiName getDay
 	* @apiGroup Calendar
 	*
 	* @apiParam {Number} day 			必填 日期 如 2015-12-09
-	* @apiParam {String} orderField 	可选 排序字段有 UPDATED_BOOKING_DATE: 预约日期  COME_SHOP: 到店状态  BOOKING_DESC：预约调整
-	* @apiParam {Number} orderBy 		可选 排序方式 ASC ：升序  DESC 降序
+	* @apiParam {String} sort_key 	可选 排序字段有 UPDATED_BOOKING_DATE: 预约日期  COME_SHOP: 到店状态  BOOKING_DESC：预约调整
+	* @apiParam {Number} sort_type 		可选 排序方式 ASC ：升序  DESC 降序
 	* @apiParam {String} page 			第几页
 	* @apiParam {String} pageSize 		每页请求条数默认为20
 	*
@@ -168,9 +168,9 @@ class CalendarController extends Controller {
 	public function getDayIndex(){
 		$param = $this->param;
 		if( !isset($param['day']) ) return $this->error('未选定那一天');
-		if( isset($param['orderField']) || !empty($param['orderField'])) $orderField = $param['orderField'];
+		if( isset($param['sort_key']) || !empty($param['sort_key'])) $orderField = $param['sort_key'];
 		else $orderField = 'CREATE_TIME';
-		if( isset($param['orderBy']) || !empty($param['orderBy'])) $orderBy = $param['orderBy'];
+		if( isset($param['sort_type']) || !empty($param['sort_type'])) $orderBy = $param['sort_type'];
 		else $orderBy = 'ASC';
 		
 
