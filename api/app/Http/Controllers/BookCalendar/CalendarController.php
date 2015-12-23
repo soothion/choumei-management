@@ -18,7 +18,7 @@ use App\Manager;
 class CalendarController extends Controller {
 	
 	/***
-	* @api {post} /calendar/index 1.获取本月概况（含本月预览设置上限同接口）
+	* @api {post} /calendar/index 1.获取本月概况
 	* @apiName index
 	* @apiGroup Calendar
 	*
@@ -80,6 +80,7 @@ class CalendarController extends Controller {
 				$returnData[$x]['bookingLimit'] = $result2[$j]['bookingLimit'];
 			}
 			if( !isset($result[$j]) || (isset( $result[$j]) && $result[$j]['bookingDate'] != $monthTemp) ){
+				$returnData[$x]['id'] = $result[0]['id'];
 				$returnData[$x]['bookingDate'] = $monthTemp;
 				$returnData[$x]['quantity'] = 0;
 				$returnData[$x]['bookingMorn'] = 0;
@@ -88,6 +89,7 @@ class CalendarController extends Controller {
 				continue;
 			}
 			if( isset( $result[$j]) && $result[$j]['bookingDate'] == $monthTemp ){
+				$returnData[$x]['id'] = $result[$j]['id'];
 				$returnData[$x]['bookingDate'] = $monthTemp;
 				$returnData[$x]['quantity'] = $result[$j]['quantity'];
 				$returnData[$x]['bookingMorn'] = $result[$j]['bookingMorn'];
@@ -101,7 +103,7 @@ class CalendarController extends Controller {
 		return $this->success($returnData);
 	}
 	/***
-	 * @api {post} /calendar/getDay 2.查看日期订单预约情况
+	* @api {post} /calendar/getDay 2.查看日期订单预约情况
 	* @apiName getDay
 	* @apiGroup Calendar
 	* 
@@ -596,4 +598,196 @@ class CalendarController extends Controller {
 			return $this->success();
 		return $this->error('有' .(count($data)-$i).'条数据修改失败哦');
 	}
+	/***
+	 * @api {post} /calendar/limit 		6.获取本月限制设置概况
+	* @apiName limit
+	* @apiGroup Calendar
+	*
+	*
+	* @apiParam {String} 	searchData          选填        搜索的月份 如 2015-12
+	*
+	* @apiSuccess {Number} id 					定妆中心id.
+	* @apiSuccess {String} bookingDate 			日期.
+	* @apiSuccess {Number} quantity 			预约个数（同时也是实际预约个数）
+	* @apiSuccess {Number} bookingMorn 			上午预约到店人数
+	* @apiSuccess {Number} bookingAfternoon 	下午预约到店人数
+	* @apiSuccess {Number} came 				到店人数
+	* @apiSuccess {Number} bookingLimit 		预约上限
+	*
+	* @apiSuccessExample Success-Response:
+	*	{
+	*		"result": 1,
+	*		"data": [
+	*          {
+	*              "id": 1,
+	*              "bookingDate": 1,
+	*              "quantity": 20,
+	*              "bookingMorn": 10,
+	*              "bookingAfternoon": 2,
+	*              "came": 5,
+	*              "bookingLimit": 300
+	*          },
+	*          ...
+	*      ]
+	*	}
+	*
+	*
+	* @apiErrorExample Error-Response:
+	*		{
+	*		    "result": 0,
+	*		    "msg": "未授权访问"
+	*		}
+	***/
+	public function indexLimit(){
+		$param = $this->param;
+		$searchDate = date('Y-m');
+		if( isset($param['searchData']) && !empty($param['searchData']) )	$searchDate = $param['searchData'];
+	
+		$field ='BEAUTY_ID as id,BOOKING_DATE as bookingDate,SUM(QUANTITY) as quantity,SUM(BOOKING_MORN_COUNT) as bookingMorn,
+			SUM(BOOKING_AFTERNOON_COUNT) as bookingAfternoon,SUM(CAME) as came';
+		$result = BookingCalendar::select(DB::raw($field))->where('BOOKING_DATE','like','%'.$searchDate.'%')->orderBy('BOOKING_DATE','ASC')->groupBy('BOOKING_DATE')->get()->toArray();
+	
+		$result2 = BookingCalendarLimit::select(['BOOKING_DATE as bookingDate','BOOKING_LIMIT as bookingLimit'])->where('BOOKING_DATE','like','%'.$searchDate.'%')->orderBy('BOOKING_DATE','ASC')->get()->toArray();
+		// 本月天数
+		$nowInterval = idate( 't' , strtotime($searchDate) );
+		// 组装有月份的数据
+		for($i=1,$j=0,$x=0;$i<=$nowInterval;$i++,$x++){
+			$monthTemp = $i<10 ? $searchDate . '-0'.$i : $searchDate.'-'.$i;
+	
+			if( (isset( $result2[$j]) && $result2[$j]['bookingDate'] != $monthTemp) || !isset($result2[$j]) ){
+				$returnData[$x]['bookingLimit'] = 300;
+			}
+			if( isset( $result2[$j]) && $result2[$j]['bookingDate'] == $monthTemp ){
+				$returnData[$x]['bookingLimit'] = $result2[$j]['bookingLimit'];
+			}
+			if( !isset($result[$j]) || (isset( $result[$j]) && $result[$j]['bookingDate'] != $monthTemp) ){
+				$returnData[$x]['id'] = $result[0]['id'];
+				$returnData[$x]['bookingDate'] = $monthTemp;
+				$returnData[$x]['quantity'] = 0;
+				$returnData[$x]['bookingMorn'] = 0;
+				$returnData[$x]['bookingAfternoon'] = 0;
+				$returnData[$x]['came'] = 0;
+				continue;
+			}
+			if( isset( $result[$j]) && $result[$j]['bookingDate'] == $monthTemp ){
+				$returnData[$x]['id'] = $result[$j]['id'];
+				$returnData[$x]['bookingDate'] = $monthTemp;
+				$returnData[$x]['quantity'] = $result[$j]['quantity'];
+				$returnData[$x]['bookingMorn'] = $result[$j]['bookingMorn'];
+				$returnData[$x]['bookingAfternoon'] = $result[$j]['bookingAfternoon'];
+				$returnData[$x]['came'] = $result[$j]['came'];
+				$j++;
+			}
+		}
+		unset( $result );
+		unset( $result2 );
+		return $this->success($returnData);
+	}
+	/***
+	 * @api {get} /calendar/export 	7.导出查看日期订单预约情况
+	* @apiName  export
+	* @apiGroup Calendar
+	*
+	* @apiParam {Number} day 			必填 日期 如 2015-12-09
+	* @apiParam {String} sort_key 		可选 排序字段有 UPDATED_BOOKING_DATE: 预约日期  COME_SHOP: 到店状态  BOOKING_DESC：预约调整
+	* @apiParam {Number} sort_type 		可选 排序方式 ASC ：升序  DESC 降序
+	* @apiParam {String} page 			第几页
+	* @apiParam {String} page_size 		每页请求条数默认为20
+	*
+	*
+	*
+	*
+	* 
+	* @apiSuccessExample Success-Response:
+	*		{
+    *           "result": 1,
+    *           "token": "",
+    *           "data": ""
+    *      }
+	*
+	*
+	* @apiErrorExample Error-Response:
+	*		{
+	*		    "result": 0,
+	*		    "msg": "未授权访问"
+	*		}
+	***/
+	public function exportDayIndex(){
+		$param = $this->param;
+		if( !isset($param['day']) ) return $this->error('未选定那一天');
+		if( isset($param['sort_key']) || !empty($param['sort_key'])) $orderField = $param['sort_key'];
+		else $orderField = 'CREATE_TIME';
+		if( isset($param['sort_type']) || !empty($param['sort_type'])) $orderBy = $param['sort_type'];
+		else $orderBy = 'ASC';
+	
+	
+		$queryDay = $param['day'];
+		$page = isset($param['page'])?max($param['page'],1):1;
+		$page_size = isset($param['page_size'])?$param['page_size']:20;
+		$field = [
+		'ORDER_SN as orderSn','BOOKING_DATE as bookingDate','UPDATED_BOOKING_DATE as updateBookDate',
+		'BOOKER_PHONE as bookerPhone','BOOKER_NAME as bookerName','BOOKER_SEX as bookerSex','AMOUNT as amount',
+		'BOOKING_DESC as bookingDesc','CONSUME_CALL_PHONE as consumeCallPhone','COME_SHOP as comeShop'
+				];
+		//手动设置页数
+		AbstractPaginator::currentPageResolver(function() use ($page) {
+			return $page;
+		});
+		$result = BookingOrder::select($field)->where(['BOOKING_DATE'=>$queryDay])->orderBy($orderField,$orderBy)->paginate($page_size)->toArray();
+	
+		$associateItem = [];
+		$temp = [];
+		foreach( $result['data'] as $k => $v ){
+			$associateItem[] = $v['orderSn'];
+			if( $v['updateBookDate'] ) $result['data'][$k]['bookingTime'] = $v['updateBookDate'];
+			else $result['data'][$k]['bookingTime'] = $v['bookingDate'];
+			unset( $result['data'][$k]['updateBookDate'] );
+			unset( $result['data'][$k]['bookingDate'] );
+			$temp[ $v['orderSn'] ] = $v['orderSn'];
+		}
+		// 关联查找信息
+		$itemNames = BookingOrderItem::select(['ITEM_NAME','ORDER_SN'])->whereIn('ORDER_SN',$associateItem)->get()->toArray();
+		$i = 0;
+		$prev = '';
+		$len = count($itemNames)-2;
+		foreach( $itemNames as $k => $v ){
+			$prev = $temp[ $v['ORDER_SN'] ];
+			if( !isset($result['data'][$i]['itemName']) ) $result['data'][$i]['itemName'] = '';
+			if( $temp[ $v['ORDER_SN'] ] == $v['ORDER_SN'] &&  $k<= $len && $prev == $itemNames[$k+1]['ORDER_SN']){
+				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'] . ',';
+			}else{
+				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'];
+				$i++;
+			}
+		}
+		$result = $result['data'];
+		$tempData = [];
+		$temp1 = ['F'=>'女','M'=>'男'];
+		$temp2 = ['DEF'=>'未选择','MORNING'=>'上午','AFTERNOON'=>'下午'];
+		$temp3 = ['NON'=>'未拨打','CALL'=>'已拨打'];
+		$temp4 = ['NON'=>'未到店','COME'=>'已到店'];
+		foreach( $result as $k => $v ){
+			$tempData[$k][] = $v['bookerPhone'];
+			$tempData[$k][] = $v['bookerName'];
+			$tempData[$k][] = $temp1[ $v['bookerSex'] ];
+			$tempData[$k][] = $v['itemName'];
+			$tempData[$k][] = $v['amount'];
+			$tempData[$k][] = $v['bookingTime'];
+			$tempData[$k][] = $temp4[ $v['comeShop'] ];
+			$tempData[$k][] = $temp2[ $v['bookingDesc'] ];
+			$tempData[$k][] = $temp3[ $v['consumeCallPhone'] ];
+			
+		}
+		$title = '现金劵活动查询列表' .date('Ymd');
+		//导出excel
+		$header = ['手机号','姓名','性别','预约项目','预约金额','预约日期','订单状态 ','预约调整 ','客服是否拨打电话'];
+		Excel::create($title, function($excel) use($tempData,$header){
+			$excel->sheet('Sheet1', function($sheet) use($tempData,$header){
+				$sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
+				$sheet->prependRow(1, $header);//添加表头
+			});
+		})->export('xls');
+		exit;
+	}
+	
 }

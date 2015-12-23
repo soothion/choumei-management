@@ -1635,4 +1635,12 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 	    'as'=>'bookingCalendar.modifyLimit',
 	    'uses'=>'BookCalendar\CalendarController@setCalendar'
     ));
+    Route::any('calendar/limit',array(  
+	    'as'=>'bookingCalendar.limit',
+	    'uses'=>'BookCalendar\CalendarController@indexLimit'
+    ));
+    Route::any('calendar/export',array(  
+	    'as'=>'bookingCalendar.export',
+	    'uses'=>'BookCalendar\CalendarController@exportDayIndex'
+    ));
 });
