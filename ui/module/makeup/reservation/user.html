@@ -7,15 +7,15 @@
 		<style type="text/css">
 			.operation .fa{
 				font-size:24px;
-				 vertical-align: middle;
+				vertical-align: middle;
+				display:inline-block;
 			}
 			.operation form{
 				position:relative;
 				display:inline-block!important;
 				margin-right:15px;
-				overflow:hidden;
 			}
-			.operation input{
+			.operation input[type="date"]{
 				position:absolute;
 				left:0;
 				top:0;
@@ -37,14 +37,14 @@
 				<h4> 顾客预约调整</h4>
 			</div>
 			<div>
-				<form action="" data-role="export">
+				<form action="calendar/export" data-role="export">
 					<button class="btn">导出</button>
 				</form>
 			</div>
 		 </div>		 
         </div>		
         <div class="wrapper">
-           <div class="table" ajat="beautyItem/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="calendar/getDay?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
                 <table>
                     <thead>
@@ -55,31 +55,39 @@
                             <th>性别</th>                           
                             <th>预约项目 </th>                           
                             <th>预约金额</th>                           
-                            <th>预约日期 <i class="fa fa-sort"></i></th>                           
-                            <th>订单状态 <i class="fa fa-sort"></i></th>                           
-                            <th>预约调整 <i class="fa fa-sort"></i></th>                           
+                            <th><a data-role="hash" href="#page=1&sort_key=bookingTime&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">预约日期 <i class="fa fa-sort"></i></a></th>                           
+                            <th><a data-role="hash" href="#page=1&sort_key=comeShop&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">订单状态 <i class="fa fa-sort"></i></a></th>                           
+                            <th><a data-role="hash" href="#page=1&sort_key=bookingDesc&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">预约调整 <i class="fa fa-sort"></i></a></th>                           
                             <th>操作</th>
                         </tr>
                     </thead>
                 <tbody>
 				<%var data=data.data%>
+				<%var map={
+					'MORNING':'上午',
+					'AFTERNOON':'下午',
+					'DEF':''
+				}%>
 				<%data.forEach(function(item,i){%>
                  <tr>
 					<td><%=i+1%></td>
-					<td><%=item.name%></td>
-					<td><%=item.name%></td>
-					<td><%=item.name%></td>
-					<td><%=item.name%></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>上午</td>
+					<td><%=item.bookerPhone%></td>
+					<td><%=item.bookerName%></td>
+					<td><%=item.bookerSex=="F"?"女":"男"%></td>
+					<td><%=item.itemName%></td>
+					<td><%=item.amount%></td>
+					<td><%=item.bookingTime%></td>
+					<td><%=item.comeShop=="NON"?"未":"已"%>到店</td>
+					<td><%=map[item.bookingDesc]%></td>
 					<td class="operation">
-						<form action="" data-role="normal">
+						<form action="calendar/status/<%=item.orderSn%>" data-role="normal" onsuccess="parent.lib.popup.tips({define:function(){$(this).find('button').addClass('link')}})">
+							<input type="hidden" value="<%=session.user.uid%>" name="userId" />
 							<button><i class="fa fa-phone"></i></button>
 						</form>
-						<form action="" data-role="normal">
-							<input type="_datetime" />
+						<form action="calendar/modifyDay" data-role="normal" onsuccess="parent.lib.popup.tips({define:function(){location.reload()}})">
+							<input type="hidden" name="orderSn" value="<%=item.orderSn%>" />
+							<input type="hidden" name="modifyDesc" value="<%=item.bookingDesc%>" />
+							<input type="date" name="modifyDate" value="<%=item.bookingTime%>" required />
 							<i class="fa fa-calendar"></i>
 						</form>
 					</td>
@@ -91,5 +99,20 @@
 			</script>
         </div>
             </div>
+		<script type="text/javascript">
+			$(document.body).on("input",'.operation input[type="date"]',function(){
+				var $this=$(this);
+				parent.lib.popup.menu({
+					list:[{id:'MORNGIN',name:"上午"},{id:'AFTERNOON',name:"下午"}],
+					define:function(data){
+						$this.siblings("input[name='modifyDesc']").val(data.id);
+						$this.closest('form').submit();
+					},
+					complete:function(){
+						//$('.popup-overlay').off('click');
+					}
+				});
+			});
+		</script>
     </body>
 </html>
