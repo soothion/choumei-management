@@ -80,7 +80,9 @@ class CalendarController extends Controller {
 				$returnData[$x]['bookingLimit'] = $result2[$j]['bookingLimit'];
 			}
 			if( !isset($result[$j]) || (isset( $result[$j]) && $result[$j]['bookingDate'] != $monthTemp) ){
-				$returnData[$x]['id'] = $result[0]['id'];
+				if( empty($result) ) $id = 1;
+				else $id = $result[0]['id'];
+				$returnData[$x]['id'] = $id;
 				$returnData[$x]['bookingDate'] = $monthTemp;
 				$returnData[$x]['quantity'] = 0;
 				$returnData[$x]['bookingMorn'] = 0;
