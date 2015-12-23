@@ -103,7 +103,7 @@ class BeautyItemController extends Controller{
 		$data = $this->compositeData($param);
 		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
 		$result = BeautyItem::where(['item_id'=>$item_id])->update($data);
-		if($result)
+		if($result !== false)
 		{
 			$log = 'item_id:'.$item_id.' name:'.$data['name'];
 		    Event::fire('beautyItem.update',$log);
@@ -228,7 +228,7 @@ class BeautyItemController extends Controller{
 		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
 		DB::beginTransaction();
 		$result = BeautyItem::where(['item_id'=>$item_id])->update($data);
-		if(!$result)
+		if($result === false)
 		{
 			DB::rollBack();
 			throw new ApiException('更新失败',ERROR::BEAUTY_ITEM_UPDATE_FAIL);
@@ -257,7 +257,7 @@ class BeautyItemController extends Controller{
 	 * */
 	private  function compositeData($param)
 	{
-		$must_param = ['type','name','detail','logo','content_url'];
+		$must_param = ['type','name','content_url'];
 		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
 		$data['type'] = isset($param['type'])?intval($param['type']):1;
 		$data['name'] = isset($param['name'])?trim($param['name']):'';
@@ -274,10 +274,23 @@ class BeautyItemController extends Controller{
 		{
 			throw new ApiException('项目名称重复',ERROR::BEAUTY_ITEM_NAME_REOEAT);
 		}
+		$retMissing = '';
+		foreach($must_param as $val)
+		{
+			if(!$data[$val])
+			{
+				throw new ApiException("缺失参数", ERROR::BEAUTY_ITEM_ERROR);
+			} 
+		}
+
 		if($data['type'] == 1)
 		{
 			$data['price'] = isset($param['price'])?intval($param['price']):0;
 			$data['vip_price'] = isset($param['vip_price'])?intval($param['vip_price']):0;
+			if($data['price'] < $data['vip_price'])
+			{
+				throw new ApiException("价格参数错误", ERROR::BEAUTY_ITEM_WRONG_PRICE);
+			}
 		}
 		else
 		{
