@@ -66,8 +66,8 @@ class OrderRefund extends Model {
 
     private static function getRefundViewByBookingOrder($fields, $param) {
         $query = BookingOrder::getRawBindings();
-        $order_refund_fields = ['order_refund.order_refund_id', 'order_refund.add_time', 'order_refund.status', 'order_refund.money'];
-        $salon_refund_fields = ['booking_salon_refund.id', 'booking_salon_refund.created_at', 'booking_salon_refund.money'];
+        $order_refund_fields = ['order_refund.order_refund_id', 'order_refund.add_time', 'order_refund.status', 'order_refund.money as order_refund_money'];
+        $salon_refund_fields = ['booking_salon_refund.id', 'booking_salon_refund.created_at', 'booking_salon_refund.money as salon_refund_money'];
         if (isset($param['initiate_refund']) && !empty($param['initiate_refund'])) {
             if ($param['initiate_refund'] == 1) {  //用户发起的退款
                 $query->select(array_merge($fields, $order_refund_fields));
