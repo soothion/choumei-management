@@ -27,9 +27,9 @@
 			<form data-role="hash">
 				<div class="position-group">
 					<ul class="table-box">
-						<li class="table-item"><button class="prev"><i class="fa fa-chevron-left"></i></button></li>
+						<li class="table-item"><button type="button" class="prev"><i class="fa fa-chevron-left"></i></button></li>
 						<li class="table-item"><input type="month" name="searchData" required placeholder="yyyy-mm" /></li>
-						<li class="table-item"><button class="next"><i class="fa fa-chevron-right"></i></button></li>
+						<li class="table-item"><button type="button" class="next"><i class="fa fa-chevron-right"></i></button></li>
 					</ul>
 				</div>
 			</form>
@@ -84,7 +84,6 @@
         </div>
             </div>
 		<script type="text/javascript">
-			$('#table').on('_ready',function(){
 				$(document.body).on("click",'.next',function(){
 					var input=$('.position-group input');
 					var date=new Date(input.val());
@@ -96,6 +95,7 @@
 						date.setMonth(month+1);
 					}
 					input.val(date.format("yyyy-MM"));
+					input.closest('form').submit();
 				}).on("click",'.prev',function(){
 					var input=$('.position-group input');
 					var date=new Date(input.val());
@@ -107,6 +107,7 @@
 						date.setMonth(month-1);
 					}
 					input.val(date.format("yyyy-MM"));
+					input.closest('form').submit();
 				}).on('click','.edit',function(){
 					$(this).hide().siblings().show();
 					$(document.body).addClass("edit-page");
@@ -115,6 +116,8 @@
 				}).on('input','input[type="month"]',function(){
 					$(this).closest('form').submit();
 				});
+			$('#table').on('_ready',function(){
+				
 				var form=document.getElementById('form');
 				form._getFormData=function(){
 					var data=[];

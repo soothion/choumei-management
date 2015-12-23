@@ -43,29 +43,21 @@
 					<td><%=i+1%></td>
 					<td><%=item.name%></td>
 					<td>
-						<%if(item.genre!=1){%>
-							<%if(item.prices.min_price&&item.prices.max_price){%>
-								<%if(item.prices.min_price!=item.prices.max_price){%>
-								￥<%=item.prices.min_price%>-￥<%=item.prices.max_price%>
-								<%}else{%>
-								￥<%=item.prices.min_price%>
-								<%}%>
+						<%if(item.prices.min_price&&item.prices.max_price){%>
+							<%if(item.prices.min_price!=item.prices.max_price){%>
+							￥<%=item.prices.min_price%>-￥<%=item.prices.max_price%>
+							<%}else{%>
+							￥<%=item.prices.min_price%>
 							<%}%>
-						<%}else{%>
-							￥<%=item.price%>
 						<%}%>
 					</td>
 					<td>
-						<%if(item.genre!=1){%>
-							<%if(item.prices.min_vip_price&&item.prices.max_vip_price){%>
-								<%if(item.prices.min_vip_price!=item.prices.max_vip_price){%>
-								￥<%=item.prices.min_vip_price%>-￥<%=item.prices.max_vip_price%>
-								<%}else{%>
-									￥<%=item.prices.min_vip_price%>
-								<%}%>
+						<%if(item.prices.min_vip_price&&item.prices.max_vip_price){%>
+							<%if(item.prices.min_vip_price!=item.prices.max_vip_price){%>
+							￥<%=item.prices.min_vip_price%>-￥<%=item.prices.max_vip_price%>
+							<%}else{%>
+								￥<%=item.prices.min_vip_price%>
 							<%}%>
-						<%}else{%>
-							￥<%=item.vip_price%>
 						<%}%>
 					</td>
 					<td><%=item.quantity%></td>
