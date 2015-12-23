@@ -290,7 +290,7 @@
 				var imagesArr=[];
 				if(data.images){
 					JSON.parse(data.images).forEach(function(item){
-						imagesArr.push({img:item});
+						imagesArr.push({thumbimg:item});
 					})
 				}
 				lib.puploader.image({
@@ -316,10 +316,12 @@
 							define:function(data){
 								if(up.createThumbnails&&!response.edit&&!response._this){
 									up.createThumbnails({
-										img:data["750x500"],
+										thumbimg:data["750x500"]
 									});
 								}else{
-									up.preview($(response._this),{thumbimg:data["750x500"]});
+									up.preview($(response._this),{
+										thumbimg:data["750x500"]
+									});
 									$(response._this).parent().trigger('itemchange');
 								}
 							}
@@ -327,7 +329,7 @@
 					});
 					uploader.thumbnails.on('itemchange',function(){
 						var images=[];
-						$('.control-thumbnails input.original').each(function(){
+						$('.control-thumbnails input.thumb').each(function(){
 							images.push(this.value);
 						});
 						$('#item-images').val(JSON.stringify(images));
