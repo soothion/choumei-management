@@ -54,10 +54,12 @@
 	'assistant.index':'/module/makeup/assistant/index.html',
 	'artificer.index':'/module/makeup/professional/index.html',
     'book.index':'/module/makeup/order/index.html',
-    'powderArticles.articlesList':'module/makeup/coupon/index.html',
+    'powderArticles.articlesList':'/module/makeup/coupon/index.html',
     'powderArticles.presentList':'/module/makeup/order/present_list.html',
     'beautyrefund.index':'/module/makeup/order/refund_list.html',
-	'beauty.index':'/module/makeup/introduction.html'
+	'beauty.index':'/module/makeup/introduction.html',
+	'calendar.index':'/module/makeup/reservation/index.html',
+	'calendar.limit':'/module/makeup/reservation/settings.html'
 }
 var access={
 	data:[],

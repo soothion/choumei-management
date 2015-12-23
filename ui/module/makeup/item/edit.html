@@ -5,9 +5,6 @@
         <title>臭美管理后台</title>
         <script type="text/javascript" src="/js/include.js"></script>
 		<style type="text/css">
-			.format-group .control-image{
-				margin-left:5px;
-			}
 			.format-group .red{
 				top:0;
 			}
@@ -35,34 +32,8 @@
 				min-width:50px;
 				margin-top:6px;
 			}
-			.format-group img{
-				width:80px;
-				height:80px;
-			}
-			.format-group .control-single-image img[src=""]+.control-image-ud .fa{
-				margin-top:15px!important;
-				margin-bottom:-5px!important;
-			}
-			.format-group .control-image-ud{
-				font-size:12px!important;
-			}
 			#format-group{
 				margin-left:100px;
-			}
-			.control-thumbnails .control-thumbnails-item:first-child:before{
-				position:absolute;
-				left:0px;
-				top:0px;
-				content:"首";
-				background: rgb(73,155,234); /* Old browsers */
-				background: -moz-linear-gradient(-45deg, rgba(73,155,234,1) 0%, ,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* FF3.6-15 */
-				background: -webkit-linear-gradient(-45deg, rgba(73,155,234,1) 0%,,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* Chrome10-25,Safari5.1-6 */
-				background: linear-gradient(135deg, rgba(73,155,234,1) 0%,rgba(32,124,229,1) 50%,rgba(0,0,0,0) 51%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-				width:40px;
-				height:40px;
-				color:#fff;
-				z-index:100;
-				text-indent:8px;
 			}
 		</style>
     </head>
@@ -73,7 +44,8 @@
 			 <div class="flex-item">
 				<h4>编辑项目</h4>
 			</div>
-		 </div>		 
+		 </div>		
+		<hr />		 
         </div>		
         <div class="wrapper" ajat="<%if(query.p=='index'){%>beautyItem/show<%}else{%>beautyItem/showFashion<%}%>?<%=query._%>#domid=form&tempid=form-t" id="form">
 			<script type="text/template" id="form-t">
@@ -140,7 +112,6 @@
 					</ul>
 				</div>
 				</div>
-				<br />
 				<br />
 				<textarea name="more_prices" id="more_prices" style="display:none"><%=typeof data.more_prices=="string"?data.more_prices:JSON.stringify(data.more_prices)%></textarea>
 				<%}else{%>
