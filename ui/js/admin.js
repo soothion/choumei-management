@@ -457,6 +457,19 @@ $(function(){
 			};
 			laydate(options);
 		});
+		$body.on('click','input[type=month]',function(e){
+			var options={
+				format:($(this).attr('format')||'YYYY-MM'),
+				min:this.min,
+				max:this.max,
+				zIndex:1000,
+				choose:function(){
+					e.target.focus();
+					$(e.target).removeClass('placeholder').trigger("choose");
+				}
+			};
+			laydate(options);
+		});
 	}
 	$body.on('click','input[type=_datetime]',function(e){
 		var options={
