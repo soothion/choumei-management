@@ -95,14 +95,14 @@ $('#form').on("_ready",function(){
 							{ title : "Image files", extensions : "jpg,png,jpeg" },
 						]
 					},
-					max_file_size:'10mb',
+					max_file_size:'20mb',
 					imageArray:image,
 					multi_selection:true,
 					files_number:10,
 					thumb:"",
 					setSizeURL:true,
 					imageLimitSize:function(width,height){
-						return width<=2000&&height<=1500;
+						return width<=8000&&height<=8000;
 					}
 				},function(uploader){
 						uploader.unbind("UploadComplete");
@@ -158,7 +158,7 @@ $('#form').on("_ready",function(){
 					if(name=="image"){
 						var image=[];
 						td.find("img").each(function(){
-							image.push(this.src);
+							image.push($(this).data("original"));
 						});
 						item[name]=image;
 					}else{

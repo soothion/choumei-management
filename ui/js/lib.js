@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
 	jQuery.support.cors = true;
 	seajs.config({
 		'map': [
@@ -529,6 +529,10 @@
 										}
 										if(!options.thumb){
 											delete data.response.thumbimg;
+											data.response.img=data.response.img.split('?')[0];
+											if(up.sizeURL){
+												data.response.img+=up.sizeURL;
+											}
 										}
 										up.createThumbnails(data.response)
 									}else{
@@ -637,6 +641,10 @@
 									image=image.find('img').attr('src',src);
 									var options=up.getOption();
 									var imageLimitSize=options.imageLimitSize;
+									//设置原图高宽
+									if(options.setSizeURL){
+										up.sizeURL="#w="+image.width()+"&h="+image.height();
+									}
 									//检测宽高值
 									if(typeof imageLimitSize=="string"){
 										var width=imageLimitSize.split('*')[0];
