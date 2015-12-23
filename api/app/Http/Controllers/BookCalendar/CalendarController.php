@@ -25,6 +25,7 @@ class CalendarController extends Controller {
 	*
 	* @apiParam {String} 	searchData          选填        搜索的月份 如 2015-12
 	*
+	* @apiSuccess {Number} id 					定妆中心id.
 	* @apiSuccess {String} bookingDate 			日期.
 	* @apiSuccess {Number} quantity 			预约个数（同时也是实际预约个数）
 	* @apiSuccess {Number} bookingMorn 			上午预约到店人数
@@ -37,6 +38,7 @@ class CalendarController extends Controller {
 	*		"result": 1,
 	*		"data": [
 	*          {
+	*              "id": 1,
 	*              "bookingDate": 1,
 	*              "quantity": 20,
 	*              "bookingMorn": 10,
@@ -60,7 +62,7 @@ class CalendarController extends Controller {
 		$searchDate = date('Y-m');
 		if( isset($param['searchData']) && !empty($param['searchData']) )	$searchDate = $param['searchData'];
 
-		$field ='BOOKING_DATE as bookingDate,SUM(QUANTITY) as quantity,SUM(BOOKING_MORN_COUNT) as bookingMorn,
+		$field ='BEAUTY_ID as id,BOOKING_DATE as bookingDate,SUM(QUANTITY) as quantity,SUM(BOOKING_MORN_COUNT) as bookingMorn,
 			SUM(BOOKING_AFTERNOON_COUNT) as bookingAfternoon,SUM(CAME) as came';
 		$result = BookingCalendar::select(DB::raw($field))->where('BOOKING_DATE','like','%'.$searchDate.'%')->orderBy('BOOKING_DATE','ASC')->groupBy('BOOKING_DATE')->get()->toArray();
 
@@ -102,12 +104,12 @@ class CalendarController extends Controller {
 	 * @api {post} /calendar/getDay 2.查看日期订单预约情况
 	* @apiName getDay
 	* @apiGroup Calendar
-	*
+	* 
 	* @apiParam {Number} day 			必填 日期 如 2015-12-09
-	* @apiParam {String} sort_key 	可选 排序字段有 UPDATED_BOOKING_DATE: 预约日期  COME_SHOP: 到店状态  BOOKING_DESC：预约调整
+	* @apiParam {String} sort_key 		可选 排序字段有 UPDATED_BOOKING_DATE: 预约日期  COME_SHOP: 到店状态  BOOKING_DESC：预约调整
 	* @apiParam {Number} sort_type 		可选 排序方式 ASC ：升序  DESC 降序
 	* @apiParam {String} page 			第几页
-	* @apiParam {String} pageSize 		每页请求条数默认为20
+	* @apiParam {String} page_size 		每页请求条数默认为20
 	*
 	*
 	* @apiSuccess {Number} total 总数据量.
@@ -220,6 +222,7 @@ class CalendarController extends Controller {
 	* @apiName  modifyDay
 	* @apiGroup Calendar
 	*
+	* @apiParam {Number} id 						必填 	定妆中心id
 	* @apiParam {String} orderSn                   	必填        订单id
 	* @apiParam {String} modifyDate                 必填        修改日期 如 2015-12-29
 	* @apiParam {String} modifyDesc                 必填        上午 MORNGIN 下午 AFTERNOON 未选择 DEF
@@ -269,9 +272,8 @@ class CalendarController extends Controller {
 		
 		
 		// 更新开始
-		if( $oldBookingTime == $modifyDate && $oldBookingDesc==$modifyDesc ){
-			return $this->success();
-		}
+		if( $oldBookingTime == $modifyDate && $oldBookingDesc==$modifyDesc ) return $this->success();
+		
 		
 		DB::beginTransaction();
 		// 1. 修改订单的预约时间
@@ -527,5 +529,71 @@ class CalendarController extends Controller {
 		$name = Manager::select(['name'])->where(['id'=>$userId['CUSTOMER_SERVICE_ID']])->first();
 		if( empty($name) ) return $this->error('数据错误了');
 		return $this->error("$name正在通话中");
+	}
+	/***
+	 * @api {post} /calendar/modifyLimit 	5. 修改预约上限
+	* @apiName  modifyLimit
+	* @apiGroup Calendar
+	*
+	* @apiParam {Number} id 					必填 	定妆中心id
+	* @apiParam {array[Json]} data              必填        外城包裹
+	* @apiParam {String} date                   必填        修改日期 如 2015-12-29
+	* @apiParam {String} limit                  必填        修改的数量
+	*
+	*
+	*
+	*
+	*
+	*
+	*
+	*
+	*
+	* @apiSuccessExample Success-Response:
+	*		{
+	*		    "result": 1,
+	*		    "data": "",
+	*		}
+	*
+	*
+	* @apiErrorExample Error-Response:
+	*		{
+	*		    "result": 0,
+	*		    "msg": "未授权访问"
+	*		}
+	***/
+	public function setCalendar(){
+		$param = $this->param;
+		if( !isset($param['id']) ||empty($param['id'])) return $this->error('定妆中心id未填写');
+		if(empty($param) || !isset($param['data']) || empty($param['data']) )	return $this->error('参数数据错误');
+		
+		$id = $param['id'];
+		$data = json_decode($param['data'],true);
+		$i = 0;
+		$nowYear = date('Y');
+		foreach($data as $k => $v){
+			$date = $v['date'];
+			$limit = $v['limit'];
+			
+			$calendarSize = BookingCalendar::where(['BOOKING_DATE'=>$date])->sum('QUANTITY');
+			if( $limit < $calendarSize ) return $this->error('设置预约'. $date .'数据错误，实际预约量应小于上限');
+			$year = idate( 'Y',strtotime($date) );
+			if( $nowYear + 10 < $year) return $this->error('设置的年份超过未来的20年哦');
+			$exists = BookingCalendarLimit::where(['BOOKING_DATE'=>$date])->count();
+			if( $exists ) {
+				$u = BookingCalendarLimit::where(['BOOKING_DATE'=>$date])->update(['BOOKING_LIMIT'=>$limit]);
+				if( $u ) $i+=1;
+			}else{
+				$insertData = [
+					'BEAUTY_ID'=>$id,
+					'BOOKING_DATE'=>$date,
+					'BOOKING_LIMIT'=>$limit
+				];
+				$u = BookingCalendarLimit::insertGetId($insertData);
+				if( $u ) $i+=1;
+			}
+		}
+		if( $i == count($data) )
+			return $this->success();
+		return $this->error('有' .(count($data)-$i).'条数据修改失败哦');
 	}
 }

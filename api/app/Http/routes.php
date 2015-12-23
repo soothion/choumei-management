@@ -1613,22 +1613,26 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     
     // 预约日历
     Route::any('calendar/index',array(  
-    'as'=>'bookingCalendar.index',
-    'uses'=>'BookCalendar\CalendarController@index'
+	    'as'=>'bookingCalendar.index',
+	    'uses'=>'BookCalendar\CalendarController@index'
     ));
     
     Route::any('calendar/getDay',array( 
-    'as'=>'bookingCalendar.getDay',
-    'uses'=>'BookCalendar\CalendarController@getDayIndex'
+	    'as'=>'bookingCalendar.getDay',
+	    'uses'=>'BookCalendar\CalendarController@getDayIndex'
     ));
     
     Route::any('calendar/status/{orderSn}',array( 
-    'as'=>'bookingCalendar.status',
-    'uses'=>'BookCalendar\CalendarController@modifyDayStatus'
+	    'as'=>'bookingCalendar.status',
+	    'uses'=>'BookCalendar\CalendarController@modifyDayStatus'
     ));
     
     Route::any('calendar/modifyDay',array(  
-    'as'=>'bookingCalendar.modifyDay',
-    'uses'=>'BookCalendar\CalendarController@modifyDayIndex'
+	    'as'=>'bookingCalendar.modifyDay',
+	    'uses'=>'BookCalendar\CalendarController@modifyDayIndex'
+    ));
+    Route::any('calendar/modifyLimit',array(  
+	    'as'=>'bookingCalendar.modifyLimit',
+	    'uses'=>'BookCalendar\CalendarController@setCalendar'
     ));
 });
