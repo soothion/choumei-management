@@ -45,10 +45,10 @@ class BeautyRefundController extends Controller {
      * @apiSuccess {String} booking_sn 预约号
      * @apiSuccess {String} money 退款金额
      * @apiSuccess {String} retype  退款方式 1原路返还 2退回余额
-     * @apiSuccess {String} status 退款状态  RFN - 退款中，RFD\RFD-OFL - 已退款 RFE - 退款失败
+     * @apiSuccess {String} book_status 退款状态  RFN - 退款中，RFD\RFD-OFL - 已退款 RFE - 退款失败
      * @apiSuccess {String} user_id 付款人id
-     * @apiSuccess {String} username 用户姓名
-     * @apiSuccess {String} mobilephone 用户手机号
+     * @apiSuccess {String} booker_name 用户姓名
+     * @apiSuccess {String} booker_phone 用户手机号
      * @apiSuccess {String} item_name 预约项目名称
      * @apiSuccess {String} pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额  7 积分  10易联
      * @apiSuccess {Number} initiate_refund 发起退款 1 用户退款 2臭美人员

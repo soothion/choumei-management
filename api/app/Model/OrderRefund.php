@@ -44,6 +44,8 @@ class OrderRefund extends Model {
             'booking_order.STATUS as book_status',
             'booking_order.USER_ID as user_id',
             'booking_order.ORDER_SN as ordersn',
+            'booking_order.BOOKER_NAME as booker_name',
+            'booking_order.BOOKER_PHONE as booker_phone',
             'fundflow.pay_type',
         ];
 
