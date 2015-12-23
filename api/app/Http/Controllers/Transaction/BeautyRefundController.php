@@ -137,7 +137,6 @@ class BeautyRefundController extends Controller {
         $size = isset($param['page_size']) ? max(intval($param['page_size']), 1) : 20;
 //        print_r($param);exit;
         $refundList = OrderRefund::serachMakeupRefundList($param, $page, $size);
-//        print_r($refundList);exit;
         $data = [];
         foreach ($refundList['data'] as &$value) {
             $value['add_time'] = !empty($value['add_time']) ? date("Y-m-d H:i:s", $value['add_time']) : $value['created_at'];
@@ -154,6 +153,12 @@ class BeautyRefundController extends Controller {
             } else {
                 $value['initiate_refund'] = 2;
             }
+            if($value['initiate_refund']==1){
+                $value['money']=$value['order_refund_money'];
+            }else{
+                $value['money']=$value['salon_refund_money'];
+            }
+            
         }
         return $this->success($refundList);
     }
