@@ -24,7 +24,8 @@
 		 </div>		 
         </div>		
         <div class="wrapper">
-			<script type="text/template" id="hash-t" ajat-one="true">
+			<form data-role="hash" ajat="#domid=hash&tempid=hash-t" id="hash"  ajat-one="true">
+				<script type="text/template" id="hash-t">
 				<%var date=new Date();
 				date.setFullYear(date.getFullYear()+10);%>
 				<div class="position-group">
@@ -34,7 +35,8 @@
 						<li class="table-item"><button class="next"><i class="fa fa-chevron-right"></i></button></li>
 					</ul>
 				</div>
-			</script>
+				</script>
+			</form>
            <div class="table" ajat="calendar/limit?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 					<ul class="week clearfix">
