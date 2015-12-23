@@ -24,15 +24,17 @@
 		 </div>		 
         </div>		
         <div class="wrapper">
-			<form data-role="hash">
+			<script type="text/template" id="hash-t">
+				<%var date=new Date();
+				date.setFullYear(date.getFullYear()+10);%>
 				<div class="position-group">
 					<ul class="table-box">
-						<li class="table-item"><button type="button" class="prev"><i class="fa fa-chevron-left"></i></button></li>
-						<li class="table-item"><input type="month" name="searchData" required placeholder="yyyy-mm" /></li>
-						<li class="table-item"><button type="button" class="next"><i class="fa fa-chevron-right"></i></button></li>
+						<li class="table-item"><button class="prev"><i class="fa fa-chevron-left"></i></button></li>
+						<li class="table-item"><input type="month" name="searchData" required placeholder="yyyy-mm" max="<%=date.format("yyyy-MM")%>" /></li>
+						<li class="table-item"><button class="next"><i class="fa fa-chevron-right"></i></button></li>
 					</ul>
 				</div>
-			</form>
+			</script>
            <div class="table" ajat="calendar/limit?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 					<ul class="week clearfix">
