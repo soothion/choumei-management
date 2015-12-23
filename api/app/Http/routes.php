@@ -1506,24 +1506,16 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'banner.index',
         'uses'=>'Banner\BannerController@index'
     )); 
-    Route::any('banner/index2',array(  //
-        'as'=>'banner.index2',
-        'uses'=>'Banner\BannerController@index'
+    Route::any('banner/createOrSave',array(  //
+        'as'=>'banner.createOrSave',
+        'uses'=>'Banner\BannerController@createOrSave'
     )); 
     Route::any('banner/create',array(  //
         'as'=>'banner.create',
         'uses'=>'Banner\BannerController@create'
     )); 
-    Route::any('banner/create2',array(  //
-        'as'=>'banner.create2',
-        'uses'=>'Banner\BannerController@create2'
-    )); 
     Route::any('banner/edit/{id}',array(  //
         'as'=>'banner.edit',
-        'uses'=>'Banner\BannerController@edit'
-    )); 
-    Route::any('banner/edit2/{id}',array(  //
-        'as'=>'banner.edit2',
         'uses'=>'Banner\BannerController@edit'
     )); 
     Route::any('banner/destroy/{id}',array(  //
