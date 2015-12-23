@@ -700,7 +700,7 @@ class BeautyItemController extends Controller{
 		$result = $query->orderBy('type', 'asc')->orderBy('level', 'asc')->orderBy('item_id', 'desc')->get()->toArray();
 		foreach($result as &$val)
 		{
-			if($val['type'] == 2 && $val['genre'] != 1)
+			if($val['type'] == 2)
 				$val['more_prices'] =  BeautyItemNorm::where(['item_id'=>$val['item_id']])->select(['id','img_url as img','norm','price','vip_price','size','times'])->get()->toArray();
 		}
 		
