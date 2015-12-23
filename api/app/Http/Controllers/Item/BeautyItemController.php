@@ -263,6 +263,7 @@ class BeautyItemController extends Controller{
 		$data['name'] = isset($param['name'])?trim($param['name']):'';
 		$data['detail'] = isset($param['detail'])?trim($param['detail']):'';
 		$data['logo'] = isset($param['logo'])?trim($param['logo']):'';
+		$data['level'] = isset($param['level'])?trim($param['level']):'';
 		$data['content_url'] = isset($param['content_url'])?trim($param['content_url']):'';
 		$data['present_explain'] = isset($param['present_explain'])?trim($param['present_explain']):'';
 		$beautyItem = BeautyItem::find($item_id);
@@ -296,6 +297,7 @@ class BeautyItemController extends Controller{
 		{
 			$data['price'] = 0;
 			$data['vip_price'] = 0;
+			$data['level'] = 0;
 		}
 		return $data;
 
