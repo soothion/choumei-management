@@ -13,7 +13,6 @@ use App\Utils;
 use App\AlipaySimple;
 use Event;
 
-
 class BeautyRefundController extends Controller {
 
     /**
@@ -26,7 +25,10 @@ class BeautyRefundController extends Controller {
      * @apiParam {String} start_time 开始时间 YYYY-MM-DD
      * @apiParam {String} end_time 结束时间 YYYY-MM-DD
      * @apiParam {String} pay_type 0 全部  2 支付宝 3 微信 7 积分 10 易联支付
-     * @apiParam {String} state 订单退款状态  全部(用逗号分隔其他所有状态)  RFN - 退款中，RFD - 已退款' RFE - 退款失败 TODO
+     * @apiParam {String} state 订单退款状态  全部(用逗号分隔其他所有状态)  RFN - 退款中，RFD\RFD-OFL - 已退款' RFE - 退款失败 TODO
+     * @apiParam {String} sort_key 可选,排序字段 state 退款状态
+     * @apiParam {String} sort_type 可选,排序 DESC倒序 ASC升序. 
+     * @apiParam {Number} initiate_refund 发起退款 （0 全部  1用户 2臭美人员). 
      * @apiParam {Number} page 可选,页数. (从1开始)
      * @apiParam {Number} page_size 可选,分页大小.(最小1 最大500,默认20)
      *
@@ -37,17 +39,19 @@ class BeautyRefundController extends Controller {
      * @apiSuccess {Number} from 起始数据.
      * @apiSuccess {Number} to 结束数据.
      * @apiSuccess {String} order_refund_id 退款单id
+     * @apiSuccess {String} booking_id 定妆单ID(现在列表以此字段的ID为准)
      * @apiSuccess {String} add_time 申请退款时间
      * @apiSuccess {String} ordersn 订单编号
      * @apiSuccess {String} booking_sn 预约号
      * @apiSuccess {String} money 退款金额
      * @apiSuccess {String} retype  退款方式 1原路返还 2退回余额
-     * @apiSuccess {String} status 退款状态  RFN - 退款中，RFD - 已退款 RFE - 退款失败
+     * @apiSuccess {String} status 退款状态  RFN - 退款中，RFD\RFD-OFL - 已退款 RFE - 退款失败
      * @apiSuccess {String} user_id 付款人id
      * @apiSuccess {String} username 用户姓名
      * @apiSuccess {String} mobilephone 用户手机号
      * @apiSuccess {String} item_name 预约项目名称
      * @apiSuccess {String} pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额  7 积分  10易联
+     * @apiSuccess {Number} initiate_refund 发起退款 1 用户退款 2臭美人员
      *
      * @apiSuccessExample Success-Response:
      * {
@@ -123,6 +127,9 @@ class BeautyRefundController extends Controller {
             'state' => self::T_STRING, //state 0 全部  状态：NEW - 未支付,PYD - 已支付,CSD - 已消费,RFN - 申请退款(退款中),RFD - 已退款',
             'page' => self::T_INT,
             'page_size' => self::T_INT,
+            'sort_key' => self::T_STRING,
+            'sort_type' => self::T_STRING,
+            'initiate_refund' => self::T_INT,
         ]);
         $param['startTime'] = isset($param['start_time']) ? $param['start_time'] : '';
         $param['end_time'] = isset($param['end_time']) ? $param['end_time'] : '';
@@ -130,105 +137,288 @@ class BeautyRefundController extends Controller {
         $size = isset($param['page_size']) ? max(intval($param['page_size']), 1) : 20;
 //        print_r($param);exit;
         $refundList = OrderRefund::serachMakeupRefundList($param, $page, $size);
+//        print_r($refundList);exit;
         $data = [];
         foreach ($refundList['data'] as &$value) {
-            $value['add_time'] = date("Y-m-d H:i:s", $value['add_time']);
+            $value['add_time'] = !empty($value['add_time']) ? date("Y-m-d H:i:s", $value['add_time']) : $value['created_at'];
             // 查找项目信息
             $booking_order_items = BookingOrderItem::where('order_sn', $value['ordersn'])->get(['order_sn', 'item_name'])->toArray();
             $value['booking_order_item'] = $booking_order_items;
             unset($booking_order_item);
             //如果在退款中   查询是否是退款失败
-            if ($value['status'] == 'RFN' && $value['refund_status'] == 3) {
-                $value['status'] = 'RFE';
+            if ($value['book_status'] == 'RFN' && $value['status'] == 3) {
+                $value['book_status'] = 'RFE';
+            }
+            if (empty($value['id'])) {
+                $value['initiate_refund'] = 1;
+            } else {
+                $value['initiate_refund'] = 2;
             }
         }
         return $this->success($refundList);
     }
 
     /**
-     * @api {get} /beautyrefund/show/:id 2.定妆单退款详情
+     * @api {get} /beautyrefund/show/{id} 2.定妆单退款详情
      * @apiName show
      * @apiGroup beautyrefund
      *
-     * @apiSuccess {String} ordersn 订单号
-     * @apiSuccess {String} booking_sn 预约号
-     * @apiSuccess {String} booker_phone  手机号
-     * @apiSuccess {String} booker_name 姓名
-     * @apiSuccess {String} booker_sex 预约人性别: F - 女, M - 男',
-     * @apiSuccess {String} item_name 预约项目
-     * @apiSuccess {String} price  项目价格
-     * @apiSuccess {String} booking_date 预约日期
-     * @apiSuccess {String} recommend_code 推荐码 TODO
-     * @apiSuccess {String} status 订单状态 RFN - 申请退款,RFD - 已退款'，RFE -退款失败 TODO
-     * @apiSuccess {String} pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额  7 积分  10易联
-     * @apiSuccess {String} payment_sn   流水号
-     * @apiSuccess {String} payable 支付金额
-     * @apiSuccess {String} paied_time 支付时间
-     * @apiSuccess {String} pay_status 支付状态 1成功 2失败
-     * @apiSuccess {String} refund_from 发起退款 1 用户 2臭美人员
-     * @apiSuccess {String} rereason 退款原因  
-     * @apiSuccess {String} refund_desc 退款说明  
-     * @apiSuccess {String} refund_type 退款方式    1 网银 2 支付宝 3 微信 4 余额  7 积分  10易联
-     * @apiSuccess {Number} money   退款金额
-     * @apiSuccess {String} add_time 发起退款时间
-     * @apiSuccess {String} add_time 退款时间
-     * @apiSuccess {String} opt_time 审批时间
-     * @apiSuccess {String} complete_time 完成退款时间
-     * @apiSuccess {String} opt_user  审批人
-     * @apiSuccess {String} recommend_code  推荐码
-     * @apiSuccess {String} arrive_at 到店时间
-     * @apiSuccess {String} update_booking_date  修改的预约时间
-     * @apiSuccess {String} remark  沟通记录
-     * @apiSuccess {String} receiver  接待人
-     * @apiSuccess {String} create_at  接待时间
-     *
+     * @apiSuccess {String} order 预约单
+     * @apiSuccess {String} order.ID 预约单ID
+     * @apiSuccess {String} order.ORDER_SN 订单号
+     * @apiSuccess {String} order.BOOKING_SN 预约号
+     * @apiSuccess {String} order.BOOKING_DATE 预约日期
+     * @apiSuccess {String} order.UPDATED_BOOKING_DATE 修改后的预约日期 / 客服调整的预约日期
+     * @apiSuccess {String} order.QUANTITY 数量
+     * @apiSuccess {String} order.AMOUNT 订单金额
+     * @apiSuccess {String} order.PAYABLE 应付金额(已支付)
+     * @apiSuccess {String} order.BOOKER_NAME 预约人姓名
+     * @apiSuccess {String} order.BOOKER_SEX 预约人性别
+     * @apiSuccess {String} order.BOOKER_PHONE 预约人电话
+     * @apiSuccess {String} order.BOOKER_NAME 预约人姓名
+     * @apiSuccess {String} order.STATUS 订单状态 NEW - 未支付,PYD - 已支付,CSD - 已消费,RFN - 申请退款,RFD - 已退款  RFD-OFL 线下已退款 RFE退款失败
+     * @apiSuccess {String} order.PAIED_TIME 支付时间
+     * @apiSuccess {String} order.CONSUME_TIME 消费时间
+     * @apiSuccess {String} order.CREATE_TIME 预约时间
+     * @apiSuccess {String} order.UPDATE_TIME 最近修改时间
+     * @apiSuccess {String} order.BOOKING_DESC 预约时间  DEF-未选择，MORNING - 上午，AFTERNOON下午
+     * @apiSuccess {Object} order.manager 客服信息
+     * @apiSuccess {String} order.item_amount 项目总价
+     * @apiSuccess {String} order_item 预约项目信息
+     * @apiSuccess {String} order_item.ID 项目ID
+     * @apiSuccess {String} order_item.ITEM_NAME 项目名称
+     * @apiSuccess {String} order_item.AMOUNT 预约金总额
+     * @apiSuccess {String} order_item.PAYABLE 应付总额
+     * @apiSuccess {String} beauty_order_item 实做项目信息
+     * @apiSuccess {String} beauty_order_item.item_id 项目ID
+     * @apiSuccess {String} beauty_order_item.item_name 项目名称
+     * @apiSuccess {String} beauty_order_item.amout 总额
+     * @apiSuccess {String} beauty_order_item.to_pay_amount 应付总额
+     * @apiSuccess {String} beauty_order_item.norm_id 项目规格ID
+     * @apiSuccess {String} beauty_order_item.norm_name 项目规格名称
+     * @apiSuccess {String} fundflow 金额构成
+     * @apiSuccess {String} fundflow.pay_type 支付方式  1 网银 2 支付宝 3 微信 4 余额 5 红包 6 优惠券 7 积分 8邀请码兑换 10易联
+     * @apiSuccess {String} paymentlog 流水信息
+     * @apiSuccess {String} paymentlog.tn 第三方流水号
+     * @apiSuccess {String} recommend 推荐信息
+     * @apiSuccess {String} recommend.recommend_code 推荐码
+     * @apiSuccess {String} makeup 补妆信息
+     * @apiSuccess {String} makeup.remark 说明
+     * @apiSuccess {String} makeup.work_at 补妆时间
+     * @apiSuccess {String} makeup.created_at 操作时间
+     * @apiSuccess {String} makeup.manager 操作人信息
+     * @apiSuccess {String} makeup.expert 专家信息
+     * @apiSuccess {String} makeup.assistant 助理信息
+     * @apiSuccess {String} booking_bill 发票信息
+     * @apiSuccess {String} booking_bill.created_at 开发票时间
+     * @apiSuccess {String} booking_bill.manager 开发票操作人信息
+     * @apiSuccess {String} booking_cash 收银信息
+     * @apiSuccess {String} booking_cash.pay_type 支付方式1:微信2:支付宝3:POS机,4:现金,5:微信+现金6:支付宝+现金7:POS机+现金
+     * @apiSuccess {String} booking_cash.other_money 除现金外的其他支付金额
+     * @apiSuccess {String} booking_cash.cash_money 现金金额
+     * @apiSuccess {String} booking_cash.deduction_money 现金金额
+     * @apiSuccess {String} booking_cash.created_at 收银时间
+     * @apiSuccess {String} booking_cash.manager 操作人信息
+     * @apiSuccess {String} booking_cash.expert 专家信息
+     * @apiSuccess {String} booking_cash.assistant 助理信息
+     * @apiSuccess {String} booking_receive 接待信息
+     * @apiSuccess {String} booking_receive.update_booking_date 实际接待日期
+     * @apiSuccess {String} booking_receive.remark 沟通记录
+     * @apiSuccess {String} booking_receive.arrive_at 到店时间
+     * @apiSuccess {String} booking_receive.created_at 接待时间
+     * @apiSuccess {String} booking_receive.state 接待状态 0:失效,1正常
+     * @apiSuccess {String} booking_receive.manager 接待人信息
+     * @apiSuccess {String} booking_salon_refund 退款信息(特殊退款)
+     * @apiSuccess {String} booking_salon_refund.back_to 退款方式1:微信2:支付宝3:银联,4:现金
+     * @apiSuccess {String} booking_salon_refund.money 退款金额
+     * @apiSuccess {String} booking_salon_refund.remark 退款说明
+     * @apiSuccess {String} booking_salon_refund.created_at 退款时间
+     * @apiSuccess {String} booking_salon_refund.manager 退款人信息     
+     * @apiSuccess {String} order_refund 退款信息(客服申请的退款)
+     * @apiSuccess {String} order_refund.add_time 申请退款时间
+     * @apiSuccess {String} order_refund.opt_time 退款审批时间
+     * @apiSuccess {String} order_refund.manager  审批人信息    
+     * 
      * @apiSuccessExample Success-Response:
      *       {
-     *       "result": 1,
-     *       "token": "",
-     *       "data": {
-     *           "ordersn": "3891556931672",
-     *           "booking_sn": "sad2323232",
-     *           "booker_phone": "18611112222",
-     *           "booker_name": "预约人",
-     *           "booker_sex": "F",
-     *           "booking_order_item": [
-     *               {
-     *                   "item_name": "测试时",
-     *                   "price": "100.00"
-     *               },
-     *               {
-     *                   "item_name": "韩式提拉",
-     *                   "price": "0.00"
-     *               }
+     *         "result": 1,
+     *         "token": "",
+     *         "data": {
+     *           "order": {
+     *             "ID": 1,
+     *             "ORDER_SN": "3891556931672",
+     *             "BOOKING_SN": "sad2323232",
+     *             "USER_ID": 1,
+     *             "BOOKING_DATE": "2015-12-07",
+     *             "UPDATED_BOOKING_DATE": "2015-12-03",
+     *             "QUANTITY": 0,
+     *             "AMOUNT": "100.00",
+     *             "PAYABLE": "100.00",
+     *             "BOOKER_NAME": "预约人",
+     *             "BOOKER_SEX": "F",
+     *             "BOOKER_PHONE": "18611112222",
+     *             "STATUS": "RFN",
+     *             "INSTRUCTIONS": "1",
+     *             "PAIED_TIME": "2015-10-12 00:00:00",
+     *             "CONSUME_TIME": "2015-12-03 16:15:32",
+     *             "CREATE_TIME": "2015-12-01 17:18:23",
+     *             "UPDATE_TIME": "2015-12-03 16:23:01",
+     *             "item_amount": 120
+     *           },
+     *           "order_item": [
+     *             {
+     *               "ORDER_SN": "3891556931672",
+     *               "ITEM_ID": 111,
+     *               "ITEM_NAME": "测试时",
+     *               "AMOUNT": "0.00",
+     *               "PAYABLE": "0.00"
+     *             },
+     *             {
+     *               "ORDER_SN": "3891556931672",
+     *               "ITEM_ID": 2,
+     *               "ITEM_NAME": "韩式提拉",
+     *               "AMOUNT": "0.00",
+     *               "PAYABLE": "0.00"
+     *             }
      *           ],
-     *           "booking_date": "2015-12-07",
-     *           "status": "RFN",
-     *           "pay_type": 2,
-     *           "payment_sn": "3891556931672Z1438915583",
-     *           "payable": "100.00",
-     *           "paied_time": "2015-10-12 00:00:00",
-     *           "pay_status": 1,
-     *           "refund_from": 1,
-     *           "rereason": "2",
-     *           "refund_desc": "2",
-     *           "refund_type": 2,
-     *           "money": "290.00",
-     *           "add_time": "2015-01-02 16:11:47",
-     *           "opt_time": "",
-     *           "complete_time": "",
-     *           "opt_user": "",
-     *          "recommend_code": "",
-     *         "receive": {
-     *             "arrive_at": "",
-     *             "update_booking_date": "",
-     *             "remark": "",
-     *             "receiver": "",
-     *             "create_at": ""
+     *           "fundflow": [
+     *             {
+     *               "record_no": "3891556931672",
+     *               "pay_type": 2
+     *             }
+     *           ],
+     *           "payment_log": {
+     *             "ordersn": "3891556931672",
+     *             "tn": "1002360799201508070568495032",
+     *             "amount": "1.00"
+     *           },
+     *           "recommend": {
+     *              "recommend_code":"123456789",
+     *           },
+     *           "beauty_order_item": [
+     *             {
+     *               "order_sn": "3891556931672",
+     *               "item_id": 3,
+     *               "item_name": "韩式无痛水光针",
+     *               "amount": "850.00",
+     *               "to_pay_amount": "120.00",
+     *               "norm_id":0,
+     *               "norm_name":"",
+     *             }
+     *           ],
+     *           "makeup": {
+     *             "id": 1,
+     *             "booking_id": 1,
+     *             "booking_sn": "fasdfasdf",
+     *             "order_sn": "fasdfasdf",
+     *             "expert_uid": 18,
+     *             "assistant_uid": 17,
+     *             "work_at": "2015-12-06",
+     *             "remark": "fasdfadfasdfasdfasdfasdfasdfasdf",
+     *             "uid": 1,
+     *             "created_at": "2015-12-03 00:00:00",
+     *             "manager": {
+     *               "id": 1,
+     *               "name": "超级管理员"
+     *             },
+     *             "expert": {
+     *               "artificer_id": 18,
+     *               "name": "ddfdsfs",
+     *               "number": "M222"
+     *             },
+     *             "assistant": {
+     *               "artificer_id": 17,
+     *               "name": "fsfsffff",
+     *               "number": "M982"
+     *             }
+     *           },
+     *           "booking_bill": {
+     *             "id": 1,
+     *             "booking_id": 1,
+     *             "booking_sn": "sad2323232",
+     *             "order_sn": "3891556931672",
+     *             "created_at": "2015-12-01 00:00:00",
+     *             "uid": 1,
+     *             "manager": {
+     *               "id": 1,
+     *               "name": "超级管理员"
+     *             }
+     *           },
+     *           "booking_cash": {
+     *             "id": 1,
+     *             "booking_id": 1,
+     *             "booking_sn": "fasdfasdf",
+     *             "order_sn": "fasdfasdfasdf",
+     *             "pay_type": 1,
+     *             "other_money": "10.00",
+     *             "cash_money": "20.00",
+     *             "deduction_money": "30.00",
+     *             "expert_uid": 17,
+     *             "assistant_uid": 18,
+     *             "created_at": "2015-12-02 00:00:00",
+     *             "uid": 1,
+     *             "manager": {
+     *               "id": 1,
+     *               "name": "超级管理员"
+     *             },
+     *             "expert": {
+     *               "artificer_id": 17,
+     *               "name": "fsfsffff",
+     *               "number": "M982"
+     *             },
+     *             "assistant": {
+     *               "artificer_id": 18,
+     *               "name": "ddfdsfs",
+     *               "number": "M222"
+     *             }
+     *           },
+     *           "booking_receive": {
+     *             "id": 1,
+     *             "booking_id": 1,
+     *             "booking_sn": "sad23232321",
+     *             "order_sn": "fasdfasdf",
+     *             "update_booking_date": "2015-12-03",
+     *             "remark": "fasdfasdfasdfafasdf",
+     *             "arrive_at": "2015-12-01 00:00:00",
+     *             "created_at": "2015-12-10 00:00:00",
+     *             "state":1,
+     *             "uid": 1,
+     *             "manager": {
+     *               "id": 1,
+     *               "name": "超级管理员"
+     *             }
+     *           },
+     *           "booking_salon_refund": {
+     *             "id": 1,
+     *             "booking_id": 1,
+     *             "uid": 1,
+     *             "booking_sn": "2334",
+     *             "order_sn": "fasdfadfasdf",
+     *             "back_to": 1,
+     *             "money": "2323.00",
+     *             "remark": "fasdfasdfas",
+     *             "created_at": "2015-12-03 00:00:00",
+     *             "manager": {
+     *               "id": 1,
+     *               "name": "超级管理员"
+     *             }
+     *           },
+     *           "order_refund": {
+     *             "ordersn": "3891556931672",
+     *             "user_id": 720005,
+     *             "money": "1.00",
+     *             "opt_user_id": 0,
+     *             "rereason": "2",
+     *             "add_time": 1438926590,
+     *             "opt_time": 0,
+     *             "status": 2,
+     *             "booking_sn": "",
+     *             "item_type": "MF",
+     *             "manager": null
+     *           }
      *         }
-     *      }
-     *  }
-     * 
+     *
+     *
      * @apiErrorExample Error-Response:
      * 		{
      * 		    "result": 0,
@@ -236,10 +426,10 @@ class BeautyRefundController extends Controller {
      * 		}
      */
     public function show($id) {
-        $detail = OrderRefund::makeupRefundDetail($id);
-        if(!empty($detail)){//记录日志
-            Event::fire("BeautyRefund.show");
-        }
+        $detail = OrderRefund::detail($id);
+//        if(!empty($detail)){//记录日志
+//            Event::fire("BeautyRefund.show");
+//        }
         return $this->success($detail);
     }
 
@@ -327,13 +517,13 @@ class BeautyRefundController extends Controller {
         if (count($ids) < 1) {
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
         }
-         //操作人ID
+        //操作人ID
         if (!empty($this->user)) {
             $opt_user_id = $this->user->id;
         } else {
             $opt_user_id = 0;
         }
-        $info = BeautyRefundApi::accpetBeauty($ids,$opt_user_id);
+        $info = BeautyRefundApi::accpetBeauty($ids, $opt_user_id);
         //记录日志
         Event::fire("BeautyRefund.accept");
         return $this->success($info);

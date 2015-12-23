@@ -11,7 +11,7 @@ use Log;
 class Stylist extends Model {
 
     protected $table = 'hairstylist';
-    protected $fillable = ['stylistId', 'salonId', 'startType', 'type', 'stylistName', 'stylistImg', 'job', 'mobilephone', 'addTime', 'likeNum', 'signature', 'status', 'sex', 'wechat', 'qq', 'email', 'birthday', 'IDcard', 'sNumber', 'workYears', 'grade', 'workExp', 'educateExp', 'description', 'gradeType', 'osType', 'fastGrade'];
+    protected $fillable = ['stylistId', 'salonId', 'type', 'stylistName', 'stylistImg', 'job', 'mobilephone', 'addTime', 'likeNum', 'signature', 'status', 'sex', 'wechat', 'qq', 'email', 'birthday', 'IDcard', 'sNumber', 'workYears', 'grade', 'workExp', 'educateExp', 'description', 'gradeType', 'osType', 'fastGrade'];
     public $timestamps = false;
     protected $primaryKey = 'stylistId';
 
@@ -85,9 +85,6 @@ class Stylist extends Model {
         if (!empty($param['type'])) {
             $data['type'] = $param['type'];
         }
-        if (!empty($param['startType'])) {
-            $data['startType'] = $param['startType'];
-        }
         if (isset($param['IDcard']) && $param['IDcard']) {
             $data['IDcard'] = $param['IDcard'];
         }
@@ -152,7 +149,6 @@ class Stylist extends Model {
         $data['workYears'] = $param['workYears'];
         $data['signature'] = $param['signature'];
         $data['type'] = $param['type'];
-        $data['startType'] = $param['startType'];
 
         if (!empty($param['img'])) {
             $data['img'] = $param['img'];

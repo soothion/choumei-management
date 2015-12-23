@@ -43,6 +43,7 @@
           color:#fff;
           line-height: 24px;
           text-indent: 28px;
+          cursor: pointer;
         }
 
         label.switch > input[type="checkbox"]:checked + span {
@@ -77,7 +78,13 @@
 
             <div style="margin-bottom:10px">
                 <span><strong>开启/暂停代客预约</strong></span>
-                <label class="switch"><input type="checkbox" checked/><span>NO</span><input type="hidden" name="status" value="Y"></label>
+                <%if(!data.startType || data.startType == "1"){%>
+                    <label class="switch"><input type="checkbox" name="startType" value="1" checked/><span>NO</span></label>
+                <%}%>     
+
+                <%if(data.startType == "2"){%>
+                    <label class="switch"><input type="checkbox" name="startType" value="2"/><span>OFF</span></label>
+                <%}%>
             </div> 
 
             <%if(lib.query.id){%>
@@ -96,7 +103,7 @@
 						autocomplete="off" disabled required>
                     <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
                     <label>
-                        <input type="checkbox" value="<%=data.reward%>"/>
+                        <input id="updateSalonCheckbox" type="checkbox" value="<%=data.reward%>"/>
                         <span>修改所属店铺</span>
                     </label>
                 </div>
@@ -169,7 +176,7 @@
             <div class="control-group">
                 <label class="control-label" for="">类型：</label>
                 <div class="control">
-                    <select name="grade">
+                    <select id="professionType" name="type">
                         <option value="1">造型师</option>
                         <option value="2">助理</option>
                         <option value="3">其他</option>

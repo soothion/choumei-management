@@ -229,8 +229,6 @@ class TSocket extends TTransport {
     // Connect failed?
     if ($this->handle_ === FALSE) {
       $error = 'TSocket: Could not connect to '.$this->host_.':'.$this->port_.' ('.$errstr.' ['.$errno.'])';
-      echo $error;
-      die();
       if ($this->debug_) {
         call_user_func($this->debugHandler_, $error);
       }

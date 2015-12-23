@@ -32,24 +32,27 @@ class OrderRefund extends Model {
 
     public static function serachMakeupRefundList($param, $page, $size) {
         $fields = [
-            'order_refund.order_refund_id',
-            'order_refund.ordersn',
-            'order_refund.user_id',
-            'order_refund.add_time',
-            'order_refund.money',
-            'order_refund.booking_sn',
-            'order_refund.status as refund_status',
-            'booking_order.status',
-            'booking_order.booker_name',
-            'booking_order.booker_phone',
+//            'order_refund.order_refund_id',
+//            'order_refund.ordersn',
+//            'order_refund.user_id',
+//            'order_refund.add_time',
+//            'order_refund.money',
+//            'order_refund.booking_sn',
+//            'order_refund.status as refund_status',
+            'booking_order.BOOKING_SN as booking_sn',
+            'booking_order.ID as booking_id',
+            'booking_order.STATUS as book_status',
+            'booking_order.USER_ID as user_id',
+            'booking_order.ORDER_SN as ordersn',
             'fundflow.pay_type',
         ];
 
 
-        $query = self::select($fields);
-
-        $query = self::getRefundView($query, $param);
-        $query = self::whereConditionRefund($query, $param);
+//        $query = BookingOrder::select($fields);
+//        $query = self::getRefundView($query, $param);
+        $query = self::getRefundViewByBookingOrder($fields, $param);
+//        $query = self::whereConditionRefund($query, $param);
+        $query = self::whereConditionRefundByBookingOrder($query, $param);
         AbstractPaginator::currentPageResolver(function () use($page) {
             return $page;
         });
@@ -59,6 +62,46 @@ class OrderRefund extends Model {
         return $refundList;
     }
 
+    private static function getRefundViewByBookingOrder($fields, $param) {
+        $query = BookingOrder::getRawBindings();
+        $order_refund_fields = ['order_refund.order_refund_id', 'order_refund.add_time', 'order_refund.status', 'order_refund.money'];
+        $salon_refund_fields = ['booking_salon_refund.id', 'booking_salon_refund.created_at', 'booking_salon_refund.money'];
+        if (isset($param['initiate_refund']) && !empty($param['initiate_refund'])) {
+            if ($param['initiate_refund'] == 1) {  //用户发起的退款
+                $query->select(array_merge($fields, $order_refund_fields));
+                $query->leftJoin('order_refund', function ($join) {
+                    $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status', '!=', 2);
+                });
+            } else { //臭美人员
+                $query->select(array_merge($fields, $salon_refund_fields));
+                $query->leftJoin('booking_salon_refund', 'booking_salon_refund.booking_sn', '=', 'booking_order.BOOKING_SN');
+            }
+        } else {  //全部
+            $query->select(array_merge($fields, $order_refund_fields, $salon_refund_fields));
+//            $query->leftJoin('order_refund', 'order_refund.booking_sn', '=', 'booking_order.BOOKING_SN')
+            $query->leftJoin('order_refund', function ($join) {
+                $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status', '!=', 2);
+            });
+            $query->leftJoin('booking_salon_refund', 'booking_salon_refund.booking_sn', '=', 'booking_order.BOOKING_SN');
+        }
+        $query->leftJoin('fundflow', 'record_no', '=', 'booking_order.ORDER_SN');
+        if (isset($param['key']) && isset($param['keyword']) && ($param['key'] == 3) && !empty($param['keyword'])) {
+            $query->leftJoin('recommend_code_user', 'recommend_code_user.user_id', '=', 'order_refund.user_id');
+        }
+        if (isset($param['sort_key']) && !empty($param['sort_key'])) {
+            $sort_type = (isset($param['sort_type']) && !empty($param['sort_type']) && in_array($param['sort_type'], ['ASC', 'DESC'])) ? $param['sort_type'] : 'DESC';
+            if ($param['sort_key'] == 'state') {
+                $sort_key = 'booking_order.STATUS';
+            } else {
+                $sort_key = $param['sort_key'];
+            }
+            $query->orderBy($sort_key, $sort_type);
+        } else {
+            $query->orderBy('booking_order.ID', 'DESC');
+        }
+        return $query;
+    }
+
     private static function getRefundView($query, $param) {
 
         $query->leftJoin('booking_order', 'booking_order.ORDER_SN', '=', 'order_refund.ordersn')
@@ -66,21 +109,30 @@ class OrderRefund extends Model {
         if (isset($param['key']) && isset($param['keyword']) && ($param['key'] == 3) && !empty($param['keyword'])) {
             $query->leftJoin('recommend_code_user', 'recommend_code_user.user_id', '=', 'order_refund.user_id');
         }
-
-        $query->orderBy('order_refund_id', 'DESC');
+        if (isset($param['sort_key']) && !empty($param['sort_key'])) {
+            $sort_type = (isset($param['sort_type']) && !empty($param['sort_type']) && in_array($param['sort_type'], ['ASC', 'DESC'])) ? $param['sort_type'] : 'DESC';
+            if ($param['sort_key'] == 'state') {
+                $sort_key = 'booking_order.STATUS';
+            } else {
+                $sort_key = $param['sort_key'];
+            }
+            $query->orderBy($sort_key, $sort_type);
+        } else {
+            $query->orderBy('order_refund_id', 'DESC');
+        }
         return $query;
     }
 
     private static function whereConditionRefund($query, $param) {
-        //必要条件 退款状态 为可用
-        $query->where('order_refund.item_type', '!=', "MF");
+        //必要条件 全部为退款状态
+        $query->whereNotIn('booking_order.STATUS', ['NEW', 'PYD', 'CSD']);
 
         // 按时间搜索
         if (!empty($param['start_time'])) {
-            $query->where('order_refund.add_time', '>=', strtotime($param['start_time']."00:00:00"));
+            $query->where('order_refund.add_time', '>=', strtotime($param['start_time'] . "00:00:00"));
         }
         if (!empty($param['end_time'])) {
-            $query->where('order_refund.add_time', '<=', strtotime($param['end_time']."23:59:59"));
+            $query->where('order_refund.add_time', '<=', strtotime($param['end_time'] . "23:59:59"));
         }
         //支付方式
         if (isset($param['pay_type']) && $param['pay_type']) {
@@ -100,15 +152,116 @@ class OrderRefund extends Model {
         if (isset($param['key']) && isset($param['keyword']) && $param['key'] && !empty($param['keyword'])) {
             switch ($param['key']) {
                 case 1:
-                    $query->where('booking_order.booker_phone','like', '%'.$param['keyword'].'%');
+                    $query->where('booking_order.booker_phone', 'like', '%' . $param['keyword'] . '%');
                     break;
                 case 2:
                     // TODO  预约号
-                    $query->where('order_refund.booking_sn','like','%'.$param['keyword'].'%');
+                    $query->where('booking_order.BOOKING_SN', 'like', '%' . $param['keyword'] . '%');
                     break;
                 case 3:
                     //TODO  推荐码
-                    $query->where('recommend_code_user.recommend_code','like', '%'.$param['keyword'].'%');
+                    $query->where('recommend_code_user.recommend_code', 'like', '%' . $param['keyword'] . '%');
+                    break;
+                default :
+                    break;
+            }
+        }
+        return $query;
+    }
+
+    private static function whereConditionRefundByBookingOrder($query, $param) {
+
+        $initiate_refund = 0; //发起退款  默认全部
+        if (isset($param['initiate_refund']) && !empty($param['initiate_refund'])) {
+            if ($param['initiate_refund'] == 1) {  //用户
+                $initiate_refund = 1;
+            } else {
+                $initiate_refund = 2;
+            }
+        }
+
+
+        //必要条件 全部为退款状态
+        $query->whereNotIn('booking_order.STATUS', ['NEW', 'PYD', 'CSD']);
+
+        // 按时间搜索
+
+        if ($initiate_refund == 1) {  //用户
+            if (!empty($param['start_time'])) {
+                $query->where('order_refund.add_time', '>=', strtotime($param['start_time'] . "00:00:00"));
+            }
+            if (!empty($param['end_time'])) {
+                $query->where('order_refund.add_time', '<=', strtotime($param['end_time'] . "23:59:59"));
+            }
+            $query->whereNotNull('order_refund.order_refund_id');
+        } elseif ($initiate_refund == 2) {  //臭美人员
+            if (!empty($param['start_time'])) {
+                $query->where('booking_salon_refund.created_at', '>=', $param['start_time'] . "00:00:00");
+            }
+            if (!empty($param['end_time'])) {
+                $query->where('booking_salon_refund.created_at', '<=', $param['start_time'] . "23:59:59");
+            }
+            $query->whereNotNull('booking_salon_refund.id');
+        } else {  //全部
+            if (!empty($param['start_time'])) {
+                $query->where('booking_salon_refund.created_at', '>=', $param['start_time'] . "00:00:00")
+                        ->where('order_refund.add_time', '>=', strtotime($param['start_time'] . "00:00:00"));
+            }
+            if (!empty($param['end_time'])) {
+                $query->where('booking_salon_refund.created_at', '<=', $param['end_time'] . "23:59:59")
+                        ->where('booking_salon_refund.created_at', '<=', $param['end_time'] . "23:59:59");
+            }
+        }
+
+        //支付方式
+        if (isset($param['pay_type']) && $param['pay_type']) {
+            $query->where('fundflow.pay_type', $param['pay_type']);
+        }
+        //付款状态
+//        if (isset($param['state']) && $param['state']) {
+//            $state_str = explode(",", $param['state']);
+//            if (count($state_str) == 3) { //全选
+//                $query->whereIn('booking_order.STATUS', $state_str)->where("order_refund.status", '!=', 2);
+//            } elseif (count($state_str) == 1 && $state_str[0] == 'RFE') {  //仅选择了退款失败
+//                $query->where("order_refund.status", 3);
+//            } else {
+//                $query->whereIn('booking_order.STATUS', $state_str)->where("order_refund.status", 1);
+//            }
+//        }
+        if (isset($param['state']) && $param['state']) {
+            $state_str = explode(",", $param['state']);
+            if (count($state_str) == 3) { //全选
+                $state_str[] = "RFD-OFL";
+                $query->whereIn('booking_order.STATUS', $state_str);
+            } elseif ($param['state'] == "RFE") {//失败
+                if ($initiate_refund != 2) {
+                    $query->where("order_refund.status", 3);
+                } else {
+                    $query->where('booking_order.STATUS', $param['state']);
+                }
+            } elseif ($param['state'] == "RFD") {//完成
+                $query->whereIn('booking_order.STATUS', [
+                    'RFD',
+                    'RFD-OFL'
+                ]);
+            } elseif ($param['state'] == "RFN") { //退款中(申请退款)
+                $query->where('booking_order.STATUS', $param['state']);
+            }
+        }
+
+
+        if (isset($param['key']) && isset($param['keyword']) && $param['key'] && !empty($param['keyword'])) {
+            switch ($param['key']) {
+                case 1:
+                    $query->where('booking_order.booker_phone', 'like', '%' . $param['keyword'] . '%');
+                    break;
+                case 2:
+                    // TODO  预约号
+                    $query->where('booking_order.BOOKING_SN', 'like', '%' . $param['keyword'] . '%');
+                    break;
+                case 3:
+                    //TODO  推荐码
+                    $query->where('recommend_code_user.recommend_code', 'like', '%' . $param['keyword'] . '%');
                     break;
                 default :
                     break;
@@ -225,6 +378,85 @@ class OrderRefund extends Model {
             'receive' => $receive
         ];
         return $res;
+    }
+
+    public static function detail($id) {
+        $base = BookingOrder::where('ID', $id)->first();
+
+        if (empty($base)) {
+            throw new ApiException("预约单{$id} 不存在", ERROR::ORDER_NOT_EXIST);
+        }
+
+        $base = $base->toArray();
+        $ordersn = $base['ORDER_SN'];
+        $manager_id = $base['CUSTOMER_SERVICE_ID'];
+        $item_fields = ['ORDER_SN', 'ITEM_ID', 'ITEM_NAME', 'AMOUNT', 'PAYABLE'];
+        $beauty_item_fields = ['order_sn', 'item_id', 'item_name', 'norm_id', 'norm_name', 'amount', 'to_pay_amount'];
+        $items = BookingOrderItem::where('ORDER_SN', $ordersn)->get($item_fields)->toArray();
+        $beauty_items = BeautyOrderItem::where('order_sn', $ordersn)->get($beauty_item_fields)->toArray();
+        $fundflows = Fundflow::where('record_no', $ordersn)->get(['record_no', 'pay_type'])->toArray();
+        $payment_log = PaymentLog::where('ordersn', $ordersn)->first(['ordersn', 'tn', 'amount']);
+        $recommend = RecommendCodeUser::where('user_id', $base['USER_ID'])->whereIn('type', [2, 3])->first(['id', 'user_id', 'recommend_code']);
+        $refund_fields = ['order_refund_id','ordersn', 'user_id', 'money', 'opt_user_id', 'rereason', 'add_time', 'opt_time', 'status', 'booking_sn', 'item_type', 'rereason', 'other_rereason'];
+        $order_refund = OrderRefund::where('ordersn', $ordersn)->where('status', 1)->first($refund_fields);
+        $base['manager'] = null;
+        if (!empty($manager_id)) {
+            $base['manager'] = Manager::getBaseInfo($manager_id);
+        }
+        if (empty($payment_log)) {
+            $payment_log = NULL;
+        } else {
+            $payment_log = $payment_log->toArray();
+        }
+        if (empty($order_refund)) {
+            $order_refund = NULL;
+        } else {
+            $order_refund = $order_refund->toArray();
+            $order_refund['manager'] = Manager::getBaseInfo($order_refund['opt_user_id']);
+            if ($base['STATUS'] == 'RFN' && $order_refund['status'] == 3) {
+                $base['STATUS'] == 'RFE';
+            }
+            $reason = str_replace(array_keys(Mapping::BeautyRefundRereasonNames()), array_values(Mapping::BeautyRefundRereasonNames()), $order_refund['rereason']);
+            $reason = !empty($reason) ? $reason . "," . $order_refund['other_rereason'] : $order_refund['other_rereason'];
+            $order_refund['rereason'] = $reason;
+            $order_refund['refund_desc'] = $reason;
+            $order_refund['add_time'] = date("Y-m-d H:i:s", $order_refund['add_time']);
+            $order_refund['opt_time'] = empty($order_refund['opt_time']) ? "" : date("Y-m-d H:i:s", $order_refund['opt_time']);
+            $order_refund['complete_time'] = $order_refund['opt_time'];
+        }
+        $item_amount = 0;
+        $is_virtual_beauty = false;
+        if (empty($beauty_items)) {
+            $is_virtual_beauty = true;
+            $item_ids = array_map("intval", array_column($items, "ITEM_ID"));
+            $beauty_items = BookingReceive::getItemNormInfoAtFirst($item_ids);
+        }
+        $to_pay_amounts = array_map("floatval", array_column($beauty_items, "to_pay_amount"));
+        $item_amount = array_sum($to_pay_amounts);
+        if ($is_virtual_beauty) {
+            $beauty_items = [];
+        }
+
+        $base['item_amount'] = $item_amount;
+        if (empty($recommend)) {
+            $recommend = NULL;
+        } else {
+            $recommend = $recommend->toArray();
+        }
+        return [
+            'order' => $base,
+            'order_item' => $items,
+            'fundflow' => $fundflows,
+            'payment_log' => $payment_log,
+            'recommend' => $recommend,
+            'beauty_order_item' => $beauty_items,
+            'makeup' => BeautyMakeup::getByBookingId($id),
+            'booking_bill' => BookingBill::getByBookingId($id),
+            'booking_cash' => BookingCash::getByBookingId($id),
+            'booking_receive' => BookingReceive::getByBookingId($id),
+            'booking_salon_refund' => BookingSalonRefund::getByBookingId($id),
+            'order_refund' => $order_refund,
+        ];
     }
 
 }

@@ -135,7 +135,7 @@ class PresentItemExpireRemind extends Command
                         $dataPush[$key]['TITLE'] = '项目到期提醒';
                         $dataPush[$key]['MESSAGE'] = "你有一个臭美赠送的价值{$beautyItemPrice}元的{$beautyItemName}项目再有5天就到期啦，快去体验吧！点击查看";
                         $dataPush[$key]['PRIORITY'] = 1;
-                        $dataPush[$key]['EVENT'] = "{'event':'presentItemExpire','userId':{$val['user_id']},'articleCodeId':{$val['article_code_id']},'msgType':11}";
+                        $dataPush[$key]['EVENT'] = "{'event':'presentItem','userId':{$val['user_id']},'articleCodeId':{$val['article_code_id']},'msgType':11}";
                         $dataPush[$key]['STATUS'] = 'NEW';
                         $dataPush[$key]['CREATE_TIME'] = date('Y-m-d H:i:s');
                     }
