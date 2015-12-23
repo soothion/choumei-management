@@ -1,26 +1,38 @@
 .week{
 	line-height:36px;
 	background:#F6F8F9;
-	border:1px solid #E6EAF2;
+	text-align:center;
+	font-weight:bold;
+	font-size:16px;
 }
 .week li{
-	text-align:center!important;
-	font-weight:bold!important;
-	font-size:16px!important;
 	width:14.28%;
-}
-.date-container{
-	border-right:1px solid #E6EAF2;
+	float:left;
+	margin:-1px -1px 0 0;
+	border:1px solid #E6EAF2;
+	box-sizing:border-box;
 }
 .date-item{
 	padding:10px;
-	border-left:1px solid #E6EAF2;
-	border-bottom:1px solid #E6EAF2;
+	border:1px solid #E6EAF2;
 	float:left;
 	width:14.28%;
 	box-sizing:border-box;
 	min-height:170px;
 	position:relative;
+	margin:-1px -1px 0 0;
+}
+.today{
+	border-color:#58A2EC;
+	position:relative;
+	z-index:10;
+	color:#58A2EC!important;
+}
+.date-item:hover{
+	background:rgba(215,231,247,0.5);
+}
+.today .weak{
+	color:#58A2EC;
 }
 .date-item .control-help{
 	position:absolute;

@@ -27,14 +27,14 @@
 			</form>
            <div class="table" ajat="calendar/index?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
-					<ul class="table-box week">
-						<li class="table-item">星期日</li>
-						<li class="table-item">星期一</li>
-						<li class="table-item">星期二</li>
-						<li class="table-item">星期三</li>
-						<li class="table-item">星期四</li>
-						<li class="table-item">星期五</li>
-						<li class="table-item">星期六</li>
+					<ul class="week clearfix">
+						<li>星期日</li>
+						<li>星期一</li>
+						<li>星期二</li>
+						<li>星期三</li>
+						<li>星期四</li>
+						<li>星期五</li>
+						<li>星期六</li>
 					</ul>
 					<div class="date-container clearfix">
 						<%
@@ -52,7 +52,8 @@
 							}
 						%>
 						<%data.forEach(function(item,i){%>
-						<a class="date-item" <%if(item){%> href="user.html#day=<%=new Date(item.bookingDate).format("yyyy-MM-dd")%>" <%}%>>
+						<%var _date=new Date(item.bookingDate).getDate()%>
+						<a class="date-item <%=new Date().getDate()==_date?"today":""%>" <%if(item){%> href="user.html#day=<%=new Date(item.bookingDate).format("yyyy-MM-dd")%>" <%}%>>
 							<%if(item){%>
 							<h4><%=new Date(item.bookingDate).getDate()%></h4>
 							<p class="weak">

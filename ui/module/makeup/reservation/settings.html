@@ -35,14 +35,14 @@
 			</form>
            <div class="table" ajat="calendar/limit?<%=query._%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
-					<ul class="table-box week">
-						<li class="table-item">星期日</li>
-						<li class="table-item">星期一</li>
-						<li class="table-item">星期二</li>
-						<li class="table-item">星期三</li>
-						<li class="table-item">星期四</li>
-						<li class="table-item">星期五</li>
-						<li class="table-item">星期六</li>
+					<ul class="week clearfix">
+						<li>星期日</li>
+						<li>星期一</li>
+						<li>星期二</li>
+						<li>星期三</li>
+						<li>星期四</li>
+						<li>星期五</li>
+						<li>星期六</li>
 					</ul>
 					<form id="form" action="calendar/modifyLimit" data-role="form">
 					<div class="date-container clearfix">
@@ -62,9 +62,10 @@
 						%>
 						<%data.forEach(function(item,i){%>
 						<%var disabled=item&&new Date().getDate()>=new Date(item.bookingDate).getDate()%>
-						<div class="date-item" style="min-height:125px" <%if(disabled){%>disabled<%}%>>
+						<%var _date=new Date(item.bookingDate).getDate()%>
+						<div class="date-item <%=new Date().getDate()==_date?"today":""%>" style="min-height:125px" <%if(disabled){%>disabled<%}%>>
 							<%if(item){%>
-							<h4><%=new Date(item.bookingDate).getDate()%></h4>
+							<h4><%=_date%></h4>
 							<p class="weak">
 								<input type="hidden" name="id" value="" />
 								实际预约数：<label <%if(item.quantity>item.bookingLimit){%>style="color:#FF9900"<%}%>><%=item.quantity%></label><br />
