@@ -379,6 +379,10 @@ class BannerController extends Controller {
         if (empty($param['type']) || !isset($param['introduce'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
+        $banner=Banner::where('type',$param['type'])->count();
+        if($banner == FALSE){
+             throw new ApiException('这个banner类不存在，请添加后再来！', ERROR::BEAUTY_BANNER_NOT_ID);
+        }
         if($param['type'] == 3 || $param['type'] == 4 ){
             if (!isset($param['price']) || !isset($param['priceOri'])) {
                 throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
