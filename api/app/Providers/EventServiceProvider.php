@@ -436,16 +436,16 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\BookingOrderEventListener@onRefund',
         ],
 // 		预约设置
-        'booking.status' => [
+        'calendar.status' => [
         	'App\Listeners\BookingCalendarEventListener@onStatus',
         ],
-        'booking.modifyDay' => [
+        'calendar.modifyDay' => [
             'App\Listeners\BookingCalendarEventListener@onModifyDay',
         ],
-        'booking.export' => [
+        'calendar.export' => [
             'App\Listeners\BookingCalendarEventListener@onExport',
         ],
-        'booking.modifyLimit' => [
+        'calendar.modifyLimit' => [
             'App\Listeners\BookingCalendarEventListener@onModifyLimit',
         ],
         

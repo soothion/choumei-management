@@ -487,7 +487,7 @@ class CalendarController extends Controller {
 			if(empty($v)){ $resultN = false; break 1;}
 		}
 		if( $result1 && $resultN){
-			Event::fire('booking.modifyDay','修改预约时间');
+			Event::fire('calendar.modifyDay','修改预约时间');
 			DB::commit();
 			return $this->success();
 		}else{
@@ -528,7 +528,7 @@ class CalendarController extends Controller {
 		if( !isset($this->param['userId']) ) return $this->error('未传递参数usesrId');
 		$result = BookingOrder::where(['ORDER_SN'=>$orderSn,'CONSUME_CALL_PHONE'=>'NON'])->update(['CONSUME_CALL_PHONE'=>'CALL','CUSTOMER_SERVICE_ID'=>$this->param['userId']]);
 		if($result) {
-			Event::fire('booking.status','客服id为 '.$this->param['userId']);
+			Event::fire('calendar.status','客服id为 '.$this->param['userId']);
 			return $this->success();
 		}
 		$userId = BookingOrder::select(['CUSTOMER_SERVICE_ID'])->where(['ORDER_SN'=>$orderSn,'CONSUME_CALL_PHONE'=>'NON'])->first();
@@ -600,7 +600,7 @@ class CalendarController extends Controller {
 			}
 		}
 		if( $i == count($data) ){
-			Event::fire('booking.modifyLimit','修改预约上限 ');
+			Event::fire('calendar.modifyLimit','修改预约上限 ');
 			return $this->success();
 		}
 		return $this->error('有' .(count($data)-$i).'条数据修改失败哦');
@@ -788,7 +788,7 @@ class CalendarController extends Controller {
 			
 		}
 
-		Event::fire('booking.export','导出某日的订单预约列表 ');
+		Event::fire('calendar.export','导出某日的订单预约列表 ');
 		$title = '现金劵活动查询列表' .date('Ymd');
 		//导出excel
 		$header = ['手机号','姓名','性别','预约项目','预约金额','预约日期','订单状态 ','预约调整 ','客服是否拨打电话'];
