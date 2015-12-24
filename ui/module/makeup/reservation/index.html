@@ -23,13 +23,13 @@
 				<div class="position-group">
 					<ul class="table-box">
 						<li class="table-item"><button class="prev"><i class="fa fa-chevron-left"></i></button></li>
-						<li class="table-item"><input type="month" name="searchData" required placeholder="yyyy-mm" max="<%=date.format("yyyy-MM")%>" /></li>
+						<li class="table-item"><input type="month" name="searchData" required placeholder="yyyy-mm" max="<%=date.format("yyyy-MM")%>" value="<%=!query._?new Date().format("yyyy-MM"):""%>" /></li>
 						<li class="table-item"><button class="next"><i class="fa fa-chevron-right"></i></button></li>
 					</ul>
 				</div>
 				</script>
 			</form>
-           <div class="table" ajat="calendar/index?<%=query._%>#domid=table&tempid=table-t" id="table">
+           <div class="table" ajat="<%if(query._){%>calendar/index?<%=query._%><%}%>#domid=table&tempid=table-t" id="table">
 			<script type="text/template" id="table-t">
 					<ul class="week clearfix">
 						<li>星期日</li>
@@ -102,6 +102,11 @@
 				input.val(date.format("yyyy-MM"));
 			}).on('input','input[type="month"]',function(){
 				$(this).closest('form').submit();
+			});
+			$('#hash').on("_ready",function(){
+				if(!lib.query._){
+					$('#hash').submit();
+				}
 			})
 		</script>
     </body>

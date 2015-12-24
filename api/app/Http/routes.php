@@ -208,8 +208,8 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'uses'=>'MessageBox\MessageBoxController@redirectUrl'
     ))->where('pushId', '[0-9]+'); 
 //权限管理后台接口
-// Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
- Route::group(['middleware' => ['before']], function(){
+Route::group(['middleware' => ['jwt.auth','acl.auth']], function(){
+//  Route::group(['middleware' => ['before']], function(){
 
 
 	//管理员模块
@@ -1609,34 +1609,34 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     
     // 预约日历
     Route::any('calendar/index',array(  
-	    'as'=>'bookingCalendar.index',
+	    'as'=>'calendar.index',
 	    'uses'=>'BookCalendar\CalendarController@index'
     ));
     
     Route::any('calendar/getDay',array( 
-	    'as'=>'bookingCalendar.getDay',
+	    'as'=>'calendar.getDay',
 	    'uses'=>'BookCalendar\CalendarController@getDayIndex'
     ));
     
     Route::any('calendar/status/{orderSn}',array( 
-	    'as'=>'bookingCalendar.status',
+	    'as'=>'calendar.status',
 	    'uses'=>'BookCalendar\CalendarController@modifyDayStatus'
     ));
     
     Route::any('calendar/modifyDay',array(  
-	    'as'=>'bookingCalendar.modifyDay',
+	    'as'=>'calendar.modifyDay',
 	    'uses'=>'BookCalendar\CalendarController@modifyDayIndex'
     ));
     Route::any('calendar/modifyLimit',array(  
-	    'as'=>'bookingCalendar.modifyLimit',
+	    'as'=>'calendar.modifyLimit',
 	    'uses'=>'BookCalendar\CalendarController@setCalendar'
     ));
     Route::any('calendar/limit',array(  
-	    'as'=>'bookingCalendar.limit',
+	    'as'=>'calendar.limit',
 	    'uses'=>'BookCalendar\CalendarController@indexLimit'
     ));
     Route::any('calendar/export',array(  
-	    'as'=>'bookingCalendar.export',
+	    'as'=>'calendar.export',
 	    'uses'=>'BookCalendar\CalendarController@exportDayIndex'
     ));
 });
