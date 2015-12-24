@@ -697,8 +697,13 @@ class BeautyItemController extends Controller{
 		}
 		elseif($type == 2)
 		{
-			$query = $query->where(['type'=>$type,'is_gift'=>$is_gift]);
+			$query = $query->where(['type'=>$type]);
 		}
+		if(isset($param['is_gift']))
+		{
+			$query = $query->where(['is_gift'=>$is_gift]);
+		}
+		
 		$result = $query->orderBy('type', 'asc')->orderBy('level', 'asc')->orderBy('item_id', 'desc')->get()->toArray();
 		foreach($result as &$val)
 		{
