@@ -223,7 +223,7 @@ class BannerController extends Controller {
         if ($banner == FALSE) {
             throw new ApiException('找不到这样的banner，id有误', ERROR::BEAUTY_BANNER_NOT_ID);
         }       
-        if (!isset($param['name']) || !isset($param['image']) || empty($param['behavior'])) {
+        if (!isset($param['name']) || !isset($param['image']) || !isset($param['behavior'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }          
         if ($param['behavior'] == 1 || $param['behavior'] == 2) {
