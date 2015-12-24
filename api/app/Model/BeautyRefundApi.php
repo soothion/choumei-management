@@ -34,6 +34,32 @@ class BeautyRefundApi extends TransactionWriteApi {
     }
 
     /*
+     * 拒绝退款 通过booking_sn
+     */
+
+    public function rejectByBookingSn($booking_sns) {
+        $refundsArr = OrderRefund::whereIn('booking_sn', $booking_sns)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->get(['ordersn', 'booking_sn'])->toArray();
+        if (empty($refundsArr)) {
+            throw new ApiException("未找到退款单信息", ERROR::REFUND_FLOW_LOST);
+        }
+        $bookOrdersns = array_column($refundsArr, "booking_sn");
+        $ordersns = array_column($refundsArr, "ordersn");
+        $bookOrders = BookingOrder::whereIn('ORDER_SN', $ordersns)->where('STATUS', 'RFN')->count();
+        if ($bookOrders != count($bookOrdersns)) {
+            throw new ApiException("部分退款的预约单状态不正确", ERROR::REFUND_STATE_WRONG);
+        }
+        $bookingUp = BookingOrder::whereIn('ORDER_SN', $ordersns)->where('STATUS', 'RFN')->update(['STATUS' => 'PYD']);
+        $refundUp = OrderRefund::whereIn('order_refund_id', $ids)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->update(['status' => self::REFUND_STATUS_OF_CANCLE]);
+        //修改接待信息
+        $bookingReceiveUp = BookingReceive::whereIn('order_sn', $ordersns)->where('state', '1')->update(['state' => 0]);
+        if ($bookingUp !== false && $refundUp !== false) {
+            return [];
+        } else {
+            throw new ApiException("操作失败", ERROR::REFUND_FLOW_LOST);
+        }
+    }
+
+    /*
      * 确认退款
      */
 
@@ -267,7 +293,10 @@ class BeautyRefundApi extends TransactionWriteApi {
      */
 
     private static function modifBookingOrderRefundOptUser($booking_sns, $opt_user_id) {
-        OrderRefund::whereIn('booking_sn', $booking_sns)->where('item_type', 'MZ')->where('status', '!=', 2)->update(['opt_user_id' => $opt_user_id, 'opt_time' => time()]);  // 状态必须为申请退款 更改为退款中  TODO
+        $isSalonRefund = BookingSalonRefund::whereIn('booking_sn', $booking_sns)->count();
+        if (!$isSalonRefund) {
+            OrderRefund::whereIn('booking_sn', $booking_sns)->where('item_type', 'MZ')->where('status', '!=', 2)->update(['opt_user_id' => $opt_user_id, 'opt_time' => time()]);  // 状态必须为申请退款 更改为退款中  TODO
+        }
         return true;
     }
 
