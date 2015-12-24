@@ -343,7 +343,7 @@ class BookingOrder extends Model
     
     public static function makeOrdersn()
     {     
-        return substr(strval(time()),3)."1".mt_rand(1000, 9999);
+        return substr(strval(time()),2)."1".mt_rand(1000, 9999);
     }
     
 

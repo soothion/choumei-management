@@ -456,7 +456,7 @@ class BookController extends Controller
      *		    "msg": "未授权访问"
      *		}
      */
-    public function create($id)
+    public function create()
     {
         $params = $this->parameters([
             'phone'=>self::T_STRING,
