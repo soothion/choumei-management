@@ -542,8 +542,8 @@ class CalendarController extends Controller {
 	* @apiName  modifyLimit
 	* @apiGroup Calendar
 	*
-	* @apiParam {Number} id 					必填 	定妆中心id
 	* @apiParam {array[Json]} data              必填        外城包裹
+	* @apiParam {Number} id 					必填 	定妆中心id
 	* @apiParam {String} date                   必填        修改日期 如 2015-12-29
 	* @apiParam {String} limit                  必填        修改的数量
 	*
@@ -570,16 +570,15 @@ class CalendarController extends Controller {
 	***/
 	public function setCalendar(){
 		$param = $this->param;
-		if( !isset($param['id']) ||empty($param['id'])) return $this->error('定妆中心id未填写');
 		if(empty($param) || !isset($param['data']) || empty($param['data']) )	return $this->error('参数数据错误');
 		
-		$id = $param['id'];
 		$data = json_decode($param['data'],true);
 		$i = 0;
 		$nowYear = date('Y');
 		foreach($data as $k => $v){
 			$date = $v['date'];
 			$limit = $v['limit'];
+			$id = $v['id'];
 			
 			$calendarSize = BookingCalendar::where(['BOOKING_DATE'=>$date])->sum('QUANTITY');
 			if( $limit < $calendarSize ) return $this->error('设置预约'. $date .'数据错误，实际预约量应小于上限');

@@ -41,6 +41,7 @@
 						<li>星期六</li>
 					</ul>
 					<div class="date-container clearfix">
+						<%if(data.forEach){%>
 						<%
 							var startDay= new Date(data[0].bookingDate).getDay();
 							if(startDay>0){
@@ -57,7 +58,7 @@
 						%>
 						<%data.forEach(function(item,i){%>
 						<%var _date=new Date(item.bookingDate).getDate()%>
-						<a class="date-item <%=new Date().getDate()==_date?"today":""%>" <%if(item){%> href="user.html#day=<%=new Date(item.bookingDate).format("yyyy-MM-dd")%>" <%}%>>
+						<a class="date-item <%=new Date().getDate()==_date?"today":""%>" data-slug="calendar.getDay" <%if(item){%> href="user.html#day=<%=new Date(item.bookingDate).format("yyyy-MM-dd")%>" <%}%>>
 							<%if(item){%>
 							<h4><%=new Date(item.bookingDate).getDate()%></h4>
 							<p class="weak">
@@ -73,6 +74,7 @@
 							<%}%>
 						</a>
 						<%})%>
+						<%}%>
 					</div>
 			</script>
         </div>
@@ -107,7 +109,12 @@
 				if(!lib.query._){
 					$('#hash').submit();
 				}
-			})
+			});
+			$(document.body).on('access',function(){
+				$('.date-item[data-slug]').each(function(){
+					$(this).removeAttr("data-slug").removeAttr("href");
+				})
+			});
 		</script>
     </body>
 </html>
