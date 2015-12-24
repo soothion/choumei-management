@@ -40,10 +40,9 @@
 					取消
 				</button>
 			</div>
-			<form action="user/resetCompanyCode/<%=query.id%>" data-role="normal" id="companyCode" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
-			</form>
+			
 			<br />
-			<form action="user/update/<%=query.id%>" data-role="form" id="form">
+			
 			<div class="detail">
 				<div class="table-detail">
 					<table>
@@ -124,93 +123,10 @@
 						</tbody>
 					</table>
 				</div>
-				<%
-					var codes=data.recommendCodes;
-					var code1=null;
-					var code2=null;
-					var code3=null;
-					var code4=null;
-				%>
-				<%data.recommendCodes.forEach(function(code){%>
-					<%
-						if(code.type==1){
-							code1=code;
-						}
-						if(code.type==2){
-							code2=code;
-						}
-						if(code.type==3){
-							code3=code;
-						}
-						if(code.type==4){
-							code4=code;
-						}
-					%>
-				<%})%>
-				<div class="table">
-					<table>
-						<thead>
-							<tr>
-								<th colspan="5" style="line-height:32px;padding-left:20px;font-size:14px;">
-									用户推荐情况
-								</th>
-							</tr>
-							<tr>
-								<th>码类型</th>
-								<th>码编号</th>
-								<th>店铺（活动）类型</th>
-								<th>填写时间</th>
-								<th>操作</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>集团邀请码</td>
-								<td><%=data.companyCode?data.companyCode:"无"%></td>
-								<td><%=data.companyName?data.companyName:"无"%></td>
-								<td><%=data.companyCodeAddtime?new Date(data.companyCodeAddtime*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td><%if(data.companyCode){%><button data-slug="user.update" form="companyCode" class="link off-code">解绑集团码</button><%}else{%>无<%}%></td>
-							</tr>
-							<tr>
-								<td>商家邀请码</td>
-								<td><%=data.activity==2&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==2&&code1&&code1.type==1?code1.salonname:"无"%></td>
-								<td><%=data.activity==2&&code1&&code1.type==1?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td>无</td>
-							</tr>
-							<tr>
-								<td>活动邀请码</td>
-								<td><%=data.activity==1&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==1&&code1&&code1.type==1?code1.activityName:"无"%></td>
-								<td><%=data.activity==1&&code1&&code1.type==1&&code1.add_time?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td>无</td>
-							</tr>
-							<tr>
-								<td>店铺推荐码</td>
-								<td><%=code2?code2.recommend_code:"无"%></td>
-								<td>无</td>
-								<td><%=code2&&code2.add_time?new Date(code2.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td>无</td>
-							</tr>
-							<tr>
-								<td>用户推荐码</td>
-								<td><%=code3?code3.recommend_code:"无"%></td>
-								<td>无</td>
-								<td><%=code3&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td>无</td>
-							</tr>
-							<tr>
-								<td>活动推荐码</td>
-								<td><%=code4?code4.recommend_code:"无"%></td>
-								<td>无</td>
-								<td><%=code4&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td>无</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+				
 			</div>
 			<div class="update" style="display:none">
+				<form action="user/update/<%=query.id%>" data-role="form" id="form">
 				<div class="table-detail">
 					<table>
 						<thead>
@@ -313,6 +229,33 @@
 						</tbody>
 					</table>
 				</div>
+				
+				</form>
+			</div>
+			
+				<%
+					var codes=data.recommendCodes;
+					var code1=null;
+					var code2=null;
+					var code3=null;
+					var code4=null;
+				%>
+				<%data.recommendCodes.forEach(function(code){%>
+					<%
+						if(code.type==1){
+							code1=code;
+						}
+						if(code.type==2){
+							code2=code;
+						}
+						if(code.type==3){
+							code3=code;
+						}
+						if(code.type==4){
+							code4=code;
+						}
+					%>
+				<%})%>
 				<div class="table">
 					<table>
 						<thead>
@@ -335,55 +278,128 @@
 								<td><%=data.companyCode?data.companyCode:"无"%></td>
 								<td><%=data.companyName?data.companyName:"无"%></td>
 								<td><%=data.companyCodeAddtime?new Date(data.companyCodeAddtime*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td><%if(data.companyCode){%><button data-slug="user.update" form="companyCode" class="link off-code">解绑集团码</button><%}else{%>无<%}%></td>
+								<td><%if(data.companyCode){%>
+								<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+									<button data-slug="user.update" class="link">解绑集团码</button>
+									<input type="hidden" name="type" value="5" />
+								</form>
+								<span class="space"></span>
+								<%}%>
+								<form action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+									<button data-slug="user.update" type="button" class="link bind">绑定集团码</button>
+									<input type="hidden" name="code" />
+									<input type="hidden" name="type" value="5" />
+								</form>	
+								</td>
 							</tr>
 							<tr>
 								<td>商家邀请码</td>
 								<td><%=data.activity==2&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
 								<td><%=data.activity==2&&code1&&code1.type==1?code1.salonname:"无"%></td>
 								<td><%=data.activity==2&&code1&&code1.type==1?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td>无</td>
+								<td>
+									<%if(data.activity==2&&code1&&code1.type==1){%>
+									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" class="link">解绑商家邀请码</button>
+										<input type="hidden" name="type" value="1" />
+									</form>
+									<span class="space"></span>
+									<%}%>
+									<form action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" type="button" class="link bind">绑定商家邀请码</button>
+										<input type="hidden" name="code" />
+										<input type="hidden" name="type" value="1" />
+									</form>	
+								</td>
 							</tr>
 							<tr>
 								<td>活动邀请码</td>
 								<td><%=data.activity==1&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
 								<td><%=data.activity==1&&code1&&code1.type==1?code1.activityName:"无"%></td>
 								<td><%=data.activity==1&&code1&&code1.type==1&&code1.add_time?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td>无</td>
+								<td>
+									<%if(data.activity==1&&code1&&code1.type==1){%>
+									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" class="link">解绑活动邀请码</button>
+										<input type="hidden" name="type" value="1" />
+									</form>
+									<span class="space"></span>
+									<%}%>
+									<form action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" type="button" class="link bind">绑定活动邀请码</button>
+										<input type="hidden" name="code" />
+										<input type="hidden" name="type" value="1" />
+									</form>	
+								</td>
 							</tr>
 							<tr>
 								<td>店铺推荐码</td>
 								<td><%=code2?code2.recommend_code:"无"%></td>
 								<td>无</td>
 								<td><%=code2&&code2.add_time?new Date(code2.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td>无</td>
+								<td>
+									<%if(code2){%>
+									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" class="link">解绑商家邀请码</button>
+										<input type="hidden" name="type" value="2" />
+									</form>
+									<span class="space"></span>
+									<%}%>
+									<form action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" type="button" class="link bind">绑定商家邀请码</button>
+										<input type="hidden" name="code" />
+										<input type="hidden" name="type" value="2" />
+									</form>	
+								</td>
 							</tr>
 							<tr>
 								<td>用户推荐码</td>
 								<td><%=code3?code3.recommend_code:"无"%></td>
 								<td>无</td>
 								<td><%=code3&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td>无</td>
+								<td>
+									<%if(code3){%>
+									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" class="link">解绑用户推荐码</button>
+										<input type="hidden" name="type" value="3" />
+									</form>
+									<span class="space"></span>
+									<%}%>
+									<form action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" type="button" class="link bind">绑定用户推荐码</button>
+										<input type="hidden" name="code" />
+										<input type="hidden" name="type" value="3" />
+									</form>	
+								</td>
 							</tr>
 							<tr>
 								<td>活动推荐码</td>
 								<td><%=code4?code4.recommend_code:"无"%></td>
 								<td>无</td>
 								<td><%=code4&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
-								<td>无</td>
+								<td>
+									<%if(code4){%>
+									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" class="link">解绑活动推荐码</button>
+										<input type="hidden" name="type" value="4" />
+									</form>
+									<span class="space"></span>
+									<%}%>
+									<form action="user/setCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
+										<button data-slug="user.update" type="button" class="link bind">绑定活动推荐码</button>
+										<input type="hidden" name="code" />
+										<input type="hidden" name="type" value="4" />
+									</form>	
+								</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-				<br />
-				
-				<div class="tc">
-					<button class="btn-primary" data-slug="user.update">提交</button>
+				<div class="tc form-button" style="display:none">
+					<button class="btn-primary" form="form" data-slug="user.update">提交</button>
 					<span class="space"></span>
 					<button class="btn" type="button" onclick="history.back()">取消</button>
 				</div>
-			</div>
-			</form>
 			</script>
 		</div>
 		<script type="text/template" id="province_t">
@@ -410,6 +426,16 @@
 			$(document).on('click','.btn-edit',function(){
 				$('.detail').hide().siblings().show();
 				$(this).hide().siblings().show();
+				$('.form-button').show();
+			}).on('click','.bind',function(){
+				var $this=$(this);
+				parent.lib.popup.prompt({
+					placeholder:"请输入码号",
+					define:function(value){
+						$this.siblings('input[name="code"]').val(value);
+						$this.closest('form').submit();
+					}
+				})
 			});
 			$('#detail').one('_ready',function(){
 				$('#province,#city,#area').on('change',function(){
