@@ -244,9 +244,9 @@ class User extends  Model
         if(!$user)
             throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
         DB::beginTransaction();
-        $update = $user->update(['companyId'=>0]);
         $delete = DB::table('company_code_user')->where('user_id','=',$id)->delete();
-        if($update&&$delete){
+        $update = $user->update(['companyId'=>0]);
+        if($update){
             DB::commit();
             //触发事件，写入日志
             Event::fire('user.resetCode',array($user));
