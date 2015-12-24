@@ -656,31 +656,43 @@ class UserController extends Controller{
     }
 
     /**
-     * @api {post} /user/resetCompanyCode/:id 10.解绑用户集团码
-     * @apiName resetCompanyCode
+     * @api {post} /user/resetCompanyCode/:id 10.解绑邀请码
+     * @apiName resetCode
      * @apiGroup User
      *
-     * @apiParam {String} id 用户ID.
+     * @apiParam {Number} id 用户ID.
+     * @apiParam {String} type 推荐码类型：1美发店铺邀请码或美发活动邀请码、2美妆店铺邀请码、3推荐人、4美妆活动邀请码、5集团码
      */
-    public function resetCompanyCode($id)
+    public function resetCode($id)
     {
-        $user = User::find($id);
-        if(!$user)
-            throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
-        DB::beginTransaction();
-        $update = $user->update(['companyId'=>0]);
-        $delete = DB::table('company_code_user')->where('user_id','=',$id)->delete();
-        if($update&&$delete){
-            DB::commit();
-            //触发事件，写入日志
-            Event::fire('user.resetCompanyCode',array($user));
+        $param = $this->param;
+        if(empty($param['type']))
+            throw new ApiException('type参数必传', ERROR::PARAMETER_ERROR);
+        $type = intval($param['type']);
+        $result = User::resetCode($id,$type);
+        if($result)
             return $this->success();
-        }
-        else
-        {
-            DB::rollBack();
-            throw new ApiException('集团码解除失败', ERROR::USER_UPDATE_FAILED);
-        }
+    }
+
+    /**
+     * @api {post} /user/resetCompanyCode/:id 11.绑定邀请码
+     * @apiName setCode
+     * @apiGroup User
+     *
+     * @apiParam {Number} id 用户ID.
+     * @apiParam {String} type 推荐码类型：1美发店铺邀请码或美发活动邀请码、2美妆店铺邀请码、3推荐人、4美妆活动邀请码、5集团码
+     * @apiParam {String} code 邀请码.
+     */
+    public function setCode($id)
+    {
+        $param = $this->param;
+        if(empty($param['type']&&$param['code']))
+            throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
+        $type = intval($param['type']);
+        $result = User::setCode($id,$type,$param['code']);
+        if($result)
+            return $this->success();
+
     }
 
 }

@@ -131,7 +131,7 @@ class UserEventListener {
 		return Log::create($data);
 	}
 
-	public function onResetCompanyCode($user)
+	public function onResetCode($user)
 	{
     	$operator = JWTAuth::parseToken()->authenticate();
 		$data['username'] = $operator->username;
@@ -141,10 +141,27 @@ class UserEventListener {
 			$roles[] = $value['name'];
 		}
 		$data['roles'] = implode($roles, ',');
-		$data['operation'] = '解除集团码';
+		$data['operation'] = '解除邀请码';
 		$data['slug'] = Route::currentRouteName();
 		$data['ip'] = Request::getClientIp();
 		return Log::create($data);
 	}
+
+	public function onSetCode($user)
+	{
+    	$operator = JWTAuth::parseToken()->authenticate();
+		$data['username'] = $operator->username;
+		$data['roles'] = $operator->roles->toArray();
+		$roles = [];
+		foreach ($data['roles'] as $key => $value) {
+			$roles[] = $value['name'];
+		}
+		$data['roles'] = implode($roles, ',');
+		$data['operation'] = '绑定邀请码';
+		$data['slug'] = Route::currentRouteName();
+		$data['ip'] = Request::getClientIp();
+		return Log::create($data);
+	}
+
 
 }
