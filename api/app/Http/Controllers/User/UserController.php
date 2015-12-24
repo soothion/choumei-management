@@ -656,7 +656,7 @@ class UserController extends Controller{
     }
 
     /**
-     * @api {post} /user/resetCompanyCode/:id 10.解绑邀请码
+     * @api {post} /user/resetCode/:id 10.解绑邀请码
      * @apiName resetCode
      * @apiGroup User
      *
@@ -675,7 +675,7 @@ class UserController extends Controller{
     }
 
     /**
-     * @api {post} /user/resetCompanyCode/:id 11.绑定邀请码
+     * @api {post} /user/setCode/:id 11.绑定邀请码
      * @apiName setCode
      * @apiGroup User
      *
