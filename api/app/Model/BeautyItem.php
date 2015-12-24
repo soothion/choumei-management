@@ -40,7 +40,7 @@ class BeautyItem extends Model {
 			{	
 				$quantityRs = self::getQuantity($val['item_id'],$val['is_gift']);
 				$result['data'][$key]['quantity'] =  $quantityRs;
-				if($val['type'] == 2 && $val['genre'] != 1)//韩式快时尚 多规格价格查询
+				if($val['type'] == 2)//韩式快时尚 多规格价格查询
 				{
 					$priceRs = self::getMinMaxPrices($val['item_id']);
 					$result['data'][$key]['prices'] =  $priceRs;

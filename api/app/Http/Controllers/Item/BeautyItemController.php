@@ -76,17 +76,11 @@ class BeautyItemController extends Controller{
 	* @apiParam {string} name 必填,项目名称.
 	* @apiParam {Number} type  必填,1韩式半永久 2快时尚.
 	* @apiParam {string} detail 必填,项目介绍.
-	* @apiParam {string} description 必填,产品介绍JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
-	* @apiParam {string} archive 必填,产品档案JSON[{"title": "预约时间","content": "可预约一周内的时间"},{"title": "专家等级","content": "当前项目为(院长)为你服务"}].
-	* @apiParam {string} beauty 必填,定妆流程JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
-	* @apiParam {string} register_detail 必填,预约详情JSON[{"title": "预约时间","content": "可预约一周内的时间"},{"title": "专家等级","content": "当前项目为(院长)为你服务"}].
-	* @apiParam {string} register_workflow 必填,预约流程JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
 	* @apiParam {string} logo 必填,项目icon.
-	* @apiParam {string} images 必填,项目图片JSON[{"img":"http: \/\/sm.choumei.cn\/Uploads\/salonbrand\/2015-06-15\/143434957914358.jpg"},{"img":"http: \/\/sm.choumei.cn\/Uploads\/salonbrand\/2015-06-15\/163434957914352.jpg"}].
 	* @apiParam {string} level 必填,类别 1明星院长； 2院长.
-	* @apiParam {string} price 必填,原价.
-	* @apiParam {string} vip_price 必填,会员价.
-	* @apiParam {string} beauty_workflow_name 流程名称.
+	* @apiParam {string} vip_price 必填,臭美O2O爆品价.
+	* @apiParam {string} price 必填,国内美容机构市场价.
+	* @apiParam {string} content_url 必填,详情H5连接地址.
 	*
 	* @apiSuccessExample Success-Response:
 	*	{
@@ -106,10 +100,10 @@ class BeautyItemController extends Controller{
 	public function update()
 	{
 		$param = $this->param;
-		$data = $this->compositeData($param,1);
+		$data = $this->compositeData($param);
 		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
 		$result = BeautyItem::where(['item_id'=>$item_id])->update($data);
-		if($result)
+		if($result !== false)
 		{
 			$log = 'item_id:'.$item_id.' name:'.$data['name'];
 		    Event::fire('beautyItem.update',$log);
@@ -143,6 +137,7 @@ class BeautyItemController extends Controller{
 	* @apiSuccess {string} vip_price 会员价.
 	* @apiSuccess {string} beauty_workflow_name 流程名称.
 	* @apiSuccess {string} genre 0其他 1水光针.
+	* @apiSuccess {string} content_url 详情H5连接地址.
 	* @apiSuccessExample Success-Response:
 	*{
 	*    result: 1,
@@ -202,21 +197,11 @@ class BeautyItemController extends Controller{
 	* @apiParam {string} name 必填,项目名称.
 	* @apiParam {Number} type  必填,1韩式半永久 2快时尚.
 	* @apiParam {string} detail 必填,项目介绍.
-	* @apiParam {string} description 必填,产品介绍JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
-	* @apiParam {string} archive 必填,产品档案JSON[{"title": "预约时间","content": "可预约一周内的时间"},{"title": "专家等级","content": "当前项目为(院长)为你服务"}].
-	* @apiParam {string} beauty 必填,定妆流程JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
-	* @apiParam {string} register_detail 必填,预约详情JSON[{"title": "预约时间","content": "可预约一周内的时间"},{"title": "专家等级","content": "当前项目为(院长)为你服务"}].
-	* @apiParam {string} register_workflow 必填,预约流程JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
 	* @apiParam {string} logo 必填,项目icon.
-	* @apiParam {string} images 必填,项目图片JSON[{"img":"http: \/\/sm.choumei.cn\/Uploads\/salonbrand\/2015-06-15\/143434957914358.jpg"},{"img":"http: \/\/sm.choumei.cn\/Uploads\/salonbrand\/2015-06-15\/163434957914352.jpg"}].
-	* @apiParam {string} level 必填,类别 1明星院长； 2院长.
 	* @apiParam {string} more_prices 必填,价格规格JSON [{"img":"http:\/\/www.jt.com\/images\/logo.png","norm":"腰部","price":"1500","vip_price":"60","size":"4-8","times":"6"},{"img":"http:\/\/www.jt.com\/images\/logo.png","norm":"手臂","price":"2500","vip_price":"1800","size":"4-8","times":"6"}].
-	* @apiParam {string} equipment_cover 必填,设备封面
-	* @apiParam {string} equipment 必填,设备介绍JSON[{"title": "预约时间","content": "可预约一周内的时间","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]},{"title": "专家等级","content": "当前项目为(院长)为你服务","image": [{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/143434957914358.jpg"},{"img": "http: //sm.choumei.cn/Uploads/salonbrand/2015-06-15/163434957914352.jpg"}]}].
 	* @apiParam {string} present_explain 必填,赠送说明.	
-	* @apiParam {string} equipment_slogan 必填,设备宣传语.	
-	* @apiParam {string} beauty_workflow_name 必填,流程名称.	
 	* @apiParam {string} is_gift 必填,是否是赠送项目0否 1是.
+	* @apiParam {string} content_url 详情H5连接地址.
 	* 
 	* 
 	* @apiSuccessExample Success-Response:
@@ -237,33 +222,28 @@ class BeautyItemController extends Controller{
 	public function updateFashion()
 	{
 		$param = $this->param;
-		$data = $this->compositeData($param,2);
+		$data = $this->compositeData($param);
 		$itemResult = $this->itemResult;
-		if($itemResult->genre != 1)//不是水光针项目
-		{
-			$norm_data = $this->compositeNormByType($param);
-		}
+		$norm_data = $this->compositeNormByType($param);
 		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
 		DB::beginTransaction();
 		$result = BeautyItem::where(['item_id'=>$item_id])->update($data);
-		if(!$result)
+		if($result === false)
 		{
 			DB::rollBack();
 			throw new ApiException('更新失败',ERROR::BEAUTY_ITEM_UPDATE_FAIL);
 		}
-		
-		if($itemResult->genre != 1)//不是水光针项目  0其他 1水光针 2纤体
+	
+		BeautyItemNorm::where(['item_id'=>$item_id])->delete();
+		foreach($norm_data as $val)
 		{
-			BeautyItemNorm::where(['item_id'=>$item_id])->delete();
-			foreach($norm_data as $val)
+			if(!BeautyItemNorm::insertGetId($val))
 			{
-				if(!BeautyItemNorm::insertGetId($val))
-				{
-					DB::rollBack();
-					throw new ApiException('更新失败',ERROR::BEAUTY_ITEM_UPDATE_FAIL);
-				}
+				DB::rollBack();
+				throw new ApiException('更新失败',ERROR::BEAUTY_ITEM_UPDATE_FAIL);
 			}
 		}
+		
 		DB::commit();
 		$log = 'item_id:'.$item_id.' name:'.$data['name'];
 		Event::fire('beautyItem.updateFashion',$log);
@@ -271,11 +251,65 @@ class BeautyItemController extends Controller{
 	}
 	
 	/**
-	 * 组合参数.
+	 * 组合参数.  2.1版本
 	 * param     数据参数
 	 * act_type  1韩式定妆修改 2快时尚修改
 	 * */
-	private  function compositeData($param,$act_type)
+	private  function compositeData($param)
+	{
+		$must_param = ['type','name','content_url'];
+		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
+		$data['type'] = isset($param['type'])?intval($param['type']):1;
+		$data['name'] = isset($param['name'])?trim($param['name']):'';
+		$data['detail'] = isset($param['detail'])?trim($param['detail']):'';
+		$data['logo'] = isset($param['logo'])?trim($param['logo']):'';
+		$data['level'] = isset($param['level'])?trim($param['level']):'';
+		$data['content_url'] = isset($param['content_url'])?trim($param['content_url']):'';
+		$data['present_explain'] = isset($param['present_explain'])?trim($param['present_explain']):'';
+		$beautyItem = BeautyItem::find($item_id);
+		if(!$item_id || !$beautyItem)
+		{
+			throw new ApiException('未知项目',ERROR::BEAUTY_ITEM_NOT_FOUND);
+		}
+		if($this->checkItemTitle($data['name'],$item_id))
+		{
+			throw new ApiException('项目名称重复',ERROR::BEAUTY_ITEM_NAME_REOEAT);
+		}
+		$retMissing = '';
+		foreach($must_param as $val)
+		{
+			if(!$data[$val])
+			{
+				throw new ApiException("缺失参数", ERROR::BEAUTY_ITEM_ERROR);
+			} 
+		}
+
+		if($data['type'] == 1)
+		{
+			$data['price'] = isset($param['price'])?intval($param['price']):0;
+			$data['vip_price'] = isset($param['vip_price'])?intval($param['vip_price']):0;
+			if($data['price'] < $data['vip_price'])
+			{
+				throw new ApiException("价格参数错误", ERROR::BEAUTY_ITEM_WRONG_PRICE);
+			}
+		}
+		else
+		{
+			$data['price'] = 0;
+			$data['vip_price'] = 0;
+			$data['level'] = 0;
+		}
+		return $data;
+
+	}
+	
+	
+	/**
+	 * 组合参数.  2.0版本需求字段组合 废弃
+	 * param     数据参数
+	 * act_type  1韩式定妆修改 2快时尚修改
+	 * */
+	private  function compositeData_bak($param,$act_type)
 	{
 		$must_param = ['type','name','detail','description','logo','images','beauty_workflow_name'];
 		$item_id = isset($param['item_id'])?intval($param['item_id']):0;
@@ -504,9 +538,10 @@ class BeautyItemController extends Controller{
 	* @apiSuccess {Array} price 价格 min_price 最小原价 max_price 最大原价 min_vip_price 最小臭美会员价 max_vip_price 最大臭美会员价.
 	* @apiSuccess {Array} more_prices 规格价格.
 	* @apiSuccess {string} quantity 预约数.
-	* @apiSuccess {string} equipment_slogan 必填,设备宣传语.	
-	* @apiSuccess {string} beauty_workflow_name 必填,流程名称.
+	* @apiSuccess {string} equipment_slogan 设备宣传语.	
+	* @apiSuccess {string} beauty_workflow_name 流程名称.
 	* @apiSuccess {string} genre 0其他 1水光针.	
+	* @apiSuccess {string} content_url 详情H5连接地址.
 	*
 	* @apiSuccessExample Success-Response:
 	* {
@@ -540,6 +575,7 @@ class BeautyItemController extends Controller{
 	*       "quantity": "12",
 	*       "equipment_slogan": "12",
 	*       "beauty_workflow_name": "12",
+	*       "content_url": "http://www.choumei.cn",
 	*       "prices": {
 	*              		 "min_price": 1500,
 	*                	 "max_price": 2500,
@@ -591,7 +627,7 @@ class BeautyItemController extends Controller{
 			throw new ApiException('未知项目',ERROR::BEAUTY_ITEM_NOT_FOUND);
 		
 		$beautyItem = $beautyItem->toArray();
-		$this->parameterValidation($beautyItem);
+		//$this->parameterValidation($beautyItem);
 
 		$beautyItem['prices'] = BeautyItem::getMinMaxPrices($item_id);
 		$beautyItem['more_prices'] = BeautyItemNorm::where(['item_id'=>$item_id])->select(['img_url as img','norm','price','vip_price','size','times'])->get()->toArray();
@@ -666,7 +702,7 @@ class BeautyItemController extends Controller{
 		$result = $query->orderBy('type', 'asc')->orderBy('level', 'asc')->orderBy('item_id', 'desc')->get()->toArray();
 		foreach($result as &$val)
 		{
-			if($val['type'] == 2 && $val['genre'] != 1)
+			if($val['type'] == 2)
 				$val['more_prices'] =  BeautyItemNorm::where(['item_id'=>$val['item_id']])->select(['id','img_url as img','norm','price','vip_price','size','times'])->get()->toArray();
 		}
 		

@@ -1510,24 +1510,16 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'banner.index',
         'uses'=>'Banner\BannerController@index'
     )); 
-    Route::any('banner/index2',array(  //
-        'as'=>'banner.index2',
-        'uses'=>'Banner\BannerController@index'
+    Route::any('banner/createOrSave',array(  //
+        'as'=>'banner.createOrSave',
+        'uses'=>'Banner\BannerController@createOrSave'
     )); 
     Route::any('banner/create',array(  //
         'as'=>'banner.create',
         'uses'=>'Banner\BannerController@create'
     )); 
-    Route::any('banner/create2',array(  //
-        'as'=>'banner.create2',
-        'uses'=>'Banner\BannerController@create2'
-    )); 
     Route::any('banner/edit/{id}',array(  //
         'as'=>'banner.edit',
-        'uses'=>'Banner\BannerController@edit'
-    )); 
-    Route::any('banner/edit2/{id}',array(  //
-        'as'=>'banner.edit2',
         'uses'=>'Banner\BannerController@edit'
     )); 
     Route::any('banner/destroy/{id}',array(  //
@@ -1617,22 +1609,34 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     
     // 预约日历
     Route::any('calendar/index',array(  
-    'as'=>'bookingCalendar.index',
-    'uses'=>'BookCalendar\CalendarController@index'
+	    'as'=>'bookingCalendar.index',
+	    'uses'=>'BookCalendar\CalendarController@index'
     ));
     
     Route::any('calendar/getDay',array( 
-    'as'=>'bookingCalendar.getDay',
-    'uses'=>'BookCalendar\CalendarController@getDayIndex'
+	    'as'=>'bookingCalendar.getDay',
+	    'uses'=>'BookCalendar\CalendarController@getDayIndex'
     ));
     
     Route::any('calendar/status/{orderSn}',array( 
-    'as'=>'bookingCalendar.status',
-    'uses'=>'BookCalendar\CalendarController@modifyDayStatus'
+	    'as'=>'bookingCalendar.status',
+	    'uses'=>'BookCalendar\CalendarController@modifyDayStatus'
     ));
     
     Route::any('calendar/modifyDay',array(  
-    'as'=>'bookingCalendar.modifyDay',
-    'uses'=>'BookCalendar\CalendarController@modifyDayIndex'
+	    'as'=>'bookingCalendar.modifyDay',
+	    'uses'=>'BookCalendar\CalendarController@modifyDayIndex'
+    ));
+    Route::any('calendar/modifyLimit',array(  
+	    'as'=>'bookingCalendar.modifyLimit',
+	    'uses'=>'BookCalendar\CalendarController@setCalendar'
+    ));
+    Route::any('calendar/limit',array(  
+	    'as'=>'bookingCalendar.limit',
+	    'uses'=>'BookCalendar\CalendarController@indexLimit'
+    ));
+    Route::any('calendar/export',array(  
+	    'as'=>'bookingCalendar.export',
+	    'uses'=>'BookCalendar\CalendarController@exportDayIndex'
     ));
 });
