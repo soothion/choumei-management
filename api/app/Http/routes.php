@@ -199,6 +199,11 @@ Route::any('assistant/search/{name}',array(
     'as'=>'assistant.search',
     'uses'=>'Artificer\ArtificerAssistantController@searchNameAndNumber'
 ));
+
+Route::any('others/checkNumberExists/{id?}',array(  
+    'as'=>'others.checkNumberExists',
+    'uses'=>'Beauty\OthersController@checkNumberExists'
+));
 //商家后台提现
 Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
