@@ -7,7 +7,7 @@ use Request;
 use App\Log;
 use JWTAuth;
 
-class BookingOrderEventListener
+class BookingCalendarEventListener
 {
     /**
      * Create the event handler.
