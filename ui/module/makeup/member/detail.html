@@ -18,7 +18,7 @@
         <div class="wrapper" id="detail" ajat="others/show/<%=query.id%>#domid=detail&tempid=detail-t">
 			<script type="text/template" id="detail-t">
 			<div class="detail-operation">
-				<a href="edit.html?<%=query._%>" data-slug="<%=query.p=="index"?"beautyItem.update":"beautyItem.updateFashion"%>" class="btn">编辑</a>
+				<a href="edit.html?<%=query._%>" data-slug="others.update" class="btn">编辑</a>
 				<span class="space"></span>
 				<button class="btn btn-cancel" type="button">返回</button>
 			</div>
@@ -119,7 +119,9 @@
 					<h4>
 					个人图片：
 					</h4>
-					<img src="<%=data.photo%>" alt="" />
+					<%if(data.photo){%>
+						<img src="<%=data.photo%>" alt="" />
+					<%}%>
 				</div>
 			</div>
 			</script>
