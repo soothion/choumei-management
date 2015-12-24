@@ -60,8 +60,54 @@ class BeautyRefundApi extends TransactionWriteApi {
         //添加审批人ID
         self::modifBookingOrderRefundOptUser($ids, $opt_user_id);
         //循环时  有可能超时
-         @set_time_limit(0);
-         @ini_set('memory_limit', '512M');
+        @set_time_limit(0);
+        @ini_set('memory_limit', '512M');
+        //微信
+        if (isset($refund_items['wx']) && count($refund_items['wx']) > 0) {
+            $res['wx'] = self::refundOfWx($refund_items['wx']);
+        }
+        //易联
+        if (isset($refund_items['yilian']) && count($refund_items['yilian']) > 0) {
+            $res['yilian'] = self::refundOfYilian($refund_items['yilian']);
+        }
+        //支付宝
+        if (isset($refund_items['alipay']) && count($refund_items['alipay']) > 0) {
+            $res['alipay'] = self::refundOfAlipay($refund_items['alipay']);
+        }
+        return $res;
+    }
+
+    /*
+     * 确认退款 通过booking_sn
+     * @param $booking_sn 定妆单SN
+     * @param $opt_user_id 操作人ID
+     */
+
+    public static function accpetByBookingSn($booking_sns, $opt_user_id = 0) {
+        $refunds = self::checkRefund($booking_sns);
+        $ordersns = array_column($refunds, 'ordersn');
+//        print_r($ordersns);exit;
+        $refund_indexes = Utils::column_to_key("ordersn", $refunds);
+        $fundflow = Fundflow::where('code_type', self::REFUND_CODE_TYPE_OF_CUSTOM)
+                        ->where('refund_state', '!=', self::FUNDFLOW_REFUND_STATE_OF_COMPLETED)
+                        ->whereIn('record_no', $ordersns)
+                        ->select(['record_no', 'pay_type', 'user_id', 'money'])
+                        ->get()->toArray();
+        if (empty($fundflow)) {
+            throw new ApiException("找不到退款的支付流水信息", ERROR::REFUND_FLOW_LOST);
+        }
+        $payments = PaymentLog::whereIn('ordersn', $ordersns)->get(['ordersn', 'tn', 'device', 'batch_no', 'alipay_updated'])->toArray();
+        if (empty($payments)) {
+            throw new ApiException("退款单找不到对应的payment log 信息", ERROR::REFUND_PAYMENT_LOG_LOST);
+        }
+        $payment_indexes = Utils::column_to_key("ordersn", $payments);
+        $refund_items = self::getBeautyRefundItems($fundflow, $payment_indexes, $refund_indexes);
+//        print_r($refund_items);exit;
+        //添加审批人ID
+        $opt_user_id && self::modifBookingOrderRefundOptUser($booking_sns, $opt_user_id);
+        //循环时  有可能超时
+        @set_time_limit(0);
+        @ini_set('memory_limit', '512M');
         //微信
         if (isset($refund_items['wx']) && count($refund_items['wx']) > 0) {
             $res['wx'] = self::refundOfWx($refund_items['wx']);
@@ -94,6 +140,31 @@ class BeautyRefundApi extends TransactionWriteApi {
         return $refunds;
     }
 
+    private static function checkRefund($booking_sns) {
+        $countIds = count($booking_sns);
+        $refunds = OrderRefund::whereIn('booking_sn', $booking_sns)->where('item_type', 'MZ')->where('status', '!=', self::REFUND_STATUS_OF_CANCLE)->get(['ordersn', 'booking_sn', 'retype', 'rereason', 'other_rereason'])->toArray();
+        if (!empty($refunds)) {  //线上退款
+            if ($countIds != count($refunds)) {
+                throw new ApiException("您选的部分订单不存在退款信息", ERROR::REFUND_STATE_WRONG);
+            }
+            $orderNum = BookingOrder::whereIn('BOOKING_SN', $booking_sns)->where('STATUS', 'RFN')->count();
+            if (intval($orderNum) !== $countIds) {
+                throw new ApiException("关联的订单状态不正确", ERROR::REFUND_STATE_WRONG);
+            }
+        } else { //线下退款
+            $refunds = BookingSalonRefund::whereIn('booking_sn', $booking_sns)->get(['order_sn as ordersn', 'booking_sn']);
+            $orderNum = BookingOrder::whereIn('BOOKING_SN', $booking_sns)->whereIn('STATUS', ['PYD', 'CSD'])->count();
+            if (intval($orderNum) !== $countIds) {
+                throw new ApiException("关联的订单状态不正确", ERROR::REFUND_STATE_WRONG);
+            }
+        }
+        if (empty($refunds)) {
+            throw new ApiException("退款id下取不到信息", ERROR::PARAMS_LOST);
+        }
+
+        return $refunds;
+    }
+
     private static function getBeautyRefundItems($fundflow, $payments, $refunds) {
         $wx_refund_url_of_web = env("WX_REFUND_URL_OF_WEB", null);
         $wx_refund_url_of_sdk = env("WX_REFUND_URL_OF_SDK", null);
@@ -119,9 +190,14 @@ class BeautyRefundApi extends TransactionWriteApi {
             $user_id = $flow['user_id'];
             $money = $flow['money'];
 //            $reason = implode(',', Mapping::BeautyRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
-            $reason = implode(',', Mapping::getRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
-            $reason = !empty($reason) ? $reason . "," . $refunds[$ordersn]['other_rereason'] : $refunds[$ordersn]['other_rereason'];
-            $reason = mb_substr($reason,0,50);  //退款愿意不能超过250个字节  粗处粗略截取
+            if (isset($refunds[$ordersn]['rereason'])) {
+                $reason = implode(',', Mapping::getRefundRereasonNames(explode(',', $refunds[$ordersn]['rereason'])));
+                $reason = !empty($reason) ? $reason . "," . $refunds[$ordersn]['other_rereason'] : $refunds[$ordersn]['other_rereason'];
+                $reason = mb_substr($reason, 0, 50);  //退款愿意不能超过250个字节  粗处粗略截取
+            } else {
+                $reason = '用户不想做了';
+            }
+
             $device = null;
             $tn = '';
             $batch_no = '';
@@ -146,7 +222,7 @@ class BeautyRefundApi extends TransactionWriteApi {
                     break;
                 case self::REFUND_TO_ALIPAY:
                     //方便测试   暂时去掉;
-                   $env=  strtolower(env('APP_ENV'));
+                    $env = strtolower(env('APP_ENV'));
                     if ($env == 'prod') {
                         if (!empty($batch_no) && (time() - $alipay_updated) < 7200) {
                             throw new ApiException("ordersn '{$ordersn}' 已于" . date("Y-m-d H:i:s", $alipay_updated) . "开始退款.请不要请求太频繁", ERROR::UNKNOWN_ERROR);
@@ -187,11 +263,11 @@ class BeautyRefundApi extends TransactionWriteApi {
 
     /*
      * @deprecated
-     * 将预约订单标记为退款中
+     * 更新退款操作人信息
      */
 
-    private static function modifBookingOrderRefundOptUser($ids, $opt_user_id) {
-        OrderRefund::whereIn('order_refund_id', $ids)->update(['opt_user_id' => $opt_user_id, 'opt_time' => time()]);  // 状态必须为申请退款 更改为退款中  TODO
+    private static function modifBookingOrderRefundOptUser($booking_sns, $opt_user_id) {
+        OrderRefund::whereIn('booking_sn', $booking_sns)->where('item_type', 'MZ')->where('status', '!=', 2)->update(['opt_user_id' => $opt_user_id, 'opt_time' => time()]);  // 状态必须为申请退款 更改为退款中  TODO
         return true;
     }
 

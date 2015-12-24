@@ -150,15 +150,12 @@ class BeautyRefundController extends Controller {
             }
             if (empty($value['id'])) {
                 $value['initiate_refund'] = 1;
+                $value['money'] = $value['order_refund_money'];
             } else {
                 $value['initiate_refund'] = 2;
+                $value['money'] = $value['salon_refund_money'];
+                $value['order_refund_id']=0;
             }
-            if($value['initiate_refund']==1){
-                $value['money']=$value['order_refund_money'];
-            }else{
-                $value['money']=$value['salon_refund_money'];
-            }
-            
         }
         return $this->success($refundList);
     }
@@ -455,7 +452,7 @@ class BeautyRefundController extends Controller {
         $param = $this->parameters([
             'ids' => self::T_STRING,
                 ], true);
-        $ids = explode(",", $param['ids']);
+        $ids = array_filter(explode(",", $param['ids']));
         $ids = array_map("intval", $ids);
         if (count($ids) < 1) {
             throw new ApiException("ids参数不能为空", ERROR::PARAMS_LOST);
@@ -517,7 +514,7 @@ class BeautyRefundController extends Controller {
      */
     public function accept() {
         $params = $this->parameters(['ids' => self::T_STRING], true);
-        $ids = explode(",", $params['ids']);
+        $ids = array_filter(explode(",", $params['ids']));
         $ids = array_map("intval", $ids);
         if (count($ids) < 1) {
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
@@ -528,6 +525,11 @@ class BeautyRefundController extends Controller {
         } else {
             $opt_user_id = 0;
         }
+//        $bookingOrderSns=  \App\BookingOrder::whereIn('ID',$ids)->lists('booking_sn')->toArray();
+//         if (empty($bookingOrderSns)) {
+//            throw new ApiException("订单不存在", ERROR::PARAMS_LOST);
+//        }
+//        $order_refund_ids=  OrderRefund::whereIn('booking_sn',$bookingOrderSns)->where('status',1)->lists('order_refund_id')->toArray();
         $info = BeautyRefundApi::accpetBeauty($ids, $opt_user_id);
         //记录日志
         Event::fire("BeautyRefund.accept");
