@@ -98,6 +98,9 @@ class BannerController extends Controller {
                     $query['data'][$key]['salonId'] = $temp['salonId'];
                 }
             }
+            $query['data']['price'] =$value['price'];
+            $query['data']['priceOri'] =$value['priceOri'];
+            $query['data']['introduce'] =$value['introduce'];          
         }
         unset($query['next_page_url']);
         unset($query['prev_page_url']);
