@@ -30,6 +30,13 @@ class BookingOrderEventListener
         //
     }
     
+    public function onCreate($code='')
+    {
+        $data = $this->getLogInfo();
+        $data['operation'] = "定妆单代下单";
+        $data['object'] = $code;
+        return Log::create($data);
+    }
     
     public function onReceive($code='')
     {

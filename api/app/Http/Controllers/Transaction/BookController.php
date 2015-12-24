@@ -476,7 +476,7 @@ class BookController extends Controller
         //$params['manager_uid'] = $this->user->id;
         $book = BookingOrder::book($params);
         
-        // Event::fire('booking.create',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
+        //Event::fire('booking.create',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success($book);
     }
     
