@@ -50,6 +50,7 @@
 					</ul>
 					<form id="form" action="calendar/modifyLimit" data-role="form">
 					<div class="date-container clearfix">
+						<%if(data.forEach){%>
 						<%
 							var startDay= new Date(data[0].bookingDate).getDay();
 							if(startDay>0){
@@ -83,6 +84,7 @@
 							<%}%>
 						</div>
 						<%})%>
+						<%}%>
 					</div>
 					</form>
 			</script>
