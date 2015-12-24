@@ -31,7 +31,7 @@
 				<div class="position-group">
 					<ul class="table-box">
 						<li class="table-item"><button class="prev"><i class="fa fa-chevron-left"></i></button></li>
-						<li class="table-item"><input type="month" name="searchData" required placeholder="yyyy-mm" max="<%=date.format("yyyy-MM")%>" /></li>
+						<li class="table-item"><input type="month" name="searchData" required placeholder="yyyy-mm" max="<%=date.format("yyyy-MM")%>" value="<%=!query._?new Date().format("yyyy-MM"):""%>" /></li>
 						<li class="table-item"><button class="next"><i class="fa fa-chevron-right"></i></button></li>
 					</ul>
 				</div>
@@ -121,8 +121,13 @@
 				}).on('input','input[type="month"]',function(){
 					$(this).closest('form').submit();
 				});
+				$('#hash').on("_ready",function(){
+					if(!lib.query._){
+						$('#hash').submit();
+					}
+				})				
+
 			$('#table').on('_ready',function(){
-				
 				var form=document.getElementById('form');
 				form._getFormData=function(){
 					var data=[];
