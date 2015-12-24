@@ -200,10 +200,7 @@ Route::any('assistant/search/{name}',array(
     'uses'=>'Artificer\ArtificerAssistantController@searchNameAndNumber'
 ));
 
-Route::any('others/checkNumberExists/{number}',array(  
-    'as'=>'others.checkNumberExists',
-    'uses'=>'Beauty\OthersController@checkNumberExists'
-));
+
 //商家后台提现
 Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
 
@@ -1539,6 +1536,11 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
     Route::any('others/show/{id}',array(  
         'as'=>'others.show',
         'uses'=>'Beauty\OthersController@show'
+    ));
+    
+    Route::any('others/checkNumberExists/{number}',array(  
+    'as'=>'others.checkNumberExists',
+    'uses'=>'Beauty\OthersController@checkNumberExists'
     ));
     
     //韩式定妆

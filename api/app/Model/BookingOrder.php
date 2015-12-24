@@ -86,8 +86,7 @@ class BookingOrder extends Model
         $fundflows = Fundflow::where('record_no',$ordersn)->get(['record_no','pay_type'])->toArray();
         $payment_log = PaymentLog::where('ordersn',$ordersn)->first(['ordersn','tn','amount']);
         $recommend = RecommendCodeUser::where('user_id',$base['USER_ID'])->whereIn('type',[2,3])->first(['id','user_id','recommend_code']);
-        $refund_fields = ['ordersn','user_id','money','opt_user_id','rereason','add_time','opt_time','status','booking_sn','item_type','rereason','other_rereason'];
-        $order_refund = OrderRefund::where('ordersn',$ordersn)->where('status',1)->first($refund_fields);
+        $salon_refund = BookingSalonRefund::getByBookingId($id);
         $base['manager'] = null;
         if(!empty($manager_id))
         {
@@ -102,25 +101,14 @@ class BookingOrder extends Model
         {
             $payment_log = $payment_log->toArray();
         }
-        if(empty($order_refund))
+        
+        $change_status = NULL;
+        $order_refund = self::getOrderRefundInfo($salon_refund,$base,$fundflows,$ordersn,$change_status);
+        if(!empty($change_status))
         {
-            $order_refund = NULL;
+            $base['STATUS'] = $change_status;
         }
-        else 
-        {
-            $order_refund = $order_refund->toArray();
-            $order_refund['manager'] = Manager::getBaseInfo($order_refund['opt_user_id']);
-            if ($base['STATUS'] == 'RFN' && $order_refund['status'] == 3) {
-                $base['STATUS'] == 'RFE';
-            }
-            $reason = str_replace(array_keys(Mapping::BeautyRefundRereasonNames()), array_values(Mapping::BeautyRefundRereasonNames()), $order_refund['rereason']);
-            $reason = !empty($reason) ? $reason . "," . $order_refund['other_rereason'] : $order_refund['other_rereason'];
-            $order_refund['rereason'] = $reason;
-            $order_refund['refund_desc'] = $reason;
-            $order_refund['add_time'] = date("Y-m-d H:i:s",$order_refund['add_time']);
-            $order_refund['opt_time'] = empty($order_refund['opt_time'])?"":date("Y-m-d H:i:s",$order_refund['opt_time']);
-            $order_refund['complete_time'] = $order_refund['opt_time'] ;
-        }
+        
         $item_amount = 0;
         $is_virtual_beauty = false;
         if(empty($beauty_items))
@@ -157,7 +145,7 @@ class BookingOrder extends Model
             'booking_bill'=>BookingBill::getByBookingId($id),
             'booking_cash'=>BookingCash::getByBookingId($id),
             'booking_receive'=>BookingReceive::getByBookingId($id),
-            'booking_salon_refund'=>BookingSalonRefund::getByBookingId($id),
+            'booking_salon_refund'=>$salon_refund,
             'order_refund'=>$order_refund,
         ];
     }
@@ -485,6 +473,50 @@ class BookingOrder extends Model
         }
        
         return $res;        
+    }
+    
+    public static function getOrderRefundInfo($salonRefund,$base,$fundflows,$ordersn,&$stauts)
+    {
+        $res = [];
+        if(!empty($salonRefund) && count($fundflows)<1)
+        {
+            $order_refund = [
+                 "money"=>$base['PAYABLE'],
+                 "opt_user_id"=>$salonRefund['uid'],
+                 "rereason"=>$salonRefund['remark'],
+                 'refund_desc' => $salonRefund['remark'],
+                 "add_time"=> $salonRefund['created_at'],
+                 "opt_time"=> $salonRefund['created_at'],
+                 'complete_time' => $salonRefund['created_at'],
+                 "manager"=> $salonRefund['manager'],
+            ];
+        }
+        else 
+        {        
+            $refund_fields = ['ordersn','user_id','money','opt_user_id','rereason','add_time','opt_time','status','booking_sn','item_type','rereason','other_rereason'];
+            
+            $order_refund = OrderRefund::where('ordersn',$ordersn)->where('status',1)->first($refund_fields);
+            if(empty($order_refund))
+            {
+                $order_refund = NULL;
+            }
+            else
+            {
+                $order_refund = $order_refund->toArray();
+                $order_refund['manager'] = Manager::getBaseInfo($order_refund['opt_user_id']);
+                if ($base['STATUS'] == 'RFN' && $order_refund['status'] == 3) {
+                    $stauts == 'RFE';
+                }
+                $reason = str_replace(array_keys(Mapping::BeautyRefundRereasonNames()), array_values(Mapping::BeautyRefundRereasonNames()), $order_refund['rereason']);
+                $reason = !empty($reason) ? $reason . "," . $order_refund['other_rereason'] : $order_refund['other_rereason'];
+                $order_refund['rereason'] = $reason;
+                $order_refund['refund_desc'] = $reason;
+                $order_refund['add_time'] = date("Y-m-d H:i:s",$order_refund['add_time']);
+                $order_refund['opt_time'] = empty($order_refund['opt_time'])?"":date("Y-m-d H:i:s",$order_refund['opt_time']);
+                $order_refund['complete_time'] = $order_refund['opt_time'] ;
+            }
+        }
+        return $order_refund;
     }
 
     public function isFillable($key)
