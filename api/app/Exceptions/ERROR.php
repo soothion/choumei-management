@@ -82,6 +82,11 @@ class ERROR
      */
      CONST USER_NOT_FOUND =  -50005;
 
+    /**
+     *@param 邀请码不存在
+     */
+     CONST CODE_NOT_FOUND =  -50006;
+
 
 
     ////////////返佣单模块//////////////

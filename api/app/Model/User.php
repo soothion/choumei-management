@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use DB;
 use Illuminate\Support\Facades\Redis as Redis;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Exceptions\ApiException;
+use App\Exceptions\ERROR;
+use Event;
 
 const FIRST_KEY = 'recent.first.user';
 const REGISTER_KEY = 'recent.register.user';
@@ -191,6 +194,102 @@ class User extends  Model
     public static function verifyUserPhoneExists( $phone ){
         $exists = Self::select(['user_id','os_type'])->where(['mobilephone'=>$phone])->first();
         return $exists;
+    }
+
+    public static function resetCode($id,$type){
+        if($type<5)
+        {
+            $result = DB::table('recommend_code_user')
+                ->where('user_id','=',$id)
+                ->where('type','=',$type)
+                ->delete();
+        }
+
+        if($type==5)
+        {
+            $result = self::resetCompanyCode($id);
+        }
+        return $result;
+
+    }
+
+
+    public static function setCode($id,$type,$code){
+        if($type<5)
+        {
+            if($type==1)
+            {
+                $exists = DB::table('dividend')->where('recommend_code','=',$code)->first();
+                if(!$exists)
+                    throw new ApiException('邀请码不存在', ERROR::CODE_NOT_FOUND);
+            }
+            $model =  DB::table('recommend_code_user');
+            $model->where('user_id','=',$id)
+                ->where('type','=',$type)
+                ->where('recommend_code','=',$code)
+                ->delete();
+            $result = $model->insert(['user_id'=>$id,'type'=>$type,'recommend_code'=>$code,'add_time'=>time()]);
+        }
+
+        if($type==5)
+        {
+            $result = self::setCompanyCode($id,$code);
+        }
+        return $result;
+
+    }
+
+    public static function resetCompanyCode($id){
+        $user = User::find($id);
+        if(!$user)
+            throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+        DB::beginTransaction();
+        $update = $user->update(['companyId'=>0]);
+        $delete = DB::table('company_code_user')->where('user_id','=',$id)->delete();
+        if($update&&$delete){
+            DB::commit();
+            //触发事件，写入日志
+            Event::fire('user.resetCode',array($user));
+            return true;
+        }
+        else
+        {
+            DB::rollBack();
+            throw new ApiException('集团码解除失败', ERROR::USER_UPDATE_FAILED);
+        }
+    }
+
+    public static function setCompanyCode($id,$code){
+        $user = User::find($id);
+        if(!$user)
+            throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
+
+        $company = DB::table('company_code')->where('code','=',$code)->first();
+        if(!$company)
+            throw new ApiException('集团码不存在', ERROR::CODE_NOT_FOUND);
+
+        DB::beginTransaction();
+        $update = $user->update(['companyId'=>$company->companyId]);
+        $model = DB::table('company_code_user');
+        //解绑原集团码
+        $model->where('user_id','=',$id)->delete();
+        $insert = $model->insert([
+                'user_id'=>$id,
+                'companyId'=>$company->companyId,
+                'companyCode'=>$code,
+                'addTime'=>time()
+            ]);
+        if($update&&$insert){
+            DB::commit();
+            //触发事件，写入日志
+            // Event::fire('user.setCode',array($user));
+            return true;
+        }
+        else
+        {
+            DB::rollBack();
+            throw new ApiException('集团码绑定失败', ERROR::USER_UPDATE_FAILED);
+        }
     }
 
 }
