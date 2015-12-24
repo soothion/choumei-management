@@ -19,10 +19,10 @@ class OthersController extends Controller {
      * @apiName index
      * @apiGroup Others
      *
-     * @apiParam {Number} itemMainNum       可选,主体搜索条件类型。  1.人员姓名 2.在职编号 3.手机号码 4.类型
+     * @apiParam {Number} key       可选,主体搜索条件类型。  1.人员姓名 2.在职编号 3.手机号码 4.类型
      * @apiParam {String} keyword           可选,对应主体搜索关键词; 类型给对应数字 1美导A 2美容师B；3收银C；4前台D；
-     * @apiParam {String} orderField        可选, 排序字段支持 status 状态
-     * @apiParam {String} orderBy           可选, 排序方式 desc 降序 asc 升序
+     * @apiParam {String} sort_key          可选, 排序字段支持 status 状态
+     * @apiParam {String} sort_type         可选, 排序方式 desc 降序 asc 升序
      * @apiParam {Number} page              可选,第几页。 默认为第一页
      * @apiParam {Number} page_size         可选,取多少条。 默认为20条
      *
@@ -78,17 +78,17 @@ class OthersController extends Controller {
      */
     public function index() {
         $param = $this->param;
-        $itemMainNum = isset($param['itemMainNum']) ? $param['itemMainNum'] : 0;
+        $key = isset($param['key']) ? $param['key'] : 0;
         $keyword = isset($param['keyword']) ? $param['keyword'] : '';
-        $orderField = isset($param['orderField']) ? $param['orderField'] : '';
-        $orderBy = isset($param['orderBy']) ? $param['orderBy'] : '';
+        $sort_key = isset($param['sort_key']) ? $param['sort_key'] : '';
+        $sort_type = isset($param['sort_type']) ? $param['sort_type'] : '';
         $page = isset($param['page']) ? max($param['page'], 1) : 1;
         $pageSize = isset($param['page_size']) ? $param['page_size'] : 20;
         if ($pageSize <= 0)
             $pageSize = 20;
         if ($pageSize > 500)
             $pageSize = 500;
-        if ((!$orderField && $orderBy) || ($orderField && !$orderBy))
+        if ((!$sort_key && $sort_type) || ($sort_key && !$sort_type))
             return $this->error('排序传值错误');
         $field = ['id', 'name', 'sex', 'working_life AS workingLife', 'number', 'type', 'mobilephone as mobilePhone', 'status'];
         $obj = BeautyOthers::select($field);
@@ -96,8 +96,8 @@ class OthersController extends Controller {
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });
-        if ($itemMainNum != 0 && $keyword) {
-            switch ($itemMainNum) {
+        if ($key != 0 && $keyword) {
+            switch ($key) {
                 case 1:
                     $obj->where('name', 'like', '%' . $keyword . '%');
                     break;
@@ -114,14 +114,14 @@ class OthersController extends Controller {
                     break;
             }
         }
-        if (!$orderField || !$orderBy)
+        if (!$sort_key || !$sort_type)
             $result = $obj->orderBy('id', 'desc')->paginate($pageSize)->toArray();
-        if ($orderField && $orderBy) {
-            switch ($orderField) {
+        if ($sort_key && $sort_type) {
+            switch ($sort_key) {
                 case 'status':
                     // 降序为 启用（1）在前 禁用（0）在后
                     $temp = ['asc' => 'desc', 'desc' => 'asc'];
-                    $result = $obj->orderBy($orderField, $temp[$orderBy])->paginate($pageSize)->toArray();
+                    $result = $obj->orderBy($sort_key, $temp[$sort_type])->paginate($pageSize)->toArray();
                     break;
                 default:
                     $result = $obj->orderBy('id', 'desc')->paginate($pageSize)->toArray();
@@ -180,7 +180,7 @@ class OthersController extends Controller {
         $addData = $this->_formatReceiveData($param);
         $addData['created_at'] = time();
         $lastId = BeautyOthers::insertGetId($addData);
-//        Event::fire('others.add', '其他人员 id: ' . $lastId);
+        Event::fire('others.add', '其他人员 id: ' . $lastId);
         return $this->success();
     }
 
@@ -233,7 +233,7 @@ class OthersController extends Controller {
         $saveData = $this->_formatReceiveData($param);
         $saveData['updated_at'] = time();
         BeautyOthers::where(['id' => $id])->update($saveData);
-//        Event::fire('others.update', '编辑专家助理 id: ' . $id);
+        Event::fire('others.update', '编辑人员 id: ' . $id);
         return $this->success();
     }
 
@@ -247,10 +247,9 @@ class OthersController extends Controller {
      * @apiSuccess {String} name           姓名.
      * @apiSuccess {Number} sex            性别 1.男 2.女
      * @apiSuccess {String} birthday       生日 格式如 2015-02-22.
-     * @apiSuccess {Number} level          级别 1明星院长； 2院长.
      * @apiSuccess {String} number         在职编号.
      * @apiSuccess {Number} workingLife    工作年限.
-     * @apiSuccess {String} introduce      个性签名.
+     * @apiSuccess {String} introduce      自我描述.
      * @apiSuccess {Number} credential     证件类型  1身份证； 2军官证； 3驾驶证； 4护照.
      * @apiSuccess {String} cardId         证件类型所对应的证件号码.
      * @apiSuccess {String} mobilePhone    电话.
@@ -258,7 +257,7 @@ class OthersController extends Controller {
      * @apiSuccess {String} qq             qq.
      * @apiSuccess {String} email          电子邮箱.
      * @apiSuccess {Number} status         状态标识. 1:正常启用，0:禁用
-     * @apiSuccess {String} pid            选中的专家id
+     * @apiSuccess {String} type           类型 1美导A 2美容师B； 3收银C； 4前台D
      *
      * 
      * @apiSuccessExample Success-Response:
@@ -338,7 +337,7 @@ class OthersController extends Controller {
      */
     public function start($id) {
         BeautyOthers::where(['id' => $id, 'status' => 0])->update(['status' => 1]);
-//        Event::fire('others.up', '启用人员 id: ' . $id);
+        Event::fire('others.up', '启用人员 id: ' . $id);
         return $this->success();
     }
 
@@ -369,19 +368,19 @@ class OthersController extends Controller {
      */
     public function close($id) {
         BeautyOthers::where(['id' => $id, 'status' => 1])->update(['status' => 0]);
-//        Event::fire('others.down', '禁用人员 id: ' . $id);
+        Event::fire('others.down', '禁用人员 id: ' . $id);
         return $this->success();
     }
 
     /**
-     * @api {post} /assistant/export     6.导出人员列表
+     * @api {post} /assistant/export     7.导出人员列表
      * @apiName export
      * @apiGroup Others
      *
-     * @apiParam {String} itemMainNum       可选,主体搜索条件类型。  1.专家姓名 2.在职编号 3.手机号码 4.所属专家姓名
+     * @apiParam {String} key       可选,主体搜索条件类型。  1.专家姓名 2.在职编号 3.手机号码 4.所属专家姓名
      * @apiParam {String} keyword           可选,对应主体搜索关键词.
-     * @apiParam {String} orderField        可选, 排序字段支持 status 状态
-     * @apiParam {String} orderBy           可选, 排序方式 desc 降序 asc 升序
+     * @apiParam {String} sort_key          可选, 排序字段支持 status 状态
+     * @apiParam {String} sort_type         可选, 排序方式 desc 降序 asc 升序
      * @apiParam {Number} page              可选,第几页。 默认为第一页
      * @apiParam {Number} page_size         可选,取多少条。 默认为20条
      *
@@ -403,17 +402,17 @@ class OthersController extends Controller {
      */
     public function export() {
         $param = $this->param;
-        $itemMainNum = isset($param['itemMainNum']) ? $param['itemMainNum'] : 0;
+        $key = isset($param['key']) ? $param['key'] : 0;
         $keyword = isset($param['keyword']) ? $param['keyword'] : '';
-        $orderField = isset($param['orderField']) ? $param['orderField'] : '';
-        $orderBy = isset($param['orderBy']) ? $param['orderBy'] : '';
+        $sort_key = isset($param['sort_key']) ? $param['sort_key'] : '';
+        $sort_type = isset($param['sort_type']) ? $param['sort_type'] : '';
         $page = isset($param['page']) ? max($param['page'], 1) : 1;
         $pageSize = isset($param['page_size']) ? $param['page_size'] : 20;
         if ($pageSize <= 0)
             $pageSize = 20;
         if ($pageSize > 500)
             $pageSize = 500;
-        if ((!$orderField && $orderBy) || ($orderField && !$orderBy))
+        if ((!$sort_key && $sort_type) || ($sort_key && !$sort_type))
             return $this->error('排序传值错误');
         $field = ['id', 'name', 'sex', 'working_life AS workingLife', 'number', 'type', 'mobilephone as mobilePhone', 'status'];
         $obj = BeautyOthers::select($field);
@@ -421,8 +420,8 @@ class OthersController extends Controller {
         AbstractPaginator::currentPageResolver(function() use ($page) {
             return $page;
         });
-        if ($itemMainNum != 0 && $keyword) {
-            switch ($itemMainNum) {
+        if ($key != 0 && $keyword) {
+            switch ($key) {
                 case 1:
                     $obj->where('name', 'like', '%' . $keyword . '%');
                     break;
@@ -439,14 +438,14 @@ class OthersController extends Controller {
                     break;
             }
         }
-        if (!$orderField || !$orderBy)
+        if (!$sort_key || !$sort_type)
             $result = $obj->orderBy('id', 'desc')->paginate($pageSize)->toArray();
-        if ($orderField && $orderBy) {
-            switch ($orderField) {
+        if ($sort_key && $sort_type) {
+            switch ($sort_key) {
                 case 'status':
                     // 降序为 启用（1）在前 禁用（0）在后
                     $temp = ['asc' => 'desc', 'desc' => 'asc'];
-                    $result = $obj->orderBy($orderField, $temp[$orderBy])->paginate($pageSize)->toArray();
+                    $result = $obj->orderBy($sort_key, $temp[$sort_type])->paginate($pageSize)->toArray();
                     break;
                 default:
                     $result = $obj->orderBy('id', 'desc')->paginate($pageSize)->toArray();
@@ -470,7 +469,7 @@ class OthersController extends Controller {
             $tempData[$key][] = $val['mobilePhone'];
             $tempData[$key][] = $t3[$val['status']];
         }
-//        Event::fire('assistant.export', '导出其他人员查询列表');
+        Event::fire('others.export', '导出其他人员查询列表');
         Excel::create($title, function($excel) use($tempData, $header) {
             $excel->sheet('Sheet1', function($sheet) use($tempData, $header) {
                 $sheet->fromArray($tempData, null, 'A1', false, false); //第五个参数为是否自动生成header,这里设置为false
@@ -478,6 +477,41 @@ class OthersController extends Controller {
             });
         })->export('xls');
         exit;
+    }
+
+    /**
+     * @api {get} /others/checkNumberExists/number 8.获取人员编码是否存在
+     * @apiName     checkNumberExists
+     * @apiGroup    Others
+     *
+     * @apiParam {Number} number          必填,人员编号.
+     *
+     *
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     * 	    "result": 1,
+     * 	    "token": "",
+     * 	    "data": []
+     * 	}
+     * 
+     * * @apiErrorExample Error-Response:
+     * 		{
+     *          "result": 0,
+     *          "code": -51510,
+     *          "msg": "人员编号已存在",
+     *          "token": ""
+     *      }
+     */
+    public function checkNumberExists($number) {
+    
+        if(!isset($number))
+            return $this->error('未填写人员编码');
+        $flag = $this->_checkNumberExists(0, $number);
+        if (!$flag)
+            return $this->success();
+        return $this->error('人员编号已存在', ERROR::ARTIFICER_NAME_EXISTS_ERROR);
     }
 
     // 接收天界或者修改的数据

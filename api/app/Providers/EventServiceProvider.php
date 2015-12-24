@@ -363,6 +363,23 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\AssistantEventListener@onExport',
     	],
         
+        // 其他人员列表
+        'others.add' => [
+            'App\Listeners\OthersEventListener@onCreate',
+    	],
+        'others.update' => [
+            'App\Listeners\OthersEventListener@onUpdate',
+    	],
+        'others.up' => [
+            'App\Listeners\OthersEventListener@onUp',
+    	],
+        'others.down' => [
+            'App\Listeners\OthersEventListener@onDown',
+    	],
+        'others.export' => [
+            'App\Listeners\OthersEventListener@onExport',
+    	],
+        
         //韩式定妆模块
         'banner.create' => [
             'App\Listeners\BannerEventListener@onCreate',

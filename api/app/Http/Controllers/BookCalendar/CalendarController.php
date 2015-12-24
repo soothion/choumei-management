@@ -191,7 +191,7 @@ class CalendarController extends Controller {
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 			return $page;
 		});
-		$result = BookingOrder::select($field)->where(['BOOKING_DATE'=>$queryDay])->orderBy($orderField,$orderBy)->paginate($page_size)->toArray();
+		$result = BookingOrder::select($field)->whereRaw("( BOOKING_DATE='$queryDay' AND UPDATED_BOOKING_DATE IS NULL)   OR UPDATED_BOOKING_DATE='$queryDay'")->orderBy($orderField,$orderBy)->paginate($page_size)->toArray();
 		
 		$associateItem = [];
 		$temp = [];
@@ -212,7 +212,7 @@ class CalendarController extends Controller {
 			$prev = $temp[ $v['ORDER_SN'] ];
 			if( !isset($result['data'][$i]['itemName']) ) $result['data'][$i]['itemName'] = '';
 			if( $temp[ $v['ORDER_SN'] ] == $v['ORDER_SN'] &&  $k<= $len && $prev == $itemNames[$k+1]['ORDER_SN']){
-				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'] . ',';
+				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'] . '，';
 			}else{
 				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'];
 				$i++;
@@ -531,11 +531,12 @@ class CalendarController extends Controller {
 			Event::fire('calendar.status','客服id为 '.$this->param['userId']);
 			return $this->success();
 		}
-		$userId = BookingOrder::select(['CUSTOMER_SERVICE_ID'])->where(['ORDER_SN'=>$orderSn,'CONSUME_CALL_PHONE'=>'NON'])->first();
+		$userId = BookingOrder::select(['CUSTOMER_SERVICE_ID'])->where(['ORDER_SN'=>$orderSn,'CONSUME_CALL_PHONE'=>'CALL'])->first();
 		if( empty($userId) ) return $this->error('数据错误了');
 		$name = Manager::select(['name'])->where(['id'=>$userId['CUSTOMER_SERVICE_ID']])->first();
 		if( empty($name) ) return $this->error('数据错误了');
-		return $this->error("$name正在通话中");
+		$name = $name['name'];
+		return $this->error($name."正在通话中");
 	}
 	/***
 	 * @api {post} /calendar/modifyLimit 	5. 修改预约上限
@@ -741,7 +742,7 @@ class CalendarController extends Controller {
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 			return $page;
 		});
-		$result = BookingOrder::select($field)->where(['BOOKING_DATE'=>$queryDay])->orderBy($orderField,$orderBy)->paginate($page_size)->toArray();
+		$result = BookingOrder::select($field)->whereRaw("( BOOKING_DATE='$queryDay' AND UPDATED_BOOKING_DATE IS NULL)   OR UPDATED_BOOKING_DATE='$queryDay'")->orderBy($orderField,$orderBy)->paginate($page_size)->toArray();
 	
 		$associateItem = [];
 		$temp = [];
@@ -762,7 +763,7 @@ class CalendarController extends Controller {
 			$prev = $temp[ $v['ORDER_SN'] ];
 			if( !isset($result['data'][$i]['itemName']) ) $result['data'][$i]['itemName'] = '';
 			if( $temp[ $v['ORDER_SN'] ] == $v['ORDER_SN'] &&  $k<= $len && $prev == $itemNames[$k+1]['ORDER_SN']){
-				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'] . ',';
+				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'] . '，';
 			}else{
 				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'];
 				$i++;

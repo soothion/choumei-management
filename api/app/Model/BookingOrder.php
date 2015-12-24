@@ -93,6 +93,7 @@ class BookingOrder extends Model
         {
             $base['manager'] = Manager::getBaseInfo($manager_id);
         }
+        $help_info = self::getHelpUserInfo($base['SUBSTITUTOR'],$base['RECOMMENDER']);
         if(empty($payment_log))
         {
             $payment_log = NULL;
@@ -146,6 +147,7 @@ class BookingOrder extends Model
         }
         return [
             'order'=>$base,
+            'help_info'=>$help_info,
             'order_item'=>$items,           
             'fundflow'=>$fundflows,
             'payment_log'=>$payment_log,
@@ -172,7 +174,7 @@ class BookingOrder extends Model
         $ordersn = self::makeOrdersn();        
         $user_id = self::getUserid($params['phone'], $params['name'], $params['sex']);
         
-        //#@todo 推荐码相关的处理
+        self::checkUserRecommendCode($user_id,$params['recomment_code']);
         
         $datetime = date("Y-m-d H:i:s");
         self::AddBookingItem($ordersn,$item_infos);
@@ -192,6 +194,10 @@ class BookingOrder extends Model
             'CREATE_TIME'=>$datetime,
             'UPDATE_TIME'=>$datetime,
         ];
+        if(!empty($params['recomment_code']))
+        {
+            $attr['RECOMMENDER'] = $params['recomment_code'];
+        }
         $id = self::insertGetId($attr);
         $attr['ID'] = $id;
         return $attr;
@@ -413,7 +419,73 @@ class BookingOrder extends Model
         }
     }
     
+    public static function checkUserRecommendCode($uid,$recommend_code)
+    {
+        if(empty($recommend_code))
+        {
+            return ;
+        }
+        $oldRecommend = RecommendCodeUser::where('user_id',$uid)->first();
+        if(!empty($oldRecommend))
+        {
+            $code = $oldRecommend->recommend_code;
+            throw new ApiException("当前用户已绑定{$code}推荐码!",ERROR::PARAMETER_ERROR);
+        }
+        $order = self::where("USER_ID",$uid)->whereNotIn("STATUS",['RFD','RFD-OFL'])->where('RECOMMENDER','<>','')->whereNotNull('RECOMMENDER')->first();
+        if(!empty($order))
+        {
+            $code = $order->RECOMMENDER;
+            throw new ApiException("当前用户已在使用{$code}推荐码!",ERROR::PARAMETER_ERROR);
+        }
+        
+        if(strlen($recommend_code)>=11)
+        {
+            $user = User::where('mobilephone',$recommend_code)->first();
+            if(empty($user))
+            {
+                throw new ApiException("推荐用户不存在 {$recommend_code}!",ERROR::PARAMETER_ERROR);
+            }
+        }
+        else
+        {
+            $dividend = Dividend::where('recommend_code',$recommend_code)->first();
+            if(empty($dividend))
+            {
+                throw new ApiException("推荐码 {$recommend_code} 不可用!",ERROR::PARAMETER_ERROR);
+            }
+        }
+    }
     
+    public static function getHelpUserInfo($SUBSTITUTOR,$RECOMMENDER)
+    {    
+        $res = null; 
+        $from = "";
+        if(!empty($SUBSTITUTOR))
+        {
+            $user = User::where('mobilephone',$RECOMMENDER)->first(['nickname','mobilephone']);
+          
+            if(strlen($RECOMMENDER)<11)
+            {
+                if(!empty($RECOMMENDER))
+                {
+                    $salon = Dividend::where('recommend_code',$RECOMMENDER)->LeftJoin("salon",function($join){
+                        $join->on('dividend.salon_id','=','salon.salonid');
+                    })->first(['salon.salonname']);
+                    if(!empty($salon))
+                    {
+                        $from = $salon->salonname;
+                    }
+                }
+            }
+            $res = ['recommend_code'=>$RECOMMENDER,'from'=>$from];
+            if(!empty($user))
+            {
+                $res['mobilephone'] = $user->mobilephone;                
+            }
+        }
+       
+        return $res;        
+    }
 
     public function isFillable($key)
     {
