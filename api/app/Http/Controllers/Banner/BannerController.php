@@ -91,21 +91,25 @@ class BannerController extends Controller {
             return $page;
         });
         $query = Banner::where('type', '=', $param['type'])->orderBy('sort', 'asc')->orderBy('created_at', 'asc')->paginate($page_size)->toArray();
+        unset($query['next_page_url']);
+        unset($query['prev_page_url']);
         foreach ($query['data'] as $key =>$value) {
             if(isset($value['url'])){
                 $temp = json_decode($value['url'],true);
                 if(isset($temp['salonId'])){
                     $query['data'][$key]['salonId'] = $temp['salonId'];
                 }
-            }
-            $query['data']['price'] =$value['price'];
-            $query['data']['priceOri'] =$value['priceOri'];
-            $query['data']['introduce'] =$value['introduce'];          
+            }        
         }
-        unset($query['next_page_url']);
-        unset($query['prev_page_url']);
+        $result=[];
+        if(!empty($query['data'])){
+            $result['price'] =$value['price'];
+            $result['priceOri'] =$value['priceOri'];
+            $result['introduce'] =$value['introduce'];  
+            $result['list']=$query['data'];
+        }
         if ($query) {
-            return $this->success($query);
+            return $this->success($result);
         } else {
             throw new ApiException('查询banner失败', ERROR::BEAUTY_BANNER_SELECT_ERROR);
         }
