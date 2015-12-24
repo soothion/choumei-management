@@ -535,7 +535,8 @@ class CalendarController extends Controller {
 		if( empty($userId) ) return $this->error('数据错误了');
 		$name = Manager::select(['name'])->where(['id'=>$userId['CUSTOMER_SERVICE_ID']])->first();
 		if( empty($name) ) return $this->error('数据错误了');
-		return $this->error("$name正在通话中");
+		$name = $name['name'];
+		return $this->error($name."正在通话中");
 	}
 	/***
 	 * @api {post} /calendar/modifyLimit 	5. 修改预约上限
