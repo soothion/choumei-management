@@ -191,7 +191,7 @@ class CalendarController extends Controller {
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 			return $page;
 		});
-		$result = BookingOrder::select($field)->where(['BOOKING_DATE'=>$queryDay])->orderBy($orderField,$orderBy)->paginate($page_size)->toArray();
+		$result = BookingOrder::select($field)->whereRaw("( BOOKING_DATE='$queryDay' AND UPDATED_BOOKING_DATE IS NULL)   OR UPDATED_BOOKING_DATE='$queryDay'")->orderBy($orderField,$orderBy)->paginate($page_size)->toArray();
 		
 		$associateItem = [];
 		$temp = [];
@@ -742,7 +742,7 @@ class CalendarController extends Controller {
 		AbstractPaginator::currentPageResolver(function() use ($page) {
 			return $page;
 		});
-		$result = BookingOrder::select($field)->where(['BOOKING_DATE'=>$queryDay])->orderBy($orderField,$orderBy)->paginate($page_size)->toArray();
+		$result = BookingOrder::select($field)->whereRaw("( BOOKING_DATE='$queryDay' AND UPDATED_BOOKING_DATE IS NULL)   OR UPDATED_BOOKING_DATE='$queryDay'")->orderBy($orderField,$orderBy)->paginate($page_size)->toArray();
 	
 		$associateItem = [];
 		$temp = [];
