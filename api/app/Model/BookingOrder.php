@@ -93,7 +93,7 @@ class BookingOrder extends Model
         {
             $base['manager'] = Manager::getBaseInfo($manager_id);
         }
-        $base['help_info'] = self::getHelpUserInfo($base['SUBSTITUTOR'],$base['RECOMMENDER']);
+        $help_info = self::getHelpUserInfo($base['SUBSTITUTOR'],$base['RECOMMENDER']);
         if(empty($payment_log))
         {
             $payment_log = NULL;
@@ -147,6 +147,7 @@ class BookingOrder extends Model
         }
         return [
             'order'=>$base,
+            'help_info'=>$help_info,
             'order_item'=>$items,           
             'fundflow'=>$fundflows,
             'payment_log'=>$payment_log,

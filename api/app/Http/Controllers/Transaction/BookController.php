@@ -20,6 +20,7 @@ use App\Http\Controllers\Powder\PowderArticlesController;
 use App\Order;
 use App\Dividend;
 use App\Utils;
+use App\BeautyRefundApi;
 
 class BookController extends Controller
 {
@@ -185,6 +186,10 @@ class BookController extends Controller
      * @apiSuccess {String} order.UPDATE_TIME 最近修改时间
      * @apiSuccess {String} order.BOOKING_DESC 预约时间  DEF-未选择，MORNING - 上午，AFTERNOON下午
      * @apiSuccess {Object} order.manager 客服信息
+     * @apiSuccess {Object} help_info 代预约信息
+     * @apiSuccess {String} help_info.from 渠道
+     * @apiSuccess {String} help_info.recommend_code 推荐码
+     * @apiSuccess {String} help_info.mobilephone 手机号
      * @apiSuccess {String} order.item_amount 项目总价
      * @apiSuccess {String} order_item 预约项目信息
      * @apiSuccess {String} order_item.ID 项目ID
@@ -267,6 +272,11 @@ class BookController extends Controller
      *             "UPDATE_TIME": "2015-12-03 16:23:01",
      *             "item_amount": 120
      *           },
+     *           "help_info":{
+     *              "from":"choumei_test",
+     *              "recommend_code":"134578",
+     *              "mobilephone":"13456789451",
+     *           }
      *           "order_item": [
      *             {
      *               "ORDER_SN": "3891556931672",
@@ -746,6 +756,8 @@ class BookController extends Controller
             'remark'=>$params['remark'],
             'created_at'=>$datetime,
         ]);
+        
+        BeautyRefundApi::accpetByBookingSn([$base->BOOKING_SN], $this->user->id);
         
         BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]);
         Order::where('ordersn',$base->BOOKING_SN)->update(['status'=>4,'use_time'=>$time]); 
