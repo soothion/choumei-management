@@ -212,7 +212,7 @@ class CalendarController extends Controller {
 			$prev = $temp[ $v['ORDER_SN'] ];
 			if( !isset($result['data'][$i]['itemName']) ) $result['data'][$i]['itemName'] = '';
 			if( $temp[ $v['ORDER_SN'] ] == $v['ORDER_SN'] &&  $k<= $len && $prev == $itemNames[$k+1]['ORDER_SN']){
-				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'] . ',';
+				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'] . '，';
 			}else{
 				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'];
 				$i++;
@@ -762,7 +762,7 @@ class CalendarController extends Controller {
 			$prev = $temp[ $v['ORDER_SN'] ];
 			if( !isset($result['data'][$i]['itemName']) ) $result['data'][$i]['itemName'] = '';
 			if( $temp[ $v['ORDER_SN'] ] == $v['ORDER_SN'] &&  $k<= $len && $prev == $itemNames[$k+1]['ORDER_SN']){
-				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'] . ',';
+				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'] . '，';
 			}else{
 				$result['data'][$i]['itemName'] .= $v['ITEM_NAME'];
 				$i++;
