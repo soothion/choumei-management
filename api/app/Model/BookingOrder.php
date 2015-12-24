@@ -8,6 +8,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use App\BookingOrderItem;
+use App\Model\SeedPool;
 
 class BookingOrder extends Model
 {
@@ -168,14 +169,14 @@ class BookingOrder extends Model
         {
             throw new ApiException("所选(部分)项目不存在!",ERROR::PARAMETER_ERROR);
         }
-        $ordersn = self::makeOrdersn();
-        $bookingsn = self::makeBookingsn();
+        $ordersn = self::makeOrdersn();        
         $user_id = self::getUserid($params['phone'], $params['name'], $params['sex']);
         
         //#@todo 推荐码相关的处理
+        
         $datetime = date("Y-m-d H:i:s");
         self::AddBookingItem($ordersn,$item_infos);
-        
+        $bookingsn = self::makeBookingsn();
         $attr = [
             'ORDER_SN'=>$ordersn,
             'BOOKING_SN'=>$bookingsn,
@@ -341,14 +342,21 @@ class BookingOrder extends Model
     
     
     public static function makeOrdersn()
-    {
-        return mt_rand(100, 999).mt_rand(10000, 99999).mt_rand(10000, 99999);
+    {     
+        return substr(strval(time()),3)."1".mt_rand(1000, 9999);
     }
     
 
     public static function makeBookingsn()
     {
-        return mt_rand(100, 999).mt_rand(10000, 99999).mt_rand(10000, 99999);
+        $seed = SeedPool::where('TYPE','TKT')->where('STATUS','NEW')->first();
+        if(empty($seed))
+        {
+            throw new ApiException('无可用定妆单号',ERROR::UNKNOWN_ERROR);
+        }
+        $res = $seed->SEED;
+        $seed->update(['STATUS'=>'USD','UPDATE_TIME'=>date("Y-m-d H:i:s")]);
+        return $res;
     }
     
     public static function getBaseItemInfo($item_ids)
