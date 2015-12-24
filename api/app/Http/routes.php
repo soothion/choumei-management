@@ -1505,6 +1505,37 @@ Route::any('pay_manage/withdraw','Pay\PayController@withdraw');
         'as'=>'assistant.show',
         'uses'=>'Artificer\ArtificerAssistantController@show'
     ));
+    
+    // 其他人员
+    Route::any('others/index',array(  
+        'as'=>'others.index',
+        'uses'=>'Beauty\OthersController@index'
+    )); 
+    Route::any('others/add',array(  
+        'as'=>'others.add',
+        'uses'=>'Beauty\OthersController@add'
+    )); 
+    Route::any('others/update',array(  
+        'as'=>'others.update',
+        'uses'=>'Beauty\OthersController@save'
+    )); 
+    Route::any('others/up/{id}',array(  
+        'as'=>'others.up',
+        'uses'=>'Beauty\OthersController@start' 
+    ));
+    Route::any('others/down/{id}',array(  
+        'as'=>'others.down',
+        'uses'=>'Beauty\OthersController@close'
+    ));
+    Route::any('others/export',array(  
+        'as'=>'others.export',
+        'uses'=>'Beauty\OthersController@export'
+    )); 
+    Route::any('others/show/{id}',array(  
+        'as'=>'others.show',
+        'uses'=>'Beauty\OthersController@show'
+    ));
+    
     //韩式定妆
     Route::any('banner/index',array(  //
         'as'=>'banner.index',

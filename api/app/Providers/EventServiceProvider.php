@@ -420,6 +420,9 @@ class EventServiceProvider extends ServiceProvider
 	],
 
 		//定妆单操作
+        'booking.create' => [
+            'App\Listeners\BookingOrderEventListener@onCreate',
+        ],
         'booking.receive' => [
             'App\Listeners\BookingOrderEventListener@onReceive',
         ],

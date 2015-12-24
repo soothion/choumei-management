@@ -18,6 +18,7 @@ use App\RecommendCodeUser;
 use App\User;
 use App\Http\Controllers\Powder\PowderArticlesController;
 use App\Order;
+use App\Dividend;
 use App\Utils;
 
 class BookController extends Controller
@@ -438,7 +439,12 @@ class BookController extends Controller
      * @apiName create
      * @apiGroup book
      *
-     * @apiParam {Number}  pramas 待定
+     * @apiParam {string}  phone 手机
+     * @apiParam {string}  name 姓名
+     * @apiParam {string}  sex 1.男 2女
+     * @apiParam {string}  item_ids 预约项目(多个用','隔开)
+     * @apiParam {string}  date 预约日期 YYYY-MM-DD
+     * @apiParam {string}  recomment_code 推荐码
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -451,10 +457,28 @@ class BookController extends Controller
      *		    "msg": "未授权访问"
      *		}
      */
-    public function create($id)
+    public function create()
     {
-        //#@todo 需求待定
-        return $this->success([]);
+        $params = $this->parameters([
+            'phone'=>self::T_STRING,
+            'name'=>self::T_STRING,
+            'sex'=>self::T_INT,
+            'item_ids'=>self::T_STRING,
+            'date'=>self::T_STRING,
+            'recomment_code'=>self::T_STRING,
+        ]);
+        $params['item_ids'] = explode(",", $params['item_ids']);
+        if( count($params['item_ids'])<1)
+        {
+            throw new ApiException("预约项目不能为空!",ERROR::PARAMETER_ERROR);
+        }
+        //for test
+        $params['manager_uid'] = 1;
+        //$params['manager_uid'] = $this->user->id;
+        $book = BookingOrder::book($params);
+        
+        //Event::fire('booking.create',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
+        return $this->success($book);
     }
     
     /**
@@ -538,6 +562,7 @@ class BookController extends Controller
         }
         $first_time = BookingOrder::where("USER_ID",$custom_uid)->orderBy("CREATE_TIME","ASC")->first();
         //self::givePresent($custom_uid,true);
+        self::make_recommend($custom_uid,$book['RECOMMENDER']);
         try{
             self::givePresent($custom_uid,$book['ORDER_SN'],$is_first,$first_time->CREATE_TIME);
         }
@@ -728,6 +753,43 @@ class BookController extends Controller
         Event::fire('booking.refund',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
         
         return $this->success(['id'=>$id]);
+    }
+    
+    
+    public static function make_recommend($uid,$recommend_code)
+    {
+        if(empty($recommend_code))
+        {
+            return;
+        }
+        $recommend = RecommendCodeUser::where('user_id',$uid)->whereIn("type",[2,3,4])->first();
+        if(!empty($recommend))
+        {
+            return;
+        }
+        $attr = [
+            'user_id'=>$uid,
+            'recommend_code'=>$recommend_code,
+            'add_time'=>time(),
+        ];
+        if(strlen($recommend_code) >= 11)
+        {
+            $attr['type'] = '3';
+        }
+        else
+        {
+            $type = '2';
+            $dividend = Dividend::where('recommend_code',$recommend_code)->first();
+            if(!empty($dividend))
+            {
+                if($dividend->activity == 1)
+                {
+                    $type = '4';
+                }
+            }
+            $attr['type'] = $type;
+        }
+        RecommendCodeUser::create($attr);
     }
     
     public static function givePresent($customer_uid,$ordersn,$is_first = false,$first_consume_time = 0)

@@ -9,4 +9,9 @@ class BookingOrderItem extends Model
     protected $table = 'booking_order_item';
     protected $primaryKey = 'ID';
     public $timestamps = false;
+    
+    public function isFillable($key)
+    {
+        return true;
+    }
 }

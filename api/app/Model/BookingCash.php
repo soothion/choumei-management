@@ -87,7 +87,7 @@ class BookingCash extends Model
         self::create($attr);
         
         BookingOrder::where('ID',$booking_id)->update(['STATUS'=>'CSD','CONSUME_TIME'=>$datetime,'UPDATE_TIME'=>$datetime]);
-        Order::where('ordersn',$ordersn)->update(['status'=>7]);
+        //Order::where('ordersn',$ordersn)->update(['status'=>7]);
         Artificer::where('artificer_id',$params['specialistId'])->increment("service_times");
         return $base;
     }
