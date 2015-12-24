@@ -369,11 +369,18 @@ class BannerController extends Controller {
     public function  createOrSave(){
         $param = $this->param;
         $data = [];
-        if (empty($param['type']) || !isset($param['price']) || !isset($param['priceOri']) || !isset($param['introduce'])) {
+        if (empty($param['type']) || !isset($param['introduce'])) {
             throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
         }
-        $data['price']=$param['price'];
-        $data['priceOri']=$param['priceOri'];
+        if($param['type'] == 3 || $param['type'] == 4 ){
+            if (!isset($param['price']) || !isset($param['priceOri'])) {
+                throw new ApiException('参数不齐', ERROR::BEAUTY_ITEM_ERROR);
+            }else{
+                $data['price']=$param['price'];
+                $data['priceOri']=$param['priceOri'];
+            }
+        }
+
         $data['introduce']=$param['introduce'];
         $query = Banner::where('type',$param['type'])->update($data);
         
