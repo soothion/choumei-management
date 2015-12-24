@@ -73,4 +73,9 @@ class SeedPool extends Model
         }
         return $res->toArray();
     }
+    
+    public function isFillable($key)
+    {
+        return true;
+    }
 }

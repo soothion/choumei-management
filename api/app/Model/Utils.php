@@ -258,6 +258,20 @@ class Utils
 		return $result;
 	}
 	
+	/**
+	 * 求和数组中的某列元素  (高精度)
+	 */
+	public static function column_sum($column_name, $inputs = array(),$scale =2)
+	{
+	    $sum = 0;
+	    $items = self::get_column_array($column_name,$inputs);
+	    foreach ($items as $item)
+	    {
+	        $sum = bcadd($sum,$item,$scale);
+	    }
+	    return $sum;	    
+	}
+	
 	public static function column_to_group($column_name,$inputs =array())
 	{
 	    $result = array();

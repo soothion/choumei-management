@@ -1082,7 +1082,7 @@ class PowderArticlesController extends Controller
         //发短信
         if($beautyItemInfo){
             $thrift = new ThriftHelperModel();
-            $sms = "亲爱的{$bookingName}，恭喜您获得臭美赠送价值{$beautyItemPrice}元的{$beautyItemName}免费体验1次，预约号为：{$reservateSnInfo['reservateSn']}。无须提前预约，到店提供预约号即可。下载臭美App，http://t.cn/RZXyLPg 了解更多";
+            $sms = "亲爱的{$bookingName}，恭喜您获得臭美赠送价值{$beautyItemPrice}元的{$beautyItemName}免费体验1次，预约号为：{$reservateSnInfo['reservateSn']}。无须提前预约，到店提供预约号即可。下载臭美App，http://t.cn/RZXyLPg 了解更多。 退订回复TD";
             $res = $thrift->request('sms-center', 'sendSmsByType', array($mobilephone, $sms, '127.0.0.1', 6));
             $resultMsg = $res == 1 ? '成功' : '失败';
             $msg = '线上活动赠送项目发送信息 ： '.$resultMsg .' , 用户手机号码 ：' . $mobilephone . ' , 预约号：' . $reservateSnInfo['reservateSn'] ;

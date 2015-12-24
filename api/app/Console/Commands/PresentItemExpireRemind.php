@@ -102,7 +102,7 @@ class PresentItemExpireRemind extends Command
         $thrift = new ThriftHelperModel();
         $beautyItemName = $beautyItemInfoRes['name'];
         $beautyItemPrice = $beautyItemInfoRes['price'];
-        $sms = "你有一个臭美赠送的价值{$beautyItemPrice}元的{$beautyItemName}项目再有5天就到期啦，快去体验吧！下载臭美查看详情Apphttp://t.cn/RZXyLPg";
+        $sms = "你有一个臭美赠送的价值{$beautyItemPrice}元的{$beautyItemName}项目再有5天就到期啦，快去体验吧！下载臭美查看详情Apphttp://t.cn/RZXyLPg 退订回复TD";
         //发送短信
         foreach($presentArticleCodeInfo as $key => $value){
             $res = $thrift->request('sms-center', 'sendSmsByType', array($value['mobilephone'], $sms, '127.0.0.1', 5));

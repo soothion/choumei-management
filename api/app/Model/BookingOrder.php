@@ -8,6 +8,7 @@ use Illuminate\Pagination\AbstractPaginator;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
 use App\BookingOrderItem;
+use App\Model\SeedPool;
 
 class BookingOrder extends Model
 {
@@ -159,6 +160,43 @@ class BookingOrder extends Model
         ];
     }
     
+    public static function book($params)
+    {
+        $item_infos = self::getBaseItemInfo($params['item_ids']);
+        $exist_item_ids = array_column($item_infos, 'item_id');
+        $diff_ids = array_diff($exist_item_ids, $params['item_ids']);
+        if(count($diff_ids)>0)
+        {
+            throw new ApiException("所选(部分)项目不存在!",ERROR::PARAMETER_ERROR);
+        }
+        $ordersn = self::makeOrdersn();        
+        $user_id = self::getUserid($params['phone'], $params['name'], $params['sex']);
+        
+        //#@todo 推荐码相关的处理
+        
+        $datetime = date("Y-m-d H:i:s");
+        self::AddBookingItem($ordersn,$item_infos);
+        $bookingsn = self::makeBookingsn();
+        $attr = [
+            'ORDER_SN'=>$ordersn,
+            'BOOKING_SN'=>$bookingsn,
+            'USER_ID'=>$user_id,
+            'BOOKING_DATE'=>date("Y-m-d",strtotime($params['date'])),      
+            'QUANTITY'=>count($item_infos),
+            'AMOUNT'=>Utils::column_sum('price',$item_infos),
+            'PAYABLE'=>0,
+            'BOOKER_NAME'=>$params['name'],
+            'BOOKER_SEX'=>$params['sex']==1?"M":"F",
+            'BOOKER_PHONE'=>$params['phone'],
+            'STATUS'=>'PYD',
+            'CREATE_TIME'=>$datetime,
+            'UPDATE_TIME'=>$datetime,
+        ];
+        $id = self::insertGetId($attr);
+        $attr['ID'] = $id;
+        return $attr;
+    }
+    
     public static function getCondition($params)
     {
         $select_fields = [
@@ -300,5 +338,85 @@ class BookingOrder extends Model
         ]);
         $base->orderBy('booking_order.CREATE_TIME', 'DESC');
         return $base;
+    }
+    
+    
+    public static function makeOrdersn()
+    {     
+        return substr(strval(time()),2)."1".mt_rand(1000, 9999);
+    }
+    
+
+    public static function makeBookingsn()
+    {
+        $seed = SeedPool::where('TYPE','TKT')->where('STATUS','NEW')->first();
+        if(empty($seed))
+        {
+            throw new ApiException('无可用定妆单号',ERROR::UNKNOWN_ERROR);
+        }
+        $res = $seed->SEED;
+        $seed->update(['STATUS'=>'USD','UPDATE_TIME'=>date("Y-m-d H:i:s")]);
+        return $res;
+    }
+    
+    public static function getBaseItemInfo($item_ids)
+    {
+        $fields = ['item_id','beauty_id','type','name','price','vip_price'];
+        $item_info = BeautyItem::whereIn('item_id',$item_ids)->get($fields)->toArray();
+        return $item_info;
+    }
+    
+    public static function getUserid($mobilephone,$nickname,$sex)
+    {
+        $user = User::where('mobilephone',$mobilephone)->first();
+        if(!empty($user))
+        {
+            return $user->user_id;
+        }
+        else 
+        {
+            $attr = [
+                'mobilephone'=>$mobilephone,            
+                'username'=>strval(Username::makeUsername()),
+                'password'=>md5(strval(mt_rand(1,99999))),
+                'img'=>'',
+                'add_time'=>time(),
+                'nickname'=>$nickname,
+                'sex'=>$sex,
+                'area'=>'',
+                'couponmoney' => 0,
+            ];
+            return User::insertGetId($attr);
+        }
+    }
+    
+    public static function AddBookingItem($ordersn,$items)
+    {
+        $datetime = date("Y-m-d H:i:s");
+        foreach ($items as $item)
+        {
+            $attr = [
+                'ORDER_SN' => $ordersn,
+                'BEAUTY_ID' => $item['beauty_id'],
+                'ITEM_TYPE' => $item['type'] == 1?"FFA":"SPM",
+                'ITEM_ID' => $item['item_id'],
+                'ITEM_NAME' => $item['name'],
+                'QUANTITY' => 1,
+                'PRICE' => $item['price'],
+                'DISCOUNT_PRICE' => $item['vip_price'],
+                'AMOUNT' => $item['price'],
+                'PAYABLE' => $item['vip_price'],
+                'CREATE_TIME' => $datetime,
+                'UPDATE_TIME' => $datetime,
+            ];
+            BookingOrderItem::create($attr);            
+        }
+    }
+    
+    
+
+    public function isFillable($key)
+    {
+        return true;
     }
 }
