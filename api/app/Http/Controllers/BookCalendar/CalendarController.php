@@ -531,7 +531,7 @@ class CalendarController extends Controller {
 			Event::fire('calendar.status','客服id为 '.$this->param['userId']);
 			return $this->success();
 		}
-		$userId = BookingOrder::select(['CUSTOMER_SERVICE_ID'])->where(['ORDER_SN'=>$orderSn,'CONSUME_CALL_PHONE'=>'NON'])->first();
+		$userId = BookingOrder::select(['CUSTOMER_SERVICE_ID'])->where(['ORDER_SN'=>$orderSn,'CONSUME_CALL_PHONE'=>'CALL'])->first();
 		if( empty($userId) ) return $this->error('数据错误了');
 		$name = Manager::select(['name'])->where(['id'=>$userId['CUSTOMER_SERVICE_ID']])->first();
 		if( empty($name) ) return $this->error('数据错误了');
