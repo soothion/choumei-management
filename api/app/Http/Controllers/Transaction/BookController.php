@@ -438,7 +438,12 @@ class BookController extends Controller
      * @apiName create
      * @apiGroup book
      *
-     * @apiParam {Number}  pramas 待定
+     * @apiParam {string}  phone 手机
+     * @apiParam {string}  name 姓名
+     * @apiParam {string}  sex 1.男 2女
+     * @apiParam {string}  item_ids 预约项目(多个用','隔开)
+     * @apiParam {string}  date 预约日期 YYYY-MM-DD
+     * @apiParam {string}  recomment_code 推荐码
      *
      * @apiSuccessExample Success-Response:
      *       {
@@ -453,8 +458,26 @@ class BookController extends Controller
      */
     public function create($id)
     {
-        //#@todo 需求待定
-        return $this->success([]);
+        $params = $this->parameters([
+            'phone'=>self::T_STRING,
+            'name'=>self::T_STRING,
+            'sex'=>self::T_INT,
+            'item_ids'=>self::T_STRING,
+            'date'=>self::T_STRING,
+            'recomment_code'=>self::T_STRING,
+        ]);
+        $params['item_ids'] = explode(",", $params['item_ids']);
+        if( count($params['item_ids'])<1)
+        {
+            throw new ApiException("预约项目不能为空!",ERROR::PARAMETER_ERROR);
+        }
+        //for test
+        $params['manager_uid'] = 1;
+        //$params['manager_uid'] = $this->user->id;
+        $book = BookingOrder::book($params);
+        
+        // Event::fire('booking.create',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
+        return $this->success($book);
     }
     
     /**
