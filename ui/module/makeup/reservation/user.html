@@ -37,7 +37,7 @@
 				<h4> 顾客预约调整</h4>
 			</div>
 			<div>
-				<form action="calendar/export" data-role="export">
+				<form action="calendar/export" data-role="export" data-slug="calendar.export">
 					<button class="btn">导出</button>
 				</form>
 			</div>
@@ -80,11 +80,11 @@
 					<td><%=item.comeShop=="NON"?"未":"已"%>到店</td>
 					<td><%=map[item.bookingDesc]%></td>
 					<td class="operation">
-						<form action="calendar/status/<%=item.orderSn%>" data-role="normal" onsuccess="parent.lib.popup.tips({define:function(){$(this).find('button').addClass('link')}})">
+						<form data-slug="calendar.status" action="calendar/status/<%=item.orderSn%>" data-role="normal" onsuccess="parent.lib.popup.tips({define:function(){$(this).find('button').addClass('link')}})">
 							<input type="hidden" value="<%=session.user.uid%>" name="userId" />
 							<button><i class="fa fa-phone"></i></button>
 						</form>
-						<form action="calendar/modifyDay" data-role="normal" onsuccess="parent.lib.popup.tips({define:function(){location.reload()}})">
+						<form data-slug="calendar.modifyDay" action="calendar/modifyDay" data-role="normal" onsuccess="parent.lib.popup.tips({define:function(){location.reload()}})">
 							<input type="hidden" name="orderSn" value="<%=item.orderSn%>" />
 							<input type="hidden" name="modifyDesc" value="<%=item.bookingDesc%>" />
 							<input type="date" name="modifyDate" value="<%=item.bookingTime%>" required />
