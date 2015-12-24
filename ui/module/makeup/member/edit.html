@@ -15,9 +15,10 @@
 		 </div>		
 		<hr />		 
         </div>		
-        <div class="wrapper" ajat="#domid=form&tempid=form-t" id="form">
+        <div class="wrapper" ajat="<%if(query._){%>others/show/<%=query.id%><%}%>#domid=form&tempid=form-t" id="form">
 			<script type="text/template" id="form-t">
-			<form action="<%if(query.p=='index'){%>beautyItem/update<%}else{%>beautyItem/updateFashion<%}%>" class="form-vertical" data-role="form" >
+			<form action="others/update" class="form-vertical" data-role="form" >
+			<input type="hidden" name="id" value="<%=query.id%>" />
 			<div class="control-group">
 				<label class="control-label" for=""><span class="red">*</span>个人图片：</label>
 				<div class="control">
@@ -27,7 +28,7 @@
 							<div class="control-image-ud">
 								<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 							</div>
-							<input type="hidden" name="photo" class="original" value="<%=data.photo%>" required requiredmsg="请上传项目icon" data-helpid="image-help1">
+							<input type="hidden" name="photo" class="original" value="<%=data.photo%>" required requiredmsg="请上传个人图片" data-helpid="image-help1">
 						</div>
 					</div>
 					<div class="weak">请上传JPG或PNG格式的图标，可通过编辑裁剪750*500，此图标将显示在项目列表中</div>
@@ -106,24 +107,29 @@
 			<hr />
 			<legend>工作信息</legend>
 			<div class="control-group">
+                <label class="control-label" for=""><span class="red">*</span>类别（单选）：</label>
+                <div class="control">
+                    <label><input type="radio" name="type" required value="1" data-type="A" <%=!data.type||data.type==1?"checked":""%>/><span>美导A</span></label>
+					<label><input type="radio" name="type" required value="2" data-type="B" <%=data.type==2?"checked":""%>/><span>美容师B</span></label>
+					<label><input type="radio" name="type" required value="3" data-type="C" <%=data.type==3?"checked":""%>/><span>收银C</span></label>
+					<label><input type="radio" name="type" required value="4" data-type="D" <%=data.type==4?"checked":""%>/><span>前台D</span></label>
+                </div>
+            </div>
+			<div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>在职编号：</label>
                 <div class="control">
-                    <span>A</span><input type="text" name="number" placeholder="输入三位在职编号" value="<%=data.cardId%>" pattern="number" required >
+					
+                    <span id="number-type" style="font-weight:bold;">
+						<%=data.number?data.number.substring(0,1):"A"%>
+					</span>
+					<input type="text"  class="blur-set-number" placeholder="输入三位在职数字编号" value="<%=data.number?data.number.substring(1):""%>" pattern="number" required  minlength="3" max="999" maxlength="3">
+					<span><input type="hidden" name="number" value="<%=data.number%>" data-value="<%=data.number%>" unique="others/checkNumberExists/${value}" /></span>
                 </div>
             </div>  
 			<div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>工作年限：</label>
                 <div class="control">
-                    <input type="text" name="workingLife" pattern="number" max="99" min="1" placeholder="1~99整数" value="<%=data.cardId%>" pattern="email" required>
-                </div>
-            </div>  
-			<div class="control-group">
-                <label class="control-label" for=""><span class="red">*</span>类别（单选）：</label>
-                <div class="control">
-                    <label><input type="radio" name="type" required value="1"/><span>美导A</span></label>
-					<label><input type="radio" name="type" required value="2"/><span>美容师B</span></label>
-					<label><input type="radio" name="type" required value="3"/><span>收银C</span></label>
-					<label><input type="radio" name="type" required value="4"/><span>前台D</span></label>
+                    <input type="text" name="workingLife" pattern="number" max="99" min="1" placeholder="1~99整数" value="<%=data.workingLife%>" pattern="email" required>
                 </div>
             </div>  
 			<hr />
@@ -174,6 +180,14 @@
 						});	
 					});						
 				});
+				$('input[name="type"]').on('click',function(){
+					$('#number-type').text($(this).data('type'));
+				});
+				$('.blur-set-number').on('pass',function(){
+					var $this=$(this);
+					var value=$this.prev().text()+$this.val();
+					$('input[name="number"]').val(value).blur();
+				})
 			});
 			
 		</script>
