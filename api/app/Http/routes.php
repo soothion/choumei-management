@@ -200,7 +200,7 @@ Route::any('assistant/search/{name}',array(
     'uses'=>'Artificer\ArtificerAssistantController@searchNameAndNumber'
 ));
 
-Route::any('others/checkNumberExists/{id?}',array(  
+Route::any('others/checkNumberExists/{number}',array(  
     'as'=>'others.checkNumberExists',
     'uses'=>'Beauty\OthersController@checkNumberExists'
 ));
