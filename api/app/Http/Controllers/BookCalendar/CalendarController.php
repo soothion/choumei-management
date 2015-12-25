@@ -785,7 +785,7 @@ class CalendarController extends Controller {
 		}
 
 		Event::fire('calendar.export','导出某日的订单预约列表 ');
-		$title = '现金劵活动查询列表' .date('Ymd');
+		$title = '顾客预约调整' .date('Ymd');
 		//导出excel
 		$header = ['手机号','姓名','性别','预约项目','预约金额','预约日期','订单状态 ','预约调整 ','客服是否拨打电话'];
 		Excel::create($title, function($excel) use($tempData,$header){
