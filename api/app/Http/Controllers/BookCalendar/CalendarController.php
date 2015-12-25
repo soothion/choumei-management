@@ -783,8 +783,8 @@ class CalendarController extends Controller {
 			$tempData[$k][] = $temp1[ $v['bookerSex'] ];
 			$tempData[$k][] = $v['itemName'];
 			$tempData[$k][] = $v['amount'];
-			$tempData[$k][] = $v['bookingTime'];
 			$tempData[$k][] = $temp4[ $v['comeShop'] ];
+			$tempData[$k][] = $v['bookingTime'];
 			$tempData[$k][] = $temp2[ $v['bookingDesc'] ];
 			$tempData[$k][] = $temp3[ $v['consumeCallPhone'] ];
 			
