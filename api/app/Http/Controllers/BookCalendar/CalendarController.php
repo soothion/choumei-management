@@ -69,15 +69,14 @@ class CalendarController extends Controller {
 		// 本月天数
 		$nowInterval = idate( 't' , strtotime($searchDate) );
 		// 组装有月份的数据
+		$tempCalendar = [];
 		for($i=1,$j=0,$x=0;$i<=$nowInterval;$i++,$x++){
 			$monthTemp = $i<10 ? $searchDate . '-0'.$i : $searchDate.'-'.$i;
 
-			if( (isset( $result2[$j]) && $result2[$j]['bookingDate'] != $monthTemp) || !isset($result2[$j]) ){
+			if( isset($tempCalendar[ $monthTemp ]) && !empty( $tempCalendar[ $monthTemp ] ) )
+				$returnData[$x]['bookingLimit'] = $tempCalendar[ $monthTemp ];
+			else
 				$returnData[$x]['bookingLimit'] = 300;
-			}
-			if( isset( $result2[$j]) && $result2[$j]['bookingDate'] == $monthTemp ){
-				$returnData[$x]['bookingLimit'] = $result2[$j]['bookingLimit'];
-			}
 			if( !isset($result[$j]) || (isset( $result[$j]) && $result[$j]['bookingDate'] != $monthTemp) ){
 				if( empty($result) ) $id = 1;
 				else $id = $result[0]['id'];
