@@ -37,7 +37,7 @@ class BeautyRefundApi extends TransactionWriteApi {
      * 拒绝退款 通过booking_sn
      */
 
-    public function rejectByBookingSn($booking_sns) {
+    public static function rejectByBookingSn($booking_sns) {
         $refundsArr = OrderRefund::whereIn('booking_sn', $booking_sns)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->get(['ordersn', 'booking_sn'])->toArray();
         if (empty($refundsArr)) {
             throw new ApiException("未找到退款单信息", ERROR::REFUND_FLOW_LOST);
@@ -49,7 +49,7 @@ class BeautyRefundApi extends TransactionWriteApi {
             throw new ApiException("部分退款的预约单状态不正确", ERROR::REFUND_STATE_WRONG);
         }
         $bookingUp = BookingOrder::whereIn('ORDER_SN', $ordersns)->where('STATUS', 'RFN')->update(['STATUS' => 'PYD']);
-        $refundUp = OrderRefund::whereIn('order_refund_id', $ids)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->update(['status' => self::REFUND_STATUS_OF_CANCLE]);
+        $refundUp = OrderRefund::whereIn('booking_sn', $booking_sns)->where('status', self::REFUND_STATUS_OF_NORMAL)->where('item_type', '!=', 'MF')->update(['status' => self::REFUND_STATUS_OF_CANCLE]);
         //修改接待信息
         $bookingReceiveUp = BookingReceive::whereIn('order_sn', $ordersns)->where('state', '1')->update(['state' => 0]);
         if ($bookingUp !== false && $refundUp !== false) {

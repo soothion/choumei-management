@@ -12,6 +12,7 @@ use App\BookingOrderItem;
 use App\Utils;
 use App\AlipaySimple;
 use Event;
+use App\BookingOrder;
 
 class BeautyRefundController extends Controller {
 
@@ -428,10 +429,10 @@ class BeautyRefundController extends Controller {
      * 		}
      */
     public function show($id) {
-        $detail = OrderRefund::detail($id);
-//        if(!empty($detail)){//记录日志
-//            Event::fire("BeautyRefund.show");
-//        }
+        $detail = BookingOrder::detail($id);
+        if(!empty($detail)){//记录日志
+            Event::fire("BeautyRefund.show");
+        }
         return $this->success($detail);
     }
 
@@ -440,7 +441,7 @@ class BeautyRefundController extends Controller {
      * @apiName reject
      * @apiGroup beautyrefund
      *
-     * @apiSuccess {Number} ids id(多个用','隔开).
+     * @apiSuccess {String} booking_sn 定妆单订单号(多个用','隔开).
      *
      * @apiErrorExample Error-Response:
      * 		{
@@ -467,7 +468,7 @@ class BeautyRefundController extends Controller {
      * @apiName accept
      * @apiGroup beautyrefund
      *
-     * @apiParam {Number} ids id(多个用','隔开).
+     * @apiParam {String} booking_sn 定妆单订单sn(多个用','隔开).
      * 
      * @apiSuccess {String} alipay 支付宝
      * @apiSuccess {String} wx 微信

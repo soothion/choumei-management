@@ -72,7 +72,7 @@ class OrderRefund extends Model {
             if ($param['initiate_refund'] == 1) {  //用户发起的退款
                 $query->select(array_merge($fields, $order_refund_fields));
                 $query->leftJoin('order_refund', function ($join) {
-                    $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status', '!=', 2);
+                    $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status', '!=', 2)->where('item_type','!=','MF');
                 });
             } else { //臭美人员
                 $query->select(array_merge($fields, $salon_refund_fields));
@@ -82,7 +82,7 @@ class OrderRefund extends Model {
             $query->select(array_merge($fields, $order_refund_fields, $salon_refund_fields));
 //            $query->leftJoin('order_refund', 'order_refund.booking_sn', '=', 'booking_order.BOOKING_SN')
             $query->leftJoin('order_refund', function ($join) {
-                $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status', '!=', 2);
+                $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status', '!=', 2)->where('item_type','!=','MF');
             });
             $query->leftJoin('booking_salon_refund', 'booking_salon_refund.booking_sn', '=', 'booking_order.BOOKING_SN');
         }
@@ -405,6 +405,7 @@ class OrderRefund extends Model {
         if (!empty($manager_id)) {
             $base['manager'] = Manager::getBaseInfo($manager_id);
         }
+        $help_info = BookingOrder::getHelpUserInfo($base['SUBSTITUTOR'],$base['RECOMMENDER']);
         if (empty($payment_log)) {
             $payment_log = NULL;
         } else {
