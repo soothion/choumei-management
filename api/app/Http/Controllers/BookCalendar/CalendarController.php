@@ -259,7 +259,10 @@ class CalendarController extends Controller {
 		$orderSn = $param['orderSn'];
 		$modifyDate = $param['modifyDate'];
 		$modifyDesc = $param['modifyDesc'];
-		
+
+		if( strtotime($modifyDate) < strtotime( date('Y-m-d') )  ) return $this->error('你提交的修改预约时间有误哦！！！');
+		if( !in_array($modifyDesc,['DEF','MORNING','AFTERNOON'] )) return $this->error('未知的时间类型哦！！！');
+			
 		$oldBookingDate = BookingOrder::select(['BOOKING_DATE','UPDATED_BOOKING_DATE','BOOKING_DESC'])->where(['ORDER_SN'=>$orderSn])->first();
 		if(empty($oldBookingDate))	return $this->error('数据有误，请联系管理员');
 		// 需要取出预约的项目id哦:(
@@ -276,7 +279,6 @@ class CalendarController extends Controller {
 		// 更新开始
 		if( $oldBookingTime == $modifyDate && $oldBookingDesc==$modifyDesc ) return $this->success();
 		
-		
 		DB::beginTransaction();
 		// 1. 修改订单的预约时间
 		$result1 = BookingOrder::where(['ORDER_SN'=>$orderSn])->update(['UPDATED_BOOKING_DATE'=>$modifyDate,'BOOKING_DESC'=>$modifyDesc]);
@@ -287,7 +289,7 @@ class CalendarController extends Controller {
 		$tempResultStr = 'result';
 		foreach( $itemIds as $k => $v ){
 			$t = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->first();
-			if( empty($t) ) return $this->error('数据错误，请联系管理人员');
+			if( empty($t) ) { DB::rollBack();return $this->error('数据错误，请联系管理人员');}
 			$tOld = $t->toArray();
 			
 			$tNew = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$modifyDate])->first();
