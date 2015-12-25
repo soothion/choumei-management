@@ -79,7 +79,7 @@
 					<td><%=item.itemName%></td>
 					<td><%=item.amount%></td>
 					<td><%=item.comeShop=="NON"?"未":"已"%>到店</td>
-					<td><input type="date" class="date-item" required style="width:128px;" value="<%=item.bookingTime%>" /></td>
+					<td><input type="date" min="<%=new Date().format("yyyy-MM-dd")%>" class="date-item" required style="width:128px;" value="<%=item.bookingTime%>" /></td>
 					<td>
 						<select required class="desc-item">
 						<%if(item.bookingDesc=="DEF"){%>
