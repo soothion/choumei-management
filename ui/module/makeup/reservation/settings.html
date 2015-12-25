@@ -78,7 +78,7 @@
 								<%if(disabled){%>
 									<%=item.bookingLimit%>
 								<%}else{%>
-								<span><%=item.bookingLimit%></span><input data-id="<%=item.id%>" data-date="<%=item.bookingDate%>" type="text" name="limit" pattern="number" required min="<%=item.quantity%>" value="<%=item.bookingLimit%>" data-value="<%=item.bookingLimit%>"/>
+								<span><%=item.bookingLimit%></span><input maxlength="4" data-id="<%=item.id%>" data-date="<%=item.bookingDate%>" type="text" name="limit" pattern="number" required min="<%=item.quantity%>" value="<%=item.bookingLimit%>" data-value="<%=item.bookingLimit%>"/>
 								<%}%>
 							</p>
 							<%}%>
