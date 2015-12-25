@@ -422,7 +422,7 @@ class CalendarController extends Controller {
 				$tNewData['UPDATE_TIME'] = $updateCallendar['UPDATE_TIME'] = date('Y-m-d H:i:s');
 				$oldDescField = ['MORNING'=>'BOOKING_MORN_COUNT','AFTERNOON'=>'BOOKING_AFTERNOON_COUNT'];
 				// 此旧日历统计只含有修改的项目情况时
-				if( $oldBookingDesc != $modifyDesc && $oldBookingDate != $modifyDate ){
+				if( $oldBookingDesc != $modifyDesc && $oldBookingTime != $modifyDate ){
 					$updateCallendar['QUANTITY'] =  $tOld['QUANTITY'] - $v['QUANTITY'];
 					$tNewData['QUANTITY'] =  $tNew['QUANTITY'] + $v['QUANTITY'];
 					switch( $modifyDesc ){
@@ -446,14 +446,14 @@ class CalendarController extends Controller {
 					
 				}
 				// 					日期变化 具体时间不变
-				if($oldBookingDesc == $modifyDesc && $oldBookingDate != $modifyDate){
+				if($oldBookingDesc == $modifyDesc && $oldBookingTime != $modifyDate){
 					$updateCallendar['QUANTITY'] =  $tOld['QUANTITY'] - $v['QUANTITY'];
 					$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[ $oldDescField[ $oldBookingDesc ] ]-1;
 					$tNewData['QUANTITY'] =  $tNew['QUANTITY'] + $v['QUANTITY'];
 					$tNewData[ $oldDescField[ $oldBookingDesc ] ] = $tNew[ $oldDescField[ $oldBookingDesc ] ]+1;
 				}
 				// 日期不变 具体时间变化
-				if( $oldBookingDate == $modifyDate && $oldBookingDesc != $modifyDesc ){
+				if( $oldBookingTime == $modifyDate && $oldBookingDesc != $modifyDesc ){
 					switch( $modifyDesc ){
 						case 'DEF':
 							$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[ $oldDescField[ $oldBookingDesc ]] -1;
@@ -474,7 +474,7 @@ class CalendarController extends Controller {
 					}
 				}
 				$tOldNumber = $tOld['QUANTITY'] - $v['QUANTITY'];
-				if( $tOldNumber == 0 )
+				if( $tOldNumber == 0 && $oldBookingTime != $modifyDate )
 					$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->delete();
 				else
 					$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->update($updateCallendar);
@@ -485,7 +485,7 @@ class CalendarController extends Controller {
 		foreach( $tempResult as $k => $v ){
 			if(empty($v)){ $resultN = false; break 1;}
 		}
-		if( $result1 && $resultN){
+		if( $result1 && $resultN ){
 			Event::fire('calendar.modifyDay','修改预约时间');
 			DB::commit();
 			return $this->success();
