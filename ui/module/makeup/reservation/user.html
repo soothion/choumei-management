@@ -57,8 +57,8 @@
                             <th>性别</th>                           
                             <th>预约项目 </th>                           
                             <th>预约金额</th>                           
-                            <th><a data-role="hash" href="#page=1&sort_key=bookingTime&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">预约日期 <i class="fa fa-sort"></i></a></th>                           
                             <th><a data-role="hash" href="#page=1&sort_key=comeShop&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">订单状态 <i class="fa fa-sort"></i></a></th>                           
+							<th><a data-role="hash" href="#page=1&sort_key=bookingTime&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">预约日期 <i class="fa fa-sort"></i></a></th>                           
                             <th><a data-role="hash" href="#page=1&sort_key=bookingDesc&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">预约调整 <i class="fa fa-sort"></i></a></th>                           
                             <th>操作</th>
                         </tr>
@@ -79,16 +79,26 @@
 					<td><%=item.itemName%></td>
 					<td><%=item.amount%></td>
 					<td><%=item.comeShop=="NON"?"未":"已"%>到店</td>
-					<td><%=item.bookingTime%></td>
-					<td><%=map[item.bookingDesc]%></td>
+					<td><input type="date" class="date-item" required style="width:128px;" value="<%=item.bookingTime%>" /></td>
+					<td>
+						<select required class="desc-item">
+						<%if(item.bookingDesc=="DEF"){%>
+						<option value="">请选择</option>
+						<%}%>
+						<option <%=item.bookingDesc=="MORNING"?"selected":""%> value="MORNING">上午</option>
+						<option <%=item.bookingDesc=="AFTERNOON"?"selected":""%> value="AFTERNOON">下午</option>
+						</select>
+					</td>
 					<td class="operation">
 						<form data-slug="calendar.status" class="callform" action="calendar/status/<%=item.orderSn%>" data-role="normal">
 							<input type="hidden" value="<%=session.user.uid%>" name="userId" />
 							<button><i class="fa fa-phone"></i></button>
 						</form>
+						<!--
 						<span class="space"></span>
 						<i class="fa fa-calendar" data-ordersn="<%=item.orderSn%>" data-modifydesc="<%=item.bookingDesc%>" data-modifydate="<%=item.bookingTime%>"></i>
-						<form data-slug="calendar.modifyDay" action="calendar/modifyDay" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+						-->
+						<form class="update" data-slug="calendar.modifyDay" action="calendar/modifyDay" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 							<input type="hidden" name="orderSn" value="<%=item.orderSn%>" />
 							<input type="hidden" name="modifyDesc" value="<%=item.bookingDesc%>" />
 							<input type="date" name="modifyDate" value="<%=item.bookingTime%>" required />
@@ -156,7 +166,16 @@
 						},2*60*1000);
 					}
 				});
-			})
+			}).on('input','.date-item',function(){
+				var form=$(this).closest('tr').find("form.update");
+				form.find("input[name='modifyDate']").val($(this).val());
+				form.submit();
+			}).on('change','.desc-item',function(){
+				var form=$(this).closest('tr').find("form.update");
+				form.find("input[name='modifyDesc']").val($(this).val());
+				form.submit();
+			});
+			
 		</script>
     </body>
 </html>
