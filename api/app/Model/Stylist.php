@@ -11,13 +11,13 @@ use Log;
 class Stylist extends Model {
 
     protected $table = 'hairstylist';
-    protected $fillable = ['stylistId', 'salonId', 'type', 'stylistName', 'stylistImg', 'job', 'mobilephone', 'addTime', 'likeNum', 'signature', 'status', 'sex', 'wechat', 'qq', 'email', 'birthday', 'IDcard', 'sNumber', 'workYears', 'grade', 'workExp', 'educateExp', 'description', 'gradeType', 'osType', 'fastGrade'];
+    protected $fillable = ['stylistId', 'salonId', 'stylistName', 'stylistImg', 'job', 'mobilephone', 'addTime', 'likeNum', 'signature', 'status', 'sex', 'wechat', 'qq', 'email', 'birthday', 'IDcard', 'sNumber', 'workYears', 'grade', 'workExp', 'educateExp', 'description', 'gradeType', 'osType', 'fastGrade'];
     public $timestamps = false;
     protected $primaryKey = 'stylistId';
 
     public static function getStylistList($param) {
         $query = Self::getQuery();
-        $field = ['stylistId', 'stylistName', 'mobilephone', 'sNumber', 'grade', 'fastGrade', 'status', 'type'];
+        $field = ['stylistId', 'stylistName', 'mobilephone', 'sNumber', 'grade', 'fastGrade', 'status'];
         if (!empty($param['salonId'])) {
             $query = $query->where('salonId', $param['salonId']);
         }
@@ -50,17 +50,15 @@ class Stylist extends Model {
         unset($results['next_page_url']);
         unset($results['prev_page_url']);
         foreach ($results['data'] as $key => $value) {
-            if ($value->type == 1) {
-                $num = 0;
-                $works = StylistWorks::where('stylist_id', '=', $value->stylistId)->where('status', 'ON')->get();
-                foreach ($works as $key1 => $value) {
-                    if (!empty($value->image_ids)) {
-                        $imageArr = explode(',', $value->image_ids);
-                        $num = $num + (count($imageArr));
-                    }
+            $num = 0;
+            $works = StylistWorks::where('stylist_id', '=', $value->stylistId)->where('status', 'ON')->get();
+            foreach ($works as $key1 => $value) {
+                if (!empty($value->image_ids)) {
+                    $imageArr = explode(',', $value->image_ids);
+                    $num = $num + (count($imageArr));
                 }
-                $results['data'][$key]->num = $num;
             }
+            $results['data'][$key]->num = $num;
         }
         return $results;
     }
@@ -81,9 +79,6 @@ class Stylist extends Model {
         $data['stylistImg'] = $param['stylistImg'];
         if (!empty($param['img'])) {
             $data['img'] = $param['img'];
-        }
-        if (!empty($param['type'])) {
-            $data['type'] = $param['type'];
         }
         if (isset($param['IDcard']) && $param['IDcard']) {
             $data['IDcard'] = $param['IDcard'];
@@ -148,7 +143,6 @@ class Stylist extends Model {
         $data['sNumber'] = $param['sNumber'];
         $data['workYears'] = $param['workYears'];
         $data['signature'] = $param['signature'];
-        $data['type'] = $param['type'];
 
         if (!empty($param['img'])) {
             $data['img'] = $param['img'];

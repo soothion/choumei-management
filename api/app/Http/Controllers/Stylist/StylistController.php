@@ -31,10 +31,9 @@ class StylistController extends Controller {
      * @apiSuccess {Number} stylistId 造型师ID.
      * @apiSuccess {String} stylistName 造型师名称.
      * @apiSuccess {Number} mobilephone 手机号.
-     * @apiSuccess {Number} type 类型：  1 造型师  2 助理  3 其他  （2,3）grade、fastGrade、num直接为“无”.
      * @apiSuccess {String} sNumber 在职编号.
      * @apiSuccess {Numder} grade 悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
-     * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪  .
+     * @apiSuccess {Number} fastGrade 快剪等级 0没有等级 1普通快剪 2总监快剪.
      * @apiSuccess {Number} status 状态:1正常;2:禁用..
      * @apiSuccess {Number} num 作品数.
      * 
@@ -108,10 +107,10 @@ class StylistController extends Controller {
         if (!$stylist) {
             throw new ApiException('找不到该造型师', ERROR::MERCHANT_STYLIST_ID_ERROR);
         }
-//       $task=DB::table('bounty_task')->where(array('hairstylistId'=>$stylistId))->whereIn('btStatus',[2,3])->count();
-//       if($task==true){
-//            throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
-//       } 
+        $task = DB::table('bounty_task')->where(array('hairstylistId' => $stylistId))->whereIn('btStatus', [2, 3])->count();
+        if ($task == true) {
+            throw new ApiException('你有已接单未完成打赏的悬赏单', ERROR::MERCHANT_STYLIST_NOREWARD_ERROR);
+        }
         $data['status'] = 2;
         $query = Stylist::find($stylistId)->update($data);
         if ($query) {
@@ -204,7 +203,6 @@ class StylistController extends Controller {
      *
      * @apiSuccess {Number} stylistId 造型师ID.
      * @apiSuccess {Number} salonId 店铺编号.
-     * @apiSuccess {Number} type 类型：  1 造型师  2 助理  3 其他 .
      * @apiSuccess {String} stylistName 造型师名称.
      * @apiSuccess {String} stylistImg 造型师图像.
      * @apiSuccess {String} job 职位.
@@ -236,7 +234,6 @@ class StylistController extends Controller {
      * @apiSuccess {String} stylistImgCom 造型师头像的缩略图. 
      * @apiSuccess {String} img 造型师图像和造型师头像的缩略图的集合. 
      * @apiSuccess {String} reward 1 是你有已接单未完成打赏的悬赏单  2 是没有订单和未完成打赏的单.
-     * @apiSuccess {String} booking '1' 代表有代预约单未完成或退款中状态的代预约单  '2' 代表没有代预约单未完成或退款中状态的代预约单.
      * 
      * @apiSuccessExample Success-Response:
      * 
@@ -296,13 +293,6 @@ class StylistController extends Controller {
         } else {
             $stylist->reward = 2;
         }
-        $booking = DB::table('booking_order')->where('SUBSTITUTOR',$stylistId)->whereIn('STATUS', ["PYD", "RFN"])->count();
-        if ($booking == true) {
-            $stylist->booking = 1;
-        } else {
-            $stylist->booking = 2;
-        }
-
         $field = ['salonname', 'merchantId'];
         $salon = DB::table('salon')->select($field)->where(array("salonid" => $stylist->salonId))->first();
         if ($salon === false) {
@@ -337,7 +327,6 @@ class StylistController extends Controller {
      * @apiParam {Number} birthday 必填,出生日期.
      * @apiParam {String} IDcard 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,身份证.
      * @apiParam {String} sNumber 必填,在职编号.
-     * @apiParam {Number} type 可选, 类型：  1 造型师  2 助理  3 其他 ..
      * @apiParam {Numder} workYears 必填,工作年限.
      * @apiParam {String} job 必填,门店职位.
      * @apiParam {Numder} grade 可选,悬赏等级 0没有等级 1美发师 2高级美发师 3造型师 4艺术总监.
@@ -413,7 +402,6 @@ class StylistController extends Controller {
      * @apiParam {String} qq 可选,QQ.
      * @apiParam {String} email 可选,email.
      * @apiParam {Number} birthday 必填,出生日期.
-     * @apiParam {Number} type 必填, 类型：  1 造型师  2 助理  3 其他 ..
      * @apiParam {String} IDcard 选择IDcard、drivingLicense、officerCert、passport四个中必填一个,身份证.
      * @apiParam {String} sNumber 必填,在职编号.
      * @apiParam {Numder} workYears 必填,工作年限.
@@ -447,7 +435,7 @@ class StylistController extends Controller {
         if (!$salon) {
             throw new ApiException('找不到该店铺', ERROR::MERCHANT_ID_IS_ERROR);
         }
-        if (!isset($param['stylistImg']) || empty($param['img']) || empty($param['type']) || !isset($param['stylistName']) || empty($param['sex']) || !isset($param['mobilephone']) || !isset($param['job']) || empty($param['birthday']) || empty($param['sNumber']) || empty($param['workYears']) || empty($param['signature'])) {
+        if (!isset($param['stylistImg']) || empty($param['img']) || !isset($param['stylistName']) || empty($param['sex']) || !isset($param['mobilephone']) || !isset($param['job']) || empty($param['birthday']) || empty($param['sNumber']) || empty($param['workYears']) || empty($param['signature'])) {
             throw new ApiException('参数不齐', ERROR::MERCHANT_ERROR);
         }
         if (!isset($param['IDcard']) && !isset($param['drivingLicense']) && !isset($param['passport']) && !isset($param['officerCert'])) {
