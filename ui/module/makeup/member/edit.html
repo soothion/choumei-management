@@ -24,7 +24,7 @@
 				<div class="control">
 					<div class="control-image">
 						<div class="control-single-image">
-							<img src="<%=data.photo%>" alt="">
+							<img src="<%=data.photo%>" alt="" style="width:180px;">
 							<div class="control-image-ud">
 								<div id="imageUpload"><i class="fa fa-cloud-upload"></i>上传图片</div>
 							</div>
@@ -129,7 +129,7 @@
 			<div class="control-group">
                 <label class="control-label" for=""><span class="red">*</span>工作年限：</label>
                 <div class="control">
-                    <input type="text" name="workingLife" pattern="number" max="99" min="1" placeholder="1~99整数" value="<%=data.workingLife%>" pattern="email" required>
+                    <input type="text" name="workingLife" pattern="number" max="99" min="1" placeholder="1~99整数" value="<%=data.workingLife%>" pattern="email" required> <span style="font-weight:bold;">年</span>
                 </div>
             </div>  
 			<hr />

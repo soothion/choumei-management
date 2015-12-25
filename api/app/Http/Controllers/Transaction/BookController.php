@@ -483,8 +483,8 @@ class BookController extends Controller
             throw new ApiException("预约项目不能为空!",ERROR::PARAMETER_ERROR);
         }
         //for test
-        $params['manager_uid'] = 1;
-        //$params['manager_uid'] = $this->user->id;
+        //$params['manager_uid'] = 1;
+        $params['manager_uid'] = $this->user->id;
         $book = BookingOrder::book($params);
         
         //Event::fire('booking.create',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
@@ -519,7 +519,7 @@ class BookController extends Controller
             'update_booking_date' => self::T_STRING,
             'remark' => self::T_STRING,
             'item_ids' => self::T_STRING,
-       ]);
+       ],true);
        $params['item_ids'] = explode(",", $params['item_ids']);
        $params['uid'] = $this->user->id;
        $book = BookingReceive::receive($id,$params);

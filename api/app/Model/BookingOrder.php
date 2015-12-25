@@ -181,6 +181,7 @@ class BookingOrder extends Model
             'STATUS'=>'PYD',
             'CREATE_TIME'=>$datetime,
             'UPDATE_TIME'=>$datetime,
+            'MANAGER_UID'=>$params['manager_uid'],
         ];
         if(!empty($params['recomment_code']))
         {
