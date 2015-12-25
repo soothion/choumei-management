@@ -85,7 +85,7 @@
 						<%}%>
 					</td>
 					<td><%=item.mobilePhone%></td>
-					<td><%=item.status==1?"正常":"禁用"%></td>
+					<td><%=item.status==1?"启用中":"<span style='color:#FF6600'>禁用中</span>"%></td>
 					<td>
 					<%if(item.status==1){%>
 					<form data-slug="others.down" action="others/down/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
