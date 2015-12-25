@@ -20,6 +20,7 @@ use App\Http\Controllers\Powder\PowderArticlesController;
 use App\Order;
 use App\Dividend;
 use App\Utils;
+use App\BeautyRefundApi;
 
 class BookController extends Controller
 {
@@ -185,6 +186,10 @@ class BookController extends Controller
      * @apiSuccess {String} order.UPDATE_TIME 最近修改时间
      * @apiSuccess {String} order.BOOKING_DESC 预约时间  DEF-未选择，MORNING - 上午，AFTERNOON下午
      * @apiSuccess {Object} order.manager 客服信息
+     * @apiSuccess {Object} help_info 代预约信息
+     * @apiSuccess {String} help_info.from 渠道
+     * @apiSuccess {String} help_info.recommend_code 推荐码
+     * @apiSuccess {String} help_info.mobilephone 手机号
      * @apiSuccess {String} order.item_amount 项目总价
      * @apiSuccess {String} order_item 预约项目信息
      * @apiSuccess {String} order_item.ID 项目ID
@@ -267,6 +272,11 @@ class BookController extends Controller
      *             "UPDATE_TIME": "2015-12-03 16:23:01",
      *             "item_amount": 120
      *           },
+     *           "help_info":{
+     *              "from":"choumei_test",
+     *              "recommend_code":"134578",
+     *              "mobilephone":"13456789451",
+     *           }
      *           "order_item": [
      *             {
      *               "ORDER_SN": "3891556931672",
@@ -687,9 +697,48 @@ class BookController extends Controller
      * @apiParam {Number} money 金额
      * @apiParam {String} remark 说明
      *
+     * @apiSuccess {Object} alipay 支付宝
+     * @apiSuccess {String} wx 微信
+     * @apiSuccess {String} balance 余额
+     * @apiSuccess {String} yilian 易联
+     *
      * @apiSuccessExample Success-Response:
-     *       {
-     *       }
+     *     {
+     *        "result": 1,
+     *        "token": "",
+     *        "data": {
+     *            "alipay": {
+     *                "form_args": {
+     *                    "_input_charset": "utf-8",
+     *                    "batch_no": "20150921153317",
+     *                    "batch_num": "1",
+     *                    "detail_data": "2015091600001000780065371963^25.00^买多了/买错了",
+     *                    "notify_url": "http://192.168.13.46:9140/refund/call_back_of_alipay",
+     *                    "partner": "2088701753684258",
+     *                    "refund_date": "2015-09-21 15:33:17",
+     *                    "seller_email": "zfb@choumei.cn",
+     *                    "service": "refund_fastpay_by_platform_pwd",
+     *                    "sign": "b2eb81f50f8de1b04a86e1fddb260f6e",
+     *                    "sign_type": "MD5"
+     *                }
+     *            },
+     *            "wx":{
+     *              "info":"退款成功"
+     *            },
+     *            "balance":{
+     *              "info":"退款成功"
+     *            },
+     *            "yilian":{
+     *              "info":"退款失败<br> ordersn:xxxxx tn:xxxxx"
+     *            }
+     *        }
+     *    }
+     *
+     * @apiErrorExample Error-Response:
+     *		{
+     *		    "result": 0,
+     *		    "msg": "未授权访问"
+     *		}
      *
      *
      * @apiErrorExample Error-Response:
@@ -736,7 +785,7 @@ class BookController extends Controller
         
         $time = time();
         $datetime = date("Y-m-d H:i:s",$time);
-        BookingSalonRefund::create([
+        $attr = [
             'booking_id'=>$id,
             'uid'=>$this->user->id,
             'booking_sn'=>$base->BOOKING_SN,
@@ -745,14 +794,20 @@ class BookController extends Controller
             'money'=>$params['money'],
             'remark'=>$params['remark'],
             'created_at'=>$datetime,
-        ]);
+        ];
+        BookingSalonRefund::create($attr);
+        $res = null;
+        if($base->MANAGER_UID == 0)
+        {
+            $res = BeautyRefundApi::accpetByBookingSn([$base->BOOKING_SN], $this->user->id);
+        }
         
         BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]);
         Order::where('ordersn',$base->BOOKING_SN)->update(['status'=>4,'use_time'=>$time]); 
          
         Event::fire('booking.refund',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
         
-        return $this->success(['id'=>$id]);
+        return $this->success($res);
     }
     
     

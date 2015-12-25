@@ -150,15 +150,12 @@ class BeautyRefundController extends Controller {
             }
             if (empty($value['id'])) {
                 $value['initiate_refund'] = 1;
+                $value['money'] = $value['order_refund_money'];
             } else {
                 $value['initiate_refund'] = 2;
+                $value['money'] = $value['salon_refund_money'];
+                $value['order_refund_id'] = 0;
             }
-            if($value['initiate_refund']==1){
-                $value['money']=$value['order_refund_money'];
-            }else{
-                $value['money']=$value['salon_refund_money'];
-            }
-            
         }
         return $this->success($refundList);
     }
@@ -453,14 +450,14 @@ class BeautyRefundController extends Controller {
      */
     public function reject() {
         $param = $this->parameters([
-            'ids' => self::T_STRING,
+            'booking_sn' => self::T_STRING,
                 ], true);
-        $ids = explode(",", $param['ids']);
-        $ids = array_map("intval", $ids);
-        if (count($ids) < 1) {
+        $booking_sns = array_filter(explode(",", $param['booking_sn']));
+//        $booking_sns = array_map("intval", $ids);
+        if (count($booking_sns) < 1) {
             throw new ApiException("ids参数不能为空", ERROR::PARAMS_LOST);
         }
-        $res = BeautyRefundApi::rejectBeauty($ids);
+        $res = BeautyRefundApi::rejectByBookingSn($booking_sns);
         Event::fire("BeautyRefund.reject");
         return $this->success($res);
     }
@@ -516,10 +513,10 @@ class BeautyRefundController extends Controller {
      * 		}
      */
     public function accept() {
-        $params = $this->parameters(['ids' => self::T_STRING], true);
-        $ids = explode(",", $params['ids']);
-        $ids = array_map("intval", $ids);
-        if (count($ids) < 1) {
+        $params = $this->parameters(['booking_sn' => self::T_STRING], true);
+        $booking_sns = array_filter(explode(",", $params['booking_sn']));
+//        $ids = array_map("intval", $ids);
+        if (count($booking_sns) < 1) {
             throw new ApiException("ids 参数不能为空", ERROR::PARAMS_LOST);
         }
         //操作人ID
@@ -528,7 +525,7 @@ class BeautyRefundController extends Controller {
         } else {
             $opt_user_id = 0;
         }
-        $info = BeautyRefundApi::accpetBeauty($ids, $opt_user_id);
+        $info = BeautyRefundApi::accpetByBookingSn($booking_sns, $opt_user_id);
         //记录日志
         Event::fire("BeautyRefund.accept");
         return $this->success($info);

@@ -12,6 +12,9 @@
 			 <div class="flex-item">
 				<h4>其他人员列表</h4>
 			</div>
+			<div>
+				<a href="edit.html" data-slug="others.add" class="btn-primary"><i class="fa fa-plus"></i> 新增</a>
+			</div>
 		 </div>		 
         </div>		
         <div class="wrapper">
@@ -38,7 +41,7 @@
 					</div>
 				</form>
 				<span class="space"></span>
-				<form action="" data-role="export">
+				<form action="others/export" data-slug="others.export" data-role="export">
 					<button class="btn">导出</button>
 				</form>
 			</div>
@@ -54,7 +57,7 @@
                             <th>在职编号 </th>                           
                             <th>类型</th>                           
                             <th>手机号码</th>                           
-                            <th><a data-role="hash" href="#page=1&sort_key=bookingDesc&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">状态</a></th>                                                   
+                            <th><a data-role="hash" href="#page=1&sort_key=type&sort_type=<%=query.sort_type=="DESC"?"ASC":"DESC"%>">状态</a></th>                                                   
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -84,16 +87,17 @@
 					<td><%=item.mobilePhone%></td>
 					<td><%=item.status==1?"正常":"禁用"%></td>
 					<td>
-					<%if(data.status==1){%>
-					<form action="others/down/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+					<%if(item.status==1){%>
+					<form data-slug="others.down" action="others/down/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 						<button class="link">禁用</button>
 					</form>
 					<%}else{%>
-					<form action="others/up/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
+					<form data-slug="others.up" action="others/up/<%=item.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})">
 						<button class="link">启用</button>
 					</form>
 					<%}%>
-					<a class="link" href="detail.html?id=<%=item.id%>" data-slug="beautyItem.show,beautyItem.update">查看</a>
+					<span class="space"></span>
+					<a class="link" href="detail.html?id=<%=item.id%>" data-slug="others.show,others.update">查看</a>
 					</td>
                   </tr>
 				  <%})%>
@@ -104,24 +108,27 @@
         </div>
             </div>
 			<script type="text/javascript">
-				$('input[name="keyword"]').on('focus',function(){
+				$('select[name="key"]').on('change',function(){
 					var $this=$(this);
-					if($('select[name="itemMainNum"]').val()==4){
+					if($this.val()==4){
 						parent.lib.popup.menu({
 							list:[
-								{id:'1',name:"美导"},
-								{id:'2',name:"美容师"},
-								{id:'3',name:"收银"},
-								{id:'4',name:"前台"},
+								{id:'1',name:"美导A"},
+								{id:'2',name:"美容师B"},
+								{id:'3',name:"收银C"},
+								{id:'4',name:"前台D"},
 							],
 							define:function(data){
-								$this.val(data.id);
+								$('input[name="keyword"]').val(data.id);
 								$this.closest('form').submit();
-							},
-							complete:function(){
-								//$('.popup-overlay').off('click');
 							}
 						});
+					}
+				});
+				$('input[name="keyword"]').on('focus',function(){
+					var select=$('select[name="key"]');
+					if(select.val()==4){
+						select.trigger("change");
 					}
 				})
 			</script>

@@ -479,6 +479,41 @@ class OthersController extends Controller {
         exit;
     }
 
+    /**
+     * @api {get} /others/checkNumberExists/number 8.获取人员编码是否存在
+     * @apiName     checkNumberExists
+     * @apiGroup    Others
+     *
+     * @apiParam {Number} number          必填,人员编号.
+     *
+     *
+     * 
+     * 
+     * @apiSuccessExample Success-Response:
+     * 	{
+     * 	    "result": 1,
+     * 	    "token": "",
+     * 	    "data": []
+     * 	}
+     * 
+     * * @apiErrorExample Error-Response:
+     * 		{
+     *          "result": 0,
+     *          "code": -51510,
+     *          "msg": "人员编号已存在",
+     *          "token": ""
+     *      }
+     */
+    public function checkNumberExists($number) {
+    
+        if(!isset($number))
+            return $this->error('未填写人员编码');
+        $flag = $this->_checkNumberExists(0, $number);
+        if (!$flag)
+            return $this->success();
+        return $this->error('人员编号已存在', ERROR::ARTIFICER_NAME_EXISTS_ERROR);
+    }
+
     // 接收天界或者修改的数据
     private function _formatReceiveData($param) {
         $data = [];
