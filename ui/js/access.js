@@ -59,7 +59,8 @@
     'beautyrefund.index':'/module/makeup/order/refund_list.html',
 	'beauty.index':'/module/makeup/introduction.html',
 	'calendar.index':'/module/makeup/reservation/index.html',
-	'calendar.limit':'/module/makeup/reservation/settings.html'
+	'calendar.limit':'/module/makeup/reservation/settings.html',
+	'others.index':'/module/makeup/member/index.html'
 }
 var access={
 	data:[],

@@ -68,7 +68,7 @@
 						<%data.forEach(function(item,i){%>
 						<%var disabled=item&&new Date().getTime()>=new Date(item.bookingDate).getTime()%>
 						<%var _date=new Date(item.bookingDate).getDate()%>
-						<div class="date-item <%=new Date().getDate()==_date?"today":""%>" style="min-height:125px" <%if(disabled){%>disabled<%}%>>
+						<div class="date-item <%=new Date().format("yyyy-MM-dd")==new Date(item.bookingDate).format("yyyy-MM-dd")?"today":""%>" style="min-height:125px" <%if(disabled){%>disabled<%}%>>
 							<%if(item){%>
 							<h4><%=_date%></h4>
 							<p class="weak">

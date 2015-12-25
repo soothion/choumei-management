@@ -1196,7 +1196,7 @@
 					async:false,
 					success:function(data){
 						if(data.result!=1){
-							$target.trigger('error',{type:'unique'});
+							$target.trigger('error',{type:'unique',msg:data.msg});
 						}else{
 							var error=self.getErrorDom($target);
 							error.remove();
@@ -1249,7 +1249,7 @@
 			if($target.siblings('.unit').length==1){
 				$relative=$target.siblings('.unit');
 			}
-			error.show().html((data.msg||$target.attr('uniquemsg')||this.cfg.uniquemsg));
+			error.show().html(($target.attr('uniquemsg')||data.msg||this.cfg.uniquemsg));
 			if(!error.is(':visible')){
 				$relative.after(error);
 			}
