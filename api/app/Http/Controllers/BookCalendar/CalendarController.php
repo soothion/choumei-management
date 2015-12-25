@@ -317,12 +317,10 @@ class CalendarController extends Controller {
 							default:
 								break;
 						}
-						$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->update($updateCallendar);
 					}
 					// 					日期变化 具体时间不变
 					if($oldBookingDesc == $modifyDesc && $oldBookingTime != $modifyDate){
 						$updateCallendar['BOOKING_DATE'] = $modifyDate;
-						$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->update($updateCallendar);
 				
 					}
 					// 日期不变 具体时间变化
@@ -345,8 +343,8 @@ class CalendarController extends Controller {
 							default:
 								break;
 						}
-						$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->update($updateCallendar);
 					}
+					$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->update($updateCallendar);
 				}else{
 					$tNewData = $tOld;
 					
@@ -380,17 +378,12 @@ class CalendarController extends Controller {
 							default:
 								break;
 						}
-						$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->update($updateCallendar);
-						$tempResult[ $tempResultStr . ($k+20) ] = BookingCalendar::insertGetId( $tNewData );
 					}
 					// 	日期变化 具体时间不变
-					if($oldBookingDesc == $modifyDesc && $oldBookingTime != $modifyDate){
+					if($oldBookingDesc == $modifyDesc && $oldBookingTime != $modifyDate && $modifyDesc != 'DEF' ){
 						$oldDescField = ['MORNING'=>'BOOKING_MORN_COUNT','AFTERNOON'=>'BOOKING_AFTERNOON_COUNT'];
 						$tNewData[ $oldDescField[ $oldBookingDesc ] ] = 1;
 						$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[ $oldDescField[$oldBookingDesc] ]-1;
-						$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->update($updateCallendar);
-						$tempResult[ $tempResultStr . ($k+20) ] = BookingCalendar::insertGetId( $tNewData );
-					
 					}
 					// 日期不变 具体时间变化
 					if( $oldBookingTime == $modifyDate && $oldBookingDesc != $modifyDesc ){
@@ -412,9 +405,9 @@ class CalendarController extends Controller {
 							default:
 								break;
 						}
-						$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->update($updateCallendar);
-						$tempResult[ $tempResultStr . ($k+20) ] = BookingCalendar::insertGetId( $tNewData );
 					}
+					$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->update($updateCallendar);
+					$tempResult[ $tempResultStr . ($k+20) ] = BookingCalendar::insertGetId( $tNewData );
 				}
 			}else{
 				$tNewData = $updateCallendar = [];
@@ -446,7 +439,7 @@ class CalendarController extends Controller {
 					
 				}
 				// 					日期变化 具体时间不变
-				if($oldBookingDesc == $modifyDesc && $oldBookingTime != $modifyDate){
+				if($oldBookingDesc == $modifyDesc && $oldBookingTime != $modifyDate && $modifyDesc != 'DEF'){
 					$updateCallendar['QUANTITY'] =  $tOld['QUANTITY'] - $v['QUANTITY'];
 					$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[ $oldDescField[ $oldBookingDesc ] ]-1;
 					$tNewData['QUANTITY'] =  $tNew['QUANTITY'] + $v['QUANTITY'];
@@ -485,6 +478,7 @@ class CalendarController extends Controller {
 		foreach( $tempResult as $k => $v ){
 			if(empty($v)){ $resultN = false; break 1;}
 		}
+// 		var_dump($result1,$resultN);exit;
 		if( $result1 && $resultN ){
 			Event::fire('calendar.modifyDay','修改预约时间');
 			DB::commit();
