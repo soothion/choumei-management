@@ -519,7 +519,7 @@ class BookController extends Controller
             'update_booking_date' => self::T_STRING,
             'remark' => self::T_STRING,
             'item_ids' => self::T_STRING,
-       ]);
+       ],true);
        $params['item_ids'] = explode(",", $params['item_ids']);
        $params['uid'] = $this->user->id;
        $book = BookingReceive::receive($id,$params);

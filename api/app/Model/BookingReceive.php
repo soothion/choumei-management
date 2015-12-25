@@ -84,7 +84,7 @@ class BookingReceive extends Model
             $attr['arrive_at'] = $datetime;
         }  
         BookingReceive::where("booking_id",$id)->delete();
-        BookingOrder::where('booking_id',$id)->update($base_update_attr);
+        BookingOrder::where('ID',$id)->update($base_update_attr);
         BookingReceive::create($attr);
         return $base;
     }
