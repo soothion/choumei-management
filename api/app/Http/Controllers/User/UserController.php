@@ -441,8 +441,9 @@ class UserController extends Controller{
 
         $user->recommendCodes = DB::table('recommend_code_user')
             ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
+            ->leftJoin('salon','recommend_code_user.salon_id','=','salon.salinid')
         	->where('user_id','=',$id)
-        	->select('user_id','recommend_code_user.recommend_code','type','recommend_code_user.add_time','dividend.activity')
+        	->select('user_id','salon.salonname','recommend_code_user.recommend_code','type','recommend_code_user.add_time','dividend.activity')
         	->get();
 
         $user->add_time = date('Y-m-d',$user->add_time);

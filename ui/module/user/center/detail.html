@@ -302,7 +302,7 @@
 								<td><%=code0?code0.salonname:"无"%></td>
 								<td><%=code0?new Date(code0.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>
-									<%if(code1){%>
+									<%if(code0){%>
 									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
 										<button data-slug="user.update" class="link">解绑商家邀请码</button>
 										<input type="hidden" name="type" value="1" />
@@ -321,7 +321,7 @@
 							<tr>
 								<td>活动邀请码</td>
 								<td><%=code1?code1.recommend_code:"无"%></td>
-								<td><%=code1?code1.activityName:"无"%></td>
+								<td><%=data.activityName?data.activityName:"无"%></td>
 								<td><%=code1&&code1.add_time?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>
 									<%if(code1){%>
