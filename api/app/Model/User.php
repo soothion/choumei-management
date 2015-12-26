@@ -228,6 +228,7 @@ class User extends  Model
 
 
     public static function setCode($id,$type,$code,$activity){
+        $salonid = 0;
         if($type<'5')
         {
             $model =  DB::table('recommend_code_user');
@@ -245,6 +246,8 @@ class User extends  Model
                     ->where('user_id','=',$id)
                     ->where('activity','=',$activity)
                     ->delete();
+                if($activity==2)
+                    $salonid = DB::table('dividend')->where('recommend_code','=',$code)->first()->salon_id;
             }
             else
             {
@@ -253,7 +256,7 @@ class User extends  Model
                     ->delete();
             }
 
-            $result = $model->insert(['user_id'=>$id,'type'=>$type,'recommend_code'=>$code,'add_time'=>time()]);
+            $result = $model->insert(['user_id'=>$id,'salon_id'=>$salonid,'type'=>$type,'recommend_code'=>$code,'add_time'=>time()]);
         }
 
         if($type=='5')
