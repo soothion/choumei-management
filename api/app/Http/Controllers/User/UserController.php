@@ -694,7 +694,7 @@ class UserController extends Controller{
         {
             $activity = intval($param['activity']);
         }
-        $type = intval($param['type']);
+        $type = strval($param['type']);
         $result = User::setCode($id,$type,$param['code'],$activity);
         if($result)
             return $this->success();
