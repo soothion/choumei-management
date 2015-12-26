@@ -415,7 +415,6 @@ class UserController extends Controller{
             'growth',
             'password',
             'costpwd',
-            'activity',
             'user.companyId',
             'company_code.code as companyCode',
             'company_code.companyName',
@@ -441,12 +440,10 @@ class UserController extends Controller{
             throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
 
         $user->recommendCodes = DB::table('recommend_code_user')
+            ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
         	->where('user_id','=',$id)
-        	->select('user_id','recommend_code','type','add_time')
+        	->select('user_id','recommend_code_user.recommend_code','type','recommend_code_user.add_time','dividend.activity')
         	->get();
-
-
-
 
         $user->add_time = date('Y-m-d',$user->add_time);
         $user->sex = User::getSex($user->sex);
@@ -674,7 +671,7 @@ class UserController extends Controller{
             $activity = intval($param['activity']);
         }
         $type = strval($param['type']);
-        $result = User::resetCode($id,$type);
+        $result = User::resetCode($id,$type,$activity);
         if($result)
             return $this->success();
     }

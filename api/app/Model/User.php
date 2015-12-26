@@ -196,7 +196,7 @@ class User extends  Model
         return $exists;
     }
 
-    public static function resetCode($id,$type){
+    public static function resetCode($id,$type,$activity){
         if($type<5)
         {
             if($type=='1')
