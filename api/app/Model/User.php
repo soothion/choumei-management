@@ -215,10 +215,10 @@ class User extends  Model
 
 
     public static function setCode($id,$type,$code,$activity){
-        if($type<5)
+        if($type<'5')
         {
             $model =  DB::table('recommend_code_user');
-            if($type==1)
+            if($type=='1')
             {
                 $exists = DB::table('dividend')
                     ->where('recommend_code','=',$code)
@@ -228,7 +228,7 @@ class User extends  Model
                     throw new ApiException('邀请码不存在', ERROR::CODE_NOT_FOUND);
                 DB::table('recommend_code_user')
                     ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
-                    ->where('type','=',strval($type))
+                    ->where('type','=',$type)
                     ->where('user_id','=',$id)
                     ->where('activity','=',$activity)
                     ->delete();
@@ -236,14 +236,14 @@ class User extends  Model
             else
             {
                 $model->where('user_id','=',$id)
-                    ->where('type','=',strval($type))
+                    ->where('type','=',$type)
                     ->delete();
             }
 
             $result = $model->insert(['user_id'=>$id,'type'=>$type,'recommend_code'=>$code,'add_time'=>time()]);
         }
 
-        if($type==5)
+        if($type=='5')
         {
             $result = self::setCompanyCode($id,$code);
         }
