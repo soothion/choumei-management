@@ -52,7 +52,8 @@ class User extends  Model
         }
 
         $query = $query->with(['recommendCodes'=>function($q){
-            $q->select('user_id','recommend_code','type');
+            $q->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
+                ->select('recommend_code_user.user_id','recommend_code_user.recommend_code','recommend_code_user.type','dividend.activity');
         }]);
 
         if(!empty($param['recommendCode'])){
