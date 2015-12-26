@@ -487,7 +487,7 @@ class BookController extends Controller
         $params['manager_uid'] = $this->user->id;
         $book = BookingOrder::book($params);
         
-        //Event::fire('booking.create',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
+        Event::fire('booking.create',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success($book);
     }
     
@@ -624,7 +624,7 @@ class BookController extends Controller
         'order_sn'=>$base->ORDER_SN,
         'created_at'=>date("Y-m-d H:i:s"),
         ]);
-        //Event::fire('booking.bill',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
+        Event::fire('booking.bill',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
         return $this->success(['id'=>$id]);
     }
     
