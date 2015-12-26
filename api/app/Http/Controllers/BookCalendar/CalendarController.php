@@ -293,7 +293,8 @@ class CalendarController extends Controller {
 			$tOld = $t->toArray();
 			
 			$tNew = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$modifyDate])->first();
-			
+
+			$itemQuantity = $v['QUANTITY'];
 			// 如果新修改的时间日历不存在的情况
 			if( empty($tNew) ){
 				$updateCallendar = [];
@@ -304,16 +305,22 @@ class CalendarController extends Controller {
 						$updateCallendar['BOOKING_DATE'] = $modifyDate;
 						switch( $modifyDesc ){
 							case 'DEF':
-								$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[ $oldDescField[ $oldBookingDesc ] ]  -1;
+								$updateDesc = $tOld[ $oldDescField[ $oldBookingDesc ] ] - $itemQuantity;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $updateDesc;
 								break;
 							case 'MORNING':
-								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
+								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+								$updateDesc = $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $updateDesc;
 								$updateCallendar['BOOKING_MORN_COUNT'] = $tOld['BOOKING_MORN_COUNT']+1;
 								break;
 							case 'AFTERNOON':
-								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-								$updateCallendar['BOOKING_MORN_COUNT'] = $tOld['BOOKING_MORN_COUNT']-$tempee;
+								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+								$updateDesc = $tOld['BOOKING_MORN_COUNT']-$tempee;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar['BOOKING_MORN_COUNT'] = $updateDesc;
 								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $tOld['BOOKING_AFTERNOON_COUNT']+1;
 								break;
 							default:
@@ -330,17 +337,23 @@ class CalendarController extends Controller {
 						$oldDescField = ['MORNING'=>'BOOKING_MORN_COUNT','AFTERNOON'=>'BOOKING_AFTERNOON_COUNT'];
 						switch( $modifyDesc ){
 							case 'DEF':
-								$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[ $oldDescField[ $oldBookingDesc ]] -1;
+								$updateDesc = $tOld[ $oldDescField[ $oldBookingDesc ]] -$itemQuantity;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $updateDesc;
 								break;
 							case 'MORNING':
-								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
-								$updateCallendar['BOOKING_MORN_COUNT'] = $tOld['BOOKING_MORN_COUNT']+1;
+								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+								$updateDesc = $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $updateDesc;
+								$updateCallendar['BOOKING_MORN_COUNT'] = $tOld['BOOKING_MORN_COUNT']+$itemQuantity;
 								break;
 							case 'AFTERNOON':
-								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-								$updateCallendar['BOOKING_MORN_COUNT'] = $tOld['BOOKING_MORN_COUNT']-$tempee;
-								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $tOld['BOOKING_AFTERNOON_COUNT']+1;
+								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+								$updateDesc = $tOld['BOOKING_MORN_COUNT']-$tempee;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar['BOOKING_MORN_COUNT'] = $updateDesc;
+								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $tOld['BOOKING_AFTERNOON_COUNT']+$itemQuantity;
 								break;
 							default:
 								break;
@@ -365,17 +378,23 @@ class CalendarController extends Controller {
 						$oldDescField = ['MORNING'=>'BOOKING_MORN_COUNT','AFTERNOON'=>'BOOKING_AFTERNOON_COUNT'];
 						switch( $modifyDesc ){
 							case 'DEF':
-								$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[$oldDescField[ $oldBookingDesc ]] -1;
+								$updateDesc = $tOld[$oldDescField[ $oldBookingDesc ]] -$itemQuantity;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $updateDesc;
 								break;
 							case 'MORNING':
-								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
-								$tNewData['BOOKING_MORN_COUNT'] = 1;
+								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+								$updateDesc = $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $updateDesc;
+								$tNewData['BOOKING_MORN_COUNT'] = $itemQuantity;
 								break;
 							case 'AFTERNOON':
-								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-								$updateCallendar['BOOKING_MORN_COUNT'] = $tOld['BOOKING_MORN_COUNT']-$tempee;
-								$tNewData['BOOKING_AFTERNOON_COUNT'] = 1;
+								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+								$updateDesc = $tOld['BOOKING_MORN_COUNT']-$tempee;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar['BOOKING_MORN_COUNT'] = $updateDesc;
+								$tNewData['BOOKING_AFTERNOON_COUNT'] = $itemQuantity;
 								break;
 							default:
 								break;
@@ -384,25 +403,33 @@ class CalendarController extends Controller {
 					// 	日期变化 具体时间不变
 					if($oldBookingDesc == $modifyDesc && $oldBookingTime != $modifyDate && $modifyDesc != 'DEF' ){
 						$oldDescField = ['MORNING'=>'BOOKING_MORN_COUNT','AFTERNOON'=>'BOOKING_AFTERNOON_COUNT'];
-						$tNewData[ $oldDescField[ $oldBookingDesc ] ] = 1;
-						$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[ $oldDescField[$oldBookingDesc] ]-1;
+						$tNewData[ $oldDescField[ $oldBookingDesc ] ] = $itemQuantity;
+						$updateDesc = $tOld[ $oldDescField[$oldBookingDesc] ]-$itemQuantity;
+						if( $updateDesc < 0 ) $updateDesc = 0;
+						$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $updateDesc;
 					}
 					// 日期不变 具体时间变化
 					if( $oldBookingTime == $modifyDate && $oldBookingDesc != $modifyDesc ){
 						$oldDescField = ['MORNING'=>'BOOKING_MORN_COUNT','AFTERNOON'=>'BOOKING_AFTERNOON_COUNT'];
 						switch( $modifyDesc ){
 							case 'DEF':
-								$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[ $oldDescField[ $oldBookingDesc ]]-1;
+								$updateDesc = $tOld[ $oldDescField[ $oldBookingDesc ]]-$itemQuantity;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $updateDesc;
 								break;
 							case 'MORNING':
-								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
-								$tNewData['BOOKING_MORN_COUNT'] = 1 ;
+								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+								$updateDesc = $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $updateDesc;
+								$tNewData['BOOKING_MORN_COUNT'] = $tempee ;
 								break;
 							case 'AFTERNOON':
-								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-								$updateCallendar['BOOKING_MORN_COUNT'] = $tOld['BOOKING_MORN_COUNT']-$tempee;
-								$tNewData['BOOKING_AFTERNOON_COUNT'] = 1;
+								$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+								$updateDesc = $tOld['BOOKING_MORN_COUNT']-$tempee;
+								if( $updateDesc < 0 ) $updateDesc = 0;
+								$updateCallendar['BOOKING_MORN_COUNT'] = $updateDesc;
+								$tNewData['BOOKING_AFTERNOON_COUNT'] = $itemQuantity;
 								break;
 							default:
 								break;
@@ -418,22 +445,28 @@ class CalendarController extends Controller {
 				$oldDescField = ['MORNING'=>'BOOKING_MORN_COUNT','AFTERNOON'=>'BOOKING_AFTERNOON_COUNT'];
 				// 此旧日历统计只含有修改的项目情况时
 				if( $oldBookingDesc != $modifyDesc && $oldBookingTime != $modifyDate ){
-					$updateCallendar['QUANTITY'] =  $tOld['QUANTITY'] - $v['QUANTITY'];
-					$tNewData['QUANTITY'] =  $tNew['QUANTITY'] + $v['QUANTITY'];
+					$updateCallendar['QUANTITY'] =  $tOld['QUANTITY'] - $itemQuantity;
+					$tNewData['QUANTITY'] =  $tNew['QUANTITY'] + $itemQuantity;
 					switch( $modifyDesc ){
 						case 'DEF':
-							$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[$oldDescField[ $oldBookingDesc ]] -1;
-							$tNewData[ $oldDescField[ $oldBookingDesc ] ] = $tNew[$oldDescField[ $oldBookingDesc ]] +1;
+							$updateDesc = $tOld[$oldDescField[ $oldBookingDesc ]] -$itemQuantity;
+							if( $updateDesc < 0 ) $updateDesc = 0;
+							$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $updateDesc;
+							$tNewData[ $oldDescField[ $oldBookingDesc ] ] = $tNew[$oldDescField[ $oldBookingDesc ]] +$itemQuantity;
 							break;
 						case 'MORNING':
-							$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-							$updateCallendar['BOOKING_AFTERNOON_COUNT'] =  $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
-							$tNewData['BOOKING_MORN_COUNT'] = $tNew['BOOKING_MORN_COUNT']+1;
+							$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+							$updateDesc = $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
+							if( $updateDesc < 0 ) $updateDesc = 0;
+							$updateCallendar['BOOKING_AFTERNOON_COUNT'] =  $updateDesc;
+							$tNewData['BOOKING_MORN_COUNT'] = $tNew['BOOKING_MORN_COUNT']+$itemQuantity;
 							break;
 						case 'AFTERNOON':
-							$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-							$updateCallendar['BOOKING_MORN_COUNT'] = $tOld['BOOKING_MORN_COUNT']-$tempee;
-							$tNewData['BOOKING_AFTERNOON_COUNT'] = $tNew['BOOKING_AFTERNOON_COUNT']+1;
+							$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+							$updateDesc = $tOld['BOOKING_MORN_COUNT']-$tempee;
+							if( $updateDesc < 0 ) $updateDesc = 0;
+							$updateCallendar['BOOKING_MORN_COUNT'] = $updateDesc;
+							$tNewData['BOOKING_AFTERNOON_COUNT'] = $tNew['BOOKING_AFTERNOON_COUNT']+$itemQuantity;
 							break;
 						default:
 							break;
@@ -442,33 +475,41 @@ class CalendarController extends Controller {
 				}
 				// 					日期变化 具体时间不变
 				if($oldBookingDesc == $modifyDesc && $oldBookingTime != $modifyDate && $modifyDesc != 'DEF'){
-					$updateCallendar['QUANTITY'] =  $tOld['QUANTITY'] - $v['QUANTITY'];
-					$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[ $oldDescField[ $oldBookingDesc ] ]-1;
-					$tNewData['QUANTITY'] =  $tNew['QUANTITY'] + $v['QUANTITY'];
-					$tNewData[ $oldDescField[ $oldBookingDesc ] ] = $tNew[ $oldDescField[ $oldBookingDesc ] ]+1;
+					$updateCallendar['QUANTITY'] =  $tOld['QUANTITY'] - $itemQuantity;
+					$updateDesc = $tOld[ $oldDescField[ $oldBookingDesc ] ]-$itemQuantity;
+					if( $updateDesc<0 ) $updateDesc = 0;
+					$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $updateDesc;
+					$tNewData['QUANTITY'] =  $tNew['QUANTITY'] + $itemQuantity;
+					$tNewData[ $oldDescField[ $oldBookingDesc ] ] = $tNew[ $oldDescField[ $oldBookingDesc ] ]+$itemQuantity;
 				}
 				// 日期不变 具体时间变化
 				if( $oldBookingTime == $modifyDate && $oldBookingDesc != $modifyDesc ){
 					switch( $modifyDesc ){
 						case 'DEF':
-							$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $tOld[ $oldDescField[ $oldBookingDesc ]] -1;
-							$tNewData[ $oldDescField[ $oldBookingDesc ] ] = $tNew[ $oldDescField[ $oldBookingDesc ]] +1;
+							$updateDesc = $tOld[ $oldDescField[ $oldBookingDesc ]] -$itemQuantity;
+							if( $updateDesc < 0 ) $updateDesc = 0;
+							$updateCallendar[ $oldDescField[ $oldBookingDesc ] ] = $updateDesc;
+							$tNewData[ $oldDescField[ $oldBookingDesc ] ] = $tNew[ $oldDescField[ $oldBookingDesc ]] +$itemQuantity;
 							break;
 						case 'MORNING':
-							$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-							$updateCallendar['BOOKING_AFTERNOON_COUNT'] =$tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
-							$tNewData['BOOKING_MORN_COUNT'] = $tNew['BOOKING_MORN_COUNT']+1;
+							$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+							$updateDesc = $tOld['BOOKING_AFTERNOON_COUNT']-$tempee;
+							if( $updateDesc < 0 ) $updateDesc = 0;
+							$updateCallendar['BOOKING_AFTERNOON_COUNT'] = $updateDesc;
+							$tNewData['BOOKING_MORN_COUNT'] = $tNew['BOOKING_MORN_COUNT']+$itemQuantity;
 							break;
 						case 'AFTERNOON':
-							$tempee = isset( $oldDescField[ $oldBookingDesc ] )?1:0;
-							$updateCallendar['BOOKING_MORN_COUNT'] = $tOld['BOOKING_MORN_COUNT'] - $tempee;
-							$tNewData['BOOKING_AFTERNOON_COUNT'] = $tNew['BOOKING_AFTERNOON_COUNT']+1;
+							$tempee = isset( $oldDescField[ $oldBookingDesc ] )?$itemQuantity:0;
+							$updateDesc = $tOld['BOOKING_MORN_COUNT'] - $tempee;
+							if( $updateDesc < 0 ) $updateDesc = 0;
+							$updateCallendar['BOOKING_MORN_COUNT'] = $updateDesc;
+							$tNewData['BOOKING_AFTERNOON_COUNT'] = $tNew['BOOKING_AFTERNOON_COUNT']+$itemQuantity;
 							break;
 						default:
 							break;
 					}
 				}
-				$tOldNumber = $tOld['QUANTITY'] - $v['QUANTITY'];
+				$tOldNumber = $tOld['QUANTITY'] - $itemQuantity;
 				if( $tOldNumber == 0 && $oldBookingTime != $modifyDate )
 					$tempResult[ $tempResultStr . ($k+2) ] = BookingCalendar::where(['ITEM_ID'=>$v['ITEM_ID'],'BOOKING_DATE'=>$oldBookingTime])->delete();
 				else
@@ -480,7 +521,8 @@ class CalendarController extends Controller {
 		foreach( $tempResult as $k => $v ){
 			if(empty($v)){ $resultN = false; break 1;}
 		}
-// 		var_dump($result1,$resultN);exit;
+		DB::rollBack();
+		var_dump($result1,$resultN);exit;
 		if( $result1 && $resultN ){
 			Event::fire('calendar.modifyDay','修改预约时间');
 			DB::commit();
