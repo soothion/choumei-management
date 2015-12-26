@@ -451,13 +451,19 @@ class ShopCountController extends Controller
         {
             $str = "订单结算";
             $res = ShopCountApi::countOrder($orders);
-            ShopCountApi::commissionOrder($orders);
+            if(time() <= strtotime("2016-01-01"))
+            {
+                ShopCountApi::commissionOrder($orders);
+            }
         }
         else if($param['type'] == 2)
         {
             $str = "赏金单结算";
             $res = ShopCountApi::countBounty($orders);
-            ShopCountApi::commissionBounty($orders);
+            if(time() <= strtotime("2016-01-01"))
+            {
+                ShopCountApi::commissionBounty($orders);
+            }
         }     
         return $this->success($res);
        
