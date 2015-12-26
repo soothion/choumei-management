@@ -199,10 +199,22 @@ class User extends  Model
     public static function resetCode($id,$type){
         if($type<5)
         {
-            $result = DB::table('recommend_code_user')
-                ->where('user_id','=',$id)
-                ->where('type','=',$type)
-                ->delete();
+            if($type=='1')
+            {
+                $result = DB::table('recommend_code_user')
+                    ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
+                    ->where('type','=',$type)
+                    ->where('user_id','=',$id)
+                    ->where('activity','=',$activity)
+                    ->delete();
+            }
+            else
+            {
+                $result = DB::table('recommend_code_user')
+                    ->where('user_id','=',$id)
+                    ->where('type','=',$type)
+                    ->delete();
+            }  
         }
 
         if($type==5)

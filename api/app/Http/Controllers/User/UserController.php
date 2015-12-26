@@ -668,6 +668,11 @@ class UserController extends Controller{
         $param = $this->param;
         if(empty($param['type']))
             throw new ApiException('type参数必传', ERROR::PARAMETER_ERROR);
+        $activity = 2;
+        if(!empty($param['activity']))
+        {
+            $activity = intval($param['activity']);
+        }
         $type = strval($param['type']);
         $result = User::resetCode($id,$type);
         if($result)
