@@ -799,7 +799,13 @@ class BookController extends Controller
         $res = null;
         if($base->MANAGER_UID == 0)
         {
-            $res = BeautyRefundApi::accpetByBookingSn([$base->BOOKING_SN], $this->user->id);
+            try{
+                $res = BeautyRefundApi::accpetByBookingSn([$base->BOOKING_SN], $this->user->id);
+            }
+            catch (\Exception $e)
+            {
+                Utils::log("pay", date("Y-m-d H:i:s")." ".$e->getMessage()."\n","offline_refund");
+            }
         }
         
         BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]);

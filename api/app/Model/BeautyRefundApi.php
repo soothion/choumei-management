@@ -178,7 +178,7 @@ class BeautyRefundApi extends TransactionWriteApi {
                 throw new ApiException("关联的订单状态不正确", ERROR::REFUND_STATE_WRONG);
             }
         } else { //线下退款
-            $refunds = BookingSalonRefund::whereIn('booking_sn', $booking_sns)->get(['order_sn as ordersn', 'booking_sn']);
+            $refunds = BookingSalonRefund::whereIn('booking_sn', $booking_sns)->get(['order_sn as ordersn', 'booking_sn'])->toArray();
             $orderNum = BookingOrder::whereIn('BOOKING_SN', $booking_sns)->whereIn('STATUS', ['PYD', 'CSD'])->count();
             if (intval($orderNum) !== $countIds) {
                 throw new ApiException("关联的订单状态不正确", ERROR::REFUND_STATE_WRONG);
