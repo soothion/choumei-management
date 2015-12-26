@@ -228,7 +228,7 @@ class User extends  Model
                     throw new ApiException('邀请码不存在', ERROR::CODE_NOT_FOUND);
                 DB::table('recommend_code_user')
                     ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
-                    ->where('type','=',$type)
+                    ->where('type','=',strval($type))
                     ->where('user_id','=',$id)
                     ->where('activity','=',$activity)
                     ->delete();
@@ -236,7 +236,7 @@ class User extends  Model
             else
             {
                 $model->where('user_id','=',$id)
-                    ->where('type','=',$type)
+                    ->where('type','=',strval($type))
                     ->delete();
             }
 
