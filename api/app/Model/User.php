@@ -214,12 +214,15 @@ class User extends  Model
     }
 
 
-    public static function setCode($id,$type,$code){
+    public static function setCode($id,$type,$code,$activity){
         if($type<5)
         {
             if($type==1)
             {
-                $exists = DB::table('dividend')->where('recommend_code','=',$code)->first();
+                $exists = DB::table('dividend')
+                    ->where('recommend_code','=',$code)
+                    ->where('activity','=',$activity)
+                    ->first();
                 if(!$exists)
                     throw new ApiException('邀请码不存在', ERROR::CODE_NOT_FOUND);
             }

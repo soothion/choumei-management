@@ -682,14 +682,20 @@ class UserController extends Controller{
      * @apiParam {Number} id 用户ID.
      * @apiParam {String} type 推荐码类型：1美发店铺邀请码或美发活动邀请码、2美妆店铺邀请码、3推荐人、4美妆活动邀请码、5集团码
      * @apiParam {String} code 邀请码.
+     * @apiParam {Number} activity是否为活动邀请码:1是2不是.
      */
     public function setCode($id)
     {
         $param = $this->param;
         if(empty($param['type']&&$param['code']))
             throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
+        $activity = 2;
+        if(!empty($param['activity']))
+        {
+            $activity = intval($param['activity']);
+        }
         $type = intval($param['type']);
-        $result = User::setCode($id,$type,$param['code']);
+        $result = User::setCode($id,$type,$param['code'],$activity);
         if($result)
             return $this->success();
 
