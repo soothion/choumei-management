@@ -321,7 +321,7 @@
 							<tr>
 								<td>活动邀请码</td>
 								<td><%=code1?code1.recommend_code:"无"%></td>
-								<td><%=data.activityName?data.activityName:"无"%></td>
+								<td><%=code1?data.activityName:"无"%></td>
 								<td><%=code1&&code1.add_time?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>
 									<%if(code1){%>
