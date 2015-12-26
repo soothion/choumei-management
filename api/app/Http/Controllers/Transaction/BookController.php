@@ -473,12 +473,13 @@ class BookController extends Controller
             'phone'=>self::T_STRING,
             'name'=>self::T_STRING,
             'sex'=>self::T_INT,
-            'item_ids'=>self::T_STRING,
+            //'item_ids'=>self::T_RAW,
             'date'=>self::T_STRING,
             'recomment_code'=>self::T_STRING,
         ]);
-        $params['item_ids'] = explode(",", $params['item_ids']);
-        if( count($params['item_ids'])<1)
+        $params['item_ids'] = $this->param['item_ids'];
+      
+        if( is_array($params['item_ids'])&& count($params['item_ids'])<1)
         {
             throw new ApiException("预约项目不能为空!",ERROR::PARAMETER_ERROR);
         }
