@@ -524,8 +524,8 @@ class CalendarController extends Controller {
 		foreach( $tempResult as $k => $v ){
 			if(empty($v)){ $resultN = false; break 1;}
 		}
-		DB::rollBack();
-		var_dump($result1,$resultN);exit;
+// 		DB::rollBack();
+// 		var_dump($result1,$resultN);exit;
 		if( $result1 && $resultN ){
 			Event::fire('calendar.modifyDay','修改预约时间');
 			DB::commit();
