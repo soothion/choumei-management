@@ -473,12 +473,13 @@ class BookController extends Controller
             'phone'=>self::T_STRING,
             'name'=>self::T_STRING,
             'sex'=>self::T_INT,
-            'item_ids'=>self::T_STRING,
+            //'item_ids'=>self::T_RAW,
             'date'=>self::T_STRING,
             'recomment_code'=>self::T_STRING,
         ]);
-        $params['item_ids'] = explode(",", $params['item_ids']);
-        if( count($params['item_ids'])<1)
+        $params['item_ids'] = $this->param['item_ids'];
+      
+        if( is_array($params['item_ids'])&& count($params['item_ids'])<1)
         {
             throw new ApiException("预约项目不能为空!",ERROR::PARAMETER_ERROR);
         }
@@ -487,7 +488,7 @@ class BookController extends Controller
         $params['manager_uid'] = $this->user->id;
         $book = BookingOrder::book($params);
         
-        //Event::fire('booking.create',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
+        Event::fire('booking.create',"预约号".$book['BOOKING_SN']." "."订单号".$book['ORDER_SN']);
         return $this->success($book);
     }
     
@@ -624,7 +625,7 @@ class BookController extends Controller
         'order_sn'=>$base->ORDER_SN,
         'created_at'=>date("Y-m-d H:i:s"),
         ]);
-        //Event::fire('booking.bill',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
+        Event::fire('booking.bill',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
         return $this->success(['id'=>$id]);
     }
     
@@ -799,7 +800,13 @@ class BookController extends Controller
         $res = null;
         if($base->MANAGER_UID == 0)
         {
-            $res = BeautyRefundApi::accpetByBookingSn([$base->BOOKING_SN], $this->user->id);
+            try{
+                $res = BeautyRefundApi::accpetByBookingSn([$base->BOOKING_SN], $this->user->id);
+            }
+            catch (\Exception $e)
+            {
+                Utils::log("pay", date("Y-m-d H:i:s")." ".$e->getMessage()."\n","offline_refund");
+            }
         }
         
         BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]);

@@ -235,6 +235,7 @@
 			
 				<%
 					var codes=data.recommendCodes;
+					var code0=null;
 					var code1=null;
 					var code2=null;
 					var code3=null;
@@ -242,7 +243,10 @@
 				%>
 				<%data.recommendCodes.forEach(function(code){%>
 					<%
-						if(code.type==1){
+						if(code.type==1&&code.activity==2){
+							code0=code;
+						}
+						if(code.type==1&&code.activity==1){
 							code1=code;
 						}
 						if(code.type==2){
@@ -294,14 +298,15 @@
 							</tr>
 							<tr>
 								<td>商家邀请码</td>
-								<td><%=data.activity==2&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==2&&code1&&code1.type==1?code1.salonname:"无"%></td>
-								<td><%=data.activity==2&&code1&&code1.type==1?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td><%=code0?code0.recommend_code:"无"%></td>
+								<td><%=code0?code0.salonname:"无"%></td>
+								<td><%=code0?new Date(code0.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>
-									<%if(data.activity==2&&code1&&code1.type==1){%>
+									<%if(code0){%>
 									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
 										<button data-slug="user.update" class="link">解绑商家邀请码</button>
 										<input type="hidden" name="type" value="1" />
+										<input type="hidden" name="activity" value="2" />
 									</form>
 									<span class="space"></span>
 									<%}%>
@@ -309,19 +314,21 @@
 										<button data-slug="user.update" type="button" class="link bind">绑定商家邀请码</button>
 										<input type="hidden" name="code" />
 										<input type="hidden" name="type" value="1" />
+										<input type="hidden" name="activity" value="2" />
 									</form>	
 								</td>
 							</tr>
 							<tr>
 								<td>活动邀请码</td>
-								<td><%=data.activity==1&&code1&&code1.type==1?code1.recommend_code:"无"%></td>
-								<td><%=data.activity==1&&code1&&code1.type==1?code1.activityName:"无"%></td>
-								<td><%=data.activity==1&&code1&&code1.type==1&&code1.add_time?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td><%=code1?code1.recommend_code:"无"%></td>
+								<td><%=code1?data.activityName:"无"%></td>
+								<td><%=code1&&code1.add_time?new Date(code1.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>
-									<%if(data.activity==1&&code1&&code1.type==1){%>
+									<%if(code1){%>
 									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
 										<button data-slug="user.update" class="link">解绑活动邀请码</button>
 										<input type="hidden" name="type" value="1" />
+										<input type="hidden" name="activity" value="1" />
 									</form>
 									<span class="space"></span>
 									<%}%>
@@ -329,6 +336,7 @@
 										<button data-slug="user.update" type="button" class="link bind">绑定活动邀请码</button>
 										<input type="hidden" name="code" />
 										<input type="hidden" name="type" value="1" />
+										<input type="hidden" name="activity" value="1" />
 									</form>	
 								</td>
 							</tr>

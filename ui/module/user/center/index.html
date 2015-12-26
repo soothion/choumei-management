@@ -98,12 +98,12 @@
 					  <td><%=item.companyCode%></td>
 					  <td>
 						<%item.recommend_codes.forEach(function(code){%>
-							 <%=item.activity==2&&code.type==1?code.recommend_code:""%>
+							 <%=code.activity==2&&code.type==1?code.recommend_code:""%>
 						<%})%>
 					 </td>
 					  <td>
 						<%item.recommend_codes.forEach(function(code){%>
-							<%=item.activity==1&&code.type==1?code.recommend_code:""%>
+							<%=code.activity==1&&code.type==1?code.recommend_code:""%>
 						<%})%>
 					 </td>
 					  <td>

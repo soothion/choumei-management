@@ -415,7 +415,6 @@ class UserController extends Controller{
             'growth',
             'password',
             'costpwd',
-            'activity',
             'user.companyId',
             'company_code.code as companyCode',
             'company_code.companyName',
@@ -441,12 +440,11 @@ class UserController extends Controller{
             throw new ApiException('用户不存在', ERROR::USER_NOT_FOUND);
 
         $user->recommendCodes = DB::table('recommend_code_user')
+            ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
+            ->leftJoin('salon','recommend_code_user.salon_id','=','salon.salonid')
         	->where('user_id','=',$id)
-        	->select('user_id','recommend_code','type','add_time')
+        	->select('user_id','salon.salonname','recommend_code_user.recommend_code','type','recommend_code_user.add_time','dividend.activity')
         	->get();
-
-
-
 
         $user->add_time = date('Y-m-d',$user->add_time);
         $user->sex = User::getSex($user->sex);
@@ -668,8 +666,13 @@ class UserController extends Controller{
         $param = $this->param;
         if(empty($param['type']))
             throw new ApiException('type参数必传', ERROR::PARAMETER_ERROR);
-        $type = intval($param['type']);
-        $result = User::resetCode($id,$type);
+        $activity = 2;
+        if(!empty($param['activity']))
+        {
+            $activity = intval($param['activity']);
+        }
+        $type = strval($param['type']);
+        $result = User::resetCode($id,$type,$activity);
         if($result)
             return $this->success();
     }
@@ -682,14 +685,20 @@ class UserController extends Controller{
      * @apiParam {Number} id 用户ID.
      * @apiParam {String} type 推荐码类型：1美发店铺邀请码或美发活动邀请码、2美妆店铺邀请码、3推荐人、4美妆活动邀请码、5集团码
      * @apiParam {String} code 邀请码.
+     * @apiParam {Number} activity是否为活动邀请码:1是2不是.
      */
     public function setCode($id)
     {
         $param = $this->param;
         if(empty($param['type']&&$param['code']))
             throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
-        $type = intval($param['type']);
-        $result = User::setCode($id,$type,$param['code']);
+        $activity = 2;
+        if(!empty($param['activity']))
+        {
+            $activity = intval($param['activity']);
+        }
+        $type = strval($param['type']);
+        $result = User::setCode($id,$type,$param['code'],$activity);
         if($result)
             return $this->success();
 

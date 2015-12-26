@@ -52,7 +52,8 @@ class User extends  Model
         }
 
         $query = $query->with(['recommendCodes'=>function($q){
-            $q->select('user_id','recommend_code','type');
+            $q->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
+                ->select('recommend_code_user.user_id','recommend_code_user.recommend_code','recommend_code_user.type','dividend.activity');
         }]);
 
         if(!empty($param['recommendCode'])){
@@ -196,13 +197,25 @@ class User extends  Model
         return $exists;
     }
 
-    public static function resetCode($id,$type){
+    public static function resetCode($id,$type,$activity){
         if($type<5)
         {
-            $result = DB::table('recommend_code_user')
-                ->where('user_id','=',$id)
-                ->where('type','=',$type)
-                ->delete();
+            if($type=='1')
+            {
+                $result = DB::table('recommend_code_user')
+                    ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
+                    ->where('type','=',$type)
+                    ->where('user_id','=',$id)
+                    ->where('activity','=',$activity)
+                    ->delete();
+            }
+            else
+            {
+                $result = DB::table('recommend_code_user')
+                    ->where('user_id','=',$id)
+                    ->where('type','=',$type)
+                    ->delete();
+            }  
         }
 
         if($type==5)
@@ -214,24 +227,39 @@ class User extends  Model
     }
 
 
-    public static function setCode($id,$type,$code){
-        if($type<5)
+    public static function setCode($id,$type,$code,$activity){
+        $salonid = 0;
+        if($type<'5')
         {
-            if($type==1)
+            $model =  DB::table('recommend_code_user');
+            if($type=='1')
             {
-                $exists = DB::table('dividend')->where('recommend_code','=',$code)->first();
+                $exists = DB::table('dividend')
+                    ->where('recommend_code','=',$code)
+                    ->where('activity','=',$activity)
+                    ->first();
                 if(!$exists)
                     throw new ApiException('邀请码不存在', ERROR::CODE_NOT_FOUND);
+                DB::table('recommend_code_user')
+                    ->leftJoin('dividend','dividend.recommend_code','=','recommend_code_user.recommend_code')
+                    ->where('type','=',$type)
+                    ->where('user_id','=',$id)
+                    ->where('activity','=',$activity)
+                    ->delete();
+                if($activity==2)
+                    $salonid = DB::table('dividend')->where('recommend_code','=',$code)->first()->salon_id;
             }
-            $model =  DB::table('recommend_code_user');
-            $model->where('user_id','=',$id)
-                ->where('type','=',$type)
-                ->where('recommend_code','=',$code)
-                ->delete();
-            $result = $model->insert(['user_id'=>$id,'type'=>$type,'recommend_code'=>$code,'add_time'=>time()]);
+            else
+            {
+                $model->where('user_id','=',$id)
+                    ->where('type','=',$type)
+                    ->delete();
+            }
+
+            $result = $model->insert(['user_id'=>$id,'salon_id'=>$salonid,'type'=>$type,'recommend_code'=>$code,'add_time'=>time()]);
         }
 
-        if($type==5)
+        if($type=='5')
         {
             $result = self::setCompanyCode($id,$code);
         }
