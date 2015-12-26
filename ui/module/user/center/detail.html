@@ -306,6 +306,7 @@
 									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
 										<button data-slug="user.update" class="link">解绑商家邀请码</button>
 										<input type="hidden" name="type" value="1" />
+										<input type="hidden" name="activity" value="2" />
 									</form>
 									<span class="space"></span>
 									<%}%>
@@ -327,6 +328,7 @@
 									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
 										<button data-slug="user.update" class="link">解绑活动邀请码</button>
 										<input type="hidden" name="type" value="1" />
+										<input type="hidden" name="activity" value="1" />
 									</form>
 									<span class="space"></span>
 									<%}%>
