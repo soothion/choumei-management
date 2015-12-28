@@ -22,7 +22,8 @@ class BookingCalendar extends Model {
 	    {
 	        return;
 	    }
-	    $item_idx = BeautyItem::whereIn('item_id',$item_ids)->lists('beauty_id','item_id');
+	    $items = BeautyItem::whereIn('item_id',$item_ids)->get(['beauty_id','item_id'])->toArray();
+	    $item_idx = Utils::column_to_key('item_id',$items);
 	    if(count(array_diff($item_ids, array_keys($item_idx)))>0)
 	    {
 	        throw new ApiException("部分项目已经不存在!",ERROR::PARAMETER_ERROR);
@@ -33,7 +34,7 @@ class BookingCalendar extends Model {
 	        $beauty_id = 1;
 	        if (isset($item_idx[$item_id]))
 	        {
-	            $beauty_id = $item_idx[$item_id];
+	            $beauty_id = $item_idx[$item_id]['beauty_id'];
 	        }
 	        self::upsert($item_id,$booking_date,$beauty_id,$change_type);
 	    }
