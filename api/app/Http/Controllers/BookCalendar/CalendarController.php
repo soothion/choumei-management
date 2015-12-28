@@ -13,6 +13,7 @@ use App\BookingCalendarLimit;
 use App\BookingOrder;
 use App\BookingOrderItem;
 use App\Manager;
+use Illuminate\Support\Facades\Redis as Redis;
 
 class CalendarController extends Controller {
 	
@@ -31,6 +32,7 @@ class CalendarController extends Controller {
 	* @apiSuccess {Number} bookingAfternoon 	下午预约到店人数
 	* @apiSuccess {Number} came 				到店人数
 	* @apiSuccess {Number} bookingLimit 		预约上限
+	* @apiSuccess {Number} nowDay 				0：当天 -1：过去 1：将来
 	*
 	* @apiSuccessExample Success-Response:
 	*	{
@@ -43,7 +45,8 @@ class CalendarController extends Controller {
 	*              "bookingMorn": 10,
 	*              "bookingAfternoon": 2,
 	*              "came": 5,
-	*              "bookingLimit": 300
+	*              "bookingLimit": 300,
+	*              "nowDay": -1
 	*          },
 	*          ...
 	*      ]
@@ -70,9 +73,16 @@ class CalendarController extends Controller {
 		$nowInterval = idate( 't' , strtotime($searchDate) );
 		// 组装有月份的数据
 		$tempCalendar = [];
+		$iNowDate = strtotime(date('Y-m-d'));
 		for($i=1,$j=0,$x=0;$i<=$nowInterval;$i++,$x++){
 			$monthTemp = $i<10 ? $searchDate . '-0'.$i : $searchDate.'-'.$i;
-
+			
+			if( strtotime($monthTemp) <$iNowDate )
+				$returnData[$x]['nowDay'] = -1;
+			elseif(strtotime($monthTemp) == $iNowDate )
+				$returnData[$x]['nowDay'] = 0;
+			else 
+				$returnData[$x]['nowDay'] = 1;
 			if( isset($tempCalendar[ $monthTemp ]) && !empty( $tempCalendar[ $monthTemp ] ) )
 				$returnData[$x]['bookingLimit'] = $tempCalendar[ $monthTemp ];
 			else
@@ -184,7 +194,7 @@ class CalendarController extends Controller {
 		$field = [
 			'ORDER_SN as orderSn','BOOKING_DATE as bookingDate','UPDATED_BOOKING_DATE as updateBookDate',
 			'BOOKER_PHONE as bookerPhone','BOOKER_NAME as bookerName','BOOKER_SEX as bookerSex','AMOUNT as amount',
-			'BOOKING_DESC as bookingDesc','CONSUME_CALL_PHONE as consumeCallPhone','COME_SHOP as comeShop'
+			'BOOKING_DESC as bookingDesc','COME_SHOP as comeShop'
 		];
 		//手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
@@ -194,12 +204,23 @@ class CalendarController extends Controller {
 		
 		$associateItem = [];
 		$temp = [];
+		$redis = Redis::connection();
+		$keyPre = 'CALENDAR-CALL-'; 
+        $key = $keyPre.date('Y-m-d');
 		foreach( $result['data'] as $k => $v ){
 			$associateItem[] = $v['orderSn'];
-			if( $v['updateBookDate'] ) $result['data'][$k]['bookingTime'] = $v['updateBookDate'];
-			else $result['data'][$k]['bookingTime'] = $v['bookingDate'];
+			
+			if( $v['updateBookDate'] ) $bookingTime = $v['updateBookDate'];
+			else $bookingTime = $v['bookingDate'];
+			$result['data'][$k]['bookingTime']  = $bookingTime;
 			unset( $result['data'][$k]['updateBookDate'] );
 			unset( $result['data'][$k]['bookingDate'] );
+			
+			if( $redis->get( $keyPre . $v['orderSn']  ) === NULL ){
+				$result[ 'data' ][$k][ 'consumeCallPhone' ]='NON';
+			}else{
+				$result[ 'data' ][$k][ 'consumeCallPhone' ]='CALL';
+			}
 			$temp[ $v['orderSn'] ] = $v['orderSn'];
 		}
 		// 关联查找信息
@@ -281,7 +302,7 @@ class CalendarController extends Controller {
 		
 		DB::beginTransaction();
 		// 1. 修改订单的预约时间
-		$result1 = BookingOrder::where(['ORDER_SN'=>$orderSn])->update(['UPDATED_BOOKING_DATE'=>$modifyDate,'BOOKING_DESC'=>$modifyDesc]);
+		$result1 = BookingOrder::where(['ORDER_SN'=>$orderSn])->update(['UPDATED_BOOKING_DATE'=>$modifyDate,'BOOKING_DESC'=>$modifyDesc,'RECORD_TIME'=>date('Y-m-d H:i:s')]);
 		
 // 		2. 修改日历数据 按照项目id和时间日期逐一修改统计
 		$resultN = true;
@@ -566,17 +587,24 @@ class CalendarController extends Controller {
 	***/
 	public function modifyDayStatus( $orderSn = '' ){
 		if( !isset($this->param['userId']) ) return $this->error('未传递参数usesrId');
-		$result = BookingOrder::where(['ORDER_SN'=>$orderSn,'CONSUME_CALL_PHONE'=>'NON'])->update(['CONSUME_CALL_PHONE'=>'CALL','CUSTOMER_SERVICE_ID'=>$this->param['userId']]);
-		if($result) {
-			Event::fire('calendar.status','客服id为 '.$this->param['userId']);
-			return $this->success();
+		
+		$redis = Redis::connection();
+		$keyPre = 'CALENDAR-CALL-';
+		$result = BookingOrder::select(['BOOKING_DATE as bookingDate','UPDATED_BOOKING_DATE as updatedBookingDate'])->where(['ORDER_SN'=>$orderSn])->first();
+		if(empty($result)) {
+			return $this->error('数据错误，请联系管理员');
 		}
-		$userId = BookingOrder::select(['CUSTOMER_SERVICE_ID'])->where(['ORDER_SN'=>$orderSn,'CONSUME_CALL_PHONE'=>'CALL'])->first();
-		if( empty($userId) ) return $this->error('数据错误了');
-		$name = Manager::select(['name'])->where(['id'=>$userId['CUSTOMER_SERVICE_ID']])->first();
-		if( empty($name) ) return $this->error('数据错误了');
-		$name = $name['name'];
-		return $this->error($name."正在通话中");
+		if($redis->get($keyPre . $orderSn) === NULL){
+			Event::fire('calendar.status','客服id为 '.$this->param['userId']);
+			$redis->setex( $keyPre . $orderSn,120,$this->param['userId']);
+			return $this->success();
+		}else{
+			$userId = $redis->get($keyPre . $orderSn);
+			$name = Manager::select(['name'])->where(['id'=>$userId])->first();
+			if( empty($name) ) return $this->error('数据错误了');
+			$name = $name['name'];
+			return $this->error($name."正在通话中");
+		}
 	}
 	/***
 	 * @api {post} /calendar/modifyLimit 	5. 修改预约上限
@@ -661,6 +689,7 @@ class CalendarController extends Controller {
 	* @apiSuccess {Number} bookingAfternoon 	下午预约到店人数
 	* @apiSuccess {Number} came 				到店人数
 	* @apiSuccess {Number} bookingLimit 		预约上限
+	* @apiSuccess {Number} nowDay 				0：当天 -1：过去 1：将来
 	*
 	* @apiSuccessExample Success-Response:
 	*	{
@@ -673,7 +702,8 @@ class CalendarController extends Controller {
 	*              "bookingMorn": 10,
 	*              "bookingAfternoon": 2,
 	*              "came": 5,
-	*              "bookingLimit": 300
+	*              "bookingLimit": 300,
+	*              "nowDay": 0
 	*          },
 	*          ...
 	*      ]
@@ -702,11 +732,16 @@ class CalendarController extends Controller {
 		foreach( $result2 as $k=>$v ){
 			$tempCalendar[ $v['bookingDate'] ] = $v['bookingLimit'];
 		}
-		
+		$iNowDate = strtotime(date('Y-m-d'));
 		// 组装有月份的数据
 		for($i=1,$j=0,$x=0;$i<=$nowInterval;$i++,$x++){
 			$monthTemp = $i<10 ? $searchDate . '-0'.$i : $searchDate.'-'.$i;
-	
+			if( strtotime($monthTemp) <$iNowDate )
+				$returnData[$x]['nowDay'] = -1;
+			elseif(strtotime($monthTemp) == $iNowDate )
+			$returnData[$x]['nowDay'] = 0;
+			else
+				$returnData[$x]['nowDay'] = 1;
 			if( isset($tempCalendar[ $monthTemp ]) )
 				$returnData[$x]['bookingLimit'] = $tempCalendar[ $monthTemp ];
 			else

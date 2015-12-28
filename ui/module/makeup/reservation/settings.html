@@ -14,7 +14,7 @@
 				<h4> 预约上限设置</h4>
 			</div>
 			<div>
-				<button class="btn edit" data-slug="calendar.modifyLimit">编辑</button>
+				<button class="btn edit" id="edit" data-slug="calendar.modifyLimit">编辑</button>
 				<span style="display:none">
 					<button class="btn cancel">取消</button>
 					<span class="space"></span>
@@ -31,7 +31,7 @@
 				<div class="position-group">
 					<ul class="table-box">
 						<li class="table-item"><button class="prev"><i class="fa fa-chevron-left"></i></button></li>
-						<li class="table-item"><input id="month" type="month" name="searchData" required placeholder="yyyy-mm" min="2016-01" max="<%=date.format("yyyy-MM")%>" value="<%=!query._?new Date().format("yyyy-MM"):""%>" /></li>
+						<li class="table-item"><input id="month" type="month" name="searchData" required placeholder="yyyy-mm" min="2015-11" max="<%=date.format("yyyy-MM")%>" value="<%=!query._?new Date().format("yyyy-MM"):""%>" /></li>
 						<li class="table-item"><button class="next"><i class="fa fa-chevron-right"></i></button></li>
 					</ul>
 				</div>
@@ -62,6 +62,11 @@
 								}
 							}
 							var endDay= new Date(data[data.length-1].bookingDate).getDay();
+							if(data[data.length-1].nowDay==-1||data[data.length-1].nowDay==0){
+								document.getElementById("edit").style.display="none";
+							}else{
+								document.getElementById("edit").style.display="inline-block";
+							}
 							if(endDay!=6){
 								for(var i=1;i<7-endDay;i++){
 									data.push("");
@@ -69,9 +74,9 @@
 							}
 						%>
 						<%data.forEach(function(item,i){%>
-						<%var disabled=item&&new Date().getTime()>=new Date(item.bookingDate).getTime()%>
+						<%var disabled=item&&item.nowDay!=1%>
 						<%var _date=new Date(item.bookingDate).getDate()%>
-						<div class="date-item <%=new Date().format("yyyy-MM-dd")==new Date(item.bookingDate).format("yyyy-MM-dd")?"today":""%>" style="min-height:125px" <%if(disabled){%>disabled<%}%>>
+						<div class="date-item <%=item&&item.nowDay===0?"today":""%>"  <%=disabled===true?"disabled":""%> style="min-height:125px">
 							<%if(item){%>
 							<h4><%=_date%></h4>
 							<p class="weak">

@@ -61,7 +61,7 @@
 						%>
 						<%data.forEach(function(item,i){%>
 						<%var _date=new Date(item.bookingDate).getDate()%>
-						<a class="date-item <%=new Date().format("yyyy-MM-dd")==new Date(item.bookingDate).format("yyyy-MM-dd")?"today":""%>" data-slug="calendar.getDay" <%if(item){%> href="user.html#day=<%=new Date(item.bookingDate).format("yyyy-MM-dd")%>" <%}%>>
+						<a class="date-item <%=item&&item.nowDay===0?"today":""%>" data-slug="calendar.getDay" <%if(item){%> href="user.html#day=<%=new Date(item.bookingDate).format("yyyy-MM-dd")%>" <%}%>>
 							<%if(item){%>
 							<h4><%=new Date(item.bookingDate).getDate()%></h4>
 							<p class="weak">

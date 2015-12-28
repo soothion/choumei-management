@@ -70,10 +70,6 @@
 							</tr>
 							<%if(query.p=="index"){%>
 							<tr>
-								<td>项目logo：</td>
-								<td><img src="<%=data.logo%>" alt="" /></td>
-							</tr>
-							<tr>
 								<td>类别：</td>
 								<td><%=data.level==1?"明星院长":"院长"%></td>
 							</tr>
@@ -135,6 +131,12 @@
 						</tbody>
 					</table>
 				</div>
+				<%if(query.p=="index"){%>
+					<div class="table-item" style="width:140px;padding-left:15px;">
+						<h4 style="margin-top:0;">项目icon</h4>
+						<img src="<%=data.logo%>" alt="" />
+					</div>
+				<%}%>
 			</div>
 			</script>
         </div>
