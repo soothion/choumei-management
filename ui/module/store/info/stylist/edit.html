@@ -38,23 +38,6 @@
             opacity: 1!important;
         }
 
-        label.switch > input[type="checkbox"] + span {
-          width:60px;
-          color:#fff;
-          line-height: 24px;
-          text-indent: 28px;
-          cursor: pointer;
-        }
-
-        label.switch > input[type="checkbox"]:checked + span {
-          background: #58A2EC;
-          text-indent: 8px;
-        }           
-
-        label.switch > input[type="checkbox"]:checked + span:after {
-          left:39px;
-        }              
-
       </style>
   </head>
   <body>
@@ -74,18 +57,7 @@
                 <button type="button" class="btn btn-cancel">取消</button>
                 <span class="space"></span>
                 <button class="btn-primary">提交</button>
-            </div> 
-
-            <div style="margin-bottom:10px">
-                <span><strong>开启/暂停代客预约</strong></span>
-                <%if(!data.startType || data.startType == "1"){%>
-                    <label class="switch"><input type="checkbox" name="startType" value="1" checked/><span>NO</span></label>
-                <%}%>     
-
-                <%if(data.startType == "2"){%>
-                    <label class="switch"><input type="checkbox" name="startType" value="2"/><span>OFF</span></label>
-                <%}%>
-            </div> 
+            </div>  
 
             <%if(lib.query.id){%>
             <div>
@@ -98,12 +70,12 @@
                     <input type="hidden" name="salon_id" id="salonid" value="<%=data.salonId%>"/>
                     <input type="hidden" name="salonname" id="salonname" value="<%=data.salonname%>"/>
                     <input id="search" type="text" value="<%=data.salonname%>" 
-						ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" 
-						ajat-resources="/module/public/widget/autocomplete/index.js" 
-						autocomplete="off" disabled required>
+                        ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" 
+                        ajat-resources="/module/public/widget/autocomplete/index.js" 
+                        autocomplete="off" disabled required>
                     <div class="complete-position" id="complete-position" style="width:20%;min-width:250px;"></div>
                     <label>
-                        <input id="updateSalonCheckbox" type="checkbox" value="<%=data.reward%>"/>
+                        <input type="checkbox" value="<%=data.reward%>"/>
                         <span>修改所属店铺</span>
                     </label>
                 </div>
@@ -171,18 +143,7 @@
                 <div class="control">
                     <input type="text" name="mobilephone" placeholder="11位有效数字手机号码" value="<%=data.mobilephone%>" maxlength="11" pattern="mobile" patternmsg="请输入11位有效手机号" required>
                 </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label" for="">类型：</label>
-                <div class="control">
-                    <select id="professionType" name="type">
-                        <option value="1">造型师</option>
-                        <option value="2">助理</option>
-                        <option value="3">其他</option>
-                    </select>
-                </div>
-            </div>  
+            </div> 
 
             <div class="control-group">
                 <label class="control-label" for="">微信号：</label>
@@ -327,7 +288,7 @@
                     <div class="keypress" maxlength="40">
                         <textarea maxlength="40" data-helpid="textarea-help" name="signature" required><%=data.signature%></textarea>
                     </div>
-                    <div class="keypress-help" style="display:none;" id="textarea-help"></div>
+                    <span class="control-help" style="display:none;" id="textarea-help"></span>
                 </div>
             </div>
 
