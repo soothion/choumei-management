@@ -13,10 +13,11 @@ class BookingCalendar extends Model {
 	
 	protected $primaryKey = 'ID';
 	
-	CONST CHANGE_TYPE_OFF_ADD = 1;
-	CONST CHANGE_TYPE_OFF_DEL = 2;
-	
-	public static function change_items_date($item_ids,$booking_date,$change_type = self::CHANGE_TYPE_OFF_ADD)
+	CONST CHANGE_TYPE_OF_ADD = 1;
+	CONST CHANGE_TYPE_OF_DEL = 2;
+	CONST CHANGE_FIELD_OF_BOOK = 1;
+	CONST CHANGE_FIELD_OF_ARRIVE = 2;
+	public static function change_items_date($item_ids,$booking_date,$change_type = self::CHANGE_TYPE_OF_ADD)
 	{
 	    if(count($item_ids)<1)
 	    {
@@ -39,35 +40,72 @@ class BookingCalendar extends Model {
 	    }
 	}
 	
-	public static  function upsert($item_id,$booking_date,$beauty_id,$change_type = self::CHANGE_TYPE_OFF_ADD)
+	public static  function upsert($item_id,$booking_date,$beauty_id,$change_type = self::CHANGE_TYPE_OF_ADD,$update_field = self::CHANGE_FIELD_OF_BOOK)
 	{
 	    $now_date = date("Y-m-d H:i:s");
         $item = self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->first();
         if(empty($item))
         {
-            if ($change_type == self::CHANGE_TYPE_OFF_ADD)
+            $attr = [
+                'ITEM_ID'=>$item_id,
+                'BOOKING_DATE'=>$booking_date,
+                'BEAUTY_ID'=>$beauty_id,
+                'QUANTITY'=>0,
+                'CREATE_TIME'=>$now_date,
+                'UPDATE_TIME'=>$now_date,
+            ];
+            if ($change_type == self::CHANGE_TYPE_OF_ADD)
             {
-                self::create([
-                    'ITEM_ID'=>$item_id,
-                    'BOOKING_DATE'=>$booking_date,
-                    'BEAUTY_ID'=>$beauty_id,
-                    'QUANTITY'=>1,
-                    'CREATE_TIME'=>$now_date,
-                    'UPDATE_TIME'=>$now_date,
-                ]);
+                if($update_field == self::CHANGE_FIELD_OF_BOOK)
+                {
+                    $attr['QUANTITY']  = 1;
+                }
+                else 
+                {
+                    $attr['CAME'] = 1;
+                }
+                self::create($attr);
             }
         }
         else 
         {
-            if ($change_type == self::CHANGE_TYPE_OFF_ADD)
+            $field = 'QUANTITY';
+            if($update_field != self::CHANGE_FIELD_OF_BOOK)
             {
-                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->increment('QUANTITY',1,['UPDATE_TIME'=>$now_date]);
+                $field = 'CAME';
+            }
+            if ($change_type == self::CHANGE_TYPE_OF_ADD)
+            {
+                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->increment($field,1,['UPDATE_TIME'=>$now_date]);
             }
             else
             {
-                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->where('QUANTITY','>',0)->decrement('QUANTITY',1,['UPDATE_TIME'=>$now_date]);
+                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->where($field,'>',0)->decrement($field,1,['UPDATE_TIME'=>$now_date]);
             }
         }
+	}
+	
+	public static function arrive($item_ids,$arrive_date,$change_type = self::CHANGE_TYPE_OF_ADD)
+	{
+	    if(count($item_ids)<1)
+	    {
+	        return;
+	    }
+	    $item_idx = BeautyItem::getItemBeautyId($item_ids);
+	    if(count(array_diff($item_ids, array_keys($item_idx)))>0)
+	    {
+	        throw new ApiException("部分项目已经不存在!",ERROR::PARAMETER_ERROR);
+	    }
+	     
+	    foreach ($item_ids as $item_id)
+	    {
+	        $beauty_id = 1;
+	        if (isset($item_idx[$item_id]))
+	        {
+	            $beauty_id = $item_idx[$item_id];
+	        }
+	        self::upsert($item_id,$arrive_date,$beauty_id,$change_type,self::CHANGE_FIELD_OF_ARRIVE);
+	    }
 	}
 	
 	public function isFillable($key)
