@@ -110,11 +110,11 @@ class BookingReceive extends Model
         $item_ids = BeautyOrderItem::where('order_sn',$ordersn)->lists('item_id');
         if(!empty($old_date))
         {           
-            BookingCalendar::change_items_date($item_ids, $old_date,BookingCalendar::CHANGE_TYPE_OFF_DEL);
+            BookingCalendar::change_items_date($item_ids, $old_date,BookingCalendar::CHANGE_TYPE_OF_DEL);
         }
         if(!empty($arrive_date))
         {
-            BookingCalendar::arrive($item_ids, $arrive_date,BookingCalendar::CHANGE_TYPE_OFF_DEL);
+            BookingCalendar::arrive($item_ids, $arrive_date,BookingCalendar::CHANGE_TYPE_OF_DEL);
         }
         BeautyOrderItem::where('order_sn',$ordersn)->delete();
     }  
