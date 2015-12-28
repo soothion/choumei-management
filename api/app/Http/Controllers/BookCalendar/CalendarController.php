@@ -629,7 +629,7 @@ class CalendarController extends Controller {
 			$exists = BookingCalendarLimit::where(['BOOKING_DATE'=>$date])->count();
 			if( $exists ) {
 				$u = BookingCalendarLimit::where(['BOOKING_DATE'=>$date])->update(['BOOKING_LIMIT'=>$limit]);
-				if( $u ) $i+=1;
+// 				if( $u ) $i+=1;
 			}else{
 				$insertData = [
 					'BEAUTY_ID'=>$id,
