@@ -31,7 +31,7 @@
 				<div class="position-group">
 					<ul class="table-box">
 						<li class="table-item"><button class="prev"><i class="fa fa-chevron-left"></i></button></li>
-						<li class="table-item"><input type="month" name="searchData" required placeholder="yyyy-mm" min="2016-01" max="<%=date.format("yyyy-MM")%>" value="<%=!query._?new Date().format("yyyy-MM"):""%>" /></li>
+						<li class="table-item"><input id="month" type="month" name="searchData" required placeholder="yyyy-mm" min="2016-01" max="<%=date.format("yyyy-MM")%>" value="<%=!query._?new Date().format("yyyy-MM"):""%>" /></li>
 						<li class="table-item"><button class="next"><i class="fa fa-chevron-right"></i></button></li>
 					</ul>
 				</div>
@@ -52,6 +52,9 @@
 					<div class="date-container clearfix">
 						<%if(data.forEach){%>
 						<%
+							if(!lib.query._){
+								document.getElementById("month").value=new Date(data[0].bookingDate).format("yyyy-MM");
+							}
 							var startDay= new Date(data[0].bookingDate).getDay();
 							if(startDay>0){
 								for(var i=0;i<startDay;i++){
@@ -131,6 +134,12 @@
 					location.reload();
 				}).on('input','input[type="month"]',function(){
 					$(this).closest('form').submit();
+				}).on('error','input[name="limit"]',function(){
+					var $this=$(this);
+					console.log($.trim($this.val())==$this.data('value'));
+					if($.trim($this.val())==$this.data('value')){
+						$this.siblings('.control-help').hide();
+					}
 				});
 				setTimeout(function(){
 					var date=new Date($('.position-group input').val());
