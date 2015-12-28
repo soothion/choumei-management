@@ -71,5 +71,10 @@ class BookingCalendar extends Model {
         }
 	}
 	
+	public function isFillable($key)
+	{
+	    return true;
+	}
+	
 }
 
