@@ -62,11 +62,11 @@ class BookingCalendar extends Model {
         {
             if ($change_type == self::CHANGE_TYPE_OFF_ADD)
             {
-                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->increment('QUANTITY');
+                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->increment('QUANTITY',1,['UPDATE_TIME'=>$now_date]);
             }
             else
             {
-                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->where('QUANTITY','>',0)->decrement('QUANTITY');
+                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->where('QUANTITY','>',0)->decrement('QUANTITY',1,['UPDATE_TIME'=>$now_date]);
             }
         }
 	}
