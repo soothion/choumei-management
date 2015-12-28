@@ -39,6 +39,8 @@ class BookingReceive extends Model
             throw new ApiException("定妆单{$id}不存在或者已经被删除!", ERROR::ORDER_NOT_EXIST);
         }
         $base= $base->toArray();
+        $old_booking_date = empty($base['UPDATED_BOOKING_DATE'])?$base['BOOKING_DATE']:$base['UPDATED_BOOKING_DATE'];
+        $update_booking_date = isset($params['update_booking_date'])?date("Y-m-d",strtotime($params['update_booking_date'])):NULL;
         // 任何状态下都允许接待
 //         if($base['STATUS'] !== "PYD")
 //         {
@@ -51,10 +53,10 @@ class BookingReceive extends Model
         }
         else
         {
-            self::deleteOldItems($ordersn);
+            self::deleteOldItems($ordersn,$old_booking_date);
             $id_infos = self::getItemIdsNormIds($params['item_ids']);
             $item_infos = self::getItemNormInfo($id_infos);
-            self::insertNewItems($ordersn, $item_infos);
+            self::insertNewItems($ordersn, $item_infos,$update_booking_date);
         }
         
         $datetime = date("Y-m-d H:i:s");
@@ -66,10 +68,10 @@ class BookingReceive extends Model
             'created_at'=>$datetime,
         ];
         $base_update_attr = ['COME_SHOP'=>'COME'];
-        if(isset($params['update_booking_date']))
+        if(!empty($update_booking_date))
         {
-            $attr['update_booking_date'] = date("Y-m-d",strtotime($params['update_booking_date']));
-            $base_update_attr['UPDATED_BOOKING_DATE'] = $attr['update_booking_date'];
+            $attr['update_booking_date'] = $update_booking_date;
+            $base_update_attr['UPDATED_BOOKING_DATE'] = $update_booking_date;
         }
         if(isset($params['remark']))
         {
@@ -98,19 +100,27 @@ class BookingReceive extends Model
         self::insertNewItems($ordersn, $item_infos);
     }
     
-    public static function deleteOldItems($ordersn)
+    public static function deleteOldItems($ordersn,$old_date=NULL)
     {
+        if(!empty($old_date))
+        {
+            $item_ids = BeautyOrderItem::where('order_sn',$ordersn)->lists('item_id');
+            BookingCalendar::change_items_date($item_ids, $old_date,BookingCalendar::CHANGE_TYPE_OFF_DEL);
+        }
         BeautyOrderItem::where('order_sn',$ordersn)->delete();
     }  
       
-    public static function insertNewItems($ordersn,$item_infos)
+    public static function insertNewItems($ordersn,$item_infos,$update_booking_date=NULL)
     {      
         if(count($item_infos)<1)
         {
             return ;
         }
         $datetime = date("Y-m-d H:i:s");   
-      
+        if(!empty($update_booking_date))
+        {
+            BookingCalendar::change_items_date(array_column($item_infos, 'item_id'), $update_booking_date);
+        }
         foreach ($item_infos as $item)
         {       
             $attrs = [];
