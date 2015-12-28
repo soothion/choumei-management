@@ -13,6 +13,7 @@ use App\BookingCalendarLimit;
 use App\BookingOrder;
 use App\BookingOrderItem;
 use App\Manager;
+use Illuminate\Support\Facades\Redis as Redis;
 
 class CalendarController extends Controller {
 	
@@ -184,7 +185,7 @@ class CalendarController extends Controller {
 		$field = [
 			'ORDER_SN as orderSn','BOOKING_DATE as bookingDate','UPDATED_BOOKING_DATE as updateBookDate',
 			'BOOKER_PHONE as bookerPhone','BOOKER_NAME as bookerName','BOOKER_SEX as bookerSex','AMOUNT as amount',
-			'BOOKING_DESC as bookingDesc','CONSUME_CALL_PHONE as consumeCallPhone','COME_SHOP as comeShop'
+			'BOOKING_DESC as bookingDesc','COME_SHOP as comeShop'
 		];
 		//手动设置页数
 		AbstractPaginator::currentPageResolver(function() use ($page) {
@@ -194,12 +195,23 @@ class CalendarController extends Controller {
 		
 		$associateItem = [];
 		$temp = [];
+		$redis = Redis::connection();
+		$keyPre = 'CALENDAR-CALL-'; 
+        $key = $keyPre.date('Y-m-d');
 		foreach( $result['data'] as $k => $v ){
 			$associateItem[] = $v['orderSn'];
-			if( $v['updateBookDate'] ) $result['data'][$k]['bookingTime'] = $v['updateBookDate'];
-			else $result['data'][$k]['bookingTime'] = $v['bookingDate'];
+			
+			if( $v['updateBookDate'] ) $bookingTime = $v['updateBookDate'];
+			else $bookingTime = $v['bookingDate'];
+			$result['data'][$k]['bookingTime']  = $bookingTime;
 			unset( $result['data'][$k]['updateBookDate'] );
 			unset( $result['data'][$k]['bookingDate'] );
+			
+			if( $redis->get( $keyPre . $v['orderSn']  ) === NULL ){
+				$result[ 'data' ][$k][ 'consumeCallPhone' ]='NON';
+			}else{
+				$result[ 'data' ][$k][ 'consumeCallPhone' ]='CALL';
+			}
 			$temp[ $v['orderSn'] ] = $v['orderSn'];
 		}
 		// 关联查找信息
@@ -566,17 +578,24 @@ class CalendarController extends Controller {
 	***/
 	public function modifyDayStatus( $orderSn = '' ){
 		if( !isset($this->param['userId']) ) return $this->error('未传递参数usesrId');
-		$result = BookingOrder::where(['ORDER_SN'=>$orderSn,'CONSUME_CALL_PHONE'=>'NON'])->update(['CONSUME_CALL_PHONE'=>'CALL','CUSTOMER_SERVICE_ID'=>$this->param['userId']]);
-		if($result) {
-			Event::fire('calendar.status','客服id为 '.$this->param['userId']);
-			return $this->success();
+		
+		$redis = Redis::connection();
+		$keyPre = 'CALENDAR-CALL-';
+		$result = BookingOrder::select(['BOOKING_DATE as bookingDate','UPDATED_BOOKING_DATE as updatedBookingDate'])->where(['ORDER_SN'=>$orderSn])->first();
+		if(empty($result)) {
+			return $this->error('数据错误，请联系管理员');
 		}
-		$userId = BookingOrder::select(['CUSTOMER_SERVICE_ID'])->where(['ORDER_SN'=>$orderSn,'CONSUME_CALL_PHONE'=>'CALL'])->first();
-		if( empty($userId) ) return $this->error('数据错误了');
-		$name = Manager::select(['name'])->where(['id'=>$userId['CUSTOMER_SERVICE_ID']])->first();
-		if( empty($name) ) return $this->error('数据错误了');
-		$name = $name['name'];
-		return $this->error($name."正在通话中");
+		if($redis->get($keyPre . $orderSn) === NULL){
+			Event::fire('calendar.status','客服id为 '.$this->param['userId']);
+			$redis->setex( $keyPre . $orderSn,120,$this->param['userId']);
+			return $this->success();
+		}else{
+			$userId = $redis->get($keyPre . $orderSn);
+			$name = Manager::select(['name'])->where(['id'=>$userId])->first();
+			if( empty($name) ) return $this->error('数据错误了');
+			$name = $name['name'];
+			return $this->error($name."正在通话中");
+		}
 	}
 	/***
 	 * @api {post} /calendar/modifyLimit 	5. 修改预约上限
