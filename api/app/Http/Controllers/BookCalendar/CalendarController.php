@@ -32,6 +32,7 @@ class CalendarController extends Controller {
 	* @apiSuccess {Number} bookingAfternoon 	下午预约到店人数
 	* @apiSuccess {Number} came 				到店人数
 	* @apiSuccess {Number} bookingLimit 		预约上限
+	* @apiSuccess {Number} nowDay 				0：当天 -1：过去 1：将来
 	*
 	* @apiSuccessExample Success-Response:
 	*	{
@@ -44,7 +45,8 @@ class CalendarController extends Controller {
 	*              "bookingMorn": 10,
 	*              "bookingAfternoon": 2,
 	*              "came": 5,
-	*              "bookingLimit": 300
+	*              "bookingLimit": 300,
+	*              "nowDay": -1
 	*          },
 	*          ...
 	*      ]
@@ -71,9 +73,16 @@ class CalendarController extends Controller {
 		$nowInterval = idate( 't' , strtotime($searchDate) );
 		// 组装有月份的数据
 		$tempCalendar = [];
+		$iNowDate = strtotime(date('Y-m-d'));
 		for($i=1,$j=0,$x=0;$i<=$nowInterval;$i++,$x++){
 			$monthTemp = $i<10 ? $searchDate . '-0'.$i : $searchDate.'-'.$i;
-
+			
+			if( strtotime($monthTemp) <$iNowDate )
+				$returnData[$x]['nowDay'] = -1;
+			elseif(strtotime($monthTemp) == $iNowDate )
+				$returnData[$x]['nowDay'] = 0;
+			else 
+				$returnData[$x]['nowDay'] = 1;
 			if( isset($tempCalendar[ $monthTemp ]) && !empty( $tempCalendar[ $monthTemp ] ) )
 				$returnData[$x]['bookingLimit'] = $tempCalendar[ $monthTemp ];
 			else
@@ -680,6 +689,7 @@ class CalendarController extends Controller {
 	* @apiSuccess {Number} bookingAfternoon 	下午预约到店人数
 	* @apiSuccess {Number} came 				到店人数
 	* @apiSuccess {Number} bookingLimit 		预约上限
+	* @apiSuccess {Number} nowDay 				0：当天 -1：过去 1：将来
 	*
 	* @apiSuccessExample Success-Response:
 	*	{
@@ -692,7 +702,8 @@ class CalendarController extends Controller {
 	*              "bookingMorn": 10,
 	*              "bookingAfternoon": 2,
 	*              "came": 5,
-	*              "bookingLimit": 300
+	*              "bookingLimit": 300,
+	*              "nowDay": 0
 	*          },
 	*          ...
 	*      ]
@@ -721,11 +732,16 @@ class CalendarController extends Controller {
 		foreach( $result2 as $k=>$v ){
 			$tempCalendar[ $v['bookingDate'] ] = $v['bookingLimit'];
 		}
-		
+		$iNowDate = strtotime(date('Y-m-d'));
 		// 组装有月份的数据
 		for($i=1,$j=0,$x=0;$i<=$nowInterval;$i++,$x++){
 			$monthTemp = $i<10 ? $searchDate . '-0'.$i : $searchDate.'-'.$i;
-	
+			if( strtotime($monthTemp) <$iNowDate )
+				$returnData[$x]['nowDay'] = -1;
+			elseif(strtotime($monthTemp) == $iNowDate )
+			$returnData[$x]['nowDay'] = 0;
+			else
+				$returnData[$x]['nowDay'] = 1;
 			if( isset($tempCalendar[ $monthTemp ]) )
 				$returnData[$x]['bookingLimit'] = $tempCalendar[ $monthTemp ];
 			else
