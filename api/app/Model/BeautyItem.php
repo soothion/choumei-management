@@ -88,5 +88,18 @@ class BeautyItem extends Model {
 
 	}	
 	
+	public static function getItemBeautyId($item_ids)
+	{
+	    $res = [];
+	    $items = BeautyItem::whereIn('item_id',$item_ids)->get(['beauty_id','item_id'])->toArray();
+	    foreach($items as $item)
+	    {
+	        $key = $item['item_id'];
+	        $val = $item['beauty_id'];
+	        $res[$key] = $val;
+	    }
+	    return $res;
+	}
+	
 }
 
