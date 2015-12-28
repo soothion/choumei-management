@@ -302,7 +302,7 @@ class CalendarController extends Controller {
 		
 		DB::beginTransaction();
 		// 1. 修改订单的预约时间
-		$result1 = BookingOrder::where(['ORDER_SN'=>$orderSn])->update(['UPDATED_BOOKING_DATE'=>$modifyDate,'BOOKING_DESC'=>$modifyDesc]);
+		$result1 = BookingOrder::where(['ORDER_SN'=>$orderSn])->update(['UPDATED_BOOKING_DATE'=>$modifyDate,'BOOKING_DESC'=>$modifyDesc,'RECORD_TIME'=>date('Y-m-d H:i:s')]);
 		
 // 		2. 修改日历数据 按照项目id和时间日期逐一修改统计
 		$resultN = true;
