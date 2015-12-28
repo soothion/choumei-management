@@ -136,30 +136,36 @@
             </script>
         </div>
         </div>
-        <script>
-          $(document).ready(function(){
-              $("#add_book").on('click',function(){
-                  parent.lib.popup.box({
-                      'title':'创建预约',
-                      'cancelText':'取消',
-                      'defineText':'确认预约',
-                      'height'    : $(window).height()-200,
-                      'content'   : lib.ejs.render({url:'./modal_add'}),
-                      'complete'  : function(){
-                           var form = $(this).find('form');
-                           var newForm = new parent.lib.Form(form[0]);
-                           var today = new Date().format('yyyy-MM-dd');
-                           form.find('input[type=date]').attr('min',today).val(today);
-                           $(this).find('.popup-alert-define').on('click',function(){
-
-                           }) 
-                                                     
-                           // form.on('success',function(){
-                           //     location.reload();
-                           // })
-                      }               
-                  });
-              });
+        <script>        
+        $(document).ready(function(){
+            $("#add_book").on('click',function(){
+                parent.lib.popup.box({
+                    'title':'创建预约',
+                    'cancelText':'取消',
+                    'defineText':'确认预约',
+                    'height'    : $(window).height()-200,
+                    'content'   : lib.ejs.render({url:'./modal_add'}),
+                    'complete'  : function(){
+                         var form = $(this).find('form');
+                         var newForm = new parent.lib.Form(form[0]);
+                         var today = new Date().format('yyyy-MM-dd');
+                         form.find('input[type=date]').attr('min',today).val(today);
+                         newForm.el._getFormData = function(){
+                           var returnData = parent.lib.tools.getFormData($(this));
+                           returnData.item_ids = returnData.item_ids.join(",")
+                           return returnData
+                         }
+                         parent.lib.Form.prototype.success = function(data){
+                            parent.lib.popup.result({
+                              text:"添加成功",
+                              define:function(){
+                                location.reload();
+                              }
+                            });
+                         }
+                    }                  
+                });
+            });
           });
         </script>
     </body>

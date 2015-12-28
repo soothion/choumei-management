@@ -53,13 +53,13 @@
                         <option value="RFD" >已退款</option>
                         <option value="RFE" >退款失败</option>
                     </select>
-               </div>
+                </div>
                <span class="space"></span>
                <div class="input-group">
-                    <select name="refund_user">
-                        <option value="1">发起退款</option>
-                        <option value="2" >用户</option>
-                        <option value="3" >臭美人员</option>
+                    <select name="initiate_refund">
+                        <option value="0">发起退款</option>
+                        <option value="1" >用户</option>
+                        <option value="2" >臭美人员</option>
                     </select>
                 </div>
                 <button class="btn" type="submit" data-slug="beautyrefund.index">查询</button>
@@ -92,7 +92,8 @@
                             <th>预约号</th>
                             <th>退款日期</th>
                             <th>支付方式</th>
-                            <th><a data-role="hash" href="#page=1&sort_key=status&sort_type=<%=query.sort_type=='DESC'?'ASC':'DESC'%>">状态 <i class="fa fa-sort"></i></a></th>
+                            <th>发起退款</th>
+                            <th><a data-role="hash" href="#page=1&sort_key=book_status&sort_type=<%=query.sort_type=='DESC'?'ASC':'DESC'%>">状态 <i class="fa fa-sort"></i></a></th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -114,10 +115,12 @@
                     'RFD':'已退款',
                     'RFE':'退款失败',
                     'RFD-OFL':'已退款',
-                }%>
+                }
+                var initiate_refundText = {'1':'用户退款','2':'臭美人员'}
+                %>
                 <%data.forEach(function(item,index){%>
                  <tr>
-                  <td><label><input <%if (item.status == 'RFD'){%>disabled='disabled'<%}%> type="checkbox"  value="<%=item.order_refund_id%>"/><span></span></label></td>
+                  <td><label><input <%if (item.book_status == 'RFD' || item.book_status == 'RFD-OFL'){%>disabled='disabled'<%}%> type="checkbox"  value="<%=item.booking_sn%>"/><span></span></label></td>
                   <td><%=index+1%></td>
                   <td><%=item.booker_phone%></td>
                   <td><%=item.booker_name%></td>
@@ -129,9 +132,10 @@
                   <td><%=item.booking_sn%></td>
                   <td><%=item.add_time%></td>
                   <td><%=pay_type_desc[item.pay_type]%></td>
-                  <td><%=status[item.status]%></td>
+                  <td><%=initiate_refundText[item.initiate_refund]%></td>
+                  <td><%=status[item.book_status]%></td>
                   <td class="tc">
-                    <a class="link" data-slug="beautyrefund.show" href="refund_desc.html#id=<%=item.order_refund_id%>">查看</a>
+                    <a class="link" data-slug="beautyrefund.show" href="refund_desc.html#id=<%=item.booking_id%>&booking_sn=<%=item.booking_sn%>">查看</a>
                   </td>
                   </tr>
                   <%})%>
@@ -193,7 +197,7 @@
                         'defineText':'确认退款',
                         'url':'beautyrefund/accept',
                         'data':{
-                            'ids':ids.join(",")
+                            'booking_sn':ids.join(",")
                         },
                         'successCallback':refund
                     },
@@ -203,7 +207,7 @@
                         'defineText':'执行',
                         'url':'beautyrefund/reject',
                         'data':{
-                            'ids':ids.join(",")
+                            'booking_sn':ids.join(",")
                         }
                     }
                 }
