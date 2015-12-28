@@ -62,9 +62,6 @@
 	'calendar.limit':'/module/makeup/reservation/settings.html',
 	'others.index':'/module/makeup/member/index.html'
 }
-var date=new Date();
-slug['calendar.limit']='/module/makeup/reservation/settings.html#searchData='+date.getFullYear()+"-"+(date.getMonth()+1);
-slug['calendar.index']='/module/makeup/reservation/index.html#searchData='+date.getFullYear()+"-"+(date.getMonth()+1);
 var access={
 	data:[],
 	map:{},
