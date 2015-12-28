@@ -21,8 +21,8 @@ class BookingCalendar extends Model {
 	    if(count($item_ids)<1)
 	    {
 	        return;
-	    }
-	    $item_idx = BeautyItem::whereIn('item_id',$item_ids)->lists('beauty_id','item_id');
+	    }	   
+	    $item_idx = BeautyItem::getItemBeautyId($item_ids);
 	    if(count(array_diff($item_ids, array_keys($item_idx)))>0)
 	    {
 	        throw new ApiException("部分项目已经不存在!",ERROR::PARAMETER_ERROR);
@@ -61,13 +61,18 @@ class BookingCalendar extends Model {
         {
             if ($change_type == self::CHANGE_TYPE_OFF_ADD)
             {
-                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->increment('QUANTITY');
+                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->increment('QUANTITY',1,['UPDATE_TIME'=>$now_date]);
             }
             else
             {
-                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->where('QUANTITY','>',0)->decrement('QUANTITY');
+                self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->where('QUANTITY','>',0)->decrement('QUANTITY',1,['UPDATE_TIME'=>$now_date]);
             }
         }
+	}
+	
+	public function isFillable($key)
+	{
+	    return true;
 	}
 	
 }
