@@ -47,17 +47,6 @@ class BookingReceive extends Model
 //             throw new ApiException("定妆单{$id}状态不正确!", ERROR::ORDER_STATUS_WRONG);
 //         }
         $ordersn = $base['ORDER_SN'];
-        if($copy_from_base)
-        {
-            self::makeFromOrigin($ordersn,$params['uid']);
-        }
-        else
-        {
-            self::deleteOldItems($ordersn,$old_booking_date);
-            $id_infos = self::getItemIdsNormIds($params['item_ids']);
-            $item_infos = self::getItemNormInfo($id_infos);
-            self::insertNewItems($ordersn, $item_infos,$update_booking_date);
-        }
         
         $datetime = date("Y-m-d H:i:s");
         $attr = [
@@ -81,10 +70,26 @@ class BookingReceive extends Model
         {
             $attr['arrive_at'] = date("Y-m-d H:i:s",strtotime($params['arrive_at']));
         }
-        else 
+        else
         {
             $attr['arrive_at'] = $datetime;
-        }  
+        }
+        
+        $arrive_date = date("Y-m-d",strtotime($attr['arrive_at']));        
+        
+        if($copy_from_base)
+        {
+            self::makeFromOrigin($ordersn,$params['uid']);
+        }
+        else
+        {
+            self::deleteOldItems($ordersn,$old_booking_date,$arrive_date);
+            $id_infos = self::getItemIdsNormIds($params['item_ids']);
+            $item_infos = self::getItemNormInfo($id_infos);
+            self::insertNewItems($ordersn, $item_infos,$update_booking_date,$arrive_date);
+        }
+        
+       
         BookingReceive::where("booking_id",$id)->delete();
         BookingOrder::where('ID',$id)->update($base_update_attr);
         BookingReceive::create($attr);
@@ -100,17 +105,21 @@ class BookingReceive extends Model
         self::insertNewItems($ordersn, $item_infos);
     }
     
-    public static function deleteOldItems($ordersn,$old_date=NULL)
+    public static function deleteOldItems($ordersn,$old_date=NULL,$arrive_date=NULL)
     {
+        $item_ids = BeautyOrderItem::where('order_sn',$ordersn)->lists('item_id');
         if(!empty($old_date))
-        {
-            $item_ids = BeautyOrderItem::where('order_sn',$ordersn)->lists('item_id');
+        {           
             BookingCalendar::change_items_date($item_ids, $old_date,BookingCalendar::CHANGE_TYPE_OFF_DEL);
+        }
+        if(!empty($arrive_date))
+        {
+            BookingCalendar::arrive($item_ids, $arrive_date,BookingCalendar::CHANGE_TYPE_OFF_DEL);
         }
         BeautyOrderItem::where('order_sn',$ordersn)->delete();
     }  
       
-    public static function insertNewItems($ordersn,$item_infos,$update_booking_date=NULL)
+    public static function insertNewItems($ordersn,$item_infos,$update_booking_date=NULL,$arrive_date=NULL)
     {      
         if(count($item_infos)<1)
         {
@@ -120,6 +129,10 @@ class BookingReceive extends Model
         if(!empty($update_booking_date))
         {
             BookingCalendar::change_items_date(array_column($item_infos, 'item_id'), $update_booking_date);
+        }
+        if(!empty($arrive_date))
+        {
+            BookingCalendar::arrive(array_column($item_infos, 'item_id'), $arrive_date);
         }
         foreach ($item_infos as $item)
         {       
