@@ -473,11 +473,12 @@ class BookController extends Controller
             'phone'=>self::T_STRING,
             'name'=>self::T_STRING,
             'sex'=>self::T_INT,
-            //'item_ids'=>self::T_RAW,
+            'item_ids'=>self::T_STRING,
             'date'=>self::T_STRING,
             'recomment_code'=>self::T_STRING,
-        ]);
-        $params['item_ids'] = $this->param['item_ids'];
+        ]);        
+        $params['item_ids'] = explode(",", $params['item_ids']);
+        //$params['item_ids'] = isset($this->param['item_ids'])?$this->param['item_ids']:null;
       
         if( is_array($params['item_ids'])&& count($params['item_ids'])<1)
         {
