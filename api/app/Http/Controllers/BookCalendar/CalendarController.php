@@ -260,7 +260,7 @@ class CalendarController extends Controller {
 		$modifyDate = $param['modifyDate'];
 		$modifyDesc = $param['modifyDesc'];
 
-		if( strtotime($modifyDate) < strtotime( date('Y-m-d') )  ) return $this->error('你提交的修改预约时间有误哦！！！');
+		if( strtotime($modifyDate) < strtotime( date('Y-m-d') )  ) return $this->error('预约日期不能小于当天');
 		if( !in_array($modifyDesc,['DEF','MORNING','AFTERNOON'] )) return $this->error('未知的时间类型哦！！！');
 			
 		$oldBookingDate = BookingOrder::select(['BOOKING_DATE','UPDATED_BOOKING_DATE','BOOKING_DESC'])->where(['ORDER_SN'=>$orderSn])->first();
