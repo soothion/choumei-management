@@ -829,14 +829,14 @@ class CalendarController extends Controller {
 			$tempData[$k][] = $temp4[ $v['comeShop'] ];
 			$tempData[$k][] = $v['bookingTime'];
 			$tempData[$k][] = $temp2[ $v['bookingDesc'] ];
-			$tempData[$k][] = $temp3[ $v['consumeCallPhone'] ];
+// 			$tempData[$k][] = $temp3[ $v['consumeCallPhone'] ];
 			
 		}
 
 		Event::fire('calendar.export','导出某日的订单预约列表 ');
 		$title = '顾客预约调整' .date('Ymd');
 		//导出excel
-		$header = ['手机号','姓名','性别','预约项目','预约金额','预约日期','订单状态 ','预约调整 ','客服是否拨打电话'];
+		$header = ['手机号','姓名','性别','预约项目','预约金额','订单状态','预约日期','预约调整 '/*,'客服是否拨打电话'*/];
 		Excel::create($title, function($excel) use($tempData,$header){
 			$excel->sheet('Sheet1', function($sheet) use($tempData,$header){
 				$sheet->fromArray($tempData, null, 'A1', false, false);//第五个参数为是否自动生成header,这里设置为false
