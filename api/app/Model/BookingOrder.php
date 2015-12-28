@@ -166,12 +166,13 @@ class BookingOrder extends Model
         
         $datetime = date("Y-m-d H:i:s");
         self::AddBookingItem($ordersn,$item_infos);
+        $booking_date = date("Y-m-d",strtotime($params['date'])) ;
         $bookingsn = self::makeBookingsn();
         $attr = [
             'ORDER_SN'=>$ordersn,
             'BOOKING_SN'=>$bookingsn,
             'USER_ID'=>$user_id,
-            'BOOKING_DATE'=>date("Y-m-d",strtotime($params['date'])),      
+            'BOOKING_DATE'=>  $booking_date, 
             'QUANTITY'=>count($item_infos),
             'AMOUNT'=>Utils::column_sum('price',$item_infos),
             'PAYABLE'=>0,
@@ -187,8 +188,10 @@ class BookingOrder extends Model
         {
             $attr['RECOMMENDER'] = $params['recomment_code'];
         }
+        BookingCalendar::change_items_date($exist_item_ids,$booking_date);
         $id = self::insertGetId($attr);
         $attr['ID'] = $id;
+        
         return $attr;
     }
     
