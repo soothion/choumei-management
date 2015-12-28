@@ -384,7 +384,7 @@
 								<td>活动推荐码</td>
 								<td><%=code4?code4.recommend_code:"无"%></td>
 								<td>无</td>
-								<td><%=code4&&code3.add_time?new Date(code3.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
+								<td><%=code4&&code4.add_time?new Date(code4.add_time*1000).format("yyyy-MM-dd hh:mm:ss"):"无"%></td>
 								<td>
 									<%if(code4){%>
 									<form action="user/resetCode/<%=query.id%>" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload();}})">
