@@ -31,7 +31,7 @@
 				<div class="position-group">
 					<ul class="table-box">
 						<li class="table-item"><button class="prev"><i class="fa fa-chevron-left"></i></button></li>
-						<li class="table-item"><input type="month" name="searchData" required placeholder="yyyy-mm" max="<%=date.format("yyyy-MM")%>" value="<%=!query._?new Date().format("yyyy-MM"):""%>" /></li>
+						<li class="table-item"><input type="month" name="searchData" required placeholder="yyyy-mm" min="2015-12" max="<%=date.format("yyyy-MM")%>" value="<%=!query._?new Date().format("yyyy-MM"):""%>" /></li>
 						<li class="table-item"><button class="next"><i class="fa fa-chevron-right"></i></button></li>
 					</ul>
 				</div>
@@ -91,6 +91,12 @@
         </div>
             </div>
 		<script type="text/javascript">
+				$(function(){
+				var checkedDate=function(date){
+					var input=$('.position-group input');
+					$('.prev').attr('disabled',date.getTime()<=new Date(input.attr('min')).getTime());
+					$('.next').attr('disabled',date.getTime()>=new Date(input.attr('max')).getTime());
+				}
 				$(document.body).on("click",'.next',function(){
 					var input=$('.position-group input');
 					var date=new Date(input.val());
@@ -103,6 +109,8 @@
 					}
 					input.val(date.format("yyyy-MM"));
 					input.closest('form').submit();
+					checkedDate(date);
+					
 				}).on("click",'.prev',function(){
 					var input=$('.position-group input');
 					var date=new Date(input.val());
@@ -115,6 +123,7 @@
 					}
 					input.val(date.format("yyyy-MM"));
 					input.closest('form').submit();
+					checkedDate(date);
 				}).on('click','.edit',function(){
 					$(this).hide().siblings().show();
 					$(document.body).addClass("edit-page");
@@ -123,12 +132,11 @@
 				}).on('input','input[type="month"]',function(){
 					$(this).closest('form').submit();
 				});
-				$('#hash').on("_ready",function(){
-					if(!lib.query._){
-						$('#hash').submit();
-					}
-				})				
-
+				setTimeout(function(){
+					var date=new Date($('.position-group input').val());
+					checkedDate(date);
+				},1000);
+			
 			$('#table').on('_ready',function(){
 				var form=document.getElementById('form');
 				form._getFormData=function(){
@@ -148,6 +156,7 @@
 				form.goback=function(){
 					location.reload();
 				}
+			});
 			})
 		</script>
     </body>

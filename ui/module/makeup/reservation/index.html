@@ -80,41 +80,45 @@
         </div>
             </div>
 		<script type="text/javascript">
-			$(document.body).on("click",'.next',function(){
-				var input=$('.position-group input');
-				var date=new Date(input.val());
-				var month=date.getMonth();
-				if(month==11){
-					date.setFullYear(date.getFullYear()+1);
-					date.setMonth(0);
-				}else{
-					date.setMonth(month+1);
+			$(function(){
+				var checkedDate=function(date){
+					var input=$('.position-group input');
+					$('.prev').attr('disabled',date.getTime()<=new Date(input.attr('min')).getTime());
+					$('.next').attr('disabled',date.getTime()>=new Date(input.attr('max')).getTime());
 				}
-				input.val(date.format("yyyy-MM"));
-			}).on("click",'.prev',function(){
-				var input=$('.position-group input');
-				var date=new Date(input.val());
-				var month=date.getMonth();
-				if(month==0){
-					date.setFullYear(date.getFullYear()-1);
-					date.setMonth(11);
-				}else{
-					date.setMonth(month-1);
-				}
-				input.val(date.format("yyyy-MM"));
-			}).on('input','input[type="month"]',function(){
-				$(this).closest('form').submit();
-			});
-			$('#hash').on("_ready",function(){
-				if(!lib.query._){
-					$('#hash').submit();
-				}
-			});
-			$(document.body).on('access',function(){
-				$('.date-item[data-slug]').each(function(){
-					$(this).removeAttr("data-slug").removeAttr("href");
-				})
-			});
+				$(document.body).on("click",'.next',function(){
+					var input=$('.position-group input');
+					var date=new Date(input.val());
+					var month=date.getMonth();
+					if(month==11){
+						date.setFullYear(date.getFullYear()+1);
+						date.setMonth(0);
+					}else{
+						date.setMonth(month+1);
+					}
+					input.val(date.format("yyyy-MM"));
+					//checkedDate(date);
+				}).on("click",'.prev',function(){
+					var input=$('.position-group input');
+					var date=new Date(input.val());
+					var month=date.getMonth();
+					if(month==0){
+						date.setFullYear(date.getFullYear()-1);
+						date.setMonth(11);
+					}else{
+						date.setMonth(month-1);
+					}
+					input.val(date.format("yyyy-MM"));
+					//checkedDate(date);
+				}).on('input','input[type="month"]',function(){
+					$(this).closest('form').submit();
+				});
+				$(document.body).on('access',function(){
+					$('.date-item[data-slug]').each(function(){
+						$(this).removeAttr("data-slug").removeAttr("href");
+					})
+				});
+			})
 		</script>
     </body>
 </html>
