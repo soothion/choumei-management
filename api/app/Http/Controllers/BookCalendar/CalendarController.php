@@ -702,11 +702,12 @@ class CalendarController extends Controller {
 		foreach( $result2 as $k=>$v ){
 			$tempCalendar[ $v['bookingDate'] ] = $v['bookingLimit'];
 		}
+		
 		// 组装有月份的数据
 		for($i=1,$j=0,$x=0;$i<=$nowInterval;$i++,$x++){
 			$monthTemp = $i<10 ? $searchDate . '-0'.$i : $searchDate.'-'.$i;
 	
-			if( isset($tempCalendar[ $monthTemp ]) && !empty( $tempCalendar[ $monthTemp ] ) )
+			if( isset($tempCalendar[ $monthTemp ]) )
 				$returnData[$x]['bookingLimit'] = $tempCalendar[ $monthTemp ];
 			else
 				$returnData[$x]['bookingLimit'] = 300;
