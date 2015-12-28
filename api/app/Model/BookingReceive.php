@@ -107,7 +107,8 @@ class BookingReceive extends Model
     
     public static function deleteOldItems($ordersn,$old_date=NULL,$arrive_date=NULL)
     {
-        $item_ids = BeautyOrderItem::where('order_sn',$ordersn)->lists('item_id');
+        $items = BeautyOrderItem::where('order_sn',$ordersn)->get(['item_id'])->toArray();
+        $item_ids = array_column($items, 'item_id');
         if(!empty($old_date))
         {           
             BookingCalendar::change_items_date($item_ids, $old_date,BookingCalendar::CHANGE_TYPE_OF_DEL);
