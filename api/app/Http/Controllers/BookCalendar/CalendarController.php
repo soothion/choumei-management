@@ -614,7 +614,7 @@ class CalendarController extends Controller {
 		if(empty($param) || !isset($param['data']) || empty($param['data']) )	return $this->error('参数数据错误');
 		
 		$data = json_decode($param['data'],true);
-		$i = 0;
+// 		$i = 0;
 		$nowYear = date('Y');
 		foreach($data as $k => $v){
 			$date = $v['date'];
@@ -623,6 +623,7 @@ class CalendarController extends Controller {
 			
 			$calendarSize = BookingCalendar::where(['BOOKING_DATE'=>$date])->sum('QUANTITY');
 			if( $limit < $calendarSize ) return $this->error('设置预约'. $date .'数据错误，实际预约量应小于上限');
+			if( $limit > 9999 ) return $this->error('设置预约修改范围，0-9999整数');
 			$year = idate( 'Y',strtotime($date) );
 			if( $nowYear + 10 < $year) return $this->error('设置的年份超过未来的20年哦');
 			$exists = BookingCalendarLimit::where(['BOOKING_DATE'=>$date])->count();
@@ -636,14 +637,14 @@ class CalendarController extends Controller {
 					'BOOKING_LIMIT'=>$limit
 				];
 				$u = BookingCalendarLimit::insertGetId($insertData);
-				if( $u ) $i+=1;
+// 				if( $u ) $i+=1;
 			}
 		}
-		if( $i == count($data) ){
-			Event::fire('calendar.modifyLimit','修改预约上限 ');
+// 		if( $i == count($data) ){
+// 			Event::fire('calendar.modifyLimit','修改预约上限 ');
 			return $this->success();
-		}
-		return $this->error('有' .(count($data)-$i).'条数据修改失败哦');
+// 		}
+// 		return $this->error('有' .(count($data)-$i).'条数据修改失败哦');
 	}
 	/***
 	 * @api {post} /calendar/limit 		6.获取本月限制设置概况
