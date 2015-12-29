@@ -185,6 +185,7 @@ class BookController extends Controller
      * @apiSuccess {String} order.CREATE_TIME 预约时间
      * @apiSuccess {String} order.UPDATE_TIME 最近修改时间
      * @apiSuccess {String} order.BOOKING_DESC 预约时间  DEF-未选择，MORNING - 上午，AFTERNOON下午
+     * @apiSuccess {String} order.RECORD_TIME 客服调整时间
      * @apiSuccess {Object} order.manager 客服信息
      * @apiSuccess {Object} help_info 代预约信息
      * @apiSuccess {String} help_info.from 渠道
@@ -270,6 +271,7 @@ class BookController extends Controller
      *             "CONSUME_TIME": "2015-12-03 16:15:32",
      *             "CREATE_TIME": "2015-12-01 17:18:23",
      *             "UPDATE_TIME": "2015-12-03 16:23:01",
+     *             "RECORD_TIME":null,
      *             "item_amount": 120
      *           },
      *           "help_info":{
