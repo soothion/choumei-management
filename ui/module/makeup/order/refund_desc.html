@@ -148,7 +148,7 @@
                         </tr>
                         <tr>
                             <td class="td">推荐码：</td>
-                            <td><%=data.recommend && data.recommend.recommend_code%></td>
+                            <td><%= (data.recommend && data.recommend.recommend_code) ? data.recommend.recommend_code : data.order.RECOMMENDER%></td>
                         </tr>
                         <tr>
                             <td class="td">订单状态：</td>
@@ -206,7 +206,7 @@
                             <td><%=status[data.order.STATUS]%></td>
                         </tr>
                         
-                        <%if(data.order.UPDATED_BOOKING_DATE){%>
+                        <%if(data.order.RECORD_TIME){%>
                         <tr>
                             <td colspan="2" class='white-bg'>客服调整信息</td>
                         </tr>
@@ -230,7 +230,7 @@
                                             <td>客服：</td>
                                             <td><%=data.order.manager && data.order.manager.name%></td>
                                             <td>调整时间：</td>
-                                            <td><%=data.order.UPDATED_BOOKING_DATE%></td>
+                                            <td><%=data.order.RECORD_TIME%></td>
                                         </tr>
                                     </tbody>
                                 </table>

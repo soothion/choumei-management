@@ -284,7 +284,7 @@ class BeautyItemController extends Controller{
 			} 
 		}
 
-		if($data['type'] == 1)
+		if($data['type'] == 1 || $beautyItem->is_gift == 1)
 		{
 			$data['price'] = isset($param['price'])?intval($param['price']):0;
 			$data['vip_price'] = isset($param['vip_price'])?intval($param['vip_price']):0;

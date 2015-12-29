@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-24 16:10:31
+* @Last Modified time: 2015-12-29 15:33:37
 */
 
 $(function(){
@@ -38,28 +38,19 @@ $(function(){
             async : true,
         }).done(function(data, status, xhr){
             if(data.result == "1"){
+                var itemText = {'1':'SPM','2':'FFA'}
                 var arr = [];
-                arr.push("<option value='salon'>美发店铺主页</option>");
-                arr.push("<option value='artificers'>专家主页</option>");
-                var obj = {'1':'SPM','2':'FFA'}
                 data.data.forEach(function(item,i){
-                    arr.push("<option value='"+obj[item.type]+"_"+item.item_id+"'>"+item.name+"</option>");
-                });
-                sessionStorage.setItem('bannerItemList',arr.join(''));
-                //选中对应item
-                $("form.banner select").each(function(i,item){
-                    $(item).append(arr.join(''));
-                    if($(item).attr('url')){
-                        var url = JSON.parse($(item).attr('url'));
-                        if(url.type=="salon"){
-                            $($(item).find('option')[0]).attr('selected',true)
-                        }else if(url.type=="artificers"){
-                            $($(item).find('option')[1]).attr('selected',true)
-                        }else{
-                            $(item).find('option[value='+url.type+'_'+url.itemId+']').attr('selected',true)
-                        }
+                    arr.push('<option value="'+itemText[item.type]+'_'+item.item_id+'">'+item.name+'</option>');
+                })               
+                $("form.banner select.itemSelect").each(function(i,item){
+                    $(this).append(arr.join(""));
+                    if($(this).attr('url')){
+                        var obj = JSON.parse($(this).attr('url'));
+                        $(this).find('option[value="'+obj.type+'_'+obj.itemId+'"]').attr('selected',true);
                     }
                 })
+                sessionStorage.setItem('bannerItemList',JSON.stringify(data.data));
             }
         })         
     });
@@ -67,8 +58,9 @@ $(function(){
     $("#warpper").on('click','.plus-button button',function(){
         $(this).attr('disabled',true);
         $("form.banner").find('button.edit').attr('disabled',true);
-        $("form.banner[id]").removeClass('move');                
-        var $form = $(lib.ejs.render({url:'./form'},{data:{type:lib.query.type||1}}));
+        $("form.banner[id]").removeClass('move'); 
+        var list = JSON.parse(sessionStorage.getItem('bannerItemList'));               
+        var $form = $(lib.ejs.render({url:'./form'},{data:{type:lib.query.type||1,list:list}}));
         var len = $('form.banner').length + 1;
         $form.find('input[type=radio]').attr('name','behavior'+len);
         $form.find('.uploader').attr('id','uploader'+len);
@@ -76,8 +68,7 @@ $(function(){
         var complete = $form.find('.search').attr('ajat-complete');
         complete = complete.replace('complete-position','complete-position'+len);
         $form.find('.search').attr('ajat-complete',complete);
-        $form.find('.complete-position').attr('id','complete-position'+len);
-        $form.find('select').append(sessionStorage.getItem('bannerItemList'));        
+        $form.find('.complete-position').attr('id','complete-position'+len);     
         $('.plus-button').before($form);
         new lib.Form($form);
         if($('form.banner').length >= 10){
@@ -137,13 +128,18 @@ $(function(){
             $from.find('#h5url').removeAttr('disabled');
         }
         if(val == '2'){
-            $from.find('select').removeAttr('disabled')
-            var selectValue = $from.find('select').val();   
+            $from.find('select[name=url]').removeAttr('disabled')           
+            var selectValue = $from.find('select[name=url]').val();   
             if(selectValue == "salon"){
                 $from.find(".search").removeClass('hidden').removeAttr('disabled');
                 $from.find(".salonId").removeAttr('disabled');
-
-            }         
+            }
+            if(selectValue == "artificers"){
+                $from.find('select.artificersSelect').removeAttr('disabled');
+            }
+            if(selectValue == "item"){
+                $from.find('select.itemSelect').removeAttr('disabled');
+            }          
         }
         $("form.banner").find('button.edit').attr('disabled',true);
         $(".plus-button button").attr('disabled',true);
@@ -195,15 +191,31 @@ $(function(){
         radios.find('select[disabled]').removeAttr('disabled');        
     });
 
-    $("#warpper").on('change','form.banner select',function(e){
+    $("#warpper").on('change','form.banner select[name=url]',function(e){
         $(this).find('option[selected=selected]').removeAttr('selected');
         $(this).find('option[value='+$(this).val()+']').attr('selected','selected');
+        var radios = $(this).closest('.radios');
+        radios.find('.control-help').hide();
         if($(this).val()=="salon"){
-            $(this).next().find('input').removeClass('hidden').removeAttr('disabled');
-        }else{
-            $(this).next().find('input').addClass('hidden').attr('disabled',true);
+            radios.find('select.itemSelect').addClass('hidden').attr('disabled',true);
+            radios.find('select.artificersSelect').addClass('hidden').attr('disabled',true);
+            radios.find('input[type=text]').removeClass('hidden').removeAttr('disabled');
+            radios.find('input[type=hidden]').removeClass('hidden').removeAttr('disabled');
+        }
+        if($(this).val()=="artificers"){
+            radios.find('input[type=text]').addClass('hidden').attr('disabled',true);
+            radios.find('input[type=hidden]').addClass('hidden').attr('disabled',true);
+            radios.find('select.itemSelect').addClass('hidden').attr('disabled',true);
+            radios.find('select.artificersSelect').removeClass('hidden').removeAttr('disabled');
+        }
+        if($(this).val()=="item"){
+            radios.find('input[type=text]').addClass('hidden').attr('disabled',true);
+            radios.find('input[type=hidden]').addClass('hidden').attr('disabled',true);
+            radios.find('select.artificersSelect').addClass('hidden').attr('disabled',true);
+            radios.find('select.itemSelect').removeClass('hidden').removeAttr('disabled');
         }
     });
+
 
     $("#warpper").on('autoinput','form.banner .search',function(e,data){
         var banner = $(this).closest('.banner');
@@ -343,13 +355,13 @@ $(function(){
         })            
     }
 
-    function submitBanner(data){      
+    function submitBanner(data){ 
         if(data.behavior=="2"){
             if(data.url=="salon" || data.url=="artificers"){
-                data.url = {type:data.url};
+                data.url = {'type':data.url,'itemId':data.itemId};
             }else{
-                var arr = data.url.split("_");
-                data.url = {type:arr[0],itemId:arr[1]};
+                var arr = data.itemId.split("_");
+                data.url = {'type':arr[0],'itemId':arr[1]};
             }
             data.url = JSON.stringify(data.url);
         }     
