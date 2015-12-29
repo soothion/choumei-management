@@ -175,7 +175,7 @@ class BeautyRefundApi extends TransactionWriteApi {
         $countIds = count($booking_sns);
         $refunds = BookingSalonRefund::whereIn('booking_sn', $booking_sns)->get(['order_sn as ordersn', 'booking_sn'])->toArray();
         if (!empty($refunds)) {  //线下退款
-            $orderNum = BookingOrder::whereIn('BOOKING_SN', $booking_sns)->whereIn('STATUS', ['PYD', 'CSD'])->count();
+            $orderNum = BookingOrder::whereIn('BOOKING_SN', $booking_sns)->count();
             if (intval($orderNum) !== $countIds) {
                 throw new ApiException("关联的订单状态不正确", ERROR::REFUND_STATE_WRONG);
             }
@@ -346,6 +346,10 @@ class BeautyRefundApi extends TransactionWriteApi {
         OrderRefund::whereIn('ordersn', $ordersns)->update(['opt_time' => $now_time]);
         BookingOrder::whereIn('ORDER_SN', $ordersns)->update(['status' => 'RFD']);  //退款完成
         self::modifFundflowCompleted($ordersns);
+        //调用refundUpdateCalendar
+        foreach ($ordersns as $val) {
+            BookingCalendar::refundUpdateCalendar($val);
+        }
         return true;
     }
 
