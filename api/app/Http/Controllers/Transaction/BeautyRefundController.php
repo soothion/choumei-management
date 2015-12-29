@@ -429,7 +429,7 @@ class BeautyRefundController extends Controller {
      * 		}
      */
     public function show($id) {
-        $detail = BookingOrder::detail($id);
+        $detail = OrderRefund::detail($id);
         if(!empty($detail)){//记录日志
             Event::fire("BeautyRefund.show");
         }

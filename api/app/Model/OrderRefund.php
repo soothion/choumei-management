@@ -66,13 +66,14 @@ class OrderRefund extends Model {
 
     private static function getRefundViewByBookingOrder($fields, $param) {
         $query = BookingOrder::getRawBindings();
+//        $query=  BookingOrder::selectRaw(" CASE `cm_booking_order`.`STATUS` WHEN 'RFD-OFL' THEN 'RFD' WHEN 'RFD' THEN 'RFD' ELSE 'RFN'  END sort_type ");
         $order_refund_fields = ['order_refund.order_refund_id', 'order_refund.add_time', 'order_refund.status', 'order_refund.money as order_refund_money'];
         $salon_refund_fields = ['booking_salon_refund.id', 'booking_salon_refund.created_at', 'booking_salon_refund.money as salon_refund_money'];
         if (isset($param['initiate_refund']) && !empty($param['initiate_refund'])) {
             if ($param['initiate_refund'] == 1) {  //用户发起的退款
                 $query->select(array_merge($fields, $order_refund_fields));
                 $query->leftJoin('order_refund', function ($join) {
-                    $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status', '!=', 2)->where('item_type','!=','MF');
+                    $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status', '!=', 2)->where('item_type', '!=', 'MF');
                 });
             } else { //臭美人员
                 $query->select(array_merge($fields, $salon_refund_fields));
@@ -82,7 +83,7 @@ class OrderRefund extends Model {
             $query->select(array_merge($fields, $order_refund_fields, $salon_refund_fields));
 //            $query->leftJoin('order_refund', 'order_refund.booking_sn', '=', 'booking_order.BOOKING_SN')
             $query->leftJoin('order_refund', function ($join) {
-                $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status', '!=', 2)->where('item_type','!=','MF');
+                $join->on('order_refund.ordersn', '=', 'booking_order.ORDER_SN')->where('order_refund.status', '!=', 2)->where('item_type', '!=', 'MF');
             });
             $query->leftJoin('booking_salon_refund', 'booking_salon_refund.booking_sn', '=', 'booking_order.BOOKING_SN');
         }
@@ -92,8 +93,8 @@ class OrderRefund extends Model {
         }
         if (isset($param['sort_key']) && !empty($param['sort_key'])) {
             $sort_type = (isset($param['sort_type']) && !empty($param['sort_type']) && in_array($param['sort_type'], ['ASC', 'DESC'])) ? $param['sort_type'] : 'DESC';
-            if ($param['sort_key'] == 'state') {
-                $sort_key = 'booking_order.STATUS';
+            if ($param['sort_key'] == 'book_status') {
+                $sort_key = 'sort_type';
             } else {
                 $sort_key = $param['sort_key'];
             }
@@ -101,6 +102,7 @@ class OrderRefund extends Model {
         } else {
             $query->orderBy('booking_order.ID', 'DESC');
         }
+        $query->selectRaw(" CASE `cm_booking_order`.`STATUS` WHEN 'RFD-OFL' THEN 'RFD' WHEN 'RFD' THEN 'RFD' ELSE 'RFN'  END sort_type ");
         return $query;
     }
 
@@ -399,34 +401,24 @@ class OrderRefund extends Model {
         $fundflows = Fundflow::where('record_no', $ordersn)->get(['record_no', 'pay_type'])->toArray();
         $payment_log = PaymentLog::where('ordersn', $ordersn)->first(['ordersn', 'tn', 'amount']);
         $recommend = RecommendCodeUser::where('user_id', $base['USER_ID'])->whereIn('type', [2, 3])->first(['id', 'user_id', 'recommend_code']);
-        $refund_fields = ['order_refund_id','ordersn', 'user_id', 'money', 'opt_user_id', 'rereason', 'add_time', 'opt_time', 'status', 'booking_sn', 'item_type', 'rereason', 'other_rereason'];
-        $order_refund = OrderRefund::where('ordersn', $ordersn)->where('status', 1)->first($refund_fields);
+        $salon_refund = BookingSalonRefund::getByBookingId($id);
         $base['manager'] = null;
         if (!empty($manager_id)) {
             $base['manager'] = Manager::getBaseInfo($manager_id);
         }
-        $help_info = BookingOrder::getHelpUserInfo($base['SUBSTITUTOR'],$base['RECOMMENDER']);
+        $help_info = BookingOrder::getHelpUserInfo($base['SUBSTITUTOR'], $base['RECOMMENDER']);
         if (empty($payment_log)) {
             $payment_log = NULL;
         } else {
             $payment_log = $payment_log->toArray();
         }
-        if (empty($order_refund)) {
-            $order_refund = NULL;
-        } else {
-            $order_refund = $order_refund->toArray();
-            $order_refund['manager'] = Manager::getBaseInfo($order_refund['opt_user_id']);
-            if ($base['STATUS'] == 'RFN' && $order_refund['status'] == 3) {
-                $base['STATUS'] == 'RFE';
-            }
-            $reason = str_replace(array_keys(Mapping::BeautyRefundRereasonNames()), array_values(Mapping::BeautyRefundRereasonNames()), $order_refund['rereason']);
-            $reason = !empty($reason) ? $reason . "," . $order_refund['other_rereason'] : $order_refund['other_rereason'];
-            $order_refund['rereason'] = $reason;
-            $order_refund['refund_desc'] = $reason;
-            $order_refund['add_time'] = date("Y-m-d H:i:s", $order_refund['add_time']);
-            $order_refund['opt_time'] = empty($order_refund['opt_time']) ? "" : date("Y-m-d H:i:s", $order_refund['opt_time']);
-            $order_refund['complete_time'] = $order_refund['opt_time'];
+
+        $change_status = NULL;
+        $order_refund = BookingOrder::getOrderRefundInfo($salon_refund, $base, $fundflows, $ordersn, $change_status);
+        if (!empty($change_status)) {
+            $base['STATUS'] = $change_status;
         }
+
         $item_amount = 0;
         $is_virtual_beauty = false;
         if (empty($beauty_items)) {
@@ -446,8 +438,13 @@ class OrderRefund extends Model {
         } else {
             $recommend = $recommend->toArray();
         }
+        if (!empty($salon_refund)) {
+            $salon_refund['manager'] = [];
+        }
+
         return [
             'order' => $base,
+            'help_info' => $help_info,
             'order_item' => $items,
             'fundflow' => $fundflows,
             'payment_log' => $payment_log,
@@ -457,7 +454,7 @@ class OrderRefund extends Model {
             'booking_bill' => BookingBill::getByBookingId($id),
             'booking_cash' => BookingCash::getByBookingId($id),
             'booking_receive' => BookingReceive::getByBookingId($id),
-            'booking_salon_refund' => BookingSalonRefund::getByBookingId($id),
+            'booking_salon_refund' => $salon_refund,
             'order_refund' => $order_refund,
         ];
     }
