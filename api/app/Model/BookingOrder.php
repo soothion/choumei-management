@@ -454,7 +454,7 @@ class BookingOrder extends Model
         $from = "";
         if(!empty($SUBSTITUTOR))
         {
-            $user = User::where('mobilephone',$RECOMMENDER)->first(['nickname','mobilephone']);
+            $user = User::where('user_id',$SUBSTITUTOR)->first(['nickname','mobilephone']);
           
             if(strlen($RECOMMENDER)<11)
             {
@@ -468,10 +468,10 @@ class BookingOrder extends Model
                         $from = $salon->salonname;
                     }
                 }
-            }
-            $res = ['recommend_code'=>$RECOMMENDER,'from'=>$from];
+            }           
             if(!empty($user))
             {
+                $res = ['recommend_code'=>$RECOMMENDER,'from'=>$from];
                 $res['mobilephone'] = $user->mobilephone;                
             }
         }

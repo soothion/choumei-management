@@ -31,7 +31,7 @@ class BannerController extends Controller {
      * @apiSuccess {String} image bnnaer图片.
      * @apiSuccess {String} salonName  salon店的名称
      * @apiSuccess {Number} behavior  链接到哪里  0无跳转;1H5； 2app内部',
-     * @apiSuccess {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"SPM","itemId":1}且type只有四种类型：SPM - 半永久,FFA - 快时尚',salons-美发店铺主页,artificers-专家主页,itemId:主键 (SPM - 半永久,FFA - 快时尚'是itemId, ,salons-美发店铺主页-则是salonName))
+     * @apiSuccess {Json}    url  'banner链接地址',  (behavior为’1‘或‘3’ 类型为String ,behavior为'2'类型为json {"type":"SPM","itemId":1}且type只有四种类型：(SPM - 半永久,FFA - 快时尚'),itemId:主键  ,(salon-美发店铺主页)salonId:主键  ,（artificers-专家主页)artificerId：主键
      * 
      * 
      * @apiSuccessExample Success-Response:

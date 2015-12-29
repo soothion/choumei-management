@@ -60,7 +60,10 @@ class BookingReceive extends Model
         if(!empty($update_booking_date))
         {
             $attr['update_booking_date'] = $update_booking_date;
-            $base_update_attr['UPDATED_BOOKING_DATE'] = $update_booking_date;
+            if(!(empty($base['UPDATED_BOOKING_DATE'])  && $update_booking_date == $base['BOOKING_DATE']))
+            {
+                $base_update_attr['UPDATED_BOOKING_DATE'] = $update_booking_date;
+            }
         }
         if(isset($params['remark']))
         {
