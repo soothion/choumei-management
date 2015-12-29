@@ -669,7 +669,7 @@ class CalendarController extends Controller {
 			}
 		}
 // 		if( $i == count($data) ){
-// 			Event::fire('calendar.modifyLimit','修改预约上限 ');
+			Event::fire('calendar.modifyLimit','修改预约上限 ');
 			return $this->success();
 // 		}
 // 		return $this->error('有' .(count($data)-$i).'条数据修改失败哦');
