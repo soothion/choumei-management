@@ -13,8 +13,8 @@
 			 <div class="flex-item">
 				<h4> 预约上限设置</h4>
 			</div>
-			<div>
-				<button class="btn edit" id="edit" data-slug="calendar.modifyLimit">编辑</button>
+			<div id="edit-btns">
+				<button class="btn edit"  data-slug="calendar.modifyLimit">编辑</button>
 				<span style="display:none">
 					<button class="btn cancel">取消</button>
 					<span class="space"></span>
@@ -63,9 +63,9 @@
 							}
 							var endDay= new Date(data[data.length-1].bookingDate).getDay();
 							if(data[data.length-1].nowDay==-1||data[data.length-1].nowDay==0){
-								document.getElementById("edit").style.display="none";
+								document.getElementById("edit-btns").style.display="none";
 							}else{
-								document.getElementById("edit").style.display="inline-block";
+								document.getElementById("edit-btns").style.display="inline-block";
 							}
 							if(endDay!=6){
 								for(var i=1;i<7-endDay;i++){
