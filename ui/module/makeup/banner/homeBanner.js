@@ -2,11 +2,12 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-29 15:33:37
+* @Last Modified time: 2015-12-29 17:37:17
 */
 
 $(function(){
     var moveTarget = {};
+    var tempHtml   = "";
     $("#warpper").on('click','#editBtn',function(){
         $(".copyWriter").find('textarea').removeAttr('disabled');
         $(".copyWriter").find('input[type=text]').removeAttr('disabled');
@@ -68,7 +69,8 @@ $(function(){
         var complete = $form.find('.search').attr('ajat-complete');
         complete = complete.replace('complete-position','complete-position'+len);
         $form.find('.search').attr('ajat-complete',complete);
-        $form.find('.complete-position').attr('id','complete-position'+len);     
+        $form.find('.complete-position').attr('id','complete-position'+len);
+        tempHtml = $form.html();     
         $('.plus-button').before($form);
         new lib.Form($form);
         if($('form.banner').length >= 10){
@@ -113,6 +115,8 @@ $(function(){
     });
 
     $("#warpper").on('click','form.banner .edit',function(){
+        tempHtml = $(this).closest('form.banner').html();
+
         var parent = $(this).closest('.fr');
         parent.find('.save').removeClass('hidden');
         parent.find('.canncel').removeClass('hidden');
@@ -147,36 +151,49 @@ $(function(){
     });
 
     $("#warpper").on('click','form.banner .canncel',function(){
-        var parent = $(this).closest('.fr');
-        parent.find('.save').addClass('hidden');
-        parent.find('.canncel').addClass('hidden');
-        parent.find('.edit').removeClass('hidden');
-        var $from = $(this).closest('.banner');
-        var url = $from.attr('url');
-        if(url){
-            if($from.find('.thumbnails-item-img').length > 0){
-                $from.find('.thumbnails-item-img img').attr('src',url);
-                $from.find('.thumbnails-item-img input').attr('value',url);                
-            }else{
-                $from.find('.thumbnails-item-btn').css('display','none');
-                appendImgItem($from.find('.thumbnails-item'),url);                
-            }
+        // var parent = $(this).closest('.fr');
+        // parent.find('.save').addClass('hidden');
+        // parent.find('.canncel').addClass('hidden');
+        // parent.find('.edit').removeClass('hidden');
+        // var $from = $(this).closest('.banner');
+        // $("form.banner[id]").addClass('move');  
+        // $from.find('.operation').addClass('hidden');
+        // $from.find('.control-help').hide();
+        // $from.find('input[type=radio]').attr('disabled',true);
+        // $from.find('#title').attr('disabled',true);
+        // $from.find('#h5url').attr('disabled',true);
+        // $from.find('select[name=url]').attr('disabled',true);
+        // $from.find('.search').attr('disabled',true);
+        // $from.find('.salonId').attr('disabled',true);
+        // $from.find('button.btn-primary').attr('disabled',true);   
+        // var url = $from.attr('url');
+        // if(url){
+        //     if($from.find('.thumbnails-item-img').length > 0){
+        //         $from.find('.thumbnails-item-img img').attr('src',url);
+        //         $from.find('.thumbnails-item-img input').attr('value',url);                
+        //     }else{
+        //         $from.find('.thumbnails-item-btn').css('display','none');
+        //         appendImgItem($from.find('.thumbnails-item'),url);                
+        //     }
+        // }else{
+        //     $from.find('.thumbnails-item-btn').css('display','inline-block');
+        //     $from.find('.thumbnails-item-img').remove();          
+        // }   
+        var $form = $(this).closest('form');
+        $form.html(tempHtml);
+        if($form.attr('draggable')=="false"){
+            $form.find('.save').addClass('hidden');
+            $form.find('.canncel').addClass('hidden');
+            $form.find('.edit').removeClass('hidden');
+            $form.find('.inputBox').find('input').attr('disabled','disabled');
+            $form.find('.inputBox').find('select').attr('disabled','disabled');
+            $form.find('button[id^=uploader]').attr('disabled','disabled');
         }else{
-            $from.find('.thumbnails-item-btn').css('display','inline-block');
-            $from.find('.thumbnails-item-img').remove();
-        }
-        $("form.banner[id]").addClass('move');  
-        $from.find('.operation').addClass('hidden');
-        $from.find('.control-help').hide();
-        $from.find('input[type=radio]').attr('disabled',true);
-        $from.find('#title').attr('disabled',true);
-        $from.find('#h5url').attr('disabled',true);
-        $from.find('select').attr('disabled',true);
-        $from.find('.search').attr('disabled',true);
-        $from.find('.salonId').attr('disabled',true);
-        $from.find('button.btn-primary').attr('disabled',true);
+            $form.addClass('move');
+        }           
+        uploader($form.find('button[id^=uploader]').attr('id'));
         $("form.banner").find('button.edit').removeAttr('disabled');
-        $(".plus-button button").removeAttr('disabled');    
+        $(".plus-button button").removeAttr('disabled');
     });
 
     $("#warpper").on('click','form.banner input[type=radio]',function(){ 
