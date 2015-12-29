@@ -104,7 +104,7 @@
 						<form class="update" data-slug="calendar.modifyDay" action="calendar/modifyDay" data-role="normal" onsuccess="parent.lib.popup.result({define:function(){location.reload()}})" onfail="parent.lib.popup.result({define:function(){location.reload()}})">
 							<input type="hidden" name="orderSn" value="<%=item.orderSn%>" />
 							<input type="hidden" name="modifyDesc" value="<%=item.bookingDesc%>" />
-							<input type="date" name="modifyDate" value="<%=item.bookingTime%>" required />
+							<input type="hidden" name="modifyDate" value="<%=item.bookingTime%>" required />
 							<input type="hidden" value="<%=session.user.uid%>" name="userId" />
 						</form>
 					</td>
