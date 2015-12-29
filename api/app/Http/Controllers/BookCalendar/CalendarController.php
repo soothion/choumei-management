@@ -245,7 +245,7 @@ class CalendarController extends Controller {
 	* @apiName  modifyDay
 	* @apiGroup Calendar
 	*
-	* @apiParam {Number} id 						必填 	定妆中心id
+	* @apiParam {Number} userId 					必填 	用户id
 	* @apiParam {String} orderSn                   	必填        订单id
 	* @apiParam {String} modifyDate                 必填        修改日期 如 2015-12-29
 	* @apiParam {String} modifyDesc                 必填        上午 MORNGIN 下午 AFTERNOON 未选择 DEF
@@ -276,10 +276,12 @@ class CalendarController extends Controller {
 		if(!isset($param['orderSn']) || empty($param['orderSn'])) return $this->error('未传递orderSn参数或值错误');
 		if(!isset($param['modifyDate']) || empty($param['modifyDate'])) return $this->error('未传递modifyDate参数或值错误');
 		if(!isset($param['modifyDesc']) || empty($param['modifyDesc'])) return $this->error('未传递modifyDesc参数或值错误');
+		if(!isset($param['userId']) || empty($param['userId'])) return $this->error('未传递useId参数或值错误');
 		
 		$orderSn = $param['orderSn'];
 		$modifyDate = $param['modifyDate'];
 		$modifyDesc = $param['modifyDesc'];
+		$userId = $param['userId'];
 
 		if( strtotime($modifyDate) < strtotime( date('Y-m-d') )  ) return $this->error('预约日期不能小于当天');
 		if( !in_array($modifyDesc,['DEF','MORNING','AFTERNOON'] )) return $this->error('未知的时间类型哦！！！');
@@ -302,7 +304,7 @@ class CalendarController extends Controller {
 		
 		DB::beginTransaction();
 		// 1. 修改订单的预约时间
-		$result1 = BookingOrder::where(['ORDER_SN'=>$orderSn])->update(['UPDATED_BOOKING_DATE'=>$modifyDate,'BOOKING_DESC'=>$modifyDesc,'RECORD_TIME'=>date('Y-m-d H:i:s')]);
+		$result1 = BookingOrder::where(['ORDER_SN'=>$orderSn])->update(['UPDATED_BOOKING_DATE'=>$modifyDate,'BOOKING_DESC'=>$modifyDesc,'RECORD_TIME'=>date('Y-m-d H:i:s'),'CUSTOMER_SERVICE_ID'=>$userId]);
 		
 // 		2. 修改日历数据 按照项目id和时间日期逐一修改统计
 		$resultN = true;
