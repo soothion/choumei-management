@@ -107,7 +107,33 @@ class BookingCalendar extends Model {
 	        self::upsert($item_id,$arrive_date,$beauty_id,$change_type,self::CHANGE_FIELD_OF_ARRIVE);
 	    }
 	}
-	
+	public static function refundUpdateCalendar( $orderSn = ''){
+		if( empty($orderSn) ) return false;
+		$bookings = BookingOrder::select(['booking_date as bookingDate','updated_booking_date as updatedBookingDate'])->where(['order_sn'=>$orderSn])->first();
+		if( empty( $bookings ) )	return false;
+		$bookings = $bookings->toArray();
+		if( empty( $bookings['updatedBookingDate'] ) ) $bookingTime = $bookings['updatedBookingDate'];
+		else $bookingTime = $bookings['bookingDate'];
+		
+		$itemQuantity = BookingOrderItem::select(['ITEM_ID as itemId','quantity'])->where(['order_sn'=>$orderSn])->get()->toArray();
+		$tempItemIds = [];
+		$t = [];
+		foreach( $itemQuantity as $k => $v ){
+			$tempItemIds[] = $v['itemId'];
+			$t[ $v['itemId'] ] = $v;
+		}
+		$calendarItemIds = BookingCalendar::select(['ITEM_ID as itemId','quantity'])->whereIn('ITEM_ID',$tempItemIds)->where(['BOOKING_DATE'=>$bookingTime])->get()->toArray();
+		$where['BOOKING_DATE'] = $bookingTime;
+
+		foreach( $calendarItemIds as $k => $v ){
+			$where['ITEM_ID'] = $v['itemId'];
+			$changeNum = $v['quantity'] - $t[ $v['itemId'] ]['quantity'];
+			if( $changeNum  < 0 ) $changeNum = 0;
+			$updateCalendar['QUANTITY'] = $changeNum;
+			$calendarNum = BookingCalendar::where($where)->update($updateCalendar);
+		}
+		return true;
+	}
 	public function isFillable($key)
 	{
 	    return true;
