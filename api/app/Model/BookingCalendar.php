@@ -19,6 +19,7 @@ class BookingCalendar extends Model {
 	CONST CHANGE_FIELD_OF_ARRIVE = 2;
 	public static function change_items_date($item_ids,$booking_date,$change_type = self::CHANGE_TYPE_OF_ADD)
 	{
+	    //Utils::log("logs",date("Y-m-d H:i:s")." BOOK:".($change_type == self::CHANGE_TYPE_OF_ADD ?"ADD":"DEL") .": items:[".implode(",", $item_ids)."] date:{$booking_date} \n");
 	    if(count($item_ids)<1)
 	    {
 	        return;
@@ -87,16 +88,13 @@ class BookingCalendar extends Model {
 	
 	public static function arrive($item_ids,$arrive_date,$change_type = self::CHANGE_TYPE_OF_ADD)
 	{
+	    //Utils::log("logs",date("Y-m-d H:i:s")." ARRIVE:".($change_type == self::CHANGE_TYPE_OF_ADD ?"ADD":"DEL") .": items:[".implode(",", $item_ids)."] date:{$arrive_date} \n");
 	    if(count($item_ids)<1)
 	    {
 	        return;
 	    }
 	    $item_idx = BeautyItem::getItemBeautyId($item_ids);
-	    if(count(array_diff($item_ids, array_keys($item_idx)))>0)
-	    {
-	        throw new ApiException("部分项目已经不存在!",ERROR::PARAMETER_ERROR);
-	    }
-	     
+	    
 	    foreach ($item_ids as $item_id)
 	    {
 	        $beauty_id = 1;
@@ -107,7 +105,33 @@ class BookingCalendar extends Model {
 	        self::upsert($item_id,$arrive_date,$beauty_id,$change_type,self::CHANGE_FIELD_OF_ARRIVE);
 	    }
 	}
-	
+	public static function refundUpdateCalendar( $orderSn = ''){
+		if( empty($orderSn) ) return false;
+		$bookings = BookingOrder::select(['booking_date as bookingDate','updated_booking_date as updatedBookingDate'])->where(['order_sn'=>$orderSn])->first();
+		if( empty( $bookings ) )	return false;
+		$bookings = $bookings->toArray();
+		if( empty( $bookings['updatedBookingDate'] ) ) $bookingTime = $bookings['updatedBookingDate'];
+		else $bookingTime = $bookings['bookingDate'];
+		
+		$itemQuantity = BookingOrderItem::select(['ITEM_ID as itemId','quantity'])->where(['order_sn'=>$orderSn])->get()->toArray();
+		$tempItemIds = [];
+		$t = [];
+		foreach( $itemQuantity as $k => $v ){
+			$tempItemIds[] = $v['itemId'];
+			$t[ $v['itemId'] ] = $v;
+		}
+		$calendarItemIds = BookingCalendar::select(['ITEM_ID as itemId','quantity'])->whereIn('ITEM_ID',$tempItemIds)->where(['BOOKING_DATE'=>$bookingTime])->get()->toArray();
+		$where['BOOKING_DATE'] = $bookingTime;
+
+		foreach( $calendarItemIds as $k => $v ){
+			$where['ITEM_ID'] = $v['itemId'];
+			$changeNum = $v['quantity'] - $t[ $v['itemId'] ]['quantity'];
+			if( $changeNum  < 0 ) $changeNum = 0;
+			$updateCalendar['QUANTITY'] = $changeNum;
+			$calendarNum = BookingCalendar::where($where)->update($updateCalendar);
+		}
+		return true;
+	}
 	public function isFillable($key)
 	{
 	    return true;
