@@ -108,7 +108,7 @@ class BookingReceive extends Model
         $item_ids = array_column($items, "ITEM_ID");
         $item_infos = self::getItemNormInfoAtFirst($item_ids);
         self::deleteOldItems($ordersn,$old_booking_date,$old_arrive_date);
-        self::insertNewItems($ordersn, $item_infos);
+        self::insertNewItems($ordersn, $item_infos,$update_booking_date,$arrive_date);
     }
     
     public static function deleteOldItems($ordersn,$old_booking_date=NULL,$old_arrive_date=NULL)
