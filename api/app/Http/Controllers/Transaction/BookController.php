@@ -804,6 +804,7 @@ class BookController extends Controller
         if($base->MANAGER_UID == 0)
         {
             try{
+                BookingOrder::where('ID',$id)->update(['STATUS'=>'RFN']);
                 $res = BeautyRefundApi::accpetByBookingSn([$base->BOOKING_SN], $this->user->id);
             }
             catch (\Exception $e)
@@ -812,8 +813,7 @@ class BookController extends Controller
             }
         }
         
-        BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]);
-        Order::where('ordersn',$base->BOOKING_SN)->update(['status'=>4,'use_time'=>$time]); 
+        BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]);        
          
         Event::fire('booking.refund',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
         
