@@ -180,12 +180,17 @@ class BeautyRefundApi extends TransactionWriteApi {
                 throw new ApiException("关联的订单状态不正确", ERROR::REFUND_STATE_WRONG);
             }
         } else { //线上退款
-            $booking_order = BookingOrder::whereIn('BOOKING_SN', $booking_sns)->where('STATUS', 'RFN')->get(['ORDER_SN'])->toArray();
-            if (count($booking_order) !== $countIds) {
-                throw new ApiException("关联的订单状态不正确", ERROR::REFUND_STATE_WRONG);
-            }
-            $order_sns = array_column($booking_order, 'ORDER_SN');
-            $refunds = OrderRefund::whereIn('ordersn', $order_sns)->where('item_type', 'MZ')->where('status', '!=', self::REFUND_STATUS_OF_CANCLE)->get(['ordersn', 'booking_sn', 'retype', 'rereason', 'other_rereason'])->toArray();
+//            $booking_order = BookingOrder::whereIn('BOOKING_SN', $booking_sns)->where('STATUS', 'RFN')->get(['ORDER_SN'])->toArray();
+//            if (count($booking_order) !== $countIds) {
+//                throw new ApiException("关联的订单状态不正确", ERROR::REFUND_STATE_WRONG);
+//            }
+//            $order_sns = array_column($booking_order, 'ORDER_SN');
+            $refunds = OrderRefund::select(['order_refund.ordersn', 'booking_order.BOOKING_SN as booking_sn', 'order_refund.retype', 'order_refund.rereason', 'order_refund.other_rereason'])
+                            ->leftJoin('booking_order', 'booking_order.ORDER_SN', '=', 'order_refund.ordersn')
+                            ->where('order_refund.item_type', 'MZ')
+                            ->where('order_refund.status', '!=', self::REFUND_STATUS_OF_CANCLE)
+                            ->whereIn('booking_order.BOOKING_SN', $booking_sns)
+                            ->get()->toArray();
             if ($countIds != count($refunds)) {
                 throw new ApiException("您选的部分订单不存在退款信息", ERROR::REFUND_STATE_WRONG);
             }
