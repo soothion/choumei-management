@@ -128,7 +128,7 @@ class BookingReceive extends Model
         return $item_ids;
     }
     
-    public static function getBeautyItemIds($ordersn)
+    public static function getBeautyOrderItemIds($ordersn)
     {
         $items = BeautyOrderItem::where('order_sn',$ordersn)->get(['item_id'])->toArray();
         $item_ids = array_column($items, "item_id");
