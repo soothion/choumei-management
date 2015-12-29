@@ -14,7 +14,7 @@
 <div class="control-group">
     <label class="control-label" for="">应收金额：</label>
     <div class="control">
-            <label for=""><%= orderInfo.booking_cash.other_money + orderInfo.booking_cash.cash_money + orderInfo.booking_cash.deduction_money%></label>
+            <label for=""><%= orderInfo.booking_cash.other_money*1 + orderInfo.booking_cash.cash_money*1 + orderInfo.booking_cash.deduction_money*1%></label>
     </div>
 </div>
 <div class="control-group">
@@ -26,7 +26,7 @@
 <div class="control-group">
     <label class="control-label" for="">实收金额：</label>
     <div class="control">
-            <label for=""><span class="red"><%= orderInfo.booking_cash.other_money + orderInfo.booking_cash.cash_money%></span></label>
+            <label for=""><span class="red"><%= orderInfo.booking_cash.other_money*1 + orderInfo.booking_cash.cash_money*1%></span></label>
     </div>
 </div>
 <div class="control-group">
