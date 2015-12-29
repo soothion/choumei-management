@@ -412,23 +412,23 @@
                                     <tbody>
                                         <tr>
                                             <td>发起退款：</td>
-                                            <td><%= data.booking_salon_refund ?'臭美人员':'用户'%></td>
+                                            <td><%= data.booking_salon_refund ?'臭美人员' : '用户'%></td>
                                             <td>退款原因：</td>
                                             <td>
-                                            <%= data.booking_salon_refund ? data.booking_salon_refund.remark:'用户不想做了' %>
+                                            <%= data.booking_salon_refund ? '用户不想做了' : data.order_refund.rereason%>
                                            </td>
                                         </tr>
                                     </tbody>
                             </table>
                             </td>
                         </tr>
+                        <tr>
+                            <td class="td">退款说明：</td>
+                            <td><%=data.booking_salon_refund ? '用户不想做了' : data.order_refund.refund_desc%></td>
+                        </tr>
                         <%}%>
 
                         <%if (data.booking_salon_refund) {%>
-                        <tr>
-                            <td class="td">退款说明：</td>
-                            <td><%=data.booking_salon_refund.remark%></td>
-                        </tr>
                         <%var back_to_desc=[,'微信','支付宝','银联','现金']%>
                         <tr>
                             <td class="td">退款方式：</td>
@@ -482,10 +482,6 @@
 
 
                         <%if (data.order_refund) {%>
-                        <tr>
-                            <td class="td">退款说明：</td>
-                            <td><%=data.order_refund.refund_desc%></td>
-                        </tr>
                         <tr>
                             <td class="td">退款方式：</td>
                             <td><%=payment_list.join(',')%></td>
