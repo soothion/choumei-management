@@ -245,7 +245,6 @@ class CalendarController extends Controller {
 	* @apiName  modifyDay
 	* @apiGroup Calendar
 	*
-	* @apiParam {Number} userId 					必填 	用户id
 	* @apiParam {String} orderSn                   	必填        订单id
 	* @apiParam {String} modifyDate                 必填        修改日期 如 2015-12-29
 	* @apiParam {String} modifyDesc                 必填        上午 MORNGIN 下午 AFTERNOON 未选择 DEF
@@ -276,12 +275,11 @@ class CalendarController extends Controller {
 		if(!isset($param['orderSn']) || empty($param['orderSn'])) return $this->error('未传递orderSn参数或值错误');
 		if(!isset($param['modifyDate']) || empty($param['modifyDate'])) return $this->error('未传递modifyDate参数或值错误');
 		if(!isset($param['modifyDesc']) || empty($param['modifyDesc'])) return $this->error('未传递modifyDesc参数或值错误');
-		if(!isset($param['userId']) || empty($param['userId'])) return $this->error('未传递useId参数或值错误');
 		
 		$orderSn = $param['orderSn'];
 		$modifyDate = $param['modifyDate'];
 		$modifyDesc = $param['modifyDesc'];
-		$userId = $param['userId'];
+		$userId = $this->user->id;
 
 		if( strtotime($modifyDate) < strtotime( date('Y-m-d') )  ) return $this->error('预约日期不能小于当天');
 		if( !in_array($modifyDesc,['DEF','MORNING','AFTERNOON'] )) return $this->error('未知的时间类型哦！！！');
@@ -304,7 +302,12 @@ class CalendarController extends Controller {
 		
 		DB::beginTransaction();
 		// 1. 修改订单的预约时间
-		$result1 = BookingOrder::where(['ORDER_SN'=>$orderSn])->update(['UPDATED_BOOKING_DATE'=>$modifyDate,'BOOKING_DESC'=>$modifyDesc,'RECORD_TIME'=>date('Y-m-d H:i:s'),'CUSTOMER_SERVICE_ID'=>$userId]);
+		if( $oldBookingTime == $modifyDate ){
+			$result1 = BookingOrder::where(['ORDER_SN'=>$orderSn])->update(['BOOKING_DESC'=>$modifyDesc,'RECORD_TIME'=>date('Y-m-d H:i:s'),'CUSTOMER_SERVICE_ID'=>$userId]);
+		}else{
+			$result1 = BookingOrder::where(['ORDER_SN'=>$orderSn])->update(['UPDATED_BOOKING_DATE'=>$modifyDate,'BOOKING_DESC'=>$modifyDesc,'RECORD_TIME'=>date('Y-m-d H:i:s'),'CUSTOMER_SERVICE_ID'=>$userId]);
+		}
+		
 		
 // 		2. 修改日历数据 按照项目id和时间日期逐一修改统计
 		$resultN = true;
@@ -565,7 +568,6 @@ class CalendarController extends Controller {
 	* @apiGroup Calendar
 	*
 	* @apiParam {String} orderSn                   	必填        订单id
-	* @apiParam {String} userId                   	必填        客服登录id
 	*
 	*
 	*
@@ -588,8 +590,7 @@ class CalendarController extends Controller {
 	*		}
 	***/
 	public function modifyDayStatus( $orderSn = '' ){
-		if( !isset($this->param['userId']) ) return $this->error('未传递参数usesrId');
-		
+		$userId = $this->user->id;
 		$redis = Redis::connection();
 		$keyPre = 'CALENDAR-CALL-';
 		$result = BookingOrder::select(['BOOKING_DATE as bookingDate','UPDATED_BOOKING_DATE as updatedBookingDate'])->where(['ORDER_SN'=>$orderSn])->first();
@@ -597,8 +598,8 @@ class CalendarController extends Controller {
 			return $this->error('数据错误，请联系管理员');
 		}
 		if($redis->get($keyPre . $orderSn) === NULL){
-			Event::fire('calendar.status','客服id为 '.$this->param['userId']);
-			$redis->setex( $keyPre . $orderSn,120,$this->param['userId']);
+			Event::fire('calendar.status','客服id为 '.$userId);
+			$redis->setex( $keyPre . $orderSn,120,$userId);
 			return $this->success();
 		}else{
 			$userId = $redis->get($keyPre . $orderSn);
