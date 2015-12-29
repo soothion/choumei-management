@@ -19,7 +19,7 @@ class BookingCalendar extends Model {
 	CONST CHANGE_FIELD_OF_ARRIVE = 2;
 	public static function change_items_date($item_ids,$booking_date,$change_type = self::CHANGE_TYPE_OF_ADD)
 	{
-	    Utils::log("logs",date("Y-m-d H:i:s")." BOOK:".($change_type == self::CHANGE_TYPE_OF_ADD ?"ADD":"DEL") .": items:[".implode(",", $item_ids)."] date:{$booking_date} \n");
+	    //Utils::log("logs",date("Y-m-d H:i:s")." BOOK:".($change_type == self::CHANGE_TYPE_OF_ADD ?"ADD":"DEL") .": items:[".implode(",", $item_ids)."] date:{$booking_date} \n");
 	    if(count($item_ids)<1)
 	    {
 	        return;
@@ -88,7 +88,7 @@ class BookingCalendar extends Model {
 	
 	public static function arrive($item_ids,$arrive_date,$change_type = self::CHANGE_TYPE_OF_ADD)
 	{
-	    Utils::log("logs",date("Y-m-d H:i:s")." ARRIVE:".($change_type == self::CHANGE_TYPE_OF_ADD ?"ADD":"DEL") .": items:[".implode(",", $item_ids)."] date:{$arrive_date} \n");
+	    //Utils::log("logs",date("Y-m-d H:i:s")." ARRIVE:".($change_type == self::CHANGE_TYPE_OF_ADD ?"ADD":"DEL") .": items:[".implode(",", $item_ids)."] date:{$arrive_date} \n");
 	    if(count($item_ids)<1)
 	    {
 	        return;
