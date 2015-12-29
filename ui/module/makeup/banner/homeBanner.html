@@ -124,7 +124,11 @@
                                   </label>
 
                                   <%if(item.behavior=="2"){var url = JSON.parse(item.url);%>
-                                      <select name="url" disabled  url=<%=item.url%>></select>
+                                      <select name="url" disabled  url=<%=item.url%>>
+                                        <option value="salon" <%=url.type=='salon'?'selected':''%>>美发店主页</option>
+                                        <option value="artificers" <%=url.type=='artificers'?'selected':''%>>定妆专家</option>
+                                        <option value="item" <%=(url.type=='SPM'||url.type=='FFA')?'selected':''%>>定妆项目</option>
+                                      </select>
                                       <div class="control complete">
                                         <input class="search <%=url.type=='salon'?'':'hidden'%>" type="text" name="salonName" 
                                         ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" autocomplete="off" value="<%=item.salonName%>" required disabled/>
@@ -132,9 +136,25 @@
                                         required disabled>
                                         <div class="complete-position" id="complete-position<%=i%>"></div>
                                         <span class="control-help" style="display: none;">未填写</span>
-                                      </div>                                    
+                                      </div>
+                                      <select name="itemId" style="width:26.5%;" disabled url=<%=item.url%>
+                                      class="itemSelect <%=(url.type=='SPM'|| url.type=='FFA')?'':'hidden'%>">
+
+                                      </select>   
+
+                                      <select name="itemId" style="width:26.5%;" class="artificersSelect <%=url.type=='artificers'?'':'hidden'%>" disabled>
+                                          <option value="1" <%=(url.type=='artificers'&&url.itemId=='1')?'selected':''%>>预约主页</option>
+                                          <option value="2" <%=(url.type=='artificers'&&url.itemId=='2')?'selected':''%>>定妆中心介绍页</option>
+                                          <option value="3" <%=(url.type=='artificers'&&url.itemId=='3')?'selected':''%>>约明星院长页面</option>
+                                          <option value="4" <%=(url.type=='artificers'&&url.itemId=='4')?'selected':''%>>约院长页</option>
+                                          <option value="5" <%=(url.type=='artificers'&&url.itemId=='5')?'selected':''%>>院长列表页</option>
+                                      </select>                                                                           
                                   <%}else{%>                                  
-                                      <select name="url" disabled></select>
+                                      <select name="url" disabled>
+                                        <option value="salon">美发店主页</option>
+                                        <option value="artificers">定妆专家</option>
+                                        <option value="item">定妆项目</option>                                      
+                                      </select>
                                       <div class="control complete">
                                         <input class="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position<%=i%>&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字"
                                         autocomplete="off" value="<%=item.salonName%>" required disabled/>
@@ -143,7 +163,19 @@
                                         <div class="complete-position" id="complete-position<%=i%>"></div>
                                         <span class="control-help" style="display: none;">未填写</span>
                                       </div> 
+                                      <select name="itemId" style="width:26.5%;" class="itemSelect hidden" disabled>
+
+                                      </select>   
+
+                                      <select name="itemId" style="width:26.5%;" class="artificersSelect hidden" disabled>
+                                          <option value="1">预约主页</option>
+                                          <option value="2">定妆中心介绍页</option>
+                                          <option value="3">约明星院长页面</option>
+                                          <option value="4">约院长页</option>
+                                          <option value="5">院长列表页</option>
+                                      </select>                                    
                                   <%}%>
+
                               </div>
 
                               <div class="radios">
