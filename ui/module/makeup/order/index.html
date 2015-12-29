@@ -122,7 +122,7 @@
                   <td><%=item.PAYABLE%></td>
                   <td><%=item.BOOKING_SN%></td>
                   <td><%=item.BOOKING_DATE%></td>
-                  <td><%=item.recommend_code%></td>
+                  <td><%=item.recommend_code ? item.recommend_code:item.RECOMMENDER%></td>
                   <td><%=pay_type_desc[item.pay_type]%></td>
                   <td><%= item.beauty_makeup_id &&item.STATUS=='CSD' ? '已补色' :status[item.STATUS]%></td>
                   <td class="tc">

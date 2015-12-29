@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-23 13:29:30
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-24 16:28:16
+* @Last Modified time: 2015-12-29 14:09:31
 */
 .box-warpper{
     position:relative;            
@@ -184,6 +184,7 @@ select:disabled,input:disabled,textarea:disabled{
 select{
     width:29.5%!important;
 }
+
 .s-list{
     width: 180px;
 }

@@ -46,14 +46,31 @@
                 </label>
 
                 <select name="url" style="width:26.5%;" disabled>
-                    
+                    <option value="salon">美发店主页</option>
+                    <option value="artificers">定妆专家</option>
+                    <option value="item">定妆项目</option>
                 </select>
 
                 <div class="control complete">
                     <input class="search" type="text" name="salonName" ajat-complete="salonAccount/getSalonName?salonname=${value}#domid=complete-position&tempid=/module/public/widget/autocomplete/shop" placeholder="店铺名称1~15个字" autocomplete="off" disabled required requiredmsg="未填写"/>
                     <input type="hidden" class="salonId" name="salonId" disabled required>
                     <div class="complete-position" id="complete-position"></div>
-                </div>                             
+                </div>
+
+                <select name="itemId" style="width:26%;" class="itemSelect hidden">
+                  <% var itemText = {'1':'SPM','2':'FFA'}; %>
+                  <% data.list.forEach(function(item,i){%>
+                    <option value="<%=itemText[item.type]+"_"+item.item_id%>"><%=item.name%></option>
+                  <%})%>
+                </select>   
+
+                <select name="itemId" style="width:26%;" class="artificersSelect hidden">
+                    <option value="1">预约主页</option>
+                    <option value="2">定妆中心介绍页</option>
+                    <option value="3">约明星院长页面</option>
+                    <option value="4">约院长页</option>
+                    <option value="5">院长列表页</option>
+                </select>                                                                            
             </div>
 
             <div class="radios">
