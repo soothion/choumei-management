@@ -99,6 +99,20 @@ class BannerController extends Controller {
                 if(isset($temp['salonId'])){
                     $query['data'][$key]['salonId'] = $temp['salonId'];
                 }
+                if(isset($temp['type'])){
+                    switch($temp['type']){
+                        case "booking" : 
+                            $query['data'][$key]['url']='{"type":"artificers","itemId":"1"}'; break;
+                        case "beauty-center":
+                            $query['data'][$key]['url']='{"type":"artificers","itemId":"2"}'; break;
+                        case "book-pop-artificer":
+                            $query['data'][$key]['url']='{"type":"artificers","itemId":"3"}'; break;
+                        case "book-artificer":
+                            $query['data'][$key]['url']='{"type":"artificers","itemId":"4"}'; break;
+                        case "artificers":
+                            $query['data'][$key]['url']='{"type":"artificers","itemId":"5"}'; break;
+                    }
+                }    
             }        
         }
         $result=[];
@@ -171,7 +185,25 @@ class BannerController extends Controller {
             $param['url']=  json_encode($temp);
         }
         if (!empty($param['url'])) {
-            $date['url']=$param['url'];
+            $temp2 = json_decode($param['url'],true);
+            var_dump($temp2['type']);
+            if(isset($temp2['type'])&&$temp2['type'] == "artificers"){
+                switch($temp2['itemId']){
+                    case 1 : 
+                        $date['url']='{"type":"booking"}'; break;
+                    case 2:
+                        $date['url']='{"type":"beauty-center"}'; break;
+                    case 3:
+                        $date['url']='{"type":"book-pop-artificer"}'; break;
+                    case 4:
+                        $date['url']='{"type":"book-artificer"}'; break;
+                    case 5:
+                        $date['url']='{"type":"artificers"}'; break;
+                }        
+            } else {
+                $date['url']=$param['url'];
+            }
+  
         }
         if (!empty($param['salonName'])) {
             $date['salonName']=$param['salonName'];
@@ -250,8 +282,24 @@ class BannerController extends Controller {
             }
         }
         $data['updated_at']=time();        
-        if (!empty($param['url'])) {
-            $data['url']=$param['url'];
+       if (!empty($param['url'])) {
+            $temp2 = json_decode($param['url'], true);
+            if(isset($temp2['type'])&&$temp2['type'] == "artificers"){
+                  switch($temp2['itemId']){
+                    case 1 : 
+                        $data['url']='{"type":"booking"}'; break;
+                    case 2:
+                        $data['url']='{"type":"beauty-center"}'; break;
+                    case 3:
+                        $data['url']='{"type":"book-pop-artificer"}'; break;
+                    case 4:
+                        $data['url']='{"type":"book-artificer"}'; break;
+                    case 5:
+                        $data['url']='{"type":"artificers"}'; break;
+                }        
+            }  else {
+                $data['url']=$param['url'];
+            }
         }
         $query = Banner::where('banner_id',$id)->update($data);
         if ($query) {
