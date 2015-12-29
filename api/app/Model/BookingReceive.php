@@ -26,7 +26,6 @@ class BookingReceive extends Model
     }
     
     /**
-     * 
      * @param int $id
      * @param array $params
      * @param string $copy_from_base
@@ -39,16 +38,42 @@ class BookingReceive extends Model
             throw new ApiException("定妆单{$id}不存在或者已经被删除!", ERROR::ORDER_NOT_EXIST);
         }
         $base= $base->toArray();
+        $ordersn = $base['ORDER_SN'];
+        $datetime = date("Y-m-d H:i:s");
+        $receive = BookingReceive::where("booking_id",$id)->first();
+        $is_first_receive = false;
+        if(empty($receive) || $copy_from_base)
+        {
+            $is_first_receive = true;
+        }
+        
+        $old_items_ids = [];
+        if($is_first_receive)
+        {
+            $old_items_ids = self::getBookingOrderItemIds($ordersn);
+        }
+        else 
+        {
+            $old_items_ids = self::getBeautyOrderItemIds($ordersn);
+        }
+        
+        $insert_items_info = [];
+        
+        if($copy_from_base)
+        {
+            $insert_items_info = self::getItemNormInfoAtFirst($old_items_ids);
+        }
+        else 
+        {
+            $id_infos = self::getItemIdsNormIds($params['item_ids']);
+            $insert_items_info = self::getItemNormInfo($id_infos);
+            unset($id_infos);
+        }
+        
         $old_booking_date = empty($base['UPDATED_BOOKING_DATE'])?$base['BOOKING_DATE']:$base['UPDATED_BOOKING_DATE'];
         $update_booking_date = isset($params['update_booking_date'])?date("Y-m-d",strtotime($params['update_booking_date'])):NULL;
-        // 任何状态下都允许接待
-//         if($base['STATUS'] !== "PYD")
-//         {
-//             throw new ApiException("定妆单{$id}状态不正确!", ERROR::ORDER_STATUS_WRONG);
-//         }
-        $ordersn = $base['ORDER_SN'];
-        
-        $datetime = date("Y-m-d H:i:s");
+        $now_booking_date = empty($update_booking_date)?$old_booking_date:$update_booking_date;
+
         $attr = [
             'booking_id'=>$id,
             'order_sn'=>$ordersn,
@@ -56,13 +81,15 @@ class BookingReceive extends Model
             'uid'=>$params['uid'],
             'created_at'=>$datetime,
         ];
+        
         $base_update_attr = ['COME_SHOP'=>'COME'];
         if(!empty($update_booking_date))
         {
             $attr['update_booking_date'] = $update_booking_date;
-            if(!(empty($base['UPDATED_BOOKING_DATE'])  && $update_booking_date == $base['BOOKING_DATE']))
+        
+            if(!empty($base['UPDATED_BOOKING_DATE'])  || $now_booking_date != $old_booking_date )
             {
-                $base_update_attr['UPDATED_BOOKING_DATE'] = $update_booking_date;
+                $base_update_attr['UPDATED_BOOKING_DATE'] = $now_booking_date;
             }
         }
         if(isset($params['remark']))
@@ -78,43 +105,38 @@ class BookingReceive extends Model
             $attr['arrive_at'] = $datetime;
         }        
         $arrive_date = date("Y-m-d",strtotime($attr['arrive_at']));        
-        $receive = BookingReceive::where("booking_id",$id)->first();
+        
         $old_arrive_date = null;
+        
         if(!empty($receive) && !empty($receive->arrive_at))
         {
-         $old_arrive_date = date("Y-m-d",strtotime($receive->arrive_at)); 
-        }
-        if($copy_from_base)
-        {
-            self::makeFromOrigin($ordersn,$params['uid'],$old_booking_date,$old_arrive_date,$update_booking_date,$arrive_date);
-        }
-        else
-        {
-            self::deleteOldItems($ordersn,$old_booking_date,$old_arrive_date);
-            $id_infos = self::getItemIdsNormIds($params['item_ids']);
-            $item_infos = self::getItemNormInfo($id_infos);
-            self::insertNewItems($ordersn, $item_infos,$update_booking_date,$arrive_date);
+            $old_arrive_date = date("Y-m-d",strtotime($receive->arrive_at)); 
         }
         
-        BookingReceive::where("booking_id",$id)->delete();
+        self::deleteOldItems($ordersn, $old_items_ids,$old_booking_date,$old_arrive_date);
+        self::insertNewItems($ordersn, $insert_items_info,$now_booking_date,$arrive_date);
+        $receive->delete();
         BookingOrder::where('ID',$id)->update($base_update_attr);
         BookingReceive::create($attr);
         return $base;
     }
     
-    public static function makeFromOrigin($ordersn,$uid,$old_booking_date,$old_arrive_date,$update_booking_date,$arrive_date)
+    public static function getBookingOrderItemIds($ordersn)
     {
         $items = BookingOrderItem::where('ORDER_SN',$ordersn)->get(['ITEM_ID'])->toArray();
         $item_ids = array_column($items, "ITEM_ID");
-        $item_infos = self::getItemNormInfoAtFirst($item_ids);
-        self::deleteOldItems($ordersn,$old_booking_date,$old_arrive_date);
-        self::insertNewItems($ordersn, $item_infos,$update_booking_date,$arrive_date);
+        return $item_ids;
     }
     
-    public static function deleteOldItems($ordersn,$old_booking_date=NULL,$old_arrive_date=NULL)
+    public static function getBeautyItemIds($ordersn)
     {
         $items = BeautyOrderItem::where('order_sn',$ordersn)->get(['item_id'])->toArray();
-        $item_ids = array_column($items, 'item_id');
+        $item_ids = array_column($items, "item_id");
+        return $item_ids;
+    }
+
+    public static function deleteOldItems($ordersn,$item_ids,$old_booking_date=NULL,$old_arrive_date=NULL)
+    {
         if(!empty($old_booking_date))
         {           
             BookingCalendar::change_items_date($item_ids, $old_booking_date,BookingCalendar::CHANGE_TYPE_OF_DEL);
