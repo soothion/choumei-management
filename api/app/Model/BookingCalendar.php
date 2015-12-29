@@ -25,11 +25,7 @@ class BookingCalendar extends Model {
 	        return;
 	    }	   
 	    $item_idx = BeautyItem::getItemBeautyId($item_ids);
-	    if(count(array_diff($item_ids, array_keys($item_idx)))>0)
-	    {
-	        throw new ApiException("部分项目已经不存在!",ERROR::PARAMETER_ERROR);
-	    }
-	    
+
 	    foreach ($item_ids as $item_id)
 	    {
 	        $beauty_id = 1;
