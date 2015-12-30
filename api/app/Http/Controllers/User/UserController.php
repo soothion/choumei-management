@@ -668,12 +668,10 @@ class UserController extends Controller{
         $activity = 2;
         if(empty($param['type']))
             throw new ApiException('type参数必传', ERROR::PARAMETER_ERROR);
-        if(in_array($type, ['2','3','4']))
-        {
-            if(!User::canResetCode($id))
-                throw new ApiException('存在未完成订单', ERROR::UNFINISHED_ORDER_EXIST);
-        }
-        
+
+        if(!User::canResetCode($id,$type))
+            throw new ApiException('存在未完成订单', ERROR::UNFINISHED_ORDER_EXIST);
+
         if(!empty($param['activity']))
         {
             $activity = intval($param['activity']);
@@ -700,11 +698,10 @@ class UserController extends Controller{
         $activity = 2;
         if(empty($param['type']))
             throw new ApiException('type参数必传', ERROR::PARAMETER_ERROR);
-        if(in_array($type, ['2','3','4']))
-        {
-            if(!User::canResetCode($id))
-                throw new ApiException('存在未完成订单', ERROR::UNFINISHED_ORDER_EXIST);
-        }
+
+        if(!User::canResetCode($id,$type))
+            throw new ApiException('存在未完成订单', ERROR::UNFINISHED_ORDER_EXIST);
+        
         if(!empty($param['activity']))
         {
             $activity = intval($param['activity']);
