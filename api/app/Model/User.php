@@ -362,7 +362,7 @@ class User extends  Model
             ->first();
 
         $books = DB::table('booking_order')
-            ->where('SUBSTITUTOR','=',$id)
+            ->where('user_id','=',$id)
             ->whereIn('status',['PYD','RFN'])
             ->first();
         $result = !($tickets||$books);
