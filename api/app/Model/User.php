@@ -333,7 +333,7 @@ class User extends  Model
             ->where('SUBSTITUTOR','=',$id)
             ->where('status','=','CSD')
             ->first();
-        $result = !($tickets||$books)
+        $result = !($tickets||$books);
         return $result;
     }
 
