@@ -21,6 +21,7 @@ use App\Order;
 use App\Dividend;
 use App\Utils;
 use App\BeautyRefundApi;
+use App\BookingCalendar;
 
 class BookController extends Controller
 {
@@ -813,7 +814,10 @@ class BookController extends Controller
             }
         }
         else 
-        {        
+        {   
+            $old_booking_date = empty($base->UPDATED_BOOKING_DATE)?$base->BOOKING_DATE:$base->UPDATED_BOOKING_DATE;
+            $item_ids = BookingReceive::getBookingOrderItemIds($base->ORDER_SN); 
+            BookingCalendar::change_items_date($item_ids, $old_booking_date,BookingCalendar::CHANGE_TYPE_OF_DEL);
             BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]); 
         }  
 
