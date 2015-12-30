@@ -48,9 +48,10 @@ class BookingReceive extends Model
         }
         
         $old_items_ids = [];
+        $origin_item_ids = self::getBookingOrderItemIds($ordersn);
         if($is_first_receive)
-        {
-            $old_items_ids = self::getBookingOrderItemIds($ordersn);
+        {           
+            $old_items_ids = $origin_item_ids;
         }
         else 
         {
@@ -82,7 +83,7 @@ class BookingReceive extends Model
             'created_at'=>$datetime,
         ];
         
-        $base_update_attr = ['COME_SHOP'=>'COME'];
+        $base_update_attr = ['COME_SHOP'=>'COME','BOOKING_DESC'=>'DEF'];
         if(!empty($update_booking_date))
         {
             $attr['update_booking_date'] = $update_booking_date;
@@ -113,8 +114,26 @@ class BookingReceive extends Model
             $old_arrive_date = date("Y-m-d",strtotime($receive->arrive_at)); 
         }
         
-        self::deleteOldItems($ordersn, $old_items_ids,$old_booking_date,$old_arrive_date);
-        self::insertNewItems($ordersn, $insert_items_info,$now_booking_date,$arrive_date);
+        if(!empty($old_booking_date))
+        {
+             BookingCalendar::change_items_date($old_items_ids, $old_booking_date,BookingCalendar::CHANGE_TYPE_OF_DEL);
+        }
+        if(!empty($old_arrive_date))
+        {
+            BookingCalendar::arrive($old_items_ids, $old_arrive_date,BookingCalendar::CHANGE_TYPE_OF_DEL);
+        }
+        
+        self::deleteOldItems($ordersn, $old_items_ids);
+        
+        if(!empty($now_booking_date))
+        {
+            BookingCalendar::change_items_date($old_items_ids, $now_booking_date);
+        }
+        if(!empty($arrive_date))
+        {
+            BookingCalendar::arrive($old_items_ids, $arrive_date);
+        }
+        self::insertNewItems($ordersn, $insert_items_info);
         if(!empty($receive))
         {
             $receive->delete();
@@ -138,34 +157,19 @@ class BookingReceive extends Model
         return $item_ids;
     }
 
-    public static function deleteOldItems($ordersn,$item_ids,$old_booking_date=NULL,$old_arrive_date=NULL)
+    public static function deleteOldItems($ordersn,$item_ids)
     {
-        if(!empty($old_booking_date))
-        {           
-            BookingCalendar::change_items_date($item_ids, $old_booking_date,BookingCalendar::CHANGE_TYPE_OF_DEL);
-        }
-        if(!empty($old_arrive_date))
-        {
-            BookingCalendar::arrive($item_ids, $old_arrive_date,BookingCalendar::CHANGE_TYPE_OF_DEL);
-        }
         BeautyOrderItem::where('order_sn',$ordersn)->delete();
     }  
       
-    public static function insertNewItems($ordersn,$item_infos,$update_booking_date=NULL,$arrive_date=NULL)
+    public static function insertNewItems($ordersn,$item_infos)
     {      
         if(count($item_infos)<1)
         {
             return ;
         }
         $datetime = date("Y-m-d H:i:s");   
-        if(!empty($update_booking_date))
-        {
-            BookingCalendar::change_items_date(array_column($item_infos, 'item_id'), $update_booking_date);
-        }
-        if(!empty($arrive_date))
-        {
-            BookingCalendar::arrive(array_column($item_infos, 'item_id'), $arrive_date);
-        }
+
         foreach ($item_infos as $item)
         {       
             $attrs = [];
