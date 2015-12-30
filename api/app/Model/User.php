@@ -251,6 +251,42 @@ class User extends  Model
             }
             else
             {
+                if($type=='2')
+                {
+                    $exists = DB::table('dividend')
+                        ->where('recommend_code','=',$code)
+                        ->where('activity','=',$activity)
+                        ->first();
+                    if(!$exists)
+                        throw new ApiException('该推荐邀请码无效', ERROR::CODE_NOT_FOUND);
+                }
+                
+                if($type=='3')
+                {
+                    $user= User::where('mobilephone','=',$code)->first();
+                    if(!$user)
+                        throw new ApiException('该推荐邀请码无效', ERROR::USER_NOT_FOUND);
+                    $exists = DB::table('booking_order')
+                        ->where('USER_ID','=',$user->user_id)
+                        ->where(function($q){
+                            $q->where('CONSUMED','=',1);
+                            $q->orWhere('STATUS','in',['PYD','CSD','RFN']);
+
+                        })
+                        ->first();
+                    if(!$exists)
+                        throw new ApiException('该推荐邀请码无效', ERROR::CODE_NOT_FOUND);
+                }
+
+                if($type=='4')
+                {
+                    $exists = DB::table('voucher_conf')
+                        ->where('vcSn','=',$code)
+                        ->where('status','=',1)
+                        ->first();
+                    if(!$exists)
+                        throw new ApiException('该推荐邀请码无效', ERROR::CODE_NOT_FOUND);
+                }
                 $model->where('user_id','=',$id)
                     ->where('type','=',$type)
                     ->delete();
