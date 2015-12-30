@@ -268,7 +268,7 @@ class User extends  Model
                         throw new ApiException('该推荐邀请码无效', ERROR::USER_NOT_FOUND);
                     $exists = DB::table('booking_order')
                         ->where('USER_ID','=',$user->user_id)
-                        ->where('STATUS','in',['PYD','CSD','RFN']);
+                        ->where('STATUS','in',['PYD','CSD','RFN'])
                         ->first();
                     if(!$exists)
                         throw new ApiException('该推荐邀请码无效', ERROR::CODE_NOT_FOUND);
