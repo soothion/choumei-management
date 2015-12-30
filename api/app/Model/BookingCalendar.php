@@ -103,12 +103,12 @@ class BookingCalendar extends Model {
 	}
 	public static function refundUpdateCalendar( $orderSn = ''){
 		if( empty($orderSn) ) return false;
-		$bookings = BookingOrder::select(['booking_date as bookingDate','updated_booking_date as updatedBookingDate'])->where(['order_sn'=>$orderSn])->first();
+		$bookings = BookingOrder::select(['booking_date as bookingDate','updated_booking_date as updatedBookingDate','BOOKING_DESC as bookingDesc'])->where(['order_sn'=>$orderSn])->first();
 		if( empty( $bookings ) )	return false;
 		$bookings = $bookings->toArray();
 		if( empty( $bookings['updatedBookingDate'] ) ) $bookingTime = $bookings['updatedBookingDate'];
 		else $bookingTime = $bookings['bookingDate'];
-		
+		$tempField = ['DEF'=>'','MORNING'=>'BOOKING_MORN_COUNT','AFTERNOON'=>'BOOKING_AFTERNOON_COUNT'];
 		$itemQuantity = BookingOrderItem::select(['ITEM_ID as itemId','quantity'])->where(['order_sn'=>$orderSn])->get()->toArray();
 		$tempItemIds = [];
 		$t = [];
@@ -116,12 +116,18 @@ class BookingCalendar extends Model {
 			$tempItemIds[] = $v['itemId'];
 			$t[ $v['itemId'] ] = $v;
 		}
-		$calendarItemIds = BookingCalendar::select(['ITEM_ID as itemId','quantity'])->whereIn('ITEM_ID',$tempItemIds)->where(['BOOKING_DATE'=>$bookingTime])->get()->toArray();
+		$calendarItemIds = BookingCalendar::select(['ITEM_ID as itemId','quantity','BOOKING_MORN_COUNT','BOOKING_AFTERNOON_COUNT'])->whereIn('ITEM_ID',$tempItemIds)->where(['BOOKING_DATE'=>$bookingTime])->get()->toArray();
 		$where['BOOKING_DATE'] = $bookingTime;
-
+		$bookingDesc = $bookings['bookingDesc'];
 		foreach( $calendarItemIds as $k => $v ){
+			$updateCalendar = [];
 			$where['ITEM_ID'] = $v['itemId'];
 			$changeNum = $v['quantity'] - $t[ $v['itemId'] ]['quantity'];
+			if( $bookingDesc != 'DEF' ){
+				$changeDesc = $v[ $tempField[ $bookingDesc] ] - $t[ $v['itemId'] ]['quantity'];
+				if( $changeDesc<0 ) $changeDesc = 0;
+				$updateCalendar[ $tempField[ $bookingDesc] ] = $changeDesc;
+			}
 			if( $changeNum  < 0 ) $changeNum = 0;
 			$updateCalendar['QUANTITY'] = $changeNum;
 			$calendarNum = BookingCalendar::where($where)->update($updateCalendar);
