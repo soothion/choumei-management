@@ -322,7 +322,7 @@ class User extends  Model
 
 
     //判断用户能否解绑或绑定邀请码
-    public function canResetCode($id)
+    public static function canResetCode($id)
     {
         $tickets = DB::table('order_ticket')
             ->status('status','<',4)
