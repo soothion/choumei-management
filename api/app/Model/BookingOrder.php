@@ -494,8 +494,8 @@ class BookingOrder extends Model
     
     public static function getOrderRefundInfo($salonRefund,$base,$fundflows,$ordersn,&$stauts)
     {
-        $res = [];
-        if(!empty($salonRefund) && count($fundflows)<1)
+        $order_refund = NULL;
+        if(!empty($salonRefund) && count($fundflows)>0)
         {
             $order_refund = [
                  "money"=>$base['PAYABLE'],
@@ -513,11 +513,7 @@ class BookingOrder extends Model
             $refund_fields = ['ordersn','user_id','money','opt_user_id','rereason','add_time','opt_time','status','booking_sn','item_type','rereason','other_rereason'];
             
             $order_refund = OrderRefund::where('ordersn',$ordersn)->where('status',1)->first($refund_fields);
-            if(empty($order_refund))
-            {
-                $order_refund = NULL;
-            }
-            else
+            if(!empty($order_refund))
             {
                 $order_refund = $order_refund->toArray();
                 $order_refund['manager'] = Manager::getBaseInfo($order_refund['opt_user_id']);
@@ -531,6 +527,10 @@ class BookingOrder extends Model
                 $order_refund['add_time'] = date("Y-m-d H:i:s",$order_refund['add_time']);
                 $order_refund['opt_time'] = empty($order_refund['opt_time'])?"":date("Y-m-d H:i:s",$order_refund['opt_time']);
                 $order_refund['complete_time'] = $order_refund['opt_time'] ;
+            }
+            else 
+            {
+                $order_refund = null;
             }
         }
         return $order_refund;
