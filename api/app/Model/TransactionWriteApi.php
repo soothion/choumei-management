@@ -1048,7 +1048,7 @@ class TransactionWriteApi
             'local' => [
                 'PAY_MERCHANT_ID' => '10037612',
                 'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
-                'PAY_REFUND_URL' => 'https://mch.tenpay.com/refundapi/gateway/refund.xml',
+                'PAY_REFUND_URL' => 'https://api.mch.tenpay.com/refundapi/gateway/refund.xml',
                 'PAY_PARTNER_ID' => '1224362901',
                 'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
                 'H5_APP_ID' => 'wxdf5a63a0bcc5daed',
@@ -1059,7 +1059,7 @@ class TransactionWriteApi
             'dev' => [
                 'PAY_MERCHANT_ID' => '10037612',
                 'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
-                'PAY_REFUND_URL' => 'https://mch.tenpay.com/refundapi/gateway/refund.xml',
+                'PAY_REFUND_URL' => 'https://api.mch.tenpay.com/refundapi/gateway/refund.xml',
                 'PAY_PARTNER_ID' => '1224362901',
                 'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
                 'H5_APP_ID' => 'wxdf5a63a0bcc5daed',
@@ -1070,7 +1070,7 @@ class TransactionWriteApi
             'test' => [
                 'PAY_MERCHANT_ID' => '10037612',
                 'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
-                'PAY_REFUND_URL' => 'https://mch.tenpay.com/refundapi/gateway/refund.xml',
+                'PAY_REFUND_URL' => 'https://api.mch.tenpay.com/refundapi/gateway/refund.xml',
                 'PAY_PARTNER_ID' => '1224362901',
                 'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
                 'H5_APP_ID' => 'wxd4c590c3a2dad288',
@@ -1081,7 +1081,7 @@ class TransactionWriteApi
             'uat' => [
                 'PAY_MERCHANT_ID' => '10037612',
                 'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
-                'PAY_REFUND_URL' => 'https://mch.tenpay.com/refundapi/gateway/refund.xml',
+                'PAY_REFUND_URL' => 'https://api.mch.tenpay.com/refundapi/gateway/refund.xml',
                 'PAY_PARTNER_ID' => '1224362901',
                 'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
                 'H5_APP_ID' => 'wxd4c590c3a2dad288',
@@ -1092,7 +1092,7 @@ class TransactionWriteApi
             'prod' => [
                 'PAY_MERCHANT_ID' => '10037612',
                 'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
-                'PAY_REFUND_URL' => 'https://mch.tenpay.com/refundapi/gateway/refund.xml',
+                'PAY_REFUND_URL' => 'https://api.mch.tenpay.com/refundapi/gateway/refund.xml',
                 'PAY_PARTNER_ID' => '1224362901',
                 'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
                 'H5_APP_ID' => 'wx6cfe7d87206790b5',
