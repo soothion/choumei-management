@@ -174,7 +174,7 @@ class BookingOrder extends Model
             'USER_ID'=>$user_id,
             'BOOKING_DATE'=>  $booking_date, 
             'QUANTITY'=>count($item_infos),
-            'AMOUNT'=>Utils::column_sum('price',$item_infos),
+            'AMOUNT'=>0,
             'PAYABLE'=>0,
             'BOOKER_NAME'=>$params['name'],
             'BOOKER_SEX'=>$params['sex']==1?"M":"F",
