@@ -187,7 +187,8 @@
                           </li>
                       </ul>             
                   </form>
-              <%})%>          
+              <%})%>   
+              <%if(data.list.length < 10){%>
               <div class="plus-button">
                 <div>
                     <button type="button" data-slug="banner.create">
@@ -195,10 +196,9 @@
                         <span style="font-size: 15px;color:#ddd;font-weight:900;">添加</span>
                     </button>
                 </div>                
-              </div>                                                    
-           </section> 
-        
-
+              </div>   
+              <%}%>
+           </section>         
         </script>
         </div>
         <script src="homeBanner.js"></script>
