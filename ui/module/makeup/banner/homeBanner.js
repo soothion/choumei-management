@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-30 11:51:40
+* @Last Modified time: 2015-12-30 17:11:00
 */
 
 $(function(){
@@ -308,8 +308,8 @@ $(function(){
         },function(uploader){
             var item = $('#'+id).closest('.thumbnails-item');
             uploader.bind('ImageUploaded',function(up,response){
-                var ratio = new Number(750/528).toFixed(2);
-                createThumbnails(up,response,ratio,'750x528',item);
+                var ratio = new Number(1080/600);
+                createThumbnails(up,response,ratio,'1080x600',item);
             });
             item.on('click','.fa-pencil-square-o',function(){                
                 var src = item.find('img').attr('src');

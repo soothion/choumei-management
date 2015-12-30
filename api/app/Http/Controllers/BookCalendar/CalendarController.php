@@ -193,7 +193,7 @@ class CalendarController extends Controller {
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 		$field = [
 			'ORDER_SN as orderSn','BOOKING_DATE as bookingDate','UPDATED_BOOKING_DATE as updateBookDate',
-			'BOOKER_PHONE as bookerPhone','BOOKER_NAME as bookerName','BOOKER_SEX as bookerSex','AMOUNT as amount',
+			'BOOKER_PHONE as bookerPhone','BOOKER_NAME as bookerName','BOOKER_SEX as bookerSex','PAYABLE as amount',
 			'BOOKING_DESC as bookingDesc','COME_SHOP as comeShop'
 		];
 		//手动设置页数
@@ -818,7 +818,7 @@ class CalendarController extends Controller {
 		$page_size = isset($param['page_size'])?$param['page_size']:20;
 		$field = [
 		'ORDER_SN as orderSn','BOOKING_DATE as bookingDate','UPDATED_BOOKING_DATE as updateBookDate',
-		'BOOKER_PHONE as bookerPhone','BOOKER_NAME as bookerName','BOOKER_SEX as bookerSex','AMOUNT as amount',
+		'BOOKER_PHONE as bookerPhone','BOOKER_NAME as bookerName','BOOKER_SEX as bookerSex','PAYABLE as amount',
 		'BOOKING_DESC as bookingDesc','CONSUME_CALL_PHONE as consumeCallPhone','COME_SHOP as comeShop'
 				];
 		//手动设置页数
@@ -883,5 +883,4 @@ class CalendarController extends Controller {
 		})->export('xls');
 		exit;
 	}
-	
 }
