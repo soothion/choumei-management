@@ -813,7 +813,12 @@ class BookController extends Controller
             }
         }
         
-        BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]);        
+        BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]);   
+
+        if(!empty($base->RECOMMENDER))
+        {
+            RecommendCodeUser::where('user_id',$base->USER_ID)->where('recommend_code',$base->RECOMMENDER)->delete();
+        }
          
         Event::fire('booking.refund',"预约号".$base->BOOKING_SN." "."订单号".$base->ORDER_SN);
         
