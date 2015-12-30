@@ -442,6 +442,14 @@ class BookingOrder extends Model
             {
                 throw new ApiException("推荐用户不存在 {$recommend_code}!",ERROR::PARAMETER_ERROR);
             }
+            else 
+            {
+                $order = self::where('USER_ID',$user->user_id)->where('CONSUMED',1)->first();
+                if(!$order)
+                {
+                    throw new ApiException("推荐用户{$recommend_code} 未进行过定妆消费!",ERROR::PARAMETER_ERROR);
+                }
+            }
         }
         else
         {
