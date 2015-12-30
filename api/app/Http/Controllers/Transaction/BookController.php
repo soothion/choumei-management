@@ -812,8 +812,10 @@ class BookController extends Controller
                 Utils::log("pay", date("Y-m-d H:i:s")." ".$e->getMessage()."\n","offline_refund");
             }
         }
-        
-        BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]);   
+        else 
+        {        
+            BookingOrder::where('ID',$id)->update(['STATUS'=>'RFD-OFL','UPDATE_TIME'=>$datetime]); 
+        }  
 
         if(!empty($base->RECOMMENDER))
         {
