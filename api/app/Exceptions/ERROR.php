@@ -87,6 +87,11 @@ class ERROR
      */
      CONST CODE_NOT_FOUND =  -50006;
 
+     /**
+     *@param 存在未完成订单
+     */
+     CONST UNFINISHED_ORDER_EXIST =  -50007;
+
 
 
     ////////////返佣单模块//////////////
