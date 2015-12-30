@@ -188,7 +188,7 @@
                       </ul>             
                   </form>
               <%})%>   
-              <%if(data.list.length < 10){%>
+              <%if(!data.list || data.list.length < 10){%>
               <div class="plus-button">
                 <div>
                     <button type="button" data-slug="banner.create">

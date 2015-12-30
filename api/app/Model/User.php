@@ -320,4 +320,21 @@ class User extends  Model
         }
     }
 
+
+    //判断用户能否解绑或绑定邀请码
+    public static function canResetCode($id)
+    {
+        $tickets = DB::table('order_ticket')
+            ->where('status','<',4)
+            ->where('user_id','=',$id)
+            ->first();
+
+        $books = DB::table('booking_order')
+            ->where('SUBSTITUTOR','=',$id)
+            ->where('status','=','CSD')
+            ->first();
+        $result = !($tickets||$books);
+        return $result;
+    }
+
 }

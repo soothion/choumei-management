@@ -663,6 +663,8 @@ class UserController extends Controller{
      */
     public function resetCode($id)
     {
+        if(!User::canResetCode($id))
+            throw new ApiException('存在未完成订单', ERROR::UNFINISHED_ORDER_EXIST);
         $param = $this->param;
         if(empty($param['type']))
             throw new ApiException('type参数必传', ERROR::PARAMETER_ERROR);
@@ -689,6 +691,8 @@ class UserController extends Controller{
      */
     public function setCode($id)
     {
+        if(!User::canResetCode($id))
+            throw new ApiException('存在未完成订单', ERROR::UNFINISHED_ORDER_EXIST);
         $param = $this->param;
         if(empty($param['type']&&$param['code']))
             throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
