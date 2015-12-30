@@ -268,7 +268,7 @@ class User extends  Model
                         throw new ApiException('该推荐邀请码无效', ERROR::USER_NOT_FOUND);
                     $exists = DB::table('booking_order')
                         ->where('USER_ID','=',$user->user_id)
-                        ->where('STATUS','in',['PYD','CSD','RFN'])
+                        ->whereIn('STATUS',['PYD','CSD','RFN'])
                         ->first();
                     if(!$exists)
                         throw new ApiException('该推荐邀请码无效', ERROR::CODE_NOT_FOUND);
@@ -357,13 +357,13 @@ class User extends  Model
     public static function canResetCode($id)
     {
         $tickets = DB::table('order_ticket')
-            ->where('status','in',[2,6])
+            ->whereIn('status',[2,6])
             ->where('user_id','=',$id)
             ->first();
 
         $books = DB::table('booking_order')
             ->where('SUBSTITUTOR','=',$id)
-            ->where('status','=','CSD')
+            ->whereIn('status',['PYD','RFN'])
             ->first();
         $result = !($tickets||$books);
         return $result;
