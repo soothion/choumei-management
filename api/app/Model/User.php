@@ -357,7 +357,7 @@ class User extends  Model
     public static function canResetCode($id)
     {
         $tickets = DB::table('order_ticket')
-            ->where('status','<',4)
+            ->where('status','in',[2,6])
             ->where('user_id','=',$id)
             ->first();
 
