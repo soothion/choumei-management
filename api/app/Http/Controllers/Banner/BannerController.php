@@ -186,7 +186,6 @@ class BannerController extends Controller {
         }
         if (!empty($param['url'])) {
             $temp2 = json_decode($param['url'],true);
-            var_dump($temp2['type']);
             if(isset($temp2['type'])&&$temp2['type'] == "artificers"){
                 switch($temp2['itemId']){
                     case 1 : 

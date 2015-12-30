@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-29 17:37:17
+* @Last Modified time: 2015-12-30 09:57:52
 */
 
 $(function(){
@@ -102,12 +102,13 @@ $(function(){
                     })
                 }else{
                     $(self).closest('form.banner').remove();
-                    var len = $("form[draggable='false']").find('button.edit.hidden').length;
-                    if(len == 0){
-                        $("form.banner").find('button.edit').removeAttr('disabled');  
-                        $(".plus-button button").removeAttr('disabled');
-                        $("form.banner[id]").addClass('move');                  
-                    }          
+                    location.reload();
+                    // var len = $("form[draggable='false']").find('button.edit.hidden').length;
+                    // if(len == 0){
+                    //     $("form.banner").find('button.edit').removeAttr('disabled');  
+                    //     $(".plus-button button").removeAttr('disabled');
+                    //     $("form.banner[id]").addClass('move');                  
+                    // }          
                 }
             }
         })
