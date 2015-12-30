@@ -115,7 +115,10 @@ class BookingReceive extends Model
         
         self::deleteOldItems($ordersn, $old_items_ids,$old_booking_date,$old_arrive_date);
         self::insertNewItems($ordersn, $insert_items_info,$now_booking_date,$arrive_date);
-        $receive->delete();
+        if(!empty($receive))
+        {
+            $receive->delete();
+        }
         BookingOrder::where('ID',$id)->update($base_update_attr);
         BookingReceive::create($attr);
         return $base;

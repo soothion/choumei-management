@@ -300,6 +300,8 @@ class BookingOrder extends Model
         
         if ($key == 3 && !empty($keyword))
         {
+  //          $base->join('recommend_code_user','recommend_code_user.user_id','=','booking_order.USER_ID','inner',"recommend_code_user.type IN (2,3) AND recommend_code_user.recommend_code like '{$keyword}' GROUP BY recommend_code_user.user_id");
+            
             $base->join('recommend_code_user', function ($join) use($key,$keyword)
             {
                 $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('recommend_code_user.type',[2,3])->where('recommend_code_user.recommend_code', 'like', $keyword);
@@ -308,6 +310,8 @@ class BookingOrder extends Model
         }
         else 
         {
+            //$base->join('recommend_code_user','recommend_code_user.user_id','=','booking_order.USER_ID','left',"recommend_code_user.type IN (2,3) GROUP BY recommend_code_user.user_id");
+            
             $base->leftJoin('recommend_code_user', function ($join) 
             {
                 $join->on('booking_order.USER_ID', '=', 'recommend_code_user.user_id')->whereIn('recommend_code_user.type',[2,3]);
@@ -334,6 +338,7 @@ class BookingOrder extends Model
                 $q->get($beauty_order_item_fields);
             },
         ]);
+        $base->groupBy('booking_order.ID');
         $base->orderBy('booking_order.CREATE_TIME', 'DESC');
         return $base;
     }
@@ -423,12 +428,12 @@ class BookingOrder extends Model
             $code = $oldRecommend->recommend_code;
             throw new ApiException("当前用户已绑定{$code}推荐码!",ERROR::PARAMETER_ERROR);
         }
-        $order = self::where("USER_ID",$uid)->whereNotIn("STATUS",['RFD','RFD-OFL'])->where('RECOMMENDER','<>','')->whereNotNull('RECOMMENDER')->first();
-        if(!empty($order))
-        {
-            $code = $order->RECOMMENDER;
-            throw new ApiException("当前用户已在使用{$code}推荐码!",ERROR::PARAMETER_ERROR);
-        }
+//         $order = self::where("USER_ID",$uid)->whereNotIn("STATUS",['RFD','RFD-OFL'])->where('RECOMMENDER','<>','')->whereNotNull('RECOMMENDER')->first();
+//         if(!empty($order))
+//         {
+//             $code = $order->RECOMMENDER;
+//             throw new ApiException("当前用户已在使用{$code}推荐码!",ERROR::PARAMETER_ERROR);
+//         }
         
         if(strlen($recommend_code)>=11)
         {
