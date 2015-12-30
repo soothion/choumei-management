@@ -208,7 +208,7 @@ class TransactionSearchApi
         //金额构成
         $fundflows = Fundflow::where("record_no",$ordersn)->where("ticket_no",$ticketno)->where("code_type",2)->get(['pay_type','money']);
         //动态
-        $trends = OrderTicketTrends::where("ordersn",$ordersn)->where("ticketno",$ticketno)->orderBy("add_time","ASC")->get(['add_time','status','remark']);
+        $trends = OrderTicketTrends::where("ticketno",$ticketno)->orderBy("add_time","ASC")->get(['add_time','status','remark']);
         //代金券
         $vouchers = Voucher::where("vOrderSn",$ordersn)->select(['vId','vSn','vcSn','vUseMoney','vUseEnd','vStatus','vUseTime','vAddTime'])->first();
       
