@@ -582,6 +582,7 @@
                             return returnData;
                         }
                         lib.Form.prototype.success = function(data){
+                            data = data.data || {};
                             if(data.alipay && data.alipay.form_args){
                               $.each($("#alipaysubmit").serializeArray(),function(i,field){
                                 $("input[name='"+field.name+"']").val(data.alipay.form_args[field.name]);

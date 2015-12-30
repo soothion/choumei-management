@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-30 09:57:52
+* @Last Modified time: 2015-12-30 11:51:40
 */
 
 $(function(){
@@ -375,12 +375,15 @@ $(function(){
 
     function submitBanner(data){ 
         if(data.behavior=="2"){
-            if(data.url=="salon" || data.url=="artificers"){
+            if(data.url=="salon"){
+                data.url = {'type':data.url};
+            }else if(data.url=="artificers"){
                 data.url = {'type':data.url,'itemId':data.itemId};
             }else{
                 var arr = data.itemId.split("_");
-                data.url = {'type':arr[0],'itemId':arr[1]};
-            }
+                data.url = {'type':arr[0],'itemId':arr[1]};                
+            }            
+            delete data.itemId;
             data.url = JSON.stringify(data.url);
         }     
         lib.ajax({
