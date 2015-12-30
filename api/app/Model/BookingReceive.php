@@ -83,7 +83,7 @@ class BookingReceive extends Model
             'created_at'=>$datetime,
         ];
         
-        $base_update_attr = ['COME_SHOP'=>'COME'];
+        $base_update_attr = ['COME_SHOP'=>'COME','BOOKING_DESC'=>'DEF'];
         if(!empty($update_booking_date))
         {
             $attr['update_booking_date'] = $update_booking_date;
