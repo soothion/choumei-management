@@ -40,7 +40,9 @@ class BookingCalendar extends Model {
 	public static  function upsert($item_id,$booking_date,$beauty_id,$change_type = self::CHANGE_TYPE_OF_ADD,$update_field = self::CHANGE_FIELD_OF_BOOK)
 	{
 	    $now_date = date("Y-m-d H:i:s");
-        $item = self::where('ITEM_ID',$item_id)->where('BOOKING_DATE',$booking_date)->first();
+	    $query = self::where('ITEM_ID',$item_id);
+	    $query->useWritePdo();	    
+        $item = $query->where('BOOKING_DATE',$booking_date)->first();
         if(empty($item))
         {
             $attr = [
