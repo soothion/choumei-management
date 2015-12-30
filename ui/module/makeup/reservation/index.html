@@ -65,7 +65,7 @@
 							<%if(item){%>
 							<h4><%=new Date(item.bookingDate).getDate()%></h4>
 							<p class="weak">
-								<%if(item.quantity){%>
+								<%if(item.quantity!=0){%>
 								预约<%=item.quantity%>个 <br />
 								上午<%=item.bookingMorn%>个<br />
 								下午<%=item.bookingAfternoon%>个<br />
