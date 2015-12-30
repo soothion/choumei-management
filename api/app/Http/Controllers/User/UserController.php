@@ -663,17 +663,19 @@ class UserController extends Controller{
      */
     public function resetCode($id)
     {
-        if(!User::canResetCode($id))
-            throw new ApiException('存在未完成订单', ERROR::UNFINISHED_ORDER_EXIST);
         $param = $this->param;
+        $type = strval($param['type']);
+        $activity = 2;
         if(empty($param['type']))
             throw new ApiException('type参数必传', ERROR::PARAMETER_ERROR);
-        $activity = 2;
+
+        if(!User::canResetCode($id,$type))
+            throw new ApiException('存在未完成订单', ERROR::UNFINISHED_ORDER_EXIST);
+
         if(!empty($param['activity']))
         {
             $activity = intval($param['activity']);
         }
-        $type = strval($param['type']);
         $result = User::resetCode($id,$type,$activity);
         if($result)
             return $this->success();
@@ -691,17 +693,19 @@ class UserController extends Controller{
      */
     public function setCode($id)
     {
-        if(!User::canResetCode($id))
-            throw new ApiException('存在未完成订单', ERROR::UNFINISHED_ORDER_EXIST);
         $param = $this->param;
-        if(empty($param['type']&&$param['code']))
-            throw new ApiException('参数错误', ERROR::PARAMETER_ERROR);
+        $type = strval($param['type']);
         $activity = 2;
+        if(empty($param['type']))
+            throw new ApiException('type参数必传', ERROR::PARAMETER_ERROR);
+
+        if(!User::canResetCode($id,$type))
+            throw new ApiException('存在未完成订单', ERROR::UNFINISHED_ORDER_EXIST);
+        
         if(!empty($param['activity']))
         {
             $activity = intval($param['activity']);
         }
-        $type = strval($param['type']);
         $result = User::setCode($id,$type,$param['code'],$activity);
         if($result)
             return $this->success();

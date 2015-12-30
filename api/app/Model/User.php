@@ -354,19 +354,26 @@ class User extends  Model
 
 
     //判断用户能否解绑或绑定邀请码
-    public static function canResetCode($id)
+    public static function canResetCode($id,$type)
     {
-        $tickets = DB::table('order_ticket')
-            ->whereIn('status',[2,6])
-            ->where('user_id','=',$id)
-            ->first();
+        if(in_array($type, ['2','3','4']))
+        {
+            $books = DB::table('booking_order')
+                ->where('user_id','=',$id)
+                ->whereIn('status',['PYD','RFN'])
+                ->first();
+            return !$books;
+        }
 
-        $books = DB::table('booking_order')
-            ->where('SUBSTITUTOR','=',$id)
-            ->whereIn('status',['PYD','RFN'])
-            ->first();
-        $result = !($tickets||$books);
-        return $result;
+        if(in_array($type, ['1','5']))
+        {
+            $tickets = DB::table('order_ticket')
+                ->whereIn('status',[2,6])
+                ->where('user_id','=',$id)
+                ->first();
+            return !$tickets;
+        }
+        return false;
     }
 
 }
