@@ -1099,7 +1099,7 @@ class PowderArticlesController extends Controller
             $dataPush['TITLE'] = "消费成功，收到一份价值{$beautyItemPrice}元的消费奖励";
             $dataPush['MESSAGE'] = "你获得了臭美赠送的价值{$beautyItemPrice}元的{$beautyItemName}项目免费体验1次，点击查看";
             $dataPush['PRIORITY'] = 1;
-            $dataPush['EVENT'] = "{'event':'presentItem','userId':{$user_id},'articleCodeId':{$insertRes},'msgType':11}";
+            $dataPush['EVENT'] =  '{"event":"presentItem","userId":"'.$user_id.'","articleCodeId":"'.$insertRes.'","msgType":11}';
             $dataPush['STATUS'] = 'NEW';
             $dataPush['CREATE_TIME'] = date('Y-m-d H:i:s');
             $getPushId = Push::insert( $dataPush );
