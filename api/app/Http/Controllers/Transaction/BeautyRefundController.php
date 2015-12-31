@@ -145,13 +145,13 @@ class BeautyRefundController extends Controller {
             $booking_order_items = BookingOrderItem::where('order_sn', $value['ordersn'])->get(['order_sn', 'item_name'])->toArray();
             $value['booking_order_item'] = $booking_order_items;
             unset($booking_order_item);
-            //如果在退款中   查询是否是退款失败
-            if ($value['book_status'] == 'RFN' && $value['status'] == 3) {
-                $value['book_status'] = 'RFE';
-            }
             if (empty($value['id'])) {
                 $value['initiate_refund'] = 1;
                 $value['money'] = $value['order_refund_money'];
+                //如果在退款中   查询是否是退款失败
+                if ($value['book_status'] == 'RFN' && $value['status'] == 3) {
+                    $value['book_status'] = 'RFE';
+                }
             } else {
                 $value['initiate_refund'] = 2;
                 $value['money'] = $value['salon_refund_money'];
@@ -430,7 +430,7 @@ class BeautyRefundController extends Controller {
      */
     public function show($id) {
         $detail = OrderRefund::detail($id);
-        if(!empty($detail)){//记录日志
+        if (!empty($detail)) {//记录日志
             Event::fire("BeautyRefund.show");
         }
         return $this->success($detail);
