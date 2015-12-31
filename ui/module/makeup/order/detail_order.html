@@ -98,7 +98,7 @@
                         'RFN':'退款中',
                         'RFD':'已退款',
                         'RFE':'退款失败',
-                        'RFD-OFL':'已退款',
+                        'RFD-OFL':'已退款'
                     }%>
                     <%var cash_type_desc={
                          '1':'微信',
@@ -507,7 +507,7 @@
                                     <tbody>
                                         <tr>
                                             <td>退款状态：</td>
-                                            <td><%=status[data.order_refund.status]%></td>
+                                            <td><%=status[data.order.STATUS]%></td>
                                             <td>退款时间：</td>
                                             <td><%=data.order_refund.complete_time%></td>
                                         </tr>
