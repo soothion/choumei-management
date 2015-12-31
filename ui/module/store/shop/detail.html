@@ -479,7 +479,7 @@
 
                                   <tr>
                                       <td colspan="2" class="content">佣金率：</td>
-                                      <td colspan="6"><%=data.commissionRate && data.commissionRate + "%" %></td>
+                                      <td colspan="6"><%=(data.commissionRate ? data.commissionRate*1 : 0)  + "%" %></td>
                                   </tr>
 
                                   <tr>

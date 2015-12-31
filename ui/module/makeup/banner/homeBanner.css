@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-23 13:29:30
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-29 14:09:31
+* @Last Modified time: 2015-12-31 09:33:44
 */
 .box-warpper{
     position:relative;            
@@ -78,7 +78,7 @@ form.banner ul li{
     position:relative;
 }
 form.banner li div img{
-    width:168px;
+    width:216px;
     height:120px;
 }
 form.banner li div label{
