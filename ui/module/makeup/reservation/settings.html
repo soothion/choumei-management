@@ -76,7 +76,10 @@
 						<%data.forEach(function(item,i){%>
 						<%var disabled=item&&item.nowDay!=1%>
 						<%var _date=new Date(item.bookingDate).getDate()%>
-						<div class="date-item <%=item&&item.nowDay===0?"today":""%>"  <%=disabled===true?"disabled":""%> style="min-height:125px">
+						<div class="date-item"  <%=disabled===true?"disabled":""%> style="min-height:125px">
+							<%if(item&&item.nowDay===0){%>
+								<div class="today-block">今天</div>
+							<%}%>
 							<%if(item){%>
 							<h4><%=_date%></h4>
 							<p class="weak">
