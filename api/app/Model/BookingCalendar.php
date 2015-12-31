@@ -4,6 +4,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\ApiException;
 use App\Exceptions\ERROR;
+use Log;
 
 class BookingCalendar extends Model {
 
@@ -104,8 +105,10 @@ class BookingCalendar extends Model {
 	    }
 	}
 	public static function refundUpdateCalendar( $orderSn = ''){
+		Log::info('start:'.$orderSn);
 		if( empty($orderSn) ) return false;
 		$bookings = BookingOrder::select(['booking_date as bookingDate','updated_booking_date as updatedBookingDate','BOOKING_DESC as bookingDesc'])->where(['order_sn'=>$orderSn])->first();
+		Log::info($bookings);
 		if( empty( $bookings ) )	return false;
 		$bookings = $bookings->toArray();
 		if( empty( $bookings['updatedBookingDate'] ) ) $bookingTime = $bookings['updatedBookingDate'];
@@ -133,6 +136,9 @@ class BookingCalendar extends Model {
 			if( $changeNum  < 0 ) $changeNum = 0;
 			$updateCalendar['QUANTITY'] = $changeNum;
 			$calendarNum = BookingCalendar::where($where)->update($updateCalendar);
+			if(!$calendarNum)
+				Log::info('error');
+			Log::info('success');
 		}
 		return true;
 	}
