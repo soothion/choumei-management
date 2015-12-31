@@ -2,7 +2,7 @@
 * @Author: anchen
 * @Date:   2015-12-03 09:50:37
 * @Last Modified by:   anchen
-* @Last Modified time: 2015-12-30 17:11:00
+* @Last Modified time: 2015-12-31 10:04:32
 */
 
 $(function(){
@@ -326,7 +326,7 @@ $(function(){
     function createThumbnails(up,response,ratio,name,item){
         lib.cropper.create({
             src:response.img,
-            aspectRatio : ratio,
+            aspectRatio : 1080/600,
             thumbnails  : [name],
             define:function(data){
                 item.closest('.banner').find(".imageTip").hide();
