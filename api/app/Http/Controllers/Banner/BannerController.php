@@ -111,6 +111,14 @@ class BannerController extends Controller {
                             $query['data'][$key]['url']='{"type":"artificers","itemId":"4"}'; break;
                         case "artificers":
                             $query['data'][$key]['url']='{"type":"artificers","itemId":"5"}'; break;
+                        case "salon-appraise":
+                            $query['data'][$key]['url']='{"type":"artificers","itemId":"6"}'; break;
+                        case "salon-nearby":
+                            $query['data'][$key]['url']='{"type":"artificers","itemId":"7"}'; break;
+                        case "salon-grade":
+                            $query['data'][$key]['url']='{"type":"artificers","itemId":"8"}'; break;
+                        case "appoint-stylist":
+                            $query['data'][$key]['url']='{"type":"artificers","itemId":"9"}'; break;
                     }
                 }    
             }        
@@ -198,6 +206,14 @@ class BannerController extends Controller {
                         $date['url']='{"type":"book-artificer"}'; break;
                     case 5:
                         $date['url']='{"type":"artificers"}'; break;
+                    case 6:
+                        $date['url']='{"type":"salon-appraise"}'; break;
+                    case 7:
+                        $date['url']='{"type":"salon-nearby"}'; break;
+                    case 8:
+                        $date['url']='{"type":"salon-grade"}'; break;
+                    case 9:
+                        $date['url']='{"type":"appoint-stylist"}'; break;
                 }        
             } else {
                 $date['url']=$param['url'];
@@ -295,6 +311,14 @@ class BannerController extends Controller {
                         $data['url']='{"type":"book-artificer"}'; break;
                     case 5:
                         $data['url']='{"type":"artificers"}'; break;
+                    case 6:
+                        $data['url']='{"type":"salon-appraise"}'; break;
+                    case 7:
+                        $data['url']='{"type":"salon-nearby"}'; break;
+                    case 8:
+                        $data['url']='{"type":"salon-grade"}'; break;
+                    case 9:
+                        $data['url']='{"type":"appoint-stylist"}'; break;
                 }        
             }  else {
                 $data['url']=$param['url'];
