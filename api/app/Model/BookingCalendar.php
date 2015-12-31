@@ -108,7 +108,7 @@ class BookingCalendar extends Model {
 		$bookings = BookingOrder::select(['booking_date as bookingDate','updated_booking_date as updatedBookingDate','BOOKING_DESC as bookingDesc'])->where(['order_sn'=>$orderSn])->first();
 		if( empty( $bookings ) )	return false;
 		$bookings = $bookings->toArray();
-		if( empty( $bookings['updatedBookingDate'] ) ) $bookingTime = $bookings['updatedBookingDate'];
+		if( !empty( $bookings['updatedBookingDate'] ) ) $bookingTime = $bookings['updatedBookingDate'];
 		else $bookingTime = $bookings['bookingDate'];
 		$tempField = ['DEF'=>'','MORNING'=>'BOOKING_MORN_COUNT','AFTERNOON'=>'BOOKING_AFTERNOON_COUNT'];
 		$itemQuantity = BookingOrderItem::select(['ITEM_ID as itemId','quantity'])->where(['order_sn'=>$orderSn])->get()->toArray();
