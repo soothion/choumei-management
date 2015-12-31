@@ -1069,7 +1069,8 @@ class TransactionWriteApi
             ],
             'test' => [
                 'PAY_MERCHANT_ID' => '10037612',
-                'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
+                'PAY_MERCHANT_PASSWORD' => '159597',
+                //'PAY_MERCHANT_PASSWORD' => 'choumei88371180',
                 'PAY_REFUND_URL' => 'https://api.mch.tenpay.com/refundapi/gateway/refund.xml',
                 'PAY_PARTNER_ID' => '1224362901',
                 'PAY_PARTNER_KEY' => '00d1362509914d5b7e6fcdfe2d2d2904',
