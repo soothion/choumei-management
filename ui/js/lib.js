@@ -729,7 +729,7 @@
 					});
 					options.crop=function(e){//生成裁剪路径：与七牛图片裁剪机制相关
 						for(var name in cropper[0].thumbnails){
-							cropper[0].thumbnails[name]=this.src+"?imageMogr2"+"/crop/!"+Math.round(e.width)+"x"+Math.round(e.height)+"a"+Math.round(e.x)+"a"+Math.round(e.y)+"/thumbnail/"+name;
+							cropper[0].thumbnails[name]=this.src+"?imageMogr2"+"/crop/!"+Math.round(e.width)+"x"+Math.round(e.height)+"a"+Math.round(e.x)+"a"+Math.round(e.y)+"/thumbnail/"+name+"!";
 						}
 					}
 					$image.on('load',function(){
