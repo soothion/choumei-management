@@ -870,7 +870,9 @@ class BookController extends Controller
     
     public static function givePresent($customer_uid,$ordersn,$is_first = false,$first_consume_time = 0)
     {
-        $recommends = RecommendCodeUser::where('user_id',$customer_uid)->whereIn("type",[2,3])->get(['recommend_code','type','add_time'])->toArray(); 
+        $query = RecommendCodeUser::where('user_id',$customer_uid);
+        $query->useWritePdo();
+        $recommends = $query->whereIn("type",[2,3])->get(['recommend_code','type','add_time'])->toArray(); 
         
         if(count($recommends)!=1)
         {
