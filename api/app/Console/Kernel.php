@@ -44,6 +44,8 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\PresentArticleCodeExpire::class,  
         //定妆赠送券过期提醒
         \App\Console\Commands\PresentItemExpireRemind::class,  
+        //定妆赠送券过期提醒
+        \App\Console\Commands\BookingCalendarRepair::class,
     ];
 
     /**

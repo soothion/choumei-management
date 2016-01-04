@@ -422,7 +422,7 @@ class BookingOrder extends Model
         {
             return ;
         }
-        $oldRecommend = RecommendCodeUser::where('user_id',$uid)->first();
+        $oldRecommend = RecommendCodeUser::where('user_id',$uid)->whereIn('type',[2,3,4])->first();
         if(!empty($oldRecommend))
         {
             $code = $oldRecommend->recommend_code;
